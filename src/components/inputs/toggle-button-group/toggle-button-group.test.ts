@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDToggleButtonGroup } from './toggle-button-group.js';
@@ -40,24 +40,6 @@ describe('nldd-toggle-button-group', () => {
 		el = await fixture('<nldd-toggle-button-group type="button"></nldd-toggle-button-group>');
 		await waitForUpdate(el);
 		expect(el.getAttribute('role')).toBe('group');
-	});
-
-	it('warns when no accessible name is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture('<nldd-toggle-button-group></nldd-toggle-button-group>');
-		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('accessible name')
-		);
-		warnSpy.mockRestore();
-	});
-
-	it('does not warn when accessible-label is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture('<nldd-toggle-button-group accessible-label="Filters"></nldd-toggle-button-group>');
-		await waitForUpdate(el);
-		expect(warnSpy).not.toHaveBeenCalled();
-		warnSpy.mockRestore();
 	});
 });
 

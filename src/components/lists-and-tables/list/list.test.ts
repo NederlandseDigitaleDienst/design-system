@@ -14,6 +14,7 @@ import '../../actions/icon-button/icon-button.js';
 import '../../inputs/combo-box/combo-box.js';
 import '../../actions/menu/menu.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
+import { devRules } from '../../../utilities/dev-rules.generated.js';
 
 describe('nldd-list', () => {
 
@@ -445,58 +446,33 @@ describe('nldd-list', () => {
 		expect(getComputedStyle(el).display).not.toBe('none');
 	});
 
-	it('empty: warns in DEV about a list that renders a blank area', async () => {
-		const warnings: string[] = [];
-		const original = console.warn;
-		console.warn = (...args: unknown[]) => { warnings.push(String(args[0])); };
-		try {
-			el = await fixture('<nldd-list></nldd-list>');
-			await waitForUpdate(el);
-		} finally {
-			console.warn = original;
-		}
-		expect(warnings.some(warning => /slot="empty"/.test(warning))).toBe(true);
+	const breaks = (id: string) => el.matches(devRules.find((rule) => rule.id === id)!.context);
+
+	it('empty: breaks the rule when it renders a blank area', async () => {
+		el = await fixture('<nldd-list></nldd-list>');
+		await waitForUpdate(el);
+		expect(breaks('list-needs-empty-slot')).toBe(true);
 	});
 
-	it('empty: stays quiet when the slot is filled', async () => {
-		const warnings: string[] = [];
-		const original = console.warn;
-		console.warn = (...args: unknown[]) => { warnings.push(String(args[0])); };
-		try {
-			el = await fixture('<nldd-list><nldd-inline-dialog slot="empty" text="Niets gevonden"></nldd-inline-dialog></nldd-list>');
-			await waitForUpdate(el);
-		} finally {
-			console.warn = original;
-		}
-		expect(warnings.some(warning => /slot="empty"/.test(warning))).toBe(false);
+	it('empty: is fine when the slot is filled', async () => {
+		el = await fixture('<nldd-list><nldd-inline-dialog slot="empty" text="Niets gevonden"></nldd-inline-dialog></nldd-list>');
+		await waitForUpdate(el);
+		expect(breaks('list-needs-empty-slot')).toBe(false);
 	});
 
-	// The warning asks about the state the list is actually in. Rows that are all
+	// The rules ask about the state the list is actually in. Rows that are all
 	// hidden are the no-results state, and a slot that covers it has answered.
-	it('no-results: stays quiet when only that slot is filled', async () => {
-		const warnings: string[] = [];
-		const original = console.warn;
-		console.warn = (...args: unknown[]) => { warnings.push(String(args[0])); };
-		try {
-			el = await fixture('<nldd-list><nldd-inline-dialog slot="no-results" text="Niets gevonden"></nldd-inline-dialog><nldd-list-item hidden>A</nldd-list-item></nldd-list>');
-			await waitForUpdate(el);
-		} finally {
-			console.warn = original;
-		}
-		expect(warnings.some(warning => /blank area/.test(warning))).toBe(false);
+	it('no-results: is fine when only that slot is filled', async () => {
+		el = await fixture('<nldd-list><nldd-inline-dialog slot="no-results" text="Niets gevonden"></nldd-inline-dialog><nldd-list-item hidden>A</nldd-list-item></nldd-list>');
+		await waitForUpdate(el);
+		expect(breaks('list-needs-no-results-slot')).toBe(false);
 	});
 
 	it('no-results: asks for that slot, not the empty one', async () => {
-		const warnings: string[] = [];
-		const original = console.warn;
-		console.warn = (...args: unknown[]) => { warnings.push(String(args[0])); };
-		try {
-			el = await fixture('<nldd-list><nldd-list-item hidden>A</nldd-list-item></nldd-list>');
-			await waitForUpdate(el);
-		} finally {
-			console.warn = original;
-		}
-		expect(warnings.some(warning => /slot="no-results"/.test(warning))).toBe(true);
+		el = await fixture('<nldd-list><nldd-list-item hidden>A</nldd-list-item></nldd-list>');
+		await waitForUpdate(el);
+		expect(breaks('list-needs-no-results-slot')).toBe(true);
+		expect(breaks('list-needs-empty-slot')).toBe(false);
 	});
 
 	it('empty default: slotted content replaces the default dialog', async () => {
@@ -574,7 +550,6 @@ describe('nldd-list', () => {
 	});
 
 	it('navigation: sub-pages are a list inside their parent item, always shown', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture(`
 			<nldd-list type="navigation">
 				<nldd-list-item href="/a">
@@ -597,8 +572,6 @@ describe('nldd-list', () => {
 		// Nothing to disclose: the parent is a plain link, not a collapsed branch.
 		expect(parent.shadowRoot!.querySelector('a')!.hasAttribute('aria-expanded')).toBe(false);
 		expect(first.shadowRoot!.querySelector('a')!.getAttribute('aria-current')).toBe('page');
-		expect(warn.mock.calls.flat().join(' ')).not.toContain('slot="children"');
-		warn.mockRestore();
 
 		// The arrows walk the sub-pages like any other row: the entry point is
 		// the current page, and down from there is its sibling, not row B.
@@ -608,8 +581,7 @@ describe('nldd-list', () => {
 		expect(second._rovingActive).toBe(true);
 	});
 
-	it('navigation: `expanded` on a row with sub-pages is ignored, with a warning', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('navigation: `expanded` on a row with sub-pages is ignored', async () => {
 		el = await fixture(`
 			<nldd-list type="navigation">
 				<nldd-list-item href="/a" expanded>
@@ -623,8 +595,7 @@ describe('nldd-list', () => {
 		await waitForUpdate(parent);
 		expect(parent.shadowRoot!.querySelector('a')!.hasAttribute('aria-expanded')).toBe(false);
 		expect((parent.shadowRoot!.querySelector('.list-item__children') as HTMLElement).hidden).toBe(false);
-		expect(warn.mock.calls.flat().join(' ')).toContain('`expanded` does nothing');
-		warn.mockRestore();
+		expect(parent.matches(':state(expanded-in-navigation)')).toBe(true);
 	});
 
 	it('tree: arrow navigation walks the rows of an open branch', async () => {
@@ -1375,7 +1346,7 @@ describe('nldd-list – listbox', () => {
 	});
 });
 
-describe('nldd-list — the warning about a control the row cannot reach', () => {
+describe('nldd-list — a control the row cannot reach', () => {
 	let el: HTMLElement;
 
 	// Filled on connect, not in the constructor: the parser sets the attributes
@@ -1388,11 +1359,11 @@ describe('nldd-list — the warning about a control the row cannot reach', () =>
 	}
 	if (!customElements.get('test-control')) customElements.define('test-control', TestControl);
 
-	const mount = async (row: string) => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	const keepsTabStop = async (row: string) => {
 		el = await fixture(`<nldd-list accessible-label="X"><nldd-list-item>${row}</nldd-list-item></nldd-list>`);
 		await waitForUpdate(el);
-		return warn.mock.calls.flat().filter(arg => String(arg).includes('keeps its tab stop'));
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		return el.matches(':state(control-keeps-tab-stop)');
 	};
 
 	afterEach(() => {
@@ -1400,24 +1371,20 @@ describe('nldd-list — the warning about a control the row cannot reach', () =>
 		vi.restoreAllMocks();
 	});
 
-	it('warns for a custom element that keeps a tab stop of its own', async () => {
-		const warnings = await mount('<test-control shadow="<button>X</button>"></test-control>');
-		expect(warnings).toHaveLength(1);
+	it('states a custom element that keeps a tab stop of its own', async () => {
+		expect(await keepsTabStop('<test-control shadow="<button>X</button>"></test-control>')).toBe(true);
 	});
 
 	it('stays silent for a control parked at a negative tabindex', async () => {
-		const warnings = await mount('<test-control shadow="<div tabindex=-1></div>"></test-control>');
-		expect(warnings).toHaveLength(0);
+		expect(await keepsTabStop('<test-control shadow="<div tabindex=-1></div>"></test-control>')).toBe(false);
 	});
 
 	it('stays silent for a control that is not rendered', async () => {
-		const warnings = await mount('<test-control style="display: none" shadow="<button>X</button>"></test-control>');
-		expect(warnings).toHaveLength(0);
+		expect(await keepsTabStop('<test-control style="display: none" shadow="<button>X</button>"></test-control>')).toBe(false);
 	});
 
 	it('stays silent for a segment, which the row manages over its own channel', async () => {
-		const warnings = await mount('<nldd-list-item-segment href="/a"><nldd-text-cell text="A"></nldd-text-cell></nldd-list-item-segment>');
-		expect(warnings).toHaveLength(0);
+		expect(await keepsTabStop('<nldd-list-item-segment href="/a"><nldd-text-cell text="A"></nldd-text-cell></nldd-list-item-segment>')).toBe(false);
 	});
 });
 
@@ -1471,14 +1438,6 @@ describe('nldd-list type="form"', () => {
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
 		await waitForUpdate(el);
 		expect(document.activeElement).toBe(before);
-	});
-
-	it('warns about a row that is an action itself', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture(formList('<nldd-list-item button><nldd-text-cell text="Delete"></nldd-text-cell></nldd-list-item>'));
-		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('type="form"'));
-		warn.mockRestore();
 	});
 });
 

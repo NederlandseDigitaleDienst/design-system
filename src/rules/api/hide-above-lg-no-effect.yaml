@@ -1,0 +1,6 @@
+severity: warn
+context: ':cell[hide-above="lg"]'
+message: 'hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".'
+examples:
+  passed: ['<nldd-text-cell hide-above="md" text="Aanvraag A-1042"></nldd-text-cell>']
+  failed: ['<nldd-text-cell hide-above="lg" text="Aanvraag A-1042"></nldd-text-cell>']

@@ -1,4 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Rules } from '../../../.storybook/Rules.jsx';
 import * as Stories from './toolbar-with-actions.stories';
 
 <Meta of={Stories} />
@@ -35,8 +36,10 @@ nldd-toolbar                       size, label
 
 Wat je gratis krijgt: de toolbar-rol, de overloopknop met zijn label en `aria-expanded`, en een tabbalk en menu met de rollen die bij een keuze horen.
 
-Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `label` op de werkbalk als er meer dan één op de pagina staat, en het overloop-alternatief per item.
+Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `accessible-label` op de werkbalk als er meer dan één op de pagina staat, en het overloop-alternatief per item.
 
 ## Gezien in
 
 Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerdere producten los van elkaar tegengekomen: die is op een breed scherm onzichtbaar en valt pas op als iemand het venster smal maakt.
+
+<Rules pattern="toolbar-with-actions" />

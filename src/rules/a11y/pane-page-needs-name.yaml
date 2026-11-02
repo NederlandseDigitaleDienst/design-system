@@ -1,0 +1,8 @@
+severity: hint
+context: 'nldd-navigation-split-view nldd-page:not([landmarks="page"])'
+assert: '[accessible-label]'
+message: 'Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.'
+see: patronen/application
+examples:
+  passed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="primary-sidebar"><nldd-page accessible-label="Mappen"></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']
+  failed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="primary-sidebar"><nldd-page></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']

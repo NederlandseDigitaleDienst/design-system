@@ -16,7 +16,8 @@
  * @slot pane-n - Each subsequent pane based on the `panes` attribute
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
 import { stackedSplitViewStyles } from './stacked-split-view.styles.js';
 import { stackedSplitViewTemplate } from './stacked-split-view.template.js';

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-top-navigation-bar[back-text="Terug" i], nldd-top-title-bar[back-text="Terug" i], nldd-top-navigation-bar[back-href]:not([back-text])'
+message: 'Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-top-navigation-bar website-title="Mijn Dienst" back-text="Aanvragen" back-href="/aanvragen"></nldd-top-navigation-bar>']
+  failed: ['<nldd-top-navigation-bar website-title="Mijn Dienst" back-text="Terug" back-href="/aanvragen"></nldd-top-navigation-bar>']

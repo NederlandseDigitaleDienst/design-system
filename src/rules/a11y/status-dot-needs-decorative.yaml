@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-list-item nldd-badge:not([text], [number], [icon], [accessible-label], [decorative])'
+message: 'Set `decorative` on the dot and put the word next to it in an nldd-text-cell: the word carries the meaning.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-cell><nldd-badge decorative></nldd-badge></nldd-cell><nldd-text-cell text="Afgerond"></nldd-text-cell></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-cell><nldd-badge></nldd-badge></nldd-cell></nldd-list-item></nldd-list>']

@@ -64,7 +64,8 @@
  * @fires change - When a thumb is let go, or a key moved it; detail as for input
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, queryAll, state } from 'lit/decorators.js';
+import { property, queryAll, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';

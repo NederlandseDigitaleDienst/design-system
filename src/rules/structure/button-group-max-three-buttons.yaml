@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-button-group'
+count:
+  of: '*'
+  max: 3
+message: 'nldd-button-group holds three buttons at most; the rest are hidden.'
+examples:
+  passed: ['<nldd-button-group><nldd-button text="Bewaar"></nldd-button></nldd-button-group>']
+  failed: ['<nldd-button-group><nldd-button text="A"></nldd-button><nldd-button text="B"></nldd-button><nldd-button text="C"></nldd-button><nldd-button text="D"></nldd-button></nldd-button-group>']

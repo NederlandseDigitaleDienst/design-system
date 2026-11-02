@@ -180,7 +180,7 @@ export const VasteHoogte = () => html`
 			<nldd-button-group>
 				<nldd-button
 					appearance="primary"
-					text="Bekijken"
+					text="Dien aanvraag in"
 				></nldd-button>
 			</nldd-button-group>
 		</nldd-container>

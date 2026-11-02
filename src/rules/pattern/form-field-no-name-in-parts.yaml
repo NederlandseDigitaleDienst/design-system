@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-form-field:is([label="Voornaam" i], [label="Voorletters" i], [label="Tussenvoegsel" i], [label="Tussenvoegsels" i], [label="Achternaam" i])'
+message: 'Ask for the full name in one field, and for the form of address separately if you need it.'
+see: ontwerprichtlijnen/invoer-en-formulieren
+examples:
+  passed: ['<nldd-form-field label="Volledige naam"><nldd-text-field></nldd-text-field></nldd-form-field>']
+  failed: ['<nldd-form-field label="Achternaam"><nldd-text-field></nldd-text-field></nldd-form-field>']

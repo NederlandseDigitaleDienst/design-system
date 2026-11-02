@@ -72,7 +72,8 @@
  * ```
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddAvatarTranslations } from './avatar.i18n.js';
@@ -166,9 +167,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 		return Boolean(this.href) || this.button;
 	}
 
-	private _warnedLabel = false;
-	private _warnedTargetSize = false;
-
 	/** Set when the image errors, so the template falls through to the next
 	 *  content step. Not private: the template module reads it. */
 	@state()
@@ -247,30 +245,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 			this.setAttribute('aria-hidden', 'true');
 			this.removeAttribute('role');
 			this.removeAttribute('aria-label');
-		}
-		// An interactive avatar without a name is a silent accessibility failure:
-		// the control holds nothing but an image or initials. Warn in dev, the same
-		// as nldd-card.
-		if (import.meta.env?.DEV) {
-			const missing = this.isInteractive
-				&& !(this.accessibleLabel || this.name).trim();
-			if (missing && !this._warnedLabel) {
-				this._warnedLabel = true;
-				console.warn('<nldd-avatar>: an avatar with `href` or `button` needs `accessible-label` (or `name`), or the control has no accessible name.');
-			}
-			else if (!missing) {
-				this._warnedLabel = false;
-			}
-			// WCAG 2.5.8: a target under 24px passes only with room around it, which
-			// the avatar cannot measure. `full` takes its size from the container.
-			const small = this.isInteractive && Number(this.size) < 24;
-			if (small && !this._warnedTargetSize) {
-				this._warnedTargetSize = true;
-				console.warn(`<nldd-avatar size="${this.size}">: a link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.`);
-			}
-			else if (!small) {
-				this._warnedTargetSize = false;
-			}
 		}
 		// The shape does not resize when only its content does, so the
 		// ResizeObserver won't fire — re-measure here on every change that can

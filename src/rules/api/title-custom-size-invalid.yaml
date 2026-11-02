@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-title:state(invalid-custom-size)'
+message: 'This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.'

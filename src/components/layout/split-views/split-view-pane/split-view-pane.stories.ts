@@ -22,8 +22,8 @@ import '../../../navigation/top-title-bar/top-title-bar.js';
  * 	slot="main"
  * 	has-content
  * >
- *   <nldd-page sticky-header>
- *     <nldd-top-title-bar slot="header" text="Inhoud" back-text="Terug"></nldd-top-title-bar>
+ *   <nldd-page sticky-header landmarks="page">
+ *     <nldd-top-title-bar slot="header" text="Inhoud" back-text="Zijbalk"></nldd-top-title-bar>
  *     ...
  *   </nldd-page>
  * </nldd-split-view-pane>
@@ -62,8 +62,12 @@ export const Standaard = ({ hasContent }: Record<string, any>) => html`
 
 	>
 		<nldd-split-view-pane slot="primary-sidebar">
-			<nldd-page sticky-header>
+			<nldd-page
+				sticky-header
+				accessible-label="Navigatie"
+			>
 				<nldd-top-title-bar
+					heading-level="2"
 					slot="header"
 					text="Zijbalk"
 				></nldd-top-title-bar>
@@ -77,8 +81,12 @@ export const Standaard = ({ hasContent }: Record<string, any>) => html`
 		</nldd-split-view-pane>
 
 		<nldd-split-view-pane slot="secondary-sidebar">
-			<nldd-page sticky-header>
+			<nldd-page
+				sticky-header
+				accessible-label="Subnavigatie"
+			>
 				<nldd-top-title-bar
+					heading-level="2"
 					slot="header"
 					text="Secundaire zijbalk"
 					back-text="Zijbalk"
@@ -96,11 +104,14 @@ export const Standaard = ({ hasContent }: Record<string, any>) => html`
 			slot="main"
 			?has-content=${hasContent}
 		>
-			<nldd-page sticky-header>
+			<nldd-page
+				sticky-header
+				landmarks="page"
+			>
 				<nldd-top-title-bar
 					slot="header"
 					text="Inhoud"
-					back-text="Terug"
+					back-text="Secundaire zijbalk"
 				></nldd-top-title-bar>
 				<nldd-simple-section>
 					<nldd-rich-text>
@@ -112,8 +123,12 @@ export const Standaard = ({ hasContent }: Record<string, any>) => html`
 		</nldd-split-view-pane>
 
 		<nldd-split-view-pane slot="inspector">
-			<nldd-page sticky-header>
+			<nldd-page
+				sticky-header
+				accessible-label="Details"
+			>
 				<nldd-top-title-bar
+					heading-level="2"
 					slot="header"
 					text="Inspecteur"
 					dismiss-text="Sluit"

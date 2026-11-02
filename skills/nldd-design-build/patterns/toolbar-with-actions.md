@@ -126,8 +126,23 @@ nldd-toolbar                       size, label
 
 Wat je gratis krijgt: de toolbar-rol, de overloopknop met zijn label en `aria-expanded`, en een tabbalk en menu met de rollen die bij een keuze horen.
 
-Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `label` op de werkbalk als er meer dan één op de pagina staat, en het overloop-alternatief per item.
+Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `accessible-label` op de werkbalk als er meer dan één op de pagina staat, en het overloop-alternatief per item.
 
 ## Gezien in
 
 Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerdere producten los van elkaar tegengekomen: die is op een breed scherm onzichtbaar en valt pas op als iemand het venster smal maakt.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `toolbar-control-size-no-effect`: The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.
+- `toolbar-item-needs-overflow`: Give this item an alternative in `slot="overflow"`: on a narrow screen it moves to the overflow menu, and without one it is gone.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `tab-bar-needs-priority`: Give the tab bar a high `priority`, so it is the last to move to the overflow.
+- `tab-bar-overflow-needs-radio-group`: Give the tab bar an nldd-menu-group in `slot="overflow"`, with a type="radio" item per tab.
+- `toolbar-needs-two-actions`: Use a plain button for a single action.
+- `toolbar-primary-needs-priority`: Give the primary action the highest `priority`, so it is the last to move to the overflow.
+- `toolbar-second-needs-name`: Give each toolbar an `accessible-label` when a page has more than one.

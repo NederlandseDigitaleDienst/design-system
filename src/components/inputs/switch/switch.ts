@@ -25,7 +25,8 @@
  * @fires change - When the switch state changes; detail: { checked: boolean, value: string }
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { switchStyles } from './switch.styles.js';
@@ -93,9 +94,6 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	invalid = false;
 
 	override firstUpdated(): void {
-		if (import.meta.env?.DEV && !this.accessibleLabel) {
-			console.warn('<nldd-switch>: No accessible-label provided. Use nldd-switch-field for labeled usage, or provide an accessible-label attribute for screen reader accessibility.');
-		}
 		this._initialChecked = this.checked;
 	}
 

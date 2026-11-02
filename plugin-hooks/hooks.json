@@ -1,0 +1,16 @@
+{
+	"description": "Checks nldd-* markup with the project's own nldd lint after an edit.",
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "Write|Edit",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node \"${CLAUDE_PLUGIN_ROOT}/plugin-hooks/nldd-lint.js\""
+					}
+				]
+			}
+		]
+	}
+}

@@ -148,6 +148,7 @@ export const VolledigeBreedte = {
 	render: () => html`
 		${triggerStyle}
 		<nldd-sidebar-section
+			sidebar-label="Filters"
 			width="full"
 			@open=${reflectExpanded(true)}
 			@close=${reflectExpanded(false)}
@@ -171,6 +172,7 @@ export const EigenSheetTitelbalk = {
 	render: () => html`
 		${triggerStyle}
 		<nldd-sidebar-section
+			sidebar-label="Filters"
 			@open=${reflectExpanded(true)}
 			@close=${reflectExpanded(false)}
 		>
@@ -205,6 +207,7 @@ export const SmalleContainer = {
 		${triggerStyle}
 		<div style="max-width: 600px; margin-inline: auto; padding: 16px; outline: 1px dashed var(--semantics-surfaces-tinted-highlight-border-color);">
 			<nldd-sidebar-section
+				sidebar-label="Filters"
 				@open=${reflectExpanded(true)}
 				@close=${reflectExpanded(false)}
 			>
@@ -227,7 +230,10 @@ export const SmalleContainer = {
 export const ZonderInklappen = {
 	render: () => html`
 		<div style="max-width: 600px; margin-inline: auto; padding: 16px; outline: 1px dashed var(--semantics-surfaces-tinted-highlight-border-color);">
-			<nldd-sidebar-section no-collapse>
+			<nldd-sidebar-section
+				no-collapse
+				sidebar-label="Filters"
+			>
 				<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
 				${main}
 			</nldd-sidebar-section>

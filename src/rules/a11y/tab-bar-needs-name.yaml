@@ -1,0 +1,7 @@
+severity: error
+context: 'nldd-tab-bar'
+assert: '[accessible-label]'
+message: 'nldd-tab-bar needs `accessible-label`, so a screen reader can say what the tabs are for.'
+examples:
+  passed: ['<nldd-tab-bar accessible-label="Secties"></nldd-tab-bar>']
+  failed: ['<nldd-tab-bar></nldd-tab-bar>']

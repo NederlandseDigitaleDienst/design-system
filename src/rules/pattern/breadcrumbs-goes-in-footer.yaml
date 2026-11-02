@@ -1,0 +1,7 @@
+severity: hint
+context: ':is([slot="header"], nldd-top-navigation-bar, nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-breadcrumbs, nldd-page > nldd-breadcrumbs'
+message: 'Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page-footer><nldd-breadcrumbs slot="breadcrumbs"></nldd-breadcrumbs></nldd-page-footer>']
+  failed: ['<nldd-simple-section><nldd-breadcrumbs></nldd-breadcrumbs></nldd-simple-section>']

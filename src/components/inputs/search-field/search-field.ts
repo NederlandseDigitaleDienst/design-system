@@ -30,7 +30,8 @@
  * @fires search - When search is submitted via Enter or the search button; detail: { value: string }
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { searchFieldStyles } from './search-field.styles.js';

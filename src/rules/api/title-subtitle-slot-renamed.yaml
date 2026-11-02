@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-title > [slot="subtitle"]'
+fix: { value: { slot: { subtitle: supporting-text } } }
+message: 'The subtitle slot is now supporting-text, and what is in the old one is not shown. Rename it here and on every other nldd-title.'
+examples:
+  passed: ['<nldd-title text="Aanvraag A-1042"><span slot="supporting-text">Dakisolatie</span></nldd-title>']
+  failed: ['<nldd-title text="Aanvraag A-1042"><span slot="subtitle">Dakisolatie</span></nldd-title>']

@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-combo-box:state(no-popover)'
+message: 'This browser has no Popover API, so the dropdown does not open.'

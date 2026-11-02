@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero, nldd-page)[style*="background"]:not([background])'
+message: 'Use `background` on the section: it cascades the surface to what is inside it.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-simple-section background="tinted"></nldd-simple-section>']
+  failed: ['<nldd-simple-section style="background: #eee"></nldd-simple-section>']

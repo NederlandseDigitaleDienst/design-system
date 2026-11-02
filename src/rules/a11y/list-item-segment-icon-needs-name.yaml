@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-list-item-segment:is([button], [href]):has(> nldd-icon-cell):not(:has(> :is(nldd-text-cell, nldd-title-cell, nldd-description-cell)))'
+assert: '[accessible-label]'
+message: 'Give the segment an `accessible-label` that names the row: it holds only an icon.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment button accessible-label="Acties voor Dossier D-318"><nldd-icon-cell icon="more"></nldd-icon-cell></nldd-list-item-segment></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment button><nldd-icon-cell icon="more"></nldd-icon-cell></nldd-list-item-segment></nldd-list-item></nldd-list>']
+  cantTell: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment button :accessible-label="naam"><nldd-icon-cell icon="more"></nldd-icon-cell></nldd-list-item-segment></nldd-list-item></nldd-list>']

@@ -1,0 +1,11 @@
+severity: hint
+context: 'nldd-dropdown > select:not(:has(> optgroup)):has(> option)'
+count:
+  of: 'option'
+  min: 6
+message: 'With a handful of options, show them all with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group.'
+see: ontwerprichtlijnen/invoer-en-formulieren
+examples:
+  passed: ['<nldd-dropdown accessible-label="Land"><select><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></nldd-dropdown>']
+  failed: ['<nldd-dropdown accessible-label="Aanhef"><select><option>Heer</option><option>Mevrouw</option></select></nldd-dropdown>']
+  cantTell: ['<nldd-dropdown accessible-label="Land"><select><option v-for="land in landen">{{ land }}</option></select></nldd-dropdown>']

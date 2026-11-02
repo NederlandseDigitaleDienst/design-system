@@ -105,6 +105,7 @@ export const MetExpandableItems = {
 		<div style=${layoutArea}>
 			<nldd-menu-bar>
 				<nldd-menu-bar-item
+					accessible-label="Taal: Nederlands (NL)"
 					text="NL"
 					expandable
 					content-priority="icon"
@@ -116,11 +117,13 @@ export const MetExpandableItems = {
 							selected
 						></nldd-menu-item>
 						<nldd-menu-item
+							lang="en"
 							text="English"
 							type="radio"
 						></nldd-menu-item>
 						<nldd-menu-item
 							text="Papiamentu"
+							lang="pap"
 							type="radio"
 						></nldd-menu-item>
 					</nldd-menu>
@@ -153,6 +156,7 @@ export const Compact = {
 		<div style=${layoutArea}>
 			<nldd-menu-bar compact>
 				<nldd-menu-bar-item
+					accessible-label="Taal: Nederlands (NL)"
 					text="NL"
 					expandable
 					content-priority="icon"
@@ -164,6 +168,7 @@ export const Compact = {
 							selected
 						></nldd-menu-item>
 						<nldd-menu-item
+							lang="en"
 							text="English"
 							type="radio"
 						></nldd-menu-item>

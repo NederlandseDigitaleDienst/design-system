@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-hero:state(corner-unsupported)'
+message: '`corner` only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. Set layout="contained" and put the panel in a corner or along a side, or drop the corner.'

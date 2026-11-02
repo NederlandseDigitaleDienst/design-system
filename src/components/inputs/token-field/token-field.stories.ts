@@ -248,6 +248,7 @@ export const TokensMetMenu = {
 							value="to-start"
 							text="Verplaats naar begin"
 						></nldd-menu-item>
+						<nldd-menu-divider></nldd-menu-divider>
 						<nldd-menu-item
 							value="remove"
 							text="Verwijder"
@@ -270,6 +271,7 @@ export const TokensMetMenu = {
 							value="to-start"
 							text="Verplaats naar begin"
 						></nldd-menu-item>
+						<nldd-menu-divider></nldd-menu-divider>
 						<nldd-menu-item
 							value="remove"
 							text="Verwijder"

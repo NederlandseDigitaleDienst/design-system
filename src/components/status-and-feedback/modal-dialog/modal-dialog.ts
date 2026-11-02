@@ -42,7 +42,8 @@ import { LitElement } from 'lit';
  *  close always wins on animationend, short enough that a paused or dropped
  *  animation does not leave the dialog stuck. */
 const MODAL_DIALOG_CLOSE_TIMEOUT_MS = 1000;
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { modalDialogStyles } from './modal-dialog.styles.js';
 import { modalDialogTemplate } from './modal-dialog.template.js';
@@ -119,21 +120,9 @@ export class NLDDModalDialog extends LitElement {
 			if (dialog.open) return;
 			dialog.showModal();
 			this._manageFocus();
-			if (import.meta.env?.DEV) this._checkActions();
 		}
 		this.open = true;
 		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
-	}
-
-	private _warnedSingleAction = false;
-
-	/** DEV-only: warns once when the dialog opens with a single action. */
-	private _checkActions(): void {
-		if (this._warnedSingleAction) return;
-		const actions = [...this.children].filter((child) => child.getAttribute('slot') === 'actions');
-		if (actions.length !== 1) return;
-		this._warnedSingleAction = true;
-		console.warn('<nldd-modal-dialog>: The dialog has one action, so there is nothing to choose. Tell the user with an nldd-notification or an inline message instead, or give the dialog a real choice.', this);
 	}
 
 	private _manageFocus(): void {

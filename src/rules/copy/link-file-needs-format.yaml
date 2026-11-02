@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-link, nldd-button)[text]:is([href$=".pdf" i], [href$=".docx" i], [href$=".xlsx" i], [href$=".csv" i], [href$=".zip" i]):not([text*="pdf" i], [text*="docx" i], [text*="xlsx" i], [text*="csv" i], [text*="zip" i])'
+message: 'Name the format and the size in the link text, such as "Jaarverslag (pdf, 2 MB)".'
+see: ontwerprichtlijnen/copywriting
+examples:
+  passed: ['<nldd-link href="/jaarverslag.pdf" text="Jaarverslag (pdf, 2 MB)"></nldd-link>']
+  failed: ['<nldd-link href="/jaarverslag.pdf" text="Jaarverslag"></nldd-link>']

@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-menu-bar:state(unnamed)'
+message: 'No `accessible-label` set. A page with more than one nav landmark needs a unique label on each (WCAG 1.3.1).'

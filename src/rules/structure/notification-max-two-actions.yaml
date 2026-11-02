@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-notification'
+count:
+  of: '[slot="actions"]'
+  max: 2
+message: 'At most 2 actions: a message that needs three choices is a decision, and a decision belongs in a dialog that waits for it.'
+examples:
+  passed: ['<nldd-notification><nldd-button slot="actions" text="Bekijk"></nldd-button><nldd-button slot="actions" text="Sluit"></nldd-button></nldd-notification>']
+  failed: ['<nldd-notification><nldd-button slot="actions" text="A"></nldd-button><nldd-button slot="actions" text="B"></nldd-button><nldd-button slot="actions" text="C"></nldd-button></nldd-notification>']

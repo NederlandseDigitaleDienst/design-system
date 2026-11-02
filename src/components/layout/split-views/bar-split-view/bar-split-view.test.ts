@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import './bar-split-view.js';
 import type { NLDDBarSplitView } from './bar-split-view.js';
@@ -73,8 +73,7 @@ describe('nldd-bar-split-view', () => {
 		expect(slotNames.indexOf('main')).toBeLessThan(slotNames.indexOf('toolbar'));
 	});
 
-	it('ignores and warns about children without a slot attribute', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('ignores children without a slot attribute', async () => {
 		el = await fixture(`
 			<nldd-bar-split-view>
 				<div>No slot</div>
@@ -82,12 +81,7 @@ describe('nldd-bar-split-view', () => {
 			</nldd-bar-split-view>
 		`);
 		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('<nldd-bar-split-view>'),
-			expect.anything()
-		);
 		expect(el.shadowRoot!.querySelectorAll('slot[name=""]').length).toBe(0);
-		warn.mockRestore();
 	});
 	it('falls back to DOM order when no order attributes are set', async () => {
 		el = await fixture(`

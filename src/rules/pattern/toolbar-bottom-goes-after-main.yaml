@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-bar-split-view > [only="sm"] ~ [slot="main"]'
+message: 'Put the bar with only="sm" after slot="main" in the HTML: on a phone it belongs at the bottom, within reach of a thumb.'
+see: patronen/application
+examples:
+  passed: ['<nldd-bar-split-view><nldd-split-view-pane slot="main"></nldd-split-view-pane><nldd-split-view-pane slot="toolbar-sm" only="sm"></nldd-split-view-pane></nldd-bar-split-view>']
+  failed: ['<nldd-bar-split-view><nldd-split-view-pane slot="toolbar-sm" only="sm"></nldd-split-view-pane><nldd-split-view-pane slot="main"></nldd-split-view-pane></nldd-bar-split-view>']

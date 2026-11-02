@@ -22,6 +22,7 @@ Dit is de gedeelde naslag van het designsysteem. Hij hoort bij geen van beide we
 | een nieuwe applicatie bouwen | `nldd-design-build`: de visie, de patronen, hoe je componenten samenstelt |
 | een bestaande applicatie omzetten | `nldd-design-migrate`: wat er stil misgaat en hoe je het merkt |
 | een versie verhogen | `nldd-design-upgrade`: het upgradepad uit de changelog |
+| code controleren | `nldd-design-validate`: `nldd lint` en wat de meldingen betekenen |
 | iets voorstellen aan het systeem | `nldd-design-contribute`: hoe je een issue opbouwt |
 | het designsysteem zelf ontwikkelen | niet deze skills: die kennis zit als repo-locale skills in de repository, zie `nldd-design-contribute` |
 

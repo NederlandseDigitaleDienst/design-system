@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-image:state(invalid-width)'
+message: '`width` is not a positive number. Falling back to "full".'

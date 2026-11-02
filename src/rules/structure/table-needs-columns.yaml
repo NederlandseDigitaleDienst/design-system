@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-table'
+assert: '[columns]'
+message: 'nldd-table needs `columns`, a CSS grid track list, or its cells do not line up.'
+examples:
+  passed: ['<nldd-table columns="1fr 1fr" accessible-label="Dossiers"></nldd-table>']
+  failed: ['<nldd-table accessible-label="Dossiers"></nldd-table>']

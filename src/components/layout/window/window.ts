@@ -39,7 +39,8 @@
  */
 
 import { LitElement, PropertyValues } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { windowStyles } from './window.styles.js';
 import { windowTemplate } from './window.template.js';
 import { nlddWindowTranslations, type NLDDWindowTranslations } from './window.i18n.js';
@@ -49,6 +50,7 @@ import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { translate } from '../../../utilities/translations.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 
@@ -97,7 +99,6 @@ export class NLDDWindow extends LitElement {
 	open = false;
 
 	private _closing = false;
-	private _hasWarnedLabel = false;
 	private _titleBar = new TitleBarLabelController(this);
 
 	private get _dialog(): HTMLDialogElement | null {
@@ -178,10 +179,7 @@ export class NLDDWindow extends LitElement {
 		// New open cycle: the next close may emit again.
 		this._closeEmitted = false;
 
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this._titleBar.text && !this._hasWarnedLabel) {
-			this._hasWarnedLabel = true;
-			console.warn(`<nldd-window>: No accessible-label and no nldd-top-title-bar with text inside. Screen readers will announce this window as "${this._t('components.window.accessible-label')}". Give the title bar a text, or set accessible-label.`);
-		}
+		setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text);
 
 		dialog.showModal();
 		this.open = true;

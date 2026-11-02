@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-list-item[checkbox] nldd-checkbox:not([decorative])'
+message: 'Set `decorative`: the row is the checkbox, and this one only shows its state.'
+see: patronen/filtering
+examples:
+  passed: ['<nldd-list accessible-label="Status"><nldd-list-item checkbox><nldd-cell><nldd-checkbox decorative></nldd-checkbox></nldd-cell></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list accessible-label="Status"><nldd-list-item checkbox><nldd-cell><nldd-checkbox accessible-label="Afgerond"></nldd-checkbox></nldd-cell></nldd-list-item></nldd-list>']

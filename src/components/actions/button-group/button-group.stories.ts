@@ -147,8 +147,8 @@ export const DrieKnoppen = {
 			text="Bewaar en maak nieuwe"
 		></nldd-button>
 		<nldd-button
-			appearance="destructive"
-			text="Verwijder"
+			appearance="neutral-tinted"
+			text="Bewaar als concept"
 		></nldd-button>
 	</nldd-button-group>
 	`,
@@ -158,6 +158,7 @@ export const MaximaalDrieKnoppen = {
 	name: 'Maximaal drie knoppen (de vierde verdwijnt)',
 	args: { size: 'md', orientation: 'vertical' },
 	render: (args: Record<string, any>) => html`
+	<!-- nldd-lint-disable-next-line button-group-max-three-buttons -- Shows on purpose that the fourth button disappears. -->
 	<nldd-button-group
 		size=${args.size}
 		orientation=${args.orientation}
@@ -171,12 +172,12 @@ export const MaximaalDrieKnoppen = {
 			text="Bewaar en maak nieuwe"
 		></nldd-button>
 		<nldd-button
-			appearance="destructive"
-			text="Verwijder"
+			appearance="neutral-tinted"
+			text="Bewaar als concept"
 		></nldd-button>
 		<nldd-button
 			appearance="secondary"
-			text="Een knop te veel"
+			text="Vierde knop"
 		></nldd-button>
 	</nldd-button-group>
 	`,

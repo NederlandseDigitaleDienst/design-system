@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-title:state(custom-size-below-floor)'
+message: 'This custom size is smaller than size 1 at this breakpoint and shows as size 1. Use `size` for headings up to size 1.'

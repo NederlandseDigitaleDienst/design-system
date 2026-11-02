@@ -7,7 +7,8 @@
  * @attr {string} size - Spacer size in pixels: '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96' (default: '16')
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { spacerCellStyles } from './spacer-cell.styles.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
 

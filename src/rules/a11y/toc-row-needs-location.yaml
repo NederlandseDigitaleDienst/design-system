@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-sidebar-section nldd-list[type="navigation"] nldd-list-item[href^="#"]:not([href^="#/"], [href="#"], [current-type="location"])'
+message: 'Set current-type="location": this row points at part of this page, and a screen reader otherwise calls it the current page.'
+see: patronen/content-page
+examples:
+  passed: ['<nldd-sidebar-section sidebar-label="Op deze pagina"><nldd-list slot="sidebar" type="navigation" accessible-label="Op deze pagina"><nldd-list-item href="#kosten" current-type="location"><nldd-text-cell text="Kosten"></nldd-text-cell></nldd-list-item></nldd-list></nldd-sidebar-section>']
+  failed: ['<nldd-sidebar-section sidebar-label="Op deze pagina"><nldd-list slot="sidebar" type="navigation" accessible-label="Op deze pagina"><nldd-list-item href="#kosten"><nldd-text-cell text="Kosten"></nldd-text-cell></nldd-list-item></nldd-list></nldd-sidebar-section>']

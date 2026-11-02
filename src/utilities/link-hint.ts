@@ -16,6 +16,8 @@
  *
  * Returns null when the link needs no hint.
  */
+import { setState } from './element-state.js';
+
 export type LinkHintKey = 'link-hint-external-lowercase-label' | 'link-hint-new-tab-lowercase-label' | 'link-hint-external-new-tab-lowercase-label';
 export type DownloadLinkHintKey = LinkHintKey | 'link-hint-download-lowercase-label';
 
@@ -48,12 +50,7 @@ export function isExternalHref(href: string): boolean {
 	return url.origin !== location.origin;
 }
 
-const warnedDownloadTarget = new WeakSet<Element>();
-
-/** In development, says once per element that `target` does nothing on a
- *  download link: the file is saved, no tab opens. */
-export function warnDownloadTarget(element: Element, download: string | null | undefined, target: string | null | undefined): void {
-	if (!import.meta.env?.DEV || download === undefined || download === null || !target || target === '_self' || warnedDownloadTarget.has(element)) return;
-	warnedDownloadTarget.add(element);
-	console.warn(`<${element.localName}>: \`target="${target}"\` does nothing with \`download\`, which saves the file instead of opening it. Remove one of the two.`);
+/** `target` does nothing on a download link: the file is saved, no tab opens. */
+export function markDownloadTarget(element: HTMLElement, download: string | null | undefined, target: string | null | undefined): void {
+	setState(element, 'download-with-target', download !== undefined && download !== null && Boolean(target) && target !== '_self');
 }

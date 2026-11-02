@@ -44,7 +44,8 @@
  * @fires dismiss - Fired when the dismiss button is clicked. The consumer is responsible for removing/hiding the banner.
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { bannerStyles } from './banner.styles.js';
 import { bannerTemplate } from './banner.template.js';

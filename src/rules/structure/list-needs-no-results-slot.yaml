@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-list:state(filtered):not(:has(> [slot="empty"], > [slot="no-results"]))'
+message: 'Every item is hidden and nothing is in [slot="no-results"], so the list renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.'

@@ -99,7 +99,8 @@ Sla je dit over, dan bouwt alles, slagen alle tests en staat het component netje
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { styles } from './{naam}.styles.ts';
 import { template } from './{naam}.template.ts';
 
@@ -130,7 +131,8 @@ declare global {
 **JSDoc-opmaak:**
 
 - Proza (de beschrijving bovenaan) wrapt op ~80 tekens.
-- Een tagregel (`@attr`, `@prop`, `@fires`, `@slot`, `@method`) blijft op één regel, hoe lang die ook wordt. Dat leest slechter in de bron, maar wel goed in de gegenereerde tabel — en geen enkele generator hoeft vervolgregels te begrijpen.
+- Leest een component een attribuut van zijn kinderen (`only` op een pane), documenteer het dan met `@childattr` bij dat component. Het is dan alleen op een kind ervan geldig.
+- Een tagregel (`@attr`, `@childattr`, `@prop`, `@fires`, `@slot`, `@method`) blijft op één regel, hoe lang die ook wordt. Dat leest slechter in de bron, maar wel goed in de gegenereerde tabel — en geen enkele generator hoeft vervolgregels te begrijpen.
 - Moet er toch gebroken worden, spring dan één niveau in. Niet uitlijnen op de kolom van de beschrijving: dan houd je nog maar een handvol tekens per regel over en lijkt de tekst afgekapt.
 - Eén spatie tussen `@attr`, het type, de naam en het streepje. Niet uitlijnen in kolommen: dan dwingt één langere attribuutnaam je het hele blok opnieuw te padden, wat een diff vol witruimte oplevert zonder dat de gegenereerde docs veranderen.
 

@@ -43,14 +43,14 @@ describe('nldd-button', () => {
 	});
 
 	it('doet niets als het `form`-attribuut nergens naar wijst, en zegt dat', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<NLDDButton>('<nldd-button type="submit" form="bestaat-niet" text="Bewaar"></nldd-button>');
 		const button = el as NLDDButton;
 		await waitForUpdate(button);
 		expect(() => button.shadowRoot!.querySelector('button')!.click()).not.toThrow();
 		// Een klik die niets doet zonder een woord is precies wat dit attribuut
 		// kwam oplossen, dus daar hoort een melding bij.
-		expect(warn.mock.calls.some(([m]) => String(m).includes('form="bestaat-niet"'))).toBe(true);
+		expect(el.matches(':state(no-form-target)')).toBe(true);
+		expect(el.matches(':state(form-target-not-a-form)')).toBe(false);
 	});
 
 	it('neemt de breedte over die een groep om hem heen doorgeeft', async () => {
@@ -86,17 +86,13 @@ describe('nldd-button', () => {
 		expect(getComputedStyle(button.shadowRoot!.querySelector('button')!).width).not.toBe('320px');
 	});
 
-	it('waarschuwt opnieuw als er een andere verkeerde id staat', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDButton>('<nldd-button type="submit" form="eerste-typefout" text="Bewaar"></nldd-button>');
-		const button = el as NLDDButton;
+	it('ziet het verschil met een id van iets dat geen formulier is', async () => {
+		el = await fixture<HTMLElement>('<div><div id="geen-formulier"></div><nldd-button type="submit" form="geen-formulier" text="Bewaar"></nldd-button></div>');
+		const button = el.querySelector('nldd-button') as NLDDButton;
 		await waitForUpdate(button);
 		button.shadowRoot!.querySelector('button')!.click();
-		button.setAttribute('form', 'tweede-typefout');
-		await waitForUpdate(button);
-		button.shadowRoot!.querySelector('button')!.click();
-		const ids = warn.mock.calls.map(([m]) => String(m).match(/form="([^"]+)"/)?.[1]).filter(Boolean);
-		expect(ids).toEqual(['eerste-typefout', 'tweede-typefout']);
+		expect(button.matches(':state(form-target-not-a-form)')).toBe(true);
+		expect(button.matches(':state(no-form-target)')).toBe(false);
 	});
 
 	it('renders without error', async () => {
@@ -1082,10 +1078,9 @@ describe('<nldd-button> with download', () => {
 		expect(a.textContent).toContain('downloadt bestand');
 	});
 
-	it('warns once that target does nothing on a download', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that target does nothing on a download', async () => {
 		el = await fixture('<nldd-button href="/verslag.pdf" target="_blank" download="verslag.pdf" text="Download"></nldd-button>');
 		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
+		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
 });

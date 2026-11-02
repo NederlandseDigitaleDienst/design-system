@@ -1,0 +1,8 @@
+severity: hint
+context: 'nldd-form-field[label*="e-mail" i] > nldd-text-field:not([type="email"]), nldd-form-field:is([label*="telefoon" i], [label*="mobiel" i]) > nldd-text-field:not([type="tel"])'
+message: 'Set the `type` that fits, `email` or `tel`, which brings the right keyboard and validation.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-field label="E-mailadres"><nldd-text-field type="email"></nldd-text-field></nldd-form-field>']
+  failed: ['<nldd-form-field label="E-mailadres"><nldd-text-field></nldd-text-field></nldd-form-field>']
+  cantTell: ['<nldd-form-field label="E-mailadres"><nldd-text-field :type="soort"></nldd-text-field></nldd-form-field>']

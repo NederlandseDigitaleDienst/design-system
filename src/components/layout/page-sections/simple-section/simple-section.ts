@@ -31,7 +31,8 @@
  * @slot footer - Content below the main content
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { simpleSectionStyles } from './simple-section.styles.js';

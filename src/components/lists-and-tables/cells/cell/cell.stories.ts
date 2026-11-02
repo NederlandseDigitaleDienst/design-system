@@ -74,7 +74,8 @@ export const Standaard = {
 			vertical-alignment=${args.verticalAlignment}
 			hide-below=${args.hideBelow || nothing}
 			hide-above=${args.hideAbove || nothing}
-			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
+			min-height="80px"
+			class="cell-bounds"
 		>
 			<nldd-button
 				appearance="neutral-tinted"
@@ -89,7 +90,8 @@ export const BreedteFull = {
 	render: () => html`
 		<nldd-cell
 			width="full"
-			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
+			min-height="80px"
+			class="cell-bounds"
 		>
 			<nldd-button
 				appearance="neutral-tinted"
@@ -105,7 +107,8 @@ export const BreedteFitContent = {
 	render: () => html`
 		<nldd-cell
 			width="fit-content"
-			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
+			min-height="80px"
+			class="cell-bounds"
 		>
 			<nldd-button
 				appearance="neutral-tinted"
@@ -119,7 +122,8 @@ export const BreedteVast = {
 	render: () => html`
 		<nldd-cell
 			width="120px"
-			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
+			min-height="80px"
+			class="cell-bounds"
 		>
 			<nldd-button
 				appearance="neutral-tinted"
@@ -136,7 +140,8 @@ export const MetMinEnMaxBreedte = {
 			width="full"
 			min-width="80px"
 			max-width="200px"
-			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
+			min-height="80px"
+			class="cell-bounds"
 		>
 			<nldd-button
 				appearance="neutral-tinted"
@@ -154,7 +159,7 @@ export const MetMinimaleHoogte = {
 				<nldd-cell
 					vertical-alignment="top"
 					min-height="44px"
-					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					class="cell-bounds"
 				>
 					<nldd-button
 						appearance="neutral-tinted"
@@ -171,7 +176,7 @@ export const VerticaleUitlijning = {
 		<div style="display: flex; gap: 8px; height: 100px;">
 			<nldd-cell
 				vertical-alignment="top"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 			>
 				<nldd-button
 					appearance="neutral-tinted"
@@ -180,7 +185,7 @@ export const VerticaleUitlijning = {
 			</nldd-cell>
 			<nldd-cell
 				vertical-alignment="center"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 			>
 				<nldd-button
 					appearance="neutral-tinted"
@@ -189,7 +194,7 @@ export const VerticaleUitlijning = {
 			</nldd-cell>
 			<nldd-cell
 				vertical-alignment="bottom"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 			>
 				<nldd-button
 					appearance="neutral-tinted"
@@ -207,7 +212,8 @@ export const HorizontaleUitlijning = {
 				<nldd-cell
 					width="240px"
 					horizontal-alignment="left"
-					style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
+					min-height="60px"
+					class="cell-bounds"
 				>
 					<nldd-button
 						appearance="neutral-tinted"
@@ -219,7 +225,8 @@ export const HorizontaleUitlijning = {
 				<nldd-cell
 					width="240px"
 					horizontal-alignment="center"
-					style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
+					min-height="60px"
+					class="cell-bounds"
 				>
 					<nldd-button
 						appearance="neutral-tinted"
@@ -231,7 +238,8 @@ export const HorizontaleUitlijning = {
 				<nldd-cell
 					width="240px"
 					horizontal-alignment="right"
-					style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
+					min-height="60px"
+					class="cell-bounds"
 				>
 					<nldd-button
 						appearance="neutral-tinted"

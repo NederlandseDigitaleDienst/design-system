@@ -12,7 +12,8 @@
  * @attr {boolean} has-drag-handle - Show a drag handle
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { splitViewDividerStyles } from './split-view-divider.styles.js';
 import { splitViewDividerTemplate } from './split-view-divider.template.js';

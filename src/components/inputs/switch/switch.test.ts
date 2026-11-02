@@ -292,22 +292,6 @@ describe('nldd-switch – accessibility', () => {
 		expect(input.matches(':focus')).toBe(true);
 	});
 
-	it('warns when accessible-label is not provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDSwitch>('<nldd-switch></nldd-switch>');
-		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('accessible-label')
-		);
-	});
-
-	it('does not warn when accessible-label is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDSwitch>('<nldd-switch accessible-label="Meldingen"></nldd-switch>');
-		await waitForUpdate(el);
-		expect(warnSpy).not.toHaveBeenCalled();
-	});
-
 	it('participates in FormData when checked', async () => {
 		const form = await fixture<HTMLFormElement>('<form><nldd-switch name="alerts" value="on" accessible-label="Meldingen" checked></nldd-switch></form>');
 		el = form;

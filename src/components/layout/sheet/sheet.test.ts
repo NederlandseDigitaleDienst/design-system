@@ -454,19 +454,14 @@ describe('nldd-sheet – height', () => {
 		expect(el.style.getPropertyValue('--_sheet-height')).toBe('');
 	});
 
-	// The warning is gated on import.meta.env.DEV; skip when the suite runs
-	// in production mode so a missing warn isn't a false failure.
-	it.skipIf(!import.meta.env.DEV)('warns exactly once on an invalid height value', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states an invalid height until it is valid again', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet placement="bottom" height="not-a-length"></nldd-sheet>');
 		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledTimes(1);
-		expect(warnSpy.mock.calls[0][0]).toContain('Invalid height value "not-a-length"');
+		expect(el.matches(':state(invalid-height)')).toBe(true);
 
-		el.height = 'also-bogus';
+		el.height = '50%';
 		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledTimes(1);
-		warnSpy.mockRestore();
+		expect(el.matches(':state(invalid-height)')).toBe(false);
 	});
 
 	it('clears --_sheet-height when property is reset to empty', async () => {
@@ -800,21 +795,19 @@ describe('nldd-sheet – accessible name', () => {
 		expect(label(el)).toBe('Venster');
 	});
 
-	it('is called Venster without either, and warns when it opens', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('is called Venster without either, and states that when it opens', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet></nldd-sheet>');
 		await waitForUpdate(el);
 		el.show();
 		expect(label(el)).toBe('Venster');
-		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(true);
+		expect(el.matches(':state(unnamed)')).toBe(true);
 	});
 
-	it('does not warn when its title bar names it', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('is not unnamed when its title bar names it', async () => {
 		el = await fixture<NLDDSheet>(withBar('', 'Filters'));
 		await waitForUpdate(el);
 		el.show();
-		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(false);
+		expect(el.matches(':state(unnamed)')).toBe(false);
 	});
 });
 

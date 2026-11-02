@@ -32,7 +32,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { formActionsStyles } from './form-actions.styles.js';
 import { formActionsTemplate } from './form-actions.template.js';
 

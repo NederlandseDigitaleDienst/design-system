@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-menu-item:is([text^="✓"], [text^="✔"], [text$="✓"], [text$="✔"], [icon="check-mark"], [icon="check-mark-small"], [icon="checked"], [icon="checked-small"]):not([type="radio"], [type="checkbox"])'
+message: 'Use type="radio" or type="checkbox" with `selected`, which gives the item the role and the state a screen reader reads out.'
+see: patronen/menu-from-a-button
+examples:
+  passed: ['<nldd-menu><nldd-menu-item text="Nieuwste eerst" type="radio" selected></nldd-menu-item></nldd-menu>']
+  failed: ['<nldd-menu><nldd-menu-item text="✓ Nieuwste eerst"></nldd-menu-item></nldd-menu>', '<nldd-menu><nldd-menu-item text="Nieuwste eerst" icon="check-mark"></nldd-menu-item></nldd-menu>']

@@ -430,30 +430,6 @@ describe('nldd-segmented-control – accessibility', () => {
 		vi.restoreAllMocks();
 	});
 
-	it('warns when no accessible name is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDSegmentedControl>(`
-			<nldd-segmented-control>
-				<nldd-segmented-control-item value="a" text="A"></nldd-segmented-control-item>
-			</nldd-segmented-control>
-		`);
-		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('accessible name')
-		);
-	});
-
-	it('does not warn when accessible-label is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDSegmentedControl>(`
-			<nldd-segmented-control accessible-label="Weergave">
-				<nldd-segmented-control-item value="a" text="A"></nldd-segmented-control-item>
-			</nldd-segmented-control>
-		`);
-		await waitForUpdate(el);
-		expect(warnSpy).not.toHaveBeenCalled();
-	});
-
 	it('sets aria-label on host from accessible-label', async () => {
 		el = await fixture<NLDDSegmentedControl>(`
 			<nldd-segmented-control accessible-label="Weergave">

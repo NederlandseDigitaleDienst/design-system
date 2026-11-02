@@ -66,7 +66,8 @@
  *   instead of overflowing, without a hyphen; headings never get one.
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { nlddRichTextTranslations } from './rich-text.i18n.js';
 import type { NLDDRichTextTranslations } from './rich-text.i18n.js';

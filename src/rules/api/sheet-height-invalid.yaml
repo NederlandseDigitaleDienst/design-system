@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-sheet:state(invalid-height)'
+message: 'Invalid `height`. Falling back to full height. Use "full", "fit-content", or a valid CSS length (such as "50dvh" or "480px").'

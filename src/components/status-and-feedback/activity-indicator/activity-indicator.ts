@@ -71,7 +71,8 @@
  * @migration The `indicator` slot has been removed. Show a known progress with `nldd-progress-bar` or `nldd-progress-circle` directly, without the activity indicator around it.
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { activityIndicatorStyles } from './activity-indicator.styles.js';
 import { activityIndicatorTemplate } from './activity-indicator.template.js';

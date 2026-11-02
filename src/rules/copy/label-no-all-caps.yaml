@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-form-field, nldd-checkbox-field, nldd-radio-button-field, nldd-switch-field)[label*=" "]:is([label*="A"], [label*="B"], [label*="C"], [label*="D"], [label*="E"], [label*="F"], [label*="G"], [label*="H"], [label*="I"], [label*="J"], [label*="K"], [label*="L"], [label*="M"], [label*="N"], [label*="O"], [label*="P"], [label*="Q"], [label*="R"], [label*="S"], [label*="T"], [label*="U"], [label*="V"], [label*="W"], [label*="X"], [label*="Y"], [label*="Z"]):not([label*="a"], [label*="b"], [label*="c"], [label*="d"], [label*="e"], [label*="f"], [label*="g"], [label*="h"], [label*="i"], [label*="j"], [label*="k"], [label*="l"], [label*="m"], [label*="n"], [label*="o"], [label*="p"], [label*="q"], [label*="r"], [label*="s"], [label*="t"], [label*="u"], [label*="v"], [label*="w"], [label*="x"], [label*="y"], [label*="z"])'
+message: 'Write this label in sentence case: capitals weaken the word shape and make scanning harder.'
+see: ontwerprichtlijnen/copywriting
+examples:
+  passed: ['<nldd-form-field label="Naam van de aanvrager"><nldd-text-field></nldd-text-field></nldd-form-field>', '<nldd-form-field label="BSN"><nldd-text-field></nldd-text-field></nldd-form-field>']
+  failed: ['<nldd-form-field label="NAAM VAN DE AANVRAGER"><nldd-text-field></nldd-text-field></nldd-form-field>']

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-form > :is(nldd-button, nldd-button-group), nldd-form > form > :is(nldd-button, nldd-button-group)'
+message: 'Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form><nldd-form-actions><nldd-button-group><nldd-button text="Verstuur" type="submit"></nldd-button></nldd-button-group></nldd-form-actions></nldd-form>']
+  failed: ['<nldd-form><nldd-button text="Verstuur" type="submit"></nldd-button></nldd-form>']

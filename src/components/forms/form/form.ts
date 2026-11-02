@@ -1,3 +1,4 @@
+import '../../../utilities/custom-element.js';
 /**
  * Nederlandse Digitale Dienst Form Component
  *

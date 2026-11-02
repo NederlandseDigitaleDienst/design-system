@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-list-item:has(> nldd-list-item[slot="children"])'
+assert: 'nldd-list[type="tree"] *, nldd-list[type="navigation"] *'
+message: '`slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree" or type="navigation". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list type="tree" accessible-label="Dossiers"><nldd-list-item><nldd-list-item slot="children"></nldd-list-item></nldd-list-item></nldd-list>']
+  failed: ['<html><body><nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-list-item slot="children"></nldd-list-item></nldd-list-item></nldd-list></body></html>']
+  cantTell: ['<nldd-list :type="soort" accessible-label="Dossiers"><nldd-list-item><nldd-list-item slot="children"></nldd-list-item></nldd-list-item></nldd-list>']

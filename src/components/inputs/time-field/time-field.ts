@@ -50,7 +50,8 @@
  */
 
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import type { NLDDPopover } from '../../layout/popover/popover.js';
 import type { NLDDTimePicker } from '../time-picker/time-picker.js';
 import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';

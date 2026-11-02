@@ -83,3 +83,15 @@ Wat jij nog moet doen: een `heading-level` op het kopje van de zone, zodat die m
 ## Gezien in
 
 Modals zijn in de onderzochte producten zeldzaam, en dat is de bedoeling: zie "wanneer niet" hierboven. Waar ze staan, staan ze voor dit geval. Het vlak met de kritieke rand komt uit Fundament, waar onomkeerbare acties in zo'n zone bij elkaar staan in plaats van los tussen de rest.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `modal-dialog-destructive-goes-last`: Put the way out above the destructive action: reaching it should not mean passing the button to avoid.
+- `modal-dialog-exit-needs-primary`: Give the way out appearance="primary": autopilot should end at the safe choice, not at the irreversible one.
+- `modal-dialog-needs-two-actions`: One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `modal-dialog-destructive-needs-alert`: Set variant="alert" on a dialog about a destructive action, which brings the icon and color that go with it.

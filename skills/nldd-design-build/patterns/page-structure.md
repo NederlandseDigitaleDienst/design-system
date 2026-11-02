@@ -771,3 +771,33 @@ Op de home, zonder kruimelpad:
 De componenten regelen de breedte, de witruimte, de vlakken en de koppen die de titels renderen. Ze geven de terugknop, de zoekfunctie, de taalkeuze, de skip link, het kruimelpad en de juridische links ook de juiste semantiek.
 
 Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagina. Dat geldt ook voor de titels in de hoofdinhoud van de footer, zodat ze aansluiten op de koppen van de pagina. Geef het taalitem een `accessible-label` die de taal voluit noemt en de afkorting erin houdt, zoals "Taal: Nederlands (NL)": een schermlezer spelt "NL" anders als losse letters, en wie het item met spraak bedient moet het nog bij zijn zichtbare naam kunnen noemen. Geef taalnamen in andere talen een `lang`, zodat een schermlezer "English" Engels uitspreekt.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `language-item-needs-name`: Set an `accessible-label` such as "Taal: Nederlands (NL)": a screen reader otherwise spells out the letters.
+- `language-name-needs-lang`: Set `lang`, so a screen reader pronounces the name in that language.
+- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
+- `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
+- `website-no-sticky-header`: A website lets its header scroll away: a fixed one takes room from the content.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `avatar-in-menu-bar-needs-decorative`: Set `decorative`: the name and the text of the item are already there.
+- `avatar-in-menu-bar-needs-icon-aligned`: Set `icon-aligned` and color="inherit", so the avatar lines up with the icons next to it and takes their color.
+- `back-link-no-vague-text`: Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.
+- `breadcrumbs-goes-in-footer`: Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
+- `login-link-needs-full-verb`: A link to the login screen does not log in itself, so use the full verb: "Inloggen".
+- `logout-no-link`: Make it a button: logging out happens at once.
+- `page-content-goes-in-section`: Put this in a section, such as nldd-simple-section, which sets the width and the white space.
+- `page-footer-needs-privacy-link`: Add a direct link "Privacy": European privacy regulators ask for one on every page.
+- `page-footer-no-vague-about`: Call it "Over deze website": "Over" could just as well be about the organization.
+- `page-needs-shell`: Put nldd-shell around it: the shell sets the background and decides who scrolls.
+- `section-no-own-background`: Use `background` on the section: it cascades the surface to what is inside it.
+- `section-no-own-columns`: Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.
+- `skip-link-goes-around-header`: Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
+- `title-needs-level`: Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
+- `top-navigation-bar-max-three-items`: Keep the bar to search, language and account: the pages together are the navigation.
+- `top-navigation-bar-utility-needs-priority`: Set content-priority="text", so "Zoeken" and "NL" stay readable on a narrow screen.

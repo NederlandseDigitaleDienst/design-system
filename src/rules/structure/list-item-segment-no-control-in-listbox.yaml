@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-list[type="listbox"] nldd-list-item-segment'
+report: ':is([href], [button], [checkbox])'
+message: 'A segment in a type="listbox" list renders as a plain container: an `option` may not contain interactive descendants. Move the segment out of the listbox, or drive selection from the option itself.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list type="listbox" accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment></nldd-list-item-segment></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list type="listbox" accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment button></nldd-list-item-segment></nldd-list-item></nldd-list>']
+  cantTell: ['<nldd-list type="listbox" accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment :href="url"></nldd-list-item-segment></nldd-list-item></nldd-list>']

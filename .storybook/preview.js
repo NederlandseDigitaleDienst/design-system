@@ -66,6 +66,10 @@ const preview = {
 			// version blocks. Off by default — opt in per page with
 			// parameters={{ docs: { toc: true } }} on its <Meta>.
 			toc: false,
+			// A suppression is for the linter, not for whoever copies the example.
+			source: {
+				transform: (code) => code.replace(/\s*<!-- nldd-lint-disable-next-line[\s\S]*?-->/g, ''),
+			},
 		},
 		options: {
 			storySort: {

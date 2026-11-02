@@ -5,6 +5,8 @@ import { menuItemStyles } from './menu.styles.js';
 import { menuItemTemplate, type MenuVariant } from './menu.template.js';
 import type { QueryMarkMode } from '../../../utilities/render-marked.js';
 import type { NLDDMenu } from './menu.js';
+import { setState } from '../../../utilities/element-state.js';
+import '../../../utilities/custom-element.js';
 
 /** Makes `host` a list item while its menu is a navigation menu, and takes
  *  that back when it is not. A `listitem` the consumer set by hand on an item
@@ -185,17 +187,10 @@ export class NLDDMenuItem extends LitElement {
 		// Submenu attachment is one-shot in v1 — a nldd-menu added after this
 		// point would silently miss aria-controls, the chevron indicator, the
 		// hover-open lifecycle, and the close-state sync. Watch for late
-		// additions and warn so consumers don't chase the symptom.
+		// additions so consumers don't chase the symptom.
 		this._submenuMutationObserver = new MutationObserver(() => {
 			const current = this.querySelector(':scope > nldd-menu');
-			if (current && current !== this._cachedSubmenuEl) {
-				console.warn(
-					'[nldd-menu-item] A nldd-menu child was added after mount. '
-					+ 'Submenu attachment is resolved once at firstUpdated in v1, '
-					+ 'so this menu will not be treated as a submenu. Define the '
-					+ 'nldd-menu child before the item is connected to the DOM.',
-				);
-			}
+			setState(this, 'late-submenu', current !== null && current !== this._cachedSubmenuEl);
 		});
 		this._submenuMutationObserver.observe(this, { childList: true });
 	}

@@ -27,7 +27,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { badgeStyles } from './badge.styles.js';
 import { template } from './badge.template.js';
@@ -80,11 +81,7 @@ export class NLDDBadge extends withTranslations(LitElement, nlddBadgeTranslation
 	// first frame rather than as critical first.
 	override willUpdate(changed: Map<string, unknown>): void {
 		if (!changed.has('color')) return;
-		const known = COLORS.has(this.color);
-		this.toggleAttribute('data-color-fallback', !known);
-		if (import.meta.env?.DEV && !known) {
-			console.warn(`<nldd-badge>: color="${this.color}" is not one of ${[...COLORS].join(', ')}, and falls back to "accent". For a color of its own, use custom-color.`, this);
-		}
+		this.toggleAttribute('data-color-fallback', !COLORS.has(this.color));
 	}
 
 	override updated(changed: Map<string, unknown>): void {

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-form-actions nldd-button:is([text="Annuleer" i], [text="Annuleren" i], [text="Reset" i], [text="Terug" i], [text="Vorige" i], [text="Verwijder" i], [text="Verwijderen" i]), nldd-button-group:has(> [appearance="primary"]) > nldd-button:is([text="Annuleer" i], [text="Annuleren" i], [text="Reset" i], [text="Terug" i], [text="Vorige" i], [text="Verwijder" i], [text="Verwijderen" i])'
+message: 'Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-actions><nldd-button-group><nldd-button text="Verstuur" type="submit"></nldd-button></nldd-button-group></nldd-form-actions>']
+  failed: ['<nldd-form-actions><nldd-button-group><nldd-button text="Verstuur" type="submit"></nldd-button><nldd-button text="Annuleer"></nldd-button></nldd-button-group></nldd-form-actions>', '<nldd-button-group><nldd-button appearance="primary" text="Volgende stap"></nldd-button><nldd-button text="Terug"></nldd-button></nldd-button-group>']

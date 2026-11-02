@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-text-field:state(keyboard-contradicts-type)'
+message: '`keyboard` contradicts `type`, which already raises a keyboard of its own. Drop one of the two.'

@@ -71,13 +71,15 @@
  * @slot - Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance)
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
 import { heroCornerStyles } from './hero-corner.styles.js';
 import { applyCorner, clearCornerLimits, limitCorner } from './hero-corner.js';
+import { setState } from '../../../../utilities/element-state.js';
 
 export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
 export type HeroMainWidth = 'auto' | 'full' | (string & {});
@@ -174,8 +176,6 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		this._overlapObserver = null;
 		this._cornerObserver?.disconnect();
 		this._cornerObserver = null;
-		// A hero that comes back is watched again, so it may warn again.
-		this._warnedOverlap = false;
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -199,15 +199,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			if (valid) this.style.setProperty('--_hero-main-width', width);
 			else this.style.removeProperty('--_hero-main-width');
 			this.toggleAttribute('data-main-width-length', valid);
-			if (import.meta.env?.DEV && length && !valid) {
-				console.warn(`<nldd-hero>: main-width="${width}" is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 640px.`, this);
-			}
-		}
-		if (import.meta.env?.DEV && changed.has('mainBackground')) {
-			const background = this.mainBackground as string;
-			if (background !== 'accent' && background !== 'base') {
-				console.warn(`<nldd-hero>: main-background="${background}" is not "accent" or "base", and falls back to "accent". A color per hero is gone: pick the color for the whole site with a theme, data-nldd-theme on <html>.`, this);
-			}
+			setState(this, 'invalid-main-width', length && !valid);
 		}
 		if (changed.has('overlapSize')) {
 			const size = (this.overlapSize ?? '').trim();
@@ -229,10 +221,6 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			// The section API turns `height` into the host's min-height; a hero
 			// takes its height from its image instead.
 			this.style.removeProperty('min-height');
-			if (import.meta.env?.DEV && !this._warnedHeight) {
-				this._warnedHeight = true;
-				console.warn('<nldd-hero>: `height` is not used on a hero, whose height comes from its image. Use `media-height` for a fixed height, or `media-aspect-ratio`.', this);
-			}
 		}
 		if (changed.has('mediaAspectRatio')) {
 			// Accept '16:9' as well as '16/9' (like nldd-image). Clearing the
@@ -267,18 +255,15 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		this._cornerObserver.observe(main);
 	}
 
-	/** DEV-only latch for the `height` warning. */
-	private _warnedHeight = false;
-
 	/** DEV-only: watches an overlap hero for a panel that does not reach below its image. */
 	private _overlapObserver: ResizeObserver | null = null;
-	private _warnedOverlap = false;
 
 	private _watchOverlap(): void {
 		const watch = this.layout !== 'contained' && typeof ResizeObserver !== 'undefined';
 		if (!watch) {
 			this._overlapObserver?.disconnect();
 			this._overlapObserver = null;
+			setState(this, 'short-overlap-panel', false);
 			return;
 		}
 		if (this._overlapObserver) return;
@@ -293,18 +278,11 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	/**
 	 * In an overlap hero the panel is meant to run on below the image. When it
 	 * ends inside it, the content is shorter than `overlap-size`; the consumer
-	 * decides how far it runs on, so this only says so, in development.
+	 * decides how far it runs on, so this is only stated, in development.
 	 */
 	private _checkOverlap(media: Element, main: Element): void {
 		if (!this._hasMedia || getComputedStyle(media).position === 'static') return;
-		const falls = main.getBoundingClientRect().bottom <= media.getBoundingClientRect().bottom;
-		if (!falls) {
-			this._warnedOverlap = false;
-			return;
-		}
-		if (this._warnedOverlap) return;
-		this._warnedOverlap = true;
-		console.warn('<nldd-hero>: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout="contained" to keep the panel on the image.', this);
+		setState(this, 'short-overlap-panel', main.getBoundingClientRect().bottom <= media.getBoundingClientRect().bottom);
 	}
 
 	/** @internal Tracks the media slot so the no-media mode can collapse it. */

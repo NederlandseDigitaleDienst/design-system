@@ -1095,19 +1095,16 @@ describe('nldd-menu-item with submenu', () => {
 		expect(anchorFocusSpy).not.toHaveBeenCalled();
 	});
 
-	it('warns when a nldd-menu child is added after mount', async () => {
+	it('states a nldd-menu child that is added after mount', async () => {
 		// Submenu attachment is resolved once at firstUpdated. A late addition
-		// would silently miss aria-controls / chevron / hover-open — surface
-		// it via console.warn so consumers don't chase the symptom.
+		// would silently miss aria-controls / chevron / hover-open.
 		el = await fixture('<nldd-menu-item text="Bestand"></nldd-menu-item>');
 		await waitForUpdate(el);
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const late = document.createElement('nldd-menu');
 		el.appendChild(late);
 		// MutationObserver delivers asynchronously — wait a microtask tick.
 		await new Promise(r => setTimeout(r, 0));
-		expect(warn).toHaveBeenCalled();
-		expect(warn.mock.calls[0][0]).toMatch(/added after mount/);
+		expect(el.matches(':state(late-submenu)')).toBe(true);
 	});
 });
 
@@ -3016,13 +3013,10 @@ describe('nldd-menu – variant="navigation"', () => {
 		menu.hidePopover();
 	});
 
-	it('warns about checkable items, shortcuts and filter()', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that it was filtered', async () => {
 		const { menu } = await make('<nldd-menu-item text="Compact" type="checkbox"></nldd-menu-item>');
 		menu.filter('dak');
-		const said = warn.mock.calls.flat().join(' ');
-		expect(said).toContain('variant="navigation" is a list of links');
-		expect(said).toContain('filter() belongs to a menu of actions');
+		expect(menu.matches(':state(filtered)')).toBe(true);
 	});
 });
 
@@ -3093,7 +3087,18 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 	const NLDDMenuCtor = customElements.get('nldd-menu') as CustomElementConstructor;
 	let drillInSpy: ReturnType<typeof vi.spyOn> | null = null;
 
+	// These tests drive the chain themselves, and two things outside them can take
+	// it over halfway. A menu closes on a window resize, and the runner's frame can
+	// resize at any moment. A pointer left behind by another test file enters an
+	// item as soon as it renders there, which closes the open peer and opens that
+	// item 150 ms later.
+	const ignore = (event: Event) => event.stopImmediatePropagation();
+	const outside = ['resize', 'mouseenter', 'mouseover'];
+
+	beforeEach(() => outside.forEach((type) => window.addEventListener(type, ignore, { capture: true })));
+
 	afterEach(() => {
+		outside.forEach((type) => window.removeEventListener(type, ignore, { capture: true }));
 		drillInSpy?.mockRestore();
 		drillInSpy = null;
 		document.querySelectorAll('nldd-menu').forEach(m => m.remove());
@@ -3164,7 +3169,10 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 		await waitForUpdate(root);
 		// Closing the one and opening the other settle on their own toggle
 		// events; a loaded CI runner can take more than one update for that.
-		await until(() => secondMenu.matches(':popover-open') && !firstMenu.matches(':popover-open'));
+		await until(() => secondMenu.matches(':popover-open') && !firstMenu.matches(':popover-open')).catch((error) => {
+			const open = [root, firstMenu, secondMenu].map((menu) => menu.matches(':popover-open'));
+			throw new Error(`${error.message}\nOpen (root, first, second): ${open}`);
+		});
 		expect(firstMenu.matches(':popover-open')).toBe(false);
 		expect(secondMenu.matches(':popover-open')).toBe(true);
 		expect(closed).toEqual([firstMenu]);

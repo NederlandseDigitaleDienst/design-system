@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-menu-item[text="Log uit" i][href]'
+message: 'Make it a button: logging out happens at once.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-menu-item text="Log uit"></nldd-menu-item>']
+  failed: ['<nldd-menu-item text="Log uit" href="/uitloggen"></nldd-menu-item>']

@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-modal-dialog > [slot="actions"][appearance="destructive"] + [slot="actions"]'
+message: 'Put the way out above the destructive action: reaching it should not mean passing the button to avoid.'
+see: patronen/irreversible-action
+examples:
+  passed: ['<nldd-modal-dialog variant="alert" text="Verwijder dossier"><nldd-button slot="actions" appearance="primary" text="Behoud"></nldd-button><nldd-button slot="actions" appearance="destructive" text="Verwijder"></nldd-button></nldd-modal-dialog>']
+  failed: ['<nldd-modal-dialog variant="alert" text="Verwijder dossier"><nldd-button slot="actions" appearance="destructive" text="Verwijder"></nldd-button><nldd-button slot="actions" appearance="primary" text="Behoud"></nldd-button></nldd-modal-dialog>']

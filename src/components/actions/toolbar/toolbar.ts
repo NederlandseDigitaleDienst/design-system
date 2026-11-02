@@ -28,7 +28,8 @@
  * @slot overflow - nldd-menu-item, nldd-menu-divider and nldd-menu-group elements always shown in the overflow menu
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toolbarStyles } from './toolbar.styles.js';
 import { template, type ToolbarChild } from './toolbar.template.js';

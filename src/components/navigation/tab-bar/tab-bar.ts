@@ -36,6 +36,7 @@
  * @attr {boolean} current - The item you are on. A tab bar switching content manages it itself and renders it as `aria-selected`; a `navigation` bar leaves it to the consumer, since it follows the route, and renders it as `aria-current="page"`. Unlike a list row, which separates `current` from `selected` because it can be both at once, a tab bar has exactly one active item.
  * @attr {string} text - Tab text; also used as accessible name for icon-only items
  * @attr {string} href - Optional link URL; renders an anchor instead of a button
+ * @attr {'icon-and-text'|'text'|'icon'} variant - Forces this presentation on this item, over the one from nldd-tab-bar
  * @attr {string} icon - Icon name for nldd-icon; an alternative to the icon slot. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.
  * @attr {'md'|'lg'} size - Size: 'md' (default) | 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout.
  *
@@ -44,7 +45,9 @@
  * @fires select - When the item is activated; detail: { item: NLDDTabBarItem }
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
+import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tabBarStyles, tabBarItemStyles } from './tab-bar.styles.js';
 import { tabBarTemplate, tabBarItemTemplate } from './tab-bar.template.js';
@@ -122,9 +125,6 @@ export class NLDDTabBarItem extends LitElement {
 		const attr = this.getAttribute('variant');
 		if (attr === 'text' || attr === 'icon' || attr === 'icon-and-text') {
 			this._authorVariant = attr;
-		}
-		if (import.meta.env?.DEV && this.hasAttribute('selected')) {
-			console.warn('nldd-tab-bar-item: `selected` is now `current` and the old attribute does nothing; rename it.');
 		}
 	}
 
@@ -372,8 +372,6 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 
 	override firstUpdated(): void {
 		this._hasCustomLabel = Boolean(this.accessibleLabel);
-		import.meta.env?.DEV && !this._hasCustomLabel &&
-			console.warn('<nldd-tab-bar>: No accessible-label provided. Add an accessible-label attribute for a meaningful navigation landmark name. Falling back to "Tabs".');
 		this._syncItems();
 	}
 
@@ -399,19 +397,9 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 			);
 	}
 
-	private _warnedHrefWithoutNavigation = false;
-
 	private _syncItems(): void {
 		const items = this._getItems();
-
-		// Links that go to another page are navigation: the current tab follows the
-		// route and is said as aria-current="page". As a tablist the bar marks a tab
-		// selected on a click and an arrow key, which a screen reader then reports
-		// for a page that never opened.
-		if (import.meta.env?.DEV && !this.navigation && !this._warnedHrefWithoutNavigation && items.some(item => item.href)) {
-			this._warnedHrefWithoutNavigation = true;
-			console.warn('<nldd-tab-bar>: tabs with `href` go to another page; add `navigation` so the bar is a nav with aria-current="page" instead of a tablist, and set `current` on the tab of the page you are on.');
-		}
+		setState(this, 'link-tabs', items.some((item) => item.href));
 
 		items.forEach(item => {
 			item._groupVariant = this.variant;

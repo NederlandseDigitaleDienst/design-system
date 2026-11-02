@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-toggle-button[variant="icon"]'
+assert: '[icon], :has(> [slot="icon"])'
+message: 'nldd-toggle-button with variant="icon" has no `icon` and no slot="icon" content, so a placeholder icon is shown.'
+examples:
+  passed: ['<nldd-toggle-button variant="icon" icon="plus" accessible-label="Vet"></nldd-toggle-button>', '<nldd-toggle-button variant="icon" accessible-label="Vet"><nldd-icon slot="icon" icon="plus"></nldd-icon></nldd-toggle-button>']
+  failed: ['<nldd-toggle-button variant="icon" accessible-label="Vet"></nldd-toggle-button>']
+  cantTell: ['<nldd-toggle-button variant="icon" :icon="naam" accessible-label="Vet"></nldd-toggle-button>']

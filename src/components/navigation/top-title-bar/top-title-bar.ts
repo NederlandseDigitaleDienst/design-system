@@ -49,11 +49,13 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { topTitleBarStyles } from './top-title-bar.styles.js';
 import { topTitleBarTemplate } from './top-title-bar.template.js';
 import type { NLDDPage } from '../../layout/page/page.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -156,19 +158,17 @@ export class NLDDTopTitleBar extends LitElement {
 	}
 
 	private _connectAnchor(): void {
-		if (!this.collapseAnchor) return;
+		if (!this.collapseAnchor) {
+			setState(this, 'no-anchor', false);
+			return;
+		}
 
 		const root = this.getRootNode() as Document | ShadowRoot;
 		this._anchorElement = (root as Document).getElementById?.(this.collapseAnchor)
 			?? root.querySelector(`#${this.collapseAnchor}`);
 
+		setState(this, 'no-anchor', !this._anchorElement);
 		if (!this._anchorElement) {
-			if (import.meta.env?.DEV) {
-				console.warn(
-					`[nldd-top-title-bar] collapse-anchor="${this.collapseAnchor}" matches nothing yet. `
-					+ 'If it never renders, the bar keeps its own title and reads it out twice.',
-				);
-			}
 			this._waitForAnchor(root);
 			return;
 		}

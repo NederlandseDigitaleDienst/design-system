@@ -71,7 +71,6 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 
 	private _initialValue = '';
 	private _valueAtFocus = '';
-	private _accessibleLabelWarned = false;
 
 	private _editableCompartment = new Compartment();
 	private _placeholderCompartment = new Compartment();
@@ -157,7 +156,6 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 		// a caret; forward it to the nearest line so the padding is clickable too.
 		this.view?.scrollDOM.addEventListener('pointerdown', this._onScrollerPointerDown);
 		this.commitFormValue();
-		this._checkAccessibleLabel();
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -185,7 +183,6 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 				this.refreshContentAttributes();
 			}
 		}
-		this._checkAccessibleLabel();
 	}
 
 	private _onDocChanged(): void {
@@ -215,16 +212,6 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 		this.focusFromPoint(event.clientX, event.clientY);
 		event.preventDefault();
 	};
-
-	/* From updated(), not firstUpdated(): a parent nldd-form-field sets input-id
-	 * slightly after the first render, so an earlier check would warn for the
-	 * standard form-field usage. It warns once if the label is still missing. */
-	private _checkAccessibleLabel(): void {
-		if (this._accessibleLabelWarned) return;
-		if (this.accessibleLabel || this.inputId) return;
-		this._accessibleLabelWarned = true;
-		console.warn(`<${this.localName}>: No accessible-label or input-id provided. Use nldd-form-field for labeled usage, or set accessible-label for screen reader accessibility (WCAG SC 4.1.2).`);
-	}
 
 	override formValue(): FormValue {
 		return this.value;

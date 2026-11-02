@@ -1,0 +1,7 @@
+severity: warn
+context: ':is(nldd-split-view-pane, nldd-navigation-split-view, nldd-bar-split-view) > nldd-sheet'
+message: 'Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed: ['<nldd-sheet accessible-label="Bewerk"></nldd-sheet>']
+  failed: ['<nldd-split-view-pane slot="main"><nldd-sheet accessible-label="Bewerk"></nldd-sheet></nldd-split-view-pane>']

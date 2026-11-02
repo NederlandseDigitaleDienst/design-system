@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-form-field[optional] > [required]'
+message: 'Drop `required`, or `optional`: the field cannot be both.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-field label="Telefoon" optional><nldd-text-field></nldd-text-field></nldd-form-field>']
+  failed: ['<nldd-form-field label="Telefoon" optional><nldd-text-field required></nldd-text-field></nldd-form-field>']

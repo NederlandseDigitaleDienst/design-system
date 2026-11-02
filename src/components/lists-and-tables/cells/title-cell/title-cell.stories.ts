@@ -250,7 +250,7 @@ export const HorizontaleUitlijning = {
 			<nldd-list-item>
 				<nldd-title-cell
 					horizontal-alignment="left"
-					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					class="cell-bounds"
 					overline="Overline"
 					text="Titelcel (links)"
 					supporting-text="Ondertitel"
@@ -259,7 +259,7 @@ export const HorizontaleUitlijning = {
 			<nldd-list-item>
 				<nldd-title-cell
 					horizontal-alignment="right"
-					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					class="cell-bounds"
 					overline="Overline"
 					text="Titelcel (rechts)"
 					supporting-text="Ondertitel"
@@ -274,17 +274,17 @@ export const VerticaleUitlijning = {
 		<div style="display: flex; gap: 8px; height: 80px;">
 			<nldd-title-cell
 				vertical-alignment="top"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 				text="Boven"
 			></nldd-title-cell>
 			<nldd-title-cell
 				vertical-alignment="center"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 				text="Midden"
 			></nldd-title-cell>
 			<nldd-title-cell
 				vertical-alignment="bottom"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 				text="Onder"
 			></nldd-title-cell>
 		</div>

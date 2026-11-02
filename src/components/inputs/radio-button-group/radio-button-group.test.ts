@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDRadioButtonGroup } from './radio-button-group.js';
@@ -216,30 +216,6 @@ describe('nldd-radio-button-group – accessibility', () => {
 		await waitForUpdate(el);
 		expect(el.getAttribute('role')).toBe('radiogroup');
 		expect(el.getAttribute('aria-label')).toBe('Bezorgwijze');
-	});
-
-	it('warns in DEV when the group has no accessible name', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDRadioButtonGroup>(`
-			<nldd-radio-button-group name="g">
-				<nldd-radio-button-field value="1" label="Optie 1"></nldd-radio-button-field>
-			</nldd-radio-button-group>
-		`);
-		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('No accessible name'));
-		warn.mockRestore();
-	});
-
-	it('stays quiet when it has a name', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDRadioButtonGroup>(`
-			<nldd-radio-button-group name="g" accessible-label="Bezorgwijze">
-				<nldd-radio-button-field value="1" label="Optie 1"></nldd-radio-button-field>
-			</nldd-radio-button-group>
-		`);
-		await waitForUpdate(el);
-		expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('No accessible name'));
-		warn.mockRestore();
 	});
 
 	it('leaves an aria-label the consumer put on the group', async () => {

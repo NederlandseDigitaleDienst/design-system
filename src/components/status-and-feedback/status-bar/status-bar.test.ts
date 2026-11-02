@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDStatusBar } from './status-bar.js';
@@ -198,42 +198,38 @@ describe('nldd-status-bar', () => {
 	});
 
 	describe('placement', () => {
-		const placementWarnings = async (html: string) => {
-			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-			try {
-				el = await fixture(html);
-				await waitForUpdate(el.querySelector('nldd-status-bar') ?? el);
-				return warn.mock.calls.map(([message]) => String(message)).filter((message) => message.includes('below a top bar'));
-			} finally {
-				warn.mockRestore();
-			}
+		const isBelowTopBar = async (html: string) => {
+			el = await fixture(html);
+			const bar = el.querySelector('nldd-status-bar') ?? el;
+			await waitForUpdate(bar);
+			return bar.matches(':state(below-top-bar)');
 		};
 
-		it('says so in development when it sits below a top bar', async () => {
-			expect(await placementWarnings(`
+		it('knows when it sits below a top bar', async () => {
+			expect(await isBelowTopBar(`
 				<div>
 					<nldd-top-title-bar text="Mijn Dienst"></nldd-top-title-bar>
 					<nldd-status-bar text="Storing"></nldd-status-bar>
 				</div>
-			`)).toHaveLength(1);
+			`)).toBe(true);
 		});
 
-		it('stays quiet above a top bar', async () => {
-			expect(await placementWarnings(`
+		it('is not below a top bar it sits above', async () => {
+			expect(await isBelowTopBar(`
 				<div>
 					<nldd-status-bar text="Storing"></nldd-status-bar>
 					<nldd-top-navigation-bar></nldd-top-navigation-bar>
 				</div>
-			`)).toHaveLength(0);
+			`)).toBe(false);
 		});
 
 		it('leaves out the top bar of an overlay', async () => {
-			expect(await placementWarnings(`
+			expect(await isBelowTopBar(`
 				<div>
 					<nldd-sheet><nldd-top-title-bar text="Bewerken"></nldd-top-title-bar></nldd-sheet>
 					<nldd-status-bar text="Storing"></nldd-status-bar>
 				</div>
-			`)).toHaveLength(0);
+			`)).toBe(false);
 		});
 	});
 });
