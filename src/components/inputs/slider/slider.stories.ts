@@ -265,8 +265,8 @@ export const MetIconen = {
 		>
 			<nldd-slider
 				accessible-label="Volume"
-				start-icon="speaker-volume-low"
-				end-icon="speaker-volume-high"
+				start-icon="no-volume"
+				end-icon="high-volume"
 				value="60"
 			></nldd-slider>
 		</nldd-container>
@@ -284,22 +284,22 @@ export const Grootten = {
 		>
 			<nldd-slider
 				accessible-label="Volume md"
-				start-icon="speaker-volume-low"
-				end-icon="speaker-volume-high"
+				start-icon="no-volume"
+				end-icon="high-volume"
 				value="40"
 			></nldd-slider>
 			<nldd-slider
 				size="sm"
 				accessible-label="Volume sm"
-				start-icon="speaker-volume-low"
-				end-icon="speaker-volume-high"
+				start-icon="no-volume"
+				end-icon="high-volume"
 				value="40"
 			></nldd-slider>
 			<nldd-slider
 				size="xs"
 				accessible-label="Volume xs"
-				start-icon="speaker-volume-low"
-				end-icon="speaker-volume-high"
+				start-icon="no-volume"
+				end-icon="high-volume"
 				value="40"
 			></nldd-slider>
 		</nldd-container>
