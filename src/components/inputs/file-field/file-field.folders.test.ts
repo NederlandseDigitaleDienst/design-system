@@ -1,0 +1,135 @@
+import { describe, it, expect, afterEach } from 'vitest';
+import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { readDrop } from './file-field.drop.js';
+import type { NLDDFileField } from './file-field.js';
+import './file-field.js';
+
+/* A DataTransfer with folders in it cannot be made in a test, so these are
+ * entries of the shape a browser hands out: a folder reader that gives its
+ * entries in batches, as Chrome does in batches of 100. */
+
+type FakeEntry = FileSystemEntry & { children?: FakeEntry[]; content?: File };
+
+function file(path: string, type = 'text/html'): FakeEntry {
+	const name = path.split('/').pop()!;
+	const content = new File(['x'], name, { type });
+	return {
+		isFile: true,
+		isDirectory: false,
+		name,
+		fullPath: `/${path}`,
+		content,
+		file: (resolve: (file: File) => void) => resolve(content),
+	} as unknown as FakeEntry;
+}
+
+function folder(path: string, children: FakeEntry[], batch = 2): FakeEntry {
+	return {
+		isFile: false,
+		isDirectory: true,
+		name: path.split('/').pop()!,
+		fullPath: `/${path}`,
+		children,
+		createReader: () => {
+			let at = 0;
+			return {
+				readEntries: (resolve: (entries: FakeEntry[]) => void) => {
+					resolve(children.slice(at, at + batch));
+					at += batch;
+				},
+			};
+		},
+	} as unknown as FakeEntry;
+}
+
+/** What a drop of these entries looks like to the field. */
+function fakeTransfer(...entries: FakeEntry[]): DataTransfer {
+	return {
+		types: ['Files'],
+		items: entries.map((entry) => ({
+			kind: 'file',
+			type: entry.isFile ? entry.content!.type : '',
+			webkitGetAsEntry: () => entry,
+		})),
+		// A dropped folder shows up in `files` as an entry without a type.
+		files: entries.map((entry) => entry.content ?? new File([], entry.name, { type: '' })),
+	} as unknown as DataTransfer;
+}
+
+function drop(target: EventTarget, data: DataTransfer): void {
+	const event = new DragEvent('drop', { bubbles: true, composed: true, cancelable: true });
+	Object.defineProperty(event, 'dataTransfer', { value: data });
+	target.dispatchEvent(event);
+}
+
+const site = () => folder('site', [
+	file('site/index.html'),
+	file('site/over.html'),
+	folder('site/css', [file('site/css/main.css', 'text/css')]),
+]);
+
+describe('readDrop', () => {
+	it('reads folders down to their files, with the path from the dropped folder', async () => {
+		const dropped = await readDrop(fakeTransfer(site(), file('los.html')));
+		expect(dropped.map(({ path }) => path)).toEqual(['site/index.html', 'site/over.html', 'site/css/main.css', 'los.html']);
+		expect(dropped.every(({ file: f }) => f instanceof File)).toBe(true);
+	});
+
+	it('yields nothing for an empty folder', async () => {
+		expect(await readDrop(fakeTransfer(folder('leeg', [])))).toEqual([]);
+	});
+});
+
+describe('nldd-file-field – folders', () => {
+	let el: NLDDFileField;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const settle = () => new Promise((resolve) => setTimeout(resolve, 50));
+
+	it('takes a dropped folder with multiple, and gives the files with their paths', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
+		await waitForUpdate(el);
+		let detail: { files: File[]; paths: string[] } | undefined;
+		el.addEventListener('change', (e) => { detail = (e as CustomEvent).detail; });
+		drop(el, fakeTransfer(site()));
+		await settle();
+		await waitForUpdate(el);
+		expect(detail?.paths).toEqual(['site/index.html', 'site/over.html', 'site/css/main.css']);
+		expect(detail?.files.map((f) => f.name)).toEqual(['index.html', 'over.html', 'main.css']);
+		expect(el.paths).toEqual(detail?.paths);
+		expect(el.shadowRoot!.textContent).toContain('site (3 bestanden)');
+	});
+
+	it('still refuses a folder without multiple', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage"></nldd-file-field>');
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(site()));
+		await settle();
+		await waitForUpdate(el);
+		expect(el.files).toEqual([]);
+		expect(el.shadowRoot!.textContent).toContain('Sleep een bestand, geen map');
+	});
+
+	it('refuses a folder whose files accept rules out, as a whole', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple accept=".html"></nldd-file-field>');
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(site()));
+		await settle();
+		await waitForUpdate(el);
+		expect(el.files).toEqual([]);
+	});
+
+	it('submits a file from a folder with its path as its name', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-file-field name="site" accessible-label="Site" multiple></nldd-file-field></form>');
+		el = form.querySelector('nldd-file-field')!;
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(site()));
+		await settle();
+		const names = (new FormData(form).getAll('site') as File[]).map((f) => f.name);
+		expect(names).toEqual(['site/index.html', 'site/over.html', 'site/css/main.css']);
+		cleanup(form);
+	});
+});
