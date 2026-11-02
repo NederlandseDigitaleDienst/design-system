@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-timeline-track-cell'
+removed: ['nldd-timeline-track-cell']
+fix: { tag: nldd-step-cell }
+message: '`nldd-timeline-track-cell` is now `nldd-step-cell`. Rename the tag, its import and its class, here and on every page.'
+examples:
+  passed: ['<nldd-step-cell status="past"></nldd-step-cell>']
+  failed: ['<nldd-timeline-track-cell status="past"></nldd-timeline-track-cell>']

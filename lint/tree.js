@@ -16,6 +16,7 @@ export const BOUND = Symbol('bound');
  * @property {TreeNode[]} children
  * @property {Map<string, string | typeof BOUND>} attrs
  * @property {number} offset Position in the source file.
+ * @property {number} [endOffset] Last character of the element, when the parser saw its end.
  * @property {boolean} spread Any attribute may be set (`v-bind="o"`, `{...p}`).
  * @property {boolean} opaque Stands for content this file cannot see.
  * @property {boolean} conditional Rendered only some of the time.

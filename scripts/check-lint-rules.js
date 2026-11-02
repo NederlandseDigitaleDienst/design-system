@@ -15,6 +15,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'css-what';
+import { applyFixes } from '../lint/fix.js';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
 import { selectorsOf } from '../lint/rule-index.js';
 
@@ -34,7 +35,7 @@ const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role', 's
 function checkTokens(tokens, rule) {
 	const ruleId = rule.id;
 	for (const token of tokens) {
-		if (token.type === 'tag' && token.name.startsWith('nldd-') && !data.tags[token.name]) {
+		if (token.type === 'tag' && token.name.startsWith('nldd-') && !data.tags[token.name] && !rule.removed?.includes(token.name)) {
 			problems.push(`${ruleId}: selector names ${token.name}, which does not exist.`);
 		}
 		const known = allAttributes.has(token.name) || GLOBAL_IN_SELECTORS.has(token.name) || rule.removed?.includes(token.name);
@@ -74,6 +75,48 @@ function checkName({ id, group }) {
 	}
 }
 
+const existsAsValue = (attribute, value) =>
+	Object.values(data.tags).some((tag) => (attribute === 'slot' ? tag.slots.includes(value) : tag.attrs[attribute]?.values?.includes(value)));
+
+/** A fix changes what the rule says is gone, into something that exists. */
+function checkFix({ id, fix, removed = [] }) {
+	for (const [from, to] of Object.entries(fix?.rename ?? {})) {
+		if (!removed.includes(from)) problems.push(`${id}: the fix renames ${from}, which is not in removed.`);
+		if (!allAttributes.has(to)) problems.push(`${id}: the fix renames to ${to}, which no component has.`);
+	}
+	for (const name of fix?.remove ?? []) {
+		if (!removed.includes(name)) problems.push(`${id}: the fix removes ${name}, which is not in removed.`);
+	}
+	if (fix?.tag && !data.tags[fix.tag]) problems.push(`${id}: the fix renames to ${fix.tag}, which does not exist.`);
+	if (fix?.tag && removed.length === 0) problems.push(`${id}: the fix renames a tag, and removed does not name it.`);
+	for (const [attribute, values] of Object.entries(fix?.value ?? {})) {
+		for (const to of Object.values(values)) {
+			if (!existsAsValue(attribute, to)) problems.push(`${id}: the fix sets ${attribute} to ${to}, which no component has.`);
+		}
+	}
+}
+
+/** Lints an example as a file, which is how the linter meets it. */
+const lintExample = (example) => {
+	const isDocument = example.startsWith('<html');
+	const filename = isDocument ? 'example.html' : 'example.vue';
+	const source = isDocument ? example : `<template>${example}</template>`;
+	return linter.lintSource(source, filename).then(({ findings }) => ({ source, filename, findings }));
+};
+
+/** A fix has to end the finding it answers, and leave nothing that no longer exists. */
+async function checkFixEndsFinding(rule, example) {
+	const { source, filename, findings } = await lintExample(example);
+	const change = applyFixes(source, findings.filter(({ rule: id }) => id === rule.id));
+	const after = await linter.lintSource(change.source, filename);
+	if (change.fixed === 0) problems.push(`${rule.id}: the fix changes nothing in: ${example}`);
+	for (const finding of after.findings) {
+		if (finding.rule === rule.id || BUILT_IN_RULES[finding.rule]) {
+			problems.push(`${rule.id}: after the fix, ${finding.rule}: ${change.source}`);
+		}
+	}
+}
+
 function checkSee(rule) {
 	if (!rule.see) return;
 	const [kind, slug] = rule.see.split('/');
@@ -95,12 +138,12 @@ async function checkExamples(rule) {
 				problems.push(`${rule.id}: ${kind} example gave [${outcomes}]: ${example}`);
 			}
 			// An example naming something that does not exist would prove nothing.
-			const wrapped = example.startsWith('<html') ? example : `<template>${example}</template>`;
-			const { findings } = await linter.lintSource(wrapped, example.startsWith('<html') ? 'example.html' : 'example.vue');
+			const { findings } = await lintExample(example);
 			// A failed example may show a name that is gone: that is what a rename rule is about.
 			for (const finding of kind === 'failed' ? [] : findings) {
 				if (BUILT_IN_RULES[finding.rule]) problems.push(`${rule.id}: example: ${finding.message}`);
 			}
+			if (kind === 'failed' && rule.fix) await checkFixEndsFinding(rule, example);
 		}
 	}
 }
@@ -196,6 +239,7 @@ for (const rule of data.rules) {
 		for (const tokens of parse(selector)) checkTokens(tokens, rule);
 	}
 	checkName(rule);
+	checkFix(rule);
 	checkSee(rule);
 	checkStates(rule);
 	if (!rule.runtime) await checkExamples(rule);

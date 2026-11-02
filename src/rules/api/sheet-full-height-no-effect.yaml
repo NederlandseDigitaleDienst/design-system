@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-sheet[full-height]'
+removed: ['full-height']
+fix: { remove: ['full-height'] }
+message: 'A sheet is full height by default and `full-height` does nothing; remove it.'
+examples:
+  passed: ['<nldd-sheet accessible-label="Aanvraag A-1042"></nldd-sheet>']
+  failed: ['<nldd-sheet accessible-label="Aanvraag A-1042" full-height></nldd-sheet>']

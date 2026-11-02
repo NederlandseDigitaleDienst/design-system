@@ -15,7 +15,7 @@ Deterministisch en zonder tokens, dus draai dit in plaats van zelf markup na te 
 npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 ```
 
-1. Los elke bevinding op. Je krijgt `rule`, `message`, de plek en vaak een goed voorbeeld.
+1. Draai `npx @nldd/design-system lint --fix`: dat lost op wat alleen een andere naam kreeg (tags, attributen, waarden, slots), in elk framework. Los daarna elke bevinding op. Je krijgt `rule`, `message`, de plek en vaak een goed voorbeeld.
 2. Is dat niet genoeg: `npx @nldd/design-system explain <rule>`.
 3. Draai opnieuw tot er geen `error` of `warn` meer staat.
 4. Lees elke `hint`. Die laat niets falen, maar zegt hoe dit bij dit systeem bedoeld is: volg het patroon of de richtlijn waar `see` naar wijst, tenzij je een reden hebt.
@@ -28,7 +28,7 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 | Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
 | Vue, React, Angular, Django, Jinja, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.html` en `.j2` |
 | Een site die naar HTML bouwt (Astro, MkDocs, Hugo) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
-| Zien wat een upgrade breekt | `npx @nldd/design-system@latest lint` op je huidige code |
+| Zien wat een upgrade breekt | `npx @nldd/design-system@latest lint` op je huidige code; `--fix` lost de hernoemingen op |
 
 `.tsx` en `.jsx` lezen vraagt Node 20.19 of nieuwer; de rest draait op Node 18. Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @nldd/design-system@<versie> lint`. Zonder pin krijg je de nieuwste.
 

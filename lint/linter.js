@@ -4,6 +4,7 @@
  */
 
 import { createEngine } from './engine.js';
+import { canFix, stuckTags } from './fix.js';
 import { applyWrappers, parseSource } from './frontends.js';
 import { BUILT_IN_RULES, createCanonical, loadData } from './rule-data.js';
 import { BOUND, walk } from './tree.js';
@@ -17,6 +18,10 @@ const GLOBAL_ATTRIBUTE =
 
 /** Set as a property on any element: in markup these are bindings, not attributes. */
 const DOM_PROPERTY = /^(textContent|innerHTML|innerText|outerHTML|className|tabIndex|aria[A-Z].*)$/;
+
+/** An Angular directive of the app. Angular's own, such as `ngIf` and `routerLink`, take no inputs here. */
+const APP_DIRECTIVE = /^(?!(ng|router|form)[A-Z])[a-z]+[A-Z]/;
+const hasAppDirective = (node) => [...node.attrs.keys()].some((name) => APP_DIRECTIVE.test(name));
 
 const ICON_ATTRIBUTES = new Set(['icon', 'start-icon', 'end-icon', 'selected-icon']);
 
@@ -51,12 +56,12 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 		}
 		if (attribute?.deprecated) {
 			const detail = attribute.deprecated === true ? '' : ` ${attribute.deprecated}`;
-			report('deprecated', `\`${name}\` on ${node.name} is deprecated.${detail}`);
+			report('deprecated', `\`${name}\` on ${node.name} is deprecated.${detail}`, name);
 		}
 		if (attribute) {
 			if (attribute.values && typeof value === 'string' && !attribute.values.includes(value)) {
 				const allowed = attribute.values.filter(Boolean).join(', ');
-				report('invalid-value', `\`${name}="${value}"\` is not valid on ${node.name}: use ${allowed}.`);
+				report('invalid-value', `\`${name}="${value}"\` is not valid on ${node.name}: use ${allowed}.`, name);
 			}
 		} else if (value === BOUND && contract.props.includes(toCamelCase(name))) {
 			// A property without an attribute, which only a binding can reach.
@@ -67,7 +72,10 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 		} else if (contract.attrs[name.toLowerCase()]) {
 			// `maxLength`: no such property, so it ends up as the attribute, in lowercase.
 		} else if (!GLOBAL_ATTRIBUTE.test(name.toLowerCase()) && !node.wrapped) {
-			report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
+			// `[show]` next to `appSheetSync` may be an input of that directive, or a typo.
+			const maybeInput = isPlainHtml && value === BOUND && hasAppDirective(node);
+			if (maybeInput) report('unknown-attribute', `${node.name} has no attribute \`${name}\`. That is fine if a directive on this element takes it.`, name, 'hint');
+			else report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
 		}
 	}
 }
@@ -87,11 +95,11 @@ function builtInFindings(root, context) {
 	const findings = [];
 	walk(root, (node) => {
 		if (!node.name.startsWith('nldd-')) return;
-		const report = (rule, message, attribute) =>
-			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, node, attribute });
+		const report = (rule, message, attribute, severity = BUILT_IN_RULES[rule].severity) =>
+			findings.push({ rule, severity, message, node, attribute });
 		const contract = tags[node.name];
 		if (!contract) {
-			report('unknown-element', `${node.name} does not exist in this version.`);
+			report('unknown-element', `${node.name} does not exist in this version.`, node.name);
 			return;
 		}
 		checkAttributes(node, context, report);
@@ -149,12 +157,18 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	const ranInSource = (id) => severities[id] !== 'off' && (rules.some((rule) => rule.id === id) || id in BUILT_IN_RULES);
 	const isRule = (id) => id in BUILT_IN_RULES || data.rules.some((rule) => rule.id === id);
 
-	/** A rule about a removed name says what to use instead; the generic finding adds nothing. */
+	/** A rule about a name or value that is gone says what to use instead; the generic finding adds nothing. */
 	function withoutCovered(findings) {
 		return findings.filter(
 			({ attribute, node }) =>
-				!attribute || !findings.some((other) => other.node === node && other.removed?.includes(attribute)),
+				!attribute || !findings.some((other) => other.node === node && other.covers?.includes(attribute)),
 		);
+	}
+
+	/** A wrapper has an API of its own, and a bound name can be the input of a directive. */
+	function isOurs(node, rule, isPlainHtml) {
+		const maybeInput = isPlainHtml && hasAppDirective(node) && rule.removed?.some((name) => node.attrs.has(name));
+		return !node.wrapped && !maybeInput;
 	}
 
 	function lintRoots(roots, isPlainHtml) {
@@ -165,13 +179,16 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			for (const rule of rules) {
 				for (const { node, outcome } of engine.evaluate(rule, root)) {
 					counts[outcome]++;
-					if (outcome !== 'failed') continue;
+					// A name that is gone is wrong whatever the binding holds.
+					const namesRemoved = rule.removed?.some((name) => node.attrs.get(name) === BOUND);
+					if (outcome !== 'failed' && !(outcome === 'cantTell' && namesRemoved)) continue;
 					findings.push({
 						rule: rule.id,
 						severity: rule.severity,
 						message: rule.message,
 						node,
-						removed: rule.removed,
+						covers: [...(rule.removed ?? []), ...Object.keys(rule.fix?.value ?? {})],
+						fix: isOurs(node, rule, isPlainHtml) ? rule.fix : undefined,
 					});
 				}
 			}
@@ -195,12 +212,19 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			line,
 			column: 1,
 		});
-		const all = findings.map(({ node, severity, removed, attribute, ...finding }) => ({
-			...finding,
-			severity,
-			tag: node.name,
-			...position(node.offset),
-		}));
+		const all = findings
+			.map(({ node, severity, covers, attribute, ...finding }) => ({
+				...finding,
+				severity,
+				tag: node.name,
+				offset: node.offset,
+				endOffset: node.endOffset,
+				...position(node.offset),
+			}));
+		const stuck = stuckTags(source, all, /\.[jt]sx$/.test(filename));
+		for (const finding of all) {
+			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;
+		}
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
 		const unneeded = /\.md$/.test(filename) || parsed.length === 0 || parsed.syntaxError

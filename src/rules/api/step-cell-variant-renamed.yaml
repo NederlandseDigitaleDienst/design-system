@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-step-cell[variant]'
+removed: ['variant']
+fix: { rename: { variant: level } }
+message: 'The `variant` attribute is now `level`. Rename it here and on every other nldd-step-cell.'
+examples:
+  passed: ['<nldd-step-cell status="past" level="major"></nldd-step-cell>']
+  failed: ['<nldd-step-cell status="past" variant="major"></nldd-step-cell>']
