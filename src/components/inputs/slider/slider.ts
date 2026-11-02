@@ -37,11 +37,10 @@
  * screen reader: say what they show in the text around it.
  *
  * A click on `start-icon` or `end-icon` moves the value a larger step down or
- * up than the arrow keys do: a tenth of the range, and at least one `step`, as
- * the speakers beside a volume slider in macOS do. The icons stay out of the
- * tab order and out of the accessibility tree, because the keyboard already has
- * Page Up and Page Down for it. In a range they only explain the ends, since a
- * click could not say which thumb to move.
+ * up than the arrow keys do: a tenth of the range, and at least one `step`.
+ * The icons stay out of the tab order and out of the accessibility tree,
+ * because the keyboard already has Page Up and Page Down for it. In a range
+ * they only explain the ends, since a click could not say which thumb to move.
  *
  * In a form a slider submits its value under `name`; a range submits both ends
  * under it, the start first.

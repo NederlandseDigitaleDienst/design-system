@@ -109,6 +109,13 @@ const overview = (scheme: 'light' | 'dark') => html`
 				<nldd-switch checked accessible-label="Aan"></nldd-switch>
 				<nldd-switch accessible-label="Uit"></nldd-switch>
 			`)}
+			<nldd-slider
+				range
+				accessible-label="Prijs"
+				start-value="30"
+				end-value="70"
+				histogram="2, 4, 7, 12, 18, 26, 31, 28, 22, 24, 30, 27, 19, 14, 11, 9, 7, 6, 4, 3"
+			></nldd-slider>
 		`)}
 
 		${section('Menu\'s', html`

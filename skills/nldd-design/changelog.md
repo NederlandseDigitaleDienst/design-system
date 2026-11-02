@@ -17,13 +17,13 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **`nldd-slider`, improved.** A click on its icons steps the value a tenth of the range, as the speakers beside a volume slider in macOS do, and the chosen part of the histogram now stands out in every theme. See Added and Changed.
+- **`nldd-slider`, improved.** A click on its icons steps the value a tenth of the range, and the chosen part of the histogram now stands out in every theme. See Added and Changed.
 
 ### Added
 
 - **Row headers in `nldd-table`.** Put `row-header` on the cell that says what a row is about, and the row gives it `role="rowheader"` instead of `role="cell"`, so a screen reader names the row when it reads any other cell in it, as with `<th scope="row">`. It works on `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` and `nldd-description-cell`, and it changes the semantics only: the cell variant still decides how a row header looks. In the header row a cell stays a column header, `row-header` or not.
-- **A click on the icons of `nldd-slider` steps the value.** `start-icon` moves it a tenth of the range down, `end-icon` a tenth up, and at least one `step`, as the speakers beside a volume slider in macOS do. The icons stay out of the tab order (Page Up and Page Down do the same from the keyboard), and in a range they only explain the ends.
-- **Icon alias `no-volume`** for `speaker`, the speaker without waves, as macOS shows it at the quiet end of a volume slider.
+- **A click on the icons of `nldd-slider` steps the value.** `start-icon` moves it a tenth of the range down, `end-icon` a tenth up, and at least one `step`. The icons stay out of the tab order (Page Up and Page Down do the same from the keyboard), and in a range they only explain the ends.
+- **Icon alias `no-volume`** for `speaker`, the speaker without waves, for the quiet end of a volume slider.
 
 ### Changed
 
