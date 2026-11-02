@@ -327,6 +327,8 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	public _rejectionText(reason: DropRejection): string {
 		if (reason === 'count') return this._t('components.file-field.too-many-files-error-text');
 		if (reason === 'folder') return this._t('components.file-field.folder-error-text');
+		if (reason === 'empty-folder') return this._t('components.file-field.empty-folder-error-text');
+		if (reason === 'unreadable-folder') return this._t('components.file-field.unreadable-folder-error-text');
 		const types = this._acceptTypes();
 		if (!types) return this._t('components.file-field.wrong-file-type-error-text');
 		return this._multiple
@@ -553,7 +555,12 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 			return;
 		}
 		if (holdsFolder(e.dataTransfer)) {
-			void readDrop(e.dataTransfer).then((dropped) => this._takeDrop(dropped));
+			// A folder with nothing in it, or one the browser could not read (a file
+			// gone mid-drop, no permission), says so, as any other refused drop does.
+			void readDrop(e.dataTransfer).then(
+				(dropped) => (dropped.length ? this._takeDrop(dropped) : this._refuse('empty-folder')),
+				() => this._refuse('unreadable-folder'),
+			);
 			return;
 		}
 		this._takeDrop(files.map((file) => ({ file, path: file.name })));

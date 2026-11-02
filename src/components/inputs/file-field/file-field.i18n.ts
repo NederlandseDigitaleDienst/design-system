@@ -23,6 +23,8 @@ export const nlddFileFieldTranslations = {
 	'components.file-field.list-lowercase-text': '{items} of {last}',
 	'components.file-field.too-many-files-error-text': 'Sleep één bestand',
 	'components.file-field.folder-error-text': 'Sleep een bestand, geen map',
+	'components.file-field.empty-folder-error-text': 'Deze map is leeg',
+	'components.file-field.unreadable-folder-error-text': 'Deze map kon niet worden gelezen',
 	'components.file-field.file-count-text': '{count} bestanden',
 	'components.file-field.folder-count-text': '{folder} ({count} bestanden)',
 	'components.file-field.file-chosen-text': '{name} gekozen',

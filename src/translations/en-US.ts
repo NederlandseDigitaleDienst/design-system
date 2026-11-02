@@ -155,6 +155,8 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.list-lowercase-text': '{items} or {last}',
 	'components.file-field.too-many-files-error-text': 'Drag one file',
 	'components.file-field.folder-error-text': 'Drag a file, not a folder',
+	'components.file-field.empty-folder-error-text': 'This folder is empty',
+	'components.file-field.unreadable-folder-error-text': 'This folder could not be read',
 	'components.file-field.file-count-text': '{count} files',
 	'components.file-field.folder-count-text': '{folder} ({count} files)',
 	'components.file-field.file-chosen-text': '{name} chosen',

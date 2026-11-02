@@ -153,6 +153,8 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.list-lowercase-text': '{items} of {last}',
 	'components.file-field.too-many-files-error-text': 'Sleep ien bestân',
 	'components.file-field.folder-error-text': 'Sleep in bestân, gjin map',
+	'components.file-field.empty-folder-error-text': 'Dizze map is leech',
+	'components.file-field.unreadable-folder-error-text': 'Dizze map koe net lêzen wurde',
 	'components.file-field.file-count-text': '{count} bestannen',
 	'components.file-field.folder-count-text': '{folder} ({count} bestannen)',
 	'components.file-field.file-chosen-text': '{name} keazen',

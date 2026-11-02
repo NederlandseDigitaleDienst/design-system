@@ -114,6 +114,25 @@ describe('nldd-file-field – folders', () => {
 		expect(el.shadowRoot!.textContent).toContain('Sleep een bestand, geen map');
 	});
 
+	it('says so when a dropped folder is empty, or cannot be read', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(folder('leeg', [])));
+		await settle();
+		await waitForUpdate(el);
+		expect(el.files).toEqual([]);
+		expect(el.shadowRoot!.textContent).toContain('Deze map is leeg');
+		const broken = folder('kapot', [file('kapot/index.html')]);
+		(broken as unknown as { createReader: () => unknown }).createReader = () => ({
+			readEntries: (_resolve: unknown, reject: (error: Error) => void) => reject(new Error('NotReadableError')),
+		});
+		drop(el, fakeTransfer(broken));
+		await settle();
+		await waitForUpdate(el);
+		expect(el.files).toEqual([]);
+		expect(el.shadowRoot!.textContent).toContain('Deze map kon niet worden gelezen');
+	});
+
 	it('refuses a folder whose files accept rules out, as a whole', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple accept=".html"></nldd-file-field>');
 		await waitForUpdate(el);

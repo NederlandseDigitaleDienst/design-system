@@ -155,6 +155,8 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.list-lowercase-text': '{items} of {last}',
 	'components.file-field.too-many-files-error-text': 'Hala un archivo',
 	'components.file-field.folder-error-text': 'Hala un archivo, no un mapa',
+	'components.file-field.empty-folder-error-text': 'E mapa aki ta bashi',
+	'components.file-field.unreadable-folder-error-text': 'No por a lesa e mapa aki',
 	'components.file-field.file-count-text': '{count} archivo',
 	'components.file-field.folder-count-text': '{folder} ({count} archivo)',
 	'components.file-field.file-chosen-text': '{name} scogi',
