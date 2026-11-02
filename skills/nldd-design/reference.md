@@ -1106,7 +1106,7 @@ A monospace editor for code, YAML, JSON and other technical content, built on Co
 
 ### `<nldd-combo-box>`
 
-A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu with nldd-menu-item children to provide options. The slotted nldd-menu keeps its default focus behavior (menu container receives focus) so that typing keeps focus on the input. The picker button moves focus to the menu explicitly on activation. Note: Only nldd-menu-item type="button" is supported. Radio and checkbox types are not supported in this context.
+A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu with nldd-menu-item children to provide options. After typing, a screen reader hears how many options are shown ("2 resultaten"), or the empty text when none are, also for options that a server sends in later. Only the number it lands on: it waits until the options settle. The slotted nldd-menu keeps its default focus behavior (menu container receives focus) so that typing keeps focus on the input. The picker button moves focus to the menu explicitly on activation. Note: Only nldd-menu-item type="button" is supported. Radio and checkbox types are not supported in this context.
 
 **Rules** (`nldd lint`)
 
@@ -1930,7 +1930,7 @@ Groups nldd-toggle-button elements and manages selection, keyboard navigation, a
 
 ### `<nldd-token-field>`
 
-A multi-select input that looks like a normal input field: chosen values show as dismissible tokens in a wrapping row, followed by an inline text input that stretches to fill the remaining space and wraps to a new line (growing the field) when it no longer fits. Options are supplied as a slotted nldd-menu, exactly like nldd-combo-box; the menu filters as you type, with a chevron picker button, arrow-key roving across the tokens and ElementInternals form participation. Options can arrive after the keystroke, from a server you query per keystroke. Slot them into the menu when they come in: if the user is still in the field and the keystroke found nothing to show, the menu opens then. After Escape, or once the user left the field, it stays shut.
+A multi-select input that looks like a normal input field: chosen values show as dismissible tokens in a wrapping row, followed by an inline text input that stretches to fill the remaining space and wraps to a new line (growing the field) when it no longer fits. Options are supplied as a slotted nldd-menu, exactly like nldd-combo-box; the menu filters as you type, with a chevron picker button, arrow-key roving across the tokens and ElementInternals form participation. Options can arrive after the keystroke, from a server you query per keystroke. Slot them into the menu when they come in: if the user is still in the field and the keystroke found nothing to show, the menu opens then. After Escape, or once the user left the field, it stays shut. After typing, a screen reader hears how many options are shown ("2 resultaten"), or the empty text when none are, also for options that a server sends in later. Only the number it lands on: it waits until the options settle.
 
 **Attributes**
 

@@ -4,6 +4,10 @@
  * A text input with autocomplete dropdown via nldd-menu.
  * Add a slotted nldd-menu with nldd-menu-item children to provide options.
  *
+ * After typing, a screen reader hears how many options are shown ("2 resultaten"),
+ * or the empty text when none are, also for options that a server sends in
+ * later. Only the number it lands on: it waits until the options settle.
+ *
  * The slotted nldd-menu keeps its default focus behavior (menu container receives focus)
  * so that typing keeps focus on the input. The picker button moves focus
  * to the menu explicitly on activation.
@@ -453,11 +457,14 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		if (!this._menu || this.shadowRoot?.activeElement !== this._input) return;
 		if (this._menu.matches(':popover-open')) {
 			if (this.allowCustom && !this._hasVisibleMenuItems()) this._closeMenu();
+			// Options that came in after the keystroke, as a server sends them.
+			else this._menu._announceResults();
 			return;
 		}
 		if (this._openPending && this._hasVisibleMenuItems()) {
 			this._openPending = false;
 			this._openMenu();
+			this._menu._announceResults();
 		}
 	};
 
@@ -533,6 +540,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		}
 		if (!this._isOpen) this._openMenu();
 		this._openPending = this.text !== '' && !this._menu?.matches(':popover-open');
+		this._menu?._announceResults();
 		this.commitFormValue();
 		this.dispatchEvent(new CustomEvent('input', {
 			detail: { value: this.text },

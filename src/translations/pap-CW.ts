@@ -28,6 +28,8 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.icon-button.link-hint-external-new-tab-lowercase-label': 'otro wèpsait, ta habri den un tab nobo',
 	'components.icon-button.link-hint-download-lowercase-label': 'ta deskarga e archivo',
 	'components.menu.empty-text': 'No tin opshon disponibel',
+	'components.menu.one-result-text': '1 resultado',
+	'components.menu.results-text': '{count} resultado',
 	'components.menu.back-action': 'Bai bèk',
 	'components.menu.submenu-title': 'Submenu: {title}',
 	'components.menu.submenu-back-action': 'Bai bèk na {title}',

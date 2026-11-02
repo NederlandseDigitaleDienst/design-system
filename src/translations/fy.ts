@@ -26,6 +26,8 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.icon-button.link-hint-external-new-tab-lowercase-label': 'oare webside, iepenet yn in nij ljepblêd',
 	'components.icon-button.link-hint-download-lowercase-label': 'downloadt bestân',
 	'components.menu.empty-text': 'Gjin opsjes beskikber',
+	'components.menu.one-result-text': '1 resultaat',
+	'components.menu.results-text': '{count} resultaten',
 	'components.menu.back-action': 'Werom',
 	'components.menu.submenu-title': 'Submenu: {title}',
 	'components.menu.submenu-back-action': 'Werom nei {title}',

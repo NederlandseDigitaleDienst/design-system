@@ -28,6 +28,8 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.icon-button.link-hint-external-new-tab-lowercase-label': 'otro sitio web, ta habri den un tab nobo',
 	'components.icon-button.link-hint-download-lowercase-label': 'ta descarga e archivo',
 	'components.menu.empty-text': 'No tin opcion disponibel',
+	'components.menu.one-result-text': '1 resultado',
+	'components.menu.results-text': '{count} resultado',
 	'components.menu.back-action': 'Atras',
 	'components.menu.submenu-title': 'Submenu: {title}',
 	'components.menu.submenu-back-action': 'Atras na {title}',

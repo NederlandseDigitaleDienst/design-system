@@ -55,6 +55,9 @@ function nameOfAnchor(anchor: Element): string {
 	return root instanceof ShadowRoot ? nameOfAnchor(root.host) : '';
 }
 
+/** How long the options have to stay the same before their number is said. */
+const RESULTS_DELAY = 500;
+
 /**
  * A floating menu component using the Popover API.
  * Positioned relative to an anchor element using Floating UI.
@@ -270,6 +273,8 @@ export class NLDDMenu extends LitElement {
 	 * drop a doubled event in the same tick while still allowing the same
 	 * text to be re-announced on a later, genuine transition. */
 	private _pendingAnnouncement = '';
+	/** Holds a results announcement until the options stop changing. */
+	private _resultsTimer = 0;
 
 	/**
 	 * Write `message` to this menu's polite live region. Clears first, then
@@ -887,6 +892,8 @@ export class NLDDMenu extends LitElement {
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
+		clearTimeout(this._resultsTimer);
+		this._resultsTimer = 0;
 		// Close any open child submenu before tearing down — the submenu is a
 		// document-anchored popover and would otherwise outlive its parent.
 		// The toggle listener wired in _handleSubmenuOpen still fires from
@@ -1075,6 +1082,40 @@ export class NLDDMenu extends LitElement {
 		this._updateEmptyState();
 		this._updateDividerVisibility();
 		if (this._isOpen) this.reposition();
+	}
+
+	/**
+	 * Says how many options a listbox shows, or its empty text when it shows
+	 * none, in the live region that is always there.
+	 *
+	 * The field that owns the listbox calls this after a keystroke and when
+	 * options arrive, since only the field knows that a search happened: the
+	 * menu cannot tell a filter from any other change to its items. The count
+	 * waits until the options stop changing for a moment, so a screen reader
+	 * hears the number you land on and not every one on the way. A closed menu
+	 * says nothing, as it shows nothing.
+	 *
+	 * @internal Called by nldd-combo-box and nldd-token-field.
+	 */
+	_announceResults(): void {
+		clearTimeout(this._resultsTimer);
+		this._resultsTimer = window.setTimeout(() => {
+			this._resultsTimer = 0;
+			if (!this.isConnected || !this.matches(':popover-open')) return;
+			const count = Array.from(this.querySelectorAll('nldd-menu-item:not([hidden])'))
+				.filter((item) => item.closest('nldd-menu') === this).length;
+			let text: string;
+			if (count === 0) {
+				const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="empty"]');
+				const own = (slot?.assignedNodes({ flatten: true }) ?? []).map((node) => node.textContent ?? '').join(' ').trim();
+				text = own || this._resolvedEmptyText;
+			} else {
+				text = count === 1
+					? this._t('components.menu.one-result-text')
+					: this._t('components.menu.results-text', { count });
+			}
+			this._announce(text);
+		}, RESULTS_DELAY);
 	}
 
 	/**

@@ -23,6 +23,8 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.icon-button.link-hint-external-new-tab-lowercase-label': 'another website, opens in a new tab',
 	'components.icon-button.link-hint-download-lowercase-label': 'downloads file',
 	'components.menu.empty-text': 'No options available',
+	'components.menu.one-result-text': '1 result',
+	'components.menu.results-text': '{count} results',
 	'components.menu.back-action': 'Back',
 	'components.menu.submenu-title': 'Submenu: {title}',
 	'components.menu.submenu-back-action': 'Back to {title}',
