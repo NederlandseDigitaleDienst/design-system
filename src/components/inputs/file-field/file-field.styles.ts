@@ -292,6 +292,10 @@ export const fileFieldStyles = css`
 		color: var(--semantics-content-secondary-color);
 	}
 
+	.file-field__browse-surface .file-field__hint {
+		color: var(--semantics-content-color);
+	}
+
 	.file-field__value {
 		padding-left: var(--primitives-space-8);
 	}
