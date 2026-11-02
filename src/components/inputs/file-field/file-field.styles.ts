@@ -76,7 +76,17 @@ export const fileFieldStyles = css`
 		--_file-field-file-icon-size: var(--primitives-space-20);
 		--_file-field-browse-action-font: var(--semantics-buttons-sm-primary-text-font);
 		--_file-field-area-icon-size: var(--primitives-space-32);
+		--_file-field-area-min-height: var(--primitives-area-120);
+		--_file-field-area-padding: var(--primitives-space-12);
 		--_file-field-accepted-types-font: var(--primitives-font-body-xs-regular-tight);
+	}
+
+	:host([directory]) {
+		--_file-field-area-min-height: var(--primitives-area-200);
+	}
+
+	:host([directory][size="sm"]) {
+		--_file-field-area-min-height: var(--primitives-area-160);
 	}
 
 

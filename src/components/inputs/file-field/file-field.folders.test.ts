@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import { readDrop } from './file-field.drop.js';
 import type { NLDDFileField } from './file-field.js';
 import './file-field.js';
@@ -261,6 +262,23 @@ describe('nldd-file-field – directory', () => {
 		expect(menu()!.matches(':popover-open')).toBe(false);
 		el.focus();
 		expect(root.activeElement).toBe(files);
+	});
+
+	it('makes an area a step taller for its row of buttons, and keeps that height once chosen', async () => {
+		const unloadTokens = loadTokens();
+		const heights: number[][] = [];
+		for (const size of ['md', 'sm']) {
+			el = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Site" directory variant="area" size="${size}" style="width: 500px"></nldd-file-field>`);
+			await waitForUpdate(el);
+			const empty = el.getBoundingClientRect().height;
+			drop(el, fakeTransfer(file('index.html')));
+			await settle();
+			await waitForUpdate(el);
+			heights.push([empty, el.getBoundingClientRect().height]);
+			cleanup(el);
+		}
+		unloadTokens();
+		expect(heights).toEqual([[200, 200], [160, 160]]);
 	});
 
 	it('shows an icon on both options', async () => {
