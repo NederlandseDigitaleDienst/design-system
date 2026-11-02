@@ -22627,6 +22627,13 @@
               "type": {
                 "text": "(query: string) => string | null"
               }
+            },
+            {
+              "name": "countText",
+              "default": "(count) => String(count)",
+              "type": {
+                "text": "(count: number) => string"
+              }
             }
           ],
           "description": "The typeaheads. `getTypeaheads` is read on every keystroke, so the editor can\nhand over its current lists; choosing a candidate writes what the list's\n`insert` says and calls `onChoose`. Without lists it is inert."
@@ -45001,9 +45008,13 @@
               "type": {
                 "text": "Element | null"
               }
+            },
+            {
+              "name": "{ scheme: withScheme = true }",
+              "default": "{}"
             }
           ],
-          "description": "Gives `element` the color scheme and language of `origin`. Call it each\ntime the element shows, since the page around the origin may have changed."
+          "description": "Gives `element` the color scheme and language of `origin`. Call it each time\nthe element shows, since the page around the origin may have changed.\n\nReading the color scheme takes `getComputedStyle`, which recalculates the\nstyles of the page when they are dirty. An element nobody sees, such as the\nhidden description of a tooltip, only needs the language: pass\n`{ scheme: false }` and nothing is recalculated."
         },
         {
           "kind": "function",

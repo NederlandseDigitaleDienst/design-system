@@ -1,6 +1,7 @@
 import {
 	autocompletion,
 	completionStatus,
+	currentCompletions,
 	startCompletion,
 	type Completion,
 	type CompletionContext,
@@ -302,9 +303,10 @@ function emptyMessageFor(
 /**
  * The message in place of an empty list. It sits where the list would, in the
  * same top-layer frame and with the same surface, but it is not an option:
- * nothing to select or apply, so it is a status that a screen reader announces
- * rather than a row in the listbox. It goes when there are candidates again,
- * when the caret leaves the query, on Escape and when the editor loses focus.
+ * nothing to select or apply. A screen reader hears it through the announcer
+ * below, not from this element, which arrives with its text already in it. It
+ * goes when there are candidates again, when the caret leaves the query, on
+ * Escape and when the editor loses focus.
  */
 const emptyMessageField = StateField.define<EmptyMessage | null>({
 	create: () => null,
@@ -326,7 +328,6 @@ const emptyMessageField = StateField.define<EmptyMessage | null>({
 		create: () => {
 			const dom = document.createElement('div');
 			dom.className = 'cm-nldd-typeahead-empty';
-			dom.setAttribute('role', 'status');
 			dom.textContent = value.text;
 			return { dom };
 		},
@@ -350,6 +351,43 @@ const emptyMessageClose = [
 		}
 	}),
 ];
+
+/**
+ * What a screen reader hears about the list: how many candidates there are when
+ * it opens or its length changes, and the message when it is empty.
+ *
+ * One live region that is always there and starts empty, and only its text
+ * changes. A region that arrives together with its text, as the empty message
+ * does, is often skipped: a screen reader reads a change in a region it already
+ * knew. The listbox itself says nothing about its length.
+ */
+function typeaheadAnnouncer(countText: (count: number) => string): Extension {
+	return ViewPlugin.fromClass(class {
+		status = document.createElement('div');
+
+		constructor(view: EditorView) {
+			this.status.className = 'cm-nldd-typeahead-status';
+			this.status.setAttribute('role', 'status');
+			view.dom.append(this.status);
+		}
+
+		update(update: { state: EditorState }) {
+			const status = completionStatus(update.state);
+			// While the next query is out, the last answer stands: clearing it
+			// in between would only make a screen reader say it twice.
+			if (status === 'pending') return;
+			const empty = update.state.field(emptyMessageField, false);
+			let text = '';
+			if (empty) text = empty.text;
+			else if (status === 'active') text = countText(currentCompletions(update.state).length);
+			if (this.status.textContent !== text) this.status.textContent = text;
+		}
+
+		destroy() {
+			this.status.remove();
+		}
+	});
+}
 
 /**
  * A frame for the list in the top layer, the way an nldd-menu opens.
@@ -525,6 +563,15 @@ const popupTheme = EditorView.theme({
 	'.cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected] .cm-completionDetail': {
 		color: 'inherit',
 	},
+	// Heard, not seen: the announcer of the list's length and its message.
+	'.cm-nldd-typeahead-status': {
+		position: 'absolute',
+		width: '1px',
+		height: '1px',
+		overflow: 'hidden',
+		clipPath: 'inset(50%)',
+		whiteSpace: 'nowrap',
+	},
 	// The message in place of an empty list: the list's surface, and the
 	// secondary color, since it says something about the list rather than offering.
 	'.cm-tooltip.cm-nldd-typeahead-empty': {
@@ -557,6 +604,7 @@ export function typeaheads(
 	getTypeaheads: () => readonly Typeahead[],
 	onChoose: (choice: TypeaheadChoice) => void,
 	defaultEmptyText: (query: string) => string | null = () => null,
+	countText: (count: number) => string = (count) => String(count),
 ): Extension {
 	// CodeMirror only opens completion while typing, not on deletion. When a
 	// backspace brings the query back into a matching state ("@anb" → "@an"),
@@ -578,6 +626,7 @@ export function typeaheads(
 		reopenOnDelete,
 		emptyMessageField,
 		emptyMessageClose,
+		typeaheadAnnouncer(countText),
 		popupTheme,
 	];
 }

@@ -12,7 +12,7 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **`nldd-slider`, improved.** A click on its icons or Shift with an arrow key steps the value a tenth of the range, and the chosen part of the histogram now stands out in every theme. See Added and Changed.
-- **7 accessibility fixes,** most from two audit rounds: `focus()` that works right after a component is added, a field that says why it is red, a focused card that comes fully into view, lists a screen reader can count, a heading that stays when a title bar collapses, a link that keeps its underline on focus, and a slider histogram whose chosen part stands out. See Added, Changed and Fixed.
+- **8 accessibility fixes,** most from two audit rounds: `focus()` that works right after a component is added, a field that says why it is red, a focused card that comes fully into view, lists a screen reader can count, a heading that stays when a title bar collapses, a link that keeps its underline on focus, a slider histogram whose chosen part stands out, and a typeahead in `nldd-text-editor` that says how many suggestions it has. See Added, Changed and Fixed.
 
 ### Added
 
@@ -39,6 +39,7 @@ here; consult the commit history if you need that level of detail.
 - **`button-group-needs-width` no longer warns about a group that gets its width while the page loads.** The group judged a zero width 250ms after it first measured one, which on a loading page, such as a card in an `nldd-collection` that scrolls sideways, came before the width did, and it kept the verdict once the width arrived. It now waits for the page to load, and takes the verdict back when a width comes later.
 - **`popovertarget` on `nldd-button`, `nldd-icon-button` and `nldd-list-item-segment` opens an `nldd-popover`.** The id went onto the button inside the component, where it was looked up in the component's own shadow root and found nothing, so the example in the docs of `nldd-popover` did nothing. The component now looks the id up where it stands itself. Setting `popoverTargetElement` together with `anchor` opened the popover and closed it again at once; it now stays open.
 - **A page with many `nldd-tooltip`s builds fast again.** Every tooltip with a trigger in the light DOM read the color scheme for its hidden description, which made the browser recalculate the styles of the page once per tooltip: 540 tooltips took about a second. The description is never seen, so it now only takes the language, and nothing is recalculated.
+- **The typeahead of `nldd-text-editor` says how many suggestions it has.** A screen reader now hears "2 resultaten" when the list opens or gets shorter, and "Niets gevonden" when it is empty, from one live region that is always there. The empty message used to arrive with `role="status"` and its text at once, which a screen reader often skips. Both texts can be translated.
 
 ## [0.14.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.2...v0.14.0) (2026-11-02)
 

@@ -178,6 +178,8 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.text-editor.annotation-plural-lowercase': 'annotations',
 	'components.text-editor.typeahead-start-typing-text': 'Type to search',
 	'components.text-editor.typeahead-no-results-text': 'Nothing found',
+	'components.text-editor.typeahead-one-result-text': '1 result',
+	'components.text-editor.typeahead-results-text': '{count} results',
 	'components.text-editor.code-copy-action': 'Copy',
 	'components.text-editor.code-copy-success-text': 'Copied',
 	'components.text-editor.code-copy-failure-text': 'Copy failed',
