@@ -4,14 +4,8 @@ composition:
     children:
       - tag: nldd-page
         children:
-          - slot: header
-            note: de header
-            children:
-              - tag: nldd-skip-link
-                note: om de balk heen
-                children:
-                  - tag: nldd-top-navigation-bar
-                    note: zoeken en taal, terug naar de onderwerpen
+          - ref: page-header
+            note: de header, terug naar de onderwerpen
           - tag: nldd-hero
             note: de h1, een korte uitleg en de hoofdtaak
             children:
@@ -53,8 +47,4 @@ composition:
                   - tag: nldd-card
                     attrs: [href]
                     note: naar het andere onderwerp
-          - tag: nldd-page-footer
-            slot: footer
-            children:
-              - slot: breadcrumbs
-              - slot: legal-bar
+          - ref: page-footer

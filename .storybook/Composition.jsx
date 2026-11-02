@@ -1,6 +1,7 @@
 import { Source } from '@storybook/addon-docs/blocks';
 import { parse } from 'yaml';
-import { renderComposition } from '../scripts/lib/pattern-spec.js';
+import { renderComposition, resolveSpec } from '../scripts/lib/pattern-spec.js';
+import shared from '../src/patterns/shared.pattern.yaml?raw';
 
 const specs = import.meta.glob('../src/patterns/*/*.pattern.yaml', { query: '?raw', import: 'default', eager: true });
 
@@ -10,5 +11,5 @@ const specs = import.meta.glob('../src/patterns/*/*.pattern.yaml', { query: '?ra
  */
 export function Composition({ pattern }) {
 	const source = specs[`../src/patterns/${pattern}/${pattern}.pattern.yaml`];
-	return <Source language="text" format={false} code={renderComposition(parse(source).composition)} />;
+	return <Source language="text" format={false} code={renderComposition(resolveSpec(parse(source), parse(shared)).composition)} />;
 }

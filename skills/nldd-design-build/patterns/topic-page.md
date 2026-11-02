@@ -13,9 +13,11 @@ Een onderwerppagina is de [home](home-page.md) voor een onderwerp op een lager n
 ```
 nldd-shell                                   de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                      de header
+       ├─ slot="header"                      de header, terug naar de onderwerpen
+       │    ├─ nldd-status-bar               alleen als er iets te melden is, boven de balk; optioneel
        │    └─ nldd-skip-link                om de balk heen
-       │         └─ nldd-top-navigation-bar  zoeken en taal, terug naar de onderwerpen
+       │         └─ nldd-top-navigation-bar  website-title, back-text, back-href
+       │              └─ nldd-menu-bar       slot="utility"; zoeken en taal; optioneel
        ├─ nldd-hero                          de h1, een korte uitleg en de hoofdtaak
        │    └─ slot="media"                  nldd-image, hier nog zonder beeld
        ├─ nldd-one-half-one-half-section     tekst links, afbeelding rechts
@@ -31,9 +33,10 @@ nldd-shell                                   de buitenste schil
        ├─ nldd-simple-section                background="tinted"; verwante onderwerpen
        │    └─ nldd-collection
        │         └─ nldd-card                href; naar het andere onderwerp
-       └─ nldd-page-footer                   slot="footer"
-            ├─ slot="breadcrumbs"
-            └─ slot="legal-bar"
+       └─ nldd-page-footer                   slot="footer"; de footer
+            ├─ nldd-breadcrumbs              slot="breadcrumbs"; waar deze pagina staat; optioneel
+            ├─ nldd-container                de hoofdinhoud, vrij in te vullen; optioneel
+            └─ nldd-page-footer-legal-bar    slot="legal-bar"
 ```
 
 ```html

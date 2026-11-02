@@ -4,14 +4,8 @@ composition:
     children:
       - tag: nldd-page
         children:
-          - slot: header
-            note: de header
-            children:
-              - tag: nldd-skip-link
-                note: om de balk heen
-                children:
-                  - tag: nldd-top-navigation-bar
-                    note: zoeken en taal, geen terugknop
+          - ref: page-header
+            note: de header, geen terugknop
           - tag: nldd-hero
             attrs: [main-background]
             note: de opening
@@ -53,7 +47,4 @@ composition:
           - tag: nldd-simple-section
             attrs: ['background="tinted"']
             note: de oproep
-          - tag: nldd-page-footer
-            slot: footer
-            children:
-              - slot: legal-bar
+          - ref: page-footer

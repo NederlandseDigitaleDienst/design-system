@@ -23,7 +23,7 @@ import { parse as parseYaml } from 'yaml';
 import { parseHtml } from '../lint/frontends.js';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
 import { selectorsOf } from '../lint/rule-index.js';
-import { checkComposition } from './lib/pattern-spec.js';
+import { checkComposition, resolveSpec, unshownParts } from './lib/pattern-spec.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const data = loadData();
@@ -220,32 +220,52 @@ function checkStatesAreRead() {
 function checkCompositions() {
 	const directory = join(repoRoot, 'src/patterns');
 	const validate = new Ajv({ allErrors: true }).compile(JSON.parse(readFileSync(join(directory, 'pattern.schema.json'), 'utf8')));
-	for (const entry of readdirSync(directory, { withFileTypes: true })) {
-		const specPath = join(directory, entry.name, `${entry.name}.pattern.yaml`);
-		if (!entry.isDirectory()) continue;
-		if (!existsSync(specPath)) {
-			problems.push(`patterns/${entry.name}: has no ${entry.name}.pattern.yaml.`);
-			continue;
-		}
+	const readSpec = (path, label) => {
 		let spec;
 		try {
-			spec = parseYaml(readFileSync(specPath, 'utf8'));
+			spec = parseYaml(readFileSync(path, 'utf8'));
 		} catch (error) {
-			problems.push(`patterns/${entry.name}: ${error.message}`);
+			problems.push(`${label}: ${error.message}`);
+			return undefined;
+		}
+		if (validate(spec)) return spec;
+		problems.push(`${label}: ${validate.errors.map(({ instancePath, message }) => `${instancePath} ${message}`).join('; ')}`);
+		return undefined;
+	};
+	const shared = readSpec(join(directory, 'shared.pattern.yaml'), 'patterns/shared');
+	if (!shared) return;
+	const shown = new Set();
+	for (const entry of readdirSync(directory, { withFileTypes: true })) {
+		if (!entry.isDirectory()) continue;
+		const label = `patterns/${entry.name}`;
+		const specPath = join(directory, entry.name, `${entry.name}.pattern.yaml`);
+		if (!existsSync(specPath)) {
+			problems.push(`${label}: has no ${entry.name}.pattern.yaml.`);
 			continue;
 		}
-		if (!validate(spec)) {
-			problems.push(`patterns/${entry.name}: ${validate.errors.map(({ instancePath, message }) => `${instancePath} ${message}`).join('; ')}`);
-			continue;
-		}
+		const spec = readSpec(specPath, label);
+		if (!spec) continue;
 		const page = readFileSync(join(directory, entry.name, `${entry.name}.mdx`), 'utf8');
-		if (!page.includes(`<Composition pattern="${entry.name}" />`)) problems.push(`patterns/${entry.name}: the page does not draw its spec with <Composition pattern="${entry.name}" />.`);
-		if (/[├└]─/.test(page)) problems.push(`patterns/${entry.name}: the page has a hand-drawn tree.`);
+		if (!page.includes(`<Composition pattern="${entry.name}" />`)) problems.push(`${label}: the page does not draw its spec with <Composition pattern="${entry.name}" />.`);
+		if (/[├└]─/.test(page)) problems.push(`${label}: the page has a hand-drawn tree.`);
+		let resolved;
+		try {
+			resolved = resolveSpec(spec, shared);
+		} catch (error) {
+			problems.push(`${label}: ${error.message}`);
+			continue;
+		}
 		const examples = patternFiles(join(directory, entry.name)).map((file) => ({ file: basename(file), roots: parseHtml(readFileSync(file, 'utf8')) }));
-		for (const problem of checkComposition(spec.composition, { tags: data.tags, examples, partial: spec.partial })) {
-			problems.push(`patterns/${entry.name}: ${problem}`);
+		const starts = Object.entries(resolved.examples).filter(([file, name]) => {
+			if (!resolved.define[name]) problems.push(`${label}: ${file} starts at ${name}, which is no definition.`);
+			return resolved.define[name];
+		});
+		const fragments = Object.fromEntries(starts.map(([file, name]) => [file, [resolved.define[name]]]));
+		for (const problem of checkComposition(resolved.composition, { tags: data.tags, examples, fragments, shown })) {
+			problems.push(`${label}: ${problem}`);
 		}
 	}
+	for (const part of unshownParts(shared.define, shown)) problems.push(`patterns/shared: no example shows ${part}.`);
 }
 
 /** Text in a component is a second source. The only output left there is a real failure. */

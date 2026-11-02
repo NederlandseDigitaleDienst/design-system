@@ -1,5 +1,11 @@
-partial:
-  list.empty.html: [nldd-list-item]
+examples:
+  list.empty.html: empty-list
+
+define:
+  empty-list:
+    tag: nldd-list
+    attrs: [accessible-label]
+
 composition:
   - tag: nldd-list
     attrs: [accessible-label, appearance, type]
@@ -11,15 +17,15 @@ composition:
           - tag: nldd-list-item-segment
             optional: true
             note: een deel van de rij met een eigen actie, met zijn eigen cellen
+          - tag: nldd-spacer-cell
+            optional: true
+            note: de ruimte tussen twee cellen, waar die nodig is
           - label: cellen, in de volgorde waarin ze staan
             flat: true
             children:
               - tag: nldd-icon-cell
                 optional: true
                 note: een icoon vooraan
-              - tag: nldd-spacer-cell
-                optional: true
-                note: de ruimte tussen twee cellen
               - tag: nldd-text-cell
                 optional: true
                 attrs: [text, overline, supporting-text]

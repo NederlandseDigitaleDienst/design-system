@@ -1,0 +1,33 @@
+define:
+  page-header:
+    slot: header
+    note: de header
+    children:
+      - tag: nldd-status-bar
+        optional: true
+        note: alleen als er iets te melden is, boven de balk
+      - tag: nldd-skip-link
+        note: om de balk heen
+        children:
+          - tag: nldd-top-navigation-bar
+            attrs: [website-title, back-text, back-href]
+            children:
+              - tag: nldd-menu-bar
+                optional: true
+                slot: utility
+                note: zoeken en taal
+
+  page-footer:
+    tag: nldd-page-footer
+    slot: footer
+    note: de footer
+    children:
+      - tag: nldd-breadcrumbs
+        optional: true
+        slot: breadcrumbs
+        note: waar deze pagina staat
+      - tag: nldd-container
+        optional: true
+        note: de hoofdinhoud, vrij in te vullen
+      - tag: nldd-page-footer-legal-bar
+        slot: legal-bar

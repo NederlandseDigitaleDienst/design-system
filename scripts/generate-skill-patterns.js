@@ -19,7 +19,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse as parseYaml } from 'yaml';
-import { renderComposition } from './lib/pattern-spec.js';
+import { renderComposition, resolveSpec } from './lib/pattern-spec.js';
 import { generatedHeader, readSource, writeGenerated } from './lib/skill-doc.js';
 import { rulesOfPattern } from '../lint/rule-index.js';
 import { loadData } from '../lint/linter.js';
@@ -46,6 +46,8 @@ const PATTERNS = {
 	'Patronen/Bewerken in een sheet': 'edit-in-a-sheet',
 	'Patronen/Onomkeerbare actie': 'irreversible-action',
 };
+
+const sharedSpec = parseYaml(readSource(join(patternsDir, 'shared.pattern.yaml')));
 
 const context = {
 	patterns: Object.fromEntries(Object.entries(PATTERNS).map(([title, slug]) => [storybookId(title), slug])),
@@ -76,7 +78,7 @@ for (const slug of slugs) {
 		}),
 	);
 	const rules = rulesOfPattern(lintRules, slug);
-	const composition = renderComposition(parseYaml(readSource(join(dir, `${slug}.pattern.yaml`))).composition);
+	const composition = renderComposition(resolveSpec(parseYaml(readSource(join(dir, `${slug}.pattern.yaml`))), sharedSpec).composition);
 	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context, rules, composition, slug });
 	const header = generatedHeader(`Bron: src/patterns/${slug}/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).`);
 	writeGenerated(join(outputDir, `${slug}.md`), header + body);

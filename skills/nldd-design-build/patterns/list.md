@@ -14,9 +14,9 @@ Een lijst toont vergelijkbare items in een vorm die bezoekers snel kunnen scanne
 nldd-list                         accessible-label, appearance, type
   └─ nldd-list-item               size, en hoogstens één van href, button, checkbox, radio
        ├─ nldd-list-item-segment  een deel van de rij met een eigen actie, met zijn eigen cellen; optioneel
+       ├─ nldd-spacer-cell        de ruimte tussen twee cellen, waar die nodig is; optioneel
        └─ cellen, in de volgorde waarin ze staan
             nldd-icon-cell        een icoon vooraan; optioneel
-            nldd-spacer-cell      de ruimte tussen twee cellen; optioneel
             nldd-text-cell        text, overline, supporting-text; vult de rij, of zit in een segment; optioneel
             nldd-cell             een badge, een checkbox, wat de rij verder draagt; optioneel
             nldd-text-cell        width="fit-content"; komt daardoor achteraan; optioneel

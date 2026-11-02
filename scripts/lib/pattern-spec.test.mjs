@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import Ajv from 'ajv';
 import { parseHtml } from '../../lint/frontends.js';
-import { checkComposition, renderComposition } from './pattern-spec.js';
+import { checkComposition, renderComposition, resolveSpec, unshownParts } from './pattern-spec.js';
 
 const schema = JSON.parse(readFileSync(new URL('../../src/patterns/pattern.schema.json', import.meta.url), 'utf8'));
 const validate = new Ajv({ allErrors: true }).compile(schema);
@@ -95,19 +95,79 @@ test('checkComposition names the file of an example that leaves out a required p
 	assert.deepEqual(checkComposition(composition, { tags, examples }), ['b.html: nldd-form without nldd-form-field.']);
 });
 
-test('checkComposition lets a partial example leave out a required part', () => {
-	const examples = [example(good), example('<nldd-form></nldd-form>', 'b.html')];
-	assert.deepEqual(checkComposition(composition, { tags, examples, partial: { 'b.html': ['nldd-form-field'] } }), []);
-	assert.deepEqual(checkComposition(composition, { tags, examples: [example(good)], partial: { 'b.html': ['nldd-form-field'] } }), ['partial names b.html, which is no example.']);
+test('checkComposition starts a fragment at its own nodes', () => {
+	const fragment = [{ tag: 'nldd-dropdown' }];
+	const examples = [example(good), example('<nldd-dropdown></nldd-dropdown>', 'b.html')];
+	assert.deepEqual(checkComposition(composition, { tags, examples, fragments: { 'b.html': fragment } }), []);
+	assert.deepEqual(checkComposition(composition, { tags, examples: [example(good)], fragments: { 'b.html': fragment } }).filter((problem) => problem.startsWith('examples')), ['examples names b.html, which is no example.']);
 });
 
-test('checkComposition keeps the rest of a partial example required', () => {
-	const nodes = [{ tag: 'nldd-form', children: [{ tag: 'nldd-form-field' }, { tag: 'nldd-dropdown' }] }];
-	const examples = [
-		example('<nldd-form><nldd-form-field></nldd-form-field><nldd-dropdown></nldd-dropdown></nldd-form>'),
-		example('<nldd-form></nldd-form>', 'b.html'),
-	];
-	assert.deepEqual(checkComposition(nodes, { tags, examples, partial: { 'b.html': ['nldd-form-field'] } }), ['b.html: nldd-form without nldd-dropdown.']);
+test('checkComposition holds a fragment to what it starts at', () => {
+	const fragment = [{ tag: 'nldd-form', children: [{ tag: 'nldd-dropdown' }] }];
+	const examples = [example(good), example('<nldd-form></nldd-form>', 'b.html')];
+	const problems = checkComposition(composition, { tags, examples, fragments: { 'b.html': fragment } });
+	assert.ok(problems.includes('b.html: nldd-form without nldd-dropdown.'));
+});
+
+test('checkComposition credits a part to the example that shows it, also in a fragment', () => {
+	const part = { tag: 'nldd-form-field', optional: true };
+	const nodes = [{ tag: 'nldd-form', children: [part] }];
+	const examples = [example('<nldd-form></nldd-form>'), example('<nldd-form><nldd-form-field></nldd-form-field></nldd-form>', 'b.html')];
+	assert.deepEqual(checkComposition(nodes, { tags, examples, fragments: { 'b.html': nodes } }), []);
+});
+
+test('resolveSpec fills in a ref, here or shared, with its own note', () => {
+	const spec = { composition: [{ ref: 'head', note: 'hier' }, { ref: 'own' }], define: { own: { tag: 'b' } } };
+	const { composition, define } = resolveSpec(spec, { define: { head: { tag: 'a', note: 'overal', children: [{ tag: 'c' }] } } });
+	assert.equal(composition[0].tag, 'a');
+	assert.equal(composition[0].note, 'hier');
+	assert.equal(composition[0].shared, true);
+	assert.equal(composition[0].children[0].shared, true);
+	assert.equal(composition[1].shared, undefined);
+	assert.equal(define.head.note, 'overal');
+	assert.throws(() => resolveSpec({ composition: [{ ref: 'gone' }] }), /no definition gone/);
+});
+
+test('renderComposition draws a choice', () => {
+	assert.equal(renderComposition([{ tag: 'a', children: [{ choice: [{ tag: 'b' }, { tag: 'c' }] }] }]), [
+		'a',
+		'  └─ één van',
+		'       ├─ b',
+		'       └─ c',
+	].join('\n'));
+});
+
+test('checkComposition wants one alternative of a choice', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ choice: [{ tag: 'nldd-form-field' }, { tag: 'nldd-dropdown' }] }] }];
+	const both = '<nldd-form><nldd-form-field></nldd-form-field></nldd-form><nldd-form><nldd-dropdown></nldd-dropdown></nldd-form>';
+	assert.deepEqual(check(nodes, both), []);
+	assert.deepEqual(check(nodes, `${both}<nldd-form></nldd-form>`), ['a.html: nldd-form without nldd-form-field of nldd-dropdown.']);
+});
+
+test('checkComposition wants every alternative of a choice shown', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ choice: [{ tag: 'nldd-form-field' }, { tag: 'nldd-dropdown' }] }] }];
+	assert.deepEqual(check(nodes, '<nldd-form><nldd-form-field></nldd-form-field></nldd-form>'), ['No example shows nldd-dropdown inside nldd-form.']);
+});
+
+test('checkComposition reports a sequence out of order', () => {
+	const nodes = [{ tag: 'nldd-form', flat: true, children: [{ tag: 'nldd-form-field', optional: true }, { tag: 'nldd-dropdown', optional: true }] }];
+	const inOrder = '<nldd-form><nldd-form-field></nldd-form-field><nldd-dropdown></nldd-dropdown></nldd-form>';
+	assert.deepEqual(check(nodes, inOrder), []);
+	assert.deepEqual(check(nodes, `${inOrder}<nldd-form><nldd-dropdown></nldd-dropdown><nldd-form-field></nldd-form-field></nldd-form>`), ['a.html: nldd-form-field is out of order in nldd-form.']);
+});
+
+test('checkComposition gives each of two identical nodes an element of its own', () => {
+	const nodes = [{ tag: 'nldd-form', children: [
+		{ tag: 'nldd-form-field', children: [{ tag: 'nldd-text-field', optional: true }] },
+		{ tag: 'nldd-form-field', children: [{ tag: 'nldd-dropdown' }] },
+	] }];
+	const markup = '<nldd-form><nldd-form-field><nldd-dropdown></nldd-dropdown></nldd-form-field><nldd-form-field><nldd-text-field></nldd-text-field></nldd-form-field></nldd-form>';
+	assert.deepEqual(check(nodes, markup), []);
+});
+
+test('unshownParts names what no pattern showed of a shared definition', () => {
+	const part = { tag: 'a', children: [{ slot: 'b' }] };
+	assert.deepEqual(unshownParts({ head: part }, new Set([part])), ['slot="b"']);
 });
 
 test('checkComposition wants a child directly under its parent', () => {
@@ -136,7 +196,7 @@ test('checkComposition wants every required root in every example', () => {
 	const roots = [{ tag: 'nldd-form' }, { tag: 'nldd-dropdown' }];
 	const examples = [example('<nldd-form></nldd-form><nldd-dropdown></nldd-dropdown>'), example('<nldd-form></nldd-form>', 'b.html')];
 	assert.deepEqual(checkComposition(roots, { tags, examples }), ['b.html: misses nldd-dropdown.']);
-	assert.deepEqual(checkComposition(roots, { tags, examples, partial: { 'b.html': ['nldd-dropdown'] } }), []);
+	assert.deepEqual(checkComposition(roots, { tags, examples, fragments: { 'b.html': [{ tag: 'nldd-form' }] } }), []);
 });
 
 test('checkComposition gives every element to one sibling', () => {

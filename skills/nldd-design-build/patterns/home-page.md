@@ -13,9 +13,11 @@ De home is het startpunt van een website. Het laat zien wat bezoekers er kunnen 
 ```
 nldd-shell                                   de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                      de header
+       ├─ slot="header"                      de header, geen terugknop
+       │    ├─ nldd-status-bar               alleen als er iets te melden is, boven de balk; optioneel
        │    └─ nldd-skip-link                om de balk heen
-       │         └─ nldd-top-navigation-bar  zoeken en taal, geen terugknop
+       │         └─ nldd-top-navigation-bar  website-title, back-text, back-href
+       │              └─ nldd-menu-bar       slot="utility"; zoeken en taal; optioneel
        ├─ nldd-hero                          main-background; de opening
        │    └─ slot="media"                  nldd-image, hier nog zonder beeld
        ├─ nldd-simple-section                background="tinted"; wat je hier kunt
@@ -32,8 +34,10 @@ nldd-shell                                   de buitenste schil
        │    ├─ slot="left"                   de titel en een korte uitleg
        │    └─ slot="right"                  een nldd-list type="navigation" naar de onderwerpen
        ├─ nldd-simple-section                background="tinted"; de oproep
-       └─ nldd-page-footer                   slot="footer"
-            └─ slot="legal-bar"
+       └─ nldd-page-footer                   slot="footer"; de footer
+            ├─ nldd-breadcrumbs              slot="breadcrumbs"; waar deze pagina staat; optioneel
+            ├─ nldd-container                de hoofdinhoud, vrij in te vullen; optioneel
+            └─ nldd-page-footer-legal-bar    slot="legal-bar"
 ```
 
 ```html
