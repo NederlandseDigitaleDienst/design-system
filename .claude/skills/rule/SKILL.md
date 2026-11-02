@@ -71,7 +71,7 @@ runtime: true
 context: 'nldd-button-group:state(no-width)'
 ```
 
-De naam beschrijft het feit, nooit de fout. Deze regels draaien alleen in de browser en hebben geen voorbeelden nodig. Een component bevat nooit meldingstekst.
+De naam beschrijft het feit, nooit de fout. Deze regels draaien alleen in de browser en hebben geen voorbeelden nodig. Een component bevat nooit meldingstekst. De naam is een letterlijke string, en `lint:rules` faalt op een state die geen regel leest, net als op een regel die een state leest die niemand zet.
 
 ## 3. Bewijs de regel
 

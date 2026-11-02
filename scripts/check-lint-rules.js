@@ -5,7 +5,8 @@
  *  - its selectors and examples only name tags and attributes that exist, so
  *    renaming a component fails here, in the same pull request;
  *  - its `see` points at something that exists;
- *  - every pattern's example passes every rule, so a pattern is always valid.
+ *  - every pattern's example passes every rule, so a pattern is always valid;
+ *  - every state a rule reads is set, and every state that is set is read.
  *
  * Usage: node scripts/check-lint-rules.js
  */
@@ -126,14 +127,43 @@ async function checkPatterns() {
 const componentSources = sourceFiles(join(repoRoot, 'src'))
 	.map((file) => [file, readFileSync(file, 'utf8')]);
 
+/** A file may name something else setState, so only an import of ours counts. */
+const STATE_IMPORT = /import \{[^}]*\bsetState\b[^}]*\} from '[^']*element-state(\.js)?'/;
+const STATE_CALL = /(?<![.\w])setState\(\s*[^,]+,\s*([^,]+),/g;
+
+/** Every state a component sets. A name built at runtime cannot be checked, so it is not allowed. */
+function readSetStates() {
+	const states = new Set();
+	for (const [file, source] of componentSources) {
+		if (!STATE_IMPORT.test(source)) continue;
+		for (const { 1: name, index } of source.matchAll(STATE_CALL)) {
+			const literal = /^'([a-z0-9-]+)'$/.exec(name.trim());
+			if (literal) states.add(literal[1]);
+			else {
+				const line = source.slice(0, index).split('\n').length;
+				problems.push(`${relative(repoRoot, file)}:${line}: setState needs a literal name, got ${name.trim()}.`);
+			}
+		}
+	}
+	return states;
+}
+
+const setStates = readSetStates();
+const readStates = new Set();
+
 /** A rule on a state nothing sets would never fire, and look fine. */
 function checkStates(rule) {
 	const selectors = selectorsOf(rule).join(' ');
-	for (const [, state] of selectors.matchAll(/:state\(([a-z-]+)\)/g)) {
-		const set = `'${state}'`;
-		if (!componentSources.some(([, source]) => source.includes('setState(') && source.includes(set))) {
-			problems.push(`${rule.id}: no component sets the state ${state}.`);
-		}
+	for (const [, state] of selectors.matchAll(/:state\(([a-z0-9-]+)\)/g)) {
+		readStates.add(state);
+		if (!setStates.has(state)) problems.push(`${rule.id}: no component sets the state ${state}.`);
+	}
+}
+
+/** A state no rule reads means a warning disappeared without anyone noticing. */
+function checkStatesAreRead() {
+	for (const state of setStates) {
+		if (!readStates.has(state)) problems.push(`A component sets the state ${state}, which no rule reads.`);
 	}
 }
 
@@ -171,6 +201,7 @@ for (const rule of data.rules) {
 	if (!rule.runtime) await checkExamples(rule);
 }
 const patterns = await checkPatterns();
+checkStatesAreRead();
 checkNoWarnings();
 checkBrowserSelectors();
 
