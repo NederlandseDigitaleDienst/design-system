@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-hero:is([corner], [corner=""])[width="full"]'
+message: '`corner` with width="full" runs the hero to the edge of the screen. A shape with a rounded corner always keeps a margin around it; leave width="full" off or drop the corner.'
+examples:
+  passed: ['<nldd-hero corner="top-left"></nldd-hero>']
+  failed: ['<nldd-hero corner="top-left" width="full"></nldd-hero>', '<nldd-hero corner width="full"></nldd-hero>']

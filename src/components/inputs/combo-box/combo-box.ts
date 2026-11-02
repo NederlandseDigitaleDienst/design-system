@@ -65,7 +65,8 @@
  * ```
  */
 import { LitElement } from 'lit';
-import { customElement, property, state, query } from 'lit/decorators.js';
+import { property, state, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { comboBoxStyles } from './combo-box.styles.js';
@@ -79,6 +80,7 @@ import '../../content/icon/icon.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ComboBoxSize = 'sm' | 'md';
@@ -222,9 +224,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	// — Lifecycle ————————————————————————————————————————————————————————————
 
 	override firstUpdated(): void {
-		if (import.meta.env?.DEV && !this.accessibleLabel) {
-			console.warn('<nldd-combo-box>: No accessible-label provided. Add an accessible-label attribute for screen reader accessibility.');
-		}
 		this._initialValue = this.value;
 		this._initialText = this.text;
 	}
@@ -437,7 +436,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// state would wrongly suggest the input is invalid.
 		if (this.allowCustom && !this._hasVisibleMenuItems()) return;
 		if (!('showPopover' in this._menu)) {
-			console.warn('<nldd-combo-box>: Popover API is not supported in this browser. The dropdown will not open.');
+			setState(this, 'no-popover', true);
 			return;
 		}
 		this._updateMenuWidth();

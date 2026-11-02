@@ -46,11 +46,13 @@
  * @attr {boolean} button - Makes the whole bar a button; ignored when href is set
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { statusBarStyles } from './status-bar.styles.js';
 import { statusBarTemplate } from './status-bar.template.js';
 import '../../content/icon/icon.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type StatusBarVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 
@@ -91,19 +93,18 @@ export class NLDDStatusBar extends LitElement {
 	}
 
 	override firstUpdated(): void {
-		if (import.meta.env?.DEV) this._checkPlacement();
+		this._checkPlacement();
 	}
 
-	/** DEV-only: warns when a top bar comes before the status bar. Top bars in an overlay are left out, since a sheet or dialog has its own. */
+	/** Whether a top bar comes before the status bar. Top bars in an overlay are left out, since a sheet or dialog has its own. */
 	private _checkPlacement(): void {
+		if (!import.meta.env?.DEV) return;
 		const root = this.getRootNode() as Document | ShadowRoot;
 		const above = [...root.querySelectorAll('nldd-top-navigation-bar, nldd-top-title-bar')].some((bar) =>
 			!bar.closest('nldd-sheet, nldd-modal-dialog, nldd-popover, dialog')
 			&& (bar.compareDocumentPosition(this) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
 			&& !bar.contains(this));
-		if (above) {
-			console.warn('<nldd-status-bar>: The status bar sits below a top bar. It belongs above it, as the first thing on the screen.', this);
-		}
+		setState(this, 'below-top-bar', above);
 	}
 
 	override updated(changed: Map<string, unknown>): void {

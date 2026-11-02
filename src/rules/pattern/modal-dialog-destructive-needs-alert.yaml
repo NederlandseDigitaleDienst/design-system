@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-modal-dialog:has(> [slot="actions"][appearance="destructive"]):not([variant="alert"])'
+message: 'Set variant="alert" on a dialog about a destructive action, which brings the icon and color that go with it.'
+see: patronen/irreversible-action
+examples:
+  passed: ['<nldd-modal-dialog variant="alert" text="Verwijder dossier"><nldd-button slot="actions" appearance="primary" text="Behoud"></nldd-button><nldd-button slot="actions" appearance="destructive" text="Verwijder"></nldd-button></nldd-modal-dialog>']
+  failed: ['<nldd-modal-dialog text="Verwijder dossier"><nldd-button slot="actions" appearance="primary" text="Behoud"></nldd-button><nldd-button slot="actions" appearance="destructive" text="Verwijder"></nldd-button></nldd-modal-dialog>']

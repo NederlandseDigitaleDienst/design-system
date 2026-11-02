@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-hero:state(corner-covered)'
+message: 'This corner sits under the panel, so the rounded corner does not show. Choose a corner the panel leaves free, or leave the value empty to let the hero choose.'

@@ -168,7 +168,7 @@ Gebruik de `withTranslations` mixin uit `src/utilities/with-translations.ts`. De
 
 ```typescript
 import { LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nldd{PascalName}Translations } from './{naam}.i18n.js';
 

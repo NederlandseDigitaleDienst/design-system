@@ -39,7 +39,8 @@
  * @fires token-action - When a token's menu action is chosen (token-control="menu"); detail: { value: string, action: string }
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { tokenFieldStyles } from './token-field.styles.js';
 import { tokenFieldTemplate } from './token-field.template.js';

@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-tag:state(unnamed)'
+message: 'An icon-only tag without an `accessible-label` has no accessible name. Add `accessible-label` so screen readers can announce it.'

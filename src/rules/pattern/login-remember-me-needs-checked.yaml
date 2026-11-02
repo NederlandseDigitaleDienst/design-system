@@ -1,0 +1,8 @@
+severity: hint
+context: 'nldd-checkbox-field:is([label="Onthoud mij" i], [label="Ingelogd blijven" i], [label="Stay signed in" i], [label="Remember me" i]):not([checked])'
+message: 'Set `checked`: staying signed in is the right default, and who does not want it turns it off.'
+see: ontwerprichtlijnen/invoer-en-formulieren
+examples:
+  passed: ['<nldd-checkbox-field label="Onthoud mij" checked></nldd-checkbox-field>']
+  failed: ['<nldd-checkbox-field label="Onthoud mij"></nldd-checkbox-field>']
+  cantTell: ['<nldd-checkbox-field label="Onthoud mij" :checked="onthoud"></nldd-checkbox-field>']

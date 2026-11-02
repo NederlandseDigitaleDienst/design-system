@@ -178,17 +178,10 @@ describe('nldd-icon – icon attribute', () => {
 		expect(el.shadowRoot!.innerHTML).not.toBe(placeholderSvg);
 	});
 
-	it('warns once per page about the old name attribute, and ignores it', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('ignores the old name attribute', async () => {
 		el = await fixture<NLDDIcon>('<nldd-icon name="heart"></nldd-icon>');
 		await waitForUpdate(el);
 		expect(el.icon).toBe('circle-dashed');
-		expect(warn).toHaveBeenCalledTimes(1);
-		expect(warn.mock.calls[0][0]).toContain('icon="heart"');
-		cleanup(el);
-
-		el = await fixture<NLDDIcon>('<nldd-icon name="star"></nldd-icon>');
-		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledTimes(1);
+		expect(el.matches(':state(unknown-icon)')).toBe(false);
 	});
 });

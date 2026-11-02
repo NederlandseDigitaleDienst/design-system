@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-step-indicator-item'
+removed: ['nldd-step-indicator-item']
+fix: { tag: nldd-step-bar-item }
+message: '`nldd-step-indicator-item` is now `nldd-step-bar-item`. Rename the tag, its import and its class, here and on every page.'
+examples:
+  passed: ['<nldd-step-bar-item text="Aanvraag"></nldd-step-bar-item>']
+  failed: ['<nldd-step-indicator-item text="Aanvraag"></nldd-step-indicator-item>']

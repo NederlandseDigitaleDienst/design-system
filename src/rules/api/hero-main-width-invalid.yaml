@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-hero:state(invalid-main-width)'
+message: '`main-width` is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 640px.'

@@ -483,21 +483,19 @@ describe('nldd-window – accessible name', () => {
 		expect(label(el)).toBe('Venster');
 	});
 
-	it('is called Venster without either, and warns when it opens', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('is called Venster without either, and states that when it opens', async () => {
 		el = await fixture<NLDDWindow>('<nldd-window></nldd-window>');
 		await waitForUpdate(el);
 		el.show();
 		expect(label(el)).toBe('Venster');
-		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(true);
+		expect(el.matches(':state(unnamed)')).toBe(true);
 	});
 
-	it('does not warn when its title bar names it', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('is not unnamed when its title bar names it', async () => {
 		el = await fixture<NLDDWindow>(withBar('', 'Filters'));
 		await waitForUpdate(el);
 		el.show();
-		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(false);
+		expect(el.matches(':state(unnamed)')).toBe(false);
 	});
 });
 

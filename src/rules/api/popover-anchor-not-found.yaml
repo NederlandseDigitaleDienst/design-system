@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-popover:state(no-anchor)'
+message: 'Anchor element not found. Set `anchor` or `anchorElement` before calling show().'

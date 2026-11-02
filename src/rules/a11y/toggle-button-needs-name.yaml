@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-toggle-button'
+assert: '[text], [accessible-label], :named-by-field'
+message: 'nldd-toggle-button needs `text` or `accessible-label`, otherwise it has no accessible name.'
+examples:
+  passed: ['<nldd-toggle-button text="Vet"></nldd-toggle-button>', '<nldd-toggle-button icon="plus" accessible-label="Vet"></nldd-toggle-button>']
+  failed: ['<html><body><nldd-toggle-button icon="plus"></nldd-toggle-button></body></html>']
+  cantTell: ['<nldd-toggle-button icon="plus"></nldd-toggle-button>']

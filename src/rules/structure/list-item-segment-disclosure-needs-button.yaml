@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-list-item-segment[disclosure]'
+assert: '[button]'
+message: 'Add `button`: `disclosure` only marks which control opens the branch, and without it there is no hover, focus or keyboard.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list type="tree" accessible-label="Teams"><nldd-list-item><nldd-list-item-segment button disclosure accessible-label="Klap Team Beleid uit"></nldd-list-item-segment></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list type="tree" accessible-label="Teams"><nldd-list-item><nldd-list-item-segment disclosure></nldd-list-item-segment></nldd-list-item></nldd-list>']

@@ -316,6 +316,7 @@ export const InEenListbox = {
 			accessible-label="Opties"
 		>
 			<nldd-list-item>
+				<!-- nldd-lint-disable-next-line list-item-segment-no-control-in-listbox -- Shows on purpose how a segment degrades in a listbox. -->
 				<nldd-list-item-segment
 					checkbox
 					width="full"

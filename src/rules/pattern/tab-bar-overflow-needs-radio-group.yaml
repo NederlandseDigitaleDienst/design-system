@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-toolbar-item:has(> nldd-tab-bar):has(> [slot="overflow"]):not(:has(> nldd-menu-group[slot="overflow"]))'
+message: 'Give the tab bar an nldd-menu-group in `slot="overflow"`, with a type="radio" item per tab.'
+see: patronen/toolbar-with-actions
+examples:
+  passed: ['<nldd-toolbar-item priority="10"><nldd-tab-bar accessible-label="Secties"></nldd-tab-bar><nldd-menu-group slot="overflow" text="Secties"><nldd-menu-item text="Dossiers" type="radio"></nldd-menu-item></nldd-menu-group></nldd-toolbar-item>']
+  failed: ['<nldd-toolbar-item><nldd-tab-bar accessible-label="Secties"></nldd-tab-bar><nldd-menu-item slot="overflow" text="Secties"></nldd-menu-item></nldd-toolbar-item>']

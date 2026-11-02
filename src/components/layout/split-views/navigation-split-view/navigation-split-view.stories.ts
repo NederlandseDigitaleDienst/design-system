@@ -103,6 +103,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 					accessible-label="Navigatie"
 				>
 					<nldd-top-title-bar
+						heading-level="2"
 						slot="header"
 						text="Zijbalk"
 						dismiss-text="Sluit"
@@ -136,6 +137,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 					accessible-label="Tweede navigatie"
 				>
 					<nldd-top-title-bar
+						heading-level="2"
 						slot="header"
 						text="Secundaire zijbalk"
 						back-text="Zijbalk"
@@ -170,7 +172,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 					<nldd-top-title-bar
 						slot="header"
 						text="Inhoud"
-						back-text="Terug"
+						back-text="Secundaire zijbalk"
 					>
 						<nldd-button
 							id="sidebar-toggle"
@@ -202,6 +204,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 					accessible-label="Details"
 				>
 					<nldd-top-title-bar
+						heading-level="2"
 						slot="header"
 						text="Inspecteur"
 						dismiss-text="Sluit"
@@ -240,8 +243,12 @@ export const GenestdeSplitView = {
 		style="height: 600px;"
 	>
 		<nldd-split-view-pane slot="primary-sidebar">
-			<nldd-page sticky-header>
+			<nldd-page
+				sticky-header
+				accessible-label="Navigatie"
+			>
 				<nldd-top-title-bar
+					heading-level="2"
 					slot="header"
 					text="Zijbalk"
 					dismiss-text="Sluit"
@@ -268,7 +275,7 @@ export const GenestdeSplitView = {
 						<nldd-top-title-bar
 							slot="header"
 							text="Inhoud"
-							back-text="Terug"
+							back-text="Zijbalk"
 						></nldd-top-title-bar>
 						<nldd-simple-section>
 							<nldd-rich-text>

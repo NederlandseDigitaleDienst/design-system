@@ -267,13 +267,13 @@ export const MinimaleHoogte = {
 				<nldd-text-cell
 					vertical-alignment="top"
 					min-height="44px"
-					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					class="cell-bounds"
 					text="Min-hoogte 44px"
 				></nldd-text-cell>
 				<nldd-text-cell
 					vertical-alignment="top"
 					min-height="44px"
-					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					class="cell-bounds"
 					text="Met ondersteunende tekst"
 					supporting-text="Ondersteunende tekst"
 				></nldd-text-cell>
@@ -288,7 +288,7 @@ export const HorizontaleUitlijning = {
 			<nldd-list-item>
 				<nldd-text-cell
 					horizontal-alignment="left"
-					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					class="cell-bounds"
 					overline="Overline"
 					text="Tekstcel (links)"
 					supporting-text="Ondersteunende tekst"
@@ -297,7 +297,7 @@ export const HorizontaleUitlijning = {
 			<nldd-list-item>
 				<nldd-text-cell
 					horizontal-alignment="right"
-					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					class="cell-bounds"
 					overline="Overline"
 					text="Tekstcel (rechts)"
 					supporting-text="Ondersteunende tekst"
@@ -312,17 +312,17 @@ export const VerticaleUitlijning = {
 		<div style="display: flex; gap: 8px; height: 80px;">
 			<nldd-text-cell
 				vertical-alignment="top"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 				text="Boven"
 			></nldd-text-cell>
 			<nldd-text-cell
 				vertical-alignment="center"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 				text="Midden"
 			></nldd-text-cell>
 			<nldd-text-cell
 				vertical-alignment="bottom"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 				text="Onder"
 			></nldd-text-cell>
 		</div>

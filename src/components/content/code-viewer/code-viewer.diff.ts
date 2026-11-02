@@ -24,6 +24,8 @@ export interface ParsedDiff {
 	lines: DiffLine[];
 	added: number;
 	removed: number;
+	/** Lines outside the counts of their hunk header, which are not shown. */
+	dropped: number;
 }
 
 const HUNK_RE = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/;
@@ -99,10 +101,7 @@ export function parseUnifiedDiff(raw: string): ParsedDiff {
 		}
 		hunk = null;
 	}
-	if (dropped > 0 && import.meta.env?.DEV) {
-		console.warn(`<nldd-code-viewer>: ${dropped} line(s) of the diff fall outside the line counts of their @@ header and are not shown. Check the counts in the hunk headers.`);
-	}
-	return { doc: lines.map((line) => line.text).join('\n'), lines, added, removed };
+	return { doc: lines.map((line) => line.text).join('\n'), lines, added, removed, dropped };
 }
 
 /** The removed and added lines that are one change: within a hunk, a run of

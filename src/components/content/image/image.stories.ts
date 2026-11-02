@@ -441,6 +441,9 @@ export const AfbeeldingLaadtNiet = {
  */
 export const LqipEncoder = {
 	name: 'LQIP-encoder',
-	render: () => html`<nldd-lqip-encoder></nldd-lqip-encoder>`,
+	render: () => html`
+		<!-- nldd-lint-disable-next-line unknown-element -- Developer tool registered by this story only, left out of the package on purpose. -->
+		<nldd-lqip-encoder></nldd-lqip-encoder>
+	`,
 	parameters: { controls: { disable: true } },
 };

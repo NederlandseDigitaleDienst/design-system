@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-form nldd-form-field[label-alignment]'
+message: 'Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form label-alignment="start"><nldd-form-field label="Naam"><nldd-text-field></nldd-text-field></nldd-form-field></nldd-form>']
+  failed: ['<nldd-form><nldd-form-field label="Naam" label-alignment="start"><nldd-text-field></nldd-text-field></nldd-form-field></nldd-form>']

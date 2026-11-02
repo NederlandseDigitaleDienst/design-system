@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-list:state(control-keeps-tab-stop)'
+message: 'A control in a list-item keeps its tab stop in its own shadow root and has no `no-tab`, so the row cannot take it out of the tab order and the arrow keys skip that row. If the rows of this list are not actions themselves, it is a form: set type="form" and the roving falls away. Otherwise give the component `no-tab`, or wrap the control in an nldd-list-item-segment.'

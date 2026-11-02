@@ -28,7 +28,8 @@
  * @fires change - When value is committed (blur)
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { multiLineTextFieldStyles } from './multi-line-text-field.styles.js';
@@ -131,9 +132,6 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 
 	override firstUpdated(): void {
 		this._initialValue = this.value;
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this.inputId) {
-			console.warn('<nldd-multi-line-text-field>: No accessible-label or input-id provided. Use nldd-form-field for labeled usage, or set accessible-label for screen reader accessibility.');
-		}
 	}
 
 	override updated(changed: PropertyValues): void {

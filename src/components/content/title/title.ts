@@ -31,17 +31,16 @@
  * @slot end - Whatever belongs at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there.
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { titleStyles } from './title.styles.js';
 import { titleTemplate } from './title.template.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Size = 1 | 2 | 3 | 4 | 5 | 6;
 type TitleColor = 'content' | 'inherit';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-
-/** One warning per page: a missed rename is one search-and-replace, not one per title. */
-let warnedAboutSubtitle = false;
 
 type Breakpoint = 'sm' | 'md' | 'lg';
 
@@ -117,15 +116,6 @@ export class NLDDTitle extends LitElement {
 		else this._hasDefaultSlotted = hasContent;
 	};
 
-	override firstUpdated(): void {
-		// The subtitle slot was renamed to supporting-text. Content in a slot that
-		// no longer exists is not rendered and reports nothing, so say it here.
-		if (import.meta.env?.DEV && !warnedAboutSubtitle && this.querySelector(':scope > [slot="subtitle"]')) {
-			warnedAboutSubtitle = true;
-			console.warn('NLDDTitle: the subtitle slot is now supporting-text. Rename slot="subtitle" to slot="supporting-text", or use the supporting-text attribute, here and on every other nldd-title.');
-		}
-	}
-
 	/** The valid custom size per breakpoint, worked out before the first paint. */
 	private _customSizes: Partial<Record<Breakpoint, string>> = {};
 
@@ -144,6 +134,7 @@ export class NLDDTitle extends LitElement {
 		// size from the scale.
 		const own: Record<Breakpoint, string> = { sm: this.smCustomSize, md: this.mdCustomSize, lg: this.lgCustomSize };
 		this._customSizes = {};
+		let invalid = false;
 		for (const breakpoint of BREAKPOINTS) {
 			const value = (own[breakpoint] || '').trim();
 			const valid = value !== '' && isFontSize(value);
@@ -154,10 +145,9 @@ export class NLDDTitle extends LitElement {
 				this.style.removeProperty(`--_title-${breakpoint}-custom-size`);
 			}
 			this.toggleAttribute(`data-${breakpoint}-custom-size`, valid);
-			if (import.meta.env?.DEV && value !== '' && !valid) {
-				this._warnOnce(`invalid-${breakpoint}-${value}`, `<nldd-title>: ${breakpoint}-custom-size="${value}" is not a size the title can use, so it keeps its size from the scale at ${breakpoint}. Use a length such as "96px" or "6rem", not a keyword.`);
-			}
+			if (value !== '' && !valid) invalid = true;
 		}
+		setState(this, 'invalid-custom-size', invalid);
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -168,18 +158,12 @@ export class NLDDTitle extends LitElement {
 		}
 	}
 
-	/** DEV-only: warnings already given, so each says it once per title. */
-	private _warned = new Set<string>();
-
-	private _warnOnce(key: string, message: string): void {
-		if (this._warned.has(key)) return;
-		this._warned.add(key);
-		console.warn(message, this);
-	}
-
-	/** DEV-only: says so when a custom size is smaller than size 1, which then shows instead. */
+	/** DEV-only: whether a custom size is smaller than size 1, which then shows instead. */
 	private _checkFloor(sizes: Partial<Record<Breakpoint, string>>): void {
-		if (!this.shadowRoot || Object.keys(sizes).length === 0) return;
+		if (!this.shadowRoot || Object.keys(sizes).length === 0) {
+			setState(this, 'custom-size-below-floor', false);
+			return;
+		}
 		const probe = document.createElement('span');
 		probe.style.position = 'absolute';
 		probe.style.visibility = 'hidden';
@@ -188,19 +172,19 @@ export class NLDDTitle extends LitElement {
 			probe.style.fontSize = value;
 			return parseFloat(getComputedStyle(probe).fontSize);
 		};
+		let below = false;
 		try {
 			for (const [breakpoint, value] of Object.entries(sizes) as [Breakpoint, string][]) {
 				// A value relative to the viewport, a container or the surrounding
 				// text resolves to something else elsewhere, so it is left to the
 				// CSS floor rather than measured here.
 				if (/%|\d(?:v[whib]|vmin|vmax|cq[whib]|cqmin|cqmax|em|ex|ch|cap|ic|lh)\b/.test(value)) continue;
-				if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) {
-					this._warnOnce(`floor-${breakpoint}-${value}`, `<nldd-title>: custom size "${value}" is smaller than size 1 at ${breakpoint} and shows as size 1. Use size for headings up to size 1.`);
-				}
+				if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) below = true;
 			}
 		} finally {
 			probe.remove();
 		}
+		setState(this, 'custom-size-below-floor', below);
 	}
 
 	override render() {

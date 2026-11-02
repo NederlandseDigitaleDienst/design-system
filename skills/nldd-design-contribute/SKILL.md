@@ -89,6 +89,7 @@ Wat er dan beschikbaar is:
 | `/css` | de CSS-conventies: breakpoints per stuk (geen mobile-first overrides), at-rule nesting, de vijf variabelenlagen |
 | `/changelog` | een entry schrijven die een consument iets zegt, boven het nieuwste versieblok |
 | `/translation-keys` | de conventies voor i18n-keys en microcopy |
+| `/rule` | een regel toevoegen aan `nldd lint`, getest op patronen en echte apps |
 | `/worktree` | een worktree opzetten voor een nieuwe branch, met `.env` en `.claude/` erin |
 | `/storybook-manager` | Storybook-instances starten en stoppen over meerdere worktrees |
 

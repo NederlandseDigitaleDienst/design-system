@@ -859,7 +859,10 @@ export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-button-group>
+				<nldd-container
+					layout="wrap"
+					gap="8"
+				>
 					<nldd-button
 						appearance="inherit-filled"
 						text="Inherit filled"
@@ -881,7 +884,7 @@ export const OpKleurvlak = {
 						expandable
 						expanded
 					></nldd-button>
-				</nldd-button-group>
+				</nldd-container>
 			</div>
 			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-button-group>

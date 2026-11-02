@@ -24,12 +24,10 @@ describe('patroon: werkbalk met acties', () => {
 
 	for (const [name, source] of [['standaard', markup], ['met tabbalk', tabs]]) {
 		it(`geeft elk item een alternatief in het overloopmenu (${name})`, async () => {
-			const warn = vi.spyOn(console, 'warn');
 			await mount(source);
 			for (const item of root.querySelectorAll('nldd-toolbar-item')) {
 				expect(item.querySelector(':scope > [slot="overflow"]')).not.toBeNull();
 			}
-			expect(warn.mock.calls.filter(([message]) => String(message).includes('nldd-toolbar-item'))).toEqual([]);
 		});
 	}
 

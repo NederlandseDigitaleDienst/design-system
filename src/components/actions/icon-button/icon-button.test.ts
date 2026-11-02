@@ -68,29 +68,6 @@ describe('nldd-icon-button – icon & text attributes', () => {
 		expect(textEl).toBeNull();
 	});
 
-	it('warns when slot-based icon-only has no accessible name', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDIconButton>(`
-			<nldd-icon-button>
-				<svg slot="icon" width="20" height="20"><circle cx="10" cy="10" r="8"/></svg>
-			</nldd-icon-button>
-		`);
-		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('accessible-label'));
-		warnSpy.mockRestore();
-	});
-
-	it('does not warn when slot-based icon has text', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDIconButton>(`
-			<nldd-icon-button text="Custom">
-				<svg slot="icon" width="20" height="20"><circle cx="10" cy="10" r="8"/></svg>
-			</nldd-icon-button>
-		`);
-		await waitForUpdate(el);
-		expect(warnSpy).not.toHaveBeenCalled();
-		warnSpy.mockRestore();
-	});
 });
 
 
@@ -827,10 +804,9 @@ describe('<nldd-icon-button> with download', () => {
 		expect(a.getAttribute('aria-label')).toContain('downloadt bestand');
 	});
 
-	it('warns once that target does nothing on a download', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that target does nothing on a download', async () => {
 		el = await fixture('<nldd-icon-button href="/verslag.pdf" target="_blank" download="verslag.pdf" icon="download" text="Download"></nldd-icon-button>');
 		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
+		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
 });

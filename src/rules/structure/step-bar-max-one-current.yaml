@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-step-bar'
+count:
+  of: 'nldd-step-bar-item[status="current"]'
+  max: 1
+message: 'More than one step has `status="current"`; the last one wins. Mark only the step you are on.'
+examples:
+  passed: ['<nldd-step-bar><nldd-step-bar-item text="Gegevens" status="past"></nldd-step-bar-item><nldd-step-bar-item text="Controle" status="current"></nldd-step-bar-item></nldd-step-bar>']
+  failed: ['<nldd-step-bar><nldd-step-bar-item text="Gegevens" status="current"></nldd-step-bar-item><nldd-step-bar-item text="Controle" status="current"></nldd-step-bar-item></nldd-step-bar>']

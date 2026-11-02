@@ -22,6 +22,8 @@ import { SafeTriangleController, rectContainsPoint, type Point } from './menu.sa
 import { NLDDMenuGroup } from './menu-group.js';
 import { NLDDMenuDivider } from './menu-divider.js';
 import { nextTabbableAfter } from '../../../utilities/tab-order.js';
+import { setState } from '../../../utilities/element-state.js';
+import '../../../utilities/custom-element.js';
 
 export { NLDDMenuItem } from './menu-item.js';
 export { NLDDMenuGroup } from './menu-group.js';
@@ -1061,10 +1063,7 @@ export class NLDDMenu extends LitElement {
 	 * keystroke. Text without the query in it is shown as it is.
 	 */
 	public filter(query: string, { hide = true }: { hide?: boolean } = {}): void {
-		if (import.meta.env?.DEV && this.variant === 'navigation' && !this._warnedFilterInNavigation) {
-			this._warnedFilterInNavigation = true;
-			console.warn('nldd-menu: filter() belongs to a menu of actions or options. A navigation menu is a short list of links and is not filtered.');
-		}
+		setState(this, 'filtered', true);
 		const allItems = Array.from(this.querySelectorAll('nldd-menu-item')) as NLDDMenuItem[];
 		allItems.forEach(item => {
 			const matches = !hide || !query || this.filterFn(query, item);
@@ -1452,25 +1451,12 @@ export class NLDDMenu extends LitElement {
 		});
 		(Array.from(this.querySelectorAll('nldd-menu-divider, nldd-menu-group')) as (NLDDMenuDivider | NLDDMenuGroup)[])
 			.forEach(part => { part.menuVariant = this.variant; });
-		this._warnOnActionsInNavigation(items);
 		const own = items.filter(item => item.closest('nldd-menu') === this);
 		const checkColumn = this.variant === 'menu' && own.some(item => item.type !== 'button');
 		own.forEach(item => {
 			item.checkColumn = checkColumn;
 		});
 	};
-
-	private _warnedActionsInNavigation = false;
-	private _warnedFilterInNavigation = false;
-
-	/** Checkable items and shortcuts belong to actions, not to a list of links. */
-	private _warnOnActionsInNavigation(items: NLDDMenuItem[]): void {
-		if (!import.meta.env?.DEV || this.variant !== 'navigation' || this._warnedActionsInNavigation) return;
-		const stray = items.find(item => item.type !== 'button' || item.shortcut);
-		if (!stray) return;
-		this._warnedActionsInNavigation = true;
-		console.warn('nldd-menu: variant="navigation" is a list of links. A checkbox or radio item, or a shortcut, belongs to an action menu and has no role to live in here. Use the default variant for actions.', stray);
-	}
 
 	private _handleBeforeToggle = (event: Event): void => {
 		if ((event as ToggleEvent).newState === 'open') this.removeAttribute('positioned');

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-page-footer-legal-bar:has(> nldd-page-footer-legal-bar-item[text]):not(:has(> nldd-page-footer-legal-bar-item[text*="privacy" i]))'
+message: 'Add a direct link "Privacy": European privacy regulators ask for one on every page.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page-footer-legal-bar><nldd-page-footer-legal-bar-item text="Privacy" href="/privacy"></nldd-page-footer-legal-bar-item></nldd-page-footer-legal-bar>']
+  failed: ['<nldd-page-footer-legal-bar><nldd-page-footer-legal-bar-item text="Contact" href="/contact"></nldd-page-footer-legal-bar-item></nldd-page-footer-legal-bar>']

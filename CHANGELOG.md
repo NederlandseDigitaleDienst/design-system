@@ -19,6 +19,7 @@ here; consult the commit history if you need that level of detail.
 - **A larger step on `nldd-slider`, by click or by key.** A click on `start-icon` moves the value a tenth of the range down, on `end-icon` a tenth up, and at least one `step`: the jump Page Up and Page Down take. Shift with an arrow key now takes it too, on the thumb with focus, also in a range; a Mac keyboard has no Page Up. The icons stay out of the tab order, and in a range they only explain the ends.
 - **Icon alias `no-volume`** for `speaker`, the speaker without waves, for the quiet end of a volume slider.
 - **A field never turns red without a reason under it.** When a control is `invalid` and no item of its `nldd-validation-list` fails, the list says what is wrong itself: an invalid e-mail or web address, an empty required field, too short, too long, too low or too high, as the browser reports it, and "Controleer wat je hebt ingevuld." when it cannot tell. The line is read out with the field like any other item, and every text can be translated. An item of your own that fails always wins.
+- **Rule `list-item-label-needs-title`.** `nldd-list-item` warns while developing when `accessible-label` does not start with the row's visible title, so voice control can find the row by the words on screen.
 
 ### Changed
 
@@ -26,15 +27,49 @@ here; consult the commit history if you need that level of detail.
 - **Centered text in `nldd-inline-dialog` is balanced.** The text and supporting text break into lines of about equal length, so a short last line no longer sits under a long first one. Left-aligned text keeps its usual line breaks.
 - **The histogram of `nldd-slider` reads more clearly.** The bars within the chosen value or range take the color of the fill, rather than a pale tint of it, so they stand out from the other bars in every theme, light and dark. The bars now stop 2px above the track, so a bar never runs into it. The histogram now spans the part of the track the thumb travels, half a thumb in from each end, so every bar stands right above the values it counts and no bar sticks out beside a thumb at the minimum or maximum.
 - **`nldd-title-cell` is `size="6"` in a table.** In an `nldd-table-row` a title cell without a `size` of its own is as large as the other cells, in bold, rather than the larger size 5 it has in a list. A `size` in the markup still wins, 5 included. Outside a table nothing changes, but `size` is now unset by default rather than 5: the cell looks the same, while the `size` property reads `undefined` and there is no `size="5"` on the element.
-- **`nldd-collection`, `nldd-menu-bar` and the legal bar of `nldd-page-footer` are lists for assistive technology.** A screen reader now says how many items or links there are. The items get `role="listitem"`, unless they have a role of their own: an `nldd-card` keeps its article inside. A collection that scrolls sideways is now a named list instead of a region.
-- **An `nldd-title` that a `nldd-top-title-bar` points at with `collapse-anchor` gets the bar's heading level** when it has none. An anchor that is no heading leaves the bar's own title in place as the heading, so a page never ends up without one, and development warns about it.
-- **`nldd-list-item` warns in development when `accessible-label` does not start with the row's visible title**, so voice control can find the row by the words on screen.
+- **`nldd-collection`, `nldd-menu-bar` and the legal bar of `nldd-page-footer` are lists for assistive technology.** A screen reader now says how many items or links there are. The items get `role="listitem"`, unless they have a role of their own: an `nldd-card` keeps its article inside. A collection that scrolls sideways is now a named list instead of a region. The rule `collection-no-child-with-role` points out a child that keeps a role of its own, such as a bare `<article>`, because the list then holds something that is no list item.
+- **An `nldd-title` that a `nldd-top-title-bar` points at with `collapse-anchor` gets the bar's heading level** when it has none. An anchor that is no heading leaves the bar's own title in place as the heading, so a page never ends up without one, and the rule `top-title-bar-anchor-needs-heading` warns about it.
 
 ### Fixed
 
 - **Dragging on `nldd-task-board` works on an iPhone.** After holding an item, the first move scrolled the board instead, and the drag broke off. iOS decides whether a touch may scroll as it starts, and the board now says so from the start.
 - **`focus()` right after a component is put in the page works.** A text field, button, checkbox and every other component that hands focus to an element inside it did nothing before its first render, so a site that adds a field and focuses it left focus where it was. The call now waits for that render, unless focus has moved on in the meantime.
 - **A card in an `nldd-collection` that scrolls sideways comes fully into view when something in it takes focus.** The browser only scrolled the focused link in, so a card could stay half outside the row with its focus ring cut off.
+
+## [0.14.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.2...v0.14.0) (2026-11-02)
+
+### Breaking
+
+- **Warnings changed shape.** Tests that spy on `console.warn` for a text of this package need the new text: `[nldd] <rule>: ...`. Most warnings now arrive a moment later, once per element.
+
+### Highlights
+
+- **`nldd lint`, a fast and deterministic check for code that uses the design system.** `npx @nldd/design-system lint`, with no configuration: unknown tags, attributes, slots, values and icons, missing accessible names, and mistakes in how components fit together. A value that only exists at runtime is never a finding, and `--update-baseline` accepts what is already there, so only new findings count. It reads HTML, Vue and JSX/TSX, and works as a pre-commit hook and in CI with `--format github`. See Added.
+
+### Added
+
+- **The same rules in the browser.** While developing with a bundler that sets `import.meta.env.DEV`, such as Vite, a page shows `[nldd]` warnings in the console. A rule then sees real values and what several components render together. A production build does not contain this.
+- **`nldd lint` reads Vue, TSX, JSX, Angular, Django, Jinja (`.j2`), htmx and plain HTML** as they are, and Astro, MkDocs and Hugo through what they build. What a template writes into a tag makes an element uncertain, never wrong.
+- **Reading `.tsx` and `.jsx` needs Node 20.19 or newer,** through the optional `oxc-parser`. The rest of `nldd lint` runs on Node 18.
+- **`nldd lint --fix` solves what only got another name:** tags such as `nldd-app-view`, attributes such as `variant`, values such as `box` and the `subtitle` slot, and it removes attributes that do nothing any more. It works in Vue, JSX, Angular, Jinja and plain HTML and leaves everything else in the file as it was. A renamed tag takes its imports, classes and selectors along, and it names the lines it leaves to you. On the fourteen public apps that use the design system it solves three quarters of the findings.
+- **`--statistics` counts findings per rule,** for a project with hundreds. A suppression that no longer suppresses anything gets a warning of its own, and a rule links to its page in Storybook.
+- **Rules come in groups.** `api`, `a11y`, `copy`, `structure` and `pattern`, for `--select`, `--ignore`, `rules --group` and `.nldd-lint.json`. A name starts with what it is about and says what is wrong, such as `tab-bar-needs-name`.
+- **Hints, about how something is meant to be done.** Every sentence in the design guidelines and the patterns was read, and what the markup shows became a rule or a hint. A hint never fails anything. It appears on the pattern it belongs to, and the output sums up each hint once.
+- **`nldd lint dist` reads built HTML,** as whole pages, for any framework that builds to HTML.
+- **`nldd lint`, `nldd explain` and `nldd rules`.** The package has a `bin`. `--format json` gives an agent everything it needs to fix a finding.
+- **`nldd-design-validate`, a sixth skill,** and a hook in the plugin that hands findings back to the agent after an edit. The hook only runs the linter installed in the project.
+- **Rules on the page.** The reference lists the rules per component, and a pattern shows the rules that belong to it.
+- **`custom-elements.json` spells out literal types.** An attribute typed `Appearance` now has `expandedType` with its values, and the manifest lists attributes that only have JSDoc.
+- **`disclosure` on `nldd-icon-cell`** is now documented.
+
+### Fixed
+
+- **DEV warnings reach the main export.** The library build removed almost all of them from `@nldd/design-system`, so only a per-component import showed them.
+
+### Changed
+
+- **Every warning is now a rule in `src/rules/`.** No component contains warning text any more. Warnings start with `[nldd]` and the id of the rule, arrive once per element, and no longer repeat the value at fault: the element is logged with it. Warnings that were always on, such as `hide-below="sm"`, now only appear while developing.
+- **Custom states while developing.** Where a fact is not in the markup, a component exposes it as `:state()`, such as `nldd-button-group:state(no-width)`, and a rule reads that. In production this does nothing.
 
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
 

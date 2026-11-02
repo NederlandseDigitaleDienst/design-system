@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-simple-section, nldd-full-bleed-section) > :is([style*="grid-template-columns"], [style*="display: grid"], [style*="display:grid"], [style*="display: flex"], [style*="display:flex"])'
+message: 'Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-two-thirds-one-third-section></nldd-two-thirds-one-third-section>']
+  failed: ['<nldd-simple-section><div style="display: grid"></div></nldd-simple-section>']

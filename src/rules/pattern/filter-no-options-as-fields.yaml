@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-sidebar-section [slot="sidebar"] nldd-checkbox-field, nldd-sidebar-section nldd-checkbox-field[slot="sidebar"]'
+message: 'Make the options rows of an nldd-list, with `checkbox` on the row: the whole row is the target and there is nothing to submit.'
+see: patronen/filtering
+examples:
+  passed: ['<nldd-sidebar-section sidebar-label="Filters"><nldd-list slot="sidebar" accessible-label="Status"><nldd-list-item checkbox><nldd-text-cell text="Afgerond"></nldd-text-cell></nldd-list-item></nldd-list></nldd-sidebar-section>']
+  failed: ['<nldd-sidebar-section sidebar-label="Filters"><nldd-container slot="sidebar"><nldd-checkbox-field label="Afgerond"></nldd-checkbox-field></nldd-container></nldd-sidebar-section>']

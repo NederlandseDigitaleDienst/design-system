@@ -138,17 +138,15 @@ describe('nldd-popover', () => {
 		expect(trigger.getAttribute('aria-expanded')).toBe('false');
 	});
 
-	it('warnt en doet niets als anchor niet gevonden wordt', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('doet niets als anchor niet gevonden wordt', async () => {
 		el = await fixture('<nldd-popover anchor="non-existent" accessible-label="Test"></nldd-popover>');
 		await waitForUpdate(el);
 
 		(el as NLDDPopover).show();
 		await waitForUpdate(el);
 
-		expect(warn).toHaveBeenCalled();
+		expect(el.matches(':state(no-anchor)')).toBe(true);
 		expect((el as NLDDPopover).open).toBe(false);
-		warn.mockRestore();
 	});
 
 	it('anchorElement property heeft voorrang op anchor attribuut', async () => {
@@ -867,7 +865,6 @@ describe('nldd-popover – open attribute', () => {
 	});
 
 	it('does not keep open without an anchor to open against', async () => {
-		vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture('<nldd-popover accessible-label="Test"></nldd-popover>');
 		const popover = el as NLDDPopover;
 		popover.open = true;

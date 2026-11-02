@@ -1,0 +1,9 @@
+severity: hint
+context: 'nldd-page:has(nldd-top-navigation-bar, nldd-page-footer), nldd-bar-split-view, nldd-navigation-split-view'
+assert: 'nldd-shell *, nldd-sheet *, nldd-window *, nldd-modal-dialog *'
+message: 'Put nldd-shell around it: the shell sets the background and decides who scrolls.'
+see: patronen/page-structure
+examples:
+  passed: ['<html><body><nldd-shell><nldd-page><nldd-page-footer slot="footer"></nldd-page-footer></nldd-page></nldd-shell></body></html>']
+  failed: ['<html><body><nldd-page><nldd-page-footer slot="footer"></nldd-page-footer></nldd-page></body></html>']
+  cantTell: ['<nldd-page><nldd-page-footer slot="footer"></nldd-page-footer></nldd-page>']

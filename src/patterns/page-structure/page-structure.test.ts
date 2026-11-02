@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { waitForUpdate } from '../../test-utils.js';
 import markup from './page-structure.html?raw';
 import header from './page-structure.header.html?raw';
@@ -77,20 +77,15 @@ describe('patroon: paginaopbouw, de header', () => {
 	});
 
 	it('zet een status bar als eerste in het header-slot, boven de skip link en de balk', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		try {
-			await mount(headerStatus);
-			const inHeader = [...root.querySelectorAll('nldd-page > [slot="header"]')].map((el) => el.tagName.toLowerCase());
-			expect(inHeader).toEqual(['nldd-status-bar', 'nldd-skip-link']);
-			const status = root.querySelector('nldd-status-bar')!;
-			await waitForUpdate(status as HTMLElement);
-			expect(status.getAttribute('text')).toMatch(/^[A-Z][^:]+: /);
-			const bar = root.querySelector('nldd-top-navigation-bar')!;
-			expect(status.getBoundingClientRect().bottom).toBeLessThanOrEqual(bar.getBoundingClientRect().top);
-			expect(warn.mock.calls.some(([message]) => String(message).includes('below a top bar'))).toBe(false);
-		} finally {
-			warn.mockRestore();
-		}
+		await mount(headerStatus);
+		const inHeader = [...root.querySelectorAll('nldd-page > [slot="header"]')].map((el) => el.tagName.toLowerCase());
+		expect(inHeader).toEqual(['nldd-status-bar', 'nldd-skip-link']);
+		const status = root.querySelector('nldd-status-bar')!;
+		await waitForUpdate(status as HTMLElement);
+		expect(status.getAttribute('text')).toMatch(/^[A-Z][^:]+: /);
+		const bar = root.querySelector('nldd-top-navigation-bar')!;
+		expect(status.getBoundingClientRect().bottom).toBeLessThanOrEqual(bar.getBoundingClientRect().top);
+		expect(status.matches(':state(below-top-bar)')).toBe(false);
 	});
 
 	it('zet inloggen als link helemaal rechts, na zoeken en taal', async () => {

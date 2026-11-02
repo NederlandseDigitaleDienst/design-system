@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-list[hidden]'
+message: 'Leave the list in place and fill `slot="empty"` and `slot="no-results"`: hidden, the empty state goes with it.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list accessible-label="Dossiers"><nldd-inline-dialog slot="empty" text="Nog geen dossiers"></nldd-inline-dialog></nldd-list>']
+  failed: ['<nldd-list accessible-label="Dossiers" hidden></nldd-list>']

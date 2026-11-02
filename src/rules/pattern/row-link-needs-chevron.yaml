@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-list:not([type]) > nldd-list-item[href]:not(:has(> nldd-icon-cell[icon="chevron-right"], > nldd-step-cell))'
+message: 'End the row with an nldd-icon-cell with icon="chevron-right", which says there is more behind it without the word "openen".'
+see: patronen/list
+examples:
+  passed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item href="/d-318"><nldd-text-cell text="Dossier D-318"></nldd-text-cell><nldd-icon-cell icon="chevron-right"></nldd-icon-cell></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item href="/d-318"><nldd-text-cell text="Dossier D-318"></nldd-text-cell></nldd-list-item></nldd-list>']

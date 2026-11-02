@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-modal-dialog:has(> [slot="actions"][appearance="destructive"]):not(:has(> [slot="actions"][appearance="primary"])) > [slot="actions"]:not([appearance="destructive"])'
+message: 'Give the way out appearance="primary": autopilot should end at the safe choice, not at the irreversible one.'
+see: patronen/irreversible-action
+examples:
+  passed: ['<nldd-modal-dialog variant="alert" text="Verwijder dossier"><nldd-button slot="actions" appearance="primary" text="Behoud"></nldd-button><nldd-button slot="actions" appearance="destructive" text="Verwijder"></nldd-button></nldd-modal-dialog>']
+  failed: ['<nldd-modal-dialog variant="alert" text="Verwijder dossier"><nldd-button slot="actions" text="Behoud"></nldd-button><nldd-button slot="actions" appearance="destructive" text="Verwijder"></nldd-button></nldd-modal-dialog>']
+  cantTell: ['<nldd-modal-dialog variant="alert" text="Verwijder dossier"><nldd-button slot="actions" :appearance="soort" text="Behoud"></nldd-button><nldd-button slot="actions" appearance="destructive" text="Verwijder"></nldd-button></nldd-modal-dialog>']

@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-toolbar[label]'
+removed: ['label']
+fix: { rename: { label: accessible-label } }
+message: 'The `label` attribute is now `accessible-label`. Rename it here and on every other nldd-toolbar.'
+examples:
+  passed: ['<nldd-toolbar accessible-label="Acties"></nldd-toolbar>']
+  failed: ['<nldd-toolbar label="Acties"></nldd-toolbar>']

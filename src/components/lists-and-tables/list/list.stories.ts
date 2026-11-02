@@ -290,6 +290,7 @@ export const MetInteractieveRijen = {
 			</nldd-list-item>
 			<nldd-list-item href="/settings">
 				<nldd-text-cell text="Link-item"></nldd-text-cell>
+				<nldd-icon-cell icon="chevron-right"></nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item>
 				<nldd-text-cell text="Niet-interactief item"></nldd-text-cell>
@@ -442,6 +443,7 @@ const buildListbox = (appearance: 'box' | 'simple') => {
 	render(html`
 		<nldd-list
 			type="listbox"
+			accessible-label="Producten"
 			appearance=${appearance}
 			height="280px"
 			@input=${onInput}
@@ -583,7 +585,7 @@ export const Leeg = {
 				<nldd-button
 					slot="actions"
 					appearance="neutral-tinted"
-					text="Filters wissen"
+					text="Pas de filters aan"
 				></nldd-button>
 			</nldd-inline-dialog>
 		</nldd-list>

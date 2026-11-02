@@ -40,7 +40,8 @@
  * @fires menu-click - Fired when the dropdown trigger is clicked and no overlay is slotted
  */
 import { LitElement } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { splitButtonStyles } from './split-button.styles.js';
 import { template } from './split-button.template.js';

@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-page > nldd-page-footer:not([slot="footer"])'
+message: 'Set slot="footer": the page gives the footer its place and it sets its own width and spacing.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page><nldd-page-footer slot="footer"></nldd-page-footer></nldd-page>']
+  failed: ['<nldd-page><nldd-page-footer></nldd-page-footer></nldd-page>']

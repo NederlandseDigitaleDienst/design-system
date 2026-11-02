@@ -17,7 +17,8 @@
  */
 import { LitElement } from 'lit';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { switchFieldStyles } from './switch-field.styles.js';
 import { switchFieldTemplate } from './switch-field.template.js';
 import type { NLDDSwitch } from '../switch/switch.js';

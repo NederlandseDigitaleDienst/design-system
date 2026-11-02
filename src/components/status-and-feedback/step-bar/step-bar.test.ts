@@ -51,8 +51,7 @@ describe('nldd-step-bar', () => {
 		expect(items().map(item => item.resolvedStatus)).toEqual(['current', 'future']);
 	});
 
-	it('laat de laatste stap met status="current" winnen en waarschuwt', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('laat de laatste stap met status="current" winnen', async () => {
 		el = await fixture<NLDDStepBar>(`
 			<nldd-step-bar>
 				<nldd-step-bar-item text="Een" status="current"></nldd-step-bar-item>
@@ -62,12 +61,9 @@ describe('nldd-step-bar', () => {
 		`);
 		await waitForUpdate(el);
 		expect(items().map(item => item.resolvedStatus)).toEqual(['past', 'current', 'future']);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('the last one wins'));
-		warn.mockRestore();
 	});
 
-	it('waarschuwt als current nog op de ouder staat', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('negeert current op de ouder', async () => {
 		el = await fixture<NLDDStepBar>(`
 			<nldd-step-bar current="2">
 				<nldd-step-bar-item text="Een"></nldd-step-bar-item>
@@ -75,19 +71,7 @@ describe('nldd-step-bar', () => {
 			</nldd-step-bar>
 		`);
 		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('moved to the step'));
 		expect(items().map(item => item.resolvedStatus)).toEqual(['current', 'future']);
-		warn.mockRestore();
-	});
-
-	it('waarschuwt ook als current pas later op de ouder komt', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDStepBar>(THREE_STEPS);
-		await waitForUpdate(el);
-		expect(warn).not.toHaveBeenCalled();
-		el.setAttribute('current', '3');
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('status="current"'));
-		warn.mockRestore();
 	});
 
 	it('laat een eigen status van een item winnen van de afleiding', async () => {

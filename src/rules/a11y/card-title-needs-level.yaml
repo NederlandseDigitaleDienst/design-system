@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-card:is([href], [button]) nldd-title:not([heading-level], :has(> :is(h1, h2, h3, h4, h5, h6)))'
+message: 'Set `heading-level`: the title of a card that is a choice is a heading, directly below the page title or the section heading.'
+see: patronen/navigation-page
+examples:
+  passed: ['<nldd-card href="/a" accessible-label="Aanvraag A-1042"><nldd-title text="Aanvraag A-1042" heading-level="2"></nldd-title></nldd-card>']
+  failed: ['<nldd-card href="/a" accessible-label="Aanvraag A-1042"><nldd-title text="Aanvraag A-1042"></nldd-title></nldd-card>']

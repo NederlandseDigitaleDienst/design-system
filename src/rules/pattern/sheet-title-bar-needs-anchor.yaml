@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-sheet nldd-page:has(nldd-form) > nldd-top-title-bar:not([collapse-anchor])'
+message: 'Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed: ['<nldd-sheet><nldd-page><nldd-top-title-bar slot="header" text="Bewerk" dismiss-text="Annuleer" collapse-anchor="titel"></nldd-top-title-bar><nldd-form></nldd-form></nldd-page></nldd-sheet>']
+  failed: ['<nldd-sheet><nldd-page><nldd-top-title-bar slot="header" text="Bewerk" dismiss-text="Annuleer"></nldd-top-title-bar><nldd-form></nldd-form></nldd-page></nldd-sheet>']

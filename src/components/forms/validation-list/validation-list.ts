@@ -72,9 +72,11 @@
  * </nldd-form-field>
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { validationListStyles, validationItemStyles } from './validation-list.styles.js';
 import { validationListTemplate, validationItemTemplate } from './validation-list.template.js';
+import { setState } from '../../../utilities/element-state.js';
 import { nlddValidationListTranslations } from './validation-list.i18n.js';
 import type { NLDDValidationListTranslations } from './validation-list.i18n.js';
 import { translate } from '../../../utilities/translations.js';
@@ -361,6 +363,7 @@ export class NLDDValidationList extends LitElement {
 
 		let anyVisible = false;
 		let anyRuleFails = false;
+		let ruleAndUnmet = false;
 		const messages: string[] = [];
 
 		for (const item of items) {
@@ -368,13 +371,7 @@ export class NLDDValidationList extends LitElement {
 			const rule = tested !== null && skipRules ? true : tested;
 			const failing = rule === null ? named.includes(item.id) : !rule;
 
-			if (import.meta.env?.DEV && rule !== null && named.includes(item.id)) {
-				console.warn(
-					`<nldd-validation-list>: item "${item.id}" has a rule of its own and is also named in \`unmet\`. `
-					+ 'The rule decides, and the name is ignored: it is a snapshot of the previous check and cannot be newer '
-					+ 'than the value. Drop it from `unmet`, or take the rule off the item.',
-				);
-			}
+			if (rule !== null && named.includes(item.id)) ruleAndUnmet = true;
 
 			item.unmet = invalid && failing;
 			item.visible = item.unmet || (!this.judging && (item.hint || this.hint));
@@ -388,6 +385,7 @@ export class NLDDValidationList extends LitElement {
 		const fallback = invalid && !items.some((item) => item.unmet) ? this._fallbackText() : '';
 		this._syncFallbackItem(fallback);
 		this.classList.toggle('has-items', anyVisible || Boolean(fallback));
+		setState(this, 'rule-and-unmet', ruleAndUnmet);
 		this._reportValidity(anyRuleFails, messages);
 	}
 

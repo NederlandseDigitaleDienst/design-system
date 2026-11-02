@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-document-tab-bar'
+assert: '[accessible-label]'
+message: 'nldd-document-tab-bar needs `accessible-label` for a meaningful navigation landmark name; without one it falls back to a generic name.'
+examples:
+  passed: ['<nldd-document-tab-bar accessible-label="Open dossiers"></nldd-document-tab-bar>']
+  failed: ['<nldd-document-tab-bar></nldd-document-tab-bar>']
+  cantTell: ['<nldd-document-tab-bar :accessible-label="naam"></nldd-document-tab-bar>']

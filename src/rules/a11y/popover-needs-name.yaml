@@ -1,0 +1,7 @@
+severity: error
+context: 'nldd-popover'
+assert: '[accessible-label]'
+message: 'nldd-popover needs `accessible-label`, or a screen reader announces it without a name.'
+examples:
+  passed: ['<nldd-popover accessible-label="Filters"></nldd-popover>']
+  failed: ['<nldd-popover></nldd-popover>']

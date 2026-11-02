@@ -31,7 +31,8 @@
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { radioButtonFieldStyles } from './radio-button-field.styles.js';
 import { radioButtonFieldTemplate } from './radio-button-field.template.js';

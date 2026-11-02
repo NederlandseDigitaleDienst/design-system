@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-title[text$="?"]'
+message: 'Give the answer as the heading, such as "De beoordeling duurt zes weken" for "Hoe lang duurt het?".'
+see: ontwerprichtlijnen/copywriting
+examples:
+  passed: ['<nldd-title text="De beoordeling duurt zes weken"></nldd-title>']
+  failed: ['<nldd-title text="Hoe lang duurt het?"></nldd-title>']

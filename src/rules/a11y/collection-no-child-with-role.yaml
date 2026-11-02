@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-collection > :not([slot]):is(a, article, aside, button, details, dialog, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, img, li, main, nav, ol, section, table, ul, [role]:not([role="listitem"]))'
+message: 'The collection is a list and makes each child a list item, but this child has a role of its own, which would be lost. It stays as it is, so the list now holds something that is no list item. Put the content in an nldd-card, or wrap it in a div.'
+examples:
+  passed: ['<nldd-collection><nldd-card></nldd-card><div>Aanvraag A-1042</div></nldd-collection>', '<nldd-collection><nldd-card></nldd-card><nldd-button slot="footer" text="Meer laden"></nldd-button></nldd-collection>']
+  failed: ['<nldd-collection><article>Aanvraag A-1042</article></nldd-collection>', '<nldd-collection><div role="group">Aanvraag A-1042</div></nldd-collection>']

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-toolbar-item:has(> nldd-search-field):not([min-width][max-width])'
+message: 'Give the toolbar item a `min-width` and a `max-width`, so the field shrinks along without becoming unreadable.'
+see: patronen/filtering
+examples:
+  passed: ['<nldd-toolbar-item min-width="240px" max-width="480px"><nldd-search-field></nldd-search-field></nldd-toolbar-item>']
+  failed: ['<nldd-toolbar-item><nldd-search-field></nldd-search-field></nldd-toolbar-item>']

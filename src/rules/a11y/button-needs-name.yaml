@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-button'
+assert: '[text], [accessible-label], :has(> [slot=text])'
+message: 'nldd-button needs `text` or `accessible-label`, otherwise it has no accessible name.'
+examples:
+  passed: ['<nldd-button text="Bewaar"></nldd-button>']
+  failed: ['<nldd-button></nldd-button>']
+  cantTell: ['<nldd-button :text="label"></nldd-button>']

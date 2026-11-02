@@ -277,8 +277,7 @@ describe('nldd-top-title-bar – is-compact', () => {
 		cleanup(container);
 	});
 
-	it('keeps its own title and warns when the anchor is no heading', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('keeps its own title and states it when the anchor is no heading', async () => {
 		const container = await fixture<HTMLElement>(`
 			<div>
 				<nldd-top-title-bar text="Aanvraag A-1042" collapse-anchor="intro"></nldd-top-title-bar>
@@ -290,8 +289,7 @@ describe('nldd-top-title-bar – is-compact', () => {
 		await waitForUpdate(el);
 		const group = el.shadowRoot!.querySelector('.top-title-bar__title-group');
 		expect(group!.hasAttribute('aria-hidden')).toBe(false);
-		expect(warn.mock.calls.some(([message]) => String(message).includes('no heading'))).toBe(true);
-		warn.mockRestore();
+		expect(el.matches(':state(anchor-not-heading)')).toBe(true);
 		cleanup(container);
 	});
 

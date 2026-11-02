@@ -20,7 +20,8 @@
  * @slot description - The description content
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { descriptionCellStyles } from './description-cell.styles.js';
 import { template } from './description-cell.template.js';

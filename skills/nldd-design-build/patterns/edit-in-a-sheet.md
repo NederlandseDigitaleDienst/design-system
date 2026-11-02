@@ -135,3 +135,15 @@ Wat jij nog moet doen: een `text` op de titelbalk die zegt waar de sheet over ga
 ## Gezien in
 
 Deze compositie komt voor in vrijwel elke applicatie op dit systeem, in Vue, Angular en server-gerenderde templates.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
+- `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `sheet-form-max-one-action`: Keep one action under the form. The way out is `dismiss-text` on the title bar.
+- `sheet-title-bar-needs-anchor`: Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.

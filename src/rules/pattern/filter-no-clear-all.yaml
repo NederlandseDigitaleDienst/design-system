@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-link, nldd-button):is([text="Wis alles" i], [text="Alles wissen" i], [text="Wis filters" i], [text="Filters wissen" i], [text="Wis alle filters" i], [text="Alle filters wissen" i], [text="Reset filters" i], [text="Filters resetten" i])'
+message: 'Let each nldd-token remove its own filter instead: one misclick here costs the whole selection, with no way back.'
+see: patronen/filtering
+examples:
+  passed: ['<nldd-token text="Status: Afgerond" control="dismiss"></nldd-token>']
+  failed: ['<nldd-button text="Wis alle filters"></nldd-button>']

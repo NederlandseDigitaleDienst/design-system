@@ -60,11 +60,13 @@
  * @slot footer - Footer content
  */
 import { LitElement, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { findScrollModeProvider, whenScrollModeProviderDefined } from '../../../utilities/scroll-mode-controller.js';
 import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Landmarks = 'auto' | 'page' | 'region';
 
@@ -112,8 +114,6 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	@state()
 	private _derived: 'page' | 'region' = 'page';
 
-	private _warnedDuplicateMain = false;
-
 	/** True when this page renders a section instead of the document landmarks. @internal */
 	get _isRegion(): boolean {
 		return this.landmarks === 'auto' ? this._derived === 'region' : this.landmarks === 'region';
@@ -140,15 +140,12 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	 * A document has one main, and two pages claiming it is invalid HTML that
 	 * nothing on screen gives away. Hidden pages count: a pane that is collapsed
 	 * at this window width is the same markup at another. Only the page that
-	 * arrived later says it, so one mistake is one message.
+	 * arrived later is the second, so one mistake is one fact.
 	 */
-	private _warnOnSecondMain(): void {
-		if (!import.meta.env?.DEV || this._warnedDuplicateMain || this._isRegion) return;
-		const [first, ...rest] = [..._connectedPages].filter((page) => !page._isRegion);
-		const other = first === this ? undefined : first;
-		if (!other || !rest.includes(this)) return;
-		this._warnedDuplicateMain = true;
-		console.warn('nldd-page: a second page renders a main landmark, which a document may have only one of. Leave `landmarks` at "auto" on pages in a pane or an overlay, or set landmarks="region" on the ones that are not the document\'s page.', this, other);
+	private _syncSecondMain(): void {
+		if (!import.meta.env?.DEV) return;
+		const [, ...rest] = [..._connectedPages].filter((page) => !page._isRegion);
+		setState(this, 'second-main', rest.includes(this));
 	}
 
 	private _scrollMode: 'nested' | 'root' = 'nested';
@@ -262,7 +259,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 
 	override updated(changed: PropertyValues) {
 		if (changed.has('stickyHeader')) this._configureScroll();
-		this._warnOnSecondMain();
+		this._syncSecondMain();
 	}
 
 	/**

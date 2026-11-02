@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import './form-field.js';
 import '../../inputs/text-field/text-field.js';
@@ -584,23 +584,11 @@ describe('nldd-form-field – finds the control', () => {
 		expect(el.querySelector('nldd-text-field')!.getAttribute('accessible-label')).toBe('Veldnaam');
 	});
 
-	it('wires up nothing and warns when there is no input at all', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('wires up nothing when there is no input at all', async () => {
 		el = await fixture('<nldd-form-field label="Veldnaam"><div>Geen veld</div></nldd-form-field>');
 		await waitForUpdate(el);
 		expect(el.querySelector('div')!.hasAttribute('accessible-label')).toBe(false);
 		expect(el.querySelector('div')!.hasAttribute('aria-label')).toBe(false);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('No form input found'));
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('label="Veldnaam"'));
-		warn.mockRestore();
-	});
-
-	it('stays quiet while the field is still empty', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture('<nldd-form-field label="Veldnaam"></nldd-form-field>');
-		await waitForUpdate(el);
-		expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('No form input found'));
-		warn.mockRestore();
 	});
 
 	it('leaves a helper element alone as the first child', async () => {
