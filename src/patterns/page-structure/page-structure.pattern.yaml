@@ -1,0 +1,43 @@
+composition:
+  - tag: nldd-shell
+    note: de buitenste schil
+    children:
+      - tag: nldd-page
+        children:
+          - label: slot="header"
+            note: de header
+            children:
+              - tag: nldd-status-bar
+                optional: true
+                note: alleen als er iets te melden is, boven de balk
+              - tag: nldd-skip-link
+                optional: true
+                note: om de balk heen
+                children:
+                  - tag: nldd-top-navigation-bar
+                    attrs: [website-title, back-text, back-href]
+                    children:
+                      - tag: nldd-menu-bar
+                        optional: true
+                        attrs: ['slot="utility"']
+                        note: zoeken en taal
+          - tag: nldd-simple-section
+            note: één sectie per inhoudsblok, met de h1 in de eerste
+          - tag: nldd-simple-section
+            optional: true
+            attrs: ['background="tinted"']
+            note: een vlak
+          - tag: nldd-page-footer
+            optional: true
+            attrs: ['slot="footer"']
+            note: de footer
+            children:
+              - tag: nldd-breadcrumbs
+                optional: true
+                attrs: ['slot="breadcrumbs"']
+                note: waar deze pagina staat
+              - tag: nldd-container
+                optional: true
+                note: de hoofdinhoud, vrij in te vullen
+              - tag: nldd-page-footer-legal-bar
+                attrs: ['slot="legal-bar"']

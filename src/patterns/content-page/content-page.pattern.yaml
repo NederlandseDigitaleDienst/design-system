@@ -1,0 +1,59 @@
+composition:
+  - tag: nldd-shell
+    note: de buitenste schil
+    children:
+      - tag: nldd-page
+        children:
+          - label: slot="header"
+            note: de header
+            children:
+              - tag: nldd-skip-link
+                note: om de balk heen
+                children:
+                  - tag: nldd-top-navigation-bar
+                    attrs: [back-text, back-href]
+                    note: naar de pagina erboven
+                    children:
+                      - tag: nldd-menu-bar
+                        attrs: ['slot="utility"']
+                        note: zoeken en taal
+          - tag: nldd-sidebar-section
+            optional: true
+            attrs: [sidebar-label, grow]
+            note: met een inhoudsopgave, breed een kolom, smal een sheet
+            children:
+              - label: slot="header"
+                note: de nldd-title met de h1, en op smal de knop naar de sheet
+              - label: slot="sidebar"
+                note: de inhoudsopgave, een nldd-list type="navigation" met current-type="location"
+              - tag: nldd-rich-text
+                note: de uitleg, met een id op elke h2
+              - tag: nldd-card
+                note: de actie, na de uitleg
+          - tag: nldd-two-thirds-one-third-section
+            optional: true
+            note: of, kort met een vervolgactie
+            children:
+              - label: slot="header"
+                note: de nldd-title met de h1
+              - label: slot="left"
+                note: de nldd-rich-text met de uitleg
+              - label: slot="right"
+                note: de nldd-card met de actie
+          - tag: nldd-simple-section
+            optional: true
+            note: 'of, kort zonder vervolgactie: de h1 in het header-slot, de nldd-rich-text eronder'
+          - tag: nldd-simple-section
+            attrs: ['background="tinted"']
+            note: waar je hierna heen kunt
+            children:
+              - tag: nldd-collection
+                children:
+                  - tag: nldd-card
+                    attrs: [href]
+          - tag: nldd-page-footer
+            attrs: ['slot="footer"']
+            children:
+              - label: slot="breadcrumbs"
+                note: waar deze pagina staat
+              - label: slot="legal-bar"

@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/edit-in-a-sheet/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/edit-in-a-sheet/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,15 +11,15 @@ Met een sheet kan iemand iets aanpassen zonder de pagina waarop diegene werkt te
 ## Compositie
 
 ```
-de pagina eronder             de lijst of het detail waar de sheet vandaan komt
+de pagina eronder                           de lijst of het detail waar de sheet vandaan komt
 
-nldd-sheet                     open, placement, width; in de document-root
+nldd-sheet                                  open, placement, width; in de document-root
   └─ nldd-page
-       ├─ nldd-top-title-bar   slot="header", met text, dismiss-text en collapse-anchor
+       ├─ nldd-top-title-bar                slot="header", text, dismiss-text, collapse-anchor
        └─ nldd-simple-section
-            ├─ nldd-title      slot="header", het id waar de balk naar wijst
+            ├─ nldd-title                   slot="header"; het id waar de balk naar wijst
             └─ nldd-form
-                 ├─ nldd-form-field    per veld, met de waarde die er al staat
+                 ├─ nldd-form-field         per veld, met de waarde die er al staat
                  └─ nldd-form-actions
                       └─ nldd-button-group  de actie, onder het laatste veld
 ```

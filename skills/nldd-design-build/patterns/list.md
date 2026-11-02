@@ -11,15 +11,16 @@ Een lijst toont vergelijkbare items in een vorm die bezoekers snel kunnen scanne
 ## Compositie
 
 ```
-nldd-list                     accessible-label, appearance, type
-  └─ nldd-list-item           size, en hoogstens één van href, button, checkbox, radio
+nldd-list                         accessible-label, appearance, type
+  └─ nldd-list-item               size, en hoogstens één van href, button, checkbox, radio
+       ├─ nldd-list-item-segment  een deel van de rij met een eigen actie
        └─ cellen, in de volgorde waarin ze staan
-            nldd-icon-cell    een icoon vooraan
-            nldd-spacer-cell  de ruimte tussen twee cellen
-            nldd-text-cell    text, overline, supporting-text; vult de rij
-            nldd-cell         een badge, een checkbox, wat de rij verder draagt
-            nldd-text-cell    width="fit-content"; komt daardoor achteraan
-            nldd-icon-cell    de chevron van een rij die iets opent
+            nldd-icon-cell        een icoon vooraan
+            nldd-spacer-cell      de ruimte tussen twee cellen
+            nldd-text-cell        text, overline, supporting-text; vult de rij
+            nldd-cell             een badge, een checkbox, wat de rij verder draagt
+            nldd-text-cell        width="fit-content"; komt daardoor achteraan
+            nldd-icon-cell        de chevron van een rij die iets opent
 ```
 
 ```html

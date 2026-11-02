@@ -7,6 +7,9 @@ composition:
         attrs: [size]
         one-of: [href, button, checkbox, radio]
         children:
+          - tag: nldd-list-item-segment
+            optional: true
+            note: een deel van de rij met een eigen actie
           - label: cellen, in de volgorde waarin ze staan
             flat: true
             children:

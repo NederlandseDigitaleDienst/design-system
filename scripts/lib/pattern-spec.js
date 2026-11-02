@@ -10,7 +10,8 @@
  *
  *   tag        the element
  *   label      a place in the tree that is no single element
- *   attrs      attributes worth naming here; `name="value"` shows a fixed value
+ *   attrs      attributes worth naming here; `name="value"` is a fixed value, and
+ *              the node then only means elements with that value
  *   one-of     attributes of which at most one applies
  *   any-of     tags that can fill a `label`; the list is never complete
  *   note       what the node is for, in a few words
@@ -47,12 +48,22 @@ function collectLines(nodes, prefix, flat, lines) {
 /** @returns {string} the composition as a text tree, with the details in one column */
 export function renderComposition(nodes) {
 	const lines = [];
-	for (const root of nodes) {
+	for (const [index, root] of nodes.entries()) {
+		if (index > 0) lines.push({ start: '', detail: '' });
 		lines.push({ start: root.tag ?? root.label, detail: detailOf(root) });
 		collectLines(root.children ?? [], '  ', Boolean(root.flat), lines);
 	}
 	const column = Math.max(...lines.filter(({ detail }) => detail).map(({ start }) => start.length)) + 2;
 	return lines.map(({ start, detail }) => (detail ? start.padEnd(column) + detail : start)).join('\n');
+}
+
+/** A node with `name="value"` in its attrs is only the elements with that value. */
+function matches(element, node) {
+	if (element.name !== node.tag) return false;
+	return (node.attrs ?? []).filter((attribute) => attribute.includes('=')).every((attribute) => {
+		const [name, ...value] = attribute.split('=');
+		return element.attrs.get(name) === value.join('=').replace(/^"|"$/g, '');
+	});
 }
 
 function descendants(element) {
@@ -78,18 +89,17 @@ export function checkComposition(nodes, { tags, examples }) {
 	const problems = [];
 	const elements = examples.flatMap((root) => descendants(root));
 
-	/** Inside, not directly under: `label` nodes and wrappers such as `form` sit in between. */
-	const shownInside = (parent, tag) =>
-		elements.some((element) => element.name === parent && descendants(element).some(({ name }) => name === tag));
-
-	const visit = (node, parent) => {
+	/** A node only looks inside what its parent matched, so a second nldd-page elsewhere is not its business. */
+	const visit = (node, parent, scope) => {
+		const pool = scope ?? elements;
 		for (const tag of node['any-of'] ?? []) {
 			if (!tags[tag]) problems.push(`any-of names ${tag}, which does not exist.`);
 		}
-		if (parent && node['any-of'] && !node['any-of'].some((tag) => shownInside(parent, tag))) {
+		if (parent && node['any-of'] && !pool.some(({ name }) => node['any-of'].includes(name))) {
 			problems.push(`No example shows any of ${node['any-of'].join(', ')} inside ${parent}.`);
 		}
 		const owner = node.tag ?? parent;
+		let inner = pool;
 		if (node.tag && !tags[node.tag]) problems.push(`Names ${node.tag}, which does not exist.`);
 		else if (node.tag) {
 			const known = [...Object.keys(tags[node.tag].attrs), ...Object.keys(tags[parent]?.childAttrs ?? {})];
@@ -97,9 +107,11 @@ export function checkComposition(nodes, { tags, examples }) {
 				const name = attributeName(attribute);
 				if (!known.includes(name) && !GLOBAL_ATTRIBUTES.has(name)) problems.push(`${node.tag} has no attribute ${name}.`);
 			}
-			const shown = elements.filter((element) => element.name === node.tag);
-			if (shown.length === 0) problems.push(`No example shows ${node.tag}.`);
-			else if (parent && !shownInside(parent, node.tag)) problems.push(`No example shows ${node.tag} inside ${parent}.`);
+			const shown = pool.filter((element) => matches(element, node));
+			if (shown.length === 0) {
+				const elsewhere = parent && elements.some((element) => matches(element, node));
+				problems.push(elsewhere ? `No example shows ${node.tag} inside ${parent}.` : `No example shows ${node.tag}.`);
+			}
 			const needed = requiredTags(node.children ?? []);
 			for (const element of shown) {
 				const inside = new Set(descendants(element).map(({ name }) => name));
@@ -107,8 +119,9 @@ export function checkComposition(nodes, { tags, examples }) {
 					if (!inside.has(tag)) problems.push(`An example has ${node.tag} without ${tag}.`);
 				}
 			}
+			inner = shown.flatMap((element) => descendants(element));
 		}
-		for (const child of node.children ?? []) visit(child, owner);
+		for (const child of node.children ?? []) visit(child, owner, inner);
 	};
 	for (const root of nodes) visit(root);
 	return [...new Set(problems)];
