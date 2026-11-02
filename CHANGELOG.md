@@ -12,6 +12,7 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **`nldd-slider`, improved.** A click on its icons or Shift with an arrow key steps the value a tenth of the range, and the chosen part of the histogram now stands out in every theme. See Added and Changed.
+- **`nldd-file-field` takes folders.** A folder can be dropped on a field with `multiple`, and `directory` offers one in the file dialog too, through a menu or, in an area, two buttons. Each file keeps its path, so two files with one name stay apart. An area at `size="sm"` is now 120px tall, and its buttons keep their own width. See Added and Changed.
 - **9 accessibility fixes,** most from two audit rounds: `focus()` that works right after a component is added, a field that says why it is red, a focused card that comes fully into view, lists a screen reader can count, a heading that stays when a title bar collapses, a link that keeps its underline on focus, a slider histogram whose chosen part stands out, a typeahead, combobox and token field that say how many suggestions they have, and a file field whose name matches what it shows. See Added, Changed and Fixed.
 
 ### Added
