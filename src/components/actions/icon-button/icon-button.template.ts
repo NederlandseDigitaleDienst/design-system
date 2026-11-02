@@ -4,6 +4,7 @@ import { linkRel } from '../../../utilities/link-rel.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/tooltip/tooltip.js';
+import { popoverTargetOf } from '../../../utilities/popover-target.js';
 
 function renderContent(component: NLDDIconButton) {
 	return html`
@@ -116,8 +117,7 @@ export function template(this: NLDDIconButton) {
 				aria-expanded=${ariaExpanded}
 				aria-busy=${ariaBusy}
 				tabindex=${this.noTab ? '-1' : nothing}
-				popovertarget=${this.popovertarget || nothing}
-				.popoverTargetElement=${this.popoverTargetElement}
+				.popoverTargetElement=${popoverTargetOf(this, this.popovertarget, this.popoverTargetElement)}
 				.popoverTargetAction=${this.popoverTargetAction}
 				@pointerdown=${this._popup.handlePointerdown}
 				@click=${this._handleClick}

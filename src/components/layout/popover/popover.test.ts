@@ -1,4 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
+import '../../actions/button/button.js';
+import '../../actions/icon-button/icon-button.js';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './popover.js';
 import '../../navigation/top-title-bar/top-title-bar.js';
@@ -927,5 +930,50 @@ describe('nldd-popover onder een knop', () => {
 		wrapper.querySelector('nldd-top-title-bar')!.dispatchEvent(new CustomEvent('dismiss', { bubbles: true, composed: true }));
 		await waitForUpdate(popover);
 		expect(popover.open).toBe(false);
+	});
+
+	describe('opened by a button', () => {
+		const settle = () => new Promise((resolve) => setTimeout(resolve, 100));
+
+		it('opens and stays open on a click with popovertarget, as the docs show', async () => {
+			el = await fixture(`<div>
+				<nldd-button id="info-trigger" text="Info" popovertarget="info-popover"></nldd-button>
+				<nldd-popover id="info-popover" anchor="info-trigger" accessible-label="Info"><p>Inhoud</p></nldd-popover>
+			</div>`);
+			const popover = el.querySelector('nldd-popover') as HTMLElement;
+			await waitForUpdate(popover);
+			await userEvent.click(el.querySelector('nldd-button')!);
+			await settle();
+			expect(popover.matches(':popover-open')).toBe(true);
+			await userEvent.click(el.querySelector('nldd-button')!);
+			await settle();
+			expect(popover.matches(':popover-open')).toBe(false);
+		});
+
+		it('opens and stays open with popoverTargetElement and an anchor', async () => {
+			el = await fixture(`<div>
+				<nldd-button id="info-trigger" text="Info"></nldd-button>
+				<nldd-popover id="info-popover" anchor="info-trigger" accessible-label="Info"><p>Inhoud</p></nldd-popover>
+			</div>`);
+			const popover = el.querySelector('nldd-popover') as HTMLElement;
+			(el.querySelector('nldd-button') as HTMLElement & { popoverTargetElement: Element | null }).popoverTargetElement = popover;
+			await waitForUpdate(popover);
+			await userEvent.click(el.querySelector('nldd-button')!);
+			await settle();
+			expect(popover.matches(':popover-open')).toBe(true);
+		});
+
+		it('opens from an nldd-icon-button with popovertarget, and from a popover rendered after it', async () => {
+			el = await fixture(`<div>
+				<nldd-icon-button id="info-trigger" icon="info" text="Info" popovertarget="info-popover"></nldd-icon-button>
+			</div>`);
+			await waitForUpdate(el.querySelector('nldd-icon-button') as HTMLElement);
+			el.insertAdjacentHTML('beforeend', '<nldd-popover id="info-popover" anchor="info-trigger" accessible-label="Info"><p>Inhoud</p></nldd-popover>');
+			const popover = el.querySelector('nldd-popover') as HTMLElement;
+			await waitForUpdate(popover);
+			await userEvent.click(el.querySelector('nldd-icon-button')!);
+			await settle();
+			expect(popover.matches(':popover-open')).toBe(true);
+		});
 	});
 });

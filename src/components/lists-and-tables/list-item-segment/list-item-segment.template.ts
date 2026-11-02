@@ -16,7 +16,6 @@ export function template(
 	accessibleLabel: string,
 	actionTabindex?: string,
 	popupType?: string,
-	popovertarget?: string,
 	popoverTargetElement?: Element | null,
 	popoverTargetAction?: 'toggle' | 'show' | 'hide',
 	linkHint = '',
@@ -52,7 +51,6 @@ export function template(
 		return html`<button class="list-item-segment"
 			type="button"
 			aria-haspopup=${popupType || nothing}
-			popovertarget=${popovertarget ?? nothing}
 			.popoverTargetElement=${popoverTargetElement ?? null}
 			.popoverTargetAction=${popoverTargetAction ?? 'toggle'}
 			role=${control === 'checkbox' ? 'checkbox' : nothing}

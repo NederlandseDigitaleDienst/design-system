@@ -540,8 +540,12 @@ export class NLDDPopover extends LitElement {
 		// browser's default activation behavior already toggles us. Running
 		// our own toggle here would invert the state right after, leaving
 		// the popover in the wrong final state.
-		const popovertarget = anchorEl.getAttribute('popovertarget');
+		const popovertarget = anchorEl.getAttribute('popovertarget')
+			?? (anchorEl as { popovertarget?: string }).popovertarget;
 		if (popovertarget && this.id && popovertarget === this.id) return;
+		// The same when the anchor names this popover by element, as nldd-button
+		// does with popoverTargetElement: the browser toggles it already.
+		if ((anchorEl as { popoverTargetElement?: Element | null }).popoverTargetElement === this) return;
 		// Native light-dismiss fires on pointerdown and closes the popover
 		// before the click arrives. Without this guard the click would
 		// immediately reopen it.

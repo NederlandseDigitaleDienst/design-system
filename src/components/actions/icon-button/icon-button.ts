@@ -28,7 +28,7 @@
  * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
- * @attr {string} popovertarget - ID of a popover element to toggle; forwarded to the inner <button>
+ * @attr {string} popovertarget - ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element.
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set; falls back to a placeholder icon when the slot is empty.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay.
@@ -59,6 +59,7 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { internalsOf } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { popoverTargetOf } from '../../../utilities/popover-target.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
 export type Appearance =
@@ -263,6 +264,11 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 			e.preventDefault();
 			e.stopPropagation();
 			return;
+		}
+		// Before the browser's own toggle, which runs after this listener: a
+		// popover rendered after the button was not there on its last render.
+		if (e.currentTarget instanceof HTMLButtonElement) {
+			e.currentTarget.popoverTargetElement = popoverTargetOf(this, this.popovertarget, this.popoverTargetElement);
 		}
 		// A slotted overlay makes this button its invoker: toggle it and stop —
 		// a popup button neither submits a form nor navigates.

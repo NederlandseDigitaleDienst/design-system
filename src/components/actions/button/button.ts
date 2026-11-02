@@ -9,7 +9,7 @@
  * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {string} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
- * @attr {string} popovertarget - ID of a popover element this button invokes; forwarded to the inner button. Use the popoverTargetElement property instead when the popover lives in another tree.
+ * @attr {string} popovertarget - ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree.
  * @attr {boolean} expandable - Whether the button has a icon to indicate it opens a menu or popover
  * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
  * @attr {string} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
@@ -58,6 +58,7 @@ import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import { internalsOf } from '../../../utilities/element-state.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { popoverTargetOf } from '../../../utilities/popover-target.js';
 
 type Appearance =
 	| 'primary'
@@ -271,6 +272,11 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 			e.preventDefault();
 			e.stopPropagation();
 			return;
+		}
+		// Before the browser's own toggle, which runs after this listener: a
+		// popover rendered after the button was not there on its last render.
+		if (e.currentTarget instanceof HTMLButtonElement) {
+			e.currentTarget.popoverTargetElement = popoverTargetOf(this, this.popovertarget, this.popoverTargetElement);
 		}
 		// A slotted overlay makes this button its invoker: toggle it and stop —
 		// a popup button neither submits a form nor navigates.

@@ -743,7 +743,7 @@
               },
               "default": "undefined",
               "fieldName": "popovertarget",
-              "description": "ID of a popover element this button invokes; forwarded to the inner button. Use the popoverTargetElement property instead when the popover lives in another tree."
+              "description": "ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree."
             },
             {
               "name": "loading",
@@ -1461,7 +1461,7 @@
               },
               "default": "undefined",
               "fieldName": "popovertarget",
-              "description": "ID of a popover element to toggle; forwarded to the inner <button>"
+              "description": "ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element."
             },
             {
               "name": "text",
@@ -38526,7 +38526,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "ID of a popover this segment toggles; forwarded to the inner button. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.",
+              "description": "ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.",
               "name": "popovertarget",
               "fieldName": "popovertarget"
             },
@@ -47212,6 +47212,52 @@
           "declaration": {
             "name": "PageSectionMixin",
             "module": "src/utilities/page-section-mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/popover-target.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "popoverTargetOf",
+          "return": {
+            "type": {
+              "text": "Element | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "element",
+              "type": {
+                "text": "Element | null"
+              }
+            }
+          ],
+          "description": "The popover a component's inner button invokes, from `popovertarget` or\n`popoverTargetElement` on the host.\n\nAn id written on the inner button is looked up in the component's own\nshadow root, where the popover never is, so the button opened nothing. The\nid is looked up here in the tree of the host instead, and the inner button\ngets the element. The element wins when both are set.\n\nLook it up again on click: a popover rendered after the button is not there\nyet on the button's first render."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "popoverTargetOf",
+          "declaration": {
+            "name": "popoverTargetOf",
+            "module": "src/utilities/popover-target.ts"
           }
         }
       ]
