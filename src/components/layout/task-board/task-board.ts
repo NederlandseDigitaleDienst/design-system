@@ -154,12 +154,17 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		super.connectedCallback();
 		this.addEventListener('pointerdown', this._onPointerDown);
 		this.addEventListener('keydown', this._onKeyDown);
+		// iOS decides whether a touch may scroll when it starts, from the touch
+		// listeners there are then: one added once the drag begins comes too
+		// late, and the board scrolls and cancels the drag.
+		this.addEventListener('touchmove', this._holdTouch, { passive: false });
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this.removeEventListener('pointerdown', this._onPointerDown);
 		this.removeEventListener('keydown', this._onKeyDown);
+		this.removeEventListener('touchmove', this._holdTouch);
 		this._scrollObserver?.disconnect();
 		this._scrollObserver = null;
 		this._endPress();
@@ -397,9 +402,9 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		event.stopPropagation();
 	};
 
-	/** While a finger holds an item, the page must not scroll under it. */
+	/** While a finger drags an item, the page must not scroll under it. */
 	private _holdTouch = (event: TouchEvent): void => {
-		event.preventDefault();
+		if (this._drag) event.preventDefault();
 	};
 
 	private _preventContextMenu = (event: Event): void => {
@@ -472,7 +477,6 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		document.getSelection()?.removeAllRanges();
 		document.documentElement.style.setProperty('user-select', 'none');
 		document.documentElement.style.setProperty('-webkit-user-select', 'none');
-		window.addEventListener('touchmove', this._holdTouch, { passive: false });
 		window.addEventListener('contextmenu', this._preventContextMenu);
 		window.addEventListener('keydown', this._onDragKeyDown, true);
 		for (const column of this.columns) column._dropState = 'available';
@@ -632,7 +636,6 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		this._grabbing = null;
 		document.documentElement.style.removeProperty('user-select');
 		document.documentElement.style.removeProperty('-webkit-user-select');
-		window.removeEventListener('touchmove', this._holdTouch);
 		window.removeEventListener('contextmenu', this._preventContextMenu);
 		window.removeEventListener('keydown', this._onDragKeyDown, true);
 		this._dragging = false;

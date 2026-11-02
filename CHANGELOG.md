@@ -26,6 +26,10 @@ here; consult the commit history if you need that level of detail.
 - **The histogram of `nldd-slider` reads more clearly.** The bars within the chosen value or range take the color of the fill, rather than a pale tint of it, so they stand out from the other bars in every theme, light and dark. The bars now stop 2px above the track, so a bar never runs into it. The histogram now spans the part of the track the thumb travels, half a thumb in from each end, so every bar stands right above the values it counts and no bar sticks out beside a thumb at the minimum or maximum.
 - **`nldd-title-cell` is `size="6"` in a table.** In an `nldd-table-row` a title cell without a `size` of its own is as large as the other cells, in bold, rather than the larger size 5 it has in a list. A `size` in the markup still wins, 5 included. Outside a table nothing changes, but `size` is now unset by default rather than 5: the cell looks the same, while the `size` property reads `undefined` and there is no `size="5"` on the element.
 
+### Fixed
+
+- **Dragging on `nldd-task-board` works on an iPhone.** After holding an item, the first move scrolled the board instead, and the drag broke off. iOS decides whether a touch may scroll as it starts, and the board now says so from the start.
+
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
 
 ### Highlights

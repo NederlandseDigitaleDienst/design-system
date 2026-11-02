@@ -567,6 +567,25 @@ describe('nldd-task-board', () => {
 			expect(moves[0]).toMatchObject({ fromColumn: 'nieuw', toColumn: 'bezig' });
 		});
 
+		it('keeps the page from scrolling under a finger that drags, and only then', async () => {
+			({ el } = await board());
+			const a = el.querySelector('#a') as HTMLElement;
+			const [x, y] = center(a);
+			const touchmove = () => {
+				const event = new TouchEvent('touchmove', { bubbles: true, composed: true, cancelable: true });
+				a.dispatchEvent(event);
+				return event.defaultPrevented;
+			};
+			// The listener is on the board before the touch starts, as iOS wants it.
+			expect(touchmove()).toBe(false);
+			pointer(a, 'pointerdown', x, y, 'touch');
+			expect(touchmove()).toBe(false);
+			await new Promise((resolve) => setTimeout(resolve, 350));
+			expect(touchmove()).toBe(true);
+			pointer(window, 'pointerup', x, y, 'touch');
+			expect(touchmove()).toBe(false);
+		});
+
 		it('lets a finger that moves before the hold scroll', async () => {
 			let moves: NLDDMoveEventDetail[];
 			({ el, moves } = await board());
