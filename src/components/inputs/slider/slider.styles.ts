@@ -150,7 +150,7 @@ export const sliderStyles = css`
 		display: flex;
 		position: absolute;
 		bottom: calc(50% + var(--_slider-track-height) / 2 + var(--_slider-histogram-track-gap));
-		inset-inline: 0;
+		inset-inline: calc(var(--_slider-thumb-size) / 2);
 		pointer-events: none;
 		height: var(--_slider-histogram-height);
 		gap: var(--_slider-histogram-gap);
@@ -165,14 +165,6 @@ export const sliderStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
-	}
-
-	.slider__histogram-bar:first-child {
-		border-end-start-radius: var(--_slider-histogram-bar-corner-radius);
-	}
-
-	.slider__histogram-bar:last-child {
-		border-end-end-radius: var(--_slider-histogram-bar-corner-radius);
 	}
 
 	.slider__histogram-bar.is-selected {
