@@ -1,0 +1,59 @@
+composition:
+  - tag: nldd-shell
+    note: de buitenste schil
+    children:
+      - tag: nldd-page
+        children:
+          - label: slot="header"
+            note: de header
+            children:
+              - tag: nldd-skip-link
+                note: om de balk heen
+                children:
+                  - tag: nldd-top-navigation-bar
+                    note: zoeken en taal, geen terugknop
+          - tag: nldd-hero
+            attrs: [main-background]
+            note: de opening
+            children:
+              - label: slot="media"
+                note: nldd-image, hier nog zonder beeld
+          - tag: nldd-simple-section
+            attrs: ['background="tinted"']
+            note: wat je hier kunt
+            children:
+              - label: slot="header"
+                note: de titel en een intro van een zin of twee
+              - tag: nldd-collection
+                optional: true
+                attrs: ['layout="grid"', item-min-width]
+                children:
+                  - tag: nldd-card
+                    note: een onderwerp, een zin en een knop met de actie in de footer
+          - tag: nldd-one-half-one-half-section
+            note: afbeelding links, tekst rechts
+            children:
+              - tag: nldd-image
+                attrs: ['slot="left"', aspect-ratio]
+              - label: slot="right"
+                note: titel, tekst en een nldd-link verder
+          - tag: nldd-two-thirds-one-third-section
+            attrs: ['background="tinted"']
+            children:
+              - label: slot="left"
+                note: de titel en de lopende uitleg
+              - label: slot="right"
+                note: een ondersteunende kaart
+          - tag: nldd-one-third-two-thirds-section
+            children:
+              - label: slot="left"
+                note: de titel en een korte uitleg
+              - label: slot="right"
+                note: een nldd-list type="navigation" naar de onderwerpen
+          - tag: nldd-simple-section
+            attrs: ['background="tinted"']
+            note: de oproep
+          - tag: nldd-page-footer
+            attrs: ['slot="footer"']
+            children:
+              - label: slot="legal-bar"

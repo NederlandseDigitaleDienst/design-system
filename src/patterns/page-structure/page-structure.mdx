@@ -1,4 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Composition } from '../../../.storybook/Composition.jsx';
 import { Rules } from '../../../.storybook/Rules.jsx';
 import * as Stories from './page-structure.stories';
 
@@ -10,21 +11,7 @@ De paginaopbouw beschrijft de vaste basis van een websitepagina: de shell, de he
 
 ## Compositie
 
-```
-nldd-shell                            de buitenste schil
-  └─ nldd-page
-       ├─ slot="header"                  de header
-       │    ├─ nldd-status-bar           alleen als er iets te melden is, boven de balk
-       │    └─ nldd-skip-link            om de balk heen
-       │         └─ nldd-top-navigation-bar    website-title, en back-text en back-href
-       │              └─ slot="utility"  nldd-menu-bar met zoeken en taal
-       ├─ nldd-simple-section            één sectie per inhoudsblok, met de h1 in de eerste
-       ├─ nldd-simple-section            background="tinted", een vlak
-       └─ slot="footer"                  de footer: nldd-page-footer
-            ├─ slot="breadcrumbs"        nldd-breadcrumbs, waar deze pagina staat
-            ├─ nldd-container            de hoofdinhoud, vrij in te vullen
-            └─ slot="legal-bar"          nldd-page-footer-legal-bar
-```
+<Composition pattern="page-structure" />
 
 <Canvas of={Stories.Standaard} />
 

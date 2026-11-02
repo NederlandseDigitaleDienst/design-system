@@ -1,0 +1,57 @@
+composition:
+  - tag: nldd-shell
+    note: de buitenste schil
+    children:
+      - tag: nldd-bar-split-view
+        note: balken boven of onder de inhoud
+        children:
+          - tag: nldd-split-view-pane
+            attrs: ['slot="toolbar-md"', 'only="md"']
+            children:
+              - tag: nldd-container
+                note: met padding
+                children:
+                  - tag: nldd-toolbar
+                    note: de hoofdwerkbalk, met een zoekknop
+          - tag: nldd-split-view-pane
+            attrs: ['slot="toolbar-lg"', 'above="lg"']
+            children:
+              - tag: nldd-container
+                note: met padding
+                children:
+                  - tag: nldd-toolbar
+                    note: dezelfde balk, met een zoekveld
+          - tag: nldd-split-view-pane
+            attrs: ['slot="main"']
+            children:
+              - tag: nldd-navigation-split-view
+                optional: true
+                children:
+                  - tag: nldd-split-view-pane
+                    note: slot="primary-sidebar", "secondary-sidebar", "main", "inspector"
+                  - tag: nldd-page
+                    attrs: [landmarks, accessible-label]
+                    children:
+                      - tag: nldd-top-title-bar
+                        attrs: ['slot="header"', collapse-anchor]
+                      - tag: nldd-simple-section
+                        children:
+                          - tag: nldd-title
+                            attrs: ['slot="header"']
+                            note: het anker van de balk
+                          - tag: nldd-toolbar
+                            optional: true
+                            note: de acties van dit paneel
+                          - label: de inhoud
+                            note: een lijst, een formulier, een detail
+          - tag: nldd-split-view-pane
+            attrs: ['slot="toolbar-sm"', 'only="sm"']
+            children:
+              - tag: nldd-container
+                note: met padding
+                children:
+                  - tag: nldd-toolbar
+                    attrs: ['size="lg"']
+                    note: dezelfde acties als icoon met label
+  - tag: nldd-sheet
+    note: het detail van een rij, in de document-root

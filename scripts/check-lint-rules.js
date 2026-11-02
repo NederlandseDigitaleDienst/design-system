@@ -222,7 +222,11 @@ function checkCompositions() {
 	const validate = new Ajv({ allErrors: true }).compile(JSON.parse(readFileSync(join(directory, 'pattern.schema.json'), 'utf8')));
 	for (const entry of readdirSync(directory, { withFileTypes: true })) {
 		const specPath = join(directory, entry.name, `${entry.name}.pattern.yaml`);
-		if (!entry.isDirectory() || !existsSync(specPath)) continue;
+		if (!entry.isDirectory()) continue;
+		if (!existsSync(specPath)) {
+			problems.push(`patterns/${entry.name}: has no ${entry.name}.pattern.yaml.`);
+			continue;
+		}
 		const spec = parseYaml(readFileSync(specPath, 'utf8'));
 		if (!validate(spec)) {
 			problems.push(`patterns/${entry.name}: ${validate.errors.map(({ instancePath, message }) => `${instancePath} ${message}`).join('; ')}`);

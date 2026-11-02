@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/application/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/application/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,28 +11,28 @@ Een applicatie gebruik je als bezoekers tijdens een taak vaak tussen verschillen
 ## Compositie
 
 ```
-nldd-shell                                 de buitenste schil
-  └─ nldd-bar-split-view                      balken boven of onder de inhoud
-       ├─ nldd-split-view-pane                slot="toolbar-md", only="md"
-       │    └─ nldd-container                 met padding
-       │         └─ nldd-toolbar              de hoofdwerkbalk, met een zoekknop
-       ├─ nldd-split-view-pane                slot="toolbar-lg", above="lg"
-       │    └─ nldd-container                 met padding
-       │         └─ nldd-toolbar              dezelfde balk, met een zoekveld
-       ├─ nldd-split-view-pane                slot="main"
+nldd-shell                                   de buitenste schil
+  └─ nldd-bar-split-view                     balken boven of onder de inhoud
+       ├─ nldd-split-view-pane               slot="toolbar-md", only="md"
+       │    └─ nldd-container                met padding
+       │         └─ nldd-toolbar             de hoofdwerkbalk, met een zoekknop
+       ├─ nldd-split-view-pane               slot="toolbar-lg", above="lg"
+       │    └─ nldd-container                met padding
+       │         └─ nldd-toolbar             dezelfde balk, met een zoekveld
+       ├─ nldd-split-view-pane               slot="main"
        │    └─ nldd-navigation-split-view
-       │         └─ nldd-split-view-pane      slot="primary-sidebar", "secondary-sidebar", "main", "inspector"
-       │         └─ nldd-page                 landmarks, accessible-label
-       │              ├─ nldd-top-title-bar   slot="header", collapse-anchor
+       │         ├─ nldd-split-view-pane     slot="primary-sidebar", "secondary-sidebar", "main", "inspector"
+       │         └─ nldd-page                landmarks, accessible-label
+       │              ├─ nldd-top-title-bar  slot="header", collapse-anchor
        │              └─ nldd-simple-section
-       │                   ├─ nldd-title      slot="header", het anker van de balk
-       │                   ├─ nldd-toolbar    de acties van dit paneel
-       │                   └─ de inhoud       een lijst, een formulier, een detail
-       └─ nldd-split-view-pane                slot="toolbar-sm", only="sm"
-            └─ nldd-container                 met padding
-                 └─ nldd-toolbar              size="lg", dezelfde acties als icoon met label
+       │                   ├─ nldd-title     slot="header"; het anker van de balk
+       │                   ├─ nldd-toolbar   de acties van dit paneel
+       │                   └─ de inhoud      een lijst, een formulier, een detail
+       └─ nldd-split-view-pane               slot="toolbar-sm", only="sm"
+            └─ nldd-container                met padding
+                 └─ nldd-toolbar             size="lg"; dezelfde acties als icoon met label
 
-nldd-sheet                                    het detail van een rij, in de document-root
+nldd-sheet                                   het detail van een rij, in de document-root
 ```
 
 ```html

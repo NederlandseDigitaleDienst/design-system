@@ -89,6 +89,24 @@ test('checkComposition reports an any-of no example fills', () => {
 	assert.ok(problems.includes('No example shows any of nldd-text-field inside nldd-form-field.'));
 });
 
+test('checkComposition only looks inside the parent an element was matched in', () => {
+	const sheet = [{ tag: 'nldd-form', children: [{ tag: 'nldd-form-field', children: [{ tag: 'nldd-text-field' }] }] }];
+	const examples = parseHtml('<nldd-form-field></nldd-form-field><nldd-form><nldd-form-field><nldd-text-field></nldd-text-field></nldd-form-field></nldd-form>');
+	assert.deepEqual(checkComposition(sheet, { tags, examples }), []);
+});
+
+test('checkComposition reads a fixed value as part of the node', () => {
+	const fixed = [{ tag: 'nldd-form', attrs: ['name="zoek"'], children: [{ tag: 'nldd-form-field' }] }];
+	const without = parseHtml('<nldd-form name="zoek"><nldd-form-field></nldd-form-field></nldd-form><nldd-form name="ander"></nldd-form>');
+	assert.deepEqual(checkComposition(fixed, { tags, examples: without }), []);
+	const other = parseHtml('<nldd-form name="ander"></nldd-form>');
+	assert.ok(checkComposition(fixed, { tags, examples: other }).includes('No example shows nldd-form.'));
+});
+
+test('renderComposition puts a blank line between roots', () => {
+	assert.equal(renderComposition([{ tag: 'nldd-form' }, { tag: 'nldd-sheet' }]), 'nldd-form\n\nnldd-sheet');
+});
+
 test('the schema refuses a field it does not know', () => {
 	assert.equal(validate({ composition: [{ tag: 'nldd-form', optionl: true }] }), false);
 });

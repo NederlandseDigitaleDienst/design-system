@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/toolbar-with-actions/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/toolbar-with-actions/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,11 +11,11 @@ Een werkbalk bundelt acties die gelden voor een heel scherm of paneel, zoals iet
 ## Compositie
 
 ```
-nldd-toolbar                       size, label
-  ├─ nldd-toolbar-item             slot="start" | "center" | "end", priority
-  │    ├─ de control               nldd-button, nldd-icon-button, nldd-search-field, …
-  │    └─ nldd-menu-item           slot="overflow", dezelfde actie in het menu
-  └─ nldd-menu-item                slot="overflow", acties die altijd in het menu staan
+nldd-toolbar              size, accessible-label
+  ├─ nldd-toolbar-item    priority; slot="start" | "center" | "end"
+  │    ├─ de control      nldd-button, nldd-icon-button, nldd-search-field, …
+  │    └─ nldd-menu-item  slot="overflow"; dezelfde actie in het menu
+  └─ nldd-menu-item       slot="overflow"; acties die altijd in het menu staan
 ```
 
 ```html

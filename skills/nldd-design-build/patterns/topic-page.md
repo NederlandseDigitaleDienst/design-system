@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/topic-page/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/topic-page/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,27 +11,27 @@ Een onderwerppagina is de [home](home-page.md) voor een onderwerp op een lager n
 ## Compositie
 
 ```
-nldd-shell                            de buitenste schil
+nldd-shell                                   de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                  de header
-       │    └─ nldd-skip-link            om de balk heen
-       │         └─ nldd-top-navigation-bar   zoeken en taal, terug naar de onderwerpen
-       ├─ nldd-hero                      de h1, een korte uitleg en de hoofdtaak
-       │    └─ slot="media"              nldd-image, hier nog zonder beeld
-       ├─ nldd-one-half-one-half-section tekst links, afbeelding rechts
-       │    ├─ slot="left"               titel, tekst en een nldd-link verder
-       │    └─ slot="right"              nldd-image met aspect-ratio
-       ├─ nldd-simple-section            background="tinted", wat je moet weten
-       │    ├─ slot="header"             de titel en een intro van een zin of twee
+       ├─ slot="header"                      de header
+       │    └─ nldd-skip-link                om de balk heen
+       │         └─ nldd-top-navigation-bar  zoeken en taal, terug naar de onderwerpen
+       ├─ nldd-hero                          de h1, een korte uitleg en de hoofdtaak
+       │    └─ slot="media"                  nldd-image, hier nog zonder beeld
+       ├─ nldd-one-half-one-half-section     tekst links, afbeelding rechts
+       │    ├─ slot="left"                   titel, tekst en een nldd-link verder
+       │    └─ nldd-image                    slot="right", aspect-ratio
+       ├─ nldd-simple-section                background="tinted"; wat je moet weten
+       │    ├─ slot="header"                 de titel en een intro van een zin of twee
        │    └─ nldd-collection
-       │         └─ nldd-card            href, naar pagina's waar ze ook staan
+       │         └─ nldd-card                href; naar pagina's waar ze ook staan
        ├─ nldd-one-third-two-thirds-section
-       │    ├─ slot="left"               de titel en een korte uitleg
-       │    └─ slot="right"              een nldd-list type="navigation" naar de pagina's eronder
-       ├─ nldd-simple-section            background="tinted", verwante onderwerpen
+       │    ├─ slot="left"                   de titel en een korte uitleg
+       │    └─ nldd-list                     slot="right", type="navigation"; naar de pagina's eronder
+       ├─ nldd-simple-section                background="tinted"; verwante onderwerpen
        │    └─ nldd-collection
-       │         └─ nldd-card            href, naar het andere onderwerp
-       └─ slot="footer"                  nldd-page-footer
+       │         └─ nldd-card                href; naar het andere onderwerp
+       └─ nldd-page-footer                   slot="footer"
             ├─ slot="breadcrumbs"
             └─ slot="legal-bar"
 ```
