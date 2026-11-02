@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.14.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.2...v0.14.0) (2026-11-02)
+
 ### Breaking
 
 - **Warnings changed shape.** Tests that spy on `console.warn` for a text of this package need the new text: `[nldd] <rule>: ...`. Most warnings now arrive a moment later, once per element.
