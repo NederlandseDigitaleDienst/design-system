@@ -28,9 +28,14 @@
  * its name, as a native folder input does, so two files with one name in
  * different folders stay apart. `accept` holds for every file in it. Without
  * `multiple` a folder is refused ("Sleep een bestand, geen map"): one file
- * cannot be a folder. Only a drop tells a folder apart, not the drag. Choosing
- * a folder in the file dialog is not offered: a dialog picks files or a folder,
- * never both.
+ * cannot be a folder. Only a drop tells a folder apart, not the drag.
+ *
+ * `directory` offers a folder in the file dialog too. A dialog picks files or a
+ * folder, never both, so with it choosing and changing open a menu with
+ * "Bestanden kiezen" and "Map kiezen", and the field says "Bestanden of een map
+ * kiezen". A folder is many files, so `directory` takes several without
+ * `multiple`. Safari on iOS picks a folder as well; a browser that cannot opens
+ * a dialog for files instead.
  *
  * While files are dragged over the page, every field marks itself as a place
  * to put them, and the field under the pointer says it will take them (a field
@@ -65,7 +70,8 @@
  * @attr {string} variant - 'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height
  * @attr {string} size - Field size: 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {string} accept - Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*")
- * @attr {boolean} multiple - Allows choosing more than one file
+ * @attr {boolean} multiple - Allows choosing more than one file, and dropping a folder
+ * @attr {boolean} directory - Offers a folder beside files: choosing and changing open a menu with both, since one dialog picks either. Takes several files, as `multiple` does
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid; shows a check icon on the right, like nldd-dropdown
@@ -137,6 +143,15 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	multiple = false;
+
+	/** Offers a folder beside files: choosing opens a menu with both. */
+	@property({ type: Boolean, reflect: true })
+	directory = false;
+
+	/** @internal A folder is many files, so `directory` takes several too. */
+	get _multiple(): boolean {
+		return this.multiple || this.directory;
+	}
 
 	/** Accessible label forwarded to the inner <input>. Set automatically by nldd-form-field. */
 	@property({ type: String, attribute: 'accessible-label' })
@@ -218,6 +233,12 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	@query('.file-field__input')
 	private _input!: HTMLInputElement;
 
+	@query('.file-field__folder-input')
+	private _folderInput!: HTMLInputElement | null;
+
+	@query('.file-field__choose-menu')
+	private _chooseMenu!: (HTMLElement & { anchorElement: Element | null }) | null;
+
 	/** @internal */
 	public _t(key: keyof NLDDFileFieldTranslations, vars?: Record<string, string | number>): string {
 		return translate(this.translations, nlddFileFieldTranslations, key, vars);
@@ -225,7 +246,8 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** @internal */
 	public _chooseLabel(): string {
-		return this.multiple
+		if (this.directory) return this._t('components.file-field.to-choose-files-or-folder-action');
+		return this._multiple
 			? this._t('components.file-field.to-choose-files-action')
 			: this._t('components.file-field.to-choose-file-action');
 	}
@@ -247,7 +269,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 * @internal
 	 */
 	public _chooseAccessibleLabel(): string {
-		const hint = !fileDragAndDropAvailable() ? '' : this.multiple
+		const hint = !fileDragAndDropAvailable() ? '' : this._multiple
 			? this._t('components.file-field.drop-hint-multiple-lowercase-text')
 			: this._t('components.file-field.drop-hint-lowercase-text');
 		const types = this.variant === 'area' ? this._acceptTypes() : null;
@@ -296,7 +318,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		if (reason === 'folder') return this._t('components.file-field.folder-error-text');
 		const types = this._acceptTypes();
 		if (!types) return this._t('components.file-field.wrong-file-type-error-text');
-		return this.multiple
+		return this._multiple
 			? this._t('components.file-field.files-type-error-text', { types })
 			: this._t('components.file-field.file-type-error-text', { types });
 	}
@@ -398,9 +420,27 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/** @internal */
-	public _handleChoose(): void {
+	public _handleChoose(e?: Event): void {
 		this._clearRejection();
+		// With a folder on offer, a press asks which of the two: one dialog picks
+		// files or a folder, never both.
+		const menu = this._chooseMenu;
+		if (this.directory && menu && e?.currentTarget instanceof Element) {
+			menu.anchorElement = e.currentTarget;
+			menu.showPopover();
+			return;
+		}
 		this._input?.click();
+	}
+
+	/** @internal Picked in the menu of a field with `directory`. */
+	public _chooseFiles(): void {
+		this._input?.click();
+	}
+
+	/** @internal Picked in the menu of a field with `directory`. */
+	public _chooseFolder(): void {
+		this._folderInput?.click();
 	}
 
 	/** @internal */
@@ -424,16 +464,16 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  on names and types; without, a drag only on what it shows before the drop. */
 	private _judge(transfer: DataTransfer, files?: File[]): DropRejection | null {
 		if (files) {
-			if (!this.multiple && files.length > 1) return 'count';
+			if (!this._multiple && files.length > 1) return 'count';
 			if (holdsFolder(transfer)) {
 				// Several files may come from a folder; one file cannot be a folder.
 				// The types are judged once the folder is read.
-				return this.multiple ? null : 'folder';
+				return this._multiple ? null : 'folder';
 			}
 			return files.every((file) => fileMatches(this.accept, file)) ? null : 'type';
 		}
 		const items = Array.from(transfer.items).filter((item) => item.kind === 'file');
-		if (!this.multiple && items.length > 1) return 'count';
+		if (!this._multiple && items.length > 1) return 'count';
 		return items.some((item) => typeRuledOut(this.accept, item.type)) ? 'type' : null;
 	}
 
@@ -520,6 +560,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		// Clearing the input as well as the array: the element keeps the previous
 		// FileList otherwise, so choosing the same file again would fire no change.
 		if (this._input) this._input.value = '';
+		if (this._folderInput) this._folderInput.value = '';
 		this._files = [];
 		this._paths = [];
 		this._commit();

@@ -131,7 +131,8 @@ export const fileFieldStyles = css`
 
 	/* # Elements */
 
-	.file-field__input {
+	.file-field__input,
+	.file-field__folder-input {
 		display: none;
 	}
 

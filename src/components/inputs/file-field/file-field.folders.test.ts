@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { readDrop } from './file-field.drop.js';
 import type { NLDDFileField } from './file-field.js';
@@ -131,5 +131,60 @@ describe('nldd-file-field – folders', () => {
 		const names = (new FormData(form).getAll('site') as File[]).map((f) => f.name);
 		expect(names).toEqual(['site/index.html', 'site/over.html', 'site/css/main.css']);
 		cleanup(form);
+	});
+});
+
+describe('nldd-file-field – directory', () => {
+	let el: NLDDFileField;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const settle = () => new Promise((resolve) => setTimeout(resolve, 50));
+	const menu = () => el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-menu');
+	const item = (text: string) => [...el.shadowRoot!.querySelectorAll('nldd-menu-item')]
+		.find((option) => option.getAttribute('text') === text) as HTMLElement;
+
+	it('opens the file dialog straight away without directory', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage"></nldd-file-field>');
+		await waitForUpdate(el);
+		const click = vi.spyOn(el.shadowRoot!.querySelector<HTMLInputElement>('.file-field__input')!, 'click').mockImplementation(() => {});
+		el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!.click();
+		expect(click).toHaveBeenCalledOnce();
+		expect(menu()).toBeNull();
+	});
+
+	it('asks for files or a folder with directory, and opens the dialog for the one chosen', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
+		expect(button.textContent!.replace(/\s+/g, ' ')).toContain('Bestanden of een map kiezen');
+		expect(button.getAttribute('aria-haspopup')).toBe('menu');
+		const files = vi.spyOn(el.shadowRoot!.querySelector<HTMLInputElement>('.file-field__input')!, 'click').mockImplementation(() => {});
+		const folder = vi.spyOn(el.shadowRoot!.querySelector<HTMLInputElement>('.file-field__folder-input')!, 'click').mockImplementation(() => {});
+
+		button.click();
+		await settle();
+		expect(menu()!.matches(':popover-open')).toBe(true);
+		expect(files).not.toHaveBeenCalled();
+		item('Map kiezen').shadowRoot!.querySelector('button')!.click();
+		await settle();
+		expect(folder).toHaveBeenCalledOnce();
+		expect(menu()!.matches(':popover-open')).toBe(false);
+
+		button.click();
+		await settle();
+		item('Bestanden kiezen').shadowRoot!.querySelector('button')!.click();
+		expect(files).toHaveBeenCalledOnce();
+	});
+
+	it('takes several files and a dropped folder with directory, without multiple', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(site()));
+		await settle();
+		await waitForUpdate(el);
+		expect(el.paths).toEqual(['site/index.html', 'site/over.html', 'site/css/main.css']);
 	});
 });

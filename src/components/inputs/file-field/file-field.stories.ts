@@ -62,6 +62,7 @@ export default {
 		size: 'md',
 		accept: '',
 		multiple: false,
+		directory: false,
 		accessibleLabel: 'Bijlage',
 		valid: false,
 		invalid: false,
@@ -89,6 +90,11 @@ export default {
 		multiple: {
 			control: 'boolean',
 			description: 'Meerdere bestanden kiezen',
+			table: { defaultValue: { summary: false } },
+		},
+		directory: {
+			control: 'boolean',
+			description: 'Ook een map kiezen: kiezen opent een menu met bestanden of een map',
 			table: { defaultValue: { summary: false } },
 		},
 		accessibleLabel: {
@@ -128,6 +134,7 @@ export const Standaard = ({
 	size,
 	accept,
 	multiple,
+	directory,
 	accessibleLabel,
 	valid,
 	invalid,
@@ -140,6 +147,7 @@ export const Standaard = ({
 		size=${size || nothing}
 		accept=${accept || nothing}
 		?multiple=${multiple}
+		?directory=${directory}
 		accessible-label=${accessibleLabel || nothing}
 		?valid=${valid}
 		?invalid=${invalid}
@@ -186,6 +194,24 @@ export const Meerdere = {
 		<nldd-file-field
 			multiple
 			accessible-label="Bijlagen"
+		></nldd-file-field>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
+ * Met `directory` kun je ook een map aanleveren, met alles wat erin staat. Een
+ * dialoog kiest bestanden of een map, nooit allebei, dus kiezen en wijzigen
+ * openen een menu met de twee. Slepen kan met allebei tegelijk. Het veld noemt
+ * de map ("site (124 bestanden)"), `paths` zegt waar elk bestand stond, en een
+ * formulier stuurt elk bestand mee met zijn pad als naam.
+ */
+export const MetMappen = {
+	name: 'Met mappen',
+	render: () => html`
+		<nldd-file-field
+			directory
+			accessible-label="Site"
 		></nldd-file-field>
 	`,
 	parameters: { controls: { disable: true } },

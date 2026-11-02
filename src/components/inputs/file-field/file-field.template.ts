@@ -6,6 +6,7 @@ import '../../actions/button-group/button-group.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import '../../content/tooltip/tooltip.js';
+import '../../actions/menu/menu.js';
 import { splitName, splitForTruncation } from './file-field.truncate.js';
 
 /** Format icons by extension; a format without one gets the plain file. */
@@ -87,7 +88,7 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 		{ content: component._rejectionText('type'), kind: 'rejected', active: rejection === 'type' },
 		{ content: component._rejectionText('folder'), kind: 'rejected', active: rejection === 'folder' },
 	];
-	if (!component.multiple) {
+	if (!component._multiple) {
 		variants.push({ content: component._rejectionText('count'), kind: 'rejected', active: rejection === 'count' });
 	}
 	return variants;
@@ -99,14 +100,14 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 function renderBrowse(component: NLDDFileField): TemplateResult {
 	const drags = dragVariants(
 		component,
-		component.multiple
+		component._multiple
 			? component._t('components.file-field.drag-here-multiple-text')
 			: component._t('components.file-field.drag-here-text'),
-		component.multiple
+		component._multiple
 			? component._t('components.file-field.drop-here-multiple-text')
 			: component._t('components.file-field.drop-here-text'),
 	);
-	const sentence = html`<span class="file-field__browse-action">${component._chooseLabel()}</span> <span class="file-field__hint">${component.multiple
+	const sentence = html`<span class="file-field__browse-action">${component._chooseLabel()}</span> <span class="file-field__hint">${component._multiple
 		? component._t('components.file-field.drop-hint-multiple-lowercase-text')
 		: component._t('components.file-field.drop-hint-lowercase-text')}</span>`;
 	const area = component.variant === 'area';
@@ -115,8 +116,9 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 		<button class="file-field__browse-button"
 			type="button"
 			aria-label=${component._chooseAccessibleLabel()}
+			aria-haspopup=${component.directory ? 'menu' : nothing}
 			?disabled=${component.disabled}
-			@click=${component._handleChoose}
+			@click=${(e: Event) => component._handleChoose(e)}
 		>${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}<span class="file-field__sentence">${renderStack([
 			{ content: sentence, active: !drags.some((variant) => variant.active) },
 			...drags,
@@ -165,7 +167,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 		{ content: component._rejectionText('type'), kind: 'rejected', active: refused === 'type' },
 		{ content: component._rejectionText('folder'), kind: 'rejected', active: refused === 'folder' },
 	];
-	if (!component.multiple) {
+	if (!component._multiple) {
 		nameVariants.push({ content: component._rejectionText('count'), kind: 'rejected', active: refused === 'count' });
 	}
 	return html`
@@ -182,9 +184,10 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 							<nldd-button
 								appearance="neutral-tinted"
 								text=${component._t('components.file-field.to-change-action')}
+								popup-type=${component.directory ? 'menu' : nothing}
 								accessible-label=${component._changeAccessibleLabel() || nothing}
 								?disabled=${component.disabled}
-								@click=${component._handleChoose}
+								@click=${(e: Event) => component._handleChoose(e)}
 							></nldd-button>
 							<nldd-button
 								appearance="neutral-base"
@@ -201,9 +204,10 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 							appearance="neutral-tinted"
 							size=${buttonSize}
 							text=${component._t('components.file-field.to-change-action')}
+							popup-type=${component.directory ? 'menu' : nothing}
 							accessible-label=${component._changeAccessibleLabel() || nothing}
 							?disabled=${component.disabled}
-							@click=${component._handleChoose}
+							@click=${(e: Event) => component._handleChoose(e)}
 						></nldd-button>
 						<nldd-icon-button
 							appearance="neutral-transparent"
@@ -241,12 +245,31 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 				type="file"
 				id=${component.inputId || nothing}
 				accept=${component.accept || nothing}
-				?multiple=${component.multiple}
+				?multiple=${component._multiple}
 				?disabled=${component.disabled}
 				?required=${component.required}
 				aria-label=${component.accessibleLabel || nothing}
 				@change=${component._handleInputChange}
 			>
+			${component.directory ? html`
+				<input class="file-field__folder-input"
+					type="file"
+					webkitdirectory
+					multiple
+					?disabled=${component.disabled}
+					@change=${component._handleInputChange}
+				>
+				<nldd-menu class="file-field__choose-menu">
+					<nldd-menu-item
+						text=${component._t('components.file-field.files-menu-action')}
+						@select=${component._chooseFiles}
+					></nldd-menu-item>
+					<nldd-menu-item
+						text=${component._t('components.file-field.folder-menu-action')}
+						@select=${component._chooseFolder}
+					></nldd-menu-item>
+				</nldd-menu>
+			` : nothing}
 			${hasFiles ? renderChosen(component) : renderBrowse(component)}
 			<span class="file-field__status" role="status">${component._rejection
 				? component._rejectionText(component._rejection)
