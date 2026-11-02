@@ -119,6 +119,36 @@ describe('nldd-menu-bar-item', () => {
 		expect(menu.anchorOffset).toBe(0);
 	});
 
+	it('leaves a click on a link in its menu alone, so the link navigates', async () => {
+		el = await fixture(`
+			<nldd-menu-bar-item text="Account" expandable>
+				<nldd-menu>
+					<nldd-menu-item text="Instellingen" href="/settings"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-bar-item>
+		`);
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as HTMLElement;
+		el.click();
+		await waitForUpdate(el);
+		expect(menu.matches(':popover-open')).toBe(true);
+		let prevented: boolean | null = null;
+		const record = (event: Event) => {
+			prevented = event.defaultPrevented;
+			event.preventDefault();
+		};
+		window.addEventListener('click', record);
+		const item = el.querySelector('nldd-menu-item')!;
+		const target = item.shadowRoot?.querySelector('a') ?? item;
+		target.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, cancelable: true }));
+		window.removeEventListener('click', record);
+		expect(prevented).toBe(false);
+		// The next click on the item itself still toggles, unhindered by the one in the menu.
+		el.click();
+		await waitForUpdate(el);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
 	it('does not fire select when expandable with a slotted menu', async () => {
 		el = await fixture(`
 			<nldd-menu-bar-item text="NL" expandable>
