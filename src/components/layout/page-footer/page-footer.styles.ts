@@ -71,7 +71,11 @@ export const pageFooterStyles = css`
 		margin-top: var(--_page-footer-ribbon-height);
 	}
 
-	.page-footer::after {
+	:host([no-ribbon]) .page-footer {
+		--_page-footer-ribbon-height: 0px;
+	}
+
+	:host(:not([no-ribbon])) .page-footer::after {
 		content: '';
 		position: absolute;
 		bottom: 0;
@@ -83,7 +87,7 @@ export const pageFooterStyles = css`
 	}
 
 	@media (forced-colors: active) {
-		.page-footer::after {
+		:host(:not([no-ribbon])) .page-footer::after {
 			background-color: ButtonText;
 		}
 	}

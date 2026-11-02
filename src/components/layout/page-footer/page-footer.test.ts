@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './page-footer.js';
 import '../../navigation/breadcrumbs/breadcrumbs.js';
 
@@ -36,6 +37,37 @@ describe('nldd-page-footer', () => {
 		// Empty footer drops the gray band — only the ribbon shows. See
 		// :host([empty]) in the styles.
 		expect(el.hasAttribute('empty')).toBe(true);
+	});
+
+	it('leaves out the ribbon and its room with no-ribbon', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture(`
+			<nldd-page-footer>
+				<nldd-page-footer-legal-bar slot="legal-bar">
+					<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
+				</nldd-page-footer-legal-bar>
+			</nldd-page-footer>
+		`);
+		await waitForUpdate(el);
+		const footer = el.shadowRoot!.querySelector('.page-footer') as HTMLElement;
+		const legal = el.shadowRoot!.querySelector('.page-footer__legal-bar') as HTMLElement;
+		expect(getComputedStyle(footer, '::after').content).not.toBe('none');
+		const withRibbon = parseFloat(getComputedStyle(legal).paddingBottom);
+		el.setAttribute('no-ribbon', '');
+		await waitForUpdate(el);
+		expect(getComputedStyle(footer, '::after').content).toBe('none');
+		const withoutRibbon = parseFloat(getComputedStyle(legal).paddingBottom);
+		expect(withoutRibbon).toBeLessThan(withRibbon);
+		expect(withoutRibbon).toBeGreaterThan(0);
+		unloadTokens();
+	});
+
+	it('takes no height when empty and without the ribbon', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-page-footer no-ribbon></nldd-page-footer>');
+		await waitForUpdate(el);
+		expect(el.getBoundingClientRect().height).toBe(0);
+		unloadTokens();
 	});
 
 	it('clears empty once any row has content', async () => {

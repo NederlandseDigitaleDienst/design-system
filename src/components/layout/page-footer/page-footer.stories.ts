@@ -18,9 +18,11 @@ export default {
 		status: { type: 'stable' },
 	},
 	args: {
+		noRibbon: false,
 		width: '',
 	},
 	argTypes: {
+		noRibbon: { name: 'no-ribbon', control: 'boolean', description: 'Laat het lint en zijn ruimte weg, voor een site buiten de Rijksoverheid', table: { defaultValue: { summary: false } } },
 		width: {
 			control: 'text',
 			description: "Body max-width (net als een page-section): 'full' verwijdert de constraint, of een CSS-lengte (bijv. '480px').",
@@ -29,8 +31,8 @@ export default {
 };
 
 export const Standaard = {
-	render: (args: Record<string, string>) => html`
-		<nldd-page-footer width=${args.width || nothing}>
+	render: (args: Record<string, string | boolean>) => html`
+		<nldd-page-footer ?no-ribbon=${args.noRibbon} width=${args.width || nothing}>
 			<nldd-breadcrumbs slot="breadcrumbs">
 				<nldd-breadcrumbs-item
 					text="Home"
