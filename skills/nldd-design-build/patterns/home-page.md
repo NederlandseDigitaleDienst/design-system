@@ -16,7 +16,7 @@ nldd-shell                                   de buitenste schil
        ├─ slot="header"                      de header, geen terugknop
        │    ├─ nldd-status-bar               alleen als er iets te melden is, boven de balk; optioneel
        │    └─ nldd-skip-link                om de balk heen
-       │         └─ nldd-top-navigation-bar  website-title, back-text, back-href
+       │         └─ nldd-top-navigation-bar
        │              └─ nldd-menu-bar       slot="utility"; zoeken en taal; optioneel
        ├─ nldd-hero                          main-background; de opening
        │    └─ slot="media"                  nldd-image, hier nog zonder beeld

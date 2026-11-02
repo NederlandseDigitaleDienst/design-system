@@ -14,6 +14,7 @@ composition:
       - tag: nldd-page
         children:
           - ref: page-header
+            note: de header; de balk krijgt website-title, en back-text en back-href waar dat kan
           - tag: nldd-simple-section
             note: één sectie per inhoudsblok, met de h1 in de eerste
           - tag: nldd-simple-section

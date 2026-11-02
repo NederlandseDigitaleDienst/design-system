@@ -39,9 +39,10 @@
 				{ "required": ["tag"], "not": { "anyOf": [{ "required": ["label"] }, { "required": ["choice"] }, { "required": ["ref"] }, { "required": ["any-of"] }] } },
 				{ "required": ["label"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["slot"] }, { "required": ["choice"] }, { "required": ["ref"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }] } },
 				{ "required": ["slot"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["label"] }, { "required": ["choice"] }, { "required": ["ref"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }] } },
-				{ "required": ["choice"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["label"] }, { "required": ["slot"] }, { "required": ["ref"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }, { "required": ["any-of"] }, { "required": ["children"] }] } },
+				{ "required": ["choice"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["label"] }, { "required": ["slot"] }, { "required": ["ref"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }, { "required": ["any-of"] }, { "required": ["children"] }, { "required": ["flat"] }] } },
 				{ "required": ["ref"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["label"] }, { "required": ["slot"] }, { "required": ["choice"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }, { "required": ["any-of"] }, { "required": ["children"] }, { "required": ["flat"] }] } }
 			],
+			"dependencies": { "flat": ["children"] },
 			"properties": {
 				"tag": { "type": "string", "pattern": "^nldd-[a-z0-9-]+$", "description": "The element." },
 				"or": { "$ref": "#/definitions/tags", "description": "Other tags that can take its place." },

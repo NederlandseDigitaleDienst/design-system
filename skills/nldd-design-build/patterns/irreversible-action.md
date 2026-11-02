@@ -11,15 +11,16 @@ Een bevestiging geeft iemand de kans om een actie met blijvende gevolgen nog een
 ## Compositie
 
 ```
-nldd-box                  background="critical"; de zone waar de actie woont
-  └─ nldd-container       padding, gap
-       ├─ nldd-title      heading-level; wat de zone is
-       ├─ nldd-rich-text  wat er gebeurt als je de knop gebruikt
-       └─ nldd-button     appearance="destructive"; opent de dialoog
+nldd-simple-section
+  └─ nldd-box                  background="critical"; de zone waar de actie woont
+       └─ nldd-container       padding, gap
+            ├─ nldd-title      heading-level; wat de zone is
+            ├─ nldd-rich-text  wat er gebeurt als je de knop gebruikt
+            └─ nldd-button     appearance="destructive"; opent de dialoog
 
-nldd-modal-dialog         open, variant="alert", text, supporting-text
-  ├─ nldd-button          slot="actions", appearance="primary"; de uitweg
-  └─ nldd-button          slot="actions", appearance="destructive"; de actie
+nldd-modal-dialog              open, variant="alert", text, supporting-text
+  ├─ nldd-button               slot="actions", appearance="primary"; de uitweg
+  └─ nldd-button               slot="actions", appearance="destructive"; de actie
 ```
 
 ```html

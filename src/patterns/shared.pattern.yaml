@@ -10,7 +10,6 @@ define:
         note: om de balk heen
         children:
           - tag: nldd-top-navigation-bar
-            attrs: [website-title, back-text, back-href]
             children:
               - tag: nldd-menu-bar
                 optional: true

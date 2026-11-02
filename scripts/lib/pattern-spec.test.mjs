@@ -205,7 +205,8 @@ test('checkComposition gives every element to one sibling', () => {
 		{ tag: 'nldd-form-field', attrs: ['label="a"'] },
 	] }];
 	const problems = check(nodes, '<nldd-form><nldd-form-field label="a"></nldd-form-field></nldd-form>');
-	assert.deepEqual(problems, ['No example shows nldd-form-field inside nldd-form.']);
+	assert.ok(problems.includes('No example shows nldd-form-field inside nldd-form.'));
+	assert.ok(problems.includes('a.html: nldd-form without nldd-form-field.'));
 });
 
 test('checkComposition matches identical siblings to the one that fits', () => {
@@ -292,6 +293,123 @@ test('checkComposition reports an element with more than one of `one-of`', () =>
 	const nodes = [{ tag: 'nldd-text-field', 'one-of': ['href', 'button'] }];
 	assert.deepEqual(check(nodes, '<nldd-text-field href="/x"></nldd-text-field>'), []);
 	assert.deepEqual(check(nodes, '<nldd-text-field href="/x" button></nldd-text-field>'), ['a.html: nldd-text-field has more than one of href, button.']);
+});
+
+test('checkComposition wants identical required siblings under one parent', () => {
+	const nodes = [{ tag: 'nldd-form', children: [
+		{ tag: 'nldd-form-field', attrs: ['label="a"'], children: [{ tag: 'nldd-text-field' }] },
+		{ tag: 'nldd-form-field', attrs: ['label="a"'], children: [{ tag: 'nldd-dropdown' }] },
+	] }];
+	const one = '<nldd-form><nldd-form-field label="a"><nldd-text-field></nldd-text-field></nldd-form-field></nldd-form>';
+	const other = '<nldd-form><nldd-form-field label="a"><nldd-dropdown></nldd-dropdown></nldd-form-field></nldd-form>';
+	assert.ok(check(nodes, `${one}${other}`).length > 0);
+});
+
+test('checkComposition does not take a child of a filler for a child of the slot', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ slot: 'actions', children: [{ tag: 'nldd-form-field' }] }] }];
+	assert.ok(check(nodes, '<nldd-form><nldd-dropdown slot="actions"><nldd-form-field></nldd-form-field></nldd-dropdown></nldd-form>').includes('a.html: nldd-form without nldd-form-field.'));
+});
+
+test('checkComposition does not see a slot below a plain element', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ tag: 'nldd-form-field', slot: 'actions' }] }];
+	assert.ok(check(nodes, '<nldd-form><div><nldd-form-field slot="actions"></nldd-form-field></div></nldd-form>').includes('a.html: nldd-form without nldd-form-field.'));
+});
+
+test('checkComposition keeps a fixed value to its own place in a sequence', () => {
+	const nodes = [{ tag: 'nldd-form', flat: true, children: [
+		{ tag: 'nldd-form-field', optional: true },
+		{ tag: 'nldd-dropdown', optional: true },
+		{ tag: 'nldd-form-field', optional: true, attrs: ['label="laatste"'] },
+	] }];
+	const good2 = '<nldd-form><nldd-form-field></nldd-form-field><nldd-dropdown></nldd-dropdown><nldd-form-field label="laatste"></nldd-form-field></nldd-form>';
+	assert.deepEqual(check(nodes, good2), []);
+	const wrong = '<nldd-form><nldd-form-field label="laatste"></nldd-form-field><nldd-dropdown></nldd-dropdown></nldd-form>';
+	assert.ok(check(nodes, `${good2}${wrong}`).includes('a.html: nldd-dropdown is out of order in nldd-form.'));
+});
+
+test('checkComposition checks the order of a flat slot and of a label in a label', () => {
+	const slot = [{ tag: 'nldd-form', children: [{ slot: 'actions', flat: true, children: [{ tag: 'nldd-form-field', optional: true }, { tag: 'nldd-dropdown', optional: true }] }] }];
+	const inOrder = '<nldd-form><nldd-form-field slot="actions"></nldd-form-field><nldd-dropdown slot="actions"></nldd-dropdown></nldd-form>';
+	const swapped = '<nldd-form><nldd-dropdown slot="actions"></nldd-dropdown><nldd-form-field slot="actions"></nldd-form-field></nldd-form>';
+	assert.ok(check(slot, `${inOrder}${swapped}`).includes('a.html: nldd-form-field is out of order in nldd-form.'));
+	const nested = [{ tag: 'nldd-form', children: [{ label: 'x', children: [{ label: 'y', flat: true, children: [{ tag: 'nldd-form-field', optional: true }, { tag: 'nldd-dropdown', optional: true }] }] }] }];
+	const free = (markup) => markup.replaceAll(' slot="actions"', '');
+	assert.ok(check(nested, free(`${inOrder}${swapped}`)).includes('a.html: nldd-form-field is out of order in nldd-form.'));
+});
+
+test('checkComposition does not apply the order of a child to its parent', () => {
+	const nodes = [{ tag: 'nldd-form', children: [
+		{ tag: 'nldd-form-field', flat: true, children: [{ tag: 'nldd-text-field' }, { tag: 'nldd-dropdown' }] },
+		{ tag: 'nldd-dropdown' },
+		{ tag: 'nldd-text-field' },
+	] }];
+	const markup = '<nldd-form><nldd-dropdown></nldd-dropdown><nldd-text-field></nldd-text-field><nldd-form-field><nldd-text-field></nldd-text-field><nldd-dropdown></nldd-dropdown></nldd-form-field></nldd-form>';
+	assert.deepEqual(check(nodes, markup), []);
+});
+
+test('checkComposition wants exactly one alternative of a choice', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ choice: [{ tag: 'nldd-form-field' }, { tag: 'nldd-dropdown' }] }] }];
+	const problems = check(nodes, '<nldd-form><nldd-form-field></nldd-form-field><nldd-dropdown></nldd-dropdown></nldd-form>');
+	assert.deepEqual(problems, ['a.html: nldd-form has more than one of nldd-form-field, nldd-dropdown.']);
+});
+
+test('checkComposition accepts a label as an alternative', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ choice: [{ tag: 'nldd-form-field', optional: true }, { label: 'iets anders' }] }] }];
+	const markup = '<nldd-form></nldd-form><nldd-form><nldd-form-field></nldd-form-field></nldd-form>';
+	assert.deepEqual(check(nodes, markup), []);
+});
+
+test('checkComposition looks for a root at the top of an example', () => {
+	const roots = [{ tag: 'nldd-form' }, { tag: 'nldd-dropdown' }];
+	const problems = check(roots, '<nldd-form><nldd-dropdown></nldd-dropdown></nldd-form>');
+	assert.ok(problems.includes('a.html: misses nldd-dropdown.'));
+});
+
+test('checkComposition does not fill an any-of from a named slot', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ label: 'x', 'any-of': ['nldd-dropdown'] }] }];
+	const problems = check(nodes, '<nldd-form><nldd-dropdown slot="actions"></nldd-dropdown></nldd-form>');
+	assert.ok(problems.includes('a.html: nldd-form without x.'));
+});
+
+test('checkComposition does not fill an any-of in a choice from a sibling', () => {
+	const nodes = [{ tag: 'nldd-form', children: [
+		{ tag: 'nldd-form-field', optional: true },
+		{ choice: [{ label: 'x', 'any-of': ['nldd-text-field'] }, { tag: 'nldd-dropdown' }] },
+	] }];
+	assert.ok(check(nodes, '<nldd-form><nldd-form-field></nldd-form-field></nldd-form>').length > 0);
+});
+
+test('checkComposition lets a label be optional with all it holds', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ label: 'x', optional: true, children: [{ tag: 'nldd-form-field' }] }] }];
+	const markup = '<nldd-form></nldd-form><nldd-form><nldd-form-field></nldd-form-field></nldd-form>';
+	assert.deepEqual(check(nodes, markup), []);
+});
+
+test('checkComposition treats an empty slot attribute as the default slot', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ tag: 'nldd-form-field' }] }];
+	assert.deepEqual(check(nodes, '<nldd-form><nldd-form-field slot=""></nldd-form-field></nldd-form>'), []);
+});
+
+test('checkComposition holds a definition to what exists, also unused', () => {
+	const defined = [{ tag: 'nldd-gone' }, { tag: 'nldd-form', attrs: ['nope'] }];
+	const problems = checkComposition(composition, { tags, examples: [example(good)], defined });
+	assert.ok(problems.includes('Names nldd-gone, which does not exist.'));
+	assert.ok(problems.includes('nldd-form has no attribute nope.'));
+});
+
+test('resolveSpec refuses a definition that refers to itself', () => {
+	const spec = { composition: [{ ref: 'a' }], define: { a: { tag: 'x', children: [{ ref: 'a' }] } } };
+	assert.throws(() => resolveSpec(spec), /a refers to itself/);
+});
+
+test('unshownParts also names an any-of nothing filled', () => {
+	const part = { label: 'x', 'any-of': ['a'] };
+	assert.deepEqual(unshownParts({ head: part }, new Set()), ['any of a']);
+});
+
+test('the schema refuses flat where nothing could be in order', () => {
+	assert.equal(validate({ composition: [{ tag: 'nldd-form', flat: true }] }), false);
+	assert.equal(validate({ composition: [{ flat: true, choice: [{ tag: 'nldd-form' }, { tag: 'nldd-form' }] }] }), false);
 });
 
 test('the schema refuses a field it does not know', () => {

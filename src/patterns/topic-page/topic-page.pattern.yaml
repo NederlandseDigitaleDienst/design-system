@@ -5,7 +5,7 @@ composition:
       - tag: nldd-page
         children:
           - ref: page-header
-            note: de header, terug naar de onderwerpen
+            note: de header, met back-text en back-href naar de onderwerpen
           - tag: nldd-hero
             note: de h1, een korte uitleg en de hoofdtaak
             children:

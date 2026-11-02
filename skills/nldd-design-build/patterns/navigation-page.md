@@ -13,10 +13,10 @@ Een navigatiepagina helpt bezoekers hun weg te vinden naar onderliggende pagina�
 ```
 nldd-shell                                        de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                           de header, terug naar de home
+       ├─ slot="header"                           de header, met back-text en back-href naar de home
        │    ├─ nldd-status-bar                    alleen als er iets te melden is, boven de balk; optioneel
        │    └─ nldd-skip-link                     om de balk heen
-       │         └─ nldd-top-navigation-bar       website-title, back-text, back-href
+       │         └─ nldd-top-navigation-bar
        │              └─ nldd-menu-bar            slot="utility"; zoeken en taal; optioneel
        ├─ één van
        │    ├─ nldd-one-third-two-thirds-section  met een lijst

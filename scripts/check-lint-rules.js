@@ -23,7 +23,8 @@ import { parse as parseYaml } from 'yaml';
 import { parseHtml } from '../lint/frontends.js';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
 import { selectorsOf } from '../lint/rule-index.js';
-import { checkComposition, resolveSpec, unshownParts } from './lib/pattern-spec.js';
+import { describeErrors } from './lib/lint-data.js';
+import { checkComposition, checkNodes, resolveSpec, unshownParts } from './lib/pattern-spec.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const data = loadData();
@@ -229,11 +230,14 @@ function checkCompositions() {
 			return undefined;
 		}
 		if (validate(spec)) return spec;
-		problems.push(`${label}: ${validate.errors.map(({ instancePath, message }) => `${instancePath} ${message}`).join('; ')}`);
+		problems.push(`${label}: ${describeErrors(validate.errors)}`);
 		return undefined;
 	};
 	const shared = readSpec(join(directory, 'shared.pattern.yaml'), 'patterns/shared');
-	if (!shared) return;
+	if (!shared?.define) {
+		if (shared) problems.push('patterns/shared: needs `define`.');
+		return;
+	}
 	const shown = new Set();
 	for (const entry of readdirSync(directory, { withFileTypes: true })) {
 		if (!entry.isDirectory()) continue;
@@ -245,7 +249,12 @@ function checkCompositions() {
 		}
 		const spec = readSpec(specPath, label);
 		if (!spec) continue;
-		const page = readFileSync(join(directory, entry.name, `${entry.name}.mdx`), 'utf8');
+		if (!spec.composition) {
+			problems.push(`${label}: needs \`composition\`.`);
+			continue;
+		}
+		const pagePath = join(directory, entry.name, `${entry.name}.mdx`);
+		const page = existsSync(pagePath) ? readFileSync(pagePath, 'utf8') : '';
 		if (!page.includes(`<Composition pattern="${entry.name}" />`)) problems.push(`${label}: the page does not draw its spec with <Composition pattern="${entry.name}" />.`);
 		if (/[├└]─/.test(page)) problems.push(`${label}: the page has a hand-drawn tree.`);
 		let resolved;
@@ -261,10 +270,12 @@ function checkCompositions() {
 			return resolved.define[name];
 		});
 		const fragments = Object.fromEntries(starts.map(([file, name]) => [file, [resolved.define[name]]]));
-		for (const problem of checkComposition(resolved.composition, { tags: data.tags, examples, fragments, shown })) {
+		const defined = resolved.local.map((name) => resolved.define[name]);
+		for (const problem of checkComposition(resolved.composition, { tags: data.tags, examples, fragments, defined, shown })) {
 			problems.push(`${label}: ${problem}`);
 		}
 	}
+	for (const problem of checkNodes(Object.values(shared.define), data.tags)) problems.push(`patterns/shared: ${problem}`);
 	for (const part of unshownParts(shared.define, shown)) problems.push(`patterns/shared: no example shows ${part}.`);
 }
 

@@ -1,19 +1,21 @@
 composition:
-  - tag: nldd-box
-    attrs: ['background="critical"']
-    note: de zone waar de actie woont
+  - tag: nldd-simple-section
     children:
-      - tag: nldd-container
-        attrs: [padding, gap]
+      - tag: nldd-box
+        attrs: ['background="critical"']
+        note: de zone waar de actie woont
         children:
-          - tag: nldd-title
-            attrs: [heading-level]
-            note: wat de zone is
-          - tag: nldd-rich-text
-            note: wat er gebeurt als je de knop gebruikt
-          - tag: nldd-button
-            attrs: ['appearance="destructive"']
-            note: opent de dialoog
+          - tag: nldd-container
+            attrs: [padding, gap]
+            children:
+              - tag: nldd-title
+                attrs: [heading-level]
+                note: wat de zone is
+              - tag: nldd-rich-text
+                note: wat er gebeurt als je de knop gebruikt
+              - tag: nldd-button
+                attrs: ['appearance="destructive"']
+                note: opent de dialoog
   - tag: nldd-modal-dialog
     attrs: [open, 'variant="alert"', text, supporting-text]
     children:

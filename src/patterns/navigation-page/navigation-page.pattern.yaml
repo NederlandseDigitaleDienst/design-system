@@ -5,7 +5,7 @@ composition:
       - tag: nldd-page
         children:
           - ref: page-header
-            note: de header, terug naar de home
+            note: de header, met back-text en back-href naar de home
           - choice:
               - tag: nldd-one-third-two-thirds-section
                 note: met een lijst
