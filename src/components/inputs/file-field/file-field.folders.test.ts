@@ -226,6 +226,22 @@ describe('nldd-file-field – directory', () => {
 		expect(menu()!.matches(':popover-open')).toBe(false);
 	});
 
+	it('opens the menu under "Wijzigen", which shows a chevron and whether it is open', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(file('index.html')));
+		await settle();
+		await waitForUpdate(el);
+		const change = el.shadowRoot!.querySelector<HTMLElement & { expandable: boolean; expanded: boolean }>('.file-field__actions nldd-button')!;
+		expect(change.expandable).toBe(true);
+		const box = change.getBoundingClientRect();
+		change.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1, clientX: box.left + 5, clientY: box.top + 5 }));
+		await settle();
+		await waitForUpdate(el);
+		expect((menu() as HTMLElement & { anchorElement: Element | null }).anchorElement).toBe(change);
+		expect(change.expanded).toBe(true);
+	});
+
 	it('shows an icon on both options', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
 		await waitForUpdate(el);

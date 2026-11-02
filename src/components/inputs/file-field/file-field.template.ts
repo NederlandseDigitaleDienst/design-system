@@ -117,6 +117,7 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 			type="button"
 			aria-label=${component._chooseAccessibleLabel()}
 			aria-haspopup=${component.directory ? 'menu' : nothing}
+			aria-expanded=${component.directory ? String(component._menuOpen) : nothing}
 			?disabled=${component.disabled}
 			@click=${(e: Event) => component._handleChoose(e)}
 		>${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}<span class="file-field__sentence">${renderStack([
@@ -185,6 +186,8 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 								appearance="neutral-tinted"
 								text=${component._t('components.file-field.to-change-action')}
 								popup-type=${component.directory ? 'menu' : nothing}
+								?expandable=${component.directory}
+								?expanded=${component._menuOpen}
 								accessible-label=${component._changeAccessibleLabel() || nothing}
 								?disabled=${component.disabled}
 								@click=${(e: Event) => component._handleChoose(e)}
@@ -205,6 +208,8 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 							size=${buttonSize}
 							text=${component._t('components.file-field.to-change-action')}
 							popup-type=${component.directory ? 'menu' : nothing}
+							?expandable=${component.directory}
+							?expanded=${component._menuOpen}
 							accessible-label=${component._changeAccessibleLabel() || nothing}
 							?disabled=${component.disabled}
 							@click=${(e: Event) => component._handleChoose(e)}

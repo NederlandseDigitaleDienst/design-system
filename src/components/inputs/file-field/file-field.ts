@@ -440,7 +440,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 				return;
 			}
 			if (performance.now() - this._menuClosedAt < REOPEN_GUARD_MS) return;
-			menu.anchorElement = this._pointAt(e) ?? e.currentTarget;
+			// The field opens it where it was clicked; "Wijzigen" opens it under itself.
+			const field = e.currentTarget.classList.contains('file-field__browse-button');
+			menu.anchorElement = (field && this._pointAt(e)) || e.currentTarget;
 			menu.showPopover();
 			return;
 		}
@@ -463,9 +465,14 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** When the choose menu last closed, for the press that closed it. */
 	private _menuClosedAt = -Infinity;
 
+	/** @internal Whether the choose menu is open, for `expanded` on the button. */
+	@state()
+	_menuOpen = false;
+
 	/** @internal */
 	public _handleMenuToggle(e: Event): void {
-		if ((e as ToggleEvent).newState === 'closed') this._menuClosedAt = performance.now();
+		this._menuOpen = (e as ToggleEvent).newState === 'open';
+		if (!this._menuOpen) this._menuClosedAt = performance.now();
 	}
 
 	/** @internal Picked in the menu of a field with `directory`. */
