@@ -159,7 +159,7 @@ describe('nldd-file-field – directory', () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
 		await waitForUpdate(el);
 		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
-		expect(button.textContent!.replace(/\s+/g, ' ')).toContain('Bestanden of een map kiezen');
+		expect(button.textContent!.replace(/\s+/g, ' ')).toContain('Bestanden of map kiezen');
 		expect(button.getAttribute('aria-haspopup')).toBe('menu');
 		const files = vi.spyOn(el.shadowRoot!.querySelector<HTMLInputElement>('.file-field__input')!, 'click').mockImplementation(() => {});
 		const folder = vi.spyOn(el.shadowRoot!.querySelector<HTMLInputElement>('.file-field__folder-input')!, 'click').mockImplementation(() => {});
@@ -168,15 +168,68 @@ describe('nldd-file-field – directory', () => {
 		await settle();
 		expect(menu()!.matches(':popover-open')).toBe(true);
 		expect(files).not.toHaveBeenCalled();
-		item('Map kiezen').shadowRoot!.querySelector('button')!.click();
+		item('Map kiezen…').shadowRoot!.querySelector('button')!.click();
 		await settle();
 		expect(folder).toHaveBeenCalledOnce();
 		expect(menu()!.matches(':popover-open')).toBe(false);
 
 		button.click();
 		await settle();
-		item('Bestanden kiezen').shadowRoot!.querySelector('button')!.click();
+		item('Bestanden kiezen…').shadowRoot!.querySelector('button')!.click();
 		expect(files).toHaveBeenCalledOnce();
+	});
+
+	it('opens the menu where a click lands, and under the button from the keyboard', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
+		const box = button.getBoundingClientRect();
+		const field = el.shadowRoot!.querySelector('.file-field')!.getBoundingClientRect();
+		const anchored = () => (menu() as HTMLElement & { anchorElement: Element | null }).anchorElement;
+
+		button.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1, clientX: box.left + 40, clientY: box.top + 10 }));
+		await settle();
+		const point = anchored() as HTMLElement;
+		expect(point.classList.contains('file-field__menu-anchor')).toBe(true);
+		expect(point.style.left).toBe(`${box.left + 40 - field.left}px`);
+		menu()!.hidePopover();
+		await new Promise((resolve) => setTimeout(resolve, 350));
+
+		// A keyboard press is a click without a point.
+		button.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 0 }));
+		await settle();
+		expect(anchored()).toBe(button);
+	});
+
+	it('closes the open menu on a second press on the field, without opening it again', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
+		button.click();
+		await settle();
+		expect(menu()!.matches(':popover-open')).toBe(true);
+		// Light dismiss closes it on pointerdown, before the click lands.
+		menu()!.hidePopover();
+		button.click();
+		await settle();
+		expect(menu()!.matches(':popover-open')).toBe(false);
+	});
+
+	it('closes the open menu on a click that light dismiss let through', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
+		button.click();
+		await settle();
+		button.click();
+		await settle();
+		expect(menu()!.matches(':popover-open')).toBe(false);
+	});
+
+	it('shows an icon on both options', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
+		await waitForUpdate(el);
+		expect([...el.shadowRoot!.querySelectorAll('nldd-menu-item')].map((option) => option.getAttribute('icon'))).toEqual(['files', 'folder']);
 	});
 
 	it('takes several files and a dropped folder with directory, without multiple', async () => {

@@ -136,6 +136,13 @@ export const fileFieldStyles = css`
 		display: none;
 	}
 
+	.file-field__menu-anchor {
+		position: absolute;
+		pointer-events: none;
+		width: 0;
+		height: 0;
+	}
+
 	.file-field__browse-button,
 	.file-field__replace-area {
 		box-sizing: border-box;

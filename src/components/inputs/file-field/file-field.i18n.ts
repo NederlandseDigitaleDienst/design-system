@@ -1,9 +1,9 @@
 export const nlddFileFieldTranslations = {
 	'components.file-field.to-choose-file-action': 'Bestand kiezen',
 	'components.file-field.to-choose-files-action': 'Bestanden kiezen',
-	'components.file-field.to-choose-files-or-folder-action': 'Bestanden of een map kiezen',
-	'components.file-field.files-menu-action': 'Bestanden kiezen',
-	'components.file-field.folder-menu-action': 'Map kiezen',
+	'components.file-field.to-choose-files-or-folder-action': 'Bestanden of map kiezen',
+	'components.file-field.files-menu-action': 'Bestanden kiezen…',
+	'components.file-field.folder-menu-action': 'Map kiezen…',
 	'components.file-field.to-change-action': 'Wijzigen',
 	'components.file-field.drop-hint-lowercase-text': 'of sleep het hierheen',
 	'components.file-field.drop-hint-multiple-lowercase-text': 'of sleep ze hierheen',

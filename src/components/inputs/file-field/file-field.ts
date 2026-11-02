@@ -32,10 +32,11 @@
  *
  * `directory` offers a folder in the file dialog too. A dialog picks files or a
  * folder, never both, so with it choosing and changing open a menu with
- * "Bestanden kiezen" and "Map kiezen", and the field says "Bestanden of een map
- * kiezen". A folder is many files, so `directory` takes several without
- * `multiple`. Safari on iOS picks a folder as well; a browser that cannot opens
- * a dialog for files instead.
+ * "Bestanden kiezen" and "Map kiezen", and the field says "Bestanden of map
+ * kiezen". A click opens the menu where it lands, as a context menu does; the
+ * keyboard opens it under the button. A folder is many files, so `directory`
+ * takes several without `multiple`. Safari on iOS picks a folder as well; a
+ * browser that cannot opens a dialog for files instead.
  *
  * While files are dragged over the page, every field marks itself as a place
  * to put them, and the field under the pointer says it will take them (a field
@@ -114,6 +115,9 @@ import { fileDragAndDropAvailable, FileDragAndDropAvailabilityController } from 
 
 /** How long the message of a refused drop stays in the field. */
 const REJECTION_MS = 4000;
+
+/** A click this soon after the choose menu closed is the one that closed it. */
+const REOPEN_GUARD_MS = 300;
 
 /** The word for a family of types in `accept`, such as `image/*`. */
 const FAMILY_KEYS = {
@@ -238,6 +242,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@query('.file-field__choose-menu')
 	private _chooseMenu!: (HTMLElement & { anchorElement: Element | null }) | null;
+
+	@query('.file-field__menu-anchor')
+	private _menuAnchor!: HTMLElement | null;
 
 	/** @internal */
 	public _t(key: keyof NLDDFileFieldTranslations, vars?: Record<string, string | number>): string {
@@ -426,11 +433,39 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		// files or a folder, never both.
 		const menu = this._chooseMenu;
 		if (this.directory && menu && e?.currentTarget instanceof Element) {
-			menu.anchorElement = e.currentTarget;
+			// A press on the field while the menu is open closes it. Light dismiss
+			// usually did so on pointerdown already, so this click must not reopen it.
+			if (menu.matches(':popover-open')) {
+				menu.hidePopover();
+				return;
+			}
+			if (performance.now() - this._menuClosedAt < REOPEN_GUARD_MS) return;
+			menu.anchorElement = this._pointAt(e) ?? e.currentTarget;
 			menu.showPopover();
 			return;
 		}
 		this._input?.click();
+	}
+
+	/** The point a mouse or a finger pressed, as an element the menu can hang
+	 *  from, so it opens there. Null for the keyboard, whose click has no point
+	 *  (`detail` 0): the menu then hangs under the button. */
+	private _pointAt(e: Event): Element | null {
+		const anchor = this._menuAnchor;
+		const field = anchor?.parentElement;
+		if (!(e instanceof MouseEvent) || e.detail === 0 || !anchor || !field) return null;
+		const box = field.getBoundingClientRect();
+		anchor.style.left = `${e.clientX - box.left}px`;
+		anchor.style.top = `${e.clientY - box.top}px`;
+		return anchor;
+	}
+
+	/** When the choose menu last closed, for the press that closed it. */
+	private _menuClosedAt = -Infinity;
+
+	/** @internal */
+	public _handleMenuToggle(e: Event): void {
+		if ((e as ToggleEvent).newState === 'closed') this._menuClosedAt = performance.now();
 	}
 
 	/** @internal Picked in the menu of a field with `directory`. */

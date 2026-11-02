@@ -259,12 +259,17 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 					?disabled=${component.disabled}
 					@change=${component._handleInputChange}
 				>
-				<nldd-menu class="file-field__choose-menu">
+				<span class="file-field__menu-anchor"></span>
+				<nldd-menu class="file-field__choose-menu"
+					@beforetoggle=${(e: Event) => component._handleMenuToggle(e)}
+				>
 					<nldd-menu-item
+						icon="files"
 						text=${component._t('components.file-field.files-menu-action')}
 						@select=${component._chooseFiles}
 					></nldd-menu-item>
 					<nldd-menu-item
+						icon="folder"
 						text=${component._t('components.file-field.folder-menu-action')}
 						@select=${component._chooseFolder}
 					></nldd-menu-item>
