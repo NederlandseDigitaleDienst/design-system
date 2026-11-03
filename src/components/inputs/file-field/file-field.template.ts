@@ -34,7 +34,8 @@ const FORMAT_ICONS: Record<string, string> = {
 
 function fileIcon(component: NLDDFileField): string {
 	const files = component.files;
-	if (files.length > 1 || component._folderName()) return 'file-on-file';
+	if (component._folderName()) return 'folder';
+	if (files.length > 1) return 'file-on-file';
 	const extension = splitName(files[0].name)[1].slice(1).toLowerCase();
 	return FORMAT_ICONS[extension] ?? 'file';
 }

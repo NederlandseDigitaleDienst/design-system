@@ -207,7 +207,7 @@ describe('nldd-file-field – folders', () => {
 		await waitForUpdate(el);
 		expect(el.paths).toEqual(['site/index.html']);
 		expect(el.shadowRoot!.querySelector('.file-field__folder--full')!.textContent).toBe('site (1 bestand)');
-		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file-on-file');
+		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('folder');
 	});
 
 	it('shows it is reading a folder that takes a while, until it is read or something else is done', async () => {

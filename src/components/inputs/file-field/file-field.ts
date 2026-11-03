@@ -78,7 +78,8 @@
  * `variant="area"` lays the same field out as a tall surface, for a page where
  * handing in files is the main task. Empty, it shows an upload icon, the
  * sentence and the types it takes ("Toegestaan: PDF of JPG"), named from
- * `accept`; with a file, the icon of its format, its name and the buttons
+ * `accept`; with a file, the icon of its format (a folder for a folder, a
+ * stack for several files), its name and the buttons
  * "Wijzigen" and "Wis selectie" stacked in the middle. Both states have the same
  * height, so the page does not move when a file is chosen: 160px, 120px at
  * `size="sm"`, and a step more with `directory`, whose buttons take a row of
