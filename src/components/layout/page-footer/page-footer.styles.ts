@@ -102,34 +102,44 @@ export const pageFooterStyles = css`
 	.page-footer__breadcrumbs,
 	.page-footer__legal-bar {
 		@container (max-width: ${smMax}) {
-			padding-block: var(--primitives-space-16);
+			--_page-footer-section-padding-block: var(--primitives-space-16);
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			padding-block: var(--primitives-space-24);
+			--_page-footer-section-padding-block: var(--primitives-space-24);
 		}
 
 		@container (min-width: ${lgMin}) {
-			padding-block: var(--primitives-space-24);
+			--_page-footer-section-padding-block: var(--primitives-space-24);
 		}
 	}
 
 	.page-footer__main {
 		@container (max-width: ${smMax}) {
-			padding-block: var(--primitives-space-24);
+			--_page-footer-section-padding-block: var(--primitives-space-24);
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			padding-block: var(--primitives-space-32);
+			--_page-footer-section-padding-block: var(--primitives-space-32);
 		}
 
 		@container (min-width: ${lgMin}) {
-			padding-block: var(--primitives-space-48);
+			--_page-footer-section-padding-block: var(--primitives-space-48);
 		}
+	}
+
+	.page-footer__breadcrumbs,
+	.page-footer__main,
+	.page-footer__legal-bar {
+		padding-block: var(--_page-footer-section-padding-block);
 	}
 
 	.page-footer__body > div:not([hidden]):not(:has(~ div:not([hidden]))) {
 		padding-bottom: calc(var(--primitives-space-16) + var(--_page-footer-ribbon-height));
+	}
+
+	:host([no-ribbon]:not([single-slot])) .page-footer__body > div:not([hidden]):not(:has(~ div:not([hidden]))) {
+		padding-bottom: var(--_page-footer-section-padding-block);
 	}
 
 	:host([single-slot]) .page-footer__body > div:not([hidden]) {

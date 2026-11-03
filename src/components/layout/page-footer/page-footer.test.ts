@@ -62,6 +62,23 @@ describe('nldd-page-footer', () => {
 		unloadTokens();
 	});
 
+	it('keeps as much room under the last row as above it without the ribbon', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture(`
+			<nldd-page-footer no-ribbon style="width: 1280px">
+				<p>Mijn Dienst</p>
+				<nldd-page-footer-legal-bar slot="legal-bar">
+					<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
+				</nldd-page-footer-legal-bar>
+			</nldd-page-footer>
+		`);
+		await waitForUpdate(el);
+		const legal = getComputedStyle(el.shadowRoot!.querySelector('.page-footer__legal-bar')!);
+		expect(parseFloat(legal.paddingTop)).toBeGreaterThan(0);
+		expect(legal.paddingBottom).toBe(legal.paddingTop);
+		unloadTokens();
+	});
+
 	it('takes no height when empty and without the ribbon', async () => {
 		const unloadTokens = loadTokens();
 		el = await fixture('<nldd-page-footer no-ribbon></nldd-page-footer>');
