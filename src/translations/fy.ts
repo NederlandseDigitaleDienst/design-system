@@ -58,7 +58,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.validation-list.too-long-text': 'Op syn heechst {maxlength} tekens.',
 	'components.validation-list.range-underflow-text': '{min} of mear.',
 	'components.validation-list.range-overflow-text': '{max} of minder.',
-	'components.validation-list.fallback-text': 'Dit klopt noch net.',
+	'components.validation-list.invalid-text': 'Dit klopt noch net.',
 	'components.combo-box.open-menu-action': 'Opsjes sjen litte',
 	'components.combo-box.clear-action': 'Ynfier wiskje',
 	'components.date-field.to-pick-date-action': 'Datum kieze',

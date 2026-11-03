@@ -426,7 +426,7 @@ export class NLDDValidationList extends LitElement {
 		if (validity?.tooLong) return this._t('components.validation-list.too-long-text', { maxlength: attr('maxlength') });
 		if (validity?.rangeUnderflow) return this._t('components.validation-list.range-underflow-text', { min: attr('min') });
 		if (validity?.rangeOverflow) return this._t('components.validation-list.range-overflow-text', { max: attr('max') });
-		return this._t('components.validation-list.fallback-text');
+		return this._t('components.validation-list.invalid-text');
 	}
 
 	/**

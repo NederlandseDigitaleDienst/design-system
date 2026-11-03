@@ -60,7 +60,7 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.validation-list.too-long-text': 'Maximo {maxlength} caracter.',
 	'components.validation-list.range-underflow-text': '{min} of mas.',
 	'components.validation-list.range-overflow-text': '{max} of menos.',
-	'components.validation-list.fallback-text': 'Esaki no ta cuadra ainda.',
+	'components.validation-list.invalid-text': 'Esaki no ta cuadra ainda.',
 	'components.combo-box.open-menu-action': 'Mustra opcion',
 	'components.combo-box.clear-action': 'Limpia input',
 	'components.date-field.to-pick-date-action': 'Scoge un fecha',

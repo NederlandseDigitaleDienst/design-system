@@ -60,7 +60,7 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.validation-list.too-long-text': 'Máksimo {maxlength} karakter.',
 	'components.validation-list.range-underflow-text': '{min} òf mas.',
 	'components.validation-list.range-overflow-text': '{max} òf ménos.',
-	'components.validation-list.fallback-text': 'Esaki no ta kuadra ainda.',
+	'components.validation-list.invalid-text': 'Esaki no ta kuadra ainda.',
 	'components.combo-box.open-menu-action': 'Mustra opshon',
 	'components.combo-box.clear-action': 'Limpia input',
 	'components.date-field.to-pick-date-action': 'Skohe un fecha',

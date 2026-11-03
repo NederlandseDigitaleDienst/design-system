@@ -60,7 +60,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.validation-list.too-long-text': 'At most {maxlength} characters.',
 	'components.validation-list.range-underflow-text': '{min} or more.',
 	'components.validation-list.range-overflow-text': '{max} or less.',
-	'components.validation-list.fallback-text': 'This is not right yet.',
+	'components.validation-list.invalid-text': 'This is not right yet.',
 	'components.combo-box.open-menu-action': 'Show options',
 	'components.combo-box.clear-action': 'Clear input',
 	'components.date-field.to-pick-date-action': 'Choose date',
