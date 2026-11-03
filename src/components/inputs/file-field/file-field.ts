@@ -53,11 +53,13 @@
  * editable field takes is left alone. On a device without hover there is no
  * dragging, so the field there drops the hint.
  *
- * A narrow field with a file makes room for its name: below 320px it leaves
- * out the icon of the format and counts a folder as "site (3)", below 240px "Wijzigen" becomes an icon button
- * with `edit` and the text as its tooltip. A refused drop says why across the
- * whole row there, in place of the name and the buttons, so the field is no
- * taller than its name needs.
+ * A control reserves the height of every text it can show, so fields of a
+ * size are as tall at one width, empty or with a file. The name takes the lines
+ * that leaves it, and is cut in the middle only once those are full. A narrow
+ * field makes more room: below 320px it leaves out the icon of the format and
+ * counts a folder as "site (3)", below 240px "Wijzigen" and "Wis selectie" go
+ * in one menu behind "Toon opties". A refused drop says why across the whole
+ * row of a control, in place of the name and the buttons.
  *
  * The surface deliberately does not look like an input field. A border with
  * field semantics promises you can type into it; here you can only press it or
@@ -122,7 +124,7 @@ import {
 	type DragState,
 	type DropRejection,
 } from './file-field.drop.js';
-import { textMeasurer, truncateMiddle } from './file-field.truncate.js';
+import { lineFitter, textMeasurer, truncateMiddle, truncateMiddleToFit } from './file-field.truncate.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
@@ -236,6 +238,15 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** @internal Whether the name is cut short, and so shows whole in a tooltip. */
 	@state()
 	_nameTruncated = false;
+
+	/** @internal The name of the chosen folder cut in the middle to fit, or null
+	 *  while it fits or CSS cuts it on one line. */
+	@state()
+	_fittedFolder: string | null = null;
+
+	/** @internal The lines the name has room for. */
+	@state()
+	_nameLines = 1;
 
 	private _resizeObserver?: ResizeObserver;
 	private _rejectionTimer?: ReturnType<typeof setTimeout>;
@@ -361,6 +372,11 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 			: this._t('components.file-field.file-type-error-text', { types });
 	}
 
+	/** @internal "Toon opties" with what they are for: "Toon opties, rapport.pdf". */
+	public _moreAccessibleLabel(): string {
+		return `${this._t('components.file-field.show-options-action')}, ${this._valueLabel()}`;
+	}
+
 	/** @internal */
 	public _valueLabel(): string {
 		const folder = this._folderName();
@@ -423,14 +439,20 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this._fitName();
 	}
 
-	/** Cuts the chosen name in the middle to the width it has. Without a width
-	 *  (a hidden field), it falls back to the CSS cut of the first render. */
+	/** Cuts the chosen name in the middle to the room it has: one line, or in a
+	 *  control as many lines as its texts reserve anyway, so a name never makes
+	 *  the field taller. A folder keeps its count whole and gives up its name.
+	 *  Without a width (a hidden field), it falls back to the CSS cut of the
+	 *  first render. */
 	private _fitName(): void {
-		const value = this.shadowRoot?.querySelector<HTMLElement>('.file-field__value');
-		const name = this.shadowRoot?.querySelector<HTMLElement>('.file-field__name');
-		if (this._files.length !== 1 || !value || !name) {
-			this._fittedName = null;
-			this._nameTruncated = false;
+		const root = this.shadowRoot;
+		const value = root?.querySelector<HTMLElement>('.file-field__value');
+		const folder = this._folderName();
+		const label = folder
+			? Array.from(root?.querySelectorAll<HTMLElement>('.file-field__folder') ?? []).find((variant) => variant.checkVisibility())
+			: root?.querySelector<HTMLElement>('.file-field__name');
+		if (!value || !label || (!folder && this._files.length !== 1)) {
+			this._resetFit();
 			return;
 		}
 		// The buttons beside the name take their width after their own render, so
@@ -443,13 +465,48 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		const style = getComputedStyle(value);
 		const width = value.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
 		if (width <= 0) {
-			this._fittedName = null;
-			this._nameTruncated = false;
+			this._resetFit();
 			return;
 		}
-		const { measure, done } = textMeasurer(name);
+		const lines = this._nameLinesFor(value);
+		this._nameLines = lines;
+		if (folder) {
+			if (lines === 1) {
+				// CSS gives up the name of the folder before its count.
+				this._fittedFolder = null;
+				this._nameTruncated = false;
+				return;
+			}
+			const text = label.classList.contains('file-field__folder--short')
+				? this._t('components.file-field.folder-count-short-text', { folder, count: this._files.length })
+				: this._valueLabel();
+			const at = text.indexOf(folder);
+			const [before, after] = at < 0 ? ['', ''] : [text.slice(0, at), text.slice(at + folder.length)];
+			const { fits, done } = lineFitter(value, width, lines);
+			try {
+				const { text: fitted, truncated } = truncateMiddleToFit(folder, (name) => fits(before + name + after), { keepExtension: false });
+				this._fittedFolder = fitted;
+				this._nameTruncated = truncated;
+			} finally {
+				done();
+			}
+			return;
+		}
+		const name = this._files[0].name;
+		if (lines === 1) {
+			const { measure, done } = textMeasurer(label);
+			try {
+				const { text, truncated } = truncateMiddle(name, width, measure);
+				this._fittedName = text;
+				this._nameTruncated = truncated;
+			} finally {
+				done();
+			}
+			return;
+		}
+		const { fits, done } = lineFitter(value, width, lines);
 		try {
-			const { text, truncated } = truncateMiddle(this._files[0].name, width, measure);
+			const { text, truncated } = truncateMiddleToFit(name, fits);
 			this._fittedName = text;
 			this._nameTruncated = truncated;
 		} finally {
@@ -457,11 +514,25 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 	}
 
+	/** The lines a control has for its name: what its tallest text takes, the
+	 *  room around a text off. An area shows one. */
+	private _nameLinesFor(value: HTMLElement): number {
+		const text = this.shadowRoot?.querySelector<HTMLElement>('.file-field__replace-area .file-field__text');
+		if (this.variant === 'area' || !text) return 1;
+		const style = getComputedStyle(text);
+		const room = text.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+		return Math.max(1, Math.floor((room + 0.5) / parseFloat(getComputedStyle(value).lineHeight)));
+	}
+
+	private _resetFit(): void {
+		this._fittedName = null;
+		this._fittedFolder = null;
+		this._nameTruncated = false;
+		this._nameLines = 1;
+	}
+
 	override willUpdate(changed: PropertyValues): void {
-		if (changed.has('_files')) {
-			this._fittedName = null;
-			this._nameTruncated = false;
-		}
+		if (changed.has('_files')) this._resetFit();
 		if (changed.has('required')) this._updateValidity();
 		if (changed.has('accessibleLabel')) this.internals.ariaLabel = this.accessibleLabel || null;
 	}
@@ -734,9 +805,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** The button that opens the dialog: the whole surface while the field is
 	 *  empty, or the first of its two choices in an area with `directory`, and
-	 *  "Wijzigen" once it has a file, as text or as an icon, whichever shows. */
+	 *  "Wijzigen" once it has a file, or the menu that holds it in a narrow field. */
 	private _chooseButton(): HTMLElement | null {
-		const buttons = this.shadowRoot?.querySelectorAll<HTMLElement>('.file-field__choose-button, .file-field__choose-button-group nldd-button, .file-field__change-button') ?? [];
+		const buttons = this.shadowRoot?.querySelectorAll<HTMLElement>('.file-field__choose-button, .file-field__choose-button-group nldd-button, .file-field__change-button, .file-field__more-button') ?? [];
 		return Array.from(buttons).find((button) => button.checkVisibility?.() ?? true) ?? buttons[0] ?? null;
 	}
 

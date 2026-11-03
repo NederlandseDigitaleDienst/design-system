@@ -163,6 +163,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.folder-count-short-text': '{folder} ({count})',
 	'components.file-field.file-chosen-text': '{name} chosen',
 	'components.file-field.clear-action': 'Clear selection',
+	'components.file-field.show-options-action': 'Show options',
 	'components.file-field.required-error-text': 'A file is required',
 	'components.file-field.accepted-types-text': 'Accepted: {types}',
 	'components.slider.start-value-label': 'Minimum',

@@ -288,13 +288,13 @@ export const fileFieldStyles = css`
 		}
 
 		@container file-field-chosen-area (max-width: 14.9375rem) {
-			.file-field__change-button:not(.file-field__change-icon-button) {
+			:is(.file-field__change-button, .file-field__clear-button) {
 				display: none;
 			}
 		}
 
 		@container file-field-chosen-area (min-width: 15rem) {
-			.file-field__change-icon-button {
+			.file-field__more-button {
 				display: none;
 			}
 		}
@@ -302,13 +302,13 @@ export const fileFieldStyles = css`
 
 	.file-field__chosen-file {
 		@container file-field-chosen-area (max-width: 19.9375rem) {
-			.file-field__folder--full {
+			.file-field__folder.file-field__folder--full {
 				display: none;
 			}
 		}
 
 		@container file-field-chosen-area (min-width: 20rem) {
-			.file-field__folder--short {
+			.file-field__folder.file-field__folder--short {
 				display: none;
 			}
 		}
@@ -391,6 +391,16 @@ export const fileFieldStyles = css`
 	.file-field__folder {
 		display: flex;
 		min-width: 0;
+	}
+
+	:is(.file-field__name, .file-field__folder).is-wrapped {
+		display: block;
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	.file-field__name.is-wrapped .file-field__name-start {
+		white-space: normal;
 	}
 
 	.file-field__folder-name {

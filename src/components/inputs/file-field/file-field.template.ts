@@ -99,14 +99,15 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
  *  their height. An area shows only the active text, and has a fixed height. */
 function reservedVariants(component: NLDDFileField): Variant[] {
 	if (component.variant === 'area') return [];
-	const t = (key: string) => component._t(`components.file-field.${key}`);
-	const sentence = (choose: string, hint: string) => html`<span class="file-field__choose-text">${t(choose)}</span> <span class="file-field__drop-hint-text">${t(hint)}</span>`;
+	type Key = Parameters<NLDDFileField['_t']>[0] extends `components.file-field.${infer K}` ? K : never;
+	const t = (key: Key) => component._t(`components.file-field.${key}`);
+	const sentence = (choose: Key, hint: Key) => html`<span class="file-field__choose-text">${t(choose)}</span> <span class="file-field__drop-hint-text">${t(hint)}</span>`;
 	const texts: [TemplateResult | string, Kind][] = [
 		[sentence('to-choose-file-action', 'drop-hint-lowercase-text'), 'idle'],
 		[sentence('to-choose-files-action', 'drop-hint-multiple-lowercase-text'), 'idle'],
 		[sentence('to-choose-files-or-folder-action', 'drop-hint-multiple-lowercase-text'), 'idle'],
-		...['drag-here-text', 'drag-here-multiple-text', 'replace-drag-text'].map((key): [string, Kind] => [t(key), 'drag']),
-		...['drop-here-text', 'drop-here-multiple-text', 'replace-drop-text'].map((key): [string, Kind] => [t(key), 'drop']),
+		...(['drag-here-text', 'drag-here-multiple-text', 'replace-drag-text'] as const).map((key): [string, Kind] => [t(key), 'drag']),
+		...(['drop-here-text', 'drop-here-multiple-text', 'replace-drop-text'] as const).map((key): [string, Kind] => [t(key), 'drop']),
 		...(['type', 'count', 'folder', 'empty-folder', 'unreadable-folder'] as const)
 			.map((reason): [string, Kind] => [component._rejectionText(reason), 'rejected']),
 		[t('wrong-file-type-error-text'), 'rejected'],
@@ -223,9 +224,10 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 	`;
 }
 
-/** A name as it fits: cut in the middle once measured, before that cut by CSS
- *  with its end in view. A screen reader reads the whole name either way, and a
- *  name that is cut short shows whole in a tooltip. */
+/** A name as it fits: cut in the middle once measured, on one line or on the
+ *  lines the field has, before that cut by CSS with its end in view. A screen
+ *  reader reads the whole name either way, and a name that is cut short shows
+ *  whole in a tooltip. */
 function renderName(component: NLDDFileField, name: string): TemplateResult {
 	const [start, end] = splitForTruncation(name);
 	const shown = component._fittedName === null
@@ -235,20 +237,26 @@ function renderName(component: NLDDFileField, name: string): TemplateResult {
 		: html`<span class="file-field__name-start">${component._fittedName}</span>`;
 	return html`
 		<nldd-tooltip text=${name} timing=${component._nameTruncated ? 'delay' : 'never'}>
-			<span class="file-field__name" aria-hidden="true">${shown}</span>
+			<span class=${classMap({ 'file-field__name': true, 'is-wrapped': component._nameLines > 1 })} aria-hidden="true">${shown}</span>
 		</nldd-tooltip>
 		<span class="file-field__full-name">${name}</span>
 	`;
 }
 
 /** A folder with the number of files in it. The name of the folder gives way
- *  first, so the number stays in view, and a narrow field drops the word:
- *  "site (3)". A screen reader reads the whole label either way. */
+ *  first, so the number stays in view: on one line by CSS, on more cut in the
+ *  middle once measured. A narrow field drops the word: "site (3)". A screen
+ *  reader reads the whole label either way. */
 function renderFolderLabel(component: NLDDFileField, folder: string): TemplateResult {
 	const label = component._valueLabel();
 	const short = component._t('components.file-field.folder-count-short-text', { folder, count: component.files.length });
+	const wrapped = component._nameLines > 1;
 	const variant = (text: string, length: 'full' | 'short') => {
 		const at = text.indexOf(folder);
+		if (wrapped) {
+			const fitted = at < 0 ? text : text.slice(0, at) + (component._fittedFolder ?? folder) + text.slice(at + folder.length);
+			return html`<span class="file-field__folder file-field__folder--${length} is-wrapped" aria-hidden="true">${fitted}</span>`;
+		}
 		const [before, name, after] = at < 0 ? ['', text, ''] : [text.slice(0, at), folder, text.slice(at + folder.length)];
 		return html`<span class="file-field__folder file-field__folder--${length}" aria-hidden="true">${before
 			? html`<span class="file-field__folder-rest">${before}</span>`
@@ -259,14 +267,55 @@ function renderFolderLabel(component: NLDDFileField, folder: string): TemplateRe
 	return html`${variant(label, 'full')}${variant(short, 'short')}<span class="file-field__full-name">${label}</span>`;
 }
 
+/** The buttons of a narrow control in one menu, so the name keeps room. With
+ *  `directory` it offers files and a folder itself, not a menu in a menu. */
+function renderMoreButton(component: NLDDFileField, size: string): TemplateResult {
+	return html`
+		<nldd-icon-button class="file-field__more-button"
+			appearance="neutral-transparent"
+			size=${size}
+			icon="more"
+			text=${component._t('components.file-field.show-options-action')}
+			accessible-label=${component._moreAccessibleLabel()}
+			?disabled=${component.disabled}
+		>
+			<nldd-menu slot="popup">
+				${component.directory ? html`
+					<nldd-menu-item
+						icon="files"
+						text=${component._t('components.file-field.to-choose-files-menu-action')}
+						@select=${component._chooseFiles}
+					></nldd-menu-item>
+					<nldd-menu-item
+						icon="folder"
+						text=${component._t('components.file-field.to-choose-folder-menu-action')}
+						@select=${component._chooseFolder}
+					></nldd-menu-item>
+				` : html`
+					<nldd-menu-item
+						icon="edit"
+						text=${component._t('components.file-field.to-change-action')}
+						@select=${component._chooseFiles}
+					></nldd-menu-item>
+				`}
+				<nldd-menu-item
+					icon="dismiss"
+					text=${component._t('components.file-field.clear-action')}
+					@select=${component._handleClear}
+				></nldd-menu-item>
+			</nldd-menu>
+		</nldd-icon-button>
+	`;
+}
+
 /**
  * A field with a file: the row with its name and buttons, and over it, in the
  * same place, the sentences of a drag, saying a drop replaces what is there.
  * While files are dragged the row gives way to them; nothing can be pressed
  * then. A drop that was refused says why in the same place, across the whole
  * row, so the name has only itself to make room for; an area says it in place
- * of the name, with the buttons still there. A narrow field gives up
- * the icon of the file first, then shows "Wijzigen" as an icon button.
+ * of the name, with the buttons still there. A narrow control gives up the
+ * icon of the file first, then puts both buttons in a menu.
  */
 function renderChosen(component: NLDDFileField): TemplateResult {
 	const files = component.files;
@@ -329,17 +378,6 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 							?disabled=${component.disabled}
 							@click=${(e: Event) => component._handleChoose(e)}
 						></nldd-button>
-						<nldd-icon-button class="file-field__change-button file-field__change-icon-button"
-							appearance="neutral-tinted"
-							size=${buttonSize}
-							icon="edit"
-							text=${component._t('components.file-field.to-change-action')}
-							popup-type=${component.directory ? 'menu' : nothing}
-							?expanded=${component._menuOpen}
-							accessible-label=${component._changeAccessibleLabel() || nothing}
-							?disabled=${component.disabled}
-							@click=${(e: Event) => component._handleChoose(e)}
-						></nldd-icon-button>
 						<nldd-icon-button class="file-field__clear-button"
 							appearance="neutral-transparent"
 							size=${buttonSize}
@@ -349,6 +387,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 							?disabled=${component.disabled}
 							@click=${component._handleClear}
 						></nldd-icon-button>
+						${renderMoreButton(component, buttonSize)}
 					</div>
 				`}
 				${renderValidationIcon(component)}

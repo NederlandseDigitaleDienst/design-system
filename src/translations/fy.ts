@@ -161,6 +161,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.folder-count-short-text': '{folder} ({count})',
 	'components.file-field.file-chosen-text': '{name} keazen',
 	'components.file-field.clear-action': 'Seleksje wiskje',
+	'components.file-field.show-options-action': 'Opsjes sjen litte',
 	'components.file-field.required-error-text': 'In bestân is ferplichte',
 	'components.number-field.decrement-action': 'Ferleegje',
 	'components.number-field.increment-action': 'Ferheegje',

@@ -163,6 +163,7 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.folder-count-short-text': '{folder} ({count})',
 	'components.file-field.file-chosen-text': '{name} skohé',
 	'components.file-field.clear-action': 'Limpia selekshon',
+	'components.file-field.show-options-action': 'Mustra opshon',
 	'components.file-field.required-error-text': 'Un archivo ta obligatorio',
 	'components.number-field.decrement-action': 'Baha',
 	'components.number-field.increment-action': 'Subi',
