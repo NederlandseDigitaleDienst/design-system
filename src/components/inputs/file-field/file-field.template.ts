@@ -217,6 +217,24 @@ function renderName(component: NLDDFileField, name: string): TemplateResult {
 	`;
 }
 
+/** A folder with the number of files in it. The name of the folder gives way
+ *  first, so the number stays in view, and a narrow field drops the word:
+ *  "site (3)". A screen reader reads the whole label either way. */
+function renderFolderLabel(component: NLDDFileField, folder: string): TemplateResult {
+	const label = component._valueLabel();
+	const short = component._t('components.file-field.folder-count-short-text', { folder, count: component.files.length });
+	const variant = (text: string, length: 'full' | 'short') => {
+		const at = text.indexOf(folder);
+		const [before, name, after] = at < 0 ? ['', text, ''] : [text.slice(0, at), folder, text.slice(at + folder.length)];
+		return html`<span class="file-field__folder file-field__folder--${length}" aria-hidden="true">${before
+			? html`<span class="file-field__folder-rest">${before}</span>`
+			: nothing}<span class="file-field__folder-name">${name}</span>${after
+			? html`<span class="file-field__folder-rest">${after}</span>`
+			: nothing}</span>`;
+	};
+	return html`${variant(label, 'full')}${variant(short, 'short')}<span class="file-field__full-name">${label}</span>`;
+}
+
 /**
  * A field with a file: the row with its name and buttons, and over it, in the
  * same place, the sentences of a drag, saying a drop replaces what is there.
@@ -240,7 +258,10 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 		component._t('components.file-field.replace-drag-text'),
 		component._t('components.file-field.replace-drop-text'),
 	).map((variant) => ({ ...variant, active: variant.active && replaced }));
-	const name = files.length === 1 && !component._folderName() ? renderName(component, files[0].name) : component._valueLabel();
+	const folder = component._folderName();
+	const name = folder
+		? renderFolderLabel(component, folder)
+		: files.length === 1 ? renderName(component, files[0].name) : component._valueLabel();
 	return html`
 		<div class="file-field__chosen-area">
 			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !replaced })}>

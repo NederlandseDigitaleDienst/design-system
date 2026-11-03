@@ -111,7 +111,7 @@ describe('nldd-file-field – folders', () => {
 		await settle();
 		await waitForUpdate(el);
 		expect(el.files).toEqual([]);
-		expect(el.shadowRoot!.textContent).toContain('Sleep een bestand, geen map');
+		expect(el.shadowRoot!.textContent).toContain('Sleep bestand, geen map');
 	});
 
 	it('says so when a dropped folder is empty, or cannot be read', async () => {
@@ -121,7 +121,7 @@ describe('nldd-file-field – folders', () => {
 		await settle();
 		await waitForUpdate(el);
 		expect(el.files).toEqual([]);
-		expect(el.shadowRoot!.textContent).toContain('Deze map is leeg');
+		expect(el.shadowRoot!.textContent).toContain('Map is leeg');
 		const broken = folder('kapot', [file('kapot/index.html')]);
 		(broken as unknown as { createReader: () => unknown }).createReader = () => ({
 			readEntries: (_resolve: unknown, reject: (error: Error) => void) => reject(new Error('NotReadableError')),
@@ -130,7 +130,7 @@ describe('nldd-file-field – folders', () => {
 		await settle();
 		await waitForUpdate(el);
 		expect(el.files).toEqual([]);
-		expect(el.shadowRoot!.textContent).toContain('Deze map kon niet worden gelezen');
+		expect(el.shadowRoot!.textContent).toContain('Map niet te lezen');
 	});
 
 	it('shows an empty folder in place of what was chosen, then what was chosen again', async () => {
@@ -139,13 +139,16 @@ describe('nldd-file-field – folders', () => {
 		drop(el, fakeTransfer(site()));
 		await settle();
 		await waitForUpdate(el);
-		const shown = () => el.shadowRoot!.querySelector('.file-field__chosen-area > .is-active .is-active')!.textContent!.trim();
+		const shown = () => {
+			const active = el.shadowRoot!.querySelector('.file-field__chosen-area > .is-active .is-active')!;
+			return (active.querySelector('.file-field__full-name') ?? active).textContent!.trim();
+		};
 		expect(shown()).toBe('site (3 bestanden)');
 		drop(el, fakeTransfer(folder('leeg', [])));
 		await settle();
 		await waitForUpdate(el);
 		// The message takes the whole row, so the name has only itself to make room for.
-		expect(shown()).toBe('Deze map is leeg');
+		expect(shown()).toBe('Map is leeg');
 		await new Promise((resolve) => setTimeout(resolve, 4050));
 		await waitForUpdate(el);
 		expect(shown()).toBe('site (3 bestanden)');
@@ -175,15 +178,25 @@ describe('nldd-file-field – folders', () => {
 		expect(el.files).toEqual([]);
 	});
 
-	it('cuts the name of a folder with an ellipsis where it does not fit', async () => {
-		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple style="width: 180px"></nldd-file-field>');
+	it('cuts the name of a folder before its number, and drops the word in a narrow field', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple style="width: 360px"></nldd-file-field>');
 		await waitForUpdate(el);
-		drop(el, fakeTransfer(site()));
+		drop(el, fakeTransfer(folder('aanvraag-A-1042-bijlagen', [file('aanvraag-A-1042-bijlagen/index.html'), file('aanvraag-A-1042-bijlagen/over.html')])));
 		await settle();
 		await waitForUpdate(el);
-		const label = el.shadowRoot!.querySelector<HTMLElement>('.file-field__value > .is-active')!;
-		expect(label.scrollWidth).toBeGreaterThan(label.clientWidth);
-		expect(getComputedStyle(label).textOverflow).toBe('ellipsis');
+		const root = el.shadowRoot!;
+		const full = root.querySelector<HTMLElement>('.file-field__folder--full')!;
+		const short = root.querySelector<HTMLElement>('.file-field__folder--short')!;
+		const name = full.querySelector<HTMLElement>('.file-field__folder-name')!;
+		const count = full.querySelector<HTMLElement>('.file-field__folder-rest')!;
+		expect([full.checkVisibility(), short.checkVisibility()]).toEqual([true, false]);
+		expect(name.scrollWidth).toBeGreaterThan(name.clientWidth);
+		expect(count.scrollWidth).toBe(count.clientWidth);
+		expect(count.textContent).toBe(' (2 bestanden)');
+		el.style.width = '300px';
+		expect([full.checkVisibility(), short.checkVisibility()]).toEqual([false, true]);
+		expect(short.textContent).toBe('aanvraag-A-1042-bijlagen (2)');
+		expect(root.querySelector('.file-field__full-name')!.textContent).toBe('aanvraag-A-1042-bijlagen (2 bestanden)');
 	});
 
 	it('names a folder with one file as a folder, as its paths have it', async () => {
@@ -193,7 +206,7 @@ describe('nldd-file-field – folders', () => {
 		await settle();
 		await waitForUpdate(el);
 		expect(el.paths).toEqual(['site/index.html']);
-		expect(el.shadowRoot!.querySelector('.file-field__value .is-active')!.textContent!.trim()).toBe('site (1 bestand)');
+		expect(el.shadowRoot!.querySelector('.file-field__folder--full')!.textContent).toBe('site (1 bestand)');
 		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file-on-file');
 	});
 

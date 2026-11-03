@@ -17,8 +17,8 @@
  * a pick. `accept` and `multiple` hold for a drop too, which the native input
  * does not do: a drop that does not fit is refused as a whole, the previous
  * choice stays, and the field says why for a few seconds: "Sleep één
- * bestand", or what `accept` takes, named from it ("Het bestand moet een PDF
- * zijn"; "Dit bestandstype past niet" where a type in it has no name). The
+ * bestand", or what `accept` takes, named from it ("Alleen PDF";
+ * "Bestandstype past niet" where a type in it has no name). The
  * message stays for a few seconds and then gives way to the field again.
  *
  * With `multiple`, a dropped folder is read down to the files in it, its
@@ -28,7 +28,7 @@
  * file sat ("site/css/main.css"), and a form submits each file with its path as
  * its name, as a native folder input does, so two files with one name in
  * different folders stay apart. `accept` holds for every file in it. Without
- * `multiple` a folder is refused ("Sleep een bestand, geen map"): one file
+ * `multiple` a folder is refused ("Sleep bestand, geen map"): one file
  * cannot be a folder. Only a drop tells a folder apart, not the drag. A folder
  * that takes longer than a second to read shows the field empty with an
  * `nldd-activity-indicator` ("Laden" in an area, the circle alone otherwise),
@@ -54,7 +54,7 @@
  * dragging, so the field there drops the hint.
  *
  * A narrow field with a file makes room for its name: below 320px it leaves
- * out the icon of the format, below 240px "Wijzigen" becomes an icon button
+ * out the icon of the format and counts a folder as "site (3)", below 240px "Wijzigen" becomes an icon button
  * with `edit` and the text as its tooltip. A refused drop says why across the
  * whole row there, in place of the name and the buttons, so the field is no
  * taller than its name needs.

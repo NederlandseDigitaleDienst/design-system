@@ -254,8 +254,8 @@ describe('nldd-file-field', () => {
 			await waitForUpdate(el);
 			expect(listener).not.toHaveBeenCalled();
 			expect(el.files.map((f) => f.name)).toEqual(['rapport.pdf']);
-			expect(valueText(el)).toBe('Het bestand moet een PDF zijn');
-			expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Het bestand moet een PDF zijn');
+			expect(valueText(el)).toBe('Alleen PDF');
+			expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Alleen PDF');
 
 			el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 			await waitForUpdate(el);
@@ -267,7 +267,7 @@ describe('nldd-file-field', () => {
 			await waitForUpdate(el);
 			drag(el, 'drop', transfer(pdf('rapport.pdf')));
 			await waitForUpdate(el);
-			expect(emptyText(el)).toBe('Elk bestand moet een PNG, JPG of WEBP zijn');
+			expect(emptyText(el)).toBe('Alleen PNG, JPG of WEBP');
 		});
 
 		it('gives the field back after a few seconds, and keeps the message for a screen reader', async () => {
@@ -277,11 +277,11 @@ describe('nldd-file-field', () => {
 			try {
 				drag(el, 'drop', transfer(png('foto.png')));
 				await el.updateComplete;
-				expect(shownText(el)).toBe('Het bestand moet een PDF zijn');
+				expect(shownText(el)).toBe('Alleen PDF');
 				vi.advanceTimersByTime(4000);
 				await el.updateComplete;
 				expect(shownText(el)).toBe('Bestand kiezen of sleep het hierheen');
-				expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Het bestand moet een PDF zijn');
+				expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Alleen PDF');
 			} finally {
 				vi.useRealTimers();
 			}
@@ -307,7 +307,7 @@ describe('nldd-file-field', () => {
 				vi.advanceTimersByTime(4000);
 				await el.updateComplete;
 				expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('');
-				expect(shownText(el)).not.toBe('Het bestand moet een PDF zijn');
+				expect(shownText(el)).not.toBe('Alleen PDF');
 			} finally {
 				vi.useRealTimers();
 			}
@@ -342,7 +342,7 @@ describe('nldd-file-field', () => {
 			drag(el, 'dragover', transfer(png('foto.png')));
 			await waitForUpdate(el);
 			expect(el.shadowRoot!.querySelector('.file-field')!.classList.contains('is-drag-rejected')).toBe(true);
-			expect(valueText(el)).toBe('Het bestand moet een PDF zijn');
+			expect(valueText(el)).toBe('Alleen PDF');
 		});
 
 		it('marks itself while files are dragged elsewhere on the page, and keeps them from opening there', async () => {
@@ -467,7 +467,7 @@ describe('nldd-file-field', () => {
 		expect(height()).toBe(resting);
 		drag(el, 'dragover', transfer(pdf('rapport.pdf')));
 		await waitForUpdate(el);
-		expect(shownText(el)).toBe('Het bestand moet een PNG, JPG of WEBP zijn');
+		expect(shownText(el)).toBe('Alleen PNG, JPG of WEBP');
 		expect(height()).toBe(resting);
 		unload();
 	});

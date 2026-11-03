@@ -300,6 +300,20 @@ export const fileFieldStyles = css`
 		}
 	}
 
+	.file-field__chosen-file {
+		@container file-field-chosen-area (max-width: 19.9375rem) {
+			.file-field__folder--full {
+				display: none;
+			}
+		}
+
+		@container file-field-chosen-area (min-width: 20rem) {
+			.file-field__folder--short {
+				display: none;
+			}
+		}
+	}
+
 	.file-field__value,
 	.file-field__text {
 		box-sizing: border-box;
@@ -365,6 +379,23 @@ export const fileFieldStyles = css`
 		display: flex;
 		min-width: 0;
 		overflow: hidden;
+	}
+
+	.file-field__folder {
+		display: flex;
+		min-width: 0;
+	}
+
+	.file-field__folder-name {
+		min-width: 0;
+		white-space: pre;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.file-field__folder-rest {
+		flex-shrink: 0;
+		white-space: pre;
 	}
 
 	.file-field__full-name {
@@ -480,7 +511,7 @@ export const fileFieldStyles = css`
 		display: none;
 	}
 
-	.file-field--area .file-field__name {
+	.file-field--area :is(.file-field__name, .file-field__folder) {
 		justify-content: center;
 	}
 
