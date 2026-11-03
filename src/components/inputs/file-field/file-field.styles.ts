@@ -42,7 +42,7 @@ export const fileFieldStyles = css`
 		--_file-field-area-gap: var(--primitives-space-2);
 		--_file-field-area-icon-size: var(--primitives-space-40);
 		--_file-field-area-edit-button-group-padding-top: var(--primitives-space-8);
-		--_file-field-area-buttons-gap: var(--primitives-space-8);
+		--_file-field-area-button-group-gap: var(--primitives-space-8);
 		--_file-field-area-choose-button-group-margin-top: var(--primitives-space-4);
 		--_file-field-area-choose-button-group-margin-bottom: var(--primitives-space-8);
 		--_file-field-drop-area-drop-hint-text-color: var(--semantics-content-color);
@@ -326,7 +326,7 @@ export const fileFieldStyles = css`
 		margin-bottom: var(--_file-field-area-choose-button-group-margin-bottom);
 		flex-wrap: wrap;
 		justify-content: center;
-		gap: var(--_file-field-area-buttons-gap);
+		gap: var(--_file-field-area-button-group-gap);
 	}
 
 	.file-field__name {
@@ -460,7 +460,7 @@ export const fileFieldStyles = css`
 	.file-field--area .file-field__edit-button-group {
 		flex-wrap: wrap;
 		justify-content: center;
-		gap: var(--_file-field-area-buttons-gap);
+		gap: var(--_file-field-area-button-group-gap);
 		padding-top: var(--_file-field-area-edit-button-group-padding-top);
 		padding-right: var(--primitives-space-0);
 	}
