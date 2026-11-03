@@ -31,21 +31,21 @@ export const fileFieldStyles = css`
 		--_file-field-rejected-background-color: var(--semantics-drop-targets-is-rejected-background-color);
 		--_file-field-file-icon-size: var(--primitives-space-24);
 		--_file-field-actions-gap: var(--primitives-space-4);
-		--_file-field-browse-action-color: var(--semantics-controls-is-selected-indicator-color);
-		--_file-field-browse-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
-		--_file-field-browse-is-active-highlight-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
-		--_file-field-browse-is-hovered-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-100));
-		--_file-field-browse-is-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-150));
-		--_file-field-browse-action-font: var(--semantics-buttons-md-primary-text-font);
+		--_file-field-choose-text-color: var(--semantics-controls-is-selected-indicator-color);
+		--_file-field-choose-button-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+		--_file-field-choose-button-is-active-highlight-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
+		--_file-field-choose-button-is-hovered-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-100));
+		--_file-field-choose-button-is-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-150));
+		--_file-field-choose-text-font: var(--semantics-buttons-md-primary-text-font);
 		--_file-field-area-min-height: var(--primitives-area-160);
 		--_file-field-area-padding: var(--primitives-space-16);
 		--_file-field-area-gap: var(--primitives-space-2);
 		--_file-field-area-icon-size: var(--primitives-space-40);
 		--_file-field-area-actions-padding-top: var(--primitives-space-8);
 		--_file-field-area-buttons-gap: var(--primitives-space-8);
-		--_file-field-area-choices-margin-top: var(--primitives-space-4);
-		--_file-field-area-choices-margin-bottom: var(--primitives-space-8);
-		--_file-field-area-choices-hint-color: var(--semantics-content-color);
+		--_file-field-area-choose-button-group-margin-top: var(--primitives-space-4);
+		--_file-field-area-choose-button-group-margin-bottom: var(--primitives-space-8);
+		--_file-field-drop-area-hint-color: var(--semantics-content-color);
 		--_file-field-accepted-types-color: var(--semantics-content-secondary-color);
 		--_file-field-accepted-types-font: var(--primitives-font-body-sm-regular-tight);
 
@@ -74,7 +74,7 @@ export const fileFieldStyles = css`
 		--_file-field-clear-button-padding-right: calc((var(--_file-field-min-size) - var(--semantics-controls-xs-min-size)) / 2);
 		--_file-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
 		--_file-field-file-icon-size: var(--primitives-space-20);
-		--_file-field-browse-action-font: var(--semantics-buttons-sm-primary-text-font);
+		--_file-field-choose-text-font: var(--semantics-buttons-sm-primary-text-font);
 		--_file-field-area-icon-size: var(--primitives-space-32);
 		--_file-field-area-min-height: var(--primitives-area-120);
 		--_file-field-area-padding: var(--primitives-space-12);
@@ -115,12 +115,12 @@ export const fileFieldStyles = css`
 		pointer-events: none;
 	}
 
-	.file-field:not([class*="is-drag-"]):has(> .file-field__browse-button:hover) {
-		--_file-field-highlight-border-color: var(--_file-field-browse-is-hovered-highlight-border-color);
+	.file-field:not([class*="is-drag-"]):has(> .file-field__choose-button:hover) {
+		--_file-field-highlight-border-color: var(--_file-field-choose-button-is-hovered-highlight-border-color);
 	}
 
-	.file-field:not([class*="is-drag-"]):has(> .file-field__browse-button:active) {
-		--_file-field-highlight-border-color: var(--_file-field-browse-is-active-highlight-border-color);
+	.file-field:not([class*="is-drag-"]):has(> .file-field__choose-button:active) {
+		--_file-field-highlight-border-color: var(--_file-field-choose-button-is-active-highlight-border-color);
 	}
 
 	.file-field.is-drag-page {
@@ -156,8 +156,8 @@ export const fileFieldStyles = css`
 		height: 0;
 	}
 
-	.file-field__browse-button,
-	.file-field__browse-surface,
+	.file-field__choose-button,
+	.file-field__drop-area,
 	.file-field__replace-area {
 		box-sizing: border-box;
 		display: flex;
@@ -177,26 +177,26 @@ export const fileFieldStyles = css`
 		text-align: center;
 	}
 
-	.file-field:not([class*="is-drag-"]) > .file-field__browse-button:hover {
-		background-color: var(--_file-field-browse-is-hovered-background-color);
+	.file-field:not([class*="is-drag-"]) > .file-field__choose-button:hover {
+		background-color: var(--_file-field-choose-button-is-hovered-background-color);
 	}
 
-	.file-field:not([class*="is-drag-"]) > .file-field__browse-button:active {
-		background-color: var(--_file-field-browse-is-active-background-color);
+	.file-field:not([class*="is-drag-"]) > .file-field__choose-button:active {
+		background-color: var(--_file-field-choose-button-is-active-background-color);
 	}
 
-	.file-field__browse-button:focus-visible {
+	.file-field__choose-button:focus-visible {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
 	}
 
-	.file-field__browse-button:focus:not(:focus-visible) {
+	.file-field__choose-button:focus:not(:focus-visible) {
 		outline: none;
 	}
 
-	:host([valid]) .file-field:not(.file-field--area) :is(.file-field__browse-button, .file-field__replace-area),
-	:host([invalid]) .file-field:not(.file-field--area) :is(.file-field__browse-button, .file-field__replace-area) {
+	:host([valid]) .file-field:not(.file-field--area) :is(.file-field__choose-button, .file-field__replace-area),
+	:host([invalid]) .file-field:not(.file-field--area) :is(.file-field__choose-button, .file-field__replace-area) {
 		padding-left: calc(var(--_file-field-validation-icon-size) + var(--_file-field-validation-icon-area-padding-right));
 	}
 
@@ -259,9 +259,9 @@ export const fileFieldStyles = css`
 		}
 	}
 
-	.file-field__browse-action {
-		color: var(--_file-field-browse-action-color);
-		font: var(--_file-field-browse-action-font);
+	.file-field__choose-text {
+		color: var(--_file-field-choose-text-color);
+		font: var(--_file-field-choose-text-font);
 	}
 
 	.file-field__file-icon {
@@ -290,11 +290,11 @@ export const fileFieldStyles = css`
 	}
 
 	:is(.file-field__text--drag, .file-field__text--drop, .file-field__text--rejected) {
-		font: var(--_file-field-browse-action-font);
+		font: var(--_file-field-choose-text-font);
 	}
 
 	.file-field__text--drop {
-		color: var(--_file-field-browse-action-color);
+		color: var(--_file-field-choose-text-color);
 	}
 
 	.file-field__text--rejected {
@@ -305,8 +305,8 @@ export const fileFieldStyles = css`
 		color: var(--semantics-content-secondary-color);
 	}
 
-	.file-field__browse-surface .file-field__hint {
-		color: var(--_file-field-area-choices-hint-color);
+	.file-field__drop-area .file-field__hint {
+		color: var(--_file-field-drop-area-hint-color);
 	}
 
 	.file-field__value {
@@ -315,15 +315,15 @@ export const fileFieldStyles = css`
 
 	@media (hover: none) {
 		.file-field__hint,
-		.file-field__browse-surface .file-field__sentence {
+		.file-field__drop-area .file-field__sentence {
 			display: none;
 		}
 	}
 
-	.file-field__choices {
+	.file-field__choose-button-group {
 		display: flex;
-		margin-top: var(--_file-field-area-choices-margin-top);
-		margin-bottom: var(--_file-field-area-choices-margin-bottom);
+		margin-top: var(--_file-field-area-choose-button-group-margin-top);
+		margin-bottom: var(--_file-field-area-choose-button-group-margin-bottom);
 		flex-wrap: wrap;
 		justify-content: center;
 		gap: var(--_file-field-area-buttons-gap);
@@ -408,7 +408,7 @@ export const fileFieldStyles = css`
 		min-height: var(--_file-field-area-min-height);
 	}
 
-	.file-field--area :is(.file-field__browse-button, .file-field__browse-surface, .file-field__replace-area, .file-field__chosen-file) {
+	.file-field--area :is(.file-field__choose-button, .file-field__drop-area, .file-field__replace-area, .file-field__chosen-file) {
 		padding: var(--_file-field-area-padding);
 		flex-direction: column;
 		gap: var(--_file-field-area-gap);
@@ -428,7 +428,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field--area.is-drag-over :is(.file-field__upload-icon, .file-field__accepted-types) {
-		color: var(--_file-field-browse-action-color);
+		color: var(--_file-field-choose-text-color);
 	}
 
 	.file-field--area.is-drag-rejected :is(.file-field__upload-icon, .file-field__accepted-types) {

@@ -24,10 +24,10 @@ const png = (name: string) => new File(['x'], name, { type: 'image/png' });
  *  place, the active one, in the active layer. */
 const shownText = (el: NLDDFileField) => {
 	const root = el.shadowRoot!;
-	const scope = root.querySelector('.file-field__browse-button') ?? root.querySelector('.file-field__chosen-area > .is-active')!;
+	const scope = root.querySelector('.file-field__choose-button') ?? root.querySelector('.file-field__chosen-area > .is-active')!;
 	return scope.querySelector('.file-field__text.is-active')!.textContent!.replace(/\s+/g, ' ').trim();
 };
-const browseText = shownText;
+const emptyText = shownText;
 const fullName = (el: NLDDFileField) => el.shadowRoot!.querySelector('.file-field__full-name')!.textContent;
 const valueText = shownText;
 
@@ -59,18 +59,18 @@ describe('nldd-file-field', () => {
 	it('is one button over the surface reading as one sentence before a file is chosen', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage"></nldd-file-field>');
 		await waitForUpdate(el);
-		expect(browseText(el)).toBe('Bestand kiezen of sleep het hierheen');
-		expect(el.shadowRoot!.querySelector('.file-field__browse-button')!.getAttribute('aria-label')).toBe('Bestand kiezen of sleep het hierheen, Bijlage');
+		expect(emptyText(el)).toBe('Bestand kiezen of sleep het hierheen');
+		expect(el.shadowRoot!.querySelector('.file-field__choose-button')!.getAttribute('aria-label')).toBe('Bestand kiezen of sleep het hierheen, Bijlage');
 		expect(el.shadowRoot!.querySelector('nldd-icon-button')).toBeNull();
 		const click = vi.spyOn(el.shadowRoot!.querySelector('input')!, 'click').mockImplementation(() => {});
-		el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!.click();
+		el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-button')!.click();
 		expect(click).toHaveBeenCalledOnce();
 	});
 
 	it.each(['control', 'area'])('names the empty button after its visible text, so axe finds no label mismatch (%s)', async (variant) => {
 		el = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" variant="${variant}" accept=".pdf"></nldd-file-field>`);
 		await waitForUpdate(el);
-		const button = el.shadowRoot!.querySelector('.file-field__browse-button')!;
+		const button = el.shadowRoot!.querySelector('.file-field__choose-button')!;
 		expect(button.getAttribute('aria-label')).toBe(variant === 'area'
 			? 'Bestand kiezen of sleep het hierheen, Toegestaan: PDF, Bijlage'
 			: 'Bestand kiezen of sleep het hierheen, Bijlage');
@@ -89,7 +89,7 @@ describe('nldd-file-field', () => {
 		el.requestUpdate();
 		await waitForUpdate(el);
 		spy.mockRestore();
-		expect(el.shadowRoot!.querySelector('.file-field__browse-button')!.getAttribute('aria-label'))
+		expect(el.shadowRoot!.querySelector('.file-field__choose-button')!.getAttribute('aria-label'))
 			.toBe('Bestand kiezen, Toegestaan: PDF, Bijlage');
 	});
 
@@ -115,7 +115,7 @@ describe('nldd-file-field', () => {
 	it('names the button after the multiple attribute', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field multiple></nldd-file-field>');
 		await waitForUpdate(el);
-		expect(browseText(el)).toBe('Bestanden kiezen of sleep ze hierheen');
+		expect(emptyText(el)).toBe('Bestanden kiezen of sleep ze hierheen');
 	});
 
 	it('fires change with the chosen files', async () => {
@@ -139,7 +139,7 @@ describe('nldd-file-field', () => {
 
 		expect(el.files).toEqual([]);
 		expect(el.shadowRoot!.querySelector('input')!.files!.length).toBe(0);
-		expect(browseText(el)).toBe('Bestand kiezen of sleep het hierheen');
+		expect(emptyText(el)).toBe('Bestand kiezen of sleep het hierheen');
 	});
 
 	it('is invalid while required and empty, and valid once a file is chosen', async () => {
@@ -176,7 +176,7 @@ describe('nldd-file-field', () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
 		el.translations = { 'components.file-field.drop-hint-lowercase-text': 'or drag it here' };
 		await waitForUpdate(el);
-		expect(browseText(el)).toBe('Bestand kiezen or drag it here');
+		expect(emptyText(el)).toBe('Bestand kiezen or drag it here');
 	});
 
 	it('shows the icon of the format', async () => {
@@ -193,7 +193,7 @@ describe('nldd-file-field', () => {
 	it('keeps the validation icon inside the button while empty, so a press on it opens the dialog too', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field invalid></nldd-file-field>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.file-field__browse-button .file-field__validation-icon-area')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('.file-field__choose-button .file-field__validation-icon-area')).not.toBeNull();
 	});
 
 	it('trades the choose button for a change button once a file is chosen', async () => {
@@ -247,7 +247,7 @@ describe('nldd-file-field', () => {
 			await waitForUpdate(el);
 			drag(el, 'drop', transfer(pdf('rapport.pdf')));
 			await waitForUpdate(el);
-			expect(browseText(el)).toBe('Elk bestand moet een PNG, JPG of WEBP zijn');
+			expect(emptyText(el)).toBe('Elk bestand moet een PNG, JPG of WEBP zijn');
 		});
 
 		it('gives the field back after a few seconds, and keeps the message for a screen reader', async () => {
@@ -305,7 +305,7 @@ describe('nldd-file-field', () => {
 			const over = drag(document.body, 'dragover', transfer(pdf('rapport.pdf')));
 			await waitForUpdate(el);
 			expect(el.shadowRoot!.querySelector('.file-field')!.classList.contains('is-drag-page')).toBe(true);
-			expect(browseText(el)).toBe('Sleep het bestand hierheen');
+			expect(emptyText(el)).toBe('Sleep het bestand hierheen');
 			expect(over.defaultPrevented).toBe(true);
 
 			const drop = drag(document.body, 'drop', transfer(pdf('rapport.pdf')));
@@ -455,7 +455,7 @@ describe('nldd-file-field – variant="area"', () => {
 
 	it('shows the upload icon and the types accept takes, inside the one button', async () => {
 		const root = await area('accept=".pdf,.jpg"');
-		const button = root.querySelector('.file-field__browse-button')!;
+		const button = root.querySelector('.file-field__choose-button')!;
 		expect(button.querySelector('.file-field__upload-icon')).not.toBeNull();
 		expect(button.querySelector('.file-field__accepted-types')!.textContent).toBe('Toegestaan: PDF of JPG');
 	});
@@ -477,8 +477,8 @@ describe('nldd-file-field – variant="area"', () => {
 
 	it('colors the upload icon and the accepted types like the text while files are dragged over it', async () => {
 		const root = await area('accept=".pdf"');
-		const icon = () => root.querySelector('.file-field__browse-button .file-field__upload-icon') as HTMLElement;
-		const accent = getComputedStyle(root.querySelector('.file-field__browse-action')!).color;
+		const icon = () => root.querySelector('.file-field__choose-button .file-field__upload-icon') as HTMLElement;
+		const accent = getComputedStyle(root.querySelector('.file-field__choose-text')!).color;
 		const resting = getComputedStyle(icon()).color;
 		drag(el, 'dragover', transfer(pdf('rapport.pdf')));
 		await waitForUpdate(el);

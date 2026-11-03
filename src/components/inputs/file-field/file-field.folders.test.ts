@@ -194,7 +194,7 @@ describe('nldd-file-field – directory', () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage"></nldd-file-field>');
 		await waitForUpdate(el);
 		const click = vi.spyOn(el.shadowRoot!.querySelector<HTMLInputElement>('.file-field__input')!, 'click').mockImplementation(() => {});
-		el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!.click();
+		el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-button')!.click();
 		expect(click).toHaveBeenCalledOnce();
 		expect(menu()).toBeNull();
 	});
@@ -202,7 +202,7 @@ describe('nldd-file-field – directory', () => {
 	it('asks for files or a folder with directory, and opens the dialog for the one chosen', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
 		await waitForUpdate(el);
-		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-button')!;
 		expect(button.textContent!.replace(/\s+/g, ' ')).toContain('Bestanden of map kiezen');
 		expect(button.getAttribute('aria-haspopup')).toBe('menu');
 		const files = vi.spyOn(el.shadowRoot!.querySelector<HTMLInputElement>('.file-field__input')!, 'click').mockImplementation(() => {});
@@ -226,7 +226,7 @@ describe('nldd-file-field – directory', () => {
 	it('opens the menu where a click lands, and under the button from the keyboard', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
 		await waitForUpdate(el);
-		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-button')!;
 		const box = button.getBoundingClientRect();
 		const field = el.shadowRoot!.querySelector('.file-field')!.getBoundingClientRect();
 		const anchored = () => (menu() as HTMLElement & { anchorElement: Element | null }).anchorElement;
@@ -248,7 +248,7 @@ describe('nldd-file-field – directory', () => {
 	it('closes the open menu on a second press on the field, without opening it again', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
 		await waitForUpdate(el);
-		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-button')!;
 		button.click();
 		await settle();
 		expect(menu()!.matches(':popover-open')).toBe(true);
@@ -262,7 +262,7 @@ describe('nldd-file-field – directory', () => {
 	it('closes the open menu on a click that light dismiss let through', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
 		await waitForUpdate(el);
-		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!;
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-button')!;
 		button.click();
 		await settle();
 		button.click();
@@ -290,8 +290,8 @@ describe('nldd-file-field – directory', () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory variant="area"></nldd-file-field>');
 		await waitForUpdate(el);
 		const root = el.shadowRoot!;
-		expect(root.querySelector('.file-field__browse-button')).toBeNull();
-		const [files, folder] = [...root.querySelectorAll<HTMLElement>('.file-field__choices nldd-button')];
+		expect(root.querySelector('.file-field__choose-button')).toBeNull();
+		const [files, folder] = [...root.querySelectorAll<HTMLElement>('.file-field__choose-button-group nldd-button')];
 		expect([files.getAttribute('text'), folder.getAttribute('text')]).toEqual(['Bestanden kiezen', 'Map kiezen']);
 		expect([(files as HTMLElement & { size: string }).size, folder.getAttribute('start-icon')]).toEqual(['md', 'folder']);
 		expect(root.querySelector('.file-field__sentence')!.textContent!.trim().replace(/\s+/g, ' ')).toMatch(/^of sleep ze hierheen/);

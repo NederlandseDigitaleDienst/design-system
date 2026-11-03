@@ -95,12 +95,12 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 
 /** A button for files and one for a folder, for an area with `directory`:
  *  room enough to offer both without a menu. */
-function renderChoices(component: NLDDFileField): TemplateResult {
+function renderChooseButtonGroup(component: NLDDFileField): TemplateResult {
 	const label = (text: string) => [text, component.accessibleLabel].filter(Boolean).join(', ');
 	const files = component._t('components.file-field.to-choose-files-action');
 	const folder = component._t('components.file-field.to-choose-folder-action');
 	return html`
-		<div class="file-field__choices">
+		<div class="file-field__choose-button-group">
 			<nldd-button
 				appearance="neutral-tinted"
 				size=${component.size}
@@ -128,7 +128,7 @@ function renderChoices(component: NLDDFileField): TemplateResult {
  *  so a press on the icon opens the dialog too. An area with `directory` has a
  *  button for each choice instead, with the drop hint under them, and the
  *  surface around them is only a place to drop. */
-function renderBrowse(component: NLDDFileField): TemplateResult {
+function renderEmpty(component: NLDDFileField): TemplateResult {
 	const drags = dragVariants(
 		component,
 		component._multiple
@@ -139,23 +139,23 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 			: component._t('components.file-field.drop-here-text'),
 	);
 	const area = component.variant === 'area';
-	const choices = area && component.directory;
+	const buttonGroup = area && component.directory;
 	const hint = html`<span class="file-field__hint">${component._multiple
 		? component._t('components.file-field.drop-hint-multiple-lowercase-text')
 		: component._t('components.file-field.drop-hint-lowercase-text')}</span>`;
-	const sentence = choices
+	const sentence = buttonGroup
 		? hint
-		: html`<span class="file-field__browse-action">${component._chooseLabel()}</span> ${hint}`;
+		: html`<span class="file-field__choose-text">${component._chooseLabel()}</span> ${hint}`;
 	const types = area ? component._acceptTypes() : null;
-	const content = html`${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}${choices ? renderChoices(component) : nothing}<span class="file-field__sentence">${renderStack([
+	const content = html`${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}${buttonGroup ? renderChooseButtonGroup(component) : nothing}<span class="file-field__sentence">${renderStack([
 		{ content: sentence, active: !drags.some((variant) => variant.active) },
 		...drags,
 	])}</span>${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}${renderValidationIcon(component)}`;
-	if (choices) {
-		return html`<div class="file-field__browse-surface">${content}</div>`;
+	if (buttonGroup) {
+		return html`<div class="file-field__drop-area">${content}</div>`;
 	}
 	return html`
-		<button class="file-field__browse-button"
+		<button class="file-field__choose-button"
 			type="button"
 			aria-label=${component._chooseAccessibleLabel()}
 			aria-haspopup=${component.directory ? 'menu' : nothing}
@@ -316,7 +316,7 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 					></nldd-menu-item>
 				</nldd-menu>
 			` : nothing}
-			${hasFiles ? renderChosen(component) : renderBrowse(component)}
+			${hasFiles ? renderChosen(component) : renderEmpty(component)}
 			<span class="file-field__status" role="status">${component._rejection
 				? component._rejectionText(component._rejection)
 				: component._announcement}</span>

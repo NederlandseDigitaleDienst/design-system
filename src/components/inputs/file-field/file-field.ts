@@ -451,7 +451,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 			}
 			if (performance.now() - this._menuClosedAt < REOPEN_GUARD_MS) return;
 			// The field opens it where it was clicked; "Wijzigen" opens it under itself.
-			const field = e.currentTarget.classList.contains('file-field__browse-button');
+			const field = e.currentTarget.classList.contains('file-field__choose-button');
 			menu.anchorElement = (field && this._pointAt(e)) || e.currentTarget;
 			menu.showPopover();
 			return;
@@ -692,7 +692,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  empty, or the first of its two choices in an area with `directory`, and
 	 *  "Wijzigen" once it has a file. */
 	private _chooseButton(): HTMLElement | null {
-		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse-button, nldd-button') ?? null;
+		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__choose-button, nldd-button') ?? null;
 	}
 
 	/**
