@@ -83,7 +83,12 @@ export class PopupAnchorController {
 	 *  browser's light-dismiss runs. Covers mouse, touch and pen — `mousedown`
 	 *  alone would skip touch, where no mousedown precedes the synthetic click. */
 	handlePointerdown = (): void => {
-		this._wasOpenOnPointerdown = this._overlay?.matches(':popover-open') ?? false;
+		const overlay = this._overlay;
+		if (!overlay) {
+			this._wasOpenOnPointerdown = false;
+			return;
+		}
+		this._wasOpenOnPointerdown = '_shownForInvoker' in overlay ? overlay._shownForInvoker() : overlay.matches(':popover-open');
 	};
 
 	/** Call from the control's click handler. Returns true when the click was

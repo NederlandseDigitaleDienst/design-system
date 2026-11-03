@@ -360,6 +360,18 @@ export class NLDDMenu extends LitElement {
 
 	// — Anchor ————————————————————————————————————————————————————————————————
 
+	/**
+	 * Whether the invoking control should treat this menu as open on a
+	 * pointerdown. In drill-in mode the root is hidden while a submenu shows,
+	 * and the same pointerdown on the anchor collapses that submenu before the
+	 * control looks, so `:popover-open` alone would make its click reopen the
+	 * main level.
+	 * @internal
+	 */
+	_shownForInvoker(): boolean {
+		return this.matches(':popover-open') || this._openChain.length > 0 || this._collapsedByPointerGesture;
+	}
+
 	/** @internal */
 	_getAnchorEl(): Element | null {
 		if (this.anchorElement) return this.anchorElement;
@@ -473,12 +485,12 @@ export class NLDDMenu extends LitElement {
 	// — Event handlers ————————————————————————————————————————————————————————
 
 	private _handleDocumentClick = (event: MouseEvent): void => {
-		if (this.anchorElement) return;
 		// Consume the same-gesture collapse marker (set when an outside or
 		// anchor pointer gesture collapsed the chain). Read+clear for every
 		// click so it never leaks past a single gesture.
 		const collapsedByGesture = this._collapsedByPointerGesture;
 		this._collapsedByPointerGesture = false;
+		if (this.anchorElement) return;
 		const anchorEl = this._getAnchorEl();
 		if (!anchorEl) return;
 		const path = event.composedPath();

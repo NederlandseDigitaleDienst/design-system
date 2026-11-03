@@ -21797,7 +21797,7 @@
           "type": {
             "text": "Extension"
           },
-          "default": "[cursorLayer, pointerTracker, stepOverKeymap, typePastBadge, theme]"
+          "default": "[cursorLayer, pointerTracker, stepOverKeymap, typePastBadge]"
         }
       ],
       "exports": [
