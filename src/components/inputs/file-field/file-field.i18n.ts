@@ -27,6 +27,7 @@ export const nlddFileFieldTranslations = {
 	'components.file-field.unreadable-folder-error-text': 'Deze map kon niet worden gelezen',
 	'components.file-field.file-count-text': '{count} bestanden',
 	'components.file-field.folder-count-text': '{folder} ({count} bestanden)',
+	'components.file-field.folder-one-file-text': '{folder} (1 bestand)',
 	'components.file-field.file-chosen-text': '{name} gekozen',
 	'components.file-field.clear-action': 'Wis selectie',
 	'components.file-field.required-error-text': 'Een bestand is verplicht',

@@ -133,6 +133,23 @@ describe('nldd-file-field – folders', () => {
 		expect(el.shadowRoot!.textContent).toContain('Deze map kon niet worden gelezen');
 	});
 
+	it('shows an empty folder in place of what was chosen, then what was chosen again', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(site()));
+		await settle();
+		await waitForUpdate(el);
+		const shown = () => el.shadowRoot!.querySelector('.file-field__value .is-active')!.textContent!.trim();
+		expect(shown()).toBe('site (3 bestanden)');
+		drop(el, fakeTransfer(folder('leeg', [])));
+		await settle();
+		await waitForUpdate(el);
+		expect(shown()).toBe('Deze map is leeg');
+		await new Promise((resolve) => setTimeout(resolve, 4050));
+		await waitForUpdate(el);
+		expect(shown()).toBe('site (3 bestanden)');
+	});
+
 	it('ignores a folder that finishes reading after the field was cleared', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
 		await waitForUpdate(el);
@@ -155,6 +172,69 @@ describe('nldd-file-field – folders', () => {
 		await settle();
 		await waitForUpdate(el);
 		expect(el.files).toEqual([]);
+	});
+
+	it('names a folder with one file as a folder, as its paths have it', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(folder('site', [file('site/index.html')])));
+		await settle();
+		await waitForUpdate(el);
+		expect(el.paths).toEqual(['site/index.html']);
+		expect(el.shadowRoot!.querySelector('.file-field__value .is-active')!.textContent!.trim()).toBe('site (1 bestand)');
+		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file-on-file');
+	});
+
+	it('shows it is reading a folder that takes a while, until it is read or something else is done', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
+		await waitForUpdate(el);
+		const slowFolder = () => {
+			let finish!: () => void;
+			const slow = folder('traag', [file('traag/index.html')]);
+			(slow as unknown as { createReader: () => unknown }).createReader = () => {
+				let done = false;
+				return {
+					readEntries: (resolve: (entries: FakeEntry[]) => void) => {
+						if (done) return resolve([]);
+						done = true;
+						finish = () => resolve(slow.children!);
+					},
+				};
+			};
+			return { slow, finish: () => finish() };
+		};
+		const indicator = () => el.shadowRoot!.querySelector('nldd-activity-indicator');
+		const busy = () => el.shadowRoot!.querySelector('.file-field')!.getAttribute('aria-busy');
+
+		const first = slowFolder();
+		drop(el, fakeTransfer(first.slow));
+		await settle();
+		await waitForUpdate(el);
+		// Most folders are read sooner, so nothing shows at first.
+		expect(indicator()).toBeNull();
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		await waitForUpdate(el);
+		expect(indicator()!.getAttribute('size')).toBe('24');
+		expect(indicator()!.hasAttribute('show-text')).toBe(false);
+		expect(busy()).toBe('true');
+		first.finish();
+		await settle();
+		await waitForUpdate(el);
+		expect(indicator()).toBeNull();
+		expect(busy()).toBeNull();
+		expect(el.paths).toEqual(['traag/index.html']);
+
+		const second = slowFolder();
+		drop(el, fakeTransfer(second.slow));
+		await new Promise((resolve) => setTimeout(resolve, 1050));
+		await waitForUpdate(el);
+		// The folder read replaces what was chosen, so the field shows empty.
+		expect(indicator()!.getAttribute('size')).toBe('24');
+		expect(el.shadowRoot!.querySelector('.file-field__chosen-area')).toBeNull();
+		el._handleClear();
+		await waitForUpdate(el);
+		expect(indicator()).toBeNull();
+		expect(busy()).toBeNull();
 	});
 
 	it('refuses a folder whose files accept rules out, as a whole', async () => {

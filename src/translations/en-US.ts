@@ -159,6 +159,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.unreadable-folder-error-text': 'This folder could not be read',
 	'components.file-field.file-count-text': '{count} files',
 	'components.file-field.folder-count-text': '{folder} ({count} files)',
+	'components.file-field.folder-one-file-text': '{folder} (1 file)',
 	'components.file-field.file-chosen-text': '{name} chosen',
 	'components.file-field.clear-action': 'Clear selection',
 	'components.file-field.required-error-text': 'A file is required',

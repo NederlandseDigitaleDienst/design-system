@@ -159,6 +159,7 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.unreadable-folder-error-text': 'No por a lesa e mapa aki',
 	'components.file-field.file-count-text': '{count} archivo',
 	'components.file-field.folder-count-text': '{folder} ({count} archivo)',
+	'components.file-field.folder-one-file-text': '{folder} (1 archivo)',
 	'components.file-field.file-chosen-text': '{name} skohé',
 	'components.file-field.clear-action': 'Limpia selekshon',
 	'components.file-field.required-error-text': 'Un archivo ta obligatorio',

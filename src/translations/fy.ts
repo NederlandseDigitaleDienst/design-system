@@ -157,6 +157,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.unreadable-folder-error-text': 'Dizze map koe net lêzen wurde',
 	'components.file-field.file-count-text': '{count} bestannen',
 	'components.file-field.folder-count-text': '{folder} ({count} bestannen)',
+	'components.file-field.folder-one-file-text': '{folder} (1 bestân)',
 	'components.file-field.file-chosen-text': '{name} keazen',
 	'components.file-field.clear-action': 'Seleksje wiskje',
 	'components.file-field.required-error-text': 'In bestân is ferplichte',

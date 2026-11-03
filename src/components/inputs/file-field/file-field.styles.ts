@@ -419,7 +419,7 @@ export const fileFieldStyles = css`
 		justify-content: center;
 	}
 
-	.file-field--area :is(.file-field__upload-icon, .file-field__file-icon) {
+	.file-field--area :is(.file-field__upload-icon, .file-field__file-icon, .file-field__reading-indicator) {
 		flex-shrink: 0;
 		margin: 0;
 		width: var(--_file-field-area-icon-size);

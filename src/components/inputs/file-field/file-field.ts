@@ -23,12 +23,17 @@
  *
  * With `multiple`, a dropped folder is read down to the files in it, its
  * subfolders included, and mixed with loose files in one drop if need be. The
- * field then names the folder ("site (124 bestanden)"), `paths` says where each
+ * field then names the folder ("site (124 bestanden)", also "site (1 bestand)"
+ * for one), `paths` says where each
  * file sat ("site/css/main.css"), and a form submits each file with its path as
  * its name, as a native folder input does, so two files with one name in
  * different folders stay apart. `accept` holds for every file in it. Without
  * `multiple` a folder is refused ("Sleep een bestand, geen map"): one file
- * cannot be a folder. Only a drop tells a folder apart, not the drag.
+ * cannot be a folder. Only a drop tells a folder apart, not the drag. A folder
+ * that takes longer than a second to read shows the field empty with an
+ * `nldd-activity-indicator` ("Laden" in an area, the circle alone otherwise),
+ * as what was chosen gives way to it. An empty or unreadable folder is refused
+ * as any other drop, and the previous choice comes back after the message.
  *
  * `directory` offers a folder in the file dialog too. A dialog picks files or a
  * folder, never both, so with it the field says "Bestanden of map kiezen" and
@@ -119,6 +124,10 @@ import { fileDragAndDropAvailable, FileDragAndDropAvailabilityController } from 
 
 /** How long the message of a refused drop stays in the field. */
 const REJECTION_MS = 4000;
+
+/** How long a folder is read before the field shows it is busy. Most folders
+ *  are read sooner, and the field then does not flash. */
+const READING_INDICATOR_DELAY_MS = 1000;
 
 /** A click this soon after the choose menu closed is the one that closed it. */
 const REOPEN_GUARD_MS = 300;
@@ -224,11 +233,17 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _resizeObserver?: ResizeObserver;
 	private _rejectionTimer?: ReturnType<typeof setTimeout>;
+	private _readingTimer?: ReturnType<typeof setTimeout>;
 	private _observedValue?: Element;
 
 	/** @internal What a screen reader hears after a drop that was taken. */
 	@state()
 	_announcement = '';
+
+	/** @internal Whether a dropped folder has been read for a while now, so the
+	 *  field shows it is busy. */
+	@state()
+	_reading = false;
 
 	/** @internal Why the last drop was refused; shown for a few seconds. */
 	@state()
@@ -342,14 +357,22 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** @internal */
 	public _valueLabel(): string {
+		const folder = this._folderName();
+		if (folder) {
+			return this._files.length === 1
+				? this._t('components.file-field.folder-one-file-text', { folder })
+				: this._t('components.file-field.folder-count-text', { folder, count: this._files.length });
+		}
 		if (this._files.length === 1) return this._files[0].name;
-		// Everything from one dropped folder: name the folder.
+		return this._t('components.file-field.file-count-text', { count: this._files.length });
+	}
+
+	/** @internal The folder everything came from, picked or dropped, or null.
+	 *  A folder with one file is still named as a folder, as `paths` has it. */
+	public _folderName(): string | null {
 		const folders = new Set(this._paths.map((path) => (path.includes('/') ? path.split('/')[0] : '')));
 		const [folder] = folders;
-		if (folders.size === 1 && folder) {
-			return this._t('components.file-field.folder-count-text', { folder, count: this._files.length });
-		}
-		return this._t('components.file-field.file-count-text', { count: this._files.length });
+		return folders.size === 1 && folder ? folder : null;
 	}
 
 	override connectedCallback(): void {
@@ -372,6 +395,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		unwatchDrags(this);
 		this._resizeObserver?.disconnect();
 		clearTimeout(this._rejectionTimer);
+		this._stopReading();
 		this._observedValue = undefined;
 		this.removeEventListener('dragover', this._handleDragOver);
 		this.removeEventListener('drop', this._handleDrop);
@@ -500,6 +524,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
 		this._action++;
+		this._stopReading();
 		// The other input keeps its previous pick otherwise, and picking that
 		// again would fire no change.
 		const other = input === this._input ? this._folderInput : this._input;
@@ -558,6 +583,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		e.preventDefault();
 		if (this.disabled) return;
 		const action = ++this._action;
+		this._stopReading();
 		const files = Array.from(e.dataTransfer.files);
 		const rejection = this._judge(e.dataTransfer, files);
 		if (rejection) {
@@ -567,14 +593,20 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		if (holdsFolder(e.dataTransfer)) {
 			// A folder with nothing in it, or one the browser could not read (a file
 			// gone mid-drop, no permission), says so, as any other refused drop does.
+			this._readingTimer = setTimeout(() => {
+				this._reading = true;
+			}, READING_INDICATOR_DELAY_MS);
 			void readDrop(e.dataTransfer).then(
 				(dropped) => {
 					if (action !== this._action) return;
+					this._stopReading();
 					if (dropped.length) this._takeDrop(dropped);
 					else this._refuse('empty-folder');
 				},
 				() => {
-					if (action === this._action) this._refuse('unreadable-folder');
+					if (action !== this._action) return;
+					this._stopReading();
+					this._refuse('unreadable-folder');
 				},
 			);
 			return;
@@ -614,6 +646,11 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		}, REJECTION_MS);
 	}
 
+	private _stopReading(): void {
+		clearTimeout(this._readingTimer);
+		this._reading = false;
+	}
+
 	private _clearRejection = (): void => {
 		clearTimeout(this._rejectionTimer);
 		this._rejection = null;
@@ -629,6 +666,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		// Clearing the input as well as the array: the element keeps the previous
 		// FileList otherwise, so choosing the same file again would fire no change.
 		this._action++;
+		this._stopReading();
 		if (this._input) this._input.value = '';
 		if (this._folderInput) this._folderInput.value = '';
 		this._files = [];

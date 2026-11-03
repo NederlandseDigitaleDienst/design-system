@@ -6,6 +6,8 @@ import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import '../../content/tooltip/tooltip.js';
 import '../../actions/menu/menu.js';
+import '../../status-and-feedback/activity-indicator/activity-indicator.js';
+import type { DropRejection } from './file-field.drop.js';
 import { splitName, splitForTruncation } from './file-field.truncate.js';
 
 /** Format icons by extension; a format without one gets the plain file. */
@@ -30,8 +32,9 @@ const FORMAT_ICONS: Record<string, string> = {
 	odf: 'file-odf',
 };
 
-function fileIcon(files: File[]): string {
-	if (files.length > 1) return 'file-on-file';
+function fileIcon(component: NLDDFileField): string {
+	const files = component.files;
+	if (files.length > 1 || component._folderName()) return 'file-on-file';
 	const extension = splitName(files[0].name)[1].slice(1).toLowerCase();
 	return FORMAT_ICONS[extension] ?? 'file';
 }
@@ -49,7 +52,7 @@ function renderValidationIcon(component: NLDDFileField): TemplateResult | typeof
 	`;
 }
 
-type Kind = 'idle' | 'drag' | 'drop' | 'rejected';
+type Kind = 'idle' | 'drag' | 'drop' | 'rejected' | 'reading';
 
 interface Variant {
 	content: TemplateResult | string;
@@ -83,13 +86,37 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 	const variants: Variant[] = [
 		{ content: dragText, kind: 'drag', active: dragging && component._drag === 'page' },
 		{ content: dropText, kind: 'drop', active: dragging && component._drag === 'over' },
-		{ content: component._rejectionText('type'), kind: 'rejected', active: rejection === 'type' },
-		{ content: component._rejectionText('folder'), kind: 'rejected', active: rejection === 'folder' },
+		...rejectionVariants(component, rejection),
 	];
-	if (!component._multiple) {
-		variants.push({ content: component._rejectionText('count'), kind: 'rejected', active: rejection === 'count' });
-	}
 	return variants;
+}
+
+/** The reasons a drop can be refused for, as this field takes files: a field
+ *  for one refuses a folder or several files, a field for more reads a folder,
+ *  which can then be empty or unreadable. */
+function rejectionVariants(component: NLDDFileField, rejection: DropRejection | null): Variant[] {
+	const reasons: DropRejection[] = component._multiple
+		? ['type', 'empty-folder', 'unreadable-folder']
+		: ['type', 'folder', 'count'];
+	return reasons.map((reason) => ({ content: component._rejectionText(reason), kind: 'rejected', active: rejection === reason }));
+}
+
+/**
+ * While a dropped folder is read, the activity indicator with its own label, as
+ * every other loading state, at the size of the icon of a chosen file. The field
+ * shows it empty: what was chosen before gives way to the folder. Only an area
+ * has room to show the label; a screen reader hears it either way. The circle
+ * is only there while it shows: it is a live region, and sets its own visibility.
+ */
+function renderReadingIndicator(component: NLDDFileField): TemplateResult {
+	const area = component.variant === 'area';
+	const sm = component.size === 'sm';
+	const size = area ? (sm ? '32' : '40') : (sm ? '20' : '24');
+	return html`<nldd-activity-indicator class="file-field__reading-indicator"
+		timing="instant"
+		size=${size}
+		?show-text=${area}
+	></nldd-activity-indicator>`;
 }
 
 /** A button for files and one for a folder, for an area with `directory`:
@@ -146,10 +173,16 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 		? hint
 		: html`<span class="file-field__choose-text">${component._chooseLabel()}</span> ${hint}`;
 	const types = area ? component._acceptTypes() : null;
-	const content = html`${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}${buttonGroup ? renderChooseButtonGroup(component) : nothing}${renderStack('text', [
-		{ content: sentence, kind: 'idle', active: !drags.some((variant) => variant.active) },
+	const dragged = drags.some((variant) => variant.active);
+	const reading = component._reading && !dragged;
+	const stack = renderStack('text', [
+		{ content: sentence, kind: 'idle', active: !reading && !dragged },
 		...drags,
-	])}${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}${renderValidationIcon(component)}`;
+		...(area ? [] : [{ content: reading ? renderReadingIndicator(component) : '', kind: 'reading' as const, active: reading }]),
+	]);
+	const content = html`${area && reading ? renderReadingIndicator(component) : html`${area
+		? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>`
+		: nothing}${buttonGroup ? renderChooseButtonGroup(component) : nothing}${stack}${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}`}${renderValidationIcon(component)}`;
 	if (buttonGroup) {
 		return html`<div class="file-field__drop-area">${content}</div>`;
 	}
@@ -202,17 +235,17 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 		component._t('components.file-field.replace-drop-text'),
 	).map((variant) => ({ ...variant, active: variant.active && dragging }));
 	const nameVariants: Variant[] = [
-		{ content: files.length === 1 ? renderName(component, files[0].name) : component._valueLabel(), kind: 'idle', active: !refused },
-		{ content: component._rejectionText('type'), kind: 'rejected', active: refused === 'type' },
-		{ content: component._rejectionText('folder'), kind: 'rejected', active: refused === 'folder' },
+		{
+			content: files.length === 1 && !component._folderName() ? renderName(component, files[0].name) : component._valueLabel(),
+			kind: 'idle',
+			active: !refused,
+		},
+		...rejectionVariants(component, refused),
 	];
-	if (!component._multiple) {
-		nameVariants.push({ content: component._rejectionText('count'), kind: 'rejected', active: refused === 'count' });
-	}
 	return html`
 		<div class="file-field__chosen-area">
 			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !dragging })}>
-				<nldd-icon class="file-field__file-icon" icon=${fileIcon(files)} aria-hidden="true"></nldd-icon>
+				<nldd-icon class="file-field__file-icon" icon=${fileIcon(component)} aria-hidden="true"></nldd-icon>
 				${renderStack('value', nameVariants)}
 				${area ? html`
 					<div class="file-field__edit-button-group">
@@ -272,10 +305,10 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 }
 
 export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
-	const hasFiles = component.files.length > 0;
+	const hasFiles = component.files.length > 0 && !component._reading;
 
 	return html`
-		<div class=${classMap({
+		<div aria-busy=${component._reading ? 'true' : nothing} class=${classMap({
 			'file-field': true,
 			'file-field--area': component.variant === 'area',
 			'has-files': hasFiles,
