@@ -56,6 +56,7 @@ here; consult the commit history if you need that level of detail.
 - **The tooltip of `nldd-slider` sits 8px above the thumb with a mouse,** where it floated up to 16px above it, measured from the edge of the larger hit area. With a finger it stays 32px above the middle of the thumb in every size, as a finger does not get smaller with the slider.
 - **The buttons of an `nldd-file-field` sit as far apart as in an `nldd-button-group` of their size:** 8px for md buttons and 6px for sm and xs. "Wijzigen" and the cross of a field without `variant="area"` were 4px apart, and the buttons of an area with `size="sm"` 8px.
 - **The built-in validation texts state the requirement, not an instruction.** As the design guidelines ask, "Vul dit veld in" is now "Dit veld is verplicht", "Gebruik minstens 8 tekens" is "Minstens 8 tekens" and "Vul een datum in als dd-mm-jjjj" is "Een datum als dd-mm-jjjj". This covers the lines `nldd-validation-list` adds itself and the messages of `nldd-date-field`, `nldd-time-field` and `nldd-file-field`, in every language. A test that matches one of the old texts needs the new one.
+- **The line numbers of `nldd-code-editor` line up with `nldd-code-viewer`.** The gutter starts at the edge of the field, the code stands 8px from the divider instead of against it, and the divider runs to the bottom of the field instead of stopping at the last line.
 
 ### Fixed
 
