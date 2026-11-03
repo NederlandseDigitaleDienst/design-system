@@ -501,14 +501,19 @@ export const fileFieldStyles = css`
 	}
 
 	@container file-field-area (max-width: 22.4375rem) {
-		:host([directory]:not([size="sm"])) .file-field--area > :is(.file-field__choose-button, .file-field__drop-area, .file-field__chosen-area) {
+		:host([directory]) .file-field--area > :is(.file-field__choose-button, .file-field__drop-area, .file-field__chosen-area) {
 			min-height: var(--_file-field-area-stacked-min-height);
 		}
-	}
 
-	@container file-field-area (max-width: 18.6875rem) {
-		:host([directory][size="sm"]) .file-field--area > :is(.file-field__choose-button, .file-field__drop-area, .file-field__chosen-area) {
-			min-height: var(--_file-field-area-stacked-min-height);
+		:host([directory]) .file-field--area :is(.file-field__choose-button-group, .file-field__edit-button-group) {
+			--context-button-width: 100%;
+			flex-direction: column;
+			align-self: stretch;
+		}
+
+		:host([directory]) .file-field--area :is(.file-field__choose-button-group, .file-field__edit-button-group) > nldd-button {
+			display: block;
+			width: 100%;
 		}
 	}
 
