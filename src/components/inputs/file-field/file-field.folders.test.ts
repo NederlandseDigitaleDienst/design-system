@@ -175,6 +175,17 @@ describe('nldd-file-field – folders', () => {
 		expect(el.files).toEqual([]);
 	});
 
+	it('cuts the name of a folder with an ellipsis where it does not fit', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple style="width: 180px"></nldd-file-field>');
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(site()));
+		await settle();
+		await waitForUpdate(el);
+		const label = el.shadowRoot!.querySelector<HTMLElement>('.file-field__value > .is-active')!;
+		expect(label.scrollWidth).toBeGreaterThan(label.clientWidth);
+		expect(getComputedStyle(label).textOverflow).toBe('ellipsis');
+	});
+
 	it('names a folder with one file as a folder, as its paths have it', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
 		await waitForUpdate(el);

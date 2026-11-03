@@ -312,8 +312,12 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__value {
-		text-overflow: ellipsis;
 		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.file-field__value > * {
+		text-overflow: ellipsis;
 		overflow: hidden;
 	}
 
