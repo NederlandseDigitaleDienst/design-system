@@ -73,9 +73,10 @@ describe('nldd-file-field', () => {
 		await waitForUpdate(el);
 		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-button')!;
 		const click = vi.spyOn(el.shadowRoot!.querySelector('input')!, 'click').mockImplementation(() => {});
+		const pointerDown = () => button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
 		const press = () => {
-			button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
-			button.click();
+			pointerDown();
+			button.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
 		};
 		drag(el, 'drop', transfer(png('foto.png')));
 		await waitForUpdate(el);
@@ -90,6 +91,13 @@ describe('nldd-file-field', () => {
 		await waitForUpdate(el);
 		button.click();
 		expect(click).toHaveBeenCalledTimes(2);
+		// A press released outside the field gives no click, so Enter after it still opens the dialog.
+		drag(el, 'drop', transfer(png('foto.png')));
+		await waitForUpdate(el);
+		pointerDown();
+		await waitForUpdate(el);
+		button.click();
+		expect(click).toHaveBeenCalledTimes(3);
 	});
 
 	it.each(['control', 'area'])('lights up a refusal on hover, also over a file, as a press dismisses it (%s)', async (variant) => {

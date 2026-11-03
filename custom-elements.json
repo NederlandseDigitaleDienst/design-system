@@ -13867,7 +13867,8 @@
                 "type": {
                   "text": "void"
                 }
-              }
+              },
+              "description": "Back to empty, as a clear, but without a change event, as a native\ninput resets: a folder still being read is dropped too."
             },
             {
               "kind": "method",

@@ -287,6 +287,41 @@ describe('nldd-file-field – folders', () => {
 		expect(busy()).toBeNull();
 	});
 
+	it('forgets the folder on a form reset, also one still being read', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-file-field accessible-label="Site" multiple name="site"></nldd-file-field></form>');
+		el = form.querySelector('nldd-file-field')!;
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(site()));
+		await settle();
+		await waitForUpdate(el);
+		expect(el.paths).toHaveLength(3);
+		form.reset();
+		await waitForUpdate(el);
+		expect(el.files).toEqual([]);
+		expect(el.paths).toEqual([]);
+
+		let finish!: () => void;
+		const slow = folder('traag', [file('traag/index.html')]);
+		(slow as unknown as { createReader: () => unknown }).createReader = () => {
+			let done = false;
+			return {
+				readEntries: (resolve: (entries: FakeEntry[]) => void) => {
+					if (done) return resolve([]);
+					done = true;
+					finish = () => resolve(slow.children!);
+				},
+			};
+		};
+		drop(el, fakeTransfer(slow));
+		await settle();
+		form.reset();
+		finish();
+		await settle();
+		await waitForUpdate(el);
+		expect(el.files).toEqual([]);
+		expect(el.shadowRoot!.querySelector('.file-field__chosen-area')).toBeNull();
+	});
+
 	it('refuses a folder whose files accept rules out, as a whole', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple accept=".html"></nldd-file-field>');
 		await waitForUpdate(el);

@@ -752,10 +752,12 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this._clearRejection();
 	};
 
+	/** Only the click of that press: one that never came, released outside the
+	 *  field, leaves no flag for a later Enter, whose click has no `detail`. */
 	private _handleClickCapture = (e: Event): void => {
-		if (!this._dismissing) return;
+		const dismissing = this._dismissing;
 		this._dismissing = false;
-		e.stopPropagation();
+		if (dismissing && e instanceof MouseEvent && e.detail > 0) e.stopPropagation();
 	};
 
 	private _handleKeydown = (e: KeyboardEvent): void => {
@@ -821,9 +823,16 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 	}
 
+	/** Back to empty, as a clear, but without a change event, as a native
+	 *  input resets: a folder still being read is dropped too. */
 	formResetCallback(): void {
+		this._action++;
+		this._stopReading();
+		this._clearRejection();
 		if (this._input) this._input.value = '';
+		if (this._folderInput) this._folderInput.value = '';
 		this._files = [];
+		this._paths = [];
 		this.commitFormValue();
 	}
 
