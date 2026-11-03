@@ -29,7 +29,7 @@ export const nlddFileFieldTranslations = {
 	'components.file-field.folder-count-text': '{folder} ({count} bestanden)',
 	'components.file-field.file-chosen-text': '{name} gekozen',
 	'components.file-field.clear-action': 'Wis selectie',
-	'components.file-field.required-error-text': 'Kies een bestand',
+	'components.file-field.required-error-text': 'Een bestand is verplicht',
 	'components.file-field.accepted-types-text': 'Toegestaan: {types}',
 };
 

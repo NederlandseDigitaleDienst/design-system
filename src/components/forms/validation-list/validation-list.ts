@@ -23,7 +23,7 @@
  * then says what it can itself, so a field never turns red without a reason
  * under it. It reads the control's `validity` and names what is wrong (an
  * invalid e-mail or web address, an empty required field, too short, too long,
- * too low, too high), and says "Controleer wat je hebt ingevuld." when it
+ * too low, too high), and says "Dit klopt nog niet." when it
  * cannot tell. An item of your own that fails always wins over this line.
  * The line is an nldd-validation-item the list adds to its own children while
  * it is needed, so nldd-form-field reads it to the control as it does every

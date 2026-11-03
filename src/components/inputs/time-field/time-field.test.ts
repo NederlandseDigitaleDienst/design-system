@@ -658,17 +658,17 @@ describe('nldd-time-field meldt wat value niet kan zeggen', () => {
 		await send('Test');
 		expect(el.value).toBe('');
 		expect(el.internals.validity.badInput).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een tijd in als uu:mm');
+		expect(el.internals.validationMessage).toBe('Een tijd als uu:mm');
 	});
 
 	it('names the bound a typed time falls outside', async () => {
 		el = await fixture<NLDDTimeField>('<nldd-time-field min="09:00" max="17:00"></nldd-time-field>');
 		await send('08:00');
 		expect(el.internals.validity.rangeUnderflow).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een tijd in vanaf 09:00');
+		expect(el.internals.validationMessage).toBe('Een tijd vanaf 09:00');
 		await send('18:00');
 		expect(el.internals.validity.rangeOverflow).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een tijd in tot en met 17:00');
+		expect(el.internals.validationMessage).toBe('Een tijd tot en met 17:00');
 		await send('12:00');
 		expect(el.internals.validity.valid).toBe(true);
 	});

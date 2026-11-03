@@ -240,7 +240,7 @@ export const InEenFormulierveld = {
 				unmet="bewijsstuk-verplicht"
 			></nldd-file-field>
 			<nldd-validation-list>
-				<nldd-validation-item id="bewijsstuk-verplicht">Kies een bestand</nldd-validation-item>
+				<nldd-validation-item id="bewijsstuk-verplicht">Een bestand is verplicht</nldd-validation-item>
 			</nldd-validation-list>
 		</nldd-form-field>
 	`,

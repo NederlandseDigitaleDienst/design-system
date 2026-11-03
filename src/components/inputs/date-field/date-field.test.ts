@@ -899,7 +899,7 @@ describe('nldd-date-field meldt wat value niet kan zeggen', () => {
 		await type(el, 'Test');
 		expect(el.value).toBe('');
 		expect(el.internals.validity.badInput).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een datum in als dd-mm-jjjj');
+		expect(el.internals.validationMessage).toBe('Een datum als dd-mm-jjjj');
 	});
 
 	it('is valid again once the text is a date or gone', async () => {
@@ -916,10 +916,10 @@ describe('nldd-date-field meldt wat value niet kan zeggen', () => {
 		el = await fixture<NLDDDateField>('<nldd-date-field min="2026-06-01" max="2026-06-30"></nldd-date-field>');
 		await type(el, '15-05-2026');
 		expect(el.internals.validity.rangeUnderflow).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een datum in vanaf 01-06-2026');
+		expect(el.internals.validationMessage).toBe('Een datum vanaf 01-06-2026');
 		await type(el, '15-07-2026');
 		expect(el.internals.validity.rangeOverflow).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een datum in tot en met 30-06-2026');
+		expect(el.internals.validationMessage).toBe('Een datum tot en met 30-06-2026');
 	});
 
 	it('checks both halves of a period', async () => {
@@ -934,7 +934,7 @@ describe('nldd-date-field meldt wat value niet kan zeggen', () => {
 		el = await fixture<NLDDDateField>('<nldd-date-field range required></nldd-date-field>');
 		await typeIn(el, inputs(el)[0], '01-07-2026');
 		expect(el.internals.validity.valueMissing).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul ook de einddatum in');
+		expect(el.internals.validationMessage).toBe('De einddatum ontbreekt');
 		cleanup(el);
 
 		el = await fixture<NLDDDateField>('<nldd-date-field range></nldd-date-field>');

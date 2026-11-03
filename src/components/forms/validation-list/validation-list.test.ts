@@ -95,7 +95,7 @@ describe('nldd-validation-list', () => {
 			<nldd-form-field label="Wachtwoord">
 				<nldd-text-field invalid></nldd-text-field>
 				<nldd-validation-list>
-					<nldd-validation-item id="password-empty" required>Vul een wachtwoord in</nldd-validation-item>
+					<nldd-validation-item id="password-empty" required>Een wachtwoord is verplicht</nldd-validation-item>
 					<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
@@ -300,7 +300,7 @@ describe('nldd-validation-list', () => {
 				<nldd-form-field label="Naam">
 					<nldd-text-field name="name"></nldd-text-field>
 					<nldd-validation-list>
-						<nldd-validation-item id="name-required" required>Vul een naam in</nldd-validation-item>
+						<nldd-validation-item id="name-required" required>Een naam is verplicht</nldd-validation-item>
 					</nldd-validation-list>
 				</nldd-form-field>
 				<nldd-form-field label="Bijnaam">
@@ -422,7 +422,7 @@ describe('nldd-validation-list', () => {
 			expect(item(el, 'mail-at').unmet).toBe(false);
 			control.toggleAttribute('invalid', true);
 			await waitForUpdate(el);
-			expect(fallback(el)?.textContent).toBe('Vul een geldig e-mailadres in, zoals naam@voorbeeld.nl.');
+			expect(fallback(el)?.textContent).toBe('Een geldig e-mailadres zoals naam@voorbeeld.nl.');
 			expect(fallback(el)?.visible).toBe(true);
 			expect(list(el).classList.contains('has-items')).toBe(true);
 		});
@@ -452,14 +452,14 @@ describe('nldd-validation-list', () => {
 		it('zegt dat een leeg verplicht veld ingevuld moet worden', async () => {
 			el = await fixture(field('required invalid', ''));
 			await waitForUpdate(el);
-			expect(fallback(el)?.textContent).toBe('Vul dit veld in.');
+			expect(fallback(el)?.textContent).toBe('Dit veld is verplicht.');
 		});
 
 		it('valt terug op een algemene zin als de browser niets meldt', async () => {
 			el = await fixture(field('invalid', ''));
 			await waitForUpdate(el);
 			await type(el, 'iets');
-			expect(fallback(el)?.textContent).toBe('Controleer wat je hebt ingevuld.');
+			expect(fallback(el)?.textContent).toBe('Dit klopt nog niet.');
 		});
 	});
 
