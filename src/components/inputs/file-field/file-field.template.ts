@@ -318,8 +318,8 @@ function renderMoreButton(component: NLDDFileField, size: string): TemplateResul
  * While files are dragged the row gives way to them; nothing can be pressed
  * then. A drop that was refused says why in the same place, across the whole
  * row, so the name has only itself to make room for; an area says it in place
- * of the name, with the buttons still there. A narrow control gives up the
- * icon of the file first, then puts both buttons in a menu.
+ * of the name, with the buttons still there. A narrow control puts both
+ * buttons in a menu first, then gives up the icon of the file.
  */
 function renderChosen(component: NLDDFileField): TemplateResult {
 	const files = component.files;

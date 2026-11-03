@@ -56,9 +56,9 @@
  * A control reserves the height of every text it can show, so fields of a
  * size are as tall at one width, empty or with a file. The name takes the lines
  * that leaves it, and is cut in the middle only once those are full. A narrow
- * field makes more room: below 320px it leaves out the icon of the format and
- * counts a folder as "site (3)", below 240px "Wijzigen" and "Wis selectie" go
- * in one menu behind "Toon opties". A refused drop says why across the whole
+ * field makes more room: below 320px "Wijzigen" and "Wis selectie" go in one
+ * menu behind "Toon opties" and a folder is counted as "site (3)", below 240px
+ * it leaves out the icon of the format. A refused drop says why across the whole
  * row of a control, in place of the name and the buttons.
  *
  * The surface deliberately does not look like an input field. A border with

@@ -277,7 +277,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field:not(.file-field--area) .file-field__chosen-file {
-		@container file-field-chosen-area (max-width: 19.9375rem) {
+		@container file-field-chosen-area (max-width: 14.9375rem) {
 			.file-field__file-icon {
 				display: none;
 			}
@@ -287,13 +287,13 @@ export const fileFieldStyles = css`
 			}
 		}
 
-		@container file-field-chosen-area (max-width: 14.9375rem) {
+		@container file-field-chosen-area (max-width: 19.9375rem) {
 			:is(.file-field__change-button, .file-field__clear-button) {
 				display: none;
 			}
 		}
 
-		@container file-field-chosen-area (min-width: 15rem) {
+		@container file-field-chosen-area (min-width: 20rem) {
 			.file-field__more-button {
 				display: none;
 			}

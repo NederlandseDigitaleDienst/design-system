@@ -227,7 +227,7 @@ describe('nldd-file-field', () => {
 		expect(heights[0]).toBeGreaterThan(44);
 	});
 
-	it('gives up the file icon in a narrow field first, then puts its buttons in a menu', async () => {
+	it('puts its buttons in a menu in a narrow field first, then gives up the file icon', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage" style="width: 400px"></nldd-file-field>');
 		await waitForUpdate(el);
 		choose(el, txt('rapport.pdf'));
@@ -238,9 +238,10 @@ describe('nldd-file-field', () => {
 		expect(shown('.file-field__file-icon')).toBe(true);
 		expect(buttons()).toEqual([true, true, false]);
 		el.style.width = '280px';
-		expect(shown('.file-field__file-icon')).toBe(false);
-		expect(buttons()).toEqual([true, true, false]);
+		expect(shown('.file-field__file-icon')).toBe(true);
+		expect(buttons()).toEqual([false, false, true]);
 		el.style.width = '200px';
+		expect(shown('.file-field__file-icon')).toBe(false);
 		expect(buttons()).toEqual([false, false, true]);
 		const more = root.querySelector<HTMLElement>('.file-field__more-button')!;
 		expect(more.getAttribute('accessible-label')).toBe('Toon opties, rapport.pdf');
@@ -458,7 +459,7 @@ describe('nldd-file-field', () => {
 		const tooltip = (el: NLDDFileField) => el.shadowRoot!.querySelector('nldd-tooltip')!;
 
 		it('is cut in the middle to the width it has, with the whole name in a tooltip', async () => {
-			el = await fixture<NLDDFileField>('<nldd-file-field style="width: 280px"></nldd-file-field>');
+			el = await fixture<NLDDFileField>('<nldd-file-field style="width: 400px"></nldd-file-field>');
 			await waitForUpdate(el);
 			choose(el, txt(long));
 			await vi.waitFor(() => expect(shown(el)).toContain('…'));
@@ -488,7 +489,7 @@ describe('nldd-file-field', () => {
 		});
 
 		it('falls back to the CSS cut while it has no width, instead of keeping an old one', async () => {
-			el = await fixture<NLDDFileField>('<nldd-file-field style="width: 280px"></nldd-file-field>');
+			el = await fixture<NLDDFileField>('<nldd-file-field style="width: 400px"></nldd-file-field>');
 			await waitForUpdate(el);
 			choose(el, txt(long));
 			await vi.waitFor(() => expect(shown(el)).toContain('…'));
