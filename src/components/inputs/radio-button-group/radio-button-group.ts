@@ -25,6 +25,7 @@ import { radioButtonGroupTemplate } from './radio-button-group.template.js';
 import type { NLDDRadioButtonField } from '../radio-button-field/radio-button-field.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { radioPositions } from '../../../utilities/radio-position.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 @customElement('nldd-radio-button-group')
 export class NLDDRadioButtonGroup extends LitElement {
@@ -206,6 +207,7 @@ export class NLDDRadioButtonGroup extends LitElement {
 	 * place.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const fields = this._getEnabledFields();
 		(fields.find(field => field.checked) ?? fields[0])?.focus(options);
 	}

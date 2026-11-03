@@ -89,7 +89,7 @@ function renderToken(component: NLDDTokenField, value: string, index: number): T
 				control="menu"
 				tabindex=${tabindex}
 				?roving=${!component.readonly}
-				menu-text=${`${component._t('components.token-field.token-menu-action')} "${label}"`}
+				menu-text=${`${component._t('components.token-field.open-token-menu-action')} "${label}"`}
 				?disabled=${component.disabled}
 				data-value=${value}
 				@keydown=${(e: KeyboardEvent) => component._handleTokenKeydown(e, index)}

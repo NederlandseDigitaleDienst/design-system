@@ -162,7 +162,7 @@ export const MeerdereFouten = () => html`
 	<nldd-form-field label="Wachtwoord">
 		<nldd-text-field invalid></nldd-text-field>
 		<nldd-validation-list>
-			<nldd-validation-item id="wachtwoord-verplicht" required>Vul een wachtwoord in</nldd-validation-item>
+			<nldd-validation-item id="wachtwoord-verplicht" required>Een wachtwoord is verplicht</nldd-validation-item>
 			<nldd-validation-item id="wachtwoord-lengte" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 		</nldd-validation-list>
 		<nldd-form-field-help-text>

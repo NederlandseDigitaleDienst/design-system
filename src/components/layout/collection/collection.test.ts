@@ -1,7 +1,9 @@
 import { describe, it, expect, afterEach } from 'vitest';
+import { userEvent, page } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './collection.js';
+import '../card/card.js';
 
 describe('nldd-collection', () => {
 	let el: HTMLElement;
@@ -451,5 +453,40 @@ describe('nldd-collection', () => {
 
 		expect((next as HTMLElement & { disabled: boolean }).disabled).toBe(true);
 		expect(collection.shadowRoot!.activeElement).toBe(previous);
+	});
+
+	it.each([1100, 1180])('scrolls a whole item into view when something in it takes focus, at %ipx', async (width) => {
+		await page.viewport(width, 700);
+		el = await fixture(`<div style="padding: 0 24px"><nldd-collection layout="horizontal-scroll" item-min-width="280px">${
+			Array.from({ length: 8 }, (_, i) => `<div style="height: 80px"><a href="#">Kaart ${i + 1}</a></div>`).join('')
+		}</nldd-collection></div>`);
+		const collection = el.querySelector('nldd-collection') as HTMLElement & { updateComplete: Promise<unknown> };
+		await collection.updateComplete;
+		const scroller = collection.shadowRoot!.querySelector<HTMLElement>('.collection__items')!;
+		const links = Array.from(el.querySelectorAll('a'));
+		links[0].focus();
+		const clipped: number[] = [];
+		for (let i = 1; i < links.length; i++) {
+			await userEvent.keyboard('{Tab}');
+			await new Promise((resolve) => setTimeout(resolve, 400));
+			const card = links[i].parentElement!.getBoundingClientRect();
+			const view = scroller.getBoundingClientRect();
+			if (card.left < view.left - 1 || card.right > view.right + 1) clipped.push(i + 1);
+		}
+		expect(clipped).toEqual([]);
+	});
+
+	it('is a list of its items, and leaves an item with a role of its own alone', async () => {
+		el = await fixture(`
+			<nldd-collection>
+				<nldd-card></nldd-card>
+				<div>Kaart</div>
+				<article>Artikel</article>
+			</nldd-collection>
+		`);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.collection__items')!.getAttribute('role')).toBe('list');
+		const roles = [...el.children].map((child) => child.getAttribute('role'));
+		expect(roles).toEqual(['listitem', 'listitem', null]);
 	});
 });

@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDLink } from './link.js';
 import './link.js';
@@ -14,6 +15,16 @@ describe('nldd-link', () => {
 		el = await fixture('<nldd-link></nldd-link>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot).not.toBeNull();
+	});
+
+	it('keeps its underline when it has keyboard focus', async () => {
+		el = await fixture('<nldd-link href="#" text="Toegankelijkheid"></nldd-link>');
+		await waitForUpdate(el);
+		await userEvent.keyboard('{Tab}');
+		const anchor = el.shadowRoot!.querySelector('.link')!;
+		expect(anchor.matches(':focus-visible')).toBe(true);
+		const label = el.shadowRoot!.querySelector('.link__label')!;
+		expect(getComputedStyle(label).textDecorationLine).toBe('underline');
 	});
 
 	it('defaults size to inherit, and leaves the attribute off', async () => {

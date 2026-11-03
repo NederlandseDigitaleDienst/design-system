@@ -4,6 +4,7 @@ import { syntaxTree } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
 import { isMentionLink } from './text-editor.mention.js';
 import { forEachLineStart, treeAdvanced } from './text-editor.syntax.js';
+import { prefixLength } from './text-editor.markdown.js';
 import { taskBox } from './text-editor.tasks.js';
 
 /* syntax="hidden": the formatting marks of bold, italic, strikethrough, inline
@@ -35,11 +36,13 @@ const bullet = Decoration.mark({ class: 'cm-md-bullet' });
 const TASK_PREFIX_RE = /^(\s*)[-*+]\s+\[[ xX]\](\s+)/;
 /** The width of the box in mono advances; matches .cm-md-task-box. */
 const TASK_BOX_WIDTH = 2.5;
-// !important: CodeMirror joins this style with the full-prefix indent of the
-// list into one style attribute, where that one comes last and would win.
-const taskIndentCache: Record<number, Decoration> = {};
-function taskIndent(length: number): Decoration {
-	return (taskIndentCache[length] ??= Decoration.line({
+// A hanging indent for a prefix that hides part of itself, a task's bullet or
+// the spare spaces of a quote. !important: CodeMirror joins this style with the
+// full-prefix indent of the line into one style attribute, where that one comes
+// last and would win.
+const prefixIndentCache: Record<number, Decoration> = {};
+function prefixIndent(length: number): Decoration {
+	return (prefixIndentCache[length] ??= Decoration.line({
 		attributes: {
 			style: `text-indent:calc(${length} * var(--_text-editor-marker-advance) * -1) !important;padding-left:calc(${length} * var(--_text-editor-marker-advance)) !important`,
 		},
@@ -48,11 +51,26 @@ function taskIndent(length: number): Decoration {
 // The number of a numbered list is content, so it takes the color of the text
 // rather than the dimmed color of a mark. Only the color: the mono width stays.
 const ordinal = Decoration.mark({ class: 'cm-md-ordinal' });
-// A quote reads as a line on the left. Its `>` keeps its width, so the text
-// starts in the same place whether the line or the marks show. The whole quote
-// is the construct: the caret anywhere in it shows every `>` and drops the line.
-const quoteLine = Decoration.line({ class: 'cm-md-quote-line' });
+// A quote reads as a line on the left, one per level, each where its `>` is,
+// as nldd-rich-text draws a border per nested blockquote. The `>` keeps its
+// width, and so does one space after it; spaces beyond that mean nothing in
+// the result (">   > " is "> > "), so they are hidden. The whole quote is the
+// construct: the caret anywhere in it shows every `>` and space, and drops the
+// lines.
+const quoteLineCache: Record<string, Decoration> = {};
+function quoteLine(columns: number[]): Decoration {
+	const key = columns.join(',');
+	return (quoteLineCache[key] ??= Decoration.line({
+		class: 'cm-md-quote-line',
+		attributes: {
+			style: `background-image:${columns.map(() => 'var(--_text-editor-quote-rule)').join(',')};background-position:${columns.map((column) => `calc(${column} * var(--_text-editor-marker-advance)) 0`).join(',')}`,
+		},
+	}));
+}
 const quoteMark = Decoration.mark({ class: 'cm-md-quote-mark-hidden' });
+// A `>` with no space after it gets the room of one, since ">>" is "> >" in the
+// result, so every level is a step of the same width.
+const quoteGap = Decoration.mark({ class: 'cm-md-quote-gap' });
 // With its backticks hidden, inline code gets room inside its tint as padding on
 // the text. Not as a widget: Safari measured the selection wrong beside one.
 const bareCode = Decoration.mark({ class: 'cm-md-code-bare' });
@@ -79,6 +97,71 @@ function outermostQuote(node: SyntaxNode): SyntaxNode {
 	let outer = node;
 	for (let up = node.parent; up; up = up.parent) if (up.name === 'Blockquote') outer = up;
 	return outer;
+}
+
+/** The width of one quote level in mono advances, of "> ". */
+const QUOTE_STEP = 2;
+
+// A lazy line has fewer `>` than its level, so its text is pushed in by the
+// levels it misses, as if their `> ` were there. !important for the same
+// reason as prefixIndent.
+const lazyIndentCache: Record<string, Decoration> = {};
+function lazyIndent(prefix: number, extra: number): Decoration {
+	return (lazyIndentCache[`${prefix},${extra}`] ??= Decoration.line({
+		attributes: {
+			style: `text-indent:calc(${prefix} * var(--_text-editor-marker-advance) * -1) !important;padding-left:calc(${prefix + extra} * var(--_text-editor-marker-advance)) !important`,
+		},
+	}));
+}
+
+/** How many quotes each line of a quote lies in, per line start. */
+function quoteDepths(state: EditorState, quote: SyntaxNode): Map<number, number> {
+	const depths = new Map<number, number>();
+	syntaxTree(state).iterate({
+		from: quote.from,
+		to: quote.to,
+		enter: (node) => {
+			if (node.name !== 'Blockquote') return;
+			forEachLineStart(state, node.from, node.to, (lineFrom) => depths.set(lineFrom, (depths.get(lineFrom) ?? 0) + 1));
+		},
+	});
+	return depths;
+}
+
+/** The start of the last line of a quote with more than its marks on it. */
+function lastLineWithText(state: EditorState, quote: SyntaxNode): number {
+	for (let line = state.doc.lineAt(quote.to); ; line = state.doc.line(line.number - 1)) {
+		if (/[^\s>]/.test(line.text) || line.from <= quote.from) return line.from;
+	}
+}
+
+/** The spaces after each `>` beyond the first, as [from, to) columns: 2 to 4
+ *  spaces are padding the result ignores, while 5 or more start an indented
+ *  code block in the quote, which keeps them. */
+function spareSpaces(text: string, marks: number[]): [number, number][] {
+	const spare: [number, number][] = [];
+	for (const mark of marks) {
+		const run = /^[ ]*/.exec(text.slice(mark + 1))![0].length;
+		if (run >= 2 && run <= 4) spare.push([mark + 2, mark + 1 + run]);
+	}
+	return spare;
+}
+
+/** The column of every `>` in a quote, per line start. */
+function quoteColumns(state: EditorState, quote: SyntaxNode): Map<number, number[]> {
+	const columns = new Map<number, number[]>();
+	syntaxTree(state).iterate({
+		from: quote.from,
+		to: quote.to,
+		enter: (node) => {
+			if (node.name !== 'QuoteMark') return;
+			const line = state.doc.lineAt(node.from);
+			const list = columns.get(line.from) ?? [];
+			list.push(node.from - line.from);
+			columns.set(line.from, list);
+		},
+	});
+	return columns;
 }
 
 function revealsAnything(state: EditorState): boolean {
@@ -176,7 +259,35 @@ function buildHidden(view: EditorView): DecorationSet {
 					// The outermost quote is the construct; a nested one lies inside it.
 					const outer = outermostQuote(node.node);
 					if (outer !== node.node || revealed(outer.from, outer.to)) return;
-					forEachLineStart(state, outer.from, outer.to, (lineFrom) => ranges.push(quoteLine.range(lineFrom)));
+					const columns = quoteColumns(state, outer);
+					const depths = quoteDepths(state, outer);
+					// The lines go as deep as the parser puts a line, which is not always
+					// its number of `>`: a line with fewer, or none, right under a
+					// paragraph goes on in that paragraph (a lazy line), as it will in
+					// the result. Empty lines at the end show nothing there, so no lines.
+					const lastText = lastLineWithText(state, outer);
+					let last: number[] = [0];
+					forEachLineStart(state, outer.from, outer.to, (lineFrom) => {
+						if (lineFrom > lastText) return;
+						const line = state.doc.lineAt(lineFrom);
+						const marks = columns.get(lineFrom) ?? [];
+						const spare = spareSpaces(line.text, marks);
+						const hidden = spare.reduce((sum, [from, to]) => sum + to - from, 0);
+						for (const [from, to] of spare) ranges.push(hideMark.range(lineFrom + from, lineFrom + to));
+						const tight = marks.filter((column) => /[^ \t]/.test(line.text.charAt(column + 1)));
+						for (const column of tight) ranges.push(quoteGap.range(lineFrom + column, lineFrom + column + 1));
+						const own = marks.map((column) => column - spare.filter(([from]) => from < column).reduce((sum, [from, to]) => sum + to - from, 0) + tight.filter((mark) => mark < column).length);
+						const depth = Math.max(1, depths.get(lineFrom) ?? 0);
+						const prefix = prefixLength(line.text) - hidden + tight.length;
+						// A line without `>` lines up under the levels of the line above it.
+						const rules = (own.length ? own : last).slice(0, depth);
+						while (rules.length < depth) rules.push(rules.length ? rules[rules.length - 1] + QUOTE_STEP : 0);
+						const missing = own.length ? (depth - own.length) * QUOTE_STEP : rules[rules.length - 1] + QUOTE_STEP;
+						if (missing > 0) ranges.push(lazyIndent(prefix, missing).range(lineFrom));
+						else if (hidden || tight.length) ranges.push(prefixIndent(prefix).range(lineFrom));
+						ranges.push(quoteLine(rules).range(lineFrom));
+						last = rules;
+					});
 					return;
 				}
 				if (!parent) return;
@@ -196,7 +307,7 @@ function buildHidden(view: EditorView): DecorationSet {
 					const marker = task && node.node.parent?.getChild('Task')?.getChild('TaskMarker');
 					if (task && marker) {
 						ranges.push(
-							taskIndent(task[1].length + TASK_BOX_WIDTH + task[2].length).range(line.from),
+							prefixIndent(task[1].length + TASK_BOX_WIDTH + task[2].length).range(line.from),
 							hideMark.range(node.from, marker.from),
 							taskBox(state, /x/i.test(state.sliceDoc(marker.from, marker.to))).range(marker.from, marker.to),
 						);

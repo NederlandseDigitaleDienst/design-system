@@ -124,10 +124,6 @@ export const linkStyles = css`
 		text-underline-offset: 0.15em;
 	}
 
-	.link:focus-visible .link__label {
-		text-decoration: none;
-	}
-
 	.link__start-icon,
 	.link__end-icon {
 		display: inline-flex;

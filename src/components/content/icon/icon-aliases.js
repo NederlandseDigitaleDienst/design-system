@@ -637,6 +637,9 @@ export const aliases = {
 	'ai': 'sparkles',
 	'magic': 'sparkles',
 
+	// speaker
+	'no-volume': 'speaker',
+
 	// speaker-slash
 	'mute': 'speaker-slash',
 

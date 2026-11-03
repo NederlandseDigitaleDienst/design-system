@@ -32,16 +32,35 @@ export default {
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
 		status: { type: 'beta' },
+		// The canvas spacing below is not part of the example, so keep it out
+		// of the code a reader copies.
+		docs: { source: { excludeDecorators: true } },
 	},
+	// Room above the track for the value tooltip, which would otherwise fall
+	// off the top of the canvas.
+	decorators: [
+		(story: () => unknown) => html`
+			<nldd-container
+				padding-top="40"
+				max-width="480px"
+			>
+				${story()}
+			</nldd-container>
+		`,
+	],
 	args: {
 		size: 'md',
 		range: false,
+		histogram: '',
 		startIcon: '',
 		endIcon: '',
 		accessibleLabel: 'Volume',
+		tooltipTiming: 'instant',
 		invalid: false,
 		disabled: false,
 		value: 40,
+		startValue: undefined,
+		endValue: undefined,
 		min: 0,
 		max: 100,
 		step: 1,
@@ -57,6 +76,10 @@ export default {
 			control: 'boolean',
 			description: 'Kiest een bereik, met een thumb voor elk uiteinde',
 			table: { defaultValue: { summary: false } },
+		},
+		histogram: {
+			control: 'text',
+			description: 'Aantallen als balken boven de baan, één per vak, gescheiden door komma\'s (bijv. `2, 4, 7, 12`)',
 		},
 		startIcon: {
 			name: 'start-icon',
@@ -79,6 +102,13 @@ export default {
 			control: 'text',
 			description: 'Toegankelijke naam; een range zet er "minimum" en "maximum" achter',
 		},
+		tooltipTiming: {
+			name: 'tooltip-timing',
+			control: 'select',
+			options: ['instant', 'never'],
+			description: 'Wanneer de waarde boven de thumb staat: bij hover, focus en slepen, of nooit',
+			table: { defaultValue: { summary: 'instant' } },
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Markeert de slider als ongeldig',
@@ -92,6 +122,18 @@ export default {
 		value: {
 			control: 'number',
 			description: 'De waarde (zonder `range`)',
+		},
+		startValue: {
+			name: 'start-value',
+			control: 'number',
+			description: 'Het begin van een bereik (met `range`)',
+			table: { defaultValue: { summary: 'min' } },
+		},
+		endValue: {
+			name: 'end-value',
+			control: 'number',
+			description: 'Het eind van een bereik (met `range`)',
+			table: { defaultValue: { summary: 'max' } },
 		},
 		min: {
 			control: 'number',
@@ -113,24 +155,23 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-container
-			padding-top="40"
-			max-width="480px"
-		>
-			<nldd-slider
-				size=${args.size}
-				?range=${args.range}
-				start-icon=${args.startIcon || nothing}
-				end-icon=${args.endIcon || nothing}
-				accessible-label=${args.accessibleLabel || nothing}
-				?invalid=${args.invalid}
-				?disabled=${args.disabled}
-				value=${args.value}
-				min=${args.min}
-				max=${args.max}
-				step=${args.step}
-			></nldd-slider>
-		</nldd-container>
+		<nldd-slider
+			size=${args.size}
+			?range=${args.range}
+			histogram=${args.histogram || nothing}
+			start-icon=${args.startIcon || nothing}
+			end-icon=${args.endIcon || nothing}
+			accessible-label=${args.accessibleLabel || nothing}
+			tooltip-timing=${args.tooltipTiming}
+			?invalid=${args.invalid}
+			?disabled=${args.disabled}
+			value=${args.value}
+			start-value=${args.startValue ?? nothing}
+			end-value=${args.endValue ?? nothing}
+			min=${args.min}
+			max=${args.max}
+			step=${args.step}
+		></nldd-slider>
 	`,
 };
 
@@ -141,21 +182,16 @@ export const Standaard = {
  */
 export const Range = {
 	render: () => html`
-		<nldd-container
-			padding-top="40"
-			max-width="480px"
-		>
-			<nldd-slider
-				range
-				accessible-label="Prijs"
-				min="0"
-				max="2000"
-				step="50"
-				start-value="200"
-				end-value="1200"
-				.formatValue=${(value: number) => `€ ${value.toLocaleString('nl-NL')}`}
-			></nldd-slider>
-		</nldd-container>
+		<nldd-slider
+			range
+			accessible-label="Prijs"
+			min="0"
+			max="2000"
+			step="50"
+			start-value="200"
+			end-value="1200"
+			.formatValue=${(value: number) => `€ ${value.toLocaleString('nl-NL')}`}
+		></nldd-slider>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -191,7 +227,7 @@ export const Range = {
 export const MetHistogramEnVelden = {
 	name: 'Met histogram en velden',
 	render: () => {
-		const root = (event: Event) => (event.target as Element).closest('nldd-container')!;
+		const root = (event: Event) => (event.target as Element).closest('nldd-container:has(> nldd-slider)')!;
 		const fromSlider = (event: Event) => {
 			const { startValue, endValue } = (event as CustomEvent).detail;
 			const [start, end] = root(event).querySelectorAll('nldd-number-field');
@@ -207,7 +243,6 @@ export const MetHistogramEnVelden = {
 		return html`
 			<nldd-container
 				gap="16"
-				max-width="480px"
 			>
 				<nldd-container
 					layout="row"
@@ -254,22 +289,20 @@ export const MetHistogramEnVelden = {
 
 /**
  * Iconen aan de uiteinden zeggen wat de baan betekent, zoals Apple de
- * luidsprekers bij het volume zet.
+ * luidsprekers bij het volume zet. Net als daar zet een klik op een icoon de
+ * waarde een tiende van het bereik omlaag of omhoog. Met het toetsenbord doe
+ * je dat met Page Up en Page Down, dus de iconen zijn geen tabstop. In een
+ * range zijn ze alleen uitleg.
  */
 export const MetIconen = {
 	name: 'Met iconen',
 	render: () => html`
-		<nldd-container
-			padding-top="40"
-			max-width="480px"
-		>
-			<nldd-slider
-				accessible-label="Volume"
-				start-icon="speaker-volume-low"
-				end-icon="speaker-volume-high"
-				value="60"
-			></nldd-slider>
-		</nldd-container>
+		<nldd-slider
+			accessible-label="Volume"
+			start-icon="no-volume"
+			end-icon="high-volume"
+			value="60"
+		></nldd-slider>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -278,28 +311,26 @@ export const MetIconen = {
 export const Grootten = {
 	render: () => html`
 		<nldd-container
-			padding-top="40"
 			gap="40"
-			max-width="480px"
 		>
 			<nldd-slider
 				accessible-label="Volume md"
-				start-icon="speaker-volume-low"
-				end-icon="speaker-volume-high"
+				start-icon="no-volume"
+				end-icon="high-volume"
 				value="40"
 			></nldd-slider>
 			<nldd-slider
 				size="sm"
 				accessible-label="Volume sm"
-				start-icon="speaker-volume-low"
-				end-icon="speaker-volume-high"
+				start-icon="no-volume"
+				end-icon="high-volume"
 				value="40"
 			></nldd-slider>
 			<nldd-slider
 				size="xs"
 				accessible-label="Volume xs"
-				start-icon="speaker-volume-low"
-				end-icon="speaker-volume-high"
+				start-icon="no-volume"
+				end-icon="high-volume"
 				value="40"
 			></nldd-slider>
 		</nldd-container>
@@ -314,21 +345,16 @@ export const Grootten = {
 export const InEenFormulierveld = {
 	name: 'In een formulierveld',
 	render: () => html`
-		<nldd-container
-			padding-top="16"
-			max-width="480px"
-		>
-			<nldd-form-field label="Bijdrage in de kosten">
-				<nldd-slider
-					name="bijdrage"
-					min="0"
-					max="100"
-					step="5"
-					value="50"
-					.formatValue=${(value: number) => `${value}%`}
-				></nldd-slider>
-			</nldd-form-field>
-		</nldd-container>
+		<nldd-form-field label="Bijdrage in de kosten">
+			<nldd-slider
+				name="bijdrage"
+				min="0"
+				max="100"
+				step="5"
+				value="50"
+				.formatValue=${(value: number) => `${value}%`}
+			></nldd-slider>
+		</nldd-form-field>
 	`,
 	parameters: { controls: { disable: true } },
 };

@@ -209,15 +209,4 @@ const cursorLayer = layer({
 	},
 });
 
-/** drawSelection() keeps drawing its own cursors in `.cm-cursorLayer`; this
- *  layer takes over the drawing and that one is hidden. Its selection layer,
- *  blink keyframes and native-caret suppression stay in force. The rules below
- *  mirror what CodeMirror's theme gives its own cursor layer. */
-const theme = EditorView.theme({
-	'.cm-cursorLayer': { display: 'none' },
-	'.cm-nldd-cursorLayer': { pointerEvents: 'none' },
-	'&.cm-focused > .cm-scroller > .cm-nldd-cursorLayer': { animation: 'steps(1) cm-blink 1.2s infinite' },
-	'&.cm-focused > .cm-scroller > .cm-nldd-cursorLayer .cm-cursor': { display: 'block' },
-});
-
-export const stableCursor: Extension = [cursorLayer, pointerTracker, stepOverKeymap, typePastBadge, theme];
+export const stableCursor: Extension = [cursorLayer, pointerTracker, stepOverKeymap, typePastBadge];

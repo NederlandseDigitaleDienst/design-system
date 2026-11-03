@@ -65,6 +65,7 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
@@ -265,6 +266,7 @@ export class NLDDSegmentedControlItem extends LitElement {
 	 * `itemEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		if (this.inputType === 'radio') {
 			super.focus(options);
 			return;
@@ -649,6 +651,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	 * the control.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const items = this._getItems().filter(item => !item.disabled);
 		(items.find(item => item.selected) ?? items[0])?.focus(options);
 	}

@@ -45,6 +45,7 @@ import { DescribedBy, applyDescribedBy } from '../../../utilities/described-by-m
 import { ShortcutAvailabilityController, shortcutsAvailable } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type SearchFieldSize = 'sm' | 'md';
 
@@ -259,6 +260,7 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	 * `searchFieldEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._input?.focus(options);
 	}
 

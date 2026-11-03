@@ -11,6 +11,7 @@ import { nlddListItemTranslations } from './list-item.i18n.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
 import { setState } from '../../../utilities/element-state.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ListItemSize = 'sm' | 'md';
 
@@ -172,7 +173,7 @@ const NESTED_CONTROLS = [
  * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
  * @attr {boolean} radio - Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it.
- * @attr {string} accessible-label - Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it.
+ * @attr {string} accessible-label - Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it.
  * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
  * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. A selected row sets `--context-selected-indicator-color` and `--context-selected-contrast-color` to its text and fill color, so a checked nldd-checkbox, nldd-radio-button or nldd-switch in it takes the colors of the row: on its gray the accent can fall below 3:1. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
  * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
@@ -598,6 +599,9 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this._relayExpanded();
 			this._syncExpandedFacts();
 		}
+		if (changed.has('accessibleLabel') || changed.has('href') || changed.has('button')) {
+			this._syncLabelFacts();
+		}
 		if (changed.has('_arrowNavigation') || changed.has('_rovingActive')) {
 			this._syncRovingTabStops();
 		}
@@ -647,6 +651,21 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	private _relayExpanded(): void {
 		this._ownDescendants<HTMLElement & { _rowExpanded?: boolean }>('nldd-list-item-segment[disclosure]')
 			.forEach(segment => { segment._rowExpanded = this._resolvedExpanded; });
+	}
+
+	/**
+	 * An `accessible-label` replaces what the row says for assistive technology.
+	 * Someone who reads "Aanvraag A-1042" and says it to voice control finds no
+	 * control by that name when the label says something else (WCAG 2.5.3).
+	 * States whether the label starts with the visible title.
+	 */
+	private _syncLabelFacts(): void {
+		const cell = this._ownDescendants('nldd-title-cell, nldd-text-cell')[0];
+		const normalize = (text: string) => text.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+		const title = normalize(cell?.getAttribute('text') ?? cell?.textContent ?? '');
+		const without = Boolean(this.accessibleLabel) && Boolean(title)
+			&& !normalize(this.accessibleLabel).startsWith(title);
+		setState(this, 'label-without-title', without);
 	}
 
 	/** `expanded` needs a control to sit on; a plain container has none, and a
@@ -988,6 +1007,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * so consumers can call `listItemEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		// A tree row without a control of its own (only segments, or
 		// none at all) takes focus on the host: that is where role="treeitem"
 		// sits, so assistive technology announces the row rather than a button

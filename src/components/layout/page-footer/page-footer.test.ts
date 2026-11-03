@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './page-footer.js';
 import '../../navigation/breadcrumbs/breadcrumbs.js';
 
@@ -36,6 +37,54 @@ describe('nldd-page-footer', () => {
 		// Empty footer drops the gray band — only the ribbon shows. See
 		// :host([empty]) in the styles.
 		expect(el.hasAttribute('empty')).toBe(true);
+	});
+
+	it('leaves out the ribbon and its room with no-ribbon', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture(`
+			<nldd-page-footer>
+				<nldd-page-footer-legal-bar slot="legal-bar">
+					<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
+				</nldd-page-footer-legal-bar>
+			</nldd-page-footer>
+		`);
+		await waitForUpdate(el);
+		const footer = el.shadowRoot!.querySelector('.page-footer') as HTMLElement;
+		const legal = el.shadowRoot!.querySelector('.page-footer__legal-bar') as HTMLElement;
+		expect(getComputedStyle(footer, '::after').content).not.toBe('none');
+		const withRibbon = parseFloat(getComputedStyle(legal).paddingBottom);
+		el.setAttribute('no-ribbon', '');
+		await waitForUpdate(el);
+		expect(getComputedStyle(footer, '::after').content).toBe('none');
+		const withoutRibbon = parseFloat(getComputedStyle(legal).paddingBottom);
+		expect(withoutRibbon).toBeLessThan(withRibbon);
+		expect(withoutRibbon).toBeGreaterThan(0);
+		unloadTokens();
+	});
+
+	it('keeps as much room under the last row as above it without the ribbon', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture(`
+			<nldd-page-footer no-ribbon style="width: 1280px">
+				<p>Mijn Dienst</p>
+				<nldd-page-footer-legal-bar slot="legal-bar">
+					<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
+				</nldd-page-footer-legal-bar>
+			</nldd-page-footer>
+		`);
+		await waitForUpdate(el);
+		const legal = getComputedStyle(el.shadowRoot!.querySelector('.page-footer__legal-bar')!);
+		expect(parseFloat(legal.paddingTop)).toBeGreaterThan(0);
+		expect(legal.paddingBottom).toBe(legal.paddingTop);
+		unloadTokens();
+	});
+
+	it('takes no height when empty and without the ribbon', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-page-footer no-ribbon></nldd-page-footer>');
+		await waitForUpdate(el);
+		expect(el.getBoundingClientRect().height).toBe(0);
+		unloadTokens();
 	});
 
 	it('clears empty once any row has content', async () => {
@@ -162,6 +211,21 @@ describe('nldd-page-footer-legal-bar', () => {
 
 	afterEach(() => {
 		if (el) cleanup(el);
+	});
+
+	it('puts its links in a list per side, so a screen reader says how many there are', async () => {
+		el = await fixture(`
+			<nldd-page-footer-legal-bar>
+				<nldd-page-footer-legal-bar-item slot="start" text="Mijn Dienst"></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item slot="end" text="Toegankelijkheid" href="/toegankelijkheid/"></nldd-page-footer-legal-bar-item>
+			</nldd-page-footer-legal-bar>
+		`);
+		await waitForUpdate(el);
+		const lists = [...el.shadowRoot!.querySelectorAll('nav [role="list"]')];
+		expect(lists.length).toBe(2);
+		const roles = [...el.querySelectorAll('nldd-page-footer-legal-bar-item')].map((item) => item.getAttribute('role'));
+		expect(roles).toEqual(['listitem', 'listitem', 'listitem']);
 	});
 
 	it('renders a nav landmark with the default aria-label', async () => {

@@ -1464,4 +1464,22 @@ describe('<nldd-list-item> with download', () => {
 		await waitForUpdate(el);
 		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
+
+	it('states when accessible-label does not start with the row\'s title', async () => {
+		el = await fixture(`
+			<nldd-list-item href="#" accessible-label="Open de aanvraag">
+				<nldd-title-cell text="Aanvraag A-1042" supporting-text="Dakisolatie"></nldd-title-cell>
+			</nldd-list-item>
+		`);
+		await waitForUpdate(el);
+		expect(el.matches(':state(label-without-title)')).toBe(true);
+		cleanup(el);
+		el = await fixture(`
+			<nldd-list-item href="#" accessible-label="Aanvraag A-1042, in behandeling">
+				<nldd-title-cell text="Aanvraag A-1042"></nldd-title-cell>
+			</nldd-list-item>
+		`);
+		await waitForUpdate(el);
+		expect(el.matches(':state(label-without-title)')).toBe(false);
+	});
 });

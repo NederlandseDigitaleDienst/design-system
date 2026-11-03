@@ -27,12 +27,13 @@ import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js'
 import { cellStyles } from './cell.styles.js';
 import { template } from './cell.template.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
+import { RowHeaderMixin } from '../../../../utilities/row-header-mixin.js';
 
 export type CellVerticalAlignment = 'top' | 'center' | 'bottom';
 export type CellHorizontalAlignment = 'left' | 'center' | 'right';
 
 @customElement('nldd-cell')
-export class NLDDCell extends VisibilityMixin(LitElement, 'cells-container') {
+export class NLDDCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = [cellStyles];
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('fit-content') })

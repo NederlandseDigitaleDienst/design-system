@@ -203,6 +203,25 @@ describe('nldd-button-group – gestapeld', () => {
 		await new Promise((resolve) => setTimeout(resolve, 400));
 		expect(el.querySelector('nldd-button-group')!.matches(':state(no-width)')).toBe(true);
 	});
+
+	it('laat het los als de ouder zijn breedte pas na het oordeel geeft', async () => {
+		el = await fixture<HTMLElement>(
+			`<div style="display: inline-flex">
+				<nldd-button-group>
+					<nldd-button text="Bekijk vacature"></nldd-button>
+				</nldd-button-group>
+			</div>`,
+		);
+		const groep = el.querySelector('nldd-button-group') as HTMLElement;
+		await waitForUpdate(groep);
+		await new Promise((resolve) => setTimeout(resolve, 400));
+		expect(groep.matches(':state(no-width)')).toBe(true);
+
+		// Op een pagina die nog laadt, geeft een collection zijn kaarten pas later een breedte.
+		el.style.display = 'block';
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		expect(groep.matches(':state(no-width)')).toBe(false);
+	});
 });
 
 describe('nldd-button-group – width="full"', () => {

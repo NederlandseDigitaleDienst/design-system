@@ -234,7 +234,10 @@ export class NLDDTooltip extends LitElement {
 				});
 				document.body.appendChild(this._descriptionEl);
 			}
-			carryContext(this._descriptionEl, this);
+			// The language for the pronunciation. The description is never seen,
+			// so its color scheme does not matter, and reading it would cost a
+			// style recalculation per tooltip on mount.
+			carryContext(this._descriptionEl, this, { scheme: false });
 			// Hover and focus sync too; write only what changed, so nothing is
 			// re-announced.
 			if (this._descriptionEl.textContent !== description) this._descriptionEl.textContent = description;

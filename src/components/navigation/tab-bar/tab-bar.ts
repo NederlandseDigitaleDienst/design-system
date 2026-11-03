@@ -56,6 +56,7 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddTabBarTranslations } from './tab-bar.i18n.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 
 // # nldd-tab-bar-item
@@ -133,6 +134,7 @@ export class NLDDTabBarItem extends LitElement {
 	}
 
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLElement>('.tab-bar__item')?.focus(options);
 	}
 

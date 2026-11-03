@@ -107,8 +107,18 @@ const Template = ({
 							type="radio"
 						></nldd-menu-item>
 						<nldd-menu-item
+							lang="fy"
+							text="Frysk"
+							type="radio"
+						></nldd-menu-item>
+						<nldd-menu-item
+							lang="pap-AW"
+							text="Papiamento"
+							type="radio"
+						></nldd-menu-item>
+						<nldd-menu-item
+							lang="pap-CW"
 							text="Papiamentu"
-							lang="pap"
 							type="radio"
 						></nldd-menu-item>
 					</nldd-menu>
@@ -202,8 +212,18 @@ export const SmalScherm = {
 								type="radio"
 							></nldd-menu-item>
 							<nldd-menu-item
+								lang="fy"
+								text="Frysk"
+								type="radio"
+							></nldd-menu-item>
+							<nldd-menu-item
+								lang="pap-AW"
+								text="Papiamento"
+								type="radio"
+							></nldd-menu-item>
+							<nldd-menu-item
+								lang="pap-CW"
 								text="Papiamentu"
-								lang="pap"
 								type="radio"
 							></nldd-menu-item>
 						</nldd-menu>
@@ -344,8 +364,18 @@ export const VeelGlobaleItems = {
 								type="radio"
 							></nldd-menu-item>
 							<nldd-menu-item
+								lang="fy"
+								text="Frysk"
+								type="radio"
+							></nldd-menu-item>
+							<nldd-menu-item
+								lang="pap-AW"
+								text="Papiamento"
+								type="radio"
+							></nldd-menu-item>
+							<nldd-menu-item
+								lang="pap-CW"
 								text="Papiamentu"
-								lang="pap"
 								type="radio"
 							></nldd-menu-item>
 						</nldd-menu>

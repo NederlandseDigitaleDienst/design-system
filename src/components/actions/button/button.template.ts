@@ -4,6 +4,7 @@ import { linkRel } from '../../../utilities/link-rel.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
+import { popoverTargetOf } from '../../../utilities/popover-target.js';
 
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;
@@ -157,8 +158,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 			aria-expanded=${ariaExpanded}
 			aria-busy=${ariaBusy}
 			tabindex=${this.noTab ? '-1' : nothing}
-			popovertarget=${this.popovertarget || nothing}
-			.popoverTargetElement=${this.popoverTargetElement}
+			.popoverTargetElement=${popoverTargetOf(this, this.popovertarget, this.popoverTargetElement)}
 			.popoverTargetAction=${this.popoverTargetAction}
 			@pointerdown=${this._popup.handlePointerdown}
 			@click=${helpers.handleClick}

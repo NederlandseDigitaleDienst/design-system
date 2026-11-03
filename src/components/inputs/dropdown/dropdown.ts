@@ -49,6 +49,7 @@ import './../../content/icon/icon.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { setState } from '../../../utilities/element-state.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type DropdownSize = 'xs' | 'sm' | 'md';
 
@@ -259,7 +260,9 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	 * to send focus.
 	 */
 	override focus(options?: FocusOptions): void {
-		this._select?.focus(options);
+		if (deferFocus(this, options)) return;
+		// Right after the first render the slot has not reported the <select> yet.
+		(this._select ?? this.querySelector('select'))?.focus(options);
 	}
 
 	/** The consumer's own <select>, which it slots in the light DOM. */

@@ -7,6 +7,7 @@ import type { QueryMarkMode } from '../../../utilities/render-marked.js';
 import type { NLDDMenu } from './menu.js';
 import { setState } from '../../../utilities/element-state.js';
 import '../../../utilities/custom-element.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 /** Makes `host` a list item while its menu is a navigation menu, and takes
  *  that back when it is not. A `listitem` the consumer set by hand on an item
@@ -146,6 +147,7 @@ export class NLDDMenuItem extends LitElement {
 	}
 
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const focusable = this.shadowRoot?.querySelector<HTMLElement>('button, a');
 		focusable?.focus(options);
 	}

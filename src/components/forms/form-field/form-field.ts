@@ -15,8 +15,8 @@
  * @element nldd-form-field
  *
  * @attr {string} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
- * @attr {string} label - Field label text. Omit for no-label layout.
- * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge.
+ * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
+ * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.
  * @attr {boolean} optional - Shows an optional badge next to the label.
  * @attr {string} optional-label - Text for the optional badge. Defaults to 'Optioneel'.
  * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
@@ -47,6 +47,7 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
+import { stripBold } from '../../../utilities/render-marked.js';
 import { applyDescribedBy, type DescribedElement } from '../../../utilities/described-by-mixin.js';
 import {
 	formFieldStyles,
@@ -258,7 +259,7 @@ export class NLDDFormField extends LitElement {
 				: null;
 		if (!attribute) return;
 
-		this._appliedLabel = setOwnedAttribute(input, attribute, this.label, this._appliedLabel);
+		this._appliedLabel = setOwnedAttribute(input, attribute, stripBold(this.label), this._appliedLabel);
 	}
 
 	/**

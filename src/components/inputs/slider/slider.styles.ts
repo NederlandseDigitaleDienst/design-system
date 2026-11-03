@@ -31,12 +31,14 @@ export const sliderStyles = css`
 		--_slider-thumb-is-hovered-border-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-750));
 		--_slider-thumb-is-active-border-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
 		--_slider-histogram-height: var(--primitives-space-48);
+		--_slider-histogram-track-gap: var(--primitives-space-2);
 		--_slider-histogram-gap: var(--primitives-space-1);
 		--_slider-histogram-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
-		--_slider-histogram-selected-color: color-mix(in oklab, var(--_slider-fill-color) 40%, transparent);
+		--_slider-histogram-selected-color: var(--_slider-fill-color);
 		--_slider-histogram-bar-corner-radius: var(--primitives-space-2);
 		--_slider-histogram-bar-height: 0;
 		--_slider-tooltip-offset: var(--primitives-space-8);
+		--_slider-tooltip-touch-offset: var(--primitives-space-32);
 		--_slider-tooltip-shift: 0px;
 		--_slider-tooltip-background-color: var(--semantics-tooltips-background-color);
 		--_slider-tooltip-content-color: var(--semantics-tooltips-content-color);
@@ -142,16 +144,16 @@ export const sliderStyles = css`
 	/* # Histogram */
 
 	.slider__control.has-histogram {
-		margin-top: calc(var(--_slider-histogram-height) - (var(--_slider-control-height) - var(--_slider-track-height)) / 2);
+		margin-top: calc(var(--_slider-histogram-height) + var(--_slider-histogram-track-gap) - (var(--_slider-control-height) - var(--_slider-track-height)) / 2);
 	}
 
 	.slider__histogram {
 		display: flex;
 		position: absolute;
-		bottom: 50%;
-		inset-inline: 0;
+		bottom: calc(50% + var(--_slider-track-height) / 2 + var(--_slider-histogram-track-gap));
+		inset-inline: calc(var(--_slider-thumb-size) / 2);
 		pointer-events: none;
-		height: calc(var(--_slider-histogram-height) + var(--_slider-track-height) / 2);
+		height: var(--_slider-histogram-height);
 		gap: var(--_slider-histogram-gap);
 		align-items: flex-end;
 	}
@@ -160,7 +162,7 @@ export const sliderStyles = css`
 		border-start-start-radius: var(--_slider-histogram-bar-corner-radius);
 		border-start-end-radius: var(--_slider-histogram-bar-corner-radius);
 		background-color: var(--_slider-histogram-color);
-		height: calc(var(--_slider-track-height) / 2 + var(--_slider-histogram-bar-height) * var(--_slider-histogram-height));
+		height: calc(var(--_slider-histogram-bar-height) * var(--_slider-histogram-height));
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
@@ -296,7 +298,6 @@ export const sliderStyles = css`
 		box-sizing: border-box;
 		position: absolute;
 		z-index: 3;
-		bottom: calc(100% + var(--_slider-tooltip-offset));
 		inset-inline-start: calc(var(--_slider-thumb-size) / 2 + (100% - var(--_slider-thumb-size)) * var(--_slider-end));
 		visibility: hidden;
 		opacity: 0;
@@ -312,6 +313,14 @@ export const sliderStyles = css`
 		white-space: nowrap;
 		transition: opacity var(--_slider-tooltip-transition-duration), visibility var(--_slider-tooltip-transition-duration);
 		transform: translateX(calc(-50% + var(--_slider-tooltip-shift)));
+
+		@media not (pointer: coarse) {
+			bottom: calc(50% + var(--_slider-thumb-size) / 2 + var(--_slider-tooltip-offset));
+		}
+
+		@media (pointer: coarse) {
+			bottom: calc(50% + var(--_slider-tooltip-touch-offset));
+		}
 	}
 
 	:host(:dir(rtl)) .slider__tooltip {
@@ -319,7 +328,7 @@ export const sliderStyles = css`
 	}
 
 	.slider__control.has-histogram .slider__tooltip {
-		bottom: calc(50% + var(--_slider-track-height) / 2 + var(--_slider-histogram-height) + var(--_slider-tooltip-offset));
+		bottom: calc(50% + var(--_slider-track-height) / 2 + var(--_slider-histogram-track-gap) + var(--_slider-histogram-height) + var(--_slider-tooltip-offset));
 	}
 
 	.slider__tooltip--start {
@@ -330,11 +339,11 @@ export const sliderStyles = css`
 		inset-inline-start: calc(var(--_slider-thumb-size) / 2 + (100% - var(--_slider-thumb-size)) * (var(--_slider-start) + var(--_slider-end)) / 2);
 	}
 
-	/* Shown while the pointer is over the slider, a thumb has keyboard focus or
-	   is dragged: each thumb its own, or the two of a range as one where they
-	   would overlap. */
-	.slider:not(.is-merged) .slider__control:is(:hover, .is-active, :has(.slider__input:focus-visible)) :is(.slider__tooltip--value, .slider__tooltip--start, .slider__tooltip--end),
-	.slider.is-merged .slider__control:is(:hover, .is-active, :has(.slider__input:focus-visible)) .slider__tooltip--both {
+	/* Shown while the pointer is over the slider or its icons, a thumb has
+	   keyboard focus or is pressed: each thumb its own, or the two of a range as
+	   one where they would overlap. */
+	.slider:not(.is-merged):is(:hover, :has(.slider__control.is-active, .slider__input:focus-visible)) :is(.slider__tooltip--value, .slider__tooltip--start, .slider__tooltip--end),
+	.slider.is-merged:is(:hover, :has(.slider__control.is-active, .slider__input:focus-visible)) .slider__tooltip--both {
 		visibility: visible;
 		opacity: 1;
 	}

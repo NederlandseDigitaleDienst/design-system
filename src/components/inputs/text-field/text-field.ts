@@ -37,6 +37,7 @@ import { textFieldStyles } from './text-field.styles.js';
 import { textFieldTemplate } from './text-field.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { setState } from '../../../utilities/element-state.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type InputType = 'text' | 'email' | 'tel' | 'url';
 
@@ -228,6 +229,7 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	 * `textFieldEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._input?.focus(options);
 	}
 

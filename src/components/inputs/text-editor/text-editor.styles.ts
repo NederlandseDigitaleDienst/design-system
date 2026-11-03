@@ -58,6 +58,7 @@ export const textEditorStyles = css`
 		--_text-editor-rule-thickness: var(--semantics-dividers-thickness);
 		--_text-editor-quote-border-width: var(--primitives-border-width-regular);
 		--_text-editor-quote-border-color: var(--semantics-content-color);
+		--_text-editor-quote-rule: linear-gradient(var(--_text-editor-quote-border-color), var(--_text-editor-quote-border-color));
 		--_text-editor-rule-color: var(--semantics-dividers-color);
 		--_text-editor-heading-marker-scale: 75%;
 		--_text-editor-token-corner-radius: var(--primitives-corner-radius-sm);
@@ -110,6 +111,33 @@ export const textEditorStyles = css`
 		--_text-editor-mention-token-is-selected-background-color: var(--semantics-mentions-is-selected-background-color);
 		--_text-editor-mention-token-is-selected-content-color: var(--semantics-mentions-is-selected-content-color);
 		--_text-editor-rows: 6;
+		--_text-editor-popup-corner-radius: var(--semantics-overlays-corner-radius);
+		--_text-editor-popup-background-color: var(--semantics-surfaces-base-background-color);
+		--_text-editor-popup-box-shadow: var(--semantics-overlays-box-shadow);
+		--_text-editor-popup-font-family: var(--primitives-font-family-body);
+		--_text-editor-popup-font-size: var(--primitives-font-size-100);
+		--_text-editor-popup-min-width: var(--primitives-area-280);
+		--_text-editor-popup-max-height: 14em;
+		--_text-editor-popup-padding: var(--primitives-space-8);
+		--_text-editor-popup-row-min-height: var(--semantics-controls-sm-min-size);
+		--_text-editor-popup-row-gap: var(--primitives-space-8);
+		--_text-editor-popup-row-padding-block: var(--primitives-space-4);
+		--_text-editor-popup-row-padding-inline: var(--primitives-space-8);
+		--_text-editor-popup-row-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_text-editor-popup-row-content-color: var(--semantics-content-color);
+		--_text-editor-popup-row-is-highlighted-background-color: var(--semantics-list-items-is-highlighted-background-color);
+		--_text-editor-popup-row-is-highlighted-content-color: var(--semantics-list-items-is-highlighted-content-color);
+		--_text-editor-popup-row-is-hovered-background-color: var(--semantics-list-items-is-hovered-background-color);
+		--_text-editor-popup-row-is-hovered-content-color: var(--semantics-list-items-is-hovered-content-color);
+		--_text-editor-popup-avatar-row-min-height: var(--semantics-controls-md-min-size);
+		--_text-editor-popup-text-font: var(--primitives-font-body-md-regular-tight);
+		--_text-editor-popup-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
+		--_text-editor-popup-supporting-text-color: var(--semantics-content-secondary-color);
+		--_text-editor-popup-symbol-size: var(--primitives-space-20);
+		--_text-editor-popup-message-max-width: var(--primitives-area-400);
+		--_text-editor-popup-message-padding-block: var(--primitives-space-12);
+		--_text-editor-popup-message-padding-inline: var(--primitives-space-16);
+		--_text-editor-popup-message-color: var(--semantics-content-secondary-color);
 
 		${inheritedTextReset}
 		display: flex;
@@ -123,6 +151,12 @@ export const textEditorStyles = css`
 
 	:host([hidden]) {
 		display: none;
+	}
+
+	@media (pointer: coarse) {
+		:host {
+			--_text-editor-popup-row-min-height: var(--semantics-controls-md-min-size);
+		}
 	}
 
 
@@ -200,6 +234,24 @@ export const textEditorStyles = css`
 		padding-block: var(--_text-editor-padding-block);
 		padding-right: var(--_text-editor-padding-inline);
 		min-height: calc(var(--_text-editor-rows) * 1lh);
+	}
+
+	/* drawSelection() keeps drawing its own cursors; .cm-nldd-cursorLayer takes
+	   over, with the blink CodeMirror gives its own layer. */
+	:host .cm-cursorLayer {
+		display: none;
+	}
+
+	:host .cm-nldd-cursorLayer {
+		pointer-events: none;
+	}
+
+	:host .cm-editor.cm-focused > .cm-scroller > .cm-nldd-cursorLayer {
+		animation: steps(1) cm-blink 1.2s infinite;
+	}
+
+	:host .cm-editor.cm-focused > .cm-scroller > .cm-nldd-cursorLayer .cm-cursor {
+		display: block;
 	}
 
 	/* Read-only, like a native read-only field: select and copy, but no caret. */
@@ -510,10 +562,12 @@ export const textEditorStyles = css`
 	/* A gradient, not an inset shadow with an offset: iOS Safari leaves a hairline
 	   of such a shadow along the bottom of a line with a fractional height. */
 	.cm-md-quote-line {
-		background-image: linear-gradient(var(--_text-editor-quote-border-color), var(--_text-editor-quote-border-color));
 		background-repeat: no-repeat;
-		background-position: left;
 		background-size: var(--_text-editor-quote-border-width) 100%;
+	}
+
+	.cm-md-quote-gap {
+		padding-inline-end: var(--_text-editor-marker-advance);
 	}
 
 	:host .cm-md-quote-mark-hidden,
@@ -659,6 +713,137 @@ export const textEditorStyles = css`
 	.cm-md-listprefix * {
 		font-family: var(--_text-editor-code-font-family);
 		font-size: var(--_text-editor-marker-font-size);
+	}
+
+
+	/* # Typeahead popup */
+
+	/* Only a frame in the top layer for CodeMirror's tooltips, which place
+	   themselves against the window: no surface that would swallow a click. */
+	:host .cm-nldd-popups {
+		position: fixed;
+		inset: 0;
+		width: auto;
+		height: auto;
+		margin: 0;
+		border: none;
+		padding: 0;
+		background: none;
+		overflow: visible;
+		pointer-events: none;
+	}
+
+	:host .cm-nldd-popups .cm-tooltip {
+		pointer-events: auto;
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete,
+	:host .cm-tooltip.cm-nldd-typeahead-empty {
+		box-sizing: border-box;
+		border: none;
+		border-radius: var(--_text-editor-popup-corner-radius);
+		box-shadow: var(--_text-editor-popup-box-shadow);
+		background-color: var(--_text-editor-popup-background-color);
+	}
+
+	/* The .cm-tooltip prefix matches CodeMirror's specificity, so these beat its
+	   monospace font and cramped rows. */
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul {
+		box-sizing: border-box;
+		margin: 0;
+		padding: var(--_text-editor-popup-padding);
+		min-width: var(--_text-editor-popup-min-width);
+		max-height: var(--_text-editor-popup-max-height);
+		font-family: var(--_text-editor-popup-font-family);
+		font-size: var(--_text-editor-popup-font-size);
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li {
+		box-sizing: border-box;
+		display: flex;
+		border-radius: var(--_text-editor-popup-row-corner-radius);
+		min-height: var(--_text-editor-popup-row-min-height);
+		padding: var(--_text-editor-popup-row-padding-block) var(--_text-editor-popup-row-padding-inline);
+		align-items: center;
+		gap: var(--_text-editor-popup-row-gap);
+		color: var(--_text-editor-popup-row-content-color);
+		cursor: default;
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li > :is(nldd-avatar, nldd-icon, .cm-nldd-symbol) {
+		flex: none;
+	}
+
+	:host .cm-nldd-symbol {
+		display: inline-flex;
+		inline-size: var(--_text-editor-popup-symbol-size);
+		justify-content: center;
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li.cm-nldd-row-avatar {
+		display: grid;
+		min-height: var(--_text-editor-popup-avatar-row-min-height);
+		grid-template-columns: auto minmax(0, 1fr);
+		align-content: center;
+		row-gap: 0;
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li.cm-nldd-row-avatar > nldd-avatar {
+		grid-row: span 2;
+		align-self: center;
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li.cm-nldd-row-avatar > .cm-completionLabel {
+		grid-column: 2;
+		font: var(--_text-editor-popup-text-font);
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li.cm-nldd-row-avatar > .cm-completionDetail {
+		grid-column: 2;
+		margin-left: 0;
+		font: var(--_text-editor-popup-supporting-text-font);
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected] {
+		background-color: var(--_text-editor-popup-row-is-highlighted-background-color);
+		color: var(--_text-editor-popup-row-is-highlighted-content-color);
+	}
+
+	/* CodeMirror keeps the keyboard choice selected under the pointer, so hover
+	   gets a quieter look and only on the other rows. */
+	@media (hover: hover) {
+		:host .cm-tooltip.cm-tooltip-autocomplete > ul > li:not([aria-selected]):hover {
+			background-color: var(--_text-editor-popup-row-is-hovered-background-color);
+			color: var(--_text-editor-popup-row-is-hovered-content-color);
+		}
+	}
+
+	:host .cm-completionDetail {
+		margin-left: auto;
+		color: var(--_text-editor-popup-supporting-text-color);
+		font-style: normal;
+	}
+
+	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected] .cm-completionDetail {
+		color: inherit;
+	}
+
+	:host .cm-nldd-typeahead-status {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	:host .cm-tooltip.cm-nldd-typeahead-empty {
+		min-width: var(--_text-editor-popup-min-width);
+		max-width: var(--_text-editor-popup-message-max-width);
+		padding: var(--_text-editor-popup-message-padding-block) var(--_text-editor-popup-message-padding-inline);
+		color: var(--_text-editor-popup-message-color);
+		font-family: var(--_text-editor-popup-font-family);
+		font-size: var(--_text-editor-popup-font-size);
 	}
 
 

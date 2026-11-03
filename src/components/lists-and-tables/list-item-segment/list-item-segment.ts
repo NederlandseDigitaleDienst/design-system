@@ -9,6 +9,8 @@ import type { NLDDList } from '../list/list.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { nlddListItemSegmentTranslations } from './list-item-segment.i18n.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
+import { popoverTargetOf } from '../../../utilities/popover-target.js';
 
 export type ListItemSegmentWidth = 'fit-content' | 'full';
 
@@ -51,7 +53,7 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
  * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded.
  * @attr {string} popup-type - Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render.
- * @attr {string} popovertarget - ID of a popover this segment toggles; forwarded to the inner button. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.
+ * @attr {string} popovertarget - ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.
  * @attr {boolean} current - Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
  * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value of a `current` segment (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
  * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
@@ -220,6 +222,11 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 			e.stopPropagation();
 			return;
 		}
+		// Before the browser's own toggle, which runs after this listener: a
+		// popover rendered after the segment was not there on its last render.
+		if (this._control instanceof HTMLButtonElement) {
+			this._control.popoverTargetElement = popoverTargetOf(this, this.popovertarget, this.popoverTargetElement);
+		}
 		// Safari and Firefox on Mac don't focus buttons on click. Force focus so
 		// the :focus-visible styling below stays reliable.
 		this._control?.focus();
@@ -277,6 +284,7 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 
 	/** Delegates focus to the inner control so consumers needn't reach into shadow DOM. */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._control?.focus(options);
 	}
 
@@ -304,8 +312,7 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 			this.accessibleLabel,
 			this._tabbable === undefined ? undefined : (this._tabbable ? '0' : '-1'),
 			this.popupType,
-			this.popovertarget,
-			this.popoverTargetElement,
+			popoverTargetOf(this, this.popovertarget, this.popoverTargetElement),
 			this.popoverTargetAction,
 			hintKey ? this._t(`components.list-item-segment.${hintKey}`) : '',
 		);

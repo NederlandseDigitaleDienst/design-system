@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-top-title-bar:state(anchor-not-heading)'
+message: '`collapse-anchor` points at an element that is no heading and holds none. The bar keeps its own title as the heading, so the page has one, but a screen reader now finds the title twice. Point the anchor at the nldd-title that starts the content.'

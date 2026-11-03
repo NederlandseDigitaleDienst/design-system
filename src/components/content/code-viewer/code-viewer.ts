@@ -69,6 +69,7 @@ import '../../actions/icon-button/icon-button.js';
 import '../tooltip/tooltip.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 
@@ -190,6 +191,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	 * announces — but only when it's actually scrollable (focusable); otherwise
 	 * there's nothing to focus, so no-op. */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const scroller = this.view?.scrollDOM;
 		if (this._isScrollable && scroller) scroller.focus(options);
 	}

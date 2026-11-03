@@ -15,10 +15,10 @@ export const nlddDateFieldTranslations = {
 	'components.date-field.range-to-short-lowercase-label': 't/m',
 	// Validation messages the field reports to the form. {date} is a bound in
 	// the notation the field shows.
-	'components.date-field.bad-input-error-text': 'Vul een datum in als dd-mm-jjjj',
-	'components.date-field.range-underflow-error-text': 'Vul een datum in vanaf {date}',
-	'components.date-field.range-overflow-error-text': 'Vul een datum in tot en met {date}',
-	'components.date-field.range-incomplete-error-text': 'Vul ook de einddatum in',
+	'components.date-field.bad-input-error-text': 'Een datum als dd-mm-jjjj',
+	'components.date-field.range-underflow-error-text': 'Een datum vanaf {date}',
+	'components.date-field.range-overflow-error-text': 'Een datum tot en met {date}',
+	'components.date-field.range-incomplete-error-text': 'De einddatum ontbreekt',
 };
 
 export type NLDDDateFieldTranslations = typeof nlddDateFieldTranslations;

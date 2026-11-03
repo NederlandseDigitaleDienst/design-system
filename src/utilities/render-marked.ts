@@ -12,6 +12,11 @@ export function renderBold(text: string): TemplateResult | string {
 	return html`${parts.map((part, i) => i % 2 === 1 ? html`<b>${part}</b>` : part)}`;
 }
 
+/** The text of `**bold**` markdown without its markers, for an accessible name. */
+export function stripBold(text: string): string {
+	return text.replace(/\*\*(.+?)\*\*/g, '$1');
+}
+
 /**
  * Renders text with the query (or its complement) wrapped in `<b>`, based on `mode`.
  *

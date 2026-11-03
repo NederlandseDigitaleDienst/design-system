@@ -82,7 +82,7 @@ import { translate } from '../../../utilities/translations.js';
 
 /** Delay before the indicator fades in. Brief loading states finish within
  *  this window and the indicator is never shown — avoids a jarring flash. */
-const DELAY_MS = 1000;
+const SHOW_DELAY_MS = 1000;
 
 export type ActivityIndicatorSize =
 	'16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
@@ -103,7 +103,7 @@ export class NLDDActivityIndicator extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	/** 'delay' waits {@link DELAY_MS} before showing; 'instant' shows
+	/** 'delay' waits {@link SHOW_DELAY_MS} before showing; 'instant' shows
 	 *  immediately. The fade-in plays either way. */
 	@property({ reflect: true, converter: reflectNonDefault<ActivityIndicatorTiming>('delay') })
 	timing: ActivityIndicatorTiming = 'delay';
@@ -195,7 +195,7 @@ export class NLDDActivityIndicator extends LitElement {
 		this._delayTimeout = setTimeout(() => {
 			this._visible = true;
 			this._delayTimeout = undefined;
-		}, DELAY_MS);
+		}, SHOW_DELAY_MS);
 	}
 
 	/** A polite live region (role="status") while loading; cleared when

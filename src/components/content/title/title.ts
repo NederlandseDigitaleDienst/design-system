@@ -10,6 +10,14 @@
  * it. Each of the three has a slot in the same place for content that is more
  * than text, and a filled slot takes the place of the attribute.
  *
+ * A word too long for the line is hyphenated by syllable, with the `lang` of
+ * the page: only a word of at least 12 letters, with at least 5 on each side, so
+ * a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a
+ * place to break of your own, also where the browser has no dictionary for the
+ * language: `overheids&shy;informatie`, or `\u00AD` in a string set from
+ * script, where an entity is not read. Most browsers then break that word only
+ * there; Safari may still pick a syllable of its own.
+ *
  * @element nldd-title
  *
  * @attr {number} size - Visual size of the title: 1–6 (default: 3)

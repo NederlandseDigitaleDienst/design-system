@@ -50,6 +50,11 @@ jobs:
       - name: Test reference generator
         run: npm run test:scripts
 
+      # The changelog skill fixes the order of the sections, Highlights first,
+      # but a rule in prose was broken in half the blocks before this ran.
+      - name: Validate changelog sections
+        run: npm run validate:changelog
+
       # The drift check below compares generated output against generated
       # output, so it cannot see a property that never reached the JSDoc. This
       # one compares the other way round: from the @property decorators to the

@@ -1613,6 +1613,49 @@ describe('nldd-menu drill-in chain', () => {
 		cleanup(root);
 	});
 
+	it('a slotted menu closes from a submenu when its nldd-button is clicked', async () => {
+		// The button opens what it saw closed on pointerdown. In drill-in the
+		// root is hidden behind the submenu, so it must still count as open.
+		const root = await fixture<HTMLElement>(`
+			<nldd-button text="Open menu">
+				<nldd-menu slot="popup">
+					<nldd-menu-item text="L1">
+						<nldd-menu>
+							<nldd-menu-item text="L2"></nldd-menu-item>
+						</nldd-menu>
+					</nldd-menu-item>
+				</nldd-menu>
+			</nldd-button>
+		`);
+		await waitForUpdate(root);
+		const inner = root.shadowRoot!.querySelector('button') as HTMLButtonElement;
+		const menu = root.querySelector('nldd-menu') as HTMLElement & { showPopover(): void };
+		const l1Item = menu.querySelector(':scope > nldd-menu-item') as HTMLElement;
+		const l2Menu = l1Item.querySelector(':scope > nldd-menu') as HTMLElement;
+
+		menu.showPopover();
+		await waitForUpdate(root);
+		openSubmenu(menu, l1Item, l2Menu);
+		await waitForUpdate(root);
+		expect(l2Menu.matches(':popover-open')).toBe(true);
+
+		inner.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, pointerType: 'mouse' }));
+		await waitForUpdate(root);
+		inner.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
+		await waitForUpdate(root);
+
+		expect(menu.matches(':popover-open')).toBe(false);
+		expect(l2Menu.matches(':popover-open')).toBe(false);
+
+		// The marker is gone, so the next click opens the menu again.
+		inner.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, pointerType: 'mouse' }));
+		inner.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
+		await waitForUpdate(root);
+		expect(menu.matches(':popover-open')).toBe(true);
+
+		cleanup(root);
+	});
+
 	it('root-only drill-in: anchor click closes (no bounce) and a later click reopens', async () => {
 		// Contract for a root drill-in menu with no submenu. The anchor
 		// click must close it via the click handler's collapse-and-return

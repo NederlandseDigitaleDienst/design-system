@@ -33,6 +33,7 @@ import { checkboxStyles } from './checkbox.styles.js';
 import { checkboxTemplate } from './checkbox.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 @customElement('nldd-checkbox')
 export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
@@ -139,6 +140,7 @@ export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
 	 * call `checkboxEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLInputElement>('.checkbox__input')?.focus(options);
 	}
 

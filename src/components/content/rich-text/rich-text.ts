@@ -63,7 +63,10 @@
  *   language information the browser does not hyphenate. An
  *   `overflow-wrap: break-word` safety net on headings, p and li is always on,
  *   independent of this attribute, so a word wider than the column breaks
- *   instead of overflowing, without a hyphen; headings never get one.
+ *   instead of overflowing. Headings are hyphenated regardless of this
+ *   attribute, but only a word of at least 12 letters, as in `nldd-title`, so
+ *   a short word moves to the next line whole. A soft hyphen (`&shy;`) adds
+ *   a place to break of your own.
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';

@@ -59,6 +59,7 @@ import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js'
 import { textCellStyles } from './text-cell.styles.js';
 import { template } from './text-cell.template.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
+import { RowHeaderMixin } from '../../../../utilities/row-header-mixin.js';
 import type { QueryMarkMode } from '../../../../utilities/render-marked.js';
 
 type Size = 'sm' | 'md';
@@ -67,7 +68,7 @@ type HorizontalAlignment = 'left' | 'center' | 'right';
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 
 @customElement('nldd-text-cell')
-export class NLDDTextCell extends VisibilityMixin(LitElement, 'cells-container') {
+export class NLDDTextCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = [textCellStyles];
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })

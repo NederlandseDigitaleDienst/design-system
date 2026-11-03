@@ -22,10 +22,20 @@
  * For a custom focus target inside the popover, put `autofocus` on the child you
  * want. Without it the popover host itself takes focus.
  *
- * On sm the popover is a bottom sheet that closes with Escape or a tap outside
- * it. Where that is not enough, give its content a title bar of its own, as in a
- * sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The
- * popover catches the dismiss of that bar and closes. It draws no bar itself.
+ * On md and up the popover closes with Escape or a click outside it, and that
+ * click goes on to what it lands on, as with any native popover: the page has
+ * no backdrop and stays in use, so a click on another control does what it
+ * says in one go. It needs no close button of its own. Content that does, because
+ * a stray click must not close it (a form, a few steps, work you would lose),
+ * is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education
+ * is the exception, a manual popover that stays until it is dismissed.
+ *
+ * On sm the popover is a bottom sheet with a dimmed backdrop, which closes with
+ * Escape or a tap outside it. That tap stops at the backdrop, as on every
+ * native sheet: the dimming says the page is out of play. Where that is not
+ * enough, give its content a title bar of its own, as in a sheet: an nldd-page
+ * with an nldd-top-title-bar and a `dismiss-text`. The popover catches the
+ * dismiss of that bar and closes. It draws no bar itself.
  *
  * @element nldd-popover
  *
@@ -540,8 +550,12 @@ export class NLDDPopover extends LitElement {
 		// browser's default activation behavior already toggles us. Running
 		// our own toggle here would invert the state right after, leaving
 		// the popover in the wrong final state.
-		const popovertarget = anchorEl.getAttribute('popovertarget');
+		const popovertarget = anchorEl.getAttribute('popovertarget')
+			?? (anchorEl as { popovertarget?: string }).popovertarget;
 		if (popovertarget && this.id && popovertarget === this.id) return;
+		// The same when the anchor names this popover by element, as nldd-button
+		// does with popoverTargetElement: the browser toggles it already.
+		if ((anchorEl as { popoverTargetElement?: Element | null }).popoverTargetElement === this) return;
 		// Native light-dismiss fires on pointerdown and closes the popover
 		// before the click arrives. Without this guard the click would
 		// immediately reopen it.

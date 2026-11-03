@@ -39,6 +39,15 @@ export const menuBarStyles = css`
 
 	/* # Elements */
 
+	.menu-bar__list {
+		display: flex;
+		min-width: 0;
+		flex-direction: row;
+		flex-grow: 1;
+		flex-shrink: 1;
+		align-items: center;
+	}
+
 	.menu-bar__overflow-button {
 		display: none;
 	}

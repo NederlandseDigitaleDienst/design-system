@@ -1,5 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events -- label delegates to inner input */
 import { html, nothing, TemplateResult } from 'lit';
+import { renderBold } from '../../../utilities/render-marked.js';
 import type { NLDDFormField } from './form-field.js';
 import type { NLDDFormFieldHelpText } from './form-field.js';
 
@@ -22,12 +23,12 @@ export function formFieldTemplate(component: NLDDFormField): TemplateResult {
 				<label class="form-field__label"
 					@click=${(e: Event) => component._focusInput(e)}
 				>
-					${component.label}
+					<span>${renderBold(component.label)}</span>
 					${component.optional ? renderOptional(component.optionalLabel) : nothing}
 				</label>
 			` : nothing}
 			${hasSupportingLabel ? html`
-				<span class="form-field__supporting-label">${component.supportingLabel}</span>
+				<span class="form-field__supporting-label">${renderBold(component.supportingLabel)}</span>
 			` : nothing}
 		</div>
 	`;

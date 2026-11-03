@@ -743,7 +743,7 @@
               },
               "default": "undefined",
               "fieldName": "popovertarget",
-              "description": "ID of a popover element this button invokes; forwarded to the inner button. Use the popoverTargetElement property instead when the popover lives in another tree."
+              "description": "ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree."
             },
             {
               "name": "loading",
@@ -1461,7 +1461,7 @@
               },
               "default": "undefined",
               "fieldName": "popovertarget",
-              "description": "ID of a popover element to toggle; forwarded to the inner <button>"
+              "description": "ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element."
             },
             {
               "name": "text",
@@ -6503,7 +6503,7 @@
               },
               "default": "false",
               "fieldName": "hyphens",
-              "description": "Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing, without a hyphen; headings never get one."
+              "description": "Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own."
             }
           ],
           "superclass": {
@@ -6864,7 +6864,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. `size` is how it looks, `heading-level` what it is, and the two are set apart. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text, and a filled slot takes the place of the attribute.",
+          "description": "A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. `size` is how it looks, `heading-level` what it is, and the two are set apart. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text, and a filled slot takes the place of the attribute. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.",
           "name": "NLDDTitle",
           "members": [
             {
@@ -7729,7 +7729,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Field label text. Omit for no-label layout.",
+              "description": "Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.",
               "fieldName": "label"
             },
             {
@@ -7738,7 +7738,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Short supporting text below the label. Same typography as optional badge.",
+              "description": "Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.",
               "fieldName": "supportingLabel"
             },
             {
@@ -8186,7 +8186,7 @@
         },
         {
           "kind": "class",
-          "description": "Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a value has to satisfy, in one list. A requirement you can state up front is an item with a rule, and it checks itself while you type. One only a server can decide is an item without a rule, and the app names it in `unmet` on the control. The list has two modes and `judging` is the switch. Before a verdict it shows its hints, which are the requirements of the field. After one it shows everything the value does not satisfy, and the hints are gone. It throws that switch itself the moment its control turns `invalid`, so when the field is judged is the consumer's decision, and the right moment is on submit. Hints are off by default. A phone number does not need its format spelled out before anyone has typed, while the rules for a password do. There are no checkmarks. The control already shows a validation icon of its own, and repeating that per line says the same thing three times.",
+          "description": "Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a value has to satisfy, in one list. A requirement you can state up front is an item with a rule, and it checks itself while you type. One only a server can decide is an item without a rule, and the app names it in `unmet` on the control. The list has two modes and `judging` is the switch. Before a verdict it shows its hints, which are the requirements of the field. After one it shows everything the value does not satisfy, and the hints are gone. It throws that switch itself the moment its control turns `invalid`, so when the field is judged is the consumer's decision, and the right moment is on submit. Hints are off by default. A phone number does not need its format spelled out before anyone has typed, while the rules for a password do. There are no checkmarks. The control already shows a validation icon of its own, and repeating that per line says the same thing three times. A field can be `invalid` while no item fails: the browser rejects `naam@` as an e-mail address, and a `match=\"@\"` item passes it. The list then says what it can itself, so a field never turns red without a reason under it. It reads the control's `validity` and names what is wrong (an invalid e-mail or web address, an empty required field, too short, too long, too low, too high), and says \"Dit klopt nog niet.\" when it cannot tell. An item of your own that fails always wins over this line. The line is an nldd-validation-item the list adds to its own children while it is needed, so nldd-form-field reads it to the control as it does every other item: a line in the list's shadow root would be out of its reach.",
           "name": "NLDDValidationList",
           "members": [
             {
@@ -8236,6 +8236,15 @@
                 "text": "string | undefined"
               },
               "description": "The value to check, when there is no control to read it from."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<NLDDValidationListTranslations>"
+              },
+              "default": "{}",
+              "attribute": "translations"
             }
           ],
           "attributes": [
@@ -8265,6 +8274,15 @@
               "default": "false",
               "description": "Drop the hints, because this field has been judged. Turned on by the list itself once its control is `invalid`, and settable by hand. What turns red follows `invalid`, not this.",
               "fieldName": "judging"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<NLDDValidationListTranslations>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "description": "Override translation keys (the line the list shows when the field is invalid and no item fails); unset keys fall back to Dutch."
             }
           ],
           "superclass": {
@@ -10971,7 +10989,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu with nldd-menu-item children to provide options. The slotted nldd-menu keeps its default focus behavior (menu container receives focus) so that typing keeps focus on the input. The picker button moves focus to the menu explicitly on activation. Note: Only nldd-menu-item type=\"button\" is supported. Radio and checkbox types are not supported in this context.",
+          "description": "A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu with nldd-menu-item children to provide options. After typing, a screen reader hears how many options are shown (\"2 resultaten\"), or the empty text when none are, also for options that a server sends in later. Only the number it lands on: it waits until the options settle. The slotted nldd-menu keeps its default focus behavior (menu container receives focus) so that typing keeps focus on the input. The picker button moves focus to the menu explicitly on activation. Note: Only nldd-menu-item type=\"button\" is supported. Radio and checkbox types are not supported in this context.",
           "name": "NLDDComboBox",
           "members": [
             {
@@ -13311,6 +13329,24 @@
         },
         {
           "kind": "function",
+          "name": "readDrop",
+          "return": {
+            "type": {
+              "text": "Promise<DroppedFile[]>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "transfer",
+              "type": {
+                "text": "DataTransfer"
+              }
+            }
+          ],
+          "description": "Every file in a drop, folders read down to the files in them, with paths.\n\nThe entries have to be taken while the drop event runs: once its handler\nreturns, the DataTransfer is emptied. Reading a folder is asynchronous, and a\nreader hands out its entries in batches (100 in Chrome), so it is read until\na batch comes back empty. An empty folder yields nothing."
+        },
+        {
+          "kind": "function",
           "name": "carriesFiles",
           "return": {
             "type": {
@@ -13393,6 +13429,14 @@
           "name": "holdsFolder",
           "declaration": {
             "name": "holdsFolder",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "readDrop",
+          "declaration": {
+            "name": "readDrop",
             "module": "src/components/inputs/file-field/file-field.drop.ts"
           }
         },
@@ -13494,6 +13538,67 @@
         },
         {
           "kind": "function",
+          "name": "truncateMiddleToFit",
+          "return": {
+            "type": {
+              "text": "{ text: string; truncated: boolean }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "fits",
+              "type": {
+                "text": "(text: string) => boolean"
+              }
+            },
+            {
+              "name": "{ keepExtension = true }",
+              "default": "{}",
+              "type": {
+                "text": "{ keepExtension?: boolean }"
+              }
+            }
+          ],
+          "description": "The name as it fits where `fits` says, cut as `truncateMiddle` cuts it. With\n`keepExtension` off, as for a folder, a dot in the name is no extension."
+        },
+        {
+          "kind": "function",
+          "name": "lineFitter",
+          "return": {
+            "type": {
+              "text": "{ fits: (text: string) => boolean; done: () => void }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "container",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "lines",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Tells whether text fits in `lines` lines of `width`, wrapped the way\n`container` wraps it: anywhere, as a file name has few spaces. Call `done`\nafter."
+        },
+        {
+          "kind": "function",
           "name": "textMeasurer",
           "return": {
             "type": {
@@ -13538,6 +13643,22 @@
         },
         {
           "kind": "js",
+          "name": "truncateMiddleToFit",
+          "declaration": {
+            "name": "truncateMiddleToFit",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "lineFitter",
+          "declaration": {
+            "name": "lineFitter",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "textMeasurer",
           "declaration": {
             "name": "textMeasurer",
@@ -13552,7 +13673,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, \"Bestand kiezen of sleep het hierheen\", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view (\"Screenshot 20…at 13.12.21.png\"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: \"Sleep één bestand\", or what `accept` takes, named from it (\"Het bestand moet een PDF zijn\"; \"Dit bestandstype past niet\" where a type in it has no name). A dropped folder is refused as well (\"Sleep een bestand, geen map\"): it arrives as a file without a type that cannot be read, and only the drop tells it apart, not the drag. The message stays for a few seconds and then gives way to the field again. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event. `variant=\"area\"` lays the same field out as a tall surface, for a page where handing in files is the main task. Empty, it shows an upload icon, the sentence and the types it takes (\"Toegestaan: PDF of JPG\"), named from `accept`; with a file, the icon of its format, its name and the buttons \"Wijzigen\" and \"Wis selectie\" stacked in the middle. Both states have the same height, so the page does not move when a file is chosen.",
+          "description": "A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, \"Bestand kiezen of sleep het hierheen\", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view (\"Screenshot 20…at 13.12.21.png\"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: \"Sleep één bestand\", or what `accept` takes, named from it (\"Alleen PDF\"; \"Bestandstype past niet\" where a type in it has no name). The message stays for a few seconds and then gives way to the field again. While it shows, the message is a button of its own over the whole field, \"Alleen PDF, sluit melding, Bijlage\" to a screen reader: a press on it, or Enter, Space or Escape, dismisses it and puts focus on the button of the field again. A field that had focus when the message came gives it to the message, so focus does not fall back to the page. With `multiple`, a dropped folder is read down to the files in it, its subfolders included, and mixed with loose files in one drop if need be. The field then names the folder (\"site (124 bestanden)\", also \"site (1 bestand)\" for one), `paths` says where each file sat (\"site/css/main.css\"), and a form submits each file with its path as its name, as a native folder input does, so two files with one name in different folders stay apart. `accept` holds for every file in it. Without `multiple` a folder is refused (\"Sleep bestand, geen map\"): one file cannot be a folder. Only a drop tells a folder apart, not the drag. A folder that takes longer than a second to read shows the field empty with an `nldd-activity-indicator` (\"Laden\" in an area, the circle alone otherwise), as what was chosen gives way to it. An empty or unreadable folder is refused as any other drop, and the previous choice comes back after the message. `directory` offers a folder in the file dialog too. A dialog picks files or a folder, never both, so with it the field says \"Bestanden of map kiezen\" and a click opens a menu with both where it lands, as a context menu does; the keyboard opens it under the button. An area has room for both, so there it shows \"Bestanden kiezen\" and \"Map kiezen\" as two buttons with the drop hint under them, and the surface around them only takes a drop. \"Wijzigen\" opens the menu under itself. A folder is many files, so `directory` takes several without `multiple`. Safari on iOS picks a folder as well; a browser that cannot opens a dialog for files instead. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. A control reserves the height of every text it can show, so fields of a size are as tall at one width, empty or with a file. Only a field with `directory` reserves the sentence that offers a folder, the longest of them. The name takes the lines that leaves it, and is cut in the middle only once those are full. A narrow field makes more room: below 320px \"Wijzigen\" and \"Wis selectie\" go in one menu behind \"Toon opties\" and a folder is counted as \"site (3)\", below 240px it leaves out the icon of the format. A refused drop says why in place of the name and the buttons, and an area shows its upload icon in red with it, as it did while the drop was refused. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event. `variant=\"area\"` lays the same field out as a tall surface, for a page where handing in files is the main task. Empty, it shows an upload icon, the sentence and the types it takes (\"Toegestaan: PDF of JPG\"), named from `accept`; with a file, the icon of its format (a folder for a folder, a stack for several files), its name and the buttons \"Wijzigen\" and \"Wis selectie\" stacked in the middle. Both states have the same height, so the page does not move when a file is chosen: 160px, 120px at `size=\"sm\"`, and a step more with `directory`, whose buttons take a row of their own. Where those buttons no longer fit side by side, below 360px or 300px at `size=\"sm\"`, it is one step taller again.",
           "name": "NLDDFileField",
           "members": [
             {
@@ -13603,6 +13724,17 @@
               },
               "default": "false",
               "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "directory",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Offers a folder beside files: choosing opens a menu with both.",
+              "attribute": "directory",
               "reflects": true
             },
             {
@@ -13692,6 +13824,15 @@
               "readonly": true
             },
             {
+              "kind": "field",
+              "name": "paths",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "Where each file sat: its name, or for a file from a dropped folder the\npath from that folder down (\"site/css/main.css\"). Same order as `files`.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "formValue",
               "return": {
@@ -13699,7 +13840,7 @@
                   "text": "FormValue"
                 }
               },
-              "description": "Submit one entry per file under `name`, the way a native multiple file\ninput does. A single file is submitted as itself, so a form with one file\nreads back as a File rather than as FormData wrapping one.",
+              "description": "Submit one entry per file under `name`, the way a native multiple file\ninput does. A single file is submitted as itself, so a form with one file\nreads back as a File rather than as FormData wrapping one. A file from a\ndropped folder goes with its path as its file name, which is how a native\nfolder input submits it too.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -13726,7 +13867,8 @@
                 "type": {
                   "text": "void"
                 }
-              }
+              },
+              "description": "Back to empty, as a clear, but without a change event, as a native\ninput resets: a folder still being read is dropped too."
             },
             {
               "kind": "method",
@@ -13913,7 +14055,7 @@
           "events": [
             {
               "name": "change",
-              "description": "When the chosen files change, including a clear; detail: { files: File[] }"
+              "description": "When the chosen files change, including a clear; detail: { files: File[], paths: string[] }"
             }
           ],
           "attributes": [
@@ -13957,7 +14099,16 @@
               },
               "default": "false",
               "fieldName": "multiple",
-              "description": "Allows choosing more than one file"
+              "description": "Allows choosing more than one file, and dropping a folder"
+            },
+            {
+              "name": "directory",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Offers a folder beside files, since one dialog picks either: choosing and changing open a menu with both, and an area shows a button for each. Takes several files, as `multiple` does",
+              "fieldName": "directory"
             },
             {
               "name": "accessible-label",
@@ -18750,7 +18901,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter (\"a price between …\"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader (\"Prijs, minimum\"), and a press on the track moves the nearer thumb there. The thumbs do not pass each other; where they lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider, while a thumb has keyboard focus and while it is dragged; with `tooltip-timing=\"never\"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one (\"200 – 1.200\"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \\`€ ${value}\\``; without it the number is written the Dutch way. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.",
+          "description": "A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter (\"a price between …\"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader (\"Prijs, minimum\"), and a press on the track moves the nearer thumb there. The thumbs do not pass each other; where they lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider or its icons, while a thumb has keyboard focus and while it or an icon is pressed; with `tooltip-timing=\"never\"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one (\"200 – 1.200\"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \\`€ ${value}\\``; without it the number is written in the language of the page (`lang`), and in Dutch where none is set. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. A larger step than the arrow keys take is a tenth of the range, and at least one `step`: what Page Up and Page Down do, what Shift with an arrow key does (a Mac keyboard has no Page Up), and what a click on `start-icon` or `end-icon` does. The icons stay out of the tab order and out of the accessibility tree, because the keyboard already has those keys. In a range they only explain the ends, since a click could not say which thumb to move. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.",
           "name": "NLDDSlider",
           "members": [
             {
@@ -18951,7 +19102,8 @@
                 "type": {
                   "text": "void"
                 }
-              }
+              },
+              "description": "Back to the values in the attributes, as a native input resets to its\n`value` attribute, or else to what it had when it was first connected."
             },
             {
               "kind": "method",
@@ -19214,7 +19366,7 @@
               },
               "default": "''",
               "fieldName": "startIcon",
-              "description": "Icon at the start of the track, such as a quiet speaker for a volume"
+              "description": "Icon at the start of the track, such as a quiet speaker for a volume. A click on it moves the value a tenth of the range down (not in a range)."
             },
             {
               "name": "end-icon",
@@ -19223,7 +19375,7 @@
               },
               "default": "''",
               "fieldName": "endIcon",
-              "description": "Icon at the end of the track"
+              "description": "Icon at the end of the track. A click on it moves the value a tenth of the range up (not in a range)."
             },
             {
               "name": "accessible-label",
@@ -21724,7 +21876,7 @@
           "type": {
             "text": "Extension"
           },
-          "default": "[cursorLayer, pointerTracker, stepOverKeymap, typePastBadge, theme]"
+          "default": "[cursorLayer, pointerTracker, stepOverKeymap, typePastBadge]"
         }
       ],
       "exports": [
@@ -22155,6 +22307,24 @@
       "path": "src/components/inputs/text-editor/text-editor.markdown.ts",
       "declarations": [
         {
+          "kind": "function",
+          "name": "prefixLength",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The length of the list and quote markers a line starts with, which the\nhanging indent of the line counts in mono advances."
+        },
+        {
           "kind": "variable",
           "name": "markdownEditing",
           "type": {
@@ -22165,6 +22335,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "prefixLength",
+          "declaration": {
+            "name": "prefixLength",
+            "module": "src/components/inputs/text-editor/text-editor.markdown.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "markdownEditing",
@@ -22608,6 +22786,13 @@
               "default": "() => null",
               "type": {
                 "text": "(query: string) => string | null"
+              }
+            },
+            {
+              "name": "countText",
+              "default": "(count) => String(count)",
+              "type": {
+                "text": "(count: number) => string"
               }
             }
           ],
@@ -24132,7 +24317,7 @@
               "expandedType": {
                 "text": "'hidden' | 'visible'"
               },
-              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
+              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
               "name": "annotatable",
@@ -27433,7 +27618,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A multi-select input that looks like a normal input field: chosen values show as dismissible tokens in a wrapping row, followed by an inline text input that stretches to fill the remaining space and wraps to a new line (growing the field) when it no longer fits. Options are supplied as a slotted nldd-menu, exactly like nldd-combo-box; the menu filters as you type, with a chevron picker button, arrow-key roving across the tokens and ElementInternals form participation. Options can arrive after the keystroke, from a server you query per keystroke. Slot them into the menu when they come in: if the user is still in the field and the keystroke found nothing to show, the menu opens then. After Escape, or once the user left the field, it stays shut.",
+          "description": "A multi-select input that looks like a normal input field: chosen values show as dismissible tokens in a wrapping row, followed by an inline text input that stretches to fill the remaining space and wraps to a new line (growing the field) when it no longer fits. Options are supplied as a slotted nldd-menu, exactly like nldd-combo-box; the menu filters as you type, with a chevron picker button, arrow-key roving across the tokens and ElementInternals form participation. Options can arrive after the keystroke, from a server you query per keystroke. Slot them into the menu when they come in: if the user is still in the field and the keystroke found nothing to show, the menu opens then. After Escape, or once the user left the field, it stays shut. After typing, a screen reader hears how many options are shown (\"2 resultaten\"), or the empty text when none are, also for options that a server sends in later. Only the number it lands on: it waits until the options settle.",
           "name": "NLDDTokenField",
           "members": [
             {
@@ -29766,6 +29951,16 @@
               "description": "Body max-width: 'full' (removes the constraint) or any CSS length.\nMirrors a page section's width.",
               "attribute": "width",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "noRibbon",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-ribbon",
+              "reflects": true
             }
           ],
           "attributes": [
@@ -29777,6 +29972,15 @@
               "default": "''",
               "description": "Body max-width, mirroring a page section: 'full' removes the constraint so the content spans the full width; any CSS length (e.g. '480px') overrides the default max-width.",
               "fieldName": "width"
+            },
+            {
+              "name": "no-ribbon",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "noRibbon",
+              "description": "Leaves out the ribbon under the footer, and the room it takes, as `no-logo` does on nldd-top-navigation-bar. The ribbon belongs to the house style of the Rijksoverheid, so a site outside it, or one anyone may run, turns it off. An empty footer then takes no height at all."
             }
           ],
           "superclass": {
@@ -34108,7 +34312,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id=\"info-trigger\" popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" anchor=\"info-trigger\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On sm the popover is a bottom sheet that closes with Escape or a tap outside it. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
+          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id=\"info-trigger\" popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" anchor=\"info-trigger\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
           "name": "NLDDPopover",
           "members": [
             {
@@ -36257,6 +36461,20 @@
             },
             {
               "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -36341,6 +36559,18 @@
               "description": "Vertical alignment of slotted content (default: 'center')"
             },
             {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader",
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -36364,6 +36594,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "RowHeaderMixin",
+              "module": "/src/utilities/row-header-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -36461,6 +36695,20 @@
             },
             {
               "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -36533,6 +36781,18 @@
               "description": "Vertical alignment (default: 'center')"
             },
             {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader",
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -36556,6 +36816,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "RowHeaderMixin",
+              "module": "/src/utilities/row-header-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -37442,6 +37706,20 @@
             },
             {
               "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -37598,6 +37876,18 @@
               "description": "'match' | 'predictive' (default: 'predictive')"
             },
             {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader",
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -37621,6 +37911,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "RowHeaderMixin",
+              "module": "/src/utilities/row-header-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -37680,9 +37974,9 @@
               "kind": "field",
               "name": "size",
               "type": {
-                "text": "TitleCellSize"
+                "text": "TitleCellSize | undefined"
               },
-              "default": "5",
+              "description": "Unset looks like 5, and like 6 in an nldd-table-row, which is why it\nhas no value of its own: the row can only tell an unset size from a\nchosen 5 when unset is not 5.",
               "attribute": "size",
               "reflects": true
             },
@@ -37814,6 +38108,20 @@
             },
             {
               "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -37843,14 +38151,13 @@
             {
               "name": "size",
               "type": {
-                "text": "TitleCellSize"
+                "text": "TitleCellSize | undefined"
               },
-              "default": "5",
+              "description": "Visual size of the title (unset: looks like 5, and becomes 6 in an `nldd-table-row`, where a title the size of the other cells reads better)",
               "fieldName": "size",
               "expandedType": {
                 "text": "1 | 2 | 3 | 4 | 5 | 6"
-              },
-              "description": "Visual size of the title (default: 5)"
+              }
             },
             {
               "name": "color",
@@ -37979,6 +38286,18 @@
               "description": "'match' | 'predictive' (default: 'predictive')"
             },
             {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader",
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -38002,6 +38321,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "RowHeaderMixin",
+              "module": "/src/utilities/row-header-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -38389,7 +38712,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "ID of a popover this segment toggles; forwarded to the inner button. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.",
+              "description": "ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.",
               "name": "popovertarget",
               "fieldName": "popovertarget"
             },
@@ -38806,7 +39129,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it.",
+              "description": "Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it.",
               "name": "accessible-label",
               "default": "''",
               "fieldName": "accessibleLabel"
@@ -39170,7 +39493,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. Header: put one `<nldd-table-row slot=\"header\">` in the `header` slot. Its cells become column headers (role=\"columnheader\"). Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).",
+          "description": "Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. Header: put one `<nldd-table-row slot=\"header\">` in the `header` slot. Its cells become column headers (role=\"columnheader\"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role=\"rowheader\" instead of \"cell\", so a screen reader names the row along with every other cell in it, like `<th scope=\"row\">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).",
           "name": "NLDDTable",
           "members": [
             {
@@ -39856,7 +40179,7 @@
                 "name": "withTranslations",
                 "module": "src/utilities/with-translations.ts"
               },
-              "description": "Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.overflow-action' (default: 'Meer')"
+              "description": "Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.show-more-tabs-action' (default: 'Toon meer tabbladen')"
             }
           ],
           "mixins": [
@@ -41775,7 +42098,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A toolbar for page and container headings with optional navigation and action buttons. The component has two states: - Default: the back button shows the previous page title as a text button - Compact (class `is-compact`): the back button is an icon button, a divider and the toolbar title are visible When `collapse-anchor` is set, the `is-compact` class is automatically applied as soon as the top of the anchor element reaches this bar's own top edge (the sticky header line). Measuring the bar rather than the page keeps it correct in both nested and root scroll modes; it also re-points at the live scroll target when the page switches mode. Without `collapse-anchor` the bar takes a static state: compact when `text` is set (so the title shows in the title-group), non-compact otherwise (so the `back-text` button stays visible). An anchored bar hides its own title from assistive technology. The anchor is the heading the title swaps in for, so both carry the same words: once you scroll past the heading, a screen reader would otherwise find the same title twice. Sighted readers see one at a time, and this makes that true for everyone. Anchor at the heading, then, and not at some other element that happens to sit at the right height: the bar hands its title over to it. The title stays on one line and is cut off with an ellipsis when it does not fit, which on a narrow screen or at 400% zoom is soon. The bar is therefore not the place for the full title: put that in an `nldd-title` at the top of the content, which wraps and always fits, and point `collapse-anchor` at it. A bar without an anchor holds the only copy of its title, so keep that one to a word or two.",
+          "description": "A toolbar for page and container headings with optional navigation and action buttons. The component has two states: - Default: the back button shows the previous page title as a text button - Compact (class `is-compact`): the back button is an icon button, a divider and the toolbar title are visible When `collapse-anchor` is set, the `is-compact` class is automatically applied as soon as the top of the anchor element reaches this bar's own top edge (the sticky header line). Measuring the bar rather than the page keeps it correct in both nested and root scroll modes; it also re-points at the live scroll target when the page switches mode. Without `collapse-anchor` the bar takes a static state: compact when `text` is set (so the title shows in the title-group), non-compact otherwise (so the `back-text` button stays visible). An anchored bar hides its own title from assistive technology. The anchor is the heading the title swaps in for, so both carry the same words: once you scroll past the heading, a screen reader would otherwise find the same title twice. Sighted readers see one at a time, and this makes that true for everyone. Anchor at the heading, then, and not at some other element that happens to sit at the right height: the bar hands its title over to it. An `nldd-title` anchor without a `heading-level` gets the bar's own, so the title it takes over is a heading of the same level. An anchor that is no heading at all, and holds none, would leave the page without one: the bar then keeps its own title for assistive technology and warns in development. The title stays on one line and is cut off with an ellipsis when it does not fit, which on a narrow screen or at 400% zoom is soon. The bar is therefore not the place for the full title: put that in an `nldd-title` at the top of the content, which wraps and always fits, and point `collapse-anchor` at it. A bar without an anchor holds the only copy of its title, so keep that one to a word or two.",
           "name": "NLDDTopTitleBar",
           "members": [
             {
@@ -42005,7 +42328,7 @@
                 "text": "ActivityIndicatorTiming"
               },
               "default": "'delay'",
-              "description": "'delay' waits DELAY_MS before showing; 'instant' shows\nimmediately. The fade-in plays either way.",
+              "description": "'delay' waits SHOW_DELAY_MS before showing; 'instant' shows\nimmediately. The fade-in plays either way.",
               "attribute": "timing",
               "reflects": true
             },
@@ -42802,7 +43125,7 @@
               "expandedType": {
                 "text": "'' | 'center' | 'left'"
               },
-              "description": "Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Left alignment also lays the actions out in a row instead of stacked full-width."
+              "description": "Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 360px wide, even where two would fit side by side. Left-aligned, they sit in a row, each as wide as its label."
             }
           ],
           "superclass": {
@@ -42814,7 +43137,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Optional custom content between text and actions"
+              "description": "Optional custom content between text and actions. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout=\"stack\" and a gap."
             },
             {
               "name": "actions",
@@ -43258,7 +43581,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Optional custom content, forwarded to nldd-inline-dialog"
+              "description": "Optional custom content, forwarded to nldd-inline-dialog. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout=\"stack\" and a gap."
             },
             {
               "name": "actions",
@@ -44846,6 +45169,24 @@
       "declarations": [
         {
           "kind": "function",
+          "name": "langOf",
+          "return": {
+            "type": {
+              "text": "string | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "The language of an element, looking past shadow roots to their hosts."
+        },
+        {
+          "kind": "function",
           "name": "carryContext",
           "return": {
             "type": {
@@ -44864,9 +45205,13 @@
               "type": {
                 "text": "Element | null"
               }
+            },
+            {
+              "name": "{ scheme: withScheme = true }",
+              "default": "{}"
             }
           ],
-          "description": "Gives `element` the color scheme and language of `origin`. Call it each\ntime the element shows, since the page around the origin may have changed."
+          "description": "Gives `element` the color scheme and language of `origin`. Call it each time\nthe element shows, since the page around the origin may have changed.\n\nReading the color scheme takes `getComputedStyle`, which recalculates the\nstyles of the page when they are dirty. An element nobody sees, such as the\nhidden description of a tooltip, only needs the language: pass\n`{ scheme: false }` and nothing is recalculated."
         },
         {
           "kind": "function",
@@ -44888,6 +45233,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "langOf",
+          "declaration": {
+            "name": "langOf",
+            "module": "src/utilities/carried-context.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "carryContext",
@@ -45629,6 +45982,47 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/defer-focus.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "deferFocus",
+          "return": {
+            "type": {
+              "text": ""
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "LitElement"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "FocusOptions"
+              }
+            }
+          ],
+          "description": "Holds on to a `focus()` that comes before the first render.\n\nA component that hands focus to an element in its shadow root has nothing to\nhand it to until it has rendered, so `focus()` right after the element is put\nin the page did nothing. A site that copies a field and focuses the copy then\nleaves focus where it was. This runs the call again once the component has\nrendered, unless focus has moved on in the meantime: a later `focus()` on\nsomething else wins, as it would have without the wait.\n\nCall it first in an overridden `focus()`, and return when it says it waits:\n\n```ts\noverride focus(options?: FocusOptions): void {\n  if (deferFocus(this, options)) return;\n  this._input?.focus(options);\n}\n```"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "deferFocus",
+          "declaration": {
+            "name": "deferFocus",
+            "module": "src/utilities/defer-focus.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/described-by-mixin.ts",
       "declarations": [
         {
@@ -45883,6 +46277,83 @@
           "declaration": {
             "name": "setState",
             "module": "src/utilities/element-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/file-drag-and-drop.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "fileDragAndDropAvailable",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "description": "Whether files can be dragged onto the page on this device, so a hint for it is worth showing."
+        },
+        {
+          "kind": "class",
+          "description": "Renders the host again when dragging files becomes available or unavailable,\nsuch as when a trackpad is attached to a tablet, so a drop hint in its\naccessible name follows the visible one. Pass `onChange` for work that a\nrender does not redo.",
+          "name": "FileDragAndDropAvailabilityController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_query",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onChange",
+              "type": {
+                "text": "() => void"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "fileDragAndDropAvailable",
+          "declaration": {
+            "name": "fileDragAndDropAvailable",
+            "module": "src/utilities/file-drag-and-drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FileDragAndDropAvailabilityController",
+          "declaration": {
+            "name": "FileDragAndDropAvailabilityController",
+            "module": "src/utilities/file-drag-and-drop.ts"
           }
         }
       ]
@@ -46462,6 +46933,40 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/list-items.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "markListItems",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "elements",
+              "type": {
+                "text": "Element[]"
+              }
+            }
+          ],
+          "description": "Gives slotted children `role=\"listitem\"`, for a component that renders the\n`role=\"list\"` around its slot.\n\nA child with a role of its own, written or implied by its element, keeps it:\na consumer's `<article>` stays an article. An nldd-card carries its article\ninside its shadow root, so its host has room for the list item."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "markListItems",
+          "declaration": {
+            "name": "markListItems",
+            "module": "src/utilities/list-items.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/open-when-rendered.ts",
       "declarations": [
         {
@@ -47006,6 +47511,52 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/popover-target.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "popoverTargetOf",
+          "return": {
+            "type": {
+              "text": "Element | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "element",
+              "type": {
+                "text": "Element | null"
+              }
+            }
+          ],
+          "description": "The popover a component's inner button invokes, from `popovertarget` or\n`popoverTargetElement` on the host.\n\nAn id written on the inner button is looked up in the component's own\nshadow root, where the popover never is, so the button opened nothing. The\nid is looked up here in the tree of the host instead, and the inner button\ngets the element. The element wins when both are set.\n\nLook it up again on click: a popover rendered after the button is not there\nyet on the button's first render."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "popoverTargetOf",
+          "declaration": {
+            "name": "popoverTargetOf",
+            "module": "src/utilities/popover-target.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/popup-anchor-controller.ts",
       "declarations": [
         {
@@ -47421,6 +47972,24 @@
         },
         {
           "kind": "function",
+          "name": "stripBold",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The text of `**bold**` markdown without its markers, for an accessible name."
+        },
+        {
+          "kind": "function",
           "name": "renderQueryMark",
           "return": {
             "type": {
@@ -47457,6 +48026,14 @@
           "name": "renderBold",
           "declaration": {
             "name": "renderBold",
+            "module": "src/utilities/render-marked.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "stripBold",
+          "declaration": {
+            "name": "stripBold",
             "module": "src/utilities/render-marked.ts"
           }
         },
@@ -47581,6 +48158,57 @@
           "declaration": {
             "name": "resolveDateBound",
             "module": "src/utilities/resolve-date-bound.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/row-header-mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Adds the `row-header` attribute to the cells that can say what a row is\nabout: `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` and\n`nldd-description-cell`.\n\nIt is the `<th scope=\"row\">` of an `nldd-table`. The cell itself does\nnothing with it: the `nldd-table-row` around it reads the attribute and\ngives that cell `role=\"rowheader\"` instead of `role=\"cell\"`, so a screen\nreader names the row when it reads any other cell in it. The row assigns\nevery cell role already, which is why the decision stays there.\n\nIt sits on the cell rather than on the row, because a cell is what a header\nis in HTML too, and because a column index on the row breaks as soon as a\ncolumn is hidden at a breakpoint or reordered. It is a mixin so it works the\nsame on every cell variant, and the variant still decides how the cell\nlooks: a row header gets no styling of its own.\n\nIn a header row (`slot=\"header\"`) the attribute is ignored and the cell\nstays a `columnheader`. Outside an `nldd-table` it does nothing.",
+          "name": "RowHeaderMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "Base",
+              "type": {
+                "text": "TBase"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RowHeaderMixin",
+          "declaration": {
+            "name": "RowHeaderMixin",
+            "module": "src/utilities/row-header-mixin.ts"
           }
         }
       ]

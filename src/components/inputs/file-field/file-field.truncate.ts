@@ -40,16 +40,45 @@ export function truncateMiddle(
 	width: number,
 	measure: (text: string) => number,
 ): { text: string; truncated: boolean } {
-	if (measure(name) <= width) return { text: name, truncated: false };
-	const [base, extension] = splitName(name);
+	return truncateMiddleToFit(name, (text) => measure(text) <= width);
+}
+
+/**
+ * The name as it fits where `fits` says, cut as `truncateMiddle` cuts it. With
+ * `keepExtension` off, as for a folder, a dot in the name is no extension.
+ */
+export function truncateMiddleToFit(
+	name: string,
+	fits: (text: string) => boolean,
+	{ keepExtension = true }: { keepExtension?: boolean } = {},
+): { text: string; truncated: boolean } {
+	if (fits(name)) return { text: name, truncated: false };
+	const [base, extension] = keepExtension ? splitName(name) : [name, ''];
 	let low = 0;
 	let high = base.length - 1;
 	while (low < high) {
 		const mid = Math.ceil((low + high) / 2);
-		if (measure(compose(base, extension, mid)) <= width) low = mid;
+		if (fits(compose(base, extension, mid))) low = mid;
 		else high = mid - 1;
 	}
 	return { text: compose(base, extension, low), truncated: true };
+}
+
+/** Tells whether text fits in `lines` lines of `width`, wrapped the way
+ *  `container` wraps it: anywhere, as a file name has few spaces. Call `done`
+ *  after. */
+export function lineFitter(container: Element, width: number, lines: number): { fits: (text: string) => boolean; done: () => void } {
+	const probe = document.createElement('span');
+	probe.style.cssText = `position: absolute; visibility: hidden; display: block; width: ${width}px; white-space: normal; overflow-wrap: anywhere;`;
+	container.append(probe);
+	const lineHeight = parseFloat(getComputedStyle(probe).lineHeight);
+	return {
+		fits: (text) => {
+			probe.textContent = text;
+			return probe.getBoundingClientRect().height <= lines * lineHeight + 0.5;
+		},
+		done: () => probe.remove(),
+	};
 }
 
 /** Measures text the way `container` renders it, with a hidden span in it.

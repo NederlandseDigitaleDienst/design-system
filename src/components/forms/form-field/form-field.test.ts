@@ -162,6 +162,16 @@ describe('nldd-form-field', () => {
 		expect(order.indexOf(el.querySelector('#help-1')!)).toBe(1);
 	});
 
+	it('shows **bold** in the label and the supporting label, and names the control without the markers', async () => {
+		el = await fixture('<nldd-form-field label="Typ **verwijder** om te bevestigen" supporting-label="Hoofdletters tellen **niet**"><nldd-text-field></nldd-text-field></nldd-form-field>');
+		await waitForUpdate(el);
+		const label = el.shadowRoot!.querySelector('.form-field__label')!;
+		expect(label.querySelector('b')?.textContent).toBe('verwijder');
+		expect(label.textContent!.replace(/\s+/g, ' ').trim()).toBe('Typ verwijder om te bevestigen');
+		expect(el.shadowRoot!.querySelector('.form-field__supporting-label b')?.textContent).toBe('niet');
+		expect(el.querySelector('nldd-text-field')!.getAttribute('accessible-label')).toBe('Typ verwijder om te bevestigen');
+	});
+
 	it('sets aria-label on the slotted input', async () => {
 		el = await fixture('<nldd-form-field label="Email"><input></nldd-form-field>');
 		await waitForUpdate(el);

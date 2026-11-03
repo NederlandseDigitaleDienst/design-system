@@ -14,6 +14,7 @@ export const inlineDialogStyles = css`
 		--_inline-dialog-icon-color: var(--semantics-content-color);
 		--_inline-dialog-text-font: var(--primitives-font-body-md-bold-tight);
 		--_inline-dialog-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
+		--_inline-dialog-footer-max-width: var(--primitives-area-360);
 
 		${inheritedTextReset}
 		display: flex;
@@ -103,7 +104,7 @@ export const inlineDialogStyles = css`
 		text-align: center;
 		color: var(--semantics-content-color);
 		font: var(--_inline-dialog-text-font);
-		text-wrap: pretty;
+		text-wrap: balance;
 	}
 
 	.inline-dialog__text:focus-visible {
@@ -116,12 +117,13 @@ export const inlineDialogStyles = css`
 		text-align: center;
 		color: var(--semantics-content-color);
 		font: var(--_inline-dialog-supporting-text-font);
-		text-wrap: pretty;
+		text-wrap: balance;
 	}
 
 	.inline-dialog--left-aligned .inline-dialog__text,
 	.inline-dialog--left-aligned .inline-dialog__supporting-text {
 		text-align: left;
+		text-wrap: pretty;
 	}
 
 	.inline-dialog__content {
@@ -142,7 +144,12 @@ export const inlineDialogStyles = css`
 
 	.inline-dialog__footer {
 		width: 100%;
+		max-width: var(--_inline-dialog-footer-max-width);
 		padding-top: var(--primitives-space-16);
+	}
+
+	.inline-dialog--left-aligned .inline-dialog__footer {
+		max-width: none;
 	}
 
 	.inline-dialog__footer[hidden] {

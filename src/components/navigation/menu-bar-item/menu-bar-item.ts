@@ -39,6 +39,7 @@ import { menuBarItemStyles } from './menu-bar-item.styles.js';
 import { template } from './menu-bar-item.template.js';
 import '../../content/icon/icon.js';
 import '../../actions/menu/menu.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 /**
  * Minimal typed interface for nldd-menu.
@@ -171,6 +172,7 @@ export class NLDDMenuBarItem extends LitElement {
 	};
 
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const focusable = this.shadowRoot?.querySelector<HTMLElement>('button, a');
 		focusable?.focus(options);
 	}
@@ -218,6 +220,14 @@ export class NLDDMenuBarItem extends LitElement {
 	};
 
 	private _handleClick = (event: Event): void => {
+		// A click in the menu belongs to its item, not to this one: toggling here
+		// would cancel the link of an item with `href`, and a router with it.
+		const menu = this._findMenu();
+		if (menu && event.composedPath().includes(menu)) {
+			this._pointerdownWhileMenuOpen = false;
+			return;
+		}
+
 		if (this.disabled) {
 			event.preventDefault();
 			event.stopPropagation();

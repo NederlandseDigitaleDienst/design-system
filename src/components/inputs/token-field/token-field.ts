@@ -13,6 +13,10 @@
  * in the field and the keystroke found nothing to show, the menu opens then.
  * After Escape, or once the user left the field, it stays shut.
  *
+ * After typing, a screen reader hears how many options are shown ("2 resultaten"),
+ * or the empty text when none are, also for options that a server sends in
+ * later. Only the number it lands on: it waits until the options settle.
+ *
  * @element nldd-token-field
  * @attr {string} values - Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas.
  * @attr {string} placeholder - Placeholder shown in the input
@@ -50,6 +54,7 @@ import '../../actions/menu/menu.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 /** Trailing control rendered on each token. */
 export type TokenFieldControl = 'dismiss' | 'menu';
@@ -340,6 +345,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Programmatic focus goes to the inner input, or — when it is hidden (all values
 	 *  in, no custom, no options left) — to the token holding the roving tabindex. */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		if (this._input) this._input.focus(options);
 		else this._focusTokenAt(this._rovingIndex);
 	}
@@ -483,6 +489,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		this._syncMenuItems();
 		if (!this._isOpen) this._openMenu();
 		this._openPending = this._text !== '' && !this._menu?.matches(':popover-open');
+		this._menu?._announceResults();
 		this.dispatchEvent(
 			new CustomEvent('input', {
 				detail: { value: this._text },
@@ -880,11 +887,14 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		if (!this._menu || this.shadowRoot?.activeElement !== this._input) return;
 		if (this._menu.matches(':popover-open')) {
 			if (this._visibleOptionCount === 0) this._closeMenu();
+			// Options that came in after the keystroke, as a server sends them.
+			else this._menu._announceResults();
 			return;
 		}
 		if (this._openPending && this._visibleOptionCount > 0) {
 			this._openPending = false;
 			this._openMenu();
+			this._menu._announceResults();
 		}
 	}
 

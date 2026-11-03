@@ -12,7 +12,7 @@
 export type DragState = 'none' | 'page' | 'over' | 'rejected';
 
 /** Why a drop is refused. */
-export type DropRejection = 'type' | 'count' | 'folder';
+export type DropRejection = 'type' | 'count' | 'folder' | 'empty-folder' | 'unreadable-folder';
 
 export interface DropTarget extends HTMLElement {
 	/** @internal */
@@ -124,6 +124,47 @@ export function typeRuledOut(accept: string, type: string): boolean {
  *  extension, which the field could not read, so it is refused. */
 export function holdsFolder(transfer: DataTransfer): boolean {
 	return Array.from(transfer.items).some((item) => item.kind === 'file' && item.webkitGetAsEntry?.()?.isDirectory);
+}
+
+/** A dropped file and where it sat: its name for a loose file, and the path
+ *  from the dropped folder down for one inside a folder ("site/css/main.css"). */
+export interface DroppedFile {
+	file: File;
+	path: string;
+}
+
+/**
+ * Every file in a drop, folders read down to the files in them, with paths.
+ *
+ * The entries have to be taken while the drop event runs: once its handler
+ * returns, the DataTransfer is emptied. Reading a folder is asynchronous, and a
+ * reader hands out its entries in batches (100 in Chrome), so it is read until
+ * a batch comes back empty. An empty folder yields nothing.
+ */
+export function readDrop(transfer: DataTransfer): Promise<DroppedFile[]> {
+	const entries = Array.from(transfer.items)
+		.filter((item) => item.kind === 'file')
+		.map((item) => item.webkitGetAsEntry?.())
+		.filter((entry): entry is FileSystemEntry => !!entry);
+	return Promise.all(entries.map(readEntry)).then((lists) => lists.flat());
+}
+
+function readEntry(entry: FileSystemEntry): Promise<DroppedFile[]> {
+	const path = entry.fullPath.replace(/^\//, '');
+	if (entry.isFile) {
+		return new Promise((resolve, reject) => {
+			(entry as FileSystemFileEntry).file((file) => resolve([{ file, path }]), reject);
+		});
+	}
+	const reader = (entry as FileSystemDirectoryEntry).createReader();
+	const batch = () => new Promise<FileSystemEntry[]>((resolve, reject) => reader.readEntries(resolve, reject));
+	const all: FileSystemEntry[] = [];
+	const readAll = (): Promise<FileSystemEntry[]> => batch().then((entries) => {
+		if (entries.length === 0) return all;
+		all.push(...entries);
+		return readAll();
+	});
+	return readAll().then((children) => Promise.all(children.map(readEntry))).then((lists) => lists.flat());
 }
 
 /** Whether a drag carries files, as opposed to text or a link. */

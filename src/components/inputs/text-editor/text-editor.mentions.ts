@@ -1,6 +1,7 @@
 import {
 	autocompletion,
 	completionStatus,
+	currentCompletions,
 	startCompletion,
 	type Completion,
 	type CompletionContext,
@@ -115,9 +116,12 @@ export interface TypeaheadCandidate {
 	 *  thing itself, for a list where that is its best picture. */
 	symbol?: string;
 	/** A person or organization in front of the text: an image, or initials
-	 *  from the text when there is none. `avatar: {}` is enough for initials.
+	 *  from `name` when there is none. `name` is the full name of whom the row is
+	 *  about, for when `text` is not, as with a username; without it the
+	 *  initials come from the text. `initials` sets them outright, as on
+	 *  nldd-avatar. `avatar: {}` is enough for initials.
 	 *  The row then takes two lines, with the supporting text under the text. */
-	avatar?: { src?: string; type?: 'person' | 'organization' };
+	avatar?: { src?: string; type?: 'person' | 'organization'; name?: string; initials?: string };
 }
 
 /** The candidates for what was typed after the trigger. The source filters;
@@ -197,9 +201,10 @@ function renderLead(completion: Completion): Node | null {
 	const { candidate } = completion as CandidateCompletion;
 	if (candidate.avatar) {
 		const avatar = document.createElement('nldd-avatar');
-		avatar.setAttribute('name', candidate.text);
+		avatar.setAttribute('name', candidate.avatar.name ?? candidate.text);
 		avatar.setAttribute('size', '32');
 		avatar.setAttribute('decorative', '');
+		if (candidate.avatar.initials) avatar.setAttribute('initials', candidate.avatar.initials);
 		if (candidate.avatar.src) avatar.setAttribute('src', candidate.avatar.src);
 		if (candidate.avatar.type) avatar.setAttribute('type', candidate.avatar.type);
 		return avatar;
@@ -302,9 +307,10 @@ function emptyMessageFor(
 /**
  * The message in place of an empty list. It sits where the list would, in the
  * same top-layer frame and with the same surface, but it is not an option:
- * nothing to select or apply, so it is a status that a screen reader announces
- * rather than a row in the listbox. It goes when there are candidates again,
- * when the caret leaves the query, on Escape and when the editor loses focus.
+ * nothing to select or apply. A screen reader hears it through the announcer
+ * below, not from this element, which arrives with its text already in it. It
+ * goes when there are candidates again, when the caret leaves the query, on
+ * Escape and when the editor loses focus.
  */
 const emptyMessageField = StateField.define<EmptyMessage | null>({
 	create: () => null,
@@ -326,7 +332,6 @@ const emptyMessageField = StateField.define<EmptyMessage | null>({
 		create: () => {
 			const dom = document.createElement('div');
 			dom.className = 'cm-nldd-typeahead-empty';
-			dom.setAttribute('role', 'status');
 			dom.textContent = value.text;
 			return { dom };
 		},
@@ -350,6 +355,43 @@ const emptyMessageClose = [
 		}
 	}),
 ];
+
+/**
+ * What a screen reader hears about the list: how many candidates there are when
+ * it opens or its length changes, and the message when it is empty.
+ *
+ * One live region that is always there and starts empty, and only its text
+ * changes. A region that arrives together with its text, as the empty message
+ * does, is often skipped: a screen reader reads a change in a region it already
+ * knew. The listbox itself says nothing about its length.
+ */
+function typeaheadAnnouncer(countText: (count: number) => string): Extension {
+	return ViewPlugin.fromClass(class {
+		status = document.createElement('div');
+
+		constructor(view: EditorView) {
+			this.status.className = 'cm-nldd-typeahead-status';
+			this.status.setAttribute('role', 'status');
+			view.dom.append(this.status);
+		}
+
+		update(update: { state: EditorState }) {
+			const status = completionStatus(update.state);
+			// While the next query is out, the last answer stands: clearing it
+			// in between would only make a screen reader say it twice.
+			if (status === 'pending') return;
+			const empty = update.state.field(emptyMessageField, false);
+			let text = '';
+			if (empty) text = empty.text;
+			else if (status === 'active') text = countText(currentCompletions(update.state).length);
+			if (this.status.textContent !== text) this.status.textContent = text;
+		}
+
+		destroy() {
+			this.status.remove();
+		}
+	});
+}
 
 /**
  * A frame for the list in the top layer, the way an nldd-menu opens.
@@ -410,144 +452,6 @@ function topLayerPopups(): Extension {
 	return [tooltips({ parent: frame, tooltipSpace: space }), keeper];
 }
 
-// The suggestion popup styled to match nldd-menu.
-const popupTheme = EditorView.theme({
-	// The popover's own box is only a frame for CodeMirror's tooltips, which
-	// place themselves against the window: no look of its own, and no surface
-	// over the page that would swallow a click.
-	'.cm-nldd-popups': {
-		position: 'fixed',
-		inset: '0',
-		width: 'auto',
-		height: 'auto',
-		margin: '0',
-		border: 'none',
-		padding: '0',
-		background: 'none',
-		overflow: 'visible',
-		pointerEvents: 'none',
-	},
-	'.cm-nldd-popups .cm-tooltip': {
-		pointerEvents: 'auto',
-	},
-	'.cm-tooltip.cm-tooltip-autocomplete': {
-		// CodeMirror gives every tooltip a hairline of its own; an nldd-menu has
-		// none and leans on its shadow, so this one drops it too.
-		border: 'none',
-		// No radius on the menu itself, like nldd-menu (overlays-corner-radius).
-		borderRadius: 'var(--semantics-overlays-corner-radius)',
-		backgroundColor: 'var(--semantics-surfaces-base-background-color)',
-		boxShadow: 'var(--semantics-overlays-box-shadow)',
-	},
-	// Match CM's own specificity (.cm-tooltip.cm-tooltip-autocomplete) so the
-	// body font wins over its monospace default — names read better in sans.
-	'.cm-tooltip.cm-tooltip-autocomplete > ul': {
-		fontFamily: 'var(--primitives-font-family-body)',
-		// Match the editor body (and the inserted token), not a smaller popup size.
-		fontSize: 'var(--primitives-font-size-100)',
-		// The minimum of nldd-menu, so a short list of names is not a narrow strip
-		// that changes width as you type.
-		minWidth: 'var(--primitives-area-280)',
-		boxSizing: 'border-box',
-		maxHeight: '14em',
-		// A small inset around the items, like nldd-menu.
-		margin: '0',
-		padding: 'var(--primitives-space-8)',
-	},
-	// The .cm-tooltip prefix matches CodeMirror's own specificity so these win
-	// over its cramped defaults (1px 3px padding, pointer cursor).
-	'.cm-tooltip.cm-tooltip-autocomplete > ul > li': {
-		display: 'flex',
-		alignItems: 'center',
-		gap: 'var(--primitives-space-8)',
-		// At least control size sm tall; bumped to md on touch (below).
-		minHeight: 'var(--semantics-controls-sm-min-size)',
-		boxSizing: 'border-box',
-		// Space left and right, like a menu item.
-		padding: 'var(--primitives-space-4) var(--primitives-space-8)',
-		borderRadius: 'var(--semantics-controls-sm-corner-radius)',
-		color: 'var(--semantics-content-color)',
-		cursor: 'default',
-	},
-	'.cm-tooltip.cm-tooltip-autocomplete > ul > li > :is(nldd-avatar, nldd-icon, .cm-nldd-symbol)': {
-		flex: 'none',
-	},
-	// The symbol takes the icon's box, so a list that mixes them lines up.
-	'.cm-nldd-symbol': {
-		display: 'inline-flex',
-		justifyContent: 'center',
-		inlineSize: '20px',
-	},
-	// Two lines next to the avatar: the text, and the supporting text under it.
-	// The avatar spans both and sits centered on them.
-	'.cm-tooltip.cm-tooltip-autocomplete > ul > li.cm-nldd-row-avatar': {
-		display: 'grid',
-		gridTemplateColumns: 'auto minmax(0, 1fr)',
-		alignContent: 'center',
-		// The row's gap is for the columns; the two lines sit right on each other.
-		rowGap: '0',
-		minHeight: 'var(--semantics-controls-md-min-size)',
-	},
-	'.cm-tooltip.cm-tooltip-autocomplete > ul > li.cm-nldd-row-avatar > nldd-avatar': {
-		gridRow: 'span 2',
-		alignSelf: 'center',
-	},
-	// Tight line heights on both lines, like a title cell: with the editor's own
-	// loose line height the row grows well past a list row.
-	'.cm-tooltip.cm-tooltip-autocomplete > ul > li.cm-nldd-row-avatar > .cm-completionLabel': {
-		gridColumn: '2',
-		font: 'var(--primitives-font-body-md-regular-tight)',
-	},
-	'.cm-tooltip.cm-tooltip-autocomplete > ul > li.cm-nldd-row-avatar > .cm-completionDetail': {
-		gridColumn: '2',
-		marginLeft: '0',
-		font: 'var(--primitives-font-body-sm-regular-tight)',
-	},
-	'.cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected]': {
-		backgroundColor: 'var(--semantics-list-items-is-highlighted-background-color)',
-		color: 'var(--semantics-list-items-is-highlighted-content-color)',
-	},
-	// CodeMirror keeps the keyboard-selected option active on hover (Enter still
-	// applies that one), so hover can't share the accent 'highlighted' look —
-	// that would imply two active rows. Give hover a subtler nldd-list-item look,
-	// only on rows that aren't the keyboard selection.
-	'@media (hover: hover)': {
-		'.cm-tooltip.cm-tooltip-autocomplete > ul > li:not([aria-selected]):hover': {
-			backgroundColor: 'var(--semantics-list-items-is-hovered-background-color)',
-			color: 'var(--semantics-list-items-is-hovered-content-color)',
-		},
-	},
-	'.cm-completionDetail': {
-		marginLeft: 'auto',
-		color: 'var(--semantics-content-secondary-color)',
-		fontStyle: 'normal',
-	},
-	'.cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected] .cm-completionDetail': {
-		color: 'inherit',
-	},
-	// The message in place of an empty list: the list's surface, and the
-	// secondary color, since it says something about the list rather than offering.
-	'.cm-tooltip.cm-nldd-typeahead-empty': {
-		border: 'none',
-		borderRadius: 'var(--semantics-overlays-corner-radius)',
-		backgroundColor: 'var(--semantics-surfaces-base-background-color)',
-		boxShadow: 'var(--semantics-overlays-box-shadow)',
-		minWidth: 'var(--primitives-area-280)',
-		maxWidth: 'var(--primitives-area-400)',
-		boxSizing: 'border-box',
-		padding: 'var(--primitives-space-12) var(--primitives-space-16)',
-		color: 'var(--semantics-content-secondary-color)',
-		fontFamily: 'var(--primitives-font-family-body)',
-		fontSize: 'var(--primitives-font-size-100)',
-	},
-	// Larger touch targets on coarse pointers (control size md height).
-	'@media (pointer: coarse)': {
-		'.cm-tooltip.cm-tooltip-autocomplete > ul > li': {
-			minHeight: 'var(--semantics-controls-md-min-size)',
-		},
-	},
-});
-
 /**
  * The typeaheads. `getTypeaheads` is read on every keystroke, so the editor can
  * hand over its current lists; choosing a candidate writes what the list's
@@ -557,6 +461,7 @@ export function typeaheads(
 	getTypeaheads: () => readonly Typeahead[],
 	onChoose: (choice: TypeaheadChoice) => void,
 	defaultEmptyText: (query: string) => string | null = () => null,
+	countText: (count: number) => string = (count) => String(count),
 ): Extension {
 	// CodeMirror only opens completion while typing, not on deletion. When a
 	// backspace brings the query back into a matching state ("@anb" → "@an"),
@@ -578,6 +483,6 @@ export function typeaheads(
 		reopenOnDelete,
 		emptyMessageField,
 		emptyMessageClose,
-		popupTheme,
+		typeaheadAnnouncer(countText),
 	];
 }

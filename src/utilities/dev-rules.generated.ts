@@ -119,6 +119,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-collection[item-width]"
 	},
 	{
+		"id": "collection-no-child-with-role",
+		"message": "The collection is a list and makes each child a list item, but this child has a role of its own, which would be lost. It stays as it is, so the list now holds something that is no list item. Put the content in an nldd-card, or wrap it in a div.",
+		"context": "nldd-collection > :not([slot]):is(a, article, aside, button, details, dialog, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, img, li, main, nav, ol, section, table, ul, [role]:not([role=\"\"]):not([role=\"listitem\"]))"
+	},
+	{
 		"id": "combo-box-needs-name",
 		"message": "nldd-combo-box needs `accessible-label` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-combo-box",
@@ -337,6 +342,11 @@ export const devRules: DevRule[] = [
 		"id": "list-item-expanded-needs-control",
 		"message": "`expanded` needs somewhere to live: make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.",
 		"context": "nldd-list-item:state(expanded-without-control)"
+	},
+	{
+		"id": "list-item-label-needs-title",
+		"message": "`accessible-label` does not start with what the row shows. The label replaces the row's text for assistive technology, so someone who says the visible words to voice control finds nothing (WCAG 2.5.3). Start the label with the title, or leave it off and let the row's text be the name.",
+		"context": "nldd-list-item:state(label-without-title)"
 	},
 	{
 		"id": "list-item-needs-list",
@@ -830,6 +840,11 @@ export const devRules: DevRule[] = [
 		"id": "top-navigation-bar-no-same-href",
 		"message": "`logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.",
 		"context": "nldd-top-navigation-bar:state(same-href)"
+	},
+	{
+		"id": "top-title-bar-anchor-needs-heading",
+		"message": "`collapse-anchor` points at an element that is no heading and holds none. The bar keeps its own title as the heading, so the page has one, but a screen reader now finds the title twice. Point the anchor at the nldd-title that starts the content.",
+		"context": "nldd-top-title-bar:state(anchor-not-heading)"
 	},
 	{
 		"id": "top-title-bar-anchor-not-found",

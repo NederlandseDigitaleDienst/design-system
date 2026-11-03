@@ -84,6 +84,21 @@ Met een inhoudsopgave:
                 type="radio"
                 lang="en"
               ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
+              ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
         </nldd-menu-bar>
@@ -334,6 +349,21 @@ Zonder inhoudsopgave, voor een korte pagina:
                 text="English"
                 type="radio"
                 lang="en"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
               ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
