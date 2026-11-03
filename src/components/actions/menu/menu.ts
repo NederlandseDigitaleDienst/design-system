@@ -56,7 +56,7 @@ function nameOfAnchor(anchor: Element): string {
 }
 
 /** How long the options have to stay the same before their number is said. */
-const RESULTS_DELAY = 500;
+const ANNOUNCE_RESULTS_DELAY_MS = 500;
 
 /**
  * A floating menu component using the Popover API.
@@ -274,7 +274,7 @@ export class NLDDMenu extends LitElement {
 	 * text to be re-announced on a later, genuine transition. */
 	private _pendingAnnouncement = '';
 	/** Holds a results announcement until the options stop changing. */
-	private _resultsTimer = 0;
+	private _announceResultsTimer = 0;
 
 	/**
 	 * Write `message` to this menu's polite live region. Clears first, then
@@ -892,8 +892,8 @@ export class NLDDMenu extends LitElement {
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		clearTimeout(this._resultsTimer);
-		this._resultsTimer = 0;
+		clearTimeout(this._announceResultsTimer);
+		this._announceResultsTimer = 0;
 		// Close any open child submenu before tearing down — the submenu is a
 		// document-anchored popover and would otherwise outlive its parent.
 		// The toggle listener wired in _handleSubmenuOpen still fires from
@@ -1098,9 +1098,9 @@ export class NLDDMenu extends LitElement {
 	 * @internal Called by nldd-combo-box and nldd-token-field.
 	 */
 	_announceResults(): void {
-		clearTimeout(this._resultsTimer);
-		this._resultsTimer = window.setTimeout(() => {
-			this._resultsTimer = 0;
+		clearTimeout(this._announceResultsTimer);
+		this._announceResultsTimer = window.setTimeout(() => {
+			this._announceResultsTimer = 0;
 			if (!this.isConnected || !this.matches(':popover-open')) return;
 			const count = Array.from(this.querySelectorAll('nldd-menu-item:not([hidden])'))
 				.filter((item) => item.closest('nldd-menu') === this).length;
@@ -1115,7 +1115,7 @@ export class NLDDMenu extends LitElement {
 					: this._t('components.menu.results-text', { count });
 			}
 			this._announce(text);
-		}, RESULTS_DELAY);
+		}, ANNOUNCE_RESULTS_DELAY_MS);
 	}
 
 	/**

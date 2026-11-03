@@ -42249,7 +42249,7 @@
                 "text": "ActivityIndicatorTiming"
               },
               "default": "'delay'",
-              "description": "'delay' waits DELAY_MS before showing; 'instant' shows\nimmediately. The fade-in plays either way.",
+              "description": "'delay' waits SHOW_DELAY_MS before showing; 'instant' shows\nimmediately. The fade-in plays either way.",
               "attribute": "timing",
               "reflects": true
             },
