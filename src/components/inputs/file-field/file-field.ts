@@ -54,7 +54,8 @@
  * dragging, so the field there drops the hint.
  *
  * A control reserves the height of every text it can show, so fields of a
- * size are as tall at one width, empty or with a file. The name takes the lines
+ * size are as tall at one width, empty or with a file. Only a field with
+ * `directory` reserves the sentence that offers a folder, the longest of them. The name takes the lines
  * that leaves it, and is cut in the middle only once those are full. A narrow
  * field makes more room: below 320px "Wijzigen" and "Wis selectie" go in one
  * menu behind "Toon opties" and a folder is counted as "site (3)", below 240px

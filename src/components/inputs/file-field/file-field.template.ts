@@ -97,7 +97,9 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 }
 
 /** Every text a control can show, none of them active: they only reserve
- *  their height. An area shows only the active text, and has a fixed height. */
+ *  their height. Only a field with `directory` offers a folder, so only it
+ *  reserves that sentence. An area shows only the active text, and has a
+ *  fixed height. */
 function reservedVariants(component: NLDDFileField): Variant[] {
 	if (component.variant === 'area') return [];
 	type Key = Parameters<NLDDFileField['_t']>[0] extends `components.file-field.${infer K}` ? K : never;
@@ -106,7 +108,9 @@ function reservedVariants(component: NLDDFileField): Variant[] {
 	const texts: [TemplateResult | string, Kind][] = [
 		[sentence('to-choose-file-action', 'drop-hint-lowercase-text'), 'idle'],
 		[sentence('to-choose-files-action', 'drop-hint-multiple-lowercase-text'), 'idle'],
-		[sentence('to-choose-files-or-folder-action', 'drop-hint-multiple-lowercase-text'), 'idle'],
+		...(component.directory
+			? [[sentence('to-choose-files-or-folder-action', 'drop-hint-multiple-lowercase-text'), 'idle'] as [TemplateResult, Kind]]
+			: []),
 		...(['drag-here-text', 'drag-here-multiple-text', 'replace-drag-text'] as const).map((key): [string, Kind] => [t(key), 'drag']),
 		...(['drop-here-text', 'drop-here-multiple-text', 'replace-drop-text'] as const).map((key): [string, Kind] => [t(key), 'drop']),
 		...(['type', 'count', 'folder', 'empty-folder', 'unreadable-folder'] as const)

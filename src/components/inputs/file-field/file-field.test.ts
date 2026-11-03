@@ -227,6 +227,17 @@ describe('nldd-file-field', () => {
 		expect(heights[0]).toBeGreaterThan(44);
 	});
 
+	it('reserves the sentence that offers a folder only in a field with directory', async () => {
+		const reserved = async (attributes: string) => {
+			const control = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" ${attributes}></nldd-file-field>`);
+			const texts = [...control.shadowRoot!.querySelectorAll('.file-field__text > :not(.is-active)')].map((text) => text.textContent!.trim());
+			cleanup(control);
+			return texts;
+		};
+		expect(await reserved('multiple')).not.toContain('Bestanden of map kiezen of sleep ze hierheen');
+		expect(await reserved('directory')).toContain('Bestanden of map kiezen of sleep ze hierheen');
+	});
+
 	it('puts its buttons in a menu in a narrow field first, then gives up the file icon', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage" style="width: 400px"></nldd-file-field>');
 		await waitForUpdate(el);
