@@ -3,10 +3,10 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import type { NLDDSlider } from './slider.js';
+import type { NLDDSlider, Thumb } from './slider.js';
 import '../../content/icon/icon.js';
 
-function thumbInput(component: NLDDSlider, thumb: 'value' | 'start' | 'end', value: number): TemplateResult {
+function thumbInput(component: NLDDSlider, thumb: Thumb, value: number): TemplateResult {
 	return html`
 		<input class="slider__input slider__input--${thumb}"
 			type="range"
@@ -25,7 +25,7 @@ function thumbInput(component: NLDDSlider, thumb: 'value' | 'start' | 'end', val
 	`;
 }
 
-function tooltip(thumb: 'value' | 'start' | 'end' | 'both', text: string): TemplateResult {
+function tooltip(thumb: Thumb | 'both', text: string): TemplateResult {
 	return html`
 		<span class="slider__tooltip slider__tooltip--${thumb}"
 			aria-hidden="true"
@@ -68,7 +68,9 @@ export function sliderTemplate(component: NLDDSlider): TemplateResult {
 	const tooltips = component.tooltipTiming !== 'never';
 
 	return html`
-		<div class="slider">
+		<div class="slider"
+			@pointerdown=${component._handlePointerDown}
+		>
 			${component.startIcon ? html`
 				<span class="slider__start-icon"
 					@click=${range ? nothing : () => component._handleIconClick(-1)}
@@ -81,7 +83,6 @@ export function sliderTemplate(component: NLDDSlider): TemplateResult {
 					'--_slider-start': String(component._fraction(start)),
 					'--_slider-end': String(component._fraction(end)),
 				})}
-				@pointerdown=${component._handlePointerDown}
 			>
 				${component.histogram.length ? histogram(component, start, end) : nothing}
 				<span class="slider__track"></span>

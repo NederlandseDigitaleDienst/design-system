@@ -339,11 +339,11 @@ export const sliderStyles = css`
 		inset-inline-start: calc(var(--_slider-thumb-size) / 2 + (100% - var(--_slider-thumb-size)) * (var(--_slider-start) + var(--_slider-end)) / 2);
 	}
 
-	/* Shown while the pointer is over the slider, a thumb has keyboard focus or
-	   is dragged: each thumb its own, or the two of a range as one where they
-	   would overlap. */
-	.slider:not(.is-merged) .slider__control:is(:hover, .is-active, :has(.slider__input:focus-visible)) :is(.slider__tooltip--value, .slider__tooltip--start, .slider__tooltip--end),
-	.slider.is-merged .slider__control:is(:hover, .is-active, :has(.slider__input:focus-visible)) .slider__tooltip--both {
+	/* Shown while the pointer is over the slider or its icons, a thumb has
+	   keyboard focus or is pressed: each thumb its own, or the two of a range as
+	   one where they would overlap. */
+	.slider:not(.is-merged):is(:hover, :has(.slider__control.is-active, .slider__input:focus-visible)) :is(.slider__tooltip--value, .slider__tooltip--start, .slider__tooltip--end),
+	.slider.is-merged:is(:hover, :has(.slider__control.is-active, .slider__input:focus-visible)) .slider__tooltip--both {
 		visibility: visible;
 		opacity: 1;
 	}

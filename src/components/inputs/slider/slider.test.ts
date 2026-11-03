@@ -43,13 +43,22 @@ describe('nldd-slider', () => {
 		expect(el._value).toBe(1);
 	});
 
-	it('says the value the Dutch way, or as formatValue writes it', async () => {
-		el = await fixture<NLDDSlider>('<nldd-slider min="0" max="2000" value="1200"></nldd-slider>');
+	it('says the value in the language of the page, or as formatValue writes it', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider lang="nl" min="0" max="2000" value="1200"></nldd-slider>');
 		expect(inputs(el)[0].getAttribute('aria-valuetext')).toBe('1.200');
 		expect(el.shadowRoot!.querySelector('.slider__tooltip--value')!.textContent!.trim()).toBe('1.200');
+		el.setAttribute('lang', 'en');
+		el.requestUpdate();
+		await waitForUpdate(el);
+		expect(inputs(el)[0].getAttribute('aria-valuetext')).toBe('1,200');
 		el.formatValue = (value) => `€ ${value}`;
 		await waitForUpdate(el);
 		expect(inputs(el)[0].getAttribute('aria-valuetext')).toBe('€ 1200');
+	});
+
+	it('keeps the decimals of min on a whole step', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider min="0.5" max="10.5" step="1" value="1.4"></nldd-slider>');
+		expect(el._value).toBe(1.5);
 	});
 
 	it('fires input while it moves and change when it is let go, once each', async () => {
@@ -138,6 +147,37 @@ describe('nldd-slider', () => {
 		await waitForUpdate(el);
 		expect(new FormData(form).get('volume')).toBe('30');
 		form.remove();
+	});
+
+	it('resets to its value attribute, also one set after it was connected', async () => {
+		const form = document.createElement('form');
+		document.body.append(form);
+		el = await fixture<NLDDSlider>('<nldd-slider name="volume"></nldd-slider>');
+		form.append(el);
+		el.setAttribute('value', '30');
+		await waitForUpdate(el);
+		slide(inputs(el)[0], 80);
+		form.reset();
+		await waitForUpdate(el);
+		expect(new FormData(form).get('volume')).toBe('30');
+		form.remove();
+	});
+
+	it('shows the tooltip while the pointer is over an icon, and while one is pressed', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider start-icon="minus" end-icon="plus" value="40"></nldd-slider>');
+		await waitForUpdate(el);
+		const tooltip = el.shadowRoot!.querySelector<HTMLElement>('.slider__tooltip--value')!;
+		const icon = el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!;
+		expect(getComputedStyle(tooltip).visibility).toBe('hidden');
+		await userEvent.hover(icon);
+		expect(getComputedStyle(tooltip).visibility).toBe('visible');
+		await userEvent.unhover(icon);
+		icon.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.slider__control')!.classList.contains('is-active')).toBe(true);
+		window.dispatchEvent(new PointerEvent('pointerup'));
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.slider__control')!.classList.contains('is-active')).toBe(false);
 	});
 
 	it('keeps its value when a restored state is not a number', async () => {
@@ -267,7 +307,7 @@ describe('nldd-slider', () => {
 
 		it('joins the two tooltips where they would overlap', async () => {
 			const unloadTokens = loadTokens();
-			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="2000" start-value="200" end-value="1800" style="width: 400px"></nldd-slider>');
+			el = await fixture<NLDDSlider>('<nldd-slider lang="nl" range min="0" max="2000" start-value="200" end-value="1800" style="width: 400px"></nldd-slider>');
 			await waitForUpdate(el);
 			const slider = el.shadowRoot!.querySelector('.slider')!;
 			expect(slider.classList.contains('is-merged')).toBe(false);

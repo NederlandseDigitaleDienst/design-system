@@ -16,7 +16,7 @@
 const carried = new WeakMap<HTMLElement, { scheme: string | null; lang: string | null }>();
 
 /** The language of an element, looking past shadow roots to their hosts. */
-function langOf(el: Element): string | null {
+export function langOf(el: Element): string | null {
 	let node: Element | null = el;
 	while (node) {
 		const owner: Element | null = node.closest('[lang]');
