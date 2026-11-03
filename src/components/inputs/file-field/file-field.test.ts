@@ -134,7 +134,7 @@ describe('nldd-file-field', () => {
 		choose(el, txt('rapport.pdf'));
 		await waitForUpdate(el);
 
-		el.shadowRoot!.querySelector('nldd-icon-button')!.dispatchEvent(new Event('click'));
+		el.shadowRoot!.querySelector('.file-field__clear-button')!.dispatchEvent(new Event('click'));
 		await waitForUpdate(el);
 
 		expect(el.files).toEqual([]);
@@ -205,7 +205,27 @@ describe('nldd-file-field', () => {
 		expect(buttons.length).toBe(1);
 		expect(buttons[0].getAttribute('text')).toBe('Wijzigen');
 		expect(buttons[0].getAttribute('accessible-label')).toBe('Wijzigen, Bijlage, rapport.pdf');
-		expect(el.shadowRoot!.querySelector('nldd-icon-button')!.getAttribute('accessible-label')).toBe('Wis selectie, rapport.pdf');
+		expect(el.shadowRoot!.querySelector('.file-field__clear-button')!.getAttribute('accessible-label')).toBe('Wis selectie, rapport.pdf');
+	});
+
+	it('gives up the file icon in a narrow field first, then shows "Wijzigen" as an icon', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage" style="width: 400px"></nldd-file-field>');
+		await waitForUpdate(el);
+		choose(el, txt('rapport.pdf'));
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		const shown = (selector: string) => root.querySelector<HTMLElement>(selector)!.checkVisibility();
+		const change = () => [shown('nldd-button.file-field__change-button'), shown('.file-field__change-icon-button')];
+		expect(shown('.file-field__file-icon')).toBe(true);
+		expect(change()).toEqual([true, false]);
+		el.style.width = '280px';
+		expect(shown('.file-field__file-icon')).toBe(false);
+		expect(change()).toEqual([true, false]);
+		el.style.width = '200px';
+		expect(change()).toEqual([false, true]);
+		expect(root.querySelector('.file-field__change-icon-button')!.getAttribute('icon')).toBe('edit');
+		el.focus();
+		expect(root.activeElement).toBe(root.querySelector('.file-field__change-icon-button'));
 	});
 
 	describe('drag and drop', () => {

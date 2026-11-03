@@ -139,11 +139,12 @@ describe('nldd-file-field – folders', () => {
 		drop(el, fakeTransfer(site()));
 		await settle();
 		await waitForUpdate(el);
-		const shown = () => el.shadowRoot!.querySelector('.file-field__value .is-active')!.textContent!.trim();
+		const shown = () => el.shadowRoot!.querySelector('.file-field__chosen-area > .is-active .is-active')!.textContent!.trim();
 		expect(shown()).toBe('site (3 bestanden)');
 		drop(el, fakeTransfer(folder('leeg', [])));
 		await settle();
 		await waitForUpdate(el);
+		// The message takes the whole row, so the name has only itself to make room for.
 		expect(shown()).toBe('Deze map is leeg');
 		await new Promise((resolve) => setTimeout(resolve, 4050));
 		await waitForUpdate(el);

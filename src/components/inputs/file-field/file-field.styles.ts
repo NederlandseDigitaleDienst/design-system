@@ -218,6 +218,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__chosen-area {
+		container: file-field-chosen-area / inline-size;
 		display: grid;
 		min-width: 0;
 		flex-grow: 1;
@@ -273,6 +274,30 @@ export const fileFieldStyles = css`
 		width: var(--_file-field-file-icon-size);
 		height: var(--_file-field-file-icon-size);
 		color: var(--semantics-content-color);
+	}
+
+	.file-field:not(.file-field--area) .file-field__chosen-file {
+		@container file-field-chosen-area (max-width: 19.9375rem) {
+			.file-field__file-icon {
+				display: none;
+			}
+
+			.file-field__value {
+				padding-left: var(--_file-field-inline-padding);
+			}
+		}
+
+		@container file-field-chosen-area (max-width: 14.9375rem) {
+			.file-field__change-button:not(.file-field__change-icon-button) {
+				display: none;
+			}
+		}
+
+		@container file-field-chosen-area (min-width: 15rem) {
+			.file-field__change-icon-button {
+				display: none;
+			}
+		}
 	}
 
 	.file-field__value,

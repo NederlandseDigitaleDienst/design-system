@@ -53,6 +53,12 @@
  * editable field takes is left alone. On a device without hover there is no
  * dragging, so the field there drops the hint.
  *
+ * A narrow field with a file makes room for its name: below 320px it leaves
+ * out the icon of the format, below 240px "Wijzigen" becomes an icon button
+ * with `edit` and the text as its tooltip. A refused drop says why across the
+ * whole row there, in place of the name and the buttons, so the field is no
+ * taller than its name needs.
+ *
  * The surface deliberately does not look like an input field. A border with
  * field semantics promises you can type into it; here you can only press it or
  * drop a file on it, so it has the border of a tinted surface instead of
@@ -728,9 +734,10 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** The button that opens the dialog: the whole surface while the field is
 	 *  empty, or the first of its two choices in an area with `directory`, and
-	 *  "Wijzigen" once it has a file. */
+	 *  "Wijzigen" once it has a file, as text or as an icon, whichever shows. */
 	private _chooseButton(): HTMLElement | null {
-		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__choose-button, nldd-button') ?? null;
+		const buttons = this.shadowRoot?.querySelectorAll<HTMLElement>('.file-field__choose-button, .file-field__choose-button-group nldd-button, .file-field__change-button') ?? [];
+		return Array.from(buttons).find((button) => button.checkVisibility?.() ?? true) ?? buttons[0] ?? null;
 	}
 
 	/**

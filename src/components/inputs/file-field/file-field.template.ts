@@ -221,36 +221,37 @@ function renderName(component: NLDDFileField, name: string): TemplateResult {
  * A field with a file: the row with its name and buttons, and over it, in the
  * same place, the sentences of a drag, saying a drop replaces what is there.
  * While files are dragged the row gives way to them; nothing can be pressed
- * then. A drop that was refused says why in place of the name, with the
- * buttons still there.
+ * then. A drop that was refused says why in the same place, across the whole
+ * row, so the name has only itself to make room for; an area says it in place
+ * of the name, with the buttons still there. A narrow field gives up
+ * the icon of the file first, then shows "Wijzigen" as an icon button.
  */
 function renderChosen(component: NLDDFileField): TemplateResult {
 	const files = component.files;
 	const area = component.variant === 'area';
 	const buttonSize = component.size === 'sm' ? 'xs' : 'sm';
 	const dragging = component._drag !== 'none';
+	// An area shows only the active text and has a fixed height, so a refused
+	// drop can say why in place of the name there, with the buttons still there.
 	const refused = component._rejection;
+	const replaced = dragging || (!area && refused !== null);
 	const drags = dragVariants(
 		component,
 		component._t('components.file-field.replace-drag-text'),
 		component._t('components.file-field.replace-drop-text'),
-	).map((variant) => ({ ...variant, active: variant.active && dragging }));
-	const nameVariants: Variant[] = [
-		{
-			content: files.length === 1 && !component._folderName() ? renderName(component, files[0].name) : component._valueLabel(),
-			kind: 'idle',
-			active: !refused,
-		},
-		...rejectionVariants(component, refused),
-	];
+	).map((variant) => ({ ...variant, active: variant.active && replaced }));
+	const name = files.length === 1 && !component._folderName() ? renderName(component, files[0].name) : component._valueLabel();
 	return html`
 		<div class="file-field__chosen-area">
-			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !dragging })}>
+			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !replaced })}>
 				<nldd-icon class="file-field__file-icon" icon=${fileIcon(component)} aria-hidden="true"></nldd-icon>
-				${renderStack('value', nameVariants)}
+				${renderStack('value', [
+					{ content: name, kind: 'idle', active: !area || !refused },
+					...(area ? rejectionVariants(component, refused) : []),
+				])}
 				${area ? html`
 					<div class="file-field__edit-button-group">
-						<nldd-button
+						<nldd-button class="file-field__change-button"
 							appearance="neutral-tinted"
 							size=${component.size}
 							text=${component._t('components.file-field.to-change-action')}
@@ -272,7 +273,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 					</div>
 				` : html`
 					<div class="file-field__edit-button-group">
-						<nldd-button
+						<nldd-button class="file-field__change-button"
 							appearance="neutral-tinted"
 							size=${buttonSize}
 							text=${component._t('components.file-field.to-change-action')}
@@ -283,7 +284,18 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 							?disabled=${component.disabled}
 							@click=${(e: Event) => component._handleChoose(e)}
 						></nldd-button>
-						<nldd-icon-button
+						<nldd-icon-button class="file-field__change-button file-field__change-icon-button"
+							appearance="neutral-tinted"
+							size=${buttonSize}
+							icon="edit"
+							text=${component._t('components.file-field.to-change-action')}
+							popup-type=${component.directory ? 'menu' : nothing}
+							?expanded=${component._menuOpen}
+							accessible-label=${component._changeAccessibleLabel() || nothing}
+							?disabled=${component.disabled}
+							@click=${(e: Event) => component._handleChoose(e)}
+						></nldd-icon-button>
+						<nldd-icon-button class="file-field__clear-button"
 							appearance="neutral-transparent"
 							size=${buttonSize}
 							icon="dismiss"
@@ -296,7 +308,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 				`}
 				${renderValidationIcon(component)}
 			</div>
-			<div class=${classMap({ 'file-field__replace-area': true, 'is-active': dragging })}>
+			<div class=${classMap({ 'file-field__replace-area': true, 'is-active': replaced })}>
 				${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}
 				${renderStack('text', drags)}
 				${renderValidationIcon(component)}
