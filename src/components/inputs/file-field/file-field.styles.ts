@@ -30,7 +30,7 @@ export const fileFieldStyles = css`
 		--_file-field-rejected-border-color: var(--semantics-drop-targets-is-rejected-border-color);
 		--_file-field-rejected-background-color: var(--semantics-drop-targets-is-rejected-background-color);
 		--_file-field-file-icon-size: var(--primitives-space-24);
-		--_file-field-edit-button-group-gap: var(--primitives-space-4);
+		--_file-field-button-group-gap: var(--primitives-space-6);
 		--_file-field-choose-text-color: var(--semantics-controls-is-selected-indicator-color);
 		--_file-field-choose-button-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
 		--_file-field-choose-button-is-active-highlight-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
@@ -42,7 +42,6 @@ export const fileFieldStyles = css`
 		--_file-field-area-gap: var(--primitives-space-2);
 		--_file-field-area-icon-size: var(--primitives-space-40);
 		--_file-field-area-edit-button-group-padding-top: var(--primitives-space-8);
-		--_file-field-area-button-group-gap: var(--primitives-space-8);
 		--_file-field-area-choose-button-group-margin-top: var(--primitives-space-4);
 		--_file-field-area-choose-button-group-margin-bottom: var(--primitives-space-8);
 		--_file-field-drop-area-drop-hint-text-color: var(--semantics-content-color);
@@ -64,6 +63,10 @@ export const fileFieldStyles = css`
 	:host([disabled]) {
 		opacity: var(--primitives-opacity-disabled);
 		pointer-events: none;
+	}
+
+	:host([variant="area"]:not([size="sm"])) {
+		--_file-field-button-group-gap: var(--primitives-space-8);
 	}
 
 	:host([size="sm"]) {
@@ -326,7 +329,7 @@ export const fileFieldStyles = css`
 		margin-bottom: var(--_file-field-area-choose-button-group-margin-bottom);
 		flex-wrap: wrap;
 		justify-content: center;
-		gap: var(--_file-field-area-button-group-gap);
+		gap: var(--_file-field-button-group-gap);
 	}
 
 	.file-field__name {
@@ -360,7 +363,7 @@ export const fileFieldStyles = css`
 		display: flex;
 		position: relative;
 		flex-shrink: 0;
-		gap: var(--_file-field-edit-button-group-gap);
+		gap: var(--_file-field-button-group-gap);
 		padding-right: var(--_file-field-clear-button-padding-right);
 		align-items: center;
 	}
@@ -460,7 +463,6 @@ export const fileFieldStyles = css`
 	.file-field--area .file-field__edit-button-group {
 		flex-wrap: wrap;
 		justify-content: center;
-		gap: var(--_file-field-area-button-group-gap);
 		padding-top: var(--_file-field-area-edit-button-group-padding-top);
 		padding-right: var(--primitives-space-0);
 	}
