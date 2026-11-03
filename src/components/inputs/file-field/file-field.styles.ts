@@ -17,6 +17,7 @@ export const fileFieldStyles = css`
 		--_file-field-value-color: var(--semantics-content-color);
 		--_file-field-text-font: var(--semantics-input-fields-md-text-font);
 		--_file-field-clear-button-padding-right: calc((var(--_file-field-min-size) - var(--semantics-controls-sm-min-size)) / 2);
+		--_file-field-more-button-padding-right: var(--_file-field-clear-button-padding-right);
 		--_file-field-validation-icon-area-padding-right: var(--_file-field-inline-padding);
 		--_file-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 		--_file-field-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
@@ -66,6 +67,7 @@ export const fileFieldStyles = css`
 		--_file-field-inline-padding: var(--semantics-controls-sm-inline-padding);
 		--_file-field-text-font: var(--semantics-input-fields-sm-text-font);
 		--_file-field-clear-button-padding-right: calc((var(--_file-field-min-size) - var(--semantics-controls-xs-min-size)) / 2);
+		--_file-field-more-button-padding-right: var(--primitives-space-6);
 		--_file-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
 		--_file-field-file-icon-size: var(--primitives-space-20);
 		--_file-field-choose-text-font: var(--semantics-buttons-sm-primary-text-font);
@@ -290,6 +292,10 @@ export const fileFieldStyles = css`
 		@container file-field-chosen-area (max-width: 19.9375rem) {
 			:is(.file-field__change-button, .file-field__clear-button) {
 				display: none;
+			}
+
+			.file-field__edit-button-group:last-child {
+				padding-right: var(--_file-field-more-button-padding-right);
 			}
 		}
 
