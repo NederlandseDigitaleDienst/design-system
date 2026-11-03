@@ -644,7 +644,7 @@
     "@floating-ui/dom": "^1.7.6",
     "@lezer/highlight": "^1.2.3",
     "css-select": "^5.2.2",
-    "css-what": "^6.2.2",
+    "css-what": "^8.0.0",
     "htmlparser2": "^10.1.0",
     "lit": "^3.3.1"
   },
