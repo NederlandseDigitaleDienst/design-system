@@ -198,7 +198,10 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 	const sentence = buttonGroup
 		? hint
 		: html`<span class="file-field__choose-text">${component._chooseLabel()}</span> ${hint}`;
-	const types = area ? component._acceptTypes() : null;
+	// A refused drop in an area shows the icon and the message alone, as the
+	// refused drag before it did, until the field is back.
+	const refused = area && component._rejection !== null && component._drag === 'none';
+	const types = area && !refused ? component._acceptTypes() : null;
 	const dragged = drags.some((variant) => variant.active);
 	const reading = component._reading && !dragged;
 	const stack = renderStack('text', [
@@ -209,7 +212,7 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 	]);
 	const content = html`${area && reading ? renderReadingIndicator(component) : html`${area
 		? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>`
-		: nothing}${buttonGroup ? renderChooseButtonGroup(component) : nothing}${stack}${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}`}${renderValidationIcon(component)}`;
+		: nothing}${buttonGroup && !refused ? renderChooseButtonGroup(component) : nothing}${stack}${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}`}${renderValidationIcon(component)}`;
 	if (buttonGroup) {
 		return html`<div class="file-field__drop-area">${content}</div>`;
 	}
@@ -317,8 +320,7 @@ function renderMoreButton(component: NLDDFileField, size: string): TemplateResul
  * same place, the sentences of a drag, saying a drop replaces what is there.
  * While files are dragged the row gives way to them; nothing can be pressed
  * then. A drop that was refused says why in the same place, across the whole
- * row, so the name has only itself to make room for; an area says it in place
- * of the name, with the buttons still there. A narrow control puts both
+ * row, so the name has only itself to make room for. A narrow control puts both
  * buttons in a menu first, then gives up the icon of the file.
  */
 function renderChosen(component: NLDDFileField): TemplateResult {
@@ -326,10 +328,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 	const area = component.variant === 'area';
 	const buttonSize = component.size === 'sm' ? 'xs' : 'sm';
 	const dragging = component._drag !== 'none';
-	// An area shows only the active text and has a fixed height, so a refused
-	// drop can say why in place of the name there, with the buttons still there.
-	const refused = component._rejection;
-	const replaced = dragging || (!area && refused !== null);
+	const replaced = dragging || component._rejection !== null;
 	const drags = dragVariants(
 		component,
 		component._t('components.file-field.replace-drag-text'),
@@ -343,10 +342,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 		<div class="file-field__chosen-area">
 			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !replaced })}>
 				<nldd-icon class="file-field__file-icon" icon=${fileIcon(component)} aria-hidden="true"></nldd-icon>
-				${renderStack('value', [
-					{ content: name, kind: 'idle', active: !area || !refused },
-					...(area ? rejectionVariants(component, refused) : []),
-				])}
+				${renderStack('value', [{ content: name, kind: 'idle', active: true }])}
 				${area ? html`
 					<div class="file-field__edit-button-group">
 						<nldd-button class="file-field__change-button"
@@ -413,6 +409,7 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 			'file-field': true,
 			'file-field--area': component.variant === 'area',
 			'has-files': hasFiles,
+			'is-refused': component._rejection !== null && component._drag === 'none',
 			[`is-drag-${component._drag}`]: component._drag !== 'none',
 		})}>
 			<input class="file-field__input"

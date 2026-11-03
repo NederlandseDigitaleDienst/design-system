@@ -154,6 +154,31 @@ describe('nldd-file-field – folders', () => {
 		expect(shown()).toBe('site (3 bestanden)');
 	});
 
+	it('shows a refused drop in an area as the refused drag did: the icon and the message alone', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple directory variant="area" accept=".html,.css"></nldd-file-field>');
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(root.querySelector('.file-field__accepted-types')).not.toBeNull();
+		drop(el, fakeTransfer(folder('leeg', [])));
+		await settle();
+		await waitForUpdate(el);
+		expect(root.querySelector('.file-field__text > .is-active')!.textContent).toBe('Map is leeg');
+		expect(root.querySelector('.file-field__choose-button-group')).toBeNull();
+		expect(root.querySelector('.file-field__accepted-types')).toBeNull();
+		expect(root.querySelector('.file-field')!.classList.contains('is-refused')).toBe(true);
+		el.dispatchEvent(new PointerEvent('pointerdown'));
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(site()));
+		await settle();
+		await waitForUpdate(el);
+		drop(el, fakeTransfer(folder('leeg', [])));
+		await settle();
+		await waitForUpdate(el);
+		expect(root.querySelector('.file-field__chosen-file')!.classList.contains('is-active')).toBe(false);
+		expect(root.querySelector('.file-field__replace-area.is-active .file-field__upload-icon')).not.toBeNull();
+		expect(root.querySelector('.file-field__replace-area .file-field__text > .is-active')!.textContent).toBe('Map is leeg');
+	});
+
 	it('ignores a folder that finishes reading after the field was cleared', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
 		await waitForUpdate(el);

@@ -58,8 +58,9 @@
  * that leaves it, and is cut in the middle only once those are full. A narrow
  * field makes more room: below 320px "Wijzigen" and "Wis selectie" go in one
  * menu behind "Toon opties" and a folder is counted as "site (3)", below 240px
- * it leaves out the icon of the format. A refused drop says why across the whole
- * row of a control, in place of the name and the buttons.
+ * it leaves out the icon of the format. A refused drop says why in place of
+ * the name and the buttons, and an area shows its upload icon in red with it,
+ * as it did while the drop was refused.
  *
  * The surface deliberately does not look like an input field. A border with
  * field semantics promises you can type into it; here you can only press it or

@@ -520,7 +520,8 @@ export const fileFieldStyles = css`
 		color: var(--_file-field-choose-text-color);
 	}
 
-	.file-field--area.is-drag-rejected :is(.file-field__upload-icon, .file-field__accepted-types) {
+	.file-field--area.is-drag-rejected :is(.file-field__upload-icon, .file-field__accepted-types),
+	.file-field--area.is-refused .file-field__upload-icon {
 		color: var(--_file-field-rejected-color);
 	}
 
