@@ -114,9 +114,11 @@ describe('nldd-file-field', () => {
 		await waitForUpdate(el);
 		await userEvent.hover(el.shadowRoot!.querySelector('.file-field__replace-area')!);
 		const hovered = background();
+		const cursor = getComputedStyle(el.shadowRoot!.querySelector('.file-field__replace-area .file-field__text > .is-active')!).cursor;
 		await userEvent.unhover(field);
 		unloadTokens();
 		expect(hovered).not.toBe(plain);
+		expect(cursor).toBe('default');
 	});
 
 	it.each(['control', 'area'])('names the empty button after its visible text, so axe finds no label mismatch (%s)', async (variant) => {

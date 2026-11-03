@@ -131,6 +131,11 @@ export const fileFieldStyles = css`
 		--_file-field-highlight-border-color: var(--_file-field-choose-button-is-active-highlight-border-color);
 	}
 
+	.file-field.is-refused {
+		cursor: default;
+		user-select: none;
+	}
+
 	.file-field.is-refused:hover {
 		--_file-field-highlight-border-color: var(--_file-field-choose-button-is-hovered-highlight-border-color);
 		--_file-field-background-color: var(--_file-field-choose-button-is-hovered-background-color);
