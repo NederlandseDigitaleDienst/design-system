@@ -272,10 +272,11 @@ function renderFolderLabel(component: NLDDFileField, folder: string): TemplateRe
 function renderMoreButton(component: NLDDFileField, size: string): TemplateResult {
 	return html`
 		<nldd-icon-button class="file-field__more-button"
-			appearance="neutral-transparent"
+			appearance="neutral-tinted"
 			size=${size}
 			icon="more"
 			text=${component._t('components.file-field.show-options-action')}
+			tooltip-timing="never"
 			accessible-label=${component._moreAccessibleLabel()}
 			?disabled=${component.disabled}
 		>
