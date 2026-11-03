@@ -509,7 +509,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		const hadFocus = this.matches(':focus-within');
 		this._files = input.files ? Array.from(input.files) : [];
 		this._paths = this._files.map((file) => file.webkitRelativePath || file.name);
-		this._rejection = null;
+		this._clearRejection();
 		this._commit();
 		if (hadFocus) void this.updateComplete.then(() => this.focus());
 	}
@@ -595,7 +595,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		if (this._folderInput) this._folderInput.value = '';
 		this._files = dropped.map(({ file }) => file);
 		this._paths = dropped.map(({ path }) => path);
-		this._rejection = null;
+		this._clearRejection();
 		// A pick moves focus to the change button, which names the file; a drop
 		// moves nothing, so it is said.
 		this._announcement = this._t('components.file-field.file-chosen-text', { name: this._valueLabel() });

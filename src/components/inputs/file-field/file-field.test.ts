@@ -267,6 +267,32 @@ describe('nldd-file-field', () => {
 			}
 		});
 
+		it('a file taken while a refusal shows is not overwritten by it', async () => {
+			el = await fixture<NLDDFileField>('<nldd-file-field accept=".pdf"></nldd-file-field>');
+			await waitForUpdate(el);
+			vi.useFakeTimers();
+			try {
+				drag(el, 'drop', transfer(png('foto.png')));
+				await el.updateComplete;
+				drag(el, 'drop', transfer(pdf('rapport.pdf')));
+				await el.updateComplete;
+				vi.advanceTimersByTime(4000);
+				await el.updateComplete;
+				expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('rapport.pdf gekozen');
+
+				drag(el, 'drop', transfer(png('foto.png')));
+				await el.updateComplete;
+				choose(el, pdf('notulen.pdf'));
+				await el.updateComplete;
+				vi.advanceTimersByTime(4000);
+				await el.updateComplete;
+				expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('');
+				expect(shownText(el)).not.toBe('Het bestand moet een PDF zijn');
+			} finally {
+				vi.useRealTimers();
+			}
+		});
+
 		it('refuses more than one file without multiple', async () => {
 			el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
 			await waitForUpdate(el);
