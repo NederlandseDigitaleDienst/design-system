@@ -113,7 +113,6 @@ export const fileFieldStyles = css`
 		align-items: center;
 	}
 
-
 	.file-field::before {
 		box-sizing: border-box;
 		position: absolute;
@@ -152,7 +151,6 @@ export const fileFieldStyles = css`
 		--_file-field-highlight-border-color: var(--_file-field-drop-border-color);
 		--_file-field-background-color: var(--_file-field-drop-background-color);
 	}
-
 
 	.file-field.is-drag-rejected {
 		--_file-field-highlight-border-width: var(--_file-field-drop-border-width);
@@ -267,18 +265,6 @@ export const fileFieldStyles = css`
 		visibility: hidden;
 	}
 
-	.file-field__rejected-text {
-		white-space: normal;
-		overflow-wrap: anywhere;
-		text-wrap: balance;
-	}
-
-	@media (hover: none) {
-		:is(.file-field__drag-text, .file-field__drop-text, .file-field__rejected-text) {
-			display: none;
-		}
-	}
-
 	.file-field__choose-text {
 		color: var(--_file-field-choose-text-color);
 		font: var(--_file-field-choose-text-font);
@@ -346,6 +332,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__value {
+		padding-left: var(--_file-field-file-icon-gap);
 		white-space: nowrap;
 		overflow: hidden;
 	}
@@ -382,12 +369,8 @@ export const fileFieldStyles = css`
 		color: var(--_file-field-drop-area-drop-hint-text-color);
 	}
 
-	.file-field__value {
-		padding-left: var(--_file-field-file-icon-gap);
-	}
-
 	@media (hover: none) {
-		.file-field__drop-hint-text,
+		:is(.file-field__drag-text, .file-field__drop-text, .file-field__rejected-text, .file-field__drop-hint-text),
 		.file-field__drop-area .file-field__text {
 			display: none;
 		}
@@ -436,7 +419,8 @@ export const fileFieldStyles = css`
 		white-space: pre;
 	}
 
-	.file-field__full-name {
+	.file-field__full-name,
+	.file-field__status {
 		position: absolute;
 		width: 1px;
 		height: 1px;
@@ -470,15 +454,6 @@ export const fileFieldStyles = css`
 		padding-right: var(--primitives-space-0);
 	}
 
-	.file-field__status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		clip-path: inset(50%);
-		white-space: nowrap;
-		overflow: hidden;
-	}
-
 	.file-field__validation-icon-area {
 		display: flex;
 		height: 100%;
@@ -500,7 +475,6 @@ export const fileFieldStyles = css`
 		width: var(--_file-field-validation-icon-size);
 		height: var(--_file-field-validation-icon-size);
 	}
-
 
 
 	/* # Area */

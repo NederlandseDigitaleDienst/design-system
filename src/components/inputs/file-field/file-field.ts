@@ -257,6 +257,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _resizeObserver?: ResizeObserver;
 	private _rejectionTimer?: ReturnType<typeof setTimeout>;
+	/** Whether the press under way dismissed a refusal. */
 	private _dismissing = false;
 	private _readingTimer?: ReturnType<typeof setTimeout>;
 	private _observedValue?: Element;
@@ -273,6 +274,19 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** @internal Why the last drop was refused; shown for a few seconds. */
 	@state()
 	_rejection: DropRejection | null = null;
+
+	/** @internal Whether the field says why a drop was refused, which a new drag
+	 *  takes the place of. */
+	get _refused(): boolean {
+		return this._rejection !== null && this._drag === 'none';
+	}
+
+	/** @internal Whether the choose menu is open, for `expanded` on the button. */
+	@state()
+	_menuOpen = false;
+
+	/** When the choose menu last closed, for the press that closed it. */
+	private _menuClosedAt = -Infinity;
 
 	/** Renders again when dragging files becomes possible or not, so the drop
 	 *  hint in the name of the button follows the one on screen. */
@@ -492,14 +506,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 				: this._valueLabel();
 			const at = text.indexOf(folder);
 			const [before, after] = at < 0 ? ['', ''] : [text.slice(0, at), text.slice(at + folder.length)];
-			const { fits, done } = lineFitter(value, width, lines);
-			try {
-				const { text: fitted, truncated } = truncateMiddleToFit(folder, (name) => fits(before + name + after), { keepExtension: false });
-				this._fittedFolder = fitted;
-				this._nameTruncated = truncated;
-			} finally {
-				done();
-			}
+			const { text: fitted, truncated } = this._cutToLines(value, width, lines, folder, (name) => before + name + after, false);
+			this._fittedFolder = fitted;
+			this._nameTruncated = truncated;
 			return;
 		}
 		const name = this._files[0].name;
@@ -514,11 +523,16 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 			}
 			return;
 		}
+		const { text, truncated } = this._cutToLines(value, width, lines, name);
+		this._fittedName = text;
+		this._nameTruncated = truncated;
+	}
+
+	/** `name` cut in the middle until `shown(name)` fits on `lines` lines. */
+	private _cutToLines(value: HTMLElement, width: number, lines: number, name: string, shown = (text: string) => text, keepExtension = true): { text: string; truncated: boolean } {
 		const { fits, done } = lineFitter(value, width, lines);
 		try {
-			const { text, truncated } = truncateMiddleToFit(name, fits);
-			this._fittedName = text;
-			this._nameTruncated = truncated;
+			return truncateMiddleToFit(name, (text) => fits(shown(text)), { keepExtension });
 		} finally {
 			done();
 		}
@@ -582,13 +596,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		anchor.style.top = `${e.clientY - box.top}px`;
 		return anchor;
 	}
-
-	/** When the choose menu last closed, for the press that closed it. */
-	private _menuClosedAt = -Infinity;
-
-	/** @internal Whether the choose menu is open, for `expanded` on the button. */
-	@state()
-	_menuOpen = false;
 
 	/** @internal */
 	public _handleMenuToggle(e: Event): void {

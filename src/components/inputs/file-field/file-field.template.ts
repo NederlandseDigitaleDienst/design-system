@@ -88,12 +88,11 @@ function renderStack(element: 'text' | 'value', variants: Variant[]): TemplateRe
 function dragVariants(component: NLDDFileField, dragText: string, dropText: string): Variant[] {
 	const rejection = component._dragRejection ?? component._rejection;
 	const dragging = !rejection && component._drag !== 'none';
-	const variants: Variant[] = [
+	return [
 		{ content: dragText, kind: 'drag', active: dragging && component._drag === 'page' },
 		{ content: dropText, kind: 'drop', active: dragging && component._drag === 'over' },
 		...rejectionVariants(component, rejection),
 	];
-	return variants;
 }
 
 /** Every text a control can show, none of them active: they only reserve
@@ -147,6 +146,40 @@ function renderReadingIndicator(component: NLDDFileField): TemplateResult {
 		size=${size}
 		?show-text=${area}
 	></nldd-activity-indicator>`;
+}
+
+/** "Bestanden kiezen…" and "Map kiezen…", for a menu of a field with
+ *  `directory`: one dialog picks files or a folder, never both. */
+function renderChoiceItems(component: NLDDFileField): TemplateResult {
+	return html`
+		<nldd-menu-item
+			icon="files"
+			text=${component._t('components.file-field.to-choose-files-menu-action')}
+			@select=${component._chooseFiles}
+		></nldd-menu-item>
+		<nldd-menu-item
+			icon="folder"
+			text=${component._t('components.file-field.to-choose-folder-menu-action')}
+			@select=${component._chooseFolder}
+		></nldd-menu-item>
+	`;
+}
+
+/** "Wijzigen", which with `directory` opens the choice of files or a folder. */
+function renderChangeButton(component: NLDDFileField, size: string): TemplateResult {
+	return html`
+		<nldd-button class="file-field__change-button"
+			appearance="neutral-tinted"
+			size=${size}
+			text=${component._t('components.file-field.to-change-action')}
+			popup-type=${component.directory ? 'menu' : nothing}
+			?expandable=${component.directory}
+			?expanded=${component._menuOpen}
+			accessible-label=${component._changeAccessibleLabel() || nothing}
+			?disabled=${component.disabled}
+			@click=${(e: Event) => component._handleChoose(e)}
+		></nldd-button>
+	`;
 }
 
 /** A button for files and one for a folder, for an area with `directory`:
@@ -204,7 +237,7 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 		: html`<span class="file-field__choose-text">${component._chooseLabel()}</span> ${hint}`;
 	// A refused drop in an area shows the icon and the message alone, as the
 	// refused drag before it did, until the field is back.
-	const refused = area && component._rejection !== null && component._drag === 'none';
+	const refused = area && component._refused;
 	const types = area && !refused ? component._acceptTypes() : null;
 	const dragged = drags.some((variant) => variant.active);
 	const reading = component._reading && !dragged;
@@ -214,9 +247,14 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 		...(area ? [] : [{ content: reading ? renderReadingIndicator(component) : '', kind: 'reading' as const, active: reading }]),
 		...reservedVariants(component),
 	]);
-	const content = html`${area && reading ? renderReadingIndicator(component) : html`${area
-		? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>`
-		: nothing}${buttonGroup && !refused ? renderChooseButtonGroup(component) : nothing}${stack}${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}`}${renderValidationIcon(component)}`;
+	const icon = area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing;
+	const buttons = buttonGroup && !refused ? renderChooseButtonGroup(component) : nothing;
+	const accepted = types
+		? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>`
+		: nothing;
+	const content = area && reading
+		? html`${renderReadingIndicator(component)}${renderValidationIcon(component)}`
+		: html`${icon}${buttons}${stack}${accepted}${renderValidationIcon(component)}`;
 	if (buttonGroup) {
 		return html`<div class="file-field__drop-area">${content}</div>`;
 	}
@@ -289,18 +327,7 @@ function renderMoreButton(component: NLDDFileField, size: string): TemplateResul
 			?disabled=${component.disabled}
 		>
 			<nldd-menu slot="popup">
-				${component.directory ? html`
-					<nldd-menu-item
-						icon="files"
-						text=${component._t('components.file-field.to-choose-files-menu-action')}
-						@select=${component._chooseFiles}
-					></nldd-menu-item>
-					<nldd-menu-item
-						icon="folder"
-						text=${component._t('components.file-field.to-choose-folder-menu-action')}
-						@select=${component._chooseFolder}
-					></nldd-menu-item>
-				` : html`
+				${component.directory ? renderChoiceItems(component) : html`
 					<nldd-menu-item
 						icon="edit"
 						text=${component._t('components.file-field.to-change-action')}
@@ -349,17 +376,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 				${renderStack('value', [{ content: name, kind: 'idle', active: true }])}
 				${area ? html`
 					<div class="file-field__edit-button-group">
-						<nldd-button class="file-field__change-button"
-							appearance="neutral-tinted"
-							size=${component.size}
-							text=${component._t('components.file-field.to-change-action')}
-							popup-type=${component.directory ? 'menu' : nothing}
-							?expandable=${component.directory}
-							?expanded=${component._menuOpen}
-							accessible-label=${component._changeAccessibleLabel() || nothing}
-							?disabled=${component.disabled}
-							@click=${(e: Event) => component._handleChoose(e)}
-						></nldd-button>
+						${renderChangeButton(component, component.size)}
 						<nldd-button
 							appearance="neutral-base"
 							size=${component.size}
@@ -371,17 +388,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 					</div>
 				` : html`
 					<div class="file-field__edit-button-group">
-						<nldd-button class="file-field__change-button"
-							appearance="neutral-tinted"
-							size=${buttonSize}
-							text=${component._t('components.file-field.to-change-action')}
-							popup-type=${component.directory ? 'menu' : nothing}
-							?expandable=${component.directory}
-							?expanded=${component._menuOpen}
-							accessible-label=${component._changeAccessibleLabel() || nothing}
-							?disabled=${component.disabled}
-							@click=${(e: Event) => component._handleChoose(e)}
-						></nldd-button>
+						${renderChangeButton(component, buttonSize)}
 						<nldd-icon-button class="file-field__clear-button"
 							appearance="neutral-transparent"
 							size=${buttonSize}
@@ -413,7 +420,7 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 			'file-field': true,
 			'file-field--area': component.variant === 'area',
 			'has-files': hasFiles,
-			'is-refused': component._rejection !== null && component._drag === 'none',
+			'is-refused': component._refused,
 			[`is-drag-${component._drag}`]: component._drag !== 'none',
 		})}>
 			<input class="file-field__input"
@@ -437,18 +444,7 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 				<span class="file-field__menu-anchor"></span>
 				<nldd-menu class="file-field__choose-menu"
 					@beforetoggle=${(e: Event) => component._handleMenuToggle(e)}
-				>
-					<nldd-menu-item
-						icon="files"
-						text=${component._t('components.file-field.to-choose-files-menu-action')}
-						@select=${component._chooseFiles}
-					></nldd-menu-item>
-					<nldd-menu-item
-						icon="folder"
-						text=${component._t('components.file-field.to-choose-folder-menu-action')}
-						@select=${component._chooseFolder}
-					></nldd-menu-item>
-				</nldd-menu>
+				>${renderChoiceItems(component)}</nldd-menu>
 			` : nothing}
 			${hasFiles ? renderChosen(component) : renderEmpty(component)}
 			<span class="file-field__status" role="status">${component._rejection
