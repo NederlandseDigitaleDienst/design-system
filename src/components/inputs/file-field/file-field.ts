@@ -238,6 +238,10 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  hint in the name of the button follows the one on screen. */
 	private _fileDrag = new FileDragAndDropAvailabilityController(this);
 
+	/** Counts every pick, drop and clear, so a folder that takes long to read
+	 *  does not overwrite what the user did in the meantime. */
+	private _action = 0;
+
 	@query('.file-field__input')
 	private _input!: HTMLInputElement;
 
@@ -495,6 +499,11 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleInputChange(e: Event): void {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
+		this._action++;
+		// The other input keeps its previous pick otherwise, and picking that
+		// again would fire no change.
+		const other = input === this._input ? this._folderInput : this._input;
+		if (other) other.value = '';
 		// The choose button gives way to the change button once there is a file,
 		// and the other way round, so focus would land on the body.
 		const hadFocus = this.matches(':focus-within');
@@ -548,6 +557,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		if (!e.dataTransfer || !carriesFiles(e.dataTransfer)) return;
 		e.preventDefault();
 		if (this.disabled) return;
+		const action = ++this._action;
 		const files = Array.from(e.dataTransfer.files);
 		const rejection = this._judge(e.dataTransfer, files);
 		if (rejection) {
@@ -558,8 +568,14 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 			// A folder with nothing in it, or one the browser could not read (a file
 			// gone mid-drop, no permission), says so, as any other refused drop does.
 			void readDrop(e.dataTransfer).then(
-				(dropped) => (dropped.length ? this._takeDrop(dropped) : this._refuse('empty-folder')),
-				() => this._refuse('unreadable-folder'),
+				(dropped) => {
+					if (action !== this._action) return;
+					if (dropped.length) this._takeDrop(dropped);
+					else this._refuse('empty-folder');
+				},
+				() => {
+					if (action === this._action) this._refuse('unreadable-folder');
+				},
 			);
 			return;
 		}
@@ -569,7 +585,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** A drop that passed the count, with its folders read: judged on the types
 	 *  of the files in it, then taken in place of what the field had. */
 	private _takeDrop(dropped: { file: File; path: string }[]): void {
-		if (dropped.length === 0) return;
 		if (!dropped.every(({ file }) => fileMatches(this.accept, file))) {
 			this._refuse('type');
 			return;
@@ -577,6 +592,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		const transfer = new DataTransfer();
 		for (const { file } of dropped) transfer.items.add(file);
 		if (this._input) this._input.files = transfer.files;
+		if (this._folderInput) this._folderInput.value = '';
 		this._files = dropped.map(({ file }) => file);
 		this._paths = dropped.map(({ path }) => path);
 		this._rejection = null;
@@ -612,6 +628,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleClear(): void {
 		// Clearing the input as well as the array: the element keeps the previous
 		// FileList otherwise, so choosing the same file again would fire no change.
+		this._action++;
 		if (this._input) this._input.value = '';
 		if (this._folderInput) this._folderInput.value = '';
 		this._files = [];

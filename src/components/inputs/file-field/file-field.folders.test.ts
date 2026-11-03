@@ -133,6 +133,30 @@ describe('nldd-file-field – folders', () => {
 		expect(el.shadowRoot!.textContent).toContain('Deze map kon niet worden gelezen');
 	});
 
+	it('ignores a folder that finishes reading after the field was cleared', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple></nldd-file-field>');
+		await waitForUpdate(el);
+		let finish!: () => void;
+		const slow = folder('traag', [file('traag/index.html')]);
+		(slow as unknown as { createReader: () => unknown }).createReader = () => {
+			let done = false;
+			return {
+				readEntries: (resolve: (entries: FakeEntry[]) => void) => {
+					if (done) return resolve([]);
+					done = true;
+					finish = () => resolve(slow.children!);
+				},
+			};
+		};
+		drop(el, fakeTransfer(slow));
+		await settle();
+		el._handleClear();
+		finish();
+		await settle();
+		await waitForUpdate(el);
+		expect(el.files).toEqual([]);
+	});
+
 	it('refuses a folder whose files accept rules out, as a whole', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" multiple accept=".html"></nldd-file-field>');
 		await waitForUpdate(el);
