@@ -294,7 +294,7 @@ describe('nldd-file-field – directory', () => {
 		const [files, folder] = [...root.querySelectorAll<HTMLElement>('.file-field__choose-button-group nldd-button')];
 		expect([files.getAttribute('text'), folder.getAttribute('text')]).toEqual(['Bestanden kiezen', 'Map kiezen']);
 		expect([(files as HTMLElement & { size: string }).size, folder.getAttribute('start-icon')]).toEqual(['md', 'folder']);
-		expect(root.querySelector('.file-field__sentence')!.textContent!.trim().replace(/\s+/g, ' ')).toMatch(/^of sleep ze hierheen/);
+		expect(root.querySelector('.file-field__text')!.textContent!.trim().replace(/\s+/g, ' ')).toMatch(/^of sleep ze hierheen/);
 		expect([files.getAttribute('accessible-label'), folder.getAttribute('accessible-label')]).toEqual(['Bestanden kiezen, Site', 'Map kiezen, Site']);
 		const pickFiles = vi.spyOn(root.querySelector<HTMLInputElement>('.file-field__input')!, 'click').mockImplementation(() => {});
 		const pickFolder = vi.spyOn(root.querySelector<HTMLInputElement>('.file-field__folder-input')!, 'click').mockImplementation(() => {});

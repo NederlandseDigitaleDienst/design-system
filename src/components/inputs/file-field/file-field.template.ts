@@ -49,12 +49,12 @@ function renderValidationIcon(component: NLDDFileField): TemplateResult | typeof
 	`;
 }
 
-type Kind = 'drag' | 'drop' | 'rejected';
+type Kind = 'idle' | 'drag' | 'drop' | 'rejected';
 
 interface Variant {
 	content: TemplateResult | string;
 	active: boolean;
-	kind?: Kind;
+	kind: Kind;
 }
 
 /**
@@ -63,15 +63,14 @@ interface Variant {
  * them all the time, so the field keeps its height when the text changes: a
  * sentence that wraps in a narrow or zoomed field does not move the target
  * under a pointer that is dragging a file. The texts that only a drag brings
- * (`kind`) are left out on a device without hover, where nothing is dragged.
+ * are left out on a device without hover, where nothing is dragged.
  */
-function renderStack(variants: Variant[]): TemplateResult {
+function renderStack(element: 'text' | 'value', variants: Variant[]): TemplateResult {
 	return html`
-		<span class="file-field__texts">${variants.map((variant) => html`
+		<span class="file-field__${element}">${variants.map((variant) => html`
 			<span class=${classMap({
-				'file-field__text': true,
+				[`file-field__${variant.kind}-text`]: true,
 				'is-active': variant.active,
-				[`file-field__text--${variant.kind}`]: !!variant.kind,
 			})}>${variant.content}</span>
 		`)}</span>
 	`;
@@ -147,10 +146,10 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 		? hint
 		: html`<span class="file-field__choose-text">${component._chooseLabel()}</span> ${hint}`;
 	const types = area ? component._acceptTypes() : null;
-	const content = html`${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}${buttonGroup ? renderChooseButtonGroup(component) : nothing}<span class="file-field__sentence">${renderStack([
-		{ content: sentence, active: !drags.some((variant) => variant.active) },
+	const content = html`${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}${buttonGroup ? renderChooseButtonGroup(component) : nothing}${renderStack('text', [
+		{ content: sentence, kind: 'idle', active: !drags.some((variant) => variant.active) },
 		...drags,
-	])}</span>${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}${renderValidationIcon(component)}`;
+	])}${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}${renderValidationIcon(component)}`;
 	if (buttonGroup) {
 		return html`<div class="file-field__drop-area">${content}</div>`;
 	}
@@ -203,7 +202,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 		component._t('components.file-field.replace-drop-text'),
 	).map((variant) => ({ ...variant, active: variant.active && dragging }));
 	const nameVariants: Variant[] = [
-		{ content: files.length === 1 ? renderName(component, files[0].name) : component._valueLabel(), active: !refused },
+		{ content: files.length === 1 ? renderName(component, files[0].name) : component._valueLabel(), kind: 'idle', active: !refused },
 		{ content: component._rejectionText('type'), kind: 'rejected', active: refused === 'type' },
 		{ content: component._rejectionText('folder'), kind: 'rejected', active: refused === 'folder' },
 	];
@@ -214,7 +213,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 		<div class="file-field__chosen-area">
 			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !dragging })}>
 				<nldd-icon class="file-field__file-icon" icon=${fileIcon(files)} aria-hidden="true"></nldd-icon>
-				<span class="file-field__value">${renderStack(nameVariants)}</span>
+				${renderStack('value', nameVariants)}
 				${area ? html`
 					<div class="file-field__actions">
 						<nldd-button
@@ -265,7 +264,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 			</div>
 			<div class=${classMap({ 'file-field__replace-area': true, 'is-active': dragging })}>
 				${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}
-				<span class="file-field__sentence">${renderStack(drags)}</span>
+				${renderStack('text', drags)}
 				${renderValidationIcon(component)}
 			</div>
 		</div>

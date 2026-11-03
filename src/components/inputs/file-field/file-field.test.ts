@@ -25,7 +25,7 @@ const png = (name: string) => new File(['x'], name, { type: 'image/png' });
 const shownText = (el: NLDDFileField) => {
 	const root = el.shadowRoot!;
 	const scope = root.querySelector('.file-field__choose-button') ?? root.querySelector('.file-field__chosen-area > .is-active')!;
-	return scope.querySelector('.file-field__text.is-active')!.textContent!.replace(/\s+/g, ' ').trim();
+	return scope.querySelector(':is(.file-field__text, .file-field__value) > .is-active')!.textContent!.replace(/\s+/g, ' ').trim();
 };
 const emptyText = shownText;
 const fullName = (el: NLDDFileField) => el.shadowRoot!.querySelector('.file-field__full-name')!.textContent;
@@ -337,7 +337,7 @@ describe('nldd-file-field', () => {
 		it('takes a dragover on its inner elements before the window refuses it', async () => {
 			el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
 			await waitForUpdate(el);
-			const inner = el.shadowRoot!.querySelector('.file-field__sentence')!;
+			const inner = el.shadowRoot!.querySelector('.file-field__text')!;
 			const over = drag(inner, 'dragover', transfer(pdf('rapport.pdf')));
 			await waitForUpdate(el);
 			expect(over.defaultPrevented).toBe(true);
@@ -487,7 +487,7 @@ describe('nldd-file-field – variant="area"', () => {
 		expect(getComputedStyle(root.querySelector('.file-field__accepted-types')!).color).toBe(accent);
 		drag(el, 'dragover', transfer(png('foto.png')));
 		await waitForUpdate(el);
-		expect(getComputedStyle(icon()).color).toBe(getComputedStyle(root.querySelector('.file-field__text--rejected')!).color);
+		expect(getComputedStyle(icon()).color).toBe(getComputedStyle(root.querySelector('.file-field__rejected-text')!).color);
 		drag(el, 'dragleave', transfer(png('foto.png')));
 	});
 

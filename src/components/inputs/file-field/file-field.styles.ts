@@ -200,7 +200,14 @@ export const fileFieldStyles = css`
 		padding-left: calc(var(--_file-field-validation-icon-size) + var(--_file-field-validation-icon-area-padding-right));
 	}
 
-	.file-field__sentence {
+	.file-field__text,
+	.file-field__value {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		align-items: center;
+	}
+
+	.file-field__text {
 		padding-block: var(--primitives-space-8);
 		white-space: normal;
 		overflow-wrap: anywhere;
@@ -231,30 +238,23 @@ export const fileFieldStyles = css`
 		visibility: hidden;
 	}
 
-	.file-field__texts {
-		display: grid;
-		min-width: 0;
-		grid-template-columns: minmax(0, 1fr);
-		align-items: center;
-	}
-
-	.file-field__text {
+	:is(.file-field__text, .file-field__value) > * {
 		grid-area: 1 / 1;
 		min-width: 0;
 	}
 
-	.file-field__text:not(.is-active) {
+	:is(.file-field__text, .file-field__value) > :not(.is-active) {
 		visibility: hidden;
 	}
 
-	.file-field__text--rejected {
+	.file-field__rejected-text {
 		white-space: normal;
 		overflow-wrap: anywhere;
 		text-wrap: balance;
 	}
 
 	@media (hover: none) {
-		:is(.file-field__text--drag, .file-field__text--drop, .file-field__text--rejected) {
+		:is(.file-field__drag-text, .file-field__drop-text, .file-field__rejected-text) {
 			display: none;
 		}
 	}
@@ -273,7 +273,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__value,
-	.file-field__sentence {
+	.file-field__text {
 		box-sizing: border-box;
 		min-width: 0;
 		padding-right: var(--_file-field-inline-padding);
@@ -289,15 +289,15 @@ export const fileFieldStyles = css`
 		overflow: hidden;
 	}
 
-	:is(.file-field__text--drag, .file-field__text--drop, .file-field__text--rejected) {
+	:is(.file-field__drag-text, .file-field__drop-text, .file-field__rejected-text) {
 		font: var(--_file-field-choose-text-font);
 	}
 
-	.file-field__text--drop {
+	.file-field__drop-text {
 		color: var(--_file-field-choose-text-color);
 	}
 
-	.file-field__text--rejected {
+	.file-field__rejected-text {
 		color: var(--_file-field-rejected-color);
 	}
 
@@ -315,7 +315,7 @@ export const fileFieldStyles = css`
 
 	@media (hover: none) {
 		.file-field__hint,
-		.file-field__drop-area .file-field__sentence {
+		.file-field__drop-area .file-field__text {
 			display: none;
 		}
 	}
@@ -435,7 +435,7 @@ export const fileFieldStyles = css`
 		color: var(--_file-field-rejected-color);
 	}
 
-	.file-field--area :is(.file-field__sentence, .file-field__value) {
+	.file-field--area :is(.file-field__text, .file-field__value) {
 		padding-block: 0;
 		width: 100%;
 		flex-grow: 0;
@@ -444,7 +444,7 @@ export const fileFieldStyles = css`
 
 	/* The surface has a fixed height and centers its content, so only the
 	   shown text takes room; a hidden one that wraps would push the rest apart. */
-	.file-field--area .file-field__text:not(.is-active) {
+	.file-field--area :is(.file-field__text, .file-field__value) > :not(.is-active) {
 		display: none;
 	}
 
