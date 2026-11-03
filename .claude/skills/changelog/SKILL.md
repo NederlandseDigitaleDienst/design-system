@@ -74,6 +74,8 @@ Altijd in deze volgorde, en alleen de kopjes die van toepassing zijn:
 7. `### Fixed`
 8. `### Security`
 
+`npm run validate:changelog` controleert dit voor elk blok, in de pre-commit-hook en in `validate.yml`: alleen deze kopjes, elk één keer, in deze volgorde. Met `-- --fix` zet hij de kopjes van elk blok op volgorde.
+
 Highlights staat altijd bovenaan, ook als er iets breekt. Een belangrijke breaking change krijgt een bullet in Highlights (verwijs dan met "See Breaking.") en staat daarnaast in volle lengte onder `### Breaking`.
 
 | Kopje | Waarvoor |
