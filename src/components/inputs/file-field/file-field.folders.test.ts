@@ -166,7 +166,7 @@ describe('nldd-file-field – folders', () => {
 		expect(root.querySelector('.file-field__choose-button-group')).toBeNull();
 		expect(root.querySelector('.file-field__accepted-types')).toBeNull();
 		expect(root.querySelector('.file-field')!.classList.contains('is-refused')).toBe(true);
-		el.dispatchEvent(new PointerEvent('pointerdown'));
+		root.querySelector<HTMLButtonElement>('.file-field__dismiss-button')!.click();
 		await waitForUpdate(el);
 		drop(el, fakeTransfer(site()));
 		await settle();

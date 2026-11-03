@@ -256,11 +256,12 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 		? html`${renderReadingIndicator(component)}${renderValidationIcon(component)}`
 		: html`${icon}${buttons}${stack}${accepted}${renderValidationIcon(component)}`;
 	if (buttonGroup) {
-		return html`<div class="file-field__drop-area">${content}</div>`;
+		return html`<div class="file-field__drop-area" ?inert=${component._refused}>${content}</div>`;
 	}
 	return html`
 		<button class="file-field__choose-button"
 			type="button"
+			?inert=${component._refused}
 			aria-label=${component._chooseAccessibleLabel()}
 			aria-haspopup=${component.directory ? 'menu' : nothing}
 			aria-expanded=${component.directory ? String(component._menuOpen) : nothing}
@@ -370,7 +371,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 		? renderFolderLabel(component, folder)
 		: files.length === 1 ? renderName(component, files[0].name) : component._valueLabel();
 	return html`
-		<div class="file-field__chosen-area">
+		<div class="file-field__chosen-area" ?inert=${component._refused}>
 			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !replaced })}>
 				<nldd-icon class="file-field__file-icon" icon=${fileIcon(component)} aria-hidden="true"></nldd-icon>
 				${renderStack('value', [{ content: name, kind: 'idle', active: true }])}
@@ -447,6 +448,13 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 				>${renderChoiceItems(component)}</nldd-menu>
 			` : nothing}
 			${hasFiles ? renderChosen(component) : renderEmpty(component)}
+			${component._refused ? html`
+				<button class="file-field__dismiss-button"
+					type="button"
+					aria-label=${component._dismissAccessibleLabel()}
+					@click=${() => component._handleDismiss()}
+				></button>
+			` : nothing}
 			<span class="file-field__status" role="status">${component._rejection
 				? component._rejectionText(component._rejection)
 				: component._announcement}</span>

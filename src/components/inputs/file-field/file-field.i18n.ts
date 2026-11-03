@@ -6,6 +6,7 @@ export const nlddFileFieldTranslations = {
 	'components.file-field.to-choose-folder-menu-action': 'Map kiezen…',
 	'components.file-field.to-choose-folder-action': 'Map kiezen',
 	'components.file-field.to-change-action': 'Wijzigen',
+	'components.file-field.dismiss-message-lowercase-action': 'sluit melding',
 	'components.file-field.drop-hint-lowercase-text': 'of sleep het hierheen',
 	'components.file-field.drop-hint-multiple-lowercase-text': 'of sleep ze hierheen',
 	'components.file-field.drag-here-text': 'Sleep het bestand hierheen',

@@ -207,12 +207,26 @@ export const fileFieldStyles = css`
 		background-color: var(--_file-field-choose-button-is-active-background-color);
 	}
 
+	.file-field__dismiss-button {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		margin: 0;
+		border: none;
+		border-radius: inherit;
+		padding: 0;
+		background: none;
+		cursor: default;
+	}
+
+	.file-field__dismiss-button:focus-visible,
 	.file-field__choose-button:focus-visible {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
 	}
 
+	.file-field__dismiss-button:focus:not(:focus-visible),
 	.file-field__choose-button:focus:not(:focus-visible) {
 		outline: none;
 	}

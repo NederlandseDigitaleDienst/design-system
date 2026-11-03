@@ -138,6 +138,7 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.to-choose-folder-menu-action': 'Skohe un mapa…',
 	'components.file-field.to-choose-folder-action': 'Skohe mapa',
 	'components.file-field.to-change-action': 'Kambia',
+	'components.file-field.dismiss-message-lowercase-action': 'sera mensahe',
 	'components.file-field.drop-hint-lowercase-text': 'òf hala e aki',
 	'components.file-field.drop-hint-multiple-lowercase-text': 'òf hala nan aki',
 	'components.file-field.drag-here-text': 'Hala e archivo aki',

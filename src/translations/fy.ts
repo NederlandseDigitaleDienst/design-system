@@ -136,6 +136,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.to-choose-folder-menu-action': 'Map kieze…',
 	'components.file-field.to-choose-folder-action': 'Map kieze',
 	'components.file-field.to-change-action': 'Wizigje',
+	'components.file-field.dismiss-message-lowercase-action': 'melding slute',
 	'components.file-field.drop-hint-lowercase-text': 'of sleep it hjirhinne',
 	'components.file-field.drop-hint-multiple-lowercase-text': 'of sleep se hjirhinne',
 	'components.file-field.drag-here-text': 'Sleep it bestân hjirhinne',

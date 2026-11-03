@@ -68,36 +68,59 @@ describe('nldd-file-field', () => {
 		expect(click).toHaveBeenCalledOnce();
 	});
 
-	it.each(['control', 'area'])('dismisses a refusal with a press, without opening the dialog, and with Enter opens it (%s)', async (variant) => {
-		el = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" variant="${variant}" accept=".pdf"></nldd-file-field>`);
+	it.each([
+		['control', ''],
+		['area', ''],
+		['control with a file', 'file'],
+		['area with directory and a file', 'variant="area" directory file'],
+	])('makes a refusal a button that only dismisses it, and keeps focus in the field (%s)', async (name, setup) => {
+		const variant = setup.includes('area') || name === 'area' ? 'area' : 'control';
+		const directory = setup.includes('directory') ? 'directory' : '';
+		el = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" variant="${variant}" ${directory} accept=".pdf"></nldd-file-field>`);
 		await waitForUpdate(el);
-		const button = el.shadowRoot!.querySelector<HTMLElement>('.file-field__choose-button')!;
-		const click = vi.spyOn(el.shadowRoot!.querySelector('input')!, 'click').mockImplementation(() => {});
-		const pointerDown = () => button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
-		const press = () => {
-			pointerDown();
-			button.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
-		};
+		if (setup.includes('file')) {
+			choose(el, pdf('rapport.pdf'));
+			await waitForUpdate(el);
+		}
+		const root = el.shadowRoot!;
+		const click = vi.spyOn(root.querySelector('input')!, 'click').mockImplementation(() => {});
+		el.focus();
 		drag(el, 'drop', transfer(png('foto.png')));
 		await waitForUpdate(el);
-		expect(emptyText(el)).toBe('Alleen PDF');
-		press();
+		await el.updateComplete;
+		const dismiss = root.querySelector<HTMLButtonElement>('.file-field__dismiss-button')!;
+		expect(dismiss.getAttribute('aria-label')).toBe('Alleen PDF, sluit melding, Bijlage');
+		expect(root.activeElement).toBe(dismiss);
+		// A press, by mouse or with Enter, which a button turns into a click.
+		dismiss.click();
 		await waitForUpdate(el);
+		await el.updateComplete;
 		expect(click).not.toHaveBeenCalled();
-		expect(emptyText(el)).toBe('Bestand kiezen of sleep het hierheen');
-		press();
-		expect(click).toHaveBeenCalledOnce();
+		expect(root.querySelector('.file-field__dismiss-button')).toBeNull();
+		expect(root.activeElement).not.toBeNull();
+		expect(root.activeElement!.matches('.file-field__choose-button, .file-field__choose-button-group nldd-button, .file-field__change-button, .file-field__more-button')).toBe(true);
+	});
+
+	it('gives focus back when the message goes by itself or with Escape', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage" accept=".pdf"></nldd-file-field>');
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		el.focus();
 		drag(el, 'drop', transfer(png('foto.png')));
-		await waitForUpdate(el);
-		button.click();
-		expect(click).toHaveBeenCalledTimes(2);
-		// A press released outside the field gives no click, so Enter after it still opens the dialog.
+		await el.updateComplete;
+		await el.updateComplete;
+		expect(root.activeElement!.classList.contains('file-field__dismiss-button')).toBe(true);
+		root.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+		await el.updateComplete;
+		await el.updateComplete;
+		expect(root.activeElement!.classList.contains('file-field__choose-button')).toBe(true);
 		drag(el, 'drop', transfer(png('foto.png')));
-		await waitForUpdate(el);
-		pointerDown();
-		await waitForUpdate(el);
-		button.click();
-		expect(click).toHaveBeenCalledTimes(3);
+		await el.updateComplete;
+		await el.updateComplete;
+		await new Promise((resolve) => setTimeout(resolve, 4050));
+		await el.updateComplete;
+		await el.updateComplete;
+		expect(root.activeElement!.classList.contains('file-field__choose-button')).toBe(true);
 	});
 
 	it.each(['control', 'area'])('lights up a refusal on hover, also over a file, as a press dismisses it (%s)', async (variant) => {
@@ -112,7 +135,7 @@ describe('nldd-file-field', () => {
 		const plain = background();
 		drag(el, 'drop', transfer(png('foto.png')));
 		await waitForUpdate(el);
-		await userEvent.hover(el.shadowRoot!.querySelector('.file-field__replace-area')!);
+		await userEvent.hover(el.shadowRoot!.querySelector('.file-field__dismiss-button')!);
 		const hovered = background();
 		const cursor = getComputedStyle(el.shadowRoot!.querySelector('.file-field__replace-area .file-field__text > .is-active')!).cursor;
 		await userEvent.unhover(field);

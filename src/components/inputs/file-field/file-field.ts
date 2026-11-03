@@ -20,9 +20,11 @@
  * bestand", or what `accept` takes, named from it ("Alleen PDF";
  * "Bestandstype past niet" where a type in it has no name). The
  * message stays for a few seconds and then gives way to the field again.
- * Escape or a press dismisses it sooner. A press on the message only does
- * that: it stood where "Bestand kiezen" was, so the dialog opens on the next
- * press. Enter and Space open it right away.
+ * While it shows, the message is a button of its own over the whole field,
+ * "Alleen PDF, sluit melding, Bijlage" to a screen reader: a press on it, or
+ * Enter, Space or Escape, dismisses it and puts focus on the button of the
+ * field again. A field that had focus when the message came gives it to the
+ * message, so focus does not fall back to the page.
  *
  * With `multiple`, a dropped folder is read down to the files in it, its
  * subfolders included, and mixed with loose files in one drop if need be. The
@@ -257,8 +259,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _resizeObserver?: ResizeObserver;
 	private _rejectionTimer?: ReturnType<typeof setTimeout>;
-	/** Whether the press under way dismissed a refusal. */
-	private _dismissing = false;
 	private _readingTimer?: ReturnType<typeof setTimeout>;
 	private _observedValue?: Element;
 
@@ -430,8 +430,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		});
 		this.addEventListener('dragover', this._handleDragOver);
 		this.addEventListener('drop', this._handleDrop);
-		this.addEventListener('pointerdown', this._handlePointerDown);
-		this.addEventListener('click', this._handleClickCapture, { capture: true });
 		this.addEventListener('keydown', this._handleKeydown);
 	}
 
@@ -444,8 +442,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this._observedValue = undefined;
 		this.removeEventListener('dragover', this._handleDragOver);
 		this.removeEventListener('drop', this._handleDrop);
-		this.removeEventListener('pointerdown', this._handlePointerDown);
-		this.removeEventListener('click', this._handleClickCapture, { capture: true });
 		this.removeEventListener('keydown', this._handleKeydown);
 	}
 
@@ -732,12 +728,15 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  takes the place of "Bestand kiezen", and a field that kept it looked as if
 	 *  it no longer did anything. The status line keeps it for a screen reader. */
 	private _refuse(rejection: DropRejection): void {
+		const hadFocus = this.matches(':focus-within');
 		this._rejection = rejection;
 		clearTimeout(this._rejectionTimer);
 		this._rejectionTimer = setTimeout(() => {
+			this._clearRejection();
 			this._announcement = this._rejectionText(rejection);
-			this._rejection = null;
 		}, REJECTION_MS);
+		// The buttons give way to the message, so focus goes to it.
+		if (hadFocus) void this.updateComplete.then(() => this.focus());
 	}
 
 	private _stopReading(): void {
@@ -745,27 +744,30 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this._reading = false;
 	}
 
+	/** Takes the message away, and gives focus back to the button of the field
+	 *  when the message had it, as it goes with the message. */
 	private _clearRejection = (): void => {
+		const hadFocus = this.shadowRoot?.activeElement?.classList.contains('file-field__dismiss-button') ?? false;
 		clearTimeout(this._rejectionTimer);
 		this._rejection = null;
 		this._announcement = '';
+		if (hadFocus) void this.updateComplete.then(() => this.focus());
 	};
 
-	/** A press on a refusal only dismisses it: the message stood where "Bestand
-	 *  kiezen" was, so the click that follows does not open the dialog. The
-	 *  keyboard sends no pointerdown, and Enter still opens it. */
-	private _handlePointerDown = (): void => {
-		this._dismissing = this._rejection !== null;
+	/** @internal A press on the message dismisses it, and does nothing else. */
+	public _handleDismiss(): void {
 		this._clearRejection();
-	};
+		void this.updateComplete.then(() => this.focus());
+	}
 
-	/** Only the click of that press: one that never came, released outside the
-	 *  field, leaves no flag for a later Enter, whose click has no `detail`. */
-	private _handleClickCapture = (e: Event): void => {
-		const dismissing = this._dismissing;
-		this._dismissing = false;
-		if (dismissing && e instanceof MouseEvent && e.detail > 0) e.stopPropagation();
-	};
+	/** @internal "Alleen PDF, sluit melding, Bijlage": the message as it shows,
+	 *  what a press does, and for which field. */
+	public _dismissAccessibleLabel(): string {
+		if (!this._rejection) return '';
+		return [this._rejectionText(this._rejection), this._t('components.file-field.dismiss-message-lowercase-action'), this.accessibleLabel]
+			.filter(Boolean)
+			.join(', ');
+	}
 
 	private _handleKeydown = (e: KeyboardEvent): void => {
 		if (e.key === 'Escape') this._clearRejection();
@@ -843,10 +845,13 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this.commitFormValue();
 	}
 
-	/** The button that opens the dialog: the whole surface while the field is
+	/** The message of a refused drop while it shows. Otherwise the button that
+	 *  opens the dialog: the whole surface while the field is
 	 *  empty, or the first of its two choices in an area with `directory`, and
 	 *  "Wijzigen" once it has a file, or the menu that holds it in a narrow field. */
 	private _chooseButton(): HTMLElement | null {
+		const dismiss = this.shadowRoot?.querySelector<HTMLElement>('.file-field__dismiss-button');
+		if (dismiss) return dismiss;
 		const buttons = this.shadowRoot?.querySelectorAll<HTMLElement>('.file-field__choose-button, .file-field__choose-button-group nldd-button, .file-field__change-button, .file-field__more-button') ?? [];
 		return Array.from(buttons).find((button) => button.checkVisibility?.() ?? true) ?? buttons[0] ?? null;
 	}

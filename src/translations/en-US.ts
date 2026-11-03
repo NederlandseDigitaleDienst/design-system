@@ -138,6 +138,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.to-choose-folder-menu-action': 'Choose a folder…',
 	'components.file-field.to-choose-folder-action': 'Choose folder',
 	'components.file-field.to-change-action': 'Change',
+	'components.file-field.dismiss-message-lowercase-action': 'dismiss message',
 	'components.file-field.drop-hint-lowercase-text': 'or drag it here',
 	'components.file-field.drop-hint-multiple-lowercase-text': 'or drag them here',
 	'components.file-field.drag-here-text': 'Drag the file here',

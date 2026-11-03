@@ -138,6 +138,7 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.to-choose-folder-menu-action': 'Scoge un mapa…',
 	'components.file-field.to-choose-folder-action': 'Scoge mapa',
 	'components.file-field.to-change-action': 'Cambia',
+	'components.file-field.dismiss-message-lowercase-action': 'sera mensaje',
 	'components.file-field.drop-hint-lowercase-text': 'of hala e aki',
 	'components.file-field.drop-hint-multiple-lowercase-text': 'of hala nan aki',
 	'components.file-field.drag-here-text': 'Hala e archivo aki',
