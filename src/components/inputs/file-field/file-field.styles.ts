@@ -31,6 +31,7 @@ export const fileFieldStyles = css`
 		--_file-field-rejected-border-color: var(--semantics-drop-targets-is-rejected-border-color);
 		--_file-field-rejected-background-color: var(--semantics-drop-targets-is-rejected-background-color);
 		--_file-field-file-icon-size: var(--primitives-space-24);
+		--_file-field-file-icon-gap: var(--primitives-space-8);
 		--_file-field-button-group-gap: var(--primitives-space-6);
 		--_file-field-choose-text-color: var(--semantics-controls-is-selected-indicator-color);
 		--_file-field-choose-button-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
@@ -70,6 +71,7 @@ export const fileFieldStyles = css`
 		--_file-field-more-button-padding-right: var(--primitives-space-6);
 		--_file-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
 		--_file-field-file-icon-size: var(--primitives-space-20);
+		--_file-field-file-icon-gap: var(--primitives-space-6);
 		--_file-field-choose-text-font: var(--semantics-buttons-sm-primary-text-font);
 		--_file-field-area-icon-size: var(--primitives-space-32);
 		--_file-field-area-min-height: var(--primitives-area-120);
@@ -369,7 +371,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__value {
-		padding-left: var(--primitives-space-8);
+		padding-left: var(--_file-field-file-icon-gap);
 	}
 
 	@media (hover: none) {
