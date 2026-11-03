@@ -60,6 +60,21 @@ nldd-shell                            de buitenste schil
                 type="radio"
                 lang="en"
               ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
+              ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
         </nldd-menu-bar>
@@ -189,6 +204,21 @@ Op een onderliggende pagina:
                 type="radio"
                 lang="en"
               ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
+              ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
         </nldd-menu-bar>
@@ -243,6 +273,21 @@ Op de home, zonder terugknop:
                 text="English"
                 type="radio"
                 lang="en"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
               ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
@@ -304,6 +349,21 @@ Op de home, zonder terugknop:
                 text="English"
                 type="radio"
                 lang="en"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
               ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
@@ -371,6 +431,21 @@ In het menu staat bovenaan de link naar het persoonlijke deel, want daar logt ie
                 text="English"
                 type="radio"
                 lang="en"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
               ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
@@ -482,6 +557,21 @@ In het menu staat bovenaan de link naar het persoonlijke deel, want daar logt ie
                 text="English"
                 type="radio"
                 lang="en"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
               ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
