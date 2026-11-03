@@ -132,6 +132,16 @@ export const fileFieldStyles = css`
 		--_file-field-highlight-border-color: var(--_file-field-choose-button-is-active-highlight-border-color);
 	}
 
+	.file-field.is-refused:hover {
+		--_file-field-highlight-border-color: var(--_file-field-choose-button-is-hovered-highlight-border-color);
+		--_file-field-background-color: var(--_file-field-choose-button-is-hovered-background-color);
+	}
+
+	.file-field.is-refused:active {
+		--_file-field-highlight-border-color: var(--_file-field-choose-button-is-active-highlight-border-color);
+		--_file-field-background-color: var(--_file-field-choose-button-is-active-background-color);
+	}
+
 	.file-field.is-drag-page {
 		--_file-field-highlight-border-width: var(--_file-field-drop-border-width);
 		--_file-field-highlight-border-color: var(--_file-field-page-drag-border-color);

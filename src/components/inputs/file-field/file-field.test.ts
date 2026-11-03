@@ -4,6 +4,7 @@ import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDFileField } from './file-field.js';
 import './file-field.js';
 import axe from 'axe-core';
+import { userEvent } from 'vitest/browser';
 
 /** Puts a FileList on the inner input, the way a real pick would, and fires the
  *  change the component listens for. `input.files` is settable from script; only
@@ -89,6 +90,25 @@ describe('nldd-file-field', () => {
 		await waitForUpdate(el);
 		button.click();
 		expect(click).toHaveBeenCalledTimes(2);
+	});
+
+	it.each(['control', 'area'])('lights up a refusal on hover, also over a file, as a press dismisses it (%s)', async (variant) => {
+		const unloadTokens = loadTokens();
+		el = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" variant="${variant}" accept=".pdf"></nldd-file-field>`);
+		await waitForUpdate(el);
+		choose(el, pdf('rapport.pdf'));
+		await waitForUpdate(el);
+		const field = el.shadowRoot!.querySelector<HTMLElement>('.file-field')!;
+		const background = () => getComputedStyle(field).backgroundColor;
+		await userEvent.hover(field);
+		const plain = background();
+		drag(el, 'drop', transfer(png('foto.png')));
+		await waitForUpdate(el);
+		await userEvent.hover(el.shadowRoot!.querySelector('.file-field__replace-area')!);
+		const hovered = background();
+		await userEvent.unhover(field);
+		unloadTokens();
+		expect(hovered).not.toBe(plain);
 	});
 
 	it.each(['control', 'area'])('names the empty button after its visible text, so axe finds no label mismatch (%s)', async (variant) => {
