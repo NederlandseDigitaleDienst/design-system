@@ -90,13 +90,13 @@ here; consult the commit history if you need that level of detail.
 
 ## [0.14.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.2...v0.14.0) (2026-11-02)
 
-### Breaking
-
-- **Warnings changed shape.** Tests that spy on `console.warn` for a text of this package need the new text: `[nldd] <rule>: ...`. Most warnings now arrive a moment later, once per element.
-
 ### Highlights
 
 - **`nldd lint`, a fast and deterministic check for code that uses the design system.** `npx @nldd/design-system lint`, with no configuration: unknown tags, attributes, slots, values and icons, missing accessible names, and mistakes in how components fit together. A value that only exists at runtime is never a finding, and `--update-baseline` accepts what is already there, so only new findings count. It reads HTML, Vue and JSX/TSX, and works as a pre-commit hook and in CI with `--format github`. See Added.
+
+### Breaking
+
+- **Warnings changed shape.** Tests that spy on `console.warn` for a text of this package need the new text: `[nldd] <rule>: ...`. Most warnings now arrive a moment later, once per element.
 
 ### Added
 
@@ -114,14 +114,14 @@ here; consult the commit history if you need that level of detail.
 - **`custom-elements.json` spells out literal types.** An attribute typed `Appearance` now has `expandedType` with its values, and the manifest lists attributes that only have JSDoc.
 - **`disclosure` on `nldd-icon-cell`** is now documented.
 
-### Fixed
-
-- **DEV warnings reach the main export.** The library build removed almost all of them from `@nldd/design-system`, so only a per-component import showed them.
-
 ### Changed
 
 - **Every warning is now a rule in `src/rules/`.** No component contains warning text any more. Warnings start with `[nldd]` and the id of the rule, arrive once per element, and no longer repeat the value at fault: the element is logged with it. Warnings that were always on, such as `hide-below="sm"`, now only appear while developing.
 - **Custom states while developing.** Where a fact is not in the markup, a component exposes it as `:state()`, such as `nldd-button-group:state(no-width)`, and a rule reads that. In production this does nothing.
+
+### Fixed
+
+- **DEV warnings reach the main export.** The library build removed almost all of them from `@nldd/design-system`, so only a per-component import showed them.
 
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
 
