@@ -643,7 +643,7 @@
     "@codemirror/view": "^6.43.4",
     "@floating-ui/dom": "^1.7.6",
     "@lezer/highlight": "^1.2.3",
-    "css-select": "^5.2.2",
+    "css-select": "^7.0.0",
     "css-what": "^6.2.2",
     "htmlparser2": "^10.1.0",
     "lit": "^3.3.1"
