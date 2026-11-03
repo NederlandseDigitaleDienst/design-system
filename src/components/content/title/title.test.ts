@@ -28,6 +28,18 @@ describe('nldd-title', () => {
 		expect(el.getAttribute('size')).toBe('1');
 	});
 
+	it('hyphenates only long words, for the text and a slotted title alike', async () => {
+		el = await fixture('<div><nldd-title id="text" text="Overheidsinformatie"></nldd-title><nldd-title id="slotted"><h1>Overheidsinformatie</h1></nldd-title></div>');
+		await waitForUpdate(el);
+		const own = el.querySelector('#text')!.shadowRoot!.querySelector('.title__text')!;
+		const slotted = el.querySelector('#slotted h1')!;
+		for (const node of [own, slotted]) {
+			const style = getComputedStyle(node);
+			expect(style.hyphens).toBe('auto');
+			expect(style.getPropertyValue('hyphenate-limit-chars')).toBe('12 5 5');
+		}
+	});
+
 	it('renders slotted title content', async () => {
 		el = await fixture('<nldd-title><h1>Paginatitel</h1></nldd-title>');
 		await waitForUpdate(el);

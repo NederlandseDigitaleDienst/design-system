@@ -183,6 +183,11 @@ nldd-rich-text :is(h1, h2, h3, h4, h5, h6) {
 	margin-bottom: 0;
 	overflow-wrap: break-word;
 	text-wrap: balance;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+	-webkit-hyphenate-limit-before: 5;
+	-webkit-hyphenate-limit-after: 5;
+	hyphenate-limit-chars: 12 5 5;
 }
 
 

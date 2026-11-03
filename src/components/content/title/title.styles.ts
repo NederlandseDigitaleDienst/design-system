@@ -16,6 +16,9 @@ export const titleStyles = css`
 	/* # Host */
 
 	:host {
+		--_title-hyphenate-limit-before: 5;
+		--_title-hyphenate-limit-after: 5;
+		--_title-hyphenate-limit-chars: 12 var(--_title-hyphenate-limit-before) var(--_title-hyphenate-limit-after);
 		--_title-sm-custom-size: initial;
 		--_title-md-custom-size: initial;
 		--_title-lg-custom-size: initial;
@@ -265,6 +268,11 @@ export const titleStyles = css`
 		font: var(--_title-font);
 		overflow-wrap: anywhere;
 		text-wrap: balance;
+		-webkit-hyphens: auto;
+		hyphens: auto;
+		-webkit-hyphenate-limit-before: var(--_title-hyphenate-limit-before);
+		-webkit-hyphenate-limit-after: var(--_title-hyphenate-limit-after);
+		hyphenate-limit-chars: var(--_title-hyphenate-limit-chars);
 	}
 
 	::slotted(:not([slot])) {
@@ -276,6 +284,11 @@ export const titleStyles = css`
 		font: var(--_title-font) !important;
 		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;
+		-webkit-hyphens: auto !important;
+		hyphens: auto !important;
+		-webkit-hyphenate-limit-before: var(--_title-hyphenate-limit-before) !important;
+		-webkit-hyphenate-limit-after: var(--_title-hyphenate-limit-after) !important;
+		hyphenate-limit-chars: var(--_title-hyphenate-limit-chars) !important;
 	}
 
 	.title__supporting-text {
