@@ -288,7 +288,7 @@ describe('nldd-file-field', () => {
 			cleanup(area);
 			return result;
 		};
-		const heights = [await height('', 400), await height('', 240), await height('size="sm"', 400), await height('size="sm"', 240)];
+		const heights = [await height('', 480), await height('', 240), await height('size="sm"', 480), await height('size="sm"', 240)];
 		unloadTokens();
 		expect(heights).toEqual([200, 240, 160, 200]);
 	});
