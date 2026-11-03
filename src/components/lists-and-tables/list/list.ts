@@ -1455,7 +1455,7 @@ export class NLDDList extends LitElement {
 				activeId: this._searchFocused ? this._activeId : '',
 				searchPlaceholder: this._t('components.list.search-placeholder-label'),
 				searchAccessibleLabel: this.accessibleLabel || this._t('components.list.search-placeholder-label'),
-				searchClearLabel: this._t('components.list.search-clear-action'),
+				searchClearLabel: this._t('components.list.clear-search-action'),
 				hasSearchBarEnd: this._hasSearchBarEnd,
 				onSearchInput: this._onSearchInput,
 				onSearchKeyDown: this._onSearchKeyDown,

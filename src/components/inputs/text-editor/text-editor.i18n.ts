@@ -19,7 +19,7 @@ export const nlddTextEditorTranslations = {
 	'components.text-editor.typeahead-one-result-text': '1 resultaat',
 	'components.text-editor.typeahead-results-text': '{count} resultaten',
 	// The copy button on the head of a code block, and what it says after a try.
-	'components.text-editor.code-copy-action': 'Kopieer',
+	'components.text-editor.copy-code-action': 'Kopieer',
 	'components.text-editor.code-copy-success-text': 'Gekopieerd',
 	'components.text-editor.code-copy-failure-text': 'Kopiëren mislukt',
 	// Read by a screen reader in place of a task's box, `- [ ]` and `- [x]`.

@@ -306,12 +306,12 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 				>
 					<nldd-menu-item
 						icon="files"
-						text=${component._t('components.file-field.files-menu-action')}
+						text=${component._t('components.file-field.to-choose-files-menu-action')}
 						@select=${component._chooseFiles}
 					></nldd-menu-item>
 					<nldd-menu-item
 						icon="folder"
-						text=${component._t('components.file-field.folder-menu-action')}
+						text=${component._t('components.file-field.to-choose-folder-menu-action')}
 						@select=${component._chooseFolder}
 					></nldd-menu-item>
 				</nldd-menu>

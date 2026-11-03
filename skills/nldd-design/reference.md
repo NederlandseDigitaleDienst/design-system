@@ -2940,7 +2940,7 @@ A horizontal tab bar for document tabs with an automatic overflow button and an 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `accessible-label` | `string` | Accessible name for the navigation landmark |
-| `translations` | `object` | Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.overflow-action' (default: 'Meer') |
+| `translations` | `object` | Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.show-more-tabs-action' (default: 'Toon meer tabbladen') |
 | `navigation` | `boolean` | Renders a nav landmark instead of tablist; use when items have hrefs |
 
 **Slots**

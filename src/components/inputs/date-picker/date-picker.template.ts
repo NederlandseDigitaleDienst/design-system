@@ -59,7 +59,7 @@ function renderHeader(component: NLDDDatePicker): TemplateResult {
 			</h2>
 			${months.length < 2 ? nothing : html`
 				<nldd-menu class="date-picker__month-menu"
-					accessible-label=${component._t('components.date-picker.choose-month-action')}
+					accessible-label=${component._t('components.date-picker.to-choose-month-action')}
 					width="176px"
 					@toggle=${component._handleMonthMenuToggle}
 				>
@@ -75,7 +75,7 @@ function renderHeader(component: NLDDDatePicker): TemplateResult {
 			`}
 			${years.length < 2 ? nothing : html`
 				<nldd-menu class="date-picker__year-menu"
-					accessible-label=${component._t('components.date-picker.choose-year-action')}
+					accessible-label=${component._t('components.date-picker.to-choose-year-action')}
 					max-items="8"
 					width="136px"
 					@toggle=${component._handleYearMenuToggle}

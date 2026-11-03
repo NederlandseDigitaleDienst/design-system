@@ -15,6 +15,19 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Breaking
+
+- **9 translation keys are renamed, so the key names what the action does.** A key without a verb read as a choice. An override under an old key no longer applies, and the text falls back to Dutch. Rename it in your `translations`:
+  - `components.date-picker.choose-month-action` → `components.date-picker.to-choose-month-action`, now "Maand kiezen", as it opens a list
+  - `components.date-picker.choose-year-action` → `components.date-picker.to-choose-year-action`, now "Jaar kiezen"
+  - `components.document-tab-bar.overflow-action` → `components.document-tab-bar.show-more-tabs-action`
+  - `components.list.search-clear-action` → `components.list.clear-search-action`
+  - `components.pagination.next-action` → `components.pagination.go-to-next-page-action`
+  - `components.pagination.page-action` → `components.pagination.go-to-page-action`
+  - `components.pagination.previous-action` → `components.pagination.go-to-previous-page-action`
+  - `components.text-editor.code-copy-action` → `components.text-editor.copy-code-action`
+  - `components.token-field.token-menu-action` → `components.token-field.open-token-menu-action`, now "Toon opties voor", as on `nldd-token`
+
 ### Highlights
 
 - **`nldd-slider`, improved.** A click on its icons or Shift with an arrow key steps the value a tenth of the range, and the chosen part of the histogram now stands out in every theme. See Added and Changed.

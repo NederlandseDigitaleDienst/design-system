@@ -62,7 +62,7 @@ describe('nldd-text-editor – kopieerknop op een codeblok', () => {
 
 	it('draws a button again when its text has changed', async () => {
 		el = await editor('```\ncode\n```');
-		(el as unknown as { translations: Record<string, string> }).translations = { 'components.text-editor.code-copy-action': 'Copy' };
+		(el as unknown as { translations: Record<string, string> }).translations = { 'components.text-editor.copy-code-action': 'Copy' };
 		await el.updateComplete;
 		el.value = '```\ncode 2\n```';
 		await el.updateComplete;

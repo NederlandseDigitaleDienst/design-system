@@ -281,7 +281,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			'components.text-editor.annotation-plural-lowercase',
 			'components.text-editor.task-open-label',
 			'components.text-editor.task-done-label',
-			'components.text-editor.code-copy-action',
+			'components.text-editor.copy-code-action',
 		].map((key) => this._t(key as keyof NLDDTextEditorTranslations)).join('\n');
 	}
 
@@ -321,7 +321,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			Prec.highest(linkOpenBadge((url) => this._t('components.text-editor.open-in-new-tab-label', { url }))),
 			// A copy button on the head of each code block. See text-editor.code-copy.ts.
 			codeCopy({
-				copy: () => this._t('components.text-editor.code-copy-action'),
+				copy: () => this._t('components.text-editor.copy-code-action'),
 				success: () => this._t('components.text-editor.code-copy-success-text'),
 				failure: () => this._t('components.text-editor.code-copy-failure-text'),
 			}),
