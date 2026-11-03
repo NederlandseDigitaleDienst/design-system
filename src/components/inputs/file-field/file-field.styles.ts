@@ -347,6 +347,13 @@ export const fileFieldStyles = css`
 		color: var(--_file-field-rejected-color);
 	}
 
+	.file-field__reading-text {
+		display: flex;
+		height: 1lh;
+		align-items: center;
+		justify-content: center;
+	}
+
 	.file-field__drop-hint-text {
 		color: var(--semantics-content-secondary-color);
 	}

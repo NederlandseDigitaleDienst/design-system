@@ -111,7 +111,7 @@ describe('nldd-file-field – folders', () => {
 		await settle();
 		await waitForUpdate(el);
 		expect(el.files).toEqual([]);
-		expect(el.shadowRoot!.textContent).toContain('Sleep bestand, geen map');
+		expect(el.shadowRoot!.querySelector('.file-field__text > .is-active')!.textContent).toBe('Sleep bestand, geen map');
 	});
 
 	it('says so when a dropped folder is empty, or cannot be read', async () => {
@@ -121,7 +121,7 @@ describe('nldd-file-field – folders', () => {
 		await settle();
 		await waitForUpdate(el);
 		expect(el.files).toEqual([]);
-		expect(el.shadowRoot!.textContent).toContain('Map is leeg');
+		expect(el.shadowRoot!.querySelector('.file-field__text > .is-active')!.textContent).toBe('Map is leeg');
 		const broken = folder('kapot', [file('kapot/index.html')]);
 		(broken as unknown as { createReader: () => unknown }).createReader = () => ({
 			readEntries: (_resolve: unknown, reject: (error: Error) => void) => reject(new Error('NotReadableError')),
@@ -130,7 +130,7 @@ describe('nldd-file-field – folders', () => {
 		await settle();
 		await waitForUpdate(el);
 		expect(el.files).toEqual([]);
-		expect(el.shadowRoot!.textContent).toContain('Map niet te lezen');
+		expect(el.shadowRoot!.querySelector('.file-field__text > .is-active')!.textContent).toBe('Map niet te lezen');
 	});
 
 	it('shows an empty folder in place of what was chosen, then what was chosen again', async () => {

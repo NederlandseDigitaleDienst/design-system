@@ -67,6 +67,10 @@ interface Variant {
  * sentence that wraps in a narrow or zoomed field does not move the target
  * under a pointer that is dragging a file. The texts that only a drag brings
  * are left out on a device without hover, where nothing is dragged.
+ *
+ * A control holds the texts of both states, and of a field for one file and
+ * for more, so every field of a size is as tall at one width, whatever it
+ * shows and however it is set up.
  */
 function renderStack(element: 'text' | 'value', variants: Variant[]): TemplateResult {
 	return html`
@@ -89,6 +93,25 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 		...rejectionVariants(component, rejection),
 	];
 	return variants;
+}
+
+/** Every text a control can show, none of them active: they only reserve
+ *  their height. An area shows only the active text, and has a fixed height. */
+function reservedVariants(component: NLDDFileField): Variant[] {
+	if (component.variant === 'area') return [];
+	const t = (key: string) => component._t(`components.file-field.${key}`);
+	const sentence = (choose: string, hint: string) => html`<span class="file-field__choose-text">${t(choose)}</span> <span class="file-field__drop-hint-text">${t(hint)}</span>`;
+	const texts: [TemplateResult | string, Kind][] = [
+		[sentence('to-choose-file-action', 'drop-hint-lowercase-text'), 'idle'],
+		[sentence('to-choose-files-action', 'drop-hint-multiple-lowercase-text'), 'idle'],
+		[sentence('to-choose-files-or-folder-action', 'drop-hint-multiple-lowercase-text'), 'idle'],
+		...['drag-here-text', 'drag-here-multiple-text', 'replace-drag-text'].map((key): [string, Kind] => [t(key), 'drag']),
+		...['drop-here-text', 'drop-here-multiple-text', 'replace-drop-text'].map((key): [string, Kind] => [t(key), 'drop']),
+		...(['type', 'count', 'folder', 'empty-folder', 'unreadable-folder'] as const)
+			.map((reason): [string, Kind] => [component._rejectionText(reason), 'rejected']),
+		[t('wrong-file-type-error-text'), 'rejected'],
+	];
+	return texts.map(([content, kind]) => ({ content, kind, active: false }));
 }
 
 /** The reasons a drop can be refused for, as this field takes files: a field
@@ -180,6 +203,7 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 		{ content: sentence, kind: 'idle', active: !reading && !dragged },
 		...drags,
 		...(area ? [] : [{ content: reading ? renderReadingIndicator(component) : '', kind: 'reading' as const, active: reading }]),
+		...reservedVariants(component),
 	]);
 	const content = html`${area && reading ? renderReadingIndicator(component) : html`${area
 		? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>`
@@ -331,7 +355,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 			</div>
 			<div class=${classMap({ 'file-field__replace-area': true, 'is-active': replaced })}>
 				${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}
-				${renderStack('text', drags)}
+				${renderStack('text', [...drags, ...reservedVariants(component)])}
 				${renderValidationIcon(component)}
 			</div>
 		</div>

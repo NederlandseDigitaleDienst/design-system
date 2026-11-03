@@ -208,6 +208,25 @@ describe('nldd-file-field', () => {
 		expect(el.shadowRoot!.querySelector('.file-field__clear-button')!.getAttribute('accessible-label')).toBe('Wis selectie, rapport.pdf');
 	});
 
+	it('is as tall empty as with a file, and for one file as for more', async () => {
+		const unloadTokens = loadTokens();
+		const field = async (attributes: string, chosen: boolean) => {
+			const control = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" style="width: 300px" ${attributes}></nldd-file-field>`);
+			await waitForUpdate(control);
+			if (chosen) {
+				choose(control, txt('rapport.pdf'));
+				await waitForUpdate(control);
+			}
+			const height = control.getBoundingClientRect().height;
+			cleanup(control);
+			return height;
+		};
+		const heights = [await field('', false), await field('', true), await field('multiple', false), await field('multiple', true), await field('directory', false)];
+		unloadTokens();
+		expect(heights).toEqual(heights.map(() => heights[0]));
+		expect(heights[0]).toBeGreaterThan(44);
+	});
+
 	it('gives up the file icon in a narrow field first, then shows "Wijzigen" as an icon', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage" style="width: 400px"></nldd-file-field>');
 		await waitForUpdate(el);
