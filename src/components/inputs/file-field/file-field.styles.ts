@@ -397,6 +397,7 @@ export const fileFieldStyles = css`
 		display: block;
 		white-space: normal;
 		overflow-wrap: anywhere;
+		text-wrap: balance;
 	}
 
 	.file-field__name.is-wrapped .file-field__name-start {
