@@ -245,6 +245,8 @@ describe('nldd-file-field', () => {
 		const more = root.querySelector<HTMLElement>('.file-field__more-button')!;
 		expect(more.getAttribute('accessible-label')).toBe('Toon opties, rapport.pdf');
 		expect([...more.querySelectorAll('nldd-menu-item')].map((item) => item.getAttribute('text'))).toEqual(['Wijzigen', 'Wis selectie']);
+		expect(more.querySelector('nldd-menu-item:last-child')!.hasAttribute('destructive')).toBe(true);
+		expect(more.querySelector('nldd-menu-item:last-child')!.previousElementSibling!.localName).toBe('nldd-menu-divider');
 		el.focus();
 		expect(root.activeElement).toBe(more);
 		more.querySelectorAll('nldd-menu-item')[1].dispatchEvent(new CustomEvent('select'));

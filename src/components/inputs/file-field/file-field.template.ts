@@ -298,9 +298,11 @@ function renderMoreButton(component: NLDDFileField, size: string): TemplateResul
 						@select=${component._chooseFiles}
 					></nldd-menu-item>
 				`}
+				<nldd-menu-divider></nldd-menu-divider>
 				<nldd-menu-item
 					icon="dismiss"
 					text=${component._t('components.file-field.clear-action')}
+					destructive
 					@select=${component._handleClear}
 				></nldd-menu-item>
 			</nldd-menu>
