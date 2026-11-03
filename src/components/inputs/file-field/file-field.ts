@@ -85,8 +85,8 @@
  * "Wijzigen" and "Wis selectie" stacked in the middle. Both states have the same
  * height, so the page does not move when a file is chosen: 160px, 120px at
  * `size="sm"`, and a step more with `directory`, whose buttons take a row of
- * their own. Below 360px those buttons stack at full width, in both sizes,
- * and the area is one step taller again.
+ * their own. Where those buttons no longer fit side by side, below 360px or
+ * 300px at `size="sm"`, it is one step taller again.
  *
  * @element nldd-file-field
  * @attr {string} variant - 'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height
