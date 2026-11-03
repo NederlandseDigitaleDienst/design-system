@@ -30,7 +30,7 @@ export const fileFieldStyles = css`
 		--_file-field-rejected-border-color: var(--semantics-drop-targets-is-rejected-border-color);
 		--_file-field-rejected-background-color: var(--semantics-drop-targets-is-rejected-background-color);
 		--_file-field-file-icon-size: var(--primitives-space-24);
-		--_file-field-actions-gap: var(--primitives-space-4);
+		--_file-field-edit-button-group-gap: var(--primitives-space-4);
 		--_file-field-choose-text-color: var(--semantics-controls-is-selected-indicator-color);
 		--_file-field-choose-button-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
 		--_file-field-choose-button-is-active-highlight-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
@@ -41,7 +41,7 @@ export const fileFieldStyles = css`
 		--_file-field-area-padding: var(--primitives-space-16);
 		--_file-field-area-gap: var(--primitives-space-2);
 		--_file-field-area-icon-size: var(--primitives-space-40);
-		--_file-field-area-actions-padding-top: var(--primitives-space-8);
+		--_file-field-area-edit-button-group-padding-top: var(--primitives-space-8);
 		--_file-field-area-buttons-gap: var(--primitives-space-8);
 		--_file-field-area-choose-button-group-margin-top: var(--primitives-space-4);
 		--_file-field-area-choose-button-group-margin-bottom: var(--primitives-space-8);
@@ -356,16 +356,16 @@ export const fileFieldStyles = css`
 		white-space: pre;
 	}
 
-	.file-field__actions {
+	.file-field__edit-button-group {
 		display: flex;
 		position: relative;
 		flex-shrink: 0;
-		gap: var(--_file-field-actions-gap);
+		gap: var(--_file-field-edit-button-group-gap);
 		padding-right: var(--_file-field-clear-button-padding-right);
 		align-items: center;
 	}
 
-	.file-field__actions:not(:last-child) {
+	.file-field__edit-button-group:not(:last-child) {
 		padding-right: var(--primitives-space-0);
 	}
 
@@ -457,11 +457,11 @@ export const fileFieldStyles = css`
 		font: var(--_file-field-accepted-types-font);
 	}
 
-	.file-field--area .file-field__actions {
+	.file-field--area .file-field__edit-button-group {
 		flex-wrap: wrap;
 		justify-content: center;
 		gap: var(--_file-field-area-buttons-gap);
-		padding-top: var(--_file-field-area-actions-padding-top);
+		padding-top: var(--_file-field-area-edit-button-group-padding-top);
 		padding-right: var(--primitives-space-0);
 	}
 

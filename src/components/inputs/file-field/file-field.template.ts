@@ -215,7 +215,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 				<nldd-icon class="file-field__file-icon" icon=${fileIcon(files)} aria-hidden="true"></nldd-icon>
 				${renderStack('value', nameVariants)}
 				${area ? html`
-					<div class="file-field__actions">
+					<div class="file-field__edit-button-group">
 						<nldd-button
 							appearance="neutral-tinted"
 							size=${component.size}
@@ -237,7 +237,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 						></nldd-button>
 					</div>
 				` : html`
-					<div class="file-field__actions">
+					<div class="file-field__edit-button-group">
 						<nldd-button
 							appearance="neutral-tinted"
 							size=${buttonSize}

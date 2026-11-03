@@ -276,7 +276,7 @@ describe('nldd-file-field – directory', () => {
 		drop(el, fakeTransfer(file('index.html')));
 		await settle();
 		await waitForUpdate(el);
-		const change = el.shadowRoot!.querySelector<HTMLElement & { expandable: boolean; expanded: boolean }>('.file-field__actions nldd-button')!;
+		const change = el.shadowRoot!.querySelector<HTMLElement & { expandable: boolean; expanded: boolean }>('.file-field__edit-button-group nldd-button')!;
 		expect(change.expandable).toBe(true);
 		const box = change.getBoundingClientRect();
 		change.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1, clientX: box.left + 5, clientY: box.top + 5 }));

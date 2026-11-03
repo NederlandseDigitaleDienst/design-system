@@ -469,9 +469,9 @@ describe('nldd-file-field – variant="area"', () => {
 		const root = await area();
 		choose(el, pdf('offerte.pdf'));
 		await waitForUpdate(el);
-		const buttons = [...root.querySelectorAll('.file-field__actions nldd-button')];
+		const buttons = [...root.querySelectorAll('.file-field__edit-button-group nldd-button')];
 		expect(buttons.map((button) => button.getAttribute('text'))).toEqual(['Wijzigen', 'Wis selectie']);
-		expect(root.querySelector('.file-field__actions nldd-icon-button')).toBeNull();
+		expect(root.querySelector('.file-field__edit-button-group nldd-icon-button')).toBeNull();
 		expect(fullName(el)).toBe('offerte.pdf');
 	});
 
@@ -508,7 +508,7 @@ describe('nldd-file-field – variant="area"', () => {
 		const field = el.getBoundingClientRect();
 		const icon = box('.file-field__file-icon');
 		const value = box('.file-field__value');
-		const button = box('.file-field__actions nldd-button');
+		const button = box('.file-field__edit-button-group nldd-button');
 		expect(Math.round(value.top - icon.bottom)).toBe(2);
 		expect(Math.round(button.top - value.bottom)).toBe(10);
 		expect(Math.abs((icon.top - field.top) - (field.bottom - button.bottom))).toBeLessThanOrEqual(1);
@@ -520,7 +520,7 @@ describe('nldd-file-field – variant="area"', () => {
 		choose(el, pdf('offerte.pdf'));
 		await waitForUpdate(el);
 		expect(el.getBoundingClientRect().height).toBe(empty);
-		(el.shadowRoot!.querySelectorAll('.file-field__actions nldd-button')[1] as HTMLElement).click();
+		(el.shadowRoot!.querySelectorAll('.file-field__edit-button-group nldd-button')[1] as HTMLElement).click();
 		await waitForUpdate(el);
 		expect(el.files).toEqual([]);
 		expect(el.getBoundingClientRect().height).toBe(empty);
