@@ -20,6 +20,9 @@
  * bestand", or what `accept` takes, named from it ("Alleen PDF";
  * "Bestandstype past niet" where a type in it has no name). The
  * message stays for a few seconds and then gives way to the field again.
+ * Escape or a press dismisses it sooner. A press on the message only does
+ * that: it stood where "Bestand kiezen" was, so the dialog opens on the next
+ * press. Enter and Space open it right away.
  *
  * With `multiple`, a dropped folder is read down to the files in it, its
  * subfolders included, and mixed with loose files in one drop if need be. The
@@ -254,6 +257,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _resizeObserver?: ResizeObserver;
 	private _rejectionTimer?: ReturnType<typeof setTimeout>;
+	private _dismissing = false;
 	private _readingTimer?: ReturnType<typeof setTimeout>;
 	private _observedValue?: Element;
 
@@ -412,7 +416,8 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		});
 		this.addEventListener('dragover', this._handleDragOver);
 		this.addEventListener('drop', this._handleDrop);
-		this.addEventListener('pointerdown', this._clearRejection);
+		this.addEventListener('pointerdown', this._handlePointerDown);
+		this.addEventListener('click', this._handleClickCapture, { capture: true });
 		this.addEventListener('keydown', this._handleKeydown);
 	}
 
@@ -425,7 +430,8 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this._observedValue = undefined;
 		this.removeEventListener('dragover', this._handleDragOver);
 		this.removeEventListener('drop', this._handleDrop);
-		this.removeEventListener('pointerdown', this._clearRejection);
+		this.removeEventListener('pointerdown', this._handlePointerDown);
+		this.removeEventListener('click', this._handleClickCapture, { capture: true });
 		this.removeEventListener('keydown', this._handleKeydown);
 	}
 
@@ -736,6 +742,20 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		clearTimeout(this._rejectionTimer);
 		this._rejection = null;
 		this._announcement = '';
+	};
+
+	/** A press on a refusal only dismisses it: the message stood where "Bestand
+	 *  kiezen" was, so the click that follows does not open the dialog. The
+	 *  keyboard sends no pointerdown, and Enter still opens it. */
+	private _handlePointerDown = (): void => {
+		this._dismissing = this._rejection !== null;
+		this._clearRejection();
+	};
+
+	private _handleClickCapture = (e: Event): void => {
+		if (!this._dismissing) return;
+		this._dismissing = false;
+		e.stopPropagation();
 	};
 
 	private _handleKeydown = (e: KeyboardEvent): void => {
