@@ -85,10 +85,12 @@ export const fileFieldStyles = css`
 
 	:host([directory]) {
 		--_file-field-area-min-height: var(--primitives-area-200);
+		--_file-field-area-stacked-min-height: var(--primitives-area-240);
 	}
 
 	:host([directory][size="sm"]) {
 		--_file-field-area-min-height: var(--primitives-area-160);
+		--_file-field-area-stacked-min-height: var(--primitives-area-200);
 	}
 
 	:host([disabled]) {
@@ -495,6 +497,19 @@ export const fileFieldStyles = css`
 
 	.file-field--area {
 		min-height: var(--_file-field-area-min-height);
+		container: file-field-area / inline-size;
+	}
+
+	@container file-field-area (max-width: 22.4375rem) {
+		:host([directory]:not([size="sm"])) .file-field--area > :is(.file-field__choose-button, .file-field__drop-area, .file-field__chosen-area) {
+			min-height: var(--_file-field-area-stacked-min-height);
+		}
+	}
+
+	@container file-field-area (max-width: 18.6875rem) {
+		:host([directory][size="sm"]) .file-field--area > :is(.file-field__choose-button, .file-field__drop-area, .file-field__chosen-area) {
+			min-height: var(--_file-field-area-stacked-min-height);
+		}
 	}
 
 	.file-field--area :is(.file-field__choose-button, .file-field__drop-area, .file-field__replace-area, .file-field__chosen-file) {

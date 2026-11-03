@@ -227,6 +227,20 @@ describe('nldd-file-field', () => {
 		expect(heights[0]).toBeGreaterThan(44);
 	});
 
+	it('makes an area with directory a step taller once its buttons stack', async () => {
+		const unloadTokens = loadTokens();
+		const height = async (attributes: string, width: number) => {
+			const area = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" variant="area" directory ${attributes} style="width: ${width}px"></nldd-file-field>`);
+			await waitForUpdate(area);
+			const result = area.getBoundingClientRect().height;
+			cleanup(area);
+			return result;
+		};
+		const heights = [await height('', 400), await height('', 240), await height('size="sm"', 400), await height('size="sm"', 240)];
+		unloadTokens();
+		expect(heights).toEqual([200, 240, 160, 200]);
+	});
+
 	it('reserves the sentence that offers a folder only in a field with directory', async () => {
 		const reserved = async (attributes: string) => {
 			const control = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" ${attributes}></nldd-file-field>`);
