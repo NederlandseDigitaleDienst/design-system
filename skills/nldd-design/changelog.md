@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.15.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.14.0...v0.15.0) (2026-11-03)
+
 ### Highlights
 
 - **`nldd-slider`, improved.** A click on its icons or Shift with an arrow key steps the value a tenth of the range, and the chosen part of the histogram now stands out in every theme. See Added and Changed.
