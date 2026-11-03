@@ -217,6 +217,10 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-avatar-group` fits its container.** Where there is no room for every avatar, it shows as many as fit and puts the rest behind "+N". The "+N" scales with the group and shows an ellipsis with the count in a tooltip where the number does not fit, and on a small screen the list behind it has a title bar with the name of the group and a close button.
 - **8 new icons**: `check-mark-square`, the checked sibling of `square`, and 7 file icons for images: `file-gif`, `file-heic`, `file-jpg`, `file-png`, `file-svg`, `file-tiff` and `file-webp`.
 
+### Breaking
+
+- **Three translation keys are renamed** to say that their text starts in lowercase, because it is placed inside a longer string: `components.progress-bar.completed-suffix-text` and `components.progress-circle.completed-suffix-text` are now `…completed-suffix-lowercase-text`, and `components.date-picker.week-number-column-short-label` is now `…week-number-column-short-lowercase-label`. An override under the old key no longer applies; rename it.
+
 ### Added
 
 - **`nldd-text-editor` checks tasks.** With `syntax="hidden"` a task item reads as a square or a checked square in the place of its bullet, and a long task wraps under its text. Like every other mark, the markdown (`- [ ]`) comes back on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, all at once, in both syntax modes. The box is no tab stop, so Tab still leaves the editor, and a screen reader reads "Taak, open" or "Taak, afgerond" in its place (`translations` overrides both).
@@ -244,10 +248,6 @@ here; consult the commit history if you need that level of detail.
 - **A page in `nldd-popover` shrinks to the height limit and scrolls itself**, as in `nldd-sheet`, so a sticky header stays in view. Short content keeps the popover as high as its content. Other content scrolls the popover as before.
 - **`nldd-file-field` shows the chosen file with the icon of its format**, such as `file-pdf` or `file-png` (`file` for a format without one, `file-on-file` for several), and cuts a long name short in the middle, measured to the width it has, so its start and its end stay in view ("Screenshot 20…at 13.12.21.png"). A name that is cut short shows whole in a tooltip, and a screen reader reads it whole. Empty, the whole surface is one button with one sentence centered in it, "Bestand kiezen of sleep het hierheen", its first part accented. The whole surface lights up on hover, like a button, and a press anywhere on it opens the file dialog; it replaces the `nldd-button` in the corner and the "Geen bestand gekozen" text, whose translation key `components.file-field.no-file-chosen-text` is gone. On a device without hover, where nothing can be dragged, the hint is left out. Once there is a file, "Wijzigen" stands beside the cross, and focus moves along with it. Both buttons name the chosen file to a screen reader ("Wijzigen, Bijlage, rapport.pdf", "Wis selectie, rapport.pdf"), as a native file input does, and a file that is dropped is announced ("rapport.pdf gekozen"). The sentence and the messages wrap onto more lines, balanced, where the field is narrow or zoomed in, instead of being cut short. The field is then as tall as the longest of its texts all the time, so it does not change height while a file is dragged over it.
 
-### Breaking
-
-- **Three translation keys are renamed** to say that their text starts in lowercase, because it is placed inside a longer string: `components.progress-bar.completed-suffix-text` and `components.progress-circle.completed-suffix-text` are now `…completed-suffix-lowercase-text`, and `components.date-picker.week-number-column-short-label` is now `…week-number-column-short-lowercase-label`. An override under the old key no longer applies; rename it.
-
 ### Fixed
 
 - **A selection in `nldd-text-editor` stops at the text and no longer covers the border.** The border of the input-field appearance was drawn under the content, so a selection over several lines ran over it on the right. It now lies over the content, as in `nldd-code-viewer` and `nldd-code-editor`, and each line of a selection stops where the text does, short of the padding.
@@ -265,6 +265,11 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-code-viewer` shows a diff.** Give it a unified diff and `diff`, and it shows the code with added lines green, removed lines red, the old and new line numbers, and the changed words marked.
 - **Fixes in `nldd-text-editor`.** It tells assistive tech when it is read-only or required, a toolbar button in Safari acts on the selected lines only, a long document is styled fully once parsed, and a value set while it has focus no longer counts as an edit. See Fixed for the rest.
 - **7 new icons:** `book-with-bookmark` (alias `git-repository`), `chart-bar-x-axis`, `color-chart` (alias `themes`), `creditcard`, `lightning-filled`, `rss` and `wrench`. `lightning` is redrawn as an outline, next to the new `lightning-filled`.
+
+### Breaking
+
+- **The icon alias `chart-line` is now `line-chart`**, next to the new `bar-chart` for `chart-bar-x-axis`. Replace `icon="chart-line"` with `icon="line-chart"`, or use the icon's own name, `chart-line-x-y-axis`.
+- **`--components-text-editor-mention-*` is now `--semantics-mentions-*`**, since the editor and the rich text share the mention colors. It adds a `highlight-border-color` for the edge and an `is-hovered` and `is-active` background for a mention that is a link. The themes that ship with the system moved along. A theme of your own that sets the old names loses its mention colors without an error, so rename them.
 
 ### Added
 
@@ -293,11 +298,6 @@ here; consult the commit history if you need that level of detail.
 - **A new line in a quote in `nldd-text-editor` is as tall as the rest of the quote right away.** The quote size sat on the text, so a line with only its `> ` had the height of plain text and grew at the first letter. It sits on the line now.
 - **A toolbar button in `nldd-text-editor` acts on the selected lines only, in Safari too.** When focus came back to the editor after a click on a toolbar control, Safari could stretch the selection to the start of the document. The editor took that as the new selection, so a list or heading button right after it changed every line from the top down to the selection. The editor now keeps its own selection in that case. A selection you make yourself, with the mouse or the keyboard, is never touched.
 
-### Breaking
-
-- **The icon alias `chart-line` is now `line-chart`**, next to the new `bar-chart` for `chart-bar-x-axis`. Replace `icon="chart-line"` with `icon="line-chart"`, or use the icon's own name, `chart-line-x-y-axis`.
-- **`--components-text-editor-mention-*` is now `--semantics-mentions-*`**, since the editor and the rich text share the mention colors. It adds a `highlight-border-color` for the edge and an `is-hovered` and `is-active` background for a mention that is a link. The themes that ship with the system moved along. A theme of your own that sets the old names loses its mention colors without an error, so rename them.
-
 ## [0.11.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.10.0...v0.11.0) (2026-10-23)
 
 ### Highlights
@@ -305,6 +305,12 @@ here; consult the commit history if you need that level of detail.
 - **Improved themes.** The focus ring, the steps, the progress, the banner icon and the selection sit closer to the theme color where contrast allows it, everything that marks something reaches 3:1 in dark mode, and the near-black selections in the light and status themes are a softer gray.
 - **Compare themes at a glance.** Under Docs/Thema's in Storybook every theme has its own page with the controls in light and dark mode side by side, so switching themes is one click.
 - **Keyboard shortcuts on seven components.** `nldd-button`, `nldd-icon-button`, `nldd-toggle-button`, `nldd-segmented-control-item`, `nldd-split-button`, `nldd-search-field` and `nldd-tooltip` show the shortcut of an action, as menu items already did: after the text, in the tooltip, or at the end of the search field.
+
+### Breaking
+
+- **`--components-tab-bar-is-current-*` is now `--semantics-tabs-is-current-*`.** `nldd-document-tab-bar` reads the same tokens for its selected document, so two components share them. If your theme sets these tokens, rename them.
+- **`--primitives-color-accent-*` is the theme color in every theme.** In rood, robijnrood and oranje the accent scale used to be gray, and in geel and donkergeel its dark steps were near-black in light mode. Those choices now sit in the semantics and components tokens that need them, and every component reads such a token instead of the scale. If your own CSS reads `--primitives-color-accent-*`, it now gets the theme color in those themes; read a semantics token to follow what the theme decides.
+- **The `indicator` slot of `nldd-activity-indicator` is gone.** The activity indicator is for loading of unknown length; a progress bar or circle in its slot lost the label and announced itself twice. When you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` directly instead of inside the activity indicator.
 
 ### Added
 
@@ -338,18 +344,17 @@ here; consult the commit history if you need that level of detail.
 - **The secondary text on an accent button keeps its contrast in every state.** In the themes with black text on a light button (geel, donkergeel, lichtblauw, mintgroen and paars) a hovered, pressed or open button got darker while its supporting text and shortcut kept the same color, down to 2.9:1 when open and pressed. That color now moves along with the button and stays above 4.5:1. The other themes do not change.
 - **`nldd-activity-indicator` takes its space during the delay.** It was 0px high until it faded in after a second, so the content around it shifted twice. It now takes the size of the circle, and of the label with `show-text`, from the start, and gives it up once `complete` is set. Give a parent that sizes to its content a `min-height` for the content you expect, so the area does not change height when the content arrives, such as `<nldd-container min-height="240px">`; the indicator fills it and centers itself.
 
-### Breaking
-
-- **`--components-tab-bar-is-current-*` is now `--semantics-tabs-is-current-*`.** `nldd-document-tab-bar` reads the same tokens for its selected document, so two components share them. If your theme sets these tokens, rename them.
-- **`--primitives-color-accent-*` is the theme color in every theme.** In rood, robijnrood and oranje the accent scale used to be gray, and in geel and donkergeel its dark steps were near-black in light mode. Those choices now sit in the semantics and components tokens that need them, and every component reads such a token instead of the scale. If your own CSS reads `--primitives-color-accent-*`, it now gets the theme color in those themes; read a semantics token to follow what the theme decides.
-- **The `indicator` slot of `nldd-activity-indicator` is gone.** The activity indicator is for loading of unknown length; a progress bar or circle in its slot lost the label and announced itself twice. When you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` directly instead of inside the activity indicator.
-
 ## [0.10.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.9.0...v0.10.0) (2026-10-21)
 
 ### Highlights
 
 - **Themes for 17 Rijkshuisstijl colors.** Set `data-nldd-theme` on `<html>` and buttons, selections, links, the focus ring, the hero and the badge take that color instead of lintblauw, in light and dark mode. The ribbon and the logo stay lintblauw.
 - **A favicon and touch icon in the color of your theme.** The field behind the ribbon takes the theme color, so the tab and the home screen match the site. They ship as `@nldd/design-system/favicon/geel/` and so on.
+
+### Breaking
+
+- **`nldd-badge` no longer takes a Rijkshuisstijl color.** `color` is the same set as `nldd-status-bar`, plus `inherit`: `critical` (the default), `accent`, `neutral`, `warning`, `success` and `inherit`. A badge is a signal, not a category, and a color of its own clashed with the theme. A badge with `color="hemelblauw"` or another named color now gets the accent, and says so in the console during development. Pick the color for the whole site with a theme, or use `custom-color` for a color of its own.
+- **`nldd-hero` no longer takes a Rijkshuisstijl color for its panel.** `main-background` is `accent` (the default) or `base`. A color per hero came before themes. A theme now picks the color for the whole site. A hero with `main-background="donkerblauw"` or another named color gets the accent instead, and says so in the console during development. To keep the color, set the theme on `<html>` (`data-nldd-theme="donkerblauw"`, with `@nldd/design-system/themes/donkerblauw.css`) and remove the attribute. Without a theme the accent is lintblauw.
 
 ### Added
 
@@ -377,11 +382,6 @@ here; consult the commit history if you need that level of detail.
 - **Components switch to their narrow layout when you zoom in Safari.** With page zoom, Safari measured the width of a container that takes its size from the layout in zoomed pixels, so a list 537px wide counted as wider than 641px and kept its desktop layout, with a column of one word per line. The breakpoints in the component styles are now in rem (`40rem` instead of `640px`), which scale with the zoom, and so are the thresholds of their own in rich text, the split sections, the progress bar, pagination and the document tab bar. The style check now fails on a px length in a query condition. At the default font size of 16px nothing changes; with a larger default font size the narrow layout comes earlier. `@nldd/design-system/breakpoints` adds `queryBreakpoints` (the rem values), and `breakpointPx()` and `rootFontSize()` for a width you measure in script; `breakpoints` keeps its px values. A `hide-below` or `hide-above` with a px value of your own still has the problem in Safari: write it in rem.
 - **On a small screen `nldd-hero` keeps the full distance at the top again.** Half the distance (8px) put the hero too close to the top bar on mobile, so there it is 16px again, as for the other page sections. On md and lg the top stays at half.
 
-### Breaking
-
-- **`nldd-badge` no longer takes a Rijkshuisstijl color.** `color` is the same set as `nldd-status-bar`, plus `inherit`: `critical` (the default), `accent`, `neutral`, `warning`, `success` and `inherit`. A badge is a signal, not a category, and a color of its own clashed with the theme. A badge with `color="hemelblauw"` or another named color now gets the accent, and says so in the console during development. Pick the color for the whole site with a theme, or use `custom-color` for a color of its own.
-- **`nldd-hero` no longer takes a Rijkshuisstijl color for its panel.** `main-background` is `accent` (the default) or `base`. A color per hero came before themes. A theme now picks the color for the whole site. A hero with `main-background="donkerblauw"` or another named color gets the accent instead, and says so in the console during development. To keep the color, set the theme on `<html>` (`data-nldd-theme="donkerblauw"`, with `@nldd/design-system/themes/donkerblauw.css`) and remove the attribute. Without a theme the accent is lintblauw.
-
 ## [0.9.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.100...v0.9.0) (2026-10-19)
 
 ### Highlights
@@ -391,6 +391,10 @@ here; consult the commit history if you need that level of detail.
 - **`accessible-label` works the same everywhere.** It names a navigation list, and `nldd-list-item` has one too.
 - **A step stands beside its title.** `nldd-step-cell` puts its dot at the top of a row with `vertical-alignment="top"`, or beside a first line of any height with `marker-offset`, so a step with a title and a paragraph no longer has its dot halfway down the text.
 - **The corner of a hero without an image is smaller.** On a hero with a single title the corner took up most of its height, so the panel looked like a drop. Without media it now takes half the radius, and in any hero never more than a third of the height.
+
+### Breaking
+
+- **The translation key for the new-tab hint is renamed.** `components.{name}.opens-in-new-tab-label` is now `components.{name}.link-hint-new-tab-lowercase-label`, next to the new `link-hint-external-lowercase-label` and `link-hint-external-new-tab-lowercase-label`, so the three hints of a link sit together. The text always follows a name after a comma, so the default is lowercase: "opent in nieuw tabblad". If you override this text with `translations` or `setTranslations()`, rename the key and write the text in lowercase. The old key does nothing anymore.
 
 ### Added
 
@@ -412,10 +416,6 @@ here; consult the commit history if you need that level of detail.
 
 - **The corner of an `nldd-hero` without media is smaller.** On a hero with a single title, the radius of 60px took up more than 80% of a panel 73px high. Without an image the panel is the whole hero, so it now takes the radius of a panel: half, 0.75X on small screens and 1X above. In any hero the radius is never more than a third of the shortest side of the area it rounds, which also protects a hero with a small `media-height`. Without media the corner applies in every layout, overlap included, and the hero chooses top-right, or top-left for a panel on the right.
 
-### Breaking
-
-- **The translation key for the new-tab hint is renamed.** `components.{name}.opens-in-new-tab-label` is now `components.{name}.link-hint-new-tab-lowercase-label`, next to the new `link-hint-external-lowercase-label` and `link-hint-external-new-tab-lowercase-label`, so the three hints of a link sit together. The text always follows a name after a comma, so the default is lowercase: "opent in nieuw tabblad". If you override this text with `translations` or `setTranslations()`, rename the key and write the text in lowercase. The old key does nothing anymore.
-
 ## [0.8.100](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.99...v0.8.100) (2026-10-16)
 
 ### Highlights
@@ -425,6 +425,12 @@ here; consult the commit history if you need that level of detail.
 - **Icons are easier to find.** The icon gallery has its own page under Docs › Iconen, where it used to be the last story of `nldd-icon`. Search every icon and alias there, or see what is new or updated.
 - **A design guideline for link text.** A link names where it goes: no "klik hier", "lees meer" or "meer info", which say nothing to someone scanning the page or to a screen reader listing its links.
 - **The examples follow the design guidelines.** Button labels in the imperative, no "Annuleer" next to the primary action, the safe way out first in a destructive dialog, link texts that name their destination, and Dutch text with the fixed example cast.
+
+### Breaking
+
+- **Items in a horizontal-scroll `nldd-collection` stop at 480px.** One or two items that fit grew to the full width of the container, so a card of 320px became more than 1000px wide on a desktop. They now grow up to 480px and stay at the start. An `item-min-width` wider than 480px raises the limit with it, and `item-max-width` sets your own; `item-max-width="100%"` brings back the old behavior.
+
+- **`item-width` on `nldd-collection` is now `item-min-width`.** It was a minimum in every layout: in a grid the narrowest a column gets, in a horizontal scroll the width an item never shrinks below. The new name says so, and pairs with `item-max-width`. There is no alias. An `item-width` left on a collection does nothing, so its items fall back to the default of 280px; in development the collection says so once, with the renamed attribute. Rename the attribute on every `nldd-collection`.
 
 ### Added
 
@@ -454,12 +460,6 @@ here; consult the commit history if you need that level of detail.
 
 - **A menu under an `nldd-menu-bar-item` opens against its indicator.** The indicator stops 6px short of the item's bottom edge, and the menu hung off the item, so it opened with a gap below the gray box that marked the open item. It now touches the indicator, which keeps its rounded corners.
 
-### Breaking
-
-- **Items in a horizontal-scroll `nldd-collection` stop at 480px.** One or two items that fit grew to the full width of the container, so a card of 320px became more than 1000px wide on a desktop. They now grow up to 480px and stay at the start. An `item-min-width` wider than 480px raises the limit with it, and `item-max-width` sets your own; `item-max-width="100%"` brings back the old behavior.
-
-- **`item-width` on `nldd-collection` is now `item-min-width`.** It was a minimum in every layout: in a grid the narrowest a column gets, in a horizontal scroll the width an item never shrinks below. The new name says so, and pairs with `item-max-width`. There is no alias. An `item-width` left on a collection does nothing, so its items fall back to the default of 280px; in development the collection says so once, with the renamed attribute. Rename the attribute on every `nldd-collection`.
-
 ### Fixed
 
 - **`nldd-container width="fit-content"` takes the width of its content.** The container measures its own width for its breakpoint padding and gap, and that measuring left a fit-content container 0px wide, so whatever was in it piled up on its neighbours. A fit-content container no longer measures itself; its breakpoints follow the container around it.
@@ -473,6 +473,10 @@ here; consult the commit history if you need that level of detail.
 - **Closing tabs one after another keeps the next close button under the pointer.** The tabs in an `nldd-document-tab-bar` keep their width while you close them, and grow into the space once the pointer leaves the bar.
 - **Notifications can be raised from code.** `NLDDNotification.show()` creates, shows and cleans up a notification, which is the way to raise one from a framework.
 - **`nldd-visually-hidden` is new**, for text that only a screen reader reads, such as the header of a column of checkboxes.
+
+### Breaking
+
+- **`label` on `nldd-toolbar` is now `accessible-label`.** It was the one place where an accessible name was called `label`; every other component says `accessible-label`, and on `nldd-toolbar-item` `label` is the visible text below the item, which made the two easy to mix up. There is no alias: a `label` left on a toolbar does nothing, so the toolbar loses its name. Rename the attribute on every `nldd-toolbar`. The `label` on `nldd-toolbar-item` stays as it is.
 
 ### Added
 
@@ -490,10 +494,6 @@ here; consult the commit history if you need that level of detail.
 
 - **Closing tabs in `nldd-document-tab-bar` one after another keeps the next close button under the pointer.** Closing a tab with the pointer used to spread the others over the space at once, so the close button of the next tab moved away from the pointer. The tabs now keep their width until the pointer leaves the bar, and the next close button slides in under the pointer. Then they grow into the space, without motion for anyone who asks for reduced motion. Closing the last tab of the row, with none left in the overflow, lets them grow into the space at once; closing from the keyboard spreads them at once.
 
-### Breaking
-
-- **`label` on `nldd-toolbar` is now `accessible-label`.** It was the one place where an accessible name was called `label`; every other component says `accessible-label`, and on `nldd-toolbar-item` `label` is the visible text below the item, which made the two easy to mix up. There is no alias: a `label` left on a toolbar does nothing, so the toolbar loses its name. Rename the attribute on every `nldd-toolbar`. The `label` on `nldd-toolbar-item` stays as it is.
-
 ### Fixed
 
 - **Text in an `nldd-popover` under a button can be selected.** `nldd-button`, `nldd-icon-button`, `nldd-menu-bar-item` and `nldd-menu-bar` switch text selection off for themselves and everything in them, and a popover in their `popup` slot is in them. The popover now switches it back on, so its text can be selected and copied.
@@ -509,6 +509,10 @@ here; consult the commit history if you need that level of detail.
 - **A round of accessibility fixes.** A skip link that could silently do nothing, a tooltip you could not close with Escape while pointing at it, a copy failure that vanished after two seconds, and a scrolling sidebar that Firefox focused without a role or a name.
 - **A rule in `nldd-validation-list` no longer rejects an empty optional field.** A `match` or `minlength` under a field that may stay empty used to block every submit that left it empty. See Breaking if a field relies on the old behavior.
 
+### Breaking
+
+- **Rules in `nldd-validation-list` skip an empty value unless the field needs one.** An empty value used to fail `match`, `minlength` and `maxlength` like any other. It now passes them, the way the native `pattern` and `minlength` leave an empty input alone, unless an item has `required` or the control itself is `required`. If you counted on `minlength` to stop an empty field, add `required` to the control or add an item with `required`. For example: `<nldd-validation-item id="password-required" required>Vul een wachtwoord in</nldd-validation-item>` next to the `minlength` item.
+
 ### Added
 
 - **Sub-pages in `nldd-list type="navigation"`.** Put the rows of a sub-level in their parent row's `slot="children"`, the slot a tree already uses. The parent renders them as a list inside its list item, so a screen reader hears the level and how many there are; an indent made with a spacer cell alone stayed one flat list. They are always shown and the arrow keys walk them like any other row. Indenting is still yours: add an `nldd-spacer-cell` per level.
@@ -521,10 +525,6 @@ here; consult the commit history if you need that level of detail.
 - **Escape closes an `nldd-tooltip` and nothing else.** While a tooltip is showing, by hover or by focus, the first Escape closes the tooltip only. A dialog, sheet or menu around it stays open and closes on the next press, where one press used to close both. The tooltip takes the key in the capture phase on `document` and stops it there, so a handler of your own for Escape, in a search field or a combobox for instance, does not hear that first press either.
 - **A link stays a link in the overflow menu of `nldd-menu-bar`.** An item with `href` used to become a button in the "Meer opties" menu. It is an `<a>` now, so it opens in a new tab like the item in the bar, and a click handler on the original item still runs and can cancel the navigation.
 - **A failed copy in `nldd-code-viewer` stays on screen.** "Kopiëren mislukt" disappeared after two seconds like the success message. It now stays until you leave the button, press Escape or try again. The button takes focus on click, so leaving it works in Safari too.
-
-### Breaking
-
-- **Rules in `nldd-validation-list` skip an empty value unless the field needs one.** An empty value used to fail `match`, `minlength` and `maxlength` like any other. It now passes them, the way the native `pattern` and `minlength` leave an empty input alone, unless an item has `required` or the control itself is `required`. If you counted on `minlength` to stop an empty field, add `required` to the control or add an item with `required`. For example: `<nldd-validation-item id="password-required" required>Vul een wachtwoord in</nldd-validation-item>` next to the `minlength` item.
 
 ### Fixed
 
@@ -543,6 +543,14 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-app-view` is now `nldd-shell`.** It is the outer layer of a website as much as of an application, and the old name suggested only the second. Every page needs the rename, since there is no alias; see Breaking.
 - **Icons are getting a typeface of their own.** We are drawing a typeface for the letters and digits inside icons: a simpler, more geometric version of RijksSans. The twelve icons that hold a letter or a digit are the first in it: `heading-1` through `heading-6`, `numbered-list`, `square-1`, `bold`, `strikethrough`, `underlined` and `text-format-size`.
 
+### Breaking
+
+- **`main-width` on `nldd-hero` follows the content.** `1/2`, `2/3` and `3/4` are gone: half the width was too narrow for text on md, and three quarters too wide to read on a large screen. The panel is now as wide as its content needs, between 480px and 640px and never wider than the image allows (`main-width="auto"`, the default). `full` stays, and any CSS width (`560px`, `60%`) sets it exactly, still never wider than the image allows. A fraction is not a CSS width, so it falls back to `auto` and says so in development.
+- **A hero with an image overlaps by default.** `nldd-hero` used to keep its text panel on the image; it now lets it fall over the bottom edge and run on below, and takes only the horizontal side of `main-position`. A hero whose panel stands at the top or along a side (`top-left`, `left` and so on), or whose panel is too short to reach below the image, needs `layout="contained"` to stay as it was. A hero without an image does not change.
+- **`nldd-app-view` is now `nldd-shell`.** It is the outer layer of everything, a website as much as an application, and "app view" suggested it was only for the second. Rename the tag in every page, the import (`@nldd/design-system/app-view` becomes `/shell`) and the class (`NLDDAppView` becomes `NLDDShell`). There is no alias: an `nldd-app-view` left behind is an unknown element, so the page loses its background and its scroll mode, and the document font, which the stylesheet sets once a shell is on the page. A CSS selector on `nldd-app-view` needs the new name too.
+- **`data-width` in `nldd-rich-text` is now `data-rich-text-width`.** The attribute that moves one child to another width zone (`main`, `wide` or `full`) said neither what it belonged to nor that it only works inside a rich text, and it read like the `width` of a page section, which is something else. There is no alias: a `data-width` left behind does nothing, and the child falls back to the zone of its kind.
+- **`is-last` is gone from page sections.** `nldd-page` marks the section that takes the leftover height with `data-growing` instead of the `is-last` class, since a framework's class binding rewrites `class` and could wipe it. If you styled `.is-last` yourself, use `[data-growing]`.
+
 ### Added
 
 - **`layout` on `nldd-hero`**, with `overlap` (the default) and `contained`. In `overlap` the text panel falls over the bottom of the image by `overlap-size` (any CSS length, 160px by default) and runs on below it as far as its content needs. The image keeps a fixed height (320px on md, 400px on lg, or your own `media-height` or `media-aspect-ratio`), so it stays the same whatever the content, and the overlap stays the same whatever the image. A panel shorter than `overlap-size` ends inside the image; that is up to you, and it says so in development. `contained` keeps the panel on the image, in any of the eight positions.
@@ -553,14 +561,6 @@ here; consult the commit history if you need that level of detail.
 - **A page structure pattern** (`page-structure.md` in `nldd-design-build`), for the frame every page of a website shares: the `nldd-shell` around everything, one section per block of content, a surface made with `background`, and one `h1`. Its header is the bar on top: search and a language menu in the utility slot of the top bar, a back button to the page above on every page but the home, and a skip link around it. Where a site has a personal part, a third item signs you in, and becomes a menu with your name, your profile and a way to sign out once you have. A status bar, when there is something every visitor has to know, goes above the bar. Its footer has the breadcrumbs in a row of their own, a main part each website fills in itself, and a legal bar that links straight to Contact, Toegankelijkheid, Privacy and Over deze website: grouping the privacy statement under an "about" page alone is not enough, since the European data protection guidelines ask for a direct link on every page.
 - **Topic page and navigation page patterns** (`topic-page.md`, `navigation-page.md` in `nldd-design-build`). A topic page opens with a hero holding a short explanation and its one main task, then has text beside an image, link cards to pages wherever they already live, a list of the pages below the topic, and related topics as link cards in a tinted section at the bottom. The home page shows the same kinds of sections: an image beside text in an `nldd-one-half-one-half-section`, cards with an intro, and a list of topics beside its title and a short text, laid out like the navigation page. A navigation page shows its choice as a navigation list next to the title and a short intro, in an `nldd-one-third-two-thirds-section`, or as a full-width collection of link cards below them; the pattern shows both.
 - **`nldd-list-item` and `nldd-list-item-segment` have `current-type`**, the `aria-current` value a `current` row or segment puts on its link. It was always `page`, which is wrong for a table of contents: every row there points at a section of the page you are already on. Set `current-type="location"` there. Same attribute and values as on `nldd-menu-bar-item`.
-
-### Breaking
-
-- **`main-width` on `nldd-hero` follows the content.** `1/2`, `2/3` and `3/4` are gone: half the width was too narrow for text on md, and three quarters too wide to read on a large screen. The panel is now as wide as its content needs, between 480px and 640px and never wider than the image allows (`main-width="auto"`, the default). `full` stays, and any CSS width (`560px`, `60%`) sets it exactly, still never wider than the image allows. A fraction is not a CSS width, so it falls back to `auto` and says so in development.
-- **A hero with an image overlaps by default.** `nldd-hero` used to keep its text panel on the image; it now lets it fall over the bottom edge and run on below, and takes only the horizontal side of `main-position`. A hero whose panel stands at the top or along a side (`top-left`, `left` and so on), or whose panel is too short to reach below the image, needs `layout="contained"` to stay as it was. A hero without an image does not change.
-- **`nldd-app-view` is now `nldd-shell`.** It is the outer layer of everything, a website as much as an application, and "app view" suggested it was only for the second. Rename the tag in every page, the import (`@nldd/design-system/app-view` becomes `/shell`) and the class (`NLDDAppView` becomes `NLDDShell`). There is no alias: an `nldd-app-view` left behind is an unknown element, so the page loses its background and its scroll mode, and the document font, which the stylesheet sets once a shell is on the page. A CSS selector on `nldd-app-view` needs the new name too.
-- **`data-width` in `nldd-rich-text` is now `data-rich-text-width`.** The attribute that moves one child to another width zone (`main`, `wide` or `full`) said neither what it belonged to nor that it only works inside a rich text, and it read like the `width` of a page section, which is something else. There is no alias: a `data-width` left behind does nothing, and the child falls back to the zone of its kind.
-- **`is-last` is gone from page sections.** `nldd-page` marks the section that takes the leftover height with `data-growing` instead of the `is-last` class, since a framework's class binding rewrites `class` and could wipe it. If you styled `.is-last` yourself, use `[data-growing]`.
 
 ### Changed
 
@@ -598,18 +598,6 @@ here; consult the commit history if you need that level of detail.
 
 - **The `--components-*` layer is gone.** A component's values now sit as local variables in its own stylesheet, and what several components share became a semantics token. Restyling one component through a public token was a quiet way to make it differ from the rest. If you want a component to change, ask in an issue. See Breaking.
 
-### Added
-
-- **File icons** `file-pdf`, `file-markdown`, `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf`, with the aliases `pdf-document`, `markdown-document`, `odt-document`, `ods-document`, `odp-document`, `odg-document` and `odf-document`.
-
-- **Icons** `microscope`, `share-network`, `power-plug-socket` (with the alias `plug-connected`), `subscript` and `superscript`.
-
-- **`--semantics-brand-ribbon-color`**, next to the ribbon widths: the color of the Rijksoverheid ribbon, which `nldd-top-navigation-bar` and `nldd-page-footer` both draw. It does not follow a theme's accent color, since the ribbon does not either.
-
-### Changed
-
-- **Every local variable in a component carries the component's name**, such as `--_button-background-color` instead of `--_background-color`. A custom property inherits through shadow boundaries, and a generic name on one component reached the elements of another slotted inside it. Locals were never meant to be set from outside; if you did set one, it now has a different name.
-
 ### Breaking
 
 - **`nldd-step-indicator` is now `nldd-step-bar`, and `nldd-timeline-track-cell` is now `nldd-step-cell`.** They are one family, the steps of a process across and under each other, as `nldd-progress-bar` and `nldd-progress-circle` are one family for how much is done. "Timeline" said less than the cell does: most of all it draws steps. Rename the tags, and the classes and imports if you use them:
@@ -637,6 +625,18 @@ here; consult the commit history if you need that level of detail.
 
   Search your own CSS for `--components-` to find what this affects.
 
+### Added
+
+- **File icons** `file-pdf`, `file-markdown`, `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf`, with the aliases `pdf-document`, `markdown-document`, `odt-document`, `ods-document`, `odp-document`, `odg-document` and `odf-document`.
+
+- **Icons** `microscope`, `share-network`, `power-plug-socket` (with the alias `plug-connected`), `subscript` and `superscript`.
+
+- **`--semantics-brand-ribbon-color`**, next to the ribbon widths: the color of the Rijksoverheid ribbon, which `nldd-top-navigation-bar` and `nldd-page-footer` both draw. It does not follow a theme's accent color, since the ribbon does not either.
+
+### Changed
+
+- **Every local variable in a component carries the component's name**, such as `--_button-background-color` instead of `--_background-color`. A custom property inherits through shadow boundaries, and a generic name on one component reached the elements of another slotted inside it. Locals were never meant to be set from outside; if you did set one, it now has a different name.
+
 ### Fixed
 
 - **A transparent `nldd-toggle-button` with `variant="text"` fills when it is on, also with a `selected-icon`.** A transparent toggle with a selected icon stays without a fill and lets the change of icon show that it is on. With `variant="text"` the icon does not render, so nothing changed at all when you switched it on.
@@ -653,6 +653,12 @@ here; consult the commit history if you need that level of detail.
 
 - **A title in `nldd-toolbar` keeps its width.** Buttons move into the overflow menu first, and the title only truncates once none is left.
 
+### Breaking
+
+- **The current step in `nldd-step-indicator` is `status="current"` on the step.** It was a number on the parent (`current="2"`), which pointed at the wrong step as soon as an app left one out. Now it is the same `status` a step already had, with the same three values as `nldd-timeline-track-cell`: `current` marks where you are and the parent derives the rest from it, while `past` and `future` stay an exception for one step. With no step marked, step 1 is current, and with more than one the last wins. Move the attribute: `<nldd-step-indicator current="2">` becomes `status="current"` on the second item. A leftover `current` on the parent no longer does anything, and a dev build says so in the console, also when a framework sets it later.
+
+- **The long form of a skill name is `/nldd-design-system:nldd-design`**, no longer `/nldd:nldd-design`, because the prefix follows the plugin name. This holds for existing installs too, from their next update. A permission rule such as `Skill(nldd:nldd-design-build)` or a hook that matches on the long form stops matching, without an error. The short form (`/nldd-design`) is unchanged, and so is the skill an assistant picks by itself. The README has a search that finds the places to change.
+
 ### Added
 
 - **`nldd-design-migrate` covers sites built by a static site generator** (MkDocs, Hugo, Eleventy). Leave the authors' Markdown alone and convert the rendered HTML in a build hook, take the bundle from the registry without a bundler and pin it with its integrity hash, and decide up front what is left without JavaScript and what loading the whole bundle on every page costs. The behavior check now also strips the base path a site runs under, because a pull request preview runs under a different one than production.
@@ -664,12 +670,6 @@ here; consult the commit history if you need that level of detail.
 - **Only the ribbon and the wordmark text in `nldd-top-navigation-bar` take a click.** The logo link spans the whole width beside the ribbon, which keeps the ribbon centered, and all of that space used to be clickable. It is still one link with one tab stop, named by the wordmark.
 
 - **`nldd-blockquote` wraps with `text-wrap: pretty`**, the quote as well as the attribution, so neither ends on a single word on its last line.
-
-### Breaking
-
-- **The current step in `nldd-step-indicator` is `status="current"` on the step.** It was a number on the parent (`current="2"`), which pointed at the wrong step as soon as an app left one out. Now it is the same `status` a step already had, with the same three values as `nldd-timeline-track-cell`: `current` marks where you are and the parent derives the rest from it, while `past` and `future` stay an exception for one step. With no step marked, step 1 is current, and with more than one the last wins. Move the attribute: `<nldd-step-indicator current="2">` becomes `status="current"` on the second item. A leftover `current` on the parent no longer does anything, and a dev build says so in the console, also when a framework sets it later.
-
-- **The long form of a skill name is `/nldd-design-system:nldd-design`**, no longer `/nldd:nldd-design`, because the prefix follows the plugin name. This holds for existing installs too, from their next update. A permission rule such as `Skill(nldd:nldd-design-build)` or a hook that matches on the long form stops matching, without an error. The short form (`/nldd-design`) is unchanged, and so is the skill an assistant picks by itself. The README has a search that finds the places to change.
 
 ### Fixed
 
@@ -694,6 +694,14 @@ here; consult the commit history if you need that level of detail.
 - **Button bars and split buttons work on a colored surface.** `nldd-button-bar` and `nldd-split-button` take `inherit-tinted` and `inherit-filled`, like the buttons inside, instead of a gray block. The inherit buttons now keep one color through hover, press and expanded, so their label keeps the contrast the surface gives it.
 
 - **Attributes say what they do.** `variant` is `appearance` on nine components where it was a designed style, `level` on `nldd-timeline-track-cell`, and `mode` is `variant` on `nldd-progress-bar` and `nldd-progress-circle`. The values stay the same; search your markup, since a leftover attribute is ignored without a warning. See Breaking.
+
+### Breaking
+
+- **`variant` is now `appearance` on `nldd-button`, `nldd-button-bar`, `nldd-icon-button`, `nldd-split-button`, `nldd-keyboard-shortcut`, `nldd-code-viewer`, `nldd-code-editor`, `nldd-text-editor` and `nldd-list`.** The values stay the same, so `variant="primary"` becomes `appearance="primary"`, and the property is `appearance` too. `variant` meant two different things across the system: how something is drawn, and what kind of thing it is. On these nine it was always the first, a designed style with its color included, so it now has a name of its own. `variant` stays on the components where it says what kind of thing it is and sets the icon and role with it, such as `nldd-banner`, `nldd-notification`, `nldd-status-bar` and `nldd-inline-dialog`. A `variant` left on one of the nine is ignored without a warning and the component falls back to its default style, so search your markup for it. The exported types follow: `CodeViewerVariant`, `CodeEditorVariant`, `TextEditorVariant`, `ListVariant` and the `Variant` of `nldd-icon-button` are now `CodeViewerAppearance`, `CodeEditorAppearance`, `TextEditorAppearance`, `ListAppearance` and `Appearance`.
+
+- **`variant` on `nldd-timeline-track-cell` is now `level`.** `major`, `minor` and `none` say how far down the hierarchy a row sits: `minor` is a row that belongs under the one above it. The values stay the same, so `variant="minor"` becomes `level="minor"`.
+
+- **`mode` on `nldd-progress-bar` and `nldd-progress-circle` is now `variant`.** `progress` and `distribution` are two kinds of indicator, progress toward a goal and the parts of a whole, and the screen reader hears something different for each, which is what `variant` stands for in this system. The values stay the same, so `mode="distribution"` becomes `variant="distribution"`. The types `ProgressBarMode` and `ProgressCircleMode` are now `ProgressBarVariant` and `ProgressCircleVariant`.
 
 ### Added
 
@@ -744,14 +752,6 @@ here; consult the commit history if you need that level of detail.
 - **Running text wraps with `text-wrap: pretty`, headings in `nldd-rich-text` with `balance`.** `nldd-text`, and the paragraphs, list items, definitions and quotes in `nldd-rich-text`, no longer end on a single word on their last line, as the cells and the status components already did. Headings in `nldd-rich-text` had `pretty` and now break into lines of even length, the way `nldd-title` does. Browsers without support, Firefox for now, break lines as before.
 
 - **`nldd-dropdown` fades a long option out instead of ending it with an ellipsis.** The field now shows its choice through the native `<select>`, and WebKit neither keeps that text out of the end padding nor draws an ellipsis there, so every browser fades the text before the icons. Two side effects: desktop Safari draws the options in its popup at the field's text size, 18px at `md` instead of 16px, and an `xs` dropdown shows 16px text on touch devices, because iOS zooms in on a smaller select when you tap it.
-
-### Breaking
-
-- **`variant` is now `appearance` on `nldd-button`, `nldd-button-bar`, `nldd-icon-button`, `nldd-split-button`, `nldd-keyboard-shortcut`, `nldd-code-viewer`, `nldd-code-editor`, `nldd-text-editor` and `nldd-list`.** The values stay the same, so `variant="primary"` becomes `appearance="primary"`, and the property is `appearance` too. `variant` meant two different things across the system: how something is drawn, and what kind of thing it is. On these nine it was always the first, a designed style with its color included, so it now has a name of its own. `variant` stays on the components where it says what kind of thing it is and sets the icon and role with it, such as `nldd-banner`, `nldd-notification`, `nldd-status-bar` and `nldd-inline-dialog`. A `variant` left on one of the nine is ignored without a warning and the component falls back to its default style, so search your markup for it. The exported types follow: `CodeViewerVariant`, `CodeEditorVariant`, `TextEditorVariant`, `ListVariant` and the `Variant` of `nldd-icon-button` are now `CodeViewerAppearance`, `CodeEditorAppearance`, `TextEditorAppearance`, `ListAppearance` and `Appearance`.
-
-- **`variant` on `nldd-timeline-track-cell` is now `level`.** `major`, `minor` and `none` say how far down the hierarchy a row sits: `minor` is a row that belongs under the one above it. The values stay the same, so `variant="minor"` becomes `level="minor"`.
-
-- **`mode` on `nldd-progress-bar` and `nldd-progress-circle` is now `variant`.** `progress` and `distribution` are two kinds of indicator, progress toward a goal and the parts of a whole, and the screen reader hears something different for each, which is what `variant` stands for in this system. The values stay the same, so `mode="distribution"` becomes `variant="distribution"`. The types `ProgressBarMode` and `ProgressCircleMode` are now `ProgressBarVariant` and `ProgressCircleVariant`.
 
 ### Fixed
 
@@ -963,6 +963,22 @@ here; consult the commit history if you need that level of detail.
 
 - **An Erlenmeyer flask, in two weights.** `erlenmeyer-flask` draws the conical flask in outline, a rim at the top and a band of liquid filled in at the bottom. `erlenmeyer-flask-light` is the same flask with a thinner line, on the 32 view-box the other light weights use. The aliases are `lab` and `lab-light`, for what the flask stands for: a laboratory, an experiment, a test setup.
 
+### Breaking
+
+- **`label` and `detail` on a mention candidate are `text` and `supportingText`.** The words the rest of the system uses: `text` on a button, a menu item and a title cell, and `supporting-text` under it on a button and a title cell. `MentionCandidate` is `{ id, text, supportingText? }` now, and `nldd-text-editor-mention` carries `text` instead of `label`. The typeahead candidates use the same names.
+
+- **`modeless` is gone from `nldd-sheet` and `nldd-window`.** Both are always modal now: they open with `showModal()`, draw a backdrop and hold focus. The attribute promised an overlay you could leave open while working behind it, and the native `<dialog>` gives you the shell for that but none of the things that make it usable. Nothing in this system set it on either one, and the sheet's own story warned in its text that it did not lay out correctly. Whatever it was reaching for wants solving on its own terms rather than as a flag on a component built to be modal. `nldd-window` is still the positionable overlay: `top`, `left`, `right`, `bottom`, `centered`, `width` and `height` are what set it apart from `nldd-modal-dialog`, not this.
+
+- **`timing="default"` is now `timing="delay"`.** On `nldd-tooltip` (a 700ms show delay) and on `nldd-activity-indicator` (a 1000ms anti-flash delay), and on the `tooltip-timing` of `nldd-avatar` and `nldd-icon-button`, which forward it. A value named for its position in the list says nothing about what it does, and it breaks the day the default moves. Beside `instant` and `never`, `delay` is the only word that says when the thing appears, which is what those two already do. Which value is the default lives in the component, and an attribute equal to the default is dropped from the DOM anyway, so leaving it out and writing it are the same thing.
+
+- **`color="default"` on `nldd-avatar` is now `color="neutral"`.** Same reason. Not `neutral-tinted`: that fill is neutral-100 in light and neutral-300 in dark, where the shared neutral-tinted family is 75/200 on buttons and 50/150 on categories, so the name would promise a scale it is not on.
+
+- **`color` says `content` on `nldd-title`, `nldd-rich-text`, `nldd-text`, `nldd-text-cell`, `nldd-title-cell` and `nldd-icon-cell`.** On the first two the attribute had one value, `inherit`, and leaving it off meant the system's own text colors. Nameless, so the story control had to invent a word for the empty option and landed on `(auto)`, which sat in the same dropdown as `inherit` and read as a second way of saying "take it from somewhere else". They are opposites: `content` is the system's color, `inherit` is the surface's. Both are words now and there is nothing left to label. On `nldd-text` and the three cells that same color was called `default`, which said where it sat in the list rather than what it did, next to `secondary`, `accent`, `success`, `warning` and `critical` that all say what they are. They share one color scale and are read side by side in a row, so they move together. `content` is the word the tokens already use, as in `--semantics-content-color` and the `primary-content` of `nldd-icon`.
+
+- **`size` on `nldd-link` defaults to `inherit`.** Leaving it off already behaved as `inherit`: the CSS gives `:host(:not([size]))` and `:host([size="inherit"])` the same rules, and the story had a row saying so out loud. But the property held no value at all, so the control offered `(geen)` and `inherit` as two entries for one behavior, and reading `size` back gave `undefined`. Now it says what it does. Nothing renders differently.
+
+- **`size` on `nldd-avatar` and `nldd-icon` defaults to `full` instead of an empty string.** `full` was already implemented on both, already in the type and already documented as the default. Only the property disagreed. Nothing renders differently. Read `size` back and you now get `full` where you got `''`.
+
 ### Added
 
 - **Icons.** `erlenmeyer-flask` (alias `lab`) and `erlenmeyer-flask-light` (alias `lab-light`).
@@ -978,7 +994,6 @@ here; consult the commit history if you need that level of detail.
 - **`insertAtCursor(text)` on `nldd-text-editor`.** Puts text at the caret, in place of a selection, and leaves the caret after it with focus kept. Setting `value` replaced the whole document and reset the caret, and `paste()` reads the clipboard, so there was no way to insert a piece of text from a button of your own. (#200)
 
 - **`toggleTaskList()` on `nldd-text-editor`, and `taskList` in its state.** The parser already read GFM task items; there was no command to make one. It turns the selected lines into `- [ ] ` items, keeping a bullet's or numbered item's indent, and back into bullets once they all are tasks, so only the box goes and the list stays. Checking a box is not a command. `runCommand('taskList')` reaches it too, and `getState().active.taskList` reports it for a toolbar.
-
 
 ### Changed
 
@@ -997,22 +1012,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-inline-dialog` and `nldd-modal-dialog` take their alignment from their slot.** Content in the default slot aligns the text, the icon and the actions left, and lays those actions out in a row at their own width instead of stacked full-width. An empty slot keeps the centered empty state exactly as it was. Both are derived rather than defaulted, so an empty state needs no attribute and a form dialog stops needing a workaround. `horizontal-alignment` overrides it in both directions, for a long message that reads badly centered or for slotted content that is symmetric on its own. `nldd-modal-dialog` forwards it. Two things the slotted case exposed along the way, neither reachable before: content in the slot now keeps its distance from the text above it, and in the centered mode it is genuinely centered rather than merely full-width.
 
 - **`size="inherit"` on `nldd-icon` is reachable at last, and sits on the text's own line.** It sizes the icon to the text around it (`1em`), which is what you want for an icon set in a line of running text: a fixed size in px falls out of step the moment the text grows, and the first reader who zooms is the one who finds out. It rode visibly high, though, because an inline box sits with its bottom edge on the baseline while the text itself hangs below that line. A `vertical-align: -0.15em` drops it back onto the line. The value has been in the component from the start, but the story control offered neither it nor `full`, and labeled the empty option `(inherit)` while an empty size in fact fills the container. That one word said the opposite of what it did. There is a story for it now, with five different icons in a sentence at three text sizes, because how heavy an icon reads in a line comes from its drawing rather than its size: a check mark fills half its box in height where a lock or a clock nearly fills it.
-
-### Breaking
-
-- **`label` and `detail` on a mention candidate are `text` and `supportingText`.** The words the rest of the system uses: `text` on a button, a menu item and a title cell, and `supporting-text` under it on a button and a title cell. `MentionCandidate` is `{ id, text, supportingText? }` now, and `nldd-text-editor-mention` carries `text` instead of `label`. The typeahead candidates use the same names.
-
-- **`modeless` is gone from `nldd-sheet` and `nldd-window`.** Both are always modal now: they open with `showModal()`, draw a backdrop and hold focus. The attribute promised an overlay you could leave open while working behind it, and the native `<dialog>` gives you the shell for that but none of the things that make it usable. Nothing in this system set it on either one, and the sheet's own story warned in its text that it did not lay out correctly. Whatever it was reaching for wants solving on its own terms rather than as a flag on a component built to be modal. `nldd-window` is still the positionable overlay: `top`, `left`, `right`, `bottom`, `centered`, `width` and `height` are what set it apart from `nldd-modal-dialog`, not this.
-
-- **`timing="default"` is now `timing="delay"`.** On `nldd-tooltip` (a 700ms show delay) and on `nldd-activity-indicator` (a 1000ms anti-flash delay), and on the `tooltip-timing` of `nldd-avatar` and `nldd-icon-button`, which forward it. A value named for its position in the list says nothing about what it does, and it breaks the day the default moves. Beside `instant` and `never`, `delay` is the only word that says when the thing appears, which is what those two already do. Which value is the default lives in the component, and an attribute equal to the default is dropped from the DOM anyway, so leaving it out and writing it are the same thing.
-
-- **`color="default"` on `nldd-avatar` is now `color="neutral"`.** Same reason. Not `neutral-tinted`: that fill is neutral-100 in light and neutral-300 in dark, where the shared neutral-tinted family is 75/200 on buttons and 50/150 on categories, so the name would promise a scale it is not on.
-
-- **`color` says `content` on `nldd-title`, `nldd-rich-text`, `nldd-text`, `nldd-text-cell`, `nldd-title-cell` and `nldd-icon-cell`.** On the first two the attribute had one value, `inherit`, and leaving it off meant the system's own text colors. Nameless, so the story control had to invent a word for the empty option and landed on `(auto)`, which sat in the same dropdown as `inherit` and read as a second way of saying "take it from somewhere else". They are opposites: `content` is the system's color, `inherit` is the surface's. Both are words now and there is nothing left to label. On `nldd-text` and the three cells that same color was called `default`, which said where it sat in the list rather than what it did, next to `secondary`, `accent`, `success`, `warning` and `critical` that all say what they are. They share one color scale and are read side by side in a row, so they move together. `content` is the word the tokens already use, as in `--semantics-content-color` and the `primary-content` of `nldd-icon`.
-
-- **`size` on `nldd-link` defaults to `inherit`.** Leaving it off already behaved as `inherit`: the CSS gives `:host(:not([size]))` and `:host([size="inherit"])` the same rules, and the story had a row saying so out loud. But the property held no value at all, so the control offered `(geen)` and `inherit` as two entries for one behavior, and reading `size` back gave `undefined`. Now it says what it does. Nothing renders differently.
-
-- **`size` on `nldd-avatar` and `nldd-icon` defaults to `full` instead of an empty string.** `full` was already implemented on both, already in the type and already documented as the default. Only the property disagreed. Nothing renders differently. Read `size` back and you now get `full` where you got `''`.
 
 ### Fixed
 
@@ -1308,6 +1307,10 @@ here; consult the commit history if you need that level of detail.
 
 - **Icons** — `git-branch`, `git-commit`, `git-compare`, `git-fork`, `git-merge`, `git-pull-request`, `git-pull-request-closed` and `git-pull-request-draft`. No aliases: these names are the functional ones.
 
+### Changed
+
+- **`point-bottom-left-to-point-top-right-s-curve-path` is redrawn.** Its two end points are a size smaller: the disc goes from 8 to 7 pixels across and the dot inside it from 4 to 3, with the ring around it still 2. That is the node the new `git-*` icons draw, so a route and a commit graph now sit at the same weight.
+
 ### Fixed
 
 - **A click on the label of `nldd-form-field` now reaches every input.** It reached about half of them. The label focuses the slotted element by hand, because a `<label for>` cannot cross a shadow boundary, and that only lands somewhere when the element is a native control or carries a `focus()` of its own. Ten did not: `nldd-dropdown`, `nldd-checkbox`, `nldd-checkbox-field`, `nldd-radio-button`, `nldd-radio-button-field`, `nldd-radio-button-group`, `nldd-segmented-control`, `nldd-stepper`, `nldd-toggle-button` and `nldd-toggle-button-group`. Each of them now delegates focus to the control it wraps, so `el.focus()` also works on its own, without reaching into shadow DOM. A group sends focus to the chosen option and falls back to the first one that is enabled, which is where the keyboard puts you when you tab in. Nothing gained a `tabindex`, so no component became an extra tab stop. Reported in [#188](https://github.com/NederlandseDigitaleDienst/design-system/issues/188).
@@ -1322,10 +1325,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-form-field` asks which of its children is the input, and looks inside a wrapper.** It took the first child that was not a help or error text and treated that as the field, so wrapping your input in a `div` or an `nldd-container` for layout sent the id, the accessible name and the error wiring to the wrapper. The field itself was left unnamed, and nothing about that was visible on screen. Every input now carries `static isFormInput = true` and the field goes looking for the first child that says so, through a wrapper if it has to. Asked rather than guessed, because half the package accepts `accessible-label` and reading that as the signal would let an `nldd-tag` beside your field be mistaken for the field. Finding nothing is a real answer: it wires up nothing and says so in DEV, naming the field by its label. A field that holds more than one input is untouched, so a radio group whose last option is "Anders" plus the text field that appears with it stays one question: the first input carries the caption and the ones after it name themselves. A consumer with an input of their own sets the same static, or names the control themselves.
 - **The label of `nldd-form-field` no longer pretends to be a control label.** `_focusInput` carried an exception that skipped `preventDefault` for checkboxes and radios, to protect a native toggle. There is no such toggle to protect: the label has no `for` and does not wrap the control, so the platform sees it as labeling nothing. The exception did nothing and the comment described a relationship this component deliberately does not have. A field caption moves focus, and never ticks a box, because every checkbox carries its own label and a caption over a group could not say which one it meant.
 
-### Changed
-
-- **`point-bottom-left-to-point-top-right-s-curve-path` is redrawn.** Its two end points are a size smaller: the disc goes from 8 to 7 pixels across and the dot inside it from 4 to 3, with the ring around it still 2. That is the node the new `git-*` icons draw, so a route and a commit graph now sit at the same weight.
-
 ## [0.8.80](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.79...v0.8.80) (2026-08-10)
 
 ### Highlights
@@ -1336,18 +1335,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-avatar` can show its name as a tooltip.** An avatar shows no text, so without one the name is readable by assistive software and by nobody else. On by default, mirroring `nldd-icon-button`; `tooltip-timing="never"` turns it off, and a `decorative` avatar shows none at all, because there the name already stands beside it as text.
 - **`nldd-badge` can pulse.** A ring grows out of the badge and fades, for something happening right now: a live connection, an outage in progress. It borrows the badge's own shape and color, so it works on a dot as well as on a counter, and it sits behind the content without touching layout or hit area. Motion turned off means no ring.
 - **Four new icons.** `ship-wheel-badge-plus`, `puzzle-piece-badge-plus` and `brackets-ellipsis-badge-plus` are the ship's wheel, the puzzle piece and the brackets with a plus in the corner: adding a cluster, installing a plugin, making a namespace. The badge sits where a badge sits on every other icon in the set, so the thing itself stays recognizable and the plus only says what you are about to do with it. `seal-star` is that same seal as `seal-check-mark` with a star in it: where the check mark says something was verified, the star says something is the organization's own. Also reachable as `add-kubernetes` / `add-k8s`, `add-plugin`, `add-namespace` and `brand`.
-
-### Added
-
-- **`nldd-timeline-track-cell` knows a track of one.** `position="only"` leaves out the line on both sides, where `first` and `last` each leave a stub sticking out of a dot that connects to nothing. A history that holds a single event is a normal thing to draw, and it should look like one event rather than like the top of a list that never came.
-- **`nldd-toolbar-title` can be a link.** `href` (with an optional `target`) turns the mark and the name into one link, for the place this window belongs to: in an application toolbar that is usually its own start page. It keeps the text color and draws no underline, because the name of the window you are in is not somewhere you send people away to; the focus ring is the only state it carries. The `action` slot stays outside the link — a control inside a link is a control you cannot reach without following the link.
-- **`nldd-toolbar-title` has a `media` slot.** A leading image before the title: a logo, a product mark, a file-type icon that says what kind of document this is before you read which one. The mirror of the `action` slot at the other end, named after the place rather than after one kind of content. Its height is capped to the title group so nothing a consumer hands over can stretch the row; which size to draw within that is theirs, since a file icon and a logo do not want the same one. Without `text` the media stands alone and is the only thing naming the window, so give it a name of its own — an `alt` on an image. An `nldd-icon` will not do there: an icon is decoration and says nothing. The space around media and action is a gap on the title itself rather than a margin on what you slot in, so a consumer's own margin reset cannot quietly close it.
-- **`nldd-badge` can be decorative.** A dot beside the word it stands for used to announce itself as "Notificatie", because a badge without text falls back to that label. With `decorative` it leaves the accessibility tree, the way `nldd-avatar` already could, so the color speaks with one voice instead of two. Use it whenever the text next to the badge already says what the color says.
-
-### Changed
-
-- **`nldd-badge`, `nldd-tag` and `nldd-token` now each say what they are for and point at the other two.** The tag documentation used to offer itself for "categories, statuses or metadata", which is how statuses ended up as tags. The line between them is who decides what it says: a badge is a state or a count the system keeps, a tag is a trait someone assigned, and a token is self-contained data the user handles, the only one of the three you can operate. Worth holding your tags against it.
-- **The divider of `nldd-list-item` starts at the first text or title cell by default.** It used to do that only when the row opened with an icon or something else of glyph size; a row that opened with spacers, a leaf in a tree for instance, got a line across the full width. The line now lands on the words rather than on whatever came before them, so rows of different shapes line their dividers up with each other and the dividers of a tree indent along with it. Text inside an `nldd-list-item-action` counts. A row without a text or title cell keeps the full content width, and `divider-start` on an earlier cell gives that back too.
 
 ### Breaking
 
@@ -1360,6 +1347,18 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-byline` is now `nldd-identity`.** Same component, a name that says what it shows: a person or a group of people with their name and a supporting line, wherever that is useful, rather than only under an article. Rename the tag, the class (`NLDDByline` becomes `NLDDIdentity`) and the import path (`content/byline/byline.js` becomes `content/identity/identity.js`).
 - **`nldd-identity` hands more than one avatar to `nldd-avatar-group`.** One avatar can still be slotted bare and gets its size from identity; from two on, wrap them: `<nldd-avatar-group slot="avatars">…</nldd-avatar-group>`. The group owns the overlap and the ring, which identity used to draw itself, so both components say one thing each.
 - **`nldd-box` no longer has padding of its own.** It draws the surface and nothing else, exactly as `nldd-card` already did, so one component owns the inset wherever it is used. Wrap what is inside in an `nldd-container` and let that set it: `<nldd-box><nldd-container padding="16">…</nldd-container></nldd-box>` reproduces the old look. Without it, content now sits against the border. The token that held the old value, `--components-box-padding`, is still there as the reference for what "16" means here.
+
+### Added
+
+- **`nldd-timeline-track-cell` knows a track of one.** `position="only"` leaves out the line on both sides, where `first` and `last` each leave a stub sticking out of a dot that connects to nothing. A history that holds a single event is a normal thing to draw, and it should look like one event rather than like the top of a list that never came.
+- **`nldd-toolbar-title` can be a link.** `href` (with an optional `target`) turns the mark and the name into one link, for the place this window belongs to: in an application toolbar that is usually its own start page. It keeps the text color and draws no underline, because the name of the window you are in is not somewhere you send people away to; the focus ring is the only state it carries. The `action` slot stays outside the link — a control inside a link is a control you cannot reach without following the link.
+- **`nldd-toolbar-title` has a `media` slot.** A leading image before the title: a logo, a product mark, a file-type icon that says what kind of document this is before you read which one. The mirror of the `action` slot at the other end, named after the place rather than after one kind of content. Its height is capped to the title group so nothing a consumer hands over can stretch the row; which size to draw within that is theirs, since a file icon and a logo do not want the same one. Without `text` the media stands alone and is the only thing naming the window, so give it a name of its own — an `alt` on an image. An `nldd-icon` will not do there: an icon is decoration and says nothing. The space around media and action is a gap on the title itself rather than a margin on what you slot in, so a consumer's own margin reset cannot quietly close it.
+- **`nldd-badge` can be decorative.** A dot beside the word it stands for used to announce itself as "Notificatie", because a badge without text falls back to that label. With `decorative` it leaves the accessibility tree, the way `nldd-avatar` already could, so the color speaks with one voice instead of two. Use it whenever the text next to the badge already says what the color says.
+
+### Changed
+
+- **`nldd-badge`, `nldd-tag` and `nldd-token` now each say what they are for and point at the other two.** The tag documentation used to offer itself for "categories, statuses or metadata", which is how statuses ended up as tags. The line between them is who decides what it says: a badge is a state or a count the system keeps, a tag is a trait someone assigned, and a token is self-contained data the user handles, the only one of the three you can operate. Worth holding your tags against it.
+- **The divider of `nldd-list-item` starts at the first text or title cell by default.** It used to do that only when the row opened with an icon or something else of glyph size; a row that opened with spacers, a leaf in a tree for instance, got a line across the full width. The line now lands on the words rather than on whatever came before them, so rows of different shapes line their dividers up with each other and the dividers of a tree indent along with it. Text inside an `nldd-list-item-action` counts. A row without a text or title cell keeps the full content width, and `divider-start` on an earlier cell gives that back too.
 
 ### Fixed
 
@@ -1396,6 +1395,10 @@ here; consult the commit history if you need that level of detail.
 
 - **A time field and a time picker.** `nldd-time-field` is the counterpart of `nldd-date-field`, with the same API, so a date-and-time form no longer needs a hand-styled native input beside it. Its picker is a wheel: two columns sliding past the selection in the middle, where scrolling is choosing and CSS snapping does the work. `step` decides which minutes exist at all, `rows` how tall the wheel stands, and a row is 44px under a finger and 32px under a mouse. Nothing lands until you leave: the field previews the time as you scroll, "Klaar" keeps it, and Annuleer or Escape puts the old one back. An empty field opens on the current time rather than on midnight. On the keyboard the selection is the control: opening the picker puts focus on the hour, hour and minute are each a spinbutton, up and down set the value, left and right move between them. `nldd-time-picker` also stands on its own, inline on a page.
 
+### Breaking
+
+- **`nldd-banner`** — the two size-dependent custom properties carry their size in the name: `--components-banner-padding` becomes `--components-banner-md-padding` and `--components-banner-icon-size` becomes `--components-banner-md-icon-size`. Without the size segment they read as "the padding of every banner" while `sm` has its own value, and every other component names them this way. `--components-banner-corner-radius` and `--components-banner-content-color` are unchanged, because they do not differ per size. Override one of the two renamed properties and the override stops applying, silently.
+
 ### Added
 
 - **A standalone browser bundle.** `dist/nldd.min.js` is every component in one minified file, with lit, Floating UI and CodeMirror inlined: drop it on a page with a plain `<script src>` and the elements upgrade, no build step at the other end. Reachable as `@nldd/design-system/bundle` and through the `unpkg` / `jsdelivr` fields, so a CDN URL resolves to it without a path. Building it yourself? Keep using the package root; that entry leaves the dependencies external and splits into chunks, which is what a bundler wants. The file is 2 MB, 540 KB over the wire, and the npm tarball grows by that much for everyone.
@@ -1409,10 +1412,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-top-navigation-bar`** — the wordmark title, subtitle and supporting text balance their lines instead of filling each one in turn. A long organization name breaks in the middle rather than leaving a single word on the second line.
 - **Icons** — `viewfinder` has shorter corner brackets. The arms ran to a third of each side, which closed the shape up at small sizes and read more as a frame than as a finder.
 - **`nldd-banner`, `nldd-just-in-time-education`** — the dismiss button is labelled "Verberg" instead of "Sluit". Both put the notice out of sight without resolving anything, and "Sluit" claims more than that. `nldd-document-tab-bar` and `nldd-top-navigation-bar` keep "Sluit", where it really does close something.
-
-### Breaking
-
-- **`nldd-banner`** — the two size-dependent custom properties carry their size in the name: `--components-banner-padding` becomes `--components-banner-md-padding` and `--components-banner-icon-size` becomes `--components-banner-md-icon-size`. Without the size segment they read as "the padding of every banner" while `sm` has its own value, and every other component names them this way. `--components-banner-corner-radius` and `--components-banner-content-color` are unchanged, because they do not differ per size. Override one of the two renamed properties and the override stops applying, silently.
 
 ### Fixed
 
@@ -1449,6 +1448,11 @@ here; consult the commit history if you need that level of detail.
 - **Host styling now survives a consuming app's CSS reset.** A universal rule like `* { margin: 0; padding: 0; border: 0 }` in a consuming app silently beat every normal `:host` declaration (CSS Scoping cascade order, [#160](https://github.com/NederlandseDigitaleDienst/design-system/issues/160)), stripping padding, dividers, and spacing from components that styled their shadow host. Banner, container, menu groups and dividers, table rows, cells, and interactive list rows now keep their layout under any reset, including Tailwind Preflight. Styling remains a CSS-variables affair — direct element styling such as `nldd-banner { padding: … }` was never a supported API and now consistently has no effect.
 - **New icons.** `viewfinder-line` (alias `scan`) is the existing `viewfinder` with a scan line through it, for scanning a document or a code. `display` and `paintbrush` landed in the same batch.
 
+### Breaking
+
+- **`@nldd/design-system/tokens` is gone.** It only ever re-exported `breakpoints`, so import from `@nldd/design-system/breakpoints` instead. Same values, same names.
+- **The four `--primitives-font-family-*-fallback` variables are gone.** Nothing read them, so overriding one to drop RijksSans changed nothing while looking like the switch you were after. To use a different font, override `--primitives-font-family-sans-serif` and `--primitives-font-family-monospace` — or import `/styles/system-font` and skip the `@font-face` rules entirely.
+
 ### Added
 
 - **Icons** — `viewfinder-line` (alias `scan`), `display`, `paintbrush`.
@@ -1464,11 +1468,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-title`** — a slotted heading is capped at a 40ch measure and balances its lines, so a title on a wide section no longer runs the full width with a lonely last word.
 - **`nldd-list-item`** — a row that opens with an icon now starts its divider at the first text or title cell, so the line aligns with the words instead of the icon. Consumers no longer need a `divider-start` marker for this; an explicit marker still wins, and putting one on the icon cell restores the full-width line.
 - **Document typography** — the stylesheet now gives the `body` the document font and content color as soon as an `nldd-app-view` is on the page. Apps no longer need their own `body { font: … }`. The rule sits in `@layer reset`, so any consumer rule beats it without effort; a page without an app-view is untouched.
-
-### Breaking
-
-- **`@nldd/design-system/tokens` is gone.** It only ever re-exported `breakpoints`, so import from `@nldd/design-system/breakpoints` instead. Same values, same names.
-- **The four `--primitives-font-family-*-fallback` variables are gone.** Nothing read them, so overriding one to drop RijksSans changed nothing while looking like the switch you were after. To use a different font, override `--primitives-font-family-sans-serif` and `--primitives-font-family-monospace` — or import `/styles/system-font` and skip the `@font-face` rules entirely.
 
 ### Fixed
 
@@ -1500,6 +1499,14 @@ here; consult the commit history if you need that level of detail.
 - **37 new icons.** Sound and image (`microphone`, `speaker` and its volume steps, `photo-camera`, `video-camera`, `photo-on-photo-angled` for a gallery, `photo-stack`), maps and wayfinding (`map`, `map-pin` and its badge variants, `map-pin-oval` for your current location, `signpost` for directions), a fuller file and folder family (`file-badge-*`, `file-on-file`, `folder-open`, `folder-badge-plus`), `arrow-clockwise` for refresh, a pair of expand and collapse arrows, `clipboard-pencil` for a form, `hand-thumbs-up` and `hand-thumbs-down` for a like and a dislike, `person-badge-minus`, `link-badge-lock` for a secure link, `slider-horizontal-3` for local settings, `text-format-size`, and `square-grid-2x2` with a pencil variant. The full list is under Added.
 - **11 icons are redrawn.** The file and folder family (`file`, `file-text` and its badge and pencil variants, `file-text-on-file-text`, `folder`), the stack icons (`rectangle-stack`, `rectangle-stack-text`, `rectangle-stack-chevron-left-forward-slash-chevron-right`) and `house-apartment-building` got new artwork, so the set draws with one pen again now that it has grown.
 
+### Breaking
+
+- **Three icons renamed**, because `-stack` is reserved for 3 or more and these draw 2: `file-text-stack` is now `file-text-on-file-text` (with new artwork), `folder-stack` is now `folder-on-folder`, and `tag-stack` is now `tag-on-tag`. The old names are gone. The aliases `text-documents`, `directories`, `tags` and `labels` moved along and keep working.
+- **`stack-text` is now `rectangle-stack-text`** (with new artwork), naming the shape it draws the way `rectangle-stack` already does.
+- **`house-and-appartment-building` is now `house-apartment-building`** (with new artwork) — the spelling fixed to match `apartment-building`, and the "and" dropped from the compound.
+- **`square-and-arrow-down` is now `square-arrow-down`**, dropping the "and" the way `square-arrow-up` and `square-arrow-right-top` already read. The aliases `save` and `import` moved along and keep working.
+- **The media-transport icons carry a `media-` prefix**: `backward`, `forward` and their `-filled`, `-end`, `-end-filled`, `-frame` and `-frame-filled` variants are now `media-backward`, `media-forward` and so on (12 renames). The bare names were ambiguous — "forward" reads as navigation more often than as media transport — and the icon `forward` was unreachable outright, shadowed by the alias `forward` → `chevron-right` (aliases win on resolution). That alias stays, as the counterpart of `back` → `chevron-left`. `play`, `pause`, `stop` and `play-pause` keep their names: they collide with nothing and are clear as they are.
+
 ### Added
 
 - **Icons** — `apartment-building-2` (aliases `buildings` and `offices`), `arrow-clockwise` (aliases `refresh` and `reload`), `arrow-down-left-arrow-up-right` (aliases `expand` and `full-screen`), `arrow-up-right-arrow-down-left` (aliases `collapse` and `exit-full-screen`), `clipboard-pencil` (alias `form`), `file-badge-arrow-down` (alias `download-document`), `file-badge-arrow-up` (alias `upload-document`), `file-badge-minus` (alias `remove-document`), `file-badge-plus` (alias `new-document`), `file-on-file` (alias `documents`), `folder-badge-plus` (alias `new-folder`), `folder-open`, `hand-thumbs-up` (alias `like`), `hand-thumbs-down` (alias `dislike`), `link-badge-lock` (aliases `secure-link` and `secure-url`), `map`, `map-pin` (alias `location`), `map-pin-badge-plus` (alias `add-location`), `map-pin-badge-minus` (alias `remove-location`), `map-pin-oval` (alias `current-location`), `microphone` (alias `microphone-on`), `microphone-slash` (alias `microphone-off`), `person-badge-minus` (alias `remove-user`), `photo-camera` (alias `camera`), `photo-on-photo-angled` (alias `gallery`), `photo-stack` (aliases `image-stack` and `images`), `signpost` (alias `directions`), `slider-horizontal-3` (alias `local-settings`), `speaker`, `speaker-slash` (alias `mute`), `speaker-volume-low` (alias `low-volume`), `speaker-volume-medium` (alias `medium-volume`), `speaker-volume-high` (alias `high-volume`), `square-grid-2x2`, `square-grid-2x2-pencil`, `text-format-size` and `video-camera`.
@@ -1514,14 +1521,6 @@ here; consult the commit history if you need that level of detail.
 - **`rectangle-stack` is redrawn and gains the `library` alias**, next to the existing `stack`.
 - **`stack-code` is now the alias of `rectangle-stack-chevron-left-forward-slash-chevron-right`.** The icon is renamed (and redrawn) after the shape-first pattern of `chevron-left-forward-slash-chevron-right`; the old name keeps working as its functional alias.
 - **The `documents` alias points at `file-on-file`.** It sat on the icon now called `file-text-on-file-text`, which keeps `text-documents` — the plain pair is the generic plural, the way `document` already sat on plain `file`.
-
-### Breaking
-
-- **Three icons renamed**, because `-stack` is reserved for 3 or more and these draw 2: `file-text-stack` is now `file-text-on-file-text` (with new artwork), `folder-stack` is now `folder-on-folder`, and `tag-stack` is now `tag-on-tag`. The old names are gone. The aliases `text-documents`, `directories`, `tags` and `labels` moved along and keep working.
-- **`stack-text` is now `rectangle-stack-text`** (with new artwork), naming the shape it draws the way `rectangle-stack` already does.
-- **`house-and-appartment-building` is now `house-apartment-building`** (with new artwork) — the spelling fixed to match `apartment-building`, and the "and" dropped from the compound.
-- **`square-and-arrow-down` is now `square-arrow-down`**, dropping the "and" the way `square-arrow-up` and `square-arrow-right-top` already read. The aliases `save` and `import` moved along and keep working.
-- **The media-transport icons carry a `media-` prefix**: `backward`, `forward` and their `-filled`, `-end`, `-end-filled`, `-frame` and `-frame-filled` variants are now `media-backward`, `media-forward` and so on (12 renames). The bare names were ambiguous — "forward" reads as navigation more often than as media transport — and the icon `forward` was unreachable outright, shadowed by the alias `forward` → `chevron-right` (aliases win on resolution). That alias stays, as the counterpart of `back` → `chevron-left`. `play`, `pause`, `stop` and `play-pause` keep their names: they collide with nothing and are clear as they are.
 
 ## <small>0.8.72 (2026-07-29)</small>
 
@@ -1634,16 +1633,16 @@ here; consult the commit history if you need that level of detail.
 - **29 new icons.** Media controls: `play`, `pause`, `play-pause`, `stop`, `forward`, `backward`, `forward-end`, `backward-end`, `forward-frame`, `backward-frame`, each with a filled variant. Plus `exclamation-2-circle` (`medium-priority`), `exclamation-3-circle` (`high-priority`), both also filled, `square-corner-4` (`fit-to-view`), `person-badge-plus` (`add-user`), `antenna-radio-waves` (`broadcast`), `megaphone` and `circle-grid-2x2-top-left-check-mark`. Aliases in brackets; reach for those first, they say what the icon is for.
 - **The package describes itself.** It now ships a Custom Elements Manifest, so VS Code and JetBrains give autocomplete and hover documentation for `nldd-*` tags in plain HTML without any setup. Vue consumers get generated template types with `import '@nldd/design-system/vue'`, where a prop carries the component's own type (`size` is `'md' | 'sm'`, not `string`) instead of a hand-written declaration that falls behind on every release.
 
+### Breaking
+
+- **Icons: `batch` in a name is now `badge`.** Three icons show a small badge in the bottom-right corner, sharing that sub-glyph with `person-badge-gear` and `cylinder-split-badge-lock`. None of them shows a stack, so the name was simply wrong. Rename `book-batch-play` to `book-badge-play`, `file-text-batch-check-mark` to `file-text-badge-check-mark` and `file-text-batch-check-plus` to `file-text-badge-check-plus`. The old names are gone, also as aliases: a misspelling kept alive as an alias is a misspelling you keep reading in code review. The `new-text-document` alias follows the rename and needs no change.
+
 ### Added
 
 - **`nldd-date-picker`** (inputs) — new component. `value` for a single date, or `range` with `start` / `end`; `min` / `max` accept an ISO date, `today`, or `today±Nd/w/m/y`; `week-numbers` adds an ISO week column; `first-day-of-week` sets the leading column; `isDateUnavailable` (property) blocks individual dates while keeping them reachable with the keyboard; `accessible-label` names the grid; `translations` overrides the Dutch defaults. Fires `input` while a period is half-chosen and `change` once a value is complete.
 - **`nldd-date-field`** (inputs) — new component. A text field that reads a typed date generously (`12-3-2026`, `12/03/2026`, `12032026`, ISO) and normalizes on blur, with `nldd-date-picker` behind a calendar button. `value` is ISO, or one ISO 8601 interval with `range`; `min` / `max` accept an ISO date, `today`, or `today±Nd/w/m/y`; `no-picker` drops the button; a `picker` slot takes your own calendar. Form-associated, so it submits under one `name`.
 - **Vue template types.** `import '@nldd/design-system/vue'` declares every `nldd-*` tag for Vue's template type-checking, so a Vue consumer no longer maintains a hand-written declaration that falls behind. Generated from the manifest, so it cannot: props carry the component's own types (`size` is `'md' | 'sm'`, not `string`), attributes work both as written in markup (`week-numbers`) and in the form Vue normalizes them to (`weekNumbers`), and events are the prop Vue derives from `@change`.
 - **Custom Elements Manifest.** The package now ships `custom-elements.json` and points at it with the `customElements` field, so VS Code and JetBrains give autocomplete and hover documentation for `nldd-*` tags in plain HTML, with no extra setup. It is generated from the source rather than from the documentation, so a union like `'md' | 'sm'` stays a union instead of flattening to `string`. It is also the input for generated framework type declarations.
-
-### Breaking
-
-- **Icons: `batch` in a name is now `badge`.** Three icons show a small badge in the bottom-right corner, sharing that sub-glyph with `person-badge-gear` and `cylinder-split-badge-lock`. None of them shows a stack, so the name was simply wrong. Rename `book-batch-play` to `book-badge-play`, `file-text-batch-check-mark` to `file-text-badge-check-mark` and `file-text-batch-check-plus` to `file-text-badge-check-plus`. The old names are gone, also as aliases: a misspelling kept alive as an alias is a misspelling you keep reading in code review. The `new-text-document` alias follows the rename and needs no change.
 
 ### Changed
 
@@ -1678,6 +1677,12 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-menu` header and footer slots.** Root-only `header` / `footer` slots hold free content (an account identity header, a short note, a link) outside `role="menu"` — reached with Tab, skipped by arrow navigation. `role="menu"` now lives statically on the item list.
 - **Content-color token names standardised** (breaking). The buttons and categories content tokens now follow the global `content-color` / `content-secondary-color` word order, and the cross-component `--context-cell-content-*` channel is renamed to `--context-content-*`.
 
+### Breaking
+
+- **Semantics content-color tokens renamed** (no aliases): `--semantics-buttons-*-primary-content-color` and the `categories` equivalents become `--semantics-*-content-color` (drop `primary`); `--semantics-*-secondary-content-color` become `--semantics-*-content-secondary-color` (qualifier after `content`). Update any consumer CSS that references them.
+- **`--context-cell-content-*` renamed to `--context-content-*`** (whole family: `color`, `secondary-color`, `accent-color`, `success-color`, `warning-color`, `critical-color`). Update any consumer CSS that sets or reads these context custom properties.
+- **`nldd-button` / `nldd-icon-button` overlay slot renamed `menu` → `popup`** — the slot now accepts an `nldd-menu` or an `nldd-popover`. Change `<nldd-menu slot="menu">` to `slot="popup"`. (`nldd-token` / `nldd-token-field` keep their own menu-only `slot="menu"`.)
+
 ### Added
 
 - **Icon** — `file-text-batch-check-plus`, with the `new-text-document` alias.
@@ -1695,12 +1700,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-popover`** — now syncs its open state to a control trigger via the trigger's `expanded` / `popup-type` IDL props (so the trigger's inner button ARIA and disclosure chevron reflect the popover), falling back to `aria-*` attributes for plain element anchors. It also bails on its own anchor-click toggle when driven via `anchorElement`, so it can be nested and driven from a button.
 - **`nldd-byline`** — renders its avatars with `nldd-avatar` (both the `avatar-src` path and slotted `nldd-avatar`), so a byline without an image shows initials; a slotted `<img>` still works.
 - **`--semantics-buttons-neutral-tinted-divider-color`** — slightly lighter in dark mode (`neutral-450` → `neutral-350`).
-
-### Breaking
-
-- **Semantics content-color tokens renamed** (no aliases): `--semantics-buttons-*-primary-content-color` and the `categories` equivalents become `--semantics-*-content-color` (drop `primary`); `--semantics-*-secondary-content-color` become `--semantics-*-content-secondary-color` (qualifier after `content`). Update any consumer CSS that references them.
-- **`--context-cell-content-*` renamed to `--context-content-*`** (whole family: `color`, `secondary-color`, `accent-color`, `success-color`, `warning-color`, `critical-color`). Update any consumer CSS that sets or reads these context custom properties.
-- **`nldd-button` / `nldd-icon-button` overlay slot renamed `menu` → `popup`** — the slot now accepts an `nldd-menu` or an `nldd-popover`. Change `<nldd-menu slot="menu">` to `slot="popup"`. (`nldd-token` / `nldd-token-field` keep their own menu-only `slot="menu"`.)
 
 ### Fixed
 
@@ -1728,6 +1727,10 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-app-view` document scroll mode.** The layout can hand page scrolling to the document (root) instead of an inner pane (nested), so iOS rubber-band and the collapsing Safari toolbar behave natively.
 - **New icons.** `heading-1`…`heading-6`, `paragraph-sign`, `lifebuoy`, `network-structure`, `stack-text`, `wheat` (`harvest`) and `person-circle-badge-plus` (`new-account`).
 
+### Breaking
+
+- **`clipboard-rectangle` icon renamed to `clipboard-square`** — the `paste` icon is reshaped from a rectangle to a square, and the old name is *not* kept as an alias, so `icon="clipboard-rectangle"` no longer resolves. Switch to `clipboard-square`; the `paste` alias already points to it.
+
 ### Added
 
 - **Icons** — `heading-1`…`heading-6`, `paragraph-sign`, `lifebuoy`, `network-structure`, `stack-text`, `wheat` and `person-circle-badge-plus`, with `harvest` and `new-account` aliases.
@@ -1738,10 +1741,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-toolbar`** — the title can size to `fit-content` with an action slot beside it.
 - **`nldd-app-view`** — derives a document-level scroll mode (root vs nested) so the document can own iOS rubber-band and Safari-toolbar scrolling instead of an inner pane.
 - **Icons renamed** (old names kept as aliases, so nothing breaks): `centralized-network` → `centralized-structure`, `table-cells` → `rectangle-split-2x3`.
-
-### Breaking
-
-- **`clipboard-rectangle` icon renamed to `clipboard-square`** — the `paste` icon is reshaped from a rectangle to a square, and the old name is *not* kept as an alias, so `icon="clipboard-rectangle"` no longer resolves. Switch to `clipboard-square`; the `paste` alias already points to it.
 
 ### Fixed
 
@@ -1811,6 +1810,12 @@ here; consult the commit history if you need that level of detail.
 - **Definition lists in `nldd-rich-text`.** Responsive `dl` / `dt` / `dd` term-definition layout, so glossaries and key/value content render as aligned term/definition pairs that adapt to the available width.
 - **`nldd-card` as a link.** `href` / `target` / `rel` turn the whole card into a clickable link via an overlay anchor; `target="_blank"` auto-resolves `rel` and announces a new-tab hint, and `accessible-label` names the link without a double announcement.
 
+### Breaking
+
+- **`nldd-window`** — no longer draggable: drag-to-move added more complexity than a window inside a browser tab warrants. The `movable` attribute and the `window-drag-handle` hook are removed; the window stays positionable via `top`/`left`/`right`/`bottom`/`centered`. For genuine window management, open content in a new browser tab instead.
+- **`nldd-breadcrumbs`** — no auto-collapse: the `no-collapse` attribute and the ellipsis expand button are removed. The trail always renders in full and wraps onto multiple lines.
+- **`nldd-hero`** — the `media-corner` attribute is renamed to `media-corner-position` (freeing the `media-corner` namespace for the new media attributes).
+
 ### Added
 
 - **`nldd-list` listbox** — `type="listbox"`: a filterable combobox-pattern listbox with a built-in search field, `role="listbox"`/`role="option"` items, an active option that moves via `aria-activedescendant` (focus stays in the input), plus `toolbar` and `search-bar-end` slots and an `accessible-label`.
@@ -1839,12 +1844,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-rich-text` / `nldd-container`** — the rich-text host (and container slotted items) now use `box-sizing: border-box`, so padding or a border no longer makes the element overflow its slot or grid/column track.
 - **All component hosts** now pin `box-sizing: border-box`, so a consumer's global box-sizing reset (e.g. Tailwind Preflight) can no longer change a component host's box model.
 
-### Breaking
-
-- **`nldd-window`** — no longer draggable: drag-to-move added more complexity than a window inside a browser tab warrants. The `movable` attribute and the `window-drag-handle` hook are removed; the window stays positionable via `top`/`left`/`right`/`bottom`/`centered`. For genuine window management, open content in a new browser tab instead.
-- **`nldd-breadcrumbs`** — no auto-collapse: the `no-collapse` attribute and the ellipsis expand button are removed. The trail always renders in full and wraps onto multiple lines.
-- **`nldd-hero`** — the `media-corner` attribute is renamed to `media-corner-position` (freeing the `media-corner` namespace for the new media attributes).
-
 ## <small>0.8.63 (2026-06-18)</small>
 
 * feat: just-in-time-education, list arrow-key navigation, activity-indicator overlay, plus consumer-r ([1e6bf86](https://github.com/NederlandseDigitaleDienst/design-system/commit/1e6bf86)), closes [#130](https://github.com/NederlandseDigitaleDienst/design-system/issues/130)
@@ -1856,6 +1855,11 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-status-bar` now mounts under Vue, React and other `createElement`-based frameworks** (reported by a consuming team). The ARIA setup moved from the constructor to `connectedCallback`: a custom-element constructor may not add attributes, so `document.createElement` previously threw `NotSupportedError` and the bar never upgraded (no shadow root, no role, height 0).
 - **`nldd-inline-dialog`** no longer trips Lit's change-in-update warning on the initial slot sync (reported by a consuming team).
 - **List arrow-key navigation.** Opt-in `arrow-navigation` on `nldd-list`: ArrowUp/Down move focus between the interactive items (wrapping), Home/End jump to first/last, and the list becomes a single tab stop so Tab moves past the rest. Focus only (selection stays consumer-managed). For simple lists where each item has one action; mutually exclusive with `reorderable`.
+
+### Breaking
+
+- **`nldd-activity-indicator`:** a custom indicator override moved from the default slot to the new `indicator` slot, since the default slot now holds the wrapped content — `<nldd-progress-bar slot="indicator">`.
+- **`nldd-list-item` translation key** `components.list-item.opens-in-new-tab-label` was renamed to `components.list-item.opens-in-new-tab-text`; update any `translations` override.
 
 ### Added
 
@@ -1869,11 +1873,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-collection`** shows its scroll controls and edge fade only when the content actually overflows.
 - **`nldd-page-footer`** with no content shows only the accent line, without the gray surface.
 - `width: 100%` fixes on `nldd-form-field`, `nldd-form-actions` and `nldd-document-tab-bar`.
-
-### Breaking
-
-- **`nldd-activity-indicator`:** a custom indicator override moved from the default slot to the new `indicator` slot, since the default slot now holds the wrapped content — `<nldd-progress-bar slot="indicator">`.
-- **`nldd-list-item` translation key** `components.list-item.opens-in-new-tab-label` was renamed to `components.list-item.opens-in-new-tab-text`; update any `translations` override.
 
 ## <small>0.8.62 (2026-06-16)</small>
 
@@ -1891,14 +1890,14 @@ here; consult the commit history if you need that level of detail.
 - **List rows can open in a new tab.** `nldd-list-item` forwards `target` and `rel` to its anchor.
 - **Dark-mode and layout polish.** Neutral tags and banners no longer blend into a tinted surface in dark mode, alongside `nldd-button` full-width / disclosure-gap and `nldd-toolbar` item-sizing fixes.
 
+### Breaking
+
+- **`nldd-bar-split-view`** — dividers are now placed automatically wherever the main pane meets an adjacent bar (directly above and/or below it), at every breakpoint including `sm`, and never between two stacked bars on the same side. The consumer-managed `no-divider` attribute is **removed and ignored** — drop any usage. Bars on `sm` now show a divider where they meet main (previously `sm` had none).
+
 ### Added
 
 - **Icons** — `arrow-left-to-line` / `arrow-right-to-line` and `chevron-left-to-line` / `chevron-right-to-line` ("move to edge" affordances), `file-text-stack` (with `documents` aliases), and an `open-new-page` alias for `square-arrow-right-top`.
 - **`nldd-list-item`** — forwards `target` and `rel` to the underlying `<a>`, so a link row can open in a new tab (`target="_blank" rel="noopener noreferrer"`). With `target="_blank"` it also injects a visually hidden "opens in new tab" announcement for assistive technology (WCAG 2.1 SC 3.2.2), overridable via the `translations` property.
-
-### Breaking
-
-- **`nldd-bar-split-view`** — dividers are now placed automatically wherever the main pane meets an adjacent bar (directly above and/or below it), at every breakpoint including `sm`, and never between two stacked bars on the same side. The consumer-managed `no-divider` attribute is **removed and ignored** — drop any usage. Bars on `sm` now show a divider where they meet main (previously `sm` had none).
 
 ### Fixed
 
@@ -1922,6 +1921,10 @@ here; consult the commit history if you need that level of detail.
 - **Keyboard-shortcut variants.** `nldd-keyboard-shortcut` gained `box` and `simple` variants, `sm` / `md` / `inherit` sizes and `neutral` / `inherit` colors, so a shortcut fits both a standalone keycap and inline running text.
 - **Loading backdrop.** `nldd-activity-indicator` can dim and blur the content behind it while loading (opt-in `backdrop`), and a static-skeleton-loading principle was added to the `Docs/Ontwerprichtlijnen` reference.
 
+### Breaking
+
+- **`nldd-menu`** — the `translations` key `components.menu.back` was renamed to `components.menu.back-action` (matching the existing `components.menu.submenu-back-action`); the rendered label is unchanged. Update any `translations` override that sets the old key.
+
 ### Added
 
 - **`nldd-menu`** — menu items accept an `href` (rendered as a real `<a>`, so middle-click and open-in-new-tab work) and a keyboard-shortcut hint (`shortcut`, `shortcut-mac`, `shortcut-windows`, `shortcut-linux`); the menu now sizes to its content between a minimum and `min(100vw - inset, 640px)`, with an explicit `width` to pin it.
@@ -1932,10 +1935,6 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **`nldd-byline`** — on a small container (≤ sm), a byline with two or more avatars stacks the avatar row above the names so the text keeps the full width; single-avatar bylines stay inline.
-
-### Breaking
-
-- **`nldd-menu`** — the `translations` key `components.menu.back` was renamed to `components.menu.back-action` (matching the existing `components.menu.submenu-back-action`); the rendered label is unchanged. Update any `translations` override that sets the old key.
 
 ### Fixed
 
@@ -1957,6 +1956,16 @@ here; consult the commit history if you need that level of detail.
 - **Category color styles.** Every category color now comes in three styles — `filled` (saturated), `tinted` (a soft tint with colored text and a same-hue outline) and `reference` (the true rijkshuisstijl brand color) — addressed as `--semantics-categories-{color}-{style}-*`. `nldd-tag` and `nldd-banner` adopt `tinted`; the hero paints its panel with `reference`. *(Breaking.)*
 - **Design-guidelines reference.** A new `Docs/Ontwerprichtlijnen` Storybook page gathers the design system's interface principles — input and forms, navigation, feedback, microcopy, visual hierarchy and process — as one reference for design and review.
 
+### Breaking
+
+- **`nldd-list-item` interactive mode** — `type="button"` is replaced by the boolean `button` attribute, aligning the opt-in across default-static components (`nldd-list-item`, `nldd-status-bar`): `href` = link, `button` = button, neither = static. The `ListItemType` export is removed.
+- **`nldd-breadcrumbs`** — trails of four or more levels now collapse by default to `Home › … › {parent} › {current}`. The ellipsis is a button that reveals the hidden levels in place (they stay in the DOM for crawlers). Set `no-collapse` to always show the full trail.
+- **`nldd-rich-text` width zones** — children other than text now span wider by default. Text (headings, paragraphs, lists, `div` / `section`) and blockquotes stay at the reading measure; `img` / `figure` / `video` / `iframe` and tables take the wide accent; code blocks and components span the full column. Override per child with `data-width="main|wide|full"`.
+- **`coolgray` removed** — no longer a color/category value on `nldd-badge`, `nldd-tag`, `nldd-progress-bar`, `nldd-progress-circle` or the hero `main-background`; the matching filled-semantics and component tokens are gone. The `neutral` palette (which aliases the coolgray primitives) is unaffected.
+- **`--components-banner-content-secondary-color` removed** — banner supporting text now always uses the primary content color. Consumers who overrode this token to recolor the supporting text will need to remove that override.
+- **Category tokens renamed and regrouped** — `--semantics-categories-filled-{color}-*` is now `--semantics-categories-{color}-filled-*`, grouped per color and moved directly below the content colors. `border-color` is renamed `highlight-border-color`, and `content-color` splits into `primary-content-color` / `secondary-content-color`.
+- **Per-component category tokens removed** — the `--components-{badge,tag,progress-bar,progress-circle,banner}-{color}-{background,border,content,icon}-color` pass-throughs are gone; these components now read the `--semantics-categories-{color}-{style}-*` tokens directly. Point any external references at the semantic category tokens.
+
 ### Added
 
 - **`nldd-status-bar`** (status & feedback) — a 24px-high, full-width status strip with a deep background per variant (`neutral`, `accent`, `success`, `warning`, `critical`). Text-only; set `href` to make the whole strip a link or `button` to make it a button, otherwise it is static. `role` / `aria-live` follow the variant.
@@ -1969,16 +1978,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-blockquote`** accepts an `nldd-byline` as its `attribution` (the leading em-dash is dropped for a byline).
 - **Rich-text images** get the controls medium corner radius.
 - **Category `tinted` and `reference` color styles** — alongside `filled`, each category color exposes a `tinted` style (a soft tint with a same-hue outline and colored text, ~525 steps deeper for AA contrast) and a `reference` style (the true rijkshuisstijl brand color, identical in light and dark mode via a mirrored step). Each style provides `background`, `highlight-border`, `primary-content` and `secondary-content` colors.
-
-### Breaking
-
-- **`nldd-list-item` interactive mode** — `type="button"` is replaced by the boolean `button` attribute, aligning the opt-in across default-static components (`nldd-list-item`, `nldd-status-bar`): `href` = link, `button` = button, neither = static. The `ListItemType` export is removed.
-- **`nldd-breadcrumbs`** — trails of four or more levels now collapse by default to `Home › … › {parent} › {current}`. The ellipsis is a button that reveals the hidden levels in place (they stay in the DOM for crawlers). Set `no-collapse` to always show the full trail.
-- **`nldd-rich-text` width zones** — children other than text now span wider by default. Text (headings, paragraphs, lists, `div` / `section`) and blockquotes stay at the reading measure; `img` / `figure` / `video` / `iframe` and tables take the wide accent; code blocks and components span the full column. Override per child with `data-width="main|wide|full"`.
-- **`coolgray` removed** — no longer a color/category value on `nldd-badge`, `nldd-tag`, `nldd-progress-bar`, `nldd-progress-circle` or the hero `main-background`; the matching filled-semantics and component tokens are gone. The `neutral` palette (which aliases the coolgray primitives) is unaffected.
-- **`--components-banner-content-secondary-color` removed** — banner supporting text now always uses the primary content color. Consumers who overrode this token to recolor the supporting text will need to remove that override.
-- **Category tokens renamed and regrouped** — `--semantics-categories-filled-{color}-*` is now `--semantics-categories-{color}-filled-*`, grouped per color and moved directly below the content colors. `border-color` is renamed `highlight-border-color`, and `content-color` splits into `primary-content-color` / `secondary-content-color`.
-- **Per-component category tokens removed** — the `--components-{badge,tag,progress-bar,progress-circle,banner}-{color}-{background,border,content,icon}-color` pass-throughs are gone; these components now read the `--semantics-categories-{color}-{style}-*` tokens directly. Point any external references at the semantic category tokens.
 
 ### Changed
 
@@ -2004,6 +2003,15 @@ here; consult the commit history if you need that level of detail.
 - **35 new icons** — `accessibility` (`a11y`), `app`, `arrow-left-right`, `binoculars` (`explore`, `discover`), `blocks-9` (`building-blocks`), `book-batch-play`, `brick-wall`, `centralized-network`, `cylinder-2-big-small-split` (`coins`), `cylinder-split-badge-lock`, `desk-with-screen` (`workplace`), `diamond` (`gem`, `quality`), `file-box` (`archive`), `file-text-batch-check-mark`, `file-text-pencil`, `foundation`, `globe-rack-server` (`dns`), `hand` (`privacy`), `handshake`, `key`, `leaf` (`sustainability`), `pencil-ruler` (`design`), `pipeline-corner-2` (`pipeline`), `pipeline-machine-gear` (`pipeline-runner`), `pipeline-valve`, `point-bottom-left-to-point-top-right-s-curve-path` (`path`, `traject`), `radar` (`monitoring`), `score-meter`, `seal-check-mark` (`certified`), `shield` (`protection`), `shield-lock`, `shopping-cart` (`cart`), `square-and-arrow-down` (`save`, `import`), `stack-code`, `table-cells` (`table`).
 - **Breadcrumbs** keep the full trail and wrap on small screens — the small-screen collapse-to-back-link is gone.
 
+### Breaking
+
+- **`nldd-tab-bar`**: the `compact` variant is removed. Use `size="lg"` — the icon-and-text variant at `lg` stacks the icon over the text, which is what `compact` did.
+- **Button content-color tokens renamed**: `--semantics-buttons-*-content-color` → `--semantics-buttons-*-primary-content-color`, system-wide. Update any custom CSS that references them.
+- **Button font tokens renamed**: `--semantics-buttons-{xs,sm,md,lg}-font` → `--semantics-buttons-{size}-primary-text-font`, system-wide. The supporting text gets its own per-size token (`--semantics-buttons-{size}-supporting-text-font`) instead of an inline primitive. Update any custom CSS that references the old names.
+- **`nldd-button`**: the `horizontal-align` attribute is renamed to `horizontal-alignment`.
+- **Icon renamed**: `table-badge-arrow-down` → `table-cells-badge-arrow-down`.
+- **`nldd-image`**: the error translation key is renamed to `error-text`.
+
 ### Added
 
 - **`lg` size** on `nldd-button`, `nldd-icon-button`, `nldd-button-bar`, `nldd-split-button`, `nldd-toolbar`, `nldd-tab-bar`, `nldd-toggle-button`, and `nldd-segmented-control`.
@@ -2026,15 +2034,6 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-inline-dialog`**: smaller icons (md 48 → 40px, lg 56 → 48px).
 - **`nldd-breadcrumbs`**: keeps the full trail and wraps on small screens; the small-screen collapse-to-back-link and its container-query machinery are removed.
 - **Input fields**: autofill stays light in both color schemes — a light-yellow background with dark-amber text — instead of inverting in dark mode, via the new `--semantics-input-fields-is-autofill-content-color` token.
-
-### Breaking
-
-- **`nldd-tab-bar`**: the `compact` variant is removed. Use `size="lg"` — the icon-and-text variant at `lg` stacks the icon over the text, which is what `compact` did.
-- **Button content-color tokens renamed**: `--semantics-buttons-*-content-color` → `--semantics-buttons-*-primary-content-color`, system-wide. Update any custom CSS that references them.
-- **Button font tokens renamed**: `--semantics-buttons-{xs,sm,md,lg}-font` → `--semantics-buttons-{size}-primary-text-font`, system-wide. The supporting text gets its own per-size token (`--semantics-buttons-{size}-supporting-text-font`) instead of an inline primitive. Update any custom CSS that references the old names.
-- **`nldd-button`**: the `horizontal-align` attribute is renamed to `horizontal-alignment`.
-- **Icon renamed**: `table-badge-arrow-down` → `table-cells-badge-arrow-down`.
-- **`nldd-image`**: the error translation key is renamed to `error-text`.
 
 ### Fixed
 
@@ -2067,6 +2066,15 @@ here; consult the commit history if you need that level of detail.
 - **Reorganized categories** — `menu` moves to **Actions** and **Lists & Menus** becomes **Lists & Tables**, making room for the new table family (import paths and Storybook nav change — see Breaking).
 - **Two new icons** — `book` (aliases `guide`, `read`) and `lightbulb` (alias `idea`).
 
+### Breaking
+
+- **Component categories moved.** Import paths change: `…/lists-and-menus/*` → `…/lists-and-tables/*`, and `menu` moves to `…/actions/menu`. Storybook nav follows (`Components/Lists & Menus/*` → `Components/Lists & Tables/*`, `Menu` → `Components/Actions/Menu`).
+- **`nldd-progress` → `nldd-activity-indicator`.** The element, class (`NLDDProgress` → `NLDDActivityIndicator`), and translation key are renamed with no alias. `no-label` is replaced by `show-text` (the label is now hidden by default).
+- **Progress `segment` → `segment-indicator`.** `nldd-progress-bar-segment` → `nldd-progress-bar-segment-indicator` (and the circle equivalent); exported classes `NLDDProgress{Bar,Circle}Segment` → `…SegmentIndicator`; and the `--components-progress-*-segment-*` custom properties gain `-indicator`.
+- **Surface tokens renamed** (same values) so the default variant is named alongside `tinted`:
+  - `--semantics-surfaces-background-color` → `--semantics-surfaces-base-background-color`
+  - `--semantics-surfaces-border-color` → `--semantics-surfaces-base-border-color`
+
 ### Added
 
 - **`nldd-table` + `nldd-table-row`**: a `columns` grid-track list applied once and shared by every row via subgrid for true column alignment; reuses `nldd-cell` (generic cells default to full width inside a table); a `header` slot rendered first with `columnheader` roles; per-row `selected` styling; an empty state ("Geen items"); and keyboard focus when the table scrolls horizontally. Always a boxed surface — `background="base"` (default) or `"tinted"`, full-bleed row dividers, inline padding on the rows.
@@ -2077,15 +2085,6 @@ here; consult the commit history if you need that level of detail.
 - **Icons**: `book` (aliases `guide`, `read`) and `lightbulb` (alias `idea`).
 - **Tokens**: a shared `--semantics-tables-*` range (border color/width, row padding, column gap, row min-height, selected-row colors) used by `nldd-table` and the rich-text tables.
 - **`nldd-progress-bar` / `nldd-progress-circle`**: the indeterminate indicator now carries the same 1px token-colored highlight border as the determinate segment-indicators.
-
-### Breaking
-
-- **Component categories moved.** Import paths change: `…/lists-and-menus/*` → `…/lists-and-tables/*`, and `menu` moves to `…/actions/menu`. Storybook nav follows (`Components/Lists & Menus/*` → `Components/Lists & Tables/*`, `Menu` → `Components/Actions/Menu`).
-- **`nldd-progress` → `nldd-activity-indicator`.** The element, class (`NLDDProgress` → `NLDDActivityIndicator`), and translation key are renamed with no alias. `no-label` is replaced by `show-text` (the label is now hidden by default).
-- **Progress `segment` → `segment-indicator`.** `nldd-progress-bar-segment` → `nldd-progress-bar-segment-indicator` (and the circle equivalent); exported classes `NLDDProgress{Bar,Circle}Segment` → `…SegmentIndicator`; and the `--components-progress-*-segment-*` custom properties gain `-indicator`.
-- **Surface tokens renamed** (same values) so the default variant is named alongside `tinted`:
-  - `--semantics-surfaces-background-color` → `--semantics-surfaces-base-background-color`
-  - `--semantics-surfaces-border-color` → `--semantics-surfaces-base-border-color`
 
 ### Fixed
 
@@ -2138,6 +2137,18 @@ here; consult the commit history if you need that level of detail.
 - **Copy-to-clipboard on `nldd-code-viewer`**: a top-right button copies the rendered code with a one-shot "Copied" confirmation. Combined with the new `variant` + `background` attributes, snippets now look and behave like proper code blocks out of the box.
 - **Six new icons**: `bell`, `bookmark`, `flag`, `star`, `tag`, and `photo-slash` (with a `broken-image` alias used by `nldd-image`'s error fallback). The icon gallery story also gains a search filter for easier discovery.
 
+### Breaking
+
+- `nldd-list`: `variant="box-on-tinted"` is removed. Use `<nldd-list variant="box" background="base">` instead. The `background` axis is also narrowed to `'tinted' | 'base'` (the old `'transparent'` value is removed — `variant="simple"` is the no-chrome case and `background` no longer applies when variant is `'simple'`).
+- `nldd-code-viewer`: `no-box` boolean is removed. Use `variant="simple"` instead. `background="inherit"` is removed. The remaining `background` values are `'tinted'` (default) and `'base'`.
+- Tokens renamed for the new inset-border pattern (same values, new names; rename overrides in custom themes):
+  - `--semantics-surfaces-highlight-color` → `--semantics-surfaces-border-color`
+  - `--semantics-surfaces-tinted-highlight-color` → `--semantics-surfaces-tinted-border-color`
+  - `--components-box-highlight-color` → `--components-box-border-color`
+  - `--components-box-on-tinted-background-color` → `--components-box-base-background-color`
+  - `--components-box-on-tinted-background-color`'s sibling highlight token is also renamed to `--components-box-base-border-color`.
+- `nldd-progress`: the `text=" "` (space-as-sentinel) trick for suppressing the loading label is gone — use the new `no-label` boolean attribute.
+
 ### Added
 
 - `nldd-banner`: status/feedback component with semantic variants (info / success / warning / critical), filled default icons, optional dismiss button, and primary/secondary actions.
@@ -2168,18 +2179,6 @@ here; consult the commit history if you need that level of detail.
 - `nldd-tag` and `nldd-badge` stories: `Variants` + `Rijkskleuren` merged into a single `Colors` story per component; tag color labels switched from concept-style strings (concept / nieuw / gepubliceerd / let op / afgewezen) to the semantic color names.
 - Interactive controls (16 components) now have `user-select: none` on hit targets so double-tapping or shift-clicking doesn't accidentally select label text.
 
-### Breaking
-
-- `nldd-list`: `variant="box-on-tinted"` is removed. Use `<nldd-list variant="box" background="base">` instead. The `background` axis is also narrowed to `'tinted' | 'base'` (the old `'transparent'` value is removed — `variant="simple"` is the no-chrome case and `background` no longer applies when variant is `'simple'`).
-- `nldd-code-viewer`: `no-box` boolean is removed. Use `variant="simple"` instead. `background="inherit"` is removed. The remaining `background` values are `'tinted'` (default) and `'base'`.
-- Tokens renamed for the new inset-border pattern (same values, new names; rename overrides in custom themes):
-  - `--semantics-surfaces-highlight-color` → `--semantics-surfaces-border-color`
-  - `--semantics-surfaces-tinted-highlight-color` → `--semantics-surfaces-tinted-border-color`
-  - `--components-box-highlight-color` → `--components-box-border-color`
-  - `--components-box-on-tinted-background-color` → `--components-box-base-background-color`
-  - `--components-box-on-tinted-background-color`'s sibling highlight token is also renamed to `--components-box-base-border-color`.
-- `nldd-progress`: the `text=" "` (space-as-sentinel) trick for suppressing the loading label is gone — use the new `no-label` boolean attribute.
-
 ### Fixed
 
 - `text-field`, `password-field`, `search-field`, `combo-box`, `multi-line-text-field`: autofill text color pinned to the content-color token via `-webkit-text-fill-color` so dark-mode autofill no longer paints dark browser-default text on the dark-amber autofill background.
@@ -2202,7 +2201,7 @@ here; consult the commit history if you need that level of detail.
 - `nldd-container` stories: control + story ordering aligned with the canonical skill groups (visueel dominant → space → alignment); optional selects use the `'(geen)'` + `mapping` pattern; booleans default to `false` so the toggle is interactive immediately (no intermediate "Set boolean" step); the defaults column is populated across all controls.
 - CHANGELOG workflow: section conventions moved to `CONTRIBUTING.md`; the `## Unreleased` header is dropped — hand-written `### Highlights` / `### Breaking Changes` now sit directly above the current top version and nest naturally under the new version block that semantic-release prepends on release.
 
-### Breaking Changes
+### Breaking
 
 - `nldd-container`: `reverse`, `sm-reverse`, `md-reverse`, `lg-reverse` boolean attributes are **removed**. Use per-child `order` / `sm-order` / `md-order` / `lg-order` on the slotted items instead.
 
@@ -2257,7 +2256,7 @@ here; consult the commit history if you need that level of detail.
 - Timeline-track-cell split into `*.styles.ts` + `*.template.ts` like other cell components. Own component-color tokens (`--components-timeline-track-cell-color` / `-future-background-color`). Cell stretches to its row by default so the line spans the full main-area height.
 - Window keeps its position on sm viewports — previously top/right/bottom/left/centered were cleared on sm and the dialog centered. New `scheme` attribute ('inherit' | 'light' | 'dark') applies color-scheme to host + inner dialog so surfaces inside adapt.
 
-### Breaking Changes
+### Breaking
 
 - `background="default"` is now `background="base"` on `nldd-app-view`, `nldd-page` and the five split-view components (`nldd-split-view-pane`, `bar`, `navigation`, `side-by-side`, `stacked`). Same paint behavior, just a clearer name that matches the new `PageSectionMixin` vocabulary. Migration: search/replace `background="default"` → `background="base"` on these elements.
 - `<nldd-menu-bar-item expandable>` items must now be wrapped in an explicit `<nldd-menu>`. Previously menu-bar-item auto-created a body-attached menu and cloned the slotted items into it (which dropped JS event listeners). Migration:
@@ -2309,7 +2308,7 @@ Grote housekeeping-batch met een paar zichtbare features bovenop een grondige CS
 - **`<nldd-code>` houdt kleuren correct na light/dark-wissel** tijdens horizontaal scrollen — voorheen bleef weggescrollde inhoud in het oude kleurenschema hangen.
 - **Changelog infrastructure**: `CHANGELOG.md` in repo + Storybook docs-page + auto-generatie via semantic-release.
 
-### Breaking Changes
+### Breaking
 
 Bijna alle breaking changes zijn "onbekende/lege attribuutwaardes → fallback op default" (waar voorheen ongedefineerd gedrag was). Echte API-veranderingen:
 
@@ -2373,7 +2372,7 @@ Bijna alle breaking changes zijn "onbekende/lege attribuutwaardes → fallback o
 
 Substantial branch: several components reworked, **7 breaking changes**, plus accessibility improvements, bug fixes and new icons. 90 commits. Read the breaking changes before upgrading.
 
-### Breaking Changes
+### Breaking
 
 - **menu**: drill-in chain reworked — opener no longer toggles its submenu; anchor state is synced. Open/close behavior changes; review any code reaching into menu internals.
 - **rich-text**: rebuilt on CSS grid with named columns + new `centered` mode; blockquotes/tables now bleed wider. Check custom rich-text styling.
@@ -2384,7 +2383,7 @@ Substantial branch: several components reworked, **7 breaking changes**, plus ac
 - **styles**: `is-open` CSS variables renamed to `is-expanded`.
 - **link**: moved from `actions` to `navigation` — update the import path / export subpath (`navigation/link`).
 
-### Menu (drill-in rework)
+#### Menu (drill-in rework)
 
 - Root-owned registry drives chain collapse instead of walking stale parent links: fixes anchor-click not closing after multiple navigations and bounce-back to root.
 - Re-resolve drill-in side per reposition (no frozen/mid-chain flip).
@@ -2434,7 +2433,7 @@ Brede design-system polish over componenten, tokens en a11y. Bevat meerdere brea
 - **Storybook DX** — alle stories naar NL. Optionele select-controls gebruiken het `'(geen)'` label-mapping patroon zodat de placeholder verdwijnt en de "geen waarde"-state een echte optie wordt.
 - **Tests** — smoke coverage voor button/icon-button aria-expanded combinaties, popup-type forwarding, single-line, width-API en variants.
 
-### Breaking Changes
+### Breaking
 
 Migration guide:
 
