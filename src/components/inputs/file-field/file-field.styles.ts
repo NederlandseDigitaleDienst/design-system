@@ -45,7 +45,7 @@ export const fileFieldStyles = css`
 		--_file-field-area-buttons-gap: var(--primitives-space-8);
 		--_file-field-area-choose-button-group-margin-top: var(--primitives-space-4);
 		--_file-field-area-choose-button-group-margin-bottom: var(--primitives-space-8);
-		--_file-field-drop-area-hint-color: var(--semantics-content-color);
+		--_file-field-drop-area-drop-hint-text-color: var(--semantics-content-color);
 		--_file-field-accepted-types-color: var(--semantics-content-secondary-color);
 		--_file-field-accepted-types-font: var(--primitives-font-body-sm-regular-tight);
 
@@ -301,12 +301,12 @@ export const fileFieldStyles = css`
 		color: var(--_file-field-rejected-color);
 	}
 
-	.file-field__hint {
+	.file-field__drop-hint-text {
 		color: var(--semantics-content-secondary-color);
 	}
 
-	.file-field__drop-area .file-field__hint {
-		color: var(--_file-field-drop-area-hint-color);
+	.file-field__drop-area .file-field__drop-hint-text {
+		color: var(--_file-field-drop-area-drop-hint-text-color);
 	}
 
 	.file-field__value {
@@ -314,7 +314,7 @@ export const fileFieldStyles = css`
 	}
 
 	@media (hover: none) {
-		.file-field__hint,
+		.file-field__drop-hint-text,
 		.file-field__drop-area .file-field__text {
 			display: none;
 		}

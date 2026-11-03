@@ -139,7 +139,7 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 	);
 	const area = component.variant === 'area';
 	const buttonGroup = area && component.directory;
-	const hint = html`<span class="file-field__hint">${component._multiple
+	const hint = html`<span class="file-field__drop-hint-text">${component._multiple
 		? component._t('components.file-field.drop-hint-multiple-lowercase-text')
 		: component._t('components.file-field.drop-hint-lowercase-text')}</span>`;
 	const sentence = buttonGroup
