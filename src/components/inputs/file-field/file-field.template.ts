@@ -103,7 +103,8 @@ function rejectionVariants(component: NLDDFileField, rejection: DropRejection | 
 
 /**
  * While a dropped folder is read, the activity indicator with its own label, as
- * every other loading state, at the size of the icon of a chosen file. The field
+ * every other loading state, at the size of the icon of a chosen file, a step
+ * smaller in an area, where the label goes under it. The field
  * shows it empty: what was chosen before gives way to the folder. Only an area
  * has room to show the label; a screen reader hears it either way. The circle
  * is only there while it shows: it is a live region, and sets its own visibility.
@@ -111,7 +112,7 @@ function rejectionVariants(component: NLDDFileField, rejection: DropRejection | 
 function renderReadingIndicator(component: NLDDFileField): TemplateResult {
 	const area = component.variant === 'area';
 	const sm = component.size === 'sm';
-	const size = area ? (sm ? '32' : '40') : (sm ? '20' : '24');
+	const size = area ? (sm ? '24' : '32') : (sm ? '20' : '24');
 	return html`<nldd-activity-indicator class="file-field__reading-indicator"
 		timing="instant"
 		size=${size}
