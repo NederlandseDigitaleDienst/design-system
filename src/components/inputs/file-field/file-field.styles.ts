@@ -60,15 +60,6 @@ export const fileFieldStyles = css`
 		display: none;
 	}
 
-	:host([disabled]) {
-		opacity: var(--primitives-opacity-disabled);
-		pointer-events: none;
-	}
-
-	:host([variant="area"]:not([size="sm"])) {
-		--_file-field-button-group-gap: var(--primitives-space-8);
-	}
-
 	:host([size="sm"]) {
 		--_file-field-corner-radius: var(--semantics-controls-sm-corner-radius);
 		--_file-field-min-size: var(--semantics-controls-sm-min-size);
@@ -84,12 +75,21 @@ export const fileFieldStyles = css`
 		--_file-field-accepted-types-font: var(--primitives-font-body-xs-regular-tight);
 	}
 
+	:host([variant="area"]:not([size="sm"])) {
+		--_file-field-button-group-gap: var(--primitives-space-8);
+	}
+
 	:host([directory]) {
 		--_file-field-area-min-height: var(--primitives-area-200);
 	}
 
 	:host([directory][size="sm"]) {
 		--_file-field-area-min-height: var(--primitives-area-160);
+	}
+
+	:host([disabled]) {
+		opacity: var(--primitives-opacity-disabled);
+		pointer-events: none;
 	}
 
 
