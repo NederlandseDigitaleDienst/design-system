@@ -43,6 +43,7 @@ here; consult the commit history if you need that level of detail.
 - **The clear button of an `nldd-file-field` shows no tooltip,** as its menu button already did. The tooltip repeated the name of the file over the field.
 - **The hint `menu-no-manual-anchor` also covers a list row:** an `nldd-menu` with `anchor` on an `nldd-list-item-segment` is pointed at `popovertarget`. The list pattern now works that way.
 - **`timing="instant"` on `nldd-tooltip` also skips the fade,** on the way in and out, so a tooltip follows the pointer across a row of swatches or icon buttons without lagging behind.
+- **A column of an `nldd-task-board` that you drag an item to comes fully into view.** Rest the pointer on a column cut off at the side and the board moves just far enough to show all of it clear of the fade, so it stays the column under the pointer and the next one peeks out. At the edge the board still scrolls on. Moving an item to another column with Alt and an arrow key shows that whole column too, not only the item.
 
 ### Fixed
 

@@ -184,6 +184,31 @@ describe('nldd-task-board', () => {
 			expect(document.activeElement).toBe(a);
 		});
 
+		it('brings the whole column an item moved to into view, not just the item', async () => {
+			const unloadTokens = loadTokens();
+			el = await fixture<NLDDTaskBoard>(`
+				<nldd-task-board style="width: 400px">
+					<nldd-task-board-column value="a" text="A"><button id="x">A-1044</button></nldd-task-board-column>
+					<nldd-task-board-column value="b" text="B"></nldd-task-board-column>
+					<nldd-task-board-column value="c" text="C"></nldd-task-board-column>
+				</nldd-task-board>
+			`);
+			el.addEventListener('nldd-move', (event) => {
+				const { item, toColumn } = (event as CustomEvent<NLDDMoveEventDetail>).detail;
+				el.columns.find((column) => column.value === toColumn)!.append(item);
+			});
+			await frames(2);
+			const scroller = el.shadowRoot!.querySelector('.task-board') as HTMLElement;
+			const item = el.querySelector('#x') as HTMLElement;
+			item.focus();
+			alt(item, 'ArrowRight');
+			await frames(3);
+			await new Promise((resolve) => setTimeout(resolve, 600));
+			const shown = el.columns[1].getBoundingClientRect();
+			expect(shown.right).toBeLessThanOrEqual(scroller.getBoundingClientRect().right + 1);
+			unloadTokens();
+		});
+
 		it('puts focus back inside an item whose own shadow root holds it, such as an nldd-card', async () => {
 			el = await fixture<NLDDTaskBoard>(`
 				<nldd-task-board>
@@ -489,6 +514,59 @@ describe('nldd-task-board', () => {
 			pointer(window, 'pointermove', edge, y);
 			await frames(10);
 			expect(scroller.scrollLeft).toBeGreaterThan(0);
+			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+			unloadTokens();
+		});
+
+		it('brings a column cut off at the side fully into view once the pointer rests on it', async () => {
+			const unloadTokens = loadTokens();
+			el = await fixture<NLDDTaskBoard>(`
+				<nldd-task-board style="width: 400px">
+					<nldd-task-board-column value="a" text="A"><button id="x">A-1044</button></nldd-task-board-column>
+					<nldd-task-board-column value="b" text="B"></nldd-task-board-column>
+					<nldd-task-board-column value="c" text="C"></nldd-task-board-column>
+				</nldd-task-board>
+			`);
+			await frames(2);
+			const scroller = el.shadowRoot!.querySelector('.task-board') as HTMLElement;
+			const board = scroller.getBoundingClientRect();
+			const second = el.columns[1].getBoundingClientRect();
+			expect(second.right).toBeGreaterThan(board.right);
+			const item = el.querySelector('#x') as HTMLElement;
+			const [x, y] = center(item);
+			pointer(item, 'pointerdown', x, y);
+			pointer(window, 'pointermove', second.left + 20, y);
+			await frames(2);
+			expect(scroller.scrollLeft).toBe(0);
+			await new Promise((resolve) => setTimeout(resolve, 900));
+			const shown = el.columns[1].getBoundingClientRect();
+			// Clear of the 32px fade, and no further.
+			expect(Math.round(board.right - shown.right)).toBe(32);
+			expect(el.columns[1]._dropState).toBe('over');
+			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+			unloadTokens();
+		});
+
+		it('leaves the board where it is while the pointer only passes a column cut off at the side', async () => {
+			const unloadTokens = loadTokens();
+			el = await fixture<NLDDTaskBoard>(`
+				<nldd-task-board style="width: 400px">
+					<nldd-task-board-column value="a" text="A"><button id="x">A-1044</button></nldd-task-board-column>
+					<nldd-task-board-column value="b" text="B"></nldd-task-board-column>
+				</nldd-task-board>
+			`);
+			await frames(2);
+			const scroller = el.shadowRoot!.querySelector('.task-board') as HTMLElement;
+			const second = el.columns[1].getBoundingClientRect();
+			const item = el.querySelector('#x') as HTMLElement;
+			const [x, y] = center(item);
+			pointer(item, 'pointerdown', x, y);
+			pointer(window, 'pointermove', second.left + 20, y);
+			await new Promise((resolve) => setTimeout(resolve, 100));
+			pointer(window, 'pointermove', x, y);
+			await frames(2);
+			await new Promise((resolve) => setTimeout(resolve, 600));
+			expect(scroller.scrollLeft).toBe(0);
 			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 			unloadTokens();
 		});
