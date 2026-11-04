@@ -22,6 +22,7 @@ import { nlddPasswordFieldTranslations } from '../components/inputs/password-fie
 import { nlddSearchFieldTranslations } from '../components/inputs/search-field/search-field.i18n.js';
 import { nlddSliderTranslations } from '../components/inputs/slider/slider.i18n.js';
 import { nlddStepperTranslations } from '../components/inputs/stepper/stepper.i18n.js';
+import { nlddSwatchPickerItemTranslations } from '../components/inputs/swatch-picker/swatch-picker.i18n.js';
 import { nlddTextEditorTranslations } from '../components/inputs/text-editor/text-editor.i18n.js';
 import { nlddTimeFieldTranslations } from '../components/inputs/time-field/time-field.i18n.js';
 import { nlddTimePickerTranslations } from '../components/inputs/time-picker/time-picker.i18n.js';
@@ -78,6 +79,7 @@ export const nl = {
 	...nlddSearchFieldTranslations,
 	...nlddSliderTranslations,
 	...nlddStepperTranslations,
+	...nlddSwatchPickerItemTranslations,
 	...nlddTextEditorTranslations,
 	...nlddTimeFieldTranslations,
 	...nlddTimePickerTranslations,

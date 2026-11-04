@@ -28,6 +28,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
+- **`nldd-swatch-picker`, a new component for choosing one swatch:** a category `color` ("rood", with its name from the translations), a `custom-color` of your own, or an `image` of a pattern or a material, with `image-srcset` for sharp screens. It is a radio group that goes with a form, the chosen swatch shows a check mark, and the name of each swatch shows as a tooltip, which stays after a click until the pointer leaves and shows for a moment after a tap, clear of the finger. Swatches follow the control sizes, 44px at `md`. Three lint rules come with it: a picker without a name, a swatch without a name, and a swatch with more than one fill.
 - **`nldd-link-group`, a new component for a set of related links,** such as those under the name of a service in a footer. The links sit in a row that wraps, or stacked with `orientation="vertical"`, and `horizontal-alignment="center"` centers the whole set. The group is a `nav` with the links as a list, and sets its `size` on every link in it.
 - **`popovertarget` positions the menu it opens.** An `nldd-button`, `nldd-icon-button`, `nldd-split-button` or `nldd-list-item-segment` whose `popovertarget` names an `nldd-menu` or `nldd-popover` now also anchors it to itself, so the overlay needs only its `id` and no `anchor`. A menu elsewhere on the page, such as the one for the actions of a list row, is wired in one place. An overlay with an `anchor` of its own keeps it.
 - **More for the main action of an `nldd-split-button`:** `type` and `form` to submit or reset a form, also one it sits outside of, `loading` and `loading-text` while the action runs, and `href` and `download` for an action that is a link, such as "Download PDF" with the other formats in the menu.
@@ -41,9 +42,11 @@ here; consult the commit history if you need that level of detail.
 - **An `nldd-file-field` lines up with the other fields in a form.** Its texts start on the left, after the upload icon, which sits where the file icon comes once a file is chosen. Only `variant="area"` keeps everything centered.
 - **The clear button of an `nldd-file-field` shows no tooltip,** as its menu button already did. The tooltip repeated the name of the file over the field.
 - **The hint `menu-no-manual-anchor` also covers a list row:** an `nldd-menu` with `anchor` on an `nldd-list-item-segment` is pointed at `popovertarget`. The list pattern now works that way.
+- **`timing="instant"` on `nldd-tooltip` also skips the fade,** on the way in and out, so a tooltip follows the pointer across a row of swatches or icon buttons without lagging behind.
 
 ### Fixed
 
+- **An `nldd-tooltip` shown by hover goes away when the page scrolls.** It stayed fixed on the screen while the page moved under it, and only went once the scrolling stopped. A tooltip shown by focus or held with `open` now follows its trigger instead.
 - **The line numbers of an `nldd-code-editor` stay inside its rounded frame.** With `appearance="input-field"` and `line-numbers`, the background of the gutter stuck out past the rounded corners.
 - **The menu of an `nldd-split-button` opens again after its chevron closed it.** Once the chevron had closed the menu, every later press, by pointer, did nothing, also after Escape or a click outside.
 

@@ -170,7 +170,7 @@ export const devRules: DevRule[] = [
 		"id": "form-field-needs-input",
 		"message": "nldd-form-field holds no form input, so the label cannot name anything or move focus into it.",
 		"context": "nldd-form-field[label]:not([label=\"\"]):has(> :not(nldd-form-field-help-text))",
-		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
+		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
 		"properties": []
 	},
 	{
@@ -699,6 +699,31 @@ export const devRules: DevRule[] = [
 		"id": "step-cell-variant-renamed",
 		"message": "The `variant` attribute is now `level`. Rename it here and on every other nldd-step-cell.",
 		"context": "nldd-step-cell[variant]"
+	},
+	{
+		"id": "swatch-picker-item-fill-no-effect",
+		"message": "An nldd-swatch-picker-item shows one of `color`, `custom-color` or `image`: an image covers a color, and a category `color` wins over `custom-color`. Keep one.",
+		"context": "nldd-swatch-picker-item[color]:not([color=\"\"])[custom-color]:not([custom-color=\"\"]), nldd-swatch-picker-item[image]:not([image=\"\"])[color]:not([color=\"\"]), nldd-swatch-picker-item[image]:not([image=\"\"])[custom-color]:not([custom-color=\"\"])"
+	},
+	{
+		"id": "swatch-picker-item-needs-name",
+		"message": "An nldd-swatch-picker-item with a `custom-color` or an `image` has no accessible name. Add `text`; only a category `color` brings a name of its own.",
+		"context": "nldd-swatch-picker-item",
+		"assert": "[color]:not([color=\"\"]), [text]:not([text=\"\"])",
+		"properties": [
+			"color",
+			"text"
+		]
+	},
+	{
+		"id": "swatch-picker-needs-name",
+		"message": "nldd-swatch-picker needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.",
+		"context": "nldd-swatch-picker",
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"accessibleLabeledBy"
+		]
 	},
 	{
 		"id": "switch-needs-name",
@@ -1307,6 +1332,21 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-stepper-size",
 		"message": "`size` on nldd-stepper takes: md, sm, xs.",
 		"context": "nldd-stepper[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-swatch-picker-item-color",
+		"message": "`color` on nldd-swatch-picker-item takes: bruin, donkerblauw, donkerbruin, donkergeel, donkergroen, geel, groen, hemelblauw, lichtblauw, lintblauw, mintgroen, mosgroen, oranje, paars, robijnrood, rood, roze, violet.",
+		"context": "nldd-swatch-picker-item[color]:not([color=\"\"], [color=\"bruin\"], [color=\"donkerblauw\"], [color=\"donkerbruin\"], [color=\"donkergeel\"], [color=\"donkergroen\"], [color=\"geel\"], [color=\"groen\"], [color=\"hemelblauw\"], [color=\"lichtblauw\"], [color=\"lintblauw\"], [color=\"mintgroen\"], [color=\"mosgroen\"], [color=\"oranje\"], [color=\"paars\"], [color=\"robijnrood\"], [color=\"rood\"], [color=\"roze\"], [color=\"violet\"])"
+	},
+	{
+		"id": "invalid-value-swatch-picker-item-size",
+		"message": "`size` on nldd-swatch-picker-item takes: md, sm, xs.",
+		"context": "nldd-swatch-picker-item[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-swatch-picker-size",
+		"message": "`size` on nldd-swatch-picker takes: md, sm, xs.",
+		"context": "nldd-swatch-picker[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-switch-field-color",

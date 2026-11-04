@@ -12,7 +12,7 @@
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
  * @attr {string} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
- * @attr {string} timing - When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant.
+ * @attr {string} timing - When the tooltip appears on hover: 'instant' — right away, without a show delay or a fade, also on the way out. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant.
  *
  * Escape closes a tooltip that hover or focus opened, wherever focus is: the
  * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
@@ -119,10 +119,16 @@ export class NLDDTooltip extends LitElement {
 	/** Refreshes the description when shortcuts become available or unavailable, for the shortcut in it. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this, () => this._syncAriaDescribedBy());
 	private _positionVersion = 0;
+	/** Whether hover put it up: then a scroll takes it down, since the pointer
+	 *  is no longer over what it describes. Shown by focus or `open`, it follows. */
+	private _shownByHover = false;
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		if (this._visible) document.addEventListener('keydown', this._handleKeyDown, true);
+		if (this._visible) {
+			document.addEventListener('keydown', this._handleKeyDown, true);
+			document.addEventListener('scroll', this._handleScroll, { capture: true, passive: true });
+		}
 		// Re-register slotchange after reconnect (firstUpdated only runs once)
 		if (this.hasUpdated) {
 			this.shadowRoot?.querySelector('slot')?.addEventListener('slotchange', this._boundSlotChange);
@@ -146,6 +152,7 @@ export class NLDDTooltip extends LitElement {
 					clearTimeout(this._showTimeout);
 					this._showTimeout = null;
 				}
+				this._shownByHover = false;
 				this._visible = true;
 			} else if (this._visible) {
 				this._visible = false;
@@ -155,8 +162,13 @@ export class NLDDTooltip extends LitElement {
 			// On the document and only while showing: a tooltip opened by hover
 			// has no focus inside it, so a listener on the host never hears the
 			// Escape that WCAG 1.4.13 asks for.
-			if (this._visible) document.addEventListener('keydown', this._handleKeyDown, true);
-			else document.removeEventListener('keydown', this._handleKeyDown, true);
+			if (this._visible) {
+				document.addEventListener('keydown', this._handleKeyDown, true);
+				document.addEventListener('scroll', this._handleScroll, { capture: true, passive: true });
+			} else {
+				document.removeEventListener('keydown', this._handleKeyDown, true);
+				document.removeEventListener('scroll', this._handleScroll, { capture: true });
+			}
 			const tooltip = this._getTooltipElement();
 			if (tooltip) {
 				if (this._visible) {
@@ -281,6 +293,7 @@ export class NLDDTooltip extends LitElement {
 		if (this._showTimeout) clearTimeout(this._showTimeout);
 		if (this.timing === 'instant') {
 			this._showTimeout = null;
+			this._shownByHover = !this._visible || this._shownByHover;
 			this._visible = true;
 			return;
 		}
@@ -292,6 +305,7 @@ export class NLDDTooltip extends LitElement {
 		const showDelay = Number.isFinite(parsedShow) ? parsedShow : DEFAULT_SHOW_DELAY_MS;
 		this._showTimeout = setTimeout(() => {
 			this._showTimeout = null;
+			this._shownByHover = !this._visible || this._shownByHover;
 			this._visible = true;
 		}, showDelay);
 	}
@@ -313,6 +327,7 @@ export class NLDDTooltip extends LitElement {
 			clearTimeout(this._showTimeout);
 			this._showTimeout = null;
 		}
+		this._shownByHover = false;
 		this._visible = true;
 	}
 
@@ -376,6 +391,21 @@ export class NLDDTooltip extends LitElement {
 		this._handleTriggerLeave();
 	}
 
+	/** A hover tooltip goes when the page scrolls: it is fixed to the screen,
+	 *  and the pointer leaves its trigger without a mouseleave until the
+	 *  scrolling stops. One shown by focus or `open` follows its trigger. */
+	private _handleScroll = (): void => {
+		if (this.open || !this._shownByHover) {
+			this._updatePosition();
+			return;
+		}
+		if (this._hideTimeout) {
+			clearTimeout(this._hideTimeout);
+			this._hideTimeout = null;
+		}
+		this._visible = false;
+	};
+
 	private _handleKeyDown = (e: KeyboardEvent): void => {
 		if (e.key !== 'Escape' || !this._visible) return;
 		if (this.open) {
@@ -430,11 +460,17 @@ export class NLDDTooltip extends LitElement {
 		}
 
 		const styles = getComputedStyle(this);
+		// A component that opens its tooltip under a finger can lift it clear of
+		// the fingertip on touch (unitless px, inherited). Unset, nothing changes.
+		const touchOffset = parseInt(styles.getPropertyValue('--context-tooltip-touch-offset'), 10);
+		const distance = coarsePointerQuery.matches && Number.isFinite(touchOffset)
+			? touchOffset
+			: parseInt(styles.getPropertyValue('--_tooltip-offset'), 10);
 		const { x, y } = await computePosition(trigger, tooltip, {
 			placement: this._effectivePlacement,
 			strategy: 'fixed',
 			middleware: [
-				offset(parseInt(styles.getPropertyValue('--_tooltip-offset'), 10)),
+				offset(distance),
 				flip(),
 				shift({ padding: parseInt(styles.getPropertyValue('--_tooltip-shift-padding'), 10) }),
 			],
@@ -449,6 +485,7 @@ export class NLDDTooltip extends LitElement {
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		document.removeEventListener('keydown', this._handleKeyDown, true);
+		document.removeEventListener('scroll', this._handleScroll, { capture: true });
 		this.shadowRoot?.querySelector('slot')?.removeEventListener('slotchange', this._boundSlotChange);
 		if (this._hideTimeout) {
 			clearTimeout(this._hideTimeout);

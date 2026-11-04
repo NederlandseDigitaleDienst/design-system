@@ -19,6 +19,7 @@ import '../../inputs/radio-button/radio-button.js';
 import '../../inputs/radio-button-field/radio-button-field.js';
 import '../../inputs/radio-button-group/radio-button-group.js';
 import '../../inputs/segmented-control/segmented-control.js';
+import '../../inputs/swatch-picker/swatch-picker.js';
 import '../../inputs/stepper/stepper.js';
 import '../../inputs/toggle-button/toggle-button.js';
 import '../../inputs/toggle-button-group/toggle-button-group.js';
@@ -387,6 +388,15 @@ const SLOTTED_CONTROLS: Array<{ name: string; markup: string }> = [
 			</nldd-segmented-control>
 		`,
 	},
+	{
+		name: 'swatch-picker',
+		markup: `
+			<nldd-swatch-picker>
+				<nldd-swatch-picker-item value="rood" color="rood"></nldd-swatch-picker-item>
+				<nldd-swatch-picker-item value="groen" color="groen"></nldd-swatch-picker-item>
+			</nldd-swatch-picker>
+		`,
+	},
 ];
 
 /** Walks up from the deepest active element, hopping shadow hosts, to see
@@ -450,6 +460,7 @@ const NAMED_VIA_ACCESSIBLE_LABEL = [
 	'<nldd-radio-button-group name="g"><nldd-radio-button-field value="1" label="Een"></nldd-radio-button-field></nldd-radio-button-group>',
 	'<nldd-toggle-button-group name="t"><nldd-toggle-button value="a" text="A"></nldd-toggle-button></nldd-toggle-button-group>',
 	'<nldd-segmented-control><nldd-segmented-control-item value="a" text="A"></nldd-segmented-control-item></nldd-segmented-control>',
+	'<nldd-swatch-picker><nldd-swatch-picker-item value="rood" color="rood"></nldd-swatch-picker-item></nldd-swatch-picker>',
 ];
 
 // These carry a visible label that already names their control. The caption

@@ -182,6 +182,10 @@
       "types": "./dist/components/inputs/segmented-control/segmented-control.d.ts",
       "default": "./dist/components/inputs/segmented-control/segmented-control.js"
     },
+    "./swatch-picker": {
+      "types": "./dist/components/inputs/swatch-picker/swatch-picker.d.ts",
+      "default": "./dist/components/inputs/swatch-picker/swatch-picker.js"
+    },
     "./stepper": {
       "types": "./dist/components/inputs/stepper/stepper.d.ts",
       "default": "./dist/components/inputs/stepper/stepper.js"

@@ -7632,7 +7632,7 @@
               "expandedType": {
                 "text": "'delay' | 'instant' | 'never'"
               },
-              "description": "When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant."
+              "description": "When the tooltip appears on hover: 'instant' — right away, without a show delay or a fade, also on the way out. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant."
             }
           ],
           "superclass": {
@@ -8823,6 +8823,22 @@
           "declaration": {
             "name": "NLDDSegmentedControl",
             "module": "./inputs/segmented-control/segmented-control.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDSwatchPicker",
+          "declaration": {
+            "name": "NLDDSwatchPicker",
+            "module": "./inputs/swatch-picker/swatch-picker.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDSwatchPickerItem",
+          "declaration": {
+            "name": "NLDDSwatchPickerItem",
+            "module": "./inputs/swatch-picker/swatch-picker.js"
           }
         },
         {
@@ -20099,6 +20115,700 @@
           "declaration": {
             "name": "NLDDStepper",
             "module": "src/components/inputs/stepper/stepper.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/swatch-picker/swatch-picker.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "NLDDSwatchPickerItem",
+          "members": [
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "SwatchColor | ''"
+              },
+              "default": "''",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "customColor",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "custom-color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "image"
+            },
+            {
+              "kind": "field",
+              "name": "imageSrcset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "image-srcset"
+            },
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "SwatchPickerSize"
+              },
+              "default": "'md'",
+              "description": "Set by nldd-swatch-picker. Not part of the public API.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "item-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "color",
+              "type": {
+                "text": "SwatchColor | ''"
+              },
+              "default": "''",
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'bruin' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'violet'"
+              },
+              "description": "Category color: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. Brings its name along, so `text` is optional."
+            },
+            {
+              "name": "custom-color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "customColor",
+              "description": "Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`."
+            },
+            {
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "image",
+              "description": "URL of an image that fills the swatch, for a pattern or a material. Needs `text`."
+            },
+            {
+              "name": "image-srcset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "imageSrcset",
+              "description": "Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from."
+            },
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`."
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "selected",
+              "description": "Whether this swatch is chosen (set by the picker)"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "Value for this swatch"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "SwatchPickerSize"
+              },
+              "default": "'md'",
+              "description": "Set by nldd-swatch-picker. Not part of the public API.",
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm' | 'xs'"
+              }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys (the names of the category colors); unset keys fall back to Dutch."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-swatch-picker-item",
+          "customElement": true
+        },
+        {
+          "kind": "class",
+          "description": "A row of swatches to choose one from: a color, or an image of a pattern or a material. The row wraps onto the next line when the swatches do not fit. It is a radio group: Tab enters and leaves it in one stop, the arrow keys choose, and the value goes with a form under `name`. The chosen swatch shows a check mark. Put it in an `nldd-form-field`, which names the group. Every swatch needs a name, since a color or an image says nothing to a screen reader. A swatch with a category `color` takes the name of that color from the translations (\"Rood\"); one with a `custom-color` or an `image` has to say it in `text`. The name shows as a tooltip. Exports both NLDDSwatchPicker and NLDDSwatchPickerItem.",
+          "name": "NLDDSwatchPicker",
+          "members": [
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "SwatchPickerSize"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabeledBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-labeled-by"
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the group as invalid. Announced and not drawn, and on the group: a\nred ring around one swatch would say that swatch is wrong, while it is the\nquestion that is unanswered.",
+              "attribute": "invalid",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Something has to be chosen. Carried by a hidden radio of the group's own,\nchecked as soon as anything is chosen, so the browser writes the message.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormData | string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "The group has no focus of its own, so an invalid submit lands where Tab\nwould: on the chosen swatch, or the first one that is enabled.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Focus goes to the chosen swatch, or the first enabled one: where Tab lands."
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "SwatchPickerSize"
+              },
+              "default": "'md'",
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm' | 'xs'"
+              },
+              "description": "Swatch size, on the control scale: 'xs' (24px) | 'sm' (32px) | 'md' (44px) (default: 'md')"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name for the group, set as aria-label. In an nldd-form-field the field names it."
+            },
+            {
+              "name": "accessible-labeled-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabeledBy",
+              "description": "Id of an external label element, set as aria-labelledby on the group"
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it.",
+              "fieldName": "invalid"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state for all swatches"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "description": "Name for form submission"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "Value of the chosen swatch"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Something has to be chosen",
+              "fieldName": "required"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-swatch-picker",
+          "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "When the choice changes; detail: { value: string }"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "nldd-swatch-picker-item elements"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDSwatchPickerItem",
+          "declaration": {
+            "name": "NLDDSwatchPickerItem",
+            "module": "src/components/inputs/swatch-picker/swatch-picker.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-swatch-picker-item",
+          "declaration": {
+            "name": "NLDDSwatchPickerItem",
+            "module": "src/components/inputs/swatch-picker/swatch-picker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDSwatchPicker",
+          "declaration": {
+            "name": "NLDDSwatchPicker",
+            "module": "src/components/inputs/swatch-picker/swatch-picker.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-swatch-picker",
+          "declaration": {
+            "name": "NLDDSwatchPicker",
+            "module": "src/components/inputs/swatch-picker/swatch-picker.ts"
           }
         }
       ]

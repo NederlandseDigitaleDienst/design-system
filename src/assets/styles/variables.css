@@ -1643,6 +1643,12 @@
 	--semantics-overlays-inset: var(--primitives-space-16);
 	--semantics-overlays-box-shadow: var(--primitives-box-shadows-level-5);
 
+	/* ## Swatches */
+
+	--semantics-swatches-highlight-border-color: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.20));
+	--semantics-swatches-is-selected-indicator-background-color: light-dark(rgba(255, 255, 255, 0.90), rgba(0, 0, 0, 0.60));
+	--semantics-swatches-is-selected-indicator-content-color: var(--primitives-color-neutral-1000);
+
 	/* ## Sheets */
 
 	--semantics-sheets-side-animation-duration: var(--primitives-transition-duration-medium);

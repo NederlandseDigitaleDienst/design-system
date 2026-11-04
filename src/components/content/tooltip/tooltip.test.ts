@@ -476,4 +476,31 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		expect(description.getAttribute('lang')).toBe('en');
 		expect(description.style.colorScheme).toBe('');
 	});
+
+	it('verdwijnt bij scrollen als hover hem toonde', async () => {
+		el = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
+		await waitForUpdate(el);
+		await triggerShow(el, el.querySelector('button')!);
+		document.dispatchEvent(new Event('scroll'));
+		await until(() => !isTooltipVisible(el));
+		expect(isTooltipVisible(el)).toBe(false);
+	});
+
+	it('blijft bij scrollen als focus hem toonde', async () => {
+		el = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
+		await waitForUpdate(el);
+		el.querySelector('button')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+		await until(() => isTooltipVisible(el));
+		document.dispatchEvent(new Event('scroll'));
+		await waitForUpdate(el);
+		expect(isTooltipVisible(el)).toBe(true);
+	});
+
+	it('blijft bij scrollen als open hem vastzet', async () => {
+		el = await fixture<NLDDTooltip>('<nldd-tooltip text="Test" open><button>Trigger</button></nldd-tooltip>');
+		await until(() => isTooltipVisible(el));
+		document.dispatchEvent(new Event('scroll'));
+		await waitForUpdate(el);
+		expect(isTooltipVisible(el)).toBe(true);
+	});
 });

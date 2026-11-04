@@ -833,7 +833,7 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `open` | `boolean` | Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior. |
 | `placement` | `string` | Position: 'top' \| 'bottom' \| 'left' \| 'right' (default: 'bottom'; automatically 'top' on touch devices) |
-| `timing` | `string` | When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant. |
+| `timing` | `string` | When the tooltip appears on hover: 'instant' — right away, without a show delay or a fade, also on the way out. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant. |
 
 **Slots**
 
@@ -1655,6 +1655,60 @@ A numeric control with increment and decrement buttons.
 | Event | Description |
 | --- | --- |
 | `change` | When the value changes; detail: { value: number } |
+
+### `<nldd-swatch-picker>`
+
+A row of swatches to choose one from: a color, or an image of a pattern or a material. The row wraps onto the next line when the swatches do not fit. It is a radio group: Tab enters and leaves it in one stop, the arrow keys choose, and the value goes with a form under `name`. The chosen swatch shows a check mark. Put it in an `nldd-form-field`, which names the group. Every swatch needs a name, since a color or an image says nothing to a screen reader. A swatch with a category `color` takes the name of that color from the translations ("Rood"); one with a `custom-color` or an `image` has to say it in `text`. The name shows as a tooltip. Exports both NLDDSwatchPicker and NLDDSwatchPickerItem.
+
+**Rules** (`nldd lint`)
+
+- `swatch-picker-needs-name`: nldd-swatch-picker needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `size` | `string` | Swatch size, on the control scale: 'xs' (24px) \| 'sm' (32px) \| 'md' (44px) (default: 'md') |
+| `accessible-label` | `string` | Accessible name for the group, set as aria-label. In an nldd-form-field the field names it. |
+| `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
+| `invalid` | `boolean` | Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state for all swatches |
+| `name` | `string` | Name for form submission |
+| `value` | `string` | Value of the chosen swatch |
+| `required` | `boolean` | Something has to be chosen |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | nldd-swatch-picker-item elements |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `change` | When the choice changes; detail: { value: string } |
+
+### `<nldd-swatch-picker-item>`
+
+**Rules** (`nldd lint`)
+
+- `swatch-picker-item-fill-no-effect`: An nldd-swatch-picker-item shows one of `color`, `custom-color` or `image`: an image covers a color, and a category `color` wins over `custom-color`. Keep one.
+- `swatch-picker-item-needs-name`: An nldd-swatch-picker-item with a `custom-color` or an `image` has no accessible name. Add `text`; only a category `color` brings a name of its own.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `color` | `string` | Category color: 'lintblauw' \| 'donkerblauw' \| 'hemelblauw' \| 'lichtblauw' \| 'paars' \| 'violet' \| 'robijnrood' \| 'roze' \| 'rood' \| 'oranje' \| 'donkergeel' \| 'geel' \| 'donkerbruin' \| 'bruin' \| 'donkergroen' \| 'groen' \| 'mosgroen' \| 'mintgroen'. Brings its name along, so `text` is optional. |
+| `custom-color` | `string` | Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`. |
+| `image` | `string` | URL of an image that fills the swatch, for a pattern or a material. Needs `text`. |
+| `image-srcset` | `string` | Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from. |
+| `text` | `string` | Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`. |
+| `selected` | `boolean` | Whether this swatch is chosen (set by the picker) |
+| `disabled` | `boolean` | Disabled state |
+| `value` | `string` | Value for this swatch |
+| `translations` | `object` | Override translation keys (the names of the category colors); unset keys fall back to Dutch. |
 
 ### `<nldd-switch>`
 
