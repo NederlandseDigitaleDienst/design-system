@@ -205,6 +205,10 @@ export const sliderStyles = css`
 		z-index: 2;
 	}
 
+	.slider__input:focus {
+		z-index: 3;
+	}
+
 	.slider__control.is-stacked .slider__input::-webkit-slider-thumb {
 		pointer-events: none;
 	}
@@ -255,21 +259,27 @@ export const sliderStyles = css`
 		height: var(--_slider-thumb-hit-size);
 	}
 
+	/* While a thumb is held, the native :hover and :active stay on the input a
+	   drag began on, also once it has passed the other thumb and drags that. */
 	@media (hover: hover) {
-		.slider__input::-webkit-slider-thumb:hover {
+		.slider__control:not(.is-holding) .slider__input::-webkit-slider-thumb:hover {
 			--_slider-thumb-border-color: var(--_slider-thumb-is-hovered-border-color);
 		}
 
-		.slider__input::-moz-range-thumb:hover {
+		.slider__control:not(.is-holding) .slider__input::-moz-range-thumb:hover {
 			--_slider-thumb-border-color: var(--_slider-thumb-is-hovered-border-color);
 		}
 	}
 
-	.slider__input:active::-webkit-slider-thumb {
+	.slider__control.is-holding-value .slider__input--value::-webkit-slider-thumb,
+	.slider__control.is-holding-start .slider__input--start::-webkit-slider-thumb,
+	.slider__control.is-holding-end .slider__input--end::-webkit-slider-thumb {
 		--_slider-thumb-border-color: var(--_slider-thumb-is-active-border-color);
 	}
 
-	.slider__input:active::-moz-range-thumb {
+	.slider__control.is-holding-value .slider__input--value::-moz-range-thumb,
+	.slider__control.is-holding-start .slider__input--start::-moz-range-thumb,
+	.slider__control.is-holding-end .slider__input--end::-moz-range-thumb {
 		--_slider-thumb-border-color: var(--_slider-thumb-is-active-border-color);
 	}
 

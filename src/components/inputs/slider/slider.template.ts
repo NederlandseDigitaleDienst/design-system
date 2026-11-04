@@ -78,7 +78,7 @@ export function sliderTemplate(component: NLDDSlider): TemplateResult {
 					<nldd-icon icon=${component.startIcon}></nldd-icon>
 				</span>
 			` : nothing}
-			<div class=${classMap({ 'slider__control': true, 'has-histogram': component.histogram.length > 0, 'is-active': component._active, 'is-start-on-top': startOnTop, 'is-stacked': range && start === end })}
+			<div class=${classMap({ 'slider__control': true, 'has-histogram': component.histogram.length > 0, 'is-active': component._active, 'is-holding': !!component._held, 'is-holding-value': component._held === 'value', 'is-holding-start': component._held === 'start', 'is-holding-end': component._held === 'end', 'is-start-on-top': startOnTop, 'is-stacked': range && start === end })}
 				style=${styleMap({
 					'--_slider-start': String(component._fraction(start)),
 					'--_slider-end': String(component._fraction(end)),

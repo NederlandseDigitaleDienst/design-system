@@ -46,6 +46,7 @@ here; consult the commit history if you need that level of detail.
 - **`timing="instant"` on `nldd-tooltip` also skips the fade,** on the way in and out, so a tooltip follows the pointer across a row of swatches or icon buttons without lagging behind.
 - **A column of an `nldd-task-board` that you drag an item to comes fully into view.** Rest the pointer on a column cut off at the side and the board moves just far enough to show all of it clear of the fade, so it stays the column under the pointer and the next one peeks out. At the edge the board still scrolls on. Moving an item to another column with Alt and an arrow key shows that whole column too, not only the item.
 - **On a small screen the wordmark of an `nldd-top-navigation-bar` sits on the bottom of the ribbon,** instead of in the middle, next to the emblem as in the printed logo. A name that does not fit still keeps its distance from the top and grows down.
+- **A thumb of a range `nldd-slider` can pass the other one.** Drag it or move it with an arrow key, also with Shift, past the other thumb and it becomes that end of the range, with focus going along, so a screen reader still hears which end it is on. Home, End, Page Up and Page Down still stop at the other thumb.
 
 ### Fixed
 

@@ -238,14 +238,82 @@ describe('nldd-slider', () => {
 			expect([start.getAttribute('aria-label'), end.getAttribute('aria-label')]).toEqual(['Prijs, minimum', 'Prijs, maximum']);
 		});
 
-		it('keeps the thumbs from passing each other', async () => {
+		it('stops a thumb at the other one for Home, End, Page Up and Page Down', async () => {
 			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
 			const [start, end] = inputs(el);
-			slide(start, 90);
-			expect(el._start).toBe(60);
+			start.focus();
+			start.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+			slide(start, 100);
+			expect([el._start, el._end]).toEqual([60, 60]);
 			expect(start.value).toBe('60');
+			end.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true }));
 			slide(end, 10);
-			expect(el._end).toBe(60);
+			expect([el._start, el._end]).toEqual([60, 60]);
+			expect(el.shadowRoot!.activeElement).toBe(start);
+		});
+
+		it('takes a thumb past the other one with an arrow key, and moves focus to that end', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range accessible-label="Prijs" start-value="50" end-value="50"></nldd-slider>');
+			const [start, end] = inputs(el);
+			start.focus();
+			start.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+			slide(start, 51);
+			expect([el._start, el._end]).toEqual([50, 51]);
+			expect([start.value, end.value]).toEqual(['50', '51']);
+			expect(el.shadowRoot!.activeElement).toBe(end);
+		});
+
+		it('draws the focused thumb over the other one', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="50" end-value="52"></nldd-slider>');
+			const [start, end] = inputs(el);
+			const z = (input: HTMLInputElement) => Number(getComputedStyle(input).zIndex) || 0;
+			start.focus();
+			expect(z(start)).toBeGreaterThan(z(end));
+			end.focus();
+			expect(z(end)).toBeGreaterThan(z(start));
+		});
+
+		it('takes a thumb past the other one with Shift and an arrow key too', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="40" end-value="45"></nldd-slider>');
+			const [start, end] = inputs(el);
+			start.focus();
+			start.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true, bubbles: true, cancelable: true }));
+			expect([el._start, el._end]).toEqual([45, 50]);
+			expect(el.shadowRoot!.activeElement).toBe(end);
+		});
+
+		it('gives the pressed look to the end a drag holds, also once it has passed the other thumb', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+			const [start] = inputs(el);
+			const control = el.shadowRoot!.querySelector('.slider__control')!;
+			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+			await waitForUpdate(el);
+			expect(control.classList.contains('is-holding-start')).toBe(true);
+			slide(start, 70, false);
+			await waitForUpdate(el);
+			expect(control.classList.contains('is-holding-end')).toBe(true);
+			expect(control.classList.contains('is-holding-start')).toBe(false);
+			window.dispatchEvent(new PointerEvent('pointerup'));
+			await waitForUpdate(el);
+			expect(control.classList.contains('is-holding')).toBe(false);
+		});
+
+		it('takes a dragged thumb past the other one, and on as that end until it is let go', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+			const [start, end] = inputs(el);
+			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+			start.focus();
+			slide(start, 70, false);
+			expect([el._start, el._end]).toEqual([60, 70]);
+			expect(el.shadowRoot!.activeElement).toBe(end);
+			slide(start, 80, false);
+			expect([el._start, el._end]).toEqual([60, 80]);
+			slide(start, 40, false);
+			expect([el._start, el._end]).toEqual([40, 60]);
+			expect(el.shadowRoot!.activeElement).toBe(start);
+			window.dispatchEvent(new PointerEvent('pointerup'));
+			slide(start, 90);
+			expect([el._start, el._end]).toEqual([60, 60]);
 		});
 
 		it('fires both ends in its events, and submits both under name', async () => {
@@ -280,6 +348,12 @@ describe('nldd-slider', () => {
 			press(at(40), 'pointermove', window);
 			press(at(40), 'pointerup', window);
 			expect([el._start, el._end]).toEqual([40, 70]);
+			// Dragged on from the track, past the other thumb.
+			press(at(45), 'pointerdown');
+			press(at(90), 'pointermove', window);
+			expect([el._start, el._end]).toEqual([70, 90]);
+			expect(el.shadowRoot!.activeElement).toBe(inputs(el)[1]);
+			press(at(90), 'pointerup', window);
 			unloadTokens();
 		});
 
