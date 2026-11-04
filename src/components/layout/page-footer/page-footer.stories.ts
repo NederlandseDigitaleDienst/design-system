@@ -104,9 +104,9 @@ export const Standaard = {
  * `lg-column-count="4"`, en op sm en md twee per rij. De kolomtelling volgt
  * de breedte van de footer zelf, niet het venster. Geef de container geen
  * `padding`: de footer zet zelf de ruimte rond elke rij. Elke kolom is een
- * `nldd-container` met `gap="8"`, een `nldd-title` met een `heading-level` en
- * de links in een `nldd-link-group` met `orientation="vertical"`, die de kop
- * als `accessible-label` krijgt.
+ * `nldd-container` met een `nldd-title` met een `heading-level`, een
+ * `nldd-spacer` van 8 en de links in een `nldd-link-group` met
+ * `orientation="vertical"`, die de kop als `accessible-label` krijgt.
  */
 export const MetKolommen = {
 	name: 'Met kolommen',
@@ -119,12 +119,13 @@ export const MetKolommen = {
 				lg-column-count="4"
 				gap="24"
 			>
-			<nldd-container gap="8">
+			<nldd-container>
 				<nldd-title
 					size="5"
 					text="Aanvragen"
 					heading-level="2"
 				></nldd-title>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-link-group
 					orientation="vertical"
 					accessible-label="Aanvragen"
@@ -143,12 +144,13 @@ export const MetKolommen = {
 					></nldd-link>
 				</nldd-link-group>
 			</nldd-container>
-			<nldd-container gap="8">
+			<nldd-container>
 				<nldd-title
 					size="5"
 					text="Onderwerpen"
 					heading-level="2"
 				></nldd-title>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-link-group
 					orientation="vertical"
 					accessible-label="Onderwerpen"
@@ -167,12 +169,13 @@ export const MetKolommen = {
 					></nldd-link>
 				</nldd-link-group>
 			</nldd-container>
-			<nldd-container gap="8">
+			<nldd-container>
 				<nldd-title
 					size="5"
 					text="Over Mijn Dienst"
 					heading-level="2"
 				></nldd-title>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-link-group
 					orientation="vertical"
 					accessible-label="Over Mijn Dienst"
@@ -187,12 +190,13 @@ export const MetKolommen = {
 					></nldd-link>
 				</nldd-link-group>
 			</nldd-container>
-			<nldd-container gap="8">
+			<nldd-container>
 				<nldd-title
 					size="5"
 					text="Meedoen"
 					heading-level="2"
 				></nldd-title>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-link-group
 					orientation="vertical"
 					accessible-label="Meedoen"

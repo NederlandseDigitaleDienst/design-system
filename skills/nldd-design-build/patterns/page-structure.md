@@ -637,12 +637,13 @@ Op een onderliggende pagina:
         lg-column-count="3"
         gap="24"
       >
-        <nldd-container gap="8">
+        <nldd-container>
           <nldd-title
             size="5"
             text="Aanvragen"
             heading-level="2"
           ></nldd-title>
+          <nldd-spacer size="8"></nldd-spacer>
           <nldd-link-group
             orientation="vertical"
             accessible-label="Aanvragen"
@@ -661,12 +662,13 @@ Op een onderliggende pagina:
             ></nldd-link>
           </nldd-link-group>
         </nldd-container>
-        <nldd-container gap="8">
+        <nldd-container>
           <nldd-title
             size="5"
             text="Onderwerpen"
             heading-level="2"
           ></nldd-title>
+          <nldd-spacer size="8"></nldd-spacer>
           <nldd-link-group
             orientation="vertical"
             accessible-label="Onderwerpen"
@@ -685,12 +687,13 @@ Op een onderliggende pagina:
             ></nldd-link>
           </nldd-link-group>
         </nldd-container>
-        <nldd-container gap="8">
+        <nldd-container>
           <nldd-title
             size="5"
             text="Mijn Dienst"
             heading-level="2"
           ></nldd-title>
+          <nldd-spacer size="8"></nldd-spacer>
           <nldd-link-group
             orientation="vertical"
             accessible-label="Mijn Dienst"
@@ -762,12 +765,13 @@ Op de home, zonder kruimelpad:
         lg-column-count="3"
         gap="24"
       >
-        <nldd-container gap="8">
+        <nldd-container>
           <nldd-title
             size="5"
             text="Aanvragen"
             heading-level="2"
           ></nldd-title>
+          <nldd-spacer size="8"></nldd-spacer>
           <nldd-link-group
             orientation="vertical"
             accessible-label="Aanvragen"
@@ -786,12 +790,13 @@ Op de home, zonder kruimelpad:
             ></nldd-link>
           </nldd-link-group>
         </nldd-container>
-        <nldd-container gap="8">
+        <nldd-container>
           <nldd-title
             size="5"
             text="Onderwerpen"
             heading-level="2"
           ></nldd-title>
+          <nldd-spacer size="8"></nldd-spacer>
           <nldd-link-group
             orientation="vertical"
             accessible-label="Onderwerpen"
@@ -810,12 +815,13 @@ Op de home, zonder kruimelpad:
             ></nldd-link>
           </nldd-link-group>
         </nldd-container>
-        <nldd-container gap="8">
+        <nldd-container>
           <nldd-title
             size="5"
             text="Mijn Dienst"
             heading-level="2"
           ></nldd-title>
+          <nldd-spacer size="8"></nldd-spacer>
           <nldd-link-group
             orientation="vertical"
             accessible-label="Mijn Dienst"
