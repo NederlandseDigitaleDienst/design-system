@@ -17,6 +17,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Breaking
 
+- **The package needs Node 20.19 or newer.** The parsers of `nldd lint` moved to versions that only run there, so the linter no longer runs on Node 18, also not for `.vue`, `.html` and `.j2`. Reading `.tsx` and `.jsx` already asked for it. Node 18 and 20 are both out of support.
 - **The texts of the toggle on `nldd-password-field` are translation keys now, as on every other field.** The attributes `show-button-text`, `hide-button-text`, `show-button-accessible-label` and `hide-button-accessible-label` are gone, and `nldd lint` reports them as unknown. Move a text you set to `translations`, on the field or with `setTranslations()`:
   - `show-button-text` → `components.password-field.show-action` ("Toon")
   - `hide-button-text` → `components.password-field.hide-action` ("Verberg")
@@ -44,9 +45,11 @@ here; consult the commit history if you need that level of detail.
 - **The hint `menu-no-manual-anchor` also covers a list row:** an `nldd-menu` with `anchor` on an `nldd-list-item-segment` is pointed at `popovertarget`. The list pattern now works that way.
 - **`timing="instant"` on `nldd-tooltip` also skips the fade,** on the way in and out, so a tooltip follows the pointer across a row of swatches or icon buttons without lagging behind.
 - **A column of an `nldd-task-board` that you drag an item to comes fully into view.** Rest the pointer on a column cut off at the side and the board moves just far enough to show all of it clear of the fade, so it stays the column under the pointer and the next one peeks out. At the edge the board still scrolls on. Moving an item to another column with Alt and an arrow key shows that whole column too, not only the item.
+- **On a small screen the wordmark of an `nldd-top-navigation-bar` sits on the bottom of the ribbon,** instead of in the middle, next to the emblem as in the printed logo. A name that does not fit still keeps its distance from the top and grows down.
 
 ### Fixed
 
+- **The bar of an `nldd-top-navigation-bar` follows its wordmark in Safari.** When the screen got narrower, the wordmark grew past the ribbon and the title ran over it. When the screen got wider, the bar kept the height it had when the page loaded.
 - **An `nldd-tooltip` shown by hover goes away when the page scrolls.** It stayed fixed on the screen while the page moved under it, and only went once the scrolling stopped. A tooltip shown by focus or held with `open` now follows its trigger instead.
 - **The line numbers of an `nldd-code-editor` stay inside its rounded frame.** With `appearance="input-field"` and `line-numbers`, the background of the gutter stuck out past the rounded corners.
 - **The menu of an `nldd-split-button` opens again after its chevron closed it.** Once the chevron had closed the menu, every later press, by pointer, did nothing, also after Escape or a click outside.
