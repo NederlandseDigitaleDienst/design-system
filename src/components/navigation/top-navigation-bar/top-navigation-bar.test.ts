@@ -574,11 +574,10 @@ describe('nldd-top-navigation-bar – wordmark beside the ribbon', () => {
 		return { bar, logo: q('.top-navigation-bar__logo'), content: q('.top-navigation-bar__wordmark-content') };
 	};
 
-	it('centres a wordmark that fits against the ribbon', async () => {
+	it('puts a wordmark that fits on the bottom of the ribbon', async () => {
 		const { logo, content } = await mount('375px', '');
-		const midden = (r: DOMRect) => r.top + r.height / 2;
 		expect(content.height).toBeLessThan(logo.height);
-		expect(Math.abs(midden(content) - midden(logo))).toBeLessThan(1);
+		expect(Math.abs(content.bottom - logo.bottom)).toBeLessThan(1);
 	});
 
 	it('keeps 16px from the top and grows downward when it does not fit', async () => {
