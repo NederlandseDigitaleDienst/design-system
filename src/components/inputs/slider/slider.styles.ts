@@ -38,7 +38,7 @@ export const sliderStyles = css`
 		--_slider-histogram-bar-corner-radius: var(--primitives-space-2);
 		--_slider-histogram-bar-height: 0;
 		--_slider-tooltip-offset: var(--primitives-space-8);
-		--_slider-tooltip-touch-offset: var(--primitives-space-32);
+		--_slider-tooltip-touch-offset: calc(var(--semantics-fingertip-size) / 2);
 		--_slider-tooltip-shift: 0px;
 		--_slider-tooltip-background-color: var(--semantics-tooltips-background-color);
 		--_slider-tooltip-content-color: var(--semantics-tooltips-content-color);

@@ -47,12 +47,12 @@ export const swatchPickerItemStyles = css`
 		--_swatch-picker-item-custom-color: transparent;
 		--_swatch-picker-item-background-color: var(--_swatch-picker-item-custom-color);
 		--_swatch-picker-item-highlight-border-width: var(--primitives-border-width-thin);
-		--_swatch-picker-item-highlight-border-color: var(--semantics-swatches-highlight-border-color);
+		--_swatch-picker-item-highlight-border-color: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.20));
 		--_swatch-picker-item-indicator-size: 60%;
-		--_swatch-picker-item-indicator-background-color: var(--semantics-swatches-is-selected-indicator-background-color);
+		--_swatch-picker-item-indicator-background-color: light-dark(rgba(255, 255, 255, 0.90), rgba(0, 0, 0, 0.60));
 		--_swatch-picker-item-indicator-icon-size: 88%;
-		--_swatch-picker-item-indicator-content-color: var(--semantics-swatches-is-selected-indicator-content-color);
-		--context-tooltip-touch-offset: 24;
+		--_swatch-picker-item-indicator-content-color: var(--primitives-color-neutral-1000);
+		--context-tooltip-fingertip-size: var(--semantics-fingertip-size);
 
 		box-sizing: border-box;
 		display: inline-flex;

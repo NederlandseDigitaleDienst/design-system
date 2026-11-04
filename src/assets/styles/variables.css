@@ -1279,6 +1279,8 @@
 	--semantics-controls-md-min-size: var(--primitives-space-44);
 	--semantics-controls-lg-min-size: var(--primitives-space-56);
 
+	--semantics-fingertip-size: var(--primitives-space-64);
+
 	--semantics-controls-lg-inline-padding: var(--primitives-space-16);
 	--semantics-controls-md-inline-padding: var(--primitives-space-12);
 	--semantics-controls-sm-inline-padding: var(--primitives-space-10);
@@ -1642,12 +1644,6 @@
 	--semantics-overlays-corner-radius: var(--primitives-corner-radius-none);
 	--semantics-overlays-inset: var(--primitives-space-16);
 	--semantics-overlays-box-shadow: var(--primitives-box-shadows-level-5);
-
-	/* ## Swatches */
-
-	--semantics-swatches-highlight-border-color: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.20));
-	--semantics-swatches-is-selected-indicator-background-color: light-dark(rgba(255, 255, 255, 0.90), rgba(0, 0, 0, 0.60));
-	--semantics-swatches-is-selected-indicator-content-color: var(--primitives-color-neutral-1000);
 
 	/* ## Sheets */
 

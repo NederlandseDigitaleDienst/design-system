@@ -51,7 +51,7 @@ import { LitElement } from 'lit';
 import type { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { computePosition, flip, shift, offset } from '@floating-ui/dom';
+import { computePosition, flip, shift, offset, type OffsetOptions } from '@floating-ui/dom';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tooltipStyles } from './tooltip.styles.js';
 import { tooltipTemplate } from './tooltip.template.js';
@@ -460,12 +460,17 @@ export class NLDDTooltip extends LitElement {
 		}
 
 		const styles = getComputedStyle(this);
-		// A component that opens its tooltip under a finger can lift it clear of
-		// the fingertip on touch (unitless px, inherited). Unset, nothing changes.
-		const touchOffset = parseInt(styles.getPropertyValue('--context-tooltip-touch-offset'), 10);
-		const distance = coarsePointerQuery.matches && Number.isFinite(touchOffset)
-			? touchOffset
-			: parseInt(styles.getPropertyValue('--_tooltip-offset'), 10);
+		// A component that opens its tooltip under a finger passes the size of a
+		// fingertip (inherited). On touch the tooltip then keeps half of it from the
+		// center of the trigger, whatever the trigger's size. Unset, nothing changes.
+		const gap = parseInt(styles.getPropertyValue('--_tooltip-offset'), 10);
+		const fingertip = parseFloat(styles.getPropertyValue('--context-tooltip-fingertip-size'));
+		const distance: OffsetOptions = coarsePointerQuery.matches && Number.isFinite(fingertip)
+			? ({ placement, rects }) => {
+				const across = /^(top|bottom)/.test(placement) ? rects.reference.height : rects.reference.width;
+				return Math.max(gap, (fingertip - across) / 2);
+			}
+			: gap;
 		const { x, y } = await computePosition(trigger, tooltip, {
 			placement: this._effectivePlacement,
 			strategy: 'fixed',
