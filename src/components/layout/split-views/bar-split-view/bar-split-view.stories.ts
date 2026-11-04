@@ -10,6 +10,9 @@ import '../../../inputs/segmented-control/segmented-control.js';
 import '../../../inputs/search-field/search-field.js';
 
 import '../../../actions/menu/menu.js';
+import { syncToolbarOverflow } from '../../../actions/toolbar/toolbar.story-sync.js';
+
+syncToolbarOverflow();
 
 /**
  * Gebruik een bar split view voor een verticale layout met een main-gebied en een
@@ -139,17 +142,17 @@ const toolbar = html`
 				<nldd-menu-item
 					slot="overflow"
 					text="Geen"
-					type="checkbox"
+					type="radio"
 				></nldd-menu-item>
 				<nldd-menu-item
 					slot="overflow"
 					text="Lijst"
-					type="checkbox"
+					type="radio"
 				></nldd-menu-item>
 				<nldd-menu-item
 					slot="overflow"
 					text="Genummerd"
-					type="checkbox"
+					type="radio"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-title
