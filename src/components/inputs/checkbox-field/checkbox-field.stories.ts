@@ -19,6 +19,13 @@ export default {
 		},
 	},
 	argTypes: {
+		color: {
+			control: 'select',
+			options: ['(auto)', 'inherit'],
+			mapping: { '(auto)': '' },
+			description: 'Met inherit krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
+			table: { defaultValue: { summary: '(auto)' } },
+		},
 		label: {
 			control: 'text',
 			description: 'Label tekst',
@@ -60,6 +67,7 @@ export default {
 
 	},
 	args: {
+		color: '',
 		label: 'Checkbox field',
 		name: '',
 		value: 'on',
@@ -71,8 +79,9 @@ export default {
 	},
 };
 
-const Template = ({ label, name, value, checked, indeterminate, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ color, label, name, value, checked, indeterminate, invalid, disabled, required }: Record<string, any>) => html`
 	<nldd-checkbox-field
+		color=${color || nothing}
 		label=${label}
 		name=${name || nothing}
 		?checked=${checked}
@@ -87,6 +96,28 @@ const Template = ({ label, name, value, checked, indeterminate, invalid, disable
 export const Standaard = {
 	render: Template,
 	args: {},
+};
+
+export const KleurInherit = {
+	name: 'Kleur inherit',
+	render: () => html`
+		<nldd-container
+			layout="wrap"
+			gap="32"
+			padding="24"
+			style="--context-parent-background-color: var(--semantics-surfaces-accent-filled-background-color); background-color: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color);"
+		>
+			<nldd-checkbox-field
+				color="inherit"
+				label="Stuur me een bevestiging"
+			></nldd-checkbox-field>
+			<nldd-checkbox-field
+				color="inherit"
+				label="Bewaar mijn gegevens"
+				checked
+			></nldd-checkbox-field>
+		</nldd-container>
+	`,
 };
 
 export const AlleToestanden = {

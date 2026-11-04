@@ -39,6 +39,13 @@ export default {
 		},
 	},
 	argTypes: {
+		color: {
+			control: 'select',
+			options: ['(auto)', 'inherit'],
+			mapping: { '(auto)': '' },
+			description: 'Met inherit krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
+			table: { defaultValue: { summary: '(auto)' } },
+		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverwerking (groepeert radio buttons)',
@@ -80,6 +87,7 @@ export default {
 
 	},
 	args: {
+		color: '',
 		name: 'demo',
 		value: 'option-1',
 		checked: false,
@@ -91,8 +99,9 @@ export default {
 	},
 };
 
-const Template = ({ name, value, checked, accessibleLabel, invalid, disabled, required, decorative }: Record<string, any>) => html`
+const Template = ({ color, name, value, checked, accessibleLabel, invalid, disabled, required, decorative }: Record<string, any>) => html`
 	<nldd-radio-button
+		color=${color || nothing}
 		?checked=${checked}
 		?invalid=${invalid}
 		?required=${required}
@@ -107,6 +116,32 @@ const Template = ({ name, value, checked, accessibleLabel, invalid, disabled, re
 export const Standaard = {
 	render: Template,
 	args: {},
+};
+
+export const KleurInherit = {
+	name: 'Kleur inherit',
+	render: () => html`
+		<nldd-container
+			layout="wrap"
+			gap="32"
+			padding="24"
+			style="--context-parent-background-color: var(--semantics-surfaces-accent-filled-background-color); background-color: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color);"
+		>
+			<nldd-radio-button
+				color="inherit"
+				name="demo-kleur"
+				value="1"
+				accessible-label="Optie 1"
+			></nldd-radio-button>
+			<nldd-radio-button
+				color="inherit"
+				name="demo-kleur"
+				value="2"
+				checked
+				accessible-label="Optie 2"
+			></nldd-radio-button>
+		</nldd-container>
+	`,
 };
 
 /* Elke toestand krijgt een eigen naam. Op de docs-pagina staan deze voorbeelden
