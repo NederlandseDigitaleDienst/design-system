@@ -11,8 +11,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **`nldd-swatch-picker`, for choosing one swatch:** a color, a color of your own, or an image of a pattern or a material, as a radio group with the name of each swatch in a tooltip. See Added.
 - **`nldd-link-group`, for a set of related links,** in a row that wraps or stacked, such as those under the name of a service in a footer. See Added.
+- **`nldd-swatch-picker`, for choosing one swatch:** a color, a color of your own, or an image of a pattern or a material, as a radio group with the name of each swatch in a tooltip. See Added.
 - **`nldd-slider`, improved.** The thumbs of a range can pass each other, by drag and with the arrow keys, and focus goes along to the end it becomes. The thumb you hold or focus lies on top. See Changed.
 
 ### Breaking
@@ -34,6 +34,8 @@ here; consult the commit history if you need that level of detail.
 - **`popovertarget` positions the menu it opens.** An `nldd-button`, `nldd-icon-button`, `nldd-split-button` or `nldd-list-item-segment` whose `popovertarget` names an `nldd-menu` or `nldd-popover` now also anchors it to itself, so the overlay needs only its `id` and no `anchor`. A menu elsewhere on the page, such as the one for the actions of a list row, is wired in one place. An overlay with an `anchor` of its own keeps it.
 - **More for the main action of an `nldd-split-button`:** `type` and `form` to submit or reset a form, also one it sits outside of, `loading` and `loading-text` while the action runs, and `href` and `download` for an action that is a link, such as "Download PDF" with the other formats in the menu.
 - **Icon alias `checkbox`** for `check-mark-square`.
+- **The concept translations in Frisian and Papiamento have every text again,** 37 that fell back to Dutch: the toggle of `nldd-password-field`, the colors of `nldd-swatch-picker`, the announcements of `nldd-task-board`, the ends of a range `nldd-slider`, the diff lines of `nldd-code-viewer` and the accepted types of `nldd-file-field`. They are still a guess until a native speaker checks them.
+- **`--semantics-fingertip-size` (64px), the size of a fingertip.** On touch, the tooltip of an `nldd-slider` and of an `nldd-swatch-picker` keeps half of it from the center of where you press, so it clears the finger at every size.
 - **Three lint rules for `nldd-split-button`:** one without a menu (`split-button-needs-popup`), one with more than one (`split-button-max-one-popup`), and one with anything else inside (`split-button-no-other-children`).
 
 ### Changed
