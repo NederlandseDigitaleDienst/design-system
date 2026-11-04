@@ -203,10 +203,11 @@ export class NLDDSplitButton extends LitElement {
 		if (chevron) chevron.popoverTargetElement = this._popoverTarget();
 	};
 
-	override updated(changed: PropertyValues<this>): void {
+	override willUpdate(changed: PropertyValues<this>): void {
 		if (changed.has('width')) {
 			// 'full' is CSS on the host. A CSS length goes into local variables
-			// only, so a width the app sets on the host itself still wins.
+			// only, so a width the app sets on the host itself still wins. Set
+			// before the render, so an explicit width never shows at auto first.
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {
 				this.style.setProperty('--_split-button-host-width', w);

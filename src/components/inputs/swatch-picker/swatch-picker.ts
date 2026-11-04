@@ -40,6 +40,7 @@
  * @attr {boolean} selected - Whether this swatch is chosen (set by the picker)
  * @attr {boolean} disabled - Disabled state
  * @attr {string} value - Value for this swatch
+ * @attr {string} size - Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')
  * @attr {object} translations - Override translation keys (the names of the category colors); unset keys fall back to Dutch.
  */
 import { LitElement } from 'lit';

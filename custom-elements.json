@@ -4378,6 +4378,31 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.story-sync.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "syncToolbarOverflow",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "syncToolbarOverflow",
+          "declaration": {
+            "name": "syncToolbarOverflow",
+            "module": "src/components/actions/toolbar/toolbar.story-sync.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/actions/toolbar/toolbar.ts",
       "declarations": [
         {
@@ -20338,7 +20363,7 @@
                 "text": "SwatchPickerSize"
               },
               "default": "'md'",
-              "description": "Set by nldd-swatch-picker. Not part of the public API.",
+              "description": "Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')",
               "fieldName": "size",
               "expandedType": {
                 "text": "'md' | 'sm' | 'xs'"

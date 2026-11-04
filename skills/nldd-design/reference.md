@@ -1706,6 +1706,7 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 | `selected` | `boolean` | Whether this swatch is chosen (set by the picker) |
 | `disabled` | `boolean` | Disabled state |
 | `value` | `string` | Value for this swatch |
+| `size` | `string` | Swatch size: 'xs' \| 'sm' \| 'md' (set by the picker, default: 'md') |
 | `translations` | `object` | Override translation keys (the names of the category colors); unset keys fall back to Dutch. |
 
 ### `<nldd-switch>`
