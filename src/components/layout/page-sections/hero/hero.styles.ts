@@ -86,7 +86,7 @@ export const heroStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			padding-top: var(--_hero-sm-padding-top, var(--_hero-padding-top, var(--semantics-page-sections-sm-margin-block)));
+			padding-top: var(--_hero-sm-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-sm-margin-block) / 2)));
 			padding-bottom: var(--_hero-sm-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 

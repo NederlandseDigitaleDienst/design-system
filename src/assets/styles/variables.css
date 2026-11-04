@@ -1617,7 +1617,7 @@
 	--semantics-page-sections-body-max-width: var(--primitives-area-1280);
 
 	--semantics-page-sections-sm-margin-inline: var(--primitives-space-16);
-	--semantics-page-sections-sm-margin-block: var(--primitives-space-16);
+	--semantics-page-sections-sm-margin-block: var(--primitives-space-24);
 	--semantics-page-sections-sm-gap: var(--primitives-space-16);
 	--semantics-page-sections-md-margin-inline: var(--primitives-space-40);
 	--semantics-page-sections-md-margin-block: var(--primitives-space-32);

@@ -146,6 +146,12 @@ export const pageFooterStyles = css`
 		padding-top: calc(var(--primitives-space-16) + var(--_page-footer-ribbon-height));
 	}
 
+	:host([single-slot]:not([no-ribbon])) .page-footer__body > div:not([hidden]) {
+		@container (max-width: ${smMax}) {
+			padding-block: var(--primitives-space-32);
+		}
+	}
+
 	.page-footer__breadcrumbs[hidden],
 	.page-footer__main[hidden],
 	.page-footer__legal-bar[hidden],
@@ -180,7 +186,7 @@ export const pageFooterLegalBarStyles = css`
 	.page-footer__legal-bar {
 		display: flex;
 		flex-wrap: wrap;
-		row-gap: var(--primitives-space-4);
+		row-gap: var(--primitives-space-8);
 		column-gap: var(--primitives-space-16);
 		align-items: flex-start;
 		justify-content: space-between;
@@ -189,14 +195,16 @@ export const pageFooterLegalBarStyles = css`
 	.page-footer__legal-bar-start {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--primitives-space-12);
+		row-gap: var(--primitives-space-8);
+		column-gap: var(--primitives-space-12);
 		order: 0;
 	}
 
 	.page-footer__legal-bar-end {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--primitives-space-12);
+		row-gap: var(--primitives-space-8);
+		column-gap: var(--primitives-space-12);
 		order: 1;
 	}
 

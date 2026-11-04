@@ -42,6 +42,8 @@ here; consult the commit history if you need that level of detail.
 - **On a small screen the wordmark of an `nldd-top-navigation-bar` sits on the bottom of the ribbon,** instead of in the middle, next to the emblem as in the printed logo. A name that does not fit still keeps its distance from the top and grows down.
 - **A thumb of a range `nldd-slider` can pass the other one.** Drag it or move it with an arrow key, also with Shift, past the other thumb and it becomes that end of the range, with focus going along, so a screen reader still hears which end it is on. Home, End, Page Up and Page Down still stop at the other thumb.
 - **A checked control on a selected `nldd-list-item` keeps the accent.** An `nldd-checkbox`, `nldd-radio-button` or `nldd-switch` in a selected row took the dark text color of the row, because the accent can fall below 3:1 against its gray. What shows the state, the check mark, the dot or the thumb, has at least 4.5:1 against the accent in every theme, so the control now looks the same in a row as anywhere else.
+- **Page sections have more room on a small screen:** 24px above and below instead of 16px, which is `--semantics-page-sections-sm-margin-block`. `nldd-hero` gets half of that at the top (12px), as it does on md and lg. An `nldd-page-footer` with a single row gets 32px above and below there, so the row sits in the middle with room to spare above the ribbon, instead of 36px.
+- **The links in the legal bar of an `nldd-page-footer` wrap like an `nldd-link-group` of `size="sm"`:** 8px between rows and 12px between links, instead of 12px both ways. When the start and the end of the bar wrap onto rows of their own, they are 8px apart too, instead of 4px.
 
 ### Fixed
 
