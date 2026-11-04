@@ -41,6 +41,7 @@ here; consult the commit history if you need that level of detail.
 - **A column of an `nldd-task-board` that you drag an item to comes fully into view.** Rest the pointer on a column cut off at the side and the board moves just far enough to show all of it clear of the fade, so it stays the column under the pointer and the next one peeks out. At the edge the board still scrolls on. Moving an item to another column with Alt and an arrow key shows that whole column too, not only the item.
 - **On a small screen the wordmark of an `nldd-top-navigation-bar` sits on the bottom of the ribbon,** instead of in the middle, next to the emblem as in the printed logo. A name that does not fit still keeps its distance from the top and grows down.
 - **A thumb of a range `nldd-slider` can pass the other one.** Drag it or move it with an arrow key, also with Shift, past the other thumb and it becomes that end of the range, with focus going along, so a screen reader still hears which end it is on. Home, End, Page Up and Page Down still stop at the other thumb.
+- **A checked control on a selected `nldd-list-item` keeps the accent.** An `nldd-checkbox`, `nldd-radio-button` or `nldd-switch` in a selected row took the dark text color of the row, because the accent can fall below 3:1 against its gray. What shows the state, the check mark, the dot or the thumb, has at least 4.5:1 against the accent in every theme, so the control now looks the same in a row as anywhere else.
 
 ### Fixed
 

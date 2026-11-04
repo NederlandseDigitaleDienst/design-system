@@ -17,11 +17,11 @@ export const switchStyles = css`
 		--_switch-border-width: var(--primitives-border-width-regular);
 		--_switch-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 		--_switch-background-color: var(--semantics-surfaces-base-background-color);
-		--_switch-is-selected-background-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
+		--_switch-is-selected-background-color: var(--semantics-controls-is-selected-indicator-color);
 		--_switch-thumb-border-width: var(--primitives-border-width-regular);
 		--_switch-thumb-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 		--_switch-thumb-background-color: var(--semantics-surfaces-base-background-color);
-		--_switch-is-selected-thumb-background-color: var(--context-selected-contrast-color, var(--semantics-controls-is-selected-mark-color));
+		--_switch-is-selected-thumb-background-color: var(--semantics-controls-is-selected-mark-color);
 
 		display: inline-block;
 		position: relative;

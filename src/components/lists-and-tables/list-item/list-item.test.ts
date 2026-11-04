@@ -1403,7 +1403,7 @@ describe('nldd-list-item – what goes in a row', () => {
 		expect(firstRow().matches(':state(nested-control)')).toBe(true);
 	});
 
-	it('gives a checked control on a selected row the content color, which the accent can fall below 3:1 against', async () => {
+	it('leaves a checked control on a selected row in the accent, as anywhere else', async () => {
 		const unloadTokens = loadTokens();
 		try {
 			el = await fixture(`<nldd-list>
@@ -1417,8 +1417,7 @@ describe('nldd-list-item – what goes in a row', () => {
 			await waitForUpdate(row);
 			const fill = (checkbox: Element) => getComputedStyle(checkbox).getPropertyValue('--_checkbox-is-selected-background-color');
 			const onRow = fill(row.querySelector('nldd-checkbox') as Element);
-			expect(onRow).toBe(getComputedStyle(row).getPropertyValue('--semantics-list-items-is-selected-content-color'));
-			expect(onRow).not.toBe(fill(el.querySelector(':scope > nldd-checkbox') as Element));
+			expect(onRow).toBe(fill(el.querySelector(':scope > nldd-checkbox') as Element));
 		} finally {
 			unloadTokens();
 		}

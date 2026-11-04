@@ -17,7 +17,7 @@ export const sliderStyles = css`
 		--_slider-track-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
 		--_slider-track-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
 		--_slider-track-border-width: var(--primitives-border-width-thin);
-		--_slider-fill-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
+		--_slider-fill-color: var(--semantics-controls-is-selected-indicator-color);
 		--_slider-fill-highlight-border-color: var(--semantics-controls-is-selected-indicator-highlight-border-color);
 		--_slider-thumb-size: var(--primitives-space-28);
 		--_slider-thumb-hit-size: var(--_slider-control-height);

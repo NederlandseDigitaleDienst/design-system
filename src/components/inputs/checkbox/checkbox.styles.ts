@@ -12,17 +12,17 @@ export const checkboxStyles = css`
 		--_checkbox-border-width: var(--primitives-border-width-regular);
 		--_checkbox-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 		--_checkbox-background-color: var(--semantics-surfaces-base-background-color);
-		--_checkbox-is-selected-border-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
-		--_checkbox-is-selected-background-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
-		--_checkbox-is-selected-icon-color: var(--context-selected-contrast-color, var(--semantics-controls-is-selected-mark-color));
+		--_checkbox-is-selected-border-color: var(--semantics-controls-is-selected-indicator-color);
+		--_checkbox-is-selected-background-color: var(--semantics-controls-is-selected-indicator-color);
+		--_checkbox-is-selected-icon-color: var(--semantics-controls-is-selected-mark-color);
 		--_checkbox-is-hovered-border-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-700));
-		--_checkbox-is-selected-is-hovered-border-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-is-hovered-indicator-color));
-		--_checkbox-is-selected-is-hovered-background-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-is-hovered-indicator-color));
-		--_checkbox-is-selected-is-hovered-icon-color: var(--context-selected-contrast-color, var(--semantics-controls-is-selected-mark-color));
+		--_checkbox-is-selected-is-hovered-border-color: var(--semantics-controls-is-selected-is-hovered-indicator-color);
+		--_checkbox-is-selected-is-hovered-background-color: var(--semantics-controls-is-selected-is-hovered-indicator-color);
+		--_checkbox-is-selected-is-hovered-icon-color: var(--semantics-controls-is-selected-mark-color);
 		--_checkbox-is-active-border-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-750));
-		--_checkbox-is-selected-is-active-border-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-is-active-indicator-color));
-		--_checkbox-is-selected-is-active-background-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-is-active-indicator-color));
-		--_checkbox-is-selected-is-active-icon-color: var(--context-selected-contrast-color, var(--semantics-controls-is-selected-mark-color));
+		--_checkbox-is-selected-is-active-border-color: var(--semantics-controls-is-selected-is-active-indicator-color);
+		--_checkbox-is-selected-is-active-background-color: var(--semantics-controls-is-selected-is-active-indicator-color);
+		--_checkbox-is-selected-is-active-icon-color: var(--semantics-controls-is-selected-mark-color);
 
 		display: inline-flex;
 		position: relative;
