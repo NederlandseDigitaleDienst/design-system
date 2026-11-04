@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.16.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.15.0...v0.16.0) (2026-11-04)
+
 ### Highlights
 
 - **`nldd-link-group`, for a set of related links,** in a row that wraps or stacked, such as those under the name of a service in a footer. See Added.
