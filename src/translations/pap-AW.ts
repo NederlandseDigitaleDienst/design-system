@@ -5,8 +5,8 @@
  *
  * Not yet checked by a native speaker. Every key has a text, also where the
  * wording is a guess, because correcting a text is easier than writing one.
- * Typed as partial, so a key added to a component later falls back to Dutch
- * until it is translated here. Report a better wording at
+ * Typed as complete, as en-US is, so a key added to a component needs a text
+ * here too, or the build fails. Report a better wording at
  * https://github.com/NederlandseDigitaleDienst/design-system/issues
  *
  * ```js
@@ -18,7 +18,7 @@
  */
 import type { TranslationKey } from './nl.generated.js';
 
-export const papAW: Partial<Record<TranslationKey, string>> = {
+export const papAW: Record<TranslationKey, string> = {
 	'components.button.link-hint-new-tab-lowercase-label': 'ta habri den un tab nobo',
 	'components.button.link-hint-external-lowercase-label': 'otro sitio web',
 	'components.button.link-hint-external-new-tab-lowercase-label': 'otro sitio web, ta habri den un tab nobo',
@@ -48,6 +48,11 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.code-viewer.copy-action': 'Copia',
 	'components.code-viewer.copy-success-text': 'Copia',
 	'components.code-viewer.copy-failure-text': 'Copiamento no a logra',
+	'components.code-viewer.diff-summary-text': '{added} {addedNoun} agrega, {removed} {removedNoun} quita',
+	'components.code-viewer.line-singular-lowercase': 'linea',
+	'components.code-viewer.line-plural-lowercase': 'lineanan',
+	'components.code-viewer.added-line-label': 'Agrega, linea {number}',
+	'components.code-viewer.removed-line-label': 'Quita, linea {number}',
 	'components.image.error-text': 'E imagen no a carga',
 	'components.rich-text.table-scroll-label': 'Tabel cu por scroll',
 	'components.token.dismiss-action': 'Kita',
@@ -166,14 +171,39 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.clear-action': 'Limpia seleccion',
 	'components.file-field.show-options-action': 'Mustra opcion',
 	'components.file-field.required-error-text': 'Un archivo ta obligatorio',
+	'components.file-field.accepted-types-text': 'Permiti: {types}',
 	'components.number-field.decrement-action': 'Baha',
 	'components.number-field.increment-action': 'Subi',
 	'components.number-field.to-adjust-value-action': 'Ahusta valor',
+	'components.password-field.show-action': 'Mustra',
+	'components.password-field.hide-action': 'Sconde',
+	'components.password-field.show-accessible-label': 'Mustra contraseña',
+	'components.password-field.hide-accessible-label': 'Sconde contraseña',
 	'components.search-field.clear-action': 'Limpia busqueda',
 	'components.search-field.search-action': 'Busca',
+	'components.slider.start-value-label': 'Minimo',
+	'components.slider.end-value-label': 'Maximo',
 	'components.stepper.decrement-action': 'Baha',
 	'components.stepper.increment-action': 'Subi',
 	'components.stepper.to-adjust-value-action': 'Ahusta cantidad',
+	'components.swatch-picker-item.lintblauw-text': 'Blauw di lint',
+	'components.swatch-picker-item.donkerblauw-text': 'Blauw scur',
+	'components.swatch-picker-item.hemelblauw-text': 'Blauw di cielo',
+	'components.swatch-picker-item.lichtblauw-text': 'Blauw cla',
+	'components.swatch-picker-item.paars-text': 'Morado',
+	'components.swatch-picker-item.violet-text': 'Violeta',
+	'components.swatch-picker-item.robijnrood-text': 'Cora rubi',
+	'components.swatch-picker-item.roze-text': 'Rosa',
+	'components.swatch-picker-item.rood-text': 'Cora',
+	'components.swatch-picker-item.oranje-text': 'Oraño',
+	'components.swatch-picker-item.donkergeel-text': 'Geel scur',
+	'components.swatch-picker-item.geel-text': 'Geel',
+	'components.swatch-picker-item.donkerbruin-text': 'Brun scur',
+	'components.swatch-picker-item.bruin-text': 'Brun',
+	'components.swatch-picker-item.donkergroen-text': 'Berde scur',
+	'components.swatch-picker-item.groen-text': 'Berde',
+	'components.swatch-picker-item.mosgroen-text': 'Berde di mos',
+	'components.swatch-picker-item.mintgroen-text': 'Berde di menta',
 	'components.text-editor.open-in-new-tab-label': 'Habri link den un tab nobo: {url}',
 	'components.text-editor.annotation-count-label': '{count} {noun} riba \'{quote}\'',
 	'components.text-editor.annotation-singular-lowercase': 'anotacion',
@@ -214,6 +244,13 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.sidebar-section.sidebar-label': 'Bara di banda',
 	'components.sidebar-section.sheet-dismiss-action': 'Cera',
 	'components.popover.accessible-label': 'Popover',
+	'components.task-board.accessible-label': 'Tabla di tarea',
+	'components.task-board.moved-text': 'Move pa {column}, {position} di {total}.',
+	'components.task-board.no-change-text': 'Poni, luga no a cambia.',
+	'components.task-board.edge-text': 'No por mas leu.',
+	'components.task-board.drag-canceled-text': 'Halamento cancela.',
+	'components.task-board.readonly-text': 'E tabla aki ta solamente pa lesa',
+	'components.task-board.drag-return-text': 'Atras na e luga anterior',
 	'components.window.accessible-label': 'Bentana',
 	'components.drag-handle-cell.accessible-label': 'Agarrador, primi spacio of enter pa move',
 	'components.list-item.link-hint-new-tab-lowercase-label': 'ta habri den un tab nobo',

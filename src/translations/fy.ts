@@ -3,8 +3,8 @@
  *
  * Not yet checked by a native speaker. Every key has a text, also where the
  * wording is a guess, because correcting a text is easier than writing one.
- * Typed as partial, so a key added to a component later falls back to Dutch
- * until it is translated here. Report a better wording at
+ * Typed as complete, as en-US is, so a key added to a component needs a text
+ * here too, or the build fails. Report a better wording at
  * https://github.com/NederlandseDigitaleDienst/design-system/issues
  *
  * ```js
@@ -16,7 +16,7 @@
  */
 import type { TranslationKey } from './nl.generated.js';
 
-export const fy: Partial<Record<TranslationKey, string>> = {
+export const fy: Record<TranslationKey, string> = {
 	'components.button.link-hint-new-tab-lowercase-label': 'iepenet yn in nij ljepblêd',
 	'components.button.link-hint-external-lowercase-label': 'oare webside',
 	'components.button.link-hint-external-new-tab-lowercase-label': 'oare webside, iepenet yn in nij ljepblêd',
@@ -46,6 +46,11 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.code-viewer.copy-action': 'Kopiearje',
 	'components.code-viewer.copy-success-text': 'Kopiearre',
 	'components.code-viewer.copy-failure-text': 'Kopiearjen mislearre',
+	'components.code-viewer.diff-summary-text': '{added} {addedNoun} tafoege, {removed} {removedNoun} fuorthelle',
+	'components.code-viewer.line-singular-lowercase': 'rigel',
+	'components.code-viewer.line-plural-lowercase': 'rigels',
+	'components.code-viewer.added-line-label': 'Tafoege, rigel {number}',
+	'components.code-viewer.removed-line-label': 'Fuorthelle, rigel {number}',
 	'components.image.error-text': 'Ofbylding is net laden',
 	'components.rich-text.table-scroll-label': 'Skowbere tabel',
 	'components.token.dismiss-action': 'Smyt fuort',
@@ -164,14 +169,39 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.clear-action': 'Seleksje wiskje',
 	'components.file-field.show-options-action': 'Opsjes sjen litte',
 	'components.file-field.required-error-text': 'In bestân is ferplichte',
+	'components.file-field.accepted-types-text': 'Tastien: {types}',
 	'components.number-field.decrement-action': 'Ferleegje',
 	'components.number-field.increment-action': 'Ferheegje',
 	'components.number-field.to-adjust-value-action': 'Wearde oanpasse',
+	'components.password-field.show-action': 'Toan',
+	'components.password-field.hide-action': 'Ferbergje',
+	'components.password-field.show-accessible-label': 'Toan wachtwurd',
+	'components.password-field.hide-accessible-label': 'Ferbergje wachtwurd',
 	'components.search-field.clear-action': 'Sykopdracht wiskje',
 	'components.search-field.search-action': 'Sykje',
+	'components.slider.start-value-label': 'Minimum',
+	'components.slider.end-value-label': 'Maksimum',
 	'components.stepper.decrement-action': 'Ferleegje',
 	'components.stepper.increment-action': 'Ferheegje',
 	'components.stepper.to-adjust-value-action': 'Oantal oanpasse',
+	'components.swatch-picker-item.lintblauw-text': 'Lintblau',
+	'components.swatch-picker-item.donkerblauw-text': 'Donkerblau',
+	'components.swatch-picker-item.hemelblauw-text': 'Himelblau',
+	'components.swatch-picker-item.lichtblauw-text': 'Ljochtblau',
+	'components.swatch-picker-item.paars-text': 'Pears',
+	'components.swatch-picker-item.violet-text': 'Fiolet',
+	'components.swatch-picker-item.robijnrood-text': 'Robijnread',
+	'components.swatch-picker-item.roze-text': 'Roze',
+	'components.swatch-picker-item.rood-text': 'Read',
+	'components.swatch-picker-item.oranje-text': 'Oranje',
+	'components.swatch-picker-item.donkergeel-text': 'Donkergiel',
+	'components.swatch-picker-item.geel-text': 'Giel',
+	'components.swatch-picker-item.donkerbruin-text': 'Donkerbrún',
+	'components.swatch-picker-item.bruin-text': 'Brún',
+	'components.swatch-picker-item.donkergroen-text': 'Donkergrien',
+	'components.swatch-picker-item.groen-text': 'Grien',
+	'components.swatch-picker-item.mosgroen-text': 'Moasgrien',
+	'components.swatch-picker-item.mintgroen-text': 'Mintgrien',
 	'components.text-editor.open-in-new-tab-label': 'Keppeling iepenje yn in nij ljepblêd: {url}',
 	'components.text-editor.annotation-count-label': '{count} {noun} op \'{quote}\'',
 	'components.text-editor.annotation-singular-lowercase': 'annotaasje',
@@ -212,6 +242,13 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.sidebar-section.sidebar-label': 'Sydbalke',
 	'components.sidebar-section.sheet-dismiss-action': 'Slút',
 	'components.popover.accessible-label': 'Popover',
+	'components.task-board.accessible-label': 'Takenboerd',
+	'components.task-board.moved-text': 'Ferpleatst nei {column}, {position} fan {total}.',
+	'components.task-board.no-change-text': 'Delset, plak net feroare.',
+	'components.task-board.edge-text': 'Kin net fierder.',
+	'components.task-board.drag-canceled-text': 'Slepen ôfbrutsen.',
+	'components.task-board.readonly-text': 'Dit boerd is allinne-lêze',
+	'components.task-board.drag-return-text': 'Werom nei it âlde plak',
 	'components.window.accessible-label': 'Finster',
 	'components.drag-handle-cell.accessible-label': 'Sleephandel, druk op spaasje of enter om te ferpleatsen',
 	'components.list-item.link-hint-new-tab-lowercase-label': 'iepenet yn in nij ljepblêd',
