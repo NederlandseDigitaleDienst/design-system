@@ -65,7 +65,7 @@ describe('nldd-link-group', () => {
 	it('legt de links op een rij die doorloopt, of onder elkaar', async () => {
 		el = await fixture(group());
 		await waitForUpdate(el);
-		const list = el.shadowRoot!.querySelector('.link-group__list')!;
+		const list = el.shadowRoot!.querySelector('.link-group__items')!;
 		expect(getComputedStyle(list).flexDirection).toBe('row');
 		expect(getComputedStyle(list).flexWrap).toBe('wrap');
 		el.setAttribute('orientation', 'vertical');
@@ -76,7 +76,7 @@ describe('nldd-link-group', () => {
 	it('centreert de links met horizontal-alignment="center"', async () => {
 		el = await fixture(group('horizontal-alignment="center"'));
 		await waitForUpdate(el);
-		const list = el.shadowRoot!.querySelector('.link-group__list')!;
+		const list = el.shadowRoot!.querySelector('.link-group__items')!;
 		expect(getComputedStyle(list).justifyContent).toBe('center');
 	});
 });

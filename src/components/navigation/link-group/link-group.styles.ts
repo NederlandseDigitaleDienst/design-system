@@ -44,7 +44,7 @@ export const linkGroupStyles = css`
 
 	/* # Block */
 
-	.link-group__list {
+	.link-group__items {
 		display: flex;
 		flex-direction: var(--_link-group-flex-direction);
 		flex-wrap: var(--_link-group-flex-wrap);
@@ -54,7 +54,7 @@ export const linkGroupStyles = css`
 		justify-content: var(--_link-group-justify-content);
 	}
 
-	:host([horizontal-alignment="center"]) .link-group__list {
+	:host([horizontal-alignment="center"]) .link-group__items {
 		text-align: center;
 	}
 `;
