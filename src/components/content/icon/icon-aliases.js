@@ -112,6 +112,9 @@ export const aliases = {
 	// check-mark-small
 	'checked-small': 'check-mark-small',
 
+	// check-mark-square
+	'checkbox': 'check-mark-square',
+
 	// chevron-left
 	'back': 'chevron-left',
 

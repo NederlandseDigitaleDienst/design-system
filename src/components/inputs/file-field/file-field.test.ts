@@ -339,6 +339,7 @@ describe('nldd-file-field', () => {
 		const buttons = () => ['.file-field__change-button', '.file-field__clear-button', '.file-field__more-button'].map(shown);
 		expect(shown('.file-field__file-icon')).toBe(true);
 		expect(buttons()).toEqual([true, true, false]);
+		expect(root.querySelector('.file-field__clear-button')!.getAttribute('tooltip-timing')).toBe('never');
 		el.style.width = '280px';
 		expect(shown('.file-field__file-icon')).toBe(true);
 		expect(buttons()).toEqual([false, false, true]);
@@ -556,7 +557,7 @@ describe('nldd-file-field', () => {
 		});
 		afterEach(() => unloadTokens());
 
-		const long = 'Screenshot 2026-10-27 at 15.42.11.png';
+		const long = 'Schermafbeelding van de aanvraag voor dakisolatie met alle bijlagen.png';
 		const shown = (el: NLDDFileField) => el.shadowRoot!.querySelector('.file-field__name')!.textContent!.trim();
 		const tooltip = (el: NLDDFileField) => el.shadowRoot!.querySelector('nldd-tooltip')!;
 

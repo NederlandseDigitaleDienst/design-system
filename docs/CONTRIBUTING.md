@@ -26,7 +26,7 @@ Code mag later. Draait het patroon eenmaal, dan moet elke `nldd-*`-tag in de doc
 
 ## Lokaal draaien
 
-Je hebt Node 18 of hoger nodig.
+Je hebt Node 20.19 of hoger nodig.
 
 ```bash
 npm ci

@@ -27,6 +27,11 @@ export const tooltipStyles = css`
 		display: contents;
 	}
 
+	:host([timing="instant"]) {
+		--_tooltip-hide-duration: 0s;
+		--_tooltip-show-duration: 0s;
+	}
+
 	:host([hidden]) {
 		display: none;
 	}

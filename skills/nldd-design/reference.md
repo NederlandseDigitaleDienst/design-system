@@ -52,7 +52,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `loading-text` | `string` | What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden". |
 | `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `type` | `string` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
-| `popovertarget` | `string` | ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. |
+| `popovertarget` | `string` | ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
 | `expandable` | `boolean` | Whether the button has a icon to indicate it opens a menu or popover |
 | `expanded` | `boolean` | Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state. |
 | `popup-type` | `string` | Type of popup container this button opens: 'menu' \| 'listbox' \| 'dialog' \| 'tree' \| 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup. |
@@ -191,7 +191,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
-| `popovertarget` | `string` | ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. |
+| `popovertarget` | `string` | ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
 
 **Slots**
 
@@ -216,7 +216,10 @@ A floating menu component using the Popover API. Positioned relative to an ancho
 - `menu-navigation-no-filter`: filter() belongs to a menu of actions or options. A navigation menu is a short list of links and is not filtered.
 - `menu-navigation-no-other-items`: variant="navigation" is a list of links. A checkbox or radio item, or a shortcut, belongs to an action menu and has no role to live in here. Use the default variant for actions.
 - `menu-needs-two-actions` (hint): Use a plain button for a single action.
-- `menu-no-manual-anchor` (hint): Nest it in the `popup` slot of the button, which anchors it, opens it and needs no id: `anchor` is for a trigger without that slot.
+- `menu-no-manual-anchor` (hint): Nest it in the `popup` slot of the button, or point `popovertarget` on the button or list segment at its id: both anchor it and open it. `anchor` is for a trigger that is not an nldd component.
+- `split-button-max-one-popup`: nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.
+- `split-button-needs-popup`: nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.
+- `split-button-no-other-children`: Only an nldd-menu or nldd-popover goes in nldd-split-button; anything else does not render. Set the label with `text` and the icon with `icon`.
 
 **Attributes**
 
@@ -225,7 +228,7 @@ A floating menu component using the Popover API. Positioned relative to an ancho
 | `variant` | `'menu'\|'listbox'\|'navigation'` | What the menu is (default 'menu'). `menu` is a menu of actions: `role="menu"` with menu items, for things you do. `listbox` is the popup of a combobox: `role="listbox"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role="list"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role="listitem"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself. |
 | `width` | `string` | Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)). |
 | `accessible-label` | `string` | Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field. |
-| `anchor` | `string` | ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a menu hung off a button. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle. |
+| `anchor` | `string` | ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle. |
 | `placement` | `string` | Floating UI placement. Default: 'bottom-start'. |
 | `max-items` | `number` | Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit). |
 | `empty-text` | `string` | Text of the default empty-state dialog. Falls back to Dutch i18n "Geen opties beschikbaar". |
@@ -311,10 +314,15 @@ A single item within an nldd-menu.
 
 ### `<nldd-split-button>`
 
-A split button combines a primary action button with a dropdown trigger. The main button performs the default action, while the icon button opens a menu or popover. Provide the dropdown by slotting an `nldd-menu` (with its `nldd-menu-item` / `nldd-menu-divider` children) or an `nldd-popover` directly: ```html <nldd-split-button text="Opslaan"> <nldd-menu> <nldd-menu-item text="Opslaan als…"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The slotted overlay stays in the light DOM — no item-moving — so consumers keep their references and the full overlay API. The split-button anchors it to the chevron and opens it on click. When no overlay is slotted, the chevron dispatches `menu-click` and the consumer manages their own popover.
+A split button combines a primary action with a chevron that opens its alternatives. The main button performs the default action; the chevron opens a menu or popover of variants of that same action. The overlay is required. Put an `nldd-menu` or `nldd-popover` in the `popup` slot, as on nldd-button and nldd-icon-button: ```html <nldd-split-button text="Bewaar"> <nldd-menu slot="popup"> <nldd-menu-item text="Opslaan als…"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The split button has no other slots, so an overlay without `slot="popup"` works too. When both hold one, the one in `popup` wins. For an overlay that lives elsewhere, point `popovertarget` at it instead. The chevron is the overlay's invoker: it anchors it, opens and closes it, and takes `aria-expanded` and `aria-haspopup` from it, exactly as an nldd-icon-button with a slotted overlay does. Its accessible name says which action it belongs to ("Meer opties voor Bewaar"). The API is narrower than nldd-button on purpose: a split button is an action with variants, so it has no supporting text, no end icon and no link target. Its label always stays on one line, without an ellipsis: keep it short.
 
 **Rules** (`nldd lint`)
 
+- `button-form-id-invalid`: The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.
+- `button-form-id-not-found`: Nothing in this root has the id in `form`, so this button submits nothing.
+- `split-button-max-one-popup`: nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.
+- `split-button-needs-popup`: nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.
+- `split-button-no-other-children`: Only an nldd-menu or nldd-popover goes in nldd-split-button; anything else does not render. Set the label with `text` and the icon with `icon`.
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
@@ -322,11 +330,18 @@ A split button combines a primary action button with a dropdown trigger. The mai
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
-| `appearance` | `string` | Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface) |
+| `appearance` | `string` | Visual style: 'neutral-tinted' (default) \| 'neutral-base' \| 'accent-filled' \| 'primary' \| 'secondary' \| 'inherit-tinted' \| 'inherit-filled'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The inherit appearances are for a colored surface. There are no transparent appearances: the split button needs a surface of its own to show it is one control. |
 | `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
+| `loading` | `boolean` | Loading state of the main action, as on nldd-button. The chevron stays available. |
+| `loading-text` | `string` | What the screen reader announces while `loading` is on, as on nldd-button. |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space |
 | `text` | `string` | Button text for the primary action |
 | `icon` | `string` | Icon name shown before the text on the primary action button |
+| `type` | `string` | What the main action does in a form: 'button' (default) \| 'submit' \| 'reset'. Ignored when `href` is set. |
+| `form` | `string` | Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button. |
+| `href` | `string` | Turns the main action into a link, as on nldd-button. |
+| `download` | `string` | Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`. |
+| `popovertarget` | `string` | ID of an `nldd-menu` or `nldd-popover` elsewhere in this tree that the chevron opens, for an overlay that cannot be a child. A slotted overlay wins. |
 | `shortcut` | `string` | Keyboard shortcut hint for the primary action, shown right after its text, e.g. 'Cmd+S'. Forwarded to the inner nldd-button; display only, wire up the handling in your app. |
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
@@ -337,14 +352,14 @@ A split button combines a primary action button with a dropdown trigger. The mai
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | A single `nldd-menu` or `nldd-popover` that the chevron opens. |
+| `popup` | The `nldd-menu` or `nldd-popover` the chevron opens. |
+| _(default)_ | Fallback for the overlay when it has no `slot="popup"`. Anything that is not an `nldd-menu` or `nldd-popover` does nothing here. |
 
 **Events**
 
 | Event | Description |
 | --- | --- |
 | `action-click` | Fired when the main button is clicked |
-| `menu-click` | Fired when the dropdown trigger is clicked and no overlay is slotted |
 
 ### `<nldd-toolbar>`
 
@@ -818,7 +833,7 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `open` | `boolean` | Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior. |
 | `placement` | `string` | Position: 'top' \| 'bottom' \| 'left' \| 'right' (default: 'bottom'; automatically 'top' on touch devices) |
-| `timing` | `string` | When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant. |
+| `timing` | `string` | When the tooltip appears on hover: 'instant' — right away, without a show delay or a fade, also on the way out. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant. |
 
 **Slots**
 
@@ -1009,8 +1024,6 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 ## Inputs
 
 ### `<nldd-checkbox>`
-
-On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
 
 **Rules** (`nldd lint`)
 
@@ -1369,10 +1382,7 @@ A password input field with visibility toggle and validation states.
 | `invalid` | `boolean` | Marks the field as invalid |
 | `disabled` | `boolean` | Disabled state |
 | `masked` | `boolean` | Whether the password is masked (default: true) |
-| `show-button-text` | `string` | Visible toggle button text when masked (default: 'Toon') |
-| `hide-button-text` | `string` | Visible toggle button text when unmasked (default: 'Verberg') |
-| `show-button-accessible-label` | `string` | aria-label for toggle when masked (default: 'Toon wachtwoord') |
-| `hide-button-accessible-label` | `string` | aria-label for toggle when unmasked (default: 'Verberg wachtwoord') |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `readonly` | `boolean` | Readonly state |
 | `required` | `boolean` | Required state |
 | `name` | `string` | Input name for form submission |
@@ -1392,7 +1402,7 @@ A password input field with visibility toggle and validation states.
 
 ### `<nldd-radio-button>`
 
-WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role="radiogroup" aria-labelledby="options-label"> <legend id="options-label">Kies een optie</legend> <nldd-radio-button name="options" value="1" accessible-label="Optie 1"></nldd-radio-button> <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button> </fieldset> On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
+WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role="radiogroup" aria-labelledby="options-label"> <legend id="options-label">Kies een optie</legend> <nldd-radio-button name="options" value="1" accessible-label="Optie 1"></nldd-radio-button> <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button> </fieldset>
 
 **Attributes**
 
@@ -1588,7 +1598,7 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 ### `<nldd-slider>`
 
-A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter ("a price between …"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader ("Prijs, minimum"), and a press on the track moves the nearer thumb there. The thumbs do not pass each other; where they lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider or its icons, while a thumb has keyboard focus and while it or an icon is pressed; with `tooltip-timing="never"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one ("200 – 1.200"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \`€ ${value}\``; without it the number is written in the language of the page (`lang`), and in Dutch where none is set. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. A larger step than the arrow keys take is a tenth of the range, and at least one `step`: what Page Up and Page Down do, what Shift with an arrow key does (a Mac keyboard has no Page Up), and what a click on `start-icon` or `end-icon` does. The icons stay out of the tab order and out of the accessibility tree, because the keyboard already has those keys. In a range they only explain the ends, since a click could not say which thumb to move. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.
+A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter ("a price between …"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader ("Prijs, minimum"), and a press on the track moves the nearer thumb there. A thumb dragged or moved with an arrow key (also with Shift) past the other one becomes that end of the range, and focus goes with it, so its name still says which end it is. Home, End, Page Up and Page Down stop at the other thumb, so they never turn the range around. Where the thumbs lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider or its icons, while a thumb has keyboard focus and while it or an icon is pressed; with `tooltip-timing="never"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one ("200 – 1.200"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \`€ ${value}\``; without it the number is written in the language of the page (`lang`), and in Dutch where none is set. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. A larger step than the arrow keys take is a tenth of the range, and at least one `step`: what Page Up and Page Down do, what Shift with an arrow key does (a Mac keyboard has no Page Up), and what a click on `start-icon` or `end-icon` does. The icons stay out of the tab order and out of the accessibility tree, because the keyboard already has those keys. In a range they only explain the ends, since a click could not say which thumb to move. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.
 
 **Attributes**
 
@@ -1644,9 +1654,64 @@ A numeric control with increment and decrement buttons.
 | --- | --- |
 | `change` | When the value changes; detail: { value: number } |
 
+### `<nldd-swatch-picker>`
+
+A row of swatches to choose one from: a color, or an image of a pattern or a material. The row wraps onto the next line when the swatches do not fit. It is a radio group: Tab enters and leaves it in one stop, the arrow keys choose, and the value goes with a form under `name`. The chosen swatch shows a check mark. Put it in an `nldd-form-field`, which names the group. Every swatch needs a name, since a color or an image says nothing to a screen reader. A swatch with a category `color` takes the name of that color from the translations ("Rood"); one with a `custom-color` or an `image` has to say it in `text`. The name shows as a tooltip. Exports both NLDDSwatchPicker and NLDDSwatchPickerItem.
+
+**Rules** (`nldd lint`)
+
+- `swatch-picker-needs-name`: nldd-swatch-picker needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `size` | `string` | Swatch size, on the control scale: 'xs' (24px) \| 'sm' (32px) \| 'md' (44px) (default: 'md') |
+| `accessible-label` | `string` | Accessible name for the group, set as aria-label. In an nldd-form-field the field names it. |
+| `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
+| `invalid` | `boolean` | Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state for all swatches |
+| `name` | `string` | Name for form submission |
+| `value` | `string` | Value of the chosen swatch |
+| `required` | `boolean` | Something has to be chosen |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | nldd-swatch-picker-item elements |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `change` | When the choice changes; detail: { value: string } |
+
+### `<nldd-swatch-picker-item>`
+
+**Rules** (`nldd lint`)
+
+- `swatch-picker-item-fill-no-effect`: An nldd-swatch-picker-item shows one of `color`, `custom-color` or `image`: an image covers a color, and a category `color` wins over `custom-color`. Keep one.
+- `swatch-picker-item-needs-name`: An nldd-swatch-picker-item with a `custom-color` or an `image` has no accessible name. Add `text`; only a category `color` brings a name of its own.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `color` | `string` | Category color: 'lintblauw' \| 'donkerblauw' \| 'hemelblauw' \| 'lichtblauw' \| 'paars' \| 'violet' \| 'robijnrood' \| 'roze' \| 'rood' \| 'oranje' \| 'donkergeel' \| 'geel' \| 'donkerbruin' \| 'bruin' \| 'donkergroen' \| 'groen' \| 'mosgroen' \| 'mintgroen'. Brings its name along, so `text` is optional. |
+| `custom-color` | `string` | Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`. |
+| `image` | `string` | URL of an image that fills the swatch, for a pattern or a material. Needs `text`. |
+| `image-srcset` | `string` | Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from. |
+| `text` | `string` | Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`. |
+| `selected` | `boolean` | Whether this swatch is chosen (set by the picker) |
+| `disabled` | `boolean` | Disabled state |
+| `value` | `string` | Value for this swatch |
+| `size` | `string` | Swatch size: 'xs' \| 'sm' \| 'md' (set by the picker, default: 'md') |
+| `translations` | `object` | Override translation keys (the names of the category colors); unset keys fall back to Dutch. |
+
 ### `<nldd-switch>`
 
-A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility. On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
+A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
 
 **Rules** (`nldd lint`)
 
@@ -2476,7 +2541,7 @@ A single entry in an `nldd-page-footer-legal-bar`. Renders as a link when `href`
 
 ### `<nldd-popover>`
 
-A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover="auto") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id="info-trigger" popovertarget="info-popover">Info</nldd-button> <nldd-popover id="info-popover" anchor="info-trigger" accessible-label="Info"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.
+A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover="auto") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget="info-popover">Info</nldd-button> <nldd-popover id="info-popover" accessible-label="Info"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.
 
 **Rules** (`nldd lint`)
 
@@ -2484,6 +2549,9 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 - `popover-anchor-not-found`: Anchor element not found. Set `anchor` or `anchorElement` before calling show().
 - `popover-needs-name`: nldd-popover needs `accessible-label`, or a screen reader announces it without a name.
 - `popover-width-invalid`: This `width` is not supported and is ignored: the popover is an inline-size query container, so its width cannot come from its own content. Give it a CSS length instead.
+- `split-button-max-one-popup`: nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.
+- `split-button-needs-popup`: nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.
+- `split-button-no-other-children`: Only an nldd-menu or nldd-popover goes in nldd-split-button; anything else does not render. Set the label with `text` and the icon with `icon`.
 
 **Attributes**
 
@@ -3019,6 +3087,25 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 | _(default)_ | Link text (alternative to the text attribute) |
 | `start-icon` | Custom icon before the text |
 | `end-icon` | Custom icon after the text |
+
+### `<nldd-link-group>`
+
+A set of related `nldd-link` elements, such as the links under the name of a service in a footer or the links to the other parts of a site. The links sit in a row that wraps onto the next line when they do not fit, or stacked with `orientation="vertical"`. With `horizontal-alignment="center"` the whole set is centered, line by line, so a short list reads as one cloud in the middle. The group is a `nav` landmark with the links as a list, so a screen reader says how many there are. Give it an `accessible-label` as soon as a page has more than one `nav`, so each landmark can be told apart. The group sets its `size` on every link in it: links in one group are the same size.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `size` | `string` | Text size, set on every link in it: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
+| `orientation` | `string` | Layout direction: 'horizontal' (a row that wraps) \| 'vertical' (default: 'horizontal') |
+| `horizontal-alignment` | `string` | Alignment of the links: 'left' \| 'center' (default: 'left') |
+| `accessible-label` | `string` | Accessible name of the nav landmark |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | nldd-link elements |
 
 ### `<nldd-menu-bar>`
 
@@ -3744,7 +3831,6 @@ A container for `nldd-list-item` elements. The `type` attribute switches the lis
 - `list-needs-no-results-slot`: Every item is hidden and nothing is in [slot="no-results"], so the list renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.
 - `list-no-hidden` (hint): Leave the list in place and fill `slot="empty"` and `slot="no-results"`: hidden, the empty state goes with it.
 - `list-reorderable-no-effect`: `reorderable` is only valid when type="list", and is ignored here.
-- `menu-no-manual-anchor` (hint): Nest it in the `popup` slot of the button, which anchors it, opens it and needs no id: `anchor` is for a trigger without that slot.
 - `navigation-no-vague-label` (hint): Name the subject or the goal instead, such as "Ondersteuning" for "Service", so nobody has to guess what is behind it.
 - `row-action-goes-in-segment` (hint): Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.
 - `row-link-needs-chevron` (hint): End the row with an nldd-icon-cell with icon="chevron-right", which says there is more behind it without the word "openen".
@@ -3825,7 +3911,7 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `radio` | `boolean` | Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it. |
 | `accessible-label` | `string` | Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it. |
 | `reorderable` | `boolean` | Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility. |
-| `selected` | `boolean` | Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. A selected row sets `--context-selected-indicator-color` and `--context-selected-contrast-color` to its text and fill color, so a checked nldd-checkbox, nldd-radio-button or nldd-switch in it takes the colors of the row: on its gray the accent can fall below 3:1. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`. |
+| `selected` | `boolean` | Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`. |
 | `checked` | `boolean` | Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it |
 | `expanded` | `boolean` | Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live. |
 | `current` | `boolean` | Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs. |
@@ -3880,7 +3966,7 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 | `checked` | `boolean` | Checked state of a `checkbox` segment; it toggles on activation |
 | `expanded` | `boolean` | Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded. |
 | `popup-type` | `string` | Type of popup this segment opens: 'menu' \| 'listbox' \| 'dialog' \| 'tree' \| 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render. |
-| `popovertarget` | `string` | ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button. |
+| `popovertarget` | `string` | ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
 | `current` | `boolean` | Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set. |
 | `current-type` | `'page'\|'step'\|'location'\|'date'\|'time'\|'true'` | The `aria-current` value of a `current` segment (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on. |
 | `disabled` | `boolean` | Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off. |
@@ -3951,7 +4037,7 @@ Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surfa
 
 **Rules** (`nldd lint`)
 
-- `menu-no-manual-anchor` (hint): Nest it in the `popup` slot of the button, which anchors it, opens it and needs no id: `anchor` is for a trigger without that slot.
+- `menu-no-manual-anchor` (hint): Nest it in the `popup` slot of the button, or point `popovertarget` on the button or list segment at its id: both anchor it and open it. `anchor` is for a trigger that is not an nldd component.
 - `table-needs-columns`: nldd-table needs `columns`, a CSS grid track list, or its cells do not line up.
 - `table-needs-empty-slot`: No rows and nothing in [slot="empty"], so the table renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.
 - `table-needs-name`: nldd-table needs `accessible-label`: role="table" takes its name from there.
@@ -4070,7 +4156,7 @@ A cell component for displaying a title with optional overline and supporting te
 
 ## Iconen
 
-Geldige waarden voor `icon`, op `<nldd-icon>` en op elk component dat een icoon rendert (393 iconen + 354 aliassen). Verzin geen naam; kies er een uit deze set.
+Geldige waarden voor `icon`, op `<nldd-icon>` en op elk component dat een icoon rendert (393 iconen + 355 aliassen). Verzin geen naam; kies er een uit deze set.
 
 **Iconen**
 
@@ -4078,4 +4164,4 @@ Geldige waarden voor `icon`, op `<nldd-icon>` en op elk component dat een icoon 
 
 **Aliassen** (verwijzen naar een icoon hierboven)
 
-`a11y`, `account`, `add`, `add-emoji`, `add-extension`, `add-location`, `add-module`, `add-plugin`, `add-small`, `add-user`, `ai`, `airco`, `alarm`, `alert`, `all-tasks`, `analytics`, `annotation`, `announcement`, `appearance`, `apps`, `archive`, `attach`, `attachment`, `back`, `backlog`, `backup-in-cloud`, `bar-chart`, `blocked`, `blocked-light`, `blockquote`, `bookmarked`, `books`, `brain`, `brand`, `broadcast`, `broken-image`, `building`, `building-blocks`, `buildings`, `calendar`, `camera`, `cart`, `categories`, `centralized-network`, `certified`, `chart-x-y-axis-line`, `check-circle-filled`, `check-list`, `checked`, `checked-extra-small`, `checked-small`, `checked-text-document`, `checklist`, `cli`, `close`, `close-circle`, `close-circle-filled`, `close-extra-small`, `close-small`, `code`, `code-block`, `cognition`, `coins`, `collapse`, `columns-2`, `columns-3`, `comment`, `companies`, `company`, `console`, `contact-card`, `cooling`, `copy`, `countdown`, `current-location`, `cut`, `dark-mode`, `database`, `day`, `deaf`, `delete`, `deploy`, `design`, `diploma`, `directions`, `directories`, `directory`, `disabled-database`, `discover`, `dislike`, `dns`, `document`, `documents`, `doing`, `doing-light`, `done`, `done-light`, `download`, `download-document`, `download-from-cloud`, `download-table`, `duplicate`, `edit`, `edit-text-document`, `email`, `embed`, `energy`, `energy-filled`, `error`, `event`, `exit`, `exit-full-screen`, `expand`, `explore`, `export`, `extension`, `external-link`, `favorite`, `files`, `filter`, `firewall`, `fit-to-view`, `flagged`, `folders`, `forbidden`, `form`, `forward`, `frowning`, `full-screen`, `future`, `gallery`, `gem`, `gif-document`, `git-repository`, `global-settings`, `graph`, `group`, `guide`, `happy`, `hard-drive`, `harvest`, `hearing`, `heic-document`, `help`, `hidden`, `hide`, `hierarchy`, `high-priority`, `high-priority-filled`, `high-volume`, `history`, `home`, `hyperlink`, `icon-placeholder`, `idea`, `image`, `image-stack`, `images`, `import`, `inbox`, `indent`, `info`, `information`, `invalid`, `inventory`, `inventory-alt`, `jpeg-document`, `jpg-document`, `k8s`, `kanban`, `kubernetes`, `lab`, `lab-light`, `label`, `labels`, `languages`, `library`, `license`, `light-mode`, `like`, `line-chart`, `local-settings`, `location`, `lock`, `locked`, `locked-database`, `login`, `logout`, `love`, `low-priority`, `low-priority-filled`, `low-volume`, `magic`, `mail`, `markdown`, `markdown-document`, `medium-priority`, `medium-priority-filled`, `medium-volume`, `memory`, `menu`, `microphone-off`, `microphone-on`, `mind`, `module`, `monitoring`, `more`, `mouth`, `mute`, `namespace`, `network`, `network-interface-card`, `network-patch-mapping`, `new`, `new-account`, `new-book`, `new-directory`, `new-document`, `new-folder`, `new-k8s`, `new-kubernetes`, `new-namespace`, `new-text-document`, `nic`, `night`, `no-hearing`, `no-priority`, `no-volume`, `notification`, `notifications`, `now`, `odf-document`, `odg-document`, `odp-document`, `ods-document`, `odt-document`, `office`, `offices`, `open-directory`, `open-folder`, `open-new-page`, `outdent`, `paragraph`, `parking`, `paste`, `path`, `pause`, `pause-filled`, `pdf-document`, `pipeline`, `pipeline-runner`, `play`, `play-filled`, `play-pause`, `play-pause-filled`, `plug-connected`, `plugin`, `png-document`, `power`, `presentation`, `primary`, `print`, `privacy`, `processor`, `profile`, `promotion`, `protection`, `quality`, `question`, `ram`, `rated`, `rating`, `read`, `reading-list`, `redo`, `refresh`, `reload`, `remove`, `remove-document`, `remove-extra-small`, `remove-location`, `remove-small`, `remove-user`, `sad`, `save`, `scan`, `search`, `secure`, `secure-link`, `secure-url`, `security`, `send`, `server`, `servers`, `settings`, `sfp`, `share`, `show`, `sitemap`, `slides`, `slideshow`, `smiling`, `sort`, `sort-ascending`, `sort-descending`, `stack`, `stack-code`, `stop`, `stop-filled`, `storage`, `success`, `support`, `sustainability`, `svg-document`, `swap`, `switch`, `sync`, `table`, `table-cells`, `tags`, `tasks`, `team`, `text-document`, `text-documents`, `themes`, `tif-document`, `tiff-document`, `time`, `time-light`, `to-do`, `to-do-light`, `todos`, `tools`, `traject`, `unavailable-database`, `undo`, `unlocked`, `unsecure`, `upload`, `upload-document`, `upload-to-cloud`, `url`, `user`, `user-admin`, `user-settings`, `users`, `valid`, `verified`, `visible`, `warning`, `webp-document`, `work`, `workplace`, `write`
+`a11y`, `account`, `add`, `add-emoji`, `add-extension`, `add-location`, `add-module`, `add-plugin`, `add-small`, `add-user`, `ai`, `airco`, `alarm`, `alert`, `all-tasks`, `analytics`, `annotation`, `announcement`, `appearance`, `apps`, `archive`, `attach`, `attachment`, `back`, `backlog`, `backup-in-cloud`, `bar-chart`, `blocked`, `blocked-light`, `blockquote`, `bookmarked`, `books`, `brain`, `brand`, `broadcast`, `broken-image`, `building`, `building-blocks`, `buildings`, `calendar`, `camera`, `cart`, `categories`, `centralized-network`, `certified`, `chart-x-y-axis-line`, `check-circle-filled`, `check-list`, `checkbox`, `checked`, `checked-extra-small`, `checked-small`, `checked-text-document`, `checklist`, `cli`, `close`, `close-circle`, `close-circle-filled`, `close-extra-small`, `close-small`, `code`, `code-block`, `cognition`, `coins`, `collapse`, `columns-2`, `columns-3`, `comment`, `companies`, `company`, `console`, `contact-card`, `cooling`, `copy`, `countdown`, `current-location`, `cut`, `dark-mode`, `database`, `day`, `deaf`, `delete`, `deploy`, `design`, `diploma`, `directions`, `directories`, `directory`, `disabled-database`, `discover`, `dislike`, `dns`, `document`, `documents`, `doing`, `doing-light`, `done`, `done-light`, `download`, `download-document`, `download-from-cloud`, `download-table`, `duplicate`, `edit`, `edit-text-document`, `email`, `embed`, `energy`, `energy-filled`, `error`, `event`, `exit`, `exit-full-screen`, `expand`, `explore`, `export`, `extension`, `external-link`, `favorite`, `files`, `filter`, `firewall`, `fit-to-view`, `flagged`, `folders`, `forbidden`, `form`, `forward`, `frowning`, `full-screen`, `future`, `gallery`, `gem`, `gif-document`, `git-repository`, `global-settings`, `graph`, `group`, `guide`, `happy`, `hard-drive`, `harvest`, `hearing`, `heic-document`, `help`, `hidden`, `hide`, `hierarchy`, `high-priority`, `high-priority-filled`, `high-volume`, `history`, `home`, `hyperlink`, `icon-placeholder`, `idea`, `image`, `image-stack`, `images`, `import`, `inbox`, `indent`, `info`, `information`, `invalid`, `inventory`, `inventory-alt`, `jpeg-document`, `jpg-document`, `k8s`, `kanban`, `kubernetes`, `lab`, `lab-light`, `label`, `labels`, `languages`, `library`, `license`, `light-mode`, `like`, `line-chart`, `local-settings`, `location`, `lock`, `locked`, `locked-database`, `login`, `logout`, `love`, `low-priority`, `low-priority-filled`, `low-volume`, `magic`, `mail`, `markdown`, `markdown-document`, `medium-priority`, `medium-priority-filled`, `medium-volume`, `memory`, `menu`, `microphone-off`, `microphone-on`, `mind`, `module`, `monitoring`, `more`, `mouth`, `mute`, `namespace`, `network`, `network-interface-card`, `network-patch-mapping`, `new`, `new-account`, `new-book`, `new-directory`, `new-document`, `new-folder`, `new-k8s`, `new-kubernetes`, `new-namespace`, `new-text-document`, `nic`, `night`, `no-hearing`, `no-priority`, `no-volume`, `notification`, `notifications`, `now`, `odf-document`, `odg-document`, `odp-document`, `ods-document`, `odt-document`, `office`, `offices`, `open-directory`, `open-folder`, `open-new-page`, `outdent`, `paragraph`, `parking`, `paste`, `path`, `pause`, `pause-filled`, `pdf-document`, `pipeline`, `pipeline-runner`, `play`, `play-filled`, `play-pause`, `play-pause-filled`, `plug-connected`, `plugin`, `png-document`, `power`, `presentation`, `primary`, `print`, `privacy`, `processor`, `profile`, `promotion`, `protection`, `quality`, `question`, `ram`, `rated`, `rating`, `read`, `reading-list`, `redo`, `refresh`, `reload`, `remove`, `remove-document`, `remove-extra-small`, `remove-location`, `remove-small`, `remove-user`, `sad`, `save`, `scan`, `search`, `secure`, `secure-link`, `secure-url`, `security`, `send`, `server`, `servers`, `settings`, `sfp`, `share`, `show`, `sitemap`, `slides`, `slideshow`, `smiling`, `sort`, `sort-ascending`, `sort-descending`, `stack`, `stack-code`, `stop`, `stop-filled`, `storage`, `success`, `support`, `sustainability`, `svg-document`, `swap`, `switch`, `sync`, `table`, `table-cells`, `tags`, `tasks`, `team`, `text-document`, `text-documents`, `themes`, `tif-document`, `tiff-document`, `time`, `time-light`, `to-do`, `to-do-light`, `todos`, `tools`, `traject`, `unavailable-database`, `undo`, `unlocked`, `unsecure`, `upload`, `upload-document`, `upload-to-cloud`, `url`, `user`, `user-admin`, `user-settings`, `users`, `valid`, `verified`, `visible`, `warning`, `webp-document`, `work`, `workplace`, `write`

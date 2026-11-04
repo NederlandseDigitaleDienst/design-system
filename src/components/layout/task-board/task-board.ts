@@ -81,6 +81,9 @@ const TOUCH_HOLD_MS = 300;
 /** How close to an edge the pointer scrolls the board or a column, and how fast. */
 const SCROLL_EDGE = 48;
 const SCROLL_SPEED = 12;
+/** How long the pointer rests on a column cut off at a side before the board
+ *  brings the whole column into view. */
+const COLUMN_REVEAL_DELAY_MS = 300;
 /** How long the note at an item a readonly board did not move stays. */
 const DENIED_MS = 1500;
 /** How long the pointer stays outside the board before the copy says it goes back. */
@@ -111,6 +114,9 @@ interface Drag {
 	/** The note above the copy outside the board, and the wait before it shows. */
 	note: HTMLElement | null;
 	noteTimer: number;
+	/** The column waiting to be brought into view, and the wait before it is. */
+	columnToReveal: NLDDTaskBoardColumn | null;
+	columnRevealTimer: number;
 }
 
 @customElement('nldd-task-board')
@@ -329,6 +335,8 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 			return;
 		}
 		this._move(item, from, fromIndex, to, Math.min(fromIndex, to.items.length));
+		// After _move puts focus back, which scrolls only the item into view.
+		requestAnimationFrame(() => this._revealColumn(to));
 	};
 
 
@@ -499,6 +507,8 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 			frame: requestAnimationFrame(this._scrollLoop),
 			note: null,
 			noteTimer: 0,
+			columnToReveal: null,
+			columnRevealTimer: 0,
 		};
 		this._follow();
 	}
@@ -589,6 +599,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		const board = this._scroller.getBoundingClientRect();
 		const dx = drag.x < board.left + SCROLL_EDGE ? -SCROLL_SPEED : drag.x > board.right - SCROLL_EDGE ? SCROLL_SPEED : 0;
 		if (dx) this._scroller.scrollBy({ left: dx, behavior: 'instant' });
+		this._followColumnReveal(dx !== 0);
 		const main = drag.target?._main;
 		if (main) {
 			const rect = main.getBoundingClientRect();
@@ -598,6 +609,51 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		if (dx || main) this._follow();
 		drag.frame = requestAnimationFrame(this._scrollLoop);
 	};
+
+	/** At an edge the board scrolls on; away from it, the column under the
+	 *  pointer comes fully into view once the pointer rests on it a moment. */
+	private _followColumnReveal(atEdge: boolean): void {
+		const drag = this._drag;
+		if (!drag) return;
+		const column = atEdge ? null : drag.target;
+		if (column === drag.columnToReveal) return;
+		clearTimeout(drag.columnRevealTimer);
+		drag.columnRevealTimer = 0;
+		drag.columnToReveal = column;
+		if (!column || this._columnRevealLeft(column) === undefined) return;
+		drag.columnRevealTimer = window.setTimeout(() => {
+			if (this._drag === drag && drag.columnToReveal === column) this._revealColumn(column);
+		}, COLUMN_REVEAL_DELAY_MS);
+	}
+
+	/** The smallest scroll that shows all of a column clear of the fade, or
+	 *  nothing when it is in view already; a column wider than the board shows
+	 *  its start. The smallest, so the column stays under the pointer. */
+	private _columnRevealLeft(column: NLDDTaskBoardColumn): number | undefined {
+		const el = this._scroller;
+		const styles = getComputedStyle(el);
+		// Clear of the fade at the side, so the next column peeks out from it.
+		const insetStart = parseFloat(styles.getPropertyValue('--_task-board-fade-size')) || 0;
+		const insetEnd = insetStart;
+		const current = el.scrollLeft;
+		const rect = column.getBoundingClientRect();
+		const offset = el.getBoundingClientRect().left - current;
+		const start = rect.left - offset - insetStart;
+		const end = rect.right - offset + insetEnd - el.clientWidth;
+		let left: number;
+		if (start < current - 1 || end > start) left = start;
+		else if (end > current + 1) left = end;
+		else return undefined;
+		left = Math.round(Math.min(el.scrollWidth - el.clientWidth, Math.max(0, left)));
+		return Math.abs(left - current) > 1 ? left : undefined;
+	}
+
+	private _revealColumn(column: NLDDTaskBoardColumn): void {
+		const left = this._columnRevealLeft(column);
+		if (left === undefined) return;
+		const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		this._scroller.scrollTo({ left, behavior: reduce ? 'instant' : 'smooth' });
+	}
 
 	private _drop(): void {
 		const drag = this._drag;
@@ -627,6 +683,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		if (!drag) return;
 		cancelAnimationFrame(drag.frame);
 		clearTimeout(drag.noteTimer);
+		clearTimeout(drag.columnRevealTimer);
 		drag.note?.remove();
 		drag.ghost.remove();
 		drag.item.removeAttribute('data-task-board-dragging');

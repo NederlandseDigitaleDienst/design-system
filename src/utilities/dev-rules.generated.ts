@@ -44,12 +44,12 @@ export const devRules: DevRule[] = [
 	{
 		"id": "button-form-id-invalid",
 		"message": "The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.",
-		"context": "nldd-button:state(form-target-not-a-form)"
+		"context": "nldd-button:state(form-target-not-a-form), nldd-split-button:state(form-target-not-a-form)"
 	},
 	{
 		"id": "button-form-id-not-found",
 		"message": "Nothing in this root has the id in `form`, so this button submits nothing.",
-		"context": "nldd-button:state(no-form-target)"
+		"context": "nldd-button:state(no-form-target), nldd-split-button:state(no-form-target)"
 	},
 	{
 		"id": "button-group-button-size-no-effect",
@@ -170,7 +170,7 @@ export const devRules: DevRule[] = [
 		"id": "form-field-needs-input",
 		"message": "nldd-form-field holds no form input, so the label cannot name anything or move focus into it.",
 		"context": "nldd-form-field[label]:not([label=\"\"]):has(> :not(nldd-form-field-help-text))",
-		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
+		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
 		"properties": []
 	},
 	{
@@ -616,6 +616,28 @@ export const devRules: DevRule[] = [
 		"context": "nldd-skip-link:state(target-not-focusable)"
 	},
 	{
+		"id": "split-button-max-one-popup",
+		"message": "nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.",
+		"context": "nldd-split-button",
+		"count": {
+			"of": "nldd-menu, nldd-popover",
+			"max": 1
+		}
+	},
+	{
+		"id": "split-button-needs-popup",
+		"message": "nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.",
+		"context": "nldd-split-button:not([popovertarget]:not([popovertarget=\"\"]))",
+		"assert": ":has(> nldd-menu, > nldd-popover)",
+		"properties": []
+	},
+	{
+		"id": "split-button-no-other-children",
+		"message": "Only an nldd-menu or nldd-popover goes in nldd-split-button; anything else does not render. Set the label with `text` and the icon with `icon`.",
+		"context": "nldd-split-button",
+		"report": ":has(> :not(nldd-menu, nldd-popover))"
+	},
+	{
 		"id": "split-view-needs-main-page",
 		"message": "Set landmarks=\"page\" on the page in the pane with the main content, or the screen offers no main landmark or two.",
 		"context": "nldd-navigation-split-view:has(nldd-page)",
@@ -677,6 +699,31 @@ export const devRules: DevRule[] = [
 		"id": "step-cell-variant-renamed",
 		"message": "The `variant` attribute is now `level`. Rename it here and on every other nldd-step-cell.",
 		"context": "nldd-step-cell[variant]"
+	},
+	{
+		"id": "swatch-picker-item-fill-no-effect",
+		"message": "An nldd-swatch-picker-item shows one of `color`, `custom-color` or `image`: an image covers a color, and a category `color` wins over `custom-color`. Keep one.",
+		"context": "nldd-swatch-picker-item[color]:not([color=\"\"])[custom-color]:not([custom-color=\"\"]), nldd-swatch-picker-item[image]:not([image=\"\"])[color]:not([color=\"\"]), nldd-swatch-picker-item[image]:not([image=\"\"])[custom-color]:not([custom-color=\"\"])"
+	},
+	{
+		"id": "swatch-picker-item-needs-name",
+		"message": "An nldd-swatch-picker-item with a `custom-color` or an `image` has no accessible name. Add `text`; only a category `color` brings a name of its own.",
+		"context": "nldd-swatch-picker-item",
+		"assert": "[color]:not([color=\"\"]), [text]:not([text=\"\"])",
+		"properties": [
+			"color",
+			"text"
+		]
+	},
+	{
+		"id": "swatch-picker-needs-name",
+		"message": "nldd-swatch-picker needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.",
+		"context": "nldd-swatch-picker",
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"accessibleLabeledBy"
+		]
 	},
 	{
 		"id": "switch-needs-name",
@@ -960,6 +1007,16 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-split-button-size",
 		"message": "`size` on nldd-split-button takes: lg, md, sm, xs.",
 		"context": "nldd-split-button[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-split-button-appearance",
+		"message": "`appearance` on nldd-split-button takes: accent-filled, inherit-filled, inherit-tinted, neutral-base, neutral-tinted, primary, secondary.",
+		"context": "nldd-split-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"inherit-filled\"], [appearance=\"inherit-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-split-button-type",
+		"message": "`type` on nldd-split-button takes: button, reset, submit.",
+		"context": "nldd-split-button[type]:not([type=\"button\"], [type=\"reset\"], [type=\"submit\"])"
 	},
 	{
 		"id": "invalid-value-toolbar-title-align",
@@ -1275,6 +1332,21 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-stepper-size",
 		"message": "`size` on nldd-stepper takes: md, sm, xs.",
 		"context": "nldd-stepper[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-swatch-picker-item-color",
+		"message": "`color` on nldd-swatch-picker-item takes: bruin, donkerblauw, donkerbruin, donkergeel, donkergroen, geel, groen, hemelblauw, lichtblauw, lintblauw, mintgroen, mosgroen, oranje, paars, robijnrood, rood, roze, violet.",
+		"context": "nldd-swatch-picker-item[color]:not([color=\"\"], [color=\"bruin\"], [color=\"donkerblauw\"], [color=\"donkerbruin\"], [color=\"donkergeel\"], [color=\"donkergroen\"], [color=\"geel\"], [color=\"groen\"], [color=\"hemelblauw\"], [color=\"lichtblauw\"], [color=\"lintblauw\"], [color=\"mintgroen\"], [color=\"mosgroen\"], [color=\"oranje\"], [color=\"paars\"], [color=\"robijnrood\"], [color=\"rood\"], [color=\"roze\"], [color=\"violet\"])"
+	},
+	{
+		"id": "invalid-value-swatch-picker-item-size",
+		"message": "`size` on nldd-swatch-picker-item takes: md, sm, xs.",
+		"context": "nldd-swatch-picker-item[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-swatch-picker-size",
+		"message": "`size` on nldd-swatch-picker takes: md, sm, xs.",
+		"context": "nldd-swatch-picker[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-switch-field-color",
@@ -2315,6 +2387,21 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-table-background",
 		"message": "`background` on nldd-table takes: base, tinted.",
 		"context": "nldd-table[background]:not([background=\"base\"], [background=\"tinted\"])"
+	},
+	{
+		"id": "invalid-value-link-group-size",
+		"message": "`size` on nldd-link-group takes: lg, md, sm, xs.",
+		"context": "nldd-link-group[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-link-group-orientation",
+		"message": "`orientation` on nldd-link-group takes: horizontal, vertical.",
+		"context": "nldd-link-group[orientation]:not([orientation=\"horizontal\"], [orientation=\"vertical\"])"
+	},
+	{
+		"id": "invalid-value-link-group-horizontal-alignment",
+		"message": "`horizontal-alignment` on nldd-link-group takes: center, left.",
+		"context": "nldd-link-group[horizontal-alignment]:not([horizontal-alignment=\"center\"], [horizontal-alignment=\"left\"])"
 	},
 	{
 		"id": "invalid-value-link-size",

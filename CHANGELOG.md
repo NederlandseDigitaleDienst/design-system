@@ -9,6 +9,57 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-link-group`, for a set of related links,** in a row that wraps or stacked, such as those under the name of a service in a footer. See Added.
+- **`nldd-swatch-picker`, for choosing one swatch:** a color, a color of your own, or an image of a pattern or a material, as a radio group with the name of each swatch in a tooltip. See Added.
+- **`nldd-slider`, improved.** The thumbs of a range can pass each other, by drag and with the arrow keys, and focus goes along to the end it becomes. The thumb you hold or focus lies on top. See Changed.
+
+### Breaking
+
+- **The package needs Node 20.19 or newer.** The parsers of `nldd lint` moved to versions that only run there, so the linter no longer runs on Node 18, also not for `.vue`, `.html` and `.j2`. Reading `.tsx` and `.jsx` already asked for it. Node 18 and 20 are both out of support.
+- **The texts of the toggle on `nldd-password-field` are translation keys now, as on every other field.** The attributes `show-button-text`, `hide-button-text`, `show-button-accessible-label` and `hide-button-accessible-label` are gone, and `nldd lint` reports them as unknown. Move a text you set to `translations`, on the field or with `setTranslations()`:
+  - `show-button-text` → `components.password-field.show-action` ("Toon")
+  - `hide-button-text` → `components.password-field.hide-action` ("Verberg")
+  - `show-button-accessible-label` → `components.password-field.show-accessible-label` ("Toon wachtwoord")
+  - `hide-button-accessible-label` → `components.password-field.hide-accessible-label` ("Verberg wachtwoord")
+- **An `nldd-split-button` needs its menu.** The chevron opens an `nldd-menu` or `nldd-popover` in the `popup` slot, or the one `popovertarget` names, and `menu-click` is gone with the split button that had neither. A menu without `slot="popup"` still works, as the split button has no other slots, but `slot="popup"` is how it is written now, as on `nldd-button` and `nldd-icon-button`. `nldd lint` reports a split button without a menu.
+- **The chevron of an `nldd-split-button` says which action it belongs to:** "Meer opties voor Bewaar" instead of "Meer opties", so two split buttons in one bar no longer sound the same. The translation key `components.split-button.menu-action` is now `components.split-button.show-options-action`, with `{text}` for the label of the main action. Rename an override and add the placeholder.
+- **`appearance` on `nldd-split-button` takes its own values only:** `neutral-tinted`, `neutral-base`, `accent-filled`, `primary`, `secondary`, `inherit-tinted` and `inherit-filled`. The transparent and critical appearances of `nldd-button` were never styled for a split button, which needs a surface of its own to read as one control, and `nldd lint` now reports them.
+
+### Added
+
+- **`nldd-swatch-picker`, a new component for choosing one swatch:** a category `color` ("rood", with its name from the translations), a `custom-color` of your own, or an `image` of a pattern or a material, with `image-srcset` for sharp screens. It is a radio group that goes with a form, the chosen swatch shows a check mark, and the name of each swatch shows as a tooltip, which stays after a click until the pointer leaves and shows for a moment after a tap, clear of the finger. Swatches follow the control sizes, 44px at `md`. Three lint rules come with it: a picker without a name, a swatch without a name, and a swatch with more than one fill.
+- **`nldd-link-group`, a new component for a set of related links,** such as those under the name of a service in a footer. The links sit in a row that wraps, or stacked with `orientation="vertical"`, and `horizontal-alignment="center"` centers the whole set. The group is a `nav` with the links as a list, and sets its `size` on every link in it.
+- **`popovertarget` positions the menu it opens.** An `nldd-button`, `nldd-icon-button`, `nldd-split-button` or `nldd-list-item-segment` whose `popovertarget` names an `nldd-menu` or `nldd-popover` now also anchors it to itself, so the overlay needs only its `id` and no `anchor`. A menu elsewhere on the page, such as the one for the actions of a list row, is wired in one place. An overlay with an `anchor` of its own keeps it.
+- **More for the main action of an `nldd-split-button`:** `type` and `form` to submit or reset a form, also one it sits outside of, `loading` and `loading-text` while the action runs, and `href` and `download` for an action that is a link, such as "Download PDF" with the other formats in the menu.
+- **Icon alias `checkbox`** for `check-mark-square`.
+- **The concept translations in Frisian and Papiamento have every text again,** 37 that fell back to Dutch: the toggle of `nldd-password-field`, the colors of `nldd-swatch-picker`, the announcements of `nldd-task-board`, the ends of a range `nldd-slider`, the diff lines of `nldd-code-viewer` and the accepted types of `nldd-file-field`. They are still a guess until a native speaker checks them.
+- **`--semantics-fingertip-size` (64px), the size of a fingertip.** On touch, the tooltip of an `nldd-slider` and of an `nldd-swatch-picker` keeps half of it from the center of where you press, so it clears the finger at every size.
+- **Three lint rules for `nldd-split-button`:** one without a menu (`split-button-needs-popup`), one with more than one (`split-button-max-one-popup`), and one with anything else inside (`split-button-no-other-children`).
+
+### Changed
+
+- **The label of an `nldd-split-button` stays on one line.** The split button grows to fit it instead of wrapping, and never cuts it off.
+- **A width set on an `nldd-split-button` itself wins.** With a CSS length in `width`, the split button wrote an inline width onto its own element, over one the app set, and cleared it again when `width` was emptied.
+- **An `nldd-file-field` lines up with the other fields in a form.** Its texts start on the left, after the upload icon, which sits where the file icon comes once a file is chosen. Only `variant="area"` keeps everything centered.
+- **The clear button of an `nldd-file-field` shows no tooltip,** as its menu button already did. The tooltip repeated the name of the file over the field.
+- **The hint `menu-no-manual-anchor` also covers a list row:** an `nldd-menu` with `anchor` on an `nldd-list-item-segment` is pointed at `popovertarget`. The list pattern now works that way.
+- **`timing="instant"` on `nldd-tooltip` also skips the fade,** on the way in and out, so a tooltip follows the pointer across a row of swatches or icon buttons without lagging behind.
+- **A column of an `nldd-task-board` that you drag an item to comes fully into view.** Rest the pointer on a column cut off at the side and the board moves just far enough to show all of it clear of the fade, so it stays the column under the pointer and the next one peeks out. At the edge the board still scrolls on. Moving an item to another column with Alt and an arrow key shows that whole column too, not only the item.
+- **On a small screen the wordmark of an `nldd-top-navigation-bar` sits on the bottom of the ribbon,** instead of in the middle, next to the emblem as in the printed logo. A name that does not fit still keeps its distance from the top and grows down.
+- **A thumb of a range `nldd-slider` can pass the other one.** Drag it or move it with an arrow key, also with Shift, past the other thumb and it becomes that end of the range, with focus going along, so a screen reader still hears which end it is on. Home, End, Page Up and Page Down still stop at the other thumb. The thumb you hold or focus lies on top of the other.
+- **A checked control on a selected `nldd-list-item` keeps the accent.** An `nldd-checkbox`, `nldd-radio-button` or `nldd-switch` in a selected row took the dark text color of the row, because the accent can fall below 3:1 against its gray. What shows the state, the check mark, the dot or the thumb, has at least 4.5:1 against the accent in every theme, so the control now looks the same in a row as anywhere else.
+- **Page sections have more room on a small screen:** 24px above and below instead of 16px, which is `--semantics-page-sections-sm-margin-block`. `nldd-hero` gets half of that at the top (12px), as it does on md and lg. An `nldd-page-footer` with a single row gets 32px above and below there, so the row sits in the middle with room to spare above the ribbon, instead of 36px.
+- **The links in the legal bar of an `nldd-page-footer` wrap like an `nldd-link-group` of `size="sm"`:** 8px between rows and 12px between links, instead of 12px both ways. When the start and the end of the bar wrap onto rows of their own, they are 8px apart too, instead of 4px.
+
+### Fixed
+
+- **The bar of an `nldd-top-navigation-bar` follows its wordmark in Safari.** When the screen got narrower, the wordmark grew past the ribbon and the title ran over it. When the screen got wider, the bar kept the height it had when the page loaded.
+- **An `nldd-tooltip` shown by hover goes away when the page scrolls.** It stayed fixed on the screen while the page moved under it, and only went once the scrolling stopped. A tooltip shown by focus or held with `open` now follows its trigger instead.
+- **The line numbers of an `nldd-code-editor` stay inside its rounded frame.** With `appearance="input-field"` and `line-numbers`, the background of the gutter stuck out past the rounded corners.
+- **The menu of an `nldd-split-button` opens again after its chevron closed it.** Once the chevron had closed the menu, every later press, by pointer, did nothing, also after Escape or a click outside.
+
 ## [0.15.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.14.0...v0.15.0) (2026-11-03)
 
 ### Highlights

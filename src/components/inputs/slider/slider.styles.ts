@@ -17,7 +17,7 @@ export const sliderStyles = css`
 		--_slider-track-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
 		--_slider-track-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
 		--_slider-track-border-width: var(--primitives-border-width-thin);
-		--_slider-fill-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
+		--_slider-fill-color: var(--semantics-controls-is-selected-indicator-color);
 		--_slider-fill-highlight-border-color: var(--semantics-controls-is-selected-indicator-highlight-border-color);
 		--_slider-thumb-size: var(--primitives-space-28);
 		--_slider-thumb-hit-size: var(--_slider-control-height);
@@ -38,7 +38,7 @@ export const sliderStyles = css`
 		--_slider-histogram-bar-corner-radius: var(--primitives-space-2);
 		--_slider-histogram-bar-height: 0;
 		--_slider-tooltip-offset: var(--primitives-space-8);
-		--_slider-tooltip-touch-offset: var(--primitives-space-32);
+		--_slider-tooltip-touch-offset: calc(var(--semantics-fingertip-size) / 2);
 		--_slider-tooltip-shift: 0px;
 		--_slider-tooltip-background-color: var(--semantics-tooltips-background-color);
 		--_slider-tooltip-content-color: var(--semantics-tooltips-content-color);
@@ -205,6 +205,15 @@ export const sliderStyles = css`
 		z-index: 2;
 	}
 
+	.slider__input:focus {
+		z-index: 3;
+	}
+
+	.slider__control.is-holding-start .slider__input--start,
+	.slider__control.is-holding-end .slider__input--end {
+		z-index: 4;
+	}
+
 	.slider__control.is-stacked .slider__input::-webkit-slider-thumb {
 		pointer-events: none;
 	}
@@ -255,21 +264,27 @@ export const sliderStyles = css`
 		height: var(--_slider-thumb-hit-size);
 	}
 
+	/* While a thumb is held, the native :hover and :active stay on the input a
+	   drag began on, also once it has passed the other thumb and drags that. */
 	@media (hover: hover) {
-		.slider__input::-webkit-slider-thumb:hover {
+		.slider__control:not(.is-holding) .slider__input::-webkit-slider-thumb:hover {
 			--_slider-thumb-border-color: var(--_slider-thumb-is-hovered-border-color);
 		}
 
-		.slider__input::-moz-range-thumb:hover {
+		.slider__control:not(.is-holding) .slider__input::-moz-range-thumb:hover {
 			--_slider-thumb-border-color: var(--_slider-thumb-is-hovered-border-color);
 		}
 	}
 
-	.slider__input:active::-webkit-slider-thumb {
+	.slider__control.is-holding-value .slider__input--value::-webkit-slider-thumb,
+	.slider__control.is-holding-start .slider__input--start::-webkit-slider-thumb,
+	.slider__control.is-holding-end .slider__input--end::-webkit-slider-thumb {
 		--_slider-thumb-border-color: var(--_slider-thumb-is-active-border-color);
 	}
 
-	.slider__input:active::-moz-range-thumb {
+	.slider__control.is-holding-value .slider__input--value::-moz-range-thumb,
+	.slider__control.is-holding-start .slider__input--start::-moz-range-thumb,
+	.slider__control.is-holding-end .slider__input--end::-moz-range-thumb {
 		--_slider-thumb-border-color: var(--_slider-thumb-is-active-border-color);
 	}
 

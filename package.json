@@ -182,6 +182,10 @@
       "types": "./dist/components/inputs/segmented-control/segmented-control.d.ts",
       "default": "./dist/components/inputs/segmented-control/segmented-control.js"
     },
+    "./swatch-picker": {
+      "types": "./dist/components/inputs/swatch-picker/swatch-picker.d.ts",
+      "default": "./dist/components/inputs/swatch-picker/swatch-picker.js"
+    },
     "./stepper": {
       "types": "./dist/components/inputs/stepper/stepper.d.ts",
       "default": "./dist/components/inputs/stepper/stepper.js"
@@ -393,6 +397,10 @@
     "./link": {
       "types": "./dist/components/navigation/link/link.d.ts",
       "default": "./dist/components/navigation/link/link.js"
+    },
+    "./link-group": {
+      "types": "./dist/components/navigation/link-group/link-group.d.ts",
+      "default": "./dist/components/navigation/link-group/link-group.js"
     },
     "./skip-link": {
       "types": "./dist/components/navigation/skip-link/skip-link.d.ts",
@@ -614,7 +622,7 @@
     "yaml": "^2.9.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.19.0"
   },
   "keywords": [
     "design-system",
@@ -643,9 +651,9 @@
     "@codemirror/view": "^6.43.4",
     "@floating-ui/dom": "^1.7.6",
     "@lezer/highlight": "^1.2.3",
-    "css-select": "^5.2.2",
-    "css-what": "^6.2.2",
-    "htmlparser2": "^10.1.0",
+    "css-select": "^7.0.0",
+    "css-what": "^8.0.0",
+    "htmlparser2": "^12.0.0",
     "lit": "^3.3.1"
   },
   "customElements": "custom-elements.json",

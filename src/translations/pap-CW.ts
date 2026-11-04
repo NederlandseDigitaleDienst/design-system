@@ -5,8 +5,8 @@
  *
  * Not yet checked by a native speaker. Every key has a text, also where the
  * wording is a guess, because correcting a text is easier than writing one.
- * Typed as partial, so a key added to a component later falls back to Dutch
- * until it is translated here. Report a better wording at
+ * Typed as complete, as en-US is, so a key added to a component needs a text
+ * here too, or the build fails. Report a better wording at
  * https://github.com/NederlandseDigitaleDienst/design-system/issues
  *
  * ```js
@@ -18,7 +18,7 @@
  */
 import type { TranslationKey } from './nl.generated.js';
 
-export const papCW: Partial<Record<TranslationKey, string>> = {
+export const papCW: Record<TranslationKey, string> = {
 	'components.button.link-hint-new-tab-lowercase-label': 'ta habri den un tab nobo',
 	'components.button.link-hint-external-lowercase-label': 'otro wèpsait',
 	'components.button.link-hint-external-new-tab-lowercase-label': 'otro wèpsait, ta habri den un tab nobo',
@@ -33,7 +33,7 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.menu.back-action': 'Bai bèk',
 	'components.menu.submenu-title': 'Submenu: {title}',
 	'components.menu.submenu-back-action': 'Bai bèk na {title}',
-	'components.split-button.menu-action': 'Mas opshon',
+	'components.split-button.show-options-action': 'Mas opshon pa {text}',
 	'components.toolbar.overflow-action': 'Mas',
 	'components.toolbar.link-hint-new-tab-lowercase-label': 'ta habri den un tab nobo',
 	'components.toolbar.link-hint-external-lowercase-label': 'otro wèpsait',
@@ -48,6 +48,11 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.code-viewer.copy-action': 'Kopia',
 	'components.code-viewer.copy-success-text': 'Kopiá',
 	'components.code-viewer.copy-failure-text': 'Kopiamentu no a logra',
+	'components.code-viewer.diff-summary-text': '{added} {addedNoun} agregá, {removed} {removedNoun} kitá',
+	'components.code-viewer.line-singular-lowercase': 'liña',
+	'components.code-viewer.line-plural-lowercase': 'liñanan',
+	'components.code-viewer.added-line-label': 'Agregá, liña {number}',
+	'components.code-viewer.removed-line-label': 'Kitá, liña {number}',
 	'components.image.error-text': 'E imágen no a karga',
 	'components.rich-text.table-scroll-label': 'Tabel ku por skrol',
 	'components.token.dismiss-action': 'Kita',
@@ -166,14 +171,39 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.clear-action': 'Limpia selekshon',
 	'components.file-field.show-options-action': 'Mustra opshon',
 	'components.file-field.required-error-text': 'Un archivo ta obligatorio',
+	'components.file-field.accepted-types-text': 'Permití: {types}',
 	'components.number-field.decrement-action': 'Baha',
 	'components.number-field.increment-action': 'Subi',
 	'components.number-field.to-adjust-value-action': 'Ahustá balor',
+	'components.password-field.show-action': 'Mustra',
+	'components.password-field.hide-action': 'Skonde',
+	'components.password-field.show-accessible-label': 'Mustra kontraseña',
+	'components.password-field.hide-accessible-label': 'Skonde kontraseña',
 	'components.search-field.clear-action': 'Limpia búskeda',
 	'components.search-field.search-action': 'Buska',
+	'components.slider.start-value-label': 'Mínimo',
+	'components.slider.end-value-label': 'Máksimo',
 	'components.stepper.decrement-action': 'Baha',
 	'components.stepper.increment-action': 'Subi',
 	'components.stepper.to-adjust-value-action': 'Ahustá kantidat',
+	'components.swatch-picker-item.lintblauw-text': 'Blou di lint',
+	'components.swatch-picker-item.donkerblauw-text': 'Blou skur',
+	'components.swatch-picker-item.hemelblauw-text': 'Blou di shelu',
+	'components.swatch-picker-item.lichtblauw-text': 'Blou kla',
+	'components.swatch-picker-item.paars-text': 'Mora',
+	'components.swatch-picker-item.violet-text': 'Violeta',
+	'components.swatch-picker-item.robijnrood-text': 'Kòrá rubí',
+	'components.swatch-picker-item.roze-text': 'Rosa',
+	'components.swatch-picker-item.rood-text': 'Kòrá',
+	'components.swatch-picker-item.oranje-text': 'Oraño',
+	'components.swatch-picker-item.donkergeel-text': 'Hel skur',
+	'components.swatch-picker-item.geel-text': 'Hel',
+	'components.swatch-picker-item.donkerbruin-text': 'Brùin skur',
+	'components.swatch-picker-item.bruin-text': 'Brùin',
+	'components.swatch-picker-item.donkergroen-text': 'Bèrdè skur',
+	'components.swatch-picker-item.groen-text': 'Bèrdè',
+	'components.swatch-picker-item.mosgroen-text': 'Bèrdè di mos',
+	'components.swatch-picker-item.mintgroen-text': 'Bèrdè di menta',
 	'components.text-editor.open-in-new-tab-label': 'Habri link den un tab nobo: {url}',
 	'components.text-editor.annotation-count-label': '{count} {noun} riba \'{quote}\'',
 	'components.text-editor.annotation-singular-lowercase': 'anotashon',
@@ -214,6 +244,13 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.sidebar-section.sidebar-label': 'Bara di banda',
 	'components.sidebar-section.sheet-dismiss-action': 'Sera',
 	'components.popover.accessible-label': 'Popover',
+	'components.task-board.accessible-label': 'Tabla di tarea',
+	'components.task-board.moved-text': 'Movè pa {column}, {position} di {total}.',
+	'components.task-board.no-change-text': 'Pone, lugá no a kambia.',
+	'components.task-board.edge-text': 'No por mas leu.',
+	'components.task-board.drag-canceled-text': 'Halamentu kanselá.',
+	'components.task-board.readonly-text': 'E tabla aki ta solamente pa lesa',
+	'components.task-board.drag-return-text': 'Bèk na e lugá anterior',
 	'components.window.accessible-label': 'Bentana',
 	'components.drag-handle-cell.accessible-label': 'Agarador, primi spasio of enter pa move',
 	'components.list-item.link-hint-new-tab-lowercase-label': 'ta habri den un tab nobo',

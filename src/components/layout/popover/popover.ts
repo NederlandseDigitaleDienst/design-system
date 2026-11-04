@@ -6,10 +6,12 @@
  * handles opening, toggling and light dismiss; this component only handles
  * positioning and focus.
  *
- * The recommended use is through popovertarget, so the browser owns the toggle:
+ * The recommended use is through popovertarget, so the browser owns the toggle.
+ * An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment
+ * also positions the popover against itself, so the popover needs no `anchor`:
  *
- *     <nldd-button id="info-trigger" popovertarget="info-popover">Info</nldd-button>
- *     <nldd-popover id="info-popover" anchor="info-trigger" accessible-label="Info">
+ *     <nldd-button popovertarget="info-popover">Info</nldd-button>
+ *     <nldd-popover id="info-popover" accessible-label="Info">
  *         <nldd-container>
  *             <p>Content of the popover.</p>
  *         </nldd-container>

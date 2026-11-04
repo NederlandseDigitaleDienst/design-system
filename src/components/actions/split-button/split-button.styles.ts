@@ -16,9 +16,11 @@ export const splitButtonStyles = css`
 		--_split-button-highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
 		--_split-button-divider-length: var(--semantics-buttons-md-divider-length);
 		--_split-button-width: auto;
+		--_split-button-host-width: auto;
 
 		${inheritedTextReset}
 		display: inline-flex;
+		width: var(--_split-button-host-width);
 		isolation: isolate;
 		-webkit-tap-highlight-color: transparent;
 	}
@@ -77,6 +79,8 @@ export const splitButtonStyles = css`
 		display: none;
 	}
 
+	/* The host fades, not its buttons: the highlight border is drawn here and
+	   has to fade with them. */
 	:host([disabled]) {
 		opacity: var(--primitives-opacity-disabled);
 		pointer-events: none;

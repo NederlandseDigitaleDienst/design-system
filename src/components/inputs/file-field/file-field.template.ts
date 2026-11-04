@@ -247,7 +247,7 @@ function renderEmpty(component: NLDDFileField): TemplateResult {
 		...(area ? [] : [{ content: reading ? renderReadingIndicator(component) : '', kind: 'reading' as const, active: reading }]),
 		...reservedVariants(component),
 	]);
-	const icon = area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing;
+	const icon = html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>`;
 	const buttons = buttonGroup && !refused ? renderChooseButtonGroup(component) : nothing;
 	const accepted = types
 		? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>`
@@ -396,6 +396,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 							icon="dismiss"
 							text=${component._t('components.file-field.clear-action')}
 							accessible-label=${component._clearAccessibleLabel()}
+							tooltip-timing="never"
 							?disabled=${component.disabled}
 							@click=${component._handleClear}
 						></nldd-icon-button>
@@ -405,7 +406,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 				${renderValidationIcon(component)}
 			</div>
 			<div class=${classMap({ 'file-field__replace-area': true, 'is-active': replaced })}>
-				${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}
+				<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>
 				${renderStack('text', [...drags, ...reservedVariants(component)])}
 				${renderValidationIcon(component)}
 			</div>

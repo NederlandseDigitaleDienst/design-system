@@ -107,10 +107,11 @@ describe('the translation sets', () => {
 		expect(Object.keys(enUS).sort()).toEqual(Object.keys(nl).sort());
 	});
 
-	// The concept sets are partial on purpose: a missing key falls back to
-	// Dutch. A key no component knows, though, would do nothing at all.
-	it.each([['fy', fy], ['pap-AW', papAW], ['pap-CW', papCW]])('%s only uses keys a component knows', (_name, set) => {
-		expect(Object.keys(set).filter((key) => !(key in nl))).toEqual([]);
+	// A missing key would fall back to Dutch, in the middle of a Frisian or
+	// Papiamento page. A key no component knows would do nothing at all.
+	it.each([['fy', fy], ['pap-AW', papAW], ['pap-CW', papCW]])('%s has a text for every key a component knows, and nothing else', (_name, set) => {
+		expect(Object.keys(nl).filter((key) => !(key in set)), 'missing').toEqual([]);
+		expect(Object.keys(set).filter((key) => !(key in nl)), 'unknown').toEqual([]);
 	});
 
 	it.each([['en-US', enUS], ['fy', fy], ['pap-AW', papAW], ['pap-CW', papCW]])('%s keeps the placeholders of the Dutch text', (_name, set) => {

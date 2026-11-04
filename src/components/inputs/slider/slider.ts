@@ -15,8 +15,11 @@
  * Page Down, Home and End), touch, the form and a screen reader work as they do
  * for any slider. A range is two of them over each other, each with its own
  * name for a screen reader ("Prijs, minimum"), and a press on the track moves
- * the nearer thumb there. The thumbs do not pass each other; where they lie
- * on one value, the first move picks one, to the left the start one.
+ * the nearer thumb there. A thumb dragged or moved with an arrow key (also
+ * with Shift) past the other one becomes that end of the range, and focus goes with it, so its name
+ * still says which end it is. Home, End, Page Up and Page Down stop at the
+ * other thumb, so they never turn the range around. Where the thumbs lie on
+ * one value, the first move picks one, to the left the start one.
  *
  * The value shows in a tooltip above the thumb while the pointer is over the
  * slider or its icons, while a thumb has keyboard focus and while it or an icon
@@ -179,6 +182,9 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	/** @internal While a thumb is pressed or dragged, so its tooltip shows. */
 	@state() _active = false;
 
+	/** @internal The thumb a pointer holds, for its pressed look. */
+	@state() _held: Thumb | null = null;
+
 	@queryAll('.slider__input')
 	private _inputs!: NodeListOf<HTMLInputElement>;
 
@@ -189,6 +195,13 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	private _trackThumb: 'start' | 'end' | null = null;
 	/** Where a press on two stacked thumbs began, until a move picks one. */
 	private _stackedPress: number | null = null;
+	/** The input a pointer drags natively, and the end of the range it moves:
+	 *  past the other thumb that is the other end, while the drag goes on. */
+	private _dragInput: HTMLInputElement | null = null;
+	private _dragThumb: 'start' | 'end' | null = null;
+	/** Whether the key that moves a thumb is a plain arrow, which may take it
+	 *  past the other one. */
+	private _arrowKey = false;
 
 	/** @internal */
 	_t(key: keyof NLDDSliderTranslations): string {
@@ -315,7 +328,17 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	_handleInput(event: Event, thumb: Thumb): void {
 		// The native input event crosses the shadow root; the host fires its own.
 		event.stopPropagation();
-		this._set(thumb, parseFloat((event.target as HTMLInputElement).value), event.target as HTMLInputElement);
+		const input = event.target as HTMLInputElement;
+		const dragged = input === this._dragInput && this._dragThumb;
+		const moved = dragged || thumb;
+		const landed = this._set(moved, parseFloat(input.value), input, !!dragged || this._arrowKey);
+		if (landed !== moved && landed !== 'value') {
+			if (dragged) {
+				this._dragThumb = landed;
+				this._held = landed;
+			}
+			this._focusThumb(landed);
+		}
 		this._emit('input');
 	}
 
@@ -336,6 +359,8 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	 *  takes one step for it.
 	 *  @internal */
 	_handleKeyDown(event: KeyboardEvent, thumb: Thumb): void {
+		const arrow = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key);
+		this._arrowKey = arrow && !event.shiftKey && !event.altKey && !event.ctrlKey && !event.metaKey;
 		if (!event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;
 		const rtl = getComputedStyle(this).direction === 'rtl';
 		const directions: Record<string, -1 | 1> = {
@@ -347,17 +372,19 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 		const direction = directions[event.key];
 		if (!direction) return;
 		event.preventDefault();
-		this._page(thumb, direction);
+		this._page(thumb, direction, true);
 	}
 
 	/** Moves a thumb a tenth of the range, at least one step, the jump the
 	 *  native input takes on Page Up and Page Down. */
-	private _page(thumb: Thumb, direction: -1 | 1): void {
+	private _page(thumb: Thumb, direction: -1 | 1, pass = false): void {
 		const page = Math.max(this.step > 0 ? this.step : 1, (this.max - this.min) / 10);
-		const current = () => (thumb === 'value' ? this._value : thumb === 'start' ? this._start : this._end);
+		const current = () => (thumb === 'value' ? this._value : [this._start, this._end].join());
 		const before = current();
 		const input = this.shadowRoot?.querySelector<HTMLInputElement>(`.slider__input--${thumb}`) ?? undefined;
-		this._set(thumb, before + direction * page, input);
+		const from = thumb === 'value' ? this._value : thumb === 'start' ? this._start : this._end;
+		const landed = this._set(thumb, from + direction * page, input, pass);
+		if (landed !== thumb && landed !== 'value') this._focusThumb(landed);
 		if (current() === before) return;
 		this._emit('input');
 		this._emit('change');
@@ -374,6 +401,14 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 		// the track moves the nearer thumb there, and drags it from there. Two
 		// stacked thumbs take no press either: the first move picks one.
 		const target = event.target as Element;
+		this._arrowKey = false;
+		if (target.matches('.slider__input')) {
+			this._held = target.matches('.slider__input--start') ? 'start' : target.matches('.slider__input--end') ? 'end' : 'value';
+		}
+		if (this.range && target.matches('.slider__input')) {
+			this._dragInput = target as HTMLInputElement;
+			this._dragThumb = this._held as 'start' | 'end';
+		}
 		if (!this.range || !target.closest('.slider__control') || target.matches('.slider__input')) return;
 		window.addEventListener('pointermove', this._handleTrackMove);
 		event.preventDefault();
@@ -400,13 +435,19 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 			this._stackedPress = null;
 		}
 		if (!this._trackThumb) return;
-		this._set(this._trackThumb, this._valueAt(event.clientX));
+		const landed = this._set(this._trackThumb, this._valueAt(event.clientX), undefined, true);
+		if (landed !== this._trackThumb && landed !== 'value') this._grab(landed);
 		this._emit('input');
 	};
 
 	/** Makes a thumb the one a press drags, and gives it focus. */
 	private _grab(thumb: 'start' | 'end'): void {
 		this._trackThumb = thumb;
+		this._held = thumb;
+		this._focusThumb(thumb);
+	}
+
+	private _focusThumb(thumb: 'start' | 'end'): void {
 		this.shadowRoot?.querySelector<HTMLInputElement>(`.slider__input--${thumb}`)?.focus();
 	}
 
@@ -424,6 +465,9 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 		window.removeEventListener('pointercancel', this._handlePointerUp);
 		this._trackThumb = null;
 		this._stackedPress = null;
+		this._dragInput = null;
+		this._dragThumb = null;
+		this._held = null;
 	}
 
 	/** Where the middle of the native thumb runs: from `start` over `length`
@@ -451,16 +495,35 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 		return Math.abs(x - (start + length * (rtl ? 1 - fraction : fraction))) <= hit / 2;
 	}
 
-	/** Sets a thumb, keeps the thumbs of a range from passing each other, and
-	 *  puts the native input back where the value landed. */
-	private _set(thumb: Thumb, raw: number, input?: HTMLInputElement): void {
+	/** Sets a thumb and puts the native inputs back where the values landed.
+	 *  With `pass`, a thumb moved past the other one becomes the other end of
+	 *  the range, and the other thumb takes its place; without, it stops at the
+	 *  other thumb. Returns the end the value landed on. */
+	private _set(thumb: Thumb, raw: number, input?: HTMLInputElement, pass = false): Thumb {
 		const value = this._snap(raw);
-		if (thumb === 'value') this.value = value;
-		if (thumb === 'start') this.startValue = Math.min(value, this._end);
-		if (thumb === 'end') this.endValue = Math.max(value, this._start);
-		const settled = thumb === 'value' ? this.value! : thumb === 'start' ? this.startValue! : this.endValue!;
-		if (input && parseFloat(input.value) !== settled) input.value = String(settled);
+		let landed = thumb;
+		if (thumb === 'value') {
+			this.value = value;
+			if (input && parseFloat(input.value) !== value) input.value = String(value);
+		} else {
+			const start = this._start;
+			const end = this._end;
+			if (thumb === 'start' && value > end && pass) {
+				[this.startValue, this.endValue, landed] = [end, value, 'end'];
+			} else if (thumb === 'end' && value < start && pass) {
+				[this.startValue, this.endValue, landed] = [value, start, 'start'];
+			} else if (thumb === 'start') {
+				this.startValue = Math.min(value, end);
+			} else {
+				this.endValue = Math.max(value, start);
+			}
+			for (const el of this._inputs ?? []) {
+				const settled = el.classList.contains('slider__input--start') ? this._start : this._end;
+				if (parseFloat(el.value) !== settled) el.value = String(settled);
+			}
+		}
 		this.commitFormValue();
+		return landed;
 	}
 
 	private _emit(type: 'input' | 'change'): void {

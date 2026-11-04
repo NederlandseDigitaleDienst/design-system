@@ -743,7 +743,7 @@
               },
               "default": "undefined",
               "fieldName": "popovertarget",
-              "description": "ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree."
+              "description": "ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`."
             },
             {
               "name": "loading",
@@ -1461,7 +1461,7 @@
               },
               "default": "undefined",
               "fieldName": "popovertarget",
-              "description": "ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element."
+              "description": "ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`."
             },
             {
               "name": "text",
@@ -3068,7 +3068,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a menu hung off a button. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.",
+              "description": "ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.",
               "name": "anchor",
               "default": "''",
               "fieldName": "anchor"
@@ -3183,9 +3183,19 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A split button combines a primary action button with a dropdown trigger. The main button performs the default action, while the icon button opens a menu or popover. Provide the dropdown by slotting an `nldd-menu` (with its `nldd-menu-item` / `nldd-menu-divider` children) or an `nldd-popover` directly: ```html <nldd-split-button text=\"Opslaan\"> <nldd-menu> <nldd-menu-item text=\"Opslaan als…\"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The slotted overlay stays in the light DOM — no item-moving — so consumers keep their references and the full overlay API. The split-button anchors it to the chevron and opens it on click. When no overlay is slotted, the chevron dispatches `menu-click` and the consumer manages their own popover.",
+          "description": "A split button combines a primary action with a chevron that opens its alternatives. The main button performs the default action; the chevron opens a menu or popover of variants of that same action. The overlay is required. Put an `nldd-menu` or `nldd-popover` in the `popup` slot, as on nldd-button and nldd-icon-button: ```html <nldd-split-button text=\"Bewaar\"> <nldd-menu slot=\"popup\"> <nldd-menu-item text=\"Opslaan als…\"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The split button has no other slots, so an overlay without `slot=\"popup\"` works too. When both hold one, the one in `popup` wins. For an overlay that lives elsewhere, point `popovertarget` at it instead. The chevron is the overlay's invoker: it anchors it, opens and closes it, and takes `aria-expanded` and `aria-haspopup` from it, exactly as an nldd-icon-button with a slotted overlay does. Its accessible name says which action it belongs to (\"Meer opties voor Bewaar\"). The API is narrower than nldd-button on purpose: a split button is an action with variants, so it has no supporting text, no end icon and no link target. Its label always stays on one line, without an ellipsis: keep it short.",
           "name": "NLDDSplitButton",
           "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Form-associated, so a submit split button finds the form it sits in:\nits action button is in this shadow root and has no form owner."
+            },
             {
               "kind": "field",
               "name": "size",
@@ -3200,7 +3210,7 @@
               "kind": "field",
               "name": "appearance",
               "type": {
-                "text": "string"
+                "text": "SplitButtonAppearance"
               },
               "default": "'neutral-tinted'",
               "attribute": "appearance",
@@ -3215,6 +3225,27 @@
               "default": "false",
               "attribute": "disabled",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Loading state of the main action. The chevron stays available.",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loadingText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "What the screen reader announces while `loading` is on.",
+              "attribute": "loading-text"
             },
             {
               "kind": "field",
@@ -3237,6 +3268,63 @@
               "description": "Button text for the primary action.",
               "attribute": "text",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Icon name shown before the text on the primary action button.",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'",
+              "description": "What the main action does in a form. Ignored when `href` is set.",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Turns the main action into a link.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Saves the file `href` points at instead of opening it.",
+              "attribute": "download"
+            },
+            {
+              "kind": "field",
+              "name": "popovertarget",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of an overlay elsewhere in this tree that the chevron opens.",
+              "attribute": "popovertarget"
+            },
+            {
+              "kind": "field",
+              "name": "popoverTargetElement",
+              "type": {
+                "text": "Element | null"
+              },
+              "default": "null",
+              "description": "Direct reference to that overlay, for one in another tree."
             },
             {
               "kind": "field",
@@ -3280,16 +3368,6 @@
             },
             {
               "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Icon name shown before the text on the primary action button.",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
               "name": "translations",
               "type": {
                 "text": "Partial<NLDDSplitButtonTranslations>"
@@ -3302,10 +3380,6 @@
             {
               "name": "action-click",
               "description": "Fired when the main button is clicked"
-            },
-            {
-              "name": "menu-click",
-              "description": "Fired when the dropdown trigger is clicked and no overlay is slotted"
             }
           ],
           "attributes": [
@@ -3324,11 +3398,14 @@
             {
               "name": "appearance",
               "type": {
-                "text": "string"
+                "text": "SplitButtonAppearance"
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
-              "description": "Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)"
+              "expandedType": {
+                "text": "'accent-filled' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'primary' | 'secondary'"
+              },
+              "description": "Visual style: 'neutral-tinted' (default) | 'neutral-base' | 'accent-filled' | 'primary' | 'secondary' | 'inherit-tinted' | 'inherit-filled'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The inherit appearances are for a colored surface. There are no transparent appearances: the split button needs a surface of its own to show it is one control."
             },
             {
               "name": "disabled",
@@ -3338,6 +3415,24 @@
               "default": "false",
               "fieldName": "disabled",
               "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Loading state of the main action, as on nldd-button. The chevron stays available.",
+              "fieldName": "loading"
+            },
+            {
+              "name": "loading-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "What the screen reader announces while `loading` is on, as on nldd-button.",
+              "fieldName": "loadingText"
             },
             {
               "name": "width",
@@ -3356,6 +3451,51 @@
               "default": "''",
               "description": "Button text for the primary action",
               "fieldName": "text"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Icon name shown before the text on the primary action button",
+              "fieldName": "icon"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'",
+              "description": "What the main action does in a form: 'button' (default) | 'submit' | 'reset'. Ignored when `href` is set.",
+              "fieldName": "type",
+              "expandedType": {
+                "text": "'button' | 'reset' | 'submit'"
+              }
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Turns the main action into a link, as on nldd-button.",
+              "fieldName": "href"
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`.",
+              "fieldName": "download"
+            },
+            {
+              "name": "popovertarget",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of an `nldd-menu` or `nldd-popover` elsewhere in this tree that the chevron opens, for an overlay that cannot be a child. A slotted overlay wins.",
+              "fieldName": "popovertarget"
             },
             {
               "name": "shortcut",
@@ -3394,15 +3534,6 @@
               "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Icon name shown before the text on the primary action button",
-              "fieldName": "icon"
-            },
-            {
               "name": "translations",
               "type": {
                 "text": "Partial<NLDDSplitButtonTranslations>"
@@ -3410,6 +3541,13 @@
               "default": "{}",
               "fieldName": "translations",
               "description": "Translations; unset keys fall back to Dutch"
+            },
+            {
+              "name": "form",
+              "description": "Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button.",
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -3420,8 +3558,12 @@
           "customElement": true,
           "slots": [
             {
+              "name": "popup",
+              "description": "The `nldd-menu` or `nldd-popover` the chevron opens."
+            },
+            {
               "name": "",
-              "description": "A single `nldd-menu` or `nldd-popover` that the chevron opens."
+              "description": "Fallback for the overlay when it has no `slot=\"popup\"`. Anything that is not an `nldd-menu` or `nldd-popover` does nothing here."
             }
           ]
         }
@@ -4230,6 +4372,31 @@
           "declaration": {
             "name": "ToolbarOverflowMenu",
             "module": "src/components/actions/toolbar/toolbar.overflow-menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.story-sync.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "syncToolbarOverflow",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "syncToolbarOverflow",
+          "declaration": {
+            "name": "syncToolbarOverflow",
+            "module": "src/components/actions/toolbar/toolbar.story-sync.ts"
           }
         }
       ]
@@ -7490,7 +7657,7 @@
               "expandedType": {
                 "text": "'delay' | 'instant' | 'never'"
               },
-              "description": "When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant."
+              "description": "When the tooltip appears on hover: 'instant' — right away, without a show delay or a fade, also on the way out. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant."
             }
           ],
           "superclass": {
@@ -8685,6 +8852,22 @@
         },
         {
           "kind": "js",
+          "name": "NLDDSwatchPicker",
+          "declaration": {
+            "name": "NLDDSwatchPicker",
+            "module": "./inputs/swatch-picker/swatch-picker.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDSwatchPickerItem",
+          "declaration": {
+            "name": "NLDDSwatchPickerItem",
+            "module": "./inputs/swatch-picker/swatch-picker.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "NLDDStepper",
           "declaration": {
             "name": "NLDDStepper",
@@ -9145,6 +9328,14 @@
           "declaration": {
             "name": "NLDDLink",
             "module": "./navigation/link/link.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDLinkGroup",
+          "declaration": {
+            "name": "NLDDLinkGroup",
+            "module": "./navigation/link-group/link-group.js"
           }
         },
         {
@@ -9798,7 +9989,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.",
+          "description": "",
           "name": "NLDDCheckbox",
           "members": [
             {
@@ -15570,43 +15761,13 @@
             },
             {
               "kind": "field",
-              "name": "showButtonText",
+              "name": "translations",
               "type": {
-                "text": "string"
+                "text": "Partial<NLDDPasswordFieldTranslations>"
               },
-              "default": "'Toon'",
-              "description": "Visible button label when the field is masked. Override for localisation.",
-              "attribute": "show-button-text"
-            },
-            {
-              "kind": "field",
-              "name": "hideButtonText",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Verberg'",
-              "description": "Visible button label when the field is unmasked. Override for localisation.",
-              "attribute": "hide-button-text"
-            },
-            {
-              "kind": "field",
-              "name": "showButtonAccessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Toon wachtwoord'",
-              "description": "Accessible aria-label for the toggle button when the field is masked. Override for localisation.",
-              "attribute": "show-button-accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "hideButtonAccessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Verberg wachtwoord'",
-              "description": "Accessible aria-label for the toggle button when the field is unmasked. Override for localisation.",
-              "attribute": "hide-button-accessible-label"
+              "default": "{}",
+              "description": "Override one or more translation keys. Unset keys fall back to Dutch.",
+              "attribute": "translations"
             },
             {
               "kind": "field",
@@ -16023,40 +16184,13 @@
               "description": "Whether the password is masked (default: true)"
             },
             {
-              "name": "show-button-text",
+              "name": "translations",
               "type": {
-                "text": "string"
+                "text": "Partial<NLDDPasswordFieldTranslations>"
               },
-              "default": "'Toon'",
-              "description": "Visible toggle button text when masked (default: 'Toon')",
-              "fieldName": "showButtonText"
-            },
-            {
-              "name": "hide-button-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Verberg'",
-              "description": "Visible toggle button text when unmasked (default: 'Verberg')",
-              "fieldName": "hideButtonText"
-            },
-            {
-              "name": "show-button-accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Toon wachtwoord'",
-              "description": "aria-label for toggle when masked (default: 'Toon wachtwoord')",
-              "fieldName": "showButtonAccessibleLabel"
-            },
-            {
-              "name": "hide-button-accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Verberg wachtwoord'",
-              "description": "aria-label for toggle when unmasked (default: 'Verberg wachtwoord')",
-              "fieldName": "hideButtonAccessibleLabel"
+              "default": "{}",
+              "description": "Override translation keys; unset keys fall back to Dutch",
+              "fieldName": "translations"
             },
             {
               "name": "readonly",
@@ -16822,7 +16956,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "WAI-ARIA: put the buttons of one group in a container with role=\"radiogroup\" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role=\"radiogroup\" aria-labelledby=\"options-label\"> <legend id=\"options-label\">Kies een optie</legend> <nldd-radio-button name=\"options\" value=\"1\" accessible-label=\"Optie 1\"></nldd-radio-button> <nldd-radio-button name=\"options\" value=\"2\" accessible-label=\"Optie 2\"></nldd-radio-button> </fieldset> On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.",
+          "description": "WAI-ARIA: put the buttons of one group in a container with role=\"radiogroup\" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role=\"radiogroup\" aria-labelledby=\"options-label\"> <legend id=\"options-label\">Kies een optie</legend> <nldd-radio-button name=\"options\" value=\"1\" accessible-label=\"Optie 1\"></nldd-radio-button> <nldd-radio-button name=\"options\" value=\"2\" accessible-label=\"Optie 2\"></nldd-radio-button> </fieldset>",
           "name": "NLDDRadioButton",
           "members": [
             {
@@ -18901,7 +19035,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter (\"a price between …\"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader (\"Prijs, minimum\"), and a press on the track moves the nearer thumb there. The thumbs do not pass each other; where they lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider or its icons, while a thumb has keyboard focus and while it or an icon is pressed; with `tooltip-timing=\"never\"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one (\"200 – 1.200\"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \\`€ ${value}\\``; without it the number is written in the language of the page (`lang`), and in Dutch where none is set. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. A larger step than the arrow keys take is a tenth of the range, and at least one `step`: what Page Up and Page Down do, what Shift with an arrow key does (a Mac keyboard has no Page Up), and what a click on `start-icon` or `end-icon` does. The icons stay out of the tab order and out of the accessibility tree, because the keyboard already has those keys. In a range they only explain the ends, since a click could not say which thumb to move. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.",
+          "description": "A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter (\"a price between …\"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader (\"Prijs, minimum\"), and a press on the track moves the nearer thumb there. A thumb dragged or moved with an arrow key (also with Shift) past the other one becomes that end of the range, and focus goes with it, so its name still says which end it is. Home, End, Page Up and Page Down stop at the other thumb, so they never turn the range around. Where the thumbs lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider or its icons, while a thumb has keyboard focus and while it or an icon is pressed; with `tooltip-timing=\"never\"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one (\"200 – 1.200\"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \\`€ ${value}\\``; without it the number is written in the language of the page (`lang`), and in Dutch where none is set. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. A larger step than the arrow keys take is a tenth of the range, and at least one `step`: what Page Up and Page Down do, what Shift with an arrow key does (a Mac keyboard has no Page Up), and what a click on `start-icon` or `end-icon` does. The icons stay out of the tab order and out of the accessibility tree, because the keyboard already has those keys. In a range they only explain the ends, since a click could not say which thumb to move. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.",
           "name": "NLDDSlider",
           "members": [
             {
@@ -20012,6 +20146,700 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/swatch-picker/swatch-picker.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "NLDDSwatchPickerItem",
+          "members": [
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "SwatchColor | ''"
+              },
+              "default": "''",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "customColor",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "custom-color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "image"
+            },
+            {
+              "kind": "field",
+              "name": "imageSrcset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "image-srcset"
+            },
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "SwatchPickerSize"
+              },
+              "default": "'md'",
+              "description": "Set by nldd-swatch-picker. Not part of the public API.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "item-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "color",
+              "type": {
+                "text": "SwatchColor | ''"
+              },
+              "default": "''",
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'bruin' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'violet'"
+              },
+              "description": "Category color: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. Brings its name along, so `text` is optional."
+            },
+            {
+              "name": "custom-color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "customColor",
+              "description": "Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`."
+            },
+            {
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "image",
+              "description": "URL of an image that fills the swatch, for a pattern or a material. Needs `text`."
+            },
+            {
+              "name": "image-srcset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "imageSrcset",
+              "description": "Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from."
+            },
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`."
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "selected",
+              "description": "Whether this swatch is chosen (set by the picker)"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "Value for this swatch"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "SwatchPickerSize"
+              },
+              "default": "'md'",
+              "description": "Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')",
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm' | 'xs'"
+              }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys (the names of the category colors); unset keys fall back to Dutch."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-swatch-picker-item",
+          "customElement": true
+        },
+        {
+          "kind": "class",
+          "description": "A row of swatches to choose one from: a color, or an image of a pattern or a material. The row wraps onto the next line when the swatches do not fit. It is a radio group: Tab enters and leaves it in one stop, the arrow keys choose, and the value goes with a form under `name`. The chosen swatch shows a check mark. Put it in an `nldd-form-field`, which names the group. Every swatch needs a name, since a color or an image says nothing to a screen reader. A swatch with a category `color` takes the name of that color from the translations (\"Rood\"); one with a `custom-color` or an `image` has to say it in `text`. The name shows as a tooltip. Exports both NLDDSwatchPicker and NLDDSwatchPickerItem.",
+          "name": "NLDDSwatchPicker",
+          "members": [
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "SwatchPickerSize"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabeledBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-labeled-by"
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the group as invalid. Announced and not drawn, and on the group: a\nred ring around one swatch would say that swatch is wrong, while it is the\nquestion that is unanswered.",
+              "attribute": "invalid",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Something has to be chosen. Carried by a hidden radio of the group's own,\nchecked as soon as anything is chosen, so the browser writes the message.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormData | string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "The group has no focus of its own, so an invalid submit lands where Tab\nwould: on the chosen swatch, or the first one that is enabled.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Focus goes to the chosen swatch, or the first enabled one: where Tab lands."
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "SwatchPickerSize"
+              },
+              "default": "'md'",
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm' | 'xs'"
+              },
+              "description": "Swatch size, on the control scale: 'xs' (24px) | 'sm' (32px) | 'md' (44px) (default: 'md')"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name for the group, set as aria-label. In an nldd-form-field the field names it."
+            },
+            {
+              "name": "accessible-labeled-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabeledBy",
+              "description": "Id of an external label element, set as aria-labelledby on the group"
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it.",
+              "fieldName": "invalid"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state for all swatches"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "description": "Name for form submission"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "Value of the chosen swatch"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Something has to be chosen",
+              "fieldName": "required"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-swatch-picker",
+          "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "When the choice changes; detail: { value: string }"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "nldd-swatch-picker-item elements"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDSwatchPickerItem",
+          "declaration": {
+            "name": "NLDDSwatchPickerItem",
+            "module": "src/components/inputs/swatch-picker/swatch-picker.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-swatch-picker-item",
+          "declaration": {
+            "name": "NLDDSwatchPickerItem",
+            "module": "src/components/inputs/swatch-picker/swatch-picker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDSwatchPicker",
+          "declaration": {
+            "name": "NLDDSwatchPicker",
+            "module": "src/components/inputs/swatch-picker/swatch-picker.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-swatch-picker",
+          "declaration": {
+            "name": "NLDDSwatchPicker",
+            "module": "src/components/inputs/swatch-picker/swatch-picker.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/switch-field/switch-field.ts",
       "declarations": [
         {
@@ -20277,7 +21105,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility. On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.",
+          "description": "A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.",
           "name": "NLDDSwitch",
           "members": [
             {
@@ -34312,7 +35140,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id=\"info-trigger\" popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" anchor=\"info-trigger\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
+          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
           "name": "NLDDPopover",
           "members": [
             {
@@ -38712,7 +39540,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.",
+              "description": "ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.",
               "name": "popovertarget",
               "fieldName": "popovertarget"
             },
@@ -39147,7 +39975,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. A selected row sets `--context-selected-indicator-color` and `--context-selected-contrast-color` to its text and fill color, so a checked nldd-checkbox, nldd-radio-button or nldd-switch in it takes the colors of the row: on its gray the accent can fall below 3:1. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.",
+              "description": "Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.",
               "name": "selected",
               "default": "false",
               "fieldName": "selected"
@@ -40237,6 +41065,135 @@
           "declaration": {
             "name": "NLDDDocumentTabBar",
             "module": "src/components/navigation/document-tab-bar/document-tab-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/navigation/link-group/link-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A set of related `nldd-link` elements, such as the links under the name of a service in a footer or the links to the other parts of a site. The links sit in a row that wraps onto the next line when they do not fit, or stacked with `orientation=\"vertical\"`. With `horizontal-alignment=\"center\"` the whole set is centered, line by line, so a short list reads as one cloud in the middle. The group is a `nav` landmark with the links as a list, so a screen reader says how many there are. Give it an `accessible-label` as soon as a page has more than one `nav`, so each landmark can be told apart. The group sets its `size` on every link in it: links in one group are the same size.",
+          "name": "NLDDLinkGroup",
+          "members": [
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "Orientation"
+              },
+              "default": "'horizontal'",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "horizontalAlignment",
+              "type": {
+                "text": "HorizontalAlignment"
+              },
+              "default": "'left'",
+              "attribute": "horizontal-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'md'",
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs'"
+              },
+              "description": "Text size, set on every link in it: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "Orientation"
+              },
+              "default": "'horizontal'",
+              "fieldName": "orientation",
+              "expandedType": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "description": "Layout direction: 'horizontal' (a row that wraps) | 'vertical' (default: 'horizontal')"
+            },
+            {
+              "name": "horizontal-alignment",
+              "type": {
+                "text": "HorizontalAlignment"
+              },
+              "default": "'left'",
+              "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'center' | 'left'"
+              },
+              "description": "Alignment of the links: 'left' | 'center' (default: 'left')"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name of the nav landmark"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-link-group",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "nldd-link elements"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDLinkGroup",
+          "declaration": {
+            "name": "NLDDLinkGroup",
+            "module": "src/components/navigation/link-group/link-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-link-group",
+          "declaration": {
+            "name": "NLDDLinkGroup",
+            "module": "src/components/navigation/link-group/link-group.ts"
           }
         }
       ]
@@ -47163,6 +48120,46 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/owner-form.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "ownerForm",
+          "return": {
+            "type": {
+              "text": "HTMLFormElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              }
+            }
+          ],
+          "description": "The form a form-associated button acts on: the one it sits in, or the one\nits `form` attribute names.\n\nThe platform resolves that attribute itself, but only to a real `<form>`.\nAn `nldd-form` renders its form in the light DOM without handing it the id\nthe consumer wrote, so an id pointing at the component finds an element\nthat is not a form, and the button ends up with no form owner at all. That\nis the whole reason a save button in a page footer, outside the form it\nbelongs to, used to do nothing.\n\nThe id is looked up in the host's own root, the same scope the platform\nsearches: a button inside a shadow tree reaches the forms in that tree, not\none in the document around it. Put the two in the same tree, or hand the\nbutton its form another way.\n\nShared by nldd-button and nldd-split-button, whose action button sits in a\nshadow root and so has no form owner of its own."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ownerForm",
+          "declaration": {
+            "name": "ownerForm",
+            "module": "src/utilities/owner-form.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/page-section-mixin.ts",
       "declarations": [
         {
@@ -47542,6 +48539,30 @@
             }
           ],
           "description": "The popover a component's inner button invokes, from `popovertarget` or\n`popoverTargetElement` on the host.\n\nAn id written on the inner button is looked up in the component's own\nshadow root, where the popover never is, so the button opened nothing. The\nid is looked up here in the tree of the host instead, and the inner button\ngets the element. The element wins when both are set.\n\nLook it up again on click: a popover rendered after the button is not there\nyet on the button's first render."
+        },
+        {
+          "kind": "function",
+          "name": "anchorPopoverTarget",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "Element | null"
+              }
+            }
+          ],
+          "description": "Positions an `nldd-menu` or `nldd-popover` that `popovertarget` points at\nagainst the control that opens it, so the overlay needs no `anchor` of its\nown. The browser already opens and closes it; this adds where it stands and\nthe ARIA link back to the control, as a slotted overlay gets.\n\nAn overlay with an `anchor` id, or anchored to another element, is\nleft alone: someone chose where it goes. Pass `null` to let go, as on\ndisconnect or when `popovertarget` changes."
         }
       ],
       "exports": [
@@ -47550,6 +48571,14 @@
           "name": "popoverTargetOf",
           "declaration": {
             "name": "popoverTargetOf",
+            "module": "src/utilities/popover-target.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "anchorPopoverTarget",
+          "declaration": {
+            "name": "anchorPopoverTarget",
             "module": "src/utilities/popover-target.ts"
           }
         }

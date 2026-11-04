@@ -104,6 +104,10 @@ export default {
 			description: 'Type popup-container dat deze knop opent. Zet aria-haspopup op de inner button en zorgt dat aria-expanded altijd aanwezig is (true/false) zodat screenreaders de popup-staat kennen.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		popovertarget: {
+			control: false,
+			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat deze knop opent. De knop zet het ook naast zich neer, dus het overlay heeft geen `anchor` nodig. Een overlay in de `popup`-slot wint.',
+		},
 		text: {
 			control: 'text',
 			description: 'Tekst van de knop',
@@ -218,6 +222,7 @@ export default {
 		expandable: false,
 		expanded: false,
 		popupType: '',
+		popovertarget: '',
 		text: 'Bewaar',
 		supportingText: '',
 		singleLine: false,
@@ -679,39 +684,34 @@ export const MetMenu = {
  */
 export const MetPopover = {
 	render: () => html`
-		<nldd-container
-			layout="wrap"
-			gap="16"
+		<nldd-button
+			expandable
+			text="Wat is dakisolatie?"
 		>
-			<nldd-button
-				expandable
-				text="Wat is dakisolatie?"
+			<nldd-popover
+				slot="popup"
+				accessible-label="Toelichting"
+				width="280px"
 			>
-				<nldd-popover
-					slot="popup"
-					accessible-label="Toelichting"
-					width="280px"
+				<nldd-container
+					padding="16"
+					gap="8"
 				>
-					<nldd-container
-						padding="16"
-						gap="8"
-					>
-						<nldd-title
-							size="6"
-							text="Dakisolatie"
-							heading-level="2"
-						></nldd-title>
-						<nldd-rich-text>
-							<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
-						</nldd-rich-text>
-						<nldd-button
-							appearance="primary"
-							text="Lees meer over dakisolatie"
-						></nldd-button>
-					</nldd-container>
-				</nldd-popover>
-			</nldd-button>
-		</nldd-container>
+					<nldd-title
+						size="6"
+						text="Dakisolatie"
+						heading-level="2"
+					></nldd-title>
+					<nldd-rich-text>
+						<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
+					</nldd-rich-text>
+					<nldd-button
+						appearance="primary"
+						text="Lees meer over dakisolatie"
+					></nldd-button>
+				</nldd-container>
+			</nldd-popover>
+		</nldd-button>
 	`,
 	parameters: {
 		controls: { disable: true },

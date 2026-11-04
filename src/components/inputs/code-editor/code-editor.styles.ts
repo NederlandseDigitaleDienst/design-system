@@ -101,6 +101,12 @@ export const codeEditorStyles = css`
 
 	.code-editor .cm-editor {
 		isolation: isolate;
+		border-radius: inherit;
+	}
+
+	/* The scroller clips the gutter to the rounded frame. */
+	:host .cm-scroller {
+		border-radius: inherit;
 	}
 
 	:host([disabled]) .code-editor {

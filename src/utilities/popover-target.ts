@@ -16,3 +16,32 @@ export function popoverTargetOf(host: Element, id: string | undefined, element: 
 	const root = host.getRootNode() as Document | ShadowRoot;
 	return root.getElementById?.(id) ?? null;
 }
+
+type AnchorableOverlay = Element & { anchorElement: Element | null };
+
+/** The overlay each host anchored, so it can let go again. */
+const anchoredBy = new WeakMap<Element, AnchorableOverlay>();
+
+/**
+ * Positions an `nldd-menu` or `nldd-popover` that `popovertarget` points at
+ * against the control that opens it, so the overlay needs no `anchor` of its
+ * own. The browser already opens and closes it; this adds where it stands and
+ * the ARIA link back to the control, as a slotted overlay gets.
+ *
+ * An overlay with an `anchor` id, or anchored to another element, is
+ * left alone: someone chose where it goes. Pass `null` to let go, as on
+ * disconnect or when `popovertarget` changes.
+ */
+export function anchorPopoverTarget(host: Element, target: Element | null): void {
+	const previous = anchoredBy.get(host);
+	const next = target?.matches('nldd-menu, nldd-popover') && !target.getAttribute('anchor')
+		? target as AnchorableOverlay
+		: null;
+	if (previous && previous !== next && previous.anchorElement === host) previous.anchorElement = null;
+	if (next && (next.anchorElement === null || next.anchorElement === host)) {
+		next.anchorElement = host;
+		anchoredBy.set(host, next);
+	} else {
+		anchoredBy.delete(host);
+	}
+}

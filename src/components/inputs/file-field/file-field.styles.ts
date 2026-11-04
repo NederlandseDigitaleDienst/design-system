@@ -193,10 +193,10 @@ export const fileFieldStyles = css`
 		flex-grow: 1;
 		align-self: stretch;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 		color: inherit;
 		font: inherit;
-		text-align: center;
+		text-align: start;
 	}
 
 	.file-field:not([class*="is-drag-"]) > .file-field__choose-button:hover {
@@ -229,11 +229,6 @@ export const fileFieldStyles = css`
 	.file-field__dismiss-button:focus:not(:focus-visible),
 	.file-field__choose-button:focus:not(:focus-visible) {
 		outline: none;
-	}
-
-	:host([valid]) .file-field:not(.file-field--area) :is(.file-field__choose-button, .file-field__replace-area),
-	:host([invalid]) .file-field:not(.file-field--area) :is(.file-field__choose-button, .file-field__replace-area) {
-		padding-left: calc(var(--_file-field-validation-icon-size) + var(--_file-field-validation-icon-area-padding-right));
 	}
 
 	.file-field__text,
@@ -289,12 +284,21 @@ export const fileFieldStyles = css`
 		font: var(--_file-field-choose-text-font);
 	}
 
-	.file-field__file-icon {
+	.file-field__file-icon,
+	.file-field__upload-icon {
 		flex-shrink: 0;
 		margin-left: var(--_file-field-inline-padding);
 		width: var(--_file-field-file-icon-size);
 		height: var(--_file-field-file-icon-size);
 		color: var(--semantics-content-color);
+	}
+
+	.file-field__upload-icon {
+		color: var(--_file-field-accepted-types-color);
+	}
+
+	.file-field:not(.file-field--area) .file-field__upload-icon + .file-field__text {
+		padding-left: var(--_file-field-file-icon-gap);
 	}
 
 	.file-field:not(.file-field--area) .file-field__chosen-file {
@@ -377,7 +381,7 @@ export const fileFieldStyles = css`
 		display: flex;
 		height: 1lh;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 	}
 
 	.file-field__drop-hint-text {
@@ -530,16 +534,12 @@ export const fileFieldStyles = css`
 		height: var(--_file-field-area-icon-size);
 	}
 
-	.file-field--area .file-field__upload-icon {
-		color: var(--_file-field-accepted-types-color);
-	}
-
-	.file-field--area.is-drag-over :is(.file-field__upload-icon, .file-field__accepted-types) {
+	.file-field.is-drag-over :is(.file-field__upload-icon, .file-field__accepted-types) {
 		color: var(--_file-field-choose-text-color);
 	}
 
-	.file-field--area.is-drag-rejected :is(.file-field__upload-icon, .file-field__accepted-types),
-	.file-field--area.is-refused .file-field__upload-icon {
+	.file-field.is-drag-rejected :is(.file-field__upload-icon, .file-field__accepted-types),
+	.file-field.is-refused .file-field__upload-icon {
 		color: var(--_file-field-rejected-color);
 	}
 
@@ -556,7 +556,7 @@ export const fileFieldStyles = css`
 		display: none;
 	}
 
-	.file-field--area :is(.file-field__name, .file-field__folder) {
+	.file-field--area :is(.file-field__name, .file-field__folder, .file-field__reading-text) {
 		justify-content: center;
 	}
 

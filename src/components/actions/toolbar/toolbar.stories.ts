@@ -1,5 +1,6 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import './toolbar.js';
+import { syncToolbarOverflow } from './toolbar.story-sync.js';
 import '../button/button.js';
 import '../icon-button/icon-button.js';
 import '../button-bar/button-bar.js';
@@ -11,6 +12,8 @@ import '../../navigation/tab-bar/tab-bar.js';
 import '../../layout/container/container.js';
 import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
+
+syncToolbarOverflow();
 
 export default {
 	title: 'Components/Actions/Toolbar',
@@ -700,17 +703,17 @@ export const Overloop = {
 					<nldd-menu-item
 						text="Geen"
 						icon="minus-small"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 					<nldd-menu-item
 						text="Opsomming"
 						icon="bullet-list"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 					<nldd-menu-item
 						text="Genummerd"
 						icon="numbered-list"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 				</nldd-menu-group>
 			</nldd-toolbar-item>
@@ -827,17 +830,17 @@ export const OverloopMetPrioriteit = {
 					<nldd-menu-item
 						text="Geen"
 						icon="minus-small"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 					<nldd-menu-item
 						text="Opsomming"
 						icon="bullet-list"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 					<nldd-menu-item
 						text="Genummerd"
 						icon="numbered-list"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 				</nldd-menu-group>
 			</nldd-toolbar-item>
@@ -1095,17 +1098,17 @@ export const VasteEnDynamischeOverloop = {
 					<nldd-menu-item
 						text="Geen"
 						icon="minus-small"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 					<nldd-menu-item
 						text="Opsomming"
 						icon="bullet-list"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 					<nldd-menu-item
 						text="Genummerd"
 						icon="numbered-list"
-						type="checkbox"
+						type="radio"
 					></nldd-menu-item>
 				</nldd-menu-group>
 			</nldd-toolbar-item>

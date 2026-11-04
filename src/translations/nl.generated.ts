@@ -18,9 +18,11 @@ import { nlddDateFieldTranslations } from '../components/inputs/date-field/date-
 import { nlddDatePickerTranslations } from '../components/inputs/date-picker/date-picker.i18n.js';
 import { nlddFileFieldTranslations } from '../components/inputs/file-field/file-field.i18n.js';
 import { nlddNumberFieldTranslations } from '../components/inputs/number-field/number-field.i18n.js';
+import { nlddPasswordFieldTranslations } from '../components/inputs/password-field/password-field.i18n.js';
 import { nlddSearchFieldTranslations } from '../components/inputs/search-field/search-field.i18n.js';
 import { nlddSliderTranslations } from '../components/inputs/slider/slider.i18n.js';
 import { nlddStepperTranslations } from '../components/inputs/stepper/stepper.i18n.js';
+import { nlddSwatchPickerItemTranslations } from '../components/inputs/swatch-picker/swatch-picker.i18n.js';
 import { nlddTextEditorTranslations } from '../components/inputs/text-editor/text-editor.i18n.js';
 import { nlddTimeFieldTranslations } from '../components/inputs/time-field/time-field.i18n.js';
 import { nlddTimePickerTranslations } from '../components/inputs/time-picker/time-picker.i18n.js';
@@ -73,9 +75,11 @@ export const nl = {
 	...nlddDatePickerTranslations,
 	...nlddFileFieldTranslations,
 	...nlddNumberFieldTranslations,
+	...nlddPasswordFieldTranslations,
 	...nlddSearchFieldTranslations,
 	...nlddSliderTranslations,
 	...nlddStepperTranslations,
+	...nlddSwatchPickerItemTranslations,
 	...nlddTextEditorTranslations,
 	...nlddTimeFieldTranslations,
 	...nlddTimePickerTranslations,

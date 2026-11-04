@@ -1279,6 +1279,8 @@
 	--semantics-controls-md-min-size: var(--primitives-space-44);
 	--semantics-controls-lg-min-size: var(--primitives-space-56);
 
+	--semantics-fingertip-size: var(--primitives-space-64);
+
 	--semantics-controls-lg-inline-padding: var(--primitives-space-16);
 	--semantics-controls-md-inline-padding: var(--primitives-space-12);
 	--semantics-controls-sm-inline-padding: var(--primitives-space-10);
@@ -1617,7 +1619,7 @@
 	--semantics-page-sections-body-max-width: var(--primitives-area-1280);
 
 	--semantics-page-sections-sm-margin-inline: var(--primitives-space-16);
-	--semantics-page-sections-sm-margin-block: var(--primitives-space-16);
+	--semantics-page-sections-sm-margin-block: var(--primitives-space-24);
 	--semantics-page-sections-sm-gap: var(--primitives-space-16);
 	--semantics-page-sections-md-margin-inline: var(--primitives-space-40);
 	--semantics-page-sections-md-margin-block: var(--primitives-space-32);

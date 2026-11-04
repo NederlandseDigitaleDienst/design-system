@@ -66,6 +66,7 @@ export { NLDDRadioButtonField } from './inputs/radio-button-field/radio-button-f
 export { NLDDRadioButtonGroup } from './inputs/radio-button-group/radio-button-group.js';
 export { NLDDSearchField } from './inputs/search-field/search-field.js';
 export { NLDDSegmentedControl } from './inputs/segmented-control/segmented-control.js';
+export { NLDDSwatchPicker, NLDDSwatchPickerItem } from './inputs/swatch-picker/swatch-picker.js';
 export { NLDDStepper } from './inputs/stepper/stepper.js';
 export { NLDDSwitch } from './inputs/switch/switch.js';
 export { NLDDSwitchField } from './inputs/switch-field/switch-field.js';
@@ -140,6 +141,7 @@ export { NLDDBreadcrumbs, NLDDBreadcrumbsItem } from './navigation/breadcrumbs/b
 export { NLDDMenuBar } from './navigation/menu-bar/menu-bar.js';
 export { NLDDMenuBarItem } from './navigation/menu-bar-item/menu-bar-item.js';
 export { NLDDLink } from './navigation/link/link.js';
+export { NLDDLinkGroup } from './navigation/link-group/link-group.js';
 export { NLDDSkipLink } from './navigation/skip-link/skip-link.js';
 export { NLDDTopNavigationBar } from './navigation/top-navigation-bar/top-navigation-bar.js';
 export { NLDDTopTitleBar } from './navigation/top-title-bar/top-title-bar.js';
