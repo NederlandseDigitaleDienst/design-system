@@ -684,39 +684,34 @@ export const MetMenu = {
  */
 export const MetPopover = {
 	render: () => html`
-		<nldd-container
-			layout="wrap"
-			gap="16"
+		<nldd-button
+			expandable
+			text="Wat is dakisolatie?"
 		>
-			<nldd-button
-				expandable
-				text="Wat is dakisolatie?"
+			<nldd-popover
+				slot="popup"
+				accessible-label="Toelichting"
+				width="280px"
 			>
-				<nldd-popover
-					slot="popup"
-					accessible-label="Toelichting"
-					width="280px"
+				<nldd-container
+					padding="16"
+					gap="8"
 				>
-					<nldd-container
-						padding="16"
-						gap="8"
-					>
-						<nldd-title
-							size="6"
-							text="Dakisolatie"
-							heading-level="2"
-						></nldd-title>
-						<nldd-rich-text>
-							<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
-						</nldd-rich-text>
-						<nldd-button
-							appearance="primary"
-							text="Lees meer over dakisolatie"
-						></nldd-button>
-					</nldd-container>
-				</nldd-popover>
-			</nldd-button>
-		</nldd-container>
+					<nldd-title
+						size="6"
+						text="Dakisolatie"
+						heading-level="2"
+					></nldd-title>
+					<nldd-rich-text>
+						<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
+					</nldd-rich-text>
+					<nldd-button
+						appearance="primary"
+						text="Lees meer over dakisolatie"
+					></nldd-button>
+				</nldd-container>
+			</nldd-popover>
+		</nldd-button>
 	`,
 	parameters: {
 		controls: { disable: true },
