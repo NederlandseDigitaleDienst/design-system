@@ -372,6 +372,17 @@ export class NLDDMenu extends LitElement {
 		return this.matches(':popover-open') || this._openChain.length > 0 || this._collapsedByPointerGesture;
 	}
 
+	/**
+	 * Called by the invoking control once it has handled its click. The gesture
+	 * marker is normally cleared by the document click, but a control that stops
+	 * its click (nldd-split-button) keeps that from ever arriving, and a marker
+	 * left behind makes `_shownForInvoker()` report open on every later press.
+	 * @internal
+	 */
+	_endInvokerGesture(): void {
+		this._collapsedByPointerGesture = false;
+	}
+
 	/** @internal */
 	_getAnchorEl(): Element | null {
 		if (this.anchorElement) return this.anchorElement;

@@ -103,6 +103,7 @@ export class PopupAnchorController {
 		// guard keeps showPopover() from throwing on an already-open overlay.
 		const wasOpen = event.detail > 0 && this._wasOpenOnPointerdown;
 		this._wasOpenOnPointerdown = false;
+		if ('_endInvokerGesture' in this._overlay) this._overlay._endInvokerGesture();
 		if (!wasOpen && !this._overlay.matches(':popover-open')) this._overlay.showPopover();
 		return true;
 	}

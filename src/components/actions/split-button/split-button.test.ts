@@ -160,6 +160,25 @@ describe('nldd-split-button – slotted popup overlay', () => {
 		await waitForUpdate(el);
 		expect(menu.matches(':popover-open')).toBe(true);
 	});
+
+	it('opens the menu again after the chevron closed it', async () => {
+		el = await fixture('<nldd-split-button text="Opslaan"><nldd-menu><nldd-menu-item text="Opslaan als"></nldd-menu-item></nldd-menu></nldd-split-button>');
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu')!;
+		const chevron = el.shadowRoot!.querySelector('.split-button__popup-button nldd-icon-button')!;
+		const press = async (lightDismiss: boolean) => {
+			chevron.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+			if (lightDismiss) menu.hidePopover();
+			chevron.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
+			await waitForUpdate(el);
+		};
+		await press(false);
+		expect(menu.matches(':popover-open')).toBe(true);
+		await press(true);
+		expect(menu.matches(':popover-open')).toBe(false);
+		await press(false);
+		expect(menu.matches(':popover-open')).toBe(true);
+	});
 });
 
 describe('nldd-split-button – on a colored surface', () => {

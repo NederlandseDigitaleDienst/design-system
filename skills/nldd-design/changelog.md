@@ -23,6 +23,10 @@ here; consult the commit history if you need that level of detail.
   - `show-button-accessible-label` → `components.password-field.show-accessible-label` ("Toon wachtwoord")
   - `hide-button-accessible-label` → `components.password-field.hide-accessible-label` ("Verberg wachtwoord")
 
+### Fixed
+
+- **The menu of an `nldd-split-button` opens again after its chevron closed it.** Once the chevron had closed the menu, every later press, by pointer, did nothing, also after Escape or a click outside.
+
 ## [0.15.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.14.0...v0.15.0) (2026-11-03)
 
 ### Highlights
