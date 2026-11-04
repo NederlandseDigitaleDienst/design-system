@@ -557,7 +557,7 @@ describe('nldd-file-field', () => {
 		});
 		afterEach(() => unloadTokens());
 
-		const long = 'Screenshot 2026-10-27 at 15.42.11.png';
+		const long = 'Schermafbeelding van de aanvraag voor dakisolatie met alle bijlagen.png';
 		const shown = (el: NLDDFileField) => el.shadowRoot!.querySelector('.file-field__name')!.textContent!.trim();
 		const tooltip = (el: NLDDFileField) => el.shadowRoot!.querySelector('nldd-tooltip')!;
 
