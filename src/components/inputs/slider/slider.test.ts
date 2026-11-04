@@ -273,6 +273,17 @@ describe('nldd-slider', () => {
 			expect(z(end)).toBeGreaterThan(z(start));
 		});
 
+		it('draws the held thumb over the other one, also over the focused one', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="50" end-value="52"></nldd-slider>');
+			const [start, end] = inputs(el);
+			const z = (input: HTMLInputElement) => Number(getComputedStyle(input).zIndex) || 0;
+			end.focus();
+			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+			await waitForUpdate(el);
+			expect(z(start)).toBeGreaterThan(z(end));
+			window.dispatchEvent(new PointerEvent('pointerup'));
+		});
+
 		it('takes a thumb past the other one with Shift and an arrow key too', async () => {
 			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="40" end-value="45"></nldd-slider>');
 			const [start, end] = inputs(el);

@@ -209,6 +209,11 @@ export const sliderStyles = css`
 		z-index: 3;
 	}
 
+	.slider__control.is-holding-start .slider__input--start,
+	.slider__control.is-holding-end .slider__input--end {
+		z-index: 4;
+	}
+
 	.slider__control.is-stacked .slider__input::-webkit-slider-thumb {
 		pointer-events: none;
 	}
