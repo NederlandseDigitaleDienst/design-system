@@ -1369,10 +1369,7 @@ A password input field with visibility toggle and validation states.
 | `invalid` | `boolean` | Marks the field as invalid |
 | `disabled` | `boolean` | Disabled state |
 | `masked` | `boolean` | Whether the password is masked (default: true) |
-| `show-button-text` | `string` | Visible toggle button text when masked (default: 'Toon') |
-| `hide-button-text` | `string` | Visible toggle button text when unmasked (default: 'Verberg') |
-| `show-button-accessible-label` | `string` | aria-label for toggle when masked (default: 'Toon wachtwoord') |
-| `hide-button-accessible-label` | `string` | aria-label for toggle when unmasked (default: 'Verberg wachtwoord') |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `readonly` | `boolean` | Readonly state |
 | `required` | `boolean` | Required state |
 | `name` | `string` | Input name for form submission |

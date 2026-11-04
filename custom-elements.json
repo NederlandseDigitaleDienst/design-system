@@ -15570,43 +15570,13 @@
             },
             {
               "kind": "field",
-              "name": "showButtonText",
+              "name": "translations",
               "type": {
-                "text": "string"
+                "text": "Partial<NLDDPasswordFieldTranslations>"
               },
-              "default": "'Toon'",
-              "description": "Visible button label when the field is masked. Override for localisation.",
-              "attribute": "show-button-text"
-            },
-            {
-              "kind": "field",
-              "name": "hideButtonText",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Verberg'",
-              "description": "Visible button label when the field is unmasked. Override for localisation.",
-              "attribute": "hide-button-text"
-            },
-            {
-              "kind": "field",
-              "name": "showButtonAccessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Toon wachtwoord'",
-              "description": "Accessible aria-label for the toggle button when the field is masked. Override for localisation.",
-              "attribute": "show-button-accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "hideButtonAccessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Verberg wachtwoord'",
-              "description": "Accessible aria-label for the toggle button when the field is unmasked. Override for localisation.",
-              "attribute": "hide-button-accessible-label"
+              "default": "{}",
+              "description": "Override one or more translation keys. Unset keys fall back to Dutch.",
+              "attribute": "translations"
             },
             {
               "kind": "field",
@@ -16023,40 +15993,13 @@
               "description": "Whether the password is masked (default: true)"
             },
             {
-              "name": "show-button-text",
+              "name": "translations",
               "type": {
-                "text": "string"
+                "text": "Partial<NLDDPasswordFieldTranslations>"
               },
-              "default": "'Toon'",
-              "description": "Visible toggle button text when masked (default: 'Toon')",
-              "fieldName": "showButtonText"
-            },
-            {
-              "name": "hide-button-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Verberg'",
-              "description": "Visible toggle button text when unmasked (default: 'Verberg')",
-              "fieldName": "hideButtonText"
-            },
-            {
-              "name": "show-button-accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Toon wachtwoord'",
-              "description": "aria-label for toggle when masked (default: 'Toon wachtwoord')",
-              "fieldName": "showButtonAccessibleLabel"
-            },
-            {
-              "name": "hide-button-accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Verberg wachtwoord'",
-              "description": "aria-label for toggle when unmasked (default: 'Verberg wachtwoord')",
-              "fieldName": "hideButtonAccessibleLabel"
+              "default": "{}",
+              "description": "Override translation keys; unset keys fall back to Dutch",
+              "fieldName": "translations"
             },
             {
               "name": "readonly",

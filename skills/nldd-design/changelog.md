@@ -15,6 +15,14 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Breaking
+
+- **The texts of the toggle on `nldd-password-field` are translation keys now, as on every other field.** The attributes `show-button-text`, `hide-button-text`, `show-button-accessible-label` and `hide-button-accessible-label` are gone, and `nldd lint` reports them as unknown. Move a text you set to `translations`, on the field or with `setTranslations()`:
+  - `show-button-text` → `components.password-field.show-action` ("Toon")
+  - `hide-button-text` → `components.password-field.hide-action` ("Verberg")
+  - `show-button-accessible-label` → `components.password-field.show-accessible-label` ("Toon wachtwoord")
+  - `hide-button-accessible-label` → `components.password-field.hide-accessible-label` ("Verberg wachtwoord")
+
 ## [0.15.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.14.0...v0.15.0) (2026-11-03)
 
 ### Highlights

@@ -13,10 +13,7 @@
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} disabled - Disabled state
  * @attr {boolean} masked - Whether the password is masked (default: true)
- * @attr {string} show-button-text - Visible toggle button text when masked (default: 'Toon')
- * @attr {string} hide-button-text - Visible toggle button text when unmasked (default: 'Verberg')
- * @attr {string} show-button-accessible-label - aria-label for toggle when masked (default: 'Toon wachtwoord')
- * @attr {string} hide-button-accessible-label - aria-label for toggle when unmasked (default: 'Verberg wachtwoord')
+ * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} readonly - Readonly state
  * @attr {boolean} required - Required state
  * @attr {string} name - Input name for form submission
@@ -39,6 +36,9 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { passwordFieldStyles } from './password-field.styles.js';
 import { passwordFieldTemplate } from './password-field.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
+import { nlddPasswordFieldTranslations } from './password-field.i18n.js';
+import type { NLDDPasswordFieldTranslations } from './password-field.i18n.js';
 
 @customElement('nldd-password-field')
 export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
@@ -85,21 +85,9 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	masked = true;
 
-	/** Visible button label when the field is masked. Override for localisation. */
-	@property({ type: String, attribute: 'show-button-text' })
-	showButtonText = 'Toon';
-
-	/** Visible button label when the field is unmasked. Override for localisation. */
-	@property({ type: String, attribute: 'hide-button-text' })
-	hideButtonText = 'Verberg';
-
-	/** Accessible aria-label for the toggle button when the field is masked. Override for localisation. */
-	@property({ type: String, attribute: 'show-button-accessible-label' })
-	showButtonAccessibleLabel = 'Toon wachtwoord';
-
-	/** Accessible aria-label for the toggle button when the field is unmasked. Override for localisation. */
-	@property({ type: String, attribute: 'hide-button-accessible-label' })
-	hideButtonAccessibleLabel = 'Verberg wachtwoord';
+	/** Override one or more translation keys. Unset keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<NLDDPasswordFieldTranslations> = {};
 
 	@property({ type: Boolean, reflect: true })
 	readonly = false;
@@ -164,6 +152,10 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 
 	formStateRestoreCallback(state: File | string | FormData | null): void {
 		if (typeof state === 'string') this.value = state;
+	}
+
+	public _t(key: keyof NLDDPasswordFieldTranslations): string {
+		return translate(this.translations, nlddPasswordFieldTranslations, key);
 	}
 
 	/** Enter submits the form this field belongs to, the way the browser would
