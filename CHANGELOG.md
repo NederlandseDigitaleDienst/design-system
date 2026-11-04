@@ -31,6 +31,7 @@ here; consult the commit history if you need that level of detail.
 
 - **The label of an `nldd-split-button` stays on one line.** The split button grows to fit it instead of wrapping, and never cuts it off.
 - **A width set on an `nldd-split-button` itself wins.** With a CSS length in `width`, the split button wrote an inline width onto its own element, over one the app set, and cleared it again when `width` was emptied.
+- **The clear button of an `nldd-file-field` shows no tooltip,** as its menu button already did. The tooltip repeated the name of the file over the field.
 - **The hint `menu-no-manual-anchor` also covers a list row:** an `nldd-menu` with `anchor` on an `nldd-list-item-segment` is pointed at `popovertarget`. The list pattern now works that way.
 
 ### Fixed

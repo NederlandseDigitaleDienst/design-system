@@ -396,6 +396,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 							icon="dismiss"
 							text=${component._t('components.file-field.clear-action')}
 							accessible-label=${component._clearAccessibleLabel()}
+							tooltip-timing="never"
 							?disabled=${component.disabled}
 							@click=${component._handleClear}
 						></nldd-icon-button>
