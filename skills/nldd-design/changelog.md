@@ -40,6 +40,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **The line numbers of an `nldd-code-editor` stay inside its rounded frame.** With `appearance="input-field"` and `line-numbers`, the background of the gutter stuck out past the rounded corners.
 - **The menu of an `nldd-split-button` opens again after its chevron closed it.** Once the chevron had closed the menu, every later press, by pointer, did nothing, also after Escape or a click outside.
 
 ## [0.15.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.14.0...v0.15.0) (2026-11-03)
