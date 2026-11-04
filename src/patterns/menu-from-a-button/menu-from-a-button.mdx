@@ -26,7 +26,9 @@ Een keuze uit een set zijn items met `type="radio"`, iets dat aan of uit staat e
 
 ## Waarom zo
 
-**Nest het menu in de `popup`-slot van de knop.** Dan hangt de [`nldd-button`](?path=/docs/components-actions-button--docs) het menu zelf aan zich vast en opent en sluit die het: geen id, geen `anchor`, geen eigen klikafhandeling. Het menu meldt `expanded` en `aria-haspopup` terug aan de knop, vanaf de eerste render. Een losse `anchor` is alleen nodig voor een trigger zonder `popup`-slot.
+**Nest het menu in de `popup`-slot van de knop.** Dan hangt de [`nldd-button`](?path=/docs/components-actions-button--docs) het menu zelf aan zich vast en opent en sluit die het: geen id, geen `anchor`, geen eigen klikafhandeling. Het menu meldt `expanded` en `aria-haspopup` terug aan de knop, vanaf de eerste render.
+
+**Staat het menu ergens anders, wijs het dan aan met `popovertarget`.** Dat kan op elke knop en op een [`nldd-list-item-segment`](?path=/docs/components-lists-tables-list-item-segment--docs). De knop opent het menu en zet het naast zich neer, dus het menu heeft alleen een `id` nodig. Een `anchor` op het menu is alleen nodig voor een trigger die geen NLDD-component is, zoals een gewone `<button>`.
 
 **Een destructieve actie staat onderaan, achter een scheidingslijn.** Zo staat die niet tussen de acties waar de gebruiker snel doorheen klikt. `destructive` kleurt het menu-item rood, zie [`nldd-menu`](?path=/docs/components-actions-menu--docs), maar de tekst moet zelf zeggen wat er gebeurt. Is de actie onomkeerbaar, vraag dan om [bevestiging](?path=/docs/patronen-onomkeerbare-actie--docs) of maak die ongedaan te maken.
 
@@ -42,6 +44,6 @@ Wat jij nog moet doen: de toets achter een `shortcut` zelf afhandelen. Het item 
 
 ## Gezien in
 
-`menu > menu-item` staat in de top drie van meest gebruikte composities. De `popup`-slot is nieuwer dan de losse `anchor`, dus in bestaande code kom je beide tegen. Voor nieuwe code is de slot de route.
+`menu > menu-item` staat in de top drie van meest gebruikte composities. De `popup`-slot en `popovertarget` zijn nieuwer dan de losse `anchor`, dus in bestaande code kom je die ook tegen. Voor nieuwe code is de slot de route, en `popovertarget` voor een menu dat elders staat.
 
 <Rules pattern="menu-from-a-button" />

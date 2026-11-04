@@ -48,10 +48,12 @@ describe('patroon: lijst', () => {
 			expect(acties.querySelector('nldd-icon-cell[icon="ellipsis"]')).not.toBeNull();
 			// "Meer" is in twintig rijen twintig keer hetzelfde, dus de knop noemt de rij.
 			expect(acties.getAttribute('accessible-label')).toMatch(/^Acties voor Aanvraag A-/);
-			// Het menu hangt aan dat segment en staat buiten de lijst.
-			const menu = root.querySelector(`nldd-menu[anchor="${acties.id}"]`)!;
+			// Het segment opent het menu en zet het naast zich neer; het menu staat buiten de lijst.
+			const menu = root.querySelector(`nldd-menu#${acties.getAttribute('popovertarget')}`) as HTMLElement & { anchorElement: Element | null };
 			expect(menu).not.toBeNull();
 			expect(menu.closest('nldd-list')).toBeNull();
+			expect(menu.getAttribute('anchor') ?? '').toBe('');
+			expect(menu.anchorElement).toBe(acties);
 		}
 	});
 

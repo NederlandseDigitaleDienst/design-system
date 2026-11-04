@@ -9,7 +9,7 @@
  * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {string} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
- * @attr {string} popovertarget - ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree.
+ * @attr {string} popovertarget - ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
  * @attr {boolean} expandable - Whether the button has a icon to indicate it opens a menu or popover
  * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
  * @attr {string} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
@@ -56,9 +56,9 @@ import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import { internalsOf } from '../../../utilities/element-state.js';
-import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
-import { popoverTargetOf } from '../../../utilities/popover-target.js';
+import { ownerForm } from '../../../utilities/owner-form.js';
+import { anchorPopoverTarget, popoverTargetOf } from '../../../utilities/popover-target.js';
 
 type Appearance =
 	| 'primary'
@@ -241,7 +241,13 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		anchorPopoverTarget(this, null);
+	}
+
 	override updated(changedProperties: Map<string, unknown>): void {
+		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
 		if (changedProperties.has('maxWidth')) {
 			// The cap lands on the host; the inner button is already max-width: 100%
 			// of it, so it follows without a variable of its own. Invalid values do
@@ -277,6 +283,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 		// popover rendered after the button was not there on its last render.
 		if (e.currentTarget instanceof HTMLButtonElement) {
 			e.currentTarget.popoverTargetElement = popoverTargetOf(this, this.popovertarget, this.popoverTargetElement);
+			anchorPopoverTarget(this, e.currentTarget.popoverTargetElement);
 		}
 		// A slotted overlay makes this button its invoker: toggle it and stop —
 		// a popup button neither submits a form nor navigates.
@@ -304,37 +311,8 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 		else if (this.type === 'reset') form?.reset();
 	}
 
-	/**
-	 * The form this button acts on: the one it sits in, or the one its `form`
-	 * attribute names.
-	 *
-	 * The platform resolves that attribute itself, but only to a real `<form>`.
-	 * An `nldd-form` renders its form in the light DOM without handing it the id
-	 * the consumer wrote, so an id pointing at the component finds an element
-	 * that is not a form, and the button ends up with no form owner at all. That
-	 * is the whole reason a save button in a page footer, outside the form it
-	 * belongs to, used to do nothing.
-	 *
-	 * The id is looked up in the button's own root, the same scope the platform
-	 * searches: a button inside a shadow tree reaches the forms in that tree, not
-	 * one in the document around it. Put the two in the same tree, or hand the
-	 * button its form another way.
-	 */
 	private _ownerForm(): HTMLFormElement | null {
-		const id = this.getAttribute('form');
-		const root = this.getRootNode() as Document | ShadowRoot;
-		const target = id && 'getElementById' in root ? root.getElementById(id) : null;
-		const rendered = (target as { form?: unknown } | null)?.form;
-		let form: HTMLFormElement | null = null;
-		if (target instanceof HTMLFormElement) form = target;
-		else if (rendered instanceof HTMLFormElement) form = rendered;
-		// Nothing to submit is the silent failure this attribute exists to end:
-		// the click does nothing and no error says why. Two facts, since a typo
-		// and an nldd-form that has not rendered yet look identical from the
-		// outside.
-		setState(this, 'no-form-target', Boolean(id) && !target);
-		setState(this, 'form-target-not-a-form', Boolean(target) && !form);
-		return id ? form : this._internals.form;
+		return ownerForm(this, this._internals);
 	}
 
 	/**

@@ -743,7 +743,7 @@
               },
               "default": "undefined",
               "fieldName": "popovertarget",
-              "description": "ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree."
+              "description": "ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`."
             },
             {
               "name": "loading",
@@ -1461,7 +1461,7 @@
               },
               "default": "undefined",
               "fieldName": "popovertarget",
-              "description": "ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element."
+              "description": "ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`."
             },
             {
               "name": "text",
@@ -3068,7 +3068,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a menu hung off a button. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.",
+              "description": "ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.",
               "name": "anchor",
               "default": "''",
               "fieldName": "anchor"
@@ -3183,9 +3183,19 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A split button combines a primary action button with a dropdown trigger. The main button performs the default action, while the icon button opens a menu or popover. Provide the dropdown by slotting an `nldd-menu` (with its `nldd-menu-item` / `nldd-menu-divider` children) or an `nldd-popover` directly: ```html <nldd-split-button text=\"Opslaan\"> <nldd-menu> <nldd-menu-item text=\"Opslaan als…\"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The slotted overlay stays in the light DOM — no item-moving — so consumers keep their references and the full overlay API. The split-button anchors it to the chevron and opens it on click. When no overlay is slotted, the chevron dispatches `menu-click` and the consumer manages their own popover.",
+          "description": "A split button combines a primary action with a chevron that opens its alternatives. The main button performs the default action; the chevron opens a menu or popover of variants of that same action. The overlay is required. Put an `nldd-menu` or `nldd-popover` in the `popup` slot, as on nldd-button and nldd-icon-button: ```html <nldd-split-button text=\"Bewaar\"> <nldd-menu slot=\"popup\"> <nldd-menu-item text=\"Opslaan als…\"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The split button has no other slots, so an overlay without `slot=\"popup\"` works too. When both hold one, the one in `popup` wins. For an overlay that lives elsewhere, point `popovertarget` at it instead. The chevron is the overlay's invoker: it anchors it, opens and closes it, and takes `aria-expanded` and `aria-haspopup` from it, exactly as an nldd-icon-button with a slotted overlay does. Its accessible name says which action it belongs to (\"Meer opties voor Bewaar\"). The API is narrower than nldd-button on purpose: a split button is an action with variants, so it has no supporting text, no end icon and no link target. Its label always stays on one line, without an ellipsis: keep it short.",
           "name": "NLDDSplitButton",
           "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Form-associated, so a submit split button finds the form it sits in:\nits action button is in this shadow root and has no form owner."
+            },
             {
               "kind": "field",
               "name": "size",
@@ -3200,7 +3210,7 @@
               "kind": "field",
               "name": "appearance",
               "type": {
-                "text": "string"
+                "text": "SplitButtonAppearance"
               },
               "default": "'neutral-tinted'",
               "attribute": "appearance",
@@ -3215,6 +3225,27 @@
               "default": "false",
               "attribute": "disabled",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Loading state of the main action. The chevron stays available.",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loadingText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "What the screen reader announces while `loading` is on.",
+              "attribute": "loading-text"
             },
             {
               "kind": "field",
@@ -3237,6 +3268,63 @@
               "description": "Button text for the primary action.",
               "attribute": "text",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Icon name shown before the text on the primary action button.",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'",
+              "description": "What the main action does in a form. Ignored when `href` is set.",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Turns the main action into a link.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Saves the file `href` points at instead of opening it.",
+              "attribute": "download"
+            },
+            {
+              "kind": "field",
+              "name": "popovertarget",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of an overlay elsewhere in this tree that the chevron opens.",
+              "attribute": "popovertarget"
+            },
+            {
+              "kind": "field",
+              "name": "popoverTargetElement",
+              "type": {
+                "text": "Element | null"
+              },
+              "default": "null",
+              "description": "Direct reference to that overlay, for one in another tree."
             },
             {
               "kind": "field",
@@ -3280,16 +3368,6 @@
             },
             {
               "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Icon name shown before the text on the primary action button.",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
               "name": "translations",
               "type": {
                 "text": "Partial<NLDDSplitButtonTranslations>"
@@ -3302,10 +3380,6 @@
             {
               "name": "action-click",
               "description": "Fired when the main button is clicked"
-            },
-            {
-              "name": "menu-click",
-              "description": "Fired when the dropdown trigger is clicked and no overlay is slotted"
             }
           ],
           "attributes": [
@@ -3324,11 +3398,14 @@
             {
               "name": "appearance",
               "type": {
-                "text": "string"
+                "text": "SplitButtonAppearance"
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
-              "description": "Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)"
+              "expandedType": {
+                "text": "'accent-filled' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'primary' | 'secondary'"
+              },
+              "description": "Visual style: 'neutral-tinted' (default) | 'neutral-base' | 'accent-filled' | 'primary' | 'secondary' | 'inherit-tinted' | 'inherit-filled'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The inherit appearances are for a colored surface. There are no transparent appearances: the split button needs a surface of its own to show it is one control."
             },
             {
               "name": "disabled",
@@ -3338,6 +3415,24 @@
               "default": "false",
               "fieldName": "disabled",
               "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Loading state of the main action, as on nldd-button. The chevron stays available.",
+              "fieldName": "loading"
+            },
+            {
+              "name": "loading-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "What the screen reader announces while `loading` is on, as on nldd-button.",
+              "fieldName": "loadingText"
             },
             {
               "name": "width",
@@ -3356,6 +3451,51 @@
               "default": "''",
               "description": "Button text for the primary action",
               "fieldName": "text"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Icon name shown before the text on the primary action button",
+              "fieldName": "icon"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'",
+              "description": "What the main action does in a form: 'button' (default) | 'submit' | 'reset'. Ignored when `href` is set.",
+              "fieldName": "type",
+              "expandedType": {
+                "text": "'button' | 'reset' | 'submit'"
+              }
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Turns the main action into a link, as on nldd-button.",
+              "fieldName": "href"
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`.",
+              "fieldName": "download"
+            },
+            {
+              "name": "popovertarget",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of an `nldd-menu` or `nldd-popover` elsewhere in this tree that the chevron opens, for an overlay that cannot be a child. A slotted overlay wins.",
+              "fieldName": "popovertarget"
             },
             {
               "name": "shortcut",
@@ -3394,15 +3534,6 @@
               "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Icon name shown before the text on the primary action button",
-              "fieldName": "icon"
-            },
-            {
               "name": "translations",
               "type": {
                 "text": "Partial<NLDDSplitButtonTranslations>"
@@ -3410,6 +3541,13 @@
               "default": "{}",
               "fieldName": "translations",
               "description": "Translations; unset keys fall back to Dutch"
+            },
+            {
+              "name": "form",
+              "description": "Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button.",
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -3420,8 +3558,12 @@
           "customElement": true,
           "slots": [
             {
+              "name": "popup",
+              "description": "The `nldd-menu` or `nldd-popover` the chevron opens."
+            },
+            {
               "name": "",
-              "description": "A single `nldd-menu` or `nldd-popover` that the chevron opens."
+              "description": "Fallback for the overlay when it has no `slot=\"popup\"`. Anything that is not an `nldd-menu` or `nldd-popover` does nothing here."
             }
           ]
         }
@@ -34255,7 +34397,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id=\"info-trigger\" popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" anchor=\"info-trigger\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
+          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
           "name": "NLDDPopover",
           "members": [
             {
@@ -38655,7 +38797,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.",
+              "description": "ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.",
               "name": "popovertarget",
               "fieldName": "popovertarget"
             },
@@ -47106,6 +47248,46 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/owner-form.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "ownerForm",
+          "return": {
+            "type": {
+              "text": "HTMLFormElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              }
+            }
+          ],
+          "description": "The form a form-associated button acts on: the one it sits in, or the one\nits `form` attribute names.\n\nThe platform resolves that attribute itself, but only to a real `<form>`.\nAn `nldd-form` renders its form in the light DOM without handing it the id\nthe consumer wrote, so an id pointing at the component finds an element\nthat is not a form, and the button ends up with no form owner at all. That\nis the whole reason a save button in a page footer, outside the form it\nbelongs to, used to do nothing.\n\nThe id is looked up in the host's own root, the same scope the platform\nsearches: a button inside a shadow tree reaches the forms in that tree, not\none in the document around it. Put the two in the same tree, or hand the\nbutton its form another way.\n\nShared by nldd-button and nldd-split-button, whose action button sits in a\nshadow root and so has no form owner of its own."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ownerForm",
+          "declaration": {
+            "name": "ownerForm",
+            "module": "src/utilities/owner-form.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/page-section-mixin.ts",
       "declarations": [
         {
@@ -47485,6 +47667,30 @@
             }
           ],
           "description": "The popover a component's inner button invokes, from `popovertarget` or\n`popoverTargetElement` on the host.\n\nAn id written on the inner button is looked up in the component's own\nshadow root, where the popover never is, so the button opened nothing. The\nid is looked up here in the tree of the host instead, and the inner button\ngets the element. The element wins when both are set.\n\nLook it up again on click: a popover rendered after the button is not there\nyet on the button's first render."
+        },
+        {
+          "kind": "function",
+          "name": "anchorPopoverTarget",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "Element | null"
+              }
+            }
+          ],
+          "description": "Positions an `nldd-menu` or `nldd-popover` that `popovertarget` points at\nagainst the control that opens it, so the overlay needs no `anchor` of its\nown. The browser already opens and closes it; this adds where it stands and\nthe ARIA link back to the control, as a slotted overlay gets.\n\nAn overlay with an `anchor` id, or anchored to another element, is\nleft alone: someone chose where it goes. Pass `null` to let go, as on\ndisconnect or when `popovertarget` changes."
         }
       ],
       "exports": [
@@ -47493,6 +47699,14 @@
           "name": "popoverTargetOf",
           "declaration": {
             "name": "popoverTargetOf",
+            "module": "src/utilities/popover-target.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "anchorPopoverTarget",
+          "declaration": {
+            "name": "anchorPopoverTarget",
             "module": "src/utilities/popover-target.ts"
           }
         }

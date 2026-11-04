@@ -56,7 +56,9 @@ export class PopupAnchorController {
 	/** Bind to the popup slot's `slotchange`. */
 	handleSlotChange = (event: Event): void => {
 		const slot = event.target as HTMLSlotElement;
-		const overlay = (slot.assignedElements().find((el) => el.matches(OVERLAY_SELECTOR)) as Overlay | undefined) ?? null;
+		// Flattened, so a component can forward its own slot into this one
+		// (nldd-split-button hands its popup to the chevron this way).
+		const overlay = (slot.assignedElements({ flatten: true }).find((el) => el.matches(OVERLAY_SELECTOR)) as Overlay | undefined) ?? null;
 		this.setOverlay(overlay);
 	};
 

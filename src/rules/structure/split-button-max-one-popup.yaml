@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-split-button'
+count:
+  of: 'nldd-menu, nldd-popover'
+  max: 1
+message: 'nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.'
+examples:
+  passed: ['<nldd-split-button text="Bewaar"><nldd-menu slot="popup"></nldd-menu></nldd-split-button>']
+  failed: ['<nldd-split-button text="Bewaar"><nldd-menu slot="popup"></nldd-menu><nldd-menu></nldd-menu></nldd-split-button>']

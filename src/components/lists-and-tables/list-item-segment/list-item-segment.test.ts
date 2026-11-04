@@ -651,3 +651,35 @@ describe('<nldd-list-item-segment> with download', () => {
 		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
 });
+
+describe('nldd-list-item-segment – popovertarget positions its overlay', () => {
+	let root: HTMLElement;
+
+	afterEach(() => {
+		if (root) cleanup(root);
+	});
+
+	const setup = async (menuAttrs = '') => {
+		root = await fixture(`<div><nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment button accessible-label="Acties voor Dossier D-318" popovertarget="opties"></nldd-list-item-segment></nldd-list-item></nldd-list><nldd-menu id="opties" ${menuAttrs}><nldd-menu-item text="Bekijken"></nldd-menu-item></nldd-menu></div>`);
+		const trigger = root.querySelector('nldd-list-item-segment') as HTMLElement & { updateComplete: Promise<unknown> };
+		await trigger.updateComplete;
+		const menu = root.querySelector('#opties') as HTMLElement & { anchorElement: Element | null };
+		return { trigger, menu };
+	};
+
+	it('anchors the overlay to itself, without an anchor on the overlay', async () => {
+		const { trigger, menu } = await setup();
+		expect(menu.anchorElement).toBe(trigger);
+	});
+
+	it('leaves an overlay with an anchor of its own alone', async () => {
+		const { menu } = await setup('anchor="elders"');
+		expect(menu.anchorElement).toBeNull();
+	});
+
+	it('lets go of the overlay when it leaves the page', async () => {
+		const { trigger, menu } = await setup();
+		trigger.remove();
+		expect(menu.anchorElement).toBeNull();
+	});
+});

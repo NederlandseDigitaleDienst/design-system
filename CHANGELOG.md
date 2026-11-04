@@ -16,6 +16,21 @@ here; consult the commit history if you need that level of detail.
   - `hide-button-text` → `components.password-field.hide-action` ("Verberg")
   - `show-button-accessible-label` → `components.password-field.show-accessible-label` ("Toon wachtwoord")
   - `hide-button-accessible-label` → `components.password-field.hide-accessible-label` ("Verberg wachtwoord")
+- **An `nldd-split-button` needs its menu.** The chevron opens an `nldd-menu` or `nldd-popover` in the `popup` slot, or the one `popovertarget` names, and `menu-click` is gone with the split button that had neither. A menu without `slot="popup"` still works, as the split button has no other slots, but `slot="popup"` is how it is written now, as on `nldd-button` and `nldd-icon-button`. `nldd lint` reports a split button without a menu.
+- **The chevron of an `nldd-split-button` says which action it belongs to:** "Meer opties voor Bewaar" instead of "Meer opties", so two split buttons in one bar no longer sound the same. The translation key `components.split-button.menu-action` is now `components.split-button.show-options-action`, with `{text}` for the label of the main action. Rename an override and add the placeholder.
+- **`appearance` on `nldd-split-button` takes its own values only:** `neutral-tinted`, `neutral-base`, `accent-filled`, `primary`, `secondary`, `inherit-tinted` and `inherit-filled`. The transparent and critical appearances of `nldd-button` were never styled for a split button, which needs a surface of its own to read as one control, and `nldd lint` now reports them.
+
+### Added
+
+- **`popovertarget` positions the menu it opens.** An `nldd-button`, `nldd-icon-button`, `nldd-split-button` or `nldd-list-item-segment` whose `popovertarget` names an `nldd-menu` or `nldd-popover` now also anchors it to itself, so the overlay needs only its `id` and no `anchor`. A menu elsewhere on the page, such as the one for the actions of a list row, is wired in one place. An overlay with an `anchor` of its own keeps it.
+- **More for the main action of an `nldd-split-button`:** `type` and `form` to submit or reset a form, also one it sits outside of, `loading` and `loading-text` while the action runs, and `href` and `download` for an action that is a link, such as "Download PDF" with the other formats in the menu.
+- **Three lint rules for `nldd-split-button`:** one without a menu (`split-button-needs-popup`), one with more than one (`split-button-max-one-popup`), and one with anything else inside (`split-button-no-other-children`).
+
+### Changed
+
+- **The label of an `nldd-split-button` stays on one line.** The split button grows to fit it instead of wrapping, and never cuts it off.
+- **A width set on an `nldd-split-button` itself wins.** With a CSS length in `width`, the split button wrote an inline width onto its own element, over one the app set, and cleared it again when `width` was emptied.
+- **The hint `menu-no-manual-anchor` also covers a list row:** an `nldd-menu` with `anchor` on an `nldd-list-item-segment` is pointed at `popovertarget`. The list pattern now works that way.
 
 ### Fixed
 

@@ -33,7 +33,7 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.menu.back-action': 'Bai bèk',
 	'components.menu.submenu-title': 'Submenu: {title}',
 	'components.menu.submenu-back-action': 'Bai bèk na {title}',
-	'components.split-button.menu-action': 'Mas opshon',
+	'components.split-button.show-options-action': 'Mas opshon pa {text}',
 	'components.toolbar.overflow-action': 'Mas',
 	'components.toolbar.link-hint-new-tab-lowercase-label': 'ta habri den un tab nobo',
 	'components.toolbar.link-hint-external-lowercase-label': 'otro wèpsait',

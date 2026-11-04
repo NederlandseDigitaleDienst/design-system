@@ -31,7 +31,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.menu.back-action': 'Werom',
 	'components.menu.submenu-title': 'Submenu: {title}',
 	'components.menu.submenu-back-action': 'Werom nei {title}',
-	'components.split-button.menu-action': 'Mear opsjes',
+	'components.split-button.show-options-action': 'Mear opsjes foar {text}',
 	'components.toolbar.overflow-action': 'Mear',
 	'components.toolbar.link-hint-new-tab-lowercase-label': 'iepenet yn in nij ljepblêd',
 	'components.toolbar.link-hint-external-lowercase-label': 'oare webside',

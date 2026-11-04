@@ -44,12 +44,12 @@ export const devRules: DevRule[] = [
 	{
 		"id": "button-form-id-invalid",
 		"message": "The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.",
-		"context": "nldd-button:state(form-target-not-a-form)"
+		"context": "nldd-button:state(form-target-not-a-form), nldd-split-button:state(form-target-not-a-form)"
 	},
 	{
 		"id": "button-form-id-not-found",
 		"message": "Nothing in this root has the id in `form`, so this button submits nothing.",
-		"context": "nldd-button:state(no-form-target)"
+		"context": "nldd-button:state(no-form-target), nldd-split-button:state(no-form-target)"
 	},
 	{
 		"id": "button-group-button-size-no-effect",
@@ -616,6 +616,28 @@ export const devRules: DevRule[] = [
 		"context": "nldd-skip-link:state(target-not-focusable)"
 	},
 	{
+		"id": "split-button-max-one-popup",
+		"message": "nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.",
+		"context": "nldd-split-button",
+		"count": {
+			"of": "nldd-menu, nldd-popover",
+			"max": 1
+		}
+	},
+	{
+		"id": "split-button-needs-popup",
+		"message": "nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.",
+		"context": "nldd-split-button:not([popovertarget]:not([popovertarget=\"\"]))",
+		"assert": ":has(> nldd-menu, > nldd-popover)",
+		"properties": []
+	},
+	{
+		"id": "split-button-no-other-children",
+		"message": "Only an nldd-menu or nldd-popover goes in nldd-split-button; anything else does not render. Set the label with `text` and the icon with `icon`.",
+		"context": "nldd-split-button",
+		"report": ":has(> :not(nldd-menu, nldd-popover))"
+	},
+	{
 		"id": "split-view-needs-main-page",
 		"message": "Set landmarks=\"page\" on the page in the pane with the main content, or the screen offers no main landmark or two.",
 		"context": "nldd-navigation-split-view:has(nldd-page)",
@@ -960,6 +982,16 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-split-button-size",
 		"message": "`size` on nldd-split-button takes: lg, md, sm, xs.",
 		"context": "nldd-split-button[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-split-button-appearance",
+		"message": "`appearance` on nldd-split-button takes: accent-filled, inherit-filled, inherit-tinted, neutral-base, neutral-tinted, primary, secondary.",
+		"context": "nldd-split-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"inherit-filled\"], [appearance=\"inherit-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-split-button-type",
+		"message": "`type` on nldd-split-button takes: button, reset, submit.",
+		"context": "nldd-split-button[type]:not([type=\"button\"], [type=\"reset\"], [type=\"submit\"])"
 	},
 	{
 		"id": "invalid-value-toolbar-title-align",

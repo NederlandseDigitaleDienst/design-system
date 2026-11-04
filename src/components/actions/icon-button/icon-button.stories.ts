@@ -96,6 +96,10 @@ export default {
 			description: 'Type popup-container dat deze knop opent. Zet aria-haspopup op de inner button en zorgt dat aria-expanded altijd aanwezig is (true/false) zodat screenreaders de popup-staat kennen.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		popovertarget: {
+			control: false,
+			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat deze knop opent. De knop zet het ook naast zich neer, dus het overlay heeft geen `anchor` nodig. Een overlay in de `popup`-slot wint.',
+		},
 		text: {
 			control: 'text',
 			description: 'Tekst die als aria-label en title tooltip wordt gebruikt, en zichtbaar is als label onder het icoon in lg formaat',
@@ -195,6 +199,7 @@ export default {
 		expandable: false,
 		expanded: false,
 		popupType: '',
+		popovertarget: '',
 		text: 'Annuleer',
 		icon: 'dismiss',
 		shortcut: '',

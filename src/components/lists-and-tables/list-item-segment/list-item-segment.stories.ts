@@ -51,6 +51,7 @@ export default {
 		button: true,
 		checkbox: false,
 		disclosure: false,
+		popovertarget: '',
 		accessibleLabel: '',
 		checked: false,
 		expanded: false,
@@ -72,6 +73,10 @@ export default {
 			control: 'boolean',
 			description: 'Maakt het segment de uitklapknop van de rij: `aria-expanded` komt van `expanded` op de rij, zodat de toestand op één plek staat. Een icooncel erin draait mee.',
 			table: { defaultValue: { summary: false } },
+		},
+		popovertarget: {
+			control: false,
+			description: 'Id van een `nldd-menu` of `nldd-popover` dat dit segment opent, zoals het menu met de acties van een rij. Het segment zet het ook naast zich neer, dus het menu heeft geen `anchor` nodig.',
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
