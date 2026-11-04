@@ -3035,6 +3035,25 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 | `start-icon` | Custom icon before the text |
 | `end-icon` | Custom icon after the text |
 
+### `<nldd-link-group>`
+
+A set of related `nldd-link` elements, such as the links under the name of a service in a footer or the links to the other parts of a site. The links sit in a row that wraps onto the next line when they do not fit, or stacked with `orientation="vertical"`. With `horizontal-alignment="center"` the whole set is centered, line by line, so a short list reads as one cloud in the middle. The group is a `nav` landmark with the links as a list, so a screen reader says how many there are. Give it an `accessible-label` as soon as a page has more than one `nav`, so each landmark can be told apart. The group sets its `size` on every link in it: links in one group are the same size.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `size` | `string` | Text size, set on every link in it: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
+| `orientation` | `string` | Layout direction: 'horizontal' (a row that wraps) \| 'vertical' (default: 'horizontal') |
+| `horizontal-alignment` | `string` | Alignment of the links: 'left' \| 'center' (default: 'left') |
+| `accessible-label` | `string` | Accessible name of the nav landmark |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | nldd-link elements |
+
 ### `<nldd-menu-bar>`
 
 Horizontal row of nldd-menu-bar-item elements with automatic overflow detection. Items that do not fit are hidden behind an overflow button with a popover menu.

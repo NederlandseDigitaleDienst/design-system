@@ -394,6 +394,10 @@
       "types": "./dist/components/navigation/link/link.d.ts",
       "default": "./dist/components/navigation/link/link.js"
     },
+    "./link-group": {
+      "types": "./dist/components/navigation/link-group/link-group.d.ts",
+      "default": "./dist/components/navigation/link-group/link-group.js"
+    },
     "./skip-link": {
       "types": "./dist/components/navigation/skip-link/skip-link.d.ts",
       "default": "./dist/components/navigation/skip-link/skip-link.js"

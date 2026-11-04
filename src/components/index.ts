@@ -140,6 +140,7 @@ export { NLDDBreadcrumbs, NLDDBreadcrumbsItem } from './navigation/breadcrumbs/b
 export { NLDDMenuBar } from './navigation/menu-bar/menu-bar.js';
 export { NLDDMenuBarItem } from './navigation/menu-bar-item/menu-bar-item.js';
 export { NLDDLink } from './navigation/link/link.js';
+export { NLDDLinkGroup } from './navigation/link-group/link-group.js';
 export { NLDDSkipLink } from './navigation/skip-link/skip-link.js';
 export { NLDDTopNavigationBar } from './navigation/top-navigation-bar/top-navigation-bar.js';
 export { NLDDTopTitleBar } from './navigation/top-title-bar/top-title-bar.js';

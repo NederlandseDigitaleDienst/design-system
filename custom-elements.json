@@ -9291,6 +9291,14 @@
         },
         {
           "kind": "js",
+          "name": "NLDDLinkGroup",
+          "declaration": {
+            "name": "NLDDLinkGroup",
+            "module": "./navigation/link-group/link-group.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "NLDDSkipLink",
           "declaration": {
             "name": "NLDDSkipLink",
@@ -40322,6 +40330,135 @@
           "declaration": {
             "name": "NLDDDocumentTabBar",
             "module": "src/components/navigation/document-tab-bar/document-tab-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/navigation/link-group/link-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A set of related `nldd-link` elements, such as the links under the name of a service in a footer or the links to the other parts of a site. The links sit in a row that wraps onto the next line when they do not fit, or stacked with `orientation=\"vertical\"`. With `horizontal-alignment=\"center\"` the whole set is centered, line by line, so a short list reads as one cloud in the middle. The group is a `nav` landmark with the links as a list, so a screen reader says how many there are. Give it an `accessible-label` as soon as a page has more than one `nav`, so each landmark can be told apart. The group sets its `size` on every link in it: links in one group are the same size.",
+          "name": "NLDDLinkGroup",
+          "members": [
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "Orientation"
+              },
+              "default": "'horizontal'",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "horizontalAlignment",
+              "type": {
+                "text": "HorizontalAlignment"
+              },
+              "default": "'left'",
+              "attribute": "horizontal-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'md'",
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs'"
+              },
+              "description": "Text size, set on every link in it: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "Orientation"
+              },
+              "default": "'horizontal'",
+              "fieldName": "orientation",
+              "expandedType": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "description": "Layout direction: 'horizontal' (a row that wraps) | 'vertical' (default: 'horizontal')"
+            },
+            {
+              "name": "horizontal-alignment",
+              "type": {
+                "text": "HorizontalAlignment"
+              },
+              "default": "'left'",
+              "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'center' | 'left'"
+              },
+              "description": "Alignment of the links: 'left' | 'center' (default: 'left')"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name of the nav landmark"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-link-group",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "nldd-link elements"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDLinkGroup",
+          "declaration": {
+            "name": "NLDDLinkGroup",
+            "module": "src/components/navigation/link-group/link-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-link-group",
+          "declaration": {
+            "name": "NLDDLinkGroup",
+            "module": "src/components/navigation/link-group/link-group.ts"
           }
         }
       ]

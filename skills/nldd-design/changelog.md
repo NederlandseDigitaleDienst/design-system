@@ -28,6 +28,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
+- **`nldd-link-group`, a new component for a set of related links,** such as those under the name of a service in a footer. The links sit in a row that wraps, or stacked with `orientation="vertical"`, and `horizontal-alignment="center"` centers the whole set. The group is a `nav` with the links as a list, and sets its `size` on every link in it.
 - **`popovertarget` positions the menu it opens.** An `nldd-button`, `nldd-icon-button`, `nldd-split-button` or `nldd-list-item-segment` whose `popovertarget` names an `nldd-menu` or `nldd-popover` now also anchors it to itself, so the overlay needs only its `id` and no `anchor`. A menu elsewhere on the page, such as the one for the actions of a list row, is wired in one place. An overlay with an `anchor` of its own keeps it.
 - **More for the main action of an `nldd-split-button`:** `type` and `form` to submit or reset a form, also one it sits outside of, `loading` and `loading-text` while the action runs, and `href` and `download` for an action that is a link, such as "Download PDF" with the other formats in the menu.
 - **Icon alias `checkbox`** for `check-mark-square`.

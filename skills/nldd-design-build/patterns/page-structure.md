@@ -635,7 +635,7 @@ Op een onderliggende pagina:
         sm-column-count="2"
         md-column-count="2"
         lg-column-count="3"
-        gap="16"
+        gap="24"
       >
         <nldd-container gap="8">
           <nldd-title
@@ -643,21 +643,23 @@ Op een onderliggende pagina:
             text="Aanvragen"
             heading-level="2"
           ></nldd-title>
-          <nldd-link
-            size="md"
-            href="#aanvraag-indienen"
-            text="Aanvraag indienen"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#behandeling-volgen"
-            text="Behandeling volgen"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#bezwaar-maken"
-            text="Bezwaar maken"
-          ></nldd-link>
+          <nldd-link-group
+            orientation="vertical"
+            accessible-label="Aanvragen"
+          >
+            <nldd-link
+              href="#aanvraag-indienen"
+              text="Aanvraag indienen"
+            ></nldd-link>
+            <nldd-link
+              href="#behandeling-volgen"
+              text="Behandeling volgen"
+            ></nldd-link>
+            <nldd-link
+              href="#bezwaar-maken"
+              text="Bezwaar maken"
+            ></nldd-link>
+          </nldd-link-group>
         </nldd-container>
         <nldd-container gap="8">
           <nldd-title
@@ -665,21 +667,23 @@ Op een onderliggende pagina:
             text="Onderwerpen"
             heading-level="2"
           ></nldd-title>
-          <nldd-link
-            size="md"
-            href="#isoleren"
-            text="Isoleren"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#warmtepomp"
-            text="Warmtepomp"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#energie-besparen"
-            text="Energie besparen"
-          ></nldd-link>
+          <nldd-link-group
+            orientation="vertical"
+            accessible-label="Onderwerpen"
+          >
+            <nldd-link
+              href="#isoleren"
+              text="Isoleren"
+            ></nldd-link>
+            <nldd-link
+              href="#warmtepomp"
+              text="Warmtepomp"
+            ></nldd-link>
+            <nldd-link
+              href="#energie-besparen"
+              text="Energie besparen"
+            ></nldd-link>
+          </nldd-link-group>
         </nldd-container>
         <nldd-container gap="8">
           <nldd-title
@@ -687,16 +691,19 @@ Op een onderliggende pagina:
             text="Mijn Dienst"
             heading-level="2"
           ></nldd-title>
-          <nldd-link
-            size="md"
-            href="#dossier"
-            text="Zo werkt je dossier"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#contact"
-            text="Contact opnemen"
-          ></nldd-link>
+          <nldd-link-group
+            orientation="vertical"
+            accessible-label="Mijn Dienst"
+          >
+            <nldd-link
+              href="#dossier"
+              text="Zo werkt je dossier"
+            ></nldd-link>
+            <nldd-link
+              href="#contact"
+              text="Contact opnemen"
+            ></nldd-link>
+          </nldd-link-group>
         </nldd-container>
       </nldd-container>
       <nldd-page-footer-legal-bar slot="legal-bar">
@@ -753,7 +760,7 @@ Op de home, zonder kruimelpad:
         sm-column-count="2"
         md-column-count="2"
         lg-column-count="3"
-        gap="16"
+        gap="24"
       >
         <nldd-container gap="8">
           <nldd-title
@@ -761,21 +768,23 @@ Op de home, zonder kruimelpad:
             text="Aanvragen"
             heading-level="2"
           ></nldd-title>
-          <nldd-link
-            size="md"
-            href="#aanvraag-indienen"
-            text="Aanvraag indienen"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#behandeling-volgen"
-            text="Behandeling volgen"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#bezwaar-maken"
-            text="Bezwaar maken"
-          ></nldd-link>
+          <nldd-link-group
+            orientation="vertical"
+            accessible-label="Aanvragen"
+          >
+            <nldd-link
+              href="#aanvraag-indienen"
+              text="Aanvraag indienen"
+            ></nldd-link>
+            <nldd-link
+              href="#behandeling-volgen"
+              text="Behandeling volgen"
+            ></nldd-link>
+            <nldd-link
+              href="#bezwaar-maken"
+              text="Bezwaar maken"
+            ></nldd-link>
+          </nldd-link-group>
         </nldd-container>
         <nldd-container gap="8">
           <nldd-title
@@ -783,21 +792,23 @@ Op de home, zonder kruimelpad:
             text="Onderwerpen"
             heading-level="2"
           ></nldd-title>
-          <nldd-link
-            size="md"
-            href="#isoleren"
-            text="Isoleren"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#warmtepomp"
-            text="Warmtepomp"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#energie-besparen"
-            text="Energie besparen"
-          ></nldd-link>
+          <nldd-link-group
+            orientation="vertical"
+            accessible-label="Onderwerpen"
+          >
+            <nldd-link
+              href="#isoleren"
+              text="Isoleren"
+            ></nldd-link>
+            <nldd-link
+              href="#warmtepomp"
+              text="Warmtepomp"
+            ></nldd-link>
+            <nldd-link
+              href="#energie-besparen"
+              text="Energie besparen"
+            ></nldd-link>
+          </nldd-link-group>
         </nldd-container>
         <nldd-container gap="8">
           <nldd-title
@@ -805,16 +816,19 @@ Op de home, zonder kruimelpad:
             text="Mijn Dienst"
             heading-level="2"
           ></nldd-title>
-          <nldd-link
-            size="md"
-            href="#dossier"
-            text="Zo werkt je dossier"
-          ></nldd-link>
-          <nldd-link
-            size="md"
-            href="#contact"
-            text="Contact opnemen"
-          ></nldd-link>
+          <nldd-link-group
+            orientation="vertical"
+            accessible-label="Mijn Dienst"
+          >
+            <nldd-link
+              href="#dossier"
+              text="Zo werkt je dossier"
+            ></nldd-link>
+            <nldd-link
+              href="#contact"
+              text="Contact opnemen"
+            ></nldd-link>
+          </nldd-link-group>
         </nldd-container>
       </nldd-container>
       <nldd-page-footer-legal-bar slot="legal-bar">

@@ -2349,6 +2349,21 @@ export const devRules: DevRule[] = [
 		"context": "nldd-table[background]:not([background=\"base\"], [background=\"tinted\"])"
 	},
 	{
+		"id": "invalid-value-link-group-size",
+		"message": "`size` on nldd-link-group takes: lg, md, sm, xs.",
+		"context": "nldd-link-group[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-link-group-orientation",
+		"message": "`orientation` on nldd-link-group takes: horizontal, vertical.",
+		"context": "nldd-link-group[orientation]:not([orientation=\"horizontal\"], [orientation=\"vertical\"])"
+	},
+	{
+		"id": "invalid-value-link-group-horizontal-alignment",
+		"message": "`horizontal-alignment` on nldd-link-group takes: center, left.",
+		"context": "nldd-link-group[horizontal-alignment]:not([horizontal-alignment=\"center\"], [horizontal-alignment=\"left\"])"
+	},
+	{
 		"id": "invalid-value-link-size",
 		"message": "`size` on nldd-link takes: inherit, lg, md, sm, xs.",
 		"context": "nldd-link[size]:not([size=\"inherit\"], [size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
