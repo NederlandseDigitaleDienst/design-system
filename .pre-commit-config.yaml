@@ -43,6 +43,15 @@ repos:
         files: ^CHANGELOG\.md$
         pass_filenames: false
 
+  # nldd lint on the marketing page, the same check validate.yml runs
+  - repo: local
+    hooks:
+      - id: nldd-lint-www
+        name: nldd lint (www)
+        entry: node lint/cli.js lint
+        language: system
+        files: ^www/.*\.html$
+
   # Commitlint for conventional commits
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
     rev: v9.21.0

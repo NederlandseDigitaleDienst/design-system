@@ -50,6 +50,11 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
+      # validate.yml runs the same check on every PR. Here it guards what
+      # actually goes online, also on a manual run from another branch.
+      - name: Lint page
+        run: npm run lint:www
+
       - name: Build page
         run: npm run build:www
 
