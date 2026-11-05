@@ -1,0 +1,4 @@
+# The only image (deploy/Dockerfile) needs the nginx config and the built page.
+*
+!deploy/
+!www-dist/

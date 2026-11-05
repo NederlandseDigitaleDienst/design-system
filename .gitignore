@@ -58,3 +58,6 @@ storybook-static
 # Personal, machine-specific dev server config with absolute paths.
 .claude/launch.json
 www-dist
+
+# ZAD CLI: project and API key of the active project (secret)
+.env.zadctl
