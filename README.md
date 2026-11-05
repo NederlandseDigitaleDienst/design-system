@@ -2,6 +2,8 @@
 
 Web Components voor de Nederlandse Digitale Dienst (Rijksoverheid).
 
+Meer over het designsysteem op **https://design.digitaledienst.overheid.nl**.
+
 ## Installatie
 
 ```bash
