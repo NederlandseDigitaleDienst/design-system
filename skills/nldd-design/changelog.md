@@ -15,6 +15,15 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **`--context-tooltip-pointer-events` on `nldd-tooltip`,** for a parent whose triggers sit close together. Set to `none`, a click on the tooltip reaches the control underneath instead of the trigger. Unset, the tooltip works as before.
+
+### Fixed
+
+- **A click on the name of a swatch in `nldd-swatch-picker` chose that swatch,** while the name covers the swatch above it. The click now reaches the swatch underneath.
+- **A tap on another swatch closes the name of the one before,** so two names no longer show at once on touch.
+
 ## [0.16.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.15.0...v0.16.0) (2026-11-04)
 
 ### Highlights
