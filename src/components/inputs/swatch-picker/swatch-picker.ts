@@ -230,6 +230,11 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 	private _showName(): void {
 		const tooltip = this._tooltip;
 		if (!tooltip || !this._name) return;
+		// One name at a time: a tap on the next swatch closes the one before,
+		// which would otherwise stay for the rest of its moment.
+		this.closest('nldd-swatch-picker')
+			?.querySelectorAll<NLDDSwatchPickerItem>('nldd-swatch-picker-item')
+			.forEach((item) => { if (item !== this) item._hideName(); });
 		tooltip.open = true;
 		clearTimeout(this._nameTimer);
 		this._nameTimer = this._pointerType === 'touch'

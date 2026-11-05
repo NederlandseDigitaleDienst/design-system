@@ -74,6 +74,11 @@ jobs:
       - name: Lint the stories
         run: npm run lint:stories
 
+      # The marketing page in www/ is built from the components and goes
+      # online as is, so it holds to the rules consumers get.
+      - name: Lint the marketing page
+        run: npm run lint:www
+
       # Guards reference.md (JSDoc-derived) against drift on every PR.
       # changelog.md is intentionally NOT guarded here: it is synced from the
       # root CHANGELOG by the release pipeline (@semantic-release/exec), so it

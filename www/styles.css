@@ -1,0 +1,9 @@
+/* The global stylesheet of the package, from source. Linked in the <head> so the
+   browser has it before the first paint, fouc.css included. */
+@import '../src/assets/styles/rijksoverheid-fonts.css';
+@import '../src/assets/styles/jetbrains-mono-font.css';
+@import '../src/assets/styles/variables.css';
+@import '../src/assets/styles/themes.css';
+@import '../src/assets/styles/document-reset.css';
+@import '../src/components/content/rich-text/rich-text.css';
+@import '../src/assets/styles/fouc.css';

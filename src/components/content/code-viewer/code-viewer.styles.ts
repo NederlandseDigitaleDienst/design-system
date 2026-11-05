@@ -19,9 +19,12 @@ export const codeViewerStyles = css`
 		--_code-viewer-inline-padding: var(--primitives-space-16);
 		--_code-viewer-content-color: var(--semantics-content-color);
 		--_code-viewer-font: var(--primitives-font-monospace-sm-regular-snug);
-		--_code-viewer-actions-area-padding: var(--primitives-space-8);
+		--_code-viewer-actions-button-size: var(--semantics-controls-sm-min-size);
+		/* Centers the copy button on the first line: one line of code is then
+		   as high as the box needs anyway, with the button in the middle. */
+		--_code-viewer-actions-area-padding: calc((var(--_code-viewer-block-padding) * 2 + 1lh - var(--_code-viewer-actions-button-size)) / 2);
 		--_code-viewer-actions-gap: var(--primitives-space-8);
-		--_code-viewer-actions-area-size: calc(var(--semantics-controls-md-min-size) + var(--_code-viewer-actions-area-padding) * 2);
+		--_code-viewer-actions-area-size: calc(var(--_code-viewer-actions-button-size) + var(--_code-viewer-actions-area-padding) * 2);
 		--_code-viewer-actions-z-index: 1;
 		--_code-viewer-highlight-border-z-index: 1;
 		--_code-viewer-max-height: none;

@@ -15,6 +15,23 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A page that introduces the design system, built with the design system itself.** It shows the numbers, accessibility, a theme and color mode switch for the whole page, a wall of components that recolor with it, and the icons. It lives in `www/`: `npm run www` starts it, `npm run build:www` builds it.
+
+### Added
+
+- **`--context-tooltip-pointer-events` on `nldd-tooltip`,** for a parent whose triggers sit close together. Set to `none`, a click on the tooltip reaches the control underneath instead of the trigger. Unset, the tooltip works as before.
+
+### Changed
+
+- **The copy button of `nldd-code-viewer` is `sm` and stands centered on the first line,** so a block of one line is no higher than its code, with the button in the middle.
+
+### Fixed
+
+- **A click on the name of a swatch in `nldd-swatch-picker` chose that swatch,** while the name covers the swatch above it. The click now reaches the swatch underneath.
+- **A tap on another swatch closes the name of the one before,** so two names no longer show at once on touch.
+
 ## [0.16.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.15.0...v0.16.0) (2026-11-04)
 
 ### Highlights

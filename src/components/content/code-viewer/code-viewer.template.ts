@@ -37,7 +37,7 @@ export function codeViewerTemplate(component: NLDDCodeViewer): TemplateResult {
 						icon=${copyState === 'success' ? 'check-mark' : 'copy'}
 						accessible-label=${buttonLabel}
 						tooltip-timing="never"
-						size="md"
+						size="sm"
 						@click=${component._onCopyClick}
 						@focusout=${component._onCopyBlur}
 					></nldd-icon-button>

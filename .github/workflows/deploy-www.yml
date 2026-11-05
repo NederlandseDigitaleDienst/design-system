@@ -1,0 +1,114 @@
+name: Deploy website to ZAD
+
+# On every push to main: build the marketing page in www/, put it in an nginx
+# image on GHCR and roll that image out on ZAD, at
+# design.digitaledienst.overheid.nl. See deploy/README.md.
+
+on:
+  push:
+    branches:
+      - main
+  # Can be started from any branch, but the environment 'productie' only
+  # admits main, so a run from another branch stops at the rollout.
+  workflow_dispatch:
+
+# Roll out in order: an older run must not overtake a newer one.
+concurrency:
+  group: deploy-www
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/nederlandsedigitaledienst/design-system-www
+  SITE_URL: https://design.digitaledienst.overheid.nl
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build page and image
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      # The image goes to GHCR.
+      packages: write
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # --ignore-scripts: a hijacked dependency release must not get to run
+      # its install hook in a job that can push images.
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      # validate.yml runs the same check on every PR. Here it guards what
+      # actually goes online, also on a manual run from another branch.
+      - name: Lint page
+        run: npm run lint:www
+
+      - name: Build page
+        run: npm run build:www
+
+      # The tag is the commit. A new tag changes the pod spec, and only then
+      # does ZAD start a new pod; 'latest' would not.
+      - name: Determine image tag
+        id: image
+        run: echo "image=${IMAGE}:${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "${GH_TOKEN}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build and push image
+        env:
+          IMAGE_TAG: ${{ steps.image.outputs.image }}
+        run: |
+          docker build -f deploy/Dockerfile -t "${IMAGE_TAG}" .
+          docker push "${IMAGE_TAG}"
+
+  deploy:
+    name: Roll out to ZAD
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      # The deploy action registers a GitHub deployment on the environment.
+      deployments: write
+    environment:
+      name: productie
+      url: ${{ env.SITE_URL }}
+    steps:
+      - id: deploy
+        uses: RijksICTGilde/zad-actions/deploy@4217ceaa5c347f3c6d16142b5ad8ab94110c4cdb  # v4.4.0
+        with:
+          api-key: ${{ secrets.ZAD_API_KEY }}
+          project-id: ${{ vars.ZAD_PROJECT_ID }}
+          deployment-name: productie
+          component: website
+          image: ${{ needs.build.outputs.image }}
+          # No domain-format/subdomain/base-domain: the deployment already
+          # carries them (see deploy/README.md), and the Ops CI token may only
+          # replace the image.
+          wait-for-ready: 'true'
+          health-endpoint: /healthz
+
+      # Until the ZAD team approves the domain, the rollout lands on the
+      # platform's default address. Say so instead of failing the run.
+      - name: Check address
+        env:
+          GOT: ${{ steps.deploy.outputs.url }}
+        run: |
+          if [ "${SITE_URL%/}" != "${GOT%/}" ]; then
+            echo "::warning::ZAD rolled out on ${GOT}, expected ${SITE_URL}. Is the domain approved for this project?"
+          fi
