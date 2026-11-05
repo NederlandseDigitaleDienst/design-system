@@ -92,10 +92,9 @@ jobs:
           deployment-name: productie
           component: website
           image: ${{ needs.build.outputs.image }}
-          # Together the address: design.digitaledienst.overheid.nl.
-          domain-format: subdomain
-          subdomain: design
-          base-domain: digitaledienst.overheid.nl
+          # No domain-format/subdomain/base-domain: the deployment already
+          # carries them (see deploy/README.md), and the Ops CI token may only
+          # replace the image.
           wait-for-ready: 'true'
           health-endpoint: /healthz
 

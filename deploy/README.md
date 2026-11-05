@@ -48,8 +48,9 @@ docker run --rm -p 8081:8080 nldd-www   # http://localhost:8081
   allebei op `/healthz`. Gezet met
   `zadctl service config set health-check --target component -c website`.
 - Webadres: formaat `subdomain`, subdomein `design`, basisdomein
-  `digitaledienst.overheid.nl`. De workflow geeft die drie bij elke uitrol
-  mee. Een eigen domein moet per project door het ZAD-team worden
+  `digitaledienst.overheid.nl`. Die staan op de deployment zelf, gezet bij
+  `zadctl deployment create`; de workflow vervangt alleen het image, want
+  meer mag een token met de rol `Ops CI` niet. Een eigen domein moet per project door het ZAD-team worden
   goedgekeurd; tot die tijd staat de site op het standaardadres van ZAD en
   geeft de workflow een waarschuwing.
 
