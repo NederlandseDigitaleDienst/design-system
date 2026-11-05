@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.16.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.0...v0.16.1) (2026-11-05)
+
 ### Highlights
 
 - **A page that introduces the design system, built with the design system itself.** It shows the numbers, accessibility, a theme and color mode switch for the whole page, a wall of components that recolor with it, and the icons. It lives in `www/`: `npm run www` starts it, `npm run build:www` builds it.
