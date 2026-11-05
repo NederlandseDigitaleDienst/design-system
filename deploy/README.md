@@ -20,6 +20,31 @@ De GitHub-environment `productie` hoort alleen de branch `main` toe te laten
 (Settings, Environments). De workflow is ook handmatig te starten; vanaf een
 andere branch weigert GitHub dan de uitrol.
 
+## Preview per pull request
+
+`.github/workflows/deploy-www-preview.yml` zet elke pull request die de
+pagina raakt (`www/`, `deploy/` of een van de twee workflows) op een eigen
+ZAD-deployment `pr-<nummer>`, met hetzelfde image, dezelfde nginx-config en
+dezelfde CSP als productie. De link komt in een reactie op de PR:
+
+```text
+https://pr-<nummer>-nd-1i5.rig.prd1.gn2.quattro.rijksapps.nl
+```
+
+Een PR die alleen `src/` raakt krijgt geen preview: dat is bijna elke PR, en
+daarvoor is Storybook er. In het preview-image staat een `robots.txt` die
+zoekmachines weert.
+
+Een pull request uit een fork of van Dependabot krijgt geen preview: die heeft
+geen toegang tot de secrets. De pagina wordt dan wel gelint en gebouwd.
+
+Bij het sluiten van de PR gaan de deployment, de reactie en de images
+`pr-<nummer>-<sha>` weg.
+
+De preview gebruikt een eigen token (`ZAD_PREVIEW_API_KEY`, rol
+`Developer CI`): die mag deployments aanmaken, maar niet aan productie komen.
+Het productietoken staat alleen in de environment `productie`.
+
 ## Het image
 
 - `nginx.conf` serveert de pagina op poort 8080, met `/healthz` voor de health
@@ -69,8 +94,13 @@ het commando draait. Dat bestand staat in `.gitignore`.
 
 | Naam | Soort | Inhoud |
 | --- | --- | --- |
-| `ZAD_API_KEY` | secret | Token van een service account in het ZAD-project, rol `Ops CI` |
+| `ZAD_API_KEY` | secret van de environment `productie` | Token van service account `github-actions`, rol `Ops CI` |
+| `ZAD_PREVIEW_API_KEY` | secret van de repository | Token van service account `github-actions-preview`, rol `Developer CI` |
 | `ZAD_PROJECT_ID` | variable | `nd-1i5` |
 
+De environment `productie` laat alleen de branch `main` toe.
+
 Het GHCR-package `design-system-www` is openbaar, zodat ZAD het image zonder
-inloggegevens kan ophalen.
+inloggegevens kan ophalen. De repository heeft er `Admin`-toegang op (package
+settings, Manage Actions access): schrijven voor de push, admin om de
+preview-images op te ruimen.

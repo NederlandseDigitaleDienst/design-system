@@ -1,0 +1,174 @@
+name: Preview website on ZAD
+
+# Every pull request that touches the marketing page gets its own ZAD
+# deployment pr-<number>, with the same image, nginx config and CSP as
+# production. The link goes in a comment on the PR. See deploy/README.md.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+    # The page is www/ plus the components it imports from src/. Only www/
+    # and its deploy count here: almost every PR touches src/, and Storybook
+    # is the preview for that.
+    paths:
+      - 'www/**'
+      - 'deploy/**'
+      - '.dockerignore'
+      - '.github/workflows/deploy-www.yml'
+      - '.github/workflows/deploy-www-preview.yml'
+
+concurrency:
+  group: preview-www-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/nederlandsedigitaledienst/design-system-www
+  PROJECT_ID: ${{ vars.ZAD_PROJECT_ID }}
+  BASE_DOMAIN: rig.prd1.gn2.quattro.rijksapps.nl
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build page and image
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      # The image goes to GHCR.
+      packages: write
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+      deployable: ${{ steps.deployable.outputs.deployable }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # --ignore-scripts: a hijacked dependency release must not get to run
+      # its install hook in a job that can push images.
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Lint page
+        run: npm run lint:www
+
+      - name: Build page
+        run: npm run build:www
+
+      - name: Keep the preview out of search engines
+        run: |
+          printf 'User-agent: *\nDisallow: /\n' > www-dist/robots.txt
+
+      # A fork or Dependabot gets no secrets and may not push to GHCR; for
+      # those the run stops after the build above, which still checks the PR.
+      - name: Decide whether this PR gets a preview
+        id: deployable
+        env:
+          SAME_REPO: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+          AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
+        run: |
+          if [ "${SAME_REPO}" = "true" ] && [ "${AUTHOR_TYPE}" != "Bot" ]; then
+            echo "deployable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deployable=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # One tag per commit: a new tag changes the pod spec and so forces a
+      # rollout. The pr- prefix is what the cleanup below deletes by.
+      - name: Determine image tag
+        id: image
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: echo "image=${IMAGE}:pr-${PR_NUMBER}-${HEAD_SHA::12}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        if: steps.deployable.outputs.deployable == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "${GH_TOKEN}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build and push image
+        if: steps.deployable.outputs.deployable == 'true'
+        env:
+          IMAGE_TAG: ${{ steps.image.outputs.image }}
+        run: |
+          docker build -f deploy/Dockerfile -t "${IMAGE_TAG}" .
+          docker push "${IMAGE_TAG}"
+
+  deploy:
+    name: Roll out preview to ZAD
+    needs: build
+    if: needs.build.outputs.deployable == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      # The link to the preview goes in a comment on the PR.
+      pull-requests: write
+    steps:
+      - id: deploy
+        uses: RijksICTGilde/zad-actions/deploy@4217ceaa5c347f3c6d16142b5ad8ab94110c4cdb  # v4.4.0
+        with:
+          # A Developer CI token: it may create and update deployments, but
+          # not production. The production token lives only in the
+          # environment 'productie'.
+          api-key: ${{ secrets.ZAD_PREVIEW_API_KEY }}
+          project-id: ${{ env.PROJECT_ID }}
+          deployment-name: pr-${{ github.event.pull_request.number }}
+          component: website
+          image: ${{ needs.build.outputs.image }}
+          domain-format: deployment-project
+          comment-on-pr: 'true'
+          comment-header: 'Preview of the website'
+          wait-for-ready: 'true'
+          health-endpoint: /healthz
+
+  cleanup:
+    name: Remove preview
+    if: >-
+      github.event.action == 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+      # The images of this PR are deleted from GHCR.
+      packages: write
+    steps:
+      - uses: RijksICTGilde/zad-actions/cleanup@4217ceaa5c347f3c6d16142b5ad8ab94110c4cdb  # v4.4.0
+        with:
+          api-key: ${{ secrets.ZAD_PREVIEW_API_KEY }}
+          project-id: ${{ env.PROJECT_ID }}
+          deployment-name: pr-${{ github.event.pull_request.number }}
+          delete-pr-comment: 'true'
+          comment-header: 'Preview of the website'
+
+      # Every push gave its own tag pr-<number>-<sha>. Only versions whose
+      # every tag belongs to this PR go, so an image that also carries a
+      # production tag stays.
+      - name: Delete the images of this PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PREFIX: pr-${{ github.event.pull_request.number }}-
+          PACKAGE: design-system-www
+        run: |
+          gh api --paginate "/orgs/${GITHUB_REPOSITORY_OWNER}/packages/container/${PACKAGE}/versions" \
+            --jq ".[] | select((.metadata.container.tags | length) > 0 and all(.metadata.container.tags[]; startswith(\"${PREFIX}\"))) | .id" \
+            | while read -r id; do
+                gh api -X DELETE "/orgs/${GITHUB_REPOSITORY_OWNER}/packages/container/${PACKAGE}/versions/${id}" || true
+              done
