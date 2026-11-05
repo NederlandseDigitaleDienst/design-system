@@ -39,7 +39,11 @@ export const tooltipStyles = css`
 
 	/* # Block */
 
+	/* A parent whose triggers sit close together sets
+	   --context-tooltip-pointer-events to none, so a click on the tooltip
+	   reaches the control underneath. Unset, the tooltip inherits as before. */
 	.tooltip {
+		pointer-events: var(--context-tooltip-pointer-events);
 		position: fixed;
 		opacity: 0;
 		margin: 0;

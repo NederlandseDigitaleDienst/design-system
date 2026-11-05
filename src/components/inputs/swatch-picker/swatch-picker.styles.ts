@@ -53,6 +53,9 @@ export const swatchPickerItemStyles = css`
 		--_swatch-picker-item-indicator-icon-size: 88%;
 		--_swatch-picker-item-indicator-content-color: var(--primitives-color-neutral-1000);
 		--context-tooltip-fingertip-size: var(--semantics-fingertip-size);
+		/* The name sits over the swatch above it, and the swatches are what you
+		   click: a click on the name lands on that swatch, not on this one. */
+		--context-tooltip-pointer-events: none;
 
 		box-sizing: border-box;
 		display: inline-flex;

@@ -179,4 +179,31 @@ describe('nldd-swatch-picker', () => {
 		document.dispatchEvent(new Event('scroll'));
 		expect(tooltip.open).toBe(false);
 	});
+
+	it('laat een klik op de naam door naar de kleur eronder', async () => {
+		el = await fixture(picker());
+		await settle();
+		const tooltip = items()[0].shadowRoot!.querySelector('nldd-tooltip')!;
+		const popover = tooltip.shadowRoot!.querySelector('.tooltip')!;
+		expect(getComputedStyle(popover).pointerEvents).toBe('none');
+	});
+
+	it('sluit de naam van de vorige kleur als je een andere kiest', async () => {
+		el = await fixture(picker());
+		await settle();
+		vi.useFakeTimers();
+		try {
+			const [first, second] = items();
+			const tooltipOf = (item: NLDDSwatchPickerItem) =>
+				item.shadowRoot!.querySelector('nldd-tooltip') as HTMLElement & { open: boolean };
+			first.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true }));
+			first.click();
+			second.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true }));
+			second.click();
+			expect(tooltipOf(first).open).toBe(false);
+			expect(tooltipOf(second).open).toBe(true);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
 });
