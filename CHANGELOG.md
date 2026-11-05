@@ -17,6 +17,10 @@ here; consult the commit history if you need that level of detail.
 
 - **`--context-tooltip-pointer-events` on `nldd-tooltip`,** for a parent whose triggers sit close together. Set to `none`, a click on the tooltip reaches the control underneath instead of the trigger. Unset, the tooltip works as before.
 
+### Changed
+
+- **The copy button of `nldd-code-viewer` is `sm` and stands centered on the first line,** so a block of one line is no higher than its code, with the button in the middle.
+
 ### Fixed
 
 - **A click on the name of a swatch in `nldd-swatch-picker` chose that swatch,** while the name covers the swatch above it. The click now reaches the swatch underneath.
