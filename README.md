@@ -1,8 +1,10 @@
 # NLDD Designsysteem
 
-Web Components voor de Nederlandse Digitale Dienst (Rijksoverheid).
+Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Toegankelijkheid, huisstijl en ontwerppatronen zitten erin.
 
-Meer over het designsysteem op **https://design.digitaledienst.overheid.nl**.
+De componenten zijn web components: gewone HTML-elementen die de browser zelf begrijpt. Daarom werken ze in Angular, React en Vue, en net zo goed zonder framework. Vind je een probleem, dan lossen we het één keer op, in het component zelf. Met de volgende update hebben alle teams de verbetering.
+
+Meer op **https://design.digitaledienst.overheid.nl**. Alle componenten staan in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/).
 
 ## Installatie
 
