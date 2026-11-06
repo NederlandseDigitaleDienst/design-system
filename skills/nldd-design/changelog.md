@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.16.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.1...v0.16.2) (2026-11-06)
+
 ### Added
 
 - **`hide-on` on `nldd-container`,** to take it away on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`). It uses the same test that hides keyboard shortcuts, and hides for screen readers as well. For what only works with one of the two, such as a setting about hover.
