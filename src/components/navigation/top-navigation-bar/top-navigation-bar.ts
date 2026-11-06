@@ -34,8 +34,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, query } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-// The event name only: a type import would not keep it, and the status bar itself is not bundled.
-const STATUS_BAR_CHANGE = 'nldd-status-bar-change';
+import { STATUS_BAR_CHANGE } from '../../../utilities/status-bar-change.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { topNavigationBarStyles } from './top-navigation-bar.styles.js';
 import { template } from './top-navigation-bar.template.js';

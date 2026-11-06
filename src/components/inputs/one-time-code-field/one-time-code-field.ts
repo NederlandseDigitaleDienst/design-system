@@ -186,9 +186,13 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 		return this._chars[index] ?? '';
 	}
 
-	/** The box the caret is drawn in, or -1 when there is none to point at. */
+	/**
+	 * The box with the focus ring, or -1 while the field has no focus. A
+	 * readonly field gets the ring too, since the boxes are its only focus
+	 * indicator, but no caret.
+	 */
 	get activeBox(): number {
-		if (!this._focused || this.readonly) return -1;
+		if (!this._focused) return -1;
 		return Math.min(this._box, this.boxes - 1);
 	}
 

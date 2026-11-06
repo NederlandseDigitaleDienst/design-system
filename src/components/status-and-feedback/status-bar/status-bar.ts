@@ -56,9 +56,7 @@ import { statusBarStyles } from './status-bar.styles.js';
 import { statusBarTemplate } from './status-bar.template.js';
 import '../../content/icon/icon.js';
 import { setState } from '../../../utilities/element-state.js';
-
-/** Fired on window when a status bar connects or disconnects. Read by nldd-top-navigation-bar. */
-export const STATUS_BAR_CHANGE = 'nldd-status-bar-change';
+import { STATUS_BAR_CHANGE } from '../../../utilities/status-bar-change.js';
 
 export type StatusBarVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 

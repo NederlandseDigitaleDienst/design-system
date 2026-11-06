@@ -5,12 +5,13 @@ import { BOX, type NLDDOneTimeCodeField } from './one-time-code-field.js';
 function renderBox(component: NLDDOneTimeCodeField, index: number): TemplateResult {
 	const character = component.charAt(index);
 	const active = index === component.activeBox;
+	const caret = active && !component.readonly;
 	return html`
 		<div class=${classMap({ 'one-time-code-field__box': true, 'is-filled': character !== '', 'is-active': active })}>
-			${character === '' ? (active ? html`<span class="one-time-code-field__caret"></span>` : nothing) : html`
+			${character === '' ? (caret ? html`<span class="one-time-code-field__caret"></span>` : nothing) : html`
 				<span class="one-time-code-field__character">
 					${character}
-					${active ? html`<span class="one-time-code-field__caret is-after"></span>` : nothing}
+					${caret ? html`<span class="one-time-code-field__caret is-after"></span>` : nothing}
 				</span>
 			`}
 		</div>

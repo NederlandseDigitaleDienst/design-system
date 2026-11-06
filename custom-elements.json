@@ -15987,7 +15987,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "The box the caret is drawn in, or -1 when there is none to point at.",
+              "description": "The box with the focus ring, or -1 while the field has no focus. A\nreadonly field gets the ring too, since the boxes are its only focus\nindicator, but no caret.",
               "readonly": true
             },
             {
@@ -46489,15 +46489,6 @@
       "path": "src/components/status-and-feedback/status-bar/status-bar.ts",
       "declarations": [
         {
-          "kind": "variable",
-          "name": "STATUS_BAR_CHANGE",
-          "type": {
-            "text": "string"
-          },
-          "default": "'nldd-status-bar-change'",
-          "description": "Fired on window when a status bar connects or disconnects. Read by nldd-top-navigation-bar."
-        },
-        {
           "kind": "class",
           "description": "A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status (\"Storing: …\", \"Gepland onderhoud …\"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. At the top of the page, in Safari, its color carries on above the page when the page is pulled down, and the ribbon of an nldd-top-navigation-bar below it then starts under the bar, as it does at rest. role and aria-live are set automatically from the variant: - critical → role=\"alert\" (implies aria-live=\"assertive\"; interrupts the screen reader) - others → role=\"status\" aria-live=\"polite\" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role=\"alert\" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).",
           "name": "NLDDStatusBar",
@@ -46630,14 +46621,6 @@
         }
       ],
       "exports": [
-        {
-          "kind": "js",
-          "name": "STATUS_BAR_CHANGE",
-          "declaration": {
-            "name": "STATUS_BAR_CHANGE",
-            "module": "src/components/status-and-feedback/status-bar/status-bar.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "NLDDStatusBar",
@@ -50694,6 +50677,31 @@
           "declaration": {
             "name": "spacingToValue",
             "module": "src/utilities/spacing-scale.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/status-bar-change.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "STATUS_BAR_CHANGE",
+          "type": {
+            "text": "string"
+          },
+          "default": "'nldd-status-bar-change'",
+          "description": "Fired on window when an nldd-status-bar connects or disconnects, so an\nnldd-top-navigation-bar measures again where its ribbon starts. In a module\nof its own, so the navigation bar can listen without bundling the status bar."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "STATUS_BAR_CHANGE",
+          "declaration": {
+            "name": "STATUS_BAR_CHANGE",
+            "module": "src/utilities/status-bar-change.ts"
           }
         }
       ]

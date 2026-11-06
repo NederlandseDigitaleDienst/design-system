@@ -189,6 +189,17 @@ describe('nldd-one-time-code-field', () => {
 		expect(active()).toBe(1);
 	});
 
+	it('keeps the focus ring on a readonly field, without a caret, and leaves its value alone', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123456" readonly></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		const root = el.shadowRoot!;
+		expect(root.querySelectorAll('.one-time-code-field__box.is-active')).toHaveLength(1);
+		expect(root.querySelector('.one-time-code-field__caret')).toBeNull();
+		await beforeInput('deleteContentBackward');
+		expect(el.value).toBe('123456');
+	});
+
 	it('moves with the arrow keys, Home and End, but not past the first empty box', async () => {
 		el = await fixture('<nldd-one-time-code-field value="123"></nldd-one-time-code-field>');
 		el.focus();
