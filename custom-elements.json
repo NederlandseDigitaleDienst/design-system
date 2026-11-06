@@ -5139,6 +5139,36 @@
               },
               "default": "undefined",
               "attribute": "cite"
+            },
+            {
+              "kind": "field",
+              "name": "smCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "sm-custom-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mdCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "md-custom-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "lgCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "lg-custom-size",
+              "reflects": true
             }
           ],
           "attributes": [
@@ -5150,6 +5180,33 @@
               "default": "undefined",
               "fieldName": "cite",
               "description": "URL of the source (forwarded to the <blockquote> element)"
+            },
+            {
+              "name": "sm-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "smCustomSize",
+              "description": "A size of your own for the quote at sm, any CSS length (e.g. '32px', '2rem', 'clamp(1.5rem, 4vw, 3rem)'), for a quote that stands out on its own, such as on a landing page. A quote in running text keeps its own size. Set per breakpoint on purpose: a breakpoint without one keeps the quote's own size, so a quote made large for a wide screen never breaks a narrow one. Never smaller than the quote's own size at the same breakpoint: a smaller value shows at that size, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Only the quote grows, with its line height and the space between paragraphs; the attribution and the border stay as they are. An invalid value falls back to the quote's own size"
+            },
+            {
+              "name": "md-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "mdCustomSize",
+              "description": "The same, at md"
+            },
+            {
+              "name": "lg-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "lgCustomSize",
+              "description": "The same, at lg"
             }
           ],
           "superclass": {
@@ -6876,7 +6933,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography — it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.",
+          "description": "One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography — it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.",
           "name": "NLDDText",
           "members": [
             {
@@ -6887,6 +6944,36 @@
               },
               "default": "'md'",
               "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "smCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "sm-custom-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mdCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "md-custom-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "lgCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "lg-custom-size",
               "reflects": true
             },
             {
@@ -6939,9 +7026,36 @@
               "default": "'md'",
               "fieldName": "size",
               "expandedType": {
-                "text": "'lg' | 'md' | 'sm' | 'xs' | 'xxs'"
+                "text": "'display-1' | 'display-2' | 'display-3' | 'display-4' | 'display-5' | 'display-6' | 'lg' | 'md' | 'sm' | 'xs' | 'xxs'"
               },
-              "description": "Text size on the body scale: 'xxs' | 'xs' | 'sm' | 'md' | 'lg' (default: 'md')"
+              "description": "Text size: 'xxs' | 'xs' | 'sm' | 'md' | 'lg' on the body scale (default: 'md'), or 'display-6' to 'display-1' for large letters that are not a heading, from small to large"
+            },
+            {
+              "name": "sm-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "smCustomSize",
+              "description": "A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than `display-1`. A var() works when the variable holds a length; one that is not defined leaves the text without its size, the floor included. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so text made large for a wide screen never breaks a narrow one. Never smaller than `display-1` at the same breakpoint: a smaller value shows as `display-1`, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of `display-1`. An invalid value falls back to `size`"
+            },
+            {
+              "name": "md-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "mdCustomSize",
+              "description": "The same, at md"
+            },
+            {
+              "name": "lg-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "lgCustomSize",
+              "description": "The same, at lg"
             },
             {
               "name": "weight",
@@ -7214,7 +7328,7 @@
               "expandedType": {
                 "text": "1 | 2 | 3 | 4 | 5 | 6"
               },
-              "description": "Renders text as h1–h6; absent renders a p, for a title that is not a heading."
+              "description": "Renders text as h1–h6. Absent renders a p, which is no heading: for large letters that are not a heading, use nldd-text with a display size."
             }
           ],
           "superclass": {
@@ -8804,6 +8918,14 @@
         },
         {
           "kind": "js",
+          "name": "NLDDOneTimeCodeField",
+          "declaration": {
+            "name": "NLDDOneTimeCodeField",
+            "module": "./inputs/one-time-code-field/one-time-code-field.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "NLDDPasswordField",
           "declaration": {
             "name": "NLDDPasswordField",
@@ -9172,18 +9294,18 @@
         },
         {
           "kind": "js",
-          "name": "NLDDTaskBoard",
+          "name": "NLDDColumnBoard",
           "declaration": {
-            "name": "NLDDTaskBoard",
-            "module": "./layout/task-board/task-board.js"
+            "name": "NLDDColumnBoard",
+            "module": "./layout/column-board/column-board.js"
           }
         },
         {
           "kind": "js",
-          "name": "NLDDTaskBoardColumn",
+          "name": "NLDDColumnBoardColumn",
           "declaration": {
-            "name": "NLDDTaskBoardColumn",
-            "module": "./layout/task-board/task-board.js"
+            "name": "NLDDColumnBoardColumn",
+            "module": "./layout/column-board/column-board.js"
           }
         },
         {
@@ -15645,6 +15767,658 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/one-time-code-field/one-time-code-field.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "BOX",
+          "description": "A box in the format; any other part is a separator."
+        },
+        {
+          "kind": "class",
+          "description": "A field for a code someone receives once and types over: by text message, by email, from an authenticator app or on a letter. It shows a box per character, but it is one native input underneath, so pasting the whole code, the code a phone offers from a text message (`autocomplete=\"one-time-code\"`), a screen reader and voice control all work as on any other field. The characters are monospace, so 0 and O, or 1, l and I, read apart. Typing fills the boxes from the left. The arrow keys, Home, End and a click move the caret from box to box. In a filled box it stands after the character: Backspace empties that box, without moving the rest up, so you type the right one straight in. A pasted code drops whatever is not part of one, so \"123 456\" or \"123-456\" becomes \"123456\", and a whole code replaces what was there. From a pasted sentence, such as a text message, the field takes the last word that is as long as the code, so \"Your code is 123456\" fills in \"123456\". Once every box is full the field fires `nldd-complete`, and again after a correction that leaves it full. Submitting then is up to your app: send the form, or wait for a button, but never both, or a correction submits twice. Not for a PIN or a password, which must not be readable on screen: use `nldd-password-field`. Put the field in an `nldd-form-field`, whose label says where the code comes from (\"Code uit de sms\").",
+          "name": "NLDDOneTimeCodeField",
+          "members": [
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "blocksImplicitSubmission",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Counts for the implicit-submission rule: a single-line field where Enter\nwould submit the form. See utilities/implicit-submission.ts."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "OneTimeCodeSize"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "length",
+              "default": "6",
+              "attribute": "length",
+              "reflects": true,
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "format",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible label forwarded to the inner <input>. Set automatically by nldd-form-field.",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "invalid",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "inputId",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "input-id"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "OneTimeCodeType"
+              },
+              "default": "'numeric'",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "uppercase",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "uppercase",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "formatParts",
+              "type": {
+                "text": "FormatPart[] | null"
+              },
+              "description": "The format as boxes and the separators between them, or null without a usable format.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boxes",
+              "type": {
+                "text": "number"
+              },
+              "description": "The length: the boxes in the format, or else `length` as a whole number of at least one.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `pattern` the native input checks: exactly `boxes` characters of the type.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "charAt",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "The character in a box, '' when it is empty."
+            },
+            {
+              "kind": "field",
+              "name": "activeBox",
+              "type": {
+                "text": "number"
+              },
+              "description": "The box with the focus ring, or -1 while the field has no focus. A\nreadonly field gets the ring too, since the boxes are its only focus\nindicator, but no caret.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Delegates focus to the inner native `<input>`."
+            },
+            {
+              "kind": "field",
+              "name": "describedByElements",
+              "type": {
+                "text": "readonly Element[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "description": "When the code changes; detail: { value: string }"
+            },
+            {
+              "name": "change",
+              "description": "When the code is committed; detail: { value: string }"
+            },
+            {
+              "name": "nldd-complete",
+              "description": "When every box is filled; detail: { value: string }"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "OneTimeCodeSize"
+              },
+              "default": "'md'",
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm'"
+              },
+              "description": "'sm' | 'md' (default) | 'lg'. 'lg' has boxes of 56px with larger characters, for a page where the code is the only thing to do, such as signing in."
+            },
+            {
+              "name": "length",
+              "default": "DEFAULT_LENGTH",
+              "fieldName": "length",
+              "description": "How many characters the code has (default: 6)."
+            },
+            {
+              "name": "format",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "format",
+              "description": "The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are."
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible label forwarded to the inner input. Set automatically by nldd-form-field.",
+              "fieldName": "accessibleLabel"
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "invalid",
+              "description": "Marks the field as invalid"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Readonly state"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
+            },
+            {
+              "name": "input-id",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "inputId",
+              "description": "Sets the id on the native input. Set automatically by nldd-form-field."
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "description": "Input name for form submission"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "The code"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "OneTimeCodeType"
+              },
+              "default": "'numeric'",
+              "fieldName": "type",
+              "expandedType": {
+                "text": "'alphanumeric' | 'numeric'"
+              },
+              "description": "What the code holds: 'numeric' (default, digits only, raises the number keyboard) | 'alphanumeric' (letters and digits)"
+            },
+            {
+              "name": "uppercase",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "uppercase",
+              "description": "Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type=\"alphanumeric\"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells \"a\" from \"A\", such as some recovery codes: a value turned into capitals would no longer match."
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required",
+              "description": "Required state. A code that is not complete counts as invalid too."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DescribedBy",
+              "module": "/src/utilities/described-by-mixin.js"
+            },
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-one-time-code-field",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "BOX",
+          "declaration": {
+            "name": "BOX",
+            "module": "src/components/inputs/one-time-code-field/one-time-code-field.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDOneTimeCodeField",
+          "declaration": {
+            "name": "NLDDOneTimeCodeField",
+            "module": "src/components/inputs/one-time-code-field/one-time-code-field.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-one-time-code-field",
+          "declaration": {
+            "name": "NLDDOneTimeCodeField",
+            "module": "src/components/inputs/one-time-code-field/one-time-code-field.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/password-field/password-field.ts",
       "declarations": [
         {
@@ -17527,12 +18301,13 @@
             },
             {
               "kind": "field",
-              "name": "showSearchButton",
+              "name": "searchButton",
               "type": {
-                "text": "boolean"
+                "text": "SearchButtonAppearance | null"
               },
-              "default": "false",
-              "attribute": "show-search-button",
+              "default": "null",
+              "description": "Shows a search button in this appearance; null for none, an empty string for the default.",
+              "attribute": "search-button",
               "reflects": true
             },
             {
@@ -17967,13 +18742,16 @@
               "fieldName": "accessibleLabel"
             },
             {
-              "name": "show-search-button",
+              "name": "search-button",
               "type": {
-                "text": "boolean"
+                "text": "SearchButtonAppearance | null"
               },
-              "default": "false",
-              "fieldName": "showSearchButton",
-              "description": "When set, shows a search button on the right"
+              "default": "null",
+              "description": "Shows a search button on the right, in the appearance you name: 'neutral-tinted' (also with no value) | 'accent-filled'. Leave it out for no button: Enter searches as well. 'accent-filled' is for a page where searching is the main task, such as a search page; in a header or above a list the quiet one fits.",
+              "fieldName": "searchButton",
+              "expandedType": {
+                "text": "'' | 'accent-filled' | 'neutral-tinted'"
+              }
             },
             {
               "name": "shortcut",
@@ -25689,6 +26467,15 @@
               "reflects": true
             },
             {
+              "kind": "field",
+              "name": "buttonSize",
+              "type": {
+                "text": "'sm' | 'xs'"
+              },
+              "description": "The size a slotted button gets: one step below the field, so it fits inside the border.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "formValue",
               "return": {
@@ -26149,7 +26936,13 @@
             "package": "lit"
           },
           "tagName": "nldd-text-field",
-          "customElement": true
+          "customElement": true,
+          "slots": [
+            {
+              "name": "button",
+              "description": "One `nldd-button` or `nldd-icon-button` at the end of the field, for the one action of a form that is only this field: sign up with an email address, redeem a code. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type=\"submit\"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`."
+            }
+          ]
         }
       ],
       "exports": [
@@ -29601,6 +30394,323 @@
           "declaration": {
             "name": "NLDDCollection",
             "module": "src/components/layout/collection/collection.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/layout/column-board/column-board-column.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One column of an `nldd-column-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here (\"Verplaatst naar In behandeling\"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.",
+          "name": "NLDDColumnBoardColumn",
+          "members": [
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The column's name: what a screen reader hears for it.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "description": "The column's items, in order; a hidden one does not count.",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "The column's name, shown in the header and used as its accessible name"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name in place of `text`, for a column whose header comes from the slot"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn`"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-column-board-column",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "header",
+              "description": "The header, in place of `text` and the count"
+            },
+            {
+              "name": "",
+              "description": "The items"
+            },
+            {
+              "name": "footer",
+              "description": "Right under the last item, such as a button to add one; it scrolls along with the items"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDColumnBoardColumn",
+          "declaration": {
+            "name": "NLDDColumnBoardColumn",
+            "module": "src/components/layout/column-board/column-board-column.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-column-board-column",
+          "declaration": {
+            "name": "NLDDColumnBoardColumn",
+            "module": "src/components/layout/column-board/column-board-column.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/layout/column-board/column-board.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-column-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu \"Verplaatsen naar\" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows \"Dit bord is alleen-lezen\" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.",
+          "name": "NLDDColumnBoard",
+          "members": [
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "NLDDColumnBoardColumn[]"
+              },
+              "description": "The columns, in order.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "moveItem",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "toColumn",
+                  "type": {
+                    "text": "string | NLDDColumnBoardColumn"
+                  }
+                },
+                {
+                  "name": "toIndex",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "nldd-move",
+              "description": "An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)"
+            },
+            {
+              "name": "nldd-move-denied",
+              "description": "An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name of the board (default: \"Bord\")"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "height",
+              "description": "Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-column-board",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "The columns: `nldd-column-board-column`"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDColumnBoardColumn",
+          "declaration": {
+            "name": "NLDDColumnBoardColumn",
+            "module": "src/components/layout/column-board/column-board.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDColumnBoard",
+          "declaration": {
+            "name": "NLDDColumnBoard",
+            "module": "src/components/layout/column-board/column-board.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-column-board",
+          "declaration": {
+            "name": "NLDDColumnBoard",
+            "module": "src/components/layout/column-board/column-board.ts"
           }
         }
       ]
@@ -36627,323 +37737,6 @@
           "declaration": {
             "name": "NLDDStackedSplitView",
             "module": "src/components/layout/split-views/stacked-split-view/stacked-split-view.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/layout/task-board/task-board-column.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "One column of an `nldd-task-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here (\"Verplaatst naar In behandeling\"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.",
-          "name": "NLDDTaskBoardColumn",
-          "members": [
-            {
-              "kind": "field",
-              "name": "text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "text",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "The column's name: what a screen reader hears for it.",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "items",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "description": "The column's items, in order; a hidden one does not count.",
-              "readonly": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "text",
-              "description": "The column's name, shown in the header and used as its accessible name"
-            },
-            {
-              "name": "accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "accessibleLabel",
-              "description": "Accessible name in place of `text`, for a column whose header comes from the slot"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value",
-              "description": "What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn`"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-task-board-column",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "header",
-              "description": "The header, in place of `text` and the count"
-            },
-            {
-              "name": "",
-              "description": "The items"
-            },
-            {
-              "name": "footer",
-              "description": "Right under the last item, such as a button to add one; it scrolls along with the items"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "NLDDTaskBoardColumn",
-          "declaration": {
-            "name": "NLDDTaskBoardColumn",
-            "module": "src/components/layout/task-board/task-board-column.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-task-board-column",
-          "declaration": {
-            "name": "NLDDTaskBoardColumn",
-            "module": "src/components/layout/task-board/task-board-column.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/layout/task-board/task-board.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-task-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu \"Verplaatsen naar\" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows \"Dit bord is alleen-lezen\" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.",
-          "name": "NLDDTaskBoard",
-          "members": [
-            {
-              "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "height",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "columns",
-              "type": {
-                "text": "NLDDTaskBoardColumn[]"
-              },
-              "description": "The columns, in order.",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "moveItem",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "toColumn",
-                  "type": {
-                    "text": "string | NLDDTaskBoardColumn"
-                  }
-                },
-                {
-                  "name": "toIndex",
-                  "optional": true,
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<T>"
-              },
-              "default": "{}",
-              "attribute": "translations",
-              "inheritedFrom": {
-                "name": "withTranslations",
-                "module": "src/utilities/with-translations.ts"
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "nldd-move",
-              "description": "An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)"
-            },
-            {
-              "name": "nldd-move-denied",
-              "description": "An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "accessibleLabel",
-              "description": "Accessible name of the board (default: \"Takenbord\")"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "height",
-              "description": "Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)"
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves"
-            },
-            {
-              "name": "translations",
-              "type": {
-                "text": "Partial<T>"
-              },
-              "default": "{}",
-              "fieldName": "translations",
-              "inheritedFrom": {
-                "name": "withTranslations",
-                "module": "src/utilities/with-translations.ts"
-              },
-              "description": "Override translation keys; unset keys fall back to Dutch"
-            }
-          ],
-          "mixins": [
-            {
-              "name": "withTranslations",
-              "module": "/src/utilities/with-translations.js"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-task-board",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "",
-              "description": "The columns: `nldd-task-board-column`"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "NLDDTaskBoardColumn",
-          "declaration": {
-            "name": "NLDDTaskBoardColumn",
-            "module": "src/components/layout/task-board/task-board.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "NLDDTaskBoard",
-          "declaration": {
-            "name": "NLDDTaskBoard",
-            "module": "src/components/layout/task-board/task-board.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-task-board",
-          "declaration": {
-            "name": "NLDDTaskBoard",
-            "module": "src/components/layout/task-board/task-board.ts"
           }
         }
       ]
@@ -45697,7 +46490,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status (\"Storing: …\", \"Gepland onderhoud …\"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. role and aria-live are set automatically from the variant: - critical → role=\"alert\" (implies aria-live=\"assertive\"; interrupts the screen reader) - others → role=\"status\" aria-live=\"polite\" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role=\"alert\" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).",
+          "description": "A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status (\"Storing: …\", \"Gepland onderhoud …\"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. At the top of the page, in Safari, its color carries on above the page when the page is pulled down, and the ribbon of an nldd-top-navigation-bar below it then starts under the bar, as it does at rest. role and aria-live are set automatically from the variant: - critical → role=\"alert\" (implies aria-live=\"assertive\"; interrupts the screen reader) - others → role=\"status\" aria-live=\"polite\" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role=\"alert\" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).",
           "name": "NLDDStatusBar",
           "members": [
             {
@@ -45978,7 +46771,7 @@
         },
         {
           "kind": "class",
-          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
+          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
           "name": "NLDDStepBar",
           "members": [
             {
@@ -46955,6 +47748,149 @@
           "declaration": {
             "name": "forceScrollLayerRepaint",
             "module": "src/utilities/color-scheme-repaint.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/custom-font-size.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "BREAKPOINTS",
+          "type": {
+            "text": "readonly Breakpoint[]"
+          },
+          "default": "['sm', 'md', 'lg']"
+        },
+        {
+          "kind": "variable",
+          "name": "DISPLAY_1_FONT_SIZE",
+          "type": {
+            "text": "Record<Breakpoint, string>"
+          },
+          "default": "{ sm: 'var(--primitives-font-size-700)', md: 'var(--primitives-font-size-800)', lg: 'var(--primitives-font-size-1000)', }",
+          "description": "The font size of display size 1 per breakpoint: the floor of a custom size on nldd-title and nldd-text."
+        },
+        {
+          "kind": "function",
+          "name": "isFontSize",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "A length font-size takes. A keyword cannot go inside the max() that keeps the floor, so it would void the whole font."
+        },
+        {
+          "kind": "function",
+          "name": "applyCustomFontSizes",
+          "return": {
+            "type": {
+              "text": "Partial<Record<Breakpoint, string>>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "prefix",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "own",
+              "type": {
+                "text": "Record<Breakpoint, string>"
+              }
+            }
+          ],
+          "description": "Writes the valid custom sizes onto the host and returns them. A breakpoint\nwithout a valid value keeps the size from the scale. Sets the\n`invalid-custom-size` state when a value is given that is not a length.\nCall it from willUpdate(), so the first paint already has the size."
+        },
+        {
+          "kind": "function",
+          "name": "checkCustomFontSizeFloor",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "sizes",
+              "type": {
+                "text": "Partial<Record<Breakpoint, string>>"
+              }
+            },
+            {
+              "name": "floors",
+              "type": {
+                "text": "Record<Breakpoint, string>"
+              }
+            }
+          ],
+          "description": "DEV-only: sets the `custom-size-below-floor` state when a fixed custom size\nis smaller than the floor at its breakpoint, which then shows instead."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "BREAKPOINTS",
+          "declaration": {
+            "name": "BREAKPOINTS",
+            "module": "src/utilities/custom-font-size.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DISPLAY_1_FONT_SIZE",
+          "declaration": {
+            "name": "DISPLAY_1_FONT_SIZE",
+            "module": "src/utilities/custom-font-size.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isFontSize",
+          "declaration": {
+            "name": "isFontSize",
+            "module": "src/utilities/custom-font-size.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "applyCustomFontSizes",
+          "declaration": {
+            "name": "applyCustomFontSizes",
+            "module": "src/utilities/custom-font-size.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "checkCustomFontSizeFloor",
+          "declaration": {
+            "name": "checkCustomFontSizeFloor",
+            "module": "src/utilities/custom-font-size.ts"
           }
         }
       ]
@@ -49741,6 +50677,31 @@
           "declaration": {
             "name": "spacingToValue",
             "module": "src/utilities/spacing-scale.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/status-bar-change.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "STATUS_BAR_CHANGE",
+          "type": {
+            "text": "string"
+          },
+          "default": "'nldd-status-bar-change'",
+          "description": "Fired on window when an nldd-status-bar connects or disconnects, so an\nnldd-top-navigation-bar measures again where its ribbon starts. In a module\nof its own, so the navigation bar can listen without bundling the status bar."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "STATUS_BAR_CHANGE",
+          "declaration": {
+            "name": "STATUS_BAR_CHANGE",
+            "module": "src/utilities/status-bar-change.ts"
           }
         }
       ]

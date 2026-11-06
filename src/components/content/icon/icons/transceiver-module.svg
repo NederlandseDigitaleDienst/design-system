@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-	<path fill="currentColor" d="M21 14v4c0 .55-.45 1-1 1h-1v2h-2v-2h-1v2h-2v-2h-1v2h-2v-2h-1v2h-2v-2h-1v2h-2v-2h-1c-.55 0-1-.45-1-1v-4c0-.55 .45-1 1-1h16c.55 0 1 .45 1 1zm-16 3h14v-2h-14v2z"/>
-	<path fill="currentColor" d="M15.75 8.69l1.22-1.22l1.06 1.06l-3.03 3.03l-3.03-3.03l1.06-1.06l1.22 1.22v-6.19h1.5v6.19z"/>
-	<path fill="currentColor" d="M12.03 4.97l-1.06 1.06l-1.22-1.22v6.19h-1.5v-6.19l-1.22 1.22l-1.06-1.06l3.03-3.03l3.03 3.03z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+	<path fill="currentColor" d="M84 56v16c0 2.2-1.8 4-4 4h-4v8h-8v-8h-4v8h-8v-8h-4v8h-8v-8h-4v8h-8v-8h-4v8h-8v-8h-4c-2.2 0-4-1.8-4-4v-16c0-2.2 1.8-4 4-4h64c2.2 0 4 1.8 4 4zm-64 12h56v-8h-56v8z"/>
+	<path fill="currentColor" d="m63 34.76 4.88-4.88 4.24 4.24-12.12 12.12-12.12-12.12 4.24-4.24 4.88 4.88v-24.76h6v24.76z"/>
+	<path fill="currentColor" d="m48.12 19.88-4.24 4.24-4.88-4.88v24.76h-6v-24.76l-4.88 4.88-4.24-4.24 12.12-12.12 12.12 12.12z"/>
 </svg>

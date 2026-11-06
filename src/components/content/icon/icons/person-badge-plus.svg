@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-	<path fill="currentColor" d="M18 13a5 5 0 1 1 0 10 5 5 0 0 1 0-10m-.75 4.25H15v1.5h2.25V21h1.5v-2.25H21v-1.5h-2.25V15h-1.5z"/>
-	<path fill="currentColor" d="M13.53 14a6 6 0 0 0-1.19 2H9a3 3 0 0 0-3 3v3H4v-3a5 5 0 0 1 5-5z"/>
-	<path fill="currentColor" d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+	<path fill="currentColor" d="M72 52a20 20 0 1 1 0 40 20 20 0 0 1 0-40m-3 17H60v6h9V84h6v-9H84v-6h-9V60h-6z"/>
+	<path fill="currentColor" d="M54.12 56a24 24 0 0 0-4.76 8H36a12 12 0 0 0-12 12v12H16v-12a20 20 0 0 1 20-20z"/>
+	<path fill="currentColor" d="M48 8a20 20 0 1 1 0 40 20 20 0 0 1 0-40m0 8a12 12 0 1 0 0 24 12 12 0 0 0 0-24"/>
 </svg>

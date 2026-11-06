@@ -1,8 +1,10 @@
-import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll, beforeEach } from 'vitest';
 // The token the measure comes from lives there, not in the test environment.
 import '../../../assets/styles/variables.css';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './text.js';
+import '../title/title.js';
 import '../rich-text/rich-text.js';
 import richTextCss from '../rich-text/rich-text.css?raw';
 
@@ -134,5 +136,77 @@ describe('nldd-text – inline elements match nldd-rich-text', () => {
 					.toEqual([pseudo, property, getComputedStyle(a, pseudo).getPropertyValue(property)]);
 			}
 		}
+	});
+});
+
+describe('nldd-text – display sizes and custom size', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	const text = async (attrs: string): Promise<HTMLElement> => {
+		el = await fixture(`<nldd-text ${attrs}>240</nldd-text>`);
+		await waitForUpdate(el);
+		return el;
+	};
+
+	const titleStyle = async (size: number) => {
+		const title = await fixture<HTMLElement>(`<nldd-title size="${size}" text="240" heading-level="2"></nldd-title>`);
+		const style = getComputedStyle(title.shadowRoot!.querySelector('.title__text')!);
+		const result = { fontSize: style.fontSize, fontWeight: style.fontWeight, fontFamily: style.fontFamily, lineHeight: style.lineHeight };
+		cleanup(title);
+		return result;
+	};
+
+	it.each([1, 3, 6])('takes the typography of title size %i at the same display size', async (size) => {
+		const title = await titleStyle(size);
+		await text(`size="display-${size}"`);
+		const { fontSize, fontWeight, fontFamily, lineHeight } = getComputedStyle(el);
+		expect({ fontSize, fontWeight, fontFamily, lineHeight }).toEqual(title);
+	});
+
+	it('leaves weight and line-height to the display size', async () => {
+		await text('size="display-1"');
+		const own = getComputedStyle(el).fontWeight;
+		cleanup(el);
+		await text('size="display-1" weight="regular" line-height="loose"');
+		expect(getComputedStyle(el).fontWeight).toBe(own);
+	});
+
+	it('writes each breakpoint value into its own variable', async () => {
+		await text('sm-custom-size="120px" md-custom-size="160px" lg-custom-size="200px"');
+		expect(el.style.getPropertyValue('--_text-sm-custom-size')).toBe('120px');
+		expect(el.style.getPropertyValue('--_text-md-custom-size')).toBe('160px');
+		expect(el.style.getPropertyValue('--_text-lg-custom-size')).toBe('200px');
+	});
+
+	it('grows past display-1 with the typography of display-1', async () => {
+		const display1 = await titleStyle(1);
+		await text('sm-custom-size="200px" md-custom-size="200px" lg-custom-size="200px"');
+		const style = getComputedStyle(el);
+		expect(style.fontSize).toBe('200px');
+		expect(style.fontWeight).toBe(display1.fontWeight);
+		expect(style.fontFamily).toBe(display1.fontFamily);
+	});
+
+	it('never goes below display-1', async () => {
+		const display1 = await titleStyle(1);
+		await text('sm-custom-size="10px" md-custom-size="10px" lg-custom-size="10px"');
+		expect(getComputedStyle(el).fontSize).toBe(display1.fontSize);
+		expect(el.matches(':state(custom-size-below-floor)')).toBe(true);
+	});
+
+	it('keeps its size for a value that is not a length', async () => {
+		await text('lg-custom-size="huge"');
+		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
+		expect(el.matches(':state(invalid-custom-size)')).toBe(true);
 	});
 });

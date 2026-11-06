@@ -2,7 +2,8 @@ import { describe, it, expect, afterEach } from 'vitest';
 import '../components/index.js';
 import data from '../../lint/data.generated.json';
 import { devRules } from './dev-rules.generated.js';
-import { findRoots, findViolations } from './dev-checks.js';
+import { findRoots, findViolations, lacksFoucGuard } from './dev-checks.js';
+import foucCss from '../assets/styles/fouc.css?inline';
 
 const patterns = import.meta.glob('../patterns/**/*.html', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 
@@ -113,5 +114,39 @@ describe('rules in the browser', () => {
 		button.accessibleLabel = 'Sluit';
 		await button.updateComplete;
 		expect(findViolations(root, rule)).toEqual([]);
+	});
+});
+
+describe('FOUC guard', () => {
+	let root: HTMLElement | undefined;
+	let style: HTMLStyleElement | undefined;
+
+	afterEach(() => {
+		root?.remove();
+		style?.remove();
+	});
+
+	const mount = (markup: string) => {
+		root = document.createElement('div');
+		root.innerHTML = markup;
+		document.body.append(root);
+	};
+
+	it('says nothing on a page without components', () => {
+		mount('<p>Mijn Dienst</p>');
+		expect(lacksFoucGuard(root)).toBe(false);
+	});
+
+	it('finds a page with components and no guard', () => {
+		mount('<nldd-button text="Bewaar"></nldd-button>');
+		expect(lacksFoucGuard(root)).toBe(true);
+	});
+
+	it('finds the guard once fouc.css is loaded', () => {
+		style = document.createElement('style');
+		style.textContent = foucCss;
+		document.head.append(style);
+		mount('<nldd-button text="Bewaar"></nldd-button>');
+		expect(lacksFoucGuard(root)).toBe(false);
 	});
 });

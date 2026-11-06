@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-text[size^="display-"][weight]'
+message: '`weight` belongs to the body sizes; a display size has its own weight. Remove it.'
+examples:
+  passed: ['<nldd-text size="lg" weight="bold">Mijn Dienst</nldd-text>', '<nldd-text size="display-1">240</nldd-text>']
+  failed: ['<nldd-text size="display-1" weight="bold">240</nldd-text>']
+  cantTell: ['<nldd-text :size="maat" weight="bold">240</nldd-text>']

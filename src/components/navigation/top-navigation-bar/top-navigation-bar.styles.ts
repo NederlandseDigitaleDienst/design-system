@@ -168,6 +168,11 @@ export const topNavigationBarStyles = css`
 		}
 	}
 
+	:host([data-under-status-bar]) .top-navigation-bar__logo::before,
+	:host([data-under-status-bar]) .top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top {
+		display: none;
+	}
+
 	@keyframes top-navigation-bar-ribbon-at-top {
 		to {
 			visibility: hidden;

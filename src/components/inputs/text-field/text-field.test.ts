@@ -1,6 +1,8 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import './text-field.js';
+import '../../actions/button/button.js';
+import '../../actions/icon-button/icon-button.js';
 
 describe('nldd-text-field', () => {
 	let el: HTMLElement;
@@ -210,5 +212,62 @@ describe('nldd-text-field', () => {
 		input.dispatchEvent(new Event('input', { bubbles: true }));
 		await waitForUpdate(el);
 		expect((el as unknown as { value: string }).value).toBe('U42');
+	});
+});
+
+describe('nldd-text-field – button slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const end = () => el.shadowRoot!.querySelector<HTMLElement>('.text-field__end')!;
+
+	it('reserves no space while the slot is empty', async () => {
+		el = await fixture('<nldd-text-field></nldd-text-field>');
+		expect(end().hidden).toBe(true);
+	});
+
+	it('sizes a slotted button one step below the field, over a size of its own', async () => {
+		el = await fixture('<nldd-text-field><nldd-icon-button slot="button" size="lg" icon="arrow-right" text="Schrijf in"></nldd-icon-button></nldd-text-field>');
+		await waitForUpdate(el);
+		const button = el.querySelector('nldd-icon-button')!;
+		expect(end().hidden).toBe(false);
+		expect(button.getAttribute('size')).toBe('sm');
+		el.setAttribute('size', 'sm');
+		await waitForUpdate(el);
+		expect(button.getAttribute('size')).toBe('xs');
+	});
+
+	it('sizes a button added later', async () => {
+		el = await fixture('<nldd-text-field></nldd-text-field>');
+		const button = document.createElement('nldd-button');
+		button.slot = 'button';
+		button.setAttribute('text', 'Verzilver');
+		el.append(button);
+		await waitForUpdate(el);
+		expect(button.getAttribute('size')).toBe('sm');
+		expect(end().hidden).toBe(false);
+	});
+
+	it('disables the button with the field, and enables only what it disabled', async () => {
+		el = await fixture('<nldd-text-field><nldd-button slot="button" text="Verzilver"></nldd-button></nldd-text-field>');
+		await waitForUpdate(el);
+		const button = el.querySelector('nldd-button')!;
+		el.setAttribute('disabled', '');
+		await waitForUpdate(el);
+		expect(button.hasAttribute('disabled')).toBe(true);
+		el.removeAttribute('disabled');
+		await waitForUpdate(el);
+		expect(button.hasAttribute('disabled')).toBe(false);
+	});
+
+	it('leaves a button that was disabled of its own alone', async () => {
+		el = await fixture('<nldd-text-field disabled><nldd-button slot="button" disabled text="Verzilver"></nldd-button></nldd-text-field>');
+		await waitForUpdate(el);
+		el.removeAttribute('disabled');
+		await waitForUpdate(el);
+		expect(el.querySelector('nldd-button')!.hasAttribute('disabled')).toBe(true);
 	});
 });

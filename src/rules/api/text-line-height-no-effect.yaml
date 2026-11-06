@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-text[size^="display-"][line-height]'
+message: '`line-height` belongs to the body sizes; a display size has its own line height. Remove it.'
+examples:
+  passed: ['<nldd-text size="lg" line-height="tight">Mijn Dienst</nldd-text>', '<nldd-text size="display-1">240</nldd-text>']
+  failed: ['<nldd-text size="display-1" line-height="tight">240</nldd-text>']
+  cantTell: ['<nldd-text :size="maat" line-height="tight">240</nldd-text>']

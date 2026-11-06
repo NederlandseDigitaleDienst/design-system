@@ -15,13 +15,17 @@
  * values as `nldd-step-cell`, so a flow reads in one vocabulary
  * whether it runs across or down.
  *
- * Horizontal only. For steps under each other, build an `nldd-list` with an
- * `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps
- * usually carry more than a title, and a list row already does that.
+ * Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for
+ * its label, and with more of them you count instead of seeing at a glance
+ * how far you are. For more steps, or steps under each other, build an
+ * `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row:
+ * vertical steps usually carry more than a title, and a list row already does
+ * that.
  *
- * Below the sm breakpoint (a container query, so measured on the component
- * itself rather than on the viewport) it folds into one line of text plus a
- * segmented bar. The full list of steps stays in the DOM, only visually hidden,
+ * When the bar is no wider than the sm breakpoint, or than 120px per step,
+ * whichever is wider (a container query, so measured on the component itself
+ * rather than on the viewport), it folds into one line of text plus a
+ * segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden,
  * so assistive software hears no less than a wide screen shows. A step that
  * is a link or a button is out of the tab order then: Tab would land on
  * something you cannot see (WCAG 2.4.7).
@@ -53,9 +57,9 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddStepBarTranslations, type NLDDStepBarTranslations } from './step-bar.i18n.js';
-import { stepBarStyles, stepBarItemStyles } from './step-bar.styles.js';
+import { stepBarStyles, stepBarItemStyles, COMPACT_COUNTS, STEP_MIN_WIDTH_REM } from './step-bar.styles.js';
 import { stepBarTemplate, stepBarItemTemplate } from './step-bar.template.js';
-import { breakpointPx } from '../../../assets/styles/breakpoints.js';
+import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.js';
 import '../../content/icon/icon.js';
 
 /** The same three names as nldd-step-cell, so one flow reads in a
@@ -190,14 +194,22 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 	 *  element: the derived statuses and the compact view follow it. */
 	private _observer = new MutationObserver(() => this.requestUpdate());
 
-	/** Whether the compact view shows: the same width the container query in
-	 *  the styles compares. */
-	@state()
+	/** Whether the compact view shows: the same width the container queries in
+	 *  the styles compare. */
 	private _compact = false;
 
+	@state()
+	private _width = 0;
+
 	private _resizeObserver = new ResizeObserver(([entry]) => {
-		this._compact = entry.contentRect.width <= breakpointPx('smMax');
+		this._width = entry.contentRect.width;
 	});
+
+	/** The step count the styles have a threshold for: none up to 5, where the sm breakpoint is wider than the row needs, and 12 from 12 on. */
+	private get _thresholdCount(): number | null {
+		if (this.total < COMPACT_COUNTS[0]) return null;
+		return Math.min(this.total, COMPACT_COUNTS[COMPACT_COUNTS.length - 1]);
+	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -224,6 +236,11 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 		// withTranslations merges a consumer's `translations` override in its own
 		// willUpdate; without this call the override is silently ignored.
 		super.willUpdate(changed);
+		const count = this._thresholdCount;
+		if (count === null) this.removeAttribute('data-steps');
+		else this.setAttribute('data-steps', String(count));
+		const threshold = Math.max(breakpointPx('smMax'), (count ?? 0) * STEP_MIN_WIDTH_REM * rootFontSize());
+		this._compact = this._width > 0 && this._width <= threshold;
 		this._syncItems();
 	}
 

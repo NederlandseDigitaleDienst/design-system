@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-one-time-code-field[format*="#"][length]'
+message: '`format` sets the length, so `length` does nothing here. Remove `length`.'
+examples:
+  passed: ['<nldd-one-time-code-field format="###-###"></nldd-one-time-code-field>', '<nldd-one-time-code-field length="6"></nldd-one-time-code-field>']
+  failed: ['<nldd-one-time-code-field format="###-###" length="8"></nldd-one-time-code-field>']

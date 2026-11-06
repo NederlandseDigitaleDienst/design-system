@@ -36,6 +36,16 @@ export const devRules: DevRule[] = [
 		"report": ":has(> :not([slot]))"
 	},
 	{
+		"id": "blockquote-custom-size-invalid",
+		"message": "This is not a size the quote can use, so it keeps its own size at this breakpoint. Use a length such as \"32px\" or \"2rem\", not a keyword.",
+		"context": "nldd-blockquote:state(invalid-custom-size)"
+	},
+	{
+		"id": "blockquote-custom-size-no-effect",
+		"message": "This custom size is smaller than the quote's own size at this breakpoint and shows at that size.",
+		"context": "nldd-blockquote:state(custom-size-below-floor)"
+	},
+	{
 		"id": "button-bar-no-toggle-button",
 		"message": "The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.",
 		"context": "nldd-button-bar",
@@ -124,6 +134,31 @@ export const devRules: DevRule[] = [
 		"context": "nldd-collection > :not([slot]):is(a, article, aside, button, details, dialog, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, img, li, main, nav, ol, section, table, ul, [role]:not([role=\"\"]):not([role=\"listitem\"]))"
 	},
 	{
+		"id": "column-board-column-needs-name",
+		"message": "nldd-column-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
+		"context": "nldd-column-board-column",
+		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"text",
+			"accessibleLabel"
+		]
+	},
+	{
+		"id": "column-board-column-tag-renamed",
+		"message": "`nldd-task-board-column` is now `nldd-column-board-column`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-task-board-column"
+	},
+	{
+		"id": "column-board-move-item-invalid",
+		"message": "moveItem() needs an item in one of the board's columns and a column of the board.",
+		"context": "nldd-column-board:state(invalid-move)"
+	},
+	{
+		"id": "column-board-tag-renamed",
+		"message": "`nldd-task-board` is now `nldd-column-board`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-task-board"
+	},
+	{
 		"id": "combo-box-needs-name",
 		"message": "nldd-combo-box needs `accessible-label` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-combo-box",
@@ -170,7 +205,7 @@ export const devRules: DevRule[] = [
 		"id": "form-field-needs-input",
 		"message": "nldd-form-field holds no form input, so the label cannot name anything or move focus into it.",
 		"context": "nldd-form-field[label]:not([label=\"\"]):has(> :not(nldd-form-field-help-text))",
-		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
+		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-one-time-code-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
 		"properties": []
 	},
 	{
@@ -491,6 +526,21 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "one-time-code-field-format-invalid",
+		"message": "`format` needs a `#` for each box, such as `###-###`; without one the field ignores it.",
+		"context": "nldd-one-time-code-field[format]:not([format=\"\"]):not([format*=\"#\"])"
+	},
+	{
+		"id": "one-time-code-field-length-no-effect",
+		"message": "`format` sets the length, so `length` does nothing here. Remove `length`.",
+		"context": "nldd-one-time-code-field[format*=\"#\"][length]:not([length=\"\"])"
+	},
+	{
+		"id": "one-time-code-field-uppercase-no-effect",
+		"message": "`uppercase` only does something with `type=\"alphanumeric\"`; a numeric code has no letters. Remove it, or set the type.",
+		"context": "nldd-one-time-code-field[uppercase]:not([type=\"alphanumeric\"])"
+	},
+	{
 		"id": "page-footer-goes-in-page",
 		"message": "nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.",
 		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-page-footer"
@@ -558,6 +608,11 @@ export const devRules: DevRule[] = [
 		"id": "row-no-control-around-segments",
 		"message": "Move the `href` or `button` to a segment: both together put a control in a control.",
 		"context": "nldd-list-item:is([href]:not([href=\"\"]), [button]):has(> nldd-list-item-segment)"
+	},
+	{
+		"id": "search-field-show-search-button-renamed",
+		"message": "The `show-search-button` attribute is now `search-button`, which also takes the appearance of the button. Rename it here and on every other nldd-search-field.",
+		"context": "nldd-search-field[show-search-button]"
 	},
 	{
 		"id": "segmented-control-needs-name",
@@ -782,19 +837,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-tag:state(unnamed)"
 	},
 	{
-		"id": "task-board-column-needs-name",
-		"message": "nldd-task-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
-		"context": "nldd-task-board-column",
-		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
-		"properties": [
-			"text",
-			"accessibleLabel"
-		]
+		"id": "text-custom-size-invalid",
+		"message": "This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as \"96px\" or \"6rem\", not a keyword.",
+		"context": "nldd-text:state(invalid-custom-size)"
 	},
 	{
-		"id": "task-board-move-item-invalid",
-		"message": "moveItem() needs an item in one of the board's columns and a column of the board.",
-		"context": "nldd-task-board:state(invalid-move)"
+		"id": "text-custom-size-no-effect",
+		"message": "This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `size` for text up to `display-1`.",
+		"context": "nldd-text:state(custom-size-below-floor)"
 	},
 	{
 		"id": "text-editor-command-not-found",
@@ -807,9 +857,24 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text-editor:state(invalid-typeahead-query)"
 	},
 	{
+		"id": "text-field-button-size-no-effect",
+		"message": "The button in the `button` slot has a size of its own, but the field sets it: `sm` in a field of `md`, `xs` in one of `sm`. Leave the size off the button.",
+		"context": "nldd-text-field:state(own-button-size-overwritten)"
+	},
+	{
 		"id": "text-field-no-keyboard-with-type",
 		"message": "`keyboard` contradicts `type`, which already raises a keyboard of its own. Drop one of the two.",
 		"context": "nldd-text-field:state(keyboard-contradicts-type)"
+	},
+	{
+		"id": "text-line-height-no-effect",
+		"message": "`line-height` belongs to the body sizes; a display size has its own line height. Remove it.",
+		"context": "nldd-text[size^=\"display-\"][line-height]:not([line-height=\"\"])"
+	},
+	{
+		"id": "text-weight-no-effect",
+		"message": "`weight` belongs to the body sizes; a display size has its own weight. Remove it.",
+		"context": "nldd-text[size^=\"display-\"][weight]:not([weight=\"\"])"
 	},
 	{
 		"id": "title-custom-size-invalid",
@@ -1135,8 +1200,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-text-size",
-		"message": "`size` on nldd-text takes: lg, md, sm, xs, xxs.",
-		"context": "nldd-text[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], [size=\"xxs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"message": "`size` on nldd-text takes: display-1, display-2, display-3, display-4, display-5, display-6, lg, md, sm, xs, xxs.",
+		"context": "nldd-text[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], [size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], [size=\"xxs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-text-weight",
@@ -1259,6 +1324,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-number-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-one-time-code-field-size",
+		"message": "`size` on nldd-one-time-code-field takes: lg, md, sm.",
+		"context": "nldd-one-time-code-field[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-one-time-code-field-type",
+		"message": "`type` on nldd-one-time-code-field takes: alphanumeric, numeric.",
+		"context": "nldd-one-time-code-field[type]:not([type=\"alphanumeric\"], [type=\"numeric\"])"
+	},
+	{
 		"id": "invalid-value-password-field-size",
 		"message": "`size` on nldd-password-field takes: md, sm.",
 		"context": "nldd-password-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -1277,6 +1352,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-search-field-size",
 		"message": "`size` on nldd-search-field takes: md, sm.",
 		"context": "nldd-search-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-search-field-search-button",
+		"message": "`search-button` on nldd-search-field takes: accent-filled, neutral-tinted.",
+		"context": "nldd-search-field[search-button]:not([search-button=\"\"], [search-button=\"accent-filled\"], [search-button=\"neutral-tinted\"])"
 	},
 	{
 		"id": "invalid-value-segmented-control-item-appearance",

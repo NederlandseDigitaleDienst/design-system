@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-one-time-code-field[uppercase]:not([type="alphanumeric"])'
+message: '`uppercase` only does something with `type="alphanumeric"`; a numeric code has no letters. Remove it, or set the type.'
+examples:
+  passed: ['<nldd-one-time-code-field type="alphanumeric" uppercase></nldd-one-time-code-field>']
+  failed: ['<nldd-one-time-code-field uppercase></nldd-one-time-code-field>']
+  cantTell: ['<nldd-one-time-code-field :type="soort" uppercase></nldd-one-time-code-field>']

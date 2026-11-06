@@ -4,6 +4,7 @@ import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTopNavigationBar } from './top-navigation-bar.js';
 import './top-navigation-bar.js';
+import '../../status-and-feedback/status-bar/status-bar.js';
 
 function navWithGlobalItems(): string {
 	return `
@@ -826,6 +827,44 @@ describe('nldd-top-navigation-bar – ribbon at the top', () => {
 	])('keeps the ribbon that hides on scroll inside %s', async (_, attributes) => {
 		el = await fixture(`<nldd-top-navigation-bar ${attributes}></nldd-top-navigation-bar>`);
 		expect(el.shadowRoot!.querySelector('.top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top')).not.toBeNull();
+	});
+});
+
+describe('nldd-top-navigation-bar – under a status bar', () => {
+	let wrap: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => {
+		if (wrap) cleanup(wrap);
+		removeTokens();
+	});
+
+	const nav = () => wrap.querySelector('nldd-top-navigation-bar')!;
+
+	it('leaves the ribbon above the page to a status bar above it', async () => {
+		wrap = await fixture('<div><nldd-status-bar text="Gepland onderhoud"></nldd-status-bar><nldd-top-navigation-bar></nldd-top-navigation-bar></div>');
+		await nextFrames();
+		expect(nav().hasAttribute('data-under-status-bar')).toBe(true);
+	});
+
+	it('draws the ribbon above the page without one', async () => {
+		wrap = await fixture('<div><nldd-top-navigation-bar></nldd-top-navigation-bar></div>');
+		await nextFrames();
+		expect(nav().hasAttribute('data-under-status-bar')).toBe(false);
+	});
+
+	it('measures again when a status bar comes or goes', async () => {
+		wrap = await fixture('<div><nldd-top-navigation-bar></nldd-top-navigation-bar></div>');
+		const bar = document.createElement('nldd-status-bar');
+		bar.setAttribute('text', 'Gepland onderhoud');
+		wrap.prepend(bar);
+		await waitForUpdate(bar);
+		await nextFrames();
+		expect(nav().hasAttribute('data-under-status-bar')).toBe(true);
+		bar.remove();
+		await nextFrames();
+		expect(nav().hasAttribute('data-under-status-bar')).toBe(false);
 	});
 });
 

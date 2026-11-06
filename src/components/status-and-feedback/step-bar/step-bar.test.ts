@@ -243,4 +243,33 @@ describe('nldd-step-bar – compact view', () => {
 		el.style.width = '900px';
 		await vi.waitFor(() => expect(controls(bar).every((control) => !control.hasAttribute('tabindex'))).toBe(true));
 	});
+
+	const bar = async (steps: number, width: number): Promise<Element> => {
+		const items = Array.from({ length: steps }, (_, i) => `<nldd-step-bar-item text="Stap ${i + 1}" href="#${i + 1}"></nldd-step-bar-item>`).join('');
+		el = await fixture(`<div style="width: ${width}px"><nldd-step-bar>${items}</nldd-step-bar></div>`);
+		return el.querySelector('nldd-step-bar')!;
+	};
+	const isCompact = (stepBar: Element) =>
+		getComputedStyle(stepBar.shadowRoot!.querySelector('.step-bar__compact-text')!).display !== 'none';
+
+	it.each([
+		[5, 700, false],
+		[6, 700, true],
+		[6, 760, false],
+		[7, 820, true],
+		[7, 860, false],
+		[11, 1300, true],
+		[14, 1460, false],
+	])('with %i steps at %ipx compact is %s: at least 120px a step, and never wider than sm', async (steps, width, compact) => {
+		const stepBar = await bar(steps, width);
+		await vi.waitFor(() => expect(isCompact(stepBar)).toBe(compact));
+		await vi.waitFor(() => expect(controls(stepBar).every((control) => control.hasAttribute('tabindex') === compact)).toBe(true));
+	});
+
+	it('moves the threshold when a step comes or goes', async () => {
+		const stepBar = await bar(5, 700);
+		await vi.waitFor(() => expect(isCompact(stepBar)).toBe(false));
+		stepBar.append(Object.assign(document.createElement('nldd-step-bar-item'), { text: 'Stap 6' }));
+		await vi.waitFor(() => expect(isCompact(stepBar)).toBe(true));
+	});
 });

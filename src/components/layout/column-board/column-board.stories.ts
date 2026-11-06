@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
-import './task-board.js';
-import type { NLDDTaskBoard, NLDDMoveEventDetail } from './task-board.js';
+import './column-board.js';
+import type { NLDDColumnBoard, NLDDMoveEventDetail } from './column-board.js';
 import '../../layout/card/card.js';
 import '../../layout/container/container.js';
 import '../../layout/spacer/spacer.js';
@@ -40,12 +40,12 @@ import '../../actions/menu/menu.js';
  * ```
  */
 export default {
-	title: 'Components/Layout/Task Board',
-	component: 'nldd-task-board',
+	title: 'Components/Layout/Column Board',
+	component: 'nldd-column-board',
 	tags: ['autodocs'],
 	parameters: {
 		componentSource: {
-			file: 'src/components/layout/task-board/task-board.ts',
+			file: 'src/components/layout/column-board/column-board.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
 		status: { type: 'beta' },
@@ -61,7 +61,7 @@ export default {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijke naam van het bord',
-			table: { defaultValue: { summary: 'Takenbord' } },
+			table: { defaultValue: { summary: 'Bord' } },
 		},
 		height: {
 			control: 'text',
@@ -77,7 +77,7 @@ export default {
 
 /** Moves the item in the DOM, the way an app moves it in its data. */
 function onMove(event: CustomEvent<NLDDMoveEventDetail>) {
-	const board = event.currentTarget as NLDDTaskBoard;
+	const board = event.currentTarget as NLDDColumnBoard;
 	const { item, toColumn, toIndex } = event.detail;
 	const column = board.columns.find((candidate) => candidate.value === toColumn)!;
 	const rest = column.items.filter((el) => el !== item);
@@ -105,38 +105,38 @@ const card = (title: string, text: string, tag?: string) => html`
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-task-board
+		<nldd-column-board
 			accessible-label=${args.accessibleLabel || nothing}
 			height=${args.height || nothing}
 			?readonly=${args.readonly}
 			@nldd-move=${onMove}
 		>
-			<nldd-task-board-column
+			<nldd-column-board-column
 				value="nieuw"
 				text="Nieuw"
 			>
 				${card('Aanvraag A-1044', 'Zonnepanelen')}
 				${card('Aanvraag A-1045', 'Spouwmuurisolatie')}
-			</nldd-task-board-column>
-			<nldd-task-board-column
+			</nldd-column-board-column>
+			<nldd-column-board-column
 				value="in-behandeling"
 				text="In behandeling"
 			>
 				${card('Aanvraag A-1042', 'Dakisolatie', 'Team Uitvoering')}
 				${card('Dossier D-318', 'Bezwaar', 'Team Uitvoering')}
 				${card('Dossier D-319', 'Beleidsadvies', 'Team Beleid')}
-			</nldd-task-board-column>
-			<nldd-task-board-column
+			</nldd-column-board-column>
+			<nldd-column-board-column
 				value="afgerond"
 				text="Afgerond"
 			>
 				${card('Aanvraag A-1043', 'Warmtepomp')}
-			</nldd-task-board-column>
-			<nldd-task-board-column
+			</nldd-column-board-column>
+			<nldd-column-board-column
 				value="ingetrokken"
 				text="Ingetrokken"
-			></nldd-task-board-column>
-		</nldd-task-board>
+			></nldd-column-board-column>
+		</nldd-column-board>
 	`,
 	parameters: { controls: { disable: false } },
 };
@@ -150,12 +150,12 @@ export const Standaard = {
 export const MetEigenKop = {
 	name: 'Met eigen kop en voet',
 	render: () => html`
-		<nldd-task-board
+		<nldd-column-board
 			accessible-label="Dossiers"
 			@nldd-move=${onMove}
 		>
 			${[['uitvoering', 'Team Uitvoering', 'Dossier D-318'], ['beleid', 'Team Beleid', 'Dossier D-319']].map(([value, text, item]) => html`
-				<nldd-task-board-column
+				<nldd-column-board-column
 					value=${value}
 					text=${text}
 				>
@@ -186,9 +186,9 @@ export const MetEigenKop = {
 						width="full"
 						horizontal-alignment="left"
 					></nldd-button>
-				</nldd-task-board-column>
+				</nldd-column-board-column>
 			`)}
-		</nldd-task-board>
+		</nldd-column-board>
 	`,
 };
 
@@ -202,12 +202,12 @@ export const MetEigenKop = {
 export const VasteHoogte = {
 	name: 'Vaste hoogte',
 	render: () => html`
-		<nldd-task-board
+		<nldd-column-board
 			height="360px"
 			accessible-label="Aanvragen"
 			@nldd-move=${onMove}
 		>
-			<nldd-task-board-column
+			<nldd-column-board-column
 				value="nieuw"
 				text="Nieuw"
 			>
@@ -216,18 +216,18 @@ export const VasteHoogte = {
 				${card('Aanvraag A-1046', 'Vloerisolatie')}
 				${card('Aanvraag A-1047', 'Warmtepomp')}
 				${card('Aanvraag A-1048', 'Zonneboiler')}
-			</nldd-task-board-column>
-			<nldd-task-board-column
+			</nldd-column-board-column>
+			<nldd-column-board-column
 				value="in-behandeling"
 				text="In behandeling"
 			>
 				${card('Aanvraag A-1042', 'Dakisolatie', 'Team Uitvoering')}
-			</nldd-task-board-column>
-			<nldd-task-board-column
+			</nldd-column-board-column>
+			<nldd-column-board-column
 				value="afgerond"
 				text="Afgerond"
-			></nldd-task-board-column>
-		</nldd-task-board>
+			></nldd-column-board-column>
+		</nldd-column-board>
 	`,
 };
 
@@ -245,31 +245,31 @@ export const VasteHoogte = {
 export const ToestandReadonly = {
 	name: 'Toestand readonly',
 	render: () => html`
-		<nldd-task-board
+		<nldd-column-board
 			readonly
 			accessible-label="Aanvragen"
 			@nldd-move=${onMove}
 		>
-			<nldd-task-board-column
+			<nldd-column-board-column
 				value="nieuw"
 				text="Nieuw"
 			>
 				${card('Aanvraag A-1044', 'Zonnepanelen')}
-			</nldd-task-board-column>
-			<nldd-task-board-column
+			</nldd-column-board-column>
+			<nldd-column-board-column
 				value="in-behandeling"
 				text="In behandeling"
 			>
 				${card('Aanvraag A-1042', 'Dakisolatie', 'Team Uitvoering')}
 				${card('Dossier D-318', 'Bezwaar', 'Team Uitvoering')}
-			</nldd-task-board-column>
-			<nldd-task-board-column
+			</nldd-column-board-column>
+			<nldd-column-board-column
 				value="afgerond"
 				text="Afgerond"
 			>
 				${card('Aanvraag A-1043', 'Warmtepomp')}
-			</nldd-task-board-column>
-		</nldd-task-board>
+			</nldd-column-board-column>
+		</nldd-column-board>
 	`,
 };
 
@@ -286,7 +286,7 @@ export const ZonderSlepen = {
 		const move = (event: Event) => {
 			const chosen = event.target as HTMLElement & { value: string };
 			const item = chosen.closest('nldd-card')!;
-			(item.closest('nldd-task-board') as NLDDTaskBoard).moveItem(item, chosen.value);
+			(item.closest('nldd-column-board') as NLDDColumnBoard).moveItem(item, chosen.value);
 		};
 		// Every move, by the menu, by dragging or by the keyboard, marks the
 		// item's new column in its menu.
@@ -336,29 +336,29 @@ export const ZonderSlepen = {
 			</nldd-card>
 		`;
 		return html`
-			<nldd-task-board
+			<nldd-column-board
 				accessible-label="Aanvragen"
 				@nldd-move=${moved}
 			>
-				<nldd-task-board-column
+				<nldd-column-board-column
 					value="nieuw"
 					text="Nieuw"
 				>
 					${movable('Aanvraag A-1044', 'Zonnepanelen', 'nieuw')}
-				</nldd-task-board-column>
-				<nldd-task-board-column
+				</nldd-column-board-column>
+				<nldd-column-board-column
 					value="in-behandeling"
 					text="In behandeling"
 				>
 					${movable('Aanvraag A-1042', 'Dakisolatie', 'in-behandeling')}
-				</nldd-task-board-column>
-				<nldd-task-board-column
+				</nldd-column-board-column>
+				<nldd-column-board-column
 					value="afgerond"
 					text="Afgerond"
 				>
 					${movable('Aanvraag A-1043', 'Warmtepomp', 'afgerond')}
-				</nldd-task-board-column>
-			</nldd-task-board>
+				</nldd-column-board-column>
+			</nldd-column-board>
 		`;
 	},
 };

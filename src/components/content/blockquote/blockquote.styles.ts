@@ -3,6 +3,9 @@ import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { slottedReset, inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
+const mdMin = unsafeCSS(queryBreakpoints.mdMin);
+const mdMax = unsafeCSS(queryBreakpoints.mdMax);
+const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 
 export const blockquoteStyles = css`
 	:host {
@@ -16,6 +19,12 @@ export const blockquoteStyles = css`
 		--_blockquote-spacing: var(--semantics-blockquotes-md-spacing);
 		--_blockquote-quote-font: var(--semantics-blockquotes-md-quote-font);
 		--_blockquote-attribution-font: var(--semantics-blockquotes-md-attribution-font);
+		--_blockquote-sm-custom-size: initial;
+		--_blockquote-md-custom-size: initial;
+		--_blockquote-lg-custom-size: initial;
+		--_blockquote-sm-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-sm-custom-size), var(--primitives-font-size-200)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		--_blockquote-md-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-md-custom-size), var(--primitives-font-size-300)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		--_blockquote-lg-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-lg-custom-size), var(--primitives-font-size-300)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
 
 		@media (max-width: ${smMax}) {
 			--_blockquote-spacing: var(--semantics-blockquotes-sm-spacing);
@@ -36,6 +45,38 @@ export const blockquoteStyles = css`
 
 	:host([hidden]) {
 		display: none;
+	}
+
+	/* ## Custom size */
+
+	:host([data-sm-custom-size]) {
+		@media (max-width: ${smMax}) {
+			--_blockquote-quote-font: var(--_blockquote-sm-custom-font);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_blockquote-quote-font: var(--_blockquote-sm-custom-font);
+		}
+	}
+
+	:host([data-md-custom-size]) {
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_blockquote-quote-font: var(--_blockquote-md-custom-font);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_blockquote-quote-font: var(--_blockquote-md-custom-font);
+		}
+	}
+
+	:host([data-lg-custom-size]) {
+		@media (min-width: ${lgMin}) {
+			--_blockquote-quote-font: var(--_blockquote-lg-custom-font);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_blockquote-quote-font: var(--_blockquote-lg-custom-font);
+		}
 	}
 
 
@@ -59,7 +100,7 @@ export const blockquoteStyles = css`
 	.blockquote__quote {
 		display: flex;
 		flex-direction: column;
-		gap: calc(var(--_blockquote-spacing) / 2);
+		gap: calc(1lh / 2);
 		font: var(--_blockquote-quote-font);
 	}
 

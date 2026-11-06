@@ -1,4 +1,5 @@
 severity: warn
+aliases: ['task-board-move-item-invalid']
 runtime: true
-context: 'nldd-task-board:state(invalid-move)'
+context: 'nldd-column-board:state(invalid-move)'
 message: 'moveItem() needs an item in one of the board''s columns and a column of the board.'

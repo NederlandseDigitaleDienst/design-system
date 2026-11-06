@@ -1,8 +1,35 @@
-import { css, unsafeCSS } from 'lit';
+import { css, unsafeCSS, type CSSResult } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
+
+/** The least room a step gets in the row; with less, the bar goes compact. 120px at a 16px root. */
+export const STEP_MIN_WIDTH_REM = 7.5;
+
+/** Step counts whose row needs more than the sm breakpoint. From 12 on the bar keeps the threshold of 12. */
+export const COMPACT_COUNTS = [6, 7, 8, 9, 10, 11, 12];
+
+const compactBelow = (host: string, width: CSSResult) => css`
+	${unsafeCSS(host)} .step-bar__items {
+		/* Stays in the DOM for assistive tech. Standard visually-hidden recipe. */
+		@container (max-width: ${width}) {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
+		}
+	}
+
+	${unsafeCSS(host)} .step-bar__compact-text,
+	${unsafeCSS(host)} .step-bar__compact-bar {
+		@container (max-width: ${width}) {
+			display: flex;
+		}
+	}
+`;
 
 export const stepBarStyles = css`
 	:host {
@@ -54,17 +81,6 @@ export const stepBarStyles = css`
 	.step-bar__items {
 		display: flex;
 		align-items: start;
-
-		/* Stays in the DOM for assistive tech when the compact view takes over.
-		   Standard visually-hidden recipe. */
-		@container (max-width: ${smMax}) {
-			position: absolute;
-			width: 1px;
-			height: 1px;
-			overflow: hidden;
-			clip-path: inset(50%);
-			white-space: nowrap;
-		}
 	}
 
 	.step-bar__compact-text {
@@ -75,10 +91,6 @@ export const stepBarStyles = css`
 		align-items: baseline;
 		color: var(--_step-bar-compact-text-color);
 		font: var(--primitives-font-body-md-regular-flat);
-
-		@container (max-width: ${smMax}) {
-			display: flex;
-		}
 	}
 
 	.step-bar__compact-title {
@@ -95,10 +107,6 @@ export const stepBarStyles = css`
 		display: none;
 		margin-top: var(--_step-bar-compact-bar-gap);
 		gap: var(--_step-bar-compact-bar-segment-gap);
-
-		@container (max-width: ${smMax}) {
-			display: flex;
-		}
 	}
 
 	.step-bar__compact-bar-segment {
@@ -111,6 +119,12 @@ export const stepBarStyles = css`
 	.step-bar__compact-bar-segment[data-filled] {
 		background-color: var(--_step-bar-progress-color);
 	}
+
+
+	/* ## Compact */
+
+	${compactBelow(':host', smMax)}
+	${unsafeCSS(COMPACT_COUNTS.map((count) => compactBelow(`:host([data-steps="${count}"])`, unsafeCSS(`${count * STEP_MIN_WIDTH_REM}rem`)).cssText).join('\n'))}
 `;
 
 export const stepBarItemStyles = css`
@@ -219,6 +233,7 @@ export const stepBarItemStyles = css`
 		color: var(--_step-bar-title-color);
 		font: var(--primitives-font-body-sm-regular-flat);
 		overflow-wrap: anywhere;
+		hyphens: auto;
 		text-wrap: balance;
 	}
 
