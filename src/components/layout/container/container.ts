@@ -111,6 +111,7 @@
  * @attr {string} lg-padding-right - Padding right at lg
  * @attr {string} lg-padding-bottom - Padding bottom at lg
  * @attr {string} lg-padding-left - Padding left at lg
+ * @attr {string} hide-on - 'touch' | 'pointer'. Takes the container and all it holds away, for screen readers as well, on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`), the same test that hides keyboard shortcuts. For what only works with one of the two, such as a setting about hover. Not for content: what one visitor gets, the other should get too.
  * @attr {string} horizontal-alignment - 'left' | 'center' | 'right'
  * @attr {string} vertical-alignment - 'top' | 'center' | 'bottom'
  *
@@ -132,6 +133,7 @@ type ColumnCount = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type HorizontalAlignment = 'left' | 'center' | 'right';
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 type Scope = '' | 'sm' | 'md' | 'lg';
+type HideOn = '' | 'touch' | 'pointer';
 
 const HORIZONTAL_TO_FLEX: Record<HorizontalAlignment, string> = {
 	left: 'flex-start',
@@ -179,14 +181,17 @@ export class NLDDContainer extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
-	@property({ type: String, reflect: true, attribute: 'min-width' })
+	@property({ reflect: true, attribute: 'min-width', converter: reflectNonDefault<string>('') })
 	minWidth = '';
 
-	@property({ type: String, reflect: true, attribute: 'max-width' })
+	@property({ reflect: true, attribute: 'max-width', converter: reflectNonDefault<string>('') })
 	maxWidth = '';
 
-	@property({ type: String, reflect: true, attribute: 'min-height' })
+	@property({ reflect: true, attribute: 'min-height', converter: reflectNonDefault<string>('') })
 	minHeight = '';
+
+	@property({ reflect: true, attribute: 'hide-on', converter: reflectNonDefault<string>('') })
+	hideOn: HideOn = '';
 
 	@property({ type: String, reflect: true })
 	gap: PaddingSize | undefined = undefined;

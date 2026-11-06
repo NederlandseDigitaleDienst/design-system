@@ -9,6 +9,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **`hide-on` on `nldd-container`,** to take it away on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`). It uses the same test that hides keyboard shortcuts, and hides for screen readers as well. For what only works with one of the two, such as a setting about hover.
+
 ### Changed
 
 - **Labels and descriptions break more evenly over their lines,** so a single word no longer ends up alone on the last line. This covers the labels of `nldd-checkbox-field`, `nldd-radio-button-field` and `nldd-switch-field`, the title and description in `nldd-description-cell`, the supporting text of `nldd-form-section` and `nldd-button`, the messages in `nldd-validation-list`, the label of `nldd-progress-bar`, the text of `nldd-tooltip` and the current step of a compact `nldd-step-bar`.
@@ -18,6 +22,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-date-field` reads a date with only some of its separators,** such as `18-122026`. A numeric keypad on a phone has no hyphen, so a date edited there often kept one hyphen and lost the other, and then stayed invalid. It now settles as `18-12-2026` when the field is left.
 - **The ring around avatars, badges and steps matches the card or box they sit in.** `nldd-card`, `nldd-box`, `nldd-sheet`, `nldd-popover`, `nldd-modal-dialog` and `nldd-window` now pass their own background on as `--context-parent-background-color`, so `nldd-avatar-group`, `nldd-badge`, `nldd-step-bar`, `nldd-step-cell` and `nldd-activity-indicator` no longer take the color of the section around them. A card that changes color on hover or press takes the ring along.
+- **`nldd-container` no longer writes empty `min-width`, `max-width` and `min-height` attributes on every instance.** The empty `min-height` made the styling meant for a container with a minimum height apply to all of them. The attributes now appear only when you set them, as `width` already did. A container stretched by a flex parent no longer stretches its content along unless it has a `min-height`.
 
 ## [0.16.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.0...v0.16.1) (2026-11-05)
 

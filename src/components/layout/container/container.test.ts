@@ -213,6 +213,28 @@ describe('nldd-container', () => {
 		expect(el.getAttribute('width')).toBe('fit-content');
 	});
 
+	it('writes no empty size attributes, so :host([min-height]) only holds when it is set', async () => {
+		el = await fixture('<nldd-container></nldd-container>');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('min-width')).toBe(false);
+		expect(el.hasAttribute('max-width')).toBe(false);
+		expect(el.hasAttribute('min-height')).toBe(false);
+		const box = el.shadowRoot!.querySelector('.container')!;
+		expect(getComputedStyle(box).display).not.toBe('flex');
+	});
+
+	it('hides itself on touch or on a pointer device, following the shortcut query', async () => {
+		const touchOnly = matchMedia('(any-hover: none)').matches;
+		el = await fixture('<nldd-container hide-on="touch"></nldd-container>');
+		expect(getComputedStyle(el).display).toBe(touchOnly ? 'none' : 'block');
+		el.setAttribute('hide-on', 'pointer');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el).display).toBe(touchOnly ? 'block' : 'none');
+		el.removeAttribute('hide-on');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el).display).toBe('block');
+	});
+
 	it('puts min-height in a custom property and removes it when cleared', async () => {
 		el = await fixture('<nldd-container min-height="240px"></nldd-container>');
 		await waitForUpdate(el);

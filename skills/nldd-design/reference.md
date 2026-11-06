@@ -2218,6 +2218,7 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 | `lg-padding-right` | `string` | Padding right at lg |
 | `lg-padding-bottom` | `string` | Padding bottom at lg |
 | `lg-padding-left` | `string` | Padding left at lg |
+| `hide-on` | `string` | 'touch' \| 'pointer'. Takes the container and all it holds away, for screen readers as well, on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`), the same test that hides keyboard shortcuts. For what only works with one of the two, such as a setting about hover. Not for content: what one visitor gets, the other should get too. |
 | `horizontal-alignment` | `string` | 'left' \| 'center' \| 'right' |
 | `vertical-alignment` | `string` | 'top' \| 'center' \| 'bottom' |
 

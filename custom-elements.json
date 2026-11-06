@@ -11924,7 +11924,7 @@
               }
             }
           ],
-          "description": "Read a typed date generously. Deliberately not a mask: reformatting per\nkeystroke moves the caret, breaks backspace mid-value and confuses screen\nreaders, so we accept what people type and normalize once on commit.\nAccepts 12-3-2026, 12/03/2026, 12.03.2026, 12032026 and ISO yyyy-mm-dd."
+          "description": "Read a typed date generously. Deliberately not a mask: reformatting per\nkeystroke moves the caret, breaks backspace mid-value and confuses screen\nreaders, so we accept what people type and normalize once on commit.\nAccepts 12-3-2026, 12/03/2026, 12.03.2026 and ISO yyyy-mm-dd, and ddmmyyyy\nwith or without a separator between each part (12032026, 12-032026, 1203 2026).\nA numeric keypad on a phone has no hyphen, so a date edited there often keeps\none separator and loses the other."
         },
         {
           "kind": "function",
@@ -29701,6 +29701,16 @@
             },
             {
               "kind": "field",
+              "name": "hideOn",
+              "type": {
+                "text": "HideOn"
+              },
+              "default": "''",
+              "attribute": "hide-on",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "gap",
               "type": {
                 "text": "PaddingSize | undefined"
@@ -30131,6 +30141,18 @@
               "default": "''",
               "fieldName": "minHeight",
               "description": "Minimum height as a CSS length (e.g. '240px'), padding included. Reserves the room that content still on its way will take; vertical-alignment then places the children within it."
+            },
+            {
+              "name": "hide-on",
+              "type": {
+                "text": "HideOn"
+              },
+              "default": "''",
+              "fieldName": "hideOn",
+              "expandedType": {
+                "text": "'' | 'pointer' | 'touch'"
+              },
+              "description": "'touch' | 'pointer'. Takes the container and all it holds away, for screen readers as well, on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`), the same test that hides keyboard shortcuts. For what only works with one of the two, such as a setting about hover. Not for content: what one visitor gets, the other should get too."
             },
             {
               "name": "gap",
