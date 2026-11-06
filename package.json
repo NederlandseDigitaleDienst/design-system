@@ -555,7 +555,7 @@
     "lint:www": "node lint/cli.js lint www/",
     "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:bundle && npm run build:components:standalone && npm run build:exports && npm run generate:cem",
     "build:icons": "node scripts/generate-icon-registry.js && node scripts/generate-logo.js",
-    "optimize:icons": "svgo --config scripts/svgo.config.mjs",
+    "optimize:icons": "node scripts/optimize-icons.js",
     "build:components:modules": "tsc -p tsconfig.build.json",
     "build:components:bundle": "vite build",
     "build:exports": "node scripts/generate-exports.js",

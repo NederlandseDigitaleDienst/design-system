@@ -15,7 +15,14 @@
 // so the sets only move when someone recomputes them.
 //
 //   git log --since=2026-10-07T00:00 --reverse --find-renames --name-status --format= \
+//     --invert-grep --grep='^refactor(icon): move every icon to the 96 grid' \
 //     -- src/components/content/icon/icons
+//
+// The --grep skips the commit that moved every icon from the 24 and 32 grids to
+// 96. It rewrote every file without changing a single drawing, so without it
+// the whole gallery reads as updated. Keep the filter as long as that commit
+// falls inside the window; while it is still uncommitted, leave it out of the
+// "uncommitted counts as new" rule above.
 //
 // Read those events oldest first and chain renames forward to today's filename.
 // An icon born inside the window is new, under whatever name it ended up with;
