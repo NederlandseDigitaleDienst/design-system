@@ -86,6 +86,7 @@ export const progressBarStyles = css`
 
 	.progress-bar__text {
 		font: var(--_progress-bar-text-font);
+		text-wrap: pretty;
 	}
 
 	.progress-bar__supporting-text {

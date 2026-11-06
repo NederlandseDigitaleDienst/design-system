@@ -27,12 +27,12 @@
 			<nldd-title
 				color="inherit"
 				size="1"
-				text="Bouw aan één overheid, in elk framework"
+				text="Bouw aan één&nbsp;overheid, in&nbsp;elk framework"
 				heading-level="1"
 			></nldd-title>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-rich-text color="inherit">
-				<p>Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Toegankelijkheid, huisstijl en ontwerppatronen zitten erin.</p>
+				<p>Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Het werkt in Angular, React en Vue, en net zo goed zonder framework. Toegankelijkheid, huisstijl en ontwerppatronen krijg je automatisch mee.</p>
 			</nldd-rich-text>
 			<nldd-spacer size="24"></nldd-spacer>
 			<nldd-container
@@ -64,7 +64,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>Van informatiesites tot applicaties met veel interactie. Het is framework-onafhankelijk: het werkt in Angular, React en Vue, en net zo goed zonder framework. We onderhouden het systeem elke week, en breiden het regelmatig uit.</p>
+				<p>Van informatiesites tot applicaties met veel interactie. We onderhouden het systeem elke week, en breiden het regelmatig uit.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="grid"
@@ -115,7 +115,7 @@
 						<nldd-title
 							size="1"
 							text="393"
-							supporting-text="iconen, getekend bij de Rijksoverheid-letter"
+							supporting-text="iconen in stijl van de Rijksoverheid-letter"
 							heading-level="3"
 						></nldd-title>
 					</nldd-container>
@@ -254,24 +254,96 @@
 						accessible-label="Thema van deze pagina"
 						value="lintblauw"
 					>
-						<nldd-swatch-picker-item color="lintblauw" value="lintblauw"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="donkerblauw" value="donkerblauw"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="hemelblauw" value="hemelblauw"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="lichtblauw" value="lichtblauw"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="paars" value="paars"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="violet" value="violet"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="robijnrood" value="robijnrood"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="roze" value="roze"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="rood" value="rood"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="oranje" value="oranje"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="donkergeel" value="donkergeel"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="geel" value="geel"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="donkerbruin" value="donkerbruin"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="bruin" value="bruin"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="donkergroen" value="donkergroen"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="groen" value="groen"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="mosgroen" value="mosgroen"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="mintgroen" value="mintgroen"></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-lintblauw)"
+							text="Lintblauw"
+							value="lintblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkerblauw)"
+							text="Donkerblauw"
+							value="donkerblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-hemelblauw)"
+							text="Hemelblauw"
+							value="hemelblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-lichtblauw)"
+							text="Lichtblauw"
+							value="lichtblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-paars)"
+							text="Paars"
+							value="paars"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-violet)"
+							text="Violet"
+							value="violet"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-robijnrood)"
+							text="Robijnrood"
+							value="robijnrood"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-roze)"
+							text="Roze"
+							value="roze"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-rood)"
+							text="Rood"
+							value="rood"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-oranje)"
+							text="Oranje"
+							value="oranje"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkergeel)"
+							text="Donkergeel"
+							value="donkergeel"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-geel)"
+							text="Geel"
+							value="geel"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkerbruin)"
+							text="Donkerbruin"
+							value="donkerbruin"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-bruin)"
+							text="Bruin"
+							value="bruin"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkergroen)"
+							text="Donkergroen"
+							value="donkergroen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-groen)"
+							text="Groen"
+							value="groen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-mosgroen)"
+							text="Mosgroen"
+							value="mosgroen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-mintgroen)"
+							text="Mintgroen"
+							value="mintgroen"
+						></nldd-swatch-picker-item>
 					</nldd-swatch-picker>
 					<nldd-spacer size="24"></nldd-spacer>
 					<nldd-title
@@ -332,10 +404,7 @@
 			>
 				<nldd-card>
 					<nldd-container padding="16">
-						<nldd-container
-							layout="wrap"
-							gap="12"
-						>
+						<nldd-button-group width="full">
 							<nldd-button
 								appearance="primary"
 								text="Start een aanvraag"
@@ -344,7 +413,7 @@
 								appearance="secondary"
 								text="Bewaar als concept"
 							></nldd-button>
-						</nldd-container>
+						</nldd-button-group>
 					</nldd-container>
 				</nldd-card>
 				<nldd-card>
@@ -505,6 +574,110 @@
 								name="voorbeeld-startdatum"
 							></nldd-date-field>
 						</nldd-form-field>
+						<nldd-spacer size="16"></nldd-spacer>
+						<nldd-form-field label="Starttijd">
+							<nldd-time-field
+								name="voorbeeld-starttijd"
+								value="09:30"
+								step="15"
+							></nldd-time-field>
+						</nldd-form-field>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-button
+							appearance="primary"
+							text="Acties"
+							expandable
+						>
+							<nldd-menu slot="popup">
+								<nldd-menu-item
+									icon="edit"
+									text="Bewerken"
+									shortcut="Ctrl+E"
+									shortcut-mac="Cmd+E"
+								></nldd-menu-item>
+								<nldd-menu-item
+									icon="duplicate"
+									text="Dupliceer"
+									shortcut="Ctrl+D"
+									shortcut-mac="Cmd+D"
+								></nldd-menu-item>
+								<nldd-menu-divider></nldd-menu-divider>
+								<nldd-menu-item
+									icon="share"
+									text="Delen"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											icon="link"
+											text="Kopieer link"
+										></nldd-menu-item>
+										<nldd-menu-item
+											icon="print"
+											text="Afdrukken"
+											shortcut="Ctrl+P"
+											shortcut-mac="Cmd+P"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-item
+									icon="folder"
+									text="Verplaatsen naar"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											text="Dossier D-318"
+											details="Uitvoering"
+										></nldd-menu-item>
+										<nldd-menu-item
+											text="Dossier D-319"
+											details="Beleid"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-item
+									icon="tag"
+									text="Status"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											type="radio"
+											text="In behandeling"
+											selected
+										></nldd-menu-item>
+										<nldd-menu-item
+											type="radio"
+											text="Wacht op jou"
+										></nldd-menu-item>
+										<nldd-menu-item
+											type="radio"
+											text="Afgerond"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-divider></nldd-menu-divider>
+								<nldd-menu-item
+									icon="delete"
+									text="Verwijderen"
+									destructive
+								></nldd-menu-item>
+							</nldd-menu>
+						</nldd-button>
+						<nldd-container
+							id="veilige-driehoek"
+							hide-on="touch"
+						>
+							<nldd-spacer size="16"></nldd-spacer>
+							<nldd-switch-field label="Toon de veilige driehoek"></nldd-switch-field>
+							<nldd-spacer size="4"></nldd-spacer>
+							<nldd-text
+								size="sm"
+								line-height="tight"
+								color="secondary"
+							>De veilige driehoek houdt een submenu open terwijl je muis er schuin naartoe beweegt, ook als hij onderweg over een ander item gaat.</nldd-text>
+						</nldd-container>
 					</nldd-container>
 				</nldd-card>
 				<nldd-card>
@@ -1027,9 +1200,10 @@
 				slot="header"
 				size="2"
 				text="Begin met één regel"
-				supporting-text="Het pakket staat op npm, de broncode op GitHub, onder de open licentie EUPL."
 				heading-level="2"
-			></nldd-title>
+			>
+				<span slot="supporting-text">Het pakket staat op <nldd-link href="https://www.npmjs.com/package/@nldd/design-system">npm</nldd-link>, de broncode op <nldd-link href="https://github.com/NederlandseDigitaleDienst/design-system">GitHub</nldd-link>, onder de open licentie EUPL.</span>
+			</nldd-title>
 			<nldd-code-viewer
 				language="bash"
 				appearance="box-base"

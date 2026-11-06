@@ -163,6 +163,7 @@ export const taskBoardColumnStyles = css`
 		flex-grow: 1;
 		color: var(--semantics-content-color);
 		font: var(--_task-board-column-title-font);
+		text-wrap: balance;
 	}
 
 	.task-board-column__count {

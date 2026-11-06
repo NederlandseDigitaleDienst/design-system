@@ -20,12 +20,22 @@ describe('parseDate', () => {
 		['12032026', '2026-03-12'],
 		['2026-03-12', '2026-03-12'],
 		[' 12-03-2026 ', '2026-03-12'],
+		['18-122026', '2026-12-18'],
+		['1812-2026', '2026-12-18'],
+		['18.12 2026', '2026-12-18'],
 	])('reads %s', (raw, iso) => {
 		expect(parseDate(raw)).toBe(iso);
 	});
 
-	it.each(['', 'Test', '31-02-2026', '2026x01x01', '12-03-26'])('refuses %j', (raw) => {
+	it.each(['', 'Test', '31-02-2026', '2026x01x01', '12-03-26', '1-8-122026', 'a18122026', '18 .- 12 2026'])('refuses %j', (raw) => {
 		expect(parseDate(raw)).toBeNull();
+	});
+
+	it('reads eight bare digits as ddmmyyyy, never as a compact ISO date', () => {
+		// 20261218 would be month 26, so it is no date at all.
+		expect(parseDate('20261218')).toBeNull();
+		// 20121218 is a real ddmmyyyy date, in the year 1218.
+		expect(parseDate('20121218')).toBe('1218-12-20');
 	});
 });
 

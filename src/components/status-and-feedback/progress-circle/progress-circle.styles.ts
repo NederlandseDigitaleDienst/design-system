@@ -220,6 +220,7 @@ export const progressCircleStyles = css`
 		color: var(--_progress-circle-text-color);
 		font: var(--_progress-circle-text-font);
 		text-align: center;
+		text-wrap: balance;
 	}
 
 	.progress-circle__supporting-text {

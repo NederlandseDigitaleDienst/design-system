@@ -81,6 +81,10 @@ export const stepBarStyles = css`
 		}
 	}
 
+	.step-bar__compact-title {
+		text-wrap: pretty;
+	}
+
 	.step-bar__compact-count {
 		color: var(--_step-bar-compact-count-color);
 		font-variant-numeric: tabular-nums;
@@ -215,6 +219,7 @@ export const stepBarItemStyles = css`
 		color: var(--_step-bar-title-color);
 		font: var(--primitives-font-body-sm-regular-flat);
 		overflow-wrap: anywhere;
+		text-wrap: balance;
 	}
 
 	.step-bar__item.is-current .step-bar__item-title {

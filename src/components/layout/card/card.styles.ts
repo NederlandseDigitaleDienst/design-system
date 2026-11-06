@@ -55,6 +55,7 @@ export const cardStyles = css`
 	/* # Block */
 
 	.card {
+		--context-parent-background-color: var(--_card-background-color);
 		display: flex;
 		position: relative;
 		border-radius: var(--_card-corner-radius);
@@ -70,12 +71,14 @@ export const cardStyles = css`
 	@media (hover: hover) {
 		.card:has(> .card__action:hover) {
 			--_card-border-color: var(--_card-is-hovered-border-color);
+			--context-parent-background-color: var(--_card-is-hovered-background-color);
 			background-color: var(--_card-is-hovered-background-color);
 		}
 	}
 
 	:host([data-action-pressed]) .card {
 		--_card-border-color: var(--_card-is-active-border-color);
+		--context-parent-background-color: var(--_card-is-active-background-color);
 		background-color: var(--_card-is-active-background-color);
 	}
 

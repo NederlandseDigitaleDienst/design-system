@@ -1484,6 +1484,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-container[layout]:not([layout=\"columns\"], [layout=\"grid\"], [layout=\"lanes\"], [layout=\"row\"], [layout=\"stack\"], [layout=\"wrap\"])"
 	},
 	{
+		"id": "invalid-value-container-hide-on",
+		"message": "`hide-on` on nldd-container takes: pointer, touch.",
+		"context": "nldd-container[hide-on]:not([hide-on=\"\"], [hide-on=\"pointer\"], [hide-on=\"touch\"])"
+	},
+	{
 		"id": "invalid-value-container-gap",
 		"message": "`gap` on nldd-container takes: 0, 10, 12, 16, 2, 20, 24, 28, 32, 4, 40, 44, 48, 56, 6, 64, 8, 80, 96.",
 		"context": "nldd-container[gap]:not([gap=\"0\"], [gap=\"10\"], [gap=\"12\"], [gap=\"16\"], [gap=\"2\"], [gap=\"20\"], [gap=\"24\"], [gap=\"28\"], [gap=\"32\"], [gap=\"4\"], [gap=\"40\"], [gap=\"44\"], [gap=\"48\"], [gap=\"56\"], [gap=\"6\"], [gap=\"64\"], [gap=\"8\"], [gap=\"80\"], [gap=\"96\"])"

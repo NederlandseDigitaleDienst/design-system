@@ -111,6 +111,7 @@ export const tooltipStyles = css`
 
 	.tooltip__text {
 		min-width: 0;
+		text-wrap: pretty;
 	}
 
 	.tooltip__shortcut {

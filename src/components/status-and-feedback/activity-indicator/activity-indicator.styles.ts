@@ -211,6 +211,7 @@ export const activityIndicatorStyles = css`
 		color: currentColor;
 		font: var(--_activity-indicator-text-font);
 		text-align: center;
+		text-wrap: balance;
 	}
 
 	/* show-text off (default): the label still renders as the announced

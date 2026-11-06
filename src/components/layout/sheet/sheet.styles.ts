@@ -14,6 +14,7 @@ export const sheetStyles = css`
 	/* # Host */
 
 	:host {
+		--_sheet-background-color: var(--semantics-surfaces-base-background-color);
 		--_sheet-width: initial;
 		--_sheet-height: initial;
 
@@ -78,6 +79,7 @@ export const sheetStyles = css`
 		--context-scroll-mode: nested;
 		--context-inset-top: 0px;
 		--context-inset-bottom: 0px;
+		--context-parent-background-color: var(--_sheet-background-color);
 
 		display: flex;
 		position: fixed;
@@ -85,7 +87,7 @@ export const sheetStyles = css`
 		outline: none;
 		border: none;
 		box-shadow: var(--semantics-overlays-box-shadow);
-		background: var(--semantics-surfaces-base-background-color);
+		background: var(--_sheet-background-color);
 		overflow: hidden;
 		padding: 0;
 		flex-direction: column;

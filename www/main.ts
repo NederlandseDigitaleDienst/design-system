@@ -1,6 +1,7 @@
 /* Only the components this page uses, so it does not wait for the hundred
    others. Add an import when the page gets a new one. */
 import '../src/components/actions/button/button.ts';
+import '../src/components/actions/button-group/button-group.ts';
 import '../src/components/actions/menu/menu-item.ts';
 import '../src/components/actions/menu/menu.ts';
 import '../src/components/content/avatar-group/avatar-group.ts';
@@ -10,6 +11,7 @@ import '../src/components/content/icon/icon.ts';
 import '../src/components/content/identity/identity.ts';
 import '../src/components/content/rich-text/rich-text.ts';
 import '../src/components/content/tag/tag.ts';
+import '../src/components/content/text/text.ts';
 import '../src/components/content/title/title.ts';
 import '../src/components/forms/form-field/form-field.ts';
 import '../src/components/inputs/checkbox-field/checkbox-field.ts';
@@ -23,6 +25,7 @@ import '../src/components/inputs/slider/slider.ts';
 import '../src/components/inputs/swatch-picker/swatch-picker.ts';
 import '../src/components/inputs/switch-field/switch-field.ts';
 import '../src/components/inputs/text-field/text-field.ts';
+import '../src/components/inputs/time-field/time-field.ts';
 import '../src/components/inputs/toggle-button-group/toggle-button-group.ts';
 import '../src/components/inputs/toggle-button/toggle-button.ts';
 import '../src/components/inputs/token-field/token-field.ts';
@@ -42,6 +45,7 @@ import '../src/components/lists-and-tables/cells/step-cell/step-cell.ts';
 import '../src/components/lists-and-tables/cells/title-cell/title-cell.ts';
 import '../src/components/lists-and-tables/list-item/list-item.ts';
 import '../src/components/lists-and-tables/list/list.ts';
+import '../src/components/navigation/link/link.ts';
 import '../src/components/navigation/skip-link/skip-link.ts';
 import '../src/components/navigation/top-navigation-bar/top-navigation-bar.ts';
 import '../src/components/status-and-feedback/badge/badge.ts';
@@ -70,6 +74,19 @@ document.querySelector('#kleurmodus')?.addEventListener('change', (event) => {
 	if (!selected) return;
 	if (value === 'systeem') root.removeAttribute('data-scheme');
 	else root.setAttribute('data-scheme', value);
+});
+
+/**
+ * The switch draws the safe triangle that keeps a submenu open while the
+ * pointer travels to it. Only a mouse has that travel, so the container around
+ * the switch has hide-on="touch". The debug property is internal to nldd-menu;
+ * this page shows it on purpose.
+ */
+const triangle = document.querySelector<HTMLElement>('#veilige-driehoek');
+triangle?.addEventListener('change', (event) => {
+	const { checked } = (event as CustomEvent<{ checked: boolean }>).detail;
+	const menus = triangle.closest('nldd-card')?.querySelectorAll('nldd-menu') ?? [];
+	for (const menu of menus) (menu as HTMLElement & { debugSafeTriangle: boolean }).debugSafeTriangle = checked;
 });
 
 /** The start date in the example form opens on today, in local time. */

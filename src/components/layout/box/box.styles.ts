@@ -45,6 +45,7 @@ export const boxStyles = css`
 	/* # Block */
 
 	.box {
+		--context-parent-background-color: var(--_box-background-color);
 		box-sizing: border-box;
 		border-radius: var(--_box-corner-radius);
 		box-shadow: var(--_box-highlight-border);
