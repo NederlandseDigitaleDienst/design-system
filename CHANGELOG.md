@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.17.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.2...v0.17.0) (2026-11-06)
+
 ### Highlights
 
 - **`nldd-one-time-code-field`,** a new field for a code someone receives once: by text message, by email or from an authenticator app. See Added.
