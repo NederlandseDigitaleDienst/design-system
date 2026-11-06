@@ -1,0 +1,264 @@
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import './one-time-code-field.js';
+import type { NLDDOneTimeCodeField } from './one-time-code-field.js';
+
+describe('nldd-one-time-code-field', () => {
+	let el: NLDDOneTimeCodeField;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const input = () => el.shadowRoot!.querySelector<HTMLInputElement>('.one-time-code-field__input')!;
+	const boxes = () => [...el.shadowRoot!.querySelectorAll('.one-time-code-field__box')];
+	const type = async (text: string) => {
+		input().value = text;
+		input().dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+		await el.updateComplete;
+	};
+
+	it('renders without errors', async () => {
+		el = await fixture('<nldd-one-time-code-field></nldd-one-time-code-field>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot).not.toBeNull();
+	});
+
+	it('draws a box per character, six by default', async () => {
+		el = await fixture('<nldd-one-time-code-field></nldd-one-time-code-field>');
+		expect(boxes()).toHaveLength(6);
+		el.length = 4;
+		await el.updateComplete;
+		expect(boxes()).toHaveLength(4);
+	});
+
+	it('draws a format as boxes with separators, and format wins over length', async () => {
+		el = await fixture('<nldd-one-time-code-field format="###-##" length="8"></nldd-one-time-code-field>');
+		expect(boxes()).toHaveLength(5);
+		expect(input().maxLength).toBe(5);
+		const separators = [...el.shadowRoot!.querySelectorAll('.one-time-code-field__separator')];
+		expect(separators.map((separator) => separator.textContent)).toEqual(['-']);
+		await type('123-45');
+		expect(el.value).toBe('12345');
+	});
+
+	it('keeps a space as a separator', async () => {
+		el = await fixture('<nldd-one-time-code-field format="## ##"></nldd-one-time-code-field>');
+		expect(el.shadowRoot!.querySelector('.one-time-code-field__separator')!.textContent).toBe(' ');
+	});
+
+	it('ignores a format without a box', async () => {
+		el = await fixture('<nldd-one-time-code-field format="000-000" length="4"></nldd-one-time-code-field>');
+		expect(boxes()).toHaveLength(4);
+		expect(el.shadowRoot!.querySelector('.one-time-code-field__separator')).toBeNull();
+	});
+
+	it('is one native input that a phone can fill from a text message', async () => {
+		el = await fixture('<nldd-one-time-code-field></nldd-one-time-code-field>');
+		expect(el.shadowRoot!.querySelectorAll('input')).toHaveLength(1);
+		expect(input().getAttribute('autocomplete')).toBe('one-time-code');
+		expect(input().getAttribute('inputmode')).toBe('numeric');
+		expect(input().maxLength).toBe(6);
+		expect(el.shadowRoot!.querySelector('.one-time-code-field__boxes')!.getAttribute('aria-hidden')).toBe('true');
+	});
+
+	it('shows each character in its box', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123"></nldd-one-time-code-field>');
+		expect(boxes().map((box) => box.textContent!.trim())).toEqual(['1', '2', '3', '', '', '']);
+	});
+
+	it('drops what is not part of a code from a pasted one', async () => {
+		el = await fixture('<nldd-one-time-code-field></nldd-one-time-code-field>');
+		await type('123 456');
+		expect(el.value).toBe('123456');
+		await type('12-34ab');
+		expect(el.value).toBe('1234');
+	});
+
+	it('keeps letters for an alphanumeric code, and no more than the length', async () => {
+		el = await fixture('<nldd-one-time-code-field type="alphanumeric" length="4"></nldd-one-time-code-field>');
+		expect(input().getAttribute('inputmode')).toBe('text');
+		await type('ab-12cd');
+		expect(el.value).toBe('ab12');
+	});
+
+	it('turns letters into capitals with uppercase, in the value too', async () => {
+		el = await fixture('<nldd-one-time-code-field type="alphanumeric" uppercase length="4"></nldd-one-time-code-field>');
+		expect(input().getAttribute('autocapitalize')).toBe('characters');
+		await type('ab-1c');
+		expect(el.value).toBe('AB1C');
+		expect(boxes().map((box) => box.textContent!.trim())).toEqual(['A', 'B', '1', 'C']);
+	});
+
+	it('keeps case without uppercase', async () => {
+		el = await fixture('<nldd-one-time-code-field type="alphanumeric" length="4" value="aB1c"></nldd-one-time-code-field>');
+		expect(el.value).toBe('aB1c');
+	});
+
+	it('fires nldd-complete once, when the last box fills', async () => {
+		el = await fixture('<nldd-one-time-code-field length="4"></nldd-one-time-code-field>');
+		const complete = vi.fn();
+		el.addEventListener('nldd-complete', complete);
+		await type('123');
+		expect(complete).not.toHaveBeenCalled();
+		await type('1234');
+		expect(complete).toHaveBeenCalledTimes(1);
+		expect(complete.mock.calls[0][0].detail).toEqual({ value: '1234' });
+		await type('1234');
+		expect(complete).toHaveBeenCalledTimes(1);
+	});
+
+	it('submits its value under its name', async () => {
+		const form = document.createElement('form');
+		form.innerHTML = '<nldd-one-time-code-field name="code" value="123456"></nldd-one-time-code-field>';
+		document.body.append(form);
+		el = form.querySelector('nldd-one-time-code-field')!;
+		await el.updateComplete;
+		expect(new FormData(form).get('code')).toBe('123456');
+		form.remove();
+	});
+
+	it('counts an incomplete code as invalid', async () => {
+		el = await fixture('<nldd-one-time-code-field required></nldd-one-time-code-field>');
+		await type('123');
+		expect(el.internals.validity.valid).toBe(false);
+		await type('123456');
+		expect(el.internals.validity.valid).toBe(true);
+	});
+
+	it('marks the box the next character goes in while focused', async () => {
+		el = await fixture('<nldd-one-time-code-field value="12"></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		expect(boxes().findIndex((box) => box.classList.contains('is-active'))).toBe(2);
+		input().blur();
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('.is-active')).toBeNull();
+	});
+
+	const active = () => boxes().findIndex((box) => box.classList.contains('is-active'));
+
+	const beforeInput = async (inputType: string, data?: string) => {
+		const event = new InputEvent('beforeinput', { inputType, data, cancelable: true, bubbles: true, composed: true });
+		input().dispatchEvent(event);
+		await el.updateComplete;
+		return event;
+	};
+
+	const key = async (name: string) => {
+		input().dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true, composed: true, cancelable: true }));
+		await el.updateComplete;
+	};
+
+	const press = async (index: number) => {
+		const { left, width, top, height } = boxes()[index].getBoundingClientRect();
+		input().dispatchEvent(new PointerEvent('pointerdown', { clientX: left + width / 2, clientY: top + height / 2, pointerType: 'mouse', bubbles: true, cancelable: true, composed: true }));
+		await el.updateComplete;
+	};
+
+	it('keeps the caret in the box that was pressed, after its character', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123"></nldd-one-time-code-field>');
+		await press(2);
+		expect(active()).toBe(2);
+		expect(boxes()[2].querySelector('.one-time-code-field__caret.is-after')).not.toBeNull();
+	});
+
+	it('lands in the first empty box when focus comes from the keyboard', async () => {
+		el = await fixture('<nldd-one-time-code-field value="12"></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		expect(active()).toBe(2);
+	});
+
+	it('empties a box with Backspace without moving the rest, so the right character goes straight in', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123456"></nldd-one-time-code-field>');
+		await press(2);
+		await beforeInput('deleteContentBackward');
+		expect(boxes().map((box) => box.textContent!.trim())).toEqual(['1', '2', '', '4', '5', '6']);
+		expect(active()).toBe(2);
+		await beforeInput('insertText', '9');
+		expect(el.value).toBe('129456');
+	});
+
+	it('empties the box before an empty one on Backspace', async () => {
+		el = await fixture('<nldd-one-time-code-field value="12"></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		await beforeInput('deleteContentBackward');
+		expect(el.value).toBe('1');
+		expect(active()).toBe(1);
+	});
+
+	it('moves with the arrow keys, Home and End, but not past the first empty box', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123"></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		await key('ArrowLeft');
+		expect(active()).toBe(2);
+		await key('Home');
+		expect(active()).toBe(0);
+		await key('End');
+		expect(active()).toBe(3);
+		await key('ArrowRight');
+		expect(active()).toBe(3);
+	});
+
+	it('writes the next box when the caret stands after a character', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123456"></nldd-one-time-code-field>');
+		await press(1);
+		await beforeInput('insertText', '0');
+		expect(el.value).toBe('120456');
+	});
+
+	it('refuses a character that is not part of a code', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123"></nldd-one-time-code-field>');
+		el.focus();
+		const event = await beforeInput('insertText', 'x');
+		expect(event.defaultPrevented).toBe(true);
+		expect(el.value).toBe('123');
+	});
+
+	it('replaces a full code with a pasted one', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123456"></nldd-one-time-code-field>');
+		await press(3);
+		const data = new DataTransfer();
+		data.setData('text/plain', '987 654');
+		input().dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertFromPaste', dataTransfer: data, cancelable: true }));
+		await el.updateComplete;
+		expect(el.value).toBe('987654');
+	});
+
+	it.each([
+		['Uw code is 123456.', '', '123456'],
+		['Bel 0612345678, code 123-456', '', '123456'],
+		['Code 111111 is verlopen, gebruik 222222', '', '222222'],
+		['Uw activatiecode is AB12CD34', 'type="alphanumeric" length="8"', 'AB12CD34'],
+	])('takes the code from a pasted sentence: %s', async (text, attrs, code) => {
+		el = await fixture(`<nldd-one-time-code-field ${attrs}></nldd-one-time-code-field>`);
+		el.focus();
+		const data = new DataTransfer();
+		data.setData('text/plain', text);
+		input().dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertFromPaste', dataTransfer: data, cancelable: true }));
+		await el.updateComplete;
+		expect(el.value).toBe(code);
+	});
+
+	it('fires nldd-complete again after a correction that leaves the code full', async () => {
+		el = await fixture('<nldd-one-time-code-field length="4"></nldd-one-time-code-field>');
+		const complete = vi.fn();
+		el.addEventListener('nldd-complete', complete);
+		await type('1234');
+		await type('1294');
+		expect(complete).toHaveBeenCalledTimes(2);
+	});
+
+	it('shows the caret after the last character once the code is complete', async () => {
+		el = await fixture('<nldd-one-time-code-field value="939393"></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		const last = boxes()[boxes().length - 1];
+		expect(last.classList.contains('is-active')).toBe(true);
+		expect(last.querySelector('.one-time-code-field__caret.is-after')).not.toBeNull();
+		expect(last.textContent!.trim()).toBe('3');
+	});
+});

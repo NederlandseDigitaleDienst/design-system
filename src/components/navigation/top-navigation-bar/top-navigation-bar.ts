@@ -34,6 +34,8 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, query } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+// The event name only: a type import would not keep it, and the status bar itself is not bundled.
+const STATUS_BAR_CHANGE = 'nldd-status-bar-change';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { topNavigationBarStyles } from './top-navigation-bar.styles.js';
 import { template } from './top-navigation-bar.template.js';
@@ -230,6 +232,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		this.addEventListener('select', this._handleItemSelect);
 		window.addEventListener('scroll', this._syncLogoOffset, { passive: true });
 		window.addEventListener('resize', this._syncLogoOffset, { passive: true });
+		window.addEventListener(STATUS_BAR_CHANGE, this._syncLogoOffset);
 		// Here and not in firstUpdated: disconnecting takes it down, and a bar
 		// moved in the DOM or kept by a framework connects again without a first
 		// update, so it would no longer turn compact on a narrow screen.
@@ -241,6 +244,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		this.removeEventListener('select', this._handleItemSelect);
 		window.removeEventListener('scroll', this._syncLogoOffset);
 		window.removeEventListener('resize', this._syncLogoOffset);
+		window.removeEventListener(STATUS_BAR_CHANGE, this._syncLogoOffset);
 		this._cleanupCompactDetection();
 		this._menuSheet.remove();
 	}
@@ -253,15 +257,24 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 
 	/**
 	 * How far the logo sits below the top of the page, so the ribbon drawn above
-	 * it starts at the top of the page and not over a bar above this one. Only
-	 * read while the page is at the top, which is the only time it shows.
+	 * it starts at the top of the page and not over a bar above this one. Under
+	 * an nldd-status-bar the ribbon is not drawn above the page at all: the
+	 * status bar carries on there in its own color, and the ribbon starts under
+	 * it, as it does at rest. Only read while the page is at the top, which is
+	 * the only time it shows.
 	 */
 	private _syncLogoOffset = (): void => {
 		if (window.scrollY > 0) return;
 		const logo = this.shadowRoot?.querySelector('.top-navigation-bar__logo');
 		if (!logo) return;
-		const offset = Math.max(0, Math.round(logo.getBoundingClientRect().top + window.scrollY));
+		const rect = logo.getBoundingClientRect();
+		const offset = Math.max(0, Math.round(rect.top + window.scrollY));
 		this.style.setProperty('--_top-navigation-bar-logo-offset', `${offset}px`);
+		const underStatusBar = [...document.querySelectorAll('nldd-status-bar')].some((bar) => {
+			const box = bar.getBoundingClientRect();
+			return box.height > 0 && box.bottom <= rect.top + 1 && box.left < rect.right && box.right > rect.left;
+		});
+		this.toggleAttribute('data-under-status-bar', underStatusBar);
 	};
 
 	/**

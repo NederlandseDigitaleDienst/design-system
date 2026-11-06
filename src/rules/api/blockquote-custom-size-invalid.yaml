@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-blockquote:state(invalid-custom-size)'
+message: 'This is not a size the quote can use, so it keeps its own size at this breakpoint. Use a length such as "32px" or "2rem", not a keyword.'

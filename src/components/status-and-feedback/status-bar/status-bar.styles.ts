@@ -135,6 +135,65 @@ export const statusBarStyles = css`
 	}
 
 
+	/* # Above the page */
+
+	.status-bar__above-page {
+		display: none;
+	}
+
+	/* WebKit only, as the ribbon of nldd-top-navigation-bar: Chrome paints
+	   nothing above the page. */
+	@supports (animation-timeline: scroll()) and (font: -apple-system-body) {
+		:host {
+			position: relative;
+		}
+
+		/* The fixed ::after only sees the document scroll, and nldd-page can be
+		   the scroller. This one sees that and goes visibility: hidden on scroll. */
+		:host([data-at-top]) .status-bar__above-page {
+			display: block;
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			animation: status-bar-above-page linear both;
+			animation-timeline: scroll(nearest);
+			animation-range: 0 1px;
+		}
+
+		/* No z-index: Safari does not paint it above the page with one. */
+		.status-bar__above-page::before {
+			content: '';
+			position: absolute;
+			bottom: 100%;
+			left: 0;
+			width: 100%;
+			height: 100lvh;
+			background-color: var(--_status-bar-background-color);
+		}
+
+		/* Safari only paints above the page while something fixed touches the top edge. */
+		.status-bar__above-page::after {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			width: 100%;
+			height: var(--_status-bar-height);
+			background-color: var(--_status-bar-background-color);
+			animation: status-bar-above-page linear both;
+			animation-timeline: scroll(root);
+			animation-range: 0 1px;
+		}
+	}
+
+	@keyframes status-bar-above-page {
+		to {
+			visibility: hidden;
+		}
+	}
+
+
 	/* # Action icon */
 
 	.status-bar__action-icon {

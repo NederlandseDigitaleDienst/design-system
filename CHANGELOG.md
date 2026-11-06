@@ -9,6 +9,31 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-one-time-code-field`,** a new field for a code someone receives once: by text message, by email or from an authenticator app. See Added.
+- **`nldd-text-field` takes a button,** for a form that is only that field, such as signing up with an email address.
+- **`nldd-task-board` is now `nldd-column-board`,** because its columns are not always tasks. `nldd lint --fix` renames it. See Breaking.
+
+### Breaking
+
+- **`nldd-task-board` and `nldd-task-board-column` are now `nldd-column-board` and `nldd-column-board-column`,** with the import path `@nldd/design-system/column-board`, the classes `NLDDColumnBoard` and `NLDDColumnBoardColumn` and the translation keys `components.column-board.*`. A column can be a status, but also a team or a phase, and then "task" was the wrong word. There is no alias; `nldd lint --fix` renames the tags, imports and classes. The default accessible name of the board is now "Bord" instead of "Takenbord".
+- **`show-search-button` on `nldd-search-field` is now `search-button`,** which also takes the appearance of the button: `neutral-tinted` (also with no value, as before) or `accent-filled`, for a page where searching is the main task. `nldd lint --fix` renames it.
+
+### Added
+
+- **`nldd-one-time-code-field`,** for a code of a fixed length that someone types over once. It shows a box per character, in monospace so 0 and O read apart, but is one native input underneath, so pasting the code, the code a phone offers from a text message, a screen reader and voice control work as on any other field. A pasted "123 456" becomes "123456", and from a pasted text message the field takes the code itself. `length` sets the number of characters (6 by default), `size="lg"` gives boxes of 56px for a page that is only the code, `format="###-###"` draws a code that is printed in groups, without the separator ending up in the value, `type="alphanumeric"` accepts letters too, `uppercase` turns them into capitals for a code where case does not matter, and `nldd-complete` fires once every box is filled. An incomplete code counts as invalid in a form.
+- **A `button` slot on `nldd-text-field`,** for one `nldd-button` or `nldd-icon-button` inside the field. The field sets its size, `sm` in a field of `md` and `xs` in one of `sm`, and disables it along with itself. A size of its own is overwritten, which a new lint rule reports.
+- **`sm-custom-size`, `md-custom-size` and `lg-custom-size` on `nldd-blockquote`,** for a quote that stands out on its own, such as on a landing page. They work as on `nldd-title`: a breakpoint without a value keeps the quote's own size, and a value never shows smaller than that size. Only the quote grows, with its line height and the space between paragraphs; the attribution and the border stay as they are.
+- **Display sizes on `nldd-text`,** `display-6` to `display-1`, for large letters that are not a heading, such as a number or a statement on a landing page. They are the sizes and typography of `nldd-title` and follow the breakpoint as a title does. `sm-custom-size`, `md-custom-size` and `lg-custom-size` work as on `nldd-title`, for a statement larger than `display-1`. A new hint reports an `nldd-title` without `heading-level`, which is no heading: give it a level, or use `nldd-text` with a display size.
+- **A warning in development when a page has no FOUC guard.** Without it, components show unstyled until they load. `@nldd/design-system/styles` includes the guard; a project that picks its own stylesheets gets it from `@nldd/design-system/styles/fouc`.
+
+### Changed
+
+- **`nldd-step-bar` goes compact when a step would get less than 120px,** and no longer only below the sm breakpoint. A bar of 6 steps goes compact below 720px, one of 7 below 840px, so a label is no longer broken in the middle of a word; one that is still too long for its step breaks at a syllable. A new hint reports a step bar of more than 7 steps, which do not fit: put those under each other in an `nldd-list` with an `nldd-step-cell` per row.
+- **The color of `nldd-status-bar` carries on above the page in Safari,** when the bar is at the top and the page is pulled down. The ribbon of an `nldd-top-navigation-bar` below it then starts under the status bar, as it does at rest, instead of running past it to the top.
+- **Every icon is drawn on a 96×96 canvas,** for regular and light icons alike. The drawings are unchanged and an icon renders the same, since the `viewBox` scales with it; only the numbers in the SVG are different. `npm run optimize:icons` brings an export on the old 24×24 or 32×32 grid to 96 before it rounds.
+
 ## [0.16.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.1...v0.16.2) (2026-11-06)
 
 ### Added

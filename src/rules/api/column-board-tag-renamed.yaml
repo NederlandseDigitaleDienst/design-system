@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-task-board'
+removed: ['nldd-task-board']
+fix: { tag: nldd-column-board }
+message: '`nldd-task-board` is now `nldd-column-board`. Rename the tag, its import and its class, here and on every page.'
+examples:
+  passed: ['<nldd-column-board></nldd-column-board>']
+  failed: ['<nldd-task-board></nldd-task-board>']

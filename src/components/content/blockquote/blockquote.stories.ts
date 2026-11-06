@@ -28,6 +28,14 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		quote: 'Overheidsdienstverlening moet begrijpelijk, toegankelijk en inclusief zijn voor iedereen.',
+		attribution: 'Team Beleid, Dossier D-319',
+		cite: '',
+		smCustomSize: '',
+		mdCustomSize: '',
+		lgCustomSize: '',
+	},
 	argTypes: {
 		quote: {
 			control: 'text',
@@ -41,16 +49,31 @@ export default {
 			control: 'text',
 			description: 'URL van de bron',
 		},
-	},
-	args: {
-		quote: 'Overheidsdienstverlening moet begrijpelijk, toegankelijk en inclusief zijn voor iedereen.',
-		attribution: 'Team Beleid, Dossier D-319',
-		cite: '',
+		smCustomSize: {
+			name: 'sm-custom-size',
+			control: 'text',
+			description: 'Eigen grootte van het citaat bij sm, elke CSS-lengte, voor een citaat als blikvanger. Een breedte zonder waarde houdt de eigen maat; nooit kleiner dan die maat.',
+		},
+		mdCustomSize: {
+			name: 'md-custom-size',
+			control: 'text',
+			description: 'Eigen grootte van het citaat bij md',
+		},
+		lgCustomSize: {
+			name: 'lg-custom-size',
+			control: 'text',
+			description: 'Eigen grootte van het citaat bij lg',
+		},
 	},
 };
 
-const Template = ({ quote, attribution, cite }: Record<string, any>) => html`
-	<nldd-blockquote cite=${cite || nothing}>
+const Template = ({ quote, attribution, cite, smCustomSize, mdCustomSize, lgCustomSize }: Record<string, any>) => html`
+	<nldd-blockquote
+		cite=${cite || nothing}
+		sm-custom-size=${smCustomSize || nothing}
+		md-custom-size=${mdCustomSize || nothing}
+		lg-custom-size=${lgCustomSize || nothing}
+	>
 		<p>${quote}</p>
 		${attribution ? html`<p slot="attribution">${attribution}</p>` : ''}
 	</nldd-blockquote>
@@ -65,6 +88,27 @@ export const MetCite = {
 	args: {
 		cite: 'https://example.nl/mijn-dienst/dossiers/d-319',
 	},
+};
+
+/**
+ * Voor een citaat als blikvanger, bijvoorbeeld op een landingspagina, geef je
+ * per breedte een eigen grootte, met `sm-`, `md-` en `lg-custom-size`. Een
+ * breedte zonder waarde houdt de eigen maat, dus een citaat dat op een breed
+ * scherm groot is, breekt nooit op een smal scherm. Alleen het citaat groeit,
+ * met zijn regelhoogte en de ruimte tussen alinea's; de bronvermelding en de
+ * rand blijven gelijk. Een citaat in lopende tekst houdt zijn eigen maat.
+ */
+export const EigenGrootte = {
+	name: 'Eigen grootte',
+	render: () => html`
+	<div style="display: block; container-type: inline-size; container-name: layout-container;">
+		<nldd-blockquote sm-custom-size="24px" md-custom-size="32px" lg-custom-size="40px">
+			<p>Overheidsdienstverlening moet begrijpelijk, toegankelijk en inclusief zijn voor iedereen.</p>
+			<p slot="attribution">Team Beleid, Dossier D-319</p>
+		</nldd-blockquote>
+	</div>
+`,
+	parameters: { controls: { disable: true } },
 };
 
 export const LangCitaat = {

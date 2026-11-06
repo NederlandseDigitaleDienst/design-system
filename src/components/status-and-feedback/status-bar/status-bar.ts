@@ -25,7 +25,10 @@
  * nldd-top-title-bar, across the whole app, also when a split view shows
  * several panes. It reports the state of the service, not of one page, so it
  * never sits inside the content or below a top bar. Below a top bar it says so
- * in development.
+ * in development. At the top of the page, in Safari, its color carries on above
+ * the page when the page is pulled down, and the ribbon of an
+ * nldd-top-navigation-bar below it then starts under the bar, as it does at
+ * rest.
  *
  * ## ARIA
  * role and aria-live are set automatically from the variant:
@@ -53,6 +56,9 @@ import { statusBarStyles } from './status-bar.styles.js';
 import { statusBarTemplate } from './status-bar.template.js';
 import '../../content/icon/icon.js';
 import { setState } from '../../../utilities/element-state.js';
+
+/** Fired on window when a status bar connects or disconnects. Read by nldd-top-navigation-bar. */
+export const STATUS_BAR_CHANGE = 'nldd-status-bar-change';
 
 export type StatusBarVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 
@@ -90,10 +96,39 @@ export class NLDDStatusBar extends LitElement {
 		// the live-region role is present from the start; updated() keeps it in sync
 		// on later variant changes.
 		this._applyAriaForVariant(this.variant);
+		// Moved in the DOM or kept by a framework: connects again without a first update.
+		window.addEventListener('resize', this._syncAtTop, { passive: true });
+		if (this.hasUpdated) {
+			this._syncAtTop();
+			this._announce();
+		}
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		window.removeEventListener('resize', this._syncAtTop);
+		this._announce();
 	}
 
 	override firstUpdated(): void {
 		this._checkPlacement();
+		this._syncAtTop();
+		this._announce();
+	}
+
+	/**
+	 * Whether the bar touches the top of the page, the only place where its
+	 * color carries on above it. Only read while the page is at the top.
+	 */
+	private _syncAtTop = (): void => {
+		if (window.scrollY > 0) return;
+		const { top, height } = this.getBoundingClientRect();
+		this.toggleAttribute('data-at-top', height > 0 && Math.abs(top) < 1);
+	};
+
+	/** Tells a top navigation bar that a status bar came or went, so it measures where its ribbon starts again. */
+	private _announce(): void {
+		window.dispatchEvent(new Event(STATUS_BAR_CHANGE));
 	}
 
 	/** Whether a top bar comes before the status bar. Top bars in an overlay are left out, since a sheet or dialog has its own. */

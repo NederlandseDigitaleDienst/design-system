@@ -104,6 +104,29 @@ export async function checkTranslationKeys(keys: string[]): Promise<void> {
 	if (unknown.length > 0) console.warn(`[nldd] setTranslations: no component knows ${unknown.join(', ')}.`);
 }
 
+/** The keyframes of fouc.css, which only that stylesheet puts on the body. */
+const FOUC_GUARD = 'nldd-fouc-reveal';
+
+/**
+ * Whether a page that shows components lacks the FOUC guard. The guard is a
+ * stylesheet, which no element can state a fact about, so this reads the body.
+ */
+export function lacksFoucGuard(root: ParentNode | null = document.body): boolean {
+	const { body } = document;
+	if (!body || !root) return false;
+	const hasComponents = [...root.querySelectorAll('*')].some((element) => element.localName.startsWith('nldd-'));
+	if (!hasComponents) return false;
+	const names = getComputedStyle(body).animationName.split(',').map((name) => name.trim());
+	return !names.includes(FOUC_GUARD);
+}
+
+/** Like a translation, the guard has no element to state a fact on, so this one reports itself. */
+export function checkFoucGuard(): void {
+	if (lacksFoucGuard()) {
+		console.warn("[nldd] fouc.css: this page has no FOUC guard, so components show unstyled until they load. Import '@nldd/design-system/styles', which includes it, or '@nldd/design-system/styles/fouc' on its own.");
+	}
+}
+
 let started = false;
 
 export function startDevChecks(): void {
@@ -125,4 +148,5 @@ export function startDevChecks(): void {
 		if (!document.hidden) report(stateRules);
 	}, RECHECK_MS);
 	schedule();
+	setTimeout(checkFoucGuard, SETTLE_MS);
 }

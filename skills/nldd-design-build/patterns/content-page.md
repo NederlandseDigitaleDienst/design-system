@@ -137,6 +137,7 @@ Met een inhoudsopgave:
           id="inhoud-kop"
           size="5"
           text="Op deze pagina"
+          heading-level="2"
         ></nldd-title>
         <nldd-spacer size="8"></nldd-spacer>
         <nldd-list

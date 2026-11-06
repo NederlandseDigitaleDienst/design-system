@@ -17,6 +17,8 @@ export const textFieldStyles = css`
 		--_text-field-inline-padding: var(--semantics-controls-md-inline-padding);
 		--_text-field-font: var(--semantics-input-fields-md-text-font);
 		--_text-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
+		--_text-field-end-padding-right: calc((var(--_text-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_text-field-button-focus-z-index: 1;
 
 		${inheritedTextReset}
 		display: block;
@@ -35,6 +37,7 @@ export const textFieldStyles = css`
 		--_text-field-inline-padding: var(--semantics-controls-sm-inline-padding);
 		--_text-field-font: var(--semantics-input-fields-sm-text-font);
 		--_text-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
+		--_text-field-end-padding-right: calc((var(--_text-field-min-size) - var(--semantics-controls-xs-min-size)) / 2 - var(--semantics-input-fields-border-width));
 	}
 
 
@@ -75,7 +78,7 @@ export const textFieldStyles = css`
 		--_text-field-background-color: var(--semantics-input-fields-is-autofill-background-color);
 	}
 
-	.text-field:focus-within {
+	.text-field:has(.text-field__input:focus-visible) {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
@@ -156,5 +159,21 @@ export const textFieldStyles = css`
 	.text-field__validation-icon {
 		width: var(--_text-field-validation-icon-size);
 		height: var(--_text-field-validation-icon-size);
+	}
+
+	.text-field__end {
+		display: flex;
+		position: relative;
+		padding-right: var(--_text-field-end-padding-right);
+		flex-shrink: 0;
+		align-items: center;
+	}
+
+	.text-field__end[hidden] {
+		display: none;
+	}
+
+	.text-field__end:focus-within {
+		z-index: var(--_text-field-button-focus-z-index);
 	}
 `;

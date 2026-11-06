@@ -29,10 +29,10 @@ import { nlddTimePickerTranslations } from '../components/inputs/time-picker/tim
 import { nlddTokenFieldTranslations } from '../components/inputs/token-field/token-field.i18n.js';
 import { nlddCardTranslations } from '../components/layout/card/card.i18n.js';
 import { nlddCollectionTranslations } from '../components/layout/collection/collection.i18n.js';
+import { nlddColumnBoardTranslations } from '../components/layout/column-board/column-board.i18n.js';
 import { nlddPageFooterTranslations } from '../components/layout/page-footer/page-footer.i18n.js';
 import { nlddSidebarSectionTranslations } from '../components/layout/page-sections/sidebar-section/sidebar-section.i18n.js';
 import { nlddPopoverTranslations } from '../components/layout/popover/popover.i18n.js';
-import { nlddTaskBoardTranslations } from '../components/layout/task-board/task-board.i18n.js';
 import { nlddWindowTranslations } from '../components/layout/window/window.i18n.js';
 import { nlddDragHandleCellTranslations } from '../components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.i18n.js';
 import { nlddListItemSegmentTranslations } from '../components/lists-and-tables/list-item-segment/list-item-segment.i18n.js';
@@ -86,10 +86,10 @@ export const nl = {
 	...nlddTokenFieldTranslations,
 	...nlddCardTranslations,
 	...nlddCollectionTranslations,
+	...nlddColumnBoardTranslations,
 	...nlddPageFooterTranslations,
 	...nlddSidebarSectionTranslations,
 	...nlddPopoverTranslations,
-	...nlddTaskBoardTranslations,
 	...nlddWindowTranslations,
 	...nlddDragHandleCellTranslations,
 	...nlddListItemSegmentTranslations,

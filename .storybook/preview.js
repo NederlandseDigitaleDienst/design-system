@@ -5,6 +5,7 @@ import '../src/assets/styles/themes.css';
 import '../src/components/content/rich-text/rich-text.css';
 import '../src/components/forms/form-section/form-section.css';
 import '../src/components/forms/form/form.css';
+import '../src/assets/styles/fouc.css';
 import './preview.css';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import references from '../scripts/reference-colors.json';

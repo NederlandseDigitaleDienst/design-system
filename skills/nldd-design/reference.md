@@ -526,11 +526,19 @@ Shows several avatars as one group: they overlap, and each one gets a ring in th
 
 Shows a quote with an optional source attribution.
 
+**Rules** (`nldd lint`)
+
+- `blockquote-custom-size-invalid`: This is not a size the quote can use, so it keeps its own size at this breakpoint. Use a length such as "32px" or "2rem", not a keyword.
+- `blockquote-custom-size-no-effect`: This custom size is smaller than the quote's own size at this breakpoint and shows at that size.
+
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `cite` | `string` | URL of the source (forwarded to the <blockquote> element) |
+| `sm-custom-size` | `string` | A size of your own for the quote at sm, any CSS length (e.g. '32px', '2rem', 'clamp(1.5rem, 4vw, 3rem)'), for a quote that stands out on its own, such as on a landing page. A quote in running text keeps its own size. Set per breakpoint on purpose: a breakpoint without one keeps the quote's own size, so a quote made large for a wide screen never breaks a narrow one. Never smaller than the quote's own size at the same breakpoint: a smaller value shows at that size, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Only the quote grows, with its line height and the space between paragraphs; the attribution and the border stay as they are. An invalid value falls back to the quote's own size |
+| `md-custom-size` | `string` | The same, at md |
+| `lg-custom-size` | `string` | The same, at lg |
 
 **Slots**
 
@@ -724,13 +732,23 @@ A compact property that has been assigned to something: a category, a type, a ro
 
 ### `<nldd-text>`
 
-One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography — it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.
+One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography — it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.
+
+**Rules** (`nldd lint`)
+
+- `text-custom-size-invalid`: This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
+- `text-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `size` for text up to `display-1`.
+- `text-line-height-no-effect`: `line-height` belongs to the body sizes; a display size has its own line height. Remove it.
+- `text-weight-no-effect`: `weight` belongs to the body sizes; a display size has its own weight. Remove it.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `string` | Text size on the body scale: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
+| `size` | `string` | Text size: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' on the body scale (default: 'md'), or 'display-6' to 'display-1' for large letters that are not a heading, from small to large |
+| `sm-custom-size` | `string` | A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than `display-1`. A var() works when the variable holds a length; one that is not defined leaves the text without its size, the floor included. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so text made large for a wide screen never breaks a narrow one. Never smaller than `display-1` at the same breakpoint: a smaller value shows as `display-1`, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of `display-1`. An invalid value falls back to `size` |
+| `md-custom-size` | `string` | The same, at md |
+| `lg-custom-size` | `string` | The same, at lg |
 | `weight` | `string` | Font weight: 'regular' \| 'medium' \| 'bold' (default: 'regular'). With 'bold' a slotted `<strong>` no longer stands out: there is nothing bolder in the scale. |
 | `line-height` | `string` | Line height: 'flat' \| 'tight' \| 'snug' \| 'loose' (default: 'snug') |
 | `color` | `string` | Text color: 'content' (the default) \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical' \| 'inherit'. 'content' and 'secondary' follow the surrounding content channel; 'inherit' takes the color it inherits, for text on a painted surface. |
@@ -755,6 +773,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 - `tag-goes-below-title` (hint): Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.
 - `title-custom-size-invalid`: This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `title-custom-size-no-effect`: This custom size is smaller than size 1 at this breakpoint and shows as size 1. Use `size` for headings up to size 1.
+- `title-needs-heading-level` (hint): A title without `heading-level` is not a heading. Give it a level, or for large letters that are not a heading use nldd-text with a display size.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 - `title-no-full-stop` (hint): Drop the full stop: a heading has none, also when it is a sentence.
 - `title-no-question` (hint): Give the answer as the heading, such as "De beoordeling duurt zes weken" for "Hoe lang duurt het?".
@@ -772,7 +791,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 | `text` | `string` | Title text. Content in the default slot takes its place. |
 | `supporting-text` | `string` | Text below the title. Content in the supporting-text slot takes its place. |
 | `overline` | `string` | Text above the title. Content in the overline slot takes its place. |
-| `heading-level` | `1\|2\|3\|4\|5\|6` | Renders text as h1–h6; absent renders a p, for a title that is not a heading. |
+| `heading-level` | `1\|2\|3\|4\|5\|6` | Renders text as h1–h6. Absent renders a p, which is no heading: for large letters that are not a heading, use nldd-text with a display size. |
 
 **Slots**
 
@@ -1366,6 +1385,42 @@ A numeric input field with decrement and increment buttons.
 | `input` | When the value changes (typing, +/- button, or on-commit correction); detail: { value: number } |
 | `change` | When the value is committed (blur/Enter or +/- button), clamped to [min, max]; empty input falls back to the last valid value. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number } |
 
+### `<nldd-one-time-code-field>`
+
+A field for a code someone receives once and types over: by text message, by email, from an authenticator app or on a letter. It shows a box per character, but it is one native input underneath, so pasting the whole code, the code a phone offers from a text message (`autocomplete="one-time-code"`), a screen reader and voice control all work as on any other field. The characters are monospace, so 0 and O, or 1, l and I, read apart. Typing fills the boxes from the left. The arrow keys, Home, End and a click move the caret from box to box. In a filled box it stands after the character: Backspace empties that box, without moving the rest up, so you type the right one straight in. A pasted code drops whatever is not part of one, so "123 456" or "123-456" becomes "123456", and a whole code replaces what was there. From a pasted sentence, such as a text message, the field takes the last word that is as long as the code, so "Your code is 123456" fills in "123456". Once every box is full the field fires `nldd-complete`, and again after a correction that leaves it full. Submitting then is up to your app: send the form, or wait for a button, but never both, or a correction submits twice. Not for a PIN or a password, which must not be readable on screen: use `nldd-password-field`. Put the field in an `nldd-form-field`, whose label says where the code comes from ("Code uit de sms").
+
+**Rules** (`nldd lint`)
+
+- `one-time-code-field-format-invalid`: `format` needs a `#` for each box, such as `###-###`; without one the field ignores it.
+- `one-time-code-field-length-no-effect`: `format` sets the length, so `length` does nothing here. Remove `length`.
+- `one-time-code-field-uppercase-no-effect`: `uppercase` only does something with `type="alphanumeric"`; a numeric code has no letters. Remove it, or set the type.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `size` | `string` | 'sm' \| 'md' (default) \| 'lg'. 'lg' has boxes of 56px with larger characters, for a page where the code is the only thing to do, such as signing in. |
+| `length` | `number` | How many characters the code has (default: 6). |
+| `format` | `string` | The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are. |
+| `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
+| `invalid` | `boolean` | Marks the field as invalid |
+| `readonly` | `boolean` | Readonly state |
+| `disabled` | `boolean` | Disabled state |
+| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
+| `name` | `string` | Input name for form submission |
+| `value` | `string` | The code |
+| `type` | `string` | What the code holds: 'numeric' (default, digits only, raises the number keyboard) \| 'alphanumeric' (letters and digits) |
+| `uppercase` | `boolean` | Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type="alphanumeric"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells "a" from "A", such as some recovery codes: a value turned into capitals would no longer match. |
+| `required` | `boolean` | Required state. A code that is not complete counts as invalid too. |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `input` | When the code changes; detail: { value: string } |
+| `change` | When the code is committed; detail: { value: string } |
+| `nldd-complete` | When every box is filled; detail: { value: string } |
+
 ### `<nldd-password-field>`
 
 A password input field with visibility toggle and validation states.
@@ -1490,6 +1545,7 @@ A search input with a leading search icon, an optional dismiss button, and an op
 
 **Rules** (`nldd lint`)
 
+- `search-field-show-search-button-renamed`: The `show-search-button` attribute is now `search-button`, which also takes the appearance of the button. Rename it here and on every other nldd-search-field.
 - `toolbar-search-needs-limits` (hint): Give the toolbar item a `min-width` and a `max-width`, so the field shrinks along without becoming unreadable.
 
 **Attributes**
@@ -1500,7 +1556,7 @@ A search input with a leading search icon, an optional dismiss button, and an op
 | `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
 | `placeholder` | `string` | Placeholder text for the input |
 | `accessible-label` | `string` | Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen'). Without a visible label the placeholder is the only text on screen, so a name of your own starts with it: someone who works the computer by voice says what they see, and a name that leaves it out does not answer (WCAG 2.5.3). |
-| `show-search-button` | `boolean` | When set, shows a search button on the right |
+| `search-button` | `string` | Shows a search button on the right, in the appearance you name: 'neutral-tinted' (also with no value) \| 'accent-filled'. Leave it out for no button: Enter searches as well. 'accent-filled' is for a page where searching is the main task, such as a search page; in a header or above a list the quiet one fits. |
 | `shortcut` | `string` | Keyboard shortcut hint shown at the right end of the empty field, e.g. 'Cmd+K' or '/'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up focusing the field in your app. Hidden while the field has focus or a value, and on touch-only devices. Joins the field's description for screen readers. |
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
@@ -1813,6 +1869,7 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 **Rules** (`nldd lint`)
 
+- `text-field-button-size-no-effect`: The button in the `button` slot has a size of its own, but the field sets it: `sm` in a field of `md`, `xs` in one of `sm`. Leave the size off the button.
 - `text-field-needs-type` (hint): Set the `type` that fits, `email` or `tel`, which brings the right keyboard and validation.
 - `text-field-no-keyboard-with-type`: `keyboard` contradicts `type`, which already raises a keyboard of its own. Drop one of the two.
 
@@ -1840,6 +1897,12 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 | `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `button` | One `nldd-button` or `nldd-icon-button` at the end of the field, for the one action of a form that is only this field: sign up with an email address, redeem a code. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`. |
 
 **Events**
 
@@ -2159,6 +2222,60 @@ A container for displaying collections of items. Supports grid, stack, lanes and
 | Event | Description |
 | --- | --- |
 | `load-more` | When the load-more button is clicked |
+
+### `<nldd-column-board>`
+
+Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-column-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu "Verplaatsen naar" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows "Dit bord is alleen-lezen" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.
+
+**Rules** (`nldd lint`)
+
+- `column-board-move-item-invalid`: moveItem() needs an item in one of the board's columns and a column of the board.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `accessible-label` | `string` | Accessible name of the board (default: "Bord") |
+| `height` | `string` | Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`) |
+| `readonly` | `boolean` | Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The columns: `nldd-column-board-column` |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `nldd-move` | An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one) |
+| `nldd-move-denied` | An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }` |
+
+### `<nldd-column-board-column>`
+
+One column of an `nldd-column-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here ("Verplaatst naar In behandeling"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.
+
+**Rules** (`nldd lint`)
+
+- `column-board-column-needs-name`: nldd-column-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `text` | `string` | The column's name, shown in the header and used as its accessible name |
+| `accessible-label` | `string` | Accessible name in place of `text`, for a column whose header comes from the slot |
+| `value` | `string` | What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn` |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `header` | The header, in place of `text` and the count |
+| _(default)_ | The items |
+| `footer` | Right under the last item, such as a button to add one; it scrolls along with the items |
 
 ### `<nldd-container>`
 
@@ -2820,60 +2937,6 @@ A vertical split view with multiple stacked panes. The number of panes is set vi
 | `pane-1` | First pane |
 | `pane-2` | Second pane |
 | `pane-n` | Each subsequent pane based on the `panes` attribute |
-
-### `<nldd-task-board>`
-
-Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-task-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu "Verplaatsen naar" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows "Dit bord is alleen-lezen" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.
-
-**Rules** (`nldd lint`)
-
-- `task-board-move-item-invalid`: moveItem() needs an item in one of the board's columns and a column of the board.
-
-**Attributes**
-
-| Attribute | Type | Description |
-| --- | --- | --- |
-| `accessible-label` | `string` | Accessible name of the board (default: "Takenbord") |
-| `height` | `string` | Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`) |
-| `readonly` | `boolean` | Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
-
-**Slots**
-
-| Slot | Description |
-| --- | --- |
-| _(default)_ | The columns: `nldd-task-board-column` |
-
-**Events**
-
-| Event | Description |
-| --- | --- |
-| `nldd-move` | An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one) |
-| `nldd-move-denied` | An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }` |
-
-### `<nldd-task-board-column>`
-
-One column of an `nldd-task-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here ("Verplaatst naar In behandeling"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.
-
-**Rules** (`nldd lint`)
-
-- `task-board-column-needs-name`: nldd-task-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.
-
-**Attributes**
-
-| Attribute | Type | Description |
-| --- | --- | --- |
-| `text` | `string` | The column's name, shown in the header and used as its accessible name |
-| `accessible-label` | `string` | Accessible name in place of `text`, for a column whose header comes from the slot |
-| `value` | `string` | What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn` |
-
-**Slots**
-
-| Slot | Description |
-| --- | --- |
-| `header` | The header, in place of `text` and the count |
-| _(default)_ | The items |
-| `footer` | Right under the last item, such as a button to add one; it scrolls along with the items |
 
 ### `<nldd-two-thirds-one-third-section>`
 
@@ -3655,7 +3718,7 @@ Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circul
 
 ### `<nldd-status-bar>`
 
-A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status ("Storing: …", "Gepland onderhoud …"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. role and aria-live are set automatically from the variant: - critical → role="alert" (implies aria-live="assertive"; interrupts the screen reader) - others → role="status" aria-live="polite" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role="alert" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).
+A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status ("Storing: …", "Gepland onderhoud …"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. At the top of the page, in Safari, its color carries on above the page when the page is pulled down, and the ribbon of an nldd-top-navigation-bar below it then starts under the bar, as it does at rest. role and aria-live are set automatically from the variant: - critical → role="alert" (implies aria-live="assertive"; interrupts the screen reader) - others → role="status" aria-live="polite" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role="alert" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).
 
 **Rules** (`nldd lint`)
 
@@ -3674,12 +3737,13 @@ A narrow, page-wide status bar (24px) with a deep background color per variant. 
 
 ### `<nldd-step-bar>`
 
-Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status="current"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status="past"` or `status="future"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
+Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status="current"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status="past"` or `status="future"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
 
 **Rules** (`nldd lint`)
 
 - `step-bar-current-renamed`: `current` moved to the step. Set `status="current"` on the current nldd-step-bar-item instead.
 - `step-bar-max-one-current`: More than one step has `status="current"`; the last one wins. Mark only the step you are on.
+- `step-bar-max-seven-items` (hint): More than 7 steps do not fit a step bar. Put them under each other in an nldd-list with an nldd-step-cell per row.
 
 **Attributes**
 
@@ -3701,6 +3765,7 @@ One step in an `nldd-step-bar`. `status="current"` marks the step you are on; th
 **Rules** (`nldd lint`)
 
 - `step-bar-max-one-current`: More than one step has `status="current"`; the last one wins. Mark only the step you are on.
+- `step-bar-max-seven-items` (hint): More than 7 steps do not fit a step bar. Put them under each other in an nldd-list with an nldd-step-cell per row.
 
 **Attributes**
 

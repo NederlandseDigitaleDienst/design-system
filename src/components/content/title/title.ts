@@ -31,7 +31,7 @@
  * @attr {string} text - Title text. Content in the default slot takes its place.
  * @attr {string} supporting-text - Text below the title. Content in the supporting-text slot takes its place.
  * @attr {string} overline - Text above the title. Content in the overline slot takes its place.
- * @attr {1|2|3|4|5|6} heading-level - Renders text as h1–h6; absent renders a p, for a title that is not a heading.
+ * @attr {1|2|3|4|5|6} heading-level - Renders text as h1–h6. Absent renders a p, which is no heading: for large letters that are not a heading, use nldd-text with a display size.
  *
  * @slot overline - Overline that is more than text. Takes the place of the overline attribute.
  * @slot - Title that is more than text, such as a link. Takes the place of text, and brings its own h1–h6 for semantics.
@@ -44,35 +44,11 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { titleStyles } from './title.styles.js';
 import { titleTemplate } from './title.template.js';
-import { setState } from '../../../utilities/element-state.js';
+import { applyCustomFontSizes, checkCustomFontSizeFloor, DISPLAY_1_FONT_SIZE, type Breakpoint } from '../../../utilities/custom-font-size.js';
 
 type Size = 1 | 2 | 3 | 4 | 5 | 6;
 type TitleColor = 'content' | 'inherit';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-
-type Breakpoint = 'sm' | 'md' | 'lg';
-
-const BREAKPOINTS: readonly Breakpoint[] = ['sm', 'md', 'lg'];
-
-/** The font size of size 1 per breakpoint: the floor of a custom size. */
-const SIZE_1_FONT_SIZE: Record<Breakpoint, string> = {
-	sm: 'var(--primitives-font-size-700)',
-	md: 'var(--primitives-font-size-800)',
-	lg: 'var(--primitives-font-size-1000)',
-};
-
-/** Font-size values that are not a length: the CSS-wide keywords and the
- *  absolute and relative size keywords. */
-const NOT_A_LENGTH = new Set([
-	'inherit', 'initial', 'unset', 'revert', 'revert-layer',
-	'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xxx-large',
-	'larger', 'smaller', 'math',
-]);
-
-/** A length font-size takes. A keyword cannot go inside the max() that keeps the floor, so it would void the whole font. */
-function isFontSize(value: string): boolean {
-	return !NOT_A_LENGTH.has(value.toLowerCase()) && CSS.supports('font-size', value);
-}
 
 @customElement('nldd-title')
 export class NLDDTitle extends LitElement {
@@ -129,70 +105,16 @@ export class NLDDTitle extends LitElement {
 
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
-		if (
-			!changed.has('smCustomSize') &&
-			!changed.has('mdCustomSize') &&
-			!changed.has('lgCustomSize')
-		) return;
-		// Nothing to measure or write when rendered without a DOM, as on a server.
-		if (typeof CSS === 'undefined') return;
-
-		// Written here rather than in updated(), so the first paint already has
-		// the custom size. A breakpoint left without a valid value keeps the
-		// size from the scale.
-		const own: Record<Breakpoint, string> = { sm: this.smCustomSize, md: this.mdCustomSize, lg: this.lgCustomSize };
-		this._customSizes = {};
-		let invalid = false;
-		for (const breakpoint of BREAKPOINTS) {
-			const value = (own[breakpoint] || '').trim();
-			const valid = value !== '' && isFontSize(value);
-			if (valid) {
-				this._customSizes[breakpoint] = value;
-				this.style.setProperty(`--_title-${breakpoint}-custom-size`, value);
-			} else {
-				this.style.removeProperty(`--_title-${breakpoint}-custom-size`);
-			}
-			this.toggleAttribute(`data-${breakpoint}-custom-size`, valid);
-			if (value !== '' && !valid) invalid = true;
-		}
-		setState(this, 'invalid-custom-size', invalid);
+		if (!changed.has('smCustomSize') && !changed.has('mdCustomSize') && !changed.has('lgCustomSize')) return;
+		this._customSizes = applyCustomFontSizes(this, 'title', { sm: this.smCustomSize, md: this.mdCustomSize, lg: this.lgCustomSize });
 	}
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
 		if (!import.meta.env?.DEV) return;
 		if (changed.has('smCustomSize') || changed.has('mdCustomSize') || changed.has('lgCustomSize')) {
-			this._checkFloor(this._customSizes);
+			checkCustomFontSizeFloor(this, this._customSizes, DISPLAY_1_FONT_SIZE);
 		}
-	}
-
-	/** DEV-only: whether a custom size is smaller than size 1, which then shows instead. */
-	private _checkFloor(sizes: Partial<Record<Breakpoint, string>>): void {
-		if (!this.shadowRoot || Object.keys(sizes).length === 0) {
-			setState(this, 'custom-size-below-floor', false);
-			return;
-		}
-		const probe = document.createElement('span');
-		probe.style.position = 'absolute';
-		probe.style.visibility = 'hidden';
-		this.shadowRoot.append(probe);
-		const px = (value: string): number => {
-			probe.style.fontSize = value;
-			return parseFloat(getComputedStyle(probe).fontSize);
-		};
-		let below = false;
-		try {
-			for (const [breakpoint, value] of Object.entries(sizes) as [Breakpoint, string][]) {
-				// A value relative to the viewport, a container or the surrounding
-				// text resolves to something else elsewhere, so it is left to the
-				// CSS floor rather than measured here.
-				if (/%|\d(?:v[whib]|vmin|vmax|cq[whib]|cqmin|cqmax|em|ex|ch|cap|ic|lh)\b/.test(value)) continue;
-				if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) below = true;
-			}
-		} finally {
-			probe.remove();
-		}
-		setState(this, 'custom-size-below-floor', below);
 	}
 
 	override render() {

@@ -5,6 +5,7 @@ import '../../inputs/text-field/text-field.js';
 import '../../inputs/password-field/password-field.js';
 import '../../inputs/multi-line-text-field/multi-line-text-field.js';
 import '../../inputs/number-field/number-field.js';
+import '../../inputs/one-time-code-field/one-time-code-field.js';
 import '../../inputs/slider/slider.js';
 import '../../inputs/search-field/search-field.js';
 import '../../inputs/date-field/date-field.js';
@@ -340,6 +341,7 @@ const SLOTTED_CONTROLS: Array<{ name: string; markup: string }> = [
 	{ name: 'password-field', markup: '<nldd-password-field></nldd-password-field>' },
 	{ name: 'multi-line-text-field', markup: '<nldd-multi-line-text-field></nldd-multi-line-text-field>' },
 	{ name: 'number-field', markup: '<nldd-number-field></nldd-number-field>' },
+	{ name: 'one-time-code-field', markup: '<nldd-one-time-code-field></nldd-one-time-code-field>' },
 	{ name: 'slider', markup: '<nldd-slider></nldd-slider>' },
 	{ name: 'search-field', markup: '<nldd-search-field></nldd-search-field>' },
 	{ name: 'date-field', markup: '<nldd-date-field></nldd-date-field>' },
@@ -447,6 +449,7 @@ describe('nldd-form-field – label click focuses the slotted control', () => {
 const NAMED_VIA_ACCESSIBLE_LABEL = [
 	'<nldd-text-field></nldd-text-field>',
 	'<nldd-number-field></nldd-number-field>',
+	'<nldd-one-time-code-field></nldd-one-time-code-field>',
 	'<nldd-slider></nldd-slider>',
 	'<nldd-search-field></nldd-search-field>',
 	'<nldd-combo-box></nldd-combo-box>',

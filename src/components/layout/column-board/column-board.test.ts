@@ -1,8 +1,8 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
-import type { NLDDTaskBoard, NLDDMoveEventDetail } from './task-board.js';
-import './task-board.js';
+import type { NLDDColumnBoard, NLDDMoveEventDetail } from './column-board.js';
+import './column-board.js';
 import '../../layout/card/card.js';
 
 const frames = async (count = 2) => {
@@ -11,18 +11,18 @@ const frames = async (count = 2) => {
 
 /** A board of three columns, with buttons as items, moved in the DOM the way an
  *  app moves them in its data. */
-async function board(): Promise<{ el: NLDDTaskBoard; moves: NLDDMoveEventDetail[] }> {
-	const el = await fixture<NLDDTaskBoard>(`
-		<nldd-task-board style="width: 900px">
-			<nldd-task-board-column value="nieuw" text="Nieuw">
+async function board(): Promise<{ el: NLDDColumnBoard; moves: NLDDMoveEventDetail[] }> {
+	const el = await fixture<NLDDColumnBoard>(`
+		<nldd-column-board style="width: 900px">
+			<nldd-column-board-column value="nieuw" text="Nieuw">
 				<button id="a">A-1044</button>
 				<button id="b">A-1045</button>
-			</nldd-task-board-column>
-			<nldd-task-board-column value="bezig" text="In behandeling">
+			</nldd-column-board-column>
+			<nldd-column-board-column value="bezig" text="In behandeling">
 				<button id="c">A-1042</button>
-			</nldd-task-board-column>
-			<nldd-task-board-column value="klaar" text="Afgerond"></nldd-task-board-column>
-		</nldd-task-board>
+			</nldd-column-board-column>
+			<nldd-column-board-column value="klaar" text="Afgerond"></nldd-column-board-column>
+		</nldd-column-board>
 	`);
 	const moves: NLDDMoveEventDetail[] = [];
 	el.addEventListener('nldd-move', (event) => {
@@ -37,15 +37,15 @@ async function board(): Promise<{ el: NLDDTaskBoard; moves: NLDDMoveEventDetail[
 }
 
 const alt = (target: Element, key: string) => target.dispatchEvent(new KeyboardEvent('keydown', { key, altKey: true, bubbles: true, composed: true, cancelable: true }));
-const announced = (el: NLDDTaskBoard) => el.shadowRoot!.querySelector('.task-board__announcer')!.textContent;
+const announced = (el: NLDDColumnBoard) => el.shadowRoot!.querySelector('.column-board__announcer')!.textContent;
 const pointer = (target: EventTarget, type: string, x: number, y: number, pointerType = 'mouse') => target.dispatchEvent(new PointerEvent(type, { bubbles: true, composed: true, clientX: x, clientY: y, pointerId: 1, isPrimary: true, button: 0, pointerType }));
 const center = (el: Element) => {
 	const rect = el.getBoundingClientRect();
 	return [rect.left + rect.width / 2, rect.top + rect.height / 2] as const;
 };
 
-describe('nldd-task-board', () => {
-	let el: NLDDTaskBoard;
+describe('nldd-column-board', () => {
+	let el: NLDDColumnBoard;
 
 	afterEach(() => {
 		if (el) cleanup(el);
@@ -60,24 +60,24 @@ describe('nldd-task-board', () => {
 
 	it('names the board and its columns', async () => {
 		({ el } = await board());
-		expect(el.shadowRoot!.querySelector('[role="region"]')!.getAttribute('aria-label')).toBe('Takenbord');
+		expect(el.shadowRoot!.querySelector('[role="region"]')!.getAttribute('aria-label')).toBe('Bord');
 		expect(el.columns[1].shadowRoot!.querySelector('section')!.getAttribute('aria-label')).toBe('In behandeling');
 	});
 
 	it('shows the name and the number of items in the header', async () => {
 		({ el } = await board());
-		const header = el.columns[0].shadowRoot!.querySelector('.task-board-column__header')!;
+		const header = el.columns[0].shadowRoot!.querySelector('.column-board-column__header')!;
 		expect(header.textContent!.replace(/\s+/g, ' ').trim()).toBe('Nieuw 2');
 	});
 
 	it('takes a header from the slot, and keeps text as the name', async () => {
-		el = await fixture<NLDDTaskBoard>(`
-			<nldd-task-board>
-				<nldd-task-board-column value="x" text="Team Beleid">
+		el = await fixture<NLDDColumnBoard>(`
+			<nldd-column-board>
+				<nldd-column-board-column value="x" text="Team Beleid">
 					<strong slot="header">Eigen kop</strong>
 					<button>D-319</button>
-				</nldd-task-board-column>
-			</nldd-task-board>
+				</nldd-column-board-column>
+			</nldd-column-board>
 		`);
 		const column = el.columns[0];
 		await waitForUpdate(column);
@@ -86,34 +86,34 @@ describe('nldd-task-board', () => {
 	});
 
 	it('puts the footer under the items, not among them, and takes no room without one', async () => {
-		el = await fixture<NLDDTaskBoard>(`
-			<nldd-task-board>
-				<nldd-task-board-column value="x" text="Nieuw">
+		el = await fixture<NLDDColumnBoard>(`
+			<nldd-column-board>
+				<nldd-column-board-column value="x" text="Nieuw">
 					<button>A-1044</button>
 					<button slot="footer">Toevoegen</button>
-				</nldd-task-board-column>
-				<nldd-task-board-column value="y" text="Afgerond"></nldd-task-board-column>
-			</nldd-task-board>
+				</nldd-column-board-column>
+				<nldd-column-board-column value="y" text="Afgerond"></nldd-column-board-column>
+			</nldd-column-board>
 		`);
 		const [withFooter, without] = el.columns;
 		await waitForUpdate(withFooter);
 		await waitForUpdate(without);
 		expect(withFooter.items.map((item) => item.textContent)).toEqual(['A-1044']);
-		expect(withFooter.shadowRoot!.querySelector('.task-board-column__footer')!.hasAttribute('hidden')).toBe(false);
-		expect(without.shadowRoot!.querySelector('.task-board-column__footer')!.hasAttribute('hidden')).toBe(true);
+		expect(withFooter.shadowRoot!.querySelector('.column-board-column__footer')!.hasAttribute('hidden')).toBe(false);
+		expect(without.shadowRoot!.querySelector('.column-board-column__footer')!.hasAttribute('hidden')).toBe(true);
 	});
 
 	it('fades the side it can scroll to, and only that side', async () => {
 		const unloadTokens = loadTokens();
-		el = await fixture<NLDDTaskBoard>(`
-			<nldd-task-board style="width: 400px">
-				<nldd-task-board-column value="a" text="A"></nldd-task-board-column>
-				<nldd-task-board-column value="b" text="B"></nldd-task-board-column>
-				<nldd-task-board-column value="c" text="C"></nldd-task-board-column>
-			</nldd-task-board>
+		el = await fixture<NLDDColumnBoard>(`
+			<nldd-column-board style="width: 400px">
+				<nldd-column-board-column value="a" text="A"></nldd-column-board-column>
+				<nldd-column-board-column value="b" text="B"></nldd-column-board-column>
+				<nldd-column-board-column value="c" text="C"></nldd-column-board-column>
+			</nldd-column-board>
 		`);
 		await frames(3);
-		const scroller = el.shadowRoot!.querySelector('.task-board') as HTMLElement;
+		const scroller = el.shadowRoot!.querySelector('.column-board') as HTMLElement;
 		const sides = () => [scroller.classList.contains('can-scroll-left'), scroller.classList.contains('can-scroll-right')];
 		expect(sides()).toEqual([false, true]);
 		expect(scroller.tabIndex).toBe(0);
@@ -130,11 +130,11 @@ describe('nldd-task-board', () => {
 	});
 
 	it('takes a fixed height, which every column fills and scrolls within', async () => {
-		el = await fixture<NLDDTaskBoard>(`
-			<nldd-task-board height="320px" style="width: 900px">
-				<nldd-task-board-column text="Nieuw">${'<div style="height: 120px">A</div>'.repeat(5)}</nldd-task-board-column>
-				<nldd-task-board-column text="Klaar"></nldd-task-board-column>
-			</nldd-task-board>
+		el = await fixture<NLDDColumnBoard>(`
+			<nldd-column-board height="320px" style="width: 900px">
+				<nldd-column-board-column text="Nieuw">${'<div style="height: 120px">A</div>'.repeat(5)}</nldd-column-board-column>
+				<nldd-column-board-column text="Klaar"></nldd-column-board-column>
+			</nldd-column-board>
 		`);
 		const unloadTokens = loadTokens();
 		const [full, empty] = el.columns;
@@ -144,15 +144,15 @@ describe('nldd-task-board', () => {
 		expect(empty.getBoundingClientRect().height).toBe(320);
 		el.height = 'nonsense';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_task-board-height')).toBe('');
+		expect(el.style.getPropertyValue('--_column-board-height')).toBe('');
 		unloadTokens();
 	});
 
 	it('fades a column at the side it can scroll to, and only that side', async () => {
-		el = await fixture<NLDDTaskBoard>(`
-			<nldd-task-board height="320px" style="width: 900px">
-				<nldd-task-board-column text="Nieuw">${'<div style="height: 120px">A</div>'.repeat(5)}</nldd-task-board-column>
-			</nldd-task-board>
+		el = await fixture<NLDDColumnBoard>(`
+			<nldd-column-board height="320px" style="width: 900px">
+				<nldd-column-board-column text="Nieuw">${'<div style="height: 120px">A</div>'.repeat(5)}</nldd-column-board-column>
+			</nldd-column-board>
 		`);
 		const [column] = el.columns;
 		await waitForUpdate(column);
@@ -186,19 +186,19 @@ describe('nldd-task-board', () => {
 
 		it('brings the whole column an item moved to into view, not just the item', async () => {
 			const unloadTokens = loadTokens();
-			el = await fixture<NLDDTaskBoard>(`
-				<nldd-task-board style="width: 400px">
-					<nldd-task-board-column value="a" text="A"><button id="x">A-1044</button></nldd-task-board-column>
-					<nldd-task-board-column value="b" text="B"></nldd-task-board-column>
-					<nldd-task-board-column value="c" text="C"></nldd-task-board-column>
-				</nldd-task-board>
+			el = await fixture<NLDDColumnBoard>(`
+				<nldd-column-board style="width: 400px">
+					<nldd-column-board-column value="a" text="A"><button id="x">A-1044</button></nldd-column-board-column>
+					<nldd-column-board-column value="b" text="B"></nldd-column-board-column>
+					<nldd-column-board-column value="c" text="C"></nldd-column-board-column>
+				</nldd-column-board>
 			`);
 			el.addEventListener('nldd-move', (event) => {
 				const { item, toColumn } = (event as CustomEvent<NLDDMoveEventDetail>).detail;
 				el.columns.find((column) => column.value === toColumn)!.append(item);
 			});
 			await frames(2);
-			const scroller = el.shadowRoot!.querySelector('.task-board') as HTMLElement;
+			const scroller = el.shadowRoot!.querySelector('.column-board') as HTMLElement;
 			const item = el.querySelector('#x') as HTMLElement;
 			item.focus();
 			alt(item, 'ArrowRight');
@@ -210,11 +210,11 @@ describe('nldd-task-board', () => {
 		});
 
 		it('puts focus back inside an item whose own shadow root holds it, such as an nldd-card', async () => {
-			el = await fixture<NLDDTaskBoard>(`
-				<nldd-task-board>
-					<nldd-task-board-column value="nieuw" text="Nieuw"><nldd-card button accessible-label="A-1044"></nldd-card></nldd-task-board-column>
-					<nldd-task-board-column value="bezig" text="In behandeling"></nldd-task-board-column>
-				</nldd-task-board>
+			el = await fixture<NLDDColumnBoard>(`
+				<nldd-column-board>
+					<nldd-column-board-column value="nieuw" text="Nieuw"><nldd-card button accessible-label="A-1044"></nldd-card></nldd-column-board-column>
+					<nldd-column-board-column value="bezig" text="In behandeling"></nldd-column-board-column>
+				</nldd-column-board>
 			`);
 			el.addEventListener('nldd-move', (event) => {
 				const { item, toColumn } = (event as CustomEvent<NLDDMoveEventDetail>).detail;
@@ -304,7 +304,7 @@ describe('nldd-task-board', () => {
 			const [tx, ty] = center(el.columns[2]);
 			pointer(a, 'pointerdown', x, y);
 			pointer(window, 'pointermove', tx, ty);
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(false);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(false);
 			expect(denied).toHaveBeenCalledExactlyOnceWith(a);
 			const layers = Array.from(document.querySelectorAll<HTMLElement>('body > [aria-hidden="true"]'));
 			expect(layers.map((layer) => layer.style.cursor || layer.textContent)).toEqual(['Dit bord is alleen-lezen', 'not-allowed']);
@@ -357,10 +357,10 @@ describe('nldd-task-board', () => {
 			pointer(a, 'pointerdown', x, y);
 			pointer(window, 'pointermove', x + 10, y);
 			pointer(window, 'pointermove', tx, ty);
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(true);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(true);
 			el.readonly = true;
 			await waitForUpdate(el);
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(false);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(false);
 			pointer(window, 'pointerup', tx, ty);
 			expect(moves).toHaveLength(0);
 		});
@@ -379,13 +379,13 @@ describe('nldd-task-board', () => {
 			pointer(window, 'pointermove', x + 10, y);
 			pointer(window, 'pointermove', tx, ty);
 			await waitForUpdate(el.columns[2]);
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(true);
-			expect(el.columns[2].shadowRoot!.querySelector('.task-board-column__drop-indicator')!.hasAttribute('hidden')).toBe(false);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(true);
+			expect(el.columns[2].shadowRoot!.querySelector('.column-board-column__drop-indicator')!.hasAttribute('hidden')).toBe(false);
 			pointer(window, 'pointerup', tx, ty);
 			a.click();
 			expect(moves[0]).toMatchObject({ fromColumn: 'nieuw', toColumn: 'klaar', toIndex: 0 });
 			expect(click).not.toHaveBeenCalled();
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(false);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(false);
 			expect(document.querySelectorAll('body > [aria-hidden="true"]')).toHaveLength(0);
 		});
 
@@ -403,8 +403,8 @@ describe('nldd-task-board', () => {
 			await waitForUpdate(column);
 			expect(column._returning).toBe(true);
 			expect(column._dropIndex).toBe(null);
-			expect(column.shadowRoot!.querySelector('.task-board-column__placeholder')!.classList.contains('is-returning')).toBe(true);
-			expect(column.shadowRoot!.querySelector('.task-board-column__drop-indicator')!.hasAttribute('hidden')).toBe(true);
+			expect(column.shadowRoot!.querySelector('.column-board-column__placeholder')!.classList.contains('is-returning')).toBe(true);
+			expect(column.shadowRoot!.querySelector('.column-board-column__drop-indicator')!.hasAttribute('hidden')).toBe(true);
 			pointer(window, 'pointermove', x, b.getBoundingClientRect().bottom - 1);
 			await waitForUpdate(column);
 			expect(column._returning).toBe(false);
@@ -424,7 +424,7 @@ describe('nldd-task-board', () => {
 			pointer(window, 'pointermove', x, below);
 			await Promise.all(el.columns.map((column) => waitForUpdate(column)));
 			expect(el.columns.map((column) => column._dropState)).toEqual(['available', 'available', 'available']);
-			expect(el.columns[0].shadowRoot!.querySelector('.task-board-column__placeholder')!.classList.contains('is-returning')).toBe(true);
+			expect(el.columns[0].shadowRoot!.querySelector('.column-board-column__placeholder')!.classList.contains('is-returning')).toBe(true);
 			pointer(window, 'pointerup', x, below);
 			expect(moves).toEqual([]);
 			await frames(3);
@@ -472,8 +472,8 @@ describe('nldd-task-board', () => {
 			pointer(a, 'pointerdown', x, y);
 			pointer(window, 'pointermove', tx, c.getBoundingClientRect().top + 1);
 			await waitForUpdate(el.columns[1]);
-			const indicator = el.columns[1].shadowRoot!.querySelector('.task-board-column__drop-indicator')!.getBoundingClientRect();
-			const body = el.columns[1].shadowRoot!.querySelector('.task-board-column__main')!.getBoundingClientRect();
+			const indicator = el.columns[1].shadowRoot!.querySelector('.column-board-column__drop-indicator')!.getBoundingClientRect();
+			const body = el.columns[1].shadowRoot!.querySelector('.column-board-column__main')!.getBoundingClientRect();
 			expect(indicator.top).toBeGreaterThanOrEqual(body.top);
 			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 		});
@@ -490,23 +490,23 @@ describe('nldd-task-board', () => {
 			const ghost = document.querySelector('body > [aria-hidden="true"]')!;
 			expect(ghost.hasAttribute('data-action-focused')).toBe(false);
 			expect(ghost.hasAttribute('data-action-pressed')).toBe(false);
-			expect(el.shadowRoot!.querySelector('.task-board')!.classList.contains('is-dragging')).toBe(true);
+			expect(el.shadowRoot!.querySelector('.column-board')!.classList.contains('is-dragging')).toBe(true);
 			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 			await waitForUpdate(el);
-			expect(el.shadowRoot!.querySelector('.task-board')!.classList.contains('is-dragging')).toBe(false);
+			expect(el.shadowRoot!.querySelector('.column-board')!.classList.contains('is-dragging')).toBe(false);
 		});
 
 		it('scrolls the board sideways while an item is held at its edge', async () => {
 			const unloadTokens = loadTokens();
-			el = await fixture<NLDDTaskBoard>(`
-				<nldd-task-board style="width: 400px">
-					<nldd-task-board-column value="a" text="A"><button id="x">A-1044</button></nldd-task-board-column>
-					<nldd-task-board-column value="b" text="B"></nldd-task-board-column>
-					<nldd-task-board-column value="c" text="C"></nldd-task-board-column>
-				</nldd-task-board>
+			el = await fixture<NLDDColumnBoard>(`
+				<nldd-column-board style="width: 400px">
+					<nldd-column-board-column value="a" text="A"><button id="x">A-1044</button></nldd-column-board-column>
+					<nldd-column-board-column value="b" text="B"></nldd-column-board-column>
+					<nldd-column-board-column value="c" text="C"></nldd-column-board-column>
+				</nldd-column-board>
 			`);
 			await frames(2);
-			const scroller = el.shadowRoot!.querySelector('.task-board') as HTMLElement;
+			const scroller = el.shadowRoot!.querySelector('.column-board') as HTMLElement;
 			const item = el.querySelector('#x') as HTMLElement;
 			const [x, y] = center(item);
 			const edge = scroller.getBoundingClientRect().right - 10;
@@ -520,15 +520,15 @@ describe('nldd-task-board', () => {
 
 		it('brings a column cut off at the side fully into view once the pointer rests on it', async () => {
 			const unloadTokens = loadTokens();
-			el = await fixture<NLDDTaskBoard>(`
-				<nldd-task-board style="width: 400px">
-					<nldd-task-board-column value="a" text="A"><button id="x">A-1044</button></nldd-task-board-column>
-					<nldd-task-board-column value="b" text="B"></nldd-task-board-column>
-					<nldd-task-board-column value="c" text="C"></nldd-task-board-column>
-				</nldd-task-board>
+			el = await fixture<NLDDColumnBoard>(`
+				<nldd-column-board style="width: 400px">
+					<nldd-column-board-column value="a" text="A"><button id="x">A-1044</button></nldd-column-board-column>
+					<nldd-column-board-column value="b" text="B"></nldd-column-board-column>
+					<nldd-column-board-column value="c" text="C"></nldd-column-board-column>
+				</nldd-column-board>
 			`);
 			await frames(2);
-			const scroller = el.shadowRoot!.querySelector('.task-board') as HTMLElement;
+			const scroller = el.shadowRoot!.querySelector('.column-board') as HTMLElement;
 			const board = scroller.getBoundingClientRect();
 			const second = el.columns[1].getBoundingClientRect();
 			expect(second.right).toBeGreaterThan(board.right);
@@ -549,14 +549,14 @@ describe('nldd-task-board', () => {
 
 		it('leaves the board where it is while the pointer only passes a column cut off at the side', async () => {
 			const unloadTokens = loadTokens();
-			el = await fixture<NLDDTaskBoard>(`
-				<nldd-task-board style="width: 400px">
-					<nldd-task-board-column value="a" text="A"><button id="x">A-1044</button></nldd-task-board-column>
-					<nldd-task-board-column value="b" text="B"></nldd-task-board-column>
-				</nldd-task-board>
+			el = await fixture<NLDDColumnBoard>(`
+				<nldd-column-board style="width: 400px">
+					<nldd-column-board-column value="a" text="A"><button id="x">A-1044</button></nldd-column-board-column>
+					<nldd-column-board-column value="b" text="B"></nldd-column-board-column>
+				</nldd-column-board>
 			`);
 			await frames(2);
-			const scroller = el.shadowRoot!.querySelector('.task-board') as HTMLElement;
+			const scroller = el.shadowRoot!.querySelector('.column-board') as HTMLElement;
 			const second = el.columns[1].getBoundingClientRect();
 			const item = el.querySelector('#x') as HTMLElement;
 			const [x, y] = center(item);
@@ -580,9 +580,9 @@ describe('nldd-task-board', () => {
 			pointer(window, 'pointermove', tx, ty);
 			await Promise.all(el.columns.map((column) => waitForUpdate(column)));
 			const states = el.columns.map((column) => column.shadowRoot!.querySelector('section')!.className.replace(/\s+/g, ' ').trim());
-			expect(states).toEqual(['task-board-column is-drop-available', 'task-board-column is-drop-available', 'task-board-column is-drop-over']);
+			expect(states).toEqual(['column-board-column is-drop-available', 'column-board-column is-drop-available', 'column-board-column is-drop-over']);
 			expect(getComputedStyle(a).visibility).toBe('hidden');
-			const placeholder = el.columns[0].shadowRoot!.querySelector('.task-board-column__placeholder')!;
+			const placeholder = el.columns[0].shadowRoot!.querySelector('.column-board-column__placeholder')!;
 			expect(placeholder.hasAttribute('hidden')).toBe(false);
 			const box = placeholder.getBoundingClientRect();
 			const slot = a.getBoundingClientRect();
@@ -592,7 +592,7 @@ describe('nldd-task-board', () => {
 			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 			await Promise.all(el.columns.map((column) => waitForUpdate(column)));
 			expect(el.columns.every((column) => column._dropState === null)).toBe(true);
-			expect(el.columns[0].shadowRoot!.querySelector('.task-board-column__placeholder')!.hasAttribute('hidden')).toBe(true);
+			expect(el.columns[0].shadowRoot!.querySelector('.column-board-column__placeholder')!.hasAttribute('hidden')).toBe(true);
 			expect(getComputedStyle(a).visibility).toBe('visible');
 			expect(document.querySelectorAll('body > [aria-hidden="true"]')).toHaveLength(0);
 		});
@@ -620,7 +620,7 @@ describe('nldd-task-board', () => {
 			pointer(a, 'pointerdown', x, y);
 			pointer(window, 'pointermove', x + 2, y);
 			pointer(window, 'pointerup', x + 2, y);
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(false);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(false);
 			expect(moves).toEqual([]);
 		});
 
@@ -632,7 +632,7 @@ describe('nldd-task-board', () => {
 			const [tx, ty] = center(el.columns[1]);
 			pointer(a, 'pointerdown', x, y, 'touch');
 			await new Promise((resolve) => setTimeout(resolve, 350));
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(true);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(true);
 			pointer(window, 'pointermove', tx, ty, 'touch');
 			pointer(window, 'pointerup', tx, ty, 'touch');
 			expect(moves[0]).toMatchObject({ fromColumn: 'nieuw', toColumn: 'bezig' });
@@ -665,7 +665,7 @@ describe('nldd-task-board', () => {
 			pointer(a, 'pointerdown', x, y, 'touch');
 			pointer(window, 'pointermove', x, y + 30, 'touch');
 			await new Promise((resolve) => setTimeout(resolve, 350));
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(false);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(false);
 			pointer(window, 'pointerup', x, y + 30, 'touch');
 			expect(moves).toEqual([]);
 		});
@@ -681,7 +681,7 @@ describe('nldd-task-board', () => {
 			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 			pointer(window, 'pointerup', tx, ty);
 			expect(moves).toEqual([]);
-			expect(a.hasAttribute('data-task-board-dragging')).toBe(false);
+			expect(a.hasAttribute('data-column-board-dragging')).toBe(false);
 		});
 	});
 });

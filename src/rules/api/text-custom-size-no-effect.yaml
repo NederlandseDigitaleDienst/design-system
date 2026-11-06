@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-text:state(custom-size-below-floor)'
+message: 'This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `size` for text up to `display-1`.'
