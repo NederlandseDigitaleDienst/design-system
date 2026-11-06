@@ -11,6 +11,7 @@ import '../src/components/content/icon/icon.ts';
 import '../src/components/content/identity/identity.ts';
 import '../src/components/content/rich-text/rich-text.ts';
 import '../src/components/content/tag/tag.ts';
+import '../src/components/content/text/text.ts';
 import '../src/components/content/title/title.ts';
 import '../src/components/forms/form-field/form-field.ts';
 import '../src/components/inputs/checkbox-field/checkbox-field.ts';
@@ -73,6 +74,19 @@ document.querySelector('#kleurmodus')?.addEventListener('change', (event) => {
 	if (!selected) return;
 	if (value === 'systeem') root.removeAttribute('data-scheme');
 	else root.setAttribute('data-scheme', value);
+});
+
+/**
+ * The switch draws the safe triangle that keeps a submenu open while the
+ * pointer travels to it. Only a mouse has that travel, so the container around
+ * the switch has hide-on="touch". The debug property is internal to nldd-menu;
+ * this page shows it on purpose.
+ */
+const triangle = document.querySelector<HTMLElement>('#veilige-driehoek');
+triangle?.addEventListener('change', (event) => {
+	const { checked } = (event as CustomEvent<{ checked: boolean }>).detail;
+	const menus = triangle.closest('nldd-card')?.querySelectorAll('nldd-menu') ?? [];
+	for (const menu of menus) (menu as HTMLElement & { debugSafeTriangle: boolean }).debugSafeTriangle = checked;
 });
 
 /** The start date in the example form opens on today, in local time. */

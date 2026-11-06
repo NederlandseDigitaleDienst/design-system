@@ -27,12 +27,12 @@
 			<nldd-title
 				color="inherit"
 				size="1"
-				text="Bouw aan één overheid, in elk framework"
+				text="Bouw aan één&nbsp;overheid, in&nbsp;elk framework"
 				heading-level="1"
 			></nldd-title>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-rich-text color="inherit">
-				<p>Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Toegankelijkheid, huisstijl en ontwerppatronen zitten erin.</p>
+				<p>Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Het werkt in Angular, React en Vue, en net zo goed zonder framework. Toegankelijkheid, huisstijl en ontwerppatronen krijg je automatisch mee.</p>
 			</nldd-rich-text>
 			<nldd-spacer size="24"></nldd-spacer>
 			<nldd-container
@@ -64,7 +64,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>Van informatiesites tot applicaties met veel interactie. Het is framework-onafhankelijk: het werkt in Angular, React en Vue, en net zo goed zonder framework. We onderhouden het systeem elke week, en breiden het regelmatig uit.</p>
+				<p>Van informatiesites tot applicaties met veel interactie. We onderhouden het systeem elke week, en breiden het regelmatig uit.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="grid"
@@ -115,7 +115,7 @@
 						<nldd-title
 							size="1"
 							text="393"
-							supporting-text="iconen, getekend bij de Rijksoverheid-letter"
+							supporting-text="iconen in stijl van de Rijksoverheid-letter"
 							heading-level="3"
 						></nldd-title>
 					</nldd-container>
@@ -582,6 +582,102 @@
 								step="15"
 							></nldd-time-field>
 						</nldd-form-field>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-button
+							appearance="primary"
+							text="Acties"
+							expandable
+						>
+							<nldd-menu slot="popup">
+								<nldd-menu-item
+									icon="pencil"
+									text="Bewerken"
+									shortcut="Ctrl+E"
+									shortcut-mac="Cmd+E"
+								></nldd-menu-item>
+								<nldd-menu-item
+									icon="square-on-square"
+									text="Dupliceer"
+									shortcut="Ctrl+D"
+									shortcut-mac="Cmd+D"
+								></nldd-menu-item>
+								<nldd-menu-divider></nldd-menu-divider>
+								<nldd-menu-item
+									icon="share-network"
+									text="Delen"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											icon="link"
+											text="Kopieer link"
+										></nldd-menu-item>
+										<nldd-menu-item
+											icon="printer"
+											text="Afdrukken"
+											shortcut="Ctrl+P"
+											shortcut-mac="Cmd+P"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-item
+									icon="folder"
+									text="Verplaatsen naar"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											text="Dossier D-318"
+											details="Uitvoering"
+										></nldd-menu-item>
+										<nldd-menu-item
+											text="Dossier D-319"
+											details="Beleid"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-item
+									icon="tag"
+									text="Status"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											type="radio"
+											text="In behandeling"
+											selected
+										></nldd-menu-item>
+										<nldd-menu-item
+											type="radio"
+											text="Wacht op jou"
+										></nldd-menu-item>
+										<nldd-menu-item
+											type="radio"
+											text="Afgerond"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-divider></nldd-menu-divider>
+								<nldd-menu-item
+									icon="trash"
+									text="Verwijderen"
+									destructive
+								></nldd-menu-item>
+							</nldd-menu>
+						</nldd-button>
+						<nldd-container
+							id="veilige-driehoek"
+							hide-on="touch"
+						>
+							<nldd-spacer size="16"></nldd-spacer>
+							<nldd-switch-field label="Toon de veilige driehoek"></nldd-switch-field>
+							<nldd-spacer size="4"></nldd-spacer>
+							<nldd-text
+								size="sm"
+								line-height="tight"
+								color="secondary"
+							>De veilige driehoek houdt een submenu open terwijl je muis er schuin naartoe beweegt, ook als hij onderweg over een ander item gaat.</nldd-text>
+						</nldd-container>
 					</nldd-container>
 				</nldd-card>
 				<nldd-card>
