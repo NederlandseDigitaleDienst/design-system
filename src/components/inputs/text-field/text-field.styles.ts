@@ -173,7 +173,8 @@ export const textFieldStyles = css`
 		display: none;
 	}
 
-	.text-field__end:focus-within {
+	.text-field__button:focus-within {
+		position: relative;
 		z-index: var(--_text-field-button-focus-z-index);
 	}
 `;
