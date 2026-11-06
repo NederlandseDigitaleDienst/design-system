@@ -15,12 +15,12 @@ export const popoverStyles = css`
 	:host {
 		--_popover-max-height: calc(100vh - var(--semantics-overlays-inset) * 2);
 		--_popover-default-width: var(--primitives-area-320);
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 
 		margin: 0;
 		outline: none;
 		border: none;
 		box-shadow: var(--semantics-overlays-box-shadow);
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 		background-color: var(--semantics-surfaces-base-background-color);
 		overflow: auto;
 		padding: 0;

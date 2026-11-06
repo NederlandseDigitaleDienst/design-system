@@ -78,6 +78,7 @@ export const sheetStyles = css`
 		--context-scroll-mode: nested;
 		--context-inset-top: 0px;
 		--context-inset-bottom: 0px;
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 
 		display: flex;
 		position: fixed;
@@ -85,7 +86,6 @@ export const sheetStyles = css`
 		outline: none;
 		border: none;
 		box-shadow: var(--semantics-overlays-box-shadow);
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 		background: var(--semantics-surfaces-base-background-color);
 		overflow: hidden;
 		padding: 0;

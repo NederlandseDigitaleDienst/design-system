@@ -55,11 +55,11 @@ export const cardStyles = css`
 	/* # Block */
 
 	.card {
+		--context-parent-background-color: var(--_card-background-color);
 		display: flex;
 		position: relative;
 		border-radius: var(--_card-corner-radius);
 		box-shadow: var(--_card-box-shadow);
-		--context-parent-background-color: var(--_card-background-color);
 		background-color: var(--_card-background-color);
 		overflow: hidden;
 		flex-direction: column;

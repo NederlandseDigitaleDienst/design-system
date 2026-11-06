@@ -42,13 +42,13 @@ export const modalDialogStyles = css`
 		--context-scroll-mode: nested;
 		--context-inset-top: 0px;
 		--context-inset-bottom: 0px;
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 
 		box-sizing: border-box;
 		outline: none;
 		border: none;
 		border-radius: var(--semantics-overlays-corner-radius);
 		box-shadow: var(--semantics-overlays-box-shadow);
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 		background-color: var(--semantics-surfaces-base-background-color);
 		width: calc(100% - var(--primitives-space-16) * 2);
 		max-width: calc(var(--_modal-dialog-content-max-width) + var(--_modal-dialog-padding) * 2);
