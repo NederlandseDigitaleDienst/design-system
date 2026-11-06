@@ -254,24 +254,96 @@
 						accessible-label="Thema van deze pagina"
 						value="lintblauw"
 					>
-						<nldd-swatch-picker-item color="lintblauw" value="lintblauw"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="donkerblauw" value="donkerblauw"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="hemelblauw" value="hemelblauw"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="lichtblauw" value="lichtblauw"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="paars" value="paars"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="violet" value="violet"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="robijnrood" value="robijnrood"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="roze" value="roze"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="rood" value="rood"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="oranje" value="oranje"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="donkergeel" value="donkergeel"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="geel" value="geel"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="donkerbruin" value="donkerbruin"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="bruin" value="bruin"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="donkergroen" value="donkergroen"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="groen" value="groen"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="mosgroen" value="mosgroen"></nldd-swatch-picker-item>
-						<nldd-swatch-picker-item color="mintgroen" value="mintgroen"></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-lintblauw)"
+							text="Lintblauw"
+							value="lintblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkerblauw)"
+							text="Donkerblauw"
+							value="donkerblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-hemelblauw)"
+							text="Hemelblauw"
+							value="hemelblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-lichtblauw)"
+							text="Lichtblauw"
+							value="lichtblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-paars)"
+							text="Paars"
+							value="paars"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-violet)"
+							text="Violet"
+							value="violet"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-robijnrood)"
+							text="Robijnrood"
+							value="robijnrood"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-roze)"
+							text="Roze"
+							value="roze"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-rood)"
+							text="Rood"
+							value="rood"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-oranje)"
+							text="Oranje"
+							value="oranje"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkergeel)"
+							text="Donkergeel"
+							value="donkergeel"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-geel)"
+							text="Geel"
+							value="geel"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkerbruin)"
+							text="Donkerbruin"
+							value="donkerbruin"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-bruin)"
+							text="Bruin"
+							value="bruin"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkergroen)"
+							text="Donkergroen"
+							value="donkergroen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-groen)"
+							text="Groen"
+							value="groen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-mosgroen)"
+							text="Mosgroen"
+							value="mosgroen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-mintgroen)"
+							text="Mintgroen"
+							value="mintgroen"
+						></nldd-swatch-picker-item>
 					</nldd-swatch-picker>
 					<nldd-spacer size="24"></nldd-spacer>
 					<nldd-title
@@ -501,6 +573,14 @@
 								id="startdatum"
 								name="voorbeeld-startdatum"
 							></nldd-date-field>
+						</nldd-form-field>
+						<nldd-spacer size="16"></nldd-spacer>
+						<nldd-form-field label="Starttijd">
+							<nldd-time-field
+								name="voorbeeld-starttijd"
+								value="09:30"
+								step="15"
+							></nldd-time-field>
 						</nldd-form-field>
 					</nldd-container>
 				</nldd-card>

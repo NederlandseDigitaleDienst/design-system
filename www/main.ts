@@ -24,6 +24,7 @@ import '../src/components/inputs/slider/slider.ts';
 import '../src/components/inputs/swatch-picker/swatch-picker.ts';
 import '../src/components/inputs/switch-field/switch-field.ts';
 import '../src/components/inputs/text-field/text-field.ts';
+import '../src/components/inputs/time-field/time-field.ts';
 import '../src/components/inputs/toggle-button-group/toggle-button-group.ts';
 import '../src/components/inputs/toggle-button/toggle-button.ts';
 import '../src/components/inputs/token-field/token-field.ts';
