@@ -1,6 +1,6 @@
 # NLDD Designsysteem
 
-Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Toegankelijkheid, huisstijl en ontwerppatronen zitten erin.
+Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Toegankelijkheid, huisstijl en ontwerppatronen krijg je automatisch mee.
 
 De componenten zijn web components: gewone HTML-elementen die de browser zelf begrijpt. Daarom werken ze in Angular, React en Vue, en net zo goed zonder framework. Vind je een probleem, dan lossen we het één keer op, in het component zelf. Met de volgende update hebben alle teams de verbetering.
 
