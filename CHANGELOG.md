@@ -9,6 +9,11 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Changed
+
+- **Labels and descriptions break more evenly over their lines,** so a single word no longer ends up alone on the last line. This covers the labels of `nldd-checkbox-field`, `nldd-radio-button-field` and `nldd-switch-field`, the title and description in `nldd-description-cell`, the supporting text of `nldd-form-section` and `nldd-button`, the messages in `nldd-validation-list`, the label of `nldd-progress-bar`, the text of `nldd-tooltip` and the current step of a compact `nldd-step-bar`.
+- **Short titles are balanced over their lines,** so a title of two lines has two lines of about the same length. This covers the title of `nldd-form-section`, the step titles of `nldd-step-bar`, the column title of `nldd-task-board`, the group title of `nldd-menu` and the text of `nldd-progress-circle` and `nldd-activity-indicator`.
+
 ## [0.16.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.0...v0.16.1) (2026-11-05)
 
 ### Highlights
