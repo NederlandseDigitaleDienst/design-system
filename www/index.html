@@ -332,10 +332,7 @@
 			>
 				<nldd-card>
 					<nldd-container padding="16">
-						<nldd-container
-							layout="wrap"
-							gap="12"
-						>
+						<nldd-button-group width="full">
 							<nldd-button
 								appearance="primary"
 								text="Start een aanvraag"
@@ -344,7 +341,7 @@
 								appearance="secondary"
 								text="Bewaar als concept"
 							></nldd-button>
-						</nldd-container>
+						</nldd-button-group>
 					</nldd-container>
 				</nldd-card>
 				<nldd-card>
@@ -1027,9 +1024,10 @@
 				slot="header"
 				size="2"
 				text="Begin met één regel"
-				supporting-text="Het pakket staat op npm, de broncode op GitHub, onder de open licentie EUPL."
 				heading-level="2"
-			></nldd-title>
+			>
+				<span slot="supporting-text">Het pakket staat op <nldd-link href="https://www.npmjs.com/package/@nldd/design-system">npm</nldd-link>, de broncode op <nldd-link href="https://github.com/NederlandseDigitaleDienst/design-system">GitHub</nldd-link>, onder de open licentie EUPL.</span>
+			</nldd-title>
 			<nldd-code-viewer
 				language="bash"
 				appearance="box-base"

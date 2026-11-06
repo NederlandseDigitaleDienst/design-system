@@ -1,6 +1,7 @@
 /* Only the components this page uses, so it does not wait for the hundred
    others. Add an import when the page gets a new one. */
 import '../src/components/actions/button/button.ts';
+import '../src/components/actions/button-group/button-group.ts';
 import '../src/components/actions/menu/menu-item.ts';
 import '../src/components/actions/menu/menu.ts';
 import '../src/components/content/avatar-group/avatar-group.ts';
@@ -42,6 +43,7 @@ import '../src/components/lists-and-tables/cells/step-cell/step-cell.ts';
 import '../src/components/lists-and-tables/cells/title-cell/title-cell.ts';
 import '../src/components/lists-and-tables/list-item/list-item.ts';
 import '../src/components/lists-and-tables/list/list.ts';
+import '../src/components/navigation/link/link.ts';
 import '../src/components/navigation/skip-link/skip-link.ts';
 import '../src/components/navigation/top-navigation-bar/top-navigation-bar.ts';
 import '../src/components/status-and-feedback/badge/badge.ts';
