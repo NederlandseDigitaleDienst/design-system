@@ -10,6 +10,7 @@ export const windowStyles = css`
 	/* # Host */
 
 	:host {
+		--_window-background-color: var(--semantics-surfaces-base-background-color);
 		--_window-default-width: var(--primitives-area-640);
 
 		${inheritedTextReset}
@@ -28,7 +29,7 @@ export const windowStyles = css`
 	/* # Block */
 
 	.window {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
+		--context-parent-background-color: var(--_window-background-color);
 		display: flex;
 		position: fixed;
 		margin: auto;
@@ -36,7 +37,7 @@ export const windowStyles = css`
 		border: none;
 		border-radius: var(--semantics-overlays-corner-radius);
 		box-shadow: var(--semantics-overlays-box-shadow);
-		background-color: var(--semantics-surfaces-base-background-color);
+		background-color: var(--_window-background-color);
 		width: var(--_window-default-width);
 		max-width: calc(100vw - var(--semantics-overlays-inset) * 2);
 		max-height: calc(100dvh - var(--semantics-overlays-inset) * 2);
