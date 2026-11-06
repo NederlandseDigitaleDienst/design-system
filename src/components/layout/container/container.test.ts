@@ -235,6 +235,18 @@ describe('nldd-container', () => {
 		expect(getComputedStyle(el).display).toBe('block');
 	});
 
+	it('has a hiding rule for each hide-on value, under its own query', async () => {
+		el = await fixture('<nldd-container></nldd-container>');
+		const rules = el.shadowRoot!.adoptedStyleSheets.flatMap((sheet) => [...sheet.cssRules]);
+		const hidingSelector = (query: string): string | undefined => {
+			const media = rules.find((rule): rule is CSSMediaRule => rule instanceof CSSMediaRule && rule.conditionText === query);
+			const inner = media && [...media.cssRules].find((rule): rule is CSSStyleRule => rule instanceof CSSStyleRule && rule.style.display === 'none');
+			return inner?.selectorText;
+		};
+		expect(hidingSelector('(any-hover: none)')).toBe(':host([hide-on="touch"])');
+		expect(hidingSelector('(any-hover: hover)')).toBe(':host([hide-on="pointer"])');
+	});
+
 	it('puts min-height in a custom property and removes it when cleared', async () => {
 		el = await fixture('<nldd-container min-height="240px"></nldd-container>');
 		await waitForUpdate(el);
