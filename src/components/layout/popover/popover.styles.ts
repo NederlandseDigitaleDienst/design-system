@@ -20,6 +20,7 @@ export const popoverStyles = css`
 		outline: none;
 		border: none;
 		box-shadow: var(--semantics-overlays-box-shadow);
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 		background-color: var(--semantics-surfaces-base-background-color);
 		overflow: auto;
 		padding: 0;

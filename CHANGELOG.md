@@ -17,6 +17,7 @@ here; consult the commit history if you need that level of detail.
 ### Fixed
 
 - **`nldd-date-field` reads a date with only some of its separators,** such as `18-122026`. A numeric keypad on a phone has no hyphen, so a date edited there often kept one hyphen and lost the other, and then stayed invalid. It now settles as `18-12-2026` when the field is left.
+- **The ring around avatars, badges and steps matches the card or box they sit in.** `nldd-card`, `nldd-box`, `nldd-sheet`, `nldd-popover`, `nldd-modal-dialog` and `nldd-window` now pass their own background on as `--context-parent-background-color`, so `nldd-avatar-group`, `nldd-badge`, `nldd-step-bar`, `nldd-step-cell` and `nldd-activity-indicator` no longer take the color of the section around them. A card that changes color on hover or press takes the ring along.
 
 ## [0.16.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.0...v0.16.1) (2026-11-05)
 

@@ -85,6 +85,7 @@ export const sheetStyles = css`
 		outline: none;
 		border: none;
 		box-shadow: var(--semantics-overlays-box-shadow);
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 		background: var(--semantics-surfaces-base-background-color);
 		overflow: hidden;
 		padding: 0;

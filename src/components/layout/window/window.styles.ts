@@ -35,6 +35,7 @@ export const windowStyles = css`
 		border: none;
 		border-radius: var(--semantics-overlays-corner-radius);
 		box-shadow: var(--semantics-overlays-box-shadow);
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 		background-color: var(--semantics-surfaces-base-background-color);
 		width: var(--_window-default-width);
 		max-width: calc(100vw - var(--semantics-overlays-inset) * 2);
