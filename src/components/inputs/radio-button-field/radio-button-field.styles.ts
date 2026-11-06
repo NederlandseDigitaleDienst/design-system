@@ -60,6 +60,7 @@ export const radioButtonFieldStyles = css`
 		flex-grow: 1;
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-md-regular-snug);
+		text-wrap: pretty;
 	}
 
 	:host([disabled]) .radio-button-field__label {
