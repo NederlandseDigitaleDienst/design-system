@@ -775,7 +775,6 @@ export class NLDDMenu extends LitElement {
 		this._collapseChain();
 	};
 
-
 	/**
 	 * Collapse the entire menu chain at once — root + every open submenu —
 	 * with no "back one level" re-show. Used when the action is final:
