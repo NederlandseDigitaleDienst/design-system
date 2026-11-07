@@ -337,7 +337,7 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 				this._dragThumb = landed;
 				this._held = landed;
 			}
-			this._focusThumb(landed);
+			this._focusThumb(landed, !!dragged);
 		}
 		this._emit('input');
 	}
@@ -444,11 +444,15 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	private _grab(thumb: 'start' | 'end'): void {
 		this._trackThumb = thumb;
 		this._held = thumb;
-		this._focusThumb(thumb);
+		this._focusThumb(thumb, true);
 	}
 
-	private _focusThumb(thumb: 'start' | 'end'): void {
-		this.shadowRoot?.querySelector<HTMLInputElement>(`.slider__input--${thumb}`)?.focus();
+	/** Under a pointer the focus that moves to the other thumb is no keyboard
+	 *  focus, so it draws no ring: Safari would draw one for a focus from script,
+	 *  also in the middle of a touch. */
+	private _focusThumb(thumb: 'start' | 'end', pointer = false): void {
+		const input = this.shadowRoot?.querySelector<HTMLInputElement>(`.slider__input--${thumb}`);
+		input?.focus(pointer ? ({ focusVisible: false } as FocusOptions) : undefined);
 	}
 
 	private _handlePointerUp = (): void => {
