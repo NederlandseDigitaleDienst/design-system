@@ -134,31 +134,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-collection > :not([slot]):is(a, article, aside, button, details, dialog, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, img, li, main, nav, ol, section, table, ul, [role]:not([role=\"\"]):not([role=\"listitem\"]))"
 	},
 	{
-		"id": "column-board-column-needs-name",
-		"message": "nldd-column-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
-		"context": "nldd-column-board-column",
-		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
-		"properties": [
-			"text",
-			"accessibleLabel"
-		]
-	},
-	{
-		"id": "column-board-column-tag-renamed",
-		"message": "`nldd-task-board-column` is now `nldd-column-board-column`. Rename the tag, its import and its class, here and on every page.",
-		"context": "nldd-task-board-column"
-	},
-	{
-		"id": "column-board-move-item-invalid",
-		"message": "moveItem() needs an item in one of the board's columns and a column of the board.",
-		"context": "nldd-column-board:state(invalid-move)"
-	},
-	{
-		"id": "column-board-tag-renamed",
-		"message": "`nldd-task-board` is now `nldd-column-board`. Rename the tag, its import and its class, here and on every page.",
-		"context": "nldd-task-board"
-	},
-	{
 		"id": "combo-box-needs-name",
 		"message": "nldd-combo-box needs `accessible-label` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-combo-box",
@@ -307,6 +282,31 @@ export const devRules: DevRule[] = [
 		"id": "image-width-invalid",
 		"message": "`width` is not a positive number. Falling back to \"full\".",
 		"context": "nldd-image:state(invalid-width)"
+	},
+	{
+		"id": "kanban-column-needs-name",
+		"message": "nldd-kanban-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
+		"context": "nldd-kanban-column",
+		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"text",
+			"accessibleLabel"
+		]
+	},
+	{
+		"id": "kanban-column-tag-renamed",
+		"message": "This column is now `nldd-kanban-column`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-task-board-column, nldd-column-board-column"
+	},
+	{
+		"id": "kanban-move-item-invalid",
+		"message": "moveItem() needs an item in one of the board's columns and a column of the board.",
+		"context": "nldd-kanban:state(invalid-move)"
+	},
+	{
+		"id": "kanban-tag-renamed",
+		"message": "This board is now `nldd-kanban`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-task-board, nldd-column-board"
 	},
 	{
 		"id": "language-item-needs-name",

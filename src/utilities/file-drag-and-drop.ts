@@ -4,7 +4,7 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 // whose primary pointer cannot hover has no mouse or trackpad, and is taken to
 // have none to drag them with. An approximation: an iPad drags files from its
 // Files app without one. nldd-file-field hides its drop hint on the same query.
-// Not about dragging within the page, which nldd-column-board does by touch too.
+// Not about dragging within the page, which nldd-kanban does by touch too.
 const NO_FILE_DRAG_QUERY = '(hover: none)';
 
 /** Whether files can be dragged onto the page on this device, so a hint for it is worth showing. */

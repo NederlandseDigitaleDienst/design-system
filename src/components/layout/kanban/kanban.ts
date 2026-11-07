@@ -1,9 +1,9 @@
 /**
- * Nederlandse Digitale Dienst Column Board Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Kanban Component (Lit + TypeScript)
  *
- * Columns side by side, with items you move between them: a kanban board, or
- * any board where an item's column is one of its values, such as a status or a
- * team. Put `nldd-column-board-column`s in it, and the items in those, usually an
+ * Columns side by side, with items you move between them. Kanban is Japanese
+ * for a visible board, so it is any board where an item's column is one of its
+ * values: a status, but also a team or a phase. Put `nldd-kanban-column`s in it, and the items in those, usually an
  * `nldd-card` each. The board scrolls sideways once its columns do not fit, and
  * a column scrolls on its own once its items do not fit the height you give the
  * board.
@@ -40,13 +40,13 @@
  * synchronously in the handler: the board puts focus back on the item right
  * after, and a screen reader hears where it landed.
  *
- * @element nldd-column-board
+ * @element nldd-kanban
  * @attr {string} accessible-label - Accessible name of the board (default: "Bord")
  * @attr {string} height - Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)
  * @attr {boolean} readonly - Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
- * @slot - The columns: `nldd-column-board-column`
+ * @slot - The columns: `nldd-kanban-column`
  *
  * @fires nldd-move - An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)
  * @fires nldd-move-denied - An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`
@@ -57,13 +57,13 @@ import { LitElement, type PropertyValues } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
-import { nlddColumnBoardTranslations } from './column-board.i18n.js';
-import { columnBoardStyles } from './column-board.styles.js';
-import { columnBoardTemplate } from './column-board.template.js';
-import { NLDDColumnBoardColumn } from './column-board-column.js';
+import { nlddKanbanTranslations } from './kanban.i18n.js';
+import { kanbanStyles } from './kanban.styles.js';
+import { kanbanTemplate } from './kanban.template.js';
+import { NLDDKanbanColumn } from './kanban-column.js';
 import { setState } from '../../../utilities/element-state.js';
 
-export { NLDDColumnBoardColumn };
+export { NLDDKanbanColumn };
 
 export interface NLDDMoveEventDetail {
 	item: HTMLElement;
@@ -101,27 +101,27 @@ interface Press {
 
 interface Drag {
 	item: HTMLElement;
-	from: NLDDColumnBoardColumn;
+	from: NLDDKanbanColumn;
 	fromIndex: number;
 	ghost: HTMLElement;
 	offsetX: number;
 	offsetY: number;
 	x: number;
 	y: number;
-	target: NLDDColumnBoardColumn | null;
+	target: NLDDKanbanColumn | null;
 	index: number;
 	frame: number;
 	/** The note above the copy outside the board, and the wait before it shows. */
 	note: HTMLElement | null;
 	noteTimer: number;
 	/** The column waiting to be brought into view, and the wait before it is. */
-	columnToReveal: NLDDColumnBoardColumn | null;
+	columnToReveal: NLDDKanbanColumn | null;
 	columnRevealTimer: number;
 }
 
-@customElement('nldd-column-board')
-export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoardTranslations) {
-	static override styles = columnBoardStyles;
+@customElement('nldd-kanban')
+export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslations) {
+	static override styles = kanbanStyles;
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
@@ -132,7 +132,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 	@property({ type: Boolean, reflect: true })
 	readonly = false;
 
-	@query('.column-board')
+	@query('.kanban')
 	private _scroller!: HTMLElement;
 
 	/** @internal Whether there is more to scroll to on that side, for the fades. */
@@ -154,8 +154,8 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 	private _deniedTimer = 0;
 
 	/** The columns, in order. */
-	get columns(): NLDDColumnBoardColumn[] {
-		return Array.from(this.children).filter((el): el is NLDDColumnBoardColumn => el instanceof NLDDColumnBoardColumn && !el.hidden);
+	get columns(): NLDDKanbanColumn[] {
+		return Array.from(this.children).filter((el): el is NLDDKanbanColumn => el instanceof NLDDKanbanColumn && !el.hidden);
 	}
 
 	override connectedCallback(): void {
@@ -183,8 +183,8 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 	protected override updated(changed: PropertyValues<this>): void {
 		if (changed.has('height')) {
 			const height = this.height;
-			if (height && CSS.supports('height', height)) this.style.setProperty('--_column-board-height', height);
-			else this.style.removeProperty('--_column-board-height');
+			if (height && CSS.supports('height', height)) this.style.setProperty('--_kanban-height', height);
+			else this.style.removeProperty('--_kanban-height');
 		}
 		if (changed.has('readonly')) {
 			this._endPress();
@@ -212,7 +212,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		this._canScrollRight = rtl ? before : after;
 	};
 
-	moveItem(item: HTMLElement, toColumn: string | NLDDColumnBoardColumn, toIndex?: number): boolean {
+	moveItem(item: HTMLElement, toColumn: string | NLDDKanbanColumn, toIndex?: number): boolean {
 		const from = this._columnOf(item);
 		const to = typeof toColumn === 'string'
 			? this.columns.find((column) => this._columnKey(column) === toColumn)
@@ -225,7 +225,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		const room = to.items.filter((el) => el !== item).length;
 		const index = Math.max(0, Math.min(toIndex ?? room, room));
 		if (from === to && index === fromIndex) {
-			this._announce(this._t('components.column-board.no-change-text'));
+			this._announce(this._t('components.kanban.no-change-text'));
 			return false;
 		}
 		return this._move(item, from, fromIndex, to, index);
@@ -233,7 +233,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 
 	/** Fires nldd-move, says where the item landed and puts focus back on what
 	 *  had it, once the app has moved the item in the handler. */
-	private _move(item: HTMLElement, from: NLDDColumnBoardColumn, fromIndex: number, to: NLDDColumnBoardColumn, toIndex: number): boolean {
+	private _move(item: HTMLElement, from: NLDDKanbanColumn, fromIndex: number, to: NLDDKanbanColumn, toIndex: number): boolean {
 		const focused = this._deepActiveElement();
 		const hadFocus = !!focused && this._holds(item, focused);
 		this.dispatchEvent(new CustomEvent<NLDDMoveEventDetail>('nldd-move', {
@@ -242,7 +242,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 			composed: true,
 		}));
 		const total = to.items.filter((el) => el !== item).length + 1;
-		this._announce(this._t('components.column-board.moved-text', { column: to.label, position: toIndex + 1, total }));
+		this._announce(this._t('components.kanban.moved-text', { column: to.label, position: toIndex + 1, total }));
 		if (hadFocus) {
 			// The app moved the item in the handler, which takes focus off it.
 			requestAnimationFrame(() => {
@@ -252,14 +252,14 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		return true;
 	}
 
-	private _columnKey(column: NLDDColumnBoardColumn): string {
+	private _columnKey(column: NLDDKanbanColumn): string {
 		return column.value || column.text;
 	}
 
 	/** The column an element sits in as an item, if it is one in this board. */
-	private _columnOf(item: Element): NLDDColumnBoardColumn | null {
+	private _columnOf(item: Element): NLDDKanbanColumn | null {
 		const parent = item.parentElement;
-		return parent instanceof NLDDColumnBoardColumn && parent.parentElement === this && !item.slot ? parent : null;
+		return parent instanceof NLDDKanbanColumn && parent.parentElement === this && !item.slot ? parent : null;
 	}
 
 	/** The item an event happened in: the child of a column it came through. */
@@ -289,7 +289,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 	}
 
 	private _announce(message: string): void {
-		const region = this.shadowRoot?.querySelector<HTMLElement>('.column-board__announcer');
+		const region = this.shadowRoot?.querySelector<HTMLElement>('.kanban__announcer');
 		if (!region) return;
 		region.textContent = '';
 		// Two frames, so a screen reader registers the change even for the same text.
@@ -323,7 +323,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		if (step === 0) {
 			const toIndex = fromIndex + (event.key === 'ArrowUp' ? -1 : 1);
 			if (toIndex < 0 || toIndex > from.items.length - 1) {
-				this._announce(this._t('components.column-board.edge-text'));
+				this._announce(this._t('components.kanban.edge-text'));
 				return;
 			}
 			this._move(item, from, fromIndex, from, toIndex);
@@ -331,7 +331,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		}
 		const to = columns[columns.indexOf(from) + step];
 		if (!to) {
-			this._announce(this._t('components.column-board.edge-text'));
+			this._announce(this._t('components.kanban.edge-text'));
 			return;
 		}
 		this._move(item, from, fromIndex, to, Math.min(fromIndex, to.items.length));
@@ -483,7 +483,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 			borderRadius: this._cornerRadius(item),
 		});
 		document.body.append(ghost);
-		item.setAttribute('data-column-board-dragging', '');
+		item.setAttribute('data-kanban-dragging', '');
 		document.getSelection()?.removeAllRanges();
 		document.documentElement.style.setProperty('user-select', 'none');
 		document.documentElement.style.setProperty('-webkit-user-select', 'none');
@@ -528,7 +528,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		if (!drag) return;
 		drag.ghost.style.transform = `translate(${drag.x - drag.offsetX}px, ${drag.y - drag.offsetY}px) rotate(2deg)`;
 		const columns = this.columns;
-		let target: NLDDColumnBoardColumn | null = null;
+		let target: NLDDKanbanColumn | null = null;
 		let nearest = Infinity;
 		// Outside the board nothing takes the item: a release there puts it back.
 		const board = this._scroller.getBoundingClientRect();
@@ -581,7 +581,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		if (!drag.note && !drag.noteTimer) {
 			drag.noteTimer = window.setTimeout(() => {
 				if (this._drag !== drag) return;
-				drag.note = this._note(this._t('components.column-board.drag-return-text'));
+				drag.note = this._note(this._t('components.kanban.drag-return-text'));
 				this._followReturnNote(false);
 			}, RETURN_NOTE_DELAY_MS);
 		}
@@ -629,11 +629,11 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 	/** The smallest scroll that shows all of a column clear of the fade, or
 	 *  nothing when it is in view already; a column wider than the board shows
 	 *  its start. The smallest, so the column stays under the pointer. */
-	private _columnRevealLeft(column: NLDDColumnBoardColumn): number | undefined {
+	private _columnRevealLeft(column: NLDDKanbanColumn): number | undefined {
 		const el = this._scroller;
 		const styles = getComputedStyle(el);
 		// Clear of the fade at the side, so the next column peeks out from it.
-		const insetStart = parseFloat(styles.getPropertyValue('--_column-board-fade-size')) || 0;
+		const insetStart = parseFloat(styles.getPropertyValue('--_kanban-fade-size')) || 0;
 		const insetEnd = insetStart;
 		const current = el.scrollLeft;
 		const rect = column.getBoundingClientRect();
@@ -648,7 +648,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		return Math.abs(left - current) > 1 ? left : undefined;
 	}
 
-	private _revealColumn(column: NLDDColumnBoardColumn): void {
+	private _revealColumn(column: NLDDKanbanColumn): void {
 		const left = this._columnRevealLeft(column);
 		if (left === undefined) return;
 		const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -661,12 +661,12 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		const { item, from, fromIndex, target, index } = drag;
 		this._endDrag();
 		if (!target) {
-			this._announce(this._t('components.column-board.drag-canceled-text'));
+			this._announce(this._t('components.kanban.drag-canceled-text'));
 			return;
 		}
 		// Just above or just below its own place is where it already is.
 		if (target === from && (index === fromIndex || index === fromIndex + 1)) {
-			this._announce(this._t('components.column-board.no-change-text'));
+			this._announce(this._t('components.kanban.no-change-text'));
 			return;
 		}
 		this._move(item, from, fromIndex, target, target === from && index > fromIndex ? index - 1 : index);
@@ -675,7 +675,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 	private _cancelDrag(): void {
 		if (!this._drag) return;
 		this._endDrag();
-		this._announce(this._t('components.column-board.drag-canceled-text'));
+		this._announce(this._t('components.kanban.drag-canceled-text'));
 	}
 
 	private _endDrag(): void {
@@ -686,7 +686,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 		clearTimeout(drag.columnRevealTimer);
 		drag.note?.remove();
 		drag.ghost.remove();
-		drag.item.removeAttribute('data-column-board-dragging');
+		drag.item.removeAttribute('data-kanban-dragging');
 		if (drag.target) drag.target._dropIndex = null;
 		for (const column of this.columns) column._dropState = null;
 		drag.from._placeholder = null;
@@ -724,7 +724,7 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 	 *  and tells the app. */
 	private _deny(item: HTMLElement): void {
 		this._hideDenied();
-		const text = this._t('components.column-board.readonly-text');
+		const text = this._t('components.kanban.readonly-text');
 		this._announce(text);
 		const rect = item.getBoundingClientRect();
 		const below = rect.top < SCROLL_EDGE;
@@ -773,12 +773,12 @@ export class NLDDColumnBoard extends withTranslations(LitElement, nlddColumnBoar
 	}
 
 	override render() {
-		return columnBoardTemplate(this);
+		return kanbanTemplate(this);
 	}
 }
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'nldd-column-board': NLDDColumnBoard;
+		'nldd-kanban': NLDDKanban;
 	}
 }

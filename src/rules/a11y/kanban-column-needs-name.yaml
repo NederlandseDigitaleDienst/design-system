@@ -1,0 +1,9 @@
+severity: error
+aliases: ['task-board-column-needs-name', 'column-board-column-needs-name']
+context: 'nldd-kanban-column'
+assert: '[text], [accessible-label]'
+message: 'nldd-kanban-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.'
+examples:
+  passed: ['<nldd-kanban><nldd-kanban-column text="Te doen"></nldd-kanban-column></nldd-kanban>']
+  failed: ['<nldd-kanban><nldd-kanban-column></nldd-kanban-column></nldd-kanban>']
+  cantTell: ['<nldd-kanban><nldd-kanban-column :text="titel"></nldd-kanban-column></nldd-kanban>']

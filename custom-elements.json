@@ -9294,18 +9294,18 @@
         },
         {
           "kind": "js",
-          "name": "NLDDColumnBoard",
+          "name": "NLDDKanban",
           "declaration": {
-            "name": "NLDDColumnBoard",
-            "module": "./layout/column-board/column-board.js"
+            "name": "NLDDKanban",
+            "module": "./layout/kanban/kanban.js"
           }
         },
         {
           "kind": "js",
-          "name": "NLDDColumnBoardColumn",
+          "name": "NLDDKanbanColumn",
           "declaration": {
-            "name": "NLDDColumnBoardColumn",
-            "module": "./layout/column-board/column-board.js"
+            "name": "NLDDKanbanColumn",
+            "module": "./layout/kanban/kanban.js"
           }
         },
         {
@@ -30400,323 +30400,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/layout/column-board/column-board-column.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "One column of an `nldd-column-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here (\"Verplaatst naar In behandeling\"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.",
-          "name": "NLDDColumnBoardColumn",
-          "members": [
-            {
-              "kind": "field",
-              "name": "text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "text",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "The column's name: what a screen reader hears for it.",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "items",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "description": "The column's items, in order; a hidden one does not count.",
-              "readonly": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "text",
-              "description": "The column's name, shown in the header and used as its accessible name"
-            },
-            {
-              "name": "accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "accessibleLabel",
-              "description": "Accessible name in place of `text`, for a column whose header comes from the slot"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value",
-              "description": "What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn`"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-column-board-column",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "header",
-              "description": "The header, in place of `text` and the count"
-            },
-            {
-              "name": "",
-              "description": "The items"
-            },
-            {
-              "name": "footer",
-              "description": "Right under the last item, such as a button to add one; it scrolls along with the items"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "NLDDColumnBoardColumn",
-          "declaration": {
-            "name": "NLDDColumnBoardColumn",
-            "module": "src/components/layout/column-board/column-board-column.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-column-board-column",
-          "declaration": {
-            "name": "NLDDColumnBoardColumn",
-            "module": "src/components/layout/column-board/column-board-column.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/layout/column-board/column-board.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-column-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu \"Verplaatsen naar\" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows \"Dit bord is alleen-lezen\" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.",
-          "name": "NLDDColumnBoard",
-          "members": [
-            {
-              "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "height",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "columns",
-              "type": {
-                "text": "NLDDColumnBoardColumn[]"
-              },
-              "description": "The columns, in order.",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "moveItem",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "toColumn",
-                  "type": {
-                    "text": "string | NLDDColumnBoardColumn"
-                  }
-                },
-                {
-                  "name": "toIndex",
-                  "optional": true,
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<T>"
-              },
-              "default": "{}",
-              "attribute": "translations",
-              "inheritedFrom": {
-                "name": "withTranslations",
-                "module": "src/utilities/with-translations.ts"
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "nldd-move",
-              "description": "An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)"
-            },
-            {
-              "name": "nldd-move-denied",
-              "description": "An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "accessibleLabel",
-              "description": "Accessible name of the board (default: \"Bord\")"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "height",
-              "description": "Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)"
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves"
-            },
-            {
-              "name": "translations",
-              "type": {
-                "text": "Partial<T>"
-              },
-              "default": "{}",
-              "fieldName": "translations",
-              "inheritedFrom": {
-                "name": "withTranslations",
-                "module": "src/utilities/with-translations.ts"
-              },
-              "description": "Override translation keys; unset keys fall back to Dutch"
-            }
-          ],
-          "mixins": [
-            {
-              "name": "withTranslations",
-              "module": "/src/utilities/with-translations.js"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-column-board",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "",
-              "description": "The columns: `nldd-column-board-column`"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "NLDDColumnBoardColumn",
-          "declaration": {
-            "name": "NLDDColumnBoardColumn",
-            "module": "src/components/layout/column-board/column-board.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "NLDDColumnBoard",
-          "declaration": {
-            "name": "NLDDColumnBoard",
-            "module": "src/components/layout/column-board/column-board.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-column-board",
-          "declaration": {
-            "name": "NLDDColumnBoard",
-            "module": "src/components/layout/column-board/column-board.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/layout/container/container.ts",
       "declarations": [
         {
@@ -31770,6 +31453,323 @@
           "declaration": {
             "name": "NLDDDivider",
             "module": "src/components/layout/divider/divider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/layout/kanban/kanban-column.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One column of an `nldd-kanban`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here (\"Verplaatst naar In behandeling\"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.",
+          "name": "NLDDKanbanColumn",
+          "members": [
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The column's name: what a screen reader hears for it.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "description": "The column's items, in order; a hidden one does not count.",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "The column's name, shown in the header and used as its accessible name"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name in place of `text`, for a column whose header comes from the slot"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn`"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-kanban-column",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "header",
+              "description": "The header, in place of `text` and the count"
+            },
+            {
+              "name": "",
+              "description": "The items"
+            },
+            {
+              "name": "footer",
+              "description": "Right under the last item, such as a button to add one; it scrolls along with the items"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDKanbanColumn",
+          "declaration": {
+            "name": "NLDDKanbanColumn",
+            "module": "src/components/layout/kanban/kanban-column.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-kanban-column",
+          "declaration": {
+            "name": "NLDDKanbanColumn",
+            "module": "src/components/layout/kanban/kanban-column.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/layout/kanban/kanban.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Columns side by side, with items you move between them. Kanban is Japanese for a visible board, so it is any board where an item's column is one of its values: a status, but also a team or a phase. Put `nldd-kanban-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu \"Verplaatsen naar\" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows \"Dit bord is alleen-lezen\" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.",
+          "name": "NLDDKanban",
+          "members": [
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "NLDDKanbanColumn[]"
+              },
+              "description": "The columns, in order.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "moveItem",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "toColumn",
+                  "type": {
+                    "text": "string | NLDDKanbanColumn"
+                  }
+                },
+                {
+                  "name": "toIndex",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "nldd-move",
+              "description": "An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)"
+            },
+            {
+              "name": "nldd-move-denied",
+              "description": "An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name of the board (default: \"Bord\")"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "height",
+              "description": "Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-kanban",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "The columns: `nldd-kanban-column`"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDKanbanColumn",
+          "declaration": {
+            "name": "NLDDKanbanColumn",
+            "module": "src/components/layout/kanban/kanban.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDKanban",
+          "declaration": {
+            "name": "NLDDKanban",
+            "module": "src/components/layout/kanban/kanban.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-kanban",
+          "declaration": {
+            "name": "NLDDKanban",
+            "module": "src/components/layout/kanban/kanban.ts"
           }
         }
       ]

@@ -1,9 +1,0 @@
-severity: error
-aliases: ['task-board-column-needs-name']
-context: 'nldd-column-board-column'
-assert: '[text], [accessible-label]'
-message: 'nldd-column-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.'
-examples:
-  passed: ['<nldd-column-board><nldd-column-board-column text="Te doen"></nldd-column-board-column></nldd-column-board>']
-  failed: ['<nldd-column-board><nldd-column-board-column></nldd-column-board-column></nldd-column-board>']
-  cantTell: ['<nldd-column-board><nldd-column-board-column :text="titel"></nldd-column-board-column></nldd-column-board>']

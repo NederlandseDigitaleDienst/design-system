@@ -1,8 +1,0 @@
-severity: error
-context: 'nldd-task-board-column'
-removed: ['nldd-task-board-column']
-fix: { tag: nldd-column-board-column }
-message: '`nldd-task-board-column` is now `nldd-column-board-column`. Rename the tag, its import and its class, here and on every page.'
-examples:
-  passed: ['<nldd-column-board-column text="Te doen"></nldd-column-board-column>']
-  failed: ['<nldd-task-board-column text="Te doen"></nldd-task-board-column>']

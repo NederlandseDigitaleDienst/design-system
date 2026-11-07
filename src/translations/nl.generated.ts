@@ -29,7 +29,7 @@ import { nlddTimePickerTranslations } from '../components/inputs/time-picker/tim
 import { nlddTokenFieldTranslations } from '../components/inputs/token-field/token-field.i18n.js';
 import { nlddCardTranslations } from '../components/layout/card/card.i18n.js';
 import { nlddCollectionTranslations } from '../components/layout/collection/collection.i18n.js';
-import { nlddColumnBoardTranslations } from '../components/layout/column-board/column-board.i18n.js';
+import { nlddKanbanTranslations } from '../components/layout/kanban/kanban.i18n.js';
 import { nlddPageFooterTranslations } from '../components/layout/page-footer/page-footer.i18n.js';
 import { nlddSidebarSectionTranslations } from '../components/layout/page-sections/sidebar-section/sidebar-section.i18n.js';
 import { nlddPopoverTranslations } from '../components/layout/popover/popover.i18n.js';
@@ -86,7 +86,7 @@ export const nl = {
 	...nlddTokenFieldTranslations,
 	...nlddCardTranslations,
 	...nlddCollectionTranslations,
-	...nlddColumnBoardTranslations,
+	...nlddKanbanTranslations,
 	...nlddPageFooterTranslations,
 	...nlddSidebarSectionTranslations,
 	...nlddPopoverTranslations,
