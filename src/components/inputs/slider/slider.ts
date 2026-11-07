@@ -451,10 +451,12 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	 *  focus, so it draws no ring: Safari would draw one for a focus from script,
 	 *  also in the middle of a touch. Safari (from 18.4) and Firefox read the
 	 *  option; Chromium ignores it and decides the ring itself, which it already
-	 *  leaves off here. The cast goes once lib.dom types `focusVisible`. */
+	 *  leaves off here. */
 	private _focusThumb(thumb: 'start' | 'end', pointer = false): void {
 		const input = this.shadowRoot?.querySelector<HTMLInputElement>(`.slider__input--${thumb}`);
-		input?.focus(pointer ? ({ focusVisible: false } as FocusOptions) : undefined);
+		// @ts-expect-error lib.dom lacks focusVisible; this fails once it has it.
+		const noRing: FocusOptions = { focusVisible: false };
+		input?.focus(pointer ? noRing : undefined);
 	}
 
 	private _handlePointerUp = (): void => {
