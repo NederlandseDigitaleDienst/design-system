@@ -36,6 +36,8 @@ here; consult the commit history if you need that level of detail.
 - **An `nldd-menu` no longer closes while you scroll it on a phone.** Hiding the address bar resizes the window in height, and the menu closed on every resize. It now only closes when the width changes.
 - **`nldd-number-field` fires `change` for a number you typed.** Typing already moved the value, so leaving the field found nothing new to commit, and only + and - or a corrected number fired it.
 
+## [0.17.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.17.0...v0.17.1) (2026-11-07)
+
 ## [0.17.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.2...v0.17.0) (2026-11-06)
 
 ### Highlights
