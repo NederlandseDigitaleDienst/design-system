@@ -98,17 +98,17 @@ jobs:
           component: website
           image: ${{ needs.build.outputs.image }}
           # No domain-format/subdomain/base-domain: the deployment already
-          # carries them (see deploy/README.md), and the Ops CI token may only
-          # replace the image.
+          # carries them (see deploy/README.md).
           wait-for-ready: 'true'
           health-endpoint: /healthz
 
-      # Until the ZAD team approves the domain, the rollout lands on the
-      # platform's default address. Say so instead of failing the run.
+      # The domain is approved for this project, so anything else means the
+      # deployment's address changed in ZAD.
       - name: Check address
         env:
           GOT: ${{ steps.deploy.outputs.url }}
         run: |
           if [ "${SITE_URL%/}" != "${GOT%/}" ]; then
-            echo "::warning::ZAD rolled out on ${GOT}, expected ${SITE_URL}. Is the domain approved for this project?"
+            echo "::error::ZAD rolled out on ${GOT}, expected ${SITE_URL}. Did the address of the deployment change in ZAD?"
+            exit 1
           fi
