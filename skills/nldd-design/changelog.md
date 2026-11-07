@@ -22,6 +22,7 @@ here; consult the commit history if you need that level of detail.
 ### Breaking
 
 - **`nldd-column-board` and `nldd-column-board-column` are now `nldd-kanban` and `nldd-kanban-column`,** with the import path `@nldd/design-system/kanban`, the classes `NLDDKanban` and `NLDDKanbanColumn` and the translation keys `components.kanban.*`. Kanban is Japanese for a visible board, so the name already fits a board whose columns are a team or a phase, and it is a term people know. There is no alias; `nldd lint --fix` renames the tags, imports and classes, also from the older `nldd-task-board`.
+- **`nldd-number-field` can be empty, and starts empty without a `value`.** It used to start at 0, so an optional field with `min="1"` that nobody touched made the form invalid, and an emptied field jumped back to its last number. Empty is now no answer: it submits an empty string, `min` and `max` judge only a number that was filled in, and the new `required` asks for a value. `value` and `detail.value` of `input` and `change` are `null` when the field is empty, so code that reads them as a number has to handle that. Give a field that should start at a number its `value`. From empty, + and - start at `min`, or at 0 when that lies within the range.
 
 ### Changed
 
@@ -39,6 +40,7 @@ here; consult the commit history if you need that level of detail.
 - **The border of `nldd-card` no longer flickers in Safari,** such as while the tooltips of an `nldd-slider` in it fade in. On a card at half a pixel, Safari cut a sliver off its edge whenever something inside it faded. The border is now drawn outside what the card clips.
 - **An `nldd-menu` opens again on the first tap after you scrolled it on a touch screen.** A scroll that started on an item left the menu thinking its button had been pressed, so the next tap on that button was lost.
 - **An `nldd-menu` no longer closes while you scroll it on a phone.** Hiding the address bar resizes the window in height, and the menu closed on every resize. It now only closes when the width changes.
+- **`nldd-number-field` fires `change` for a number you typed.** Typing already moved the value, so leaving the field found nothing new to commit, and only + and - or a corrected number fired it.
 
 ## [0.17.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.2...v0.17.0) (2026-11-06)
 

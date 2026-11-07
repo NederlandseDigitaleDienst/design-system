@@ -82,10 +82,11 @@ describe('nldd-number-field – state', () => {
 		if (el) cleanup(el);
 	});
 
-	it('has default value of 0', async () => {
+	it('is empty without a value', async () => {
 		el = await fixture<NLDDNumberField>('<nldd-number-field></nldd-number-field>');
 		await waitForUpdate(el);
-		expect(el.value).toBe(0);
+		expect(el.value).toBe(null);
+		expect(el.shadowRoot!.querySelector('input')!.value).toBe('');
 	});
 
 	it('reflects value attribute', async () => {
@@ -301,30 +302,30 @@ describe('nldd-number-field – typing & clamping on commit', () => {
 		expect(input.value).toBe('0');
 	});
 
-	it('falls back to the last valid value on empty commit', async () => {
+	it('fires change once for a typed number within the range', async () => {
+		el = await fixture<NLDDNumberField>('<nldd-number-field value="5" min="0" max="10"></nldd-number-field>');
+		await waitForUpdate(el);
+		const values: Array<number | null> = [];
+		el.addEventListener('change', (e) => values.push((e as CustomEvent).detail.value));
+		const input = type(el, '8');
+		await waitForUpdate(el);
+		blur(input);
+		await waitForUpdate(el);
+		expect(values).toEqual([8]);
+	});
+
+	it('stays empty when the field is emptied, and commits null', async () => {
 		el = await fixture<NLDDNumberField>('<nldd-number-field value="7" min="0" max="10"></nldd-number-field>');
 		await waitForUpdate(el);
+		const values: Array<number | null> = [];
+		el.addEventListener('change', (e) => values.push((e as CustomEvent).detail.value));
 		const input = type(el, '');
 		await waitForUpdate(el);
 		blur(input);
 		await waitForUpdate(el);
-		expect(el.value).toBe(7);
-		expect(input.value).toBe('7');
-	});
-
-	it('updates the last valid value when a new in-range value is committed', async () => {
-		el = await fixture<NLDDNumberField>('<nldd-number-field value="5" min="0" max="10"></nldd-number-field>');
-		await waitForUpdate(el);
-		const first = type(el, '8');
-		await waitForUpdate(el);
-		blur(first);
-		await waitForUpdate(el);
-		// Now empty the field and commit — should fall back to 8, not 5.
-		const second = type(el, '');
-		await waitForUpdate(el);
-		blur(second);
-		await waitForUpdate(el);
-		expect(el.value).toBe(8);
+		expect(el.value).toBe(null);
+		expect(input.value).toBe('');
+		expect(values).toEqual([null]);
 	});
 
 	it('dispatches a single input followed by a single change when a typed value is corrected', async () => {
@@ -431,5 +432,59 @@ describe('nldd-number-field – hide-spin-buttons', () => {
 		await waitForUpdate(el);
 		const input = el.shadowRoot!.querySelector('input')!;
 		expect(getComputedStyle(input).minWidth).toBe('80px');
+	});
+});
+
+// An optional field nobody touched must not block the form: empty is no answer,
+// and min and max only judge a number that was filled in, as natively.
+describe('nldd-number-field – empty', () => {
+	let form: HTMLFormElement;
+
+	afterEach(() => {
+		if (form) cleanup(form);
+	});
+
+	const fieldIn = async (attrs: string) => {
+		form = await fixture<HTMLFormElement>(`<form><nldd-number-field name="n" accessible-label="Aantal" ${attrs}></nldd-number-field></form>`);
+		const field = form.querySelector('nldd-number-field') as NLDDNumberField;
+		await waitForUpdate(field);
+		return field;
+	};
+
+	it('submits empty and is valid with min, when nobody filled it in', async () => {
+		await fieldIn('min="1" max="40"');
+		expect(new FormData(form).get('n')).toBe('');
+		expect(form.checkValidity()).toBe(true);
+	});
+
+	it('is invalid empty when required, and valid once filled in', async () => {
+		const field = await fieldIn('min="1" required');
+		expect(form.checkValidity()).toBe(false);
+		const input = field.shadowRoot!.querySelector('input')!;
+		input.value = '3';
+		input.dispatchEvent(new Event('change', { bubbles: true }));
+		await waitForUpdate(field);
+		expect(form.checkValidity()).toBe(true);
+		expect(new FormData(form).get('n')).toBe('3');
+	});
+
+	it('starts at min from empty with +, and at 0 without a min', async () => {
+		const field = await fieldIn('min="5"');
+		(field.shadowRoot!.querySelector('.number-field__increment-button nldd-icon-button') as HTMLElement).click();
+		await waitForUpdate(field);
+		expect(field.value).toBe(5);
+		const open = await fieldIn('');
+		(open.shadowRoot!.querySelector('.number-field__decrement-button nldd-icon-button') as HTMLElement).click();
+		await waitForUpdate(open);
+		expect(open.value).toBe(0);
+	});
+
+	it('goes back to empty on a form reset when it started empty', async () => {
+		const field = await fieldIn('');
+		field.value = 4;
+		await waitForUpdate(field);
+		form.reset();
+		await waitForUpdate(field);
+		expect(field.value).toBe(null);
 	});
 });

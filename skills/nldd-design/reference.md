@@ -1365,12 +1365,13 @@ A numeric input field with decrement and increment buttons.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `number` | Current value |
+| `value` | `number` | Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. |
 | `min` | `number` | Minimum value (default: -Infinity) |
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
 | `size` | `string` | Size: 'sm' \| 'md' (default: 'md') |
 | `disabled` | `boolean` | Disabled state |
+| `required` | `boolean` | A value has to be filled in. An empty field is then invalid. |
 | `name` | `string` | Name for form submission |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px') |
@@ -1382,8 +1383,8 @@ A numeric input field with decrement and increment buttons.
 
 | Event | Description |
 | --- | --- |
-| `input` | When the value changes (typing, +/- button, or on-commit correction); detail: { value: number } |
-| `change` | When the value is committed (blur/Enter or +/- button), clamped to [min, max]; empty input falls back to the last valid value. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number } |
+| `input` | When the value changes (typing, +/- button, or on-commit correction); detail: { value: number \| null }, null when the field is empty |
+| `change` | When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field stays empty and commits null. From empty, + and - start at `min`, or at 0 when that lies within the range. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number \| null } |
 
 ### `<nldd-one-time-code-field>`
 

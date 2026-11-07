@@ -15261,9 +15261,10 @@
               "kind": "field",
               "name": "value",
               "type": {
-                "text": "number"
+                "text": "number | null"
               },
-              "default": "0",
+              "default": "null",
+              "description": "The value, or null for an empty field. An empty or unreadable attribute is empty too.",
               "attribute": "value"
             },
             {
@@ -15308,6 +15309,17 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "A value has to be filled in. An empty field is then invalid.",
+              "attribute": "required",
               "reflects": true
             },
             {
@@ -15611,22 +15623,22 @@
           "events": [
             {
               "name": "input",
-              "description": "When the value changes (typing, +/- button, or on-commit correction); detail: { value: number }"
+              "description": "When the value changes (typing, +/- button, or on-commit correction); detail: { value: number | null }, null when the field is empty"
             },
             {
               "name": "change",
-              "description": "When the value is committed (blur/Enter or +/- button), clamped to [min, max]; empty input falls back to the last valid value. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number }"
+              "description": "When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field stays empty and commits null. From empty, + and - start at `min`, or at 0 when that lies within the range. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number | null }"
             }
           ],
           "attributes": [
             {
               "name": "value",
               "type": {
-                "text": "number"
+                "text": "number | null"
               },
-              "default": "0",
-              "fieldName": "value",
-              "description": "Current value"
+              "default": "null",
+              "description": "Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty.",
+              "fieldName": "value"
             },
             {
               "name": "min",
@@ -15672,6 +15684,15 @@
               "default": "false",
               "fieldName": "disabled",
               "description": "Disabled state"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "A value has to be filled in. An empty field is then invalid.",
+              "fieldName": "required"
             },
             {
               "name": "name",
