@@ -345,6 +345,26 @@ describe('nldd-number-field – typing & clamping on commit', () => {
 		expect(values).toEqual([]);
 	});
 
+	it('fires no change when the user types the value the app just set', async () => {
+		el = await fixture<NLDDNumberField>('<nldd-number-field value="3" min="0" max="10"></nldd-number-field>');
+		await waitForUpdate(el);
+		const inputs: Array<number | null> = [];
+		const changes: Array<number | null> = [];
+		el.addEventListener('input', (e) => inputs.push((e as CustomEvent).detail.value));
+		el.addEventListener('change', (e) => changes.push((e as CustomEvent).detail.value));
+		const input = type(el, '5');
+		await waitForUpdate(el);
+		el.value = 7;
+		await waitForUpdate(el);
+		type(el, '7');
+		await waitForUpdate(el);
+		blur(input);
+		await waitForUpdate(el);
+		expect(inputs).toEqual([5]);
+		expect(changes).toEqual([]);
+		expect(el.value).toBe(7);
+	});
+
 	it('reads only numbers a native number input accepts', async () => {
 		for (const [attr, expected] of [['12', 12], ['-1.5', -1.5], ['1e2', 100], ['Infinity', null], ['0x10', null], ['abc', null]] as const) {
 			el = await fixture<NLDDNumberField>(`<nldd-number-field value="${attr}"></nldd-number-field>`);
