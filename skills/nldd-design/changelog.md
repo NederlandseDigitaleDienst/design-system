@@ -23,6 +23,10 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-column-board` and `nldd-column-board-column` are now `nldd-kanban` and `nldd-kanban-column`,** with the import path `@nldd/design-system/kanban`, the classes `NLDDKanban` and `NLDDKanbanColumn` and the translation keys `components.kanban.*`. Kanban is Japanese for a visible board, so the name already fits a board whose columns are a team or a phase, and it is a term people know. There is no alias; `nldd lint --fix` renames the tags, imports and classes, also from the older `nldd-task-board`.
 
+### Changed
+
+- **The website title of `nldd-top-navigation-bar` starts at the left on a narrow screen too,** instead of in the middle under the logo. It then lines up with the content of the page below it, as on md and lg.
+
 ### Fixed
 
 - **`nldd-code-viewer` no longer grows wider than its parent.** In a parent that does not stretch its children, such as an `nldd-container` with `horizontal-alignment`, it took the width of its longest line and pushed the page sideways. It now stays within the parent and scrolls its own lines.
