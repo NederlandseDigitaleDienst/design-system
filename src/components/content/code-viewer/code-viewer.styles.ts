@@ -45,6 +45,7 @@ export const codeViewerStyles = css`
 
 		${inheritedTextReset}
 		display: flex;
+		max-width: 100%;
 		position: relative;
 		/* Own stacking context so the absolutely-positioned actions button
 		   (z-index: var(--_code-viewer-actions-z-index)) stays scoped to the code-viewer
