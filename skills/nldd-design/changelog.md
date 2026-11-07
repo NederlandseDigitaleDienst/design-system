@@ -27,6 +27,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-code-viewer` no longer grows wider than its parent.** In a parent that does not stretch its children, such as an `nldd-container` with `horizontal-alignment`, it took the width of its longest line and pushed the page sideways. It now stays within the parent and scrolls its own lines.
 - **A range `nldd-slider` no longer shows a focus ring when you drag one thumb past the other.** The other thumb takes over, and in Safari, on a touch screen too, it got the ring of keyboard focus. With the arrow keys it still shows.
+- **The border of `nldd-card` no longer flickers in Safari,** such as while the tooltips of an `nldd-slider` in it fade in. On a card at half a pixel, Safari cut a sliver off its edge whenever something inside it faded. The border is now drawn outside what the card clips.
 
 ## [0.17.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.2...v0.17.0) (2026-11-06)
 

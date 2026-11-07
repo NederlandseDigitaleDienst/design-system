@@ -65,6 +65,8 @@ export const cardStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 		isolation: isolate;
+		outline: var(--_card-highlight-border-width) solid var(--_card-border-color);
+		outline-offset: calc(-1 * var(--_card-highlight-border-width));
 		transition: background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
 	}
 
@@ -82,14 +84,6 @@ export const cardStyles = css`
 		background-color: var(--_card-is-active-background-color);
 	}
 
-	.card::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		box-shadow: inset 0 0 0 var(--_card-highlight-border-width) var(--_card-border-color);
-		pointer-events: none;
-	}
 
 
 	/* # Link / button overlay */

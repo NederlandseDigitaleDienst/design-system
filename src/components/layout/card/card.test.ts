@@ -181,7 +181,7 @@ describe('nldd-card – hover', () => {
 	const look = async () => {
 		const card = el.shadowRoot!.querySelector<HTMLElement>('.card')!;
 		await Promise.all(card.getAnimations().map((animation) => animation.finished));
-		return [getComputedStyle(card).backgroundColor, getComputedStyle(card, '::after').boxShadow];
+		return [getComputedStyle(card).backgroundColor, getComputedStyle(card).outlineColor];
 	};
 
 	for (const background of ['base', 'tinted']) {
