@@ -37,7 +37,7 @@ export function bannerTemplate(component: NLDDBanner) {
 				<div class="banner__actions"
 					?hidden=${!component._hasActions}
 				>
-					<nldd-button-group orientation="horizontal">
+					<nldd-button-group orientation="horizontal" size="sm">
 						<slot name="actions"></slot>
 					</nldd-button-group>
 				</div>

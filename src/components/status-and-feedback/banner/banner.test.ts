@@ -171,6 +171,15 @@ describe('nldd-banner', () => {
 		expect(actions.hasAttribute('hidden')).toBe(false);
 	});
 
+	it('makes its action buttons sm, at either banner size', async () => {
+		for (const size of ['sm', 'md']) {
+			el = await fixture(`<nldd-banner size="${size}" text="Hi"><nldd-button slot="actions" text="OK"></nldd-button></nldd-banner>`);
+			await waitForUpdate(el);
+			expect(el.querySelector('nldd-button')!.getAttribute('size')).toBe('sm');
+			cleanup(el);
+		}
+	});
+
 	it('reacts to runtime slot mutations (added child flips the hidden flag)', async () => {
 		el = await fixture('<nldd-banner text="Hi"></nldd-banner>');
 		await waitForUpdate(el);

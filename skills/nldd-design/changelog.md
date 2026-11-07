@@ -27,6 +27,7 @@ here; consult the commit history if you need that level of detail.
 
 - **The website title of `nldd-top-navigation-bar` starts at the left on a narrow screen too,** instead of in the middle under the logo. It then lines up with the content of the page below it, as on md and lg.
 - **The bars of a compact `nldd-step-bar` get the same edge as `nldd-progress-bar`.** A finished step has the darker accent border, a step still to come the light track with its border.
+- **The buttons in an `nldd-banner` are sm,** at either banner size, as in `nldd-notification`. At md they were as large as the buttons of the page and weighed more than the notice itself.
 
 ### Fixed
 
