@@ -133,7 +133,10 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 			}
 		}
 		if (changedProperties.has('value')) {
-			if (this.value !== this._typed) this._committed = this.value;
+			if (this.value !== this._typed) {
+				this._committed = this.value;
+				this._typed = undefined;
+			}
 			this.commitFormValue();
 		}
 	}
@@ -256,11 +259,15 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 }
 
+/** A number as a native number input accepts it: no hex, no Infinity. */
+const FLOATING_POINT = /^-?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?$/;
+
 /** An attribute or restored state as a number, or null when it is empty or no number. */
 function emptyOrNumber(value: string | null): number | null {
-	if (value === null || value.trim() === '') return null;
-	const parsed = Number(value);
-	return Number.isNaN(parsed) ? null : parsed;
+	const text = value?.trim() ?? '';
+	if (!FLOATING_POINT.test(text)) return null;
+	const parsed = Number(text);
+	return Number.isFinite(parsed) ? parsed : null;
 }
 
 declare global {

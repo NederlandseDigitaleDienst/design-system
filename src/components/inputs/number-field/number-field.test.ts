@@ -329,6 +329,31 @@ describe('nldd-number-field – typing & clamping on commit', () => {
 		expect(el.value).toBe(3);
 	});
 
+	it('fires no change for a value the app set back to what was typed', async () => {
+		el = await fixture<NLDDNumberField>('<nldd-number-field value="3" min="0" max="10"></nldd-number-field>');
+		await waitForUpdate(el);
+		const values: Array<number | null> = [];
+		el.addEventListener('change', (e) => values.push((e as CustomEvent).detail.value));
+		const input = type(el, '5');
+		await waitForUpdate(el);
+		el.value = null;
+		await waitForUpdate(el);
+		el.value = 5;
+		await waitForUpdate(el);
+		blur(input);
+		await waitForUpdate(el);
+		expect(values).toEqual([]);
+	});
+
+	it('reads only numbers a native number input accepts', async () => {
+		for (const [attr, expected] of [['12', 12], ['-1.5', -1.5], ['1e2', 100], ['Infinity', null], ['0x10', null], ['abc', null]] as const) {
+			el = await fixture<NLDDNumberField>(`<nldd-number-field value="${attr}"></nldd-number-field>`);
+			await waitForUpdate(el);
+			expect(el.value, attr).toBe(expected);
+			cleanup(el);
+		}
+	});
+
 	it('stays empty when the field is emptied, and commits null', async () => {
 		el = await fixture<NLDDNumberField>('<nldd-number-field value="7" min="0" max="10"></nldd-number-field>');
 		await waitForUpdate(el);
