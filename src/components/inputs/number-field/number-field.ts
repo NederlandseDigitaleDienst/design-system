@@ -4,7 +4,7 @@
  * A numeric input field with decrement and increment buttons.
  *
  * @element nldd-number-field
- * @attr {number} value - Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty.
+ * @attr {number} value - Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at `min`, or at 0 when that lies within the range.
  * @attr {number} min - Minimum value (default: -Infinity)
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
@@ -19,7 +19,7 @@
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
  * @fires input - When the value changes (typing, +/- button, or on-commit correction); detail: { value: number | null }, null when the field is empty
- * @fires change - When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field stays empty and commits null. From empty, + and - start at `min`, or at 0 when that lies within the range. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number | null }
+ * @fires change - When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field, or text that is no number (such as `-` or `1e`), commits as empty: null. From empty, + and - start at `min`, or at 0 when that lies within the range. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number | null }
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';

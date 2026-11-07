@@ -53,6 +53,9 @@ function isTime(value: string): boolean {
 	return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
 }
 
+/** What ends a glide: the user scrolling the column themselves. */
+const GLIDE_INTERRUPTIONS = ['wheel', 'touchstart', 'pointerdown'] as const;
+
 @customElement('nldd-time-picker')
 export class NLDDTimePicker extends DescribedBy(LitElement) {
 
@@ -401,6 +404,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		const duration = parseFloat(getComputedStyle(this).getPropertyValue('--_time-picker-glide-duration')) || 0;
 		const start = performance.now();
 		column.toggleAttribute('data-gliding', true);
+		for (const type of GLIDE_INTERRUPTIONS) column.addEventListener(type, this._interruptGlide, { passive: true });
 		const step = (now: number): void => {
 			const t = duration > 0 ? Math.min(1, (now - start) / duration) : 1;
 			column.scrollTop = from + distance * (1 - (1 - t) ** 3);
@@ -414,7 +418,16 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		cancelAnimationFrame(this._glides.get(column) ?? 0);
 		this._glides.delete(column);
 		column.removeAttribute('data-gliding');
+		for (const type of GLIDE_INTERRUPTIONS) column.removeEventListener(type, this._interruptGlide);
 	}
+
+	/** A wheel or a touch during the glide is the user taking over: the glide
+	 *  stops where it is, and their scrolling chooses again. */
+	private _interruptGlide = (event: Event): void => {
+		this._stopGlide(event.currentTarget as HTMLElement);
+		clearTimeout(this._selfScrollTimer);
+		this._scrollingSelf = false;
+	};
 
 	/** Listen to scrolling again once our own has been still a little longer than
 	 *  the debounce above, so all its scroll events have been ignored. */
