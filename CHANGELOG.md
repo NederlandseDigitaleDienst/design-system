@@ -35,6 +35,7 @@ here; consult the commit history if you need that level of detail.
 - **An `nldd-menu` opens again on the first tap after you scrolled it on a touch screen.** A scroll that started on an item left the menu thinking its button had been pressed, so the next tap on that button was lost.
 - **An `nldd-menu` no longer closes while you scroll it on a phone.** Hiding the address bar resizes the window in height, and the menu closed on every resize. It now only closes when the width changes.
 - **`nldd-number-field` fires `change` for a number you typed.** Typing already moved the value, so leaving the field found nothing new to commit, and only + and - or a corrected number fired it.
+- **A form field that is both `required` and `disabled` no longer throws.** `nldd-file-field` threw an error while it rendered, because its disabled input still reported a missing value without a message. A disabled field now stays out of validation, as a native one does.
 
 ## [0.17.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.17.0...v0.17.1) (2026-11-07)
 

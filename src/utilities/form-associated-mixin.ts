@@ -157,7 +157,9 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 
 			const flags: ValidityStateFlags = {};
 			let message = '';
-			if (target && !target.validity.valid) {
+			// A disabled control is barred from validation: its flags can still be
+			// set while its message is empty, and setValidity refuses that pair.
+			if (target && target.willValidate && !target.validity.valid) {
 				for (const sleutel of VALIDITY_FLAGS) {
 					if (target.validity[sleutel]) flags[sleutel] = true;
 				}
