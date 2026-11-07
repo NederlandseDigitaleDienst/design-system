@@ -483,6 +483,13 @@ describe('nldd-number-field – empty', () => {
 		expect(new FormData(form).get('n')).toBe('3');
 	});
 
+	it('starts at 0 from empty when 0 lies within the range', async () => {
+		const field = await fieldIn('min="-5" max="5"');
+		(field.shadowRoot!.querySelector('.number-field__increment-button nldd-icon-button') as HTMLElement).click();
+		await waitForUpdate(field);
+		expect(field.value).toBe(0);
+	});
+
 	it('starts at min from empty with +, and at 0 without a min', async () => {
 		const field = await fieldIn('min="5"');
 		(field.shadowRoot!.querySelector('.number-field__increment-button nldd-icon-button') as HTMLElement).click();

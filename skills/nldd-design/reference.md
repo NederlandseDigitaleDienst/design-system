@@ -1365,7 +1365,7 @@ A numeric input field with decrement and increment buttons.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `number` | Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at `min`, or at 0 when that lies within the range. |
+| `value` | `number` | Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1). |
 | `min` | `number` | Minimum value (default: -Infinity) |
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
@@ -1384,7 +1384,7 @@ A numeric input field with decrement and increment buttons.
 | Event | Description |
 | --- | --- |
 | `input` | When the value changes (typing, +/- button, or on-commit correction); detail: { value: number \| null }, null when the field is empty |
-| `change` | When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field, or text that is no number (such as `-` or `1e`), commits as empty: null. From empty, + and - start at `min`, or at 0 when that lies within the range. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number \| null } |
+| `change` | When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field, or text that is no number (such as `-` or `1e`), commits as empty: null. From empty, + and - start at 0, or at the nearer end of the range when 0 lies outside it. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number \| null } |
 
 ### `<nldd-one-time-code-field>`
 

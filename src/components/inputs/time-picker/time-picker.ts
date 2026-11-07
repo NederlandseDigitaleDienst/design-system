@@ -53,6 +53,13 @@ function isTime(value: string): boolean {
 	return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
 }
 
+/** A CSS time (`200ms`, `0.2s`) in milliseconds; 0 for anything else. */
+function toMs(time: string): number {
+	const value = parseFloat(time);
+	if (Number.isNaN(value)) return 0;
+	return time.trim().endsWith('ms') ? value : time.trim().endsWith('s') ? value * 1000 : 0;
+}
+
 /** What ends a glide: the user scrolling the column themselves. */
 const GLIDE_INTERRUPTIONS = ['wheel', 'touchstart', 'pointerdown'] as const;
 
@@ -401,7 +408,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		const from = column.scrollTop;
 		const distance = top - from;
 		if (Math.abs(distance) < 1) return;
-		const duration = parseFloat(getComputedStyle(this).getPropertyValue('--_time-picker-glide-duration')) || 0;
+		const duration = toMs(getComputedStyle(this).getPropertyValue('--_time-picker-glide-duration'));
 		const start = performance.now();
 		column.toggleAttribute('data-gliding', true);
 		for (const type of GLIDE_INTERRUPTIONS) column.addEventListener(type, this._interruptGlide, { passive: true });

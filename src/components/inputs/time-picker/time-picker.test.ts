@@ -116,6 +116,16 @@ describe('nldd-time-picker – kiezen', () => {
 
 	// A wheel or a touch during the glide is the user taking over: the glide
 	// must not drag the column back to where it was heading.
+	it('leest de duur ook in seconden', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 0.2s; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		const kolom = column(el, 'hours');
+		[...kolom.querySelectorAll<HTMLElement>('.time-picker__list-item')][14].click();
+		await waitForUpdate(el);
+		await new Promise((r) => setTimeout(r, 60));
+		expect(kolom.hasAttribute('data-gliding')).toBe(true);
+	});
+
 	it('stopt de glijbeweging zodra je zelf scrollt', async () => {
 		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 200ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
 		await waitForUpdate(el);
