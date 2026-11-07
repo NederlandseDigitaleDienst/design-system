@@ -250,12 +250,13 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
 | Website van de Nederlandse Digitale Dienst | [digitaledienst.overheid.nl](https://digitaledienst.overheid.nl) | geen publieke repository |
+| Website van het designsysteem | [design.digitaledienst.overheid.nl](https://design.digitaledienst.overheid.nl) | [`www/`](https://github.com/NederlandseDigitaleDienst/design-system/tree/main/www) |
 
 #### Overige projecten
 
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
-| NeRDS, de Nederlandse Richtlijn Digitale Systemen | [nederlandsedigitaledienst.github.io/NeRDS](https://nerds.digitaledienst.overheid.nl/) | [NederlandseDigitaleDienst/NeRDS](https://github.com/NederlandseDigitaleDienst/NeRDS) |
+| NeRDS, de Nederlandse Richtlijn Digitale Systemen | [nerds.digitaledienst.overheid.nl](https://nerds.digitaledienst.overheid.nl/) | [NederlandseDigitaleDienst/NeRDS](https://github.com/NederlandseDigitaleDienst/NeRDS) |
 | Ruimte, een werkinstrument voor het samenstellen van een formatie | [nederlandsedigitaledienst.github.io/ruimte](https://nederlandsedigitaledienst.github.io/ruimte/) | [NederlandseDigitaleDienst/ruimte](https://github.com/NederlandseDigitaleDienst/ruimte) |
 
 ### Andere overheidsorganisaties
