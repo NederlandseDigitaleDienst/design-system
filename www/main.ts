@@ -45,7 +45,6 @@ import '../src/components/lists-and-tables/cells/step-cell/step-cell.ts';
 import '../src/components/lists-and-tables/cells/title-cell/title-cell.ts';
 import '../src/components/lists-and-tables/list-item/list-item.ts';
 import '../src/components/lists-and-tables/list/list.ts';
-import '../src/components/navigation/link/link.ts';
 import '../src/components/navigation/skip-link/skip-link.ts';
 import '../src/components/navigation/top-navigation-bar/top-navigation-bar.ts';
 import '../src/components/status-and-feedback/badge/badge.ts';
@@ -87,6 +86,14 @@ triangle?.addEventListener('change', (event) => {
 	const { checked } = (event as CustomEvent<{ checked: boolean }>).detail;
 	const menus = triangle.closest('nldd-card')?.querySelectorAll('nldd-menu') ?? [];
 	for (const menu of menus) (menu as HTMLElement & { debugSafeTriangle: boolean }).debugSafeTriangle = checked;
+});
+
+/** The framework switch in "Eén techniek" shows the same form in each framework. */
+document.querySelector('#framework')?.addEventListener('change', (event) => {
+	const { value } = (event as CustomEvent<{ value: string }>).detail;
+	for (const viewer of document.querySelectorAll<HTMLElement>('nldd-code-viewer[data-framework]')) {
+		viewer.hidden = viewer.dataset.framework !== value;
+	}
 });
 
 /** The start date in the example form opens on today, in local time. */

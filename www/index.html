@@ -35,10 +35,7 @@
 				<p>Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Het werkt in Angular, React en Vue, en net zo goed zonder framework. Toegankelijkheid, huisstijl en ontwerppatronen krijg je automatisch mee.</p>
 			</nldd-rich-text>
 			<nldd-spacer size="24"></nldd-spacer>
-			<nldd-container
-				layout="wrap"
-				gap="12"
-			>
+			<nldd-button-group>
 				<nldd-button
 					appearance="inherit-filled"
 					text="Bekijk code en start"
@@ -49,7 +46,7 @@
 					text="Bekijk de componenten"
 					href="https://nederlandsedigitaledienst.github.io/design-system/"
 				></nldd-button>
-			</nldd-container>
+			</nldd-button-group>
 		</nldd-hero>
 
 		<nldd-simple-section>
@@ -64,7 +61,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>Van informatiesites tot applicaties met veel interactie. We onderhouden het systeem elke week, en breiden het regelmatig uit.</p>
+				<p>Van informatiesites tot applicaties met veel interactie. De Nederlandse Digitale Dienst onderhoudt het systeem elke week en breidt het regelmatig uit.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="grid"
@@ -78,10 +75,10 @@
 				<nldd-card>
 					<nldd-container padding="16">
 						<nldd-icon
-							icon="puzzle-piece"
+							icon="building-blocks"
 							size="32"
 						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-spacer size="4"></nldd-spacer>
 						<nldd-title
 							size="1"
 							text="100"
@@ -96,7 +93,7 @@
 							icon="display"
 							size="32"
 						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-spacer size="4"></nldd-spacer>
 						<nldd-title
 							size="1"
 							text="20"
@@ -111,11 +108,11 @@
 							icon="triangle-square-circle"
 							size="32"
 						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-spacer size="4"></nldd-spacer>
 						<nldd-title
 							size="1"
 							text="393"
-							supporting-text="iconen in stijl van de Rijksoverheid-letter"
+							supporting-text="iconen in de stijl van de Rijksoverheid-letter"
 							heading-level="3"
 						></nldd-title>
 					</nldd-container>
@@ -126,7 +123,7 @@
 							icon="themes"
 							size="32"
 						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-spacer size="4"></nldd-spacer>
 						<nldd-title
 							size="1"
 							text="18"
@@ -141,7 +138,7 @@
 							icon="accessibility"
 							size="32"
 						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-spacer size="4"></nldd-spacer>
 						<nldd-title
 							size="1"
 							text="245"
@@ -156,7 +153,7 @@
 							icon="globe"
 							size="32"
 						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-spacer size="4"></nldd-spacer>
 						<nldd-title
 							size="1"
 							text="5"
@@ -176,8 +173,8 @@
 				heading-level="2"
 			></nldd-title>
 			<nldd-rich-text slot="left">
-				<p>Toetsenbord, schermlezer, focus en contrast zitten in elk component. Je hoeft de regels niet uit je hoofd te kennen om ze goed toe te passen.</p>
-				<p>Vind je een probleem, dan lossen we het één keer op, in het component zelf. Kan het component het niet afdwingen, dan wordt het een regel in de linter. Met de volgende update hebben alle teams de verbetering, zonder dat ze er iets voor hoeven te doen.</p>
+				<p>Toetsenbord, schermlezer, focus en contrast zitten in elk component. Je hoeft de WCAG niet uit je hoofd te kennen om toegankelijk te bouwen.</p>
+				<p>Vind je een probleem, dan lossen we het één keer op, bij de bron. Kan het component het niet afdwingen, dan wordt het een regel in de linter. Met de volgende update heeft elk team de verbetering.</p>
 			</nldd-rich-text>
 			<nldd-list
 				slot="right"
@@ -207,7 +204,7 @@
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
 					<nldd-title-cell
 						text="Wij lossen het op in het component"
-						supporting-text="Of schrijven een regel die de fout in de editor laat zien"
+						supporting-text="Of schrijven een lintregel die de fout in je editor laat zien"
 					></nldd-title-cell>
 				</nldd-list-item>
 				<nldd-list-item>
@@ -239,7 +236,7 @@
 			></nldd-spacer>
 			<nldd-rich-text slot="left">
 				<p>Burgers herkennen de overheid aan hoe ze communiceert. Daarom bouwen we een kleurensysteem, een eigen iconenset en componenten die bij elkaar horen.</p>
-				<p>Elke organisatie kiest haar eigen kleur. De contrastwaarden, het gedrag en de toegankelijkheid blijven gelijk. Probeer het hier: deze pagina verandert mee.</p>
+				<p>Elke organisatie kiest haar eigen kleur. De contrastwaarden, het gedrag en de toegankelijkheid blijven gelijk, in licht en donker. Probeer het hier: deze pagina verandert mee.</p>
 			</nldd-rich-text>
 			<nldd-card slot="right">
 				<nldd-container padding="24">
@@ -391,7 +388,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>Een thema zet de kleur op één plek. Knoppen, velden, keuzes en voortgang volgen vanzelf, met dezelfde contrastwaarden in licht en donker.</p>
+				<p>Een thema zet de kleur op één plek. Knoppen, velden, keuzes en voortgang volgen vanzelf. Alles hieronder werkt: open het menu achter &quot;Acties&quot;, typ een datum of sleep de schuifregelaar.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="lanes"
@@ -829,18 +826,80 @@
 				heading-level="2"
 			></nldd-title>
 			<nldd-rich-text slot="left">
-				<p>De componenten zijn web components: gewone HTML-elementen die de browser zelf begrijpt. Daarom werken ze in Angular, React en Vue, en net zo goed zonder framework. Jij kiest, het designsysteem past zich aan.</p>
-				<p>De API is zo eenvoudig dat je als designer zelf in de front-end aan de slag kunt. Er is ruimte waar je die nodig hebt, en vaste afspraken waar eenheid telt. Die afspraken zijn ook de guardrails voor een AI-assistent: die weet wat kan en wat niet.</p>
+				<p>De componenten zijn web components: gewone HTML-elementen die de browser zelf begrijpt. Ze werken in Angular, React en Vue, en net zo goed zonder framework. Daardoor bestaat elk component één keer, met de toegankelijkheid en elk detail van de interactie erin. Geen team hoeft dat zelf na te bouwen, en elke pagina gedraagt zich hetzelfde.</p>
+				<h3>Ontwerp direct in code</h3>
+				<p>De API is zo eenvoudig dat je als designer zelf aan de slag kunt. Je ziet meteen hoe het werkt, op elk scherm en met echte inhoud. Er is ruimte waar je die nodig hebt, en vaste afspraken waar eenheid telt. Die afspraken zijn ook de guardrails voor een AI-assistent: die weet wat kan en wat niet.</p>
 			</nldd-rich-text>
-			<nldd-code-viewer
+			<nldd-container
 				slot="right"
-				language="html"
-				appearance="box-tinted"
-				wrap
-			>&lt;nldd-button
-  appearance="primary"
-  text="Meld je aan"
-&gt;&lt;/nldd-button&gt;</nldd-code-viewer>
+				gap="12"
+				horizontal-alignment="left"
+			>
+				<nldd-segmented-control
+					id="framework"
+					accessible-label="Framework"
+					width="fit-content"
+					value="html"
+				>
+					<nldd-segmented-control-item text="HTML" value="html"></nldd-segmented-control-item>
+					<nldd-segmented-control-item text="Angular" value="angular"></nldd-segmented-control-item>
+					<nldd-segmented-control-item text="React" value="react"></nldd-segmented-control-item>
+					<nldd-segmented-control-item text="Vue" value="vue"></nldd-segmented-control-item>
+				</nldd-segmented-control>
+				<nldd-code-viewer
+					data-framework="html"
+					language="html"
+					appearance="box-tinted"
+				>&lt;nldd-form action="/aanmelden" method="post"&gt;
+  &lt;nldd-form-field label="E-mailadres"&gt;
+    &lt;nldd-text-field name="email" type="email" autocomplete="email"&gt;
+      &lt;nldd-button slot="button" type="submit" appearance="primary" text="Meld je aan"&gt;&lt;/nldd-button&gt;
+    &lt;/nldd-text-field&gt;
+  &lt;/nldd-form-field&gt;
+&lt;/nldd-form&gt;</nldd-code-viewer>
+				<nldd-code-viewer
+					data-framework="angular"
+					hidden
+					language="html"
+					appearance="box-tinted"
+				>&lt;nldd-form&gt;
+  &lt;form (submit)="aanmelden($event)"&gt;
+    &lt;nldd-form-field label="E-mailadres"&gt;
+      &lt;nldd-text-field name="email" type="email" autocomplete="email"&gt;
+        &lt;nldd-button slot="button" type="submit" appearance="primary" text="Meld je aan"&gt;&lt;/nldd-button&gt;
+      &lt;/nldd-text-field&gt;
+    &lt;/nldd-form-field&gt;
+  &lt;/form&gt;
+&lt;/nldd-form&gt;</nldd-code-viewer>
+				<nldd-code-viewer
+					data-framework="react"
+					hidden
+					language="html"
+					appearance="box-tinted"
+				>&lt;nldd-form&gt;
+  &lt;form onSubmit={aanmelden}&gt;
+    &lt;nldd-form-field label="E-mailadres"&gt;
+      &lt;nldd-text-field name="email" type="email" autocomplete="email"&gt;
+        &lt;nldd-button slot="button" type="submit" appearance="primary" text="Meld je aan"&gt;&lt;/nldd-button&gt;
+      &lt;/nldd-text-field&gt;
+    &lt;/nldd-form-field&gt;
+  &lt;/form&gt;
+&lt;/nldd-form&gt;</nldd-code-viewer>
+				<nldd-code-viewer
+					data-framework="vue"
+					hidden
+					language="html"
+					appearance="box-tinted"
+				>&lt;nldd-form&gt;
+  &lt;form @submit.prevent="aanmelden"&gt;
+    &lt;nldd-form-field label="E-mailadres"&gt;
+      &lt;nldd-text-field name="email" type="email" autocomplete="email"&gt;
+        &lt;nldd-button slot="button" type="submit" appearance="primary" text="Meld je aan"&gt;&lt;/nldd-button&gt;
+      &lt;/nldd-text-field&gt;
+    &lt;/nldd-form-field&gt;
+  &lt;/form&gt;
+&lt;/nldd-form&gt;</nldd-code-viewer>
+			</nldd-container>
 		</nldd-one-half-one-half-section>
 
 		<nldd-simple-section background="tinted">
@@ -855,7 +914,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>Van een huis tot een microscoop, van een tulp tot een handdruk. Elk icoon is getekend volgens één stijlgids, zodat het past bij de Rijksoverheid-letter.</p>
+				<p>De huisstijl van de Rijksoverheid heeft maar een klein aantal iconen, en die passen niet bij de Rijksoverheid-letter. Ontwikkelaars grijpen daarom naar open-source sets, en die passen er net zo slecht bij. Wij hebben er een eigen set voor ontwikkeld. Van een huis tot een microscoop, van een tulp tot een handdruk: elk icoon volgt één stijlgids, gemaakt bij de letter. Mis je een icoon voor jouw project? <a href="https://github.com/NederlandseDigitaleDienst/design-system/issues/new">Vraag het aan</a>.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="wrap"
@@ -1103,6 +1162,86 @@
 					icon="puzzle-piece"
 					size="32"
 				></nldd-icon>
+				<nldd-icon
+					icon="binoculars"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="magnifier"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="map"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="flag"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="lifebuoy"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="cloud"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="eye"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="hand-thumbs-up"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="head-profile-with-brain"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="desk-with-screen"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="projection-screen"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="note"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="pencil-ruler"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="paintbrush"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="highlighter"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="scissor"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="color-chart"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="photo"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="timer"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="power-plug"
+					size="32"
+				></nldd-icon>
 			</nldd-container>
 			<nldd-spacer size="32"></nldd-spacer>
 			<nldd-button
@@ -1124,7 +1263,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>Niet elk team heeft een designer. Met de skills krijgt je AI-assistent de kennis van het systeem mee: de componenten, de patronen en de regels. Zo ontwerp je in code, en blijft het resultaat toegankelijk en herkenbaar.</p>
+				<p>Niet elk team heeft een designer. Het designsysteem neemt die rol over, met de richtlijnen, vijftien patronen en een linter die meekijkt. Werk je met een AI-assistent, dan geven de skills hem dezelfde kennis.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="grid"
@@ -1138,18 +1277,18 @@
 				<nldd-card>
 					<nldd-container padding="16">
 						<nldd-icon
-							icon="sparkles"
+							icon="books-vertical"
 							size="32"
 						></nldd-icon>
 						<nldd-spacer size="12"></nldd-spacer>
 						<nldd-title
 							size="4"
-							text="Designer als skill"
+							text="Richtlijnen en patronen om op te bouwen"
 							heading-level="3"
 						></nldd-title>
 						<nldd-spacer size="8"></nldd-spacer>
 						<nldd-rich-text>
-							<p>De <a href="https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-ontwerprichtlijnen--docs">ontwerprichtlijnen</a> en vijftien patronen, van home tot formulier en applicatie. Je assistent bouwt een pagina zoals wij hem zouden ontwerpen.</p>
+							<p>De <a href="https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-ontwerprichtlijnen--docs">ontwerprichtlijnen</a> en vijftien patronen, van home tot formulier en applicatie. Met de skills bouwt je assistent een pagina zoals wij hem zouden ontwerpen.</p>
 						</nldd-rich-text>
 					</nldd-container>
 				</nldd-card>
@@ -1197,20 +1336,22 @@
 			background="tinted"
 		>
 			<nldd-title
-				slot="header"
 				size="2"
 				text="Begin met één regel"
 				heading-level="2"
-			>
-				<span slot="supporting-text">Het pakket staat op <nldd-link href="https://www.npmjs.com/package/@nldd/design-system">npm</nldd-link>, de broncode op <nldd-link href="https://github.com/NederlandseDigitaleDienst/design-system">GitHub</nldd-link>, onder de open licentie EUPL.</span>
-			</nldd-title>
+			></nldd-title>
+			<nldd-spacer size="16"></nldd-spacer>
+			<nldd-rich-text>
+				<p>Het pakket staat op <a href="https://www.npmjs.com/package/@nldd/design-system">npm</a>, de broncode op <a href="https://github.com/NederlandseDigitaleDienst/design-system">GitHub</a>, onder de open licentie EUPL.</p>
+			</nldd-rich-text>
+			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-code-viewer
 				language="bash"
 				appearance="box-base"
 			>npm install @nldd/design-system</nldd-code-viewer>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-rich-text>
-				<p>Bouw je samen met een AI-assistent? Installeer dan <a href="https://github.com/NederlandseDigitaleDienst/design-system/tree/main/skills">de skills</a> en vraag je assistent een bestaande pagina om te zetten naar het designsysteem.</p>
+				<p>Bouw je samen met een AI-assistent? Installeer dan <a href="https://github.com/NederlandseDigitaleDienst/design-system#plugin-voor-ai-assistenten">de skills</a> en vraag je assistent een bestaande pagina om te zetten naar het designsysteem.</p>
 			</nldd-rich-text>
 		</nldd-simple-section>
 
