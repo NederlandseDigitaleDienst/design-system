@@ -115,7 +115,7 @@ export { NLDDSheet } from './layout/sheet/sheet.js';
 export { NLDDWindow } from './layout/window/window.js';
 
 export { NLDDPageFooter, NLDDPageFooterLegalBar, NLDDPageFooterLegalBarItem } from './layout/page-footer/page-footer.js';
-export { NLDDColumnBoard, NLDDColumnBoardColumn } from './layout/column-board/column-board.js';
+export { NLDDKanban, NLDDKanbanColumn } from './layout/kanban/kanban.js';
 
 
 // # List and Table components

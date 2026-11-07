@@ -237,6 +237,7 @@ export const MetHistogramEnVelden = {
 		const fromField = (event: Event, end: boolean) => {
 			const slider = root(event).querySelector('nldd-slider') as NLDDSlider;
 			const value = (event as CustomEvent).detail.value;
+			if (value === null) return;
 			if (end) slider.endValue = value;
 			else slider.startValue = value;
 		};

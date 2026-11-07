@@ -334,9 +334,9 @@
       "types": "./dist/components/layout/page-footer/page-footer.d.ts",
       "default": "./dist/components/layout/page-footer/page-footer.js"
     },
-    "./column-board": {
-      "types": "./dist/components/layout/column-board/column-board.d.ts",
-      "default": "./dist/components/layout/column-board/column-board.js"
+    "./kanban": {
+      "types": "./dist/components/layout/kanban/kanban.d.ts",
+      "default": "./dist/components/layout/kanban/kanban.js"
     },
     "./list": {
       "types": "./dist/components/lists-and-tables/list/list.d.ts",

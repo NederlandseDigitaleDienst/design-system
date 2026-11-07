@@ -3,8 +3,10 @@ import type { NLDDNumberField } from './number-field.js';
 import './../../actions/icon-button/icon-button.js';
 
 export function numberFieldTemplate(component: NLDDNumberField): TemplateResult {
-	const canDecrease = component.value > component.min;
-	const canIncrease = component.value < component.max;
+	const { value } = component;
+	const empty = value === null;
+	const canDecrease = value === null || value > component.min;
+	const canIncrease = value === null || value < component.max;
 	const iconButtonSize = component.size === 'sm' ? 'xs' : 'sm';
 
 	return html`
@@ -29,11 +31,12 @@ export function numberFieldTemplate(component: NLDDNumberField): TemplateResult 
 				type="number"
 				inputmode=${Number.isInteger(component.step) ? 'numeric' : 'decimal'}
 				aria-label=${component.accessibleLabel || nothing}
-				.value=${String(component.value)}
-				min=${component.min}
-				max=${component.max}
+				.value=${empty ? '' : String(value)}
+				min=${Number.isFinite(component.min) ? component.min : nothing}
+				max=${Number.isFinite(component.max) ? component.max : nothing}
 				step=${component.step}
 				?disabled=${component.disabled}
+				?required=${component.required}
 				name=${component.name || nothing}
 				@keydown=${component._handleKeydown}
 				@input=${component._handleInput}

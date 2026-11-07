@@ -9,6 +9,34 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-column-board` is now `nldd-kanban`.** Kanban (看板) is Japanese for a signboard: *kan* means to look, *ban* a board. From the 1950s Toyota used kanban cards in its factories to show when a step needed new parts, and software teams took the word over for a board of columns you take in at a glance. It is the name most people already know for a board like this. `nldd lint --fix` renames it. See Breaking.
+
+### Breaking
+
+- **`nldd-column-board` and `nldd-column-board-column` are now `nldd-kanban` and `nldd-kanban-column`,** with the import path `@nldd/design-system/kanban`, the classes `NLDDKanban` and `NLDDKanbanColumn` and the translation keys `components.kanban.*`. The name fits a board whose columns are a team or a phase, not only tasks. There is no alias; `nldd lint --fix` renames the tags, imports and classes, also from the older `nldd-task-board`.
+- **`nldd-number-field` can be empty, and starts empty without a `value`.** It used to start at 0, so an optional field with `min="1"` that nobody touched made the form invalid, and an emptied field jumped back to its last number. Empty is now no answer: it submits an empty string, `min` and `max` judge only a number that was filled in, and the new `required` asks for a value. `value` and `detail.value` of `input` and `change` are `null` when the field is empty, so code that reads them as a number has to handle that. Give a field that should start at a number its `value`. From empty, + and - start at 0, or at the nearer end of the range when 0 lies outside it.
+
+### Changed
+
+- **The website title of `nldd-top-navigation-bar` starts at the left on a narrow screen too,** instead of in the middle under the logo. It then lines up with the content of the page below it, as on md and lg.
+- **The bars of a compact `nldd-step-bar` get the same edge as `nldd-progress-bar`.** A finished step has the darker accent border, a step still to come the light track with its border.
+- **The buttons in an `nldd-banner` are sm,** at either banner size, as in `nldd-notification`. At md they were as large as the buttons of the page and weighed more than the notice itself.
+- **A value you click in `nldd-time-picker` glides into the selection,** instead of jumping there, so you see where it went. It does the same with the arrow keys. A value set from outside, such as on opening, still stands there at once, and with reduced motion every move is immediate.
+- **The values of `nldd-time-picker` show the arrow cursor,** not the text cursor: you click them, you do not select them.
+- **The page sections with two columns stack below a width of 50rem (800px),** all three at the same width. `nldd-one-third-two-thirds-section` and `nldd-two-thirds-one-third-section` stacked at 48rem, where the wide column was under 400px; `nldd-one-half-one-half-section` only did so at 280px per column and jumped back beside each other where the padding shrinks. On one page they now stack together.
+
+### Fixed
+
+- **`nldd-code-viewer` no longer grows wider than its parent.** In a parent that does not stretch its children, such as an `nldd-container` with `horizontal-alignment`, it took the width of its longest line and pushed the page sideways. It now stays within the parent and scrolls its own lines.
+- **A range `nldd-slider` no longer shows a focus ring when you drag one thumb past the other.** The other thumb takes over, and in Safari, on a touch screen too, it got the ring of keyboard focus. With the arrow keys it still shows.
+- **The border of `nldd-card` no longer flickers in Safari,** such as while the tooltips of an `nldd-slider` in it fade in. On a card at half a pixel, Safari cut a sliver off its edge whenever something inside it faded. The border is now drawn outside what the card clips.
+- **An `nldd-menu` opens again on the first tap after you scrolled it on a touch screen.** A scroll that started on an item left the menu thinking its button had been pressed, so the next tap on that button was lost.
+- **An `nldd-menu` no longer closes while you scroll it on a phone.** Hiding the address bar resizes the window in height, and the menu closed on every resize. It now only closes when the width changes.
+- **`nldd-number-field` fires `change` for a number you typed.** Typing already moved the value, so leaving the field found nothing new to commit, and only + and - or a corrected number fired it.
+- **A form field that is both `required` and `disabled` no longer throws.** `nldd-file-field` threw an error while it rendered, because its disabled input still reported a missing value without a message. A disabled field now stays out of validation, as a native one does.
+
 ## [0.17.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.17.0...v0.17.1) (2026-11-07)
 
 ## [0.17.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.16.2...v0.17.0) (2026-11-06)

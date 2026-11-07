@@ -4,12 +4,13 @@
  * A numeric input field with decrement and increment buttons.
  *
  * @element nldd-number-field
- * @attr {number} value - Current value
+ * @attr {number} value - Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1).
  * @attr {number} min - Minimum value (default: -Infinity)
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
  * @attr {string} size - Size: 'sm' | 'md' (default: 'md')
  * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} required - A value has to be filled in. An empty field is then invalid.
  * @attr {string} name - Name for form submission
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px')
@@ -17,8 +18,8 @@
  * @attr {string} accessible-label - Accessible label (aria-label) forwarded to the native input
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
- * @fires input - When the value changes (typing, +/- button, or on-commit correction); detail: { value: number }
- * @fires change - When the value is committed (blur/Enter or +/- button), clamped to [min, max]; empty input falls back to the last valid value. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number }
+ * @fires input - When the value changes (typing, +/- button, or on-commit correction); not for typing that reads as the same number, such as `1.0` after `1`. detail: { value: number | null }, null when the field is empty
+ * @fires change - When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field, or text that is no number (such as `-` or `1e`), commits as empty: null. From empty, + and - start at 0, or at the nearer end of the range when 0 lies outside it. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number | null }
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -38,6 +39,19 @@ import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type NumberFieldSize = 'sm' | 'md';
 
+/** A number as a native number input accepts it: no hex, no Infinity. Above
+ *  the class: an element already in the page upgrades while the class is
+ *  defined, before the rest of this module has run. */
+const FLOATING_POINT = /^-?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?$/;
+
+/** An attribute or restored state as a number, or null when it is empty or no number. */
+function emptyOrNumber(value: string | null): number | null {
+	const text = value?.trim() ?? '';
+	if (!FLOATING_POINT.test(text)) return null;
+	const parsed = Number(text);
+	return Number.isFinite(parsed) ? parsed : null;
+}
+
 @customElement('nldd-number-field')
 export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 
@@ -52,10 +66,11 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	static blocksImplicitSubmission = true;
 
 
-	private _initialValue = 0;
+	private _initialValue: number | null = null;
 
-	@property({ type: Number })
-	value = 0;
+	/** The value, or null for an empty field. An empty or unreadable attribute is empty too. */
+	@property({ converter: emptyOrNumber })
+	value: number | null = null;
 
 	@property({ type: Number })
 	min = -Infinity;
@@ -71,6 +86,10 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
+
+	/** A value has to be filled in. An empty field is then invalid. */
+	@property({ type: Boolean, reflect: true })
+	required = false;
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
@@ -90,11 +109,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Object })
 	translations: Partial<NLDDNumberFieldTranslations> = {};
 
-	/** Last value inside [min, max]; used as fallback when the input is cleared.
-	 *  Initialized to the clamped `value` in firstUpdated — the 0 default is only
-	 *  relevant before the first render, which no user-facing handler can reach. */
-	private _lastValidValue = 0;
-
 
 	/**
 	 * Marks the control as invalid.
@@ -108,9 +122,16 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	/** The value last committed or set from outside: what `change` compares with.
+	 *  Typing already moves `value`, so comparing with that would leave a typed
+	 *  number without its `change`. */
+	private _committed: number | null = null;
+	/** What typing last put in `value`, until it is committed. Any other value
+	 *  that arrives in the meantime comes from outside and counts as committed. */
+	private _typed: number | null | undefined = undefined;
+
 	override firstUpdated(): void {
-		this._lastValidValue = this._clamp(this.value);
-		this._initialValue = this._lastValidValue;
+		this._initialValue = this.value === null ? null : this._clamp(this.value);
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
@@ -125,12 +146,16 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 			}
 		}
 		if (changedProperties.has('value')) {
+			if (this.value !== this._typed) {
+				this._committed = this.value;
+				this._typed = undefined;
+			}
 			this.commitFormValue();
 		}
 	}
 
 	override formValue(): FormValue {
-		return String(this.value);
+		return this.value === null ? '' : String(this.value);
 	}
 
 	formResetCallback(): void {
@@ -140,8 +165,8 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 
 	formStateRestoreCallback(state: File | string | FormData | null): void {
 		if (typeof state !== 'string') return;
-		const parsed = parseFloat(state);
-		if (!isNaN(parsed)) this.value = this._clamp(parsed);
+		const parsed = emptyOrNumber(state);
+		this.value = parsed === null ? null : this._clamp(parsed);
 	}
 
 	// — i18n —————————————————————————————————————————————————————————————————
@@ -154,12 +179,17 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 
 	public _handleDecrease(): void {
 		if (this.disabled) return;
-		this._commitValue(this.value - this.step);
+		this._commitValue(this.value === null ? this._startValue() : this.value - this.step);
 	}
 
 	public _handleIncrease(): void {
 		if (this.disabled) return;
-		this._commitValue(this.value + this.step);
+		this._commitValue(this.value === null ? this._startValue() : this.value + this.step);
+	}
+
+	/** Where + and - begin in an empty field: 0, or the nearer end of the range. */
+	private _startValue(): number {
+		return this._clamp(0);
 	}
 
 	/** Fires while the user types. The value may be outside [min, max]; clamping happens on change. */
@@ -172,8 +202,12 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleInput(e: Event): void {
 		if (this.disabled) return;
 		const input = e.target as HTMLInputElement;
-		const parsed = parseFloat(input.value);
-		if (isNaN(parsed)) return;
+		// A number input reads as empty while it holds no number yet ("-", "1e"),
+		// so only a field that really is empty clears the value.
+		const parsed = input.value === '' && !input.validity.badInput ? null : parseFloat(input.value);
+		if (parsed !== null && isNaN(parsed)) return;
+		if (parsed === this.value) return;
+		this._typed = parsed;
 		this.value = parsed;
 		this.commitFormValue();
 		this.dispatchEvent(new CustomEvent('input', {
@@ -183,31 +217,36 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 		}));
 	}
 
-	/** Fires on blur or Enter. Clamps the value and falls back to the last valid value when empty. */
+	/** Fires on blur or Enter. Clamps the value; an emptied field stays empty. */
 	public _handleChange(e: Event): void {
 		if (this.disabled) return;
 		const input = e.target as HTMLInputElement;
+		// Text that is no number (badInput) reads as '' here, so it commits as empty.
 		const parsed = parseFloat(input.value);
-		const finalValue = isNaN(parsed) ? this._lastValidValue : this._clamp(parsed);
-		this._commitValue(finalValue, input);
+		this._commitValue(isNaN(parsed) ? null : parsed, input);
 	}
 
-	private _commitValue(newValue: number, input?: HTMLInputElement): void {
-		const clampedValue = this._clamp(newValue);
-		const changed = clampedValue !== this.value;
+	private _commitValue(newValue: number | null, input?: HTMLInputElement): void {
+		const clampedValue = newValue === null ? null : this._clamp(newValue);
+		const corrected = clampedValue !== this.value;
+		const changed = clampedValue !== this._committed;
 		this.value = clampedValue;
-		this._lastValidValue = clampedValue;
+		this._committed = clampedValue;
+		this._typed = undefined;
 		// Force the input DOM to match the committed value — Lit's property binding
 		// may not re-sync when the user typed an out-of-range value that parses to
-		// the same number after clamping (e.g. empty → fallback).
-		if (input) input.value = String(clampedValue);
-		if (!changed) return;
+		// the same number after clamping, or text that is no number.
+		if (input) input.value = clampedValue === null ? '' : String(clampedValue);
+		if (!changed && !corrected) return;
 		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('input', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		if (corrected) {
+			this.dispatchEvent(new CustomEvent('input', {
+				detail: { value: this.value },
+				bubbles: true,
+				composed: true,
+			}));
+		}
+		if (!changed) return;
 		this.dispatchEvent(new CustomEvent('change', {
 			detail: { value: this.value },
 			bubbles: true,

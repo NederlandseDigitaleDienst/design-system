@@ -171,6 +171,7 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-accent-550), var(--primitives-color-accent-500));
+	--semantics-steps-progress-highlight-border-color: light-dark(var(--primitives-color-accent-600), var(--primitives-color-accent-550));
 	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-accent-550), var(--primitives-color-accent-500));
 	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-accent-1000));
 

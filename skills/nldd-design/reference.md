@@ -1365,12 +1365,13 @@ A numeric input field with decrement and increment buttons.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `number` | Current value |
+| `value` | `number` | Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1). |
 | `min` | `number` | Minimum value (default: -Infinity) |
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
 | `size` | `string` | Size: 'sm' \| 'md' (default: 'md') |
 | `disabled` | `boolean` | Disabled state |
+| `required` | `boolean` | A value has to be filled in. An empty field is then invalid. |
 | `name` | `string` | Name for form submission |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px') |
@@ -1382,8 +1383,8 @@ A numeric input field with decrement and increment buttons.
 
 | Event | Description |
 | --- | --- |
-| `input` | When the value changes (typing, +/- button, or on-commit correction); detail: { value: number } |
-| `change` | When the value is committed (blur/Enter or +/- button), clamped to [min, max]; empty input falls back to the last valid value. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number } |
+| `input` | When the value changes (typing, +/- button, or on-commit correction); not for typing that reads as the same number, such as `1.0` after `1`. detail: { value: number \| null }, null when the field is empty |
+| `change` | When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field, or text that is no number (such as `-` or `1e`), commits as empty: null. From empty, + and - start at 0, or at the nearer end of the range when 0 lies outside it. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number \| null } |
 
 ### `<nldd-one-time-code-field>`
 
@@ -2223,60 +2224,6 @@ A container for displaying collections of items. Supports grid, stack, lanes and
 | --- | --- |
 | `load-more` | When the load-more button is clicked |
 
-### `<nldd-column-board>`
-
-Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-column-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu "Verplaatsen naar" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows "Dit bord is alleen-lezen" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.
-
-**Rules** (`nldd lint`)
-
-- `column-board-move-item-invalid`: moveItem() needs an item in one of the board's columns and a column of the board.
-
-**Attributes**
-
-| Attribute | Type | Description |
-| --- | --- | --- |
-| `accessible-label` | `string` | Accessible name of the board (default: "Bord") |
-| `height` | `string` | Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`) |
-| `readonly` | `boolean` | Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
-
-**Slots**
-
-| Slot | Description |
-| --- | --- |
-| _(default)_ | The columns: `nldd-column-board-column` |
-
-**Events**
-
-| Event | Description |
-| --- | --- |
-| `nldd-move` | An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one) |
-| `nldd-move-denied` | An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }` |
-
-### `<nldd-column-board-column>`
-
-One column of an `nldd-column-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here ("Verplaatst naar In behandeling"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.
-
-**Rules** (`nldd lint`)
-
-- `column-board-column-needs-name`: nldd-column-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.
-
-**Attributes**
-
-| Attribute | Type | Description |
-| --- | --- | --- |
-| `text` | `string` | The column's name, shown in the header and used as its accessible name |
-| `accessible-label` | `string` | Accessible name in place of `text`, for a column whose header comes from the slot |
-| `value` | `string` | What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn` |
-
-**Slots**
-
-| Slot | Description |
-| --- | --- |
-| `header` | The header, in place of `text` and the count |
-| _(default)_ | The items |
-| `footer` | Right under the last item, such as a button to add one; it scrolls along with the items |
-
 ### `<nldd-container>`
 
 A simple layout primitive: pick a layout mode, give it a gap, optionally align contents, and add padding. Padding can be set for all sides, per axis (inline/block), or per individual side. Specificity: per side > per axis > all sides. The container owns the space around and between its children; use `nldd-spacer` only for a one-off gap between two different things. A block that is placed in more than one context gets no padding of its own: whoever places it wraps it in a container, so the inset is not counted twice. Responsive padding and gap have sm/md/lg variants. Each variant emits both an @media (viewport) and @container (layout-container) query. When inside a layout-container the @container query wins; otherwise the @media query provides the viewport-based fallback. Layout modes: - `stack` (default): block items, stacked vertically. The "what you expect from DOM flow" mode. - `row`: flex row, no wrapping. Items shrink or overflow. - `wrap`: flex row, items wrap to new lines. - `grid`: CSS grid, auto-fit columns at min 280px wide. - `columns`: CSS multi-column flow, 280px minimum column width, items don't split across column breaks. Alignment maps to the layout's natural axis: - `stack`: vertical = main-axis (justify-content), horizontal = cross-axis (align-items) - `row` / `wrap`: horizontal = main-axis, vertical = cross-axis - `grid`: horizontal = justify-items, vertical = align-items (per cell) - `columns`: alignment props have no effect (CSS multicol doesn't expose alignment) Item order is set per-child via attributes on the slotted children themselves: `<child order="3">` for a fixed position, or `<child sm-order="N">` / `<child md-order="N">` / `<child lg-order="N">` to override per breakpoint (resolved against THIS container's width via @container queries, same scope as the responsive padding/gap). The container observes slot changes and child attribute mutations and bridges these to `--_container-slot-order` / `--_container-slot-sm-order` / etc. custom properties on each child's inline style, which the container's CSS then reads via `::slotted(*)` inside @container queries. Cascade: `sm-order` falls back to `order` falls back to `0` at sm (and analogously for md/lg). No-op for `layout="columns"` (CSS multicol has no per-item ordering hook). The `column-count` attribute (1-8) forces an exact column count for `layout="grid"` (overrides auto-fit) and `layout="columns"` (overrides the natural width-driven count). `sm-column-count` / `md-column-count` / `lg-column-count` resolve against this container's OWN width via an `@container (...)` query on the host — not against the viewport. That lets a footer in a narrow sidebar choose its own column count independent of the surrounding page width. `layout="lanes"` packs items into balanced columns using native CSS grid lanes where supported, falling back to CSS multicol (column-order) elsewhere. CSS-only, no JS. Honours `gap` on both axes and `column-count`. Note that nldd-collection's lanes falls back to its own grid rather than to multicol: that component pages, and multicol redistributes the whole set every time load-more adds to it.
@@ -2433,6 +2380,60 @@ The section that says what a page is for: it names the main goal of what you can
 | `media` | Image or illustration (img or nldd-image); fills the area and is clipped. Takes precedence over the media-src attributes. Set `alt=""` when the image is decorative; otherwise give a describing alt text. |
 | _(default)_ | Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance) |
 
+### `<nldd-kanban>`
+
+Columns side by side, with items you move between them. Kanban is Japanese for a visible board, so it is any board where an item's column is one of its values: a status, but also a team or a phase. Put `nldd-kanban-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu "Verplaatsen naar" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows "Dit bord is alleen-lezen" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.
+
+**Rules** (`nldd lint`)
+
+- `kanban-move-item-invalid`: moveItem() needs an item in one of the board's columns and a column of the board.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `accessible-label` | `string` | Accessible name of the board (default: "Bord") |
+| `height` | `string` | Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`) |
+| `readonly` | `boolean` | Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The columns: `nldd-kanban-column` |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `nldd-move` | An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one) |
+| `nldd-move-denied` | An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }` |
+
+### `<nldd-kanban-column>`
+
+One column of an `nldd-kanban`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here ("Verplaatst naar In behandeling"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.
+
+**Rules** (`nldd lint`)
+
+- `kanban-column-needs-name`: nldd-kanban-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `text` | `string` | The column's name, shown in the header and used as its accessible name |
+| `accessible-label` | `string` | Accessible name in place of `text`, for a column whose header comes from the slot |
+| `value` | `string` | What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn` |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `header` | The header, in place of `text` and the count |
+| _(default)_ | The items |
+| `footer` | Right under the last item, such as a button to add one; it scrolls along with the items |
+
 ### `<nldd-navigation-split-view>`
 
 A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them. When they stop fitting, panes drop in a fixed order: the inspector goes first, then the primary sidebar collapses into the secondary sidebar. If that still does not fit, the view stacks and shows one pane at a time: main when it has content, otherwise the secondary sidebar, otherwise the primary sidebar. Use <code>nldd-split-view-pane</code> as direct children for automatic back button handling.
@@ -2471,7 +2472,7 @@ A four-column layout with a primary sidebar, secondary sidebar, main content are
 
 ### `<nldd-one-half-one-half-section>`
 
-A section with two equal columns side by side. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.
+A section with two equal columns side by side. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
 
 **Rules** (`nldd lint`)
 
@@ -2509,7 +2510,7 @@ A section with two equal columns side by side. The columns wrap automatically wh
 
 ### `<nldd-one-third-two-thirds-section>`
 
-A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.
+A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
 
 **Rules** (`nldd lint`)
 
@@ -2940,7 +2941,7 @@ A vertical split view with multiple stacked panes. The number of panes is set vi
 
 ### `<nldd-two-thirds-one-third-section>`
 
-A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.
+A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
 
 **Rules** (`nldd lint`)
 
@@ -3504,7 +3505,7 @@ An inline notification with a tinted background per variant. Use for persistent,
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Optional rich content between text and actions (e.g. nldd-rich-text) |
-| `actions` | nldd-button elements, wrapped in a horizontal nldd-button-group |
+| `actions` | nldd-button elements, wrapped in a horizontal nldd-button-group that makes them sm, at either banner size: an action beside a notice should not weigh as much as the buttons of the page. |
 
 **Events**
 

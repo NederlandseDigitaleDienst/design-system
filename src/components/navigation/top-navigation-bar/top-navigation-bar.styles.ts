@@ -354,14 +354,10 @@ export const topNavigationBarStyles = css`
 	.top-navigation-bar__website-title-bar {
 		display: flex;
 		align-items: center;
-
-		@container (max-width: ${smMax}) {
-			justify-content: center;
-		}
+		justify-content: flex-start;
 
 		@container (min-width: ${mdMin}) {
 			padding-inline-end: var(--semantics-menu-bar-items-inline-padding);
-			justify-content: flex-start;
 		}
 	}
 
@@ -392,7 +388,6 @@ export const topNavigationBarStyles = css`
 			min-width: 0;
 			white-space: normal;
 			overflow-wrap: break-word;
-			text-align: center;
 		}
 
 		@container (min-width: ${mdMin}) {

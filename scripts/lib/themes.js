@@ -912,19 +912,25 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 	// progress and the banner icon. In light mode a button that does not stand
 	// out 3:1 on the page gives way to the step nearest to it that does; a
 	// yellow theme's follow its selection. A finished marker carries its check,
-	// so it is the button itself, with the text of the button.
-	let line = accent(button.light.step);
-	let past = line;
+	// so it is the button itself, with the text of the button. The edge of a
+	// filled bar is one step darker than its line, as on a button.
+	let lineStep = button.light.step;
+	let lineColor = 'accent';
+	let past = accent(lineStep);
 	let pastText = textColor('light', button.light.text, 'accent');
 	if (yellow && !standsOut(palette, button.light.step, grounds)) {
-		line = past = accent(selection.light.step, 'neutral');
+		lineStep = selection.light.step;
+		lineColor = 'neutral';
+		past = accent(lineStep, lineColor);
 		pastText = textColor('light', 'white', 'neutral');
 	} else if (!standsOut(palette, button.light.step, grounds)) {
-		line = accent(nearestStandingStep(palette, button.light.step, grounds));
+		lineStep = nearestStandingStep(palette, button.light.step, grounds);
 	}
+	const line = accent(lineStep, lineColor);
 	const dark = accent(button.dark.step);
 	lines.push(
 		['--semantics-steps-progress-color', pair(line, dark)],
+		['--semantics-steps-progress-highlight-border-color', pair(accent(clamp(lineStep + 50), lineColor), accent(clamp(button.dark.step + 50)))],
 		['--semantics-steps-is-past-background-color', pair(past, dark)],
 		['--semantics-steps-is-past-content-color', pair(pastText, textColor('dark', button.dark.text, 'accent'))],
 	);

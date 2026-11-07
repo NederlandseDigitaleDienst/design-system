@@ -39,7 +39,7 @@
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @slot - Optional rich content between text and actions (e.g. nldd-rich-text)
- * @slot actions - nldd-button elements, wrapped in a horizontal nldd-button-group
+ * @slot actions - nldd-button elements, wrapped in a horizontal nldd-button-group that makes them sm, at either banner size: an action beside a notice should not weigh as much as the buttons of the page.
  *
  * @fires dismiss - Fired when the dismiss button is clicked. The consumer is responsible for removing/hiding the banner.
  */

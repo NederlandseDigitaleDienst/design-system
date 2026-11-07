@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
-import './column-board.js';
-import type { NLDDColumnBoard, NLDDMoveEventDetail } from './column-board.js';
+import './kanban.js';
+import type { NLDDKanban, NLDDMoveEventDetail } from './kanban.js';
 import '../../layout/card/card.js';
 import '../../layout/container/container.js';
 import '../../layout/spacer/spacer.js';
@@ -40,12 +40,12 @@ import '../../actions/menu/menu.js';
  * ```
  */
 export default {
-	title: 'Components/Layout/Column Board',
-	component: 'nldd-column-board',
+	title: 'Components/Layout/Kanban',
+	component: 'nldd-kanban',
 	tags: ['autodocs'],
 	parameters: {
 		componentSource: {
-			file: 'src/components/layout/column-board/column-board.ts',
+			file: 'src/components/layout/kanban/kanban.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
 		status: { type: 'beta' },
@@ -77,7 +77,7 @@ export default {
 
 /** Moves the item in the DOM, the way an app moves it in its data. */
 function onMove(event: CustomEvent<NLDDMoveEventDetail>) {
-	const board = event.currentTarget as NLDDColumnBoard;
+	const board = event.currentTarget as NLDDKanban;
 	const { item, toColumn, toIndex } = event.detail;
 	const column = board.columns.find((candidate) => candidate.value === toColumn)!;
 	const rest = column.items.filter((el) => el !== item);
@@ -105,38 +105,38 @@ const card = (title: string, text: string, tag?: string) => html`
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-column-board
+		<nldd-kanban
 			accessible-label=${args.accessibleLabel || nothing}
 			height=${args.height || nothing}
 			?readonly=${args.readonly}
 			@nldd-move=${onMove}
 		>
-			<nldd-column-board-column
+			<nldd-kanban-column
 				value="nieuw"
 				text="Nieuw"
 			>
 				${card('Aanvraag A-1044', 'Zonnepanelen')}
 				${card('Aanvraag A-1045', 'Spouwmuurisolatie')}
-			</nldd-column-board-column>
-			<nldd-column-board-column
+			</nldd-kanban-column>
+			<nldd-kanban-column
 				value="in-behandeling"
 				text="In behandeling"
 			>
 				${card('Aanvraag A-1042', 'Dakisolatie', 'Team Uitvoering')}
 				${card('Dossier D-318', 'Bezwaar', 'Team Uitvoering')}
 				${card('Dossier D-319', 'Beleidsadvies', 'Team Beleid')}
-			</nldd-column-board-column>
-			<nldd-column-board-column
+			</nldd-kanban-column>
+			<nldd-kanban-column
 				value="afgerond"
 				text="Afgerond"
 			>
 				${card('Aanvraag A-1043', 'Warmtepomp')}
-			</nldd-column-board-column>
-			<nldd-column-board-column
+			</nldd-kanban-column>
+			<nldd-kanban-column
 				value="ingetrokken"
 				text="Ingetrokken"
-			></nldd-column-board-column>
-		</nldd-column-board>
+			></nldd-kanban-column>
+		</nldd-kanban>
 	`,
 	parameters: { controls: { disable: false } },
 };
@@ -150,12 +150,12 @@ export const Standaard = {
 export const MetEigenKop = {
 	name: 'Met eigen kop en voet',
 	render: () => html`
-		<nldd-column-board
+		<nldd-kanban
 			accessible-label="Dossiers"
 			@nldd-move=${onMove}
 		>
 			${[['uitvoering', 'Team Uitvoering', 'Dossier D-318'], ['beleid', 'Team Beleid', 'Dossier D-319']].map(([value, text, item]) => html`
-				<nldd-column-board-column
+				<nldd-kanban-column
 					value=${value}
 					text=${text}
 				>
@@ -186,9 +186,9 @@ export const MetEigenKop = {
 						width="full"
 						horizontal-alignment="left"
 					></nldd-button>
-				</nldd-column-board-column>
+				</nldd-kanban-column>
 			`)}
-		</nldd-column-board>
+		</nldd-kanban>
 	`,
 };
 
@@ -202,12 +202,12 @@ export const MetEigenKop = {
 export const VasteHoogte = {
 	name: 'Vaste hoogte',
 	render: () => html`
-		<nldd-column-board
+		<nldd-kanban
 			height="360px"
 			accessible-label="Aanvragen"
 			@nldd-move=${onMove}
 		>
-			<nldd-column-board-column
+			<nldd-kanban-column
 				value="nieuw"
 				text="Nieuw"
 			>
@@ -216,18 +216,18 @@ export const VasteHoogte = {
 				${card('Aanvraag A-1046', 'Vloerisolatie')}
 				${card('Aanvraag A-1047', 'Warmtepomp')}
 				${card('Aanvraag A-1048', 'Zonneboiler')}
-			</nldd-column-board-column>
-			<nldd-column-board-column
+			</nldd-kanban-column>
+			<nldd-kanban-column
 				value="in-behandeling"
 				text="In behandeling"
 			>
 				${card('Aanvraag A-1042', 'Dakisolatie', 'Team Uitvoering')}
-			</nldd-column-board-column>
-			<nldd-column-board-column
+			</nldd-kanban-column>
+			<nldd-kanban-column
 				value="afgerond"
 				text="Afgerond"
-			></nldd-column-board-column>
-		</nldd-column-board>
+			></nldd-kanban-column>
+		</nldd-kanban>
 	`,
 };
 
@@ -245,31 +245,31 @@ export const VasteHoogte = {
 export const ToestandReadonly = {
 	name: 'Toestand readonly',
 	render: () => html`
-		<nldd-column-board
+		<nldd-kanban
 			readonly
 			accessible-label="Aanvragen"
 			@nldd-move=${onMove}
 		>
-			<nldd-column-board-column
+			<nldd-kanban-column
 				value="nieuw"
 				text="Nieuw"
 			>
 				${card('Aanvraag A-1044', 'Zonnepanelen')}
-			</nldd-column-board-column>
-			<nldd-column-board-column
+			</nldd-kanban-column>
+			<nldd-kanban-column
 				value="in-behandeling"
 				text="In behandeling"
 			>
 				${card('Aanvraag A-1042', 'Dakisolatie', 'Team Uitvoering')}
 				${card('Dossier D-318', 'Bezwaar', 'Team Uitvoering')}
-			</nldd-column-board-column>
-			<nldd-column-board-column
+			</nldd-kanban-column>
+			<nldd-kanban-column
 				value="afgerond"
 				text="Afgerond"
 			>
 				${card('Aanvraag A-1043', 'Warmtepomp')}
-			</nldd-column-board-column>
-		</nldd-column-board>
+			</nldd-kanban-column>
+		</nldd-kanban>
 	`,
 };
 
@@ -286,7 +286,7 @@ export const ZonderSlepen = {
 		const move = (event: Event) => {
 			const chosen = event.target as HTMLElement & { value: string };
 			const item = chosen.closest('nldd-card')!;
-			(item.closest('nldd-column-board') as NLDDColumnBoard).moveItem(item, chosen.value);
+			(item.closest('nldd-kanban') as NLDDKanban).moveItem(item, chosen.value);
 		};
 		// Every move, by the menu, by dragging or by the keyboard, marks the
 		// item's new column in its menu.
@@ -336,29 +336,29 @@ export const ZonderSlepen = {
 			</nldd-card>
 		`;
 		return html`
-			<nldd-column-board
+			<nldd-kanban
 				accessible-label="Aanvragen"
 				@nldd-move=${moved}
 			>
-				<nldd-column-board-column
+				<nldd-kanban-column
 					value="nieuw"
 					text="Nieuw"
 				>
 					${movable('Aanvraag A-1044', 'Zonnepanelen', 'nieuw')}
-				</nldd-column-board-column>
-				<nldd-column-board-column
+				</nldd-kanban-column>
+				<nldd-kanban-column
 					value="in-behandeling"
 					text="In behandeling"
 				>
 					${movable('Aanvraag A-1042', 'Dakisolatie', 'in-behandeling')}
-				</nldd-column-board-column>
-				<nldd-column-board-column
+				</nldd-kanban-column>
+				<nldd-kanban-column
 					value="afgerond"
 					text="Afgerond"
 				>
 					${movable('Aanvraag A-1043', 'Warmtepomp', 'afgerond')}
-				</nldd-column-board-column>
-			</nldd-column-board>
+				</nldd-kanban-column>
+			</nldd-kanban>
 		`;
 	},
 };

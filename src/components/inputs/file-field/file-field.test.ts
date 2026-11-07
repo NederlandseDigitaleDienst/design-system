@@ -728,3 +728,26 @@ describe('nldd-file-field – variant="area"', () => {
 		expect(el.getBoundingClientRect().height).toBe(empty);
 	});
 });
+
+describe('nldd-file-field – required and disabled', () => {
+	let form: HTMLFormElement;
+
+	afterEach(() => cleanup(form));
+
+	// The disabled inner input still reports valueMissing, with an empty message:
+	// setValidity throws on that pair unless the field leaves it out.
+	it('renders without an error and does not block its form', async () => {
+		const errors: string[] = [];
+		const onError = (event: ErrorEvent) => {
+			errors.push(event.message);
+			event.preventDefault();
+		};
+		window.addEventListener('error', onError);
+		form = await fixture<HTMLFormElement>('<form><nldd-file-field name="f" label="Bijlage" required disabled></nldd-file-field></form>');
+		const field = form.querySelector<NLDDFileField>('nldd-file-field')!;
+		await waitForUpdate(field);
+		window.removeEventListener('error', onError);
+		expect(errors).toEqual([]);
+		expect(form.checkValidity()).toBe(true);
+	});
+});

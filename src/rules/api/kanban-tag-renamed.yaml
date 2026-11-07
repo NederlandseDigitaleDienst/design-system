@@ -1,0 +1,9 @@
+severity: error
+aliases: ['column-board-tag-renamed']
+context: 'nldd-task-board, nldd-column-board'
+removed: ['nldd-task-board', 'nldd-column-board']
+fix: { tag: nldd-kanban }
+message: 'This board is now `nldd-kanban`. Rename the tag, its import and its class, here and on every page.'
+examples:
+  passed: ['<nldd-kanban></nldd-kanban>']
+  failed: ['<nldd-column-board></nldd-column-board>', '<nldd-task-board></nldd-task-board>']

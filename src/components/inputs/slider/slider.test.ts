@@ -327,6 +327,27 @@ describe('nldd-slider', () => {
 			expect([el._start, el._end]).toEqual([60, 60]);
 		});
 
+		it('moves focus to the other thumb without a focus ring while it is dragged', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+			const [start, end] = inputs(el);
+			const focus = vi.spyOn(end, 'focus');
+			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+			start.focus();
+			slide(start, 70, false);
+			expect(focus).toHaveBeenCalledWith({ focusVisible: false });
+			window.dispatchEvent(new PointerEvent('pointerup'));
+		});
+
+		it('keeps the focus ring when a key takes a thumb past the other one', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range start-value="50" end-value="50"></nldd-slider>');
+			const [start, end] = inputs(el);
+			const focus = vi.spyOn(end, 'focus');
+			start.focus();
+			start.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+			slide(start, 51);
+			expect(focus).toHaveBeenCalledWith(undefined);
+		});
+
 		it('fires both ends in its events, and submits both under name', async () => {
 			const form = document.createElement('form');
 			document.body.append(form);

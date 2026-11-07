@@ -1,5 +1,5 @@
 /**
- * One column of an `nldd-column-board`: a header and the items under it. The items
+ * One column of an `nldd-kanban`: a header and the items under it. The items
  * are whatever you put in the column, usually an `nldd-card` each; the board
  * moves them between columns.
  *
@@ -12,7 +12,7 @@
  * The column scrolls on its own once its items do not fit the height of the
  * board, and fades at the top or the bottom while there is more to scroll to.
  *
- * @element nldd-column-board-column
+ * @element nldd-kanban-column
  * @attr {string} text - The column's name, shown in the header and used as its accessible name
  * @attr {string} accessible-label - Accessible name in place of `text`, for a column whose header comes from the slot
  * @attr {string} value - What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn`
@@ -25,12 +25,12 @@ import { LitElement, type PropertyValues } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
-import { columnBoardColumnStyles } from './column-board.styles.js';
-import { columnBoardColumnTemplate } from './column-board-column.template.js';
+import { kanbanColumnStyles } from './kanban.styles.js';
+import { kanbanColumnTemplate } from './kanban-column.template.js';
 
-@customElement('nldd-column-board-column')
-export class NLDDColumnBoardColumn extends LitElement {
-	static override styles = columnBoardColumnStyles;
+@customElement('nldd-kanban-column')
+export class NLDDKanbanColumn extends LitElement {
+	static override styles = kanbanColumnStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	text = '';
@@ -66,12 +66,12 @@ export class NLDDColumnBoardColumn extends LitElement {
 	@state() _canScrollUp = false;
 	@state() _canScrollDown = false;
 
-	@query('.column-board-column__main')
+	@query('.kanban-column__main')
 	private _mainElement!: HTMLElement;
 
 	private _resizeObserver: ResizeObserver | null = null;
 
-	@query('.column-board-column__drop-indicator')
+	@query('.kanban-column__drop-indicator')
 	private _indicator!: HTMLElement;
 
 	/** The column's name: what a screen reader hears for it. */
@@ -110,7 +110,7 @@ export class NLDDColumnBoardColumn extends LitElement {
 		this._resizeObserver.disconnect();
 		this._resizeObserver.observe(this._mainElement);
 		for (const item of this.items) this._resizeObserver.observe(item);
-		const footer = this.shadowRoot?.querySelector('.column-board-column__footer');
+		const footer = this.shadowRoot?.querySelector('.kanban-column__footer');
 		if (footer) this._resizeObserver.observe(footer);
 	}
 
@@ -146,14 +146,14 @@ export class NLDDColumnBoardColumn extends LitElement {
 	/** Lays the placeholder over the empty place of the dragged item. */
 	private _placePlaceholder(): void {
 		const item = this._placeholder;
-		const placeholder = this.shadowRoot?.querySelector<HTMLElement>('.column-board-column__placeholder');
+		const placeholder = this.shadowRoot?.querySelector<HTMLElement>('.kanban-column__placeholder');
 		if (!item || !placeholder) return;
 		const main = this._mainElement.getBoundingClientRect();
 		const rect = item.getBoundingClientRect();
-		placeholder.style.setProperty('--_column-board-column-placeholder-top', `${rect.top - main.top + this._mainElement.scrollTop}px`);
-		placeholder.style.setProperty('--_column-board-column-placeholder-left', `${rect.left - main.left + this._mainElement.scrollLeft}px`);
-		placeholder.style.setProperty('--_column-board-column-placeholder-width', `${rect.width}px`);
-		placeholder.style.setProperty('--_column-board-column-placeholder-height', `${rect.height}px`);
+		placeholder.style.setProperty('--_kanban-column-placeholder-top', `${rect.top - main.top + this._mainElement.scrollTop}px`);
+		placeholder.style.setProperty('--_kanban-column-placeholder-left', `${rect.left - main.left + this._mainElement.scrollLeft}px`);
+		placeholder.style.setProperty('--_kanban-column-placeholder-width', `${rect.width}px`);
+		placeholder.style.setProperty('--_kanban-column-placeholder-height', `${rect.height}px`);
 	}
 
 	/** Puts the line between the items where a dropped item would land. */
@@ -168,16 +168,16 @@ export class NLDDColumnBoardColumn extends LitElement {
 		if (before) top = before.getBoundingClientRect().top - gap / 2;
 		else if (after) top = after.getBoundingClientRect().bottom + gap / 2;
 		else top = main.top + parseFloat(getComputedStyle(this._mainElement).paddingTop);
-		this._indicator.style.setProperty('--_column-board-column-indicator-top', `${top - main.top + this._mainElement.scrollTop}px`);
+		this._indicator.style.setProperty('--_kanban-column-indicator-top', `${top - main.top + this._mainElement.scrollTop}px`);
 	}
 
 	override render() {
-		return columnBoardColumnTemplate(this);
+		return kanbanColumnTemplate(this);
 	}
 }
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'nldd-column-board-column': NLDDColumnBoardColumn;
+		'nldd-kanban-column': NLDDKanbanColumn;
 	}
 }

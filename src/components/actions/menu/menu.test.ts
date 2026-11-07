@@ -2253,9 +2253,30 @@ describe('nldd-menu close-on-resize', () => {
 		await waitForUpdate(menu);
 		expect(menu.matches(':popover-open')).toBe(true);
 
+		const width = vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(window.innerWidth + 100);
 		window.dispatchEvent(new Event('resize'));
 		await waitForUpdate(menu);
+		width.mockRestore();
 		expect(menu.matches(':popover-open')).toBe(false);
+
+		cleanup(menu);
+	});
+
+	it('stays open when only the height changes, as when a phone hides its address bar', async () => {
+		const menu = await fixture<HTMLElement>(`
+			<nldd-menu>
+				<nldd-menu-item text="A"></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await waitForUpdate(menu);
+		(menu as HTMLElement & { showPopover: () => void }).showPopover();
+		await waitForUpdate(menu);
+
+		const height = vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(window.innerHeight + 80);
+		window.dispatchEvent(new Event('resize'));
+		await waitForUpdate(menu);
+		height.mockRestore();
+		expect(menu.matches(':popover-open')).toBe(true);
 
 		cleanup(menu);
 	});
@@ -2276,6 +2297,37 @@ describe('nldd-menu close-on-resize', () => {
 		expect(menu.matches(':popover-open')).toBe(false);
 
 		cleanup(menu);
+	});
+});
+
+describe('nldd-menu in the popup slot of its control', () => {
+	it('opens on the first tap after a scroll inside the menu closed it', async () => {
+		// A scroll that starts on an item has a pointerdown inside the menu
+		// (and so inside the button that slots it) but no click.
+		const button = await fixture<HTMLElement>(`
+			<nldd-button text="Acties">
+				<nldd-menu slot="popup">
+					<nldd-menu-item text="A"></nldd-menu-item>
+					<nldd-menu-item text="B"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-button>
+		`);
+		const menu = button.querySelector('nldd-menu') as HTMLElement & { showPopover(): void; hidePopover(): void };
+		const inner = getButton(button);
+		menu.showPopover();
+		await waitForUpdate(menu);
+
+		const item = menu.querySelector('nldd-menu-item') as HTMLElement;
+		item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, pointerType: 'touch' }));
+		menu.hidePopover();
+		await waitForUpdate(menu);
+
+		inner.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, pointerType: 'touch' }));
+		inner.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
+		await waitForUpdate(menu);
+		expect(menu.matches(':popover-open')).toBe(true);
+
+		cleanup(button);
 	});
 });
 

@@ -53,6 +53,16 @@ function isTime(value: string): boolean {
 	return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
 }
 
+/** A CSS time (`200ms`, `0.2s`) in milliseconds; 0 for anything else. */
+function toMs(time: string): number {
+	const value = parseFloat(time);
+	if (Number.isNaN(value)) return 0;
+	return time.trim().endsWith('ms') ? value : time.trim().endsWith('s') ? value * 1000 : 0;
+}
+
+/** What ends a glide: the user scrolling the column themselves. */
+const GLIDE_INTERRUPTIONS = ['wheel', 'touchstart', 'pointerdown'] as const;
+
 @customElement('nldd-time-picker')
 export class NLDDTimePicker extends DescribedBy(LitElement) {
 
@@ -200,6 +210,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			if (!slots.includes(next)) return;
 		}
 		const changed = fromMinutes(next) !== this.value;
+		this._chosenHere = changed;
 		this.value = fromMinutes(next);
 		if (changed) this._emit('input');
 		// change is the confirmation, not the change: a field showing the picker in
@@ -277,6 +288,8 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	private _scrollingSelf = false;
 	private _scrollTimers: Record<'hours' | 'minutes', number> = { hours: 0, minutes: 0 };
 	private _selfScrollTimer = 0;
+	/** The value was just picked in the picker itself, so it glides to the middle. */
+	private _chosenHere = false;
 
 	/**
 	 * Focus lands on the hour, the way nldd-date-picker focuses a day. The host
@@ -296,6 +309,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		clearTimeout(this._scrollTimers.hours);
 		clearTimeout(this._scrollTimers.minutes);
 		clearTimeout(this._selfScrollTimer);
+		for (const column of [...this._glides.keys()]) this._stopGlide(column);
 		super.disconnectedCallback();
 	}
 
@@ -306,7 +320,12 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	 * enough not to pick halfway through a swipe.
 	 */
 	public _handleScroll(e: Event, column: 'hours' | 'minutes'): void {
-		if (this._scrollingSelf) return;
+		if (this._scrollingSelf) {
+			// A smooth scroll takes longer than the timer set at its start, so
+			// every frame of it moves the end further on.
+			this._releaseSelfScroll();
+			return;
+		}
 		// Clearing the timers on disconnect is not enough on its own: a scroll event
 		// the browser had already queued still arrives afterwards and would set a
 		// fresh one on an element that is no longer in the document.
@@ -356,8 +375,9 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	 * does nothing. The field therefore calls this as soon as the popover
 	 * opens.
 	 */
-	public scrollSelectedIntoView(): void {
+	public scrollSelectedIntoView(smooth = false): void {
 		this._scrollingSelf = true;
+		const glide = smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 		for (const name of ['hours', 'minutes'] as const) {
 			const column = this.shadowRoot?.querySelector<HTMLElement>(`[data-column="${name}"]`);
 			const option = column?.querySelector<HTMLElement>('[data-selected]');
@@ -366,10 +386,61 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			// the snap points and with every scrollable ancestor, and does so
 			// differently per browser. This is the exact inverse of _centeredOption, so
 			// what we put down is also what we read back later.
-			column.scrollTop = option.offsetTop + option.offsetHeight / 2 - column.clientHeight / 2;
+			const top = option.offsetTop + option.offsetHeight / 2 - column.clientHeight / 2;
+			if (glide) this._glide(column, top);
+			else {
+				this._stopGlide(column);
+				column.scrollTop = top;
+			}
 		}
-		// A little longer than the debounce above, so the scroll events from this
-		// movement have all been ignored before we listen again.
+		this._releaseSelfScroll();
+	}
+
+	private _glides = new Map<HTMLElement, number>();
+
+	/**
+	 * Scroll to `top` ourselves, because `behavior: 'smooth'` lets the browser
+	 * pick the duration and it is too quick to follow. Ease-out over
+	 * `--_time-picker-glide-duration`.
+	 */
+	private _glide(column: HTMLElement, top: number): void {
+		this._stopGlide(column);
+		const from = column.scrollTop;
+		const distance = top - from;
+		if (Math.abs(distance) < 1) return;
+		const duration = toMs(getComputedStyle(this).getPropertyValue('--_time-picker-glide-duration'));
+		const start = performance.now();
+		column.toggleAttribute('data-gliding', true);
+		for (const type of GLIDE_INTERRUPTIONS) column.addEventListener(type, this._interruptGlide, { passive: true });
+		const step = (now: number): void => {
+			const t = duration > 0 ? Math.min(1, (now - start) / duration) : 1;
+			column.scrollTop = from + distance * (1 - (1 - t) ** 3);
+			if (t < 1) this._glides.set(column, requestAnimationFrame(step));
+			else this._stopGlide(column);
+		};
+		this._glides.set(column, requestAnimationFrame(step));
+	}
+
+	private _stopGlide(column: HTMLElement): void {
+		cancelAnimationFrame(this._glides.get(column) ?? 0);
+		this._glides.delete(column);
+		column.removeAttribute('data-gliding');
+		for (const type of GLIDE_INTERRUPTIONS) column.removeEventListener(type, this._interruptGlide);
+	}
+
+	/** A wheel or a touch during the glide is the user taking over: the glides
+	 *  stop where they are, and their scrolling chooses again. */
+	private _interruptGlide = (): void => {
+		// Both columns, or the other one's glide would pass for the user's scrolling.
+		for (const column of [...this._glides.keys()]) this._stopGlide(column);
+		clearTimeout(this._selfScrollTimer);
+		this._scrollingSelf = false;
+	};
+
+	/** Listen to scrolling again once our own has been still a little longer than
+	 *  the debounce above, so all its scroll events have been ignored. */
+	private _releaseSelfScroll(): void {
+		clearTimeout(this._selfScrollTimer);
 		this._selfScrollTimer = window.setTimeout(() => { this._scrollingSelf = false; }, 200);
 	}
 
@@ -391,7 +462,8 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			// The selection follows the value again: it was just set from outside or
 			// recorded, and in both cases it lines up with the middle.
 			this._scrolledTo = { hours: null, minutes: null };
-			this.scrollSelectedIntoView();
+			this.scrollSelectedIntoView(this._chosenHere);
+			this._chosenHere = false;
 		}
 	}
 

@@ -45,6 +45,10 @@ export const stepBarStyles = css`
 		--_step-bar-compact-bar-corner-radius: var(--primitives-corner-radius-full);
 		--_step-bar-track-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
 		--_step-bar-compact-bar-height: var(--primitives-space-6);
+		--_step-bar-compact-bar-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+		--_step-bar-compact-bar-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
+		--_step-bar-compact-bar-progress-border-color: var(--semantics-steps-progress-highlight-border-color);
+		--_step-bar-compact-bar-border-width: var(--primitives-border-width-thin);
 		--_step-bar-progress-color: var(--semantics-steps-progress-color);
 		--_step-bar-item-gap: var(--primitives-space-4);
 		--_step-bar-marker-size: var(--primitives-space-24);
@@ -112,11 +116,13 @@ export const stepBarStyles = css`
 	.step-bar__compact-bar-segment {
 		flex: 1;
 		border-radius: var(--_step-bar-compact-bar-corner-radius);
-		background-color: var(--_step-bar-track-color);
+		box-shadow: inset 0 0 0 var(--_step-bar-compact-bar-border-width) var(--_step-bar-compact-bar-border-color);
+		background-color: var(--_step-bar-compact-bar-background-color);
 		height: var(--_step-bar-compact-bar-height);
 	}
 
 	.step-bar__compact-bar-segment[data-filled] {
+		--_step-bar-compact-bar-border-color: var(--_step-bar-compact-bar-progress-border-color);
 		background-color: var(--_step-bar-progress-color);
 	}
 
