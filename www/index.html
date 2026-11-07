@@ -821,7 +821,10 @@
 			></nldd-button>
 		</nldd-simple-section>
 
-		<nldd-one-half-one-half-section vertical-alignment="center">
+		<nldd-one-half-one-half-section
+			background="accent-tinted"
+			vertical-alignment="center"
+		>
 			<nldd-title
 				slot="left"
 				size="2"
@@ -833,7 +836,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="left">
-				<p>Niet elk team heeft een designer. Met de skills kent je assistent elk component, elk patroon en de ontwerprichtlijnen. En wat hij leert, klopt.</p>
+				<p>Niet elk team heeft een designer. Met de skills kent je assistent elk component, elk patroon en de ontwerprichtlijnen. Wat hij leert, klopt. En gaat er toch iets mis, dan ziet hij het meteen.</p>
 			</nldd-rich-text>
 			<nldd-spacer
 				slot="left"
@@ -884,7 +887,7 @@
 			></nldd-spacer>
 			<nldd-button
 				slot="left"
-				appearance="secondary"
+				appearance="primary"
 				text="Installeer de skills"
 				href="https://github.com/NederlandseDigitaleDienst/design-system#plugin-voor-ai-assistenten"
 			></nldd-button>
@@ -893,7 +896,7 @@
 					<nldd-text
 						size="sm"
 						color="secondary"
-					>Je assistent schrijft een verwijderknop. nldd lint ziet direct wat er mist:</nldd-text>
+					>Je assistent vergeet de naam van een verwijderknop. De plugin draait meteen nldd lint:</nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-code-viewer
 						appearance="box-tinted"
@@ -906,7 +909,7 @@ otherwise it has no accessible name.</nldd-code-viewer>
 					<nldd-text
 						size="sm"
 						color="secondary"
-					>Je assistent herstelt het zelf:</nldd-text>
+					>Hij herstelt het zelf:</nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-code-viewer
 						appearance="box-tinted"
@@ -924,28 +927,6 @@ otherwise it has no accessible name.</nldd-code-viewer>
 					></nldd-inline-dialog>
 				</nldd-container>
 			</nldd-card>
-		</nldd-one-half-one-half-section>
-
-		<nldd-one-half-one-half-section background="tinted">
-			<nldd-title
-				slot="header"
-				size="2"
-				text="Eén techniek die elke browser kent"
-				heading-level="2"
-			></nldd-title>
-			<nldd-rich-text slot="left">
-				<p>De componenten zijn web components: gewone HTML-elementen die de browser zelf begrijpt. Daarom werken ze in Angular, React en Vue, en net zo goed zonder framework. Jij kiest, het designsysteem past zich aan.</p>
-				<p>De API is zo eenvoudig dat je als designer zelf in de front-end aan de slag kunt. Er is ruimte waar je die nodig hebt, en vaste afspraken waar eenheid telt. Die afspraken zijn ook de guardrails voor een AI-assistent: die weet wat kan en wat niet.</p>
-			</nldd-rich-text>
-			<nldd-code-viewer
-				slot="right"
-				language="html"
-				appearance="box-tinted"
-				wrap
-			>&lt;nldd-button
-  appearance="primary"
-  text="Meld je aan"
-&gt;&lt;/nldd-button&gt;</nldd-code-viewer>
 		</nldd-one-half-one-half-section>
 
 		<nldd-simple-section>
@@ -1217,9 +1198,30 @@ otherwise it has no accessible name.</nldd-code-viewer>
 			></nldd-button>
 		</nldd-simple-section>
 
+		<nldd-one-half-one-half-section background="tinted">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Eén techniek die elke browser kent"
+				heading-level="2"
+			></nldd-title>
+			<nldd-rich-text slot="left">
+				<p>De componenten zijn web components: gewone HTML-elementen die de browser zelf begrijpt. Daarom werken ze in Angular, React en Vue, en net zo goed zonder framework. Jij kiest, het designsysteem past zich aan.</p>
+				<p>De API is zo eenvoudig dat je als designer zelf in de front-end aan de slag kunt. Er is ruimte waar je die nodig hebt, en vaste afspraken waar eenheid telt.</p>
+			</nldd-rich-text>
+			<nldd-code-viewer
+				slot="right"
+				language="html"
+				appearance="box-tinted"
+				wrap
+			>&lt;nldd-button
+  appearance="primary"
+  text="Meld je aan"
+&gt;&lt;/nldd-button&gt;</nldd-code-viewer>
+		</nldd-one-half-one-half-section>
+
 		<nldd-simple-section
 			id="aan-de-slag"
-			background="tinted"
 		>
 			<nldd-title
 				slot="header"
