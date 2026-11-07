@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.18.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.17.1...v0.18.0) (2026-11-07)
+
 ### Highlights
 
 - **`nldd-column-board` is now `nldd-kanban`.** Kanban (看板) is Japanese for a signboard: *kan* means to look, *ban* a board. From the 1950s Toyota used kanban cards in its factories to show when a step needed new parts, and software teams took the word over for a board of columns you take in at a glance. It is the name most people already know for a board like this. `nldd lint --fix` renames it. See Breaking.
