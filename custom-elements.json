@@ -15623,7 +15623,7 @@
           "events": [
             {
               "name": "input",
-              "description": "When the value changes (typing, +/- button, or on-commit correction); detail: { value: number | null }, null when the field is empty"
+              "description": "When the value changes (typing, +/- button, or on-commit correction); not for typing that reads as the same number, such as `1.0` after `1`. detail: { value: number | null }, null when the field is empty"
             },
             {
               "name": "change",

@@ -32,8 +32,8 @@ export function numberFieldTemplate(component: NLDDNumberField): TemplateResult 
 				inputmode=${Number.isInteger(component.step) ? 'numeric' : 'decimal'}
 				aria-label=${component.accessibleLabel || nothing}
 				.value=${empty ? '' : String(value)}
-				min=${component.min}
-				max=${component.max}
+				min=${Number.isFinite(component.min) ? component.min : nothing}
+				max=${Number.isFinite(component.max) ? component.max : nothing}
 				step=${component.step}
 				?disabled=${component.disabled}
 				?required=${component.required}

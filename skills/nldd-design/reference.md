@@ -1383,7 +1383,7 @@ A numeric input field with decrement and increment buttons.
 
 | Event | Description |
 | --- | --- |
-| `input` | When the value changes (typing, +/- button, or on-commit correction); detail: { value: number \| null }, null when the field is empty |
+| `input` | When the value changes (typing, +/- button, or on-commit correction); not for typing that reads as the same number, such as `1.0` after `1`. detail: { value: number \| null }, null when the field is empty |
 | `change` | When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field, or text that is no number (such as `-` or `1e`), commits as empty: null. From empty, + and - start at 0, or at the nearer end of the range when 0 lies outside it. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number \| null } |
 
 ### `<nldd-one-time-code-field>`
