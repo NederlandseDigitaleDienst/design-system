@@ -29,7 +29,6 @@ export const queryBreakpoints = {
  */
 export const splitSectionBreakpoints = {
 	stackedMax: '50rem',
-	besideMin: '50.0625rem',
 } as const;
 
 /**

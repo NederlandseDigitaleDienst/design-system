@@ -113,7 +113,9 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  Typing already moves `value`, so comparing with that would leave a typed
 	 *  number without its `change`. */
 	private _committed: number | null = null;
-	private _typing = false;
+	/** What typing last put in `value`, until it is committed. Any other value
+	 *  that arrives in the meantime comes from outside and counts as committed. */
+	private _typed: number | null | undefined = undefined;
 
 	override firstUpdated(): void {
 		this._initialValue = this.value === null ? null : this._clamp(this.value);
@@ -131,7 +133,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 			}
 		}
 		if (changedProperties.has('value')) {
-			if (!this._typing) this._committed = this.value;
+			if (this.value !== this._typed) this._committed = this.value;
 			this.commitFormValue();
 		}
 	}
@@ -189,7 +191,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 		const parsed = input.value === '' && !input.validity.badInput ? null : parseFloat(input.value);
 		if (parsed !== null && isNaN(parsed)) return;
 		if (parsed === this.value) return;
-		this._typing = true;
+		this._typed = parsed;
 		this.value = parsed;
 		this.commitFormValue();
 		this.dispatchEvent(new CustomEvent('input', {
@@ -213,7 +215,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 		const changed = clampedValue !== this._committed;
 		this.value = clampedValue;
 		this._committed = clampedValue;
-		this._typing = false;
+		this._typed = undefined;
 		// Force the input DOM to match the committed value — Lit's property binding
 		// may not re-sync when the user typed an out-of-range value that parses to
 		// the same number after clamping, or text that is no number.

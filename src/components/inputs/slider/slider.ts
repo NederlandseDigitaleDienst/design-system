@@ -449,7 +449,9 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Under a pointer the focus that moves to the other thumb is no keyboard
 	 *  focus, so it draws no ring: Safari would draw one for a focus from script,
-	 *  also in the middle of a touch. */
+	 *  also in the middle of a touch. Safari (from 18.4) and Firefox read the
+	 *  option; Chromium ignores it and decides the ring itself, which it already
+	 *  leaves off here. */
 	private _focusThumb(thumb: 'start' | 'end', pointer = false): void {
 		const input = this.shadowRoot?.querySelector<HTMLInputElement>(`.slider__input--${thumb}`);
 		input?.focus(pointer ? ({ focusVisible: false } as FocusOptions) : undefined);

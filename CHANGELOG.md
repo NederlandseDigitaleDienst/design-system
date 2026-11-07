@@ -11,11 +11,11 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **`nldd-column-board` is now `nldd-kanban`,** the name most people already know for a board like this. `nldd lint --fix` renames it. See Breaking.
+- **`nldd-column-board` is now `nldd-kanban`.** Kanban (看板) is Japanese for a signboard: *kan* means to look, *ban* a board. From the 1950s Toyota used kanban cards in its factories to show when a step needed new parts, and software teams took the word over for a board of columns you take in at a glance. It is the name most people already know for a board like this. `nldd lint --fix` renames it. See Breaking.
 
 ### Breaking
 
-- **`nldd-column-board` and `nldd-column-board-column` are now `nldd-kanban` and `nldd-kanban-column`,** with the import path `@nldd/design-system/kanban`, the classes `NLDDKanban` and `NLDDKanbanColumn` and the translation keys `components.kanban.*`. Kanban is Japanese for a visible board, so the name already fits a board whose columns are a team or a phase, and it is a term people know. There is no alias; `nldd lint --fix` renames the tags, imports and classes, also from the older `nldd-task-board`.
+- **`nldd-column-board` and `nldd-column-board-column` are now `nldd-kanban` and `nldd-kanban-column`,** with the import path `@nldd/design-system/kanban`, the classes `NLDDKanban` and `NLDDKanbanColumn` and the translation keys `components.kanban.*`. The name fits a board whose columns are a team or a phase, not only tasks. There is no alias; `nldd lint --fix` renames the tags, imports and classes, also from the older `nldd-task-board`.
 - **`nldd-number-field` can be empty, and starts empty without a `value`.** It used to start at 0, so an optional field with `min="1"` that nobody touched made the form invalid, and an emptied field jumped back to its last number. Empty is now no answer: it submits an empty string, `min` and `max` judge only a number that was filled in, and the new `required` asks for a value. `value` and `detail.value` of `input` and `change` are `null` when the field is empty, so code that reads them as a number has to handle that. Give a field that should start at a number its `value`. From empty, + and - start at `min`, or at 0 when that lies within the range.
 
 ### Changed

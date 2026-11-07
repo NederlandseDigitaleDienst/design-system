@@ -6,7 +6,6 @@ const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 const mdMax = unsafeCSS(queryBreakpoints.mdMax);
 const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 const stackedMax = unsafeCSS(splitSectionBreakpoints.stackedMax);
-const besideMin = unsafeCSS(splitSectionBreakpoints.besideMin);
 
 export const oneHalfOneHalfSectionStyles = css`
 	:host {
@@ -131,13 +130,13 @@ export const oneHalfOneHalfSectionStyles = css`
 	}
 
 	:host([vertical-alignment="center"]) .one-half-one-half-section__columns {
-		@container (min-width: ${besideMin}) {
+		@container (width > ${stackedMax}) {
 			align-items: center;
 		}
 	}
 
 	:host([vertical-alignment="bottom"]) .one-half-one-half-section__columns {
-		@container (min-width: ${besideMin}) {
+		@container (width > ${stackedMax}) {
 			align-items: flex-end;
 		}
 	}
