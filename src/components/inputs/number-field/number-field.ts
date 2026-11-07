@@ -205,6 +205,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleChange(e: Event): void {
 		if (this.disabled) return;
 		const input = e.target as HTMLInputElement;
+		// Text that is no number (badInput) reads as '' here, so it commits as empty.
 		const parsed = parseFloat(input.value);
 		this._commitValue(isNaN(parsed) ? null : parsed, input);
 	}
