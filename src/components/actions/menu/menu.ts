@@ -762,10 +762,18 @@ export class NLDDMenu extends LitElement {
 	 * reflow, repaint a flipped placement, or get stuck mid-flight when
 	 * crossing the cascade ↔ drill-in viewport threshold. The window
 	 * listener is wired only while we're open and torn down on close, so
-	 * idle menus pay nothing. */
+	 * idle menus pay nothing.
+	 *
+	 * Only a change in width counts. On a phone a scroll collapses the
+	 * browser's address bar, which resizes the window in height alone; a menu
+	 * that closed on that would close under the finger scrolling it. */
 	private _handleWindowResize = (): void => {
+		if (window.innerWidth === this._openWindowWidth) return;
 		this._collapseChain();
 	};
+
+	/** The window width when the menu opened, see `_handleWindowResize`. */
+	private _openWindowWidth = 0;
 
 	/**
 	 * Collapse the entire menu chain at once — root + every open submenu —
@@ -826,7 +834,11 @@ export class NLDDMenu extends LitElement {
 		// Drill-in submenus take a different path further down.
 		if (!this._isSubmenu) {
 			const anchorEl = this._getAnchorEl();
-			if (anchorEl && event.composedPath().includes(anchorEl)) {
+			const path = event.composedPath();
+			// A menu in the popup slot of its control has that control in the
+			// path of every press inside it, and a scroll leaves no click to
+			// clear the marker.
+			if (anchorEl && path.includes(anchorEl) && !path.includes(this)) {
 				this._collapsedByPointerGesture = true;
 				return;
 			}
@@ -1566,6 +1578,7 @@ export class NLDDMenu extends LitElement {
 		// Wired only while open so idle menus pay nothing and we don't
 		// accidentally close other menus on the page during a resize or
 		// during an unrelated pointerdown elsewhere.
+		this._openWindowWidth = window.innerWidth;
 		window.addEventListener('resize', this._handleWindowResize, { passive: true });
 		// Capture so we run before the popover light-dismiss algorithm
 		// processes the pointerdown — gives us a chance to redirect the
