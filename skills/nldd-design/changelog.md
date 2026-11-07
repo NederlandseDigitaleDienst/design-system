@@ -26,6 +26,7 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **The website title of `nldd-top-navigation-bar` starts at the left on a narrow screen too,** instead of in the middle under the logo. It then lines up with the content of the page below it, as on md and lg.
+- **The bars of a compact `nldd-step-bar` get the same edge as `nldd-progress-bar`.** A finished step has the darker accent border, a step still to come the light track with its border.
 
 ### Fixed
 
