@@ -428,10 +428,11 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		for (const type of GLIDE_INTERRUPTIONS) column.removeEventListener(type, this._interruptGlide);
 	}
 
-	/** A wheel or a touch during the glide is the user taking over: the glide
-	 *  stops where it is, and their scrolling chooses again. */
-	private _interruptGlide = (event: Event): void => {
-		this._stopGlide(event.currentTarget as HTMLElement);
+	/** A wheel or a touch during the glide is the user taking over: the glides
+	 *  stop where they are, and their scrolling chooses again. */
+	private _interruptGlide = (): void => {
+		// Both columns, or the other one's glide would pass for the user's scrolling.
+		for (const column of [...this._glides.keys()]) this._stopGlide(column);
 		clearTimeout(this._selfScrollTimer);
 		this._scrollingSelf = false;
 	};

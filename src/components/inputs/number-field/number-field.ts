@@ -39,6 +39,19 @@ import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type NumberFieldSize = 'sm' | 'md';
 
+/** A number as a native number input accepts it: no hex, no Infinity. Above
+ *  the class: an element already in the page upgrades while the class is
+ *  defined, before the rest of this module has run. */
+const FLOATING_POINT = /^-?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?$/;
+
+/** An attribute or restored state as a number, or null when it is empty or no number. */
+function emptyOrNumber(value: string | null): number | null {
+	const text = value?.trim() ?? '';
+	if (!FLOATING_POINT.test(text)) return null;
+	const parsed = Number(text);
+	return Number.isFinite(parsed) ? parsed : null;
+}
+
 @customElement('nldd-number-field')
 export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 
@@ -56,7 +69,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	private _initialValue: number | null = null;
 
 	/** The value, or null for an empty field. An empty or unreadable attribute is empty too. */
-	@property({ converter: { fromAttribute: emptyOrNumber, toAttribute: (value: number | null) => value } })
+	@property({ converter: emptyOrNumber })
 	value: number | null = null;
 
 	@property({ type: Number })
@@ -257,17 +270,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	override render() {
 		return numberFieldTemplate(this);
 	}
-}
-
-/** A number as a native number input accepts it: no hex, no Infinity. */
-const FLOATING_POINT = /^-?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?$/;
-
-/** An attribute or restored state as a number, or null when it is empty or no number. */
-function emptyOrNumber(value: string | null): number | null {
-	const text = value?.trim() ?? '';
-	if (!FLOATING_POINT.test(text)) return null;
-	const parsed = Number(text);
-	return Number.isFinite(parsed) ? parsed : null;
 }
 
 declare global {

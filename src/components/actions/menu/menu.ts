@@ -754,6 +754,9 @@ export class NLDDMenu extends LitElement {
 		return this._isOpen;
 	}
 
+	/** The window width when the menu opened, see `_handleWindowResize`. */
+	private _openWindowWidth = 0;
+
 	/** Close the menu on a window resize. Floating-UI's autoUpdate keeps
 	 * the position in sync with scrolls (where users genuinely expect the
 	 * menu to follow the anchor), but a full window resize is a layout-
@@ -772,8 +775,6 @@ export class NLDDMenu extends LitElement {
 		this._collapseChain();
 	};
 
-	/** The window width when the menu opened, see `_handleWindowResize`. */
-	private _openWindowWidth = 0;
 
 	/**
 	 * Collapse the entire menu chain at once — root + every open submenu —
