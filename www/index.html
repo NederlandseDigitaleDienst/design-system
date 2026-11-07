@@ -826,36 +826,43 @@
 			vertical-alignment="center"
 		>
 			<nldd-title
-				slot="left"
+				slot="header"
 				size="2"
 				text="Je AI-assistent bouwt zoals wij ontwerpen"
 				heading-level="2"
 			></nldd-title>
 			<nldd-spacer
-				slot="left"
+				slot="header"
 				size="16"
 			></nldd-spacer>
-			<nldd-rich-text slot="left">
-				<p>Niet elk team heeft een designer. Met de skills kent je assistent elk component, elk patroon en de ontwerprichtlijnen. Wat hij leert, klopt. En gaat er toch iets mis, dan ziet hij het meteen.</p>
+			<nldd-rich-text slot="header">
+				<p>Niet elk team heeft een designer. Met zes skills kent je assistent elk component, elk patroon en de ontwerprichtlijnen. Wat hij leert, klopt: de skills komen uit de code zelf, en elk voorbeeld erin gaat door de linter. En gaat er toch iets mis, dan ziet hij het meteen.</p>
 			</nldd-rich-text>
-			<nldd-spacer
-				slot="left"
-				size="8"
-			></nldd-spacer>
 			<nldd-list
 				slot="left"
 				dividers="never"
-				accessible-label="Zo blijven de skills foutloos"
+				accessible-label="De zes skills"
 			>
 				<nldd-list-item>
 					<nldd-icon-cell
 						size="24"
-						icon="book"
+						icon="pencil-ruler"
 					></nldd-icon-cell>
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
 					<nldd-title-cell
-						text="Uit de code gegenereerd"
-						supporting-text="Elk component, attribuut en icoon, voor de versie die je gebruikt"
+						text="Bouw een applicatie"
+						supporting-text="nldd-design-build, met de patronen en de ontwerprichtlijnen"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="24"
+						icon="git-compare"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Zet een bestaande frontend om"
+						supporting-text="nldd-design-migrate, vanaf Tailwind, NL Design System of eigen CSS"
 					></nldd-title-cell>
 				</nldd-list-item>
 				<nldd-list-item>
@@ -865,19 +872,41 @@
 					></nldd-icon-cell>
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
 					<nldd-title-cell
-						text="Elk voorbeeld door de linter"
-						supporting-text="Wat je assistent overneemt, haalt eerst zelf alle 245 regels"
+						text="Controleer wat er staat"
+						supporting-text="nldd-design-validate, met nldd lint"
 					></nldd-title-cell>
 				</nldd-list-item>
 				<nldd-list-item>
 					<nldd-icon-cell
 						size="24"
-						icon="arrow-clockwise"
+						icon="arrow-up"
 					></nldd-icon-cell>
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
 					<nldd-title-cell
-						text="Na elke bewerking gecontroleerd"
-						supporting-text="De plugin draait nldd lint zodra je assistent een bestand wijzigt"
+						text="Stap over naar een nieuwe versie"
+						supporting-text="nldd-design-upgrade, met het upgradepad uit de changelog"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="24"
+						icon="book"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Zoek een component of icoon op"
+						supporting-text="nldd-design, met elk attribuut, slot en event"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="24"
+						icon="git-pull-request"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Stel een verbetering voor"
+						supporting-text="nldd-design-contribute, als issue op GitHub"
 					></nldd-title-cell>
 				</nldd-list-item>
 			</nldd-list>
