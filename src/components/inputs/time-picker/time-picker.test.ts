@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import type { NLDDTimePicker } from './time-picker.js';
 import './time-picker.js';
 
@@ -90,6 +90,28 @@ describe('nldd-time-picker – kiezen', () => {
 		await waitForUpdate(el);
 		expect(selected(el, 'hours')).toBe('09');
 		expect(selected(el, 'minutes')).toBe('30');
+	});
+
+	// A value clicked above or below the selection glides into it; one set from
+	// outside, such as on opening, stands there at once.
+	it('scrollt een aangeklikte waarde vloeiend naar het midden, een gezette direct', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 200ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		const kolom = column(el, 'hours');
+		const midden = (o: HTMLElement) => o.offsetTop + o.offsetHeight / 2 - kolom.clientHeight / 2;
+		const opties = [...kolom.querySelectorAll<HTMLElement>('.time-picker__list-item')];
+
+		opties[11].click();
+		await waitForUpdate(el);
+		expect(el.value).toBe('11:30');
+		expect(kolom.hasAttribute('data-gliding')).toBe(true);
+		await until(() => !kolom.hasAttribute('data-gliding'), { timeout: 1000 });
+		expect(Math.abs(kolom.scrollTop - midden(opties[11]))).toBeLessThan(1);
+
+		el.value = '14:00';
+		await waitForUpdate(el);
+		expect(kolom.hasAttribute('data-gliding')).toBe(false);
+		expect(Math.abs(kolom.scrollTop - midden(opties[14]))).toBeLessThan(1);
 	});
 
 	// Scrolling changes the value but confirms nothing: a field showing the picker

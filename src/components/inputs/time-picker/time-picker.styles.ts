@@ -11,6 +11,7 @@ export const timePickerStyles = css`
 
 	:host {
 		--_time-picker-control-min-size: var(--semantics-controls-md-min-size);
+		--_time-picker-glide-duration: var(--primitives-transition-duration-medium);
 		--_time-picker-control-corner-radius: var(--semantics-controls-md-corner-radius);
 		--_time-picker-list-item-font: var(--primitives-font-body-md-medium-flat);
 		--_time-picker-list-item-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-150));
@@ -71,6 +72,11 @@ export const timePickerStyles = css`
 		mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
 	}
 
+	/* Snapping would pull each frame of the glide to the nearest value. */
+	.time-picker__list[data-gliding] {
+		scroll-snap-type: none;
+	}
+
 	.time-picker__list::-webkit-scrollbar {
 		display: none;
 	}
@@ -98,6 +104,8 @@ export const timePickerStyles = css`
 		color: var(--semantics-content-color);
 		font: var(--_time-picker-list-item-font);
 		font-variant-numeric: tabular-nums;
+		cursor: default;
+		user-select: none;
 		scroll-snap-align: center;
 	}
 
