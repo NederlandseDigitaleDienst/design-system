@@ -821,7 +821,112 @@
 			></nldd-button>
 		</nldd-simple-section>
 
-		<nldd-one-half-one-half-section>
+		<nldd-one-half-one-half-section vertical-alignment="center">
+			<nldd-title
+				slot="left"
+				size="2"
+				text="Je AI-assistent bouwt zoals wij ontwerpen"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="left"
+				size="16"
+			></nldd-spacer>
+			<nldd-rich-text slot="left">
+				<p>Niet elk team heeft een designer. Met de skills kent je assistent elk component, elk patroon en de ontwerprichtlijnen. En wat hij leert, klopt.</p>
+			</nldd-rich-text>
+			<nldd-spacer
+				slot="left"
+				size="8"
+			></nldd-spacer>
+			<nldd-list
+				slot="left"
+				dividers="never"
+				accessible-label="Zo blijven de skills foutloos"
+			>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="24"
+						icon="book"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Uit de code gegenereerd"
+						supporting-text="Elk component, attribuut en icoon, voor de versie die je gebruikt"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="24"
+						icon="shield-check-mark"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Elk voorbeeld door de linter"
+						supporting-text="Wat je assistent overneemt, haalt eerst zelf alle 245 regels"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="24"
+						icon="arrow-clockwise"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Na elke bewerking gecontroleerd"
+						supporting-text="De plugin draait nldd lint zodra je assistent een bestand wijzigt"
+					></nldd-title-cell>
+				</nldd-list-item>
+			</nldd-list>
+			<nldd-spacer
+				slot="left"
+				size="24"
+			></nldd-spacer>
+			<nldd-button
+				slot="left"
+				appearance="secondary"
+				text="Installeer de skills"
+				href="https://github.com/NederlandseDigitaleDienst/design-system#plugin-voor-ai-assistenten"
+			></nldd-button>
+			<nldd-card slot="right">
+				<nldd-container padding="24">
+					<nldd-text
+						size="sm"
+						color="secondary"
+					>Je assistent schrijft een verwijderknop. nldd lint ziet direct wat er mist:</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-code-viewer
+						appearance="box-tinted"
+						wrap
+						no-copy
+					>error  icon-button-needs-name
+nldd-icon-button needs `text` or `accessible-label`,
+otherwise it has no accessible name.</nldd-code-viewer>
+					<nldd-spacer size="16"></nldd-spacer>
+					<nldd-text
+						size="sm"
+						color="secondary"
+					>Je assistent herstelt het zelf:</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-code-viewer
+						appearance="box-tinted"
+						language="html"
+						diff
+						wrap
+						no-copy
+					>-&lt;nldd-icon-button icon="delete"&gt;&lt;/nldd-icon-button&gt;
++&lt;nldd-icon-button icon="delete" text="Verwijder aanvraag A-1042"&gt;&lt;/nldd-icon-button&gt;</nldd-code-viewer>
+					<nldd-spacer size="16"></nldd-spacer>
+					<nldd-inline-dialog
+						variant="success"
+						text="0 fouten, 0 waarschuwingen"
+						supporting-text="Een schermlezer leest nu voor wat de knop doet."
+					></nldd-inline-dialog>
+				</nldd-container>
+			</nldd-card>
+		</nldd-one-half-one-half-section>
+
+		<nldd-one-half-one-half-section background="tinted">
 			<nldd-title
 				slot="header"
 				size="2"
@@ -843,7 +948,7 @@
 &gt;&lt;/nldd-button&gt;</nldd-code-viewer>
 		</nldd-one-half-one-half-section>
 
-		<nldd-simple-section background="tinted">
+		<nldd-simple-section>
 			<nldd-title
 				slot="header"
 				size="2"
@@ -1110,86 +1215,6 @@
 				text="Bekijk alle iconen"
 				href="https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-iconen--docs"
 			></nldd-button>
-		</nldd-simple-section>
-
-		<nldd-simple-section>
-			<nldd-title
-				slot="header"
-				size="2"
-				text="Het designsysteem is je designer"
-				heading-level="2"
-			></nldd-title>
-			<nldd-spacer
-				slot="header"
-				size="16"
-			></nldd-spacer>
-			<nldd-rich-text slot="header">
-				<p>Niet elk team heeft een designer. Met de skills krijgt je AI-assistent de kennis van het systeem mee: de componenten, de patronen en de regels. Zo ontwerp je in code, en blijft het resultaat toegankelijk en herkenbaar.</p>
-			</nldd-rich-text>
-			<nldd-container
-				layout="grid"
-				sm-gap="16"
-				md-gap="24"
-				lg-gap="24"
-				sm-column-count="1"
-				md-column-count="1"
-				lg-column-count="3"
-			>
-				<nldd-card>
-					<nldd-container padding="16">
-						<nldd-icon
-							icon="sparkles"
-							size="32"
-						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
-						<nldd-title
-							size="4"
-							text="Designer als skill"
-							heading-level="3"
-						></nldd-title>
-						<nldd-spacer size="8"></nldd-spacer>
-						<nldd-rich-text>
-							<p>De <a href="https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-ontwerprichtlijnen--docs">ontwerprichtlijnen</a> en vijftien patronen, van home tot formulier en applicatie. Je assistent bouwt een pagina zoals wij hem zouden ontwerpen.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-				<nldd-card>
-					<nldd-container padding="16">
-						<nldd-icon
-							icon="shield-check-mark"
-							size="32"
-						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
-						<nldd-title
-							size="4"
-							text="Een linter die naar mensen kijkt"
-							heading-level="3"
-						></nldd-title>
-						<nldd-spacer size="8"></nldd-spacer>
-						<nldd-rich-text>
-							<p>De regels gaan over toegankelijkheid, tekst en structuur. Niet over of je code netjes is, maar over of iemand je dienst kan gebruiken.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-				<nldd-card>
-					<nldd-container padding="16">
-						<nldd-icon
-							icon="arrow-clockwise"
-							size="32"
-						></nldd-icon>
-						<nldd-spacer size="12"></nldd-spacer>
-						<nldd-title
-							size="4"
-							text="Kwaliteit die na de lancering blijft"
-							heading-level="3"
-						></nldd-title>
-						<nldd-spacer size="8"></nldd-spacer>
-						<nldd-rich-text>
-							<p>We leren elk jaar meer over welke patronen werken. Binnenkort testen we ook projecten die al live staan, zodat ze die inzichten meekrijgen.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-			</nldd-container>
 		</nldd-simple-section>
 
 		<nldd-simple-section
