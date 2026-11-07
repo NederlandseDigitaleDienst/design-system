@@ -74,10 +74,9 @@ docker run --rm -p 8081:8080 nldd-www   # http://localhost:8081
   `zadctl service config set health-check --target component -c website`.
 - Webadres: formaat `subdomain`, subdomein `design`, basisdomein
   `digitaledienst.overheid.nl`. Die staan op de deployment zelf, gezet bij
-  `zadctl deployment create`; de workflow vervangt alleen het image, want
-  meer mag een token met de rol `Ops CI` niet. Een eigen domein moet per project door het ZAD-team worden
-  goedgekeurd; tot die tijd staat de site op het standaardadres van ZAD en
-  geeft de workflow een waarschuwing.
+  `zadctl deployment create`; de workflow geeft ze niet mee. Het ZAD-team
+  heeft het domein voor dit project goedgekeurd. Staat de site na een uitrol
+  op een ander adres, dan faalt de workflow.
 
 Bekijken wat er draait:
 
@@ -94,7 +93,7 @@ het commando draait. Dat bestand staat in `.gitignore`.
 
 | Naam | Soort | Inhoud |
 | --- | --- | --- |
-| `ZAD_API_KEY` | secret van de environment `productie` | Token van service account `github-actions`, rol `Ops CI` |
+| `ZAD_API_KEY` | secret van de environment `productie` | Token van service account `github-actions`, met een rol die `deployment.write` geeft. `Ops CI` alleen is niet genoeg: de deploy-action maakt de deployment aan of werkt hem bij, en `Ops CI` mag alleen het image vervangen |
 | `ZAD_PREVIEW_API_KEY` | secret van de repository | Token van service account `github-actions-preview`, rol `Developer CI` |
 | `ZAD_PROJECT_ID` | variable | `nd-1i5` |
 
