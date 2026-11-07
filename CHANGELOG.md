@@ -24,6 +24,7 @@ here; consult the commit history if you need that level of detail.
 - **The buttons in an `nldd-banner` are sm,** at either banner size, as in `nldd-notification`. At md they were as large as the buttons of the page and weighed more than the notice itself.
 - **A value you click in `nldd-time-picker` glides into the selection,** instead of jumping there, so you see where it went. It does the same with the arrow keys. A value set from outside, such as on opening, still stands there at once, and with reduced motion every move is immediate.
 - **The values of `nldd-time-picker` show the arrow cursor,** not the text cursor: you click them, you do not select them.
+- **The page sections with two columns stack below a width of 50rem (800px),** all three at the same width. `nldd-one-third-two-thirds-section` and `nldd-two-thirds-one-third-section` stacked at 48rem, where the wide column was under 400px; `nldd-one-half-one-half-section` only did so at 280px per column and jumped back beside each other where the padding shrinks. On one page they now stack together.
 
 ### Fixed
 

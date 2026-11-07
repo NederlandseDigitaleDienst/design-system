@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst One Half One Half Section Component (Lit + TypeScript)
  *
  * A section with two equal columns side by side.
- * The columns wrap automatically when they become smaller than 280px.
+ * The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns.
  * Padding and gap adjust via container queries.
  *
  * @element nldd-one-half-one-half-section

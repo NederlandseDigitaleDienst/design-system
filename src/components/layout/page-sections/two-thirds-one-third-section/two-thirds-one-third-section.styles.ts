@@ -1,10 +1,12 @@
 import { css, unsafeCSS } from 'lit';
-import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
+import { queryBreakpoints, splitSectionBreakpoints } from '../../../../assets/styles/breakpoints.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 const mdMax = unsafeCSS(queryBreakpoints.mdMax);
 const lgMin = unsafeCSS(queryBreakpoints.lgMin);
+const stackedMax = unsafeCSS(splitSectionBreakpoints.stackedMax);
+const besideMin = unsafeCSS(splitSectionBreakpoints.besideMin);
 
 export const twoThirdsOneThirdSectionStyles = css`
 	:host {
@@ -108,11 +110,9 @@ export const twoThirdsOneThirdSectionStyles = css`
 		display: flex;
 		flex-wrap: wrap;
 
-		/* Below ~768px the 2/3 column would shrink under 400px and read as
-		   two near-equal columns; stack to a single column instead. nowrap
-		   stops the column-direction wrap container from stretching the
+		/* nowrap stops the column-direction wrap container from stretching the
 		   shorter column to fill height. */
-		@container (max-width: 48rem) {
+		@container (max-width: ${stackedMax}) {
 			flex-direction: column;
 			flex-wrap: nowrap;
 		}
@@ -131,13 +131,13 @@ export const twoThirdsOneThirdSectionStyles = css`
 	}
 
 	:host([vertical-alignment="center"]) .two-thirds-one-third-section__columns {
-		@container (min-width: 48.0625rem) {
+		@container (min-width: ${besideMin}) {
 			align-items: center;
 		}
 	}
 
 	:host([vertical-alignment="bottom"]) .two-thirds-one-third-section__columns {
-		@container (min-width: 48.0625rem) {
+		@container (min-width: ${besideMin}) {
 			align-items: flex-end;
 		}
 	}

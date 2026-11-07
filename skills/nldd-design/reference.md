@@ -2471,7 +2471,7 @@ A four-column layout with a primary sidebar, secondary sidebar, main content are
 
 ### `<nldd-one-half-one-half-section>`
 
-A section with two equal columns side by side. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.
+A section with two equal columns side by side. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
 
 **Rules** (`nldd lint`)
 
@@ -2509,7 +2509,7 @@ A section with two equal columns side by side. The columns wrap automatically wh
 
 ### `<nldd-one-third-two-thirds-section>`
 
-A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.
+A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
 
 **Rules** (`nldd lint`)
 
@@ -2940,7 +2940,7 @@ A vertical split view with multiple stacked panes. The number of panes is set vi
 
 ### `<nldd-two-thirds-one-third-section>`
 
-A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.
+A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
 
 **Rules** (`nldd lint`)
 
@@ -3504,7 +3504,7 @@ An inline notification with a tinted background per variant. Use for persistent,
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Optional rich content between text and actions (e.g. nldd-rich-text) |
-| `actions` | nldd-button elements, wrapped in a horizontal nldd-button-group |
+| `actions` | nldd-button elements, wrapped in a horizontal nldd-button-group that makes them sm, at either banner size: an action beside a notice should not weigh as much as the buttons of the page. |
 
 **Events**
 

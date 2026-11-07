@@ -28109,6 +28109,12 @@
                   "text": "void"
                 }
               },
+              "parameters": [
+                {
+                  "name": "smooth",
+                  "default": "false"
+                }
+              ],
               "description": "Put the chosen value in the middle of the view. The column is seven values\ntall, so `center` lands it on the fourth row with three above and three\nbelow.\n\nPublic because a hidden element cannot be scrolled: with the picker in a\npopover it has no dimensions yet when the value is set, and scrollIntoView\ndoes nothing. The field therefore calls this as soon as the popover\nopens."
             },
             {
@@ -33319,7 +33325,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A section with two equal columns side by side. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.",
+          "description": "A section with two equal columns side by side. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.",
           "name": "NLDDOneHalfOneHalfSection",
           "members": [
             {
@@ -33838,7 +33844,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.",
+          "description": "A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.",
           "name": "NLDDOneThirdTwoThirdsSection",
           "members": [
             {
@@ -35592,7 +35598,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.",
+          "description": "A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.",
           "name": "NLDDTwoThirdsOneThirdSection",
           "members": [
             {
@@ -44697,7 +44703,7 @@
             },
             {
               "name": "actions",
-              "description": "nldd-button elements, wrapped in a horizontal nldd-button-group"
+              "description": "nldd-button elements, wrapped in a horizontal nldd-button-group that makes them sm, at either banner size: an action beside a notice should not weigh as much as the buttons of the page."
             }
           ]
         }
