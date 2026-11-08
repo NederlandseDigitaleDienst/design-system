@@ -49,7 +49,7 @@ Gooi die vergelijking niet zomaar weg als de oude pagina eruit gaat. Dan meet di
 
 ## Wat je meeneemt zonder het te merken
 
-**Eigen CSS op componenten.** In je vorige systeem was dat misschien normaal. Hier is het een signaal: stuur via attributen, slots en `--components-*`, en schrijf boven elke uitzondering waarom het component het zelf niet kan. Lukt die zin niet, dan is het smaak.
+**Eigen CSS op componenten.** In je vorige systeem was dat misschien normaal. Hier hoort het er aan het eind niet te zijn: stuur via attributen en slots. Kan het component het niet, dan is dat een melding via `nldd-design-contribute`, en staat de omweg tot die tijd in de baseline van de zuiverheidscheck, met de issuelink erboven. Lukt het niet om op te schrijven waarom het component het zelf niet kan, dan is het smaak en gaat de regel weg.
 
 **Sjablonen zonder aanroeper.** Bij een omzetting ontstaan wezen: een bestand dat niemand meer rendert. Bij het opruimen haal je die weg zonder het te merken, wat prima is, maar controleer of er niets omheen hangt.
 

@@ -21,6 +21,14 @@ De naslag die je bij een omzetting het hardst nodig hebt, staat in de skill `nld
 
 Wat je in de componentdocumentatie kunt opzoeken staat hier niet in; wat hier staat heeft in echte migraties tijd gekost.
 
+## Het doel: alles komt uit het systeem
+
+Een migratie is af als de app geen eigen vormgeving meer heeft. Geen stylesheet van jezelf, geen `class` of `className`, geen `style`, geen `div` of `span` die iets opmaakt, geen hexkleur, geen eigen iconenset. Wat er staat, zijn `nldd-*`-componenten met attributen en slots. Dat is geen streven voor later, het is de definitie van klaar, en de zuiverheidscheck hieronder bewaakt hem vanaf de eerste dag.
+
+De reden is praktisch. Elke regel eigen CSS is een plek waar de app niet meebeweegt met het systeem: geen donkere modus, geen thema, geen toegankelijkheidsfix uit de volgende release, en een plek die bij elke upgrade kan breken op een interne variabele. Een app met een "klein eigen CSS-bestand" heeft na een jaar een groot eigen CSS-bestand.
+
+Kan het systeem iets niet wat je nodig hebt, dan is dat een gat in het systeem en geen reden voor eigen CSS. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). In de tussentijd mag er een omweg staan, met de issuelink en de versie erboven, in de baseline van de zuiverheidscheck, zodat hij zichtbaar blijft tot het issue is opgelost.
+
 ## Het uitgangspunt: dit systeem faalt stil
 
 Bijna elke fout die je kunt maken rendert niets, of iets dat er bijna goed uitziet. Zonder typefout en zonder falende test. Een deel schreeuwt wel: veel componenten waarschuwen in de console over een verkeerd samengestelde rij, een ontbrekend label of een icoonnaam die niet bestaat. Die waarschuwingen zitten alleen in een dev-build, dus draai je migratie in dev en houd de console open. Wat er niet in zit, is precies wat hieronder staat.
@@ -45,15 +53,16 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 
 Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die niets anders zag:
 
-1. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
-2. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
-3. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
-4. **Klassencheck.** Elke klasse die de app rendert moet een regel achter zich hebben, én elke regel in je eigen utilities-bestand moet een gebruiker hebben. Beide richtingen.
-5. **Gedragscheck.** De vier hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
+1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een toastbibliotheek, en elk eigen stylesheet. De allowlist bevat alleen wat structureel zo hoort: `form` binnen `nldd-form`, `canvas`, `select` en `option` in `nldd-dropdown`, en inline tekst (`strong`, `em`, `code`, `a`) binnen `nldd-text` en `nldd-rich-text`. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. Een regel in de baseline zonder issuelink is een omweg zonder reden. Klaar is een lege baseline.
+2. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
+3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
+4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
+5. **Klassencheck.** Elke klasse die de app nog rendert moet een regel achter zich hebben, én elke regel in je oude CSS moet een gebruiker hebben. Beide richtingen.
+6. **Gedragscheck.** De vijf hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
 
-Is het doel dat alles uit het systeem komt, dan is er een zesde die de rest goedkoper maakt: een **zuiverheidscheck** die in de JSX weigert wat het systeem al levert. Dus geen `className` of `class`, geen `style`, geen losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), geen hexkleuren, geen eigen iconenset en geen toastbibliotheek. De allowlist blijft klein en elke regel erin heeft een reden: `form` binnen `nldd-form`, `canvas`, `select` en `option` in `nldd-dropdown`, en inline tekstelementen (`strong`, `em`, `code`, `a`) binnen `nldd-text` en `nldd-rich-text`. Met zo'n check hoeft de klassencheck bijna niets meer te doen, want er zijn geen klassen.
+De token- en klassencheck zijn steigers. Ze bewaken de CSS die er tijdens de omzetting nog staat, en verdwijnen samen met het laatste stylesheet. De zuiverheidscheck blijft, want hij houdt de app daarna puur.
 
-Hang de eerste vier in pre-commit **en** in CI. Zorg dat je lokale hook hetzelfde commando draait als CI: een hook op `tsc --noEmit` terwijl CI `tsc -b` draait laat kapotte commits er stelselmatig door.
+Hang de eerste vijf in pre-commit **en** in CI. Zorg dat je lokale hook hetzelfde commando draait als CI: een hook op `tsc --noEmit` terwijl CI `tsc -b` draait laat kapotte commits er stelselmatig door.
 
 Bewijs bij elke check dat die faalt. Zet er een opzettelijke fout in, kijk of die niet-nul afsluit, haal die weg. Een check die alleen ooit slaagt is geen check. Doe dat ook voor elk faalpad apart: een check met twee soorten bevindingen heeft twee uitgangen, en er is er altijd één die je nooit hebt zien afgaan.
 
@@ -61,7 +70,7 @@ Herhaal die proef nadat iemand aan de check zelf heeft gezeten. Een check die ti
 
 ## Meet wat een pagina DOET, niet hoe die eruitziet
 
-De vier checks hierboven vangen code die niet klopt. Ze vangen niet dat een keuzelijst weg is. Een omzetting mag een pagina er anders uit laten zien; wat niet mag is de pagina minder laten **doen**, en juist dat faalt stil. In één migratie verdwenen onderweg een keuzelijst, een knop die een venster opende en de invoervelden van een filter. Geen van drieën gaf een foutmelding.
+De checks hierboven vangen code die niet klopt. Ze vangen niet dat een keuzelijst weg is. Een omzetting mag een pagina er anders uit laten zien; wat niet mag is de pagina minder laten **doen**, en juist dat faalt stil. In één migratie verdwenen onderweg een keuzelijst, een knop die een venster opende en de invoervelden van een filter. Geen van drieën gaf een foutmelding.
 
 Haal daarom uit de gerenderde HTML wat een pagina kan, en leg dat per route vast in een bestand:
 
@@ -111,7 +120,7 @@ Wat je oude stijlsysteem ook was, de regel is dezelfde: een klasse of regel die 
 Daarom controleert de klassencheck uit de vorige sectie beide richtingen:
 
 - **Klassen zonder regel.** De markup noemt iets dat nergens meer gedefinieerd is.
-- **Regels zonder gebruiker.** Je eigen CSS-bestand houdt regels over waarvan de aanroepplek is omgezet. Een bestand dat in zijn kop zegt geen utility-framework te zijn, moet daaraan gehouden worden.
+- **Regels zonder gebruiker.** Je oude CSS houdt regels over waarvan de aanroepplek is omgezet. Haal ze weg in dezelfde commit als de omzetting, niet in een opruimronde later.
 
 Zoek daarbij verder dan het markup-attribuut. Klassen overleven het langst in lookup-tabellen (`Record<Status, string>` in je types-bestand), in ternaries en in template literals: niets daaraan ziet eruit als markup. Scan dus ook `.ts`, niet alleen `.tsx`.
 
@@ -281,10 +290,10 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 ## Een volgorde die werkte
 
 1. Installeren, stylesheet importeren, en componenten registreren per subpad, met een gegenereerde importlijst.
-2. De vier checks bouwen. Van elk bewijzen dat die faalt.
+2. De checks bouwen, de zuiverheidscheck met zijn baseline voorop. Van elk bewijzen dat die faalt.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
 4. De event-, value- en overlay-helpers schrijven, plus getypte JSX-bindings waarin een boolean alleen `true` of afwezig kan zijn.
-5. Vormgeving uit de markup halen als **eigen stap**: inline stijlen en `<style>`-blokken naar klassen, met een afdruk vooraf en achteraf als bewijs dat er niets veranderde. Pas daarna vervangen door componenten. Andersom betaal je het terug: een migratie die de CSS-opruiming als laatste deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten.
+5. Per scherm de vormgeving direct vervangen door componenten, en de CSS van dat scherm in dezelfde commit weghalen. Zet inline stijlen niet eerst om naar klassen: dat verplaatst eigen CSS in plaats van hem weg te halen. Bewaar ook geen opruimronde voor het eind. Een migratie die dat deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten. Wat geen component kan, wordt een issue en een regel in de baseline.
 6. Inventariseren welke globale regels gedrag dragen. Daarna het oude CSS-framework **vroeg** weghalen en repareren wat dat blootlegt.
 7. De app-shell omzetten (layout, navigatie, header), achter een vlag als de navigatie voor iedereen verandert.
 8. Je eigen primitives herimplementeren (Button, Input, Select, Card) met behoud van hun API. Dat converteert de nette aanroepplekken in één klap.
@@ -293,5 +302,6 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 11. Een ronde op visuele hiërarchie, met een reviewer die niets heeft omgezet.
 12. Je eigen workarounds langslopen: welke zijn overbodig geworden.
 13. De commentronde.
+14. Het laatste stylesheet weghalen, de token- en klassencheck mee. De baseline van de zuiverheidscheck is leeg, of bevat alleen regels met een open issue.
 
 Reken erop dat de verhouding rauwe markup je schatting bepaalt. In dit geval stonden 292 rauwe `<button>` tegenover 61 `<Button>`: het herimplementeren van de primitive converteerde een vijfde, de rest was handwerk op de aanroepplek. Tel allebei voordat je iets belooft.

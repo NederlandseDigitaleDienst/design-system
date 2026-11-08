@@ -30,6 +30,12 @@ Kan een component iets niet wat het zou moeten kunnen, of is het kapot, dan is d
 
 Wat je vormgeeft is daarmee geen keuze van deze skill. Wanneer een sticky header mag, hoeveel chroom een scherm verdient, hoe je microcopy schrijft: dat staat in [`design-guidelines.md`](../nldd-design/design-guidelines.md), en dat is de enige bron. Lees die voordat je iets ontwerpt. Hier staat de mechaniek eronder.
 
+### Geen eigen vormgeving
+
+Een app op dit systeem heeft geen eigen stylesheet, geen `class` of `style` en geen `div` of `span` die iets opmaakt. Wat er staat, zijn `nldd-*`-componenten met attributen en slots. Elke regel eigen CSS is een plek die niet meebeweegt met donkere modus, thema's en de toegankelijkheidsfixes van de volgende release.
+
+Kom je iets tegen dat geen component kan, dan is dat een gat in het systeem: meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Moet er tot die tijd een omweg staan, zet dan de issuelink en de versie erboven, zodat hij weg kan zodra het issue is opgelost. Hoe je dat met een check afdwingt, staat bij de zuiverheidscheck in [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md#bouw-de-checks-vóór-je-iets-omzet).
+
 ### Componeer, herstijl niet
 
 Gebruik componenten zoals ze zijn en stuur ze via hun attributen. Reik niet in de shadow DOM, override geen interne ARIA, plak geen klassen op childcomponenten.
@@ -130,7 +136,7 @@ Wat je in de devtools ziet staan, is gelaagd:
 
 Er is geen componentlaag om een component mee bij te stellen. Wil je er een anders, meld het dan; zie `nldd-design-contribute`.
 
-Houd je daarna nog eigen CSS over voor iets dat geen component is, dan is een `--primitives-*` de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
+Eigen CSS hoort er niet te zijn (zie "Geen eigen vormgeving"). Staat er tijdelijk toch een omweg, in afwachting van een issue, dan is een `--primitives-*` daarin de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
 
 **Zet geen `light-dark()` om een primitive heen.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Wikkel je die in nog een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond. Eén verwijzing volstaat.
 

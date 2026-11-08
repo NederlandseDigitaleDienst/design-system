@@ -26,7 +26,7 @@ De voor de hand liggende grep op `className="..."` vindt het meeste en mist prec
 
 Sla commentaar over bij het scannen, anders wordt een doc-comment met `h-4 w-4` gemeld en leren mensen de check te negeren.
 
-## De tokenbrug: nuttig, en makkelijk overschat
+## De tokenbrug: een steiger, geen fundament
 
 Centraliseer je Tailwind-thema in één blok en laat het naar `--primitives-*` wijzen:
 
@@ -39,7 +39,7 @@ Centraliseer je Tailwind-thema in één blok en laat het naar `--primitives-*` w
 
 Dit werkt: CSS-variabelen zijn laat gebonden, de browser lost de keten op de gebruiksplek op. De hele app staat daarmee in huisstijlkleuren zonder dat er één component is omgezet, wat een goedkoop en zichtbaar eerste resultaat oplevert.
 
-Drie kanttekeningen, want dit wordt makkelijk oververkocht. Vooraf één: je wijst hiermee vanuit je eigen CSS naar variabelen van het systeem, en die zijn geen publieke API. Ze worden hernoemd en verwijderd wanneer een component daarom vraagt, dus houd de brug in één blok, zodat een release je op één plek raakt in plaats van overal.
+Het blijft een steiger: de brug verdwijnt met Tailwind, en elke klasse die hij kleurt telt mee in de baseline van de zuiverheidscheck. Drie kanttekeningen, want dit wordt makkelijk oververkocht. Vooraf één: je wijst hiermee vanuit je eigen CSS naar variabelen van het systeem, en die zijn geen publieke API. Ze worden hernoemd en verwijderd wanneer een component daarom vraagt, dus houd de brug in één blok, zodat een release je op één plek raakt in plaats van overal.
 
 1. **Klassen die het rauwe palet gebruiken** (`bg-gray-50`, `text-red-600`) schuiven niet mee, en die zitten juist op de semantisch geladen plekken: foutmeldingen, waarschuwingen, badge-varianten. Herleid ook de grijs-, rood-, amber-, emerald- en blauwschalen om een deel terug te winnen.
 2. **Alpha-modifiers** (`ring-primary-500/20`) compileren naar `color-mix()` over een waarde die zelf al een `light-dark()`-paar is. Reken die visueel na in plaats van de hele aanpak weg te gooien als er één misgaat.
@@ -55,11 +55,11 @@ Drie patronen uit een typische Tailwind-setup vechten met het designsysteem en m
 
 Forceer verder `color-scheme: light` op de root zolang de migratie loopt. Donkere modus komt gratis met het palet, maar half omgezette schermen met `bg-white` en `text-gray-*` zijn er stuk in. Zet het pas aan als het laatste scherm om is.
 
-## Wat je overhoudt
+## Wat je niet overhoudt
 
-Reken op een klein eigen CSS-bestand voor wat het designsysteem bewust niet regelt: hoe tekst afkapt (`truncate`, `line-clamp`), `text-transform` en `letter-spacing` die `nldd-text` niet heeft, `object-fit`, `flex-shrink`, scroll-snap, en het hover-reveal-patroon.
+Na Tailwind blijven er utilities over waarvan het niet meteen duidelijk is waar ze heen moeten: `truncate` en `line-clamp`, `text-transform`, `object-fit`, scroll-snap, het hover-reveal-patroon. De verleiding is een klein eigen CSS-bestand. Dat bestand groeit, en elke regel erin beweegt niet mee met het systeem.
 
-Houd dat bestand klein en houd jezelf eraan: elke klasse vervangt precies één utility, en de klassencheck uit de hoofdskill bewaakt beide richtingen, zodat er geen regel in blijft staan die niemand gebruikt. Het is geen utility-framework en moet er geen worden.
+Loop elke utility daarom af als vraag aan het systeem. Vaak is er een attribuut of een component dat het al doet; zoek het op in de [componentreferentie](../nldd-design/reference.md). Is er niets, dan meld je het gat en zet je de omweg tijdelijk in de baseline, met de issuelink erboven. Het doel blijft nul eigen regels.
 
 ## Iconen
 

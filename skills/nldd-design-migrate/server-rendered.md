@@ -79,8 +79,8 @@ Twee dingen om bij zo'n upgrade te doen:
 - **Lees de changelog van elke tussenliggende versie, niet alleen van de doelversie.** Een hernoeming zonder terugvalgedrag en een verwijderd element kunnen in dezelfde release zitten, en dan krijg je twee faalvormen tegelijk: de meldingen verdwijnen en de oude elementen worden permanent zichtbaar, want een ongedefinieerd custom element heeft geen shadow-stijlen.
 - **Loop je eigen instructiebestanden na.** Schrijf je regels op voor je team of voor een agent, dan verouderen die stil bij een upgrade. Dat bestand is wat er straks nieuwe code mee schrijft, dus het is riskanter dan een verouderd comment.
 
-## Eigen CSS op een component: alleen met een reden die je kunt opschrijven
+## Eigen CSS op een component: alleen tijdelijk, met een issue
 
-Mag, maar zet er een comment boven die uitlegt **waarom het component het zelf niet kan**: render-timing, de grens van een fragmentwissel, de shadow DOM. Lukt die zin niet, dan is het smaak-styling en hoort de regel weg. Stuur bij voorkeur via attributen, slots en `--components-*`-variabelen.
+Het doel is geen eigen CSS (zie de hoofdpagina). Moet er tijdelijk toch een regel staan, zet er dan een comment boven die uitlegt **waarom het component het zelf niet kan** (render-timing, de grens van een fragmentwissel, de shadow DOM), met de link naar het issue en de versie. Lukt die zin niet, dan is het smaak-styling en hoort de regel weg.
 
-Dat is ook een praktische scheidslijn bij het opruimen: regels met zo'n comment laat je staan, de rest is kandidaat voor verwijdering.
+Bij het opruimen is dat de scheidslijn: een regel met een open issue blijft tot dat issue is opgelost, de rest gaat nu weg.
