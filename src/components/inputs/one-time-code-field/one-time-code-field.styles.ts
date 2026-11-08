@@ -79,6 +79,10 @@ export const oneTimeCodeFieldStyles = css`
 		max-width: 100%;
 	}
 
+	:host([centered]) .one-time-code-field {
+		margin-inline: auto;
+	}
+
 	:host([disabled]) .one-time-code-field {
 		opacity: var(--primitives-opacity-disabled);
 	}

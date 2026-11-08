@@ -141,6 +141,19 @@ describe('nldd-one-time-code-field', () => {
 		unloadTokens();
 	});
 
+	it('puts the boxes in the middle with centered, and still steps down', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field centered style="width: 400px"></nldd-one-time-code-field>');
+		await new Promise((r) => setTimeout(r, 50));
+		const host = el.getBoundingClientRect();
+		const field = el.shadowRoot!.querySelector<HTMLElement>('.one-time-code-field')!.getBoundingClientRect();
+		expect(host.width).toBe(400);
+		expect(Math.abs(field.left - host.left - (host.right - field.right))).toBeLessThan(1);
+		el.style.width = '200px';
+		await until(() => el.getAttribute('data-fit') === 'sm');
+		unloadTokens();
+	});
+
 	it('treats an unknown size as md when it fits', async () => {
 		const unloadTokens = loadTokens();
 		el = await fixture('<nldd-one-time-code-field size="xl" style="width: 600px"></nldd-one-time-code-field>');

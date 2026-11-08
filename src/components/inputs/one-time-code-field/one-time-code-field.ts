@@ -28,6 +28,7 @@
  * @element nldd-one-time-code-field
  *
  * @attr {string} size - 'sm' | 'md' (default) | 'lg'. 'lg' has boxes 56px tall with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Where not even sm fits, the field shows the code in a text field of its own size.
+ * @attr {boolean} centered - Puts the boxes in the middle of the row, as on a sign-in page where the code is the only field. The field keeps the full width of the row, so it still sees when the boxes no longer fit and steps down a size; centering it from outside, with the alignment of its parent, would shrink it to its boxes and take that away.
  * @attr {number} length - How many characters the code has (default: 6).
  * @attr {string} format - The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are.
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
@@ -99,6 +100,9 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	@property({ reflect: true, converter: reflectNonDefault<OneTimeCodeSize>('md') })
 	size: OneTimeCodeSize = 'md';
+
+	@property({ type: Boolean, reflect: true })
+	centered = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<number>(DEFAULT_LENGTH) })
 	length = DEFAULT_LENGTH;
