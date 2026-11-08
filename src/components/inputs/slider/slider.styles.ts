@@ -38,6 +38,7 @@ export const sliderStyles = css`
 		--_slider-histogram-bar-corner-radius: var(--primitives-space-2);
 		--_slider-histogram-bar-height: 0;
 		--_slider-tooltip-offset: var(--primitives-space-8);
+		--_slider-histogram-tooltip-offset: var(--primitives-space-4);
 		--_slider-tooltip-touch-offset: calc(var(--semantics-fingertip-size) / 2);
 		--_slider-tooltip-shift: 0px;
 		--_slider-tooltip-background-color: var(--semantics-tooltips-background-color);
@@ -343,7 +344,7 @@ export const sliderStyles = css`
 	}
 
 	.slider__control.has-histogram .slider__tooltip {
-		bottom: calc(50% + var(--_slider-track-height) / 2 + var(--_slider-histogram-track-gap) + var(--_slider-histogram-height) + var(--_slider-tooltip-offset));
+		bottom: calc(50% + var(--_slider-track-height) / 2 + var(--_slider-histogram-track-gap) + var(--_slider-histogram-height) + var(--_slider-histogram-tooltip-offset));
 	}
 
 	.slider__tooltip--start {
