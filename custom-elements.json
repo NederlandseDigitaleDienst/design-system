@@ -16282,7 +16282,7 @@
               "expandedType": {
                 "text": "'lg' | 'md' | 'sm'"
               },
-              "description": "'sm' | 'md' (default) | 'lg'. 'lg' has boxes of 56px with larger characters, for a page where the code is the only thing to do, such as signing in."
+              "description": "'sm' | 'md' (default) | 'lg'. 'lg' has boxes of 56px with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Narrower than sm, the boxes narrow with it."
             },
             {
               "name": "length",
@@ -18768,10 +18768,10 @@
                 "text": "SearchButtonAppearance | null"
               },
               "default": "null",
-              "description": "Shows a search button on the right, in the appearance you name: 'neutral-tinted' (also with no value) | 'accent-filled'. Leave it out for no button: Enter searches as well. 'accent-filled' is for a page where searching is the main task, such as a search page; in a header or above a list the quiet one fits.",
+              "description": "Shows a search button on the right, in the appearance you name: 'secondary' (also with no value) | 'primary'. Leave it out for no button: Enter searches as well. 'primary' is for a page where searching is the main task, such as a search page; in a header or above a list the quiet one fits.",
               "fieldName": "searchButton",
               "expandedType": {
-                "text": "'' | 'accent-filled' | 'neutral-tinted'"
+                "text": "'' | 'primary' | 'secondary'"
               }
             },
             {

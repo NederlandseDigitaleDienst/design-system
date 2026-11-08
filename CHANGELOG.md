@@ -9,6 +9,24 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A new icon: `arrow-up-circle`,** an arrow pointing up in a circle, for moving to a newer version.
+
+### Breaking
+
+- **`search-button` on `nldd-search-field` takes `secondary` or `primary`,** the appearances of `nldd-button`, instead of `neutral-tinted` and `accent-filled`. They look the same as before. `nldd lint --fix` renames them.
+
+### Changed
+
+- **The tooltips of an `nldd-slider` with a histogram sit closer to it,** 4px above the bars instead of 8px, so they read as part of the slider.
+- **A space in the `format` of `nldd-one-time-code-field` leaves room between the groups, and a dash is a drawn bar,** sized with the boxes. A space was as narrow as a single character, and a dash a thin line in the middle of it.
+- **`nldd-one-time-code-field` steps down a size where the boxes do not fit the width,** from lg to md to sm, so a code never wraps onto a second line.
+
+### Fixed
+
+- **`nldd-time-picker` no longer stops halfway when you tap values in quick succession.** A second tap during the glide stopped it, and when that tap picked the value already chosen, the column stayed behind with another number in the middle than the selection showed. A tap could also lose out to the last scroll of that glide, which then picked whatever was passing by. And scrolling right after a glide went unnoticed for a moment, so the column moved on while the selection kept the old value. Your wheel or touch now counts at once.
+
 ## [0.18.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.17.1...v0.18.0) (2026-11-07)
 
 ### Highlights
