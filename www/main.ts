@@ -62,7 +62,7 @@ const root = document.documentElement;
  * the visitor sees the system change colour around them. Lintblauw is the
  * default and has no theme of its own.
  */
-document.querySelector('#thema')?.addEventListener('change', (event) => {
+document.querySelector('#thema-keuze')?.addEventListener('change', (event) => {
 	const value = (event as CustomEvent<{ value: string }>).detail.value;
 	if (value === 'lintblauw') root.removeAttribute('data-nldd-theme');
 	else root.setAttribute('data-nldd-theme', value);
