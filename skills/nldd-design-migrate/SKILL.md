@@ -27,7 +27,7 @@ Een migratie is af als de app geen eigen vormgeving meer heeft. Geen stylesheet 
 
 De reden is praktisch. Elke regel eigen CSS is een plek waar de app niet meebeweegt met het systeem: geen donkere modus, geen thema, geen toegankelijkheidsfix uit de volgende release, en een plek die bij elke upgrade kan breken op een interne variabele. Een app met een "klein eigen CSS-bestand" heeft na een jaar een groot eigen CSS-bestand.
 
-Kan het systeem iets niet wat je nodig hebt, dan is dat een gat in het systeem en geen reden voor eigen CSS. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). In de tussentijd mag er een omweg staan, met de issuelink en de versie erboven, in de baseline van de zuiverheidscheck, zodat hij zichtbaar blijft tot het issue is opgelost.
+Kan het systeem iets niet wat je nodig hebt, dan is dat een gat in het systeem en geen reden voor eigen CSS. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). In de tussentijd mag er een omweg staan, met een uitzondering in de code die naar het issue wijst, zodat hij zichtbaar blijft tot het issue is opgelost.
 
 ## Het uitgangspunt: dit systeem faalt stil
 
@@ -53,7 +53,7 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 
 Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die niets anders zag:
 
-1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een toastbibliotheek, en elk eigen stylesheet. De allowlist bevat alleen wat structureel zo hoort: `form` binnen `nldd-form`, `canvas`, `select` en `option` in `nldd-dropdown`, en inline tekst (`strong`, `em`, `code`, `a`) binnen `nldd-text` en `nldd-rich-text`. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. Een regel in de baseline zonder issuelink is een omweg zonder reden. Klaar is een lege baseline.
+1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een toastbibliotheek, en elk eigen stylesheet. De allowlist bevat alleen wat structureel zo hoort: `form` binnen `nldd-form`, `canvas`, `select` en `option` in `nldd-dropdown`, en inline tekst (`strong`, `em`, `code`, `a`) binnen `nldd-text` en `nldd-rich-text`. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. De baseline is migratieschuld en geen plek voor uitzonderingen: wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, met de issuelink als reden. Klaar is een lege baseline.
 2. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
 3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
 4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
@@ -302,6 +302,6 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 11. Een ronde op visuele hiërarchie, met een reviewer die niets heeft omgezet.
 12. Je eigen workarounds langslopen: welke zijn overbodig geworden.
 13. De commentronde.
-14. Het laatste stylesheet weghalen, de token- en klassencheck mee. De baseline van de zuiverheidscheck is leeg, of bevat alleen regels met een open issue.
+14. Het laatste stylesheet weghalen, de token- en klassencheck mee. De baseline van de zuiverheidscheck is leeg, en elke uitzondering in de code wijst naar een open issue.
 
 Reken erop dat de verhouding rauwe markup je schatting bepaalt. In dit geval stonden 292 rauwe `<button>` tegenover 61 `<Button>`: het herimplementeren van de primitive converteerde een vijfde, de rest was handwerk op de aanroepplek. Tel allebei voordat je iets belooft.

@@ -59,7 +59,7 @@ Forceer verder `color-scheme: light` op de root zolang de migratie loopt. Donker
 
 Na Tailwind blijven er utilities over waarvan het niet meteen duidelijk is waar ze heen moeten: `truncate` en `line-clamp`, `text-transform`, `object-fit`, scroll-snap, het hover-reveal-patroon. De verleiding is een klein eigen CSS-bestand. Dat bestand groeit, en elke regel erin beweegt niet mee met het systeem.
 
-Loop elke utility daarom af als vraag aan het systeem. Vaak is er een attribuut of een component dat het al doet; zoek het op in de [componentreferentie](../nldd-design/reference.md). Is er niets, dan meld je het gat en zet je de omweg tijdelijk in de baseline, met de issuelink erboven. Het doel blijft nul eigen regels.
+Loop elke utility daarom af als vraag aan het systeem. Vaak is er een attribuut of een component dat het al doet; zoek het op in de [componentreferentie](../nldd-design/reference.md). Is er niets, dan meld je het gat en zet je er tijdelijk een uitzondering met de issuelink boven. Het doel blijft nul eigen regels.
 
 ## Iconen
 
