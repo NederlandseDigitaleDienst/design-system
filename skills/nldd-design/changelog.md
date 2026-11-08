@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.19.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.18.0...v0.19.0) (2026-11-08)
+
 ### Highlights
 
 - **A new icon: `arrow-up-circle`,** an arrow pointing up in a circle, for moving to a newer version.
