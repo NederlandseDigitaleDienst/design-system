@@ -51,7 +51,7 @@ export class NLDDMenuItem extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	details = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -66,10 +66,10 @@ export class NLDDMenuItem extends LitElement {
 	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
 	shortcutLinux = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<'button' | 'checkbox' | 'radio'>('button') })
 	type: 'button' | 'checkbox' | 'radio' = 'button';
 
 	@property({ type: Boolean, reflect: true })
@@ -78,7 +78,7 @@ export class NLDDMenuItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	value = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

@@ -193,10 +193,11 @@ describe('nldd-menu-item', () => {
 		expect(el.getAttribute('details')).toBe('Cmd+S');
 	});
 
-	it('defaults type to button', async () => {
+	it('defaults type to button, without writing the default to the DOM', async () => {
 		el = await fixture('<nldd-menu-item></nldd-menu-item>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('type')).toBe('button');
+		expect((el as unknown as { type: string }).type).toBe('button');
+		expect(el.hasAttribute('type')).toBe(false);
 	});
 
 	it('reflects type checkbox', async () => {
@@ -2726,7 +2727,7 @@ describe('nldd-menu check-mark column', () => {
 		await waitForUpdate(menu);
 		await Promise.all(Array.from(menu.querySelectorAll('nldd-menu-item'), (item) => (item as unknown as { updateComplete: Promise<unknown> }).updateComplete));
 	};
-	const checkCell = (item: Element) => item.shadowRoot!.querySelector('nldd-icon-cell[size="24"]');
+	const checkCell = (item: Element) => item.shadowRoot!.querySelector('nldd-icon-cell[horizontal-alignment="center"]');
 	const textLeft = (item: Element) => item.shadowRoot!.querySelector('nldd-text-cell')!.getBoundingClientRect().left;
 
 	it('gives every item the column when one is a radio, so the text lines up', async () => {
@@ -3274,5 +3275,154 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 		expect(first.shadowRoot!.querySelector('[aria-expanded="true"]')).toBeNull();
 		expect(second.shadowRoot!.querySelector('[aria-expanded="true"]')).not.toBeNull();
 		cleanup(root);
+	});
+
+	describe('hover-open on rest', () => {
+		type HoverMenu = HTMLElement & { _activateItem(item: Element): void };
+
+		const hoverMarkup = `
+			<nldd-menu>
+				<nldd-menu-item text="Bestand">
+					<nldd-menu><nldd-menu-item text="Open"></nldd-menu-item></nldd-menu>
+				</nldd-menu-item>
+				<nldd-menu-item text="Bewerken">
+					<nldd-menu><nldd-menu-item text="Knip"></nldd-menu-item></nldd-menu>
+				</nldd-menu-item>
+			</nldd-menu>
+		`;
+
+		const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+		const move = (target: Element, x: number, y = 10) =>
+			target.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, composed: true, clientX: x, clientY: y }));
+
+		const setup = async () => {
+			drillInSpy = vi.spyOn(NLDDMenuCtor.prototype as unknown as { _drillInMode: boolean }, '_drillInMode', 'get');
+			drillInSpy.mockReturnValue(false);
+			const root = await fixture<HoverMenu>(hoverMarkup);
+			await waitForUpdate(root);
+			root.showPopover();
+			await waitForUpdate(root);
+			const items = [...root.querySelectorAll(':scope > nldd-menu-item')] as HTMLElement[];
+			const isOpen = (item: HTMLElement) => (item.querySelector(':scope > nldd-menu') as HTMLElement).matches(':popover-open');
+			return { root, items, isOpen };
+		};
+
+		it('opens a submenu once the pointer stops on its item', async () => {
+			const { root, items, isOpen } = await setup();
+			root._activateItem(items[0]);
+			expect(isOpen(items[0])).toBe(false);
+			await until(() => isOpen(items[0]));
+			cleanup(root);
+		});
+
+		it('opens a submenu straight away when the pointer slows down on its item', async () => {
+			const { root, items, isOpen } = await setup();
+			root._activateItem(items[0]);
+			move(items[0], 10);
+			await wait(20);
+			move(items[0], 11);
+			await waitForUpdate(root);
+			expect(isOpen(items[0])).toBe(true);
+			cleanup(root);
+		});
+
+		it('opens nothing while the pointer moves fast over an item', async () => {
+			const { root, items, isOpen } = await setup();
+			root._activateItem(items[0]);
+			// Longer than the rest time, shorter than the delay.
+			const start = performance.now();
+			let x = 0;
+			while (performance.now() - start < 100) {
+				move(items[0], (x += 40));
+				await wait(10);
+			}
+			expect(isOpen(items[0])).toBe(false);
+			cleanup(root);
+		});
+
+		it('opens nothing for an item the pointer has moved on from', async () => {
+			const { root, items, isOpen } = await setup();
+			root._activateItem(items[0]);
+			move(items[0], 0);
+			await wait(10);
+			root._activateItem(items[1]);
+			await until(() => isOpen(items[1]));
+			expect(isOpen(items[0])).toBe(false);
+			cleanup(root);
+		});
+
+		const dividerMarkup = `
+			<nldd-menu>
+				<nldd-menu-item text="Afdrukken"></nldd-menu-item>
+				<nldd-menu-divider style="height: 16px"></nldd-menu-divider>
+				<nldd-menu-item text="Bewerken">
+					<nldd-menu><nldd-menu-item text="Knip"></nldd-menu-item></nldd-menu>
+				</nldd-menu-item>
+			</nldd-menu>
+		`;
+
+		const setupDivider = async () => {
+			drillInSpy = vi.spyOn(NLDDMenuCtor.prototype as unknown as { _drillInMode: boolean }, '_drillInMode', 'get');
+			drillInSpy.mockReturnValue(false);
+			const root = await fixture<HoverMenu & { releaseAt(p: { x: number; y: number }): void }>(dividerMarkup);
+			await waitForUpdate(root);
+			root.showPopover();
+			await waitForUpdate(root);
+			const item = root.querySelector(':scope > nldd-menu-item:last-of-type') as HTMLElement;
+			const divider = root.querySelector('nldd-menu-divider') as HTMLElement;
+			const submenu = item.querySelector(':scope > nldd-menu') as HTMLElement;
+			return { root, item, divider, submenu };
+		};
+
+		it('opens nothing once the pointer moves from the item onto a divider', async () => {
+			const { root, item, divider, submenu } = await setupDivider();
+			window.removeEventListener('mouseover', ignore, { capture: true });
+			root._activateItem(item);
+			divider.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, composed: true }));
+			await wait(200);
+			expect(submenu.matches(':popover-open')).toBe(false);
+			expect(item.hasAttribute('highlighted')).toBe(false);
+			cleanup(root);
+		});
+
+		it('closes the open submenu when the pointer turns away onto a divider', async () => {
+			const { root, item, submenu } = await setupDivider();
+			root._activateItem(item);
+			await until(() => submenu.matches(':popover-open'));
+			// The divider's line lives in its shadow root; aim between the two items.
+			const above = (root.querySelector(':scope > nldd-menu-item') as HTMLElement).getBoundingClientRect();
+			const point = { x: above.left + above.width / 2, y: (above.bottom + item.getBoundingClientRect().top) / 2 };
+			expect(document.elementFromPoint(point.x, point.y)?.closest('nldd-menu-item')).toBeNull();
+			root.releaseAt(point);
+			expect(submenu.matches(':popover-open')).toBe(false);
+			cleanup(root);
+		});
+
+		it('closes the open submenu when the pointer turns away out of the menu', async () => {
+			const { root, item, submenu } = await setupDivider();
+			root._activateItem(item);
+			await until(() => submenu.matches(':popover-open'));
+			const menuRect = root.getBoundingClientRect();
+			const point = { x: menuRect.left + 10, y: menuRect.bottom + 20 };
+			const below = document.elementFromPoint(point.x, point.y);
+			expect(below).not.toBeNull();
+			expect(below!.closest('nldd-menu')).toBeNull();
+			root.releaseAt(point);
+			expect(submenu.matches(':popover-open')).toBe(false);
+			cleanup(root);
+		});
+
+		it('opens a submenu at the latest after its delay, however the pointer keeps moving', async () => {
+			const { root, items, isOpen } = await setup();
+			root._activateItem(items[0]);
+			const start = performance.now();
+			let x = 0;
+			while (!isOpen(items[0]) && performance.now() - start < 400) {
+				move(items[0], (x += 20));
+				await wait(10);
+			}
+			expect(isOpen(items[0])).toBe(true);
+			cleanup(root);
+		});
 	});
 });

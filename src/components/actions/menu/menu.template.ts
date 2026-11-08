@@ -134,7 +134,6 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 	const content = html`
 		${hasCheckColumn ? html`
 			<nldd-icon-cell
-				size="24"
 				horizontal-alignment="center"
 				icon=${hasCheckState && this.selected ? 'check-mark' : nothing}
 			></nldd-icon-cell>
