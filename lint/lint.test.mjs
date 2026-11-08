@@ -1276,6 +1276,14 @@ describe('the group pure', () => {
 		assert.deepEqual(await rulesIn(pure, 'export default class A extends Component { render() { return <h2>x</h2>; } }'), ['html-no-heading']);
 	});
 
+	it('judges a helper component or a variable where the file uses it', async () => {
+		assert.deepEqual(await rulesIn(pure, 'const Row = () => <div className="row"><nldd-text>a</nldd-text></div>; export const A = () => <nldd-container><Row /></nldd-container>;'), ['html-no-class', 'html-no-container']);
+		assert.deepEqual(await rulesIn(pure, 'const Item = ({ t }) => <strong>{t}</strong>; export const A = () => <nldd-container><Item t="a" /></nldd-container>;'), ['html-no-text']);
+		assert.deepEqual(await rulesIn(pure, 'export function A() { const el = <p>a</p>; return <nldd-container>{el}</nldd-container>; }'), ['html-no-text']);
+		assert.deepEqual(await rulesIn(pure, 'const Item = () => <strong>x</strong>; export const A = () => <nldd-container><nldd-text><Item /></nldd-text><Item /></nldd-container>;'), []);
+		assert.deepEqual(await rulesIn(pure, 'const Item = () => <strong>x</strong>; export const A = () => <nldd-list renderItem={Item} />;'), []);
+	});
+
 	it('lets nldd-rich-text take its text, not a layout or a control', async () => {
 		assert.deepEqual(await rulesIn(pure, '<nldd-rich-text><div className="grid"><button>a</button></div></nldd-rich-text>'), ['html-no-class', 'html-no-control']);
 	});

@@ -15,6 +15,7 @@ import {
 	createNode,
 	createRoot,
 	isOpaqueTag,
+	walk,
 } from './tree.js';
 
 const TRANSPARENT = new Set([
@@ -391,16 +392,19 @@ const FUNCTIONS = new Set(['FunctionDeclaration', 'FunctionExpression', 'ArrowFu
  * built to be placed somewhere, maybe inside a component of this same file, and is
  * marked detached.
  */
-function collectJsx(node, found, { exported = false, renders = false, returned = false } = {}, exportedNames = new Set()) {
+function collectJsx(node, found, { exported = false, renders = false, returned = false, owner } = {}, exportedNames = new Set()) {
 	if (!node || typeof node !== 'object') return;
 	if (Array.isArray(node)) {
-		for (const item of node) collectJsx(item, found, { exported, renders, returned }, exportedNames);
+		for (const item of node) collectJsx(item, found, { exported, renders, returned, owner }, exportedNames);
 		return;
 	}
 	if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
-		found.push({ node, detached: !(renders && returned) });
+		// `owner` is the name it is bound to, `<Row />` or `{items}`, so its place can be found.
+		found.push({ node, detached: !(renders && returned), owner });
 		return;
 	}
+	// A new binding names what it holds: `const Row = () => ...`, `function Row()`, `const items = ...`.
+	const binds = (node.type === 'VariableDeclarator' || node.type === 'FunctionDeclaration') && node.id?.type === 'Identifier';
 	const isFunction = FUNCTIONS.has(node.type);
 	// `function A() {}` with `export default A` further down, or `export { A }`.
 	const named = (node.type === 'FunctionDeclaration' || node.type === 'VariableDeclarator' || node.type === 'ClassDeclaration') && exportedNames.has(node.id?.name);
@@ -414,6 +418,7 @@ function collectJsx(node, found, { exported = false, renders = false, returned =
 			returned: (node.type === 'ReturnStatement' && key === 'argument')
 				|| (node.type === 'ArrowFunctionExpression' && key === 'body')
 				|| (returned && PASSES_ON_RETURN.has(node.type)),
+			owner: binds ? node.id.name : owner,
 		}, exportedNames);
 	}
 }
@@ -500,6 +505,10 @@ function readJsxExpression(expression, parent, flags, roots) {
 			}
 			break;
 		}
+		case 'Identifier':
+			// `{items}`: whatever the file bound to that name renders here.
+			appendUnknown(parent, expression.start).ref = expression.name;
+			break;
 		default:
 			appendUnknown(parent, expression.start);
 	}
@@ -555,11 +564,37 @@ export async function parseJsx(source, filename) {
 	const found = [];
 	collectJsx(program, found, {}, exportedNamesOf(program));
 	const roots = [];
-	for (const { node, detached } of found) roots.push(jsxTree(node, roots, detached));
+	const owners = new Map();
+	for (const { node, detached, owner } of found) {
+		const root = jsxTree(node, roots, detached);
+		roots.push(root);
+		if (detached && owner) owners.set(root, owner);
+	}
+	placeDetachedRoots(roots, owners);
 	if (errors?.length) {
 		roots.syntaxError = { message: errors[0].message, offset: errors[0].labels?.[0]?.start ?? 0 };
 	}
 	return roots;
+}
+
+/**
+ * A tree bound to a name lands where this file uses that name: `<Row />` for a
+ * component, `{items}` for a value. Those places tell what is around it, so a
+ * rule can judge its plain HTML. Used nowhere in the file, it stays unknown.
+ */
+function placeDetachedRoots(roots, owners) {
+	if (owners.size === 0) return;
+	const uses = new Map();
+	for (const root of roots) {
+		walk(root, (node) => {
+			const name = node.ref ?? (node.opaque ? node.name : undefined);
+			if (name) uses.set(name, [...(uses.get(name) ?? []), node]);
+		});
+	}
+	for (const [root, owner] of owners) {
+		const places = uses.get(owner);
+		if (places?.length) root.placements = places;
+	}
 }
 
 /** Names a framework wrapper by the tag it renders, with kebab-case props. */

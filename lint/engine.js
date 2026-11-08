@@ -71,14 +71,21 @@ function createFieldLabelCheck(isInput, allowMaybe) {
  * with `@accepts` in its JSDoc.
  *
  * What a file renders is judged in that file: that a parent elsewhere might put it
- * inside an nldd-rich-text does not make plain HTML written here the system's. What
- * the file builds to place elsewhere (JSX in a variable or a prop) might land in
- * one of its own components, so there it is unknown, as is a component of the app.
+ * inside an nldd-rich-text does not make plain HTML written here the system's. A
+ * tree the file builds under a name (a helper component, a variable) is judged where
+ * the file uses that name. Used nowhere here, or under a component of the app, it is
+ * unknown.
  */
 function createAcceptedCheck(tags, allowUnknown) {
-	return (node) => {
-		for (let parent = node.parent; parent; parent = parent.parent) {
-			if (parent.name === '#root') return parent.detached ? allowUnknown : false;
+	const accepted = (node, from, depth) => {
+		for (let parent = from; parent; parent = parent.parent) {
+			if (parent.name === '#root') {
+				if (!parent.detached) return false;
+				// Placed where the file uses it: judged from each of those places. Accepted in
+				// any of them is enough, so one that maybe accepts it keeps the rule quiet.
+				if (!parent.placements || depth > 8) return allowUnknown;
+				return parent.placements.some((place) => accepted(node, place.parent, depth + 1));
+			}
 			if (parent.opaque) return allowUnknown;
 			if (!parent.name.startsWith('nldd-')) continue;
 			const accepts = tags[parent.name]?.accepts ?? [];
@@ -86,6 +93,7 @@ function createAcceptedCheck(tags, allowUnknown) {
 		}
 		return false;
 	};
+	return (node) => accepted(node, node.parent, 0);
 }
 
 function classPseudos(classes) {
