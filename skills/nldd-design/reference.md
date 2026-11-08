@@ -559,7 +559,7 @@ Shows a quote with an optional source attribution.
 | _(default)_ | The paragraph or paragraphs of the quote; prefer <p> elements |
 | `attribution` | Optional source attribution (author, title, and so on). An nldd-identity is allowed here; the em dash ("— ") is then left out. |
 
-**Plain HTML it styles:** `<p>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<p>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-code-viewer>`
 
@@ -631,7 +631,7 @@ An editorial line that shows authors or editors: optional avatar or avatars, a n
 | `text` | Name line as rich content (a link to the author's profile, for instance) |
 | `supporting-text` | Supporting text as rich content (a time element, for instance) |
 
-**Plain HTML it styles:** `<img>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<img>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-image>`
 
@@ -673,7 +673,7 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 | _(default)_ | Custom `<img>`, `<picture>` or inline `<svg>` (overrides the src-based default). An inline svg keeps its own colors and scales by its viewBox, so a drawing gets the same box, ratio and caption as a photo. Slotted media carries its own text alternative: an `alt` on the img (empty when it conveys nothing), or `role="img"` with an `aria-label`, `aria-labelledby` or `<title>` on the svg. The internal `error` listener is attached only to the built-in `<img>`, so slotted content does not trigger the error-state overlay automatically. Consumers slotting their own image are responsible for handling its error state (e.g. swapping the slot content or styling a fallback). |
 | `caption` | Rich caption content (overrides the `caption` attribute) |
 
-**Plain HTML it styles:** `<img>`, `<picture>`, `<source>`, `<svg>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<img>`, `<picture>`, `<source>`, `<svg>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-keyboard-shortcut>`
 
@@ -721,7 +721,7 @@ A container for rich text content that automatically applies responsive typograp
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `hyphens` | `boolean` | Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own. |
 
-**Plain HTML it styles:** any. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<p>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`, `<strong>`, `<b>`, `<em>`, `<i>`, `<code>`, `<mark>`, `<q>`, `<span>`, `<ul>`, `<ol>`, `<li>`, `<dl>`, `<dt>`, `<dd>`, `<blockquote>`, `<pre>`, `<figure>`, `<figcaption>`, `<img>`, `<picture>`, `<source>`, `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>`, `<hr>`, `<div>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-tag>`
 
@@ -781,7 +781,7 @@ One run of body text at a size from the type scale. It is what you reach for whe
 | --- | --- |
 | _(default)_ | The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone. |
 
-**Plain HTML it styles:** `<strong>`, `<b>`, `<em>`, `<i>`, `<a>`, `<code>`, `<mark>`, `<q>`, `<span>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<strong>`, `<b>`, `<em>`, `<i>`, `<a>`, `<code>`, `<mark>`, `<q>`, `<span>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-title>`
 
@@ -825,7 +825,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 | `supporting-text` | Supporting text that is more than text. Takes the place of the supporting-text attribute. |
 | `end` | Whatever belongs at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there. |
 
-**Plain HTML it styles:** `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-token>`
 
@@ -930,7 +930,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 | `enctype` | `string` | Encoding type for submission |
 | `novalidate` | `boolean` | Skip native browser validation |
 
-**Plain HTML it styles:** `<form>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<form>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 **Events**
 
@@ -1007,7 +1007,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 | --- | --- |
 | _(default)_ | Help text content. May contain inline elements including links. |
 
-**Plain HTML it styles:** `<a>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<a>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-form-section>`
 
@@ -1311,7 +1311,7 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 | --- | --- |
 | _(default)_ | A native `<select>` element with `<option>` and/or `<optgroup>` children |
 
-**Plain HTML it styles:** `<select>`, `<option>`, `<optgroup>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<select>`, `<option>`, `<optgroup>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 **Events**
 
@@ -2419,7 +2419,7 @@ The section that says what a page is for: it names the main goal of what you can
 | `media` | Image or illustration (img or nldd-image); fills the area and is clipped. |
 | _(default)_ | Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance) |
 
-**Plain HTML it styles:** `<img>`. Elsewhere, `nldd lint --pure` reports such an element.
+**Plain HTML it styles:** `<img>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-kanban>`
 

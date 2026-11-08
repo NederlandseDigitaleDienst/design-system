@@ -30,15 +30,18 @@ nldd-page
 <style>
   /* The section owns the switch; this reveals the trigger only when there is
      a sheet to open. :not([hidden]) keeps the toolbar's own overflow working. */
+  /* nldd-lint-disable-next-line html-no-stylesheet -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
   #filters-openen {
     display: none;
   }
 
+  /* nldd-lint-disable-next-line html-no-stylesheet -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
   nldd-sidebar-section[collapsed] #filters-openen:not([hidden]) {
     display: inline-flex;
   }
 
   /* In the sheet the results lie behind it, so there is nothing to skip to. */
+  /* nldd-lint-disable-next-line html-no-stylesheet -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
   nldd-sidebar-section[collapsed] #filters-overslaan {
     display: none;
   }

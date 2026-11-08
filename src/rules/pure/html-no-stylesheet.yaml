@@ -1,7 +1,7 @@
 severity: error
-context: 'style, link[rel~="stylesheet"]:not([href*="@nldd/design-system"]):not([href*="/nldd/"])'
+context: 'style:not(:within(svg)), link[rel~="stylesheet"]:not([href*="@nldd/design-system"]):not([href*="/nldd/css/"])'
 message: 'A stylesheet of the app''s own: the look comes from the components and their attributes.'
 see: ontwerprichtlijnen/visueel-en-layout
 examples:
   passed: ['<html><head><link rel="stylesheet" href="/node_modules/@nldd/design-system/dist/css/global.css"><link rel="stylesheet" href="/static/nldd/css/global.css"></head></html>']
-  failed: ['<html><head><style>body { margin: 0 }</style></head></html>', '<html><head><link rel="stylesheet" href="/app.css"></head></html>', '<html><head><link rel="stylesheet" href="/nldd-overrides.css"></head></html>']
+  failed: ['<html><head><style>body { margin: 0 }</style></head></html>', '<html><head><link rel="stylesheet" href="/app.css"></head></html>', '<html><head><link rel="stylesheet" href="/nldd-overrides.css"></head></html>', '<html><head><link rel="stylesheet" href="/static/nldd/overrides.css"></head></html>']

@@ -210,11 +210,12 @@ async function runLint(data, paths, options) {
 		}
 	}
 
-	// A run without --pure leaves what the group pure accepted alone.
-	const ran = (id) => !OPT_IN_GROUPS.includes(findRule(data, id)?.group) || Boolean(severities[id] && severities[id] !== 'off');
+	// What a rule that did not run accepted stays accepted: one that is off, or the
+	// group pure in a run without it.
+	const ran = (id) => severities[id] !== 'off' && (!OPT_IN_GROUPS.includes(findRule(data, id)?.group) || Boolean(severities[id]));
 	if (options['tighten-baseline']) {
 		const dropped = tightenBaseline(results, root, canonical, ran);
-		console.log(`Baseline tightened: ${dropped} fewer findings accepted.`);
+		console.log(dropped === undefined ? 'No baseline to tighten.' : `Baseline tightened: ${dropped} fewer findings accepted.`);
 		return 0;
 	}
 	if (options['update-baseline']) {

@@ -56,8 +56,13 @@ function readAttribute(element, name, value) {
 	else if (/^(:|v-bind:|x-bind:|\.|\?)/.test(name)) {
 		const bare = name.replace(/^(v-bind|x-bind)?[:.?]/, '').replace(/\.(prop|attr|camel)$/, '');
 		element.attrs.set(bare, BOUND);
-	} else if (/^\[(class\.|style\.|@)/.test(name)) {
-		// Angular's way to set one class, one style or an animation: no attribute.
+	} else if (/^\[(class\.|style\.)/.test(name) || /^\[ng(Class|Style)\]$/.test(name)) {
+		// Angular's way to set one class or style, or a set of them. Not an attribute of
+		// its own, but the element ends up with a class or a style, which the group pure asks.
+		const attribute = /^\[(class\.|ngClass)/.test(name) ? 'class' : 'style';
+		if (!element.attrs.has(attribute)) element.attrs.set(attribute, BOUND);
+	} else if (/^\[@/.test(name)) {
+		// An Angular animation: no attribute.
 	} else if (/^\[.+\]$/.test(name)) {
 		element.attrs.set(name.replace(/^\[\(?|\)?\]$/g, '').replace(/^attr\./, ''), BOUND);
 	} else if (/^(@|#|v-|\(|\*)/.test(name)) {
@@ -82,8 +87,12 @@ function readHtmlChildren(children, parent, given) {
 	if (hole) appendUnknown(parent, hole.startIndex ?? 0);
 	for (const node of children) {
 		if (node.type === 'text' && node.data.trim()) parent.text = true;
-		// htmlparser2 gives <style> a type of its own; the group pure has a rule about it.
-		if (node.type !== 'tag' && node.type !== 'style') continue;
+		// htmlparser2 gives <style> a type of its own. The group pure reads every block in it.
+		if (node.type === 'style') {
+			for (const offset of styleBlockOffsets(node)) appendChild(parent, createNode('style', offset));
+			continue;
+		}
+		if (node.type !== 'tag') continue;
 		const { name, attribs } = node;
 		// In a document, a template is inert until something stamps it out, here or elsewhere.
 		if (name === 'template' && inherited.inert) {
@@ -209,17 +218,21 @@ export function parseVue(source) {
 		roots.push(root);
 	}
 	// A style block is the component's own stylesheet, so it stands as the element it is.
-	for (const node of documentNode.children.filter((each) => each.name === 'style')) {
-		roots.push(stylesheetRoot(node.startIndex ?? 0, node.endIndex ?? undefined));
-	}
+	const blocks = documentNode.children.filter((each) => each.name === 'style').flatMap(styleBlockOffsets);
+	if (blocks.length > 0) roots.push(stylesheetRoot(blocks));
 	return roots;
 }
 
-function stylesheetRoot(offset, endOffset) {
+/** Where each block of a <style> element starts in the file. */
+function styleBlockOffsets(node) {
+	const text = node.children?.find((child) => child.type === 'text');
+	return text ? cssBlockOffsets(text.data).map((offset) => (text.startIndex ?? 0) + offset) : [];
+}
+
+/** One <style> element per block, so a suppression or a baseline count covers one block and not the whole sheet. */
+function stylesheetRoot(offsets) {
 	const root = createRoot();
-	const element = createNode('style', offset);
-	element.endOffset = endOffset;
-	appendChild(root, element);
+	for (const offset of offsets) appendChild(root, createNode('style', offset));
 	return root;
 }
 
@@ -231,16 +244,41 @@ const ownCss = (source) =>
 	source
 		.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '))
 		.replace(/^\s*\/\/.*$/gm, (comment) => ' '.repeat(comment.length))
-		.replace(/@import\s+(url\()?['"]?[^'";)]*(@nldd\/design-system|\/nldd\/)[^;]*;/g, (line) => ' '.repeat(line.length));
+		.replace(/@(import|use|forward)\s+(url\()?['"]?[^'";)]*(@nldd\/design-system|\/nldd\/css\/)[^;]*;/g, (line) => ' '.repeat(line.length));
+
+/**
+ * Where each top-level block of the app's own CSS starts: a rule with its braces,
+ * or a statement up to its semicolon.
+ */
+function cssBlockOffsets(source) {
+	const own = ownCss(source);
+	const offsets = [];
+	let depth = 0;
+	let inBlock = false;
+	for (let at = 0; at < own.length; at++) {
+		const char = own[at];
+		if (!inBlock && depth === 0 && /\S/.test(char)) {
+			offsets.push(at);
+			inBlock = true;
+		}
+		if (char === '{') depth += 1;
+		else if (char === '}') {
+			depth = Math.max(0, depth - 1);
+			if (depth === 0) inBlock = false;
+		} else if (char === ';' && depth === 0) inBlock = false;
+	}
+	return offsets;
+}
 
 /**
  * A stylesheet file is a <style> element in a file of its own, so the rule about
  * one reads both. A file that only imports the design system's own CSS is not one.
- * The element starts where the own CSS does, so a comment above it can suppress it.
+ * Each block is an element of its own, starting where it does, so a comment above
+ * a block suppresses that block.
  */
 export function parseStylesheet(source) {
-	const start = ownCss(source).search(/\S/);
-	return start === -1 ? [] : [stylesheetRoot(start, source.length - 1)];
+	const offsets = cssBlockOffsets(source);
+	return offsets.length === 0 ? [] : [stylesheetRoot(offsets)];
 }
 
 /** Every code block and inline tag in a Markdown file is a tree of its own. */
@@ -342,26 +380,54 @@ function jsxName(node) {
 /** Between a return and the JSX it returns: `return a ? <x /> : <y />`. */
 const PASSES_ON_RETURN = new Set(['ConditionalExpression', 'LogicalExpression', 'ParenthesizedExpression', 'SequenceExpression']);
 
+/** Between `export` and the component it exports: `export const A = memo(() => ...)`, a class and its render. */
+const PASSES_ON_EXPORT = new Set(['VariableDeclaration', 'VariableDeclarator', 'CallExpression', 'ClassDeclaration', 'ClassExpression', 'ClassBody', 'MethodDefinition', 'ParenthesizedExpression']);
+
+const FUNCTIONS = new Set(['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression']);
+
 /**
- * Finds every JSX tree. One that a function returns is what a component renders;
- * any other (in a variable, an array, an argument) is built to be placed elsewhere,
- * maybe inside a component of this same file, and is marked detached.
+ * Finds every JSX tree. What an exported component returns is what this file
+ * renders. Any other tree (a helper component, a callback, a variable, a prop) is
+ * built to be placed somewhere, maybe inside a component of this same file, and is
+ * marked detached.
  */
-function collectJsx(node, found, returned = false) {
+function collectJsx(node, found, { exported = false, renders = false, returned = false } = {}, exportedNames = new Set()) {
 	if (!node || typeof node !== 'object') return;
 	if (Array.isArray(node)) {
-		for (const item of node) collectJsx(item, found, returned);
-	} else if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
-		found.push({ node, detached: !returned });
-	} else {
-		for (const key of Object.keys(node)) {
-			const returns =
-				(node.type === 'ReturnStatement' && key === 'argument')
+		for (const item of node) collectJsx(item, found, { exported, renders, returned }, exportedNames);
+		return;
+	}
+	if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
+		found.push({ node, detached: !(renders && returned) });
+		return;
+	}
+	const isFunction = FUNCTIONS.has(node.type);
+	// `function A() {}` with `export default A` further down, or `export { A }`.
+	const named = (node.type === 'FunctionDeclaration' || node.type === 'VariableDeclarator' || node.type === 'ClassDeclaration') && exportedNames.has(node.id?.name);
+	exported ||= named;
+	for (const key of Object.keys(node)) {
+		if (key === 'parent') continue;
+		collectJsx(node[key], found, {
+			exported: node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration' || (exported && (named || PASSES_ON_EXPORT.has(node.type))),
+			// A function renders when it is the exported one; a function inside it does not.
+			renders: isFunction ? exported : renders,
+			returned: (node.type === 'ReturnStatement' && key === 'argument')
 				|| (node.type === 'ArrowFunctionExpression' && key === 'body')
-				|| (returned && PASSES_ON_RETURN.has(node.type));
-			collectJsx(node[key], found, returns);
+				|| (returned && PASSES_ON_RETURN.has(node.type)),
+		}, exportedNames);
+	}
+}
+
+/** The names a module exports by reference rather than in place. */
+function exportedNamesOf(program) {
+	const names = new Set();
+	for (const statement of program.body ?? []) {
+		if (statement.type === 'ExportDefaultDeclaration' && statement.declaration?.type === 'Identifier') names.add(statement.declaration.name);
+		if (statement.type === 'ExportNamedDeclaration' && !statement.source) {
+			for (const specifier of statement.specifiers ?? []) names.add(specifier.local?.name);
 		}
 	}
+	return names;
 }
 
 /** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
@@ -487,7 +553,7 @@ export async function parseJsx(source, filename) {
 	});
 	const { program, errors } = oxcParser.parseSync(filename, source);
 	const found = [];
-	collectJsx(program, found);
+	collectJsx(program, found, {}, exportedNamesOf(program));
 	const roots = [];
 	for (const { node, detached } of found) roots.push(jsxTree(node, roots, detached));
 	if (errors?.length) {

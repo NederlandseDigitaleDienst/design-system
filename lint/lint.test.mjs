@@ -1227,7 +1227,7 @@ describe('the group pure', () => {
 	});
 
 	it('finds a class whose value is bound, not only a written one', async () => {
-		assert.deepEqual(await rulesIn(pure, 'const A = () => <nldd-button text="a" className={cn(x)} />;'), ['html-no-class']);
+		assert.deepEqual(await rulesIn(pure, 'export const A = () => <nldd-button text="a" className={cn(x)} />;'), ['html-no-class']);
 	});
 
 	it('leaves plain HTML alone where the component around it styles it', async () => {
@@ -1236,7 +1236,7 @@ describe('the group pure', () => {
 	});
 
 	it('takes the file as the boundary, and is unsure inside a component of the app', async () => {
-		assert.deepEqual(await rulesIn(pure, 'const A = () => <p>x</p>;'), ['html-no-text']);
+		assert.deepEqual(await rulesIn(pure, 'export const A = () => <p>x</p>;'), ['html-no-text']);
 		assert.deepEqual(await rulesIn(pure, '<nldd-container><Card><p>x</p></Card></nldd-container>'), []);
 	});
 
@@ -1269,6 +1269,32 @@ describe('the group pure', () => {
 		assert.equal(severities['html-no-image'], 'off');
 	});
 
+	it('judges what an exported component returns, and is unsure about helpers and callbacks', async () => {
+		assert.deepEqual(await rulesIn(pure, 'export function A({ xs }) { const items = xs.map((x) => <li>{x}</li>); return <nldd-rich-text><ul>{items}</ul></nldd-rich-text>; }'), []);
+		assert.deepEqual(await rulesIn(pure, 'const Item = ({ t }) => <strong>{t}</strong>; export const A = () => <nldd-text><Item t="a" /></nldd-text>;'), []);
+		assert.deepEqual(await rulesIn(pure, 'function A() { return <p>x</p>; } export default A;'), ['html-no-text']);
+		assert.deepEqual(await rulesIn(pure, 'export default class A extends Component { render() { return <h2>x</h2>; } }'), ['html-no-heading']);
+	});
+
+	it('lets nldd-rich-text take its text, not a layout or a control', async () => {
+		assert.deepEqual(await rulesIn(pure, '<nldd-rich-text><div className="grid"><button>a</button></div></nldd-rich-text>'), ['html-no-class', 'html-no-control']);
+	});
+
+	it('leaves the inside of a drawing to the drawing', async () => {
+		assert.deepEqual(await rulesIn(pure, '<nldd-image><svg role="img" aria-label="a"><style>{".p{fill:red}"}</style><path className="p" /></svg></nldd-image>'), []);
+	});
+
+	it('finds the class and style bindings of Angular', async () => {
+		assert.deepEqual(await rulesIn(pure, '<nldd-text [ngClass]="c">a</nldd-text><nldd-text [style.color]="c">b</nldd-text>', 'a.html'), ['html-no-class', 'html-no-style']);
+	});
+
+	it('reports a stylesheet block by block, and leaves an empty one or one with only the system alone', async () => {
+		assert.deepEqual(await rulesIn(pure, '.a {}\n.b {}\n', 'a.css'), ['html-no-stylesheet', 'html-no-stylesheet']);
+		assert.deepEqual(await rulesIn(pure, '<template><nldd-text>a</nldd-text></template><style></style><style>@import "@nldd/design-system/dist/css/global.css";</style>', 'a.vue'), []);
+		assert.deepEqual(await rulesIn(pure, '@use "@nldd/design-system/styles";\n', 'a.scss'), []);
+		assert.deepEqual(await rulesIn(pure, '@import "/static/nldd/overrides.css";\n', 'a.css'), ['html-no-stylesheet']);
+	});
+
 	it('lets an empty mount point be', async () => {
 		assert.deepEqual(await rulesIn(pure, '<html><body><div id="app"></div></body></html>', 'index.html'), []);
 	});
@@ -1294,6 +1320,24 @@ describe('the group pure', () => {
 		write('export const A = () => <p>x</p>;\nexport const B = () => <p>y</p>;\n');
 		run(root, 'lint', '--pure', '--tighten-baseline');
 		assert.equal(run(root, 'lint', '--pure').status, 1);
+	});
+
+	it('keeps a baseline entry with a file that moved, and of a rule that is off', () => {
+		const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+		const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		assert.match(run(root, 'lint', '--tighten-baseline').stdout, /No baseline to tighten/);
+		writeFileSync(join(root, 'a.tsx'), 'export const A = () => <p>x</p>;\n');
+		run(root, 'lint', '--pure', '--update-baseline');
+		execFileSync('mv', [join(root, 'a.tsx'), join(root, 'b.tsx')]);
+		run(root, 'lint', '--pure', '--tighten-baseline');
+		assert.deepEqual(readBaseline(root)['b.tsx'], { 'html-no-text|p': 1 });
+		writeFileSync(join(root, '.nldd-lint.json'), JSON.stringify({ rules: { pure: 'error', 'html-no-text': 'off' } }));
+		run(root, 'lint', '--tighten-baseline');
+		assert.deepEqual(readBaseline(root)['b.tsx'], { 'html-no-text|p': 1 });
+		writeFileSync(join(root, 'b.tsx'), 'export const A = () => <nldd-text>x</nldd-text>;\n');
+		writeFileSync(join(root, '.nldd-lint.json'), JSON.stringify({ rules: { pure: 'error' } }));
+		assert.deepEqual(JSON.parse(run(root, 'lint', '--format', 'json').stdout).baseline, { accepted: 0, noLongerFound: 1 });
 	});
 
 	it('is turned on with --pure, and a baseline without it keeps what pure accepted', () => {

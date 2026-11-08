@@ -1,5 +1,5 @@
 severity: error
-context: ':is(img, picture, svg, video):not(:accepted)'
+context: ':is(img, picture, svg):not(:accepted)'
 message: 'Use nldd-image for an image or a drawing, and nldd-icon for an icon.'
 see: ontwerprichtlijnen/visueel-en-layout
 examples:

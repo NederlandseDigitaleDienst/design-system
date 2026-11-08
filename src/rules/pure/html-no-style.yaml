@@ -1,5 +1,5 @@
 severity: error
-context: ':written(style):not(:accepted-freely)'
+context: ':written(style):not(:within(svg))'
 message: 'Set the look with the attributes of a component, not with style.'
 see: ontwerprichtlijnen/visueel-en-layout
 examples:

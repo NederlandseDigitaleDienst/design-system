@@ -153,12 +153,18 @@ export function looseInBaseline(results, baseline, root, ran) {
  * anything: a ratchet. A file that is gone takes its entry along.
  */
 export function tightenBaseline(results, root, canonical, ran) {
+	if (!existsSync(join(root, BASELINE_FILE))) return undefined;
 	const baseline = readBaseline(root, canonical);
 	const read = new Map(results.map(({ filename, findings }) => [relative(root, filename), countFindings(findings)]));
+	const sameCounts = (a, b) => Object.keys({ ...a, ...b }).every((key) => a[key] === b[key]);
 	let dropped = 0;
 	for (const [file, entries] of Object.entries(baseline)) {
 		if (!existsSync(join(root, file))) {
-			dropped += Object.values(entries).reduce((sum, count) => sum + count, 0);
+			// A file that moved takes its entry along, when it was read under its new name
+			// and still has exactly what was accepted. Anything else drops it.
+			const moved = [...read].find(([name, found]) => !baseline[name] && sameCounts(entries, found));
+			if (moved) baseline[moved[0]] = entries;
+			else dropped += Object.values(entries).reduce((sum, count) => sum + count, 0);
 			delete baseline[file];
 			continue;
 		}

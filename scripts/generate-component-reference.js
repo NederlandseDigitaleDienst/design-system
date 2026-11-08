@@ -105,8 +105,8 @@ function renderComponent(c) {
 		out.push('');
 	}
 	if (c.accepts?.length) {
-		const elements = c.accepts.includes('*') ? 'any' : c.accepts.map((name) => `\`<${name}>\``).join(', ');
-		out.push(`**Plain HTML it styles:** ${elements}. Elsewhere, \`nldd lint --pure\` reports such an element.`, '');
+		const elements = c.accepts.includes('*') ? 'anything' : c.accepts.map((name) => `\`<${name}>\``).join(', ');
+		out.push(`**Plain HTML it styles:** ${elements}. \`nldd lint --pure\` reports plain HTML only where no component styles it.`, '');
 	}
 	if (c.events.length) {
 		out.push('**Events**', '');

@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { parse } from 'css-what';
 import { applyFixes } from '../lint/fix.js';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
+import { OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
 import { selectorsOf } from '../lint/rule-index.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -156,10 +157,13 @@ function patternFiles(directory) {
 	});
 }
 
+/** A pattern is what an app copies, so it has to be pure too. */
+const pureLinter = createLinter(data, { severities: resolveSeverities(data, {}, { optIn: OPT_IN_GROUPS }) });
+
 async function checkPatterns() {
 	const files = patternFiles(join(repoRoot, 'src/patterns'));
 	for (const file of files) {
-		const { findings } = await linter.lintSource(readFileSync(file, 'utf8'), file);
+		const { findings } = await pureLinter.lintSource(readFileSync(file, 'utf8'), file);
 		for (const { rule, line, message } of findings) {
 			problems.push(`${relative(repoRoot, file)}:${line} ${rule}: ${message}`);
 		}
@@ -226,11 +230,50 @@ function checkNoWarnings() {
 	}
 }
 
+/**
+ * Pseudo-classes only the source linter knows. The browser rejects them and then
+ * silently skips the rule, and :accepted judges a file by itself, which only an
+ * opt-in group may do.
+ */
+const SOURCE_ONLY_PSEUDOS = ['accepted', 'written', 'blank', 'within'];
+
+function checkSourceOnlyPseudos(rule) {
+	if (OPT_IN_GROUPS.includes(rule.group)) return;
+	for (const name of SOURCE_ONLY_PSEUDOS) {
+		if (selectorsOf(rule).some((selector) => selector.includes(`:${name}`))) {
+			problems.push(`${rule.id}: :${name} is for the opt-in groups (${OPT_IN_GROUPS.join(', ')}) only.`);
+		}
+	}
+}
+
 /** The browser rejects a pseudo it does not know, and then silently skips the rule. */
 function checkBrowserSelectors() {
 	const generated = readFileSync(join(repoRoot, 'src/utilities/dev-rules.generated.ts'), 'utf8');
-	if (generated.includes(':named-by-field')) {
-		problems.push(`dev rules still hold :named-by-field: write it as the last option of an assert.`);
+	for (const name of ['named-by-field', ...SOURCE_ONLY_PSEUDOS]) {
+		if (new RegExp(`:${name}\\b`).test(generated)) problems.push(`dev rules hold :${name}, which the browser does not know.`);
+	}
+}
+
+/**
+ * A component that styles a plain element it is given (`::slotted(a)`) says so with
+ * `@accepts a`, or `nldd lint --pure` reports that element in every app as the app's own.
+ */
+function checkSlottedIsAccepted() {
+	const accepted = new Map();
+	for (const [file, source] of componentSources) {
+		const directory = dirname(file);
+		for (const [, tag] of source.matchAll(/@element (nldd-[a-z0-9-]+)/g)) {
+			const accepts = data.tags[tag]?.accepts ?? [];
+			accepted.set(directory, new Set([...(accepted.get(directory) ?? []), ...accepts]));
+		}
+	}
+	for (const [file, source] of componentSources.filter(([name]) => name.endsWith('.styles.ts'))) {
+		const accepts = accepted.get(dirname(file)) ?? new Set();
+		for (const [, element] of source.matchAll(/::slotted\(\s*([a-z][a-z0-9]*)(?![a-z0-9-])/g)) {
+			if (!accepts.has(element) && !accepts.has('*')) {
+				problems.push(`${relative(repoRoot, file)}: styles ::slotted(${element}) but no element in this folder has @accepts ${element}.`);
+			}
+		}
 	}
 }
 
@@ -242,12 +285,14 @@ for (const rule of data.rules) {
 	checkFix(rule);
 	checkSee(rule);
 	checkStates(rule);
+	checkSourceOnlyPseudos(rule);
 	if (!rule.runtime) await checkExamples(rule);
 }
 const patterns = await checkPatterns();
 checkStatesAreRead();
 checkNoWarnings();
 checkBrowserSelectors();
+checkSlottedIsAccepted();
 
 if (problems.length > 0) {
 	console.error(problems.join('\n'));
