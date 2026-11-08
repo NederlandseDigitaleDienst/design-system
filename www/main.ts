@@ -34,6 +34,7 @@ import '../src/components/layout/container/container.ts';
 import '../src/components/layout/page-footer/page-footer.ts';
 import '../src/components/layout/page-sections/hero/hero.ts';
 import '../src/components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.ts';
+import '../src/components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.ts';
 import '../src/components/layout/page-sections/simple-section/simple-section.ts';
 import '../src/components/layout/page/page.ts';
 import '../src/components/layout/shell/shell.ts';
