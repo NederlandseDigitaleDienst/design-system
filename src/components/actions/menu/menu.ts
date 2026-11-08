@@ -13,6 +13,7 @@ import '../../content/icon/icon.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { isKeyboardMode, isTouchMode } from '../../../utilities/input-modality.js';
+import { FocusReturn } from '../../../utilities/return-focus.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { NLDDMenuItem } from './menu-item.js';
@@ -229,6 +230,8 @@ export class NLDDMenu extends LitElement {
 	_parentItem: NLDDMenuItem | null = null;
 
 	private _isOpen = false;
+
+	private _focusReturn = new FocusReturn();
 	/** Tracked so the pointerdown re-sync moves along when the anchor changes. */
 	private _previousAnchorForResync: Element | null = null;
 	/** Set on the root when a pointer gesture (outside/anchor pointerdown
@@ -1599,7 +1602,11 @@ export class NLDDMenu extends LitElement {
 	};
 
 	private _handleBeforeToggle = (event: Event): void => {
-		if ((event as ToggleEvent).newState === 'open') this.removeAttribute('positioned');
+		if ((event as ToggleEvent).newState !== 'open') return;
+		this.removeAttribute('positioned');
+		// A listbox leaves focus on its control, and a submenu hands it to its
+		// parent item, so only a root menu that takes focus gives it back.
+		if (this.variant !== 'listbox' && !this._isSubmenu) this._focusReturn.remember(this._getAnchorEl());
 	};
 
 	private _handleToggle = async (event: Event): Promise<void> => {
@@ -1625,6 +1632,7 @@ export class NLDDMenu extends LitElement {
 			document.removeEventListener('pointerdown', this._handleDocumentPointerdown, true);
 			this._pointer.stopOutsideTap();
 			this._clearHighlight();
+			this._focusReturn.restore(this);
 			return;
 		}
 

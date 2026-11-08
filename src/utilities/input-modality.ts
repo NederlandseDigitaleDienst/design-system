@@ -10,18 +10,20 @@ function init(): void {
 	controller = new AbortController();
 	const { signal } = controller;
 
+	// Capture, so a key or press a component stops (Escape in nldd-popover)
+	// still counts.
 	document.addEventListener('keydown', (e: KeyboardEvent) => {
 		if (['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', ' ', 'Escape'].includes(e.key)) {
 			modality = 'keyboard';
 		}
-	}, { signal });
+	}, { signal, capture: true });
 
 	// pointerdown carries `pointerType` ('mouse' | 'pen' | 'touch'). Use it so
 	// we can distinguish touch from mouse in one listener. Pen is grouped with
 	// mouse: stylus users generally expect the same hover/focus semantics.
 	document.addEventListener('pointerdown', (e: PointerEvent) => {
 		modality = e.pointerType === 'touch' ? 'touch' : 'mouse';
-	}, { signal });
+	}, { signal, capture: true });
 }
 
 export function getInputModality(): InputModality {

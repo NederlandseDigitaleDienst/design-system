@@ -27,6 +27,7 @@ here; consult the commit history if you need that level of detail.
 
 - **An open submenu of `nldd-menu` closes when the pointer turns away from it,** onto a divider, header, footer, the padding of the menu or out of the menu, instead of staying open with no item under the cursor. On its way to the submenu the pointer is still protected.
 - **`nldd-top-navigation-bar` also clears `current` on an item a framework made current as a property,** so two items can no longer be current at once.
+- **`nldd-popover`, `nldd-menu`, `nldd-sheet` and `nldd-window` return focus without a focus ring after a tap or click.** Safari drew a ring around the element that had focus before the overlay opened, also when you only used a finger or mouse. With the keyboard the ring stays. A popover or menu opened from a button that Safari gave no focus now returns focus to that button instead of the page, so Tab goes on from there.
 
 ## [0.19.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.18.0...v0.19.0) (2026-11-08)
 
