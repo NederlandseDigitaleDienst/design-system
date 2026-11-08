@@ -1,0 +1,7 @@
+severity: error
+context: 'nldd-search-field[search-button="neutral-tinted"], nldd-search-field[search-button="accent-filled"]'
+fix: { value: { search-button: { neutral-tinted: secondary, accent-filled: primary } } }
+message: '`search-button` takes `secondary` or `primary` now, the appearances of nldd-button. Rename it here and on every other nldd-search-field.'
+examples:
+  passed: ['<nldd-search-field search-button></nldd-search-field>', '<nldd-search-field search-button="primary"></nldd-search-field>']
+  failed: ['<nldd-search-field search-button="neutral-tinted"></nldd-search-field>', '<nldd-search-field search-button="accent-filled"></nldd-search-field>']

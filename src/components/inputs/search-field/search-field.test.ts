@@ -89,12 +89,12 @@ describe('nldd-search-field – state', () => {
 		expect(el.shadowRoot!.querySelector('nldd-button')).not.toBeNull();
 	});
 
-	it('gives the search button the appearance it names, neutral-tinted by default', async () => {
+	it('gives the search button the appearance it names, secondary by default', async () => {
 		el = await fixture<NLDDSearchField>('<nldd-search-field search-button></nldd-search-field>');
-		expect(el.shadowRoot!.querySelector<HTMLElement & { appearance: string }>('nldd-button')!.appearance).toBe('neutral-tinted');
-		el.setAttribute('search-button', 'accent-filled');
+		expect(el.shadowRoot!.querySelector<HTMLElement & { appearance: string }>('nldd-button')!.appearance).toBe('secondary');
+		el.setAttribute('search-button', 'primary');
 		await el.updateComplete;
-		expect(el.shadowRoot!.querySelector<HTMLElement & { appearance: string }>('nldd-button')!.appearance).toBe('accent-filled');
+		expect(el.shadowRoot!.querySelector<HTMLElement & { appearance: string }>('nldd-button')!.appearance).toBe('primary');
 	});
 });
 
