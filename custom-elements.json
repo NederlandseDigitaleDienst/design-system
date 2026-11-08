@@ -16282,7 +16282,7 @@
               "expandedType": {
                 "text": "'lg' | 'md' | 'sm'"
               },
-              "description": "'sm' | 'md' (default) | 'lg'. 'lg' has boxes of 56px with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Narrower than sm, the boxes narrow with it."
+              "description": "'sm' | 'md' (default) | 'lg'. 'lg' has boxes 56px tall with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Where not even sm fits, the field shows the code in a text field of its own size."
             },
             {
               "name": "length",
