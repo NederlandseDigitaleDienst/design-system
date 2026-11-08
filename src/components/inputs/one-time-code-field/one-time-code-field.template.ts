@@ -1,6 +1,7 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { BOX, type NLDDOneTimeCodeField } from './one-time-code-field.js';
+import './../../content/icon/icon.js';
 
 function renderBox(component: NLDDOneTimeCodeField, index: number): TemplateResult {
 	const character = component.charAt(index);
@@ -64,6 +65,15 @@ export function oneTimeCodeFieldTemplate(component: NLDDOneTimeCodeField): Templ
 				@input=${component._handleInput}
 				@change=${component._handleChange}
 			>
+			<div class="one-time-code-field__input-fade"></div>
+			${component.invalid ? html`
+				<div class="one-time-code-field__validation-icon-area">
+					<nldd-icon class="one-time-code-field__validation-icon"
+						icon="invalid"
+						aria-hidden="true"
+					></nldd-icon>
+				</div>
+			` : nothing}
 			<div class="one-time-code-field__boxes"
 				aria-hidden="true"
 			>
