@@ -68,17 +68,21 @@ function createFieldLabelCheck(isInput, allowMaybe) {
 /**
  * Whether the nearest component around a plain element styles it, as nldd-dropdown
  * does its <select> and nldd-rich-text everything in it. Each component says so
- * with `@accepts` in its JSDoc. A component of the app on the way could be anything.
- * The file is the boundary: that a parent elsewhere might put this file inside an
- * nldd-rich-text does not make the plain HTML written here the system's.
+ * with `@accepts` in its JSDoc; `freely` asks for one that accepts anything.
+ *
+ * What a file renders is judged in that file: that a parent elsewhere might put it
+ * inside an nldd-rich-text does not make plain HTML written here the system's. What
+ * the file builds to place elsewhere (JSX in a variable or a prop) might land in
+ * one of its own components, so there it is unknown, as is a component of the app.
  */
-function createAcceptedCheck(tags, allowUnknown) {
+function createAcceptedCheck(tags, { allowUnknown, freely = false }) {
 	return (node) => {
-		for (let parent = node.parent; parent && parent.name !== '#root'; parent = parent.parent) {
+		for (let parent = node.parent; parent; parent = parent.parent) {
+			if (parent.name === '#root') return parent.detached ? allowUnknown : false;
 			if (parent.opaque) return allowUnknown;
-			if (!parent.name?.startsWith('nldd-')) continue;
+			if (!parent.name.startsWith('nldd-')) continue;
 			const accepts = tags[parent.name]?.accepts ?? [];
-			return accepts.includes('*') || accepts.includes(node.name);
+			return accepts.includes('*') || (!freely && accepts.includes(node.name));
 		}
 		return false;
 	};
@@ -108,6 +112,7 @@ function forWorld(tokens, classes, widen) {
 		if (!widen) return token;
 		if (token.type === 'pseudo' && token.name === 'named-by-field') return { ...token, name: 'may-be-named-by-field' };
 		if (token.type === 'pseudo' && token.name === 'accepted') return { ...token, name: 'may-be-accepted' };
+		if (token.type === 'pseudo' && token.name === 'accepted-freely') return { ...token, name: 'may-be-accepted-freely' };
 		if (token.type === 'tag' || (token.type === 'pseudo' && token.name in classes)) {
 			return { type: 'pseudo', name: 'is', data: [[token], [unknown]] };
 		}
@@ -127,8 +132,12 @@ export function createEngine({ classes = {}, tags = {} } = {}) {
 		...shared,
 		'named-by-field': createFieldLabelCheck(shared['form-input'] ?? (() => false), false),
 		'may-be-named-by-field': createFieldLabelCheck(shared['form-input'] ?? (() => false), true),
-		accepted: createAcceptedCheck(tags, false),
-		'may-be-accepted': createAcceptedCheck(tags, true),
+		accepted: createAcceptedCheck(tags, { allowUnknown: false }),
+		'may-be-accepted': createAcceptedCheck(tags, { allowUnknown: true }),
+		'accepted-freely': createAcceptedCheck(tags, { allowUnknown: false, freely: true }),
+		'may-be-accepted-freely': createAcceptedCheck(tags, { allowUnknown: true, freely: true }),
+		// No element and no text: an empty mount point such as <div id="app"></div>.
+		blank: (node) => node.children.length === 0 && !node.text,
 		// Only exists on a running page, so in source it is never true.
 		state: () => false,
 		unknown: (node) => node.opaque,

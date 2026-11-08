@@ -7,7 +7,7 @@ import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, OPT_IN_GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
-import { applyBaseline, DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, readBaseline, readConfig, REFERENCE_EXTENSIONS, STYLESHEET_EXTENSIONS, writeBaseline } from './project.js';
+import { applyBaseline, DEFAULT_EXTENSIONS, looseInBaseline, tightenBaseline, findFiles, IGNORED_DIRECTORIES, readBaseline, readConfig, REFERENCE_EXTENSIONS, STYLESHEET_EXTENSIONS, writeBaseline } from './project.js';
 
 const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
@@ -16,6 +16,7 @@ const USAGE = `Usage:
     --pure                          also check that everything comes from the system: no class,
                                     style, plain HTML or stylesheet of your own (the group pure)
     --update-baseline               accept what is there now, report only new findings
+    --tighten-baseline              lower the baseline to what is still there; never raises it
     --max-warnings <n>              exit 1 above this number of warnings
     --select <groups or rules>      only these, comma separated
     --ignore <groups or rules>      all but these
@@ -137,9 +138,13 @@ async function runLint(data, paths, options) {
 	const chosen = { text: formatText, json: formatJson, github: formatGithub }[formatName];
 	if (!chosen) throw new Error(`Unknown format: ${formatName}`);
 	if (options.statistics && formatName !== 'text') throw new Error('--statistics is plain text, so it takes no --format.');
-	if (options['update-baseline'] && (options.select || options.ignore)) {
-		throw new Error('--update-baseline takes no --select or --ignore: it would forget every finding outside them.');
+	for (const flag of ['update-baseline', 'tighten-baseline']) {
+		if (options[flag] && (options.select || options.ignore)) {
+			throw new Error(`--${flag} takes no --select or --ignore: it would forget every finding outside them.`);
+		}
 	}
+	if (options['update-baseline'] && options['tighten-baseline']) throw new Error('Choose --update-baseline or --tighten-baseline.');
+	if (options['tighten-baseline'] && options.stdin) throw new Error('--tighten-baseline reads the project, so it takes no --stdin.');
 	const root = process.cwd();
 	const started = performance.now();
 	if (options.fix && (options.stdin || options['update-baseline'])) {
@@ -205,9 +210,14 @@ async function runLint(data, paths, options) {
 		}
 	}
 
+	// A run without --pure leaves what the group pure accepted alone.
+	const ran = (id) => !OPT_IN_GROUPS.includes(findRule(data, id)?.group) || Boolean(severities[id] && severities[id] !== 'off');
+	if (options['tighten-baseline']) {
+		const dropped = tightenBaseline(results, root, canonical, ran);
+		console.log(`Baseline tightened: ${dropped} fewer findings accepted.`);
+		return 0;
+	}
 	if (options['update-baseline']) {
-		// A run without --pure leaves what the group pure accepted alone.
-		const ran = (id) => !OPT_IN_GROUPS.includes(findRule(data, id)?.group) || (severities[id] && severities[id] !== 'off');
 		writeBaseline(results, root, canonical, ran);
 		const accepted = results.flatMap(({ findings }) => findings).filter(({ severity }) => severity !== 'hint').length;
 		console.log(`Baseline updated: ${accepted} findings accepted.`);
@@ -227,6 +237,7 @@ async function runLint(data, paths, options) {
 		files: inputs.length,
 		ms: Math.round(performance.now() - started),
 		skipped,
+		loose: looseInBaseline(results, baseline, root, ran),
 		explainRule: (id) => findRule(data, id),
 	};
 	const format = options.statistics ? formatStatistics : chosen;
@@ -247,6 +258,7 @@ async function main() {
 		options: {
 			format: { type: 'string' },
 			'update-baseline': { type: 'boolean' },
+			'tighten-baseline': { type: 'boolean' },
 			'max-warnings': { type: 'string' },
 			stdin: { type: 'boolean' },
 			filename: { type: 'string' },

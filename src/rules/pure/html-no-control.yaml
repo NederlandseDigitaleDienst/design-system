@@ -1,7 +1,7 @@
 severity: error
-context: ':is(button, a, input, select, textarea, label, form, fieldset, details, dialog):not(:accepted)'
+context: ':is(button, a, input:not([type="hidden"]), select, textarea, label, form, fieldset, details, dialog):not(:accepted)'
 message: 'Use the component for it: nldd-button, nldd-link, a field such as nldd-text-field in nldd-form-field, nldd-form.'
 see: ontwerprichtlijnen/visueel-en-layout
 examples:
-  passed: ['<nldd-button text="Bewaar"></nldd-button>', '<nldd-text>Lees de <a href="/voorwaarden">voorwaarden</a></nldd-text>', '<nldd-dropdown><select><option>Dakisolatie</option></select></nldd-dropdown>']
-  failed: ['<button>Bewaar</button>', '<a href="/aanvragen">Aanvragen</a>']
+  passed: ['<nldd-button text="Bewaar"></nldd-button>', '<nldd-text>Lees de <a href="/voorwaarden">voorwaarden</a></nldd-text>', '<nldd-dropdown><select><option>Dakisolatie</option></select></nldd-dropdown>', '<nldd-form><form action="/aanvragen"><input type="hidden" name="csrf" value="x"><nldd-button text="Bewaar" type="submit"></nldd-button></form></nldd-form>']
+  failed: ['<button>Bewaar</button>', '<nldd-form><form><input name="naam"></form></nldd-form>', '<a href="/aanvragen">Aanvragen</a>']

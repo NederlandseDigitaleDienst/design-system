@@ -28,6 +28,7 @@
  * @element nldd-form-field-help-text
  *
  * @slot - Help text content. May contain inline elements including links.
+ * @accepts a
  *
  * ─────────────────────────────────────────────────────────────────────────
  *

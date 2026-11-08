@@ -81,6 +81,7 @@ function readHtmlChildren(children, parent, given) {
 	const hole = given.lit && children.find((node) => node.type === 'text' && node.data.includes('${'));
 	if (hole) appendUnknown(parent, hole.startIndex ?? 0);
 	for (const node of children) {
+		if (node.type === 'text' && node.data.trim()) parent.text = true;
 		// htmlparser2 gives <style> a type of its own; the group pure has a rule about it.
 		if (node.type !== 'tag' && node.type !== 'style') continue;
 		const { name, attribs } = node;
@@ -230,7 +231,7 @@ const ownCss = (source) =>
 	source
 		.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '))
 		.replace(/^\s*\/\/.*$/gm, (comment) => ' '.repeat(comment.length))
-		.replace(/@import\s+(url\()?['"]?[^'";)]*nldd[^;]*;/g, (line) => ' '.repeat(line.length));
+		.replace(/@import\s+(url\()?['"]?[^'";)]*(@nldd\/design-system|\/nldd\/)[^;]*;/g, (line) => ' '.repeat(line.length));
 
 /**
  * A stylesheet file is a <style> element in a file of its own, so the rule about
@@ -338,14 +339,28 @@ function jsxName(node) {
 	return `${node.namespace.name}:${node.name.name}`;
 }
 
-function collectJsx(node, found) {
+/** Between a return and the JSX it returns: `return a ? <x /> : <y />`. */
+const PASSES_ON_RETURN = new Set(['ConditionalExpression', 'LogicalExpression', 'ParenthesizedExpression', 'SequenceExpression']);
+
+/**
+ * Finds every JSX tree. One that a function returns is what a component renders;
+ * any other (in a variable, an array, an argument) is built to be placed elsewhere,
+ * maybe inside a component of this same file, and is marked detached.
+ */
+function collectJsx(node, found, returned = false) {
 	if (!node || typeof node !== 'object') return;
 	if (Array.isArray(node)) {
-		for (const item of node) collectJsx(item, found);
+		for (const item of node) collectJsx(item, found, returned);
 	} else if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
-		found.push(node);
+		found.push({ node, detached: !returned });
 	} else {
-		for (const key of Object.keys(node)) collectJsx(node[key], found);
+		for (const key of Object.keys(node)) {
+			const returns =
+				(node.type === 'ReturnStatement' && key === 'argument')
+				|| (node.type === 'ArrowFunctionExpression' && key === 'body')
+				|| (returned && PASSES_ON_RETURN.has(node.type));
+			collectJsx(node[key], found, returns);
+		}
 	}
 }
 
@@ -381,7 +396,7 @@ function readJsxAttributes(element, attributes, roots) {
 		// An element passed as a prop renders elsewhere, so it is a tree of its own.
 		const nested = [];
 		collectJsx(attribute.value, nested);
-		for (const node of nested) roots.push(jsxTree(node, roots));
+		for (const { node } of nested) roots.push(jsxTree(node, roots, true));
 	}
 }
 
@@ -393,8 +408,10 @@ function readJsxExpression(expression, parent, flags, roots) {
 			readJsxNode(expression, parent, flags, roots);
 			break;
 		case 'JSXEmptyExpression':
+			break;
 		case 'Literal':
 		case 'TemplateLiteral':
+			if (expression.value !== '' && expression.value !== null) parent.text = true;
 			break;
 		case 'LogicalExpression':
 			// The left of `a && <x />` renders nothing worth counting.
@@ -412,7 +429,7 @@ function readJsxExpression(expression, parent, flags, roots) {
 			const found = [];
 			collectJsx(expression, found);
 			if (found.length === 0) appendUnknown(parent, expression.start);
-			for (const node of found) {
+			for (const { node } of found) {
 				readJsxNode(node, parent, { ...flags, repeated: true }, roots);
 			}
 			break;
@@ -424,6 +441,7 @@ function readJsxExpression(expression, parent, flags, roots) {
 
 function readJsxChildren(children, parent, flags, roots) {
 	for (const child of children) {
+		if (child.type === 'JSXText' && child.value.trim()) parent.text = true;
 		if (child.type === 'JSXElement' || child.type === 'JSXFragment') {
 			readJsxNode(child, parent, flags, roots);
 		} else if (child.type === 'JSXExpressionContainer') {
@@ -454,8 +472,9 @@ function readJsxNode(node, parent, flags, roots) {
 	readJsxChildren(node.children, element, {}, roots);
 }
 
-function jsxTree(node, roots) {
+function jsxTree(node, roots, detached = true) {
 	const root = createRoot();
+	if (detached) root.detached = true;
 	readJsxNode(node, root, {}, roots);
 	return root;
 }
@@ -470,7 +489,7 @@ export async function parseJsx(source, filename) {
 	const found = [];
 	collectJsx(program, found);
 	const roots = [];
-	for (const node of found) roots.push(jsxTree(node, roots));
+	for (const { node, detached } of found) roots.push(jsxTree(node, roots, detached));
 	if (errors?.length) {
 		roots.syntaxError = { message: errors[0].message, offset: errors[0].labels?.[0]?.start ?? 0 };
 	}

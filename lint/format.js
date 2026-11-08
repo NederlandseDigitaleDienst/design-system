@@ -45,7 +45,7 @@ function hintSummary(results, root, explainRule) {
 	return lines;
 }
 
-export function formatText(results, { root, files, ms, skipped, explainRule }) {
+export function formatText(results, { root, files, ms, skipped, loose, explainRule }) {
 	const lines = [];
 	for (const { filename, source, findings } of results) {
 		const sourceLines = source.split('\n');
@@ -65,7 +65,7 @@ export function formatText(results, { root, files, ms, skipped, explainRule }) {
 	const errors = count('error');
 	const warnings = count('warn');
 	const hints = count('hint') ? `, ${plural(count('hint'), 'hint')}` : '';
-	const known = skipped ? dim(` (${skipped} in baseline)`) : '';
+	const known = (skipped ? dim(` (${skipped} in baseline)`) : '') + (loose ? dim(` (${loose} accepted no longer found: run --tighten-baseline)`) : '');
 	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')}${hints} in ${plural(files, 'file')} (${ms} ms)`;
 	const fixable = all.filter(({ fix }) => fix).length;
 	const canFix = fixable ? `, ${fixable} fixable with --fix` : '';

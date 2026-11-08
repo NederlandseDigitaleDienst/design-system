@@ -189,7 +189,11 @@ function parseComponent(block, filePath, fallbackTag) {
 				// The plain HTML elements this component styles itself, such as the
 				// <select> in nldd-dropdown, or * for any. Written as `@accepts select, option`.
 				if (!current) break;
-				current.accepts.push(...rest.split(/[\s,]+/).filter(Boolean));
+				const names = rest.split(/[\s,]+/).filter(Boolean);
+				// A description after the names would read as more names, so nothing else goes here.
+				const wrong = names.find((name) => !/^([a-z][a-z0-9]*|\*)$/.test(name));
+				if (wrong) throw new Error(`${filePath}: @accepts on ${current.tag} takes element names only, not "${wrong}".`);
+				current.accepts.push(...names);
 				break;
 			}
 			case 'fires': {

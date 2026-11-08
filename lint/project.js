@@ -128,6 +128,55 @@ export function applyBaseline(filename, findings, baseline, root) {
 	});
 }
 
+const countFindings = (findings) => {
+	const counts = {};
+	for (const finding of findings.filter(({ severity }) => severity !== 'hint')) {
+		counts[baselineKey(finding)] = (counts[baselineKey(finding)] ?? 0) + 1;
+	}
+	return counts;
+};
+
+/** How many accepted findings of the rules that ran are gone from the files that were read. */
+export function looseInBaseline(results, baseline, root, ran) {
+	let loose = 0;
+	for (const { filename, findings } of results) {
+		const found = countFindings(findings);
+		for (const [entry, count] of Object.entries(baseline[relative(root, filename)] ?? {})) {
+			if (ran(entry.split('|')[0])) loose += Math.max(0, count - (found[entry] ?? 0));
+		}
+	}
+	return loose;
+}
+
+/**
+ * Lowers what the baseline accepts to what is still there, and never raises or adds
+ * anything: a ratchet. A file that is gone takes its entry along.
+ */
+export function tightenBaseline(results, root, canonical, ran) {
+	const baseline = readBaseline(root, canonical);
+	const read = new Map(results.map(({ filename, findings }) => [relative(root, filename), countFindings(findings)]));
+	let dropped = 0;
+	for (const [file, entries] of Object.entries(baseline)) {
+		if (!existsSync(join(root, file))) {
+			dropped += Object.values(entries).reduce((sum, count) => sum + count, 0);
+			delete baseline[file];
+			continue;
+		}
+		const found = read.get(file);
+		if (!found) continue;
+		for (const [entry, count] of Object.entries(entries)) {
+			if (!ran(entry.split('|')[0])) continue;
+			const kept = Math.min(count, found[entry] ?? 0);
+			dropped += count - kept;
+			if (kept === 0) delete entries[entry];
+			else entries[entry] = kept;
+		}
+		if (Object.keys(entries).length === 0) delete baseline[file];
+	}
+	writeFileSync(join(root, BASELINE_FILE), `${JSON.stringify(baseline, null, '\t')}\n`);
+	return dropped;
+}
+
 /** `ran` says which rules this run checked: what another rule accepted stays accepted. */
 export function writeBaseline(results, root, canonical, ran = () => true) {
 	const baseline = readBaseline(root, canonical);

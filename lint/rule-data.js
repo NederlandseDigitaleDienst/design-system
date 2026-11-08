@@ -31,6 +31,9 @@ export function resolveSeverities(data, levels = {}, { select, ignore, optIn = [
 	for (const [id, group] of groupOf) {
 		if (!severities[id] && levels[group]) severities[id] = levels[group];
 		if (OPT_IN_GROUPS.includes(group)) {
+			// The command line beats the config for the group, not for a rule the config names.
+			const namedInConfig = Object.keys(levels).some((key) => canonical(key) === id);
+			if (optIn.includes(group) && !namedInConfig && severities[id] === 'off') delete severities[id];
 			const chosen = severities[id] || optIn.includes(group) || (select?.length && matches(id, select));
 			// The linter runs a rule of such a group only with a level written out.
 			severities[id] = chosen ? (severities[id] ?? levelOf.get(id)) : 'off';

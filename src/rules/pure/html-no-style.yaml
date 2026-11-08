@@ -1,7 +1,7 @@
 severity: error
-context: ':written(style):not(:accepted)'
+context: ':written(style):not(:accepted-freely)'
 message: 'Set the look with the attributes of a component, not with style.'
 see: ontwerprichtlijnen/visueel-en-layout
 examples:
   passed: ['<nldd-container padding="16"></nldd-container>']
-  failed: ['<nldd-container style="padding: 16px"></nldd-container>', '<nldd-button text="Bewaar" :style="{ marginTop: gap }"></nldd-button>']
+  failed: ['<nldd-container style="padding: 16px"></nldd-container>', '<nldd-text><strong style="color: red">Afgewezen</strong></nldd-text>', '<nldd-button text="Bewaar" :style="{ marginTop: gap }"></nldd-button>']

@@ -1227,7 +1227,7 @@ describe('the group pure', () => {
 	});
 
 	it('finds a class whose value is bound, not only a written one', async () => {
-		assert.deepEqual(await rulesIn(pure, '<nldd-button text="a" className={cn(x)} />'), ['html-no-class']);
+		assert.deepEqual(await rulesIn(pure, 'const A = () => <nldd-button text="a" className={cn(x)} />;'), ['html-no-class']);
 	});
 
 	it('leaves plain HTML alone where the component around it styles it', async () => {
@@ -1240,6 +1240,35 @@ describe('the group pure', () => {
 		assert.deepEqual(await rulesIn(pure, '<nldd-container><Card><p>x</p></Card></nldd-container>'), []);
 	});
 
+	it('finds an element with only text in it, and a rule, which is always empty', async () => {
+		assert.deepEqual(await rulesIn(pure, '<nldd-container><span>Aanvraag</span><div>{naam}</div><hr /></nldd-container>'), ['html-no-container', 'html-no-container', 'html-no-container']);
+	});
+
+	it('lets a class or style be only where the component takes any HTML', async () => {
+		assert.deepEqual(await rulesIn(pure, '<nldd-text><span className="rood">x</span></nldd-text>'), ['html-no-class']);
+		assert.deepEqual(await rulesIn(pure, '<nldd-rich-text><pre className="language-js">x</pre></nldd-rich-text>'), []);
+	});
+
+	it('takes a form of the app in nldd-form, and a hidden field in it', async () => {
+		assert.deepEqual(await rulesIn(pure, '<nldd-form><form onSubmit={save}><input type="hidden" name="csrf" /></form></nldd-form>'), []);
+	});
+
+	it('is unsure about JSX built to be placed elsewhere, as in a variable or a prop', async () => {
+		assert.deepEqual(await rulesIn(pure, 'const A = () => { const b = <strong>x</strong>; return <nldd-text>{b}</nldd-text>; };'), []);
+		assert.deepEqual(await rulesIn(pure, '<nldd-list renderItem={() => <p>x</p>} />'), []);
+	});
+
+	it('lets a bare carrier of a slot be', async () => {
+		assert.deepEqual(await rulesIn(pure, '<nldd-title text="a"><span slot="supporting-text">b <nldd-link href="/c" text="c" /></span></nldd-title>'), []);
+	});
+
+	it('turns the group on from the command line, over a config that has it off', () => {
+		const data = loadData();
+		const severities = resolveSeverities(data, { pure: 'off', 'html-no-image': 'off' }, { optIn: ['pure'] });
+		assert.equal(severities['html-no-text'], 'error');
+		assert.equal(severities['html-no-image'], 'off');
+	});
+
 	it('lets an empty mount point be', async () => {
 		assert.deepEqual(await rulesIn(pure, '<html><body><div id="app"></div></body></html>', 'index.html'), []);
 	});
@@ -1249,6 +1278,22 @@ describe('the group pure', () => {
 		assert.deepEqual(await rulesIn(pure, '.app { padding: 4px }', 'app.css'), ['html-no-stylesheet']);
 		assert.deepEqual(await rulesIn(pure, '<template><nldd-text>a</nldd-text></template><style scoped>.a {}</style>', 'a.vue'), ['html-no-stylesheet']);
 		assert.deepEqual(await rulesIn(pure, '<html><head><style>body {}</style></head></html>', 'a.html'), ['html-no-stylesheet']);
+	});
+
+	it('tightens a baseline and never raises it', () => {
+		const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+		const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		const write = (body) => writeFileSync(join(root, 'a.tsx'), body);
+		write('export const A = () => <p>x</p>;\nexport const B = () => <p>y</p>;\n');
+		run(root, 'lint', '--pure', '--update-baseline');
+		write('export const A = () => <nldd-text>x</nldd-text>;\nexport const B = () => <p>y</p>;\n');
+		assert.match(run(root, 'lint', '--pure').stdout, /1 accepted no longer found: run --tighten-baseline/);
+		run(root, 'lint', '--pure', '--tighten-baseline');
+		assert.deepEqual(readBaseline(root)['a.tsx'], { 'html-no-text|p': 1 });
+		write('export const A = () => <p>x</p>;\nexport const B = () => <p>y</p>;\n');
+		run(root, 'lint', '--pure', '--tighten-baseline');
+		assert.equal(run(root, 'lint', '--pure').status, 1);
 	});
 
 	it('is turned on with --pure, and a baseline without it keeps what pure accepted', () => {

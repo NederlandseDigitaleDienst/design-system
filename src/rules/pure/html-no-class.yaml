@@ -1,7 +1,7 @@
 severity: error
-context: ':written(class):not(:accepted)'
+context: ':written(class):not(:accepted-freely)'
 message: 'Set the look with the attributes of a component, not with a class.'
 see: ontwerprichtlijnen/visueel-en-layout
 examples:
   passed: ['<nldd-button text="Bewaar" appearance="primary"></nldd-button>', '<nldd-rich-text><pre class="language-js">x</pre></nldd-rich-text>']
-  failed: ['<nldd-button text="Bewaar" class="mt-4"></nldd-button>', '<nldd-container :class="spacing"></nldd-container>']
+  failed: ['<nldd-button text="Bewaar" class="mt-4"></nldd-button>', '<nldd-text><span class="rood">Afgewezen</span></nldd-text>', '<nldd-container :class="spacing"></nldd-container>']

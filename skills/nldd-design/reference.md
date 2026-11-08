@@ -631,6 +631,8 @@ An editorial line that shows authors or editors: optional avatar or avatars, a n
 | `text` | Name line as rich content (a link to the author's profile, for instance) |
 | `supporting-text` | Supporting text as rich content (a time element, for instance) |
 
+**Plain HTML it styles:** `<img>`. Elsewhere, `nldd lint --pure` reports such an element.
+
 ### `<nldd-image>`
 
 Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image. Without an image (no `src`, `srcset`, `lqip` or slotted media) it shows a neutral area with an image icon, in the box, shape and caption a real image would get: a place where an image belongs, for a prototype or a pattern, or an image someone forgot. Without `aspect-ratio` that area is 16/9. While the built-in `<img>` loads without an `lqip`, the same area shows without the icon, and it goes once the image is in.
@@ -823,6 +825,8 @@ A title bar with an optional overline, title, and supporting text on the left, a
 | `supporting-text` | Supporting text that is more than text. Takes the place of the supporting-text attribute. |
 | `end` | Whatever belongs at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there. |
 
+**Plain HTML it styles:** `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`. Elsewhere, `nldd lint --pure` reports such an element.
+
 ### `<nldd-token>`
 
 A self-contained piece of data the user is handling: a person in an address field, an active filter value. Alone among the three it can be operated, so it is optionally dismissable or interactive through a contextual menu. For something you only read, reach for `nldd-tag` (a trait someone assigned) or `nldd-badge` (a state or a count the system keeps).
@@ -926,6 +930,8 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 | `enctype` | `string` | Encoding type for submission |
 | `novalidate` | `boolean` | Skip native browser validation |
 
+**Plain HTML it styles:** `<form>`. Elsewhere, `nldd lint --pure` reports such an element.
+
 **Events**
 
 | Event | Description |
@@ -1000,6 +1006,8 @@ A field around one input: its label, supporting label, optional badge, validatio
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Help text content. May contain inline elements including links. |
+
+**Plain HTML it styles:** `<a>`. Elsewhere, `nldd lint --pure` reports such an element.
 
 ### `<nldd-form-section>`
 
@@ -2408,8 +2416,10 @@ The section that says what a page is for: it names the main goal of what you can
 
 | Slot | Description |
 | --- | --- |
-| `media` | Image or illustration (img or nldd-image); fills the area and is clipped. Takes precedence over the media-src attributes. Set `alt=""` when the image is decorative; otherwise give a describing alt text. |
+| `media` | Image or illustration (img or nldd-image); fills the area and is clipped. |
 | _(default)_ | Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance) |
+
+**Plain HTML it styles:** `<img>`. Elsewhere, `nldd lint --pure` reports such an element.
 
 ### `<nldd-kanban>`
 

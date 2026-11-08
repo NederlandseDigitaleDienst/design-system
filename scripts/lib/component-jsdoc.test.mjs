@@ -43,3 +43,7 @@ test('reads the plain HTML an element styles itself from @accepts', () => {
 	const [component] = parse(['@element nldd-thing', '', '@slot - A native select.', '@accepts select, option optgroup'].join('\n'));
 	assert.deepEqual(component.accepts, ['select', 'option', 'optgroup']);
 });
+
+test('refuses a description after @accepts, which would read as element names', () => {
+	assert.throws(() => parse(['@element nldd-thing', '@accepts select - the native one'].join('\n')), /takes element names only/);
+});

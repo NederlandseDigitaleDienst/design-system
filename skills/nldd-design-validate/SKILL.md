@@ -24,7 +24,8 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 |---|---|
 | Regels voor een component, vóór je het gebruikt | `npx @nldd/design-system rules --for nldd-toolbar` |
 | Eén soort regels | `... lint --select a11y` of `--ignore copy`; groepen: `api`, `a11y`, `copy`, `structure`, `pattern`, `pure` |
-| Controleren dat alles uit het systeem komt | `... lint --pure`: ook geen eigen `class`, `style`, kale HTML of stylesheet. Voor een project: `"rules": { "pure": "error" }` in `.nldd-lint.json` |
+| Controleren dat alles uit het systeem komt | `... lint --pure`: ook geen eigen `class`, `style`, kale HTML of stylesheet. Voor een project: `"rules": { "pure": "error" }` in `.nldd-lint.json`. Op broncode, niet op `dist`: in een bundel is de CSS van het systeem niet meer van de eigen te onderscheiden |
+| Een baseline die alleen kleiner wordt | `... lint --tighten-baseline`: verlaagt wat geaccepteerd is tot wat er nog staat, en voegt nooit iets toe |
 | Beginnen in een project met honderden meldingen | `... lint --statistics`: telling per regel, grootste eerst |
 | Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
 | Vue, React, Angular, Django, Jinja, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.html` en `.j2` |

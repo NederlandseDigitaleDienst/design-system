@@ -58,6 +58,7 @@ import '../../../utilities/custom-element.js';
  * @attr {string} action - URL endpoint for submission
  * @attr {string} enctype - Encoding type for submission
  * @attr {boolean} novalidate - Skip native browser validation
+ * @accepts form
  *
  * @prop {HTMLFormElement | null} form - The inner <form> element (read-only). Use it for `form.checkValidity()`, direct DOM manipulation, or as the target for framework-managed children.
  *

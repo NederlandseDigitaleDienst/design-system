@@ -5917,6 +5917,9 @@
           },
           "tagName": "nldd-identity",
           "customElement": true,
+          "accepts": [
+            "img"
+          ],
           "slots": [
             {
               "name": "avatars",
@@ -7417,6 +7420,15 @@
           },
           "tagName": "nldd-title",
           "customElement": true,
+          "accepts": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "a"
+          ],
           "slots": [
             {
               "name": "overline",
@@ -8152,6 +8164,9 @@
           },
           "tagName": "nldd-form-field-help-text",
           "customElement": true,
+          "accepts": [
+            "a"
+          ],
           "slots": [
             {
               "name": "",
@@ -8343,6 +8358,9 @@
               "name": "reset",
               "description": ""
             }
+          ],
+          "accepts": [
+            "form"
           ]
         }
       ],
@@ -33421,10 +33439,13 @@
           },
           "tagName": "nldd-hero",
           "customElement": true,
+          "accepts": [
+            "img"
+          ],
           "slots": [
             {
               "name": "media",
-              "description": "Image or illustration (img or nldd-image); fills the area and is clipped. Takes precedence over the media-src attributes. Set `alt=\"\"` when the image is decorative; otherwise give a describing alt text."
+              "description": "Image or illustration (img or nldd-image); fills the area and is clipped."
             },
             {
               "name": "",
