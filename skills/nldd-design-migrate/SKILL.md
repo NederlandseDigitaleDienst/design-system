@@ -36,7 +36,9 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 | Niet-bestaande variabele **met** hex-fallback | De fallback rendert; de token is versiering en donkere modus bevriest |
 | `className` in plaats van `class` op een rauw element | De klasse doet niets |
 | React `onChange` op een geslot native control | De handler draait nooit |
+| `disabled={busy}` in React 18 | De knop staat altijd uit, ook als `busy` false is |
 | Breedteloze container om een kind dat zijn ouder meet | Nul pixels, hoogte blijft |
+| `import '@nldd/design-system'` naast losse subpaden | `customElements.define` gooit "has already been used" |
 
 ## Bouw de checks vóór je iets omzet
 
@@ -47,6 +49,8 @@ Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die
 3. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
 4. **Klassencheck.** Elke klasse die de app rendert moet een regel achter zich hebben, én elke regel in je eigen utilities-bestand moet een gebruiker hebben. Beide richtingen.
 5. **Gedragscheck.** De vier hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
+
+Is het doel dat alles uit het systeem komt, dan is er een zesde die de rest goedkoper maakt: een **zuiverheidscheck** die in de JSX weigert wat het systeem al levert. Dus geen `className` of `class`, geen `style`, geen losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), geen hexkleuren, geen eigen iconenset en geen toastbibliotheek. De allowlist blijft klein en elke regel erin heeft een reden: `form` binnen `nldd-form`, `canvas`, `select` en `option` in `nldd-dropdown`, en inline tekstelementen (`strong`, `em`, `code`, `a`) binnen `nldd-text` en `nldd-rich-text`. Met zo'n check hoeft de klassencheck bijna niets meer te doen, want er zijn geen klassen.
 
 Hang de eerste vier in pre-commit **en** in CI. Zorg dat je lokale hook hetzelfde commando draait als CI: een hook op `tsc --noEmit` terwijl CI `tsc -b` draait laat kapotte commits er stelselmatig door.
 
@@ -112,7 +116,24 @@ Zoek daarbij verder dan het markup-attribuut. Klassen overleven het langst in lo
 
 En sluit nooit een heel bestand uit van de check. Een uitsluiting op bestandsnaam voor graph-views ("die klassen zijn van de graph-bibliotheek") verborg 112 dode klassen over zes bestanden, waaronder een datatabel die als kale HTML rendeerde. Sluit uit op klassenaam, en alleen voor de handvol namen die een externe bibliotheek echt bezit.
 
+### Sommige regels dragen gedrag, geen opmaak
+
+Inventariseer vóór je Tailwind of je globale CSS weghaalt welke regels iets *doen*. De gevaarlijke zijn de regels achter een instelling van de gebruiker die via een data-attribuut op `<html>` werkt: `[data-contrast="high"] a { text-decoration: underline }`, of `[data-show-actions] .row-actions { opacity: 1 }` voor wie acties altijd in beeld wil. Haal je het bestand weg, dan blijft de schakelaar in de instellingen staan, schrijft hij zijn attribuut nog steeds, en verandert er niets. De gedragsmeting hierboven ziet het niet, want elke link en elke knop is er nog.
+
+Zoek dus in de CSS die weggaat op selectors met `[data-`, `:root[` en `html[`, en op `@media (prefers-*)`. Elke treffer krijgt een eigen plek in het nieuwe systeem of wordt bewust geschrapt, samen met de instelling die erbij hoort. Een instelling die niets meer doet hoort niet in de interface te blijven staan.
+
 Kom je van Tailwind, lees dan [`from-tailwind.md`](from-tailwind.md): daar zit een extra valstrik, omdat de compiler regels verzint voor klassen die nergens bestaan.
+
+## Importeer per subpad, en meng niet
+
+`import '@nldd/design-system'` registreert elk component, en dat komt allemaal in de eerste download. In een React-app met Vite was dat 2,8 MB JavaScript. Importeer per bestand alleen de subpaden die dat bestand gebruikt (`@nldd/design-system/button`, `@nldd/design-system/sheet`); in dezelfde app zakte de eerste lading daarmee naar 1.615 kB, 384 kB gzip.
+
+Meng die twee vormen niet. Importeert één bestand de hoofdingang en een ander een subpad, dan bundelt Vite ze als aparte modules, en het tweede `customElements.define` voor dezelfde tag faalt met "has already been used with this registry".
+
+Met de hand bijhouden welk bestand welke subpaden nodig heeft, houdt niemand vol. Genereer de imports uit `custom-elements.json`: lees per bestand de `nldd-*`-tags, zoek per tag de module die hem definieert, en schrijf de importregels. Geef het script een `--check`-stand die faalt als de imports niet kloppen, en draai die in CI. Dat is dan meteen je registratiecheck. Twee dingen om in te bouwen:
+
+- Niet elk onderdeel heeft een eigen subpad. `nldd-menu-item`, `nldd-toolbar-item` en `nldd-kanban-column` worden geregistreerd door het subpad van hun map (`menu`, `toolbar`, `kanban`). Kijk in de `exports` van `package.json` welk subpad een module meeneemt.
+- Heb je een klasse nodig, zoals `NLDDNotification` voor een statische methode, haal die dan op met `customElements.get('nldd-notification')` en importeer hem niet een tweede keer.
 
 ## Events: de regel die de meeste code breekt
 
@@ -132,13 +153,88 @@ Hetzelfde geldt voor:
 
 **Schrijf op dag één één `useNlddEvent(ref, 'change', ...)`-helper** plus een `useNlddValue`-spiegel voor gecontroleerde waarden, en laat alles door je eigen wrapper-componenten lopen. Audit daarna: grep elke React-handler die gebonden is aan een element binnen een `nldd-*` tag.
 
+### De helper moet na elke render opnieuw kijken
+
+De voor de hand liggende versie koppelt de listener in een `useEffect(..., [])`, dus één keer bij mount. Dat gaat goed zolang het element er bij mount al is. Een stap die later opengaat, de inhoud van een sheet of een veld achter een voorwaarde verschijnt pas na een latere render, en dat element krijgt nooit een listener. Het doet stil niets, net als de `onChange` hierboven.
+
+Laat het effect daarom na elke render draaien, vergelijk het gekoppelde element met `ref.current`, en koppel opnieuw als dat verschilt:
+
+```tsx
+import { useEffect, useRef, type RefObject } from 'react';
+
+type Binding = { el: HTMLElement; type: string; listener: EventListener };
+
+export function useNlddEvent<E extends Event = CustomEvent>(
+  ref: RefObject<HTMLElement | null>,
+  type: string,
+  handler: (event: E) => void,
+): void {
+  // The latest handler, so a new closure each render does not mean a rebind.
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+  const bound = useRef<Binding | null>(null);
+
+  // No dependency array: the element behind the ref can appear or be replaced
+  // in any render, without anything this hook is given changing.
+  useEffect(() => {
+    const el = ref.current;
+    const prev = bound.current;
+    if (prev && prev.el === el && prev.type === type) return;
+    prev?.el.removeEventListener(prev.type, prev.listener);
+    bound.current = null;
+    if (!el) return;
+    const listener: EventListener = (event) => handlerRef.current(event as E);
+    el.addEventListener(type, listener);
+    bound.current = { el, type, listener };
+  });
+
+  useEffect(() => () => {
+    const prev = bound.current;
+    prev?.el.removeEventListener(prev.type, prev.listener);
+    bound.current = null;
+  }, []);
+}
+
+export function useNlddValue<T>(
+  ref: RefObject<(HTMLElement & { value: T }) | null>,
+  value: T,
+): void {
+  // The property, not the attribute: once the user has typed, the attribute
+  // no longer says what the field holds, and setting it again changes nothing.
+  useEffect(() => {
+    const el = ref.current;
+    if (el && el.value !== value) el.value = value;
+  });
+}
+```
+
+Merk je dit pas achteraf, dan is het symptoom een knop of veld dat in de ene weergave werkt en in de andere niet, terwijl de code identiek is. Test elke helper daarom ook met een element dat pas na een klik verschijnt.
+
+## React 18: `false` is ook aan
+
+React 18 kent geen properties op custom elements. Het schrijft een prop als attribuut, en een booleaanse `false` wordt de tekst `"false"`. Een booleaans attribuut van een component staat aan zodra het er is, welke waarde er ook in staat. Dus `disabled={busy}` schakelt de knop altijd uit: `disabled=""` als `busy` true is, `disabled="false"` als het false is. Geen waarschuwing, geen fout. (React 19 zet de property als het element die heeft, en heeft dit probleem niet.)
+
+Wat werkte: genereer de JSX-typen uit `custom-elements.json` en laat een booleaans attribuut alleen `true | undefined` toe. Dan weigert `tsc` `disabled={busy}` en dwingt het `disabled={busy || undefined}` af, waarmee React het attribuut weglaat.
+
+```ts
+// Generated from custom-elements.json: a boolean is present or absent, never false.
+'nldd-button': {
+  disabled?: true;
+  text?: string;
+  // ...
+};
+```
+
+Het manifest typt sommige booleans als `boolean | undefined`, zoals `expanded` op `nldd-list-item` en `nldd-list-item-segment`. Behandel die in de generator net zo. Daar zit nog iets: bij `expanded` betekent `undefined` "niet uitklapbaar" en `false` "dicht maar uitklapbaar". Via een attribuut kun je alleen aan en afwezig zeggen; gemeten las het attribuut `"false"` als true en geen attribuut als `undefined`. Die derde stand zet je dus met de property, via een ref.
+
 Let bij die audit ook op `defaultValue`. Een gecontroleerde `value=` vervangen door `defaultValue=` "om dit op te lossen" lijkt te werken en is een bug: data komt meestal uit een query, dus de eerste render heeft een lege lijst, de default bevriest op `""` en herstelt zich nooit.
 
 ## Layout: instorten tot nul breedte
 
-Drie vormen om te kennen:
+Vier vormen om te kennen:
 
 - **`width="fit-content"` samen met `layout="row"` rendert 0 pixels.** De host is `display: block` met `width: fit-content`, terwijl de layout `display: flex` op een element in de shadow root zet. Een block-box om een flex-kind dat geen intrinsieke breedte meldt, wordt nul.
+- **`nldd-container` in een ouder die zijn breedte van de inhoud haalt.** De container is een query container op inline-size, en zo'n container telt voor zijn ouder niet mee met de breedte van zijn inhoud. Staat hij in een ouder met `fit-content`, `inline-flex` of een andere breedte die van de inhoud komt, dan meet hij 0 breed. De tekst erin breekt dan na elk woord en de pagina wordt een smalle, hoge kolom. Geef de ouder een breedte die niet uit de inhoud komt, of laat de container weg waar hij niets indeelt.
 - **Het omgekeerde.** Een container zonder breedte kan zijn buur uithongeren: een badge-kolom groeide tot 926px en hield de naam ernaast op nul.
 - **Een flex-item krimpt niet onder zijn inhoud zonder `min-width: 0`.** Een lange naam claimt de hele rij en duwt de rest van het scherm af.
 
@@ -194,6 +290,28 @@ h1:not(nldd-rich-text h1), h2:not(nldd-rich-text h2) /* … */ {
 }
 ```
 
+## Omzetten is geen ontwerpen
+
+Een omzetting die alle checks haalt, ziet er daarmee nog niet goed uit. Na een volledige omzetting van een React-app stond alles op de goede plek in de goede componenten, en toch was de hiërarchie zoek: elke pagina had een andere titelmaat, overal stonden kaders, en de gekozen optie in een formulier trok meer aandacht dan de knop om te versturen. Het meeste vond een aparte ronde die alleen naar de visuele hiërarchie keek, met een reviewer die zelf niets had omgezet. Plan die ronde als eigen stap, want wie de omzetting deed, ziet wat er bedoeld was.
+
+Wat in die ronde het meeste opleverde:
+
+- De paginatitel staat in het `header`-slot van de eerste sectie, op elke pagina in dezelfde maat. Let op de dubbele `<h1>` uit de vorige sectie.
+- Tussen pagina's navigeer je met `nldd-tab-bar`. Een `nldd-segmented-control` is een keuze in een formulier, geen navigatie.
+- Een kaart met `href` kan geen knoppen bevatten; heeft hij die wel, dan wordt de titel de link.
+- Geen kaders om lijsten, lege standen of losse cijfers. Een kader om alles maakt niets belangrijker.
+- Geen knoppen die uit staan, zie de [ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren).
+
+## Testen zonder backend
+
+Hang een lokale ontwikkelomgeving nooit aan productie, ook niet met een publieke anon-sleutel die "toch alleen kan lezen". Een testscript dat een formulier invult, doet dat dan op echte gegevens. Wat werkte voor browsertests en screenshots:
+
+1. Zet nepgegevens in `localStorage` voordat de app laadt (in Playwright met `context.add_init_script`), zodat de app opstart met een gevulde stand.
+2. Breek in Playwright elk verzoek af dat niet naar localhost gaat (`context.route("**/*", ...)` met `route.abort()` voor alles daarbuiten). Een vergeten aanroep naar buiten faalt dan zichtbaar in plaats van stil productie te raken.
+3. Doe een ingelogde sessie na door de module die de sessie levert te herschrijven terwijl de devserver hem serveert, alleen in de testbrowser (`page.route` op het pad van die module, met een vervangende body). De app zelf heeft dan geen testmodus nodig.
+
+Bewijs daarnaast dat je screenshotscript de donkere modus echt aanzet: `color_scheme="dark"` op de context, en lees in de pagina `matchMedia('(prefers-color-scheme: dark)').matches` terug voordat je een screenshot gelooft. Zonder die controle meldden meerdere testrondes ten onrechte dat de donkere modus kapot was, terwijl het script hem nooit had aangezet.
+
 ## Controleer altijd tegen het pakket
 
 Drie gewoonten die steeds tijd scheelden of kostten:
@@ -219,6 +337,12 @@ Twee gewoonten die dat voorkomen:
 
 Houd je een lijst bij van wat het systeem niet kan, noteer dan per punt de versie waartegen je mat. Zonder dat wordt het een lijst die mensen blijven citeren nadat die niet meer waar is.
 
+## Bekende beperkingen
+
+Gemeten tegen de genoemde versies. Controleer bij een upgrade in de [changelog](../nldd-design/changelog.md) of een punt is opgelost, en haal je omweg dan weg.
+
+- **`nldd-page sticky-footer` plakt zijn eigen hoogte boven de onderrand** (0.18.0 en 0.19.0). Dit gebeurt als het document scrolt: op elke telefoon, en in elke app zonder horizontale split view. Een footer van 196 px op een scherm van 844 px hoog stond van 452 tot 648 in plaats van 648 tot 844. Je merkt het pas met inhoud die hoger is dan het venster. Meet het met `page.shadowRoot.querySelector('footer').getBoundingClientRect().bottom`, dat gelijk hoort te zijn aan `innerHeight`. Een omweg die je hier bouwt, schrijf je op met deze versie erbij.
+
 ## Subagents inzetten
 
 Parallelle agents werken goed voor het mechanische deel en slecht voor oordeelswerk.
@@ -243,17 +367,18 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 
 ## Een volgorde die werkte
 
-1. Installeren, componenten registreren, stylesheet importeren.
+1. Installeren, stylesheet importeren, en componenten registreren per subpad, met een gegenereerde importlijst.
 2. De vier checks bouwen. Van elk bewijzen dat die faalt.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
-4. De event-, value- en overlay-helpers schrijven, plus getypte JSX-bindings.
+4. De event-, value- en overlay-helpers schrijven, plus getypte JSX-bindings waarin een boolean alleen `true` of afwezig kan zijn.
 5. Vormgeving uit de markup halen als **eigen stap**: inline stijlen en `<style>`-blokken naar klassen, met een afdruk vooraf en achteraf als bewijs dat er niets veranderde. Pas daarna vervangen door componenten. Andersom betaal je het terug: een migratie die de CSS-opruiming als laatste deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten.
-6. Het oude CSS-framework **vroeg** weghalen en repareren wat dat blootlegt.
+6. Inventariseren welke globale regels gedrag dragen. Daarna het oude CSS-framework **vroeg** weghalen en repareren wat dat blootlegt.
 7. De app-shell omzetten (layout, navigatie, header), achter een vlag als de navigatie voor iedereen verandert.
 8. Je eigen primitives herimplementeren (Button, Input, Select, Card) met behoud van hun API. Dat converteert de nette aanroepplekken in één klap.
 9. Schermen omzetten, goedkoopste eerst, zodat het idioom zich zet waar een fout weinig kost.
 10. Browser-sweep per pagina: nulbreedte, tab-stops, koppen, computed styles op alles wat op een tabel lijkt, plus het gedragsoppervlak tegen stap 3.
-11. Je eigen workarounds langslopen: welke zijn overbodig geworden.
-12. De commentronde.
+11. Een ronde op visuele hiërarchie, met een reviewer die niets heeft omgezet.
+12. Je eigen workarounds langslopen: welke zijn overbodig geworden.
+13. De commentronde.
 
 Reken erop dat de verhouding rauwe markup je schatting bepaalt. In dit geval stonden 292 rauwe `<button>` tegenover 61 `<Button>`: het herimplementeren van de primitive converteerde een vijfde, de rest was handwerk op de aanroepplek. Tel allebei voordat je iets belooft.

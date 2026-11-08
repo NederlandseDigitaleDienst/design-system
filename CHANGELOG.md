@@ -9,6 +9,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Changed
+
+- **`nldd-design-migrate` covers what a React migration taught.** In React 18 a boolean `false` reaches a component as the text `"false"`, which reads as on, so `disabled={busy}` always disables; the skill shows JSX types that only allow `true` or nothing. The `useNlddEvent` helper it recommends now binds again after every render, with a reference implementation, because a helper that binds once on mount misses an element that appears later. New sections cover importing per subpath instead of the whole package (and never both, or `customElements.define` fails), global CSS that carries behavior and disappears without a sound, a check that keeps the JSX free of anything the system already provides, an `nldd-container` that measures zero wide in a parent sized by its content, a separate round on visual hierarchy after the conversion, testing without a backend, and a list of known limitations that starts with the `nldd-page sticky-footer` offset in 0.18.0 and 0.19.0.
+
 ## [0.19.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.18.0...v0.19.0) (2026-11-08)
 
 ### Highlights
