@@ -119,6 +119,28 @@ describe('nldd-one-time-code-field', () => {
 		unloadTokens();
 	});
 
+	it('cuts a paste in the text field to the length of the code', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field value="123" style="width: 120px"></nldd-one-time-code-field>');
+		await until(() => el.getAttribute('data-fit') === 'field');
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('.one-time-code-field__input')!;
+		const paste = (text: string): void => {
+			const data = new DataTransfer();
+			data.setData('text/plain', text);
+			input.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertFromPaste', dataTransfer: data, cancelable: true }));
+		};
+		input.focus();
+		input.setSelectionRange(1, 1);
+		paste('98765');
+		expect(input.value).toBe('198765');
+		expect(el.value).toBe('198765');
+		input.setSelectionRange(0, 0);
+		paste('1234567890');
+		expect(input.value).toHaveLength(6);
+		expect(el.value).toHaveLength(6);
+		unloadTokens();
+	});
+
 	it('treats an unknown size as md when it fits', async () => {
 		const unloadTokens = loadTokens();
 		el = await fixture('<nldd-one-time-code-field size="xl" style="width: 600px"></nldd-one-time-code-field>');

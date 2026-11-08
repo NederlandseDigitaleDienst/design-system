@@ -112,6 +112,7 @@
 						<nldd-title
 							size="1"
 							text="394"
+							data-icon-count="{n}"
 							supporting-text="iconen in de stijl van de Rijksoverheid-letter"
 							heading-level="3"
 						></nldd-title>
@@ -915,6 +916,7 @@
 				slot="header"
 				size="2"
 				text="394 iconen in één stijl"
+				data-icon-count="{n} iconen in één stijl"
 				heading-level="2"
 			></nldd-title>
 			<nldd-spacer
@@ -1271,7 +1273,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>Niet elk team heeft een designer. Het designsysteem neemt die rol over, met de richtlijnen, vijftien patronen en een linter die meekijkt. Werk je met een AI-assistent, dan geven de skills hem dezelfde kennis.</p>
+				<p>Niet elk team heeft een designer. Het designsysteem neemt die rol over, met de richtlijnen, patronen en een linter die meekijkt. Werk je met een AI-assistent, dan geven de skills hem dezelfde kennis.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="grid"
@@ -1339,7 +1341,7 @@
 			</nldd-container>
 		</nldd-simple-section>
 
-		<nldd-one-third-two-thirds-section id="ai-assistent" background="tinted">
+		<nldd-one-third-two-thirds-section id="ai-assistent" background="tinted" vertical-alignment="center">
 			<nldd-title
 				slot="header"
 				size="2"
@@ -1383,7 +1385,7 @@
 				<nldd-list-item>
 					<nldd-icon-cell
 						size="32"
-						icon="shield-check-mark"
+						icon="check-mark-circle"
 					></nldd-icon-cell>
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
 					<nldd-title-cell
@@ -1425,18 +1427,8 @@
 					></nldd-title-cell>
 				</nldd-list-item>
 			</nldd-list>
-			<nldd-spacer
-				slot="left"
-				size="24"
-			></nldd-spacer>
-			<nldd-button
-				slot="left"
-				appearance="primary"
-				text="Installeer de skills"
-				href="https://github.com/NederlandseDigitaleDienst/design-system#plugin-voor-ai-assistenten"
-			></nldd-button>
 			<nldd-card slot="right">
-				<nldd-container padding="24">
+				<nldd-container padding="24" sm-padding="16">
 					<nldd-text>Je assistent vergeet de naam van een knop. nldd lint ziet het meteen:</nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-code-viewer
@@ -1465,6 +1457,12 @@ otherwise it has no accessible name.</nldd-code-viewer>
 					></nldd-inline-dialog>
 				</nldd-container>
 			</nldd-card>
+			<nldd-button
+				slot="footer"
+				appearance="primary"
+				text="Installeer de skills"
+				href="https://github.com/NederlandseDigitaleDienst/design-system#plugin-voor-ai-assistenten"
+			></nldd-button>
 		</nldd-one-third-two-thirds-section>
 
 		<nldd-simple-section id="start-zelf">

@@ -23,6 +23,7 @@ here; consult the commit history if you need that level of detail.
 - **A space in the `format` of `nldd-one-time-code-field` leaves room between the groups, and a dash is a drawn bar,** sized with the boxes. A space was as narrow as a single character, and a dash a thin line in the middle of it.
 - **The boxes of `nldd-one-time-code-field` are upright rectangles,** about three quarters as wide as they are tall, the shape of a character. They keep the height of a control, so the field lines up with buttons and other fields, and a code takes less width.
 - **`nldd-one-time-code-field` steps down a size where the boxes do not fit the width,** from lg to md to sm, so a code never wraps onto a second line. Where not even sm fits, it shows the code in a text field of its own size, which fades out at the end and shows the invalid icon like `nldd-text-field`.
+- **`lightbulb` is redrawn:** the two sides of its neck end square with small rounded corners instead of round. The name is unchanged.
 - **Every icon is rounded to one decimal,** which is why every icon file changed. The difference is not visible, and the files are smaller.
 
 ### Fixed

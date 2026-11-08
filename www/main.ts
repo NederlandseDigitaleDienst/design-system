@@ -8,6 +8,7 @@ import '../src/components/content/avatar-group/avatar-group.ts';
 import '../src/components/content/avatar/avatar.ts';
 import '../src/components/content/code-viewer/code-viewer.ts';
 import '../src/components/content/icon/icon.ts';
+import { iconRegistry } from '../src/components/content/icon/icon-registry.ts';
 import '../src/components/content/identity/identity.ts';
 import '../src/components/content/rich-text/rich-text.ts';
 import '../src/components/content/tag/tag.ts';
@@ -56,6 +57,11 @@ import '../src/components/status-and-feedback/progress-circle/progress-circle.ts
 import '../src/components/status-and-feedback/step-bar/step-bar.ts';
 
 const root = document.documentElement;
+
+/** The icon count in the page comes from the registry, so it never falls behind. */
+for (const title of document.querySelectorAll<HTMLElement>('[data-icon-count]')) {
+	title.setAttribute('text', title.dataset.iconCount!.replace('{n}', String(iconRegistry.size)));
+}
 
 /**
  * The swatch picker in "Eén overheid" sets the theme of the whole page, so
