@@ -104,7 +104,7 @@ export const oneTimeCodeFieldStyles = css`
 		appearance: none;
 	}
 
-	.one-time-code-field__input::selection {
+	:host(:not([data-fit="field"])) .one-time-code-field__input::selection {
 		background: transparent;
 	}
 
@@ -289,10 +289,6 @@ export const oneTimeCodeFieldStyles = css`
 		font: var(--_one-time-code-field-box-font);
 		letter-spacing: var(--_one-time-code-field-letter-spacing);
 		caret-color: auto;
-	}
-
-	:host([data-fit="field"]) .one-time-code-field__input::selection {
-		background: Highlight;
 	}
 
 	:host([data-fit="field"]) .one-time-code-field__input:-webkit-autofill,
