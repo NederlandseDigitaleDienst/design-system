@@ -11,23 +11,30 @@ Aanvulling op [`SKILL.md`](SKILL.md), de hoofdpagina van deze skill, voor een Re
 - het gestopte native event bereikt de delegate nooit, en
 - wat er wel aankomt is een `CustomEvent` die React niet op `onChange` mapt.
 
-Een React `onChange` op die select **vuurt nooit**. Dit is geen randgeval: in één codebase maakte het **37 handlers** stil onbruikbaar. Rolbeheer werkte volledig niet, deelrechten waren niet te geven, een filter stuurde geen enkele request. Niets in de UI liet dat blijken.
+Een React `onChange` op die select **vuurt nooit**. In één codebase maakte dat **37 handlers** stil onbruikbaar. Rolbeheer werkte helemaal niet, deelrechten waren niet te geven, een filter stuurde geen enkele request. Niets in de UI liet dat blijken.
 
 Hetzelfde geldt voor:
 
 - `nldd-text-field` en verwanten, die een eigen shadow input hebben en opnieuw uitzenden.
 - `close` op sheets, popovers en modals: dat heeft `bubbles: false`, dus een `onClose`-prop vuurt nooit en een dismissal reist niet omhoog. Mis je dat, dan heeft de overlay twee klikken nodig om te heropenen.
 
-**Schrijf op dag één één `useNlddEvent(ref, 'change', ...)`-helper** plus een `useNlddValue`-spiegel voor gecontroleerde waarden, en laat alles door je eigen wrapper-componenten lopen. Audit daarna: grep elke React-handler die gebonden is aan een element binnen een `nldd-*` tag.
+**Schrijf op dag één een `useNlddEvent(ref, type, handler)`-helper** plus een `useNlddValue`-spiegel voor gecontroleerde waarden, en laat alles door je eigen wrapper-componenten lopen. Zet de ref op het `nldd-*`-element zelf, niet op het control erin. Audit daarna: grep elke React-handler die gebonden is aan een element binnen een `nldd-*` tag.
+
+Twee dingen gaan bij een gecontroleerd veld vaak mis:
+
+- **Luister naar `input`, niet naar `change`.** `nldd-text-field` stuurt `input` bij elke toetsaanslag en `change` pas bij het verlaten van het veld. Volgt je state `change`, dan loopt hij achter op wat er getypt wordt, en zet de spiegel bij elke render tussendoor de oude waarde terug.
+- **`nldd-dropdown` heeft zelf geen `value`.** Zet de waarde op de `<select>` die je meegeeft, en geef de spiegel een ref naar die select.
+
+Vervang een gecontroleerde `value=` ook niet door `defaultValue=` "om dit op te lossen". Dat lijkt te werken en is een bug: data komt meestal uit een query, dus de eerste render heeft een lege lijst, de default bevriest op `""` en herstelt zich nooit.
 
 ### De helper moet na elke render opnieuw kijken
 
-De voor de hand liggende versie koppelt de listener in een `useEffect(..., [])`, dus één keer bij mount. Dat gaat goed zolang het element er bij mount al is. Een stap die later opengaat, de inhoud van een sheet of een veld achter een voorwaarde verschijnt pas na een latere render, en dat element krijgt nooit een listener. Het doet stil niets, net als de `onChange` hierboven.
+De voor de hand liggende versie koppelt de listener in een `useEffect(..., [])`, dus één keer bij mount. Dat gaat goed zolang het element er bij mount al is. Een stap die later opengaat, de inhoud van een sheet, een veld achter een voorwaarde: zulke elementen verschijnen pas na een latere render en krijgen nooit een listener. Ze doen stil niets, net als de `onChange` hierboven.
 
 Laat het effect daarom na elke render draaien, vergelijk het gekoppelde element met `ref.current`, en koppel opnieuw als dat verschilt:
 
 ```tsx
-import { useEffect, useRef, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 
 type Binding = { el: HTMLElement; type: string; listener: EventListener };
 
@@ -37,8 +44,11 @@ export function useNlddEvent<E extends Event = CustomEvent>(
   handler: (event: E) => void,
 ): void {
   // The latest handler, so a new closure each render does not mean a rebind.
+  // Written in an effect, not during render, which React may throw away.
   const handlerRef = useRef(handler);
-  handlerRef.current = handler;
+  useLayoutEffect(() => {
+    handlerRef.current = handler;
+  });
   const bound = useRef<Binding | null>(null);
 
   // No dependency array: the element behind the ref can appear or be replaced
@@ -75,11 +85,13 @@ export function useNlddValue<T>(
 }
 ```
 
+Het effect draait na elke render van het component dat de hook aanroept. Rendert een kindcomponent het element, en rendert de ouder daarbij niet mee, dan merkt de hook het niet. Zet de hook dan in dat kind, of koppel met een callback-ref: die roept React aan zodra het element verschijnt of verdwijnt, wie het ook rendert.
+
 Merk je dit pas achteraf, dan is het symptoom een knop of veld dat in de ene weergave werkt en in de andere niet, terwijl de code identiek is. Test elke helper daarom ook met een element dat pas na een klik verschijnt.
 
 ## Booleans: in React 18 is `false` ook aan
 
-React 18 kent geen properties op custom elements. Het schrijft een prop als attribuut, en een booleaanse `false` wordt de tekst `"false"`. Een booleaans attribuut van een component staat aan zodra het er is, welke waarde er ook in staat. Dus `disabled={busy}` schakelt de knop altijd uit: `disabled=""` als `busy` true is, `disabled="false"` als het false is. Geen waarschuwing, geen fout. (React 19 zet de property als het element die heeft, en heeft dit probleem niet.)
+React 18 kent geen properties op custom elements. Het schrijft een prop als attribuut, met de waarde als tekst. Een booleaans attribuut van een component staat aan zodra het er is, welke waarde er ook in staat. Dus `disabled={busy}` schakelt de knop altijd uit: `disabled="true"` als `busy` true is, `disabled="false"` als het false is. Geen waarschuwing, geen fout. (React 19 zet de property als het element die heeft, en heeft dit probleem niet.)
 
 Wat werkte: genereer de JSX-typen uit `custom-elements.json` en laat een booleaans attribuut alleen `true | undefined` toe. Dan weigert `tsc` `disabled={busy}` en dwingt het `disabled={busy || undefined}` af, waarmee React het attribuut weglaat.
 
@@ -92,6 +104,4 @@ Wat werkte: genereer de JSX-typen uit `custom-elements.json` en laat een booleaa
 };
 ```
 
-Het manifest typt sommige booleans als `boolean | undefined`, zoals `expanded` op `nldd-list-item` en `nldd-list-item-segment`. Behandel die in de generator net zo. Daar zit nog iets: bij `expanded` betekent `undefined` "niet uitklapbaar" en `false` "dicht maar uitklapbaar". Via een attribuut kun je alleen aan en afwezig zeggen; gemeten las het attribuut `"false"` als true en geen attribuut als `undefined`. Die derde stand zet je dus met de property, via een ref.
-
-Let bij die audit ook op `defaultValue`. Een gecontroleerde `value=` vervangen door `defaultValue=` "om dit op te lossen" lijkt te werken en is een bug: data komt meestal uit een query, dus de eerste render heeft een lege lijst, de default bevriest op `""` en herstelt zich nooit.
+Het manifest typt sommige booleans als `boolean | undefined`, zoals `expanded` op `nldd-list-item` en `nldd-list-item-segment`. Behandel die in de generator net zo. Bij `expanded` op een rij zonder kinderen betekent `undefined` "niet uitklapbaar" en `false` "dicht maar uitklapbaar". Een attribuut kan alleen aan of afwezig zeggen, dus `false` zet je met de property, via een ref.

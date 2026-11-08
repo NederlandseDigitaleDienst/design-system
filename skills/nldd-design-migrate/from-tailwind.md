@@ -26,7 +26,7 @@ De voor de hand liggende grep op `className="..."` vindt het meeste en mist prec
 
 Sla commentaar over bij het scannen, anders wordt een doc-comment met `h-4 w-4` gemeld en leren mensen de check te negeren.
 
-## De tokenbrug: een steiger, geen fundament
+## De tokenbrug: alleen voor tijdens de omzetting
 
 Centraliseer je Tailwind-thema in één blok en laat het naar `--primitives-*` wijzen:
 
@@ -59,7 +59,7 @@ Forceer verder de lichte weergave met `<html data-scheme="light">` zolang de mig
 
 Na Tailwind blijven er utilities over waarvan het niet meteen duidelijk is waar ze heen moeten: `truncate` en `line-clamp`, `text-transform`, `object-fit`, scroll-snap, het hover-reveal-patroon. De verleiding is een klein eigen CSS-bestand. Dat bestand groeit, en elke regel erin beweegt niet mee met het systeem.
 
-Loop elke utility daarom af als vraag aan het systeem. Vaak is er een attribuut of een component dat het al doet; zoek het op in de [componentreferentie](../nldd-design/reference.md). Is er niets, dan meld je het gat en zet je er tijdelijk een uitzondering met de issuelink boven. Het doel blijft nul eigen regels.
+Loop elke utility daarom af als vraag aan het systeem. Vaak is er een attribuut of een component dat het al doet, zoals `object-fit` op `nldd-image`; zoek het op in de [componentreferentie](../nldd-design/reference.md). Is er niets, dan meld je het gat en zet je er tijdelijk een uitzondering met de issuelink boven.
 
 ## Iconen
 

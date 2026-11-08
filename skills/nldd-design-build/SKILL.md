@@ -32,9 +32,9 @@ Wat je vormgeeft is daarmee geen keuze van deze skill. Wanneer een sticky header
 
 ### Geen eigen vormgeving
 
-Een app op dit systeem heeft geen eigen stylesheet, geen `class` of `style` en geen `div` of `span` die iets opmaakt. Wat er staat, zijn `nldd-*`-componenten met attributen en slots. Elke regel eigen CSS is een plek die niet meebeweegt met donkere modus, thema's en de toegankelijkheidsfixes van de volgende release.
+Een app op dit systeem heeft geen eigen stylesheet, geen `class` of `style` en geen `div` of `span` die iets opmaakt. Wat er staat, zijn `nldd-*`-componenten met attributen en slots. Eigen CSS moet je bij elke release zelf nalopen: een hernoemde variabele of een toegankelijkheidsfix in een component bereikt hem niet.
 
-Kom je iets tegen dat geen component kan, dan is dat een gat in het systeem: meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Moet er tot die tijd een omweg staan, zet dan de issuelink en de versie erboven, zodat hij weg kan zodra het issue is opgelost. Hoe je dat met een check afdwingt, staat bij de zuiverheidscheck in [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md#bouw-de-checks-vóór-je-iets-omzet).
+Kom je iets tegen dat geen component kan, dan is dat een gat in het systeem: meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Wat een omweg tot die tijd bij zich draagt, en hoe je het met een check afdwingt, staat in [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md#het-doel-alles-komt-uit-het-systeem).
 
 ### Componeer, herstijl niet
 

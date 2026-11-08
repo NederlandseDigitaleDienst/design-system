@@ -23,11 +23,11 @@ Wat je in de componentdocumentatie kunt opzoeken staat hier niet in; wat hier st
 
 ## Het doel: alles komt uit het systeem
 
-Een migratie is af als de app geen eigen vormgeving meer heeft. Geen stylesheet van jezelf, geen `class` of `className`, geen `style`, geen `div` of `span` die iets opmaakt, geen hexkleur, geen eigen iconenset. Wat er staat, zijn `nldd-*`-componenten met attributen en slots. Dat is geen streven voor later, het is de definitie van klaar, en de zuiverheidscheck hieronder bewaakt hem vanaf de eerste dag.
+Een migratie is af als de app geen eigen vormgeving meer heeft. Geen stylesheet van jezelf, geen `class` of `className`, geen `style`, geen `div` of `span` die iets opmaakt, geen hexkleur, geen eigen iconenset. Wat er staat, zijn `nldd-*`-componenten met attributen en slots. Dat is de definitie van klaar, en de zuiverheidscheck hieronder bewaakt hem vanaf de eerste dag.
 
-De reden is praktisch. Elke regel eigen CSS is een plek waar de app niet meebeweegt met het systeem: geen donkere modus, geen thema, geen toegankelijkheidsfix uit de volgende release, en een plek die bij elke upgrade kan breken op een interne variabele. Een app met een "klein eigen CSS-bestand" heeft na een jaar een groot eigen CSS-bestand.
+Elke regel eigen CSS is een plek die je bij elke release zelf moet nalopen: een hernoemde variabele, een nieuw thema of een toegankelijkheidsfix in een component bereikt hem niet.
 
-Kan het systeem iets niet wat je nodig hebt, dan is dat een gat in het systeem en geen reden voor eigen CSS. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). In de tussentijd mag er een omweg staan, met een uitzondering in de code die naar het issue wijst, zodat hij zichtbaar blijft tot het issue is opgelost.
+Kan het systeem iets niet wat je nodig hebt, dan is dat een gat in het systeem. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Tot het is opgelost mag er een omweg staan, met in de code drie dingen erbij: de issuelink, de versie waarop je het vaststelde, en één zin waarom het component het zelf niet kan. Lukt die zin niet, dan is het smaak en hoort de omweg weg. De rest van deze skill verwijst naar deze regel.
 
 ## Het uitgangspunt: dit systeem faalt stil
 
@@ -53,7 +53,7 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 
 Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die niets anders zag:
 
-1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een toastbibliotheek, en elk eigen stylesheet. Alleen kale HTML die een component zelf opmaakt mag blijven, zoals de `<select>` in `nldd-dropdown` of inline tekst in `nldd-text`; de slotbeschrijvingen in de [componentreferentie](../nldd-design/reference.md) zeggen welke. Daarnaast `canvas`, waar een grafiek op tekent. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. De baseline is migratieschuld en geen plek voor uitzonderingen: wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, met de issuelink als reden. Klaar is een lege baseline.
+1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een toastbibliotheek, en elk eigen stylesheet. Alleen kale HTML die een component zelf opmaakt mag blijven, zoals de `<select>` in `nldd-dropdown`, inline tekst in `nldd-text`, de kop in het standaardslot van `nldd-title` en lopende tekst in `nldd-rich-text`; de slotbeschrijvingen in de [componentreferentie](../nldd-design/reference.md) zeggen welke. Daarnaast `canvas`, waar een grafiek op tekent. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. Uitzonderingen horen niet in de baseline, want die is migratieschuld. Wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, volgens de regel voor een omweg hierboven. Klaar is een lege baseline.
 2. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
 3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
 4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
@@ -136,14 +136,14 @@ Kom je van Tailwind, lees dan [`from-tailwind.md`](from-tailwind.md): daar zit e
 
 ## Importeer per subpad, en meng niet
 
-`import '@nldd/design-system'` registreert elk component, en dat komt allemaal in de eerste download. In een React-app met Vite was dat 2,8 MB JavaScript. Importeer per bestand alleen de subpaden die dat bestand gebruikt (`@nldd/design-system/button`, `@nldd/design-system/sheet`); in dezelfde app zakte de eerste lading daarmee naar 1.615 kB, 384 kB gzip.
+`import '@nldd/design-system'` registreert elk component, en dat komt allemaal in de eerste download. In een React-app met Vite was dat 2,8 MB JavaScript. Importeer per bestand alleen de subpaden die dat bestand gebruikt (`@nldd/design-system/button`, `@nldd/design-system/sheet`); in dezelfde app zakte de eerste lading daarmee naar 1,6 MB (384 kB gzip).
 
-Meng die twee vormen niet. Importeert één bestand de hoofdingang en een ander een subpad, dan bundelt Vite ze als aparte modules, en het tweede `customElements.define` voor dezelfde tag faalt met "has already been used with this registry".
+Meng die twee vormen niet. De hoofdingang is één gebundeld bestand met een eigen kopie van elk component, dus een subpad ernaast laadt een tweede kopie, en het tweede `customElements.define` voor dezelfde tag faalt met "has already been used with this registry".
 
 Met de hand bijhouden welk bestand welke subpaden nodig heeft, houdt niemand vol. Genereer de imports uit `custom-elements.json`: lees per bestand de `nldd-*`-tags, zoek per tag de module die hem definieert, en schrijf de importregels. Geef het script een `--check`-stand die faalt als de imports niet kloppen, en draai die in CI. Dat is dan meteen je registratiecheck. Twee dingen om in te bouwen:
 
-- Niet elk onderdeel heeft een eigen subpad. `nldd-menu-item`, `nldd-toolbar-item` en `nldd-kanban-column` worden geregistreerd door het subpad van hun map (`menu`, `toolbar`, `kanban`). Kijk in de `exports` van `package.json` welk subpad een module meeneemt.
-- Heb je een klasse nodig, zoals `NLDDNotification` voor een statische methode, haal die dan op met `customElements.get('nldd-notification')` en importeer hem niet een tweede keer.
+- Niet elk onderdeel heeft een eigen subpad: de onderdelen van `menu`, `toolbar` en `kanban` (`nldd-menu-item`, `nldd-menu-group`, `nldd-toolbar-item`, `nldd-kanban-column` en verwanten) worden geregistreerd door het subpad van hun map. `custom-elements.json` geeft per tag het pad van de module; staat dat pad niet in de `exports` van `package.json`, neem dan het subpad van de map.
+- Een klasse, zoals `NLDDNotification` voor zijn statische `show()`, importeer je uit hetzelfde subpad. Dat is dezelfde module als de registratie, dus er komt geen tweede kopie bij.
 
 ## Events: wat een component zelf uitzendt
 
@@ -156,9 +156,9 @@ Kom je van React, lees dan [`from-react.md`](from-react.md): daar maakte dit in 
 Vier vormen om te kennen:
 
 - **`width="fit-content"` samen met `layout="row"` rendert 0 pixels.** De host is `display: block` met `width: fit-content`, terwijl de layout `display: flex` op een element in de shadow root zet. Een block-box om een flex-kind dat geen intrinsieke breedte meldt, wordt nul.
-- **`nldd-container` in een ouder die zijn breedte van de inhoud haalt.** De container is een query container op inline-size, en zo'n container telt voor zijn ouder niet mee met de breedte van zijn inhoud. Staat hij in een ouder met `fit-content`, `inline-flex` of een andere breedte die van de inhoud komt, dan meet hij 0 breed. De tekst erin breekt dan na elk woord en de pagina wordt een smalle, hoge kolom. Geef de ouder een breedte die niet uit de inhoud komt, of laat de container weg waar hij niets indeelt.
+- **`nldd-container` in een ouder die zijn breedte van de inhoud haalt,** zoals een andere `nldd-container` met `width="fit-content"`. De container is een query container op inline-size, en zo'n container telt voor zijn ouder niet mee met de breedte van zijn inhoud: hij meet 0 breed. De tekst erin breekt dan na elk woord en de pagina wordt een smalle, hoge kolom. Laat de ouder de volle breedte nemen, of laat de binnenste container weg waar hij niets indeelt.
 - **Het omgekeerde.** Een container zonder breedte kan zijn buur uithongeren: een badge-kolom groeide tot 926px en hield de naam ernaast op nul.
-- **Een flex-item krimpt niet onder zijn inhoud zonder `min-width: 0`.** Een lange naam claimt de hele rij en duwt de rest van het scherm af.
+- **Een rij die een lange naam niet laat krimpen.** Een lange naam claimt de hele rij en duwt de rest van het scherm af. Krimpt een component niet onder zijn inhoud, dan is dat een melding, met een omweg volgens de regel bovenaan.
 
 Spoor dit op in de browser, niet door te lezen. Loop na elke pagina de DOM langs op elementen met breedte 0 die wel inhoud hebben, en op kinderen waarvan de rechterrand buiten hun ouder valt.
 
@@ -202,19 +202,19 @@ De hele rechtvaardiging voor dit systeem is WCAG 2.1 AA en EN 301 549. Een toega
 - **Dubbele `<h1>`**: de titelbalk van de app-shell rendert meestal de h1 van de pagina. Een detailpagina die er zelf een toevoegt levert twee concurrerende koppen van niveau 1.
 - **Selectie die alleen in kleur zit** faalt 1.4.1. Gebruik de eigen `current`/`checked` van het component, plus een tweede kanaal zoals een icoon.
 
-Een kop is een `nldd-title` met `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Is de titel meer dan tekst, zoals een link, zet dan je eigen `<h2>` in het standaardslot van `nldd-title`: die maakt hem op. Een kale kop daarbuiten heeft een CSS-reset nodig, en dat is eigen opmaak.
+Een kop is een `nldd-title` met `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Is de titel meer dan tekst, zoals een link, zet dan je eigen `<h2>` met de `<a>` erin in het standaardslot van `nldd-title`: de titel maakt die kop op, en de link hoort erbij. Een kale kop daarbuiten heeft een CSS-reset nodig, en dat is eigen opmaak.
 
 ## Omzetten is geen ontwerpen
 
-Een omzetting die alle checks haalt, ziet er daarmee nog niet goed uit. Na een volledige omzetting van een React-app stond alles op de goede plek in de goede componenten, en toch was de hiërarchie zoek: elke pagina had een andere titelmaat, overal stonden kaders, en de gekozen optie in een formulier trok meer aandacht dan de knop om te versturen. Het meeste vond een aparte ronde die alleen naar de visuele hiërarchie keek, met een reviewer die zelf niets had omgezet. Plan die ronde als eigen stap, want wie de omzetting deed, ziet wat er bedoeld was.
+Een omzetting die alle checks haalt, ziet er daarmee nog niet goed uit. Na een volledige omzetting van een React-app stond alles op de goede plek in de goede componenten, en toch was de hiërarchie zoek: elke pagina had een andere titelmaat, overal stonden kaders, en de gekozen optie in een formulier trok meer aandacht dan de knop om te versturen. Het meeste vond een aparte ronde die alleen naar de visuele hiërarchie keek, met een reviewer die zelf niets had omgezet. Plan die ronde als eigen stap: wie de omzetting deed, ziet wat er bedoeld was.
 
-Wat in die ronde het meeste opleverde:
+In die ronde leverden deze punten het meeste op. De regels zelf staan elders, hier alleen waar je ze vindt:
 
-- De paginatitel staat in het `header`-slot van de eerste sectie, op elke pagina in dezelfde maat. Let op de dubbele `<h1>` uit de vorige sectie.
-- Tussen pagina's navigeer je met `nldd-tab-bar`. Een `nldd-segmented-control` is een keuze uit een vaste set ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren)), geen navigatie.
-- Een kaart met `href` kan geen knoppen bevatten; heeft hij die wel, dan wordt de titel de link.
-- Geen kaders om lijsten, lege standen of losse cijfers. Een kader om alles maakt niets belangrijker.
-- Geen knoppen die uit staan, zie de [ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren).
+- De paginatitel in het `header`-slot van de eerste sectie, op elke pagina gelijk: [`page-structure`](../nldd-design-build/patterns/page-structure.md).
+- Navigatie tussen pagina's met `nldd-tab-bar navigation` en een `href` per item; een `nldd-segmented-control` kiest uit een vaste set ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren)).
+- Een kaart met knoppen erin is geen link; zie de kaarten onder "Toegankelijkheid" hierboven.
+- Geen kader om een lijst, een lege stand of een los getal ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#visueel-en-layout)).
+- Geen knoppen die uit staan ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren)).
 
 ## Testen zonder backend
 
@@ -224,7 +224,7 @@ Hang een lokale ontwikkelomgeving nooit aan productie, ook niet met een publieke
 2. Breek in Playwright elk verzoek af dat niet naar localhost gaat (`context.route("**/*", ...)` met `route.abort()` voor alles daarbuiten). Een vergeten aanroep naar buiten faalt dan zichtbaar in plaats van stil productie te raken.
 3. Doe een ingelogde sessie na door de module die de sessie levert te herschrijven terwijl de devserver hem serveert, alleen in de testbrowser (`page.route` op het pad van die module, met een vervangende body). De app zelf heeft dan geen testmodus nodig.
 
-Bewijs daarnaast dat je screenshotscript de donkere modus echt aanzet: `color_scheme="dark"` op de context, en lees in de pagina `matchMedia('(prefers-color-scheme: dark)').matches` terug voordat je een screenshot gelooft. Zonder die controle meldden meerdere testrondes ten onrechte dat de donkere modus kapot was, terwijl het script hem nooit had aangezet.
+Bewijs daarnaast dat je screenshotscript de donkere modus echt aanzet: `color_scheme="dark"` op de context, en lees in de pagina `getComputedStyle(document.documentElement).colorScheme` terug voordat je een screenshot gelooft. Een `data-scheme` op `<html>` gaat voor de voorkeur van de browser, dus `matchMedia` alleen zegt niet genoeg. Zonder die controle meldden meerdere testrondes ten onrechte dat de donkere modus kapot was, terwijl het script hem nooit had aangezet.
 
 ## Controleer altijd tegen het pakket
 
@@ -246,7 +246,7 @@ Dat is echt gebeurd. Een consument schreef een helper die een wegwerp-childnode 
 
 Twee gewoonten die dat voorkomen:
 
-- **Schrijf boven elke workaround waaróm het component het zelf niet kan, plus de versie waarop je dat vaststelde.** Lukt die zin niet, dan is het geen workaround maar smaak.
+- **Zet bij elke workaround wat de regel voor een omweg bovenaan vraagt:** de issuelink, de versie en waarom het component het zelf niet kan.
 - **Loop bij elke upgrade je eigen omwegen langs.** De changelog vertelt wat er verandert, niet welke van jouw reparaties overbodig zijn geworden. Dat moet je zelf nagaan, en het is de enige manier waarop een fossiel weer verdwijnt.
 
 Houd je een lijst bij van wat het systeem niet kan, noteer dan per punt de versie waartegen je mat. Zonder dat wordt het een lijst die mensen blijven citeren nadat die niet meer waar is.
@@ -255,7 +255,7 @@ Houd je een lijst bij van wat het systeem niet kan, noteer dan per punt de versi
 
 Gemeten tegen de genoemde versies. Controleer bij een upgrade in de [changelog](../nldd-design/changelog.md) of een punt is opgelost, en haal je omweg dan weg.
 
-- **`nldd-page sticky-footer` plakt zijn eigen hoogte boven de onderrand** (0.18.0 en 0.19.0). Dit gebeurt als het document scrolt: op elke telefoon, en in elke app zonder horizontale split view. Een footer van 196 px op een scherm van 844 px hoog stond van 452 tot 648 in plaats van 648 tot 844. Je merkt het pas met inhoud die hoger is dan het venster. Meet het met `page.shadowRoot.querySelector('footer').getBoundingClientRect().bottom`, dat gelijk hoort te zijn aan `innerHeight`. Een omweg die je hier bouwt, schrijf je op met deze versie erbij.
+- **`nldd-page sticky-footer` plakt zijn eigen hoogte boven de onderrand** (0.18.0 en 0.19.0). Dit gebeurt als het document scrolt: op elke telefoon, en in elke app zonder horizontale split view. Een footer van 196 px op een scherm van 844 px hoog stond van 452 tot 648 in plaats van 648 tot 844. Je merkt het pas met inhoud die hoger is dan het venster. Meet het met `page.shadowRoot.querySelector('footer').getBoundingClientRect().bottom`, dat gelijk hoort te zijn aan `innerHeight`. Gemeld in [#366](https://github.com/NederlandseDigitaleDienst/design-system/issues/366); een omweg wijst daarnaar.
 
 ## Subagents inzetten
 

@@ -30,7 +30,7 @@ Dezelfde familie, breder: **een component doet eenmalig werk op een moment dat j
 
 ## Zet de nieuwe stack ernaast, en sloop die daarna expliciet
 
-Bouw de nieuwe UI in een eigen namespace: eigen route-prefix, eigen templatemap, eigen CSS en JS. Zet er een test op die faalt als er nieuwe tags in oude templates staan of omgekeerd. Zet daarna de basistemplate om zodat alles overerft, en haal de parallelle laag weg als aparte, geplande commit.
+Bouw de nieuwe UI in een eigen namespace: eigen route-prefix, eigen templatemap en eigen JS-ingang. Zet er een test op die faalt als er nieuwe tags in oude templates staan of omgekeerd. Zet daarna de basistemplate om zodat alles overerft, en haal de parallelle laag weg als aparte, geplande commit.
 
 De reden om te isoleren is duur geleerd: een eerdere poging deelde templates, CSS en JavaScript met de oude versie en deed monkey-patches tijdens het draaien. Drie bestanden moesten terug omdat ze voor het nieuwe systeem waren herschreven, waardoor een pagina van het oude systeem brak.
 
@@ -81,6 +81,6 @@ Twee dingen om bij zo'n upgrade te doen:
 
 ## Eigen CSS op een component: alleen tijdelijk, met een issue
 
-Het doel is geen eigen CSS (zie de hoofdpagina). Moet er tijdelijk toch een regel staan, zet er dan een comment boven die uitlegt **waarom het component het zelf niet kan** (render-timing, de grens van een fragmentwissel, de shadow DOM), met de link naar het issue en de versie. Lukt die zin niet, dan is het smaak-styling en hoort de regel weg.
+Het doel is geen eigen CSS (zie de hoofdpagina). Moet er tijdelijk toch een regel staan, volg dan de regel voor een omweg uit [`SKILL.md`](SKILL.md#het-doel-alles-komt-uit-het-systeem). Bij server-rendering is het waarom meestal render-timing, de grens van een fragmentwissel of de shadow DOM.
 
 Bij het opruimen is dat de scheidslijn: een regel met een open issue blijft tot dat issue is opgelost, de rest gaat nu weg.
