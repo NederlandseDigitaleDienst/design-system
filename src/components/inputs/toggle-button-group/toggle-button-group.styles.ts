@@ -9,9 +9,9 @@ export const toggleButtonGroupStyles = css`
 	/* # Host */
 
 	:host {
-		--_toggle-button-group-md-gap: var(--primitives-space-8);
-		--_toggle-button-group-sm-gap: var(--primitives-space-6);
-		--_toggle-button-group-xs-gap: var(--primitives-space-4);
+		--_toggle-button-group-md-gap: var(--semantics-button-groups-md-gap);
+		--_toggle-button-group-sm-gap: var(--semantics-button-groups-sm-gap);
+		--_toggle-button-group-xs-gap: var(--semantics-button-groups-xs-gap);
 
 		display: block;
 		isolation: isolate;

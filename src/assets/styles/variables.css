@@ -1330,6 +1330,10 @@
 	--semantics-buttons-md-gap: var(--primitives-space-6);
 	--semantics-buttons-lg-gap: var(--primitives-space-6);
 
+	--semantics-button-groups-xs-gap: var(--primitives-space-4);
+	--semantics-button-groups-sm-gap: var(--primitives-space-6);
+	--semantics-button-groups-md-gap: var(--primitives-space-8);
+
 	--semantics-buttons-xs-icon-size: var(--primitives-space-16);
 	--semantics-buttons-sm-icon-size: var(--primitives-space-18);
 	--semantics-buttons-md-icon-size: var(--primitives-space-20);
