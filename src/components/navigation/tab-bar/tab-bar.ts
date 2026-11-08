@@ -87,7 +87,7 @@ export class NLDDTabBarItem extends LitElement {
 
 	/** Icon name for nldd-icon. The icon and icon-and-text variants show a
 	 *  placeholder icon when no icon (attribute or slot) is provided. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
 	/** Set by nldd-tab-bar. Sizes the variant-driven layout: 'md' (default) or 'lg' (larger touch target). */

@@ -2845,8 +2845,7 @@
               },
               "default": "''",
               "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
-              "attribute": "width",
-              "reflects": true
+              "attribute": "width"
             },
             {
               "kind": "field",
@@ -49167,8 +49166,14 @@
       "path": "src/utilities/page-section-mixin.ts",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "pageSectionBackgroundStyles",
+          "default": "css` :host([background=\"base\"]) { --context-parent-background-color: var(--semantics-surfaces-base-background-color); } :host([background=\"tinted\"]) { --context-parent-background-color: var(--semantics-surfaces-tinted-background-color); } :host([background=\"accent-tinted\"]) { --context-parent-background-color: var(--semantics-surfaces-accent-tinted-background-color); } :host([background=\"base\"]), :host([background=\"tinted\"]), :host([background=\"accent-tinted\"]) { background-color: var(--context-parent-background-color); } `",
+          "description": "The surface a `background` paints, and passes on through\n`--context-parent-background-color` so cards and nested sections read the\nsame surface. Every section puts this first in its `styles`."
+        },
+        {
           "kind": "mixin",
-          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted` | `accent-tinted`\n  (a tint of the theme's accent, with the contrast of `tinted`). Setting\n  one of those also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
+          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities. Padding and height are written as custom\nproperties on the host, which inherit through the shadow boundary into the\nsection's block element and slotted content; the background comes from\n`pageSectionBackgroundStyles`:\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted` | `accent-tinted`\n  (a tint of the theme's accent, with the contrast of `tinted`). Setting\n  one of those also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
           "name": "PageSectionMixin",
           "members": [
             {
@@ -49324,16 +49329,6 @@
                   }
                 }
               ]
-            },
-            {
-              "kind": "method",
-              "name": "_applyBackground",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
             },
             {
               "kind": "method",
@@ -49500,6 +49495,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "pageSectionBackgroundStyles",
+          "declaration": {
+            "name": "pageSectionBackgroundStyles",
+            "module": "src/utilities/page-section-mixin.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "PageSectionMixin",

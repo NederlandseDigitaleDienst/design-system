@@ -54,7 +54,7 @@ type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export class NLDDTitle extends LitElement {
 	static override styles = titleStyles;
 
-	@property({ type: Number, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<Size>(3) })
 	size: Size = 3;
 
 	@property({ reflect: true, attribute: 'sm-custom-size', converter: reflectNonDefault<string>('') })

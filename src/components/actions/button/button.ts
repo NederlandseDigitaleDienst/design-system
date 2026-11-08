@@ -127,7 +127,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: String, reflect: true, attribute: 'popup-type' })
 	popupType?: PopupType;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
 	type: ButtonType = 'button';
 
 	@property({ type: String })

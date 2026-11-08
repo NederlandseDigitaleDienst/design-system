@@ -93,7 +93,11 @@ export class NLDDButtonGroup extends LitElement {
 		for (const el of assigned) {
 			const own = el.getAttribute('size');
 			if (own !== null && own !== this.size && !this._sized.has(el)) setState(this, 'own-size-overwritten', true);
-			el.setAttribute('size', this.size);
+			// The property, not the attribute: a framework such as Vue sets a size
+			// as a property, and only the property overrides that. The button's
+			// converter leaves no attribute at md, its default.
+			if ('size' in el) (el as Element & { size: Size }).size = this.size;
+			else el.setAttribute('size', this.size);
 			this._sized.add(el);
 		}
 	}

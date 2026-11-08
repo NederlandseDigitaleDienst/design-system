@@ -327,7 +327,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	private _initialValues: string[] = [];
 
 	/** Selected value for radio type. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	value = '';
 
 	/**
@@ -344,7 +344,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlSize>('md') })
 	size: SegmentedControlSize = 'md';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlType>('radio') })
 	type: SegmentedControlType = 'radio';
 
 	/** Content type applied to all items: text, icon, or icon-and-text. Per-item mixing is not supported. */

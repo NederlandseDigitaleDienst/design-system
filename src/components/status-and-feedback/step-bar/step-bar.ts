@@ -97,7 +97,7 @@ export class NLDDStepBarItem extends LitElement {
 	@property({ type: String })
 	icon = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
 
 	/** For flows without a URL per step (a process that runs inside one window). Ignored

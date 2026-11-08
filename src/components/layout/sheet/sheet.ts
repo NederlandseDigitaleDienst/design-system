@@ -79,7 +79,7 @@ export class NLDDSheet extends LitElement {
 	 * length/percentage sets a specific size. Clamped to `100dvh - top-
 	 * inset` via `max-height` so the dismiss-tap area always remains.
 	 */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	height = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<Placement>('right') })

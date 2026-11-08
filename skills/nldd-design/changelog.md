@@ -15,6 +15,25 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **`--semantics-button-groups-{xs,sm,md}-gap`,** the space between the buttons in `nldd-button-group` and `nldd-toggle-button-group`. Both groups read it, with the same values as before.
+
+### Changed
+
+- **Components no longer write an attribute that only repeats the default,** such as `type="button"` on `nldd-button`, `size="16"` on `nldd-spacer`, `background="inherit"` on `nldd-page` or an empty `href=""` on `nldd-card`. The property still holds the value, so only code that selects on the attribute notices: read the property instead. `value` on `nldd-progress-bar` and `nldd-progress-circle` keeps its attribute.
+- **`nldd-button-group` and `nldd-button-bar` no longer write their defaults onto their buttons,** such as `size="md"` or `appearance="neutral-tinted"`. Another size or appearance is still written.
+- **A page section paints its `background` from its own styles,** instead of an inline `style` on the element.
+- **`nldd-menu` no longer reflects `width`.** The width still applies.
+- **`nldd-menu` opens a submenu once the pointer comes to rest on its item,** when it stops or slows down, instead of after a fixed 150ms. A pointer passing over the menu still opens nothing, and 150ms remains the longest it waits.
+- **A press beside the boxes of `nldd-one-time-code-field` no longer focuses it,** also on either side when it is `centered`. The boxes and the gaps between them still do, and so does its label.
+- **The rows of an `nldd-list` with `dividers="never"` measure nothing,** so they carry no `--_list-item-divider-inset-*` and keep no resize observer.
+
+### Fixed
+
+- **An open submenu of `nldd-menu` closes when the pointer turns away from it,** onto a divider, header, footer, the padding of the menu or out of the menu, instead of staying open with no item under the cursor. On its way to the submenu the pointer is still protected.
+- **`nldd-top-navigation-bar` also clears `current` on an item a framework made current as a property,** so two items can no longer be current at once.
+
 ## [0.19.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.18.0...v0.19.0) (2026-11-08)
 
 ### Highlights

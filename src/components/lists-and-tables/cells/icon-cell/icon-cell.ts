@@ -33,7 +33,7 @@ type Color = 'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'criti
 export class NLDDIconCell extends VisibilityMixin(LitElement, 'cells-container') {
 	static override styles = iconCellStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<Size>('24') })
 	size: Size = '24';
 
 	@property({ reflect: true, converter: reflectNonDefault<Color>('content') })
@@ -42,7 +42,7 @@ export class NLDDIconCell extends VisibilityMixin(LitElement, 'cells-container')
 	@property({ reflect: true, attribute: 'vertical-alignment', converter: reflectNonDefault<VerticalAlignment>('center') })
 	verticalAlignment: VerticalAlignment = 'center';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
 	override render() {

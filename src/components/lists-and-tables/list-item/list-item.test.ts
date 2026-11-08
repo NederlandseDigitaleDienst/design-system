@@ -755,6 +755,29 @@ describe('nldd-list-item – divider markers', () => {
 		expect(item.style.getPropertyValue('--_list-item-divider-inset-end')).toBe('');
 	});
 
+	it('measures nothing in a list without dividers, and again once they return', async () => {
+		el = await fixture(`
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+				<nldd-list accessible-label="X" dividers="never">
+					<nldd-list-item>
+						<nldd-spacer-cell size="40"></nldd-spacer-cell>
+						<nldd-text-cell divider-start text="Vanaf hier"></nldd-text-cell>
+					</nldd-list-item>
+				</nldd-list>
+			</div>
+		`);
+		await waitForUpdate(el);
+		await settle();
+		const list = el.querySelector('nldd-list') as HTMLElement & { dividers: string };
+		const item = el.querySelector('nldd-list-item') as HTMLElement;
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-start')).toBe('');
+
+		list.dividers = 'always';
+		await waitForUpdate(list);
+		await settle();
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThanOrEqual(40);
+	});
+
 	// A row that opens with an icon already lines the divider up with the text, so
 	// every list does that consistently without having to set markers.
 	it('laat de divider vanzelf bij de tekst beginnen na een leidend icoon', async () => {

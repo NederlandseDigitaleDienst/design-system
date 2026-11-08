@@ -76,7 +76,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _initialSelected = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonType>('button') })
 	type: ToggleButtonType = 'button';
 
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonAppearance>('neutral-tinted') })

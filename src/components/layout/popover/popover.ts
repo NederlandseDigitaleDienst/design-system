@@ -92,7 +92,7 @@ export class NLDDPopover extends LitElement {
 	@property({ type: Boolean, reflect: true, attribute: 'sm-full-height' })
 	smFullHeight = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	anchor = '';
 
 	@property({ attribute: false })

@@ -51,6 +51,7 @@ import { TitleBarLabelController } from '../../../utilities/title-bar-label-cont
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
+import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 
@@ -58,7 +59,7 @@ export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 export class NLDDWindow extends LitElement {
 	static override styles = windowStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<NLDDWindowScheme>('inherit') })
 	scheme: NLDDWindowScheme = 'inherit';
 
 	@property({ type: String, reflect: true })

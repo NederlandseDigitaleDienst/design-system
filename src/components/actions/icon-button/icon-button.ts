@@ -121,7 +121,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	@property({ type: Boolean, reflect: true, attribute: 'no-highlight-border' })
 	noHighlightBorder = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
 	type: ButtonType = 'button';
 
 	@property({ type: Boolean, reflect: true, attribute: 'expandable' })

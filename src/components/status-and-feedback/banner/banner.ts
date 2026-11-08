@@ -77,7 +77,7 @@ export class NLDDBanner extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<BannerSize>('md') })
 	size: BannerSize = 'md';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

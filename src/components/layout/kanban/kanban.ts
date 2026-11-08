@@ -62,6 +62,7 @@ import { kanbanStyles } from './kanban.styles.js';
 import { kanbanTemplate } from './kanban.template.js';
 import { NLDDKanbanColumn } from './kanban-column.js';
 import { setState } from '../../../utilities/element-state.js';
+import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 export { NLDDKanbanColumn };
 
@@ -126,7 +127,7 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	height = '';
 
 	@property({ type: Boolean, reflect: true })

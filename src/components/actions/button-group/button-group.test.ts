@@ -423,6 +423,26 @@ describe('nldd-button-group – labels, extra knoppen, maat en richting', () => 
 		expect(el.querySelector('nldd-button')!.getAttribute('size')).toBe('sm');
 	});
 
+	it('overrides a size set as a property, as a framework sets it, and writes no md', async () => {
+		el = await fixture(`
+			<div style="width: 800px;">
+				<nldd-button-group></nldd-button-group>
+			</div>
+		`);
+		const group = el.querySelector('nldd-button-group') as HTMLElement & { size: string };
+		const button = document.createElement('nldd-button') as HTMLElement & { size: string; text: string };
+		button.text = 'Een';
+		button.size = 'lg';
+		group.append(button);
+		await frames();
+		expect(button.size).toBe('md');
+		expect(button.hasAttribute('size')).toBe(false);
+
+		group.size = 'sm';
+		await frames();
+		expect(button.getAttribute('size')).toBe('sm');
+	});
+
 	it('ziet ook een rij die aan de beginkant uitsteekt, op een pagina van rechts naar links', async () => {
 		el = await fixture(`
 			<div dir="rtl" style="width: 160px;">

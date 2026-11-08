@@ -70,7 +70,7 @@ export class NLDDMenuBarItem extends LitElement {
 	@property({ type: String })
 	href = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
 	@property({ type: Boolean, reflect: true })

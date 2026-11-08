@@ -25,6 +25,7 @@ import { ScrollModeController } from '../../../../utilities/scroll-mode-controll
 import type { SingleColumnChangeDetail } from '../../../../utilities/scroll-mode-controller.js';
 import { sideBySideSplitViewStyles } from './side-by-side-split-view.styles.js';
 import { sideBySideSplitViewTemplate } from './side-by-side-split-view.template.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 
 @customElement('nldd-side-by-side-split-view')
 export class NLDDSideBySideSplitView extends LitElement {
@@ -35,10 +36,10 @@ export class NLDDSideBySideSplitView extends LitElement {
 
 	static override styles = sideBySideSplitViewStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<'inherit' | 'base' | 'tinted'>('inherit') })
 	background: 'inherit' | 'base' | 'tinted' = 'inherit';
 
-	@property({ type: Number, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<number>(2) })
 	panes = 2;
 
 	@state()

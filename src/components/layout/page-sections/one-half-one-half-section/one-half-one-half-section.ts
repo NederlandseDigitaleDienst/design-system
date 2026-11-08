@@ -27,13 +27,13 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
+import { PageSectionMixin, pageSectionBackgroundStyles } from '../../../../utilities/page-section-mixin.js';
 import { oneHalfOneHalfSectionStyles } from './one-half-one-half-section.styles.js';
 import { oneHalfOneHalfSectionTemplate } from './one-half-one-half-section.template.js';
 
 @customElement('nldd-one-half-one-half-section')
 export class NLDDOneHalfOneHalfSection extends PageSectionMixin(LitElement) {
-	static override styles = oneHalfOneHalfSectionStyles;
+	static override styles = [pageSectionBackgroundStyles, oneHalfOneHalfSectionStyles];
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
