@@ -119,6 +119,7 @@ function parseComponent(block, filePath, fallbackTag) {
 		attrs: [],
 		slots: [],
 		events: [],
+		accepts: [],
 		category,
 	});
 
@@ -182,6 +183,13 @@ function parseComponent(block, filePath, fallbackTag) {
 				const entry = parseNamedTag(rest);
 				current.slots.push(entry);
 				lastEntry = entry;
+				break;
+			}
+			case 'accepts': {
+				// The plain HTML elements this component styles itself, such as the
+				// <select> in nldd-dropdown, or * for any. Written as `@accepts select, option`.
+				if (!current) break;
+				current.accepts.push(...rest.split(/[\s,]+/).filter(Boolean));
 				break;
 			}
 			case 'fires': {

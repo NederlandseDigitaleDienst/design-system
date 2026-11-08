@@ -67,6 +67,7 @@
  *   attribute, but only a word of at least 12 letters, as in `nldd-title`, so
  *   a short word moves to the next line whole. A soft hyphen (`&shy;`) adds
  *   a place to break of your own.
+ * @accepts *
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';

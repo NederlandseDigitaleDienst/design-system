@@ -5,14 +5,16 @@ import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { parseArgs } from 'node:util';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
-import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, resolveSeverities } from './rule-data.js';
+import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, OPT_IN_GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
-import { applyBaseline, findFiles, IGNORED_DIRECTORIES, readBaseline, readConfig, REFERENCE_EXTENSIONS, writeBaseline } from './project.js';
+import { applyBaseline, DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, readBaseline, readConfig, REFERENCE_EXTENSIONS, STYLESHEET_EXTENSIONS, writeBaseline } from './project.js';
 
 const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
     --format text|json|github       default: text
     --fix                           apply the fixes that are certain: what only got another name
+    --pure                          also check that everything comes from the system: no class,
+                                    style, plain HTML or stylesheet of your own (the group pure)
     --update-baseline               accept what is there now, report only new findings
     --max-warnings <n>              exit 1 above this number of warnings
     --select <groups or rules>      only these, comma separated
@@ -22,7 +24,7 @@ const USAGE = `Usage:
   nldd explain <rule>               what a rule checks, and why
   nldd rules [--for <tag>] [--group <group>] [--json]
                                     list the rules, or those about one component or group
-                                    groups: api, a11y, copy, structure, pattern
+                                    groups: api, a11y, copy, structure, pattern, pure (opt-in)
 `;
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
@@ -154,22 +156,28 @@ async function runLint(data, paths, options) {
 	noteOtherVersion(root);
 	const canonical = createCanonical(data);
 
+	const severities = resolveSeverities(data, config.rules, { select, ignore, optIn: options.pure ? OPT_IN_GROUPS : [] });
+	// An app that is to be pure has to be read in full: a file without a single component
+	// is the least pure of all, and a stylesheet is one too.
+	const pure = data.rules.some((rule) => OPT_IN_GROUPS.includes(rule.group) && severities[rule.id] !== 'off');
+	const extensions = pure ? [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS] : DEFAULT_EXTENSIONS;
+
 	const inputs = options.stdin
 		? [{ filename: resolve(root, options.filename ?? 'stdin.html'), source: readFileSync(0, 'utf8') }]
-		: findFiles(paths, root, config.exclude).map((filename) => ({
+		: findFiles(paths, root, config.exclude, extensions).map((filename) => ({
 				filename,
 				source: readFileSync(filename, 'utf8'),
 			}));
 
 	// Most files in an app use no component at all, and those need no parser either.
-	const relevant = inputs.filter(({ source }) => /nldd-|Nldd/.test(source) || config.wrappers);
+	const relevant = pure ? inputs : inputs.filter(({ source }) => /nldd-|Nldd/.test(source) || config.wrappers);
 	const results = [];
 	let fixed = 0;
 	let fixedFiles = 0;
 	const renamedTags = new Map();
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
-		const linter = createLinter(data, { wrappers: config.wrappers, severities: resolveSeverities(data, config.rules, { select, ignore }) });
+		const linter = createLinter(data, { wrappers: config.wrappers, severities });
 		for (const { filename, source } of relevant) {
 			const canWrite = options.fix && isUtf8(filename);
 			if (options.fix && !canWrite) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
@@ -198,7 +206,9 @@ async function runLint(data, paths, options) {
 	}
 
 	if (options['update-baseline']) {
-		writeBaseline(results, root, canonical);
+		// A run without --pure leaves what the group pure accepted alone.
+		const ran = (id) => !OPT_IN_GROUPS.includes(findRule(data, id)?.group) || (severities[id] && severities[id] !== 'off');
+		writeBaseline(results, root, canonical, ran);
 		const accepted = results.flatMap(({ findings }) => findings).filter(({ severity }) => severity !== 'hint').length;
 		console.log(`Baseline updated: ${accepted} findings accepted.`);
 		return 0;
@@ -246,6 +256,7 @@ async function main() {
 			ignore: { type: 'string' },
 			statistics: { type: 'boolean' },
 			fix: { type: 'boolean' },
+			pure: { type: 'boolean' },
 			json: { type: 'boolean' },
 			version: { type: 'boolean', short: 'v' },
 			help: { type: 'boolean', short: 'h' },

@@ -81,7 +81,8 @@ function readHtmlChildren(children, parent, given) {
 	const hole = given.lit && children.find((node) => node.type === 'text' && node.data.includes('${'));
 	if (hole) appendUnknown(parent, hole.startIndex ?? 0);
 	for (const node of children) {
-		if (node.type !== 'tag') continue;
+		// htmlparser2 gives <style> a type of its own; the group pure has a rule about it.
+		if (node.type !== 'tag' && node.type !== 'style') continue;
 		const { name, attribs } = node;
 		// In a document, a template is inert until something stamps it out, here or elsewhere.
 		if (name === 'template' && inherited.inert) {
@@ -200,10 +201,45 @@ export function parseVue(source) {
 	const template = documentNode.children.find(
 		(node) => node.type === 'tag' && node.name === 'template',
 	);
-	if (!template) return [];
+	const roots = [];
+	if (template) {
+		const root = createRoot();
+		readHtmlChildren(template.children, root, {});
+		roots.push(root);
+	}
+	// A style block is the component's own stylesheet, so it stands as the element it is.
+	for (const node of documentNode.children.filter((each) => each.name === 'style')) {
+		roots.push(stylesheetRoot(node.startIndex ?? 0, node.endIndex ?? undefined));
+	}
+	return roots;
+}
+
+function stylesheetRoot(offset, endOffset) {
 	const root = createRoot();
-	readHtmlChildren(template.children, root, {});
-	return [root];
+	const element = createNode('style', offset);
+	element.endOffset = endOffset;
+	appendChild(root, element);
+	return root;
+}
+
+/**
+ * The stylesheet with comments and imports of the design system blanked out, so
+ * what is left is the app's own and every offset still points at the source.
+ */
+const ownCss = (source) =>
+	source
+		.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '))
+		.replace(/^\s*\/\/.*$/gm, (comment) => ' '.repeat(comment.length))
+		.replace(/@import\s+(url\()?['"]?[^'";)]*nldd[^;]*;/g, (line) => ' '.repeat(line.length));
+
+/**
+ * A stylesheet file is a <style> element in a file of its own, so the rule about
+ * one reads both. A file that only imports the design system's own CSS is not one.
+ * The element starts where the own CSS does, so a comment above it can suppress it.
+ */
+export function parseStylesheet(source) {
+	const start = ownCss(source).search(/\S/);
+	return start === -1 ? [] : [stylesheetRoot(start, source.length - 1)];
 }
 
 /** Every code block and inline tag in a Markdown file is a tree of its own. */
@@ -473,6 +509,10 @@ const PARSERS = {
 	'.jsx': parseJsx,
 	'.tsx': parseJsx,
 	'.ts': parseLit,
+	'.css': parseStylesheet,
+	'.scss': parseStylesheet,
+	'.sass': parseStylesheet,
+	'.less': parseStylesheet,
 };
 
 /** @returns {Promise<import('./tree.js').TreeNode[]>} */

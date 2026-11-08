@@ -23,7 +23,8 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 | Wil je | Gebruik |
 |---|---|
 | Regels voor een component, vóór je het gebruikt | `npx @nldd/design-system rules --for nldd-toolbar` |
-| Eén soort regels | `... lint --select a11y` of `--ignore copy`; groepen: `api`, `a11y`, `copy`, `structure`, `pattern` |
+| Eén soort regels | `... lint --select a11y` of `--ignore copy`; groepen: `api`, `a11y`, `copy`, `structure`, `pattern`, `pure` |
+| Controleren dat alles uit het systeem komt | `... lint --pure`: ook geen eigen `class`, `style`, kale HTML of stylesheet. Voor een project: `"rules": { "pure": "error" }` in `.nldd-lint.json` |
 | Beginnen in een project met honderden meldingen | `... lint --statistics`: telling per regel, grootste eerst |
 | Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
 | Vue, React, Angular, Django, Jinja, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.html` en `.j2` |
@@ -56,7 +57,7 @@ npx @nldd/design-system lint --update-baseline   # accepteer wat er staat; commi
 
 | Plek | Hoe |
 |---|---|
-| lint-staged | `{ "*.{html,j2,vue,tsx,jsx}": "nldd lint" }` |
+| lint-staged | `{ "*.{html,j2,vue,tsx,jsx}": "nldd lint" }`, met `pure` aan ook `css` en `scss` |
 | CI | `npx @nldd/design-system lint --format github` |
 | pre-commit | Zie hieronder |
 

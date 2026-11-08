@@ -1,0 +1,7 @@
+severity: error
+context: 'style, link[rel~="stylesheet"]:not([href*="nldd"])'
+message: 'Leave the look to the design system: a stylesheet of your own does not follow dark mode, themes or a next release.'
+see: ontwerprichtlijnen/visueel-en-layout
+examples:
+  passed: ['<html><head><link rel="stylesheet" href="/node_modules/@nldd/design-system/dist/css/global.css"></head></html>']
+  failed: ['<html><head><style>body { margin: 0 }</style></head></html>', '<html><head><link rel="stylesheet" href="/app.css"></head></html>']

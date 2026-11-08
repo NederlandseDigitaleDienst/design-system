@@ -6,7 +6,10 @@ import { extname, join, relative, resolve } from 'node:path';
 
 export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
-const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.vue', '.jsx', '.tsx'];
+export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.vue', '.jsx', '.tsx'];
+
+/** Read only when a rule about an app's own stylesheets is on. */
+export const STYLESHEET_EXTENSIONS = ['.css', '.scss', '.sass', '.less'];
 
 /** Where a tag name stands outside markup: the linter does not read these, a renamed tag does. */
 export const REFERENCE_EXTENSIONS = ['.js', '.mjs', '.cjs', '.ts', '.css', '.scss', '.less'];
@@ -125,13 +128,15 @@ export function applyBaseline(filename, findings, baseline, root) {
 	});
 }
 
-export function writeBaseline(results, root, canonical) {
+/** `ran` says which rules this run checked: what another rule accepted stays accepted. */
+export function writeBaseline(results, root, canonical, ran = () => true) {
 	const baseline = readBaseline(root, canonical);
 	for (const { filename, findings } of results) {
 		const key = relative(root, filename);
+		const kept = Object.entries(baseline[key] ?? {}).filter(([entry]) => !ran(entry.split('|')[0]));
 		delete baseline[key];
-		if (findings.every(({ severity }) => severity === 'hint')) continue;
-		baseline[key] = {};
+		if (kept.length === 0 && findings.every(({ severity }) => severity === 'hint')) continue;
+		baseline[key] = Object.fromEntries(kept);
 		// A hint fails nothing, so there is nothing to accept.
 		for (const finding of findings.filter(({ severity }) => severity !== 'hint')) {
 			const entry = baselineKey(finding);

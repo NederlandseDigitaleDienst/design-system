@@ -1,0 +1,7 @@
+severity: error
+context: ':is(h1, h2, h3, h4, h5, h6):not(:accepted)'
+message: 'Use nldd-title with heading-level for a heading.'
+see: ontwerprichtlijnen/visueel-en-layout
+examples:
+  passed: ['<nldd-title text="Aanvraag A-1042" heading-level="1"></nldd-title>', '<nldd-rich-text><h2>Voorwaarden</h2></nldd-rich-text>']
+  failed: ['<h1>Aanvraag A-1042</h1>']

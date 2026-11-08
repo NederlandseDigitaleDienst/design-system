@@ -38,3 +38,8 @@ test('leaves the lines of a later tag out of the description', () => {
 	const [component] = parse(['A thing.', '', '@element nldd-thing', '', '@attr {string} text - Its text.', '', '@example', '<nldd-thing text="Hello"></nldd-thing>'].join('\n'));
 	assert.equal(component.summary, 'A thing.');
 });
+
+test('reads the plain HTML an element styles itself from @accepts', () => {
+	const [component] = parse(['@element nldd-thing', '', '@slot - A native select.', '@accepts select, option optgroup'].join('\n'));
+	assert.deepEqual(component.accepts, ['select', 'option', 'optgroup']);
+});

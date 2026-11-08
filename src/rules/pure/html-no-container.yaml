@@ -1,0 +1,7 @@
+severity: error
+context: ':is(div, span, section, article, aside, header, footer, nav, main, figure, hr):not(:empty):not(:accepted)'
+message: 'Lay out with nldd-container and the sections, and space with nldd-spacer.'
+see: ontwerprichtlijnen/visueel-en-layout
+examples:
+  passed: ['<nldd-container layout="row" gap="8"><nldd-button text="Bewaar"></nldd-button></nldd-container>', '<div id="app"></div>', '<nldd-rich-text><div><p>Tekst</p></div></nldd-rich-text>']
+  failed: ['<div><nldd-button text="Bewaar"></nldd-button></div>', '<section><nldd-text>Aanvraag A-1042</nldd-text></section>']

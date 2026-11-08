@@ -104,6 +104,10 @@ function renderComponent(c) {
 		}
 		out.push('');
 	}
+	if (c.accepts?.length) {
+		const elements = c.accepts.includes('*') ? 'any' : c.accepts.map((name) => `\`<${name}>\``).join(', ');
+		out.push(`**Plain HTML it styles:** ${elements}. Elsewhere, \`nldd lint --pure\` reports such an element.`, '');
+	}
 	if (c.events.length) {
 		out.push('**Events**', '');
 		out.push('| Event | Description |');

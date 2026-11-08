@@ -10,6 +10,7 @@
  * @attr {string} lg-custom-size - The same, at lg
  *
  * @slot - The paragraph or paragraphs of the quote; prefer <p> elements
+ * @accepts p
  * @slot attribution - Optional source attribution (author, title, and so on). An nldd-identity is allowed here; the em dash ("— ") is then left out.
  */
 

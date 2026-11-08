@@ -559,6 +559,8 @@ Shows a quote with an optional source attribution.
 | _(default)_ | The paragraph or paragraphs of the quote; prefer <p> elements |
 | `attribution` | Optional source attribution (author, title, and so on). An nldd-identity is allowed here; the em dash ("— ") is then left out. |
 
+**Plain HTML it styles:** `<p>`. Elsewhere, `nldd lint --pure` reports such an element.
+
 ### `<nldd-code-viewer>`
 
 A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. The viewer grows with its content. Set `max-height` to show a long file in a frame of its own: the block grows up to that height and scrolls beyond it. A scroller that overflows, in either direction, is a tab stop with a role and a name, so the keyboard reaches what a pointer can scroll to. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Set `diff` when the content is a unified diff, as git and pull request tools hand it out. The viewer shows the code it changes: an added line green and a removed line red, a column with the old and one with the new line number, a column with the `+` or `−`, and the `@@` header of each hunk between them. Within a removed line that is directly followed by an added one, the words that differ are marked, unless more than half of the line changed. File headers (`diff --git`, `---`, `+++`) are left out: name the file in the page around the viewer, and give each file of a multi-file diff a viewer of its own. `language` still highlights the code. A screen reader hears a summary first ("2 regels toegevoegd, 1 regel verwijderd") and "Toegevoegd" or "Verwijderd" with the line number before each changed line. A selection copies the code; the copy button copies the diff. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.
@@ -669,6 +671,8 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 | _(default)_ | Custom `<img>`, `<picture>` or inline `<svg>` (overrides the src-based default). An inline svg keeps its own colors and scales by its viewBox, so a drawing gets the same box, ratio and caption as a photo. Slotted media carries its own text alternative: an `alt` on the img (empty when it conveys nothing), or `role="img"` with an `aria-label`, `aria-labelledby` or `<title>` on the svg. The internal `error` listener is attached only to the built-in `<img>`, so slotted content does not trigger the error-state overlay automatically. Consumers slotting their own image are responsible for handling its error state (e.g. swapping the slot content or styling a fallback). |
 | `caption` | Rich caption content (overrides the `caption` attribute) |
 
+**Plain HTML it styles:** `<img>`, `<picture>`, `<source>`, `<svg>`. Elsewhere, `nldd lint --pure` reports such an element.
+
 ### `<nldd-keyboard-shortcut>`
 
 Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms.
@@ -714,6 +718,8 @@ A container for rich text content that automatically applies responsive typograp
 | `centered` | `boolean` | Centers the main column inside the container; without it, content is left-aligned |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `hyphens` | `boolean` | Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own. |
+
+**Plain HTML it styles:** any. Elsewhere, `nldd lint --pure` reports such an element.
 
 ### `<nldd-tag>`
 
@@ -772,6 +778,8 @@ One run of body text at a size from the type scale. It is what you reach for whe
 | Slot | Description |
 | --- | --- |
 | _(default)_ | The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone. |
+
+**Plain HTML it styles:** `<strong>`, `<b>`, `<em>`, `<i>`, `<a>`, `<code>`, `<mark>`, `<q>`, `<span>`. Elsewhere, `nldd lint --pure` reports such an element.
 
 ### `<nldd-title>`
 
@@ -1294,6 +1302,8 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 | Slot | Description |
 | --- | --- |
 | _(default)_ | A native `<select>` element with `<option>` and/or `<optgroup>` children |
+
+**Plain HTML it styles:** `<select>`, `<option>`, `<optgroup>`. Elsewhere, `nldd lint --pure` reports such an element.
 
 **Events**
 

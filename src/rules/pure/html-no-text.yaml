@@ -1,0 +1,7 @@
+severity: error
+context: ':is(p, ul, ol, li, dl, dt, dd, blockquote, pre, table, strong, b, em, i, code, small, mark, q):not(:accepted)'
+message: 'Put text in nldd-text, nldd-rich-text or nldd-title, a list in nldd-list and a table in nldd-table.'
+see: ontwerprichtlijnen/visueel-en-layout
+examples:
+  passed: ['<nldd-text>Aanvraag <strong>A-1042</strong></nldd-text>', '<nldd-rich-text><p>Tekst</p><ul><li>Tekst</li></ul></nldd-rich-text>', '<nldd-blockquote><p>Tekst</p></nldd-blockquote>']
+  failed: ['<p>Aanvraag A-1042</p>', '<nldd-container><strong>Dakisolatie</strong></nldd-container>']

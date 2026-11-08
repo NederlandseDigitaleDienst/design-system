@@ -6,7 +6,7 @@
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
-import { GROUPS } from '../../lint/rule-data.js';
+import { GROUPS, OPT_IN_GROUPS } from '../../lint/rule-data.js';
 import { basename, join, dirname } from 'node:path';
 import Ajv from 'ajv';
 import { parse as parseSelector, stringify } from 'css-what';
@@ -92,6 +92,7 @@ export function buildContract(manifest) {
 			props: members.filter((member) => member.kind === 'field' && !member.attribute).map((member) => member.name),
 			slots: slots.filter((slot) => slot !== '*'),
 			anySlot: slots.includes('*'),
+			...(declaration.accepts ? { accepts: declaration.accepts } : {}),
 			...(declaration.deprecated ? { deprecated: declaration.deprecated } : {}),
 		};
 	}
@@ -187,7 +188,9 @@ export function buildDevRules(rules, classes, tags) {
 	const authored = rules
 		// Components write `style`, `id` and more on a live page, which a hint would take for
 		// the app's own markup. A hint is advice for whoever writes the source.
-		.filter((rule) => !rule.ref && rule.severity !== 'hint')
+		// The group pure judges the app's own markup too, and a live page is full of what
+		// components write themselves; it is also off unless a project turns it on.
+		.filter((rule) => !rule.ref && rule.severity !== 'hint' && !OPT_IN_GROUPS.includes(rule.group))
 		.map(({ id, context, assert, report, count, message }) => ({
 			id,
 			message,

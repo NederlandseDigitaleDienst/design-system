@@ -5272,6 +5272,9 @@
           },
           "tagName": "nldd-blockquote",
           "customElement": true,
+          "accepts": [
+            "p"
+          ],
           "slots": [
             {
               "name": "",
@@ -6317,6 +6320,12 @@
           },
           "tagName": "nldd-image",
           "customElement": true,
+          "accepts": [
+            "img",
+            "picture",
+            "source",
+            "svg"
+          ],
           "slots": [
             {
               "name": "",
@@ -6792,7 +6801,10 @@
             "package": "lit"
           },
           "tagName": "nldd-rich-text",
-          "customElement": true
+          "customElement": true,
+          "accepts": [
+            "*"
+          ]
         }
       ],
       "exports": [
@@ -7169,6 +7181,17 @@
           },
           "tagName": "nldd-text",
           "customElement": true,
+          "accepts": [
+            "strong",
+            "b",
+            "em",
+            "i",
+            "a",
+            "code",
+            "mark",
+            "q",
+            "span"
+          ],
           "slots": [
             {
               "name": "",
@@ -13589,6 +13612,11 @@
               "name": "change",
               "description": "The native change of the slotted select, left to bubble, so a listener on the select, on the dropdown or higher up all hear it. Read the choice from `value`."
             }
+          ],
+          "accepts": [
+            "select",
+            "option",
+            "optgroup"
           ],
           "slots": [
             {

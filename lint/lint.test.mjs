@@ -6,8 +6,9 @@ import { join } from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { createEngine } from './engine.js';
-import { parseHtml, parseJsx, parseMarkdown, parseVue } from './frontends.js';
+import { parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue } from './frontends.js';
 import { createCanonical, createLinter, loadData } from './linter.js';
+import { resolveSeverities } from './rule-data.js';
 import { readBaseline } from './project.js';
 import { BOUND, walk } from './tree.js';
 
@@ -1211,6 +1212,58 @@ describe('groups', () => {
 		const { stdout } = run(project(), 'rules', '--group', 'copy');
 		assert.match(stdout, /title-no-full-stop {2}\(copy, hint\)/);
 		assert.doesNotMatch(stdout, /\(a11y, /);
+	});
+});
+
+describe('the group pure', () => {
+	const real = loadData();
+	const pure = createLinter(real, { severities: resolveSeverities(real, {}, { optIn: ['pure'] }) });
+	const rulesIn = async (linter, source, file = 'a.tsx') =>
+		(await linter.lintSource(source, file)).findings.map(({ rule }) => rule).filter((rule) => rule.startsWith('html-')).sort();
+
+	it('stays off unless a project turns it on', async () => {
+		assert.deepEqual(await rulesIn(createLinter(real), '<div className="a"><p>x</p></div>'), []);
+		assert.deepEqual(await rulesIn(createLinter(real, { severities: { 'title-no-full-stop': 'off' } }), '<p className="a">x</p>'), []);
+	});
+
+	it('finds a class whose value is bound, not only a written one', async () => {
+		assert.deepEqual(await rulesIn(pure, '<nldd-button text="a" className={cn(x)} />'), ['html-no-class']);
+	});
+
+	it('leaves plain HTML alone where the component around it styles it', async () => {
+		const source = '<nldd-container><nldd-rich-text><div><h2>a</h2><p>b</p></div></nldd-rich-text><nldd-text>c <a href="/d">d</a></nldd-text><nldd-dropdown><select><option>e</option></select></nldd-dropdown></nldd-container>';
+		assert.deepEqual(await rulesIn(pure, source), []);
+	});
+
+	it('takes the file as the boundary, and is unsure inside a component of the app', async () => {
+		assert.deepEqual(await rulesIn(pure, 'const A = () => <p>x</p>;'), ['html-no-text']);
+		assert.deepEqual(await rulesIn(pure, '<nldd-container><Card><p>x</p></Card></nldd-container>'), []);
+	});
+
+	it('lets an empty mount point be', async () => {
+		assert.deepEqual(await rulesIn(pure, '<html><body><div id="app"></div></body></html>', 'index.html'), []);
+	});
+
+	it('reads a stylesheet as a style element, unless it only imports the design system', async () => {
+		assert.equal(parseStylesheet("@import '@nldd/design-system/dist/css/global.css';\n/* app */").length, 0);
+		assert.deepEqual(await rulesIn(pure, '.app { padding: 4px }', 'app.css'), ['html-no-stylesheet']);
+		assert.deepEqual(await rulesIn(pure, '<template><nldd-text>a</nldd-text></template><style scoped>.a {}</style>', 'a.vue'), ['html-no-stylesheet']);
+		assert.deepEqual(await rulesIn(pure, '<html><head><style>body {}</style></head></html>', 'a.html'), ['html-no-stylesheet']);
+	});
+
+	it('is turned on with --pure, and a baseline without it keeps what pure accepted', () => {
+		const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+		const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.tsx'), 'export const A = () => <p>x</p>;\n');
+		writeFileSync(join(root, 'app.css'), '.a { color: red }\n');
+		assert.equal(run(root, 'lint').status, 0);
+		assert.equal(run(root, 'lint', '--pure').status, 1);
+		run(root, 'lint', '--pure', '--update-baseline');
+		run(root, 'lint', '--update-baseline');
+		assert.equal(run(root, 'lint', '--pure').status, 0);
+		writeFileSync(join(root, 'b.tsx'), 'export const B = () => <span className="b">x</span>;\n');
+		assert.equal(run(root, 'lint', '--pure').status, 1);
 	});
 });
 

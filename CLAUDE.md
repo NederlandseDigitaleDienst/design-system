@@ -204,6 +204,9 @@ Eén regel, één bestand in `src/rules/<groep>/`, ook als hij over meer compone
 | `copy` | Klopt de tekst? |
 | `structure` | Klopt de samenstelling? |
 | `pattern` | Is er een bedoelde manier? |
+| `pure` | Komt alles uit het systeem? |
+
+`pure` is de enige groep die een project zelf aanzet, met `--pure` of met een niveau in `.nldd-lint.json` (`"rules": { "pure": "error" }`). Zijn regels gaan over de eigen opmaak van een app (een `class`, `style`, kale HTML, een stylesheet), niet over het gebruik van een component, en zonder die keuze vuren ze nooit. Ze draaien daarom ook niet in de browser. Een stylesheet leest de linter als een `<style>`-element, zodat één regel een CSS-bestand, een `<style>`-blok in Vue en een `<style>` in HTML vangt. `:written(class)` matcht een attribuut dat er staat, ook met een gebonden waarde; `[class]` vraagt een waarde die we kunnen lezen. De regels waarmee `pure` begon zijn `error`, want niemand had de groep toen aan; een regel die er later bij komt, komt als `warn`, zoals elke nieuwe regel.
 
 Een naam begint met waar hij over gaat: de tag zonder `nldd-`, of een begrip uit `CONCEPTS` in `scripts/check-lint-rules.js`. Daarna één van vier vormen: `-needs-` (iets ontbreekt), `-no-` (mag niet), `-max-` (te veel), `-goes-` (verkeerde plek). In `api` eindigt hij op `-renamed`, `-invalid`, `-no-effect` of `-not-found`. `lint:rules` bewaakt dit. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.mdx` hoeft niet mee te veranderen.
 
@@ -214,6 +217,8 @@ Een regel komt erbij met een echte vondst. Hij heeft een `passed`- en `failed`-v
 Elke regel draait in twee werelden: in W+ valt alles wat onbekend is gunstig uit, in W- ongunstig. Geschonden in beide is `failed`, en alleen dat wordt gemeld. Een gebonden waarde of een kindcomponent uit een ander bestand is dus `cantTell` en nooit vals alarm. Hele pagina's zie je alleen op gebouwde HTML of in de browser.
 
 Een attribuut dat een ouder van zijn kinderen leest (`only` op een pane) documenteer je met `@childattr` bij de ouder. Het is dan alleen op een kind van die ouder geldig.
+
+Kale HTML die een component zelf opmaakt (de `<select>` in `nldd-dropdown`, inline tekst in `nldd-text`, alles in `nldd-rich-text`) documenteer je met `@accepts` bij dat component, `*` voor alles. Het komt in het manifest en in `reference.md`, en de regels van `pure` lezen het als `:accepted`: zo'n element in het dichtstbijzijnde component dat het accepteert is geen eigen opmaak. De grens is het bestand, dus een component van de app ertussen maakt het onzeker.
 
 `lint/data.generated.json` en `src/utilities/dev-rules.generated.ts` komen uit `npm run generate:lint-data` en worden gecommit, zodat een pre-commit run geen manifest van 2 MB hoeft te lezen. `generate:cem` draait het mee.
 

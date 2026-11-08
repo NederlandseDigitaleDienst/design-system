@@ -15,6 +15,16 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd lint --pure` checks that an app has no styling of its own:** no `class`, `style`, styled plain HTML or stylesheet. See Added.
+
+### Added
+
+- **`nldd lint --pure` checks that everything comes from the system.** A new group of rules, `pure`, reports a `class` or `className` (also a bound one), a `style`, plain HTML that styles something (`div`, `p`, `h2`, `button`, `img` and the like) and a stylesheet of your own: a CSS file, a `<style>` block in Vue, a `<style>` or stylesheet link in HTML. Plain HTML a component styles itself stays allowed, such as the `<select>` in `nldd-dropdown` and anything in `nldd-rich-text`. The group is off unless a project turns it on, with `--pure` or with `"rules": { "pure": "error" }` in `.nldd-lint.json`, so nobody's CI turns red unasked. With the baseline it works as a ratchet during a migration: accept what is there, and a file can only get cleaner. An `--update-baseline` without the group keeps what it accepted.
+- **The reference says which plain HTML a component styles itself,** for `nldd-text`, `nldd-rich-text`, `nldd-dropdown`, `nldd-image` and `nldd-blockquote`.
+- **A design guideline: everything comes from the system.** No stylesheet, `class` or `style` of your own; what a component cannot do yet is an issue, and a component you miss you may build yourself.
+
 ## [0.21.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.20.0...v0.21.0) (2026-11-09)
 
 ### Highlights

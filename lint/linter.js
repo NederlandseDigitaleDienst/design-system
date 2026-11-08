@@ -6,7 +6,7 @@
 import { createEngine } from './engine.js';
 import { canFix, stuckTags } from './fix.js';
 import { applyWrappers, parseSource } from './frontends.js';
-import { BUILT_IN_RULES, createCanonical, loadData } from './rule-data.js';
+import { BUILT_IN_RULES, createCanonical, loadData, OPT_IN_GROUPS } from './rule-data.js';
 import { BOUND, walk } from './tree.js';
 
 export { BUILT_IN_RULES, createCanonical, loadData };
@@ -152,8 +152,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		icons: new Set(data.icons),
 		anyChildAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.childAttrs)),
 	};
-	const engine = createEngine({ classes: data.classes });
-	const rules = data.rules.filter((rule) => !rule.runtime && severities[rule.id] !== 'off');
+	const engine = createEngine({ classes: data.classes, tags: data.tags });
+	// An opt-in group runs only where a level was given for it, never by default.
+	const isOn = (rule) => (OPT_IN_GROUPS.includes(rule.group) ? Boolean(severities[rule.id]) : true) && severities[rule.id] !== 'off';
+	const rules = data.rules.filter((rule) => !rule.runtime && isOn(rule));
 	const ranInSource = (id) => severities[id] !== 'off' && (rules.some((rule) => rule.id === id) || id in BUILT_IN_RULES);
 	const isRule = (id) => id in BUILT_IN_RULES || data.rules.some((rule) => rule.id === id);
 
