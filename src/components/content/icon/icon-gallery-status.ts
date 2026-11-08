@@ -15,14 +15,18 @@
 // so the sets only move when someone recomputes them.
 //
 //   git log --since=2026-10-07T00:00 --reverse --find-renames --name-status --format= \
-//     --invert-grep --grep='^refactor(icon): move every icon to the 96 grid' \
+//     --invert-grep --grep='^feat!: one-time code field, column board' \
+//     --grep='^refactor(icon): round every icon to one decimal' \
 //     -- src/components/content/icon/icons
 //
-// The --grep skips the commit that moved every icon from the 24 and 32 grids to
-// 96. It rewrote every file without changing a single drawing, so without it
-// the whole gallery reads as updated. Keep the filter as long as that commit
-// falls inside the window; while it is still uncommitted, leave it out of the
-// "uncommitted counts as new" rule above.
+// The greps skip the two commits that rewrote every file without changing a
+// drawing: the move from the 24 and 32 grids to 96, and the rounding to one
+// decimal. Without them the whole gallery reads as updated. The move was
+// squashed into #352, so the grep names that merge, which changed no drawing
+// of its own. A squash merge hides a commit title the same way, so after the
+// merge of the rounding, grep for the title of its merge instead. Keep a
+// filter as long as its commit falls inside the window; while it is still
+// uncommitted, leave it out of the "uncommitted counts as new" rule above.
 //
 // Read those events oldest first and chain renames forward to today's filename.
 // An icon born inside the window is new, under whatever name it ended up with;
@@ -34,6 +38,7 @@
 // caret-down), which quietly moves new icons into the updated set.
 
 export const NEW_ICONS = new Set([
+	'arrow-up-circle',
 	'book-with-bookmark',
 	'chart-bar-x-axis',
 	'check-mark-square',
