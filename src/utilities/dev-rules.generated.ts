@@ -610,6 +610,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-list-item:is([href]:not([href=\"\"]), [button]):has(> nldd-list-item-segment)"
 	},
 	{
+		"id": "search-field-search-button-renamed",
+		"message": "`search-button` takes `secondary` or `primary` now, the appearances of nldd-button. Rename it here and on every other nldd-search-field.",
+		"context": "nldd-search-field[search-button=\"neutral-tinted\"], nldd-search-field[search-button=\"accent-filled\"]"
+	},
+	{
 		"id": "search-field-show-search-button-renamed",
 		"message": "The `show-search-button` attribute is now `search-button`, which also takes the appearance of the button. Rename it here and on every other nldd-search-field.",
 		"context": "nldd-search-field[show-search-button]"
@@ -1355,8 +1360,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-search-field-search-button",
-		"message": "`search-button` on nldd-search-field takes: accent-filled, neutral-tinted.",
-		"context": "nldd-search-field[search-button]:not([search-button=\"\"], [search-button=\"accent-filled\"], [search-button=\"neutral-tinted\"])"
+		"message": "`search-button` on nldd-search-field takes: primary, secondary.",
+		"context": "nldd-search-field[search-button]:not([search-button=\"\"], [search-button=\"primary\"], [search-button=\"secondary\"])"
 	},
 	{
 		"id": "invalid-value-segmented-control-item-appearance",

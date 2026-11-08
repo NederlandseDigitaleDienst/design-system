@@ -131,6 +131,59 @@ describe('nldd-time-picker – kiezen', () => {
 		expect(minuten.hasAttribute('data-gliding')).toBe(false);
 	});
 
+	// A second tap during the glide stops it (pointerdown counts as taking over).
+	// When that tap picks the value already chosen, the column must still glide
+	// on, or it stays behind with another number in the middle than the selection.
+	it('glijdt door als je tijdens de glijbeweging nog eens op dezelfde waarde tikt', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="14:30" style="--primitives-transition-duration-medium: 200ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		const kolom = column(el, 'hours');
+		const opties = [...kolom.querySelectorAll<HTMLElement>('.time-picker__list-item')];
+		const midden = (o: HTMLElement) => o.offsetTop + o.offsetHeight / 2 - kolom.clientHeight / 2;
+		opties[7].click();
+		await waitForUpdate(el);
+		await new Promise((r) => setTimeout(r, 30));
+		kolom.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		opties[7].click();
+		await waitForUpdate(el);
+		await until(() => !kolom.hasAttribute('data-gliding'), { timeout: 1000 });
+		await new Promise((r) => setTimeout(r, 300));
+		expect(el.value).toBe('07:30');
+		expect(selection(el, 'hours').textContent!.trim()).toBe('07');
+		expect(Math.abs(kolom.scrollTop - midden(opties[7]))).toBeLessThan(1);
+	});
+
+	// The glide's last scroll event can still be queued when a tap stops it. It
+	// is not the user scrolling, and must not pick whatever passed by 120ms later.
+	it('laat een tik tijdens de glijbeweging winnen van een scroll die nog in de wachtrij stond', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="07:30" style="--primitives-transition-duration-medium: 200ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		const kolom = column(el, 'hours');
+		const opties = [...kolom.querySelectorAll<HTMLElement>('.time-picker__list-item')];
+		opties[14].click();
+		await waitForUpdate(el);
+		await new Promise((r) => setTimeout(r, 60));
+		kolom.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		kolom.dispatchEvent(new Event('scroll'));
+		opties[17].click();
+		await waitForUpdate(el);
+		await until(() => !kolom.hasAttribute('data-gliding'), { timeout: 1000 });
+		await new Promise((r) => setTimeout(r, 300));
+		expect(el.value).toBe('17:30');
+		expect(selection(el, 'hours').textContent!.trim()).toBe('17');
+	});
+
+	it('volgt je wiel ook vlak na een eigen scroll', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="18:00" style="--semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		const kolom = column(el, 'hours');
+		el.scrollSelectedIntoView();
+		kolom.dispatchEvent(new WheelEvent('wheel', { deltaY: -40 }));
+		kolom.scrollTop -= 14 * 44;
+		await until(() => el.value === '04:00', { timeout: 1000 });
+		expect(selection(el, 'hours').textContent!.trim()).toBe('04');
+	});
+
 	it('leest de duur ook in seconden', async () => {
 		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 0.2s; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
 		await waitForUpdate(el);

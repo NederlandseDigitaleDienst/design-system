@@ -82,7 +82,7 @@ export default {
 		searchButton: {
 			name: 'search-button',
 			control: 'select',
-			options: ['(geen)', 'neutral-tinted', 'accent-filled'],
+			options: ['(geen)', 'secondary', 'primary'],
 			mapping: { '(geen)': undefined },
 			description: 'Toont een zoekknop aan de rechterkant, in deze appearance',
 			table: { defaultValue: { summary: '(geen)' } },
@@ -163,7 +163,7 @@ export const Standaard = {
 
 export const MetZoekKnop = {
 	render: Template,
-	args: { searchButton: 'neutral-tinted' },
+	args: { searchButton: 'secondary' },
 };
 
 export const AlleToestanden = {
@@ -192,7 +192,7 @@ export const AlleToestanden = {
 		<nldd-search-field
 			size="md"
 			placeholder="Zoeken"
-			search-button="accent-filled"
+			search-button="primary"
 		></nldd-search-field>
 		<nldd-search-field
 			size="sm"

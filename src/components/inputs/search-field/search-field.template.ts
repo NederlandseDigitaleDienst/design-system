@@ -66,7 +66,7 @@ export function searchFieldTemplate(component: NLDDSearchField): TemplateResult 
 					${hasSearchButton ? html`
 						<div class="search-field__search-button">
 							<nldd-button
-								appearance=${component.searchButton === 'accent-filled' ? 'accent-filled' : 'neutral-tinted'}
+								appearance=${component.searchButton === 'primary' ? 'primary' : 'secondary'}
 								size=${buttonSize}
 								text=${component._t('components.search-field.search-action')}
 								@click=${component._handleSearch}

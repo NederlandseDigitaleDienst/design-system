@@ -8,6 +8,7 @@ import '../src/components/content/avatar-group/avatar-group.ts';
 import '../src/components/content/avatar/avatar.ts';
 import '../src/components/content/code-viewer/code-viewer.ts';
 import '../src/components/content/icon/icon.ts';
+import { iconRegistry } from '../src/components/content/icon/icon-registry.ts';
 import '../src/components/content/identity/identity.ts';
 import '../src/components/content/rich-text/rich-text.ts';
 import '../src/components/content/tag/tag.ts';
@@ -34,6 +35,7 @@ import '../src/components/layout/container/container.ts';
 import '../src/components/layout/page-footer/page-footer.ts';
 import '../src/components/layout/page-sections/hero/hero.ts';
 import '../src/components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.ts';
+import '../src/components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.ts';
 import '../src/components/layout/page-sections/simple-section/simple-section.ts';
 import '../src/components/layout/page/page.ts';
 import '../src/components/layout/shell/shell.ts';
@@ -56,12 +58,17 @@ import '../src/components/status-and-feedback/step-bar/step-bar.ts';
 
 const root = document.documentElement;
 
+/** The icon count in the page comes from the registry, so it never falls behind. */
+for (const title of document.querySelectorAll<HTMLElement>('[data-icon-count]')) {
+	title.setAttribute('text', title.dataset.iconCount!.replace('{n}', String(iconRegistry.size)));
+}
+
 /**
  * The swatch picker in "Eén overheid" sets the theme of the whole page, so
  * the visitor sees the system change colour around them. Lintblauw is the
  * default and has no theme of its own.
  */
-document.querySelector('#thema')?.addEventListener('change', (event) => {
+document.querySelector('#thema-keuze')?.addEventListener('change', (event) => {
 	const value = (event as CustomEvent<{ value: string }>).detail.value;
 	if (value === 'lintblauw') root.removeAttribute('data-nldd-theme');
 	else root.setAttribute('data-nldd-theme', value);

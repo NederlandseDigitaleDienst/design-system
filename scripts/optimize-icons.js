@@ -44,7 +44,7 @@ for (const file of files) {
 		}
 	}
 	const { data } = optimize(input, { ...config, path: file });
-	writeFileSync(file, `${data}\n`);
+	writeFileSync(file, `${data.trimEnd()}\n`);
 	console.log(`${file}${size === GRID ? '' : ` (scaled from ${size} to ${GRID})`}`);
 }
 process.exit(failed ? 1 : 0);

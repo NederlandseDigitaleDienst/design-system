@@ -21,6 +21,7 @@ export default {
 	},
 	args: {
 		size: 'md',
+		centered: false,
 		length: 6,
 		format: '',
 		accessibleLabel: 'Code uit de sms',
@@ -38,6 +39,11 @@ export default {
 			options: ['sm', 'md', 'lg'],
 			description: 'Maat van de vakjes',
 			table: { defaultValue: { summary: 'md' } },
+		},
+		centered: {
+			control: 'boolean',
+			description: 'Zet de vakjes in het midden van de rij',
+			table: { defaultValue: { summary: false } },
 		},
 		length: {
 			control: 'number',
@@ -91,9 +97,10 @@ export default {
 	},
 };
 
-const Template = ({ size, length, format, accessibleLabel, invalid, readonly, disabled, value, type, uppercase, required }: Record<string, any>) => html`
+const Template = ({ size, centered, length, format, accessibleLabel, invalid, readonly, disabled, value, type, uppercase, required }: Record<string, any>) => html`
 	<nldd-one-time-code-field
 		size=${size || nothing}
+		?centered=${centered}
 		length=${length ?? nothing}
 		format=${format || nothing}
 		accessible-label=${accessibleLabel || nothing}
@@ -117,11 +124,11 @@ export const Standaard = {
 export const Grootten = {
 	render: () => html`
 	<nldd-container gap="16">
-		<nldd-one-time-code-field accessible-label="Code uit de sms"></nldd-one-time-code-field>
 		<nldd-one-time-code-field
 			size="sm"
 			accessible-label="Code uit de sms"
 		></nldd-one-time-code-field>
+		<nldd-one-time-code-field accessible-label="Code uit de sms"></nldd-one-time-code-field>
 		<nldd-one-time-code-field
 			size="lg"
 			accessible-label="Code uit de sms"

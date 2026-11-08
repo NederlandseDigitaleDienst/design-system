@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './one-time-code-field.js';
 import type { NLDDOneTimeCodeField } from './one-time-code-field.js';
 
@@ -37,14 +38,131 @@ describe('nldd-one-time-code-field', () => {
 		expect(boxes()).toHaveLength(5);
 		expect(input().maxLength).toBe(5);
 		const separators = [...el.shadowRoot!.querySelectorAll('.one-time-code-field__separator')];
-		expect(separators.map((separator) => separator.textContent)).toEqual(['-']);
+		expect(separators.map((separator) => separator.className)).toEqual(['one-time-code-field__separator is-dash']);
 		await type('123-45');
 		expect(el.value).toBe('12345');
 	});
 
-	it('keeps a space as a separator', async () => {
-		el = await fixture('<nldd-one-time-code-field format="## ##"></nldd-one-time-code-field>');
-		expect(el.shadowRoot!.querySelector('.one-time-code-field__separator')!.textContent).toBe(' ');
+	it('draws a space as room between the groups, and keeps another character as text', async () => {
+		el = await fixture('<nldd-one-time-code-field format="## ##/##"></nldd-one-time-code-field>');
+		const [space, slash] = el.shadowRoot!.querySelectorAll<HTMLElement>('.one-time-code-field__separator');
+		expect(space.classList.contains('is-space')).toBe(true);
+		expect(slash.textContent).toBe('/');
+	});
+
+	it('steps down a size where the boxes do not fit, and back up when they do', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field size="lg" style="width: 600px"></nldd-one-time-code-field>');
+		const row = () => el.shadowRoot!.querySelector<HTMLElement>('.one-time-code-field__boxes')!;
+		await until(() => el.getAttribute('data-fit') === null);
+		el.style.width = '280px';
+		await until(() => el.hasAttribute('data-fit'));
+		expect(row().getBoundingClientRect().width).toBeLessThanOrEqual(280.5);
+		const fitted = el.getAttribute('data-fit');
+		el.style.width = '200px';
+		await until(() => el.getAttribute('data-fit') === 'sm');
+		expect(boxes().every((box) => box.getBoundingClientRect().top === boxes()[0].getBoundingClientRect().top)).toBe(true);
+		el.style.width = '600px';
+		await until(() => el.getAttribute('data-fit') === null);
+		expect(['md', 'sm']).toContain(fitted);
+		unloadTokens();
+	});
+
+	it('shows a text field in its own size where not even sm fits, and boxes again when they fit', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field size="lg" value="123" style="width: 120px"></nldd-one-time-code-field>');
+		await until(() => el.getAttribute('data-fit') === 'field');
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('.one-time-code-field__input')!;
+		const row = el.shadowRoot!.querySelector<HTMLElement>('.one-time-code-field__boxes')!;
+		expect(getComputedStyle(row).display).toBe('none');
+		expect(getComputedStyle(input).color).not.toBe('rgba(0, 0, 0, 0)');
+		expect(input.getBoundingClientRect().width).toBeLessThanOrEqual(120.5);
+		expect(el.shadowRoot!.querySelector<HTMLElement>(".one-time-code-field")!.getBoundingClientRect().height).toBe(56);
+		expect(input.value).toBe('123');
+		expect(el.shadowRoot!.querySelector('.one-time-code-field__validation-icon-area')).toBeNull();
+		el.setAttribute('invalid', '');
+		await waitForUpdate(el);
+		const icon = el.shadowRoot!.querySelector<HTMLElement>('.one-time-code-field__validation-icon-area')!;
+		expect(getComputedStyle(icon).display).toBe('flex');
+		expect(icon.getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right);
+		el.style.width = '600px';
+		await until(() => el.getAttribute('data-fit') === null);
+		expect(getComputedStyle(row).display).toBe('flex');
+		expect(getComputedStyle(icon).display).toBe('none');
+		unloadTokens();
+	});
+
+	it('edits as a normal text field where it shows one', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field value="123456" style="width: 120px"></nldd-one-time-code-field>');
+		await until(() => el.getAttribute('data-fit') === 'field');
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('.one-time-code-field__input')!;
+		input.focus();
+		input.setSelectionRange(1, 3);
+		input.dispatchEvent(new Event('select'));
+		expect([input.selectionStart, input.selectionEnd]).toEqual([1, 3]);
+		const left = new KeyboardEvent('keydown', { key: 'ArrowLeft', cancelable: true });
+		input.dispatchEvent(left);
+		expect(left.defaultPrevented).toBe(false);
+		input.value = '19a456';
+		input.setSelectionRange(3, 3);
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		expect(el.value).toBe('19456');
+		expect(input.value).toBe('19456');
+		expect(input.selectionStart).toBe(2);
+		const letter = new InputEvent('beforeinput', { inputType: 'insertText', data: 'a', cancelable: true });
+		input.dispatchEvent(letter);
+		expect(letter.defaultPrevented).toBe(true);
+		const digit = new InputEvent('beforeinput', { inputType: 'insertText', data: '7', cancelable: true });
+		input.dispatchEvent(digit);
+		expect(digit.defaultPrevented).toBe(false);
+		unloadTokens();
+	});
+
+	it('cuts a paste in the text field to the length of the code', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field value="123" style="width: 120px"></nldd-one-time-code-field>');
+		await until(() => el.getAttribute('data-fit') === 'field');
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('.one-time-code-field__input')!;
+		const paste = (text: string): void => {
+			const data = new DataTransfer();
+			data.setData('text/plain', text);
+			input.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertFromPaste', dataTransfer: data, cancelable: true }));
+		};
+		input.focus();
+		input.setSelectionRange(1, 1);
+		paste('98765');
+		expect(input.value).toBe('198765');
+		expect(el.value).toBe('198765');
+		input.setSelectionRange(0, 0);
+		paste('1234567890');
+		expect(input.value).toHaveLength(6);
+		expect(el.value).toHaveLength(6);
+		unloadTokens();
+	});
+
+	it('puts the boxes in the middle with centered, and still steps down', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field centered style="width: 400px"></nldd-one-time-code-field>');
+		await new Promise((r) => setTimeout(r, 50));
+		const host = el.getBoundingClientRect();
+		const field = el.shadowRoot!.querySelector<HTMLElement>('.one-time-code-field')!.getBoundingClientRect();
+		expect(host.width).toBe(400);
+		expect(Math.abs(field.left - host.left - (host.right - field.right))).toBeLessThan(1);
+		el.style.width = '200px';
+		await until(() => el.getAttribute('data-fit') === 'sm');
+		unloadTokens();
+	});
+
+	it('treats an unknown size as md when it fits', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field size="xl" style="width: 600px"></nldd-one-time-code-field>');
+		const md = await fixture<HTMLElement>('<nldd-one-time-code-field style="width: 600px"></nldd-one-time-code-field>');
+		await new Promise((r) => setTimeout(r, 50));
+		const width = (field: HTMLElement) => field.shadowRoot!.querySelector<HTMLElement>('.one-time-code-field__box')!.getBoundingClientRect().width;
+		expect(width(el)).toBe(width(md));
+		cleanup(md);
+		unloadTokens();
 	});
 
 	it('ignores a format without a box', async () => {

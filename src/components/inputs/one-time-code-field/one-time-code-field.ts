@@ -27,7 +27,8 @@
  *
  * @element nldd-one-time-code-field
  *
- * @attr {string} size - 'sm' | 'md' (default) | 'lg'. 'lg' has boxes of 56px with larger characters, for a page where the code is the only thing to do, such as signing in.
+ * @attr {string} size - 'sm' | 'md' (default) | 'lg'. 'lg' has boxes 56px tall with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Where not even sm fits, the field shows the code in a text field of its own size.
+ * @attr {boolean} centered - Puts the boxes in the middle of the row, as on a sign-in page where the code is the only field. The field keeps the full width of the row, so it still sees when the boxes no longer fit and steps down a size; centering it from outside, with the alignment of its parent, would shrink it to its boxes and take that away.
  * @attr {number} length - How many characters the code has (default: 6).
  * @attr {string} format - The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are.
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
@@ -99,6 +100,9 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	@property({ reflect: true, converter: reflectNonDefault<OneTimeCodeSize>('md') })
 	size: OneTimeCodeSize = 'md';
+
+	@property({ type: Boolean, reflect: true })
+	centered = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<number>(DEFAULT_LENGTH) })
 	length = DEFAULT_LENGTH;
@@ -232,6 +236,48 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 		this._initialValue = this.value;
 	}
 
+	private _resizeObserver?: ResizeObserver;
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this._resizeObserver = new ResizeObserver(() => this._fit());
+		this._resizeObserver.observe(this);
+	}
+
+	override disconnectedCallback(): void {
+		this._resizeObserver?.disconnect();
+		super.disconnectedCallback();
+	}
+
+	override updated(changed: PropertyValues): void {
+		super.updated(changed);
+		if (['size', 'length', 'format'].some((key) => changed.has(key))) this._fit();
+	}
+
+	/** Steps down from `size` until the boxes fit the width, so a code never
+	 *  wraps. Where not even sm fits, the input itself shows as a text field in
+	 *  the size of `size`. The boxes are measured at their full width for this. */
+	private _fit(): void {
+		const boxes = this.shadowRoot?.querySelector<HTMLElement>('.one-time-code-field__boxes');
+		const available = this.clientWidth;
+		if (!boxes || available === 0) return;
+		const sizes: OneTimeCodeSize[] = ['lg', 'md', 'sm'];
+		// An unknown size renders as md, so it steps down from there.
+		const start = sizes.includes(this.size) ? sizes.indexOf(this.size) : sizes.indexOf('md');
+		this.removeAttribute('data-fit');
+		boxes.style.minWidth = 'max-content';
+		let fits = false;
+		for (const size of sizes.slice(start)) {
+			if (size !== this.size) this.setAttribute('data-fit', size);
+			if (boxes.getBoundingClientRect().width <= available + 0.5) {
+				fits = true;
+				break;
+			}
+		}
+		boxes.style.removeProperty('min-width');
+		if (!fits) this.setAttribute('data-fit', 'field');
+	}
+
 	override formValue(): FormValue {
 		return this.value;
 	}
@@ -276,6 +322,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	 * keeps the browser's focus, which is what raises the keyboard.
 	 */
 	public _handlePointerDown(e: PointerEvent): void {
+		if (this._asField) return;
 		const box = this._boxAt(e.clientX);
 		this._pressedBox = box;
 		this._moveTo(box);
@@ -286,6 +333,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	public _handleFocus(): void {
 		this._focused = true;
+		if (this._asField) return;
 		// Tabbing in lands in the first empty box, where the next character goes.
 		if (this._pressedBox === null) this._moveTo(this._nextBox);
 		this._pressedBox = null;
@@ -300,7 +348,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	/** The native caret means nothing here; at the end it never selects a part of the code. */
 	public _keepNativeCaretAtEnd(): void {
 		const input = this._input;
-		if (!input || this.shadowRoot?.activeElement !== input) return;
+		if (!input || this._asField || this.shadowRoot?.activeElement !== input) return;
 		const end = input.value.length;
 		if (input.selectionStart !== end || input.selectionEnd !== end) input.setSelectionRange(end, end);
 	}
@@ -314,6 +362,10 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	 */
 	public _handleBeforeInput(e: InputEvent): void {
 		if (this.readonly || this.disabled) return;
+		if (this._asField) {
+			this._beforeFieldInput(e);
+			return;
+		}
 		switch (e.inputType) {
 			case 'insertText': {
 				e.preventDefault();
@@ -350,6 +402,43 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 		}
 	}
 
+	/**
+	 * As a text field the input edits like any other: select, move and delete
+	 * where you like. Only what cannot be in the code is kept out, and a pasted
+	 * code is cut out of the text around it.
+	 */
+	private _beforeFieldInput(e: InputEvent): void {
+		const input = this._input;
+		if (e.inputType === 'insertText') {
+			if (!this._clean(e.data ?? '')) e.preventDefault();
+			return;
+		}
+		if (['insertFromPaste', 'insertFromDrop', 'insertReplacementText'].includes(e.inputType)) {
+			e.preventDefault();
+			const text = this._codeIn(e.dataTransfer?.getData('text/plain') ?? e.data ?? '');
+			if (text.length === this.boxes) input.value = text;
+			else input.setRangeText(text, input.selectionStart ?? 0, input.selectionEnd ?? 0, 'end');
+			this._syncFromField();
+		}
+	}
+
+	/** Reads the text field back into the code, keeping the caret where it was. */
+	private _syncFromField(): void {
+		const input = this._input;
+		const caret = input.selectionStart ?? input.value.length;
+		const clean = this._clean(input.value);
+		if (input.value !== clean) {
+			const at = this._clean(input.value.slice(0, caret)).length;
+			input.value = clean;
+			input.setSelectionRange(at, at);
+		}
+		this._setChars(this._charsOf(clean), Math.min(clean.length, this.boxes - 1));
+	}
+
+	private get _asField(): boolean {
+		return this.getAttribute('data-fit') === 'field';
+	}
+
 	/** Writes characters from the caret on; a whole code at once replaces what was there. */
 	private _write(text: string, pasted: boolean): void {
 		if (pasted && text.length === this.boxes) {
@@ -369,7 +458,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	public _handleKeydown(e: KeyboardEvent): void {
 		submitOnEnter(this, e);
-		if (e.altKey || e.ctrlKey || e.metaKey) return;
+		if (this._asField || e.altKey || e.ctrlKey || e.metaKey) return;
 		const moves: Record<string, () => number> = {
 			ArrowLeft: () => this._box - 1,
 			ArrowRight: () => Math.min(this._box + 1, this._nextBox),
@@ -385,6 +474,10 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	/** Input that did not come through beforeinput, such as a code a phone fills in: take it from the start. */
 	public _handleInput(e: Event): void {
 		e.stopPropagation();
+		if (this._asField) {
+			this._syncFromField();
+			return;
+		}
 		const clean = this._clean(this._input.value);
 		this._setChars(this._charsOf(clean), Math.min(clean.length, this.boxes - 1));
 	}

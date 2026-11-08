@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
-	<path fill="currentColor" d="M60 76h-24v-6h24v6z"/>
-	<path fill="currentColor" d="M60 66h-24v-6h24v6z"/>
-	<path fill="currentColor" d="M74 56h-2v24c0 4.4-3.6 8-8 8h-32c-4.4 0-8-3.6-8-8v-24h-2v-8h52v8zm-42 24h32v-24h-32v24z"/>
-	<path fill="currentColor" d="M64 8c4.4 0 8 3.6 8 8v8h4c6.64 0 12 5.36 12 12v36c0 2.2-1.8 4-4 4h-8v-8h4v-32c0-2.2-1.8-4-4-4h-56c-2.2 0-4 1.8-4 4v32h4v8h-8c-2.2 0-4-1.8-4-4v-36c0-6.64 5.36-12 12-12h4v-8c0-4.4 3.6-8 8-8h32zm-32 16h32v-8h-32v8z"/>
-	<path fill="currentColor" d="M68 36c2.2 0 4 1.8 4 4 0 2.2-1.8 4-4 4-2.2 0-4-1.8-4-4 0-2.2 1.8-4 4-4z"/>
+	<path fill="currentColor" d="M60 76H36v-6h24zM60 66H36v-6h24z"/>
+	<path fill="currentColor" d="M74 56h-2v24a8 8 0 0 1-8 8H32a8 8 0 0 1-8-8V56h-2v-8h52zM32 80h32V56H32z"/>
+	<path fill="currentColor" d="M64 8a8 8 0 0 1 8 8v8h4a12 12 0 0 1 12 12v36a4 4 0 0 1-4 4h-8v-8h4V36a4 4 0 0 0-4-4H20a4 4 0 0 0-4 4v32h4v8h-8a4 4 0 0 1-4-4V36a12 12 0 0 1 12-12h4v-8a8 8 0 0 1 8-8zM32 24h32v-8H32z"/>
+	<path fill="currentColor" d="M68 36a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4"/>
 </svg>

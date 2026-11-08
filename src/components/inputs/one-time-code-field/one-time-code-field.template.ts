@@ -1,6 +1,7 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { BOX, type NLDDOneTimeCodeField } from './one-time-code-field.js';
+import './../../content/icon/icon.js';
 
 function renderBox(component: NLDDOneTimeCodeField, index: number): TemplateResult {
 	const character = component.charAt(index);
@@ -22,8 +23,17 @@ function renderBoxes(component: NLDDOneTimeCodeField): TemplateResult[] {
 	const parts = component.formatParts;
 	if (!parts) return Array.from({ length: component.boxes }, (_, index) => renderBox(component, index));
 	let index = 0;
+	return parts.map((part) => (part === BOX ? renderBox(component, index++) : renderSeparator(part)));
+}
+
+/** A space becomes room between the groups and a dash a drawn bar, both sized
+ *  with the boxes; any other character stays text. */
+function renderSeparator(part: string): TemplateResult {
+	const mark = part.trim();
+	if (mark === '') return html`<span class="one-time-code-field__separator is-space"></span>`;
+	if (mark === '-' || mark === '–') return html`<span class="one-time-code-field__separator is-dash"></span>`;
 	// Inline on purpose: the separator keeps its white space, so a line break here would show.
-	return parts.map((part) => (part === BOX ? renderBox(component, index++) : html`<span class="one-time-code-field__separator">${part}</span>`));
+	return html`<span class="one-time-code-field__separator">${part}</span>`;
 }
 
 export function oneTimeCodeFieldTemplate(component: NLDDOneTimeCodeField): TemplateResult {
@@ -55,6 +65,15 @@ export function oneTimeCodeFieldTemplate(component: NLDDOneTimeCodeField): Templ
 				@input=${component._handleInput}
 				@change=${component._handleChange}
 			>
+			<div class="one-time-code-field__input-fade"></div>
+			${component.invalid ? html`
+				<div class="one-time-code-field__validation-icon-area">
+					<nldd-icon class="one-time-code-field__validation-icon"
+						icon="invalid"
+						aria-hidden="true"
+					></nldd-icon>
+				</div>
+			` : nothing}
 			<div class="one-time-code-field__boxes"
 				aria-hidden="true"
 			>

@@ -4,5 +4,5 @@ removed: ['show-search-button']
 fix: { rename: { show-search-button: search-button } }
 message: 'The `show-search-button` attribute is now `search-button`, which also takes the appearance of the button. Rename it here and on every other nldd-search-field.'
 examples:
-  passed: ['<nldd-search-field search-button></nldd-search-field>', '<nldd-search-field search-button="accent-filled"></nldd-search-field>']
+  passed: ['<nldd-search-field search-button></nldd-search-field>', '<nldd-search-field search-button="primary"></nldd-search-field>']
   failed: ['<nldd-search-field show-search-button></nldd-search-field>']

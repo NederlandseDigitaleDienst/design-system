@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>NLDD Designsysteem</title>
-	<meta name="description" content="Web components voor de Rijksoverheid, met toegankelijkheid, huisstijl en ontwerppatronen ingebouwd. Voor elk framework.">
+	<meta name="description" content="Web Components voor de Rijksoverheid, met toegankelijkheid, huisstijl en ontwerppatronen ingebouwd. Voor elk framework.">
 	<link rel="icon" href="../src/assets/favicon/favicon.svg" type="image/svg+xml">
 	<link rel="stylesheet" href="./styles.css">
 	<script type="module" src="./main.ts"></script>
@@ -49,7 +49,7 @@
 			</nldd-button-group>
 		</nldd-hero>
 
-		<nldd-simple-section>
+		<nldd-simple-section id="statistieken">
 			<nldd-title
 				slot="header"
 				size="2"
@@ -111,7 +111,8 @@
 						<nldd-spacer size="4"></nldd-spacer>
 						<nldd-title
 							size="1"
-							text="393"
+							text="394"
+							data-icon-count="{n}"
 							supporting-text="iconen in de stijl van de Rijksoverheid-letter"
 							heading-level="3"
 						></nldd-title>
@@ -165,7 +166,7 @@
 			</nldd-container>
 		</nldd-simple-section>
 
-		<nldd-one-half-one-half-section background="tinted">
+		<nldd-one-half-one-half-section id="toegankelijkheid" background="tinted">
 			<nldd-title
 				slot="header"
 				size="2"
@@ -223,7 +224,7 @@
 			</nldd-list>
 		</nldd-one-half-one-half-section>
 
-		<nldd-one-half-one-half-section vertical-alignment="center">
+		<nldd-one-half-one-half-section id="thema" vertical-alignment="center">
 			<nldd-title
 				slot="left"
 				size="2"
@@ -247,7 +248,7 @@
 					></nldd-title>
 					<nldd-spacer size="12"></nldd-spacer>
 					<nldd-swatch-picker
-						id="thema"
+						id="thema-keuze"
 						accessible-label="Thema van deze pagina"
 						value="lintblauw"
 					>
@@ -376,7 +377,7 @@
 			</nldd-card>
 		</nldd-one-half-one-half-section>
 
-		<nldd-simple-section background="tinted">
+		<nldd-simple-section id="componenten" background="tinted">
 			<nldd-title
 				slot="header"
 				size="2"
@@ -635,21 +636,24 @@
 									</nldd-menu>
 								</nldd-menu-item>
 								<nldd-menu-item
-									icon="tag"
+									icon="circle-circle"
 									text="Status"
 								>
 									<nldd-menu>
 										<nldd-menu-item
 											type="radio"
+											icon="circle-circle"
 											text="In behandeling"
 											selected
 										></nldd-menu-item>
 										<nldd-menu-item
 											type="radio"
+											icon="clock"
 											text="Wacht op jou"
 										></nldd-menu-item>
 										<nldd-menu-item
 											type="radio"
+											icon="check-mark-circle"
 											text="Afgerond"
 										></nldd-menu-item>
 									</nldd-menu>
@@ -822,7 +826,7 @@
 			></nldd-button>
 		</nldd-simple-section>
 
-		<nldd-one-half-one-half-section>
+		<nldd-one-half-one-half-section id="techniek">
 			<nldd-title
 				slot="header"
 				size="2"
@@ -830,7 +834,8 @@
 				heading-level="2"
 			></nldd-title>
 			<nldd-rich-text slot="left">
-				<p>De componenten zijn web components: gewone HTML-elementen die de browser zelf begrijpt. Ze werken in Angular, React en Vue, en net zo goed zonder framework. Daardoor bestaat elk component één keer, met de toegankelijkheid en elk detail van de interactie erin. Geen team hoeft dat zelf na te bouwen, en elke pagina gedraagt zich hetzelfde.</p>
+				<p>We kiezen volledig voor Web Components: componenten die de browser rechtstreeks ondersteunt en die in elk framework werken. Angular, React, Vue of helemaal zonder framework: overal gebruiken developers dezelfde componenten.</p>
+				<p>Elk component brengt zijn eigen toegankelijkheid en interacties mee: van toetsenbord en focus tot schermlezer en animaties. Met een losse versie in HTML/CSS bouwt elk team dat zelf, en elk team doet het anders. Met Web Components krijgt elke toepassing dezelfde kwaliteit.</p>
 				<h3>Ontwerp direct in code</h3>
 				<p>De API is zo eenvoudig dat je als designer zelf aan de slag kunt. Je ziet meteen hoe het werkt, op elk scherm en met echte inhoud. Er is ruimte waar je die nodig hebt, en vaste afspraken waar eenheid telt. Die afspraken zijn ook de guardrails voor een AI-assistent: die weet wat kan en wat niet.</p>
 			</nldd-rich-text>
@@ -906,11 +911,12 @@
 			</nldd-container>
 		</nldd-one-half-one-half-section>
 
-		<nldd-simple-section background="tinted">
+		<nldd-simple-section id="iconen" background="tinted">
 			<nldd-title
 				slot="header"
 				size="2"
-				text="393 iconen in één stijl"
+				text="394 iconen in één stijl"
+				data-icon-count="{n} iconen in één stijl"
 				heading-level="2"
 			></nldd-title>
 			<nldd-spacer
@@ -918,7 +924,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>De huisstijl van de Rijksoverheid heeft maar een klein aantal iconen, en die passen niet bij de Rijksoverheid-letter. Ontwikkelaars grijpen daarom naar open-source sets, en die passen er net zo slecht bij. Wij hebben er een eigen set voor ontwikkeld. Van een huis tot een microscoop, van een tulp tot een handdruk: elk icoon volgt één stijlgids, gemaakt bij de letter. Mis je een icoon voor jouw project? <a href="https://github.com/NederlandseDigitaleDienst/design-system/issues/new">Vraag het aan</a>.</p>
+				<p>We hebben een eigen uitgebreide set van iconen ontwikkeld die past bij de Rijksoverheid-letter. Van een huis tot een microscoop, van een tulp tot een handdruk. Mis je een icoon voor jouw project? <a href="https://github.com/NederlandseDigitaleDienst/design-system/issues/new">Vraag het aan</a>.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="wrap"
@@ -1023,11 +1029,11 @@
 					size="32"
 				></nldd-icon>
 				<nldd-icon
-					icon="wrench"
+					icon="screwdriver-wrench"
 					size="32"
 				></nldd-icon>
 				<nldd-icon
-					icon="screwdriver-wrench"
+					icon="wrench"
 					size="32"
 				></nldd-icon>
 				<nldd-icon
@@ -1255,7 +1261,7 @@
 			></nldd-button>
 		</nldd-simple-section>
 
-		<nldd-simple-section>
+		<nldd-simple-section id="designer">
 			<nldd-title
 				slot="header"
 				size="2"
@@ -1267,7 +1273,7 @@
 				size="16"
 			></nldd-spacer>
 			<nldd-rich-text slot="header">
-				<p>Niet elk team heeft een designer. Het designsysteem neemt die rol over, met de richtlijnen, vijftien patronen en een linter die meekijkt. Werk je met een AI-assistent, dan geven de skills hem dezelfde kennis.</p>
+				<p>Niet elk team heeft een designer. Het designsysteem neemt die rol over, met de richtlijnen, patronen en een linter die meekijkt. Werk je met een AI-assistent, dan geven de skills hem dezelfde kennis.</p>
 			</nldd-rich-text>
 			<nldd-container
 				layout="grid"
@@ -1335,13 +1341,134 @@
 			</nldd-container>
 		</nldd-simple-section>
 
-		<nldd-simple-section
-			id="aan-de-slag"
-			background="tinted"
-		>
+		<nldd-one-third-two-thirds-section id="ai-assistent" background="tinted" vertical-alignment="center">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Ga aan de slag met je eigen AI-assistent"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="header"
+				size="16"
+			></nldd-spacer>
+			<nldd-rich-text slot="header">
+				<p>Met zes skills kent je assistent het hele systeem. Wat hij leert, klopt: de skills komen uit de code zelf.</p>
+			</nldd-rich-text>
+			<nldd-list
+				slot="left"
+				dividers="never"
+				accessible-label="De zes skills"
+			>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="wrench"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Bouw een applicatie"
+						supporting-text="nldd-design-build"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="arrow-left-right"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Zet een bestaande frontend om"
+						supporting-text="nldd-design-migrate"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="check-mark-circle"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Valideer wat er staat"
+						supporting-text="nldd-design-validate"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="arrow-up-circle"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Stap over naar een nieuwe versie"
+						supporting-text="nldd-design-upgrade"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="magnifier"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Zoek een component of icoon op"
+						supporting-text="nldd-design"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="lightbulb"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Stel een verbetering voor"
+						supporting-text="nldd-design-contribute"
+					></nldd-title-cell>
+				</nldd-list-item>
+			</nldd-list>
+			<nldd-card slot="right">
+				<nldd-container padding="24" sm-padding="16">
+					<nldd-text>Je assistent vergeet de naam van een knop. nldd lint ziet het meteen:</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-code-viewer
+						appearance="box-tinted"
+						wrap
+						no-copy
+					>error  icon-button-needs-name
+nldd-icon-button needs `text` or `accessible-label`,
+otherwise it has no accessible name.</nldd-code-viewer>
+					<nldd-spacer size="16"></nldd-spacer>
+					<nldd-text>Hij herstelt het zelf:</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-code-viewer
+						appearance="box-tinted"
+						language="html"
+						diff
+						wrap
+						no-copy
+					>-&lt;nldd-icon-button icon="delete"&gt;&lt;/nldd-icon-button&gt;
++&lt;nldd-icon-button icon="delete" text="Verwijder aanvraag A-1042"&gt;&lt;/nldd-icon-button&gt;</nldd-code-viewer>
+					<nldd-spacer size="16"></nldd-spacer>
+					<nldd-inline-dialog
+						variant="success"
+						text="0 fouten, 0 waarschuwingen"
+						supporting-text="Een schermlezer leest nu voor wat de knop doet."
+					></nldd-inline-dialog>
+				</nldd-container>
+			</nldd-card>
+			<nldd-button
+				slot="footer"
+				appearance="primary"
+				text="Installeer de skills"
+				href="https://github.com/NederlandseDigitaleDienst/design-system#plugin-voor-ai-assistenten"
+			></nldd-button>
+		</nldd-one-third-two-thirds-section>
+
+		<nldd-simple-section id="start-zelf">
 			<nldd-title
 				size="2"
-				text="Begin met één regel"
+				text="Of begin zelf met één regel"
 				heading-level="2"
 			></nldd-title>
 			<nldd-spacer size="16"></nldd-spacer>
@@ -1351,12 +1478,8 @@
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-code-viewer
 				language="bash"
-				appearance="box-base"
+				appearance="box-tinted"
 			>npm install @nldd/design-system</nldd-code-viewer>
-			<nldd-spacer size="16"></nldd-spacer>
-			<nldd-rich-text>
-				<p>Bouw je samen met een AI-assistent? Installeer dan <a href="https://github.com/NederlandseDigitaleDienst/design-system#plugin-voor-ai-assistenten">de skills</a> en vraag je assistent een bestaande pagina om te zetten naar het designsysteem.</p>
-			</nldd-rich-text>
 		</nldd-simple-section>
 
 		<nldd-page-footer slot="footer">
