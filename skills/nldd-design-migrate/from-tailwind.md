@@ -53,7 +53,7 @@ Drie patronen uit een typische Tailwind-setup vechten met het designsysteem en m
 - `button, a, input, select, textarea { transition: all .15s }` vecht met de animaties van de componenten, onder andere met de geslotte `<select>` in `nldd-dropdown`.
 - `body { background-color: ... }`: `nldd-shell` zet dat zelf op `document.body`.
 
-Forceer verder `color-scheme: light` op de root zolang de migratie loopt. Donkere modus komt gratis met het palet, maar half omgezette schermen met `bg-white` en `text-gray-*` zijn er stuk in. Zet het pas aan als het laatste scherm om is.
+Forceer verder de lichte weergave met `<html data-scheme="light">` zolang de migratie loopt. Donkere modus komt gratis met het palet, maar half omgezette schermen met `bg-white` en `text-gray-*` zijn er stuk in. Zet het pas aan als het laatste scherm om is.
 
 ## Wat je niet overhoudt
 
@@ -63,6 +63,6 @@ Loop elke utility daarom af als vraag aan het systeem. Vaak is er een attribuut 
 
 ## Iconen
 
-Kom je van `lucide-react` of een vergelijkbare set, dan heb je een mappingtabel nodig naar `nldd-icon`. Het gros mapt direct; een stuk of vijftien niet. Kies dan een buurman of houd een kleine eigen SVG-set.
+Kom je van `lucide-react` of een vergelijkbare set, dan heb je een mappingtabel nodig naar `nldd-icon`. Het gros mapt direct; een stuk of vijftien niet. Kies dan het icoon uit het pakket dat er het dichtst bij komt, en vraag een icoon dat echt ontbreekt aan via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Een eigen SVG-set is eigen vormgeving: hij volgt geen huisstijl en geen update van het systeem.
 
 Let op de maatvoering: Tailwind deed dat met klassen (`h-4 w-4`), `nldd-icon` doet het in pixels en accepteert alleen spacer-uitgelijnde maten. Je codemod heeft dus een klasse-naar-maat-tabel nodig, en de twee kleinste schalen ronden omhoog.

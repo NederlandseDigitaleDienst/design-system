@@ -142,7 +142,7 @@ Eigen CSS hoort er niet te zijn (zie "Geen eigen vormgeving"). Staat er tijdelij
 
 `light-dark()` heb je alleen nodig voor kleuren die niet uit het palet komen, of wanneer je per schema bewust een ándere stap wilt (bijvoorbeeld 100 in licht en 150 in donker, voor iets meer contrast).
 
-**Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `color-scheme: light` (of `dark`) op een root-element. Er is geen aparte thema-toggle-API op `nldd-shell`.
+**Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `data-scheme="light"` (of `"dark"`) op `<html>`; zonder het attribuut volgt de pagina de voorkeur van het systeem. Een schakelaar in je app zet of haalt dat attribuut weg. Componenten die bij een wissel opnieuw moeten tekenen, letten zelf op het attribuut.
 
 ## Gebruikspatronen
 

@@ -53,7 +53,7 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 
 Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die niets anders zag:
 
-1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een toastbibliotheek, en elk eigen stylesheet. De allowlist bevat alleen wat structureel zo hoort: `form` binnen `nldd-form`, `canvas`, `select` en `option` in `nldd-dropdown`, en inline tekst (`strong`, `em`, `code`, `a`) binnen `nldd-text` en `nldd-rich-text`. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. De baseline is migratieschuld en geen plek voor uitzonderingen: wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, met de issuelink als reden. Klaar is een lege baseline.
+1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een toastbibliotheek, en elk eigen stylesheet. Alleen kale HTML die een component zelf opmaakt mag blijven, zoals de `<select>` in `nldd-dropdown` of inline tekst in `nldd-text`; de slotbeschrijvingen in de [componentreferentie](../nldd-design/reference.md) zeggen welke. Daarnaast `canvas`, waar een grafiek op tekent. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. De baseline is migratieschuld en geen plek voor uitzonderingen: wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, met de issuelink als reden. Klaar is een lege baseline.
 2. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
 3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
 4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
@@ -100,7 +100,7 @@ Lees icoonnamen dus uit het pakket, en neem de aliassen mee: namen als `search` 
 
 ### Een verbouwing bewijs je met twee afdrukken
 
-Verplaats je vormgeving zonder iets te willen veranderen (inline stijlen naar klassen, `<style>`-blokken naar bestanden), dan zegt een unittest daar niets over. Maak in plaats daarvan een afdruk op de basiscommit, een op je werk, en vergelijk:
+Wil je iets veranderen zonder dat het er anders uitziet (een eigen knop vervangen door `nldd-button`, het oude CSS-framework weghalen), dan zegt een unittest daar niets over. Maak in plaats daarvan een afdruk op de basiscommit, een op je werk, en vergelijk:
 
 ```
 git worktree add /tmp/basis <basis-commit>
@@ -202,15 +202,7 @@ De hele rechtvaardiging voor dit systeem is WCAG 2.1 AA en EN 301 549. Een toega
 - **Dubbele `<h1>`**: de titelbalk van de app-shell rendert meestal de h1 van de pagina. Een detailpagina die er zelf een toevoegt levert twee concurrerende koppen van niveau 1.
 - **Selectie die alleen in kleur zit** faalt 1.4.1. Gebruik de eigen `current`/`checked` van het component, plus een tweede kanaal zoals een icoon.
 
-Is de kop een `nldd-title`, geef die dan `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Voeg je elders een kop-tag puur voor de semantiek toe (met de stijl van het component erbinnen), zet dan een reset zodat de standaardgrootte en -marge van de browser niet vechten met het component:
-
-```css
-h1:not(nldd-rich-text h1), h2:not(nldd-rich-text h2) /* … */ {
-  margin: 0;
-  font-size: inherit;
-  font-weight: inherit;
-}
-```
+Een kop is een `nldd-title` met `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Is de titel meer dan tekst, zoals een link, zet dan je eigen `<h2>` in het standaardslot van `nldd-title`: die maakt hem op. Een kale kop daarbuiten heeft een CSS-reset nodig, en dat is eigen opmaak.
 
 ## Omzetten is geen ontwerpen
 
@@ -219,7 +211,7 @@ Een omzetting die alle checks haalt, ziet er daarmee nog niet goed uit. Na een v
 Wat in die ronde het meeste opleverde:
 
 - De paginatitel staat in het `header`-slot van de eerste sectie, op elke pagina in dezelfde maat. Let op de dubbele `<h1>` uit de vorige sectie.
-- Tussen pagina's navigeer je met `nldd-tab-bar`. Een `nldd-segmented-control` is een keuze in een formulier, geen navigatie.
+- Tussen pagina's navigeer je met `nldd-tab-bar`. Een `nldd-segmented-control` is een keuze uit een vaste set ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren)), geen navigatie.
 - Een kaart met `href` kan geen knoppen bevatten; heeft hij die wel, dan wordt de titel de link.
 - Geen kaders om lijsten, lege standen of losse cijfers. Een kader om alles maakt niets belangrijker.
 - Geen knoppen die uit staan, zie de [ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren).
@@ -293,7 +285,7 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 2. De checks bouwen, de zuiverheidscheck met zijn baseline voorop. Van elk bewijzen dat die faalt.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
 4. De event-, value- en overlay-helpers schrijven, plus getypte JSX-bindings waarin een boolean alleen `true` of afwezig kan zijn.
-5. Per scherm de vormgeving direct vervangen door componenten, en de CSS van dat scherm in dezelfde commit weghalen. Zet inline stijlen niet eerst om naar klassen: dat verplaatst eigen CSS in plaats van hem weg te halen. Bewaar ook geen opruimronde voor het eind. Een migratie die dat deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten. Wat geen component kan, wordt een issue en een regel in de baseline.
+5. Per scherm de vormgeving direct vervangen door componenten, en de CSS van dat scherm in dezelfde commit weghalen. Zet inline stijlen niet eerst om naar klassen: dat verplaatst eigen CSS in plaats van hem weg te halen. Bewaar ook geen opruimronde voor het eind. Een migratie die dat deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten. Wat geen component kan, wordt een issue en een uitzondering in de code met de issuelink.
 6. Inventariseren welke globale regels gedrag dragen. Daarna het oude CSS-framework **vroeg** weghalen en repareren wat dat blootlegt.
 7. De app-shell omzetten (layout, navigatie, header), achter een vlag als de navigatie voor iedereen verandert.
 8. Je eigen primitives herimplementeren (Button, Input, Select, Card) met behoud van hun API. Dat converteert de nette aanroepplekken in één klap.
