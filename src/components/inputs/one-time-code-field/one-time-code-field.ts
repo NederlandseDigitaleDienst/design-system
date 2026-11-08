@@ -27,7 +27,7 @@
  *
  * @element nldd-one-time-code-field
  *
- * @attr {string} size - 'sm' | 'md' (default) | 'lg'. 'lg' has boxes of 56px with larger characters, for a page where the code is the only thing to do, such as signing in.
+ * @attr {string} size - 'sm' | 'md' (default) | 'lg'. 'lg' has boxes of 56px with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Narrower than sm, the boxes narrow with it.
  * @attr {number} length - How many characters the code has (default: 6).
  * @attr {string} format - The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are.
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
@@ -230,6 +230,40 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	override firstUpdated(): void {
 		this._initialValue = this.value;
+	}
+
+	private _resizeObserver?: ResizeObserver;
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this._resizeObserver = new ResizeObserver(() => this._fit());
+		this._resizeObserver.observe(this);
+	}
+
+	override disconnectedCallback(): void {
+		this._resizeObserver?.disconnect();
+		super.disconnectedCallback();
+	}
+
+	override updated(changed: PropertyValues): void {
+		super.updated(changed);
+		if (['size', 'length', 'format'].some((key) => changed.has(key))) this._fit();
+	}
+
+	/** Steps down from `size` until the boxes fit the width, so a code never
+	 *  wraps. The boxes are measured at their full width for this. */
+	private _fit(): void {
+		const boxes = this.shadowRoot?.querySelector<HTMLElement>('.one-time-code-field__boxes');
+		const available = this.clientWidth;
+		if (!boxes || available === 0) return;
+		const sizes: OneTimeCodeSize[] = ['lg', 'md', 'sm'];
+		this.removeAttribute('data-fit');
+		boxes.style.width = 'max-content';
+		for (const size of sizes.slice(sizes.indexOf(this.size))) {
+			if (size !== this.size) this.setAttribute('data-fit', size);
+			if (boxes.getBoundingClientRect().width <= available + 0.5) break;
+		}
+		boxes.style.removeProperty('width');
 	}
 
 	override formValue(): FormValue {

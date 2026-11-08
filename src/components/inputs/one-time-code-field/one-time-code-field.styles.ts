@@ -18,6 +18,9 @@ export const oneTimeCodeFieldStyles = css`
 		--_one-time-code-field-box-font: var(--primitives-font-monospace-md-regular-flat);
 		--_one-time-code-field-caret-width: var(--primitives-space-2);
 		--_one-time-code-field-caret-height: var(--primitives-space-20);
+		--_one-time-code-field-space-width: var(--primitives-space-12);
+		--_one-time-code-field-dash-width: var(--primitives-space-12);
+		--_one-time-code-field-dash-height: var(--primitives-space-3);
 
 		${inheritedTextReset}
 		display: block;
@@ -29,21 +32,28 @@ export const oneTimeCodeFieldStyles = css`
 		display: none;
 	}
 
-	:host([size="sm"]) {
+	:host([size="sm"]),
+	:host([data-fit="sm"]) {
 		--_one-time-code-field-gap: var(--primitives-space-6);
 		--_one-time-code-field-box-size: var(--semantics-controls-sm-min-size);
 		--_one-time-code-field-box-corner-radius: var(--semantics-controls-sm-corner-radius);
 		--_one-time-code-field-font: var(--semantics-input-fields-sm-text-font);
 		--_one-time-code-field-box-font: var(--primitives-font-monospace-sm-regular-flat);
 		--_one-time-code-field-caret-height: var(--primitives-space-16);
+		--_one-time-code-field-space-width: var(--primitives-space-8);
+		--_one-time-code-field-dash-width: var(--primitives-space-10);
+		--_one-time-code-field-dash-height: var(--primitives-space-2);
 	}
 
-	:host([size="lg"]) {
+	:host([size="lg"]:not([data-fit])) {
 		--_one-time-code-field-gap: var(--primitives-space-10);
 		--_one-time-code-field-box-size: var(--semantics-controls-lg-min-size);
 		--_one-time-code-field-box-corner-radius: var(--semantics-controls-lg-corner-radius);
 		--_one-time-code-field-box-font: var(--primitives-font-weight-body-regular) var(--primitives-font-size-300) / var(--primitives-line-height-flat) var(--primitives-font-family-monospace);
 		--_one-time-code-field-caret-height: var(--primitives-space-28);
+		--_one-time-code-field-space-width: var(--primitives-space-16);
+		--_one-time-code-field-dash-width: var(--primitives-space-16);
+		--_one-time-code-field-dash-height: var(--primitives-space-4);
 	}
 
 	:host([readonly]) {
@@ -140,6 +150,20 @@ export const oneTimeCodeFieldStyles = css`
 		color: var(--semantics-content-secondary-color);
 		font: var(--_one-time-code-field-box-font);
 		white-space: pre;
+	}
+
+	.one-time-code-field__separator.is-space {
+		width: var(--_one-time-code-field-space-width);
+		flex-shrink: 0;
+	}
+
+	.one-time-code-field__separator.is-dash {
+		border-radius: calc(var(--_one-time-code-field-dash-height) / 2);
+		background-color: currentColor;
+		width: var(--_one-time-code-field-dash-width);
+		height: var(--_one-time-code-field-dash-height);
+		flex-shrink: 0;
+		align-self: center;
 	}
 
 	.one-time-code-field__character {

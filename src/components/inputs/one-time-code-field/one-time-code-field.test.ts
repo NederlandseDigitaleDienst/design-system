@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './one-time-code-field.js';
 import type { NLDDOneTimeCodeField } from './one-time-code-field.js';
 
@@ -37,14 +38,34 @@ describe('nldd-one-time-code-field', () => {
 		expect(boxes()).toHaveLength(5);
 		expect(input().maxLength).toBe(5);
 		const separators = [...el.shadowRoot!.querySelectorAll('.one-time-code-field__separator')];
-		expect(separators.map((separator) => separator.textContent)).toEqual(['-']);
+		expect(separators.map((separator) => separator.className)).toEqual(['one-time-code-field__separator is-dash']);
 		await type('123-45');
 		expect(el.value).toBe('12345');
 	});
 
-	it('keeps a space as a separator', async () => {
-		el = await fixture('<nldd-one-time-code-field format="## ##"></nldd-one-time-code-field>');
-		expect(el.shadowRoot!.querySelector('.one-time-code-field__separator')!.textContent).toBe(' ');
+	it('draws a space as room between the groups, and keeps another character as text', async () => {
+		el = await fixture('<nldd-one-time-code-field format="## ##/##"></nldd-one-time-code-field>');
+		const [space, slash] = el.shadowRoot!.querySelectorAll<HTMLElement>('.one-time-code-field__separator');
+		expect(space.classList.contains('is-space')).toBe(true);
+		expect(slash.textContent).toBe('/');
+	});
+
+	it('steps down a size where the boxes do not fit, and back up when they do', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field size="lg" style="width: 600px"></nldd-one-time-code-field>');
+		const row = () => el.shadowRoot!.querySelector<HTMLElement>('.one-time-code-field__boxes')!;
+		await until(() => el.getAttribute('data-fit') === null);
+		el.style.width = '300px';
+		await until(() => el.hasAttribute('data-fit'));
+		expect(row().getBoundingClientRect().width).toBeLessThanOrEqual(300.5);
+		const fitted = el.getAttribute('data-fit');
+		el.style.width = '200px';
+		await until(() => el.getAttribute('data-fit') === 'sm');
+		expect(boxes().every((box) => box.getBoundingClientRect().top === boxes()[0].getBoundingClientRect().top)).toBe(true);
+		el.style.width = '600px';
+		await until(() => el.getAttribute('data-fit') === null);
+		expect(['md', 'sm']).toContain(fitted);
+		unloadTokens();
 	});
 
 	it('ignores a format without a box', async () => {

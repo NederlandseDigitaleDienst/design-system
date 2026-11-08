@@ -117,11 +117,11 @@ export const Standaard = {
 export const Grootten = {
 	render: () => html`
 	<nldd-container gap="16">
-		<nldd-one-time-code-field accessible-label="Code uit de sms"></nldd-one-time-code-field>
 		<nldd-one-time-code-field
 			size="sm"
 			accessible-label="Code uit de sms"
 		></nldd-one-time-code-field>
+		<nldd-one-time-code-field accessible-label="Code uit de sms"></nldd-one-time-code-field>
 		<nldd-one-time-code-field
 			size="lg"
 			accessible-label="Code uit de sms"
