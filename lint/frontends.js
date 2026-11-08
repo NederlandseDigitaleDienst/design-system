@@ -57,10 +57,10 @@ function readAttribute(element, name, value) {
 	else if (/^(:|v-bind:|x-bind:|\.|\?)/.test(name)) {
 		const bare = name.replace(/^(v-bind|x-bind)?[:.?]/, '').replace(/\.(prop|attr|camel)$/, '');
 		element.attrs.set(bare, BOUND);
-	} else if (/^\[(class\.|style\.)/.test(name) || /^\[ng(Class|Style)\]$/.test(name)) {
+	} else if (/^\[(class\.|style\.)/.test(name) || /^\[(ngClass|ngStyle|className)\]$/.test(name)) {
 		// Angular's way to set one class or style, or a set of them. Not an attribute of
 		// its own, but the element ends up with a class or a style, which the group pure asks.
-		const attribute = /^\[(class\.|ngClass)/.test(name) ? 'class' : 'style';
+		const attribute = /^\[(class\.|ngClass|className)/.test(name) ? 'class' : 'style';
 		if (!element.attrs.has(attribute)) element.attrs.set(attribute, BOUND);
 	} else if (/^\[@/.test(name)) {
 		// An Angular animation: no attribute.
@@ -251,8 +251,11 @@ const ownCss = (source) =>
  * Where each top-level block of the app's own CSS starts: a rule with its braces,
  * or a statement up to its semicolon.
  */
-function cssBlockOffsets(source) {
-	const own = ownCss(source);
+function cssBlockOffsets(source, indented = false) {
+	// Strings and url() can hold a brace or a semicolon, so their contents are blanked first.
+	const own = ownCss(source).replace(/(["'])(?:\\.|(?!\1).)*\1|url\([^)]*\)/g, (text) => text[0] + ' '.repeat(text.length - 1));
+	// Sass without braces: a block is a line that starts at the margin.
+	if (indented) return [...own.matchAll(/^\S/gm)].map((match) => match.index);
 	const offsets = [];
 	let depth = 0;
 	let inBlock = false;
@@ -277,8 +280,8 @@ function cssBlockOffsets(source) {
  * Each block is an element of its own, starting where it does, so a comment above
  * a block suppresses that block.
  */
-export function parseStylesheet(source) {
-	const offsets = cssBlockOffsets(source);
+export function parseStylesheet(source, filename = '') {
+	const offsets = cssBlockOffsets(source, filename.endsWith('.sass'));
 	return offsets.length === 0 ? [] : [stylesheetRoot(offsets)];
 }
 
@@ -378,49 +381,88 @@ function jsxName(node) {
 	return `${node.namespace.name}:${node.name.name}`;
 }
 
-/** Between a return and the JSX it returns: `return a ? <x /> : <y />`. */
-const PASSES_ON_RETURN = new Set(['ConditionalExpression', 'LogicalExpression', 'ParenthesizedExpression', 'SequenceExpression']);
+/** Expressions a value passes through unchanged: `a ? <x /> : <y />`, `(<x />)`, `<x /> as JSX.Element`. */
+const PASSES_ON_VALUE = new Set([
+	'ConditionalExpression', 'LogicalExpression', 'ParenthesizedExpression', 'SequenceExpression',
+	'TSAsExpression', 'TSSatisfiesExpression', 'TSNonNullExpression', 'TSTypeAssertion',
+]);
 
 /** Between `export` and the component it exports: `export const A = memo(() => ...)`, a class and its render. */
-const PASSES_ON_EXPORT = new Set(['VariableDeclaration', 'VariableDeclarator', 'CallExpression', 'ClassDeclaration', 'ClassExpression', 'ClassBody', 'MethodDefinition', 'ParenthesizedExpression']);
+const PASSES_ON_EXPORT = new Set([
+	...PASSES_ON_VALUE, 'VariableDeclaration', 'VariableDeclarator', 'CallExpression',
+	'ClassDeclaration', 'ClassExpression', 'ClassBody', 'MethodDefinition', 'PropertyDefinition',
+]);
 
 const FUNCTIONS = new Set(['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression']);
 
 /**
  * Finds every JSX tree. What an exported component returns is what this file
- * renders. Any other tree (a helper component, a callback, a variable, a prop) is
- * built to be placed somewhere, maybe inside a component of this same file, and is
- * marked detached.
+ * renders. Any other tree is built to be placed somewhere, maybe inside a component
+ * of this same file, and is marked detached. A tree that a function bound to a name
+ * returns, or that a name is bound to directly, gets that name as its owner, so its
+ * place can be looked up: `<Row />`, `{items}`. JSX assigned later or pushed into an
+ * array has no owner and stays unknown.
  */
-function collectJsx(node, found, { exported = false, renders = false, returned = false, owner } = {}, exportedNames = new Set()) {
+function collectJsx(node, found, state = {}, exportedNames = new Set()) {
 	if (!node || typeof node !== 'object') return;
+	const { exported = false, renders = false, returned = false, fnOwner, valueOwner } = state;
 	if (Array.isArray(node)) {
-		for (const item of node) collectJsx(item, found, { exported, renders, returned, owner }, exportedNames);
+		for (const item of node) collectJsx(item, found, state, exportedNames);
 		return;
 	}
 	if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
-		// `owner` is the name it is bound to, `<Row />` or `{items}`, so its place can be found.
-		found.push({ node, detached: !(renders && returned), owner });
+		found.push({ node, detached: !(renders && returned), owner: returned ? fnOwner : valueOwner });
 		return;
 	}
-	// A new binding names what it holds: `const Row = () => ...`, `function Row()`, `const items = ...`.
-	const binds = (node.type === 'VariableDeclarator' || node.type === 'FunctionDeclaration') && node.id?.type === 'Identifier';
 	const isFunction = FUNCTIONS.has(node.type);
 	// `function A() {}` with `export default A` further down, or `export { A }`.
 	const named = (node.type === 'FunctionDeclaration' || node.type === 'VariableDeclarator' || node.type === 'ClassDeclaration') && exportedNames.has(node.id?.name);
-	exported ||= named;
+	const isExported = exported || named;
+	// The name a function returns its JSX under: its own, or the one it is bound to.
+	const ownName = node.type === 'FunctionDeclaration' ? node.id?.name : isFunction ? valueOwner : fnOwner;
 	for (const key of Object.keys(node)) {
 		if (key === 'parent') continue;
+		let nextValueOwner;
+		if (node.type === 'VariableDeclarator' && key === 'init' && node.id?.type === 'Identifier') nextValueOwner = node.id.name;
+		else if (PASSES_ON_VALUE.has(node.type)) nextValueOwner = valueOwner;
+		// `memo(() => ...)`, `useMemo(() => ...)`, `xs.map((x) => ...)`: the callback is what the name holds.
+		else if (node.type === 'CallExpression' && key === 'arguments') nextValueOwner = valueOwner;
 		collectJsx(node[key], found, {
-			exported: node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration' || (exported && (named || PASSES_ON_EXPORT.has(node.type))),
+			exported: node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration' || (isExported && (named || PASSES_ON_EXPORT.has(node.type))),
 			// A function renders when it is the exported one; a function inside it does not.
-			renders: isFunction ? exported : renders,
+			renders: isFunction ? isExported : renders,
 			returned: (node.type === 'ReturnStatement' && key === 'argument')
 				|| (node.type === 'ArrowFunctionExpression' && key === 'body')
-				|| (returned && PASSES_ON_RETURN.has(node.type)),
-			owner: binds ? node.id.name : owner,
+				|| (returned && PASSES_ON_VALUE.has(node.type)),
+			fnOwner: isFunction ? ownName : fnOwner,
+			valueOwner: nextValueOwner,
 		}, exportedNames);
 	}
+}
+
+/** Every name the file binds, with how often: a name bound twice cannot be looked up by name alone. */
+function bindingCounts(program) {
+	const counts = new Map();
+	const add = (name) => name && counts.set(name, (counts.get(name) ?? 0) + 1);
+	const pattern = (node) => {
+		if (!node) return;
+		if (node.type === 'Identifier') add(node.name);
+		else if (node.type === 'ObjectPattern') node.properties.forEach((property) => pattern(property.value ?? property.argument));
+		else if (node.type === 'ArrayPattern') node.elements.forEach(pattern);
+		else if (node.type === 'AssignmentPattern') pattern(node.left);
+		else if (node.type === 'RestElement') pattern(node.argument);
+		else if (node.type === 'TSParameterProperty') pattern(node.parameter);
+	};
+	const visit = (node) => {
+		if (!node || typeof node !== 'object') return;
+		if (Array.isArray(node)) return node.forEach(visit);
+		if (node.type === 'VariableDeclarator') pattern(node.id);
+		if ((node.type === 'FunctionDeclaration' || node.type === 'ClassDeclaration') && node.id) add(node.id.name);
+		if (FUNCTIONS.has(node.type)) node.params?.forEach(pattern);
+		for (const key of Object.keys(node)) if (key !== 'parent') visit(node[key]);
+	};
+	visit(program);
+	return counts;
 }
 
 /** The names a module exports by reference rather than in place. */
@@ -428,6 +470,9 @@ function exportedNamesOf(program) {
 	const names = new Set();
 	for (const statement of program.body ?? []) {
 		if (statement.type === 'ExportDefaultDeclaration' && statement.declaration?.type === 'Identifier') names.add(statement.declaration.name);
+		// `export default withRouter(Page)`: the component inside the wrapper is what is exported.
+		const wrapped = (call) => call?.type === 'CallExpression' && call.arguments.forEach((arg) => (arg.type === 'Identifier' ? names.add(arg.name) : wrapped(arg)));
+		if (statement.type === 'ExportDefaultDeclaration') wrapped(statement.declaration);
 		if (statement.type === 'ExportNamedDeclaration' && !statement.source) {
 			for (const specifier of statement.specifiers ?? []) names.add(specifier.local?.name);
 		}
@@ -563,12 +608,15 @@ export async function parseJsx(source, filename) {
 	const { program, errors } = oxcParser.parseSync(filename, source);
 	const found = [];
 	collectJsx(program, found, {}, exportedNamesOf(program));
+	const bindings = bindingCounts(program);
 	const roots = [];
 	const owners = new Map();
 	for (const { node, detached, owner } of found) {
 		const root = jsxTree(node, roots, detached);
 		roots.push(root);
-		if (detached && owner) owners.set(root, owner);
+		// A name bound more than once (a parameter that shadows it, two components with
+		// the same local) might be the other one where it is used: then it stays unknown.
+		if (detached && owner && bindings.get(owner) === 1) owners.set(root, owner);
 	}
 	placeDetachedRoots(roots, owners);
 	if (errors?.length) {

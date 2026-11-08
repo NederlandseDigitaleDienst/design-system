@@ -59,7 +59,7 @@ function sourceFiles(directory) {
 }
 
 /** Things a rule can be about that are no single component. */
-const CONCEPTS = ['action', 'html', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'slot', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'variant', 'website'];
+const CONCEPTS = ['action', 'class', 'html', 'style', 'stylesheet', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'slot', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'variant', 'website'];
 const FORM = /-(needs|no|max|goes)-/;
 const API_ENDING = /-(renamed|invalid|no-effect|not-found)$/;
 
@@ -254,24 +254,70 @@ function checkBrowserSelectors() {
 	}
 }
 
+/** The plain elements a selector reaches below the component it starts with: `nldd-rich-text > p`, `:is(h1, h2)`. */
+function plainTagsAfterHost(selector) {
+	const found = [];
+	for (const tokens of parse(selector)) {
+		const [first] = tokens;
+		if (first?.type !== 'tag' || !first.name.startsWith('nldd-')) continue;
+		const host = first.name;
+		let below = false;
+		const visit = (list) => {
+			list.forEach((token, index) => {
+				// `fieldset.form-section` is an element the component renders itself, not one it is given.
+				const own = list[index + 1]?.type === 'attribute' && list[index + 1].name === 'class';
+				if (['descendant', 'child', 'sibling', 'adjacent'].includes(token.type)) below = true;
+				else if (below && token.type === 'tag' && !token.name.includes('-') && !own) found.push([host, token.name]);
+				else if (token.type === 'pseudo' && Array.isArray(token.data)) token.data.forEach(visit);
+			});
+		};
+		visit(tokens);
+	}
+	return found;
+}
+
 /**
- * A component that styles a plain element it is given (`::slotted(a)`) says so with
- * `@accepts a`, or `nldd lint --pure` reports that element in every app as the app's own.
+ * A component that styles a plain element it is given says so with `@accepts`, or
+ * `nldd-lint --pure` reports that element in every app as the app's own. Checked per
+ * element: `::slotted(a)` in the styles it uses, and for a component without shadow
+ * DOM (nldd-rich-text, nldd-form) the plain elements its stylesheet reaches.
  */
 function checkSlottedIsAccepted() {
-	const accepted = new Map();
-	for (const [file, source] of componentSources) {
-		const directory = dirname(file);
-		for (const [, tag] of source.matchAll(/@element (nldd-[a-z0-9-]+)/g)) {
-			const accepts = data.tags[tag]?.accepts ?? [];
-			accepted.set(directory, new Set([...(accepted.get(directory) ?? []), ...accepts]));
+	const slottedByConst = new Map();
+	for (const [file, source] of componentSources.filter(([name]) => name.endsWith('.styles.ts'))) {
+		for (const block of source.split(/(?=export const \w+ = css`)/)) {
+			const name = /^export const (\w+) = css`/.exec(block)?.[1];
+			if (!name) continue;
+			const tags = [...block.matchAll(/::slotted\(\s*([a-z][a-z0-9]*)(?![a-z0-9-])/g)].map(([, tag]) => tag);
+			slottedByConst.set(name, { file, tags });
 		}
 	}
-	for (const [file, source] of componentSources.filter(([name]) => name.endsWith('.styles.ts'))) {
-		const accepts = accepted.get(dirname(file)) ?? new Set();
-		for (const [, element] of source.matchAll(/::slotted\(\s*([a-z][a-z0-9]*)(?![a-z0-9-])/g)) {
-			if (!accepts.has(element) && !accepts.has('*')) {
-				problems.push(`${relative(repoRoot, file)}: styles ::slotted(${element}) but no element in this folder has @accepts ${element}.`);
+	const missing = (tag, element) => {
+		const accepts = data.tags[tag]?.accepts ?? [];
+		return !accepts.includes(element) && !accepts.includes('*');
+	};
+	for (const [file, source] of componentSources) {
+		for (const part of source.split(/(?=@customElement\(')/).slice(1)) {
+			const tag = /^@customElement\('(nldd-[a-z0-9-]+)'\)/.exec(part)?.[1];
+			const styles = /\bstyles\s*=\s*([^;]+);/.exec(part)?.[1] ?? '';
+			for (const name of styles.match(/\w+/g) ?? []) {
+				for (const element of slottedByConst.get(name)?.tags ?? []) {
+					if (tag && missing(tag, element)) problems.push(`${relative(repoRoot, file)}: ${tag} styles ::slotted(${element}) but has no @accepts ${element}.`);
+				}
+			}
+		}
+	}
+	const lightDom = readdirSync(join(repoRoot, 'src/components'), { recursive: true }).filter((file) => file.endsWith('.css'));
+	for (const file of lightDom) {
+		const css = readFileSync(join(repoRoot, 'src/components', file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+		const preludes = [...css.matchAll(/([^{}]+)\{/g)].map(([, prelude]) => prelude.trim()).filter((prelude) => prelude.startsWith('nldd-'));
+		const seen = new Set();
+		for (const prelude of preludes) {
+			for (const [tag, element] of plainTagsAfterHost(prelude)) {
+				const key = `${tag} ${element}`;
+				if (seen.has(key) || !data.tags[tag] || !missing(tag, element)) continue;
+				seen.add(key);
+				problems.push(`src/components/${file}: ${tag} styles <${element}> but has no @accepts ${element}.`);
 			}
 		}
 	}

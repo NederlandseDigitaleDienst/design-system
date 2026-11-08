@@ -156,7 +156,13 @@ export function tightenBaseline(results, root, canonical, ran) {
 	if (!existsSync(join(root, BASELINE_FILE))) return undefined;
 	const baseline = readBaseline(root, canonical);
 	const read = new Map(results.map(({ filename, findings }) => [relative(root, filename), countFindings(findings)]));
-	const sameCounts = (a, b) => Object.keys({ ...a, ...b }).every((key) => a[key] === b[key]);
+	// Only the rules that ran can be compared; what the others accepted moves along as it is.
+	const ranOnly = (entries) => Object.fromEntries(Object.entries(entries).filter(([entry]) => ran(entry.split('|')[0])));
+	const sameCounts = (a, b) => {
+		const left = ranOnly(a);
+		const right = ranOnly(b);
+		return Object.keys({ ...left, ...right }).every((key) => left[key] === right[key]);
+	};
 	let dropped = 0;
 	for (const [file, entries] of Object.entries(baseline)) {
 		if (!existsSync(join(root, file))) {

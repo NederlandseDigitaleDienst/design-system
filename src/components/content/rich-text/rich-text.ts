@@ -67,7 +67,7 @@
  *   attribute, but only a word of at least 12 letters, as in `nldd-title`, so
  *   a short word moves to the next line whole. A soft hyphen (`&shy;`) adds
  *   a place to break of your own.
- * @accepts p, h1, h2, h3, h4, h5, h6, a, strong, b, em, i, code, mark, q, span, ul, ol, li, dl, dt, dd, blockquote, pre, figure, figcaption, img, picture, source, table, thead, tbody, tr, th, td, hr, div
+ * @accepts p, h1, h2, h3, h4, h5, h6, a, strong, b, em, i, u, s, del, ins, code, kbd, samp, var, small, mark, q, cite, abbr, sub, sup, br, span, ul, ol, li, dl, dt, dd, blockquote, pre, figure, figcaption, img, picture, source, table, thead, tbody, tfoot, tr, th, td, caption, hr, div, section, video, iframe
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';

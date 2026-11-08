@@ -1,5 +1,5 @@
 severity: error
-context: ':is(p, ul, ol, li, dl, dt, dd, blockquote, pre, table, strong, b, em, i, code, small, mark, q):not(:accepted)'
+context: ':is(p, ul, ol, li, dl, dt, dd, blockquote, pre, table, strong, b, em, i, u, s, del, ins, code, kbd, samp, var, small, mark, q, cite, abbr, sub, sup):not(:accepted)'
 message: 'Put text in nldd-text, nldd-rich-text or nldd-title, a list in nldd-list and a table in nldd-table.'
 see: ontwerprichtlijnen/visueel-en-layout
 examples:

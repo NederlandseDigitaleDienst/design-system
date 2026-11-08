@@ -175,7 +175,9 @@ async function runLint(data, paths, options) {
 			}));
 
 	// Most files in an app use no component at all, and those need no parser either.
-	const relevant = pure ? inputs : inputs.filter(({ source }) => /nldd-|Nldd/.test(source) || config.wrappers);
+	// Tightening has to see every file the baseline names, also one without a component left.
+	const inBaseline = options['tighten-baseline'] ? new Set(Object.keys(readBaseline(root, canonical))) : new Set();
+	const relevant = pure ? inputs : inputs.filter(({ filename, source }) => /nldd-|Nldd/.test(source) || config.wrappers || inBaseline.has(relative(root, filename)));
 	const results = [];
 	let fixed = 0;
 	let fixedFiles = 0;

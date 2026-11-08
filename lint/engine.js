@@ -77,23 +77,31 @@ function createFieldLabelCheck(isInput, allowMaybe) {
  * unknown.
  */
 function createAcceptedCheck(tags, allowUnknown) {
-	const accepted = (node, from, depth) => {
+	// `chain` holds the plain elements between the node and the component: the
+	// component styles its own children (::slotted) or descendants of what it styles,
+	// so each of them has to be accepted too. `seen` keeps a component that places
+	// itself from going round in circles.
+	const accepted = (node, from, chain, seen) => {
 		for (let parent = from; parent; parent = parent.parent) {
 			if (parent.name === '#root') {
 				if (!parent.detached) return false;
-				// Placed where the file uses it: judged from each of those places. Accepted in
-				// any of them is enough, so one that maybe accepts it keeps the rule quiet.
-				if (!parent.placements || depth > 8) return allowUnknown;
-				return parent.placements.some((place) => accepted(node, place.parent, depth + 1));
+				if (!parent.placements) return allowUnknown;
+				if (seen.has(parent)) return false;
+				const next = new Set(seen).add(parent);
+				// Accepted in any of the places the file uses it is enough.
+				return parent.placements.some((place) => accepted(node, place.parent, chain, next));
 			}
 			if (parent.opaque) return allowUnknown;
-			if (!parent.name.startsWith('nldd-')) continue;
+			if (!parent.name.startsWith('nldd-')) {
+				chain.push(parent.name);
+				continue;
+			}
 			const accepts = tags[parent.name]?.accepts ?? [];
-			return accepts.includes('*') || accepts.includes(node.name);
+			return accepts.includes('*') || [node.name, ...chain].every((name) => accepts.includes(name));
 		}
 		return false;
 	};
-	return (node) => accepted(node, node.parent, 0);
+	return (node) => accepted(node, node.parent, [], new Set());
 }
 
 function classPseudos(classes) {

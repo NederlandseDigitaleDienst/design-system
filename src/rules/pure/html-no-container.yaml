@@ -1,5 +1,5 @@
 severity: error
-context: ':is(div, span, section, article, aside, header, footer, nav, main, figure):not([slot]):not(:blank):not(:accepted), hr:not(:accepted)'
+context: ':is(div, span, section, article, aside, header, footer, nav, main, figure):not([slot]):not([hidden]):not(:blank):not(:accepted), hr:not(:accepted)'
 message: 'Lay out with nldd-container and the sections, and space with nldd-spacer.'
 see: ontwerprichtlijnen/visueel-en-layout
 examples:

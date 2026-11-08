@@ -1,13 +1,13 @@
 <style>
   /* The section owns the switch; this shows the button, and the space above
      it, only when there is a sheet to open. */
-  /* nldd-lint-disable-next-line html-no-stylesheet -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
+  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
   nldd-sidebar-section:not([collapsed]) :is(#inhoud-openen, nldd-spacer:has(+ #inhoud-openen)) {
     display: none;
   }
 
   /* The sheet has its own title bar with the same name. */
-  /* nldd-lint-disable-next-line html-no-stylesheet -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
+  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
   nldd-sidebar-section[collapsed] :is(#inhoud-kop, #inhoud-kop + nldd-spacer) {
     display: none;
   }
