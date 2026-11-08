@@ -60,9 +60,6 @@ function toMs(time: string): number {
 	return time.trim().endsWith('ms') ? value : time.trim().endsWith('s') ? value * 1000 : 0;
 }
 
-/** What ends a glide: the user scrolling the column themselves. */
-const GLIDE_INTERRUPTIONS = ['wheel', 'touchstart', 'pointerdown'] as const;
-
 @customElement('nldd-time-picker')
 export class NLDDTimePicker extends DescribedBy(LitElement) {
 
@@ -209,10 +206,19 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			next = hour * 60 + number;
 			if (!slots.includes(next)) return;
 		}
+		// A click is a choice and supersedes a settle still pending: that one may
+		// come from the last frame of a glide the click itself stopped.
+		if (commit) this._cancelSettle();
 		const changed = fromMinutes(next) !== this.value;
 		this._chosenHere = changed;
 		this.value = fromMinutes(next);
 		if (changed) this._emit('input');
+		// The pointerdown of this click may have stopped a glide halfway. With the
+		// value unchanged nothing re-renders, so put the column back in line here.
+		else if (commit) {
+			this._scrolledTo = { hours: null, minutes: null };
+			this.scrollSelectedIntoView(true);
+		}
 		// change is the confirmation, not the change: a field showing the picker in
 		// a popover records on it, and that must not happen the moment you stop
 		// scrolling.
@@ -344,6 +350,12 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		}, 120);
 	}
 
+	private _cancelSettle(): void {
+		clearTimeout(this._scrollTimers.hours);
+		clearTimeout(this._scrollTimers.minutes);
+		this.toggleAttribute('data-scrolling', false);
+	}
+
 	/** The number of the option closest to the middle of the column. */
 	private _centeredOption(el: HTMLElement): number | null {
 		const center = el.scrollTop + el.clientHeight / 2;
@@ -411,7 +423,6 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		const duration = toMs(getComputedStyle(this).getPropertyValue('--_time-picker-glide-duration'));
 		const start = performance.now();
 		column.toggleAttribute('data-gliding', true);
-		for (const type of GLIDE_INTERRUPTIONS) column.addEventListener(type, this._interruptGlide, { passive: true });
 		const step = (now: number): void => {
 			const t = duration > 0 ? Math.min(1, (now - start) / duration) : 1;
 			column.scrollTop = from + distance * (1 - (1 - t) ** 3);
@@ -425,16 +436,22 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		cancelAnimationFrame(this._glides.get(column) ?? 0);
 		this._glides.delete(column);
 		column.removeAttribute('data-gliding');
-		for (const type of GLIDE_INTERRUPTIONS) column.removeEventListener(type, this._interruptGlide);
 	}
 
-	/** A wheel or a touch during the glide is the user taking over: the glides
-	 *  stop where they are, and their scrolling chooses again. */
-	private _interruptGlide = (): void => {
-		// Both columns, or the other one's glide would pass for the user's scrolling.
-		for (const column of [...this._glides.keys()]) this._stopGlide(column);
-		clearTimeout(this._selfScrollTimer);
-		this._scrollingSelf = false;
+	/**
+	 * A wheel, a touch or a press on a column is the user taking over, also in
+	 * the moment after a glide while we still ignore its last scroll events.
+	 * The glides stop where they are, and their scrolling chooses again.
+	 * Passive, so it never holds up the scrolling it listens to.
+	 */
+	public _takeOver = {
+		passive: true,
+		handleEvent: (): void => {
+			// Both columns, or the other one's glide would pass for the user's scrolling.
+			for (const column of [...this._glides.keys()]) this._stopGlide(column);
+			clearTimeout(this._selfScrollTimer);
+			this._scrollingSelf = false;
+		},
 	};
 
 	/** Listen to scrolling again once our own has been still a little longer than
