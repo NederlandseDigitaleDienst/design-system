@@ -127,7 +127,7 @@ Dit voorkomt rendering-issues met `fill-rule: nonzero` (de standaard).
 ## Pixel snapping
 
 - Coördinaten snappen op **hele eenheden** waar mogelijk
-- Uitzondering: diagonalen op 45° produceren √2-waarden (bijv. 5.66, 42.83), en dat is acceptabel
+- Uitzondering: diagonalen op 45° produceren √2-waarden (bijv. 5.7, 42.8), en dat is acceptabel
 - Vermijd subpixel-waarden bij horizontale en verticale lijnen
 
 ## Optimaliseren
@@ -138,7 +138,7 @@ Een nieuwe export gaat één keer door `npm run optimize:icons -- <bestand.svg> 
 - `width`, `height`, `fill-rule`, `clip-rule` en `clip-path` worden verwijderd
 - Vormen (`rect`, `circle`, …) worden paden
 - Een vaste kleur wordt `fill="currentColor"`
-- Paden worden afgerond op twee decimalen
+- Paden worden afgerond op één decimaal
 
 Draai het niet nog eens op een bestand dat al geoptimaliseerd is: een tweede ronde rondt opnieuw af en verschuift het icoon.
 
