@@ -130,6 +130,18 @@ describe('nldd-top-navigation-bar – menu item selection', () => {
 		expect(items[1].hasAttribute('current')).toBe(true);
 	});
 
+	it('deselects an item made current as a property, as a framework does', async () => {
+		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
+		await waitForUpdate(el);
+
+		const items = el.querySelectorAll<HTMLElement & { current: boolean }>('nldd-menu-bar[slot="global"] > nldd-menu-bar-item');
+		items[0].current = true;
+		items[1].click();
+		await waitForUpdate(el);
+		expect(items[0].current).toBe(false);
+		expect(items[1].current).toBe(true);
+	});
+
 	it('dispatches itemselect event on item click', async () => {
 		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
 		await waitForUpdate(el);
