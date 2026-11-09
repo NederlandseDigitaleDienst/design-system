@@ -36,6 +36,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **The menu sheet of `nldd-top-navigation-bar` shows the full title of each level above its rows,** "Menu" included, and its title bar takes the title over once you scroll past it. A long title was cut off in the bar on a phone.
 - **A page section paints its `background` from its own styles,** instead of an inline `style` on the element.
 - **`nldd-menu` opens a submenu once the pointer comes to rest on its item,** when it stops or slows down, instead of after a fixed 150ms. A pointer passing over the menu still opens nothing, and 150ms remains the longest it waits.
 - **A press beside the boxes of `nldd-one-time-code-field` no longer focuses it,** also on either side when it is `centered`. The boxes and the gaps between them still do, and so does its label.
