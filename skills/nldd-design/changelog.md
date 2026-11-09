@@ -26,7 +26,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
-- **`value` on `nldd-dropdown`,** which reads and writes the value of the slotted `<select>`, also when it is set before the select is there.
+- **`value` on `nldd-dropdown`,** which reads and writes the value of the slotted `<select>`, also when it is set before the select or its options are there, as with options loaded later. A choice someone makes in the meantime wins.
 - **`expandable` on `nldd-list-item` and `nldd-list-item-segment`,** for a row or segment that opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. Markup could not write a closed disclosure before, since `expanded="false"` reads as on.
 - **JSX types for React, in `@nldd/design-system/react`.** Every `nldd-*` tag with its attributes, for React 18 and 19. A boolean takes `true` or nothing, so `disabled={busy}`, which React 18 always reads as on, does not compile.
 - **`@nldd/design-system/autoloader`,** which watches the page for `nldd-*` elements that are not defined yet and loads the module of each tag once, so a page loads only the components it shows. `discover(root)` does the same for a shadow root of your own. `dist/cdn/autoloader.js` is the same with lit inside, a chunk per component, for a `<script type="module">` without a bundler or an import map.

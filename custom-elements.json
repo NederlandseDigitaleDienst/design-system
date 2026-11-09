@@ -2068,7 +2068,7 @@
               "type": {
                 "text": "MenuItemType"
               },
-              "description": "Item type: 'button' | 'submit' | 'checkbox' | 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.",
+              "description": "Item type: 'button' | 'submit' | 'checkbox' | 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.",
               "name": "type",
               "default": "'button'",
               "fieldName": "type",
@@ -47169,7 +47169,8 @@
                 "text": "ParentNode"
               }
             }
-          ]
+          ],
+          "description": "Loads the modules for every nldd-* element in `root` that is not defined yet,\n`root` itself included. Resolves once they are all registered."
         },
         {
           "kind": "function",

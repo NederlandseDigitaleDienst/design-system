@@ -43,15 +43,15 @@ function load(tag: string): Promise<unknown> | undefined {
 	return pending;
 }
 
-/**
- * Loads the modules for every nldd-* element in `root` that is not defined yet,
- * `root` itself included. Resolves once they are all registered.
- */
 /** For the observer, which has no caller to hand a failed load to. */
 function report(error: unknown): void {
 	console.error('[nldd] A component module failed to load.', error);
 }
 
+/**
+ * Loads the modules for every nldd-* element in `root` that is not defined yet,
+ * `root` itself included. Resolves once they are all registered.
+ */
 export async function discover(root: ParentNode = document): Promise<void> {
 	const tags = new Set<string>();
 	if (root instanceof Element && isUndefinedComponent(root)) tags.add(root.localName);

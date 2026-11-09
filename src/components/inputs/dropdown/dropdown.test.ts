@@ -313,6 +313,34 @@ describe('nldd-dropdown – change event', () => {
 		expect(el.querySelector('select')!.value).toBe('be');
 	});
 
+	it('keeps a value until its option arrives, as with options loaded later', async () => {
+		el = await fixture<NLDDDropdown>('<nldd-dropdown><select aria-label="Land"></select></nldd-dropdown>');
+		await waitForUpdate(el);
+		el.value = 'be';
+		expect(el.value).toBe('be');
+		const select = el.querySelector('select')!;
+		select.innerHTML = '<option value="nl">Nederland</option>';
+		await waitForUpdate(el);
+		expect(el.value).toBe('be');
+		select.insertAdjacentHTML('beforeend', '<option value="be">België</option>');
+		await waitForUpdate(el);
+		expect(select.value).toBe('be');
+		expect(el.value).toBe('be');
+	});
+
+	it('lets a choice someone makes win over a value still waiting for its option', async () => {
+		el = await fixture<NLDDDropdown>('<nldd-dropdown><select aria-label="Land"><option value="nl">Nederland</option></select></nldd-dropdown>');
+		await waitForUpdate(el);
+		el.value = 'be';
+		const select = el.querySelector('select')!;
+		select.value = 'nl';
+		select.dispatchEvent(new Event('change', { bubbles: true }));
+		select.insertAdjacentHTML('beforeend', '<option value="be">België</option>');
+		await waitForUpdate(el);
+		expect(select.value).toBe('nl');
+		expect(el.value).toBe('nl');
+	});
+
 	it('takes a value set before the element upgraded', async () => {
 		const wrapper = document.createElement('div');
 		wrapper.innerHTML = '<nldd-dropdown-later><select aria-label="Land"><option value="nl">Nederland</option><option value="be">België</option></select></nldd-dropdown-later>';

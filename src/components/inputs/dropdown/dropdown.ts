@@ -23,7 +23,7 @@
  * @attr {string} accessible-label - Accessible name, forwarded as aria-label to the slotted select
  * @attr {boolean} required - Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone.
  *
- * @prop {string} value - The value of the slotted select. Setting it before the select is there applies it once the select arrives.
+ * @prop {string} value - The value of the slotted select. Setting it before the select or its option is there applies it once that option arrives, unless someone picks an option first.
  *
  * @slot - A native `<select>` element with `<option>` and/or `<optgroup>` children
  *
@@ -92,27 +92,51 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 
 	private _select: HTMLSelectElement | null = null;
 
-	/** A value set before the select was slotted, applied when it arrives. */
+	/** A value set before the select or a matching option was there, kept
+	 *  until one arrives or someone picks an option. */
 	private _pendingValue: string | null = null;
+
+	/** Watches the options of the select while a value is pending. */
+	private _optionsObserver: MutationObserver | null = null;
 
 	/**
 	 * The value of the slotted `<select>`, so a framework can bind to the
 	 * dropdown itself instead of reaching for the select inside it.
 	 */
 	get value(): string {
-		const select = this._select ?? this.querySelector('select');
-		return select ? select.value : this._pendingValue ?? '';
+		if (this._pendingValue !== null) return this._pendingValue;
+		return (this._select ?? this.querySelector('select'))?.value ?? '';
 	}
 
 	set value(value: string) {
-		const select = this._select ?? this.querySelector('select');
-		if (select) {
-			select.value = value;
-			this._pendingValue = null;
-		} else {
-			this._pendingValue = value;
+		this._pendingValue = value;
+		this._applyPendingValue(this._select ?? this.querySelector('select'));
+	}
+
+	/** Sets the pending value on the select. Without a matching option yet, it
+	 *  stays pending and is set again when the options change. */
+	private _applyPendingValue(select: HTMLSelectElement | null): void {
+		if (!select || this._pendingValue === null) return;
+		const value = this._pendingValue;
+		select.value = value;
+		if ([...select.options].some((option) => option.value === value)) {
+			this._clearPendingValue();
+		} else if (!this._optionsObserver) {
+			this._optionsObserver = new MutationObserver(() => this._applyPendingValue(this._select));
+			this._optionsObserver.observe(select, { childList: true, subtree: true });
 		}
 	}
+
+	private _clearPendingValue(): void {
+		this._pendingValue = null;
+		this._optionsObserver?.disconnect();
+		this._optionsObserver = null;
+	}
+
+	/** A choice someone makes wins over a value still waiting for its option. */
+	private _handleSelectChange = (): void => {
+		this._clearPendingValue();
+	};
 
 
 	@property({ type: Boolean, reflect: true })
@@ -135,6 +159,12 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 			delete (this as { value?: string }).value;
 			this.value = value;
 		}
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this._optionsObserver?.disconnect();
+		this._optionsObserver = null;
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
@@ -172,6 +202,9 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 			this._select.removeEventListener('blur', this._handleSelectBlur);
 			this._select.removeEventListener('keydown', this._handleSelectKeydown);
 			this._select.removeEventListener('toggle', this._handleSelectToggle);
+			this._select.removeEventListener('change', this._handleSelectChange);
+			this._optionsObserver?.disconnect();
+			this._optionsObserver = null;
 		}
 
 		this._select = select;
@@ -188,14 +221,12 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		select.addEventListener('blur', this._handleSelectBlur);
 		select.addEventListener('keydown', this._handleSelectKeydown);
 		select.addEventListener('toggle', this._handleSelectToggle);
+		select.addEventListener('change', this._handleSelectChange);
 		this._syncDisabled();
 		this._syncAriaInvalid();
 		this._syncAccessibleLabel();
 		this._syncRequired();
-		if (this._pendingValue !== null) {
-			select.value = this._pendingValue;
-			this._pendingValue = null;
-		}
+		this._applyPendingValue(select);
 	}
 
 	// — Internal helpers ——————————————————————————————————————————————————————

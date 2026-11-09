@@ -3559,6 +3559,25 @@ describe('nldd-menu-item type="submit"', () => {
 		expect(submitted).toBe(true);
 	});
 
+	it('submits nothing while disabled', async () => {
+		el = await fixture(`
+			<form method="post" action="/uitloggen">
+				<nldd-menu open>
+					<nldd-menu-item type="submit" text="Uitloggen" disabled></nldd-menu-item>
+				</nldd-menu>
+			</form>
+		`);
+		const item = el.querySelector('nldd-menu-item') as HTMLElement & { select(): void };
+		await waitForUpdate(item);
+		let submitted = false;
+		el.addEventListener('submit', (event) => {
+			event.preventDefault();
+			submitted = true;
+		});
+		item.select();
+		expect(submitted).toBe(false);
+	});
+
 	it('gives the menu no check-mark column', async () => {
 		el = await fixture(`
 			<nldd-menu>
