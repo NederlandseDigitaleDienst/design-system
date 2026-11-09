@@ -87,6 +87,13 @@ const exports = {
 	// with a plain <script src> and no build step. Anyone bundling themselves uses
 	// '.', which externalizes lit and the rest.
 	'./bundle': './dist/nldd.min.js',
+	// Registers each component the first time it appears on the page. For a
+	// bundler; dist/cdn holds the same with lit inside, for a page without one.
+	'./autoloader': {
+		types: './dist/utilities/autoloader.d.ts',
+		default: './dist/utilities/autoloader.js',
+	},
+	'./cdn/*': './dist/cdn/*',
 	...componentExports,
 	'./styles': './dist/css/global.css',
 	// Same stylesheet with Inter in place of RijksSans, for consumers that may not

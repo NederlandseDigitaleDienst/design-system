@@ -14,6 +14,11 @@
       "default": "./dist/components/index.js"
     },
     "./bundle": "./dist/nldd.min.js",
+    "./autoloader": {
+      "types": "./dist/utilities/autoloader.d.ts",
+      "default": "./dist/utilities/autoloader.js"
+    },
+    "./cdn/*": "./dist/cdn/*",
     "./button": {
       "types": "./dist/components/actions/button/button.d.ts",
       "default": "./dist/components/actions/button/button.js"
@@ -572,7 +577,7 @@
     "generate:colors": "node scripts/generate-colors.js && npm run generate:themes",
     "generate:themes": "node scripts/generate-themes.js",
     "generate:component-reference": "node scripts/generate-component-reference.js",
-    "generate:cem": "cem analyze && npm run generate:vue-types && npm run generate:react-types && npm run generate:lint-data",
+    "generate:cem": "cem analyze && npm run generate:vue-types && npm run generate:react-types && npm run generate:autoloader && npm run generate:lint-data",
     "generate:lint-data": "node scripts/generate-lint-data.js",
     "generate:vue-types": "node scripts/generate-vue-types.js",
     "generate:react-types": "node scripts/generate-react-types.js",
@@ -589,7 +594,7 @@
     "validate:changelog": "node scripts/validate-changelog.js",
     "lint:stories": "node scripts/lint-stories.js",
     "lint:www": "node lint/cli.js lint www/",
-    "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:standalone && npm run build:exports && npm run generate:cem",
+    "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:standalone && npm run build:components:cdn && npm run build:exports && npm run generate:cem",
     "build:icons": "node scripts/generate-icon-registry.js && node scripts/generate-logo.js",
     "optimize:icons": "node scripts/optimize-icons.js",
     "build:components:modules": "tsc -p tsconfig.build.json",
@@ -625,6 +630,8 @@
     "test:vue-types": "vue-tsc --noEmit -p type-tests/vue/tsconfig.json",
     "test:react-types": "tsc -p type-tests/react/tsconfig.json",
     "build:components:standalone": "vite build --config vite.bundle.config.ts",
+    "build:components:cdn": "vite build --config vite.cdn.config.ts",
+    "generate:autoloader": "node scripts/generate-autoloader.js",
     "generate:translations": "node scripts/generate-translations.js"
   },
   "devDependencies": {

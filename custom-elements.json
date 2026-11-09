@@ -1870,10 +1870,21 @@
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "'button' | 'checkbox' | 'radio'"
+                "text": "MenuItemType"
               },
               "default": "'button'",
               "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Id of the form a `submit` item submits, when it does not stand in that form.",
+              "attribute": "form",
               "reflects": true
             },
             {
@@ -2055,15 +2066,24 @@
             },
             {
               "type": {
-                "text": "'button' | 'checkbox' | 'radio'"
+                "text": "MenuItemType"
               },
-              "description": "Item type: 'button' | 'checkbox' | 'radio'. Default: 'button'. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.",
+              "description": "Item type: 'button' | 'submit' | 'checkbox' | 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.",
               "name": "type",
               "default": "'button'",
               "fieldName": "type",
               "expandedType": {
-                "text": "'button' | 'checkbox' | 'radio'"
+                "text": "'button' | 'checkbox' | 'radio' | 'submit'"
               }
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root.",
+              "name": "form",
+              "default": "''",
+              "fieldName": "form"
             },
             {
               "type": {
@@ -30997,7 +31017,7 @@
               },
               "default": "''",
               "fieldName": "width",
-              "description": "'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it."
+              "description": "'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it. The same holds for a 'full' container inside a 'fit-content' one, since filling a parent that sizes to its content is sizing to the content too."
             },
             {
               "name": "min-width",
@@ -47106,6 +47126,111 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/autoloader.generated.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "loaders",
+          "type": {
+            "text": "Record<string, () => Promise<unknown>>"
+          },
+          "default": "{ 'nldd-activity-indicator': () => import('../components/status-and-feedback/activity-indicator/activity-indicator.js'), 'nldd-avatar': () => import('../components/content/avatar/avatar.js'), 'nldd-avatar-group': () => import('../components/content/avatar-group/avatar-group.js'), 'nldd-badge': () => import('../components/status-and-feedback/badge/badge.js'), 'nldd-banner': () => import('../components/status-and-feedback/banner/banner.js'), 'nldd-bar-split-view': () => import('../components/layout/split-views/bar-split-view/bar-split-view.js'), 'nldd-blockquote': () => import('../components/content/blockquote/blockquote.js'), 'nldd-box': () => import('../components/layout/box/box.js'), 'nldd-breadcrumbs': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-breadcrumbs-item': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-button': () => import('../components/actions/button/button.js'), 'nldd-button-bar': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-bar-divider': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-group': () => import('../components/actions/button-group/button-group.js'), 'nldd-card': () => import('../components/layout/card/card.js'), 'nldd-cell': () => import('../components/lists-and-tables/cells/cell/cell.js'), 'nldd-checkbox': () => import('../components/inputs/checkbox/checkbox.js'), 'nldd-checkbox-field': () => import('../components/inputs/checkbox-field/checkbox-field.js'), 'nldd-code-editor': () => import('../components/inputs/code-editor/code-editor.js'), 'nldd-code-viewer': () => import('../components/content/code-viewer/code-viewer.js'), 'nldd-collection': () => import('../components/layout/collection/collection.js'), 'nldd-combo-box': () => import('../components/inputs/combo-box/combo-box.js'), 'nldd-container': () => import('../components/layout/container/container.js'), 'nldd-date-field': () => import('../components/inputs/date-field/date-field.js'), 'nldd-date-picker': () => import('../components/inputs/date-picker/date-picker.js'), 'nldd-description-cell': () => import('../components/lists-and-tables/cells/description-cell/description-cell.js'), 'nldd-divider': () => import('../components/layout/divider/divider.js'), 'nldd-document-tab-bar': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-document-tab-bar-item': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-drag-handle-cell': () => import('../components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js'), 'nldd-dropdown': () => import('../components/inputs/dropdown/dropdown.js'), 'nldd-file-field': () => import('../components/inputs/file-field/file-field.js'), 'nldd-form': () => import('../components/forms/form/form.js'), 'nldd-form-actions': () => import('../components/forms/form-actions/form-actions.js'), 'nldd-form-field': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-field-help-text': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-section': () => import('../components/forms/form-section/form-section.js'), 'nldd-full-bleed-section': () => import('../components/layout/page-sections/full-bleed-section/full-bleed-section.js'), 'nldd-hero': () => import('../components/layout/page-sections/hero/hero.js'), 'nldd-icon': () => import('../components/content/icon/icon.js'), 'nldd-icon-button': () => import('../components/actions/icon-button/icon-button.js'), 'nldd-icon-cell': () => import('../components/lists-and-tables/cells/icon-cell/icon-cell.js'), 'nldd-identity': () => import('../components/content/identity/identity.js'), 'nldd-image': () => import('../components/content/image/image.js'), 'nldd-inline-dialog': () => import('../components/status-and-feedback/inline-dialog/inline-dialog.js'), 'nldd-just-in-time-education': () => import('../components/status-and-feedback/just-in-time-education/just-in-time-education.js'), 'nldd-kanban': () => import('../components/layout/kanban/kanban.js'), 'nldd-kanban-column': () => import('../components/layout/kanban/kanban-column.js'), 'nldd-keyboard-shortcut': () => import('../components/content/keyboard-shortcut/keyboard-shortcut.js'), 'nldd-link': () => import('../components/navigation/link/link.js'), 'nldd-link-group': () => import('../components/navigation/link-group/link-group.js'), 'nldd-list': () => import('../components/lists-and-tables/list/list.js'), 'nldd-list-item': () => import('../components/lists-and-tables/list-item/list-item.js'), 'nldd-list-item-segment': () => import('../components/lists-and-tables/list-item-segment/list-item-segment.js'), 'nldd-menu': () => import('../components/actions/menu/menu.js'), 'nldd-menu-bar': () => import('../components/navigation/menu-bar/menu-bar.js'), 'nldd-menu-bar-item': () => import('../components/navigation/menu-bar-item/menu-bar-item.js'), 'nldd-menu-divider': () => import('../components/actions/menu/menu-divider.js'), 'nldd-menu-group': () => import('../components/actions/menu/menu-group.js'), 'nldd-menu-item': () => import('../components/actions/menu/menu-item.js'), 'nldd-modal-dialog': () => import('../components/status-and-feedback/modal-dialog/modal-dialog.js'), 'nldd-multi-line-text-field': () => import('../components/inputs/multi-line-text-field/multi-line-text-field.js'), 'nldd-navigation-split-view': () => import('../components/layout/split-views/navigation-split-view/navigation-split-view.js'), 'nldd-notification': () => import('../components/status-and-feedback/notification/notification.js'), 'nldd-number-field': () => import('../components/inputs/number-field/number-field.js'), 'nldd-one-half-one-half-section': () => import('../components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.js'), 'nldd-one-third-two-thirds-section': () => import('../components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.js'), 'nldd-one-time-code-field': () => import('../components/inputs/one-time-code-field/one-time-code-field.js'), 'nldd-page': () => import('../components/layout/page/page.js'), 'nldd-page-footer': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar-item': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-pagination': () => import('../components/navigation/pagination/pagination.js'), 'nldd-password-field': () => import('../components/inputs/password-field/password-field.js'), 'nldd-popover': () => import('../components/layout/popover/popover.js'), 'nldd-progress-bar': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-bar-segment-indicator': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-circle': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-progress-circle-segment-indicator': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-radio-button': () => import('../components/inputs/radio-button/radio-button.js'), 'nldd-radio-button-field': () => import('../components/inputs/radio-button-field/radio-button-field.js'), 'nldd-radio-button-group': () => import('../components/inputs/radio-button-group/radio-button-group.js'), 'nldd-rich-text': () => import('../components/content/rich-text/rich-text.js'), 'nldd-search-field': () => import('../components/inputs/search-field/search-field.js'), 'nldd-segmented-control': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-segmented-control-item': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-sheet': () => import('../components/layout/sheet/sheet.js'), 'nldd-shell': () => import('../components/layout/shell/shell.js'), 'nldd-side-by-side-split-view': () => import('../components/layout/split-views/side-by-side-split-view/side-by-side-split-view.js'), 'nldd-sidebar-section': () => import('../components/layout/page-sections/sidebar-section/sidebar-section.js'), 'nldd-simple-section': () => import('../components/layout/page-sections/simple-section/simple-section.js'), 'nldd-skip-link': () => import('../components/navigation/skip-link/skip-link.js'), 'nldd-slider': () => import('../components/inputs/slider/slider.js'), 'nldd-spacer': () => import('../components/layout/spacer/spacer.js'), 'nldd-spacer-cell': () => import('../components/lists-and-tables/cells/spacer-cell/spacer-cell.js'), 'nldd-split-button': () => import('../components/actions/split-button/split-button.js'), 'nldd-split-view-divider': () => import('../components/layout/split-views/split-view-divider/split-view-divider.js'), 'nldd-split-view-pane': () => import('../components/layout/split-views/split-view-pane/split-view-pane.js'), 'nldd-stacked-split-view': () => import('../components/layout/split-views/stacked-split-view/stacked-split-view.js'), 'nldd-status-bar': () => import('../components/status-and-feedback/status-bar/status-bar.js'), 'nldd-step-bar': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-bar-item': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-cell': () => import('../components/lists-and-tables/cells/step-cell/step-cell.js'), 'nldd-stepper': () => import('../components/inputs/stepper/stepper.js'), 'nldd-swatch-picker': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-swatch-picker-item': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-switch': () => import('../components/inputs/switch/switch.js'), 'nldd-switch-field': () => import('../components/inputs/switch-field/switch-field.js'), 'nldd-tab-bar': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-tab-bar-item': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-table': () => import('../components/lists-and-tables/table/table.js'), 'nldd-table-row': () => import('../components/lists-and-tables/table/table.js'), 'nldd-tag': () => import('../components/content/tag/tag.js'), 'nldd-text': () => import('../components/content/text/text.js'), 'nldd-text-cell': () => import('../components/lists-and-tables/cells/text-cell/text-cell.js'), 'nldd-text-editor': () => import('../components/inputs/text-editor/text-editor.js'), 'nldd-text-field': () => import('../components/inputs/text-field/text-field.js'), 'nldd-time-field': () => import('../components/inputs/time-field/time-field.js'), 'nldd-time-picker': () => import('../components/inputs/time-picker/time-picker.js'), 'nldd-title': () => import('../components/content/title/title.js'), 'nldd-title-cell': () => import('../components/lists-and-tables/cells/title-cell/title-cell.js'), 'nldd-toggle-button': () => import('../components/inputs/toggle-button/toggle-button.js'), 'nldd-toggle-button-group': () => import('../components/inputs/toggle-button-group/toggle-button-group.js'), 'nldd-token': () => import('../components/content/token/token.js'), 'nldd-token-field': () => import('../components/inputs/token-field/token-field.js'), 'nldd-toolbar': () => import('../components/actions/toolbar/toolbar.js'), 'nldd-toolbar-item': () => import('../components/actions/toolbar/toolbar-item.js'), 'nldd-toolbar-title': () => import('../components/actions/toolbar/toolbar-title.js'), 'nldd-tooltip': () => import('../components/content/tooltip/tooltip.js'), 'nldd-top-navigation-bar': () => import('../components/navigation/top-navigation-bar/top-navigation-bar.js'), 'nldd-top-title-bar': () => import('../components/navigation/top-title-bar/top-title-bar.js'), 'nldd-two-thirds-one-third-section': () => import('../components/layout/page-sections/two-thirds-one-third-section/two-thirds-one-third-section.js'), 'nldd-validation-item': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-validation-list': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-visually-hidden': () => import('../components/content/visually-hidden/visually-hidden.js'), 'nldd-window': () => import('../components/layout/window/window.js'), }",
+          "description": "Per nldd-* tag, a dynamic import of the module that defines it."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "loaders",
+          "declaration": {
+            "name": "loaders",
+            "module": "src/utilities/autoloader.generated.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/autoloader.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "discover",
+          "return": {
+            "type": {
+              "text": "Promise<void>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "default": "document",
+              "type": {
+                "text": "ParentNode"
+              }
+            }
+          ],
+          "description": "Loads the modules for every nldd-* element in `root` that is not defined yet,\n`root` itself included. Resolves once they are all registered."
+        },
+        {
+          "kind": "function",
+          "name": "startAutoloader",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "default": "document",
+              "type": {
+                "text": "Document | ShadowRoot"
+              }
+            }
+          ],
+          "description": "Starts watching `root` for nldd-* elements. Runs on import for the document;\ncall it yourself only for another root."
+        },
+        {
+          "kind": "function",
+          "name": "stopAutoloader",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "Stops watching the document."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "discover",
+          "declaration": {
+            "name": "discover",
+            "module": "src/utilities/autoloader.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "startAutoloader",
+          "declaration": {
+            "name": "startAutoloader",
+            "module": "src/utilities/autoloader.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "stopAutoloader",
+          "declaration": {
+            "name": "stopAutoloader",
+            "module": "src/utilities/autoloader.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/carried-context.ts",
       "declarations": [
         {
@@ -49266,12 +49391,13 @@
             },
             {
               "name": "internals",
+              "optional": true,
               "type": {
                 "text": "ElementInternals"
               }
             }
           ],
-          "description": "The form a form-associated button acts on: the one it sits in, or the one\nits `form` attribute names.\n\nThe platform resolves that attribute itself, but only to a real `<form>`.\nAn `nldd-form` renders its form in the light DOM without handing it the id\nthe consumer wrote, so an id pointing at the component finds an element\nthat is not a form, and the button ends up with no form owner at all. That\nis the whole reason a save button in a page footer, outside the form it\nbelongs to, used to do nothing.\n\nThe id is looked up in the host's own root, the same scope the platform\nsearches: a button inside a shadow tree reaches the forms in that tree, not\none in the document around it. Put the two in the same tree, or hand the\nbutton its form another way.\n\nShared by nldd-button and nldd-split-button, whose action button sits in a\nshadow root and so has no form owner of its own."
+          "description": "The form a form-associated button acts on: the one it sits in, or the one\nits `form` attribute names.\n\nThe platform resolves that attribute itself, but only to a real `<form>`.\nAn `nldd-form` renders its form in the light DOM without handing it the id\nthe consumer wrote, so an id pointing at the component finds an element\nthat is not a form, and the button ends up with no form owner at all. That\nis the whole reason a save button in a page footer, outside the form it\nbelongs to, used to do nothing.\n\nThe id is looked up in the host's own root, the same scope the platform\nsearches: a button inside a shadow tree reaches the forms in that tree, not\none in the document around it. Put the two in the same tree, or hand the\nbutton its form another way.\n\nShared by nldd-button, nldd-split-button and a `submit` nldd-menu-item,\nwhose button sits in a shadow root and so has no form owner of its own."
         }
       ],
       "exports": [
