@@ -113,13 +113,13 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		this._applyPendingValue(this._select ?? this.querySelector('select'));
 	}
 
-	/** Sets the pending value on the select. Without a matching option yet, it
-	 *  stays pending and is set again when the options change. */
+	/** Sets the pending value on the select. Without a matching option yet, the
+	 *  select keeps its own choice and the value is set when the option comes. */
 	private _applyPendingValue(select: HTMLSelectElement | null): void {
 		if (!select || this._pendingValue === null) return;
 		const value = this._pendingValue;
-		select.value = value;
 		if ([...select.options].some((option) => option.value === value)) {
+			select.value = value;
 			this._clearPendingValue();
 		} else if (!this._optionsObserver) {
 			this._optionsObserver = new MutationObserver(() => this._applyPendingValue(this._select));

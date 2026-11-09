@@ -11,6 +11,7 @@
  */
 
 import { devRules } from './dev-rules.generated.js';
+import { loadingTags } from './loading-tags.js';
 
 export interface DevRule {
 	id: string;
@@ -145,7 +146,8 @@ export function findUndefined(roots: ParentNode[] = findRoots()): Element[] {
  * a rule. Like the FOUC guard, this one reports itself: once per tag, after
  * the tag has stayed undefined for a while.
  */
-function createRegistrationCheck() {
+/** @internal Exported for tests. */
+export function createRegistrationCheck() {
 	const firstSeen = new WeakMap<Element, number>();
 	const reported = new Set<string>();
 	return () => {
@@ -156,7 +158,7 @@ function createRegistrationCheck() {
 				firstSeen.set(element, now);
 				continue;
 			}
-			if (now - seen < UNREGISTERED_MS || reported.has(element.localName)) continue;
+			if (now - seen < UNREGISTERED_MS || reported.has(element.localName) || loadingTags.has(element.localName)) continue;
 			reported.add(element.localName);
 			console.warn(`[nldd] <${element.localName}> is not registered, so it renders nothing of its own. Import its module from @nldd/design-system, or check the name.`, element);
 		}

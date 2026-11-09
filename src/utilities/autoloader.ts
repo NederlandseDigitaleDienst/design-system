@@ -20,6 +20,7 @@
  */
 
 import { loaders } from './autoloader.generated.js';
+import { loadingTags } from './loading-tags.js';
 
 const loading = new Map<string, Promise<unknown>>();
 
@@ -39,6 +40,9 @@ function load(tag: string): Promise<unknown> | undefined {
 			throw error;
 		});
 		loading.set(tag, pending);
+		loadingTags.add(tag);
+		const done = () => loadingTags.delete(tag);
+		pending.then(done, done);
 	}
 	return pending;
 }

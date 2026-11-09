@@ -322,6 +322,7 @@ describe('nldd-dropdown – change event', () => {
 		select.innerHTML = '<option value="nl">Nederland</option>';
 		await waitForUpdate(el);
 		expect(el.value).toBe('be');
+		expect(select.selectedIndex).toBe(0);
 		select.insertAdjacentHTML('beforeend', '<option value="be">België</option>');
 		await waitForUpdate(el);
 		expect(select.value).toBe('be');

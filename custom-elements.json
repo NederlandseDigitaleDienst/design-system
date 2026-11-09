@@ -49176,6 +49176,28 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/loading-tags.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "loadingTags",
+          "default": "new Set<string>()",
+          "description": "The nldd-* tags whose module the autoloader is loading right now. The dev\ncheck for unregistered elements reads it, so a slow load is not reported as\na tag that is never registered."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "loadingTags",
+          "declaration": {
+            "name": "loadingTags",
+            "module": "src/utilities/loading-tags.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/open-when-rendered.ts",
       "declarations": [
         {
