@@ -1,7 +1,6 @@
 severity: error
 context: ':is(img, picture, svg):not(:accepted)'
 message: 'Use nldd-image for an image or a drawing, and nldd-icon for an icon.'
-see: ontwerprichtlijnen/visueel-en-layout
 examples:
   passed: ['<nldd-image src="/dak.jpg" alt="Dak met isolatie"></nldd-image>', '<nldd-image><svg viewBox="0 0 10 10" role="img" aria-label="Plattegrond"></svg></nldd-image>']
   failed: ['<img src="/dak.jpg" alt="Dak met isolatie">', '<svg viewBox="0 0 24 24"><path d="M0 0h24"></path></svg>']
