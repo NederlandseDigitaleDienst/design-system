@@ -25,6 +25,7 @@ here; consult the commit history if you need that level of detail.
 - **Content in a slot wins over the attribute for the same content.** Where a component takes both, such as `icon` and `slot="icon"`, or `text` and the default slot, the slot now shows and the attribute is what shows while the slot is empty. Before, the attribute won in `nldd-button`, `nldd-icon-button`, `nldd-toggle-button`, `nldd-segmented-control-item`, `nldd-tag`, `nldd-link`, `nldd-tab-bar-item`, `nldd-icon-cell`, `nldd-token`, `nldd-breadcrumbs-item`, `nldd-page-footer-legal-bar-item` and `nldd-step-bar-item`. Only markup that sets both notices; the new lint rule `slot-attribute-no-effect` finds it. Whitespace between the tags does not count as content.
 - **Components no longer write an attribute that only repeats the default,** such as `type="button"` on `nldd-button`, `size="16"` on `nldd-spacer`, `background="inherit"` on `nldd-page` or an empty `href=""` on `nldd-card`. The property still holds the value, so only code that selects on the attribute notices: read the property instead. `value` on `nldd-progress-bar` and `nldd-progress-circle` keeps its attribute.
 - **`nldd-button-group` and `nldd-button-bar` no longer write their defaults onto their buttons,** such as `size="md"` or `appearance="neutral-tinted"`. Another size or appearance is still written.
+- **`nldd-menu` no longer reflects `width`,** also not a width you set yourself. The width still applies. If you selected on `nldd-menu[width]`, use a class of your own instead.
 
 ### Added
 
@@ -36,7 +37,6 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **A page section paints its `background` from its own styles,** instead of an inline `style` on the element.
-- **`nldd-menu` no longer reflects `width`.** The width still applies.
 - **`nldd-menu` opens a submenu once the pointer comes to rest on its item,** when it stops or slows down, instead of after a fixed 150ms. A pointer passing over the menu still opens nothing, and 150ms remains the longest it waits.
 - **A press beside the boxes of `nldd-one-time-code-field` no longer focuses it,** also on either side when it is `centered`. The boxes and the gaps between them still do, and so does its label.
 - **The rows of an `nldd-list` with `dividers="never"` measure nothing,** so they carry no `--_list-item-divider-inset-*` and keep no resize observer.
