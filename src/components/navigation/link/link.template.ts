@@ -31,13 +31,13 @@ export function template(this: NLDDLink, helpers: TemplateHelpers) {
 	//   before the punctuation after the link.
 	const hasStartIcon = !!this.startIcon || this._hasStartSlot;
 	const hasEndIcon = !!this.endIcon || this._hasEndSlot;
-	const startIcon = this.startIcon
+	const startIcon = html`<slot name="start-icon" @slotchange=${helpers.handleSlotChange}>${this.startIcon
 		? html`<span class="link__start-icon"><nldd-icon icon=${this.startIcon}></nldd-icon></span>`
-		: html`<slot name="start-icon" @slotchange=${helpers.handleSlotChange}></slot>`;
-	const endIcon = this.endIcon
+		: nothing}</slot>`;
+	const endIcon = html`<slot name="end-icon" @slotchange=${helpers.handleSlotChange}>${this.endIcon
 		? html`<span class="link__end-icon"><nldd-icon icon=${this.endIcon}></nldd-icon></span>`
-		: html`<slot name="end-icon" @slotchange=${helpers.handleSlotChange}></slot>`;
-	const label = html`<span class="link__label">${this.text ? this.text : html`<slot></slot>`}</span>`;
+		: nothing}</slot>`;
+	const label = html`<span class="link__label">${this._textSlot.has ? nothing : this.text}<slot @slotchange=${this._textSlot.onChange}></slot></span>`;
 	return html`<a class="link"
 			href=${this.disabled ? nothing : (this.href || nothing)}
 			role=${this.disabled ? 'link' : nothing}

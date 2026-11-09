@@ -1,5 +1,5 @@
 import { property } from 'lit/decorators.js';
-import { LitElement, type PropertyValues } from 'lit';
+import { css, LitElement, type PropertyValues } from 'lit';
 import { reflectNonDefault } from './reflect-non-default.js';
 
 type Constructor<T = LitElement> = new (...args: any[]) => T;
@@ -9,11 +9,30 @@ export type PageSectionPadding =
 	| '0' | '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24'
 	| '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
 
-const BACKGROUND_TOKEN: Record<Exclude<PageSectionBackground, 'inherit'>, string> = {
-	base: 'var(--semantics-surfaces-base-background-color)',
-	tinted: 'var(--semantics-surfaces-tinted-background-color)',
-	'accent-tinted': 'var(--semantics-surfaces-accent-tinted-background-color)',
-};
+/**
+ * The surface a `background` paints, and passes on through
+ * `--context-parent-background-color` so cards and nested sections read the
+ * same surface. Every section puts this first in its `styles`.
+ */
+export const pageSectionBackgroundStyles = css`
+	:host([background="base"]) {
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
+	}
+
+	:host([background="tinted"]) {
+		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
+	}
+
+	:host([background="accent-tinted"]) {
+		--context-parent-background-color: var(--semantics-surfaces-accent-tinted-background-color);
+	}
+
+	:host([background="base"]),
+	:host([background="tinted"]),
+	:host([background="accent-tinted"]) {
+		background-color: var(--context-parent-background-color);
+	}
+`;
 
 function paddingToValue(size: string | undefined): string | null {
 	if (size === undefined || size === '') return null;
@@ -35,10 +54,10 @@ const PADDING_KEYS = [
 
 /**
  * Shared surface controls for the page-section components. Adds three
- * orthogonal capabilities, all written as inline host styles / custom
- * properties (no per-component CSS needed for the background — custom
- * properties inherit through the shadow boundary into the section's block
- * element and slotted content):
+ * orthogonal capabilities. Padding and height are written as custom
+ * properties on the host, which inherit through the shadow boundary into the
+ * section's block element and slotted content; the background comes from
+ * `pageSectionBackgroundStyles`:
  *
  * - **background**: `inherit` (the default — transparent, shows the ancestor's
  *   surface) | `base` (the base surface color) | `tinted` | `accent-tinted`
@@ -107,7 +126,6 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 
 		override updated(changed: PropertyValues): void {
 			super.updated(changed);
-			if (changed.has('background')) this._applyBackground();
 			if (PADDING_KEYS.some((k) => changed.has(k))) this._applyPadding();
 			if (changed.has('height')) this._applyHeight();
 		}
@@ -119,18 +137,6 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 			const wrapper = slot.parentElement;
 			if (!wrapper) return;
 			wrapper.hidden = slot.assignedElements().length === 0;
-		}
-
-		private _applyBackground(): void {
-			const token = this.background === 'inherit' ? undefined : BACKGROUND_TOKEN[this.background];
-			if (token) {
-				this.style.backgroundColor = token;
-				// Cascade so descendants (cards, nested sections) match.
-				this.style.setProperty('--context-parent-background-color', token);
-			} else {
-				this.style.backgroundColor = '';
-				this.style.removeProperty('--context-parent-background-color');
-			}
 		}
 
 		private _applyPadding(): void {

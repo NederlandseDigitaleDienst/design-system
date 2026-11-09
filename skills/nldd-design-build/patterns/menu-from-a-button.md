@@ -78,7 +78,9 @@ Een keuze uit een set zijn items met `type="radio"`, iets dat aan of uit staat e
 
 ## Waarom zo
 
-**Nest het menu in de `popup`-slot van de knop.** Dan hangt de [`nldd-button`](../../nldd-design/reference.md#nldd-button) het menu zelf aan zich vast en opent en sluit die het: geen id, geen `anchor`, geen eigen klikafhandeling. Het menu meldt `expanded` en `aria-haspopup` terug aan de knop, vanaf de eerste render. Een losse `anchor` is alleen nodig voor een trigger zonder `popup`-slot.
+**Nest het menu in de `popup`-slot van de knop.** Dan hangt de [`nldd-button`](../../nldd-design/reference.md#nldd-button) het menu zelf aan zich vast en opent en sluit die het: geen id, geen `anchor`, geen eigen klikafhandeling. Het menu meldt `expanded` en `aria-haspopup` terug aan de knop, vanaf de eerste render.
+
+**Staat het menu ergens anders, wijs het dan aan met `popovertarget`.** Dat kan op elke knop en op een [`nldd-list-item-segment`](../../nldd-design/reference.md#nldd-list-item-segment). De knop opent het menu en zet het naast zich neer, dus het menu heeft alleen een `id` nodig. Een `anchor` op het menu is alleen nodig voor een trigger die geen NLDD-component is, zoals een gewone `<button>`.
 
 **Een destructieve actie staat onderaan, achter een scheidingslijn.** Zo staat die niet tussen de acties waar de gebruiker snel doorheen klikt. `destructive` kleurt het menu-item rood, zie [`nldd-menu`](../../nldd-design/reference.md#nldd-menu), maar de tekst moet zelf zeggen wat er gebeurt. Is de actie onomkeerbaar, vraag dan om [bevestiging](irreversible-action.md) of maak die ongedaan te maken.
 
@@ -94,7 +96,7 @@ Wat jij nog moet doen: de toets achter een `shortcut` zelf afhandelen. Het item 
 
 ## Gezien in
 
-`menu > menu-item` staat in de top drie van meest gebruikte composities. De `popup`-slot is nieuwer dan de losse `anchor`, dus in bestaande code kom je beide tegen. Voor nieuwe code is de slot de route.
+`menu > menu-item` staat in de top drie van meest gebruikte composities. De `popup`-slot en `popovertarget` zijn nieuwer dan de losse `anchor`, dus in bestaande code kom je die ook tegen. Voor nieuwe code is de slot de route, en `popovertarget` voor een menu dat elders staat.
 
 ## Regels
 
@@ -102,5 +104,5 @@ Hints: zo is het bedoeld. Die laten niets falen.
 
 - `menu-item-destructive-goes-last`: Put the destructive item last, behind an nldd-menu-divider, away from the actions people click through.
 - `menu-needs-two-actions`: Use a plain button for a single action.
-- `menu-no-manual-anchor`: Nest it in the `popup` slot of the button, which anchors it, opens it and needs no id: `anchor` is for a trigger without that slot.
+- `menu-no-manual-anchor`: Nest it in the `popup` slot of the button, or point `popovertarget` on the button or list segment at its id: both anchor it and open it. `anchor` is for a trigger that is not an nldd component.
 - `menu-no-manual-choice`: Use type="radio" or type="checkbox" with `selected`, which gives the item the role and the state a screen reader reads out.

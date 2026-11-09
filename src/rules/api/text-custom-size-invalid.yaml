@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-text:state(invalid-custom-size)'
+message: 'This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.'

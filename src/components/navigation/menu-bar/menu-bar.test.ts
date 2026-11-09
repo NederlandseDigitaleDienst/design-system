@@ -30,6 +30,23 @@ describe('nldd-menu-bar', () => {
 		expect(items.length).toBe(2);
 	});
 
+	it('is a list of its items, so a screen reader says how many there are', async () => {
+		el = await fixture(`
+			<nldd-menu-bar accessible-label="Hoofdnavigatie">
+				<nldd-menu-bar-item text="Home"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="About"></nldd-menu-bar-item>
+			</nldd-menu-bar>
+		`);
+		await waitForUpdate(el);
+		await nextFrames();
+		await nextFrames();
+		const list = el.shadowRoot!.querySelector('[role="list"]')!;
+		expect(list.querySelector('slot')).not.toBeNull();
+		expect(list.closest('nav')).not.toBeNull();
+		const roles = [...el.querySelectorAll('nldd-menu-bar-item')].map((item) => item.getAttribute('role'));
+		expect(roles).toEqual(['listitem', 'listitem']);
+	});
+
 	it('renders nav landmark', async () => {
 		el = await fixture('<nldd-menu-bar accessible-label="Hoofdnavigatie"></nldd-menu-bar>');
 		await waitForUpdate(el);

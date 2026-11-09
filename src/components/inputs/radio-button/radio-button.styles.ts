@@ -13,17 +13,17 @@ export const radioButtonStyles = css`
 		--_radio-button-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 		--_radio-button-background-color: var(--semantics-surfaces-base-background-color);
 		--_radio-button-is-selected-inner-shape-border-width: var(--primitives-border-width-regular);
-		--_radio-button-is-selected-inner-shape-border-color: var(--context-selected-contrast-color, var(--semantics-controls-is-selected-mark-color));
-		--_radio-button-is-selected-border-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
-		--_radio-button-is-selected-background-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
+		--_radio-button-is-selected-inner-shape-border-color: var(--semantics-controls-is-selected-mark-color);
+		--_radio-button-is-selected-border-color: var(--semantics-controls-is-selected-indicator-color);
+		--_radio-button-is-selected-background-color: var(--semantics-controls-is-selected-indicator-color);
 		--_radio-button-is-hovered-border-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-700));
-		--_radio-button-is-selected-is-hovered-border-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-is-hovered-indicator-color));
-		--_radio-button-is-selected-is-hovered-background-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-is-hovered-indicator-color));
-		--_radio-button-is-selected-is-hovered-inner-shape-border-color: var(--context-selected-contrast-color, var(--semantics-controls-is-selected-mark-color));
+		--_radio-button-is-selected-is-hovered-border-color: var(--semantics-controls-is-selected-is-hovered-indicator-color);
+		--_radio-button-is-selected-is-hovered-background-color: var(--semantics-controls-is-selected-is-hovered-indicator-color);
+		--_radio-button-is-selected-is-hovered-inner-shape-border-color: var(--semantics-controls-is-selected-mark-color);
 		--_radio-button-is-active-border-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-750));
-		--_radio-button-is-selected-is-active-border-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-is-active-indicator-color));
-		--_radio-button-is-selected-is-active-background-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-is-active-indicator-color));
-		--_radio-button-is-selected-is-active-inner-shape-border-color: var(--context-selected-contrast-color, var(--semantics-controls-is-selected-mark-color));
+		--_radio-button-is-selected-is-active-border-color: var(--semantics-controls-is-selected-is-active-indicator-color);
+		--_radio-button-is-selected-is-active-background-color: var(--semantics-controls-is-selected-is-active-indicator-color);
+		--_radio-button-is-selected-is-active-inner-shape-border-color: var(--semantics-controls-is-selected-mark-color);
 
 		display: inline-flex;
 		position: relative;

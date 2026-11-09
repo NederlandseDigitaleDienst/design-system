@@ -12,9 +12,9 @@ export const nlddTimeFieldTranslations = {
 	'components.time-field.confirm-action': 'Klaar',
 	// Validation messages the field reports to the form. {time} is a bound as
 	// HH:mm.
-	'components.time-field.bad-input-error-text': 'Vul een tijd in als uu:mm',
-	'components.time-field.range-underflow-error-text': 'Vul een tijd in vanaf {time}',
-	'components.time-field.range-overflow-error-text': 'Vul een tijd in tot en met {time}',
+	'components.time-field.bad-input-error-text': 'Een tijd als uu:mm',
+	'components.time-field.range-underflow-error-text': 'Een tijd vanaf {time}',
+	'components.time-field.range-overflow-error-text': 'Een tijd tot en met {time}',
 };
 
 export type NLDDTimeFieldTranslations = typeof nlddTimeFieldTranslations;

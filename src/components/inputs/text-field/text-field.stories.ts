@@ -5,6 +5,7 @@ import '../../forms/form/form.js';
 import '../../forms/form-field/form-field.js';
 import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
+import '../../actions/icon-button/icon-button.js';
 import '../../actions/button-group/button-group.js';
 import '../../layout/container/container.js';
 
@@ -220,6 +221,63 @@ export const Grootten = {
 	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
+};
+
+export const MetKnop = {
+	render: () => html`
+	<nldd-container gap="24">
+		<nldd-form novalidate>
+			<nldd-form-field label="E-mailadres">
+				<nldd-text-field
+					name="email"
+					type="email"
+					autocomplete="email"
+				>
+					<nldd-icon-button
+						slot="button"
+						appearance="primary"
+						type="submit"
+						icon="arrow-right"
+						text="Schrijf in"
+					></nldd-icon-button>
+				</nldd-text-field>
+			</nldd-form-field>
+		</nldd-form>
+		<nldd-form novalidate>
+			<nldd-form-field label="Kortingscode">
+				<nldd-text-field name="code">
+					<nldd-button
+						slot="button"
+						type="submit"
+						text="Verzilver"
+					></nldd-button>
+				</nldd-text-field>
+			</nldd-form-field>
+		</nldd-form>
+		<nldd-form novalidate>
+			<nldd-form-field label="Kortingscode">
+				<nldd-text-field
+					name="code"
+					size="sm"
+				>
+					<nldd-button
+						slot="button"
+						type="submit"
+						text="Verzilver"
+					></nldd-button>
+				</nldd-text-field>
+			</nldd-form-field>
+		</nldd-form>
+	</nldd-container>
+`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'The one action of a form that is only this field sits inside it, in the `button` slot. The field sizes the button itself.',
+			},
+		},
+	},
 };
 
 export const InteractiefVoorbeeld = {

@@ -1,0 +1,1507 @@
+<!doctype html>
+<html lang="nl">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>NLDD Designsysteem</title>
+	<meta name="description" content="Web Components voor de Rijksoverheid, met toegankelijkheid, huisstijl en ontwerppatronen ingebouwd. Voor elk framework.">
+	<link rel="icon" href="../src/assets/favicon/favicon.svg" type="image/svg+xml">
+	<link rel="stylesheet" href="./styles.css">
+	<script type="module" src="./main.ts"></script>
+</head>
+<body>
+<nldd-shell>
+	<nldd-page>
+		<nldd-skip-link slot="header">
+			<nldd-top-navigation-bar
+				logo-title="Nederlandse Digitale Dienst"
+				logo-subtitle="Ministerie van Economische Zaken en Klimaat"
+				website-title="NLDD Designsysteem"
+			></nldd-top-navigation-bar>
+		</nldd-skip-link>
+
+		<nldd-hero
+			main-background="accent"
+			padding-bottom="0"
+		>
+			<nldd-title
+				color="inherit"
+				size="1"
+			>
+				<h1>Bouw aan één&nbsp;overheid<br>in&nbsp;elk framework</h1>
+			</nldd-title>
+			<nldd-spacer size="16"></nldd-spacer>
+			<nldd-rich-text color="inherit">
+				<p>Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van de Rijksoverheid. Het werkt in Angular, React en Vue, en net zo goed zonder framework. Toegankelijkheid, huisstijl en ontwerppatronen krijg je automatisch mee.</p>
+			</nldd-rich-text>
+			<nldd-spacer size="24"></nldd-spacer>
+			<nldd-button-group>
+				<nldd-button
+					appearance="inherit-filled"
+					text="Bekijk code en start"
+					href="https://github.com/NederlandseDigitaleDienst/design-system"
+				></nldd-button>
+				<nldd-button
+					appearance="inherit-tinted"
+					text="Bekijk de componenten"
+					href="https://nederlandsedigitaledienst.github.io/design-system/"
+				></nldd-button>
+			</nldd-button-group>
+		</nldd-hero>
+
+		<nldd-simple-section id="statistieken">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Twintig websites en applicaties draaien er al op"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="header"
+				size="16"
+			></nldd-spacer>
+			<nldd-rich-text slot="header">
+				<p>Van informatiesites tot applicaties met veel interactie. De Nederlandse Digitale Dienst onderhoudt het systeem elke week en breidt het regelmatig uit.</p>
+			</nldd-rich-text>
+			<nldd-container
+				layout="grid"
+				sm-gap="16"
+				md-gap="24"
+				lg-gap="24"
+				sm-column-count="2"
+				md-column-count="3"
+				lg-column-count="3"
+			>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="building-blocks"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="4"></nldd-spacer>
+						<nldd-title
+							size="1"
+							text="100"
+							supporting-text="componenten, samen 136 elementen"
+							heading-level="3"
+						></nldd-title>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="display"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="4"></nldd-spacer>
+						<nldd-title
+							size="1"
+							text="20"
+							supporting-text="websites en applicaties in gebruik"
+							heading-level="3"
+						></nldd-title>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="triangle-square-circle"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="4"></nldd-spacer>
+						<nldd-title
+							size="1"
+							text="394"
+							data-icon-count="{n}"
+							supporting-text="iconen in de stijl van de Rijksoverheid-letter"
+							heading-level="3"
+						></nldd-title>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="themes"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="4"></nldd-spacer>
+						<nldd-title
+							size="1"
+							text="18"
+							supporting-text="kleurthema's, elk in licht en donker"
+							heading-level="3"
+						></nldd-title>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="accessibility"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="4"></nldd-spacer>
+						<nldd-title
+							size="1"
+							text="245"
+							supporting-text="regels voor toegankelijkheid en gebruiksgemak"
+							heading-level="3"
+						></nldd-title>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="globe"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="4"></nldd-spacer>
+						<nldd-title
+							size="1"
+							text="5"
+							supporting-text="talen ingebouwd, ook Fries en Papiaments"
+							heading-level="3"
+						></nldd-title>
+					</nldd-container>
+				</nldd-card>
+			</nldd-container>
+		</nldd-simple-section>
+
+		<nldd-one-half-one-half-section id="toegankelijkheid" background="tinted">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Toegankelijk vanaf het eerste component"
+				heading-level="2"
+			></nldd-title>
+			<nldd-rich-text slot="left">
+				<p>Toetsenbord, schermlezer, focus en contrast zitten in elk component. Je hoeft de WCAG niet uit je hoofd te kennen om toegankelijk te bouwen.</p>
+				<p>Vind je een probleem, dan lossen we het één keer op, bij de bron. Kan het component het niet afdwingen, dan wordt het een regel in de linter. Met de volgende update heeft elk team de verbetering.</p>
+			</nldd-rich-text>
+			<nldd-list
+				slot="right"
+				dividers="never"
+				accessible-label="Zo komt een verbetering bij elk team"
+			>
+				<nldd-list-item>
+					<nldd-step-cell
+						size="md"
+						marker-offset="0.7125rem"
+						position="first"
+						text="1"
+					></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Je meldt een probleem of verbetering"
+						supporting-text="Uit een eigen test, van een gebruiker of uit de toegankelijkheidscontrole loep"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-step-cell
+						size="md"
+						marker-offset="0.7125rem"
+						position="between"
+						text="2"
+					></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Wij lossen het op in het component"
+						supporting-text="Of schrijven een lintregel die de fout in je editor laat zien"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-step-cell
+						size="md"
+						marker-offset="0.7125rem"
+						position="last"
+						text="3"
+					></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Elk team krijgt de verbetering"
+						supporting-text="Met een update van het designsysteem, in elk framework tegelijk"
+					></nldd-title-cell>
+				</nldd-list-item>
+			</nldd-list>
+		</nldd-one-half-one-half-section>
+
+		<nldd-one-half-one-half-section id="thema" vertical-alignment="center">
+			<nldd-title
+				slot="left"
+				size="2"
+				text="Eén overheid, in jouw kleur"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="left"
+				size="16"
+			></nldd-spacer>
+			<nldd-rich-text slot="left">
+				<p>Burgers herkennen de overheid aan hoe ze communiceert. Daarom bouwen we een kleurensysteem, een eigen iconenset en componenten die bij elkaar horen.</p>
+				<p>Elke organisatie kiest haar eigen kleur. De contrastwaarden, het gedrag en de toegankelijkheid blijven gelijk, in licht en donker. Probeer het hier: deze pagina verandert mee.</p>
+			</nldd-rich-text>
+			<nldd-card slot="right">
+				<nldd-container padding="24">
+					<nldd-title
+						id="thema-titel"
+						size="4"
+						text="Thema: Lintblauw"
+						heading-level="3"
+					></nldd-title>
+					<nldd-spacer size="12"></nldd-spacer>
+					<nldd-swatch-picker
+						id="thema-keuze"
+						accessible-label="Thema van deze pagina"
+						value="lintblauw"
+					>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-lintblauw)"
+							text="Lintblauw"
+							value="lintblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkerblauw)"
+							text="Donkerblauw"
+							value="donkerblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-hemelblauw)"
+							text="Hemelblauw"
+							value="hemelblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-lichtblauw)"
+							text="Lichtblauw"
+							value="lichtblauw"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-paars)"
+							text="Paars"
+							value="paars"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-violet)"
+							text="Violet"
+							value="violet"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-robijnrood)"
+							text="Robijnrood"
+							value="robijnrood"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-roze)"
+							text="Roze"
+							value="roze"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-rood)"
+							text="Rood"
+							value="rood"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-oranje)"
+							text="Oranje"
+							value="oranje"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkergeel)"
+							text="Donkergeel"
+							value="donkergeel"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-geel)"
+							text="Geel"
+							value="geel"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkerbruin)"
+							text="Donkerbruin"
+							value="donkerbruin"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-bruin)"
+							text="Bruin"
+							value="bruin"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-donkergroen)"
+							text="Donkergroen"
+							value="donkergroen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-groen)"
+							text="Groen"
+							value="groen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-mosgroen)"
+							text="Mosgroen"
+							value="mosgroen"
+						></nldd-swatch-picker-item>
+						<nldd-swatch-picker-item
+							custom-color="var(--primitives-color-reference-mintgroen)"
+							text="Mintgroen"
+							value="mintgroen"
+						></nldd-swatch-picker-item>
+					</nldd-swatch-picker>
+					<nldd-spacer size="24"></nldd-spacer>
+					<nldd-title
+						id="kleurmodus-titel"
+						size="4"
+						text="Kleurmodus"
+						heading-level="3"
+					></nldd-title>
+					<nldd-spacer size="12"></nldd-spacer>
+					<nldd-toggle-button-group
+						id="kleurmodus"
+						type="radio"
+						accessible-labeled-by="kleurmodus-titel"
+					>
+						<nldd-toggle-button
+							text="Systeem"
+							icon="display"
+							value="systeem"
+							selected
+						></nldd-toggle-button>
+						<nldd-toggle-button
+							text="Donker"
+							icon="moon"
+							value="dark"
+						></nldd-toggle-button>
+						<nldd-toggle-button
+							text="Licht"
+							icon="sun"
+							value="light"
+						></nldd-toggle-button>
+					</nldd-toggle-button-group>
+				</nldd-container>
+			</nldd-card>
+		</nldd-one-half-one-half-section>
+
+		<nldd-simple-section id="componenten" background="tinted">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Elk component kleurt mee"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="header"
+				size="16"
+			></nldd-spacer>
+			<nldd-rich-text slot="header">
+				<p>Een thema zet de kleur op één plek. Knoppen, velden, keuzes en voortgang volgen vanzelf. Alles hieronder werkt: open het menu achter &quot;Acties&quot;, typ een datum of sleep de schuifregelaar.</p>
+			</nldd-rich-text>
+			<nldd-container
+				layout="lanes"
+				sm-gap="16"
+				md-gap="24"
+				lg-gap="24"
+				sm-column-count="1"
+				md-column-count="2"
+				lg-column-count="3"
+			>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-button-group width="full">
+							<nldd-button
+								appearance="primary"
+								text="Start een aanvraag"
+							></nldd-button>
+							<nldd-button
+								appearance="secondary"
+								text="Bewaar als concept"
+							></nldd-button>
+						</nldd-button-group>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-form-field label="E-mailadres">
+							<nldd-text-field
+								type="email"
+								autocomplete="email"
+								name="voorbeeld-email"
+							></nldd-text-field>
+						</nldd-form-field>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-form-field label="Onderwerpen">
+							<nldd-token-field
+								values="isoleren, warmtepomp"
+								placeholder="Zoek een onderwerp"
+								name="voorbeeld-onderwerpen"
+							>
+								<nldd-menu>
+									<nldd-menu-item text="Isoleren" value="isoleren"></nldd-menu-item>
+									<nldd-menu-item text="Warmtepomp" value="warmtepomp"></nldd-menu-item>
+									<nldd-menu-item text="Zonnepanelen" value="zonnepanelen"></nldd-menu-item>
+									<nldd-menu-item text="Ventilatie" value="ventilatie"></nldd-menu-item>
+									<nldd-menu-item text="Zonneboiler" value="zonneboiler"></nldd-menu-item>
+								</nldd-menu>
+							</nldd-token-field>
+						</nldd-form-field>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-banner
+							variant="accent"
+							text="Er is nieuwe informatie nodig"
+							supporting-text="Aanvraag A-1042 wacht op een foto van het dak."
+						>
+							<nldd-button
+								slot="actions"
+								appearance="accent-filled"
+								text="Vul de aanvraag aan"
+							></nldd-button>
+						</nldd-banner>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-segmented-control
+							accessible-label="Periode"
+							value="week"
+						>
+							<nldd-segmented-control-item text="Dag" value="dag"></nldd-segmented-control-item>
+							<nldd-segmented-control-item text="Week" value="week"></nldd-segmented-control-item>
+							<nldd-segmented-control-item text="Maand" value="maand"></nldd-segmented-control-item>
+						</nldd-segmented-control>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-checkbox-field
+							label="Stuur me een e-mail bij een nieuwe versie"
+							checked
+						></nldd-checkbox-field>
+						<nldd-spacer size="8"></nldd-spacer>
+						<nldd-switch-field
+							label="Toon meldingen"
+							checked
+						></nldd-switch-field>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-step-bar accessible-label="Voortgang van de aanvraag">
+							<nldd-step-bar-item
+								text="Gegevens"
+								status="past"
+							></nldd-step-bar-item>
+							<nldd-step-bar-item
+								text="Controle"
+								status="current"
+							></nldd-step-bar-item>
+							<nldd-step-bar-item text="Bevestigen"></nldd-step-bar-item>
+						</nldd-step-bar>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-form-field label="Waarmee bouw je?">
+							<nldd-radio-button-group name="voorbeeld-framework">
+								<nldd-radio-button-field
+									value="angular"
+									label="Angular"
+									checked
+								></nldd-radio-button-field>
+								<nldd-radio-button-field
+									value="vue"
+									label="Vue"
+								></nldd-radio-button-field>
+								<nldd-radio-button-field
+									value="html"
+									label="Platte HTML"
+								></nldd-radio-button-field>
+							</nldd-radio-button-group>
+						</nldd-form-field>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-container
+							layout="row"
+							gap="16"
+							vertical-alignment="center"
+						>
+							<nldd-progress-circle
+								value="75"
+								size="48"
+								accessible-label="Aanvraag voor 75% ingevuld"
+							></nldd-progress-circle>
+							<nldd-progress-bar
+								value="60"
+								text="Dossier compleet"
+							></nldd-progress-bar>
+						</nldd-container>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-toggle-button-group
+							type="radio"
+							accessible-label="Weergave"
+						>
+							<nldd-toggle-button
+								text="Lijst"
+								icon="list"
+								value="lijst"
+								selected
+							></nldd-toggle-button>
+							<nldd-toggle-button
+								text="Raster"
+								icon="rectangle-split-2x3"
+								value="raster"
+							></nldd-toggle-button>
+							<nldd-toggle-button
+								text="Kaart"
+								icon="map"
+								value="kaart"
+							></nldd-toggle-button>
+						</nldd-toggle-button-group>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-form-field label="Startdatum">
+							<nldd-date-field
+								id="startdatum"
+								name="voorbeeld-startdatum"
+							></nldd-date-field>
+						</nldd-form-field>
+						<nldd-spacer size="16"></nldd-spacer>
+						<nldd-form-field label="Starttijd">
+							<nldd-time-field
+								name="voorbeeld-starttijd"
+								value="09:30"
+								step="15"
+							></nldd-time-field>
+						</nldd-form-field>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-button
+							appearance="primary"
+							text="Acties"
+							expandable
+						>
+							<nldd-menu slot="popup">
+								<nldd-menu-item
+									icon="edit"
+									text="Bewerken"
+									shortcut="Ctrl+E"
+									shortcut-mac="Cmd+E"
+								></nldd-menu-item>
+								<nldd-menu-item
+									icon="duplicate"
+									text="Dupliceer"
+									shortcut="Ctrl+D"
+									shortcut-mac="Cmd+D"
+								></nldd-menu-item>
+								<nldd-menu-divider></nldd-menu-divider>
+								<nldd-menu-item
+									icon="share"
+									text="Delen"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											icon="link"
+											text="Kopieer link"
+										></nldd-menu-item>
+										<nldd-menu-item
+											icon="print"
+											text="Afdrukken"
+											shortcut="Ctrl+P"
+											shortcut-mac="Cmd+P"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-item
+									icon="folder"
+									text="Verplaatsen naar"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											text="Dossier D-318"
+											details="Uitvoering"
+										></nldd-menu-item>
+										<nldd-menu-item
+											text="Dossier D-319"
+											details="Beleid"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-item
+									icon="circle-circle"
+									text="Status"
+								>
+									<nldd-menu>
+										<nldd-menu-item
+											type="radio"
+											icon="circle-circle"
+											text="In behandeling"
+											selected
+										></nldd-menu-item>
+										<nldd-menu-item
+											type="radio"
+											icon="clock"
+											text="Wacht op jou"
+										></nldd-menu-item>
+										<nldd-menu-item
+											type="radio"
+											icon="check-mark-circle"
+											text="Afgerond"
+										></nldd-menu-item>
+									</nldd-menu>
+								</nldd-menu-item>
+								<nldd-menu-divider></nldd-menu-divider>
+								<nldd-menu-item
+									icon="delete"
+									text="Verwijderen"
+									destructive
+								></nldd-menu-item>
+							</nldd-menu>
+						</nldd-button>
+						<nldd-container
+							id="veilige-driehoek"
+							hide-on="touch"
+						>
+							<nldd-spacer size="16"></nldd-spacer>
+							<nldd-switch-field label="Toon de veilige driehoek"></nldd-switch-field>
+							<nldd-spacer size="4"></nldd-spacer>
+							<nldd-text
+								size="sm"
+								line-height="tight"
+								color="secondary"
+							>De veilige driehoek houdt een submenu open terwijl je muis er schuin naartoe beweegt, ook als hij onderweg over een ander item gaat.</nldd-text>
+						</nldd-container>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-container
+							layout="wrap"
+							gap="8"
+							vertical-alignment="center"
+						>
+							<nldd-tag
+								text="In behandeling"
+								color="accent"
+							></nldd-tag>
+							<nldd-tag
+								text="Afgerond"
+								color="success"
+							></nldd-tag>
+							<nldd-tag
+								text="Wacht op jou"
+								color="warning"
+							></nldd-tag>
+							<nldd-tag
+								text="Afgewezen"
+								color="critical"
+							></nldd-tag>
+							<nldd-tag text="Concept"></nldd-tag>
+						</nldd-container>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-list
+							type="navigation"
+							accessible-label="Jouw aanvragen"
+						>
+							<nldd-list-item href="#a-1042">
+								<nldd-title-cell
+									text="Aanvraag A-1042"
+									supporting-text="Dakisolatie, in behandeling"
+								></nldd-title-cell>
+								<nldd-spacer-cell size="12"></nldd-spacer-cell>
+								<nldd-cell>
+									<nldd-badge
+										number="2"
+										color="accent"
+										accessible-label="2 nieuwe berichten"
+									></nldd-badge>
+								</nldd-cell>
+								<nldd-spacer-cell size="8"></nldd-spacer-cell>
+								<nldd-icon-cell
+									size="20"
+									color="secondary"
+									icon="chevron-right"
+								></nldd-icon-cell>
+							</nldd-list-item>
+							<nldd-list-item href="#a-1043">
+								<nldd-title-cell
+									text="Aanvraag A-1043"
+									supporting-text="Warmtepomp, afgerond"
+								></nldd-title-cell>
+								<nldd-spacer-cell size="12"></nldd-spacer-cell>
+								<nldd-icon-cell
+									size="20"
+									color="secondary"
+									icon="chevron-right"
+								></nldd-icon-cell>
+							</nldd-list-item>
+						</nldd-list>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-form-field label="Aantal zonnepanelen">
+							<nldd-number-field
+								width="160px"
+								value="12"
+								min="1"
+								max="40"
+								name="voorbeeld-panelen"
+							></nldd-number-field>
+						</nldd-form-field>
+						<nldd-spacer size="16"></nldd-spacer>
+						<nldd-form-field label="Doorlooptijd in dagen">
+							<nldd-slider
+								range
+								min="0"
+								max="60"
+								step="5"
+								start-value="10"
+								end-value="30"
+								histogram="4 9 16 18 14 11 8 6 4 3 2 1"
+								name="voorbeeld-doorlooptijd"
+							></nldd-slider>
+						</nldd-form-field>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-identity
+							text="Sanne, Mehmet en Lotte"
+							supporting-text="Behandelaars van aanvraag A-1042"
+						>
+							<nldd-avatar-group
+								slot="avatars"
+								size="40"
+							>
+								<nldd-avatar name="Sanne de Vries"></nldd-avatar>
+								<nldd-avatar name="Mehmet Yilmaz"></nldd-avatar>
+								<nldd-avatar name="Lotte Bakker"></nldd-avatar>
+							</nldd-avatar-group>
+						</nldd-identity>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-inline-dialog
+							variant="success"
+							text="Aanvraag ingediend"
+							supporting-text="Je krijgt binnen zes weken een besluit."
+						></nldd-inline-dialog>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-form-field label="Soort aanvraag">
+							<nldd-dropdown>
+								<select name="voorbeeld-soort">
+									<option value="isoleren">Isoleren</option>
+									<option value="warmtepomp">Warmtepomp</option>
+									<option value="zonnepanelen">Zonnepanelen</option>
+									<option value="ventilatie">Ventilatie</option>
+									<option value="zonneboiler">Zonneboiler</option>
+									<option value="energielabel">Energielabel</option>
+								</select>
+							</nldd-dropdown>
+						</nldd-form-field>
+					</nldd-container>
+				</nldd-card>
+			</nldd-container>
+			<nldd-spacer size="32"></nldd-spacer>
+			<nldd-button-group>
+				<nldd-button
+					appearance="neutral-base"
+					text="Bekijk alle componenten"
+					href="https://nederlandsedigitaledienst.github.io/design-system/"
+				></nldd-button>
+			</nldd-button-group>
+		</nldd-simple-section>
+
+		<nldd-one-half-one-half-section id="techniek">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Eén techniek die elke browser kent"
+				heading-level="2"
+			></nldd-title>
+			<nldd-rich-text slot="left">
+				<p>We kiezen volledig voor Web Components: componenten die de browser rechtstreeks ondersteunt en die in elk framework werken. Angular, React, Vue of helemaal zonder framework: overal gebruiken developers dezelfde componenten.</p>
+				<p>Elk component brengt zijn eigen toegankelijkheid en interacties mee: van toetsenbord en focus tot schermlezer en animaties. Met een losse versie in HTML/CSS bouwt elk team dat zelf, en elk team doet het anders. Met Web Components krijgt elke toepassing dezelfde kwaliteit.</p>
+				<h3>Ontwerp direct in code</h3>
+				<p>De API is zo eenvoudig dat je als designer zelf aan de slag kunt. Je ziet meteen hoe het werkt, op elk scherm en met echte inhoud. Er is ruimte waar je die nodig hebt, en vaste afspraken waar eenheid telt. Die afspraken zijn ook de guardrails voor een AI-assistent: die weet wat kan en wat niet.</p>
+			</nldd-rich-text>
+			<nldd-container
+				slot="right"
+				gap="12"
+				horizontal-alignment="left"
+			>
+				<nldd-segmented-control
+					id="framework"
+					accessible-label="Framework"
+					width="fit-content"
+					value="html"
+				>
+					<nldd-segmented-control-item text="HTML" value="html"></nldd-segmented-control-item>
+					<nldd-segmented-control-item text="Angular" value="angular"></nldd-segmented-control-item>
+					<nldd-segmented-control-item text="React" value="react"></nldd-segmented-control-item>
+					<nldd-segmented-control-item text="Vue" value="vue"></nldd-segmented-control-item>
+				</nldd-segmented-control>
+				<nldd-code-viewer
+					data-framework="html"
+					language="html"
+					appearance="box-tinted"
+				>&lt;nldd-form action="/aanmelden" method="post"&gt;
+  &lt;nldd-form-field label="E-mailadres"&gt;
+    &lt;nldd-text-field name="email" type="email" autocomplete="email"&gt;
+      &lt;nldd-button slot="button" type="submit" appearance="primary" text="Meld je aan"&gt;&lt;/nldd-button&gt;
+    &lt;/nldd-text-field&gt;
+  &lt;/nldd-form-field&gt;
+&lt;/nldd-form&gt;</nldd-code-viewer>
+				<nldd-code-viewer
+					data-framework="angular"
+					hidden
+					language="html"
+					appearance="box-tinted"
+				>&lt;nldd-form&gt;
+  &lt;form (submit)="aanmelden($event)"&gt;
+    &lt;nldd-form-field label="E-mailadres"&gt;
+      &lt;nldd-text-field name="email" type="email" autocomplete="email"&gt;
+        &lt;nldd-button slot="button" type="submit" appearance="primary" text="Meld je aan"&gt;&lt;/nldd-button&gt;
+      &lt;/nldd-text-field&gt;
+    &lt;/nldd-form-field&gt;
+  &lt;/form&gt;
+&lt;/nldd-form&gt;</nldd-code-viewer>
+				<nldd-code-viewer
+					data-framework="react"
+					hidden
+					language="html"
+					appearance="box-tinted"
+				>&lt;nldd-form&gt;
+  &lt;form onSubmit={aanmelden}&gt;
+    &lt;nldd-form-field label="E-mailadres"&gt;
+      &lt;nldd-text-field name="email" type="email" autocomplete="email"&gt;
+        &lt;nldd-button slot="button" type="submit" appearance="primary" text="Meld je aan"&gt;&lt;/nldd-button&gt;
+      &lt;/nldd-text-field&gt;
+    &lt;/nldd-form-field&gt;
+  &lt;/form&gt;
+&lt;/nldd-form&gt;</nldd-code-viewer>
+				<nldd-code-viewer
+					data-framework="vue"
+					hidden
+					language="html"
+					appearance="box-tinted"
+				>&lt;nldd-form&gt;
+  &lt;form @submit.prevent="aanmelden"&gt;
+    &lt;nldd-form-field label="E-mailadres"&gt;
+      &lt;nldd-text-field name="email" type="email" autocomplete="email"&gt;
+        &lt;nldd-button slot="button" type="submit" appearance="primary" text="Meld je aan"&gt;&lt;/nldd-button&gt;
+      &lt;/nldd-text-field&gt;
+    &lt;/nldd-form-field&gt;
+  &lt;/form&gt;
+&lt;/nldd-form&gt;</nldd-code-viewer>
+			</nldd-container>
+		</nldd-one-half-one-half-section>
+
+		<nldd-simple-section id="iconen" background="tinted">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="394 iconen in één stijl"
+				data-icon-count="{n} iconen in één stijl"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="header"
+				size="16"
+			></nldd-spacer>
+			<nldd-rich-text slot="header">
+				<p>We hebben een eigen uitgebreide set van iconen ontwikkeld die past bij de Rijksoverheid-letter. Van een huis tot een microscoop, van een tulp tot een handdruk. Mis je een icoon voor jouw project? <a href="https://github.com/NederlandseDigitaleDienst/design-system/issues/new">Vraag het aan</a>.</p>
+			</nldd-rich-text>
+			<nldd-container
+				layout="wrap"
+				sm-gap="24"
+				md-gap="32"
+				lg-gap="32"
+			>
+				<nldd-icon
+					icon="house"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="apartment-building"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="envelope"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="bell"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="calendar-event"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="clock"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="person"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="person-2"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="handshake"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="heart"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="star"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="leaf"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="flower"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="tulip"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="sun"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="moon"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="snowflake"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="globe"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="map-pin"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="signpost"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="ship-wheel"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="lightbulb"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="lightning"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="gear"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="screwdriver-wrench"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="wrench"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="key"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="lock-closed"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="shield-check-mark"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="certificate"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="seal-check-mark"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="euro-sign"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="creditcard"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="shopping-cart"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="business-suitcase"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="book"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="books-vertical"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="clipboard-pencil"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="file-text-pencil"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="folder-open"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="paperclip"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="printer"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="photo-camera"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="video-camera"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="microphone"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="speaker-volume-high"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="megaphone"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="message-rectangle-text"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="paper-plane"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="chart-bar-x-axis"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="score-meter"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="microscope"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="erlenmeyer-flask"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="wheat"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="accessibility"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="eyeglasses"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="ear"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="face-smiling"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="sparkles"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="puzzle-piece"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="binoculars"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="magnifier"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="map"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="flag"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="lifebuoy"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="cloud"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="eye"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="hand-thumbs-up"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="head-profile-with-brain"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="desk-with-screen"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="projection-screen"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="note"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="pencil-ruler"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="paintbrush"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="highlighter"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="scissor"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="color-chart"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="photo"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="timer"
+					size="32"
+				></nldd-icon>
+				<nldd-icon
+					icon="power-plug"
+					size="32"
+				></nldd-icon>
+			</nldd-container>
+			<nldd-spacer size="32"></nldd-spacer>
+			<nldd-button-group>
+				<nldd-button
+					appearance="neutral-base"
+					text="Bekijk alle iconen"
+					href="https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-iconen--docs"
+				></nldd-button>
+			</nldd-button-group>
+		</nldd-simple-section>
+
+		<nldd-simple-section id="designer">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Het designsysteem is je designer"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="header"
+				size="16"
+			></nldd-spacer>
+			<nldd-rich-text slot="header">
+				<p>Niet elk team heeft een designer. Het designsysteem neemt die rol over, met de richtlijnen, patronen en een linter die meekijkt. Werk je met een AI-assistent, dan geven de skills hem dezelfde kennis.</p>
+			</nldd-rich-text>
+			<nldd-container
+				layout="grid"
+				sm-gap="16"
+				md-gap="24"
+				lg-gap="24"
+				sm-column-count="1"
+				md-column-count="1"
+				lg-column-count="3"
+			>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="books-vertical"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-title
+							size="4"
+							text="Richtlijnen en patronen om op te bouwen"
+							heading-level="3"
+						></nldd-title>
+						<nldd-spacer size="8"></nldd-spacer>
+						<nldd-rich-text>
+							<p>De <a href="https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-ontwerprichtlijnen--docs">ontwerprichtlijnen</a> en patronen, van home tot formulier en applicatie. Met de skills bouwt je assistent een pagina zoals wij hem zouden ontwerpen.</p>
+						</nldd-rich-text>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="shield-check-mark"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-title
+							size="4"
+							text="Een linter die naar mensen kijkt"
+							heading-level="3"
+						></nldd-title>
+						<nldd-spacer size="8"></nldd-spacer>
+						<nldd-rich-text>
+							<p>De regels gaan over toegankelijkheid, tekst en structuur. Niet over of je code netjes is, maar over of iemand je dienst kan gebruiken.</p>
+						</nldd-rich-text>
+					</nldd-container>
+				</nldd-card>
+				<nldd-card>
+					<nldd-container padding="16">
+						<nldd-icon
+							icon="arrow-clockwise"
+							size="32"
+						></nldd-icon>
+						<nldd-spacer size="12"></nldd-spacer>
+						<nldd-title
+							size="4"
+							text="Kwaliteit die na de lancering blijft"
+							heading-level="3"
+						></nldd-title>
+						<nldd-spacer size="8"></nldd-spacer>
+						<nldd-rich-text>
+							<p>We leren elk jaar meer over welke patronen werken. Binnenkort testen we ook projecten die al live staan, zodat ze die inzichten meekrijgen.</p>
+						</nldd-rich-text>
+					</nldd-container>
+				</nldd-card>
+			</nldd-container>
+		</nldd-simple-section>
+
+		<nldd-one-third-two-thirds-section id="ai-assistent" background="tinted" vertical-alignment="center">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Ga aan de slag met je eigen AI-assistent"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="header"
+				size="16"
+			></nldd-spacer>
+			<nldd-rich-text slot="header">
+				<p>Met zes skills kent je assistent het hele systeem. Wat hij leert, klopt: de skills komen uit de code zelf.</p>
+			</nldd-rich-text>
+			<nldd-list
+				slot="left"
+				dividers="never"
+				accessible-label="De zes skills"
+			>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="wrench"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Bouw een applicatie"
+						supporting-text="nldd-design-build"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="arrow-left-right"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Zet een bestaande frontend om"
+						supporting-text="nldd-design-migrate"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="check-mark-circle"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Valideer wat er staat"
+						supporting-text="nldd-design-validate"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="arrow-up-circle"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Stap over naar een nieuwe versie"
+						supporting-text="nldd-design-upgrade"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="magnifier"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Zoek een component of icoon op"
+						supporting-text="nldd-design"
+					></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-icon-cell
+						size="32"
+						icon="lightbulb"
+					></nldd-icon-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell
+						text="Stel een verbetering voor"
+						supporting-text="nldd-design-contribute"
+					></nldd-title-cell>
+				</nldd-list-item>
+			</nldd-list>
+			<nldd-card slot="right">
+				<nldd-container padding="24" sm-padding="16">
+					<nldd-text>Je assistent vergeet de naam van een knop. nldd lint ziet het meteen:</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-code-viewer
+						appearance="box-tinted"
+						wrap
+						no-copy
+					>error  icon-button-needs-name
+nldd-icon-button needs `text` or `accessible-label`,
+otherwise it has no accessible name.</nldd-code-viewer>
+					<nldd-spacer size="16"></nldd-spacer>
+					<nldd-text>Hij herstelt het zelf:</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-code-viewer
+						appearance="box-tinted"
+						language="html"
+						diff
+						wrap
+						no-copy
+					>-&lt;nldd-icon-button icon="delete"&gt;&lt;/nldd-icon-button&gt;
++&lt;nldd-icon-button icon="delete" text="Verwijder aanvraag A-1042"&gt;&lt;/nldd-icon-button&gt;</nldd-code-viewer>
+					<nldd-spacer size="16"></nldd-spacer>
+					<nldd-inline-dialog
+						variant="success"
+						text="0 fouten, 0 waarschuwingen"
+						supporting-text="Een schermlezer leest nu voor wat de knop doet."
+					></nldd-inline-dialog>
+				</nldd-container>
+			</nldd-card>
+			<nldd-button-group slot="footer">
+				<nldd-button
+					appearance="primary"
+					text="Installeer de skills"
+					href="https://github.com/NederlandseDigitaleDienst/design-system#plugin-voor-ai-assistenten"
+				></nldd-button>
+			</nldd-button-group>
+		</nldd-one-third-two-thirds-section>
+
+		<nldd-simple-section id="start-zelf">
+			<nldd-title
+				size="2"
+				text="Of begin zelf met één regel"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer size="16"></nldd-spacer>
+			<nldd-rich-text>
+				<p>Het pakket staat op <a href="https://www.npmjs.com/package/@nldd/design-system">npm</a>, de broncode op <a href="https://github.com/NederlandseDigitaleDienst/design-system">GitHub</a>, onder de open licentie EUPL.</p>
+			</nldd-rich-text>
+			<nldd-spacer size="16"></nldd-spacer>
+			<nldd-code-viewer
+				language="bash"
+				appearance="box-tinted"
+			>npm install @nldd/design-system</nldd-code-viewer>
+		</nldd-simple-section>
+
+		<nldd-page-footer slot="footer">
+			<nldd-page-footer-legal-bar slot="legal-bar">
+				<nldd-page-footer-legal-bar-item
+					slot="start"
+					text="Nederlandse Digitale Dienst"
+				></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="end"
+					href="https://digitaledienst.overheid.nl/over/privacy/"
+					text="Privacy"
+				></nldd-page-footer-legal-bar-item>
+			</nldd-page-footer-legal-bar>
+		</nldd-page-footer>
+	</nldd-page>
+</nldd-shell>
+</body>
+</html>

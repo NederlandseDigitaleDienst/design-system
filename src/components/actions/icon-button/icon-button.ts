@@ -28,9 +28,9 @@
  * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
- * @attr {string} popovertarget - ID of a popover element to toggle; forwarded to the inner <button>
+ * @attr {string} popovertarget - ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
  *
- * @slot icon - Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set; falls back to a placeholder icon when the slot is empty.
+ * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay.
  *
  * @example
@@ -58,6 +58,8 @@ import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { internalsOf } from '../../../utilities/element-state.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
+import { anchorPopoverTarget, popoverTargetOf } from '../../../utilities/popover-target.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
 export type Appearance =
@@ -119,7 +121,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	@property({ type: Boolean, reflect: true, attribute: 'no-highlight-border' })
 	noHighlightBorder = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
 	type: ButtonType = 'button';
 
 	@property({ type: Boolean, reflect: true, attribute: 'expandable' })
@@ -175,8 +177,8 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	/** Icon name for the nldd-icon element. When not set, the icon slot is used,
-	 *  falling back to a placeholder icon when that slot is also empty. */
+	/** Icon name for the nldd-icon element. An icon in the icon slot wins; with
+	 *  neither, a placeholder icon shows. */
 	@property({ type: String })
 	icon = '';
 
@@ -238,7 +240,13 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		anchorPopoverTarget(this, null);
+	}
+
 	override updated(changedProperties: Map<string, unknown>): void {
+		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
 		if (changedProperties.has('width')) {
 			const w = this.width;
 			// 'full' switches host to block + 100% via CSS attribute selector.
@@ -262,6 +270,12 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 			e.preventDefault();
 			e.stopPropagation();
 			return;
+		}
+		// Before the browser's own toggle, which runs after this listener: a
+		// popover rendered after the button was not there on its last render.
+		if (e.currentTarget instanceof HTMLButtonElement) {
+			e.currentTarget.popoverTargetElement = popoverTargetOf(this, this.popovertarget, this.popoverTargetElement);
+			anchorPopoverTarget(this, e.currentTarget.popoverTargetElement);
 		}
 		// A slotted overlay makes this button its invoker: toggle it and stop —
 		// a popup button neither submits a form nor navigates.
@@ -291,6 +305,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	 * consumers can call `iconButtonEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLElement>('.icon-button')?.focus(options);
 	}
 

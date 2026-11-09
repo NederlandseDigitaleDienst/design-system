@@ -124,7 +124,7 @@ Voor knoppen, links en andere acties. De sleutelnaam bevat een werkwoord dat zeg
 ```
 general.save-action: Bewaar
 general.delete-action: Verwijder
-components.pagination.previous-action: Vorige pagina
+components.pagination.go-to-previous-page-action: Ga naar vorige pagina
 ```
 
 **Indirecte acties** (verwijzing naar een pagina/formulier): gebruik de infinitief in het Nederlands, met de `to-` prefix vóór het werkwoord.

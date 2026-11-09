@@ -36,6 +36,16 @@ export const devRules: DevRule[] = [
 		"report": ":has(> :not([slot]))"
 	},
 	{
+		"id": "blockquote-custom-size-invalid",
+		"message": "This is not a size the quote can use, so it keeps its own size at this breakpoint. Use a length such as \"32px\" or \"2rem\", not a keyword.",
+		"context": "nldd-blockquote:state(invalid-custom-size)"
+	},
+	{
+		"id": "blockquote-custom-size-no-effect",
+		"message": "This custom size is smaller than the quote's own size at this breakpoint and shows at that size.",
+		"context": "nldd-blockquote:state(custom-size-below-floor)"
+	},
+	{
 		"id": "button-bar-no-toggle-button",
 		"message": "The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.",
 		"context": "nldd-button-bar",
@@ -44,12 +54,12 @@ export const devRules: DevRule[] = [
 	{
 		"id": "button-form-id-invalid",
 		"message": "The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.",
-		"context": "nldd-button:state(form-target-not-a-form)"
+		"context": "nldd-button:state(form-target-not-a-form), nldd-split-button:state(form-target-not-a-form)"
 	},
 	{
 		"id": "button-form-id-not-found",
 		"message": "Nothing in this root has the id in `form`, so this button submits nothing.",
-		"context": "nldd-button:state(no-form-target)"
+		"context": "nldd-button:state(no-form-target), nldd-split-button:state(no-form-target)"
 	},
 	{
 		"id": "button-group-button-size-no-effect",
@@ -119,6 +129,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-collection[item-width]"
 	},
 	{
+		"id": "collection-no-child-with-role",
+		"message": "The collection is a list and makes each child a list item, but this child has a role of its own, which would be lost. It stays as it is, so the list now holds something that is no list item. Put the content in an nldd-card, or wrap it in a div.",
+		"context": "nldd-collection > :not([slot]):is(a, article, aside, button, details, dialog, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, img, li, main, nav, ol, section, table, ul, [role]:not([role=\"\"]):not([role=\"listitem\"]))"
+	},
+	{
 		"id": "combo-box-needs-name",
 		"message": "nldd-combo-box needs `accessible-label` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-combo-box",
@@ -165,7 +180,7 @@ export const devRules: DevRule[] = [
 		"id": "form-field-needs-input",
 		"message": "nldd-form-field holds no form input, so the label cannot name anything or move focus into it.",
 		"context": "nldd-form-field[label]:not([label=\"\"]):has(> :not(nldd-form-field-help-text))",
-		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
+		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-one-time-code-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
 		"properties": []
 	},
 	{
@@ -269,6 +284,31 @@ export const devRules: DevRule[] = [
 		"context": "nldd-image:state(invalid-width)"
 	},
 	{
+		"id": "kanban-column-needs-name",
+		"message": "nldd-kanban-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
+		"context": "nldd-kanban-column",
+		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"text",
+			"accessibleLabel"
+		]
+	},
+	{
+		"id": "kanban-column-tag-renamed",
+		"message": "This column is now `nldd-kanban-column`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-task-board-column, nldd-column-board-column"
+	},
+	{
+		"id": "kanban-move-item-invalid",
+		"message": "moveItem() needs an item in one of the board's columns and a column of the board.",
+		"context": "nldd-kanban:state(invalid-move)"
+	},
+	{
+		"id": "kanban-tag-renamed",
+		"message": "This board is now `nldd-kanban`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-task-board, nldd-column-board"
+	},
+	{
 		"id": "language-item-needs-name",
 		"message": "Set an `accessible-label` such as \"Taal: Nederlands (NL)\": a screen reader otherwise spells out the letters.",
 		"context": "nldd-menu-bar-item:is([text=\"NL\"], [text=\"EN\"], [text=\"DE\"], [text=\"FR\"])",
@@ -337,6 +377,11 @@ export const devRules: DevRule[] = [
 		"id": "list-item-expanded-needs-control",
 		"message": "`expanded` needs somewhere to live: make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.",
 		"context": "nldd-list-item:state(expanded-without-control)"
+	},
+	{
+		"id": "list-item-label-needs-title",
+		"message": "`accessible-label` does not start with what the row shows. The label replaces the row's text for assistive technology, so someone who says the visible words to voice control finds nothing (WCAG 2.5.3). Start the label with the title, or leave it off and let the row's text be the name.",
+		"context": "nldd-list-item:state(label-without-title)"
 	},
 	{
 		"id": "list-item-needs-list",
@@ -413,6 +458,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-menu-bar:state(unnamed)"
 	},
 	{
+		"id": "menu-item-form-id-invalid",
+		"message": "The id in `form` is an element without a form, so this item submits nothing. An nldd-form only has one once it has rendered.",
+		"context": "nldd-menu-item:state(form-target-not-a-form)"
+	},
+	{
+		"id": "menu-item-form-id-not-found",
+		"message": "Nothing in this root has the id in `form`, so this item submits nothing.",
+		"context": "nldd-menu-item:state(no-form-target)"
+	},
+	{
 		"id": "menu-navigation-no-filter",
 		"message": "filter() belongs to a menu of actions or options. A navigation menu is a short list of links and is not filtered.",
 		"context": "nldd-menu[variant=\"navigation\"]:state(filtered)"
@@ -479,6 +534,21 @@ export const devRules: DevRule[] = [
 		"properties": [
 			"accessibleLabel"
 		]
+	},
+	{
+		"id": "one-time-code-field-format-invalid",
+		"message": "`format` needs a `#` for each box, such as `###-###`; without one the field ignores it.",
+		"context": "nldd-one-time-code-field[format]:not([format=\"\"]):not([format*=\"#\"])"
+	},
+	{
+		"id": "one-time-code-field-length-no-effect",
+		"message": "`format` sets the length, so `length` does nothing here. Remove `length`.",
+		"context": "nldd-one-time-code-field[format*=\"#\"][length]:not([length=\"\"])"
+	},
+	{
+		"id": "one-time-code-field-uppercase-no-effect",
+		"message": "`uppercase` only does something with `type=\"alphanumeric\"`; a numeric code has no letters. Remove it, or set the type.",
+		"context": "nldd-one-time-code-field[uppercase]:not([type=\"alphanumeric\"])"
 	},
 	{
 		"id": "page-footer-goes-in-page",
@@ -550,6 +620,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-list-item:is([href]:not([href=\"\"]), [button]):has(> nldd-list-item-segment)"
 	},
 	{
+		"id": "search-field-search-button-renamed",
+		"message": "`search-button` takes `secondary` or `primary` now, the appearances of nldd-button. Rename it here and on every other nldd-search-field.",
+		"context": "nldd-search-field[search-button=\"neutral-tinted\"], nldd-search-field[search-button=\"accent-filled\"]"
+	},
+	{
+		"id": "search-field-show-search-button-renamed",
+		"message": "The `show-search-button` attribute is now `search-button`, which also takes the appearance of the button. Rename it here and on every other nldd-search-field.",
+		"context": "nldd-search-field[show-search-button]"
+	},
+	{
 		"id": "segmented-control-needs-name",
 		"message": "nldd-segmented-control needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-segmented-control",
@@ -604,6 +684,33 @@ export const devRules: DevRule[] = [
 		"id": "skip-link-target-needs-focusable",
 		"message": "The target did not take focus, so the skip link did nothing. It is probably hidden or inert.",
 		"context": "nldd-skip-link:state(target-not-focusable)"
+	},
+	{
+		"id": "slot-attribute-no-effect",
+		"message": "The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.",
+		"context": "nldd-button[text]:not([text=\"\"]):has(> [slot=\"text\"]), nldd-button[start-icon]:not([start-icon=\"\"]):has(> [slot=\"start-icon\"]), nldd-button[end-icon]:not([end-icon=\"\"]):has(> [slot=\"end-icon\"]), nldd-icon-button[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-menu-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-toggle-button[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-segmented-control-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-tag[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-link[start-icon]:not([start-icon=\"\"]):has(> [slot=\"start-icon\"]), nldd-link[end-icon]:not([end-icon=\"\"]):has(> [slot=\"end-icon\"]), nldd-tab-bar-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-menu-bar-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-tag[text]:not([text=\"\"]):has(> :not([slot])), nldd-link[text]:not([text=\"\"]):has(> :not([slot])), nldd-icon-cell[icon]:not([icon=\"\"]):has(> :not([slot])), nldd-token[text]:not([text=\"\"]):has(> :not([slot])), nldd-breadcrumbs-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-page-footer-legal-bar-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-step-bar-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-text-cell[text]:not([text=\"\"]):has(> :not([slot])), nldd-title-cell[text]:not([text=\"\"]):has(> :not([slot]))"
+	},
+	{
+		"id": "split-button-max-one-popup",
+		"message": "nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.",
+		"context": "nldd-split-button",
+		"count": {
+			"of": "nldd-menu, nldd-popover",
+			"max": 1
+		}
+	},
+	{
+		"id": "split-button-needs-popup",
+		"message": "nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.",
+		"context": "nldd-split-button:not([popovertarget]:not([popovertarget=\"\"]))",
+		"assert": ":has(> nldd-menu, > nldd-popover)",
+		"properties": []
+	},
+	{
+		"id": "split-button-no-other-children",
+		"message": "Only an nldd-menu or nldd-popover goes in nldd-split-button; anything else does not render. Set the label with `text` and the icon with `icon`.",
+		"context": "nldd-split-button",
+		"report": ":has(> :not(nldd-menu, nldd-popover))"
 	},
 	{
 		"id": "split-view-needs-main-page",
@@ -669,6 +776,31 @@ export const devRules: DevRule[] = [
 		"context": "nldd-step-cell[variant]"
 	},
 	{
+		"id": "swatch-picker-item-fill-no-effect",
+		"message": "An nldd-swatch-picker-item shows one of `color`, `custom-color` or `image`: an image covers a color, and a category `color` wins over `custom-color`. Keep one.",
+		"context": "nldd-swatch-picker-item[color]:not([color=\"\"])[custom-color]:not([custom-color=\"\"]), nldd-swatch-picker-item[image]:not([image=\"\"])[color]:not([color=\"\"]), nldd-swatch-picker-item[image]:not([image=\"\"])[custom-color]:not([custom-color=\"\"])"
+	},
+	{
+		"id": "swatch-picker-item-needs-name",
+		"message": "An nldd-swatch-picker-item with a `custom-color` or an `image` has no accessible name. Add `text`; only a category `color` brings a name of its own.",
+		"context": "nldd-swatch-picker-item",
+		"assert": "[color]:not([color=\"\"]), [text]:not([text=\"\"])",
+		"properties": [
+			"color",
+			"text"
+		]
+	},
+	{
+		"id": "swatch-picker-needs-name",
+		"message": "nldd-swatch-picker needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.",
+		"context": "nldd-swatch-picker",
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"accessibleLabeledBy"
+		]
+	},
+	{
 		"id": "switch-needs-name",
 		"message": "nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.",
 		"context": "nldd-switch",
@@ -725,19 +857,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-tag:state(unnamed)"
 	},
 	{
-		"id": "task-board-column-needs-name",
-		"message": "nldd-task-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
-		"context": "nldd-task-board-column",
-		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
-		"properties": [
-			"text",
-			"accessibleLabel"
-		]
+		"id": "text-custom-size-invalid",
+		"message": "This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as \"96px\" or \"6rem\", not a keyword.",
+		"context": "nldd-text:state(invalid-custom-size)"
 	},
 	{
-		"id": "task-board-move-item-invalid",
-		"message": "moveItem() needs an item in one of the board's columns and a column of the board.",
-		"context": "nldd-task-board:state(invalid-move)"
+		"id": "text-custom-size-no-effect",
+		"message": "This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `size` for text up to `display-1`.",
+		"context": "nldd-text:state(custom-size-below-floor)"
 	},
 	{
 		"id": "text-editor-command-not-found",
@@ -750,9 +877,24 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text-editor:state(invalid-typeahead-query)"
 	},
 	{
+		"id": "text-field-button-size-no-effect",
+		"message": "The button in the `button` slot has a size of its own, but the field sets it: `sm` in a field of `md`, `xs` in one of `sm`. Leave the size off the button.",
+		"context": "nldd-text-field:state(own-button-size-overwritten)"
+	},
+	{
 		"id": "text-field-no-keyboard-with-type",
 		"message": "`keyboard` contradicts `type`, which already raises a keyboard of its own. Drop one of the two.",
 		"context": "nldd-text-field:state(keyboard-contradicts-type)"
+	},
+	{
+		"id": "text-line-height-no-effect",
+		"message": "`line-height` belongs to the body sizes; a display size has its own line height. Remove it.",
+		"context": "nldd-text[size^=\"display-\"][line-height]:not([line-height=\"\"])"
+	},
+	{
+		"id": "text-weight-no-effect",
+		"message": "`weight` belongs to the body sizes; a display size has its own weight. Remove it.",
+		"context": "nldd-text[size^=\"display-\"][weight]:not([weight=\"\"])"
 	},
 	{
 		"id": "title-custom-size-invalid",
@@ -830,6 +972,11 @@ export const devRules: DevRule[] = [
 		"id": "top-navigation-bar-no-same-href",
 		"message": "`logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.",
 		"context": "nldd-top-navigation-bar:state(same-href)"
+	},
+	{
+		"id": "top-title-bar-anchor-needs-heading",
+		"message": "`collapse-anchor` points at an element that is no heading and holds none. The bar keeps its own title as the heading, so the page has one, but a screen reader now finds the title twice. Point the anchor at the nldd-title that starts the content.",
+		"context": "nldd-top-title-bar:state(anchor-not-heading)"
 	},
 	{
 		"id": "top-title-bar-anchor-not-found",
@@ -928,8 +1075,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-menu-item-type",
-		"message": "`type` on nldd-menu-item takes: button, checkbox, radio.",
-		"context": "nldd-menu-item[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"])"
+		"message": "`type` on nldd-menu-item takes: button, checkbox, radio, submit.",
+		"context": "nldd-menu-item[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"], [type=\"submit\"])"
 	},
 	{
 		"id": "invalid-value-menu-item-query-mark-mode",
@@ -945,6 +1092,16 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-split-button-size",
 		"message": "`size` on nldd-split-button takes: lg, md, sm, xs.",
 		"context": "nldd-split-button[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-split-button-appearance",
+		"message": "`appearance` on nldd-split-button takes: accent-filled, inherit-filled, inherit-tinted, neutral-base, neutral-tinted, primary, secondary.",
+		"context": "nldd-split-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"inherit-filled\"], [appearance=\"inherit-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-split-button-type",
+		"message": "`type` on nldd-split-button takes: button, reset, submit.",
+		"context": "nldd-split-button[type]:not([type=\"button\"], [type=\"reset\"], [type=\"submit\"])"
 	},
 	{
 		"id": "invalid-value-toolbar-title-align",
@@ -1063,8 +1220,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-text-size",
-		"message": "`size` on nldd-text takes: lg, md, sm, xs, xxs.",
-		"context": "nldd-text[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], [size=\"xxs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"message": "`size` on nldd-text takes: display-1, display-2, display-3, display-4, display-5, display-6, lg, md, sm, xs, xxs.",
+		"context": "nldd-text[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], [size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], [size=\"xxs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-text-weight",
@@ -1187,6 +1344,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-number-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-one-time-code-field-size",
+		"message": "`size` on nldd-one-time-code-field takes: lg, md, sm.",
+		"context": "nldd-one-time-code-field[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-one-time-code-field-type",
+		"message": "`type` on nldd-one-time-code-field takes: alphanumeric, numeric.",
+		"context": "nldd-one-time-code-field[type]:not([type=\"alphanumeric\"], [type=\"numeric\"])"
+	},
+	{
 		"id": "invalid-value-password-field-size",
 		"message": "`size` on nldd-password-field takes: md, sm.",
 		"context": "nldd-password-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -1205,6 +1372,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-search-field-size",
 		"message": "`size` on nldd-search-field takes: md, sm.",
 		"context": "nldd-search-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-search-field-search-button",
+		"message": "`search-button` on nldd-search-field takes: primary, secondary.",
+		"context": "nldd-search-field[search-button]:not([search-button=\"\"], [search-button=\"primary\"], [search-button=\"secondary\"])"
 	},
 	{
 		"id": "invalid-value-segmented-control-item-appearance",
@@ -1260,6 +1432,21 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-stepper-size",
 		"message": "`size` on nldd-stepper takes: md, sm, xs.",
 		"context": "nldd-stepper[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-swatch-picker-item-color",
+		"message": "`color` on nldd-swatch-picker-item takes: bruin, donkerblauw, donkerbruin, donkergeel, donkergroen, geel, groen, hemelblauw, lichtblauw, lintblauw, mintgroen, mosgroen, oranje, paars, robijnrood, rood, roze, violet.",
+		"context": "nldd-swatch-picker-item[color]:not([color=\"\"], [color=\"bruin\"], [color=\"donkerblauw\"], [color=\"donkerbruin\"], [color=\"donkergeel\"], [color=\"donkergroen\"], [color=\"geel\"], [color=\"groen\"], [color=\"hemelblauw\"], [color=\"lichtblauw\"], [color=\"lintblauw\"], [color=\"mintgroen\"], [color=\"mosgroen\"], [color=\"oranje\"], [color=\"paars\"], [color=\"robijnrood\"], [color=\"rood\"], [color=\"roze\"], [color=\"violet\"])"
+	},
+	{
+		"id": "invalid-value-swatch-picker-item-size",
+		"message": "`size` on nldd-swatch-picker-item takes: md, sm, xs.",
+		"context": "nldd-swatch-picker-item[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-swatch-picker-size",
+		"message": "`size` on nldd-swatch-picker takes: md, sm, xs.",
+		"context": "nldd-swatch-picker[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-switch-field-color",
@@ -1395,6 +1582,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-container-layout",
 		"message": "`layout` on nldd-container takes: columns, grid, lanes, row, stack, wrap.",
 		"context": "nldd-container[layout]:not([layout=\"columns\"], [layout=\"grid\"], [layout=\"lanes\"], [layout=\"row\"], [layout=\"stack\"], [layout=\"wrap\"])"
+	},
+	{
+		"id": "invalid-value-container-hide-on",
+		"message": "`hide-on` on nldd-container takes: pointer, touch.",
+		"context": "nldd-container[hide-on]:not([hide-on=\"\"], [hide-on=\"pointer\"], [hide-on=\"touch\"])"
 	},
 	{
 		"id": "invalid-value-container-gap",
@@ -2300,6 +2492,21 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-table-background",
 		"message": "`background` on nldd-table takes: base, tinted.",
 		"context": "nldd-table[background]:not([background=\"base\"], [background=\"tinted\"])"
+	},
+	{
+		"id": "invalid-value-link-group-size",
+		"message": "`size` on nldd-link-group takes: lg, md, sm, xs.",
+		"context": "nldd-link-group[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-link-group-orientation",
+		"message": "`orientation` on nldd-link-group takes: horizontal, vertical.",
+		"context": "nldd-link-group[orientation]:not([orientation=\"horizontal\"], [orientation=\"vertical\"])"
+	},
+	{
+		"id": "invalid-value-link-group-horizontal-alignment",
+		"message": "`horizontal-alignment` on nldd-link-group takes: center, left.",
+		"context": "nldd-link-group[horizontal-alignment]:not([horizontal-alignment=\"center\"], [horizontal-alignment=\"left\"])"
 	},
 	{
 		"id": "invalid-value-link-size",

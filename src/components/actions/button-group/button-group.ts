@@ -51,6 +51,17 @@ type Size = 'sm' | 'md';
 type Orientation = 'auto' | 'horizontal' | 'vertical';
 type Width = '' | 'full';
 
+/** `_collapseVerdict` while the group waits for the page to load. */
+const PENDING = -1;
+
+/** Resolves once the page has loaded and its fonts are in. */
+function pageLoaded(): Promise<unknown> {
+	const loaded = document.readyState === 'complete'
+		? Promise.resolve()
+		: new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
+	return loaded.then(() => document.fonts?.ready);
+}
+
 @customElement('nldd-button-group')
 export class NLDDButtonGroup extends LitElement {
 	static override styles = buttonGroupStyles;
@@ -69,7 +80,8 @@ export class NLDDButtonGroup extends LitElement {
 
 	/** DEV only: watches for the collapse below, then lets itself go. */
 	private _collapseObserver: ResizeObserver | null = null;
-	/** Timer holding a zero-width reading before it counts as a verdict. */
+	/** Timer holding a zero-width reading before it counts as a verdict, or
+	 *  PENDING while it waits for the page to load. */
 	private _collapseVerdict = 0;
 
 	/** Buttons whose size the group has set, so a size of their own can be told apart. */
@@ -81,7 +93,11 @@ export class NLDDButtonGroup extends LitElement {
 		for (const el of assigned) {
 			const own = el.getAttribute('size');
 			if (own !== null && own !== this.size && !this._sized.has(el)) setState(this, 'own-size-overwritten', true);
-			el.setAttribute('size', this.size);
+			// The property, not the attribute: a framework such as Vue sets a size
+			// as a property, and only the property overrides that. The button's
+			// converter leaves no attribute at md, its default.
+			if ('size' in el) (el as Element & { size: Size }).size = this.size;
+			else el.setAttribute('size', this.size);
 			this._sized.add(el);
 		}
 	}
@@ -122,8 +138,12 @@ export class NLDDButtonGroup extends LitElement {
 	 *
 	 * A zero reading waits before it counts: a parent can hand over its width a
 	 * frame or two after the first paint, and that looks exactly like a collapse
-	 * until it does. Only a zero that is still zero when the timer runs out gets
-	 * said out loud.
+	 * until it does. While the page is still loading it can take far longer: a
+	 * collection that scrolls sideways gives its cards their width once it has
+	 * rendered, after its script and fonts are in. So the wait starts once the
+	 * page has loaded, and only a zero that is still zero 250ms after that gets
+	 * said out loud. The observer keeps watching after that, so a width that
+	 * arrives even later takes the fact back.
 	 */
 	private _watchForCollapse(): void {
 		if (!import.meta.env?.DEV) return;
@@ -145,16 +165,20 @@ export class NLDDButtonGroup extends LitElement {
 				this._stopWatchingForCollapse();
 				return;
 			}
-			// Zero, but not yet a verdict: a parent can hand over its width a
-			// frame or two later, and that is the same zero. Give it a moment and
+			// Zero, but not yet a verdict: a parent can hand over its width later,
+			// and that is the same zero. Wait for the page, then a moment more, and
 			// keep watching, so a width that arrives cancels this.
 			if (this._collapseVerdict !== 0) return;
-			this._collapseVerdict = window.setTimeout(() => {
-				if (!this.isConnected || this.getClientRects().length === 0) return;
-				if (this.getBoundingClientRect().width > 0) return;
-				setState(this, 'no-width', true);
-				this._stopWatchingForCollapse();
-			}, 250);
+			this._collapseVerdict = PENDING;
+			void pageLoaded().then(() => {
+				if (this._collapseVerdict !== PENDING) return;
+				this._collapseVerdict = window.setTimeout(() => {
+					this._collapseVerdict = 0;
+					if (!this.isConnected || this.getClientRects().length === 0) return;
+					if (this.getBoundingClientRect().width > 0) return;
+					setState(this, 'no-width', true);
+				}, 250);
+			});
 		});
 		this._collapseObserver.observe(this);
 	}
@@ -162,7 +186,7 @@ export class NLDDButtonGroup extends LitElement {
 	private _stopWatchingForCollapse(): void {
 		this._collapseObserver?.disconnect();
 		this._collapseObserver = null;
-		if (this._collapseVerdict) clearTimeout(this._collapseVerdict);
+		if (this._collapseVerdict > 0) clearTimeout(this._collapseVerdict);
 		this._collapseVerdict = 0;
 	}
 

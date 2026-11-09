@@ -1,0 +1,6 @@
+severity: hint
+context: 'nldd-title:not([heading-level]):not(:has(> h1, > h2, > h3, > h4, > h5, > h6))'
+message: 'A title without `heading-level` is not a heading. Give it a level, or for large letters that are not a heading use nldd-text with a display size.'
+examples:
+  passed: ['<nldd-title text="Aanvragen" heading-level="1"></nldd-title>', '<nldd-title><h1>Aanvragen</h1></nldd-title>', '<nldd-text size="display-1">240</nldd-text>']
+  failed: ['<nldd-title size="1" text="240"></nldd-title>']

@@ -119,11 +119,18 @@ describe('nldd-button', () => {
 		expect(assigned[0].textContent).toBe('Bold label');
 	});
 
-	it('text attribute takes precedence over the text slot (no slot rendered)', async () => {
-		el = await fixture('<nldd-button text="Attr wins"><span slot="text">Slotted</span></nldd-button>');
+	it('the text slot wins over the text attribute', async () => {
+		el = await fixture('<nldd-button text="Attribuut"><span slot="text">Slot</span></nldd-button>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.button__text slot[name="text"]')).toBeNull();
-		expect(el.shadowRoot!.querySelector('.button__text')!.textContent).toContain('Attr wins');
+		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('.button__text slot[name="text"]')!;
+		expect(slot.assignedElements()).toEqual([el.querySelector('span')]);
+	});
+
+	it('shows the text attribute when the text slot is empty', async () => {
+		el = await fixture('<nldd-button text="Opslaan"></nldd-button>');
+		await waitForUpdate(el);
+		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('.button__text slot[name="text"]')!;
+		expect(slot.assignedNodes({ flatten: true }).map(n => n.textContent).join('')).toBe('Opslaan');
 	});
 
 	it('forwards aria-label to the inner button element', async () => {
@@ -1082,5 +1089,37 @@ describe('<nldd-button> with download', () => {
 		el = await fixture('<nldd-button href="/verslag.pdf" target="_blank" download="verslag.pdf" text="Download"></nldd-button>');
 		await waitForUpdate(el);
 		expect(el.matches(':state(download-with-target)')).toBe(true);
+	});
+});
+
+describe('nldd-button – popovertarget positions its overlay', () => {
+	let root: HTMLElement;
+
+	afterEach(() => {
+		if (root) cleanup(root);
+	});
+
+	const setup = async (menuAttrs = '') => {
+		root = await fixture(`<div><nldd-button text="Acties" popovertarget="opties"></nldd-button><nldd-menu id="opties" ${menuAttrs}><nldd-menu-item text="Bekijken"></nldd-menu-item></nldd-menu></div>`);
+		const trigger = root.querySelector('nldd-button') as HTMLElement & { updateComplete: Promise<unknown> };
+		await trigger.updateComplete;
+		const menu = root.querySelector('#opties') as HTMLElement & { anchorElement: Element | null };
+		return { trigger, menu };
+	};
+
+	it('anchors the overlay to itself, without an anchor on the overlay', async () => {
+		const { trigger, menu } = await setup();
+		expect(menu.anchorElement).toBe(trigger);
+	});
+
+	it('leaves an overlay with an anchor of its own alone', async () => {
+		const { menu } = await setup('anchor="elders"');
+		expect(menu.anchorElement).toBeNull();
+	});
+
+	it('lets go of the overlay when it leaves the page', async () => {
+		const { trigger, menu } = await setup();
+		trigger.remove();
+		expect(menu.anchorElement).toBeNull();
 	});
 });

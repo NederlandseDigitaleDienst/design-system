@@ -33,6 +33,7 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 					<nldd-menu
 						slot="popup"
 						placement="bottom-end"
+						@beforetoggle=${(event: ToggleEvent) => { if (event.newState === 'open') component.requestUpdate(); }}
 					>
 						${component._overflowItems.map(item => html`
 							<nldd-menu-item
@@ -40,7 +41,7 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 								icon=${item.icon || nothing}
 								href=${sanitizeUrl(item.href) || nothing}
 								@select=${(event: Event) => component._selectFromOverflow(event, item)}
-							></nldd-menu-item>
+							>${item._slottedIcon?.cloneNode(true) ?? nothing}</nldd-menu-item>
 						`)}
 					</nldd-menu>
 				</nldd-icon-button>
@@ -85,9 +86,9 @@ export function tabBarItemTemplate(component: NLDDTabBarItem): TemplateResult {
 		<span class="tab-bar__item-icon"
 			aria-hidden="true"
 		>
-			${component.icon
+			<slot name="icon" @slotchange=${component._onIconSlotChange}>${component.icon
 				? html`<nldd-icon icon=${component.icon}></nldd-icon>`
-				: html`<slot name="icon" @slotchange=${component._onIconSlotChange}>${showPlaceholder ? html`<nldd-icon icon="icon-placeholder"></nldd-icon>` : nothing}</slot>`}
+				: showPlaceholder ? html`<nldd-icon icon="icon-placeholder"></nldd-icon>` : nothing}</slot>
 		</span>
 		<span class="tab-bar__item-text">
 			${component.text}

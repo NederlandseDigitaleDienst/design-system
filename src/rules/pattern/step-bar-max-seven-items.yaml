@@ -1,0 +1,9 @@
+severity: hint
+context: 'nldd-step-bar'
+count:
+  of: 'nldd-step-bar-item'
+  max: 7
+message: 'More than 7 steps do not fit a step bar. Put them under each other in an nldd-list with an nldd-step-cell per row.'
+examples:
+  passed: ['<nldd-step-bar><nldd-step-bar-item text="Gegevens"></nldd-step-bar-item><nldd-step-bar-item text="Controle"></nldd-step-bar-item><nldd-step-bar-item text="Bevestigen"></nldd-step-bar-item></nldd-step-bar>']
+  failed: ['<nldd-step-bar><nldd-step-bar-item text="A"></nldd-step-bar-item><nldd-step-bar-item text="B"></nldd-step-bar-item><nldd-step-bar-item text="C"></nldd-step-bar-item><nldd-step-bar-item text="D"></nldd-step-bar-item><nldd-step-bar-item text="E"></nldd-step-bar-item><nldd-step-bar-item text="F"></nldd-step-bar-item><nldd-step-bar-item text="G"></nldd-step-bar-item><nldd-step-bar-item text="H"></nldd-step-bar-item></nldd-step-bar>']

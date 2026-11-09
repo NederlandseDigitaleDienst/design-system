@@ -13,7 +13,15 @@ export const modalDialogStyles = css`
 	/* # Host */
 
 	:host {
+		--_modal-dialog-background-color: var(--semantics-surfaces-base-background-color);
 		--_modal-dialog-max-height: 90vh;
+		--_modal-dialog-padding: var(--primitives-space-16);
+		--_modal-dialog-content-max-width: var(--primitives-area-360);
+
+		@media (min-width: ${mdMin}) {
+			--_modal-dialog-padding: var(--primitives-space-24);
+		}
+
 		--_modal-dialog-animation-duration: 150ms;
 		--_modal-dialog-animation-easing: ease;
 
@@ -35,22 +43,19 @@ export const modalDialogStyles = css`
 		--context-scroll-mode: nested;
 		--context-inset-top: 0px;
 		--context-inset-bottom: 0px;
+		--context-parent-background-color: var(--_modal-dialog-background-color);
 
 		box-sizing: border-box;
 		outline: none;
 		border: none;
 		border-radius: var(--semantics-overlays-corner-radius);
 		box-shadow: var(--semantics-overlays-box-shadow);
-		background-color: var(--semantics-surfaces-base-background-color);
+		background-color: var(--_modal-dialog-background-color);
 		width: calc(100% - var(--primitives-space-16) * 2);
-		max-width: var(--primitives-area-480);
+		max-width: calc(var(--_modal-dialog-content-max-width) + var(--_modal-dialog-padding) * 2);
 		max-height: var(--_modal-dialog-max-height);
 		overflow-y: auto;
-		padding: var(--primitives-space-16);
-
-		@media (min-width: ${mdMin}) {
-			padding: var(--primitives-space-24);
-		}
+		padding: var(--_modal-dialog-padding);
 	}
 
 	.modal-dialog:not([open]) {

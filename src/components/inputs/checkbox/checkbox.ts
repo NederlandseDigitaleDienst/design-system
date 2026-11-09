@@ -1,11 +1,6 @@
 /**
  * Nederlandse Digitale Dienst Checkbox Component (Lit + TypeScript)
  *
- * On a selected row of nldd-list-item a checked control takes the colors of the
- * row: the row sets `--context-selected-indicator-color` and
- * `--context-selected-contrast-color`, because the accent can fall below 3:1 on
- * the gray of a selected row.
- *
  * @element nldd-checkbox
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
@@ -33,6 +28,7 @@ import { checkboxStyles } from './checkbox.styles.js';
 import { checkboxTemplate } from './checkbox.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 @customElement('nldd-checkbox')
 export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
@@ -139,6 +135,7 @@ export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
 	 * call `checkboxEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLInputElement>('.checkbox__input')?.focus(options);
 	}
 

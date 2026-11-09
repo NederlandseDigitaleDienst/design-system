@@ -24,6 +24,8 @@ export const BOUND = Symbol('bound');
  * @property {boolean} toggled In the DOM, but maybe not visible (`v-show`).
  * @property {boolean} wrapped A framework wrapper standing in for this tag.
  * @property {boolean} templated A template language writes into the tag itself.
+ * @property {boolean} text Holds text of its own, not only elements.
+ * @property {boolean} [detached] On a root: markup this file builds to place elsewhere, not what it renders itself.
  */
 
 /** @returns {TreeNode} */
@@ -41,6 +43,7 @@ export function createNode(name, offset = 0) {
 		toggled: false,
 		wrapped: false,
 		templated: false,
+		text: false,
 	};
 }
 

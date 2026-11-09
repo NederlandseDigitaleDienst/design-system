@@ -42,7 +42,7 @@
  * @attr {string} group-name - Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control.
  * @attr {boolean} required - Required state of the native checkbox. In radio mode the group carries the constraint.
  *
- * @slot icon - Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set.
+ * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`.
  *
  * @fires item-change - When item is activated; detail: { value: string, checked: boolean }
  */
@@ -65,6 +65,7 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
@@ -117,7 +118,7 @@ export class NLDDSegmentedControlItem extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	/** Icon name for nldd-icon. When not set, the icon slot is used; the icon and
+	/** Icon name for nldd-icon. An icon in the icon slot wins; the icon and
 	 *  icon-and-text variants show a placeholder icon when neither is provided. */
 	@property({ type: String })
 	icon = '';
@@ -265,6 +266,7 @@ export class NLDDSegmentedControlItem extends LitElement {
 	 * `itemEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		if (this.inputType === 'radio') {
 			super.focus(options);
 			return;
@@ -325,7 +327,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	private _initialValues: string[] = [];
 
 	/** Selected value for radio type. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	value = '';
 
 	/**
@@ -342,7 +344,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlSize>('md') })
 	size: SegmentedControlSize = 'md';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlType>('radio') })
 	type: SegmentedControlType = 'radio';
 
 	/** Content type applied to all items: text, icon, or icon-and-text. Per-item mixing is not supported. */
@@ -649,6 +651,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	 * the control.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const items = this._getItems().filter(item => !item.disabled);
 		(items.find(item => item.selected) ?? items[0])?.focus(options);
 	}

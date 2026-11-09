@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-split-button:not([popovertarget])'
+assert: ':has(> nldd-menu, > nldd-popover)'
+message: 'nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.'
+examples:
+  passed: ['<nldd-split-button text="Bewaar"><nldd-menu slot="popup"><nldd-menu-item text="Opslaan als…"></nldd-menu-item></nldd-menu></nldd-split-button>', '<nldd-split-button text="Bewaar" popovertarget="opties"></nldd-split-button>']
+  failed: ['<nldd-split-button text="Bewaar"></nldd-split-button>']

@@ -6,10 +6,12 @@
  * handles opening, toggling and light dismiss; this component only handles
  * positioning and focus.
  *
- * The recommended use is through popovertarget, so the browser owns the toggle:
+ * The recommended use is through popovertarget, so the browser owns the toggle.
+ * An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment
+ * also positions the popover against itself, so the popover needs no `anchor`:
  *
- *     <nldd-button id="info-trigger" popovertarget="info-popover">Info</nldd-button>
- *     <nldd-popover id="info-popover" anchor="info-trigger" accessible-label="Info">
+ *     <nldd-button popovertarget="info-popover">Info</nldd-button>
+ *     <nldd-popover id="info-popover" accessible-label="Info">
  *         <nldd-container>
  *             <p>Content of the popover.</p>
  *         </nldd-container>
@@ -22,10 +24,20 @@
  * For a custom focus target inside the popover, put `autofocus` on the child you
  * want. Without it the popover host itself takes focus.
  *
- * On sm the popover is a bottom sheet that closes with Escape or a tap outside
- * it. Where that is not enough, give its content a title bar of its own, as in a
- * sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The
- * popover catches the dismiss of that bar and closes. It draws no bar itself.
+ * On md and up the popover closes with Escape or a click outside it, and that
+ * click goes on to what it lands on, as with any native popover: the page has
+ * no backdrop and stays in use, so a click on another control does what it
+ * says in one go. It needs no close button of its own. Content that does, because
+ * a stray click must not close it (a form, a few steps, work you would lose),
+ * is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education
+ * is the exception, a manual popover that stays until it is dismissed.
+ *
+ * On sm the popover is a bottom sheet with a dimmed backdrop, which closes with
+ * Escape or a tap outside it. That tap stops at the backdrop, as on every
+ * native sheet: the dimming says the page is out of play. Where that is not
+ * enough, give its content a title bar of its own, as in a sheet: an nldd-page
+ * with an nldd-top-title-bar and a `dismiss-text`. The popover catches the
+ * dismiss of that bar and closes. It draws no bar itself.
  *
  * @element nldd-popover
  *
@@ -69,6 +81,7 @@ import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { setState } from '../../../utilities/element-state.js';
+import { FocusReturn, focusAsLastInput } from '../../../utilities/return-focus.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -80,7 +93,7 @@ export class NLDDPopover extends LitElement {
 	@property({ type: Boolean, reflect: true, attribute: 'sm-full-height' })
 	smFullHeight = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	anchor = '';
 
 	@property({ attribute: false })
@@ -122,7 +135,7 @@ export class NLDDPopover extends LitElement {
 	open = false;
 
 	private _isOpen = false;
-	private _previousFocus: HTMLElement | null = null;
+	private _focusReturn = new FocusReturn();
 	private _pointerdownOnAnchorWhileOpen = false;
 	/** Cleanup function from Floating UI's autoUpdate, only active while open. */
 	private _cleanupAutoUpdate: (() => void) | null = null;
@@ -540,8 +553,12 @@ export class NLDDPopover extends LitElement {
 		// browser's default activation behavior already toggles us. Running
 		// our own toggle here would invert the state right after, leaving
 		// the popover in the wrong final state.
-		const popovertarget = anchorEl.getAttribute('popovertarget');
+		const popovertarget = anchorEl.getAttribute('popovertarget')
+			?? (anchorEl as { popovertarget?: string }).popovertarget;
 		if (popovertarget && this.id && popovertarget === this.id) return;
+		// The same when the anchor names this popover by element, as nldd-button
+		// does with popoverTargetElement: the browser toggles it already.
+		if ((anchorEl as { popoverTargetElement?: Element | null }).popoverTargetElement === this) return;
 		// Native light-dismiss fires on pointerdown and closes the popover
 		// before the click arrives. Without this guard the click would
 		// immediately reopen it.
@@ -561,8 +578,12 @@ export class NLDDPopover extends LitElement {
 	// Clearing `positioned` here (beforetoggle fires before the popover is shown) keeps
 	// it hidden via CSS until reposition() has placed it. (The sm bottom-sheet is
 	// CSS-animated, so its hide rule is scoped to md; this is harmless there.)
+	// Focus is remembered here too: by the toggle event, an [autofocus] inside
+	// has already taken it.
 	private _handleBeforeToggle = (event: Event): void => {
-		if ((event as ToggleEvent).newState === 'open') this.removeAttribute('positioned');
+		if ((event as ToggleEvent).newState !== 'open') return;
+		this.removeAttribute('positioned');
+		this._focusReturn.remember(this._getAnchorEl());
 	};
 
 	private _handleToggle = async (event: Event): Promise<void> => {
@@ -576,12 +597,11 @@ export class NLDDPopover extends LitElement {
 			// Stop scroll/resize tracking, no longer needed once closed.
 			this._cleanupAutoUpdate?.();
 			this._cleanupAutoUpdate = null;
-			this._returnFocus();
+			this._focusReturn.restore(this);
 			this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
 			return;
 		}
 
-		this._previousFocus = (document.activeElement as HTMLElement | null) ?? this._getAnchorEl() as HTMLElement | null;
 		await this.reposition();
 		this.setAttribute('positioned', ''); // placed — reveal it (see _handleBeforeToggle)
 		// Start scroll/resize/layout-change tracking. Floating UI's autoUpdate
@@ -609,7 +629,6 @@ export class NLDDPopover extends LitElement {
 			event.preventDefault();
 			event.stopPropagation();
 			this.hide();
-			(this._getAnchorEl() as HTMLElement | null)?.focus();
 			return;
 		}
 		if (event.key !== 'Tab') return;
@@ -660,16 +679,12 @@ export class NLDDPopover extends LitElement {
 		this.classList.toggle('is-pointer-focus', isPointerMode());
 		const autofocusEl = this.querySelector<HTMLElement>('[autofocus]');
 		if (autofocusEl) {
-			autofocusEl.focus();
+			// With its ring after the keyboard only: WebKit draws one for a script
+			// focus, also when the popover was opened with a mouse or a finger.
+			focusAsLastInput(autofocusEl);
 			return;
 		}
 		this.focus();
-	}
-
-	private _returnFocus(): void {
-		const target = this._previousFocus ?? (this._getAnchorEl() as HTMLElement | null);
-		this._previousFocus = null;
-		target?.focus();
 	}
 
 	private _getFocusables(): HTMLElement[] {

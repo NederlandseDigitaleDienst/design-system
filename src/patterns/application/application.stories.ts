@@ -1,5 +1,8 @@
 import markup from './application.html?raw';
 import { patternStory } from '../pattern-story.js';
+import { syncToolbarOverflow } from '../../components/actions/toolbar/toolbar.story-sync.js';
+
+syncToolbarOverflow();
 
 export default {
 	title: 'Patronen/Applicatie',

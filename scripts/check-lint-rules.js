@@ -22,6 +22,7 @@ import { applyFixes } from '../lint/fix.js';
 import { parse as parseYaml } from 'yaml';
 import { parseHtml } from '../lint/frontends.js';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
+import { OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
 import { selectorsOf } from '../lint/rule-index.js';
 import { describeErrors } from './lib/lint-data.js';
 import { checkComposition, checkNodes, resolveSpec, unshownParts } from './lib/pattern-spec.js';
@@ -65,7 +66,7 @@ function sourceFiles(directory) {
 }
 
 /** Things a rule can be about that are no single component. */
-const CONCEPTS = ['action', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'variant', 'website'];
+const CONCEPTS = ['action', 'class', 'html', 'style', 'stylesheet', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'slot', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'variant', 'website'];
 const FORM = /-(needs|no|max|goes)-/;
 const API_ENDING = /-(renamed|invalid|no-effect|not-found)$/;
 
@@ -163,10 +164,13 @@ function patternFiles(directory) {
 	});
 }
 
+/** A pattern is what an app copies, so it has to be pure too. */
+const pureLinter = createLinter(data, { severities: resolveSeverities(data, {}, { optIn: OPT_IN_GROUPS }) });
+
 async function checkPatterns() {
 	const files = patternFiles(join(repoRoot, 'src/patterns'));
 	for (const file of files) {
-		const { findings } = await linter.lintSource(readFileSync(file, 'utf8'), file);
+		const { findings } = await pureLinter.lintSource(readFileSync(file, 'utf8'), file);
 		for (const { rule, line, message } of findings) {
 			problems.push(`${relative(repoRoot, file)}:${line} ${rule}: ${message}`);
 		}
@@ -295,11 +299,96 @@ function checkNoWarnings() {
 	}
 }
 
+/**
+ * Pseudo-classes only the source linter knows. The browser rejects them and then
+ * silently skips the rule, and :accepted judges a file by itself, which only an
+ * opt-in group may do.
+ */
+const SOURCE_ONLY_PSEUDOS = ['accepted', 'written', 'blank', 'within'];
+
+function checkSourceOnlyPseudos(rule) {
+	if (OPT_IN_GROUPS.includes(rule.group)) return;
+	for (const name of SOURCE_ONLY_PSEUDOS) {
+		if (selectorsOf(rule).some((selector) => selector.includes(`:${name}`))) {
+			problems.push(`${rule.id}: :${name} is for the opt-in groups (${OPT_IN_GROUPS.join(', ')}) only.`);
+		}
+	}
+}
+
 /** The browser rejects a pseudo it does not know, and then silently skips the rule. */
 function checkBrowserSelectors() {
 	const generated = readFileSync(join(repoRoot, 'src/utilities/dev-rules.generated.ts'), 'utf8');
-	if (generated.includes(':named-by-field')) {
-		problems.push(`dev rules still hold :named-by-field: write it as the last option of an assert.`);
+	for (const name of ['named-by-field', ...SOURCE_ONLY_PSEUDOS]) {
+		if (new RegExp(`:${name}\\b`).test(generated)) problems.push(`dev rules hold :${name}, which the browser does not know.`);
+	}
+}
+
+/** The plain elements a selector reaches below the component it starts with: `nldd-rich-text > p`, `:is(h1, h2)`. */
+function plainTagsAfterHost(selector) {
+	const found = [];
+	for (const tokens of parse(selector)) {
+		const [first] = tokens;
+		if (first?.type !== 'tag' || !first.name.startsWith('nldd-')) continue;
+		const host = first.name;
+		let below = false;
+		const visit = (list) => {
+			list.forEach((token, index) => {
+				// `fieldset.form-section` is an element the component renders itself, not one it is given.
+				const own = list[index + 1]?.type === 'attribute' && list[index + 1].name === 'class';
+				if (['descendant', 'child', 'sibling', 'adjacent'].includes(token.type)) below = true;
+				else if (below && token.type === 'tag' && !token.name.includes('-') && !own) found.push([host, token.name]);
+				else if (token.type === 'pseudo' && Array.isArray(token.data)) token.data.forEach(visit);
+			});
+		};
+		visit(tokens);
+	}
+	return found;
+}
+
+/**
+ * A component that styles a plain element it is given says so with `@accepts`, or
+ * `nldd-lint --pure` reports that element in every app as the app's own. Checked per
+ * element: `::slotted(a)` in the styles it uses, and for a component without shadow
+ * DOM (nldd-rich-text, nldd-form) the plain elements its stylesheet reaches.
+ */
+function checkSlottedIsAccepted() {
+	const slottedByConst = new Map();
+	for (const [file, source] of componentSources.filter(([name]) => name.endsWith('.styles.ts'))) {
+		for (const block of source.split(/(?=export const \w+ = css`)/)) {
+			const name = /^export const (\w+) = css`/.exec(block)?.[1];
+			if (!name) continue;
+			const tags = [...block.matchAll(/::slotted\(\s*([a-z][a-z0-9]*)(?![a-z0-9-])/g)].map(([, tag]) => tag);
+			slottedByConst.set(name, { file, tags });
+		}
+	}
+	const missing = (tag, element) => {
+		const accepts = data.tags[tag]?.accepts ?? [];
+		return !accepts.includes(element) && !accepts.includes('*');
+	};
+	for (const [file, source] of componentSources) {
+		for (const part of source.split(/(?=@customElement\(')/).slice(1)) {
+			const tag = /^@customElement\('(nldd-[a-z0-9-]+)'\)/.exec(part)?.[1];
+			const styles = /\bstyles\s*=\s*([^;]+);/.exec(part)?.[1] ?? '';
+			for (const name of styles.match(/\w+/g) ?? []) {
+				for (const element of slottedByConst.get(name)?.tags ?? []) {
+					if (tag && missing(tag, element)) problems.push(`${relative(repoRoot, file)}: ${tag} styles ::slotted(${element}) but has no @accepts ${element}.`);
+				}
+			}
+		}
+	}
+	const lightDom = readdirSync(join(repoRoot, 'src/components'), { recursive: true }).filter((file) => file.endsWith('.css'));
+	for (const file of lightDom) {
+		const css = readFileSync(join(repoRoot, 'src/components', file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+		const preludes = [...css.matchAll(/([^{}]+)\{/g)].map(([, prelude]) => prelude.trim()).filter((prelude) => prelude.startsWith('nldd-'));
+		const seen = new Set();
+		for (const prelude of preludes) {
+			for (const [tag, element] of plainTagsAfterHost(prelude)) {
+				const key = `${tag} ${element}`;
+				if (seen.has(key) || !data.tags[tag] || !missing(tag, element)) continue;
+				seen.add(key);
+				problems.push(`src/components/${file}: ${tag} styles <${element}> but has no @accepts ${element}.`);
+			}
+		}
 	}
 }
 
@@ -311,6 +400,7 @@ for (const rule of data.rules) {
 	checkFix(rule);
 	checkSee(rule);
 	checkStates(rule);
+	checkSourceOnlyPseudos(rule);
 	if (!rule.runtime) await checkExamples(rule);
 }
 const patterns = await checkPatterns();
@@ -318,6 +408,7 @@ checkStatesAreRead();
 checkCompositions();
 checkNoWarnings();
 checkBrowserSelectors();
+checkSlottedIsAccepted();
 
 if (problems.length > 0) {
 	console.error(problems.join('\n'));

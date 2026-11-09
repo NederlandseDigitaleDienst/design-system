@@ -5,6 +5,7 @@ import '../../inputs/text-field/text-field.js';
 import '../../inputs/password-field/password-field.js';
 import '../../inputs/multi-line-text-field/multi-line-text-field.js';
 import '../../inputs/number-field/number-field.js';
+import '../../inputs/one-time-code-field/one-time-code-field.js';
 import '../../inputs/slider/slider.js';
 import '../../inputs/search-field/search-field.js';
 import '../../inputs/date-field/date-field.js';
@@ -19,6 +20,7 @@ import '../../inputs/radio-button/radio-button.js';
 import '../../inputs/radio-button-field/radio-button-field.js';
 import '../../inputs/radio-button-group/radio-button-group.js';
 import '../../inputs/segmented-control/segmented-control.js';
+import '../../inputs/swatch-picker/swatch-picker.js';
 import '../../inputs/stepper/stepper.js';
 import '../../inputs/toggle-button/toggle-button.js';
 import '../../inputs/toggle-button-group/toggle-button-group.js';
@@ -160,6 +162,16 @@ describe('nldd-form-field', () => {
 		// Wat er mis is staat voorop: dat is waarom je hier bent.
 		expect(order.indexOf(el.querySelector('#rule-at')!)).toBe(0);
 		expect(order.indexOf(el.querySelector('#help-1')!)).toBe(1);
+	});
+
+	it('shows **bold** in the label and the supporting label, and names the control without the markers', async () => {
+		el = await fixture('<nldd-form-field label="Typ **verwijder** om te bevestigen" supporting-label="Hoofdletters tellen **niet**"><nldd-text-field></nldd-text-field></nldd-form-field>');
+		await waitForUpdate(el);
+		const label = el.shadowRoot!.querySelector('.form-field__label')!;
+		expect(label.querySelector('b')?.textContent).toBe('verwijder');
+		expect(label.textContent!.replace(/\s+/g, ' ').trim()).toBe('Typ verwijder om te bevestigen');
+		expect(el.shadowRoot!.querySelector('.form-field__supporting-label b')?.textContent).toBe('niet');
+		expect(el.querySelector('nldd-text-field')!.getAttribute('accessible-label')).toBe('Typ verwijder om te bevestigen');
 	});
 
 	it('sets aria-label on the slotted input', async () => {
@@ -329,6 +341,7 @@ const SLOTTED_CONTROLS: Array<{ name: string; markup: string }> = [
 	{ name: 'password-field', markup: '<nldd-password-field></nldd-password-field>' },
 	{ name: 'multi-line-text-field', markup: '<nldd-multi-line-text-field></nldd-multi-line-text-field>' },
 	{ name: 'number-field', markup: '<nldd-number-field></nldd-number-field>' },
+	{ name: 'one-time-code-field', markup: '<nldd-one-time-code-field></nldd-one-time-code-field>' },
 	{ name: 'slider', markup: '<nldd-slider></nldd-slider>' },
 	{ name: 'search-field', markup: '<nldd-search-field></nldd-search-field>' },
 	{ name: 'date-field', markup: '<nldd-date-field></nldd-date-field>' },
@@ -375,6 +388,15 @@ const SLOTTED_CONTROLS: Array<{ name: string; markup: string }> = [
 				<nldd-segmented-control-item value="a" text="A"></nldd-segmented-control-item>
 				<nldd-segmented-control-item value="b" text="B"></nldd-segmented-control-item>
 			</nldd-segmented-control>
+		`,
+	},
+	{
+		name: 'swatch-picker',
+		markup: `
+			<nldd-swatch-picker>
+				<nldd-swatch-picker-item value="rood" color="rood"></nldd-swatch-picker-item>
+				<nldd-swatch-picker-item value="groen" color="groen"></nldd-swatch-picker-item>
+			</nldd-swatch-picker>
 		`,
 	},
 ];
@@ -427,6 +449,7 @@ describe('nldd-form-field – label click focuses the slotted control', () => {
 const NAMED_VIA_ACCESSIBLE_LABEL = [
 	'<nldd-text-field></nldd-text-field>',
 	'<nldd-number-field></nldd-number-field>',
+	'<nldd-one-time-code-field></nldd-one-time-code-field>',
 	'<nldd-slider></nldd-slider>',
 	'<nldd-search-field></nldd-search-field>',
 	'<nldd-combo-box></nldd-combo-box>',
@@ -440,6 +463,7 @@ const NAMED_VIA_ACCESSIBLE_LABEL = [
 	'<nldd-radio-button-group name="g"><nldd-radio-button-field value="1" label="Een"></nldd-radio-button-field></nldd-radio-button-group>',
 	'<nldd-toggle-button-group name="t"><nldd-toggle-button value="a" text="A"></nldd-toggle-button></nldd-toggle-button-group>',
 	'<nldd-segmented-control><nldd-segmented-control-item value="a" text="A"></nldd-segmented-control-item></nldd-segmented-control>',
+	'<nldd-swatch-picker><nldd-swatch-picker-item value="rood" color="rood"></nldd-swatch-picker-item></nldd-swatch-picker>',
 ];
 
 // These carry a visible label that already names their control. The caption

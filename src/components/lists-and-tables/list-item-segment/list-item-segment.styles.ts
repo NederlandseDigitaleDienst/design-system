@@ -107,6 +107,7 @@ export const listItemSegmentStyles = css`
 		:host(:not([disabled])) a.list-item-segment:hover,
 		button.list-item-segment:not(:disabled):hover {
 			--_list-item-segment-background-color: var(--context-list-item-hovered-background-color, var(--semantics-list-items-is-hovered-background-color));
+			--context-parent-background-color: var(--_list-item-segment-background-color);
 			--context-content-color: var(--context-list-item-hovered-content-color, var(--semantics-list-items-is-hovered-content-color));
 			--context-content-secondary-color: var(--context-list-item-hovered-content-color, var(--semantics-list-items-is-hovered-content-color));
 		}
@@ -120,6 +121,7 @@ export const listItemSegmentStyles = css`
 	button.list-item-segment:not(:disabled).is-pressed,
 	:host(:not([disabled])) .list-item-segment.is-pressed {
 		--_list-item-segment-background-color: var(--context-list-item-active-background-color, var(--semantics-list-items-is-active-background-color));
+		--context-parent-background-color: var(--_list-item-segment-background-color);
 		--context-content-color: var(--context-list-item-active-content-color, var(--context-list-item-hovered-content-color, var(--semantics-list-items-is-active-content-color)));
 		--context-content-secondary-color: var(--context-list-item-active-content-color, var(--context-list-item-hovered-content-color, var(--semantics-list-items-is-active-content-color)));
 	}
@@ -128,6 +130,7 @@ export const listItemSegmentStyles = css`
 	   dim it while what it opened is still on screen. */
 	:host([expanded]) .list-item-segment {
 		--_list-item-segment-background-color: var(--semantics-list-items-is-expanded-background-color);
+		--context-parent-background-color: var(--_list-item-segment-background-color);
 		--context-content-color: var(--semantics-list-items-is-expanded-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-expanded-content-color);
 	}
@@ -136,6 +139,7 @@ export const listItemSegmentStyles = css`
 		:host([expanded]:not([disabled])) a.list-item-segment:hover,
 		:host([expanded]) button.list-item-segment:not(:disabled):hover {
 			--_list-item-segment-background-color: var(--semantics-list-items-is-expanded-is-hovered-background-color);
+			--context-parent-background-color: var(--_list-item-segment-background-color);
 			--context-content-color: var(--semantics-list-items-is-expanded-content-color);
 			--context-content-secondary-color: var(--semantics-list-items-is-expanded-content-color);
 		}
@@ -145,12 +149,14 @@ export const listItemSegmentStyles = css`
 	:host([expanded]) button.list-item-segment:not(:disabled).is-pressed,
 	:host([expanded]:not([disabled])) .list-item-segment.is-pressed {
 		--_list-item-segment-background-color: var(--semantics-list-items-is-expanded-is-active-background-color);
+		--context-parent-background-color: var(--_list-item-segment-background-color);
 		--context-content-color: var(--semantics-list-items-is-expanded-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-expanded-content-color);
 	}
 
 	:host([checked]) .list-item-segment {
 		--_list-item-segment-background-color: var(--semantics-list-items-is-selected-background-color);
+		--context-parent-background-color: var(--_list-item-segment-background-color);
 		--context-content-color: var(--semantics-list-items-is-selected-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 	}

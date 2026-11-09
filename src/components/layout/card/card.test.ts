@@ -6,6 +6,7 @@ import type { NLDDCard } from './card.js';
 import './card.js';
 import '../../../assets/styles/variables.css';
 import '../../lists-and-tables/cells/cell/cell.js';
+import '../../content/image/image.js';
 
 describe('nldd-card', () => {
 	let el: NLDDCard;
@@ -181,7 +182,7 @@ describe('nldd-card – hover', () => {
 	const look = async () => {
 		const card = el.shadowRoot!.querySelector<HTMLElement>('.card')!;
 		await Promise.all(card.getAnimations().map((animation) => animation.finished));
-		return [getComputedStyle(card).backgroundColor, getComputedStyle(card, '::after').boxShadow];
+		return [getComputedStyle(card).backgroundColor, getComputedStyle(card).outlineColor];
 	};
 
 	for (const background of ['base', 'tinted']) {
@@ -215,6 +216,25 @@ describe('nldd-card – hover', () => {
 
 		await userEvent.hover(el.querySelector('button')!);
 		expect(await look()).toEqual(rest);
+	});
+
+	it('keeps the overlay over content that is only position: relative, and under content lifted with z-index 1', async () => {
+		el = await fixture<NLDDCard>(`
+			<nldd-card href="/aanvraag" accessible-label="Aanvraag A-1042">
+				<nldd-image src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" alt="" aspect-ratio="16/9"></nldd-image>
+				<button slot="footer" style="position: relative; z-index: 1;">Bewerk</button>
+			</nldd-card>
+		`);
+		await waitForUpdate(el);
+		/** What the pointer lands on, at the level of the card's shadow root. */
+		const hit = (target: Element) => {
+			const rect = target.getBoundingClientRect();
+			return el.shadowRoot!.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+		};
+		const image = el.querySelector('nldd-image')!;
+		expect(image.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(hit(image)).toBe(el.shadowRoot!.querySelector('.card__action'));
+		expect(hit(el.querySelector('button')!)).toBe(el.querySelector('button'));
 	});
 
 	// A touch that turns into a scroll: the browser fires pointercancel for that

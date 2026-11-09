@@ -17,12 +17,38 @@
  * a pick. `accept` and `multiple` hold for a drop too, which the native input
  * does not do: a drop that does not fit is refused as a whole, the previous
  * choice stays, and the field says why for a few seconds: "Sleep één
- * bestand", or what `accept` takes, named from it ("Het bestand moet een PDF
- * zijn"; "Dit bestandstype past niet" where a type in it has no name). A
- * dropped folder is refused as well ("Sleep een bestand, geen map"): it
- * arrives as a file without a type that cannot be read, and only the drop
- * tells it apart, not the drag. The message stays for a few seconds and then
- * gives way to the field again.
+ * bestand", or what `accept` takes, named from it ("Alleen PDF";
+ * "Bestandstype past niet" where a type in it has no name). The
+ * message stays for a few seconds and then gives way to the field again.
+ * While it shows, the message is a button of its own over the whole field,
+ * "Alleen PDF, sluit melding, Bijlage" to a screen reader: a press on it, or
+ * Enter, Space or Escape, dismisses it and puts focus on the button of the
+ * field again. A field that had focus when the message came gives it to the
+ * message, so focus does not fall back to the page.
+ *
+ * With `multiple`, a dropped folder is read down to the files in it, its
+ * subfolders included, and mixed with loose files in one drop if need be. The
+ * field then names the folder ("site (124 bestanden)", also "site (1 bestand)"
+ * for one), `paths` says where each
+ * file sat ("site/css/main.css"), and a form submits each file with its path as
+ * its name, as a native folder input does, so two files with one name in
+ * different folders stay apart. `accept` holds for every file in it. Without
+ * `multiple` a folder is refused ("Sleep bestand, geen map"): one file
+ * cannot be a folder. Only a drop tells a folder apart, not the drag. A folder
+ * that takes longer than a second to read shows the field empty with an
+ * `nldd-activity-indicator` ("Laden" in an area, the circle alone otherwise),
+ * as what was chosen gives way to it. An empty or unreadable folder is refused
+ * as any other drop, and the previous choice comes back after the message.
+ *
+ * `directory` offers a folder in the file dialog too. A dialog picks files or a
+ * folder, never both, so with it the field says "Bestanden of map kiezen" and
+ * a click opens a menu with both where it lands, as a context menu does; the
+ * keyboard opens it under the button. An area has room for both, so there it
+ * shows "Bestanden kiezen" and "Map kiezen" as two buttons with the drop hint
+ * under them, and the surface around them only takes a drop.
+ * "Wijzigen" opens the menu under itself. A folder is many files, so `directory`
+ * takes several without `multiple`. Safari on iOS picks a folder as well; a
+ * browser that cannot opens a dialog for files instead.
  *
  * While files are dragged over the page, every field marks itself as a place
  * to put them, and the field under the pointer says it will take them (a field
@@ -31,6 +57,16 @@
  * longer makes the browser open it and leave the page; a drop that another drop zone or an
  * editable field takes is left alone. On a device without hover there is no
  * dragging, so the field there drops the hint.
+ *
+ * A control reserves the height of every text it can show, so fields of a
+ * size are as tall at one width, empty or with a file. Only a field with
+ * `directory` reserves the sentence that offers a folder, the longest of them. The name takes the lines
+ * that leaves it, and is cut in the middle only once those are full. A narrow
+ * field makes more room: below 320px "Wijzigen" and "Wis selectie" go in one
+ * menu behind "Toon opties" and a folder is counted as "site (3)", below 240px
+ * it leaves out the icon of the format. A refused drop says why in place of
+ * the name and the buttons, and an area shows its upload icon in red with it,
+ * as it did while the drop was refused.
  *
  * The surface deliberately does not look like an input field. A border with
  * field semantics promises you can type into it; here you can only press it or
@@ -49,15 +85,20 @@
  * `variant="area"` lays the same field out as a tall surface, for a page where
  * handing in files is the main task. Empty, it shows an upload icon, the
  * sentence and the types it takes ("Toegestaan: PDF of JPG"), named from
- * `accept`; with a file, the icon of its format, its name and the buttons
+ * `accept`; with a file, the icon of its format (a folder for a folder, a
+ * stack for several files), its name and the buttons
  * "Wijzigen" and "Wis selectie" stacked in the middle. Both states have the same
- * height, so the page does not move when a file is chosen.
+ * height, so the page does not move when a file is chosen: 160px, 120px at
+ * `size="sm"`, and a step more with `directory`, whose buttons take a row of
+ * their own. Where those buttons no longer fit side by side, below 360px or
+ * 300px at `size="sm"`, it is one step taller again.
  *
  * @element nldd-file-field
  * @attr {string} variant - 'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height
  * @attr {string} size - Field size: 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {string} accept - Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*")
- * @attr {boolean} multiple - Allows choosing more than one file
+ * @attr {boolean} multiple - Allows choosing more than one file, and dropping a folder
+ * @attr {boolean} directory - Offers a folder beside files, since one dialog picks either: choosing and changing open a menu with both, and an area shows a button for each. Takes several files, as `multiple` does
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid; shows a check icon on the right, like nldd-dropdown
@@ -68,8 +109,9 @@
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @prop {File[]} files - The chosen files. Read-only: browsers forbid setting a file input's value, so there is no `value` attribute and no way to preselect a file.
+ * @prop {string[]} paths - Where each of `files` sat, in the same order: its name, or for a file from a dropped folder the path from that folder down. Read-only.
  *
- * @fires change - When the chosen files change, including a clear; detail: { files: File[] }
+ * @fires change - When the chosen files change, including a clear; detail: { files: File[], paths: string[] }
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
@@ -83,6 +125,7 @@ import {
 	acceptNames,
 	carriesFiles,
 	holdsFolder,
+	readDrop,
 	fileMatches,
 	typeRuledOut,
 	unwatchDrags,
@@ -90,12 +133,21 @@ import {
 	type DragState,
 	type DropRejection,
 } from './file-field.drop.js';
-import { textMeasurer, truncateMiddle } from './file-field.truncate.js';
+import { lineFitter, textMeasurer, truncateMiddle, truncateMiddleToFit } from './file-field.truncate.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
+import { fileDragAndDropAvailable, FileDragAndDropAvailabilityController } from '../../../utilities/file-drag-and-drop.js';
 
 /** How long the message of a refused drop stays in the field. */
 const REJECTION_MS = 4000;
+
+/** How long a folder is read before the field shows it is busy. Most folders
+ *  are read sooner, and the field then does not flash. */
+const READING_INDICATOR_DELAY_MS = 1000;
+
+/** A click this soon after the choose menu closed is the one that closed it. */
+const REOPEN_GUARD_MS = 300;
 
 /** The word for a family of types in `accept`, such as `image/*`. */
 const FAMILY_KEYS = {
@@ -120,11 +172,20 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	accept = '';
 
 	@property({ type: Boolean, reflect: true })
 	multiple = false;
+
+	/** Offers a folder beside files: choosing opens a menu with both. */
+	@property({ type: Boolean, reflect: true })
+	directory = false;
+
+	/** @internal A folder is many files, so `directory` takes several too. */
+	get _multiple(): boolean {
+		return this.multiple || this.directory;
+	}
 
 	/** Accessible label forwarded to the inner <input>. Set automatically by nldd-form-field. */
 	@property({ type: String, attribute: 'accessible-label' })
@@ -157,8 +218,17 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	@state()
 	private _files: File[] = [];
 
+	/** Where each of `_files` sat, in the same order. */
+	private _paths: string[] = [];
+
 	get files(): File[] {
 		return this._files;
+	}
+
+	/** Where each file sat: its name, or for a file from a dropped folder the
+	 *  path from that folder down ("site/css/main.css"). Same order as `files`. */
+	get paths(): string[] {
+		return this._paths;
 	}
 
 	/** @internal Where a dragged file is, seen from this field. */
@@ -178,20 +248,65 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	@state()
 	_nameTruncated = false;
 
+	/** @internal The name of the chosen folder cut in the middle to fit, or null
+	 *  while it fits or CSS cuts it on one line. */
+	@state()
+	_fittedFolder: string | null = null;
+
+	/** @internal The lines the name has room for. */
+	@state()
+	_nameLines = 1;
+
 	private _resizeObserver?: ResizeObserver;
 	private _rejectionTimer?: ReturnType<typeof setTimeout>;
+	private _readingTimer?: ReturnType<typeof setTimeout>;
 	private _observedValue?: Element;
 
 	/** @internal What a screen reader hears after a drop that was taken. */
 	@state()
 	_announcement = '';
 
+	/** @internal Whether a dropped folder has been read for a while now, so the
+	 *  field shows it is busy. */
+	@state()
+	_reading = false;
+
 	/** @internal Why the last drop was refused; shown for a few seconds. */
 	@state()
 	_rejection: DropRejection | null = null;
 
+	/** @internal Whether the field says why a drop was refused, which a new drag
+	 *  takes the place of. */
+	get _refused(): boolean {
+		return this._rejection !== null && this._drag === 'none';
+	}
+
+	/** @internal Whether the choose menu is open, for `expanded` on the button. */
+	@state()
+	_menuOpen = false;
+
+	/** When the choose menu last closed, for the press that closed it. */
+	private _menuClosedAt = -Infinity;
+
+	/** Renders again when dragging files becomes possible or not, so the drop
+	 *  hint in the name of the button follows the one on screen. */
+	private _fileDrag = new FileDragAndDropAvailabilityController(this);
+
+	/** Counts every pick, drop and clear, so a folder that takes long to read
+	 *  does not overwrite what the user did in the meantime. */
+	private _action = 0;
+
 	@query('.file-field__input')
 	private _input!: HTMLInputElement;
+
+	@query('.file-field__folder-input')
+	private _folderInput!: HTMLInputElement | null;
+
+	@query('.file-field__choose-menu')
+	private _chooseMenu!: (HTMLElement & { anchorElement: Element | null }) | null;
+
+	@query('.file-field__menu-anchor')
+	private _menuAnchor!: HTMLElement | null;
 
 	/** @internal */
 	public _t(key: keyof NLDDFileFieldTranslations, vars?: Record<string, string | number>): string {
@@ -200,7 +315,8 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** @internal */
 	public _chooseLabel(): string {
-		return this.multiple
+		if (this.directory) return this._t('components.file-field.to-choose-files-or-folder-action');
+		return this._multiple
 			? this._t('components.file-field.to-choose-files-action')
 			: this._t('components.file-field.to-choose-file-action');
 	}
@@ -208,13 +324,29 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/**
 	 * The native input carries the field's label but is hidden, so it is not in
 	 * the accessibility tree. The button is what you tab to, and on its own it
-	 * only says "choose a file" — for which field is the part that matters.
+	 * does not say for which field, so the label comes in its name.
+	 *
+	 * After everything the button shows, and not in place of part of it: a voice
+	 * command or an audit compares the name with the visible text, and "Bestand
+	 * kiezen, Bijlage" under "Bestand kiezen of sleep het hierheen" is a mismatch
+	 * (WCAG 2.5.3). The change button does the same.
+	 *
+	 * The drop hint only where it shows: a device without hover cannot drag, so
+	 * there the hint is gone from the field and from the name alike, and a screen
+	 * reader is not told to do what cannot be done.
 	 *
 	 * @internal
 	 */
 	public _chooseAccessibleLabel(): string {
-		if (!this.accessibleLabel) return '';
-		return `${this._chooseLabel()}, ${this.accessibleLabel}`;
+		const hint = !fileDragAndDropAvailable() ? '' : this._multiple
+			? this._t('components.file-field.drop-hint-multiple-lowercase-text')
+			: this._t('components.file-field.drop-hint-lowercase-text');
+		const types = this.variant === 'area' ? this._acceptTypes() : null;
+		return [
+			hint ? `${this._chooseLabel()} ${hint}` : this._chooseLabel(),
+			types ? this._t('components.file-field.accepted-types-text', { types }) : '',
+			this.accessibleLabel,
+		].filter(Boolean).join(', ');
 	}
 
 	/**
@@ -252,22 +384,39 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** @internal */
 	public _rejectionText(reason: DropRejection): string {
 		if (reason === 'count') return this._t('components.file-field.too-many-files-error-text');
-		if (reason === 'folder') {
-			return this.multiple
-				? this._t('components.file-field.folder-multiple-error-text')
-				: this._t('components.file-field.folder-error-text');
-		}
+		if (reason === 'folder') return this._t('components.file-field.folder-error-text');
+		if (reason === 'empty-folder') return this._t('components.file-field.empty-folder-error-text');
+		if (reason === 'unreadable-folder') return this._t('components.file-field.unreadable-folder-error-text');
 		const types = this._acceptTypes();
 		if (!types) return this._t('components.file-field.wrong-file-type-error-text');
-		return this.multiple
+		return this._multiple
 			? this._t('components.file-field.files-type-error-text', { types })
 			: this._t('components.file-field.file-type-error-text', { types });
 	}
 
+	/** @internal "Toon opties" with what they are for: "Toon opties, rapport.pdf". */
+	public _moreAccessibleLabel(): string {
+		return `${this._t('components.file-field.show-options-action')}, ${this._valueLabel()}`;
+	}
+
 	/** @internal */
 	public _valueLabel(): string {
+		const folder = this._folderName();
+		if (folder) {
+			return this._files.length === 1
+				? this._t('components.file-field.folder-one-file-text', { folder })
+				: this._t('components.file-field.folder-count-text', { folder, count: this._files.length });
+		}
 		if (this._files.length === 1) return this._files[0].name;
 		return this._t('components.file-field.file-count-text', { count: this._files.length });
+	}
+
+	/** @internal The folder everything came from, picked or dropped, or null.
+	 *  A folder with one file is still named as a folder, as `paths` has it. */
+	public _folderName(): string | null {
+		const folders = new Set(this._paths.map((path) => (path.includes('/') ? path.split('/')[0] : '')));
+		const [folder] = folders;
+		return folders.size === 1 && folder ? folder : null;
 	}
 
 	override connectedCallback(): void {
@@ -281,7 +430,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		});
 		this.addEventListener('dragover', this._handleDragOver);
 		this.addEventListener('drop', this._handleDrop);
-		this.addEventListener('pointerdown', this._clearRejection);
 		this.addEventListener('keydown', this._handleKeydown);
 	}
 
@@ -290,10 +438,10 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		unwatchDrags(this);
 		this._resizeObserver?.disconnect();
 		clearTimeout(this._rejectionTimer);
+		this._stopReading();
 		this._observedValue = undefined;
 		this.removeEventListener('dragover', this._handleDragOver);
 		this.removeEventListener('drop', this._handleDrop);
-		this.removeEventListener('pointerdown', this._clearRejection);
 		this.removeEventListener('keydown', this._handleKeydown);
 	}
 
@@ -311,14 +459,20 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this._fitName();
 	}
 
-	/** Cuts the chosen name in the middle to the width it has. Without a width
-	 *  (a hidden field), it falls back to the CSS cut of the first render. */
+	/** Cuts the chosen name in the middle to the room it has: one line, or in a
+	 *  control as many lines as its texts reserve anyway, so a name never makes
+	 *  the field taller. A folder keeps its count whole and gives up its name.
+	 *  Without a width (a hidden field), it falls back to the CSS cut of the
+	 *  first render. */
 	private _fitName(): void {
-		const value = this.shadowRoot?.querySelector<HTMLElement>('.file-field__value');
-		const name = this.shadowRoot?.querySelector<HTMLElement>('.file-field__name');
-		if (this._files.length !== 1 || !value || !name) {
-			this._fittedName = null;
-			this._nameTruncated = false;
+		const root = this.shadowRoot;
+		const value = root?.querySelector<HTMLElement>('.file-field__value');
+		const folder = this._folderName();
+		const label = folder
+			? Array.from(root?.querySelectorAll<HTMLElement>('.file-field__folder') ?? []).find((variant) => variant.checkVisibility())
+			: root?.querySelector<HTMLElement>('.file-field__name');
+		if (!value || !label || (!folder && this._files.length !== 1)) {
+			this._resetFit();
 			return;
 		}
 		// The buttons beside the name take their width after their own render, so
@@ -331,44 +485,146 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		const style = getComputedStyle(value);
 		const width = value.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
 		if (width <= 0) {
-			this._fittedName = null;
-			this._nameTruncated = false;
+			this._resetFit();
 			return;
 		}
-		const { measure, done } = textMeasurer(name);
-		try {
-			const { text, truncated } = truncateMiddle(this._files[0].name, width, measure);
-			this._fittedName = text;
+		const lines = this._nameLinesFor(value);
+		this._nameLines = lines;
+		if (folder) {
+			if (lines === 1) {
+				// CSS gives up the name of the folder before its count.
+				this._fittedFolder = null;
+				this._nameTruncated = false;
+				return;
+			}
+			const text = label.classList.contains('file-field__folder--short')
+				? this._t('components.file-field.folder-count-short-text', { folder, count: this._files.length })
+				: this._valueLabel();
+			const at = text.indexOf(folder);
+			const [before, after] = at < 0 ? ['', ''] : [text.slice(0, at), text.slice(at + folder.length)];
+			const { text: fitted, truncated } = this._cutToLines(value, width, lines, folder, (name) => before + name + after, false);
+			this._fittedFolder = fitted;
 			this._nameTruncated = truncated;
+			return;
+		}
+		const name = this._files[0].name;
+		if (lines === 1) {
+			const { measure, done } = textMeasurer(label);
+			try {
+				const { text, truncated } = truncateMiddle(name, width, measure);
+				this._fittedName = text;
+				this._nameTruncated = truncated;
+			} finally {
+				done();
+			}
+			return;
+		}
+		const { text, truncated } = this._cutToLines(value, width, lines, name);
+		this._fittedName = text;
+		this._nameTruncated = truncated;
+	}
+
+	/** `name` cut in the middle until `shown(name)` fits on `lines` lines. */
+	private _cutToLines(value: HTMLElement, width: number, lines: number, name: string, shown = (text: string) => text, keepExtension = true): { text: string; truncated: boolean } {
+		const { fits, done } = lineFitter(value, width, lines);
+		try {
+			return truncateMiddleToFit(name, (text) => fits(shown(text)), { keepExtension });
 		} finally {
 			done();
 		}
 	}
 
+	/** The lines a control has for its name: what its tallest text takes, the
+	 *  room around a text off. An area shows one. */
+	private _nameLinesFor(value: HTMLElement): number {
+		const text = this.shadowRoot?.querySelector<HTMLElement>('.file-field__replace-area .file-field__text');
+		if (this.variant === 'area' || !text) return 1;
+		const style = getComputedStyle(text);
+		const room = text.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+		return Math.max(1, Math.floor((room + 0.5) / parseFloat(getComputedStyle(value).lineHeight)));
+	}
+
+	private _resetFit(): void {
+		this._fittedName = null;
+		this._fittedFolder = null;
+		this._nameTruncated = false;
+		this._nameLines = 1;
+	}
+
 	override willUpdate(changed: PropertyValues): void {
-		if (changed.has('_files')) {
-			this._fittedName = null;
-			this._nameTruncated = false;
-		}
+		if (changed.has('_files')) this._resetFit();
 		if (changed.has('required')) this._updateValidity();
 		if (changed.has('accessibleLabel')) this.internals.ariaLabel = this.accessibleLabel || null;
 	}
 
 	/** @internal */
-	public _handleChoose(): void {
+	public _handleChoose(e?: Event): void {
 		this._clearRejection();
+		// With a folder on offer, a press asks which of the two: one dialog picks
+		// files or a folder, never both.
+		const menu = this._chooseMenu;
+		if (this.directory && menu && e?.currentTarget instanceof Element) {
+			// A press on the field while the menu is open closes it. Light dismiss
+			// usually did so on pointerdown already, so this click must not reopen it.
+			if (menu.matches(':popover-open')) {
+				menu.hidePopover();
+				return;
+			}
+			if (performance.now() - this._menuClosedAt < REOPEN_GUARD_MS) return;
+			// The field opens it where it was clicked; "Wijzigen" opens it under itself.
+			const field = e.currentTarget.classList.contains('file-field__choose-button');
+			menu.anchorElement = (field && this._pointAt(e)) || e.currentTarget;
+			menu.showPopover();
+			return;
+		}
 		this._input?.click();
+	}
+
+	/** The point a mouse or a finger pressed, as an element the menu can hang
+	 *  from, so it opens there. Null for the keyboard, whose click has no point
+	 *  (`detail` 0): the menu then hangs under the button. */
+	private _pointAt(e: Event): Element | null {
+		const anchor = this._menuAnchor;
+		const field = anchor?.parentElement;
+		if (!(e instanceof MouseEvent) || e.detail === 0 || !anchor || !field) return null;
+		const box = field.getBoundingClientRect();
+		anchor.style.left = `${e.clientX - box.left}px`;
+		anchor.style.top = `${e.clientY - box.top}px`;
+		return anchor;
+	}
+
+	/** @internal */
+	public _handleMenuToggle(e: Event): void {
+		this._menuOpen = (e as ToggleEvent).newState === 'open';
+		if (!this._menuOpen) this._menuClosedAt = performance.now();
+	}
+
+	/** @internal Picked in the menu of a field with `directory`. */
+	public _chooseFiles(): void {
+		this._input?.click();
+	}
+
+	/** @internal Picked in the menu of a field with `directory`. */
+	public _chooseFolder(): void {
+		this._folderInput?.click();
 	}
 
 	/** @internal */
 	public _handleInputChange(e: Event): void {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
+		this._action++;
+		this._stopReading();
+		// The other input keeps its previous pick otherwise, and picking that
+		// again would fire no change.
+		const other = input === this._input ? this._folderInput : this._input;
+		if (other) other.value = '';
 		// The choose button gives way to the change button once there is a file,
 		// and the other way round, so focus would land on the body.
 		const hadFocus = this.matches(':focus-within');
 		this._files = input.files ? Array.from(input.files) : [];
-		this._rejection = null;
+		this._paths = this._files.map((file) => file.webkitRelativePath || file.name);
+		this._clearRejection();
 		this._commit();
 		if (hadFocus) void this.updateComplete.then(() => this.focus());
 	}
@@ -380,12 +636,16 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  on names and types; without, a drag only on what it shows before the drop. */
 	private _judge(transfer: DataTransfer, files?: File[]): DropRejection | null {
 		if (files) {
-			if (!this.multiple && files.length > 1) return 'count';
-			if (holdsFolder(transfer)) return 'folder';
+			if (!this._multiple && files.length > 1) return 'count';
+			if (holdsFolder(transfer)) {
+				// Several files may come from a folder; one file cannot be a folder.
+				// The types are judged once the folder is read.
+				return this._multiple ? null : 'folder';
+			}
 			return files.every((file) => fileMatches(this.accept, file)) ? null : 'type';
 		}
 		const items = Array.from(transfer.items).filter((item) => item.kind === 'file');
-		if (!this.multiple && items.length > 1) return 'count';
+		if (!this._multiple && items.length > 1) return 'count';
 		return items.some((item) => typeRuledOut(this.accept, item.type)) ? 'type' : null;
 	}
 
@@ -412,35 +672,102 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		if (!e.dataTransfer || !carriesFiles(e.dataTransfer)) return;
 		e.preventDefault();
 		if (this.disabled) return;
+		const action = ++this._action;
+		this._stopReading();
 		const files = Array.from(e.dataTransfer.files);
 		const rejection = this._judge(e.dataTransfer, files);
 		if (rejection) {
-			this._rejection = rejection;
-			// Shown for a while, then the field reads as itself again: the message
-			// takes the place of "Bestand kiezen", and a field that kept it looked
-			// as if it no longer did anything. The status line keeps it for a
-			// screen reader.
-			clearTimeout(this._rejectionTimer);
-			this._rejectionTimer = setTimeout(() => {
-				this._announcement = this._rejectionText(rejection);
-				this._rejection = null;
-			}, REJECTION_MS);
+			this._refuse(rejection);
 			return;
 		}
-		if (this._input) this._input.files = e.dataTransfer.files;
-		this._files = files;
-		this._rejection = null;
+		if (holdsFolder(e.dataTransfer)) {
+			// A folder with nothing in it, or one the browser could not read (a file
+			// gone mid-drop, no permission), says so, as any other refused drop does.
+			this._readingTimer = setTimeout(() => {
+				this._reading = true;
+			}, READING_INDICATOR_DELAY_MS);
+			void readDrop(e.dataTransfer).then(
+				(dropped) => {
+					if (action !== this._action) return;
+					this._stopReading();
+					if (dropped.length) this._takeDrop(dropped);
+					else this._refuse('empty-folder');
+				},
+				() => {
+					if (action !== this._action) return;
+					this._stopReading();
+					this._refuse('unreadable-folder');
+				},
+			);
+			return;
+		}
+		this._takeDrop(files.map((file) => ({ file, path: file.name })));
+	};
+
+	/** A drop that passed the count, with its folders read: judged on the types
+	 *  of the files in it, then taken in place of what the field had. */
+	private _takeDrop(dropped: { file: File; path: string }[]): void {
+		if (!dropped.every(({ file }) => fileMatches(this.accept, file))) {
+			this._refuse('type');
+			return;
+		}
+		const transfer = new DataTransfer();
+		for (const { file } of dropped) transfer.items.add(file);
+		if (this._input) this._input.files = transfer.files;
+		if (this._folderInput) this._folderInput.value = '';
+		this._files = dropped.map(({ file }) => file);
+		this._paths = dropped.map(({ path }) => path);
+		this._clearRejection();
 		// A pick moves focus to the change button, which names the file; a drop
 		// moves nothing, so it is said.
 		this._announcement = this._t('components.file-field.file-chosen-text', { name: this._valueLabel() });
 		this._commit();
-	};
+	}
 
+	/** Shown for a while, then the field reads as itself again: the message
+	 *  takes the place of "Bestand kiezen", and a field that kept it looked as if
+	 *  it no longer did anything. The status line keeps it for a screen reader. */
+	private _refuse(rejection: DropRejection): void {
+		const hadFocus = this.matches(':focus-within');
+		this._rejection = rejection;
+		clearTimeout(this._rejectionTimer);
+		this._rejectionTimer = setTimeout(() => {
+			this._clearRejection();
+			this._announcement = this._rejectionText(rejection);
+		}, REJECTION_MS);
+		// The buttons give way to the message, so focus goes to it.
+		if (hadFocus) void this.updateComplete.then(() => this.focus());
+	}
+
+	private _stopReading(): void {
+		clearTimeout(this._readingTimer);
+		this._reading = false;
+	}
+
+	/** Takes the message away, and gives focus back to the button of the field
+	 *  when the message had it, as it goes with the message. */
 	private _clearRejection = (): void => {
+		const hadFocus = this.shadowRoot?.activeElement?.classList.contains('file-field__dismiss-button') ?? false;
 		clearTimeout(this._rejectionTimer);
 		this._rejection = null;
 		this._announcement = '';
+		if (hadFocus) void this.updateComplete.then(() => this.focus());
 	};
+
+	/** @internal A press on the message dismisses it, and does nothing else. */
+	public _handleDismiss(): void {
+		this._clearRejection();
+		void this.updateComplete.then(() => this.focus());
+	}
+
+	/** @internal "Alleen PDF, sluit melding, Bijlage": the message as it shows,
+	 *  what a press does, and for which field. */
+	public _dismissAccessibleLabel(): string {
+		if (!this._rejection) return '';
+		return [this._rejectionText(this._rejection), this._t('components.file-field.dismiss-message-lowercase-action'), this.accessibleLabel]
+			.filter(Boolean)
+			.join(', ');
+	}
 
 	private _handleKeydown = (e: KeyboardEvent): void => {
 		if (e.key === 'Escape') this._clearRejection();
@@ -450,8 +777,12 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleClear(): void {
 		// Clearing the input as well as the array: the element keeps the previous
 		// FileList otherwise, so choosing the same file again would fire no change.
+		this._action++;
+		this._stopReading();
 		if (this._input) this._input.value = '';
+		if (this._folderInput) this._folderInput.value = '';
 		this._files = [];
+		this._paths = [];
 		this._commit();
 		// Focus would land on the body when the cross unmounts with the last file.
 		void this.updateComplete.then(() => this.focus());
@@ -460,7 +791,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	private _commit(): void {
 		this.commitFormValue();
 		this.dispatchEvent(new CustomEvent('change', {
-			detail: { files: this._files },
+			detail: { files: this._files, paths: this._paths },
 			bubbles: true,
 			composed: true,
 		}));
@@ -471,12 +802,15 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Submit one entry per file under `name`, the way a native multiple file
 	 *  input does. A single file is submitted as itself, so a form with one file
-	 *  reads back as a File rather than as FormData wrapping one. */
+	 *  reads back as a File rather than as FormData wrapping one. A file from a
+	 *  dropped folder goes with its path as its file name, which is how a native
+	 *  folder input submits it too. */
 	override formValue(): FormValue {
 		if (!this.name || this._files.length === 0) return null;
-		if (this._files.length === 1) return this._files[0];
+		const nested = this._paths.some((path) => path.includes('/'));
+		if (this._files.length === 1 && !nested) return this._files[0];
 		const data = new FormData();
-		for (const file of this._files) data.append(this.name, file);
+		this._files.forEach((file, index) => data.append(this.name, file, this._paths[index] ?? file.name));
 		return data;
 	}
 
@@ -498,16 +832,28 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 	}
 
+	/** Back to empty, as a clear, but without a change event, as a native
+	 *  input resets: a folder still being read is dropped too. */
 	formResetCallback(): void {
+		this._action++;
+		this._stopReading();
+		this._clearRejection();
 		if (this._input) this._input.value = '';
+		if (this._folderInput) this._folderInput.value = '';
 		this._files = [];
+		this._paths = [];
 		this.commitFormValue();
 	}
 
-	/** The button that opens the dialog: the whole surface while the field is
-	 *  empty, "Wijzigen" once it has a file. */
+	/** The message of a refused drop while it shows. Otherwise the button that
+	 *  opens the dialog: the whole surface while the field is
+	 *  empty, or the first of its two choices in an area with `directory`, and
+	 *  "Wijzigen" once it has a file, or the menu that holds it in a narrow field. */
 	private _chooseButton(): HTMLElement | null {
-		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse-button, nldd-button') ?? null;
+		const dismiss = this.shadowRoot?.querySelector<HTMLElement>('.file-field__dismiss-button');
+		if (dismiss) return dismiss;
+		const buttons = this.shadowRoot?.querySelectorAll<HTMLElement>('.file-field__choose-button, .file-field__choose-button-group nldd-button, .file-field__change-button, .file-field__more-button') ?? [];
+		return Array.from(buttons).find((button) => button.checkVisibility?.() ?? true) ?? buttons[0] ?? null;
 	}
 
 	/**
@@ -516,6 +862,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 * sees as the control.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._chooseButton()?.focus(options);
 	}
 

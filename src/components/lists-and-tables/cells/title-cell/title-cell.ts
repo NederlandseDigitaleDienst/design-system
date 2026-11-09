@@ -19,7 +19,7 @@
  * slotted content is rendered as-is.
  *
  * @element nldd-title-cell
- * @attr {1|2|3|4|5|6} size - Visual size of the title (default: 5)
+ * @attr {1|2|3|4|5|6} size - Visual size of the title (unset: looks like 5, and becomes 6 in an `nldd-table-row`, where a title the size of the other cells reads better)
  * @attr {'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'} color - Text color variant (default: 'content'). `secondary` demotes the title to match the muted overline/supporting-text. `accent`, `success`, `warning` and `critical` tint all three regions so the cell reads as a coherent state.
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
  * @attr {string} min-width - Minimum width as CSS length (e.g. '80px', '5rem')
@@ -28,13 +28,13 @@
  * @attr {'left' | 'center' | 'right'} horizontal-alignment - Horizontal alignment (default: 'left')
  * @attr {'top' | 'center' | 'bottom'} vertical-alignment - Vertical alignment (default: 'center')
  *
- * @attr {string} text - Title text content. Supports **bold** syntax for inline bold segments. Falls back to default slot.
+ * @attr {string} text - Title text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins.
  * @attr {string} supporting-text - Optional supporting text displayed below the title. Supports **bold**. Falls back to `supporting-text` slot.
  * @attr {string} overline - Optional overline text displayed above the title. Supports **bold**. Falls back to `overline` slot.
  * @attr {number} heading-level - Heading level for the title element: 1–6 (default: none, renders a <p>)
  *
  * @slot overline - Rich content for the overline region. Overrides the `overline` attribute when content is assigned.
- * @slot - (default) Rich content for the title. Overrides the `text` attribute when content is assigned.
+ * @slot - (default) Rich content for the title. Wins over `text`.
  * @slot supporting-text - Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned.
  *
  * ### Query mark
@@ -59,6 +59,7 @@ import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js'
 import { titleCellStyles } from './title-cell.styles.js';
 import { template } from './title-cell.template.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
+import { RowHeaderMixin } from '../../../../utilities/row-header-mixin.js';
 import type { QueryMarkMode } from '../../../../utilities/render-marked.js';
 
 export type TitleCellSize = 1 | 2 | 3 | 4 | 5 | 6;
@@ -67,11 +68,14 @@ type HorizontalAlignment = 'left' | 'center' | 'right';
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 
 @customElement('nldd-title-cell')
-export class NLDDTitleCell extends VisibilityMixin(LitElement, 'cells-container') {
+export class NLDDTitleCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = [titleCellStyles];
 
+	/** Unset looks like 5, and like 6 in an nldd-table-row, which is why it
+	 *  has no value of its own: the row can only tell an unset size from a
+	 *  chosen 5 when unset is not 5. */
 	@property({ type: Number, reflect: true })
-	size: TitleCellSize = 5;
+	size?: TitleCellSize;
 
 	@property({ reflect: true, converter: reflectNonDefault<Color>('content') })
 	color: Color = 'content';

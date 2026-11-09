@@ -46,30 +46,6 @@ export default {
 			control: 'text',
 			description: 'Placeholder text',
 		},
-		showButtonText: {
-			name: 'show-button-text',
-			control: 'text',
-			description: 'Zichtbare knoptekst wanneer gemaskeerd',
-			table: { defaultValue: { summary: 'Toon' } },
-		},
-		hideButtonText: {
-			name: 'hide-button-text',
-			control: 'text',
-			description: 'Zichtbare knoptekst wanneer zichtbaar',
-			table: { defaultValue: { summary: 'Verberg' } },
-		},
-		showButtonAccessibleLabel: {
-			name: 'show-button-accessible-label',
-			control: 'text',
-			description: 'aria-label for toggle button when masked',
-			table: { defaultValue: { summary: 'Toon wachtwoord' } },
-		},
-		hideButtonAccessibleLabel: {
-			name: 'hide-button-accessible-label',
-			control: 'text',
-			description: 'aria-label for toggle button when unmasked',
-			table: { defaultValue: { summary: 'Verberg wachtwoord' } },
-		},
 		autocomplete: {
 			control: 'select',
 			options: ['(geen)', 'off', 'current-password', 'new-password'],
@@ -133,10 +109,6 @@ export default {
 		name: 'password',
 		value: '',
 		placeholder: 'Wachtwoord',
-		showButtonText: 'Toon',
-		hideButtonText: 'Verberg',
-		showButtonAccessibleLabel: 'Toon wachtwoord',
-		hideButtonAccessibleLabel: 'Verberg wachtwoord',
 		autocomplete: '',
 		masked: true,
 		valid: false,
@@ -151,7 +123,7 @@ export default {
 	},
 };
 
-const Template = ({ size, name, value, placeholder, showButtonText, hideButtonText, showButtonAccessibleLabel, hideButtonAccessibleLabel, autocomplete, masked, valid, invalid, accessibleLabel, readonly, disabled, minlength, maxlength, pattern, required, width }: Record<string, any>) => html`
+const Template = ({ size, name, value, placeholder, autocomplete, masked, valid, invalid, accessibleLabel, readonly, disabled, minlength, maxlength, pattern, required, width }: Record<string, any>) => html`
 	<nldd-password-field
 		minlength=${minlength ?? nothing}
 		maxlength=${maxlength ?? nothing}
@@ -164,10 +136,6 @@ const Template = ({ size, name, value, placeholder, showButtonText, hideButtonTe
 		?disabled=${disabled}
 		pattern=${pattern || nothing}
 		.masked=${masked}
-		show-button-text=${showButtonText}
-		hide-button-text=${hideButtonText}
-		show-button-accessible-label=${showButtonAccessibleLabel}
-		hide-button-accessible-label=${hideButtonAccessibleLabel}
 		name=${name}
 		?required=${required}
 		autocomplete=${autocomplete}

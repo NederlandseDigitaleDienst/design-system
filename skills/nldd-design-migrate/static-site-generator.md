@@ -33,7 +33,7 @@ Zet in die lijst wat je in Markdown gebruikt. Je merkt het gat aan een `p > nldd
 
 ## De bundel zonder bundler
 
-Een sitegenerator heeft meestal geen npm-stap. Haal de tarball van het pakket dan tijdens de build van de registry, en neem er `dist/nldd.min.js`, `dist/css/` en `dist/fonts/` uit. `custom-elements.json` zit in dezelfde tarball, dus je markupcheck leest de manifest van precies de versie die je uitlevert.
+Een sitegenerator heeft meestal geen npm-stap. Haal de tarball van het pakket dan tijdens de build van de registry, en neem er `dist/nldd.min.js`, `dist/css/` en `dist/fonts/` uit. Laat `css/` in een map staan die `nldd` heet (`/static/nldd/css/`), dan herkent `nldd lint --pure` de stylesheet als die van het systeem. `custom-elements.json` zit in dezelfde tarball, dus je markupcheck leest de manifest van precies de versie die je uitlevert.
 
 Leg de versie en de integriteitshash (`dist.integrity` uit de registry) samen in één bestand vast, en laat de build falen als de hash niet klopt. Een upgrade is dan een zichtbare commit van twee regels. De hash staat alleen hier beschreven. Wat een vastgezette versie je oplevert en kost staat in [`server-rendered.md`](server-rendered.md) onder vendoren, en geldt hier net zo.
 
@@ -41,9 +41,9 @@ Leg de versie en de integriteitshash (`dist.integrity` uit de registry) samen in
 
 Geen van beide is een defect. Het zijn eigenschappen van web components die bij een contentsite zwaarder wegen dan bij een applicatie, en waar een reviewer naar gaat vragen.
 
-**Zonder JavaScript rendert niets uit een shadow root.** De topnavigatie verdwijnt, en elke titel die via een attribuut is gezet (`nldd-title text="..."`) ook. Wat in de light DOM staat blijft leesbaar: de tekst in een `nldd-rich-text`, en dus de inhoud van elke pagina. Een `<noscript>` met de navigatielinks als gewone `<a>`-elementen dekt het ergste. Beslis of dat genoeg is voordat je begint, want de oude site werkte waarschijnlijk volledig zonder script.
+**Zonder JavaScript rendert niets uit een shadow root.** De topnavigatie verdwijnt, en elke titel die via een attribuut is gezet (`nldd-title text="..."`) ook. Wat in de light DOM staat blijft leesbaar: de tekst in een `nldd-rich-text`, en dus de inhoud van elke pagina. Zet een titel daarom in het slot, als je eigen kop (`<nldd-title><h1>…</h1></nldd-title>`): het slot gaat voor het attribuut, en de kop staat er dan ook zonder script. Een `<noscript>` met de navigatielinks als gewone `<a>`-elementen dekt het ergste. Beslis of dat genoeg is voordat je begint, want de oude site werkte waarschijnlijk volledig zonder script.
 
-**De hele bundel laadt op elke pagina.** Zonder bundler is er niets dat ongebruikte componenten weglaat. In 0.8.93 is `dist/nldd.min.js` ruim 2 MB, gzipped rond de 580 kB, tegenover een pagina die eerder een paar kilobyte script had. De browser cachet de bundel na de eerste pagina. De losse modules in `dist/components/` zijn geen uitweg zonder meer: die importeren `lit` op naam, dus je hebt een import map of alsnog een bundler nodig, en je beheert dan zelf welke pagina welke module laadt. Meet het en leg de keuze vast.
+**De hele bundel laadt op elke pagina.** Zonder bundler is er niets dat ongebruikte componenten weglaat. `dist/nldd.min.js` is ruim 2 MB, gzipped ruim 600 kB, tegenover een pagina die eerder een paar kilobyte script had. De browser cachet de bundel na de eerste pagina. Wil je dat een pagina alleen laadt wat erop staat, gebruik dan de autoloader: zie "Laden zonder bundler" in [`nldd-design-build`](../nldd-design-build/SKILL.md). Meet het en leg de keuze vast.
 
 ## Het gedragsoppervlak van een gegenereerde site
 

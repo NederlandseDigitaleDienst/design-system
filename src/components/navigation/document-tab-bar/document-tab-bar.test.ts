@@ -657,7 +657,7 @@ describe('nldd-document-tab-bar – translations', () => {
 	it('accepts custom translations via property', async () => {
 		el = await fixture<NLDDDocumentTabBar>(threeTabBar());
 		(el as NLDDDocumentTabBar).translations = {
-			'components.document-tab-bar.overflow-action': 'Show more tabs',
+			'components.document-tab-bar.show-more-tabs-action': 'Show more tabs',
 		};
 		await waitForUpdate(el);
 		const overflowBtn = el.shadowRoot!.querySelector('.document-tab-bar__overflow-button nldd-icon-button');

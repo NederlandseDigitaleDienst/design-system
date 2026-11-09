@@ -5,8 +5,12 @@ import { menuItemStyles } from './menu.styles.js';
 import { menuItemTemplate, type MenuVariant } from './menu.template.js';
 import type { QueryMarkMode } from '../../../utilities/render-marked.js';
 import type { NLDDMenu } from './menu.js';
+import { ownerForm } from '../../../utilities/owner-form.js';
 import { setState } from '../../../utilities/element-state.js';
 import '../../../utilities/custom-element.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
+
+export type MenuItemType = 'button' | 'submit' | 'checkbox' | 'radio';
 
 /** Makes `host` a list item while its menu is a navigation menu, and takes
  *  that back when it is not. A `listitem` the consumer set by hand on an item
@@ -24,17 +28,20 @@ export function syncListItemRole(host: HTMLElement, variant: MenuVariant | null)
  * @attr {boolean} destructive - Marks the item as destructive (red text; red highlight bg). Use for irreversible actions like "Delete". Color is the only built-in signal, so per WCAG 1.4.1 the item's own label must convey the destructive nature (e.g. "Verwijder") — don't rely on the red alone. Confirming the action (e.g. a follow-up dialog) is the consumer's responsibility.
  * @attr {string} text - Display text. Supports **bold** markdown syntax.
  * @attr {string} details - Secondary label shown on the right side.
- * @attr {string} icon - Icon name rendered before the text.
+ * @attr {string} icon - Icon name rendered before the text. An icon in the `icon` slot takes its place.
  * @attr {string} shortcut - Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {string} href - Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled.
- * @attr {string} type - Item type: 'button' | 'checkbox' | 'radio'. Default: 'button'. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.
+ * @attr {string} type - Item type: 'button' | 'submit' | 'checkbox' | 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.
+ * @attr {string} form - Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root.
  * @attr {boolean} selected - Selected state for checkbox and radio types.
  * @attr {boolean} disabled - Disabled state.
  * @attr {string} value - A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated.
  * @attr {string} aliases - Space-separated alternative search terms.
  * @attr {string} query - Query substring to bold-highlight in text. Set by menu's filter(); also settable by consumers.
  * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive'). See text-cell for details.
+ *
+ * @slot icon - An icon of your own before the text, such as an `<img>`: one that is not in the icon set. Wins over `icon`.
  *
  * @fires select - Fired when the item is clicked and not disabled.
  */
@@ -50,7 +57,7 @@ export class NLDDMenuItem extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	details = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -65,11 +72,15 @@ export class NLDDMenuItem extends LitElement {
 	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
 	shortcutLinux = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
 
-	@property({ type: String, reflect: true })
-	type: 'button' | 'checkbox' | 'radio' = 'button';
+	@property({ reflect: true, converter: reflectNonDefault<MenuItemType>('button') })
+	type: MenuItemType = 'button';
+
+	/** Id of the form a `submit` item submits, when it does not stand in that form. */
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	form = '';
 
 	@property({ type: Boolean, reflect: true })
 	selected = false;
@@ -77,7 +88,7 @@ export class NLDDMenuItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	value = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -113,6 +124,14 @@ export class NLDDMenuItem extends LitElement {
 	@state()
 	_submenuOpen = false;
 
+	/** Whether the icon slot holds something. */
+	@state()
+	_hasIconSlot = false;
+
+	_onIconSlotChange = (e: Event): void => {
+		this._hasIconSlot = (e.target as HTMLSlotElement).assignedElements().length > 0;
+	};
+
 	private static _idCounter = 0;
 
 	override connectedCallback(): void {
@@ -146,6 +165,7 @@ export class NLDDMenuItem extends LitElement {
 	}
 
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const focusable = this.shadowRoot?.querySelector<HTMLElement>('button, a');
 		focusable?.focus(options);
 	}
@@ -240,6 +260,9 @@ export class NLDDMenuItem extends LitElement {
 			composed: true,
 		}));
 		(this.closest('nldd-menu') as HTMLElement)?.hidePopover?.();
+		// The button is in this item's shadow root, so it has no form owner of
+		// its own: submit the form here, with validation and a cancelable event.
+		if (this.type === 'submit') ownerForm(this)?.requestSubmit();
 	}
 
 	/** Programmatically select this item. */

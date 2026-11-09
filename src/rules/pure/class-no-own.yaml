@@ -1,0 +1,6 @@
+severity: error
+context: ':written(class):not(:is(code, pre):accepted):not(:within(svg))'
+message: 'Set the look with the attributes of a component, not with a class.'
+examples:
+  passed: ['<nldd-button text="Bewaar" appearance="primary"></nldd-button>', '<nldd-image><svg viewBox="0 0 10 10" role="img" aria-label="Plattegrond"><path class="muur" d="M0 0h10"></path></svg></nldd-image>', '<nldd-rich-text><pre class="language-js">x</pre></nldd-rich-text>']
+  failed: ['<nldd-button text="Bewaar" class="mt-4"></nldd-button>', '<nldd-rich-text><div class="grid"><p>Tekst</p></div></nldd-rich-text>', '<nldd-text><span class="rood">Afgewezen</span></nldd-text>', '<nldd-container :class="spacing"></nldd-container>']

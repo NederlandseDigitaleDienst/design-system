@@ -11,6 +11,7 @@ import { nlddListItemTranslations } from './list-item.i18n.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
 import { setState } from '../../../utilities/element-state.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ListItemSize = 'sm' | 'md';
 
@@ -172,9 +173,10 @@ const NESTED_CONTROLS = [
  * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
  * @attr {boolean} radio - Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it.
- * @attr {string} accessible-label - Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it.
+ * @attr {boolean} expandable - The row opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. A row with children in a tree already is one.
+ * @attr {string} accessible-label - Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it.
  * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
- * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. A selected row sets `--context-selected-indicator-color` and `--context-selected-contrast-color` to its text and fill color, so a checked nldd-checkbox, nldd-radio-button or nldd-switch in it takes the colors of the row: on its gray the accent can fall below 3:1. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
+ * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
  * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
  * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
  * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
@@ -232,6 +234,14 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/** When set, the whole row is one radio of a group. Ignored when href is set. */
 	@property({ type: Boolean, reflect: true })
 	radio = false;
+
+	/**
+	 * The row opens something, also while it is closed. Without it an absent
+	 * `expanded` means "discloses nothing", and `false` can only be set as a
+	 * property, which a framework that writes attributes cannot do.
+	 */
+	@property({ type: Boolean, reflect: true })
+	expandable = false;
 
 	/** Accessible name of the row's action; replaces the content of the whole row. */
 	@property({ type: String, attribute: 'accessible-label' })
@@ -594,9 +604,12 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this._updateInteractive();
 			this._syncNestedControl();
 		}
-		if (changed.has('expanded')) {
+		if (changed.has('expanded') || changed.has('expandable')) {
 			this._relayExpanded();
 			this._syncExpandedFacts();
+		}
+		if (changed.has('accessibleLabel') || changed.has('href') || changed.has('button')) {
+			this._syncLabelFacts();
 		}
 		if (changed.has('_arrowNavigation') || changed.has('_rovingActive')) {
 			this._syncRovingTabStops();
@@ -627,7 +640,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 */
 	private get _resolvedExpanded(): boolean | undefined {
 		if (this._showChildren && this._parentType === 'navigation') return undefined;
-		if (this._showChildren) return this.expanded === true;
+		if (this._showChildren || this.expandable) return this.expanded === true;
 		return this.expanded;
 	}
 
@@ -649,11 +662,26 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			.forEach(segment => { segment._rowExpanded = this._resolvedExpanded; });
 	}
 
+	/**
+	 * An `accessible-label` replaces what the row says for assistive technology.
+	 * Someone who reads "Aanvraag A-1042" and says it to voice control finds no
+	 * control by that name when the label says something else (WCAG 2.5.3).
+	 * States whether the label starts with the visible title.
+	 */
+	private _syncLabelFacts(): void {
+		const cell = this._ownDescendants('nldd-title-cell, nldd-text-cell')[0];
+		const normalize = (text: string) => text.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+		const title = normalize(cell?.getAttribute('text') ?? cell?.textContent ?? '');
+		const without = Boolean(this.accessibleLabel) && Boolean(title)
+			&& !normalize(this.accessibleLabel).startsWith(title);
+		setState(this, 'label-without-title', without);
+	}
+
 	/** `expanded` needs a control to sit on; a plain container has none, and a
 	 *  row with sub-pages in a navigation list is always open. */
 	private _syncExpandedFacts(): void {
 		if (!import.meta.env?.DEV) return;
-		const set = this.expanded !== undefined;
+		const set = this.expanded !== undefined || this.expandable;
 		const inNavigation = set && this._showChildren && this._parentType === 'navigation';
 		setState(this, 'expanded-in-navigation', inNavigation);
 		setState(this, 'expanded-without-control', set && !inNavigation
@@ -764,14 +792,6 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/**
-	 * Measures the divider markers and writes the result as `--_list-item-divider-inset-
-	 * start/-end` on the host. No markers → the vars are cleared and CSS falls
-	 * back to the content width. Union semantics: the divider runs from the
-	 * FIRST `divider-start` to the LAST `divider-end`; a side without markers
-	 * keeps its default. Insets are measured against the row block (the widened
-	 * box on interactive rows), so the values compose with the edge geometry.
-	 */
-	/**
 	 * The cell the divider starts at when nobody said otherwise: the row's first
 	 * text or title cell. The line lands on the words rather than on whatever
 	 * leads up to them — an icon, an avatar, a checkbox, or the spacers a tree
@@ -792,11 +812,25 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		return this._ownDescendants('nldd-text-cell, nldd-title-cell');
 	}
 
-	private _measureDividerMarkers(): void {
+	/**
+	 * Measures the divider markers and writes the result as `--_list-item-divider-inset-
+	 * start/-end` on the host. No markers → the vars are cleared and CSS falls
+	 * back to the content width. Union semantics: the divider runs from the
+	 * FIRST `divider-start` to the LAST `divider-end`; a side without markers
+	 * keeps its default. Insets are measured against the row block (the widened
+	 * box on interactive rows), so the values compose with the edge geometry.
+	 * A list with `dividers="never"` draws no line, so its rows measure nothing.
+	 *
+	 * @internal Also called by the list when its `dividers` changes.
+	 */
+	_measureDividerMarkers(): void {
 		if (this.hasAttribute('data-nldd-clone')) return;
-		const explicitStarts = this._ownDescendants('[divider-start]');
-		const starts = explicitStarts.length ? explicitStarts : this._implicitDividerStart();
-		const ends = this._ownDescendants('[divider-end]');
+		// No markers means no observer and no inline vars, the same as a row
+		// without cells.
+		const drawsDivider = this._parentList?.getAttribute('dividers') !== 'never';
+		const explicitStarts = drawsDivider ? this._ownDescendants('[divider-start]') : [];
+		const starts = !drawsDivider ? [] : explicitStarts.length ? explicitStarts : this._implicitDividerStart();
+		const ends = drawsDivider ? this._ownDescendants('[divider-end]') : [];
 
 		// Re-target the resize observer ONLY when the marker set changed: every
 		// observe() fires an initial notification, so retargeting on each
@@ -988,6 +1022,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * so consumers can call `listItemEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		// A tree row without a control of its own (only segments, or
 		// none at all) takes focus on the host: that is where role="treeitem"
 		// sits, so assistive technology announces the row rather than a button

@@ -6,9 +6,11 @@ Stijlregels voor het ontwerpen en aanleveren van SVG-iconen in het NLDD Designsy
 
 | Eigenschap | Waarde |
 |------------|--------|
-| ViewBox | `0 0 24 24` |
-| Eenheid | 1 unit = 1px bij standaardweergave |
-| Center | (12, 12) |
+| ViewBox | `0 0 96 96` |
+| Eenheid | 4 eenheden = 1px bij een icoon van 24px |
+| Center | (48, 48) |
+
+Regular en light delen dit grid. Regular stond vroeger op 24×24 en light op 32×32; op 96 liggen beide op hele eenheden, waar de oude grids halve en kwart pixels nodig hadden. Alle maten hieronder zijn eenheden op dit grid.
 
 ## Rendering: fill-only
 
@@ -18,8 +20,9 @@ Alle iconen gebruiken uitsluitend `fill="currentColor"`. Er worden **geen stroke
 
 | Element | Dikte |
 |---------|-------|
-| Standaard lijnen, contouren | 2px |
-| Details op kleine vlakken | 1.5–2px (visueel beoordelen) |
+| Standaard lijnen, contouren (regular) | 8 |
+| Standaard lijnen, contouren (light) | 6 |
+| Details op kleine vlakken | 6–8 (visueel beoordelen) |
 
 ## Line caps
 
@@ -27,13 +30,13 @@ Geen bolle uiteinden. Lijnuiteinden zijn **recht afgesneden** (butt-achtig via p
 
 ## Tussenruimte tussen lijnen
 
-Parallelle lijnen hebben **2px ruimte** ertussen (gemeten van rand tot rand).
+Parallelle lijnen hebben **8 eenheden ruimte** ertussen (gemeten van rand tot rand).
 
 ## Overlappende lijnen
 
-Wanneer twee lijnen elkaar kruisen of overlappen, wordt **1px van de onderste lijn weggehaald** waar deze de bovenste raakt. Dit creëert een visueel overlap-effect waarbij de bovenste lijn "voor" de onderste lijkt te liggen.
+Wanneer twee lijnen elkaar kruisen of overlappen, worden **4 eenheden van de onderste lijn weggehaald** waar deze de bovenste raakt. Dit creëert een visueel overlap-effect waarbij de bovenste lijn "voor" de onderste lijkt te liggen.
 
-De bovenste lijn behoudt zijn volledige 2px dikte. De onderste lijn wordt aan **beide kanten** van de kruising onderbroken met **1px witruimte**. Dit creëert een visueel overlap-effect waarbij de bovenste lijn duidelijk "voor" de onderste lijkt te liggen.
+De bovenste lijn behoudt zijn volledige dikte. De onderste lijn wordt aan **beide kanten** van de kruising onderbroken met **4 eenheden witruimte**. Dit creëert een visueel overlap-effect waarbij de bovenste lijn duidelijk "voor" de onderste lijkt te liggen.
 
 ## Doorhaling (strikethrough)
 
@@ -45,12 +48,12 @@ De spacing hangt af van de oriëntatie van het icoon:
 
 | Oriëntatie | Inline (L/R) | Block (T/B) | Voorbeeld |
 |------------|-------------|-------------|-----------|
-| **Horizontaal** (breder dan hoog) | 2px | 4px | list, minus, ellipsis |
-| **Verticaal** (hoger dan breed) | 4px | 2px | arrow-down, chevron-up-down |
-| **Vierkant** (gelijke verhoudingen) | 3px | 3px | trash, pencil, gear |
-| **Cirkel** | 2px | 2px | info-circle, check-mark-circle |
+| **Horizontaal** (breder dan hoog) | 8 | 16 | list, minus, ellipsis |
+| **Verticaal** (hoger dan breed) | 16 | 8 | arrow-down, chevron-up-down |
+| **Vierkant** (gelijke verhoudingen) | 12 | 12 | trash, pencil, gear |
+| **Cirkel** | 8 | 8 | info-circle, check-mark-circle |
 
-> De content area van een horizontaal icoon is dus **20×16**, verticaal **16×20**, vierkant **18×18**, cirkel **20×20**.
+> De content area van een horizontaal icoon is dus **80×64**, verticaal **64×80**, vierkant **72×72**, cirkel **80×80**.
 
 ## Groottevarianten
 
@@ -58,11 +61,11 @@ Drie maten: regular, small, extra-small. Elke variant verkleint de content area 
 
 | Variant | Extra padding per kant | Content area (vierkant) |
 |---------|----------------------|------------------------|
-| Regular | +0px | 18×18 |
-| Small | +2px | 14×14 |
-| Extra-small | +4px | 10×10 |
+| Regular | +0 | 72×72 |
+| Small | +8 | 56×56 |
+| Extra-small | +16 | 40×40 |
 
-De padgeometrie schaalt proportioneel mee. ViewBox blijft altijd `0 0 24 24`.
+De padgeometrie schaalt proportioneel mee. ViewBox blijft altijd `0 0 96 96`.
 
 ## Hoeken
 
@@ -79,10 +82,10 @@ Gebruik bij voorkeur hoeken die een veelvoud van **15 graden** zijn:
 
 | Context | Radius |
 |---------|--------|
-| Grote buitenvormen (containers, kaarten) | 3px |
-| Middelgrote elementen | 2px |
-| Kleine details | 1px |
-| Scherpe hoeken waar passend | 0px |
+| Grote buitenvormen (containers, kaarten) | 12 |
+| Middelgrote elementen | 8 |
+| Kleine details | 4 |
+| Scherpe hoeken waar passend | 0 |
 
 De keuze is visueel: gebruik de kleinste radius die er nog goed uitziet. Geen afgeronde hoeken forceren waar scherpe hoeken beter staan.
 
@@ -91,16 +94,16 @@ De keuze is visueel: gebruik de kleinste radius die er nog goed uitziet. Geen af
 Iconen met een cirkel als omlijsting volgen dit template:
 
 ```
-Buitencirkel:  cx="12" cy="12" r="10"  (van 2 tot 22, = 2px padding)
-Binnencirkel:  cx="12" cy="12" r="8"   (visuele "lijndikte" van 2px)
+Buitencirkel:  cx="48" cy="48" r="40"  (van 8 tot 88, = 8 padding)
+Binnencirkel:  cx="48" cy="48" r="32"  (visuele "lijndikte" van 8)
 ```
 
-Content binnen de cirkel heeft 2–3px ruimte tot de binnenrand.
+Content binnen de cirkel heeft 8–12 eenheden ruimte tot de binnenrand.
 
 | Element binnen cirkel | Specificatie |
 |-----------------------|-------------|
-| Info/exclamation dot | r=1.25, gecentreerd |
-| Info/exclamation lijn | 2px breed, gecentreerd op x=12 |
+| Info/exclamation dot | r=5, gecentreerd |
+| Info/exclamation lijn | 8 breed, gecentreerd op x=48 |
 | Checkmark | 45° hoek, gecentreerd |
 
 ## Filled vs outline varianten
@@ -123,19 +126,21 @@ Dit voorkomt rendering-issues met `fill-rule: nonzero` (de standaard).
 
 ## Pixel snapping
 
-- Coördinaten snappen op **hele pixels** waar mogelijk
-- Uitzondering: diagonalen op 45° produceren √2-waarden (bijv. 1.414, 10.707) — dit is acceptabel
+- Coördinaten snappen op **hele eenheden** waar mogelijk
+- Uitzondering: diagonalen op 45° produceren √2-waarden (bijv. 5.7, 42.8), en dat is acceptabel
 - Vermijd subpixel-waarden bij horizontale en verticale lijnen
 
-## SVGO optimalisatie
+## Optimaliseren
 
-Iconen worden automatisch verwerkt door SVGO bij de build:
+Een nieuwe export gaat één keer door `npm run optimize:icons -- <bestand.svg> …` (svgo, instellingen in `scripts/svgo.config.mjs`):
 
-- `width` en `height` attributen worden verwijderd
-- `fill="#000000"` en `fill="black"` worden omgezet naar `fill="currentColor"`
-- `fill="none"` wordt verwijderd
-- `viewBox` blijft behouden
-- Multipass optimalisatie is ingeschakeld
+- Exporteer op 96×96. Een export op `0 0 24 24` (regular) of `0 0 32 32` (light) zet het script eerst naar 96, zonder af te ronden, en rondt pas daarna af; een andere viewBox weigert het
+- `width`, `height`, `fill-rule`, `clip-rule` en `clip-path` worden verwijderd
+- Vormen (`rect`, `circle`, …) worden paden
+- Een vaste kleur wordt `fill="currentColor"`
+- Paden worden afgerond op één decimaal
+
+Draai het niet nog eens op een bestand dat al geoptimaliseerd is: een tweede ronde rondt opnieuw af en verschuift het icoon.
 
 ## Naamgeving
 
@@ -160,8 +165,8 @@ Suffixen worden in vaste volgorde toegevoegd:
 | `-filled` | Volledig gevulde variant (vs outline) | `heart-filled`, `exclamation-triangle-filled` |
 | `-circle` | Omlijst met cirkel | `check-mark-circle`, `info-circle`, `person-circle` |
 | `-slash` | Doorgehaald (uitgeschakeld/verborgen) | `eye-slash` |
-| `-small` | Verkleinde variant (+2px padding) | `check-mark-small`, `caret-down-small` |
-| `-extra-small` | Extra verkleind (+4px padding) | `chevron-right-extra-small`, `minus-extra-small` |
+| `-small` | Verkleinde variant (+8 padding) | `check-mark-small`, `caret-down-small` |
+| `-extra-small` | Extra verkleind (+16 padding) | `chevron-right-extra-small`, `minus-extra-small` |
 
 Een **badge** is een klein overlay-element op het icoon. De badge-naam beschrijft de inhoud van de badge en staat als suffix vóór de grootte:
 
@@ -205,21 +210,23 @@ Bij elke nieuwe iconen-batch **herbereken** je de inhoud van beide sets (niet aa
 - `NEW_ICONS` — iconen die nieuw zijn in dat venster
 - `UPDATED_ICONS` — bestaande iconen met nieuw artwork, renames (met of zonder nieuw artwork) en iconen waarvan de aliassen zijn gewijzigd
 - Valt een icoon in beide sets, dan wint "Nieuw"
+- De omzetting naar het 96-grid telt niet als nieuw artwork; de kop van `icon-gallery-status.ts` zegt hoe je die commit overslaat
 
 ## Checklist nieuw icoon
 
-- [ ] ViewBox is `0 0 24 24`
+- [ ] ViewBox is `0 0 96 96`
 - [ ] Alleen `fill="currentColor"`, geen strokes
-- [ ] Lijndikte is 2px
-- [ ] Spacing past bij oriëntatie (H: 2/4, V: 4/2, □: 3/3, ○: 2/2)
+- [ ] Lijndikte is 8 (regular) of 6 (light)
+- [ ] Spacing past bij oriëntatie (H: 8/16, V: 16/8, □: 12/12, ○: 8/8)
 - [ ] Hoeken zijn veelvoud van 15°
-- [ ] Corner radius past bij elementgrootte (3/2/1/0)
+- [ ] Corner radius past bij elementgrootte (12/8/4/0)
 - [ ] Rechte line caps (geen bolle uiteinden)
-- [ ] 2px tussenruimte tussen parallelle lijnen
-- [ ] Overlappende lijnen: 1px van onderste lijn weggehaald bij kruising
+- [ ] 8 eenheden tussenruimte tussen parallelle lijnen
+- [ ] Overlappende lijnen: 4 eenheden van onderste lijn weggehaald bij kruising
 - [ ] Doorhaling loopt van links boven naar rechts onder
 - [ ] Buitenvormen clockwise, gaten counterclockwise
-- [ ] Coördinaten op hele pixels (behalve 45° diagonalen)
+- [ ] Coördinaten op hele eenheden (behalve 45° diagonalen)
+- [ ] Eén keer door `npm run optimize:icons`
 - [ ] Bestandsnaam in kebab-case
 - [ ] Past visueel bij bestaande iconen in gewicht en stijl
 - [ ] Naam opgenomen in `NEW_ICONS` (of `UPDATED_ICONS`) in `icon-gallery-status.ts`; oude batch eruit

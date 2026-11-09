@@ -48,7 +48,7 @@ export function topTitleBarTemplate(component: NLDDTopTitleBar) {
 					</div>
 				` : nothing}
 				<div class="top-title-bar__title-group"
-					aria-hidden=${component._hasAnchor ? 'true' : nothing}
+					aria-hidden=${component._hidesTitle ? 'true' : nothing}
 				>
 					${staticHtml`<${headingTag} class="top-title-bar__title">${component.text}</${headingTag}>`}
 					${component.supportingText ? html`

@@ -55,7 +55,7 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	/** When set, the whole card becomes one link to this URL via an overlay anchor.
 	 *  Nested interactive content must be raised above it (position: relative;
 	 *  z-index: 1) to stay clickable. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
 
 	@property({ type: String })

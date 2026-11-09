@@ -51,6 +51,8 @@ import { TitleBarLabelController } from '../../../utilities/title-bar-label-cont
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
+import { FocusReturn } from '../../../utilities/return-focus.js';
+import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 
@@ -58,7 +60,7 @@ export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 export class NLDDWindow extends LitElement {
 	static override styles = windowStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<NLDDWindowScheme>('inherit') })
 	scheme: NLDDWindowScheme = 'inherit';
 
 	@property({ type: String, reflect: true })
@@ -181,6 +183,7 @@ export class NLDDWindow extends LitElement {
 
 		setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text);
 
+		this._focusReturn.remember();
 		dialog.showModal();
 		this.open = true;
 		this._applyPositionStyles();
@@ -211,11 +214,15 @@ export class NLDDWindow extends LitElement {
 	 */
 	private _closeEmitted = false;
 
+	private _focusReturn = new FocusReturn();
+
 	private _emitClose(): void {
 		this.open = false;
 		if (this._closeEmitted) return;
 		this._closeEmitted = true;
 		this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
+		// After the event, so focus a close handler moves elsewhere stays there.
+		this._focusReturn.restore(this);
 	}
 
 	_handleDialogClose = (e: Event): void => {

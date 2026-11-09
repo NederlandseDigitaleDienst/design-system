@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import type { EditorView } from '@codemirror/view';
-import { acceptCompletion, completionStatus, moveCompletionSelection, startCompletion } from '@codemirror/autocomplete';
+import { acceptCompletion, closeCompletion, completionStatus, moveCompletionSelection, startCompletion } from '@codemirror/autocomplete';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { setTranslations } from '../../../utilities/translations.js';
 import './text-editor.js';
@@ -157,6 +157,17 @@ describe('nldd-text-editor typeaheads', () => {
 		expect(avatars[0]?.getAttribute('size')).toBe('32');
 		expect(avatars[0]?.hasAttribute('decorative')).toBe(true);
 		expect(avatars[1]?.getAttribute('type')).toBe('organization');
+		// A list whose text is a username names the person for the initials.
+		closeCompletion(el.view);
+		el.mentionSource = undefined;
+		el.typeaheads = [{ trigger: '@', source: () => [{ id: 'u1', text: 'anouk.dv', supportingText: 'Anouk de Vries', avatar: { name: 'Anouk de Vries' } }] }];
+		const named = await openList(el);
+		expect(named[0].querySelector('nldd-avatar')?.getAttribute('name')).toBe('Anouk de Vries');
+		expect(labels(named)).toEqual(['@anouk.dv']);
+		closeCompletion(el.view);
+		el.typeaheads = [{ trigger: '@', source: () => [{ id: 'u1', text: 'anouk.dv', avatar: { initials: 'KvK' } }] }];
+		expect((await openList(el))[0].querySelector('nldd-avatar')?.getAttribute('name')).toBe('anouk.dv');
+		expect(el.shadowRoot.querySelector('.cm-tooltip-autocomplete nldd-avatar')?.getAttribute('initials')).toBe('KvK');
 		expect(personRows[0].classList.contains('cm-nldd-row-avatar')).toBe(true);
 		// The label and the detail stack: the detail sits under the label, not beside it.
 		const label = personRows[0].querySelector('.cm-completionLabel')!.getBoundingClientRect();
@@ -272,13 +283,20 @@ describe('nldd-text-editor typeahead without candidates', () => {
 
 	const say = (query: string) => (query ? 'Niemand gevonden' : 'Begin met typen om iemand te vinden');
 
-	it('says why the list is empty, as a status a screen reader announces', async () => {
+	const announcer = () => el.shadowRoot.querySelector<HTMLElement>('.cm-nldd-typeahead-status')!;
+
+	it('says why the list is empty, in a status that was there before', async () => {
 		el = await make('hoi @xyz', [], () => []);
 		el.mentionEmptyText = say;
+		// The live region is there, empty, before there is anything to say.
+		expect(announcer().getAttribute('role')).toBe('status');
+		expect(announcer().textContent).toBe('');
 		startCompletion(el.view);
 		const shown = await waitForMessage();
 		expect(shown.textContent).toBe('Niemand gevonden');
-		expect(shown.getAttribute('role')).toBe('status');
+		// The message itself is no live region: it arrives with its text in it.
+		expect(shown.hasAttribute('role')).toBe(false);
+		expect(announcer().textContent).toBe('Niemand gevonden');
 		// In the same top-layer frame as the list, so a dialog around it does not clip it.
 		expect(shown.closest('.cm-nldd-popups')?.matches(':popover-open')).toBe(true);
 		expect(completionStatus(el.view.state)).not.toBe('active');
@@ -289,6 +307,18 @@ describe('nldd-text-editor typeahead without candidates', () => {
 		el.mentionEmptyText = say;
 		startCompletion(el.view);
 		expect((await waitForMessage()).textContent).toBe('Begin met typen om iemand te vinden');
+	});
+
+	it('says how many candidates there are, and again when the list gets shorter', async () => {
+		el = await make('hoi @a', [], byLabel(people));
+		startCompletion(el.view);
+		const rows = await openList(el);
+		expect(announcer().textContent).toBe(rows.length === 1 ? '1 resultaat' : `${rows.length} resultaten`);
+		el.view.dispatch({ changes: { from: 6, insert: 'no' }, selection: { anchor: 8 }, userEvent: 'input.type' });
+		for (let i = 0; i < 40 && announcer().textContent === `${rows.length} resultaten`; i++) {
+			await new Promise((resolve) => setTimeout(resolve, 25));
+		}
+		expect(announcer().textContent).toBe('1 resultaat');
 	});
 
 	it('gives way to the list once there are candidates', async () => {

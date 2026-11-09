@@ -12,6 +12,7 @@ De `nldd-design-build` skill leert je hoe de componenten werken. Deze skill gaat
 Alles hieronder geldt ongeacht waar je vandaan komt. Is je codebase specifiek, lees dan ook:
 
 - [`from-tailwind.md`](from-tailwind.md): de compilervalstrik, de tokenbrug, botsende globale regels, iconen.
+- [`from-react.md`](from-react.md): events die React niet ziet, helpers die na elke render opnieuw koppelen, en booleans die in React 18 altijd aan staan.
 - [`from-another-design-system.md`](from-another-design-system.md): je draaide al op een componentbibliotheek (NL Design System, ROOS van RVO, of een eigen systeem). Verzonnen tokennamen, de donkere weergave als controle, en twee systemen naast elkaar.
 - [`server-rendered.md`](server-rendered.md): HTML op de server met fragmentwissels (htmx, Turbo, Unpoly, LiveView). Wat een swap anders doet dan een paginalading, de nieuwe stack ernaast zetten, en wat vendoren van de bundel je oplevert en kost.
 - [`static-site-generator.md`](static-site-generator.md): een site die uit Markdown wordt gebouwd (MkDocs, Hugo, Eleventy). De HTML omzetten in een build-hook, de bundel zonder bundler, en wat er zonder JavaScript overblijft.
@@ -19,6 +20,18 @@ Alles hieronder geldt ongeacht waar je vandaan komt. Is je codebase specifiek, l
 De naslag die je bij een omzetting het hardst nodig hebt, staat in de skill `nldd-design`: de [componentreferentie](../nldd-design/reference.md) om te controleren of een attribuut of icoonnaam echt bestaat, en de [changelog](../nldd-design/changelog.md) om te zien wat er tussen jouw versie en de doelversie is veranderd.
 
 Wat je in de componentdocumentatie kunt opzoeken staat hier niet in; wat hier staat heeft in echte migraties tijd gekost.
+
+## Het doel: alles komt uit het systeem
+
+Een migratie is af als de app geen eigen vormgeving meer heeft. Geen stylesheet van jezelf, geen `class` of `className`, geen `style`, geen `div` of `span` die iets opmaakt, geen hexkleur, geen eigen iconenset. Wat er staat, zijn `nldd-*`-componenten met attributen en slots, en waar je er een mist een component van jezelf. Dat is de definitie van klaar, en `nldd lint --pure` bewaakt hem vanaf de eerste dag.
+
+Elke regel eigen CSS is een plek die je bij elke release zelf moet nalopen: een hernoemde variabele, een nieuw thema of een toegankelijkheidsfix in een component bereikt hem niet.
+
+Kan het systeem iets niet wat je nodig hebt, dan is dat een gat in het systeem. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Zet geen eigen stijl op een `nldd-*`-component om het te laten doen wat het niet kan.
+
+Mist er een heel component, dan mag je het zelf bouwen, met een eigen naam zonder `nldd-`. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in je melding, dan kan er besloten worden of het een officieel NLDD-component wordt. Een eigen component valt buiten de zuiverheidscheck: zet de map met zijn stijlen in `exclude` van `.nldd-lint.json`. Zie [Geen eigen vormgeving](../nldd-design-build/SKILL.md#geen-eigen-vormgeving).
+
+Voor een omweg op of om een `nldd-*`-component geldt: tot het gat is opgelost mag hij er staan, met een onderdrukking van de regel uit `pure` die drie dingen als reden draagt: de issuelink, de versie waarop je het vaststelde, en één zin waarom het component het zelf niet kan. Lukt die zin niet, dan is het smaak en hoort de omweg weg. De rest van deze skill verwijst naar deze regel.
 
 ## Het uitgangspunt: dit systeem faalt stil
 
@@ -36,19 +49,23 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 | Niet-bestaande variabele **met** hex-fallback | De fallback rendert; de token is versiering en donkere modus bevriest |
 | `className` in plaats van `class` op een rauw element | De klasse doet niets |
 | React `onChange` op een geslot native control | De handler draait nooit |
+| `disabled={busy}` in React 18, zonder de JSX-typen van het pakket | De knop staat altijd uit, ook als `busy` false is |
 | Breedteloze container om een kind dat zijn ouder meet | Nul pixels, hoogte blijft |
 
 ## Bouw de checks vóór je iets omzet
 
 Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die niets anders zag:
 
-1. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
-2. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
-3. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
-4. **Klassencheck.** Elke klasse die de app rendert moet een regel achter zich hebben, én elke regel in je eigen utilities-bestand moet een gebruiker hebben. Beide richtingen.
-5. **Gedragscheck.** De vier hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
+1. **Zuiverheidscheck.** Zet de groep `pure` van `nldd lint` aan in `.nldd-lint.json` (`"rules": { "pure": "error" }`) en accepteer wat er nu staat met `npx @nldd/design-system lint --update-baseline`. Hij meldt elke `class` of `className`, elke `style`, kale HTML die opmaakt (`div`, `p`, `h2`, `button`, `img` en verwanten) en elk eigen stylesheet, ook een CSS-bestand en een `<style>`-blok in Vue. Kale HTML die een component zelf opmaakt, zoals de `<select>` in `nldd-dropdown` of de tekst in `nldd-rich-text`, laat hij staan; welke per component staat in de [referentie](../nldd-design/reference.md) onder "Plain HTML it styles". De baseline telt per bestand en faalt zodra een telling stijgt. Draai `--tighten-baseline` in de commit waarin een bestand schoner wordt: dat verlaagt de telling en voegt nooit iets toe, en de samenvatting zegt het als de baseline ruimer is dan nodig. `--update-baseline` accepteert ook wat nieuw is, dus dat hoort niet meer in een gewone commit. Wat bewust blijft tot een issue is opgelost, krijgt een onderdrukking volgens de regel voor een omweg hierboven (`nldd-lint-disable-next-line style-no-own -- <issue>`), niet een plek in de baseline. Klaar is een lege baseline. Een iconenbibliotheek of meldingenbibliotheek ziet de linter niet, want die zijn componenten van de app: controleer je afhankelijkheden daar zelf op.
+2. **Registratiecheck.** Met de autoloader valt deze weg, en in een dev-build meldt de console elke `nldd-*`-tag die na een paar seconden nog niet geregistreerd is. Schrijf je de imports zelf uit, vergelijk dan elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
+3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
+4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
+5. **Klassencheck.** Elke klasse die de app nog rendert moet een regel achter zich hebben, én elke regel in je oude CSS moet een gebruiker hebben. Beide richtingen.
+6. **Gedragscheck.** De vijf hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
 
-Hang de eerste vier in pre-commit **en** in CI. Zorg dat je lokale hook hetzelfde commando draait als CI: een hook op `tsc --noEmit` terwijl CI `tsc -b` draait laat kapotte commits er stelselmatig door.
+De token- en klassencheck zijn steigers. Ze bewaken de CSS die er tijdens de omzetting nog staat, en verdwijnen samen met het laatste stylesheet. De groep `pure` blijft aan, want hij houdt de app daarna puur. Zet hem in de config en niet alleen als `--pure` in CI: dan doet een lokale `--update-baseline` hetzelfde als CI.
+
+Hang de eerste vijf in pre-commit **en** in CI. Zorg dat je lokale hook hetzelfde commando draait als CI: een hook op `tsc --noEmit` terwijl CI `tsc -b` draait laat kapotte commits er stelselmatig door.
 
 Bewijs bij elke check dat die faalt. Zet er een opzettelijke fout in, kijk of die niet-nul afsluit, haal die weg. Een check die alleen ooit slaagt is geen check. Doe dat ook voor elk faalpad apart: een check met twee soorten bevindingen heeft twee uitgangen, en er is er altijd één die je nooit hebt zien afgaan.
 
@@ -56,7 +73,7 @@ Herhaal die proef nadat iemand aan de check zelf heeft gezeten. Een check die ti
 
 ## Meet wat een pagina DOET, niet hoe die eruitziet
 
-De vier checks hierboven vangen code die niet klopt. Ze vangen niet dat een keuzelijst weg is. Een omzetting mag een pagina er anders uit laten zien; wat niet mag is de pagina minder laten **doen**, en juist dat faalt stil. In één migratie verdwenen onderweg een keuzelijst, een knop die een venster opende en de invoervelden van een filter. Geen van drieën gaf een foutmelding.
+De checks hierboven vangen code die niet klopt. Ze vangen niet dat een keuzelijst weg is. Een omzetting mag een pagina er anders uit laten zien; wat niet mag is de pagina minder laten **doen**, en juist dat faalt stil. In één migratie verdwenen onderweg een keuzelijst, een knop die een venster opende en de invoervelden van een filter. Geen van drieën gaf een foutmelding.
 
 Haal daarom uit de gerenderde HTML wat een pagina kan, en leg dat per route vast in een bestand:
 
@@ -86,7 +103,7 @@ Lees icoonnamen dus uit het pakket, en neem de aliassen mee: namen als `search` 
 
 ### Een verbouwing bewijs je met twee afdrukken
 
-Verplaats je vormgeving zonder iets te willen veranderen (inline stijlen naar klassen, `<style>`-blokken naar bestanden), dan zegt een unittest daar niets over. Maak in plaats daarvan een afdruk op de basiscommit, een op je werk, en vergelijk:
+Wil je iets veranderen zonder dat het er anders uitziet (een eigen knop vervangen door `nldd-button`, het oude CSS-framework weghalen), dan zegt een unittest daar niets over. Maak in plaats daarvan een afdruk op de basiscommit, een op je werk, en vergelijk:
 
 ```
 git worktree add /tmp/basis <basis-commit>
@@ -106,41 +123,41 @@ Wat je oude stijlsysteem ook was, de regel is dezelfde: een klasse of regel die 
 Daarom controleert de klassencheck uit de vorige sectie beide richtingen:
 
 - **Klassen zonder regel.** De markup noemt iets dat nergens meer gedefinieerd is.
-- **Regels zonder gebruiker.** Je eigen CSS-bestand houdt regels over waarvan de aanroepplek is omgezet. Een bestand dat in zijn kop zegt geen utility-framework te zijn, moet daaraan gehouden worden.
+- **Regels zonder gebruiker.** Je oude CSS houdt regels over waarvan de aanroepplek is omgezet. Haal ze weg in dezelfde commit als de omzetting, niet in een opruimronde later.
 
 Zoek daarbij verder dan het markup-attribuut. Klassen overleven het langst in lookup-tabellen (`Record<Status, string>` in je types-bestand), in ternaries en in template literals: niets daaraan ziet eruit als markup. Scan dus ook `.ts`, niet alleen `.tsx`.
 
 En sluit nooit een heel bestand uit van de check. Een uitsluiting op bestandsnaam voor graph-views ("die klassen zijn van de graph-bibliotheek") verborg 112 dode klassen over zes bestanden, waaronder een datatabel die als kale HTML rendeerde. Sluit uit op klassenaam, en alleen voor de handvol namen die een externe bibliotheek echt bezit.
 
+### Sommige regels dragen gedrag, geen opmaak
+
+Inventariseer vóór je Tailwind of je globale CSS weghaalt welke regels iets *doen*. De gevaarlijke zijn de regels achter een instelling van de gebruiker die via een data-attribuut op `<html>` werkt: `[data-contrast="high"] a { text-decoration: underline }`, of `[data-show-actions] .row-actions { opacity: 1 }` voor wie acties altijd in beeld wil. Haal je het bestand weg, dan blijft de schakelaar in de instellingen staan, schrijft hij zijn attribuut nog steeds, en verandert er niets. De gedragsmeting hierboven ziet het niet, want elke link en elke knop is er nog.
+
+Zoek dus in de CSS die weggaat op selectors met `[data-`, `:root[` en `html[`, en op `@media (prefers-*)`. Elke treffer krijgt een eigen plek in het nieuwe systeem of wordt bewust geschrapt, samen met de instelling die erbij hoort. Een instelling die niets meer doet hoort niet in de interface te blijven staan.
+
 Kom je van Tailwind, lees dan [`from-tailwind.md`](from-tailwind.md): daar zit een extra valstrik, omdat de compiler regels verzint voor klassen die nergens bestaan.
 
-## Events: de regel die de meeste code breekt
+## Importeer per subpad
 
-**React's synthetische events bereiken geen controls die in een custom element geslot zijn.**
+`import '@nldd/design-system'` registreert elk component, en dat komt allemaal in de eerste download. In een React-app met Vite was dat 2,8 MB JavaScript. Importeer per bestand alleen de subpaden die dat bestand gebruikt (`@nldd/design-system/button`, `@nldd/design-system/sheet`); in dezelfde app zakte de eerste lading daarmee naar 1,6 MB (384 kB gzip).
 
-`nldd-dropdown` is een visuele schil om een echte `<select>` die je als child meegeeft. Het component luistert op die select, roept `stopPropagation()` aan op de native `change`, en zendt daarna zijn eigen `CustomEvent` uit vanaf de host. React delegeert vanaf de root, dus:
+De hoofdingang importeert dezelfde modules als de subpaden, dus een overgebleven `import '@nldd/design-system'` naast losse subpaden kost alleen downloadgrootte, geen tweede registratie.
 
-- het gestopte native event bereikt de delegate nooit, en
-- wat er wel aankomt is een `CustomEvent` die React niet op `onChange` mapt.
+Met de hand bijhouden welk bestand welke subpaden nodig heeft, houdt niemand vol. De eenvoudigste uitweg is de autoloader (`import '@nldd/design-system/autoloader'`, zie "Installeren en bootstrappen" in [`nldd-design-build`](../nldd-design-build/SKILL.md)): die laadt elk component zodra het op de pagina komt, en een importlijst is er dan niet. Wil je de imports toch uitschrijven, genereer ze dan uit `custom-elements.json`: lees per bestand de `nldd-*`-tags, zoek per tag de module die hem definieert, en schrijf de importregels. Geef het script een `--check`-stand die faalt als de imports niet kloppen, en draai die in CI. Dat is dan meteen je registratiecheck. Elke tag heeft een subpad met de naam van zijn module, ook de onderdelen van `menu`, `toolbar` en `kanban` (`@nldd/design-system/menu-item`, `@nldd/design-system/kanban-column`). Een klasse, zoals `NLDDNotification` voor zijn statische `show()`, importeer je uit hetzelfde subpad als de registratie.
 
-Een React `onChange` op die select **vuurt nooit**. Dit is geen randgeval: in één codebase maakte het **37 handlers** stil onbruikbaar. Rolbeheer werkte volledig niet, deelrechten waren niet te geven, een filter stuurde geen enkele request. Niets in de UI liet dat blijken.
+## Events: wat een component zelf uitzendt
 
-Hetzelfde geldt voor:
+Een component met een eigen control in zijn shadow root, zoals `nldd-text-field` met zijn input, stopt de native `change` en zendt een eigen `CustomEvent` uit vanaf de host. `close` op sheets, popovers en modals heeft `bubbles: false`, net als de `close` van een native `<dialog>`. `nldd-dropdown` is anders: de `<select>` is van jou en zijn native `change` gaat gewoon door. Een framework dat luistert op het native control, of dat events vanaf de root delegeert, krijgt daardoor niets binnen, en een handler die nooit draait geeft geen fout. Luister op het `nldd-*`-element zelf, naar het event dat het component documenteert.
 
-- `nldd-text-field` en verwanten, die een eigen shadow input hebben en opnieuw uitzenden.
-- `close` op sheets, popovers en modals: dat heeft `bubbles: false`, dus een `onClose`-prop vuurt nooit en een dismissal reist niet omhoog. Mis je dat, dan heeft de overlay twee klikken nodig om te heropenen.
-
-**Schrijf op dag één één `useNlddEvent(ref, 'change', ...)`-helper** plus een `useNlddValue`-spiegel voor gecontroleerde waarden, en laat alles door je eigen wrapper-componenten lopen. Audit daarna: grep elke React-handler die gebonden is aan een element binnen een `nldd-*` tag.
-
-Let bij die audit ook op `defaultValue`. Een gecontroleerde `value=` vervangen door `defaultValue=` "om dit op te lossen" lijkt te werken en is een bug: data komt meestal uit een query, dus de eerste render heeft een lege lijst, de default bevriest op `""` en herstelt zich nooit.
+Kom je van React, lees dan [`from-react.md`](from-react.md): daar staan de helpers die het oplossen.
 
 ## Layout: instorten tot nul breedte
 
 Drie vormen om te kennen:
 
-- **`width="fit-content"` samen met `layout="row"` rendert 0 pixels.** De host is `display: block` met `width: fit-content`, terwijl de layout `display: flex` op een element in de shadow root zet. Een block-box om een flex-kind dat geen intrinsieke breedte meldt, wordt nul.
+- **`nldd-container` in een eigen element dat zijn breedte van de inhoud haalt,** zoals een `div` met `display: inline-flex`, `width: fit-content` of een float. De container is een query container op inline-size, en zo'n container telt voor zijn ouder niet mee met de breedte van zijn inhoud: hij meet 0 breed. De tekst erin breekt dan na elk woord en de pagina wordt een smalle, hoge kolom. In een `nldd-container width="fit-content"` regelt de container dat zelf; in een eigen element niet, en dat is een reden te meer om dat element weg te laten.
 - **Het omgekeerde.** Een container zonder breedte kan zijn buur uithongeren: een badge-kolom groeide tot 926px en hield de naam ernaast op nul.
-- **Een flex-item krimpt niet onder zijn inhoud zonder `min-width: 0`.** Een lange naam claimt de hele rij en duwt de rest van het scherm af.
+- **Een rij die een lange naam niet laat krimpen.** Een lange naam claimt de hele rij en duwt de rest van het scherm af. Krimpt een component niet onder zijn inhoud, dan is dat een melding, met een omweg volgens de regel bovenaan.
 
 Spoor dit op in de browser, niet door te lezen. Loop na elke pagina de DOM langs op elementen met breedte 0 die wel inhoud hebben, en op kinderen waarvan de rechterrand buiten hun ouder valt.
 
@@ -184,15 +201,29 @@ De hele rechtvaardiging voor dit systeem is WCAG 2.1 AA en EN 301 549. Een toega
 - **Dubbele `<h1>`**: de titelbalk van de app-shell rendert meestal de h1 van de pagina. Een detailpagina die er zelf een toevoegt levert twee concurrerende koppen van niveau 1.
 - **Selectie die alleen in kleur zit** faalt 1.4.1. Gebruik de eigen `current`/`checked` van het component, plus een tweede kanaal zoals een icoon.
 
-Is de kop een `nldd-title`, geef die dan `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Voeg je elders een kop-tag puur voor de semantiek toe (met de stijl van het component erbinnen), zet dan een reset zodat de standaardgrootte en -marge van de browser niet vechten met het component:
+Een kop is een `nldd-title` met `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Is de titel meer dan tekst, zoals een link, zet dan je eigen `<h2>` met de `<a>` erin in het standaardslot van `nldd-title`: de titel maakt die kop op, en de link hoort erbij. Een kale kop daarbuiten heeft een CSS-reset nodig, en dat is eigen opmaak.
 
-```css
-h1:not(nldd-rich-text h1), h2:not(nldd-rich-text h2) /* … */ {
-  margin: 0;
-  font-size: inherit;
-  font-weight: inherit;
-}
-```
+## Omzetten is geen ontwerpen
+
+Een omzetting die alle checks haalt, ziet er daarmee nog niet goed uit. Na een volledige omzetting van een React-app stond alles op de goede plek in de goede componenten, en toch was de hiërarchie zoek: elke pagina had een andere titelmaat, overal stonden kaders, en de gekozen optie in een formulier trok meer aandacht dan de knop om te versturen. Het meeste vond een aparte ronde die alleen naar de visuele hiërarchie keek, met een reviewer die zelf niets had omgezet. Plan die ronde als eigen stap: wie de omzetting deed, ziet wat er bedoeld was.
+
+In die ronde leverden deze punten het meeste op. De regels zelf staan elders, hier alleen waar je ze vindt:
+
+- De paginatitel in het `header`-slot van de eerste sectie, op elke pagina gelijk: [`page-structure`](../nldd-design-build/patterns/page-structure.md).
+- Navigatie tussen pagina's met `nldd-tab-bar navigation` en een `href` per item; een `nldd-segmented-control` kiest uit een vaste set ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren)).
+- Een kaart met knoppen erin is geen link; zie de kaarten onder "Toegankelijkheid" hierboven.
+- Terughoudend met kaders en gekleurde vlakken: een lijst, een lege stand of een los getal heeft er meestal geen nodig ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#visueel-en-layout)).
+- Geen knoppen die uit staan ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren)).
+
+## Testen zonder backend
+
+Hang een lokale ontwikkelomgeving nooit aan productie, ook niet met een publieke anon-sleutel die "toch alleen kan lezen". Een testscript dat een formulier invult, doet dat dan op echte gegevens. Wat werkte voor browsertests en screenshots:
+
+1. Zet nepgegevens in `localStorage` voordat de app laadt (in Playwright met `context.add_init_script`), zodat de app opstart met een gevulde stand.
+2. Breek in Playwright elk verzoek af dat niet naar localhost gaat (`context.route("**/*", ...)` met `route.abort()` voor alles daarbuiten). Een vergeten aanroep naar buiten faalt dan zichtbaar in plaats van stil productie te raken.
+3. Doe een ingelogde sessie na door de module die de sessie levert te herschrijven terwijl de devserver hem serveert, alleen in de testbrowser (`page.route` op het pad van die module, met een vervangende body). De app zelf heeft dan geen testmodus nodig.
+
+Bewijs daarnaast dat je screenshotscript de donkere modus echt aanzet: `color_scheme="dark"` op de context, en lees in de pagina `getComputedStyle(document.documentElement).colorScheme` terug voordat je een screenshot gelooft. Een `data-scheme` op `<html>` gaat voor de voorkeur van de browser, dus `matchMedia` alleen zegt niet genoeg. Zonder die controle meldden meerdere testrondes ten onrechte dat de donkere modus kapot was, terwijl het script hem nooit had aangezet.
 
 ## Controleer altijd tegen het pakket
 
@@ -214,7 +245,7 @@ Dat is echt gebeurd. Een consument schreef een helper die een wegwerp-childnode 
 
 Twee gewoonten die dat voorkomen:
 
-- **Schrijf boven elke workaround waaróm het component het zelf niet kan, plus de versie waarop je dat vaststelde.** Lukt die zin niet, dan is het geen workaround maar smaak.
+- **Zet bij elke workaround wat de regel voor een omweg bovenaan vraagt:** de issuelink, de versie en waarom het component het zelf niet kan.
 - **Loop bij elke upgrade je eigen omwegen langs.** De changelog vertelt wat er verandert, niet welke van jouw reparaties overbodig zijn geworden. Dat moet je zelf nagaan, en het is de enige manier waarop een fossiel weer verdwijnt.
 
 Houd je een lijst bij van wat het systeem niet kan, noteer dan per punt de versie waartegen je mat. Zonder dat wordt het een lijst die mensen blijven citeren nadat die niet meer waar is.
@@ -243,17 +274,19 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 
 ## Een volgorde die werkte
 
-1. Installeren, componenten registreren, stylesheet importeren.
-2. De vier checks bouwen. Van elk bewijzen dat die faalt.
+1. Installeren, stylesheet importeren, en componenten registreren met de autoloader of per subpad.
+2. De checks bouwen, met de groep `pure` en zijn baseline voorop. Van elk bewijzen dat die faalt.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
-4. De event-, value- en overlay-helpers schrijven, plus getypte JSX-bindings.
-5. Vormgeving uit de markup halen als **eigen stap**: inline stijlen en `<style>`-blokken naar klassen, met een afdruk vooraf en achteraf als bewijs dat er niets veranderde. Pas daarna vervangen door componenten. Andersom betaal je het terug: een migratie die de CSS-opruiming als laatste deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten.
-6. Het oude CSS-framework **vroeg** weghalen en repareren wat dat blootlegt.
+4. De event-, value- en overlay-helpers schrijven, en in een React-app de JSX-typen van het pakket importeren (`@nldd/design-system/react`).
+5. Per scherm de vormgeving direct vervangen door componenten, en de CSS van dat scherm in dezelfde commit weghalen. Zet inline stijlen niet eerst om naar klassen: dat verplaatst eigen CSS in plaats van hem weg te halen. Bewaar ook geen opruimronde voor het eind. Een migratie die dat deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten. Wat geen component kan, wordt een issue en een uitzondering in de code met de issuelink.
+6. Inventariseren welke globale regels gedrag dragen. Daarna het oude CSS-framework **vroeg** weghalen en repareren wat dat blootlegt.
 7. De app-shell omzetten (layout, navigatie, header), achter een vlag als de navigatie voor iedereen verandert.
 8. Je eigen primitives herimplementeren (Button, Input, Select, Card) met behoud van hun API. Dat converteert de nette aanroepplekken in één klap.
 9. Schermen omzetten, goedkoopste eerst, zodat het idioom zich zet waar een fout weinig kost.
 10. Browser-sweep per pagina: nulbreedte, tab-stops, koppen, computed styles op alles wat op een tabel lijkt, plus het gedragsoppervlak tegen stap 3.
-11. Je eigen workarounds langslopen: welke zijn overbodig geworden.
-12. De commentronde.
+11. Een ronde op visuele hiërarchie, met een reviewer die niets heeft omgezet.
+12. Je eigen workarounds langslopen: welke zijn overbodig geworden.
+13. De commentronde.
+14. Het laatste stylesheet weghalen, de token- en klassencheck mee. De baseline is leeg, en elke onderdrukking van een regel uit `pure` wijst naar een open issue.
 
 Reken erop dat de verhouding rauwe markup je schatting bepaalt. In dit geval stonden 292 rauwe `<button>` tegenover 61 `<Button>`: het herimplementeren van de primitive converteerde een vijfde, de rest was handwerk op de aanroepplek. Tel allebei voordat je iets belooft.

@@ -19,6 +19,13 @@ export default {
 		},
 	},
 	argTypes: {
+		color: {
+			control: 'select',
+			options: ['(auto)', 'inherit'],
+			mapping: { '(auto)': '' },
+			description: 'Met inherit krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
+			table: { defaultValue: { summary: '(auto)' } },
+		},
 		size: {
 			control: 'select',
 			options: ['xs', 'sm'],
@@ -53,6 +60,7 @@ export default {
 
 	},
 	args: {
+		color: '',
 		size: 'sm',
 		checked: false,
 		accessibleLabel: 'Switch',
@@ -62,8 +70,9 @@ export default {
 	},
 };
 
-const Template = ({ size, checked, accessibleLabel, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ color, size, checked, accessibleLabel, invalid, disabled, required }: Record<string, any>) => html`
 	<nldd-switch
+		color=${color || nothing}
 		?checked=${checked}
 		?invalid=${invalid}
 		?required=${required}
@@ -76,6 +85,28 @@ const Template = ({ size, checked, accessibleLabel, invalid, disabled, required 
 export const Standaard = {
 	render: Template,
 	args: {},
+};
+
+export const KleurInherit = {
+	name: 'Kleur inherit',
+	render: () => html`
+		<nldd-container
+			layout="wrap"
+			gap="32"
+			padding="24"
+			style="--context-parent-background-color: var(--semantics-surfaces-accent-filled-background-color); background-color: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color);"
+		>
+			<nldd-switch
+				color="inherit"
+				accessible-label="Uit"
+			></nldd-switch>
+			<nldd-switch
+				color="inherit"
+				checked
+				accessible-label="Aan"
+			></nldd-switch>
+		</nldd-container>
+	`,
 };
 
 export const AlleToestanden = {

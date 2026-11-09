@@ -10,8 +10,9 @@ import '../../container/container.js';
 
 const sidebar = html`
 	<nldd-title
-		size="sm"
+		size="5"
 		text="Filters"
+		heading-level="2"
 	></nldd-title>
 	<nldd-rich-text>
 		<ul>

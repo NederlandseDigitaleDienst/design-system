@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
+import type { NLDDTitleCell } from './title-cell.js';
 import './title-cell.js';
 
 describe('nldd-title-cell', () => {
@@ -15,10 +16,15 @@ describe('nldd-title-cell', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('defaults to size 5', async () => {
-		el = await fixture('<nldd-title-cell></nldd-title-cell>');
+	it('leaves size unset by default, styled as size 5', async () => {
+		el = await fixture('<nldd-title-cell text="A"></nldd-title-cell>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('size')).toBe('5');
+		expect((el as NLDDTitleCell).size).toBeUndefined();
+		expect(el.hasAttribute('size')).toBe(false);
+		const unsetFont = getComputedStyle(el).getPropertyValue('--_title-cell-font');
+		el.setAttribute('size', '5');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el).getPropertyValue('--_title-cell-font')).toBe(unsetFont);
 	});
 
 	it('reflects size attribute', async () => {

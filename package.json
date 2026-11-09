@@ -1,15 +1,24 @@
 {
   "name": "@nldd/design-system",
-  "version": "0.14.0",
+  "version": "0.21.1",
   "description": "Designsysteem voor de Nederlandse Digitale Dienst",
   "type": "module",
-  "main": "dist/components/components.js",
-  "module": "dist/components/components.js",
+  "main": "dist/components/index.js",
+  "module": "dist/components/index.js",
+  "types": "dist/components/index.d.ts",
   "unpkg": "dist/nldd.min.js",
   "jsdelivr": "dist/nldd.min.js",
   "exports": {
-    ".": "./dist/components/components.js",
+    ".": {
+      "types": "./dist/components/index.d.ts",
+      "default": "./dist/components/index.js"
+    },
     "./bundle": "./dist/nldd.min.js",
+    "./autoloader": {
+      "types": "./dist/utilities/autoloader.d.ts",
+      "default": "./dist/utilities/autoloader.js"
+    },
+    "./cdn/*": "./dist/cdn/*",
     "./button": {
       "types": "./dist/components/actions/button/button.d.ts",
       "default": "./dist/components/actions/button/button.js"
@@ -158,6 +167,10 @@
       "types": "./dist/components/inputs/number-field/number-field.d.ts",
       "default": "./dist/components/inputs/number-field/number-field.js"
     },
+    "./one-time-code-field": {
+      "types": "./dist/components/inputs/one-time-code-field/one-time-code-field.d.ts",
+      "default": "./dist/components/inputs/one-time-code-field/one-time-code-field.js"
+    },
     "./password-field": {
       "types": "./dist/components/inputs/password-field/password-field.d.ts",
       "default": "./dist/components/inputs/password-field/password-field.js"
@@ -181,6 +194,10 @@
     "./segmented-control": {
       "types": "./dist/components/inputs/segmented-control/segmented-control.d.ts",
       "default": "./dist/components/inputs/segmented-control/segmented-control.js"
+    },
+    "./swatch-picker": {
+      "types": "./dist/components/inputs/swatch-picker/swatch-picker.d.ts",
+      "default": "./dist/components/inputs/swatch-picker/swatch-picker.js"
     },
     "./stepper": {
       "types": "./dist/components/inputs/stepper/stepper.d.ts",
@@ -326,9 +343,9 @@
       "types": "./dist/components/layout/page-footer/page-footer.d.ts",
       "default": "./dist/components/layout/page-footer/page-footer.js"
     },
-    "./task-board": {
-      "types": "./dist/components/layout/task-board/task-board.d.ts",
-      "default": "./dist/components/layout/task-board/task-board.js"
+    "./kanban": {
+      "types": "./dist/components/layout/kanban/kanban.d.ts",
+      "default": "./dist/components/layout/kanban/kanban.js"
     },
     "./list": {
       "types": "./dist/components/lists-and-tables/list/list.d.ts",
@@ -393,6 +410,10 @@
     "./link": {
       "types": "./dist/components/navigation/link/link.d.ts",
       "default": "./dist/components/navigation/link/link.js"
+    },
+    "./link-group": {
+      "types": "./dist/components/navigation/link-group/link-group.d.ts",
+      "default": "./dist/components/navigation/link-group/link-group.js"
     },
     "./skip-link": {
       "types": "./dist/components/navigation/skip-link/skip-link.d.ts",
@@ -462,6 +483,30 @@
       "types": "./dist/components/status-and-feedback/just-in-time-education/just-in-time-education.d.ts",
       "default": "./dist/components/status-and-feedback/just-in-time-education/just-in-time-education.js"
     },
+    "./menu-divider": {
+      "types": "./dist/components/actions/menu/menu-divider.d.ts",
+      "default": "./dist/components/actions/menu/menu-divider.js"
+    },
+    "./menu-group": {
+      "types": "./dist/components/actions/menu/menu-group.d.ts",
+      "default": "./dist/components/actions/menu/menu-group.js"
+    },
+    "./menu-item": {
+      "types": "./dist/components/actions/menu/menu-item.d.ts",
+      "default": "./dist/components/actions/menu/menu-item.js"
+    },
+    "./toolbar-item": {
+      "types": "./dist/components/actions/toolbar/toolbar-item.d.ts",
+      "default": "./dist/components/actions/toolbar/toolbar-item.js"
+    },
+    "./toolbar-title": {
+      "types": "./dist/components/actions/toolbar/toolbar-title.d.ts",
+      "default": "./dist/components/actions/toolbar/toolbar-title.js"
+    },
+    "./kanban-column": {
+      "types": "./dist/components/layout/kanban/kanban-column.d.ts",
+      "default": "./dist/components/layout/kanban/kanban-column.js"
+    },
     "./styles": "./dist/css/global.css",
     "./styles/open-font": "./dist/css/global-open-font.css",
     "./styles/system-font": "./dist/css/global-open-font.css",
@@ -504,6 +549,9 @@
     },
     "./vue": {
       "types": "./dist/types/vue.d.ts"
+    },
+    "./react": {
+      "types": "./dist/types/react.d.ts"
     }
   },
   "files": [
@@ -529,9 +577,10 @@
     "generate:colors": "node scripts/generate-colors.js && npm run generate:themes",
     "generate:themes": "node scripts/generate-themes.js",
     "generate:component-reference": "node scripts/generate-component-reference.js",
-    "generate:cem": "cem analyze && npm run generate:vue-types && npm run generate:lint-data",
+    "generate:cem": "cem analyze && npm run generate:vue-types && npm run generate:react-types && npm run generate:autoloader && npm run generate:lint-data",
     "generate:lint-data": "node scripts/generate-lint-data.js",
     "generate:vue-types": "node scripts/generate-vue-types.js",
+    "generate:react-types": "node scripts/generate-react-types.js",
     "generate:skill-changelog": "node scripts/generate-skill-changelog.js",
     "generate:skill-principles": "node scripts/generate-skill-principles.js",
     "generate:skill-patterns": "node scripts/generate-skill-patterns.js",
@@ -542,17 +591,22 @@
     "validate:host-styles": "node scripts/validate-host-styles.js",
     "validate:component-api": "node scripts/validate-component-api.js",
     "validate:skill-markup": "node scripts/validate-skill-markup.js",
+    "validate:changelog": "node scripts/validate-changelog.js",
     "lint:stories": "node scripts/lint-stories.js",
-    "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:bundle && npm run build:components:standalone && npm run build:exports && npm run generate:cem",
+    "lint:www": "node lint/cli.js lint www/",
+    "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:standalone && npm run build:components:cdn && npm run build:exports && npm run generate:cem",
     "build:icons": "node scripts/generate-icon-registry.js && node scripts/generate-logo.js",
-    "optimize:icons": "svgo --config scripts/svgo.config.mjs",
+    "optimize:icons": "node scripts/optimize-icons.js",
     "build:components:modules": "tsc -p tsconfig.build.json",
-    "build:components:bundle": "vite build",
     "build:exports": "node scripts/generate-exports.js",
     "clean": "rm -rf dist",
     "clean:components": "rm -rf dist/components dist/nldd.min.js",
     "prestorybook": "npm run build:icons",
     "storybook": "storybook dev -p 6006",
+    "prewww": "npm run build:icons",
+    "www": "vite --config www/vite.config.ts",
+    "prebuild:www": "npm run build:icons",
+    "build:www": "vite build --config www/vite.config.ts",
     "sb:start": "node scripts/storybook-manager.js start",
     "sb:stop": "node scripts/storybook-manager.js stop",
     "sb:status": "node scripts/storybook-manager.js status",
@@ -574,7 +628,10 @@
     "pretypecheck": "npm run build:icons",
     "typecheck": "tsc --noEmit",
     "test:vue-types": "vue-tsc --noEmit -p type-tests/vue/tsconfig.json",
+    "test:react-types": "tsc -p type-tests/react/tsconfig.json",
     "build:components:standalone": "vite build --config vite.bundle.config.ts",
+    "build:components:cdn": "vite build --config vite.cdn.config.ts",
+    "generate:autoloader": "node scripts/generate-autoloader.js",
     "generate:translations": "node scripts/generate-translations.js"
   },
   "devDependencies": {
@@ -590,8 +647,8 @@
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/addon-themes": "^10.6.0",
     "@storybook/web-components-vite": "^10.6.0",
-    "@vitest/browser-playwright": "5.0.5",
-    "@vitest/coverage-v8": "5.0.5",
+    "@vitest/browser-playwright": "5.1.0",
+    "@vitest/coverage-v8": "5.1.0",
     "ajv": "^8.20.0",
     "axe-core": "^4.13.0",
     "conventional-changelog": "^8.1.0",
@@ -607,13 +664,13 @@
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.58.0",
     "vite": "8.3.5",
-    "vitest": "5.0.5",
+    "vitest": "5.1.0",
     "vue": "^3.5.40",
     "vue-tsc": "^3.3.7",
     "yaml": "^2.9.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.19.0"
   },
   "keywords": [
     "design-system",
@@ -642,9 +699,9 @@
     "@codemirror/view": "^6.43.4",
     "@floating-ui/dom": "^1.7.6",
     "@lezer/highlight": "^1.2.3",
-    "css-select": "^5.2.2",
-    "css-what": "^6.2.2",
-    "htmlparser2": "^10.1.0",
+    "css-select": "^7.0.0",
+    "css-what": "^8.0.0",
+    "htmlparser2": "^12.0.0",
     "lit": "^3.3.1"
   },
   "customElements": "custom-elements.json",
@@ -652,7 +709,7 @@
     "conventional-changelog-conventionalcommits": "10.2.1"
   },
   "optionalDependencies": {
-    "oxc-parser": "^0.156.0"
+    "oxc-parser": "^0.157.0"
   },
   "bin": {
     "nldd": "lint/cli.js"

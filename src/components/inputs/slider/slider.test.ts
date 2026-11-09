@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDSlider } from './slider.js';
@@ -42,13 +43,22 @@ describe('nldd-slider', () => {
 		expect(el._value).toBe(1);
 	});
 
-	it('says the value the Dutch way, or as formatValue writes it', async () => {
-		el = await fixture<NLDDSlider>('<nldd-slider min="0" max="2000" value="1200"></nldd-slider>');
+	it('says the value in the language of the page, or as formatValue writes it', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider lang="nl" min="0" max="2000" value="1200"></nldd-slider>');
 		expect(inputs(el)[0].getAttribute('aria-valuetext')).toBe('1.200');
 		expect(el.shadowRoot!.querySelector('.slider__tooltip--value')!.textContent!.trim()).toBe('1.200');
+		el.setAttribute('lang', 'en');
+		el.requestUpdate();
+		await waitForUpdate(el);
+		expect(inputs(el)[0].getAttribute('aria-valuetext')).toBe('1,200');
 		el.formatValue = (value) => `€ ${value}`;
 		await waitForUpdate(el);
 		expect(inputs(el)[0].getAttribute('aria-valuetext')).toBe('€ 1200');
+	});
+
+	it('keeps the decimals of min on a whole step', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider min="0.5" max="10.5" step="1" value="1.4"></nldd-slider>');
+		expect(el._value).toBe(1.5);
 	});
 
 	it('fires input while it moves and change when it is let go, once each', async () => {
@@ -58,6 +68,71 @@ describe('nldd-slider', () => {
 		el.addEventListener('change', (event) => seen.push(`change ${(event as CustomEvent).detail.value}`));
 		slide(inputs(el)[0], 70);
 		expect(seen).toEqual(['input 70', 'change 70']);
+	});
+
+	it('moves a tenth of the range down or up on a click on its icons', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider start-icon="no-volume" end-icon="high-volume" value="40"></nldd-slider>');
+		const seen: string[] = [];
+		el.addEventListener('input', (event) => seen.push(`input ${(event as CustomEvent).detail.value}`));
+		el.addEventListener('change', (event) => seen.push(`change ${(event as CustomEvent).detail.value}`));
+		const [start, end] = ['.slider__start-icon', '.slider__end-icon']
+			.map((selector) => el.shadowRoot!.querySelector<HTMLElement>(selector)!);
+		end.click();
+		expect(el.value).toBe(50);
+		start.click();
+		start.click();
+		expect(el.value).toBe(30);
+		await waitForUpdate(el);
+		expect(inputs(el)[0].value).toBe('30');
+		expect(seen).toEqual(['input 50', 'change 50', 'input 40', 'change 40', 'input 30', 'change 30']);
+	});
+
+	it('takes at least one step on an icon click, and stops at the ends without an event', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider end-icon="high-volume" min="0" max="5" step="2" value="4"></nldd-slider>');
+		const change = vi.fn();
+		el.addEventListener('change', change);
+		const end = el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!;
+		end.click();
+		expect(el.value).toBe(5);
+		end.click();
+		expect(change).toHaveBeenCalledTimes(1);
+	});
+
+	it('does nothing on an icon click when disabled or a range', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider end-icon="high-volume" value="40" disabled></nldd-slider>');
+		el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!.click();
+		expect(el.value).toBe(40);
+		cleanup(el);
+		el = await fixture<NLDDSlider>('<nldd-slider range end-icon="high-volume" start-value="20" end-value="60"></nldd-slider>');
+		el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!.click();
+		expect([el.startValue, el.endValue]).toEqual([20, 60]);
+	});
+
+	it('takes the same tenth of the range on Shift with an arrow key as on Page Up', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider value="40"></nldd-slider>');
+		const seen: string[] = [];
+		el.addEventListener('change', (event) => seen.push(`change ${(event as CustomEvent).detail.value}`));
+		inputs(el)[0].focus();
+		await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
+		expect(el.value).toBe(50);
+		await userEvent.keyboard('{Shift>}{ArrowDown}{ArrowDown}{/Shift}');
+		expect(el.value).toBe(30);
+		await userEvent.keyboard('{PageUp}');
+		expect(el.value).toBe(40);
+		await userEvent.keyboard('{ArrowRight}');
+		expect(el.value).toBe(41);
+		expect(seen.slice(0, 3)).toEqual(['change 50', 'change 40', 'change 30']);
+	});
+
+	it('moves the focused thumb of a range on Shift with an arrow key', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+		inputs(el)[1].focus();
+		await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
+		inputs(el)[0].focus();
+		await userEvent.keyboard('{Shift>}{ArrowLeft}{/Shift}');
+		expect([el.startValue, el.endValue]).toEqual([10, 70]);
+		await waitForUpdate(el);
+		expect(inputs(el).map((input) => input.value)).toEqual(['10', '70']);
 	});
 
 	it('submits its value under name, and resets with its form', async () => {
@@ -72,6 +147,37 @@ describe('nldd-slider', () => {
 		await waitForUpdate(el);
 		expect(new FormData(form).get('volume')).toBe('30');
 		form.remove();
+	});
+
+	it('resets to its value attribute, also one set after it was connected', async () => {
+		const form = document.createElement('form');
+		document.body.append(form);
+		el = await fixture<NLDDSlider>('<nldd-slider name="volume"></nldd-slider>');
+		form.append(el);
+		el.setAttribute('value', '30');
+		await waitForUpdate(el);
+		slide(inputs(el)[0], 80);
+		form.reset();
+		await waitForUpdate(el);
+		expect(new FormData(form).get('volume')).toBe('30');
+		form.remove();
+	});
+
+	it('shows the tooltip while the pointer is over an icon, and while one is pressed', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider start-icon="minus" end-icon="plus" value="40"></nldd-slider>');
+		await waitForUpdate(el);
+		const tooltip = el.shadowRoot!.querySelector<HTMLElement>('.slider__tooltip--value')!;
+		const icon = el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!;
+		expect(getComputedStyle(tooltip).visibility).toBe('hidden');
+		await userEvent.hover(icon);
+		expect(getComputedStyle(tooltip).visibility).toBe('visible');
+		await userEvent.unhover(icon);
+		icon.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.slider__control')!.classList.contains('is-active')).toBe(true);
+		window.dispatchEvent(new PointerEvent('pointerup'));
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.slider__control')!.classList.contains('is-active')).toBe(false);
 	});
 
 	it('keeps its value when a restored state is not a number', async () => {
@@ -132,14 +238,114 @@ describe('nldd-slider', () => {
 			expect([start.getAttribute('aria-label'), end.getAttribute('aria-label')]).toEqual(['Prijs, minimum', 'Prijs, maximum']);
 		});
 
-		it('keeps the thumbs from passing each other', async () => {
+		it('stops a thumb at the other one for Home, End, Page Up and Page Down', async () => {
 			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
 			const [start, end] = inputs(el);
-			slide(start, 90);
-			expect(el._start).toBe(60);
+			start.focus();
+			start.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+			slide(start, 100);
+			expect([el._start, el._end]).toEqual([60, 60]);
 			expect(start.value).toBe('60');
+			end.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true }));
 			slide(end, 10);
-			expect(el._end).toBe(60);
+			expect([el._start, el._end]).toEqual([60, 60]);
+			expect(el.shadowRoot!.activeElement).toBe(start);
+		});
+
+		it('takes a thumb past the other one with an arrow key, and moves focus to that end', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range accessible-label="Prijs" start-value="50" end-value="50"></nldd-slider>');
+			const [start, end] = inputs(el);
+			start.focus();
+			start.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+			slide(start, 51);
+			expect([el._start, el._end]).toEqual([50, 51]);
+			expect([start.value, end.value]).toEqual(['50', '51']);
+			expect(el.shadowRoot!.activeElement).toBe(end);
+		});
+
+		it('draws the focused thumb over the other one', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="50" end-value="52"></nldd-slider>');
+			const [start, end] = inputs(el);
+			const z = (input: HTMLInputElement) => Number(getComputedStyle(input).zIndex) || 0;
+			start.focus();
+			expect(z(start)).toBeGreaterThan(z(end));
+			end.focus();
+			expect(z(end)).toBeGreaterThan(z(start));
+		});
+
+		it('draws the held thumb over the other one, also over the focused one', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="50" end-value="52"></nldd-slider>');
+			const [start, end] = inputs(el);
+			const z = (input: HTMLInputElement) => Number(getComputedStyle(input).zIndex) || 0;
+			end.focus();
+			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+			await waitForUpdate(el);
+			expect(z(start)).toBeGreaterThan(z(end));
+			window.dispatchEvent(new PointerEvent('pointerup'));
+		});
+
+		it('takes a thumb past the other one with Shift and an arrow key too', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="40" end-value="45"></nldd-slider>');
+			const [start, end] = inputs(el);
+			start.focus();
+			start.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true, bubbles: true, cancelable: true }));
+			expect([el._start, el._end]).toEqual([45, 50]);
+			expect(el.shadowRoot!.activeElement).toBe(end);
+		});
+
+		it('gives the pressed look to the end a drag holds, also once it has passed the other thumb', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+			const [start] = inputs(el);
+			const control = el.shadowRoot!.querySelector('.slider__control')!;
+			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+			await waitForUpdate(el);
+			expect(control.classList.contains('is-holding-start')).toBe(true);
+			slide(start, 70, false);
+			await waitForUpdate(el);
+			expect(control.classList.contains('is-holding-end')).toBe(true);
+			expect(control.classList.contains('is-holding-start')).toBe(false);
+			window.dispatchEvent(new PointerEvent('pointerup'));
+			await waitForUpdate(el);
+			expect(control.classList.contains('is-holding')).toBe(false);
+		});
+
+		it('takes a dragged thumb past the other one, and on as that end until it is let go', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+			const [start, end] = inputs(el);
+			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+			start.focus();
+			slide(start, 70, false);
+			expect([el._start, el._end]).toEqual([60, 70]);
+			expect(el.shadowRoot!.activeElement).toBe(end);
+			slide(start, 80, false);
+			expect([el._start, el._end]).toEqual([60, 80]);
+			slide(start, 40, false);
+			expect([el._start, el._end]).toEqual([40, 60]);
+			expect(el.shadowRoot!.activeElement).toBe(start);
+			window.dispatchEvent(new PointerEvent('pointerup'));
+			slide(start, 90);
+			expect([el._start, el._end]).toEqual([60, 60]);
+		});
+
+		it('moves focus to the other thumb without a focus ring while it is dragged', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+			const [start, end] = inputs(el);
+			const focus = vi.spyOn(end, 'focus');
+			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+			start.focus();
+			slide(start, 70, false);
+			expect(focus).toHaveBeenCalledWith({ focusVisible: false });
+			window.dispatchEvent(new PointerEvent('pointerup'));
+		});
+
+		it('keeps the focus ring when a key takes a thumb past the other one', async () => {
+			el = await fixture<NLDDSlider>('<nldd-slider range start-value="50" end-value="50"></nldd-slider>');
+			const [start, end] = inputs(el);
+			const focus = vi.spyOn(end, 'focus');
+			start.focus();
+			start.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+			slide(start, 51);
+			expect(focus).toHaveBeenCalledWith(undefined);
 		});
 
 		it('fires both ends in its events, and submits both under name', async () => {
@@ -174,6 +380,12 @@ describe('nldd-slider', () => {
 			press(at(40), 'pointermove', window);
 			press(at(40), 'pointerup', window);
 			expect([el._start, el._end]).toEqual([40, 70]);
+			// Dragged on from the track, past the other thumb.
+			press(at(45), 'pointerdown');
+			press(at(90), 'pointermove', window);
+			expect([el._start, el._end]).toEqual([70, 90]);
+			expect(el.shadowRoot!.activeElement).toBe(inputs(el)[1]);
+			press(at(90), 'pointerup', window);
 			unloadTokens();
 		});
 
@@ -201,7 +413,7 @@ describe('nldd-slider', () => {
 
 		it('joins the two tooltips where they would overlap', async () => {
 			const unloadTokens = loadTokens();
-			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="2000" start-value="200" end-value="1800" style="width: 400px"></nldd-slider>');
+			el = await fixture<NLDDSlider>('<nldd-slider lang="nl" range min="0" max="2000" start-value="200" end-value="1800" style="width: 400px"></nldd-slider>');
 			await waitForUpdate(el);
 			const slider = el.shadowRoot!.querySelector('.slider')!;
 			expect(slider.classList.contains('is-merged')).toBe(false);

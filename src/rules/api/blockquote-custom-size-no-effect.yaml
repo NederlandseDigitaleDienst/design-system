@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-blockquote:state(custom-size-below-floor)'
+message: 'This custom size is smaller than the quote''s own size at this breakpoint and shows at that size.'

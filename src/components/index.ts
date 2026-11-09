@@ -60,12 +60,14 @@ export { NLDDDropdown } from './inputs/dropdown/dropdown.js';
 export { NLDDFileField } from './inputs/file-field/file-field.js';
 export { NLDDMultiLineTextField } from './inputs/multi-line-text-field/multi-line-text-field.js';
 export { NLDDNumberField } from './inputs/number-field/number-field.js';
+export { NLDDOneTimeCodeField } from './inputs/one-time-code-field/one-time-code-field.js';
 export { NLDDPasswordField } from './inputs/password-field/password-field.js';
 export { NLDDRadioButton } from './inputs/radio-button/radio-button.js';
 export { NLDDRadioButtonField } from './inputs/radio-button-field/radio-button-field.js';
 export { NLDDRadioButtonGroup } from './inputs/radio-button-group/radio-button-group.js';
 export { NLDDSearchField } from './inputs/search-field/search-field.js';
 export { NLDDSegmentedControl } from './inputs/segmented-control/segmented-control.js';
+export { NLDDSwatchPicker, NLDDSwatchPickerItem } from './inputs/swatch-picker/swatch-picker.js';
 export { NLDDStepper } from './inputs/stepper/stepper.js';
 export { NLDDSwitch } from './inputs/switch/switch.js';
 export { NLDDSwitchField } from './inputs/switch-field/switch-field.js';
@@ -113,7 +115,7 @@ export { NLDDSheet } from './layout/sheet/sheet.js';
 export { NLDDWindow } from './layout/window/window.js';
 
 export { NLDDPageFooter, NLDDPageFooterLegalBar, NLDDPageFooterLegalBarItem } from './layout/page-footer/page-footer.js';
-export { NLDDTaskBoard, NLDDTaskBoardColumn } from './layout/task-board/task-board.js';
+export { NLDDKanban, NLDDKanbanColumn } from './layout/kanban/kanban.js';
 
 
 // # List and Table components
@@ -140,6 +142,7 @@ export { NLDDBreadcrumbs, NLDDBreadcrumbsItem } from './navigation/breadcrumbs/b
 export { NLDDMenuBar } from './navigation/menu-bar/menu-bar.js';
 export { NLDDMenuBarItem } from './navigation/menu-bar-item/menu-bar-item.js';
 export { NLDDLink } from './navigation/link/link.js';
+export { NLDDLinkGroup } from './navigation/link-group/link-group.js';
 export { NLDDSkipLink } from './navigation/skip-link/skip-link.js';
 export { NLDDTopNavigationBar } from './navigation/top-navigation-bar/top-navigation-bar.js';
 export { NLDDTopTitleBar } from './navigation/top-title-bar/top-title-bar.js';

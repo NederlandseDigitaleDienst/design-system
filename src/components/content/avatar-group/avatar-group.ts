@@ -52,6 +52,7 @@ import '../../lists-and-tables/cells/text-cell/text-cell.js';
 import '../../lists-and-tables/cells/spacer-cell/spacer-cell.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddAvatarGroupTranslations } from './avatar-group.i18n.js';
+import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 /** The smallest size at which a count of one, two, three and four digits fits. */
 const MIN_SIZE_FOR_COUNT = [24, 40, 56, 80];
@@ -63,7 +64,7 @@ const OVERLAP = 0.2;
 export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGroupTranslations) {
 	static override styles = avatarGroupStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('40') })
 	size = '40';
 
 	@property({ type: Number, reflect: true })

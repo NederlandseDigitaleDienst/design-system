@@ -106,23 +106,17 @@ const runOverflowAction = (editor: any, action: string): void => {
 	editor.runCommand(name);
 };
 
-// Overflow menu-items are cloned into a menu in document.body, so their @click
-// listeners are lost — but the `select` event bubbles (composed). We catch it at
-// the document, resolve the editor via the overflow menu's anchor (the overflow
-// button lives in the toolbar's shadow root, itself inside a .demo-editor), and
-// run the item's `value` as an action. Scoped to the toolbar's own overflow menu
-// so the inline heading menu (its own @select handler) isn't double-handled.
-document.addEventListener('select', (event: Event) => {
+// The toolbar's overflow menu holds copies of the menu items in each item's
+// `overflow` slot, and sends a `select` on a copy on to its original. Those
+// originals sit here in the light DOM, so a listener on the wrapper sees them
+// and runs the item's `value` as an action.
+const onOverflowSelect = (event: Event) => {
 	const item = event.target as HTMLElement | null;
-	if (item?.tagName !== 'NLDD-MENU-ITEM') return;
-	const menu = item.closest('nldd-menu') as (HTMLElement & { anchorElement?: Element | null }) | null;
-	if (!menu?.id.startsWith('nldd-toolbar-overflow-menu')) return;
+	if (item?.tagName !== 'NLDD-MENU-ITEM' || !item.closest('[slot="overflow"]')) return;
 	const action = item.getAttribute('value');
-	if (!action) return;
-	const toolbar = (menu.anchorElement?.getRootNode() as ShadowRoot | null)?.host as Element | undefined;
-	const editor = toolbar?.closest('.demo-editor')?.querySelector('nldd-text-editor');
-	if (editor) runOverflowAction(editor, action);
-});
+	const editor = editorOf(event.currentTarget as Element);
+	if (action && editor) runOverflowAction(editor, action);
+};
 const onToolbarState = (event: CustomEvent) => {
 	const active = event.detail.active;
 	const root = event.currentTarget as Element;
@@ -209,10 +203,9 @@ const onToolbarState = (event: CustomEvent) => {
 	// Mirror the disabled state onto the overflow fallbacks, so an overflowed control
 	// is just as unusable in the menu as it is in the bar. Set it on both the light-DOM
 	// originals (used for the next clone) and the live clones in the toolbar's overflow
-	// menu (which sits in document.body and doesn't re-clone on a mere state change).
+	// menu, in its shadow root.
 	const toolbar = root.querySelector('nldd-toolbar');
-	const overflowMenu = Array.from(document.querySelectorAll('nldd-menu[id^="nldd-toolbar-overflow-menu"]'))
-		.find((menu) => (menu as any).anchorElement?.getRootNode()?.host === toolbar) ?? null;
+	const overflowMenu = toolbar?.shadowRoot?.querySelector('nldd-menu[id^="nldd-toolbar-overflow-menu"]') ?? null;
 	const { canUndo, canRedo, canIndent, canOutdent, empty } = event.detail;
 	const disabledByValue: Record<string, boolean> = {
 		bold: inCode, italic: inCode, strikethrough: inCode,
@@ -260,6 +253,7 @@ function toolbarEditor(editor: unknown) {
 	return html`
 		<div class="demo-editor"
 			@nldd-text-editor-state=${onToolbarState}
+			@select=${onOverflowSelect}
 		>
 			<nldd-toolbar size="md">
 				<nldd-toolbar-item

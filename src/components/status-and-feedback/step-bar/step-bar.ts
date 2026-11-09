@@ -15,13 +15,17 @@
  * values as `nldd-step-cell`, so a flow reads in one vocabulary
  * whether it runs across or down.
  *
- * Horizontal only. For steps under each other, build an `nldd-list` with an
- * `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps
- * usually carry more than a title, and a list row already does that.
+ * Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for
+ * its label, and with more of them you count instead of seeing at a glance
+ * how far you are. For more steps, or steps under each other, build an
+ * `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row:
+ * vertical steps usually carry more than a title, and a list row already does
+ * that.
  *
- * Below the sm breakpoint (a container query, so measured on the component
- * itself rather than on the viewport) it folds into one line of text plus a
- * segmented bar. The full list of steps stays in the DOM, only visually hidden,
+ * When the bar is no wider than the sm breakpoint, or than 120px per step,
+ * whichever is wider (a container query, so measured on the component itself
+ * rather than on the viewport), it folds into one line of text plus a
+ * segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden,
  * so assistive software hears no less than a wide screen shows. A step that
  * is a link or a button is out of the tab order then: Tab would land on
  * something you cannot see (WCAG 2.4.7).
@@ -50,12 +54,13 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddStepBarTranslations, type NLDDStepBarTranslations } from './step-bar.i18n.js';
-import { stepBarStyles, stepBarItemStyles } from './step-bar.styles.js';
+import { stepBarStyles, stepBarItemStyles, COMPACT_COUNTS, STEP_MIN_WIDTH_REM } from './step-bar.styles.js';
 import { stepBarTemplate, stepBarItemTemplate } from './step-bar.template.js';
-import { breakpointPx } from '../../../assets/styles/breakpoints.js';
+import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.js';
 import '../../content/icon/icon.js';
 
 /** The same three names as nldd-step-cell, so one flow reads in a
@@ -74,15 +79,18 @@ export type StepBarStatus = 'past' | 'current' | 'future';
  * @element nldd-step-bar-item
  *
  * @attr {'past' | 'current' | 'future'} status - How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only
- * @attr {string} text - Label under the disc
+ * @attr {string} text - Label under the disc. Content in the default slot wins.
  * @attr {string} icon - Icon in the disc instead of the number or the check mark
  * @attr {string} href - Makes the step a link (back to a completed step, for instance)
  * @attr {boolean} button - Makes the step a button, for flows without a URL per step; ignored when `href` is set
  *
- * @slot - Label (an alternative to `text`)
+ * @slot - Label. Wins over `text`.
  */
 export class NLDDStepBarItem extends LitElement {
 	static override styles = stepBarItemStyles;
+
+	/** @internal Whether the default slot holds text, which wins over `text`. */
+	_textSlot = new SlotContent(this);
 
 	@property({ type: String, reflect: true })
 	status?: StepBarStatus;
@@ -93,7 +101,7 @@ export class NLDDStepBarItem extends LitElement {
 	@property({ type: String })
 	icon = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
 
 	/** For flows without a URL per step (a process that runs inside one window). Ignored
@@ -190,14 +198,22 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 	 *  element: the derived statuses and the compact view follow it. */
 	private _observer = new MutationObserver(() => this.requestUpdate());
 
-	/** Whether the compact view shows: the same width the container query in
-	 *  the styles compares. */
-	@state()
+	/** Whether the compact view shows: the same width the container queries in
+	 *  the styles compare. */
 	private _compact = false;
 
+	@state()
+	private _width = 0;
+
 	private _resizeObserver = new ResizeObserver(([entry]) => {
-		this._compact = entry.contentRect.width <= breakpointPx('smMax');
+		this._width = entry.contentRect.width;
 	});
+
+	/** The step count the styles have a threshold for: none up to 5, where the sm breakpoint is wider than the row needs, and 12 from 12 on. */
+	private get _thresholdCount(): number | null {
+		if (this.total < COMPACT_COUNTS[0]) return null;
+		return Math.min(this.total, COMPACT_COUNTS[COMPACT_COUNTS.length - 1]);
+	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -224,6 +240,11 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 		// withTranslations merges a consumer's `translations` override in its own
 		// willUpdate; without this call the override is silently ignored.
 		super.willUpdate(changed);
+		const count = this._thresholdCount;
+		if (count === null) this.removeAttribute('data-steps');
+		else this.setAttribute('data-steps', String(count));
+		const threshold = Math.max(breakpointPx('smMax'), (count ?? 0) * STEP_MIN_WIDTH_REM * rootFontSize());
+		this._compact = this._width > 0 && this._width <= threshold;
 		this._syncItems();
 	}
 

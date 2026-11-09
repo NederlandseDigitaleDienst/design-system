@@ -17,6 +17,9 @@ export const codeEditorStyles = css`
 		--_code-editor-gutter-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		--_code-editor-gutter-border-width: var(--semantics-dividers-thickness);
 		--_code-editor-gutter-border-color: var(--semantics-dividers-color);
+		--_code-editor-line-number-padding-left: var(--primitives-space-8);
+		--_code-editor-line-number-padding-right: var(--primitives-space-8);
+		--_code-editor-line-numbers-content-padding-left: var(--primitives-space-8);
 		--_code-editor-input-field-border-z-index: 1;
 		--_code-editor-input-field-border-color: transparent;
 		--_code-editor-input-field-border-shadow: none;
@@ -27,6 +30,7 @@ export const codeEditorStyles = css`
 		--_code-editor-content-color: var(--semantics-content-color);
 		--_code-editor-font: var(--primitives-font-monospace-sm-regular-snug);
 		--_code-editor-rows: 6;
+		--_code-editor-min-height: calc(var(--_code-editor-rows) * 1lh + 2 * var(--_code-editor-padding-block));
 
 		/* iOS Safari auto-zooms a focused field rendered under 16px (sm is ~14px).
 		   Bump to the 16px md size on touch to prevent it; non-touch keeps the
@@ -62,6 +66,7 @@ export const codeEditorStyles = css`
 		--_code-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_code-editor-input-field-border-color);
 		--_code-editor-padding-block: var(--semantics-controls-md-inline-padding);
 		--_code-editor-padding-inline: var(--semantics-controls-md-inline-padding);
+		--_code-editor-line-number-padding-left: var(--_code-editor-padding-inline);
 	}
 
 
@@ -96,6 +101,12 @@ export const codeEditorStyles = css`
 
 	.code-editor .cm-editor {
 		isolation: isolate;
+		border-radius: inherit;
+	}
+
+	/* The scroller clips the gutter to the rounded frame. */
+	:host .cm-scroller {
+		border-radius: inherit;
 	}
 
 	:host([disabled]) .code-editor {
@@ -118,10 +129,9 @@ export const codeEditorStyles = css`
 
 	/* Padding lives on the content so the whole padded area is clickable and a
 	   click maps to the nearest line — no dead zone around the text. */
-	/* Inline padding sits on the scroller so it lands left of the line-number
-	   gutter (the gutter stays inset with the text). Block + right padding sit
-	   on the content so the padded area is clickable and horizontal scrolling
-	   keeps its end padding. :host beats the shared theme's .cm-content reset. */
+	/* Inline padding sits on the scroller, block + right padding on the content,
+	   so the padded area is clickable and horizontal scrolling keeps its end
+	   padding. :host beats the shared theme's .cm-content reset. */
 	:host .cm-scroller {
 		padding-left: var(--_code-editor-padding-inline);
 	}
@@ -129,18 +139,37 @@ export const codeEditorStyles = css`
 	:host .cm-content {
 		padding-block: var(--_code-editor-padding-block);
 		padding-right: var(--_code-editor-padding-inline);
-		min-height: calc(var(--_code-editor-rows) * 1lh);
+		min-height: var(--_code-editor-min-height);
 		tab-size: 2;
 	}
 
-	/* The gutter stays put while the code scrolls sideways under it. The
-	   divider is a gradient: an inset shadow with an offset leaves a hairline on iOS. */
+	/* The gutter stays put while the code scrolls sideways under it. */
 	:host .cm-gutters.cm-gutters {
 		background-color: var(--_code-editor-gutter-background-color);
-		background-image: linear-gradient(var(--_code-editor-gutter-border-color), var(--_code-editor-gutter-border-color));
-		background-repeat: no-repeat;
-		background-position: right;
-		background-size: var(--_code-editor-gutter-border-width) 100%;
+	}
+
+	/* CodeMirror sizes the gutter to the document, so below the last line of a
+	   short one the gutter ends. The divider runs on to the rows floor. */
+	:host .cm-gutters::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: var(--_code-editor-gutter-border-width);
+		height: max(100%, var(--_code-editor-min-height));
+		background-color: var(--_code-editor-gutter-border-color);
+	}
+
+	:host([line-numbers]) .cm-scroller {
+		padding-left: 0;
+	}
+
+	:host([line-numbers]) .cm-content {
+		padding-left: var(--_code-editor-line-numbers-content-padding-left);
+	}
+
+	:host .cm-lineNumbers .cm-gutterElement {
+		padding: 0 var(--_code-editor-line-number-padding-right) 0 var(--_code-editor-line-number-padding-left);
 	}
 
 	/* Read-only, like a native read-only field: select and copy, but no caret. */
@@ -162,7 +191,7 @@ export const codeEditorStyles = css`
 	   auto (default) = grow, vertical = drag up from the floor, none = fixed. */
 	:host .cm-scroller {
 		resize: none;
-		min-height: calc(var(--_code-editor-rows) * 1lh + 2 * var(--_code-editor-padding-block));
+		min-height: var(--_code-editor-min-height);
 	}
 
 	:host([resize="vertical"]) .cm-scroller {
@@ -170,6 +199,6 @@ export const codeEditorStyles = css`
 	}
 
 	:host([resize="none"]) .cm-editor {
-		height: calc(var(--_code-editor-rows) * 1lh + 2 * var(--_code-editor-padding-block));
+		height: var(--_code-editor-min-height);
 	}
 `;

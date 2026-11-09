@@ -9,7 +9,7 @@ export function containerTemplate(component: NLDDContainer): TemplateResult {
 	// flex, columns) — the CSS spec forbids an element from matching its own
 	// container queries, so the layout rules live on a descendant.
 	return html`
-		<div class="container">
+		<div class="container ${component._isSizedByContent ? 'is-sized-by-content' : ''}">
 			<div class="container__inner">
 				<slot @slotchange=${component._onSlotChange}></slot>
 			</div>

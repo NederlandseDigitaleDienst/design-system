@@ -19,10 +19,8 @@ export function breadcrumbsTemplate(component: NLDDBreadcrumbs): TemplateResult 
 }
 
 export function breadcrumbsItemTemplate(component: NLDDBreadcrumbsItem): TemplateResult {
-	// `text=""` (empty string) intentionally falls through to the slot —
-	// Lit normalizes the absent-attribute case to '', so a single falsy
-	// check covers both "no text attr" and "explicit empty text".
-	const label = component.text || html`<slot></slot>`;
+	// What is in the slot wins; `text` shows while it is empty.
+	const label = html`${component._textSlot.has ? nothing : component.text}<slot @slotchange=${component._textSlot.onChange}></slot>`;
 	const separator = html`<span class="breadcrumbs__separator"
 		aria-hidden="true"
 	><nldd-icon icon="chevron-right-small"></nldd-icon></span>`;

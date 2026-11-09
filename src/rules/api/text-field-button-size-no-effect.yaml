@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-text-field:state(own-button-size-overwritten)'
+message: 'The button in the `button` slot has a size of its own, but the field sets it: `sm` in a field of `md`, `xs` in one of `sm`. Leave the size off the button.'

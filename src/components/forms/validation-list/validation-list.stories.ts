@@ -125,7 +125,7 @@ export const VerplichtVeld = () => html`
 			invalid
 		></nldd-password-field>
 		<nldd-validation-list>
-			<nldd-validation-item id="new-password-empty" required>Vul een wachtwoord in</nldd-validation-item>
+			<nldd-validation-item id="new-password-empty" required>Een wachtwoord is verplicht</nldd-validation-item>
 			<nldd-validation-item id="new-password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 			<nldd-validation-item id="new-password-capital" match="[A-Z]">Een hoofdletter</nldd-validation-item>
 		</nldd-validation-list>

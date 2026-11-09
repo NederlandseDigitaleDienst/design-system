@@ -95,7 +95,7 @@ describe('nldd-validation-list', () => {
 			<nldd-form-field label="Wachtwoord">
 				<nldd-text-field invalid></nldd-text-field>
 				<nldd-validation-list>
-					<nldd-validation-item id="password-empty" required>Vul een wachtwoord in</nldd-validation-item>
+					<nldd-validation-item id="password-empty" required>Een wachtwoord is verplicht</nldd-validation-item>
 					<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
@@ -300,7 +300,7 @@ describe('nldd-validation-list', () => {
 				<nldd-form-field label="Naam">
 					<nldd-text-field name="name"></nldd-text-field>
 					<nldd-validation-list>
-						<nldd-validation-item id="name-required" required>Vul een naam in</nldd-validation-item>
+						<nldd-validation-item id="name-required" required>Een naam is verplicht</nldd-validation-item>
 					</nldd-validation-list>
 				</nldd-form-field>
 				<nldd-form-field label="Bijnaam">
@@ -403,6 +403,64 @@ describe('nldd-validation-list', () => {
 		const described = (inner as Element & { ariaDescribedByElements?: readonly Element[] | null })
 			.ariaDescribedByElements ?? [];
 		expect(described).toEqual([el.querySelector('#password-length')]);
+	});
+
+	describe('zonder falend item', () => {
+		const field = (attrs: string, items = '<nldd-validation-item id="mail-at" match="@">Een @</nldd-validation-item>') => `
+			<nldd-form-field label="E-mailadres">
+				<nldd-text-field ${attrs}></nldd-text-field>
+				<nldd-validation-list>${items}</nldd-validation-list>
+			</nldd-form-field>
+		`;
+		const fallback = (root: ParentNode) => root.querySelector<NLDDValidationItem>('nldd-validation-item[data-fallback]');
+
+		it('zegt zelf wat er mis is als het veld rood is en geen item faalt', async () => {
+			el = await fixture(field('type="email"'));
+			await waitForUpdate(el);
+			await type(el, 'loep-test@');
+			const control = el.querySelector('nldd-text-field')!;
+			expect(item(el, 'mail-at').unmet).toBe(false);
+			control.toggleAttribute('invalid', true);
+			await waitForUpdate(el);
+			expect(fallback(el)?.textContent).toBe('Een geldig e-mailadres zoals naam@voorbeeld.nl.');
+			expect(fallback(el)?.visible).toBe(true);
+			expect(list(el).classList.contains('has-items')).toBe(true);
+		});
+
+		it('leest die regel voor bij het veld, als beschrijving', async () => {
+			el = await fixture(field('type="email" invalid'));
+			await waitForUpdate(el);
+			await type(el, 'loep-test@');
+			await waitForUpdate(el);
+			const inner = el.querySelector('nldd-text-field')!.shadowRoot!.querySelector('input')!;
+			const described = (inner as Element & { ariaDescribedByElements?: readonly Element[] | null })
+				.ariaDescribedByElements ?? [];
+			expect(described).toContain(fallback(el));
+		});
+
+		it('laat een eigen falend item voorgaan, en verdwijnt als het veld weer goed is', async () => {
+			el = await fixture(field('type="email" invalid'));
+			await waitForUpdate(el);
+			await type(el, 'loep-test');
+			expect(item(el, 'mail-at').unmet).toBe(true);
+			expect(fallback(el)).toBeNull();
+			el.querySelector('nldd-text-field')!.removeAttribute('invalid');
+			await waitForUpdate(el);
+			expect(fallback(el)).toBeNull();
+		});
+
+		it('zegt dat een leeg verplicht veld ingevuld moet worden', async () => {
+			el = await fixture(field('required invalid', ''));
+			await waitForUpdate(el);
+			expect(fallback(el)?.textContent).toBe('Dit veld is verplicht.');
+		});
+
+		it('valt terug op een algemene zin als de browser niets meldt', async () => {
+			el = await fixture(field('invalid', ''));
+			await waitForUpdate(el);
+			await type(el, 'iets');
+			expect(fallback(el)?.textContent).toBe('Dit klopt nog niet.');
+		});
 	});
 
 	it('toont niets zonder `invalid`, maar blokkeert het formulier wel', async () => {

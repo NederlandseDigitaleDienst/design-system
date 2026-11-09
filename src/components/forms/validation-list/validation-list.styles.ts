@@ -43,6 +43,7 @@ export const validationItemStyles = css`
 		display: none;
 		color: var(--_validation-item-content-color);
 		font: var(--_validation-item-font);
+		text-wrap: pretty;
 	}
 
 	:host([visible]) {

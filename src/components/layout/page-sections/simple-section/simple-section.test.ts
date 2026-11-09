@@ -70,31 +70,39 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 		).toBe('');
 	});
 
+	const surface = async (background: string, token: string) => {
+		el = await fixture(`
+			<div style="${token}: rgb(1, 2, 3)">
+				<nldd-simple-section background="${background}"><p>Inhoud</p></nldd-simple-section>
+			</div>
+		`);
+		const section = el.querySelector('nldd-simple-section') as HTMLElement;
+		await waitForUpdate(section);
+		return section;
+	};
+
 	it('paints and cascades the base surface', async () => {
-		el = await fixture('<nldd-simple-section background="base"></nldd-simple-section>');
-		await waitForUpdate(el);
-		expect(el.style.backgroundColor).toBe(
-			'var(--semantics-surfaces-base-background-color)',
-		);
-		expect(
-			el.style.getPropertyValue('--context-parent-background-color'),
-		).toBe('var(--semantics-surfaces-base-background-color)');
+		const section = await surface('base', '--semantics-surfaces-base-background-color');
+		expect(getComputedStyle(section).backgroundColor).toBe('rgb(1, 2, 3)');
+		expect(getComputedStyle(section.querySelector('p')!).getPropertyValue('--context-parent-background-color')).toBe('rgb(1, 2, 3)');
+		expect(section.hasAttribute('style')).toBe(false);
 	});
 
 	it('paints the tinted surface', async () => {
-		el = await fixture('<nldd-simple-section background="tinted"></nldd-simple-section>');
-		await waitForUpdate(el);
-		expect(el.style.backgroundColor).toBe(
-			'var(--semantics-surfaces-tinted-background-color)',
-		);
+		const section = await surface('tinted', '--semantics-surfaces-tinted-background-color');
+		expect(getComputedStyle(section).backgroundColor).toBe('rgb(1, 2, 3)');
 	});
 
 	it('paints the accent-tinted surface and cascades it', async () => {
-		el = await fixture('<nldd-simple-section background="accent-tinted"></nldd-simple-section>');
+		const section = await surface('accent-tinted', '--semantics-surfaces-accent-tinted-background-color');
+		expect(getComputedStyle(section).backgroundColor).toBe('rgb(1, 2, 3)');
+		expect(getComputedStyle(section.querySelector('p')!).getPropertyValue('--context-parent-background-color')).toBe('rgb(1, 2, 3)');
+	});
+
+	it('paints nothing for inherit', async () => {
+		el = await fixture('<nldd-simple-section></nldd-simple-section>');
 		await waitForUpdate(el);
-		const token = 'var(--semantics-surfaces-accent-tinted-background-color)';
-		expect(el.style.backgroundColor).toBe(token);
-		expect(el.style.getPropertyValue('--context-parent-background-color')).toBe(token);
+		expect(getComputedStyle(el).backgroundColor).toBe('rgba(0, 0, 0, 0)');
 	});
 
 	it('strips block padding with padding-block="0"', async () => {

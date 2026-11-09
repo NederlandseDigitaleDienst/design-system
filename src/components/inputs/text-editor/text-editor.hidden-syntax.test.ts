@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { EditorView } from '@codemirror/view';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './text-editor.js';
 
 /* syntax="hidden": marks are hidden where the caret is not, and come back for
@@ -179,6 +180,122 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		expect(lines().map(ruled)).toEqual([false, false]);
 		expect(lines().map(hidden)).toEqual([false, false]);
 		expect(lines().map(textLeft)).toEqual(left);
+	});
+
+	it('draws a line per level of a nested quote, where each > is, as nldd-rich-text does', async () => {
+		const unloadTokens = loadTokens();
+		el = await make('syntax="hidden" readonly');
+		el.value = '> Niveau een\n> > Niveau twee\n> > > Niveau drie\n\n- > In een lijst\n\n- >   > Met spaties\n\n> Citaat\n>   - > met een lijst';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')];
+		const rules = (l: Element) => getComputedStyle(l).backgroundPositionX.split(',').map((x) => parseFloat(x));
+		// Where each > of the prefix is, from the left of its line.
+		const marks = (l: Element) => {
+			const left = l.getBoundingClientRect().left;
+			const at: number[] = [];
+			const walker = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+			for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+				const text = n.textContent!;
+				for (let i = text.indexOf('>'); i !== -1; i = text.indexOf('>', i + 1)) {
+					const range = document.createRange();
+					range.setStart(n, i);
+					range.setEnd(n, i + 1);
+					at.push(range.getBoundingClientRect().left - left);
+				}
+			}
+			return at;
+		};
+		expect([0, 1, 2, 4, 6, 9].map((i) => rules(lines[i]).length)).toEqual([1, 2, 3, 1, 2, 2]);
+		for (const i of [0, 1, 2, 4, 6, 9]) {
+			const at = marks(lines[i]);
+			expect(at).toHaveLength(rules(lines[i]).length);
+			rules(lines[i]).forEach((x, n) => expect(Math.abs(x - at[n])).toBeLessThanOrEqual(1));
+		}
+		unloadTokens();
+	});
+
+	it('hides the spare spaces after a >, which the result ignores, and keeps those of code', async () => {
+		const unloadTokens = loadTokens();
+		el = await make();
+		el.value = '> > Zonder\n>   > Met\n\n>     code\n\nSlot.';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		caret(el, el.view.state.doc.length);
+		const lines = () => [...el.view.contentDOM.querySelectorAll('.cm-line')];
+		const textLeft = (l: Element) => {
+			const walker = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+			for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+				const at = n.textContent!.search(/[A-Za-z]/);
+				if (at === -1) continue;
+				const range = document.createRange();
+				range.setStart(n, at);
+				range.setEnd(n, at + 1);
+				return Math.round(range.getBoundingClientRect().left);
+			}
+			return NaN;
+		};
+		const rules = (l: Element) => getComputedStyle(l).backgroundPositionX;
+		expect(textLeft(lines()[1])).toBe(textLeft(lines()[0]));
+		expect(rules(lines()[1])).toBe(rules(lines()[0]));
+		expect(lines()[1].textContent).toBe('> > Met');
+		expect(lines()[3].textContent).toBe('>     code');
+		caret(el, el.value.indexOf('Met'));
+		expect(lines()[1].textContent).toBe('>   > Met');
+		unloadTokens();
+	});
+
+	it('gives a > without a space after it the room of one, so every level is the same step', async () => {
+		const unloadTokens = loadTokens();
+		el = await make('syntax="hidden" readonly');
+		el.value = '> > > Ruim\n\n>>> Krap\n\n> >>Half';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')];
+		const textLeft = (l: Element) => {
+			const walker = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+			for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+				const at = n.textContent!.search(/[A-Za-z]/);
+				if (at === -1) continue;
+				const range = document.createRange();
+				range.setStart(n, at);
+				range.setEnd(n, at + 1);
+				return Math.round(range.getBoundingClientRect().left);
+			}
+			return NaN;
+		};
+		const rules = (l: Element) => getComputedStyle(l).backgroundPositionX;
+		for (const i of [2, 4]) {
+			expect(rules(lines[i])).toBe(rules(lines[0]));
+			expect(textLeft(lines[i])).toBe(textLeft(lines[0]));
+		}
+		unloadTokens();
+	});
+
+	it('draws a lazy line at the level of the paragraph it goes on in, and no lines on empty lines at the end', async () => {
+		const unloadTokens = loadTokens();
+		el = await make('syntax="hidden" readonly');
+		el.value = '> > > Drie\n> > lui\nook lui\n> >\n> > Twee\n> > >\n\nSlot.';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')];
+		const levels = (l: Element) => (l.classList.contains('cm-md-quote-line') ? getComputedStyle(l).backgroundPositionX.split(',').length : 0);
+		const textLeft = (l: Element) => {
+			const walker = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+			for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+				const at = n.textContent!.search(/[A-Za-z]/);
+				if (at === -1) continue;
+				const range = document.createRange();
+				range.setStart(n, at);
+				range.setEnd(n, at + 1);
+				return Math.round(range.getBoundingClientRect().left);
+			}
+			return NaN;
+		};
+		expect(lines.slice(0, 6).map(levels)).toEqual([3, 3, 3, 2, 2, 0]);
+		expect(textLeft(lines[1])).toBe(textLeft(lines[0]));
+		expect(textLeft(lines[2])).toBe(textLeft(lines[0]));
+		unloadTokens();
 	});
 
 	it('keeps hiding the marks of bold inside a quote the caret is in', async () => {

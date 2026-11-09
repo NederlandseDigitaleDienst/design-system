@@ -1279,6 +1279,8 @@
 	--semantics-controls-md-min-size: var(--primitives-space-44);
 	--semantics-controls-lg-min-size: var(--primitives-space-56);
 
+	--semantics-fingertip-size: var(--primitives-space-64);
+
 	--semantics-controls-lg-inline-padding: var(--primitives-space-16);
 	--semantics-controls-md-inline-padding: var(--primitives-space-12);
 	--semantics-controls-sm-inline-padding: var(--primitives-space-10);
@@ -1544,6 +1546,12 @@
 	--semantics-buttons-inherit-filled-highlight-border-color: currentColor;
 	--semantics-buttons-inherit-filled-divider-color: color-mix(in oklab, var(--semantics-content-contrast-color) 25%, transparent);
 
+	/* ## Button groups */
+
+	--semantics-button-groups-xs-gap: var(--primitives-space-4);
+	--semantics-button-groups-sm-gap: var(--primitives-space-6);
+	--semantics-button-groups-md-gap: var(--primitives-space-8);
+
 	/* ## Input fields */
 
 	--semantics-input-fields-border-width: var(--primitives-border-width-regular);
@@ -1617,7 +1625,7 @@
 	--semantics-page-sections-body-max-width: var(--primitives-area-1280);
 
 	--semantics-page-sections-sm-margin-inline: var(--primitives-space-16);
-	--semantics-page-sections-sm-margin-block: var(--primitives-space-16);
+	--semantics-page-sections-sm-margin-block: var(--primitives-space-24);
 	--semantics-page-sections-sm-gap: var(--primitives-space-16);
 	--semantics-page-sections-md-margin-inline: var(--primitives-space-40);
 	--semantics-page-sections-md-margin-block: var(--primitives-space-32);
@@ -1717,6 +1725,7 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
+	--semantics-steps-progress-highlight-border-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-700));
 	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
 	--semantics-steps-is-past-content-color: var(--primitives-color-accent-0);
 	--semantics-steps-is-current-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-150));

@@ -63,6 +63,7 @@ import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import { spacingToValue, type SpacingSize } from '../../../utilities/spacing-scale.js';
 import { translate } from '../../../utilities/translations.js';
+import { markListItems } from '../../../utilities/list-items.js';
 
 type Layout = 'grid' | 'stack' | 'lanes' | 'horizontal-scroll';
 
@@ -183,10 +184,12 @@ export class NLDDCollection extends LitElement {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._visibleCount = this.maxItems;
+		this.addEventListener('focusin', this._onFocusIn);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
+		this.removeEventListener('focusin', this._onFocusIn);
 		this._intersectionObserver?.disconnect();
 		this._teardownScrollListeners();
 	}
@@ -280,6 +283,7 @@ export class NLDDCollection extends LitElement {
 	_onSlotChange(e: Event): void {
 		const slot = e.target as HTMLSlotElement;
 		const items = slot.assignedElements() as HTMLElement[];
+		markListItems(items);
 		queueMicrotask(() => { this._totalCount = items.length; });
 		if (this.layout === 'horizontal-scroll') {
 			// Adding/removing items changes the content width (scrollWidth) but not
@@ -318,17 +322,8 @@ export class NLDDCollection extends LitElement {
 	_scrollBy(direction: 1 | -1): void {
 		const el = this._itemsEl;
 		if (!el) return;
-		const slot = el.querySelector('slot') as HTMLSlotElement | null;
-		const items = (slot?.assignedElements() ?? []) as HTMLElement[];
-		if (items.length === 0) return;
-
-		// Item starts in scroll coordinates, offset by the scroll padding so a
-		// target matches where scroll-snap parks the item.
-		const scrollerLeft = el.getBoundingClientRect().left;
-		const inset = parseFloat(getComputedStyle(el).scrollPaddingInlineStart) || 0;
-		const starts = items.map(item =>
-			Math.round(item.getBoundingClientRect().left - scrollerLeft + el.scrollLeft - inset),
-		);
+		const starts = this._itemStarts().map(({ start }) => start);
+		if (starts.length === 0) return;
 
 		// Sub-pixel layout means the current position is never exactly an item
 		// start, so ignore edges within a pixel of where we already are.
@@ -341,6 +336,53 @@ export class NLDDCollection extends LitElement {
 
 		el.scrollTo({ left: target, behavior: 'smooth' });
 	}
+
+	/** Each item with the scroll position that parks it at the padded start,
+	 *  where scroll-snap parks it, and its end in scroll coordinates. */
+	private _itemStarts(): { item: HTMLElement; start: number; end: number }[] {
+		const el = this._itemsEl;
+		const slot = el?.querySelector('slot') as HTMLSlotElement | null;
+		const items = (slot?.assignedElements() ?? []) as HTMLElement[];
+		if (!el || items.length === 0) return [];
+		const scrollerLeft = el.getBoundingClientRect().left;
+		const inset = parseFloat(getComputedStyle(el).scrollPaddingInlineStart) || 0;
+		return items.map((item) => {
+			const rect = item.getBoundingClientRect();
+			return {
+				item,
+				start: Math.round(rect.left - scrollerLeft + el.scrollLeft - inset),
+				end: Math.round(rect.right - scrollerLeft + el.scrollLeft),
+			};
+		});
+	}
+
+	/* The browser scrolls the focused element into view, not the item around
+	 * it. A link at the start of an item that hangs off the end of the row is
+	 * itself in view, so the row stays put and the rest of the item, its focus
+	 * ring included, stays cut off. This scrolls the whole item in, to a snap
+	 * position, so the mandatory snap has nothing to correct. */
+	private _onFocusIn = (event: FocusEvent): void => {
+		const el = this._itemsEl;
+		if (this.layout !== 'horizontal-scroll' || !el) return;
+		const target = event.target as Node;
+		const items = this._itemStarts();
+		const focused = items.find(({ item }) => item === target || item.contains(target));
+		if (!focused) return;
+		const inset = parseFloat(getComputedStyle(el).scrollPaddingInlineStart) || 0;
+		const width = el.clientWidth - inset * 2;
+		const current = el.scrollLeft;
+		let left: number | undefined;
+		if (focused.start < current - 1) {
+			left = focused.start;
+		} else if (focused.end > current + inset + width + 1) {
+			// The nearest snap position that shows the whole item, or its own
+			// start when it is wider than the row.
+			left = items.map(({ start }) => start)
+				.find((start) => start > current && focused.end <= start + inset + width + 1)
+				?? focused.start;
+		}
+		if (left !== undefined) el.scrollTo({ left, behavior: 'smooth' });
+	};
 
 	override render() {
 		return collectionTemplate(this);

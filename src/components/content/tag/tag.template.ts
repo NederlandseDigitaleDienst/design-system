@@ -18,14 +18,14 @@ export function template(component: NLDDTag) {
 		>
 			${showIcon ? html`
 				<span class="tag__icon">
-					${component.icon
+					<slot name="icon">${component.icon
 						? html`<nldd-icon icon=${component.icon}></nldd-icon>`
-						: html`<slot name="icon">${variant === 'icon' ? html`<nldd-icon icon="icon-placeholder"></nldd-icon>` : nothing}</slot>`}
+						: variant === 'icon' ? html`<nldd-icon icon="icon-placeholder"></nldd-icon>` : nothing}</slot>
 				</span>
 			` : nothing}
 			${showText ? html`
 				<span class="tag__text">
-					${component.text ? component.text : html`<slot></slot>`}
+					${component._hasSlotText ? nothing : component.text}<slot></slot>
 				</span>
 			` : nothing}
 		</span>

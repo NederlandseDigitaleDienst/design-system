@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst One Third Two Thirds Section Component (Lit + TypeScript)
  *
  * A section with a 1/3 sidebar on the left and 2/3 main content on the right.
- * The columns wrap automatically when they become smaller than 280px.
+ * The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns.
  * Padding and gap adjust via container queries.
  *
  * @element nldd-one-third-two-thirds-section
@@ -27,13 +27,13 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
+import { PageSectionMixin, pageSectionBackgroundStyles } from '../../../../utilities/page-section-mixin.js';
 import { oneThirdTwoThirdsSectionStyles } from './one-third-two-thirds-section.styles.js';
 import { oneThirdTwoThirdsSectionTemplate } from './one-third-two-thirds-section.template.js';
 
 @customElement('nldd-one-third-two-thirds-section')
 export class NLDDOneThirdTwoThirdsSection extends PageSectionMixin(LitElement) {
-	static override styles = oneThirdTwoThirdsSectionStyles;
+	static override styles = [pageSectionBackgroundStyles, oneThirdTwoThirdsSectionStyles];
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

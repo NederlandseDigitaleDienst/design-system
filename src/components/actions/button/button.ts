@@ -9,7 +9,7 @@
  * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {string} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
- * @attr {string} popovertarget - ID of a popover element this button invokes; forwarded to the inner button. Use the popoverTargetElement property instead when the popover lives in another tree.
+ * @attr {string} popovertarget - ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
  * @attr {boolean} expandable - Whether the button has a icon to indicate it opens a menu or popover
  * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
  * @attr {string} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
@@ -34,9 +34,9 @@
  * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  *
- * @slot text - Slot for custom button content (e.g. text with inline markup). Used when the text attribute is empty or not set (an empty string counts as "not set", since the attribute and the unset property are indistinguishable). Provide accessible-label when the slotted content isn't plain text.
- * @slot start-icon - Slot for a custom start icon (e.g. custom SVG). Only used when start-icon attribute is not set.
- * @slot end-icon - Slot for a custom end icon (e.g. custom SVG). Only used when end-icon attribute is not set.
+ * @slot text - Slot for custom button content (e.g. text with inline markup). Wins over `text`. Provide accessible-label when the slotted content isn't plain text.
+ * @slot start-icon - Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`.
+ * @slot end-icon - Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay.
  *
  * @fires click - When button is clicked (not fired when disabled)
@@ -56,7 +56,9 @@ import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import { internalsOf } from '../../../utilities/element-state.js';
-import { setState } from '../../../utilities/element-state.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
+import { ownerForm } from '../../../utilities/owner-form.js';
+import { anchorPopoverTarget, popoverTargetOf } from '../../../utilities/popover-target.js';
 
 type Appearance =
 	| 'primary'
@@ -125,7 +127,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: String, reflect: true, attribute: 'popup-type' })
 	popupType?: PopupType;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
 	type: ButtonType = 'button';
 
 	@property({ type: String })
@@ -187,11 +189,11 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: Boolean, reflect: true, attribute: 'no-highlight-border' })
 	noHighlightBorder = false;
 
-	/** Icon name for the start icon (before text). When not set, the start-icon slot is used. */
+	/** Icon name for the start icon (before text). An icon in the start-icon slot wins. */
 	@property({ type: String, attribute: 'start-icon' })
 	startIcon = '';
 
-	/** Icon name for the end icon (after text). When not set, the end-icon slot is used. */
+	/** Icon name for the end icon (after text). An icon in the end-icon slot wins. */
 	@property({ type: String, attribute: 'end-icon' })
 	endIcon = '';
 
@@ -239,7 +241,13 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		anchorPopoverTarget(this, null);
+	}
+
 	override updated(changedProperties: Map<string, unknown>): void {
+		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
 		if (changedProperties.has('maxWidth')) {
 			// The cap lands on the host; the inner button is already max-width: 100%
 			// of it, so it follows without a variable of its own. Invalid values do
@@ -271,6 +279,12 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 			e.stopPropagation();
 			return;
 		}
+		// Before the browser's own toggle, which runs after this listener: a
+		// popover rendered after the button was not there on its last render.
+		if (e.currentTarget instanceof HTMLButtonElement) {
+			e.currentTarget.popoverTargetElement = popoverTargetOf(this, this.popovertarget, this.popoverTargetElement);
+			anchorPopoverTarget(this, e.currentTarget.popoverTargetElement);
+		}
 		// A slotted overlay makes this button its invoker: toggle it and stop —
 		// a popup button neither submits a form nor navigates.
 		if (this._popup.handleClick(e)) {
@@ -297,37 +311,8 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 		else if (this.type === 'reset') form?.reset();
 	}
 
-	/**
-	 * The form this button acts on: the one it sits in, or the one its `form`
-	 * attribute names.
-	 *
-	 * The platform resolves that attribute itself, but only to a real `<form>`.
-	 * An `nldd-form` renders its form in the light DOM without handing it the id
-	 * the consumer wrote, so an id pointing at the component finds an element
-	 * that is not a form, and the button ends up with no form owner at all. That
-	 * is the whole reason a save button in a page footer, outside the form it
-	 * belongs to, used to do nothing.
-	 *
-	 * The id is looked up in the button's own root, the same scope the platform
-	 * searches: a button inside a shadow tree reaches the forms in that tree, not
-	 * one in the document around it. Put the two in the same tree, or hand the
-	 * button its form another way.
-	 */
 	private _ownerForm(): HTMLFormElement | null {
-		const id = this.getAttribute('form');
-		const root = this.getRootNode() as Document | ShadowRoot;
-		const target = id && 'getElementById' in root ? root.getElementById(id) : null;
-		const rendered = (target as { form?: unknown } | null)?.form;
-		let form: HTMLFormElement | null = null;
-		if (target instanceof HTMLFormElement) form = target;
-		else if (rendered instanceof HTMLFormElement) form = rendered;
-		// Nothing to submit is the silent failure this attribute exists to end:
-		// the click does nothing and no error says why. Two facts, since a typo
-		// and an nldd-form that has not rendered yet look identical from the
-		// outside.
-		setState(this, 'no-form-target', Boolean(id) && !target);
-		setState(this, 'form-target-not-a-form', Boolean(target) && !form);
-		return id ? form : this._internals.form;
+		return ownerForm(this, this._internals);
 	}
 
 	/**
@@ -335,6 +320,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	 * consumers can call `buttonEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLElement>('.button')?.focus(options);
 	}
 

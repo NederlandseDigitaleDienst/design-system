@@ -27,7 +27,7 @@ export function documentTabBarTemplate(component: NLDDDocumentTabBar): TemplateR
 		</div>
 		<div class=${classMap({ 'document-tab-bar__overflow-button': true, 'is-hidden': !hasOverflow })}>
 			<nldd-icon-button
-				text=${component._t('components.document-tab-bar.overflow-action')}
+				text=${component._t('components.document-tab-bar.show-more-tabs-action')}
 				appearance="neutral-tinted"
 				icon="ellipsis"
 				tooltip-timing="never"

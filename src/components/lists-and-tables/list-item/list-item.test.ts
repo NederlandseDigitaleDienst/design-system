@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, deepActiveElement, installUniversalReset, nextFrames } from '../../../test-utils.js';
 import { _resetInputModalityForTesting, getInputModality } from '../../../utilities/input-modality.js';
 import './list-item.js';
@@ -755,6 +756,29 @@ describe('nldd-list-item – divider markers', () => {
 		expect(item.style.getPropertyValue('--_list-item-divider-inset-end')).toBe('');
 	});
 
+	it('measures nothing in a list without dividers, and again once they return', async () => {
+		el = await fixture(`
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+				<nldd-list accessible-label="X" dividers="never">
+					<nldd-list-item>
+						<nldd-spacer-cell size="40"></nldd-spacer-cell>
+						<nldd-text-cell divider-start text="Vanaf hier"></nldd-text-cell>
+					</nldd-list-item>
+				</nldd-list>
+			</div>
+		`);
+		await waitForUpdate(el);
+		await settle();
+		const list = el.querySelector('nldd-list') as HTMLElement & { dividers: string };
+		const item = el.querySelector('nldd-list-item') as HTMLElement;
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-start')).toBe('');
+
+		list.dividers = 'always';
+		await waitForUpdate(list);
+		await settle();
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThanOrEqual(40);
+	});
+
 	// A row that opens with an icon already lines the divider up with the text, so
 	// every list does that consistently without having to set markers.
 	it('laat de divider vanzelf bij de tekst beginnen na een leidend icoon', async () => {
@@ -1055,6 +1079,28 @@ describe('nldd-list-item – row-wide disclosure', () => {
 
 	afterEach(() => {
 		if (el) cleanup(el);
+	});
+
+	it('says collapsed for an expandable row without expanded, and tells its disclosure segment', async () => {
+		el = await fixture(`
+			<nldd-list accessible-label="X">
+				<nldd-list-item button expandable><nldd-text-cell text="Rij"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item expandable>
+					<nldd-list-item-segment button disclosure accessible-label="Open"><nldd-icon-cell icon="chevron-right"></nldd-icon-cell></nldd-list-item-segment>
+					<nldd-text-cell text="Rij"></nldd-text-cell>
+				</nldd-list-item>
+			</nldd-list>
+		`);
+		await waitForUpdate(el);
+		const [row, segmented] = el.querySelectorAll<NLDDListItem>('nldd-list-item');
+		const action = row.shadowRoot!.querySelector('.list-item__action')!;
+		expect(action.getAttribute('aria-expanded')).toBe('false');
+		row.expanded = true;
+		await waitForUpdate(row);
+		expect(action.getAttribute('aria-expanded')).toBe('true');
+		const segment = segmented.querySelector('nldd-list-item-segment')!;
+		await waitForUpdate(segment);
+		expect(segment.shadowRoot!.querySelector('.list-item-segment')!.getAttribute('aria-expanded')).toBe('false');
 	});
 
 	it('turns a chevron cell marked disclosure with its own expanded state', async () => {
@@ -1403,7 +1449,7 @@ describe('nldd-list-item – what goes in a row', () => {
 		expect(firstRow().matches(':state(nested-control)')).toBe(true);
 	});
 
-	it('gives a checked control on a selected row the content color, which the accent can fall below 3:1 against', async () => {
+	it('leaves a checked control on a selected row in the accent, as anywhere else', async () => {
 		const unloadTokens = loadTokens();
 		try {
 			el = await fixture(`<nldd-list>
@@ -1417,8 +1463,7 @@ describe('nldd-list-item – what goes in a row', () => {
 			await waitForUpdate(row);
 			const fill = (checkbox: Element) => getComputedStyle(checkbox).getPropertyValue('--_checkbox-is-selected-background-color');
 			const onRow = fill(row.querySelector('nldd-checkbox') as Element);
-			expect(onRow).toBe(getComputedStyle(row).getPropertyValue('--semantics-list-items-is-selected-content-color'));
-			expect(onRow).not.toBe(fill(el.querySelector(':scope > nldd-checkbox') as Element));
+			expect(onRow).toBe(fill(el.querySelector(':scope > nldd-checkbox') as Element));
 		} finally {
 			unloadTokens();
 		}
@@ -1463,5 +1508,103 @@ describe('<nldd-list-item> with download', () => {
 		el = await fixture('<nldd-list-item href="/verslag.pdf" target="_blank" download="verslag.pdf"><nldd-text-cell text="Verslag"></nldd-text-cell></nldd-list-item>');
 		await waitForUpdate(el);
 		expect(el.matches(':state(download-with-target)')).toBe(true);
+	});
+
+	it('states when accessible-label does not start with the row\'s title', async () => {
+		el = await fixture(`
+			<nldd-list-item href="#" accessible-label="Open de aanvraag">
+				<nldd-title-cell text="Aanvraag A-1042" supporting-text="Dakisolatie"></nldd-title-cell>
+			</nldd-list-item>
+		`);
+		await waitForUpdate(el);
+		expect(el.matches(':state(label-without-title)')).toBe(true);
+		cleanup(el);
+		el = await fixture(`
+			<nldd-list-item href="#" accessible-label="Aanvraag A-1042, in behandeling">
+				<nldd-title-cell text="Aanvraag A-1042"></nldd-title-cell>
+			</nldd-list-item>
+		`);
+		await waitForUpdate(el);
+		expect(el.matches(':state(label-without-title)')).toBe(false);
+	});
+});
+
+describe('nldd-list-item – context background', () => {
+	let el: HTMLElement;
+	let unloadTokens: () => void;
+
+	beforeEach(() => {
+		unloadTokens = loadTokens();
+	});
+
+	afterEach(async () => {
+		await userEvent.unhover(document.body);
+		if (el) cleanup(el);
+		unloadTokens();
+	});
+
+	const probe = (id: string) => `<nldd-cell><span class="probe" id="${id}" style="display: block; background-color: var(--context-parent-background-color)"></span></nldd-cell>`;
+	const ring = (root: ParentNode, id: string) => getComputedStyle(root.querySelector(`#${id}`)!).backgroundColor;
+	const paint = (row: Element, selector = '.list-item__action') =>
+		getComputedStyle(row.shadowRoot!.querySelector(selector)!, '::before').backgroundColor;
+
+	it('hands a ring the fill of the row on hover, press, selected, current and highlighted', async () => {
+		el = await fixture(`<nldd-list>
+			<nldd-list-item id="hovered" button>${probe('p-hovered')}</nldd-list-item>
+			<nldd-list-item id="pressed" button>${probe('p-pressed')}</nldd-list-item>
+			<nldd-list-item id="selected" button selected>${probe('p-selected')}</nldd-list-item>
+			<nldd-list-item id="current" href="#" current>${probe('p-current')}</nldd-list-item>
+			<nldd-list-item id="still" selected>${probe('p-still')}</nldd-list-item>
+		</nldd-list>`);
+		const rows = [...el.querySelectorAll('nldd-list-item')] as HTMLElement[];
+		await Promise.all(rows.map((row) => waitForUpdate(row)));
+		const row = (id: string) => el.querySelector(`#${id}`)!;
+
+		const transparent = 'rgba(0, 0, 0, 0)';
+		const pressed = row('pressed').shadowRoot!.querySelector('.list-item__action')!;
+		pressed.classList.add('is-pressed');
+		expect(paint(row('pressed'))).not.toBe(transparent);
+		expect(ring(el, 'p-pressed')).toBe(paint(row('pressed')));
+
+		expect(ring(el, 'p-selected')).toBe(paint(row('selected')));
+		expect(ring(el, 'p-current')).toBe(paint(row('current')));
+		expect(ring(el, 'p-still')).toBe(paint(row('still'), '.list-item'));
+
+		(row('current').shadowRoot!.querySelector('.list-item__action') as HTMLElement).focus();
+		expect(ring(el, 'p-current')).toBe(paint(row('current')));
+
+		await userEvent.hover(row('hovered').shadowRoot!.querySelector('.list-item__action')!);
+		expect(paint(row('hovered'))).not.toBe(transparent);
+		expect(ring(el, 'p-hovered')).toBe(paint(row('hovered')));
+
+		row('still').shadowRoot!.querySelector('.list-item')!.classList.add('is-highlighted');
+		expect(ring(el, 'p-still')).toBe(paint(row('still'), '.list-item'));
+	});
+
+	it('leaves the child rows of a selected row on the surface', async () => {
+		el = await fixture(`<nldd-list>
+			<nldd-list-item id="parent" button selected expanded>
+				${probe('p-parent')}
+				<nldd-list-item slot="children" button>${probe('p-child')}</nldd-list-item>
+			</nldd-list-item>
+			<nldd-list-item button>${probe('p-plain')}</nldd-list-item>
+		</nldd-list>`);
+		const rows = [...el.querySelectorAll('nldd-list-item')] as HTMLElement[];
+		await Promise.all(rows.map((row) => waitForUpdate(row)));
+		expect(ring(el, 'p-parent')).not.toBe(ring(el, 'p-plain'));
+		expect(ring(el, 'p-child')).toBe(ring(el, 'p-plain'));
+	});
+
+	it('hands a ring the fill of a hovered segment', async () => {
+		el = await fixture(`<nldd-list><nldd-list-item>
+			<nldd-list-item-segment id="segment" button>${probe('p-segment')}</nldd-list-item-segment>
+		</nldd-list-item></nldd-list>`);
+		const segment = el.querySelector('#segment') as HTMLElement;
+		await waitForUpdate(segment);
+		const control = segment.shadowRoot!.querySelector('.list-item-segment')!;
+		await userEvent.hover(control);
+		const fill = getComputedStyle(control, '::before').backgroundColor;
+		expect(fill).not.toBe('rgba(0, 0, 0, 0)');
+		expect(ring(el, 'p-segment')).toBe(fill);
 	});
 });

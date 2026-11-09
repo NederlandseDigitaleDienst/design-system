@@ -9,8 +9,8 @@ export const nlddDatePickerTranslations = {
 	'components.date-picker.view-previous-month-action': 'Vorige maand',
 	'components.date-picker.view-next-month-action': 'Volgende maand',
 	'components.date-picker.view-today-action': 'Vandaag',
-	'components.date-picker.choose-month-action': 'Kies een maand',
-	'components.date-picker.choose-year-action': 'Kies een jaar',
+	'components.date-picker.to-choose-month-action': 'Maand kiezen',
+	'components.date-picker.to-choose-year-action': 'Jaar kiezen',
 
 	// Two forms, because the month name appears both inside a date label ("maandag
 	// 29 juni 2026") and on its own in the heading above it. Which form belongs

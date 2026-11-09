@@ -53,6 +53,7 @@ export const switchFieldStyles = css`
 		flex-grow: 1;
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-md-regular-snug);
+		text-wrap: pretty;
 	}
 
 	:host([disabled]) .switch-field__label {

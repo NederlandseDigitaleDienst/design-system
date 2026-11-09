@@ -13,7 +13,9 @@ import { ICONS } from '../../content/icon/icon.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-split-button text="Bewaar"></nldd-split-button>
+ * <nldd-split-button text="Bewaar">
+ *   <nldd-menu slot="popup">…</nldd-menu>
+ * </nldd-split-button>
  * ```
  */
 export default {
@@ -78,6 +80,41 @@ export default {
 			control: 'text',
 			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
 		},
+		popovertarget: {
+			control: false,
+			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat de chevron opent en naast zich neerzet. Een overlay in de `popup`-slot wint.',
+		},
+		type: {
+			control: 'select',
+			options: ['button', 'submit', 'reset'],
+			description: 'Wat de hoofdactie in een formulier doet',
+			table: {
+				defaultValue: { summary: 'button' },
+			},
+		},
+		href: {
+			control: 'text',
+			description: 'Maakt van de hoofdactie een link',
+		},
+		download: {
+			control: 'select',
+			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
+			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
+			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
+		},
+		loading: {
+			control: 'boolean',
+			description: 'Laadtoestand van de hoofdactie; de chevron blijft bruikbaar',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
+		loadingText: {
+			name: 'loading-text',
+			control: 'text',
+			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
+			table: { defaultValue: { summary: 'Laden' } },
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Disabled state',
@@ -96,12 +133,18 @@ export default {
 		shortcutMac: '',
 		shortcutWindows: '',
 		shortcutLinux: '',
+		popovertarget: '',
+		type: 'button',
+		href: '',
+		download: '(geen)',
+		loading: false,
+		loadingText: '',
 		disabled: false,
 	},
 };
 
 const menu = html`
-	<nldd-menu>
+	<nldd-menu slot="popup">
 		<nldd-menu-item
 			text="Opslaan als…"
 			@select=${action('select: save-as')}
@@ -119,7 +162,7 @@ const menu = html`
 	</nldd-menu>
 `;
 
-const Template = ({ appearance, size, width, text, icon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, text, icon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, download, loading, loadingText, disabled }: Record<string, any>) => html`
 	<nldd-split-button
 		appearance=${appearance}
 		size=${size}
@@ -130,9 +173,13 @@ const Template = ({ appearance, size, width, text, icon, shortcut, shortcutMac, 
 		shortcut-mac=${shortcutMac || nothing}
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
+		type=${type}
+		href=${href || nothing}
+		download=${download ?? nothing}
+		?loading=${loading}
+		loading-text=${loadingText || nothing}
 		?disabled=${disabled}
 		@action-click=${action('action-click')}
-		@menu-click=${action('menu-click')}
 	>${menu}</nldd-split-button>
 `;
 
@@ -246,9 +293,8 @@ export const ToestandDisabled = {
 };
 
 /**
- * De chevron slikt ook een `nldd-popover` in plaats van een menu: dezelfde
- * auto-wiring (ankeren + togglen), maar met vrije content. Zonder overlay
- * vuurt de chevron nog steeds `menu-click`.
+ * De chevron opent ook een `nldd-popover` in plaats van een menu: dezelfde
+ * koppeling (ankeren en openen), maar met vrije inhoud.
  */
 export const MetPopover = {
 	render: () => html`
@@ -256,9 +302,9 @@ export const MetPopover = {
 			text="Delen"
 			icon="share"
 			@action-click=${action('action-click')}
-			@menu-click=${action('menu-click')}
 		>
 			<nldd-popover
+				slot="popup"
 				accessible-label="Deelopties"
 				width="280px"
 			>
@@ -289,5 +335,50 @@ export const MetPopover = {
 				story: 'Split-button met een genest <code>nldd-popover</code> in plaats van een menu; zelfde auto-wiring op de chevron.',
 			},
 		},
+	},
+};
+
+/**
+ * Staat het menu ergens anders, wijs het dan aan met `popovertarget`. De chevron
+ * opent het en zet het naast zich neer, dus het menu heeft alleen een `id` nodig.
+ */
+export const MetPopovertarget = {
+	name: 'Met popovertarget',
+	render: () => html`
+		<nldd-split-button
+			text="Bewaar"
+			popovertarget="bewaar-opties"
+			@action-click=${action('action-click')}
+		></nldd-split-button>
+		<nldd-menu id="bewaar-opties">
+			<nldd-menu-item text="Opslaan als…"></nldd-menu-item>
+			<nldd-menu-item text="Bewaar en sluit"></nldd-menu-item>
+		</nldd-menu>
+	`,
+	parameters: {
+		controls: { disable: true },
+	},
+};
+
+/**
+ * De hoofdactie kan een download zijn, met de andere formaten in het menu.
+ */
+export const AlsDownload = {
+	name: 'Als download',
+	render: () => html`
+		<nldd-split-button
+			text="Download PDF"
+			icon="download"
+			href="#"
+			download="aanvraag-a-1042.pdf"
+		>
+			<nldd-menu slot="popup">
+				<nldd-menu-item text="Download als CSV"></nldd-menu-item>
+				<nldd-menu-item text="Download als Excel"></nldd-menu-item>
+			</nldd-menu>
+		</nldd-split-button>
+	`,
+	parameters: {
+		controls: { disable: true },
 	},
 };

@@ -13,7 +13,11 @@ export const RANGE_SEPARATOR = '/';
  * Read a typed date generously. Deliberately not a mask: reformatting per
  * keystroke moves the caret, breaks backspace mid-value and confuses screen
  * readers, so we accept what people type and normalize once on commit.
- * Accepts 12-3-2026, 12/03/2026, 12.03.2026, 12032026 and ISO yyyy-mm-dd.
+ * Accepts 12-3-2026, 12/03/2026, 12.03.2026 and ISO yyyy-mm-dd, and ddmmyyyy
+ * with or without one separator between each part (12032026, 12-032026, 1203 2026).
+ * Eight bare digits are always read as ddmmyyyy, never as a compact ISO date.
+ * A numeric keypad on a phone has no hyphen, so a date edited there often keeps
+ * one separator and loses the other.
  */
 export function parseDate(raw: string): string | null {
 	const trimmed = raw.trim();
@@ -23,7 +27,7 @@ export function parseDate(raw: string): string | null {
 	if (iso) return toIso(Number(iso[1]), Number(iso[2]), Number(iso[3]));
 	const dutch = /^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/.exec(trimmed);
 	if (dutch) return toIso(Number(dutch[3]), Number(dutch[2]), Number(dutch[1]));
-	const bare = /^(\d{2})(\d{2})(\d{4})$/.exec(trimmed);
+	const bare = /^(\d{2})(?:\s*[./-]\s*|\s+)?(\d{2})(?:\s*[./-]\s*|\s+)?(\d{4})$/.exec(trimmed);
 	if (bare) return toIso(Number(bare[3]), Number(bare[2]), Number(bare[1]));
 	return null;
 }

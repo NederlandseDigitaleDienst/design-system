@@ -14,6 +14,7 @@ const menuRoleMap = {
 // host, so the link inside it keeps the role it has by itself.
 const itemRoleMap = {
 	button: { menu: 'menuitem', listbox: 'option' },
+	submit: { menu: 'menuitem', listbox: 'option' },
 	checkbox: { menu: 'menuitemcheckbox', listbox: 'option' },
 	radio: { menu: 'menuitemradio', listbox: 'option' },
 } as const;
@@ -113,7 +114,7 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 }
 
 export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null = null) {
-	const hasCheckState = this.type !== 'button' && variant === 'menu';
+	const hasCheckState = (this.type === 'checkbox' || this.type === 'radio') && variant === 'menu';
 	// A plain item keeps the column empty when its menu has checkable items.
 	const hasCheckColumn = hasCheckState || (this.checkColumn && variant === 'menu');
 	// No role until a menu claims this item. `menuitem` says there is a menu
@@ -131,22 +132,29 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 	const safeHref = sanitizeUrl(this.href) ?? '';
 	const asLink = !!safeHref && this.type === 'button' && !hasSubmenu && !this.disabled;
 
+	// The slot is always there, so it can report what lands in it; an icon in
+	// it wins over `icon`, which is its fallback.
+	const hasIcon = Boolean(this.icon) || this._hasIconSlot;
 	const content = html`
 		${hasCheckColumn ? html`
 			<nldd-icon-cell
-				size="24"
 				horizontal-alignment="center"
 				icon=${hasCheckState && this.selected ? 'check-mark' : nothing}
 			></nldd-icon-cell>
 			<nldd-spacer-cell size="4"></nldd-spacer-cell>
 		` : nothing}
-		${this.icon ? html`
-			<nldd-icon-cell
-				size="20"
-				icon=${this.icon}
-			></nldd-icon-cell>
-			<nldd-spacer-cell size="8"></nldd-spacer-cell>
-		` : nothing}
+		<nldd-icon-cell
+			size="20"
+			?hidden=${!hasIcon}
+		><slot
+			name="icon"
+			class="menu__item-icon"
+			@slotchange=${this._onIconSlotChange}
+		>${this.icon ? html`<nldd-icon icon=${this.icon}></nldd-icon>` : nothing}</slot></nldd-icon-cell>
+		<nldd-spacer-cell
+			size="8"
+			?hidden=${!hasIcon}
+		></nldd-spacer-cell>
 		<nldd-text-cell
 			text=${this.text}
 			query=${this.query}

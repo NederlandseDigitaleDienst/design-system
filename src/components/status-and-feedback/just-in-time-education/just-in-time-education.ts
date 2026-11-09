@@ -95,7 +95,7 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 	@property({ type: Boolean, reflect: true })
 	dismissable = false;
 
-	@property({ type: String, reflect: true, attribute: 'arrow-length' })
+	@property({ reflect: true, attribute: 'arrow-length', converter: reflectNonDefault<string>('') })
 	arrowLength = '';
 
 	@property({ type: Boolean, reflect: true, attribute: 'no-arrow' })

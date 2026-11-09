@@ -26,7 +26,7 @@ export const codeCopyLabels = Facet.define<CodeCopyLabels, CodeCopyLabels>({
 	combine: (values) => values[0] ?? { copy: () => 'Kopieer', success: () => 'Gekopieerd', failure: () => 'Kopiëren mislukt' },
 });
 
-const FEEDBACK_MS = 2000;
+const COPY_FEEDBACK_DURATION_MS = 2000;
 
 function clipboardAvailable(): boolean {
 	return typeof window !== 'undefined' && window.isSecureContext && typeof navigator.clipboard?.writeText === 'function';
@@ -99,7 +99,7 @@ class CopyButton extends WidgetType {
 			try {
 				await navigator.clipboard.writeText(codeOf(view.state, view.state.doc.lineAt(view.posAtDOM(button)).from));
 				setState(button, labels(), 'success');
-				feedbackTimers.set(wrap, setTimeout(() => setState(button, labels(), 'idle'), FEEDBACK_MS));
+				feedbackTimers.set(wrap, setTimeout(() => setState(button, labels(), 'idle'), COPY_FEEDBACK_DURATION_MS));
 			} catch {
 				// Stays until the reader moves on, as in nldd-code-viewer.
 				setState(button, labels(), 'failure');

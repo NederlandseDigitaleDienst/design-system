@@ -5,11 +5,6 @@
  * Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label.
  * Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
  *
- * On a selected row of nldd-list-item a checked control takes the colors of the
- * row: the row sets `--context-selected-indicator-color` and
- * `--context-selected-contrast-color`, because the accent can fall below 3:1 on
- * the gray of a selected row.
- *
  * @element nldd-switch
  * @attr {boolean} checked - Whether the switch is on/off
  * @attr {boolean} disabled - Disabled state
@@ -32,6 +27,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { switchStyles } from './switch.styles.js';
 import { switchTemplate } from './switch.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type SwitchSize = 'xs' | 'sm';
 
@@ -194,6 +190,7 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	 * call `switchEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLInputElement>('.switch__input')?.focus(options);
 	}
 

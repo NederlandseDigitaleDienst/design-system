@@ -15,11 +15,11 @@ describe('nldd-spacer-cell', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('defaults to size 16 and reflects it', async () => {
+	it('defaults to size 16, without writing the default to the DOM', async () => {
 		el = await fixture('<nldd-spacer-cell></nldd-spacer-cell>');
 		await waitForUpdate(el);
 		expect((el as unknown as { size: string }).size).toBe('16');
-		expect(el.getAttribute('size')).toBe('16');
+		expect(el.hasAttribute('size')).toBe(false);
 	});
 
 	it('reflects size attribute', async () => {

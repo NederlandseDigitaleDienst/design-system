@@ -4,6 +4,7 @@ import { linkRel } from '../../../utilities/link-rel.js';
 
 export function statusBarTemplate(component: NLDDStatusBar) {
 	const interactive = Boolean(component.href || component.button);
+	const abovePage = html`<span class="status-bar__above-page" aria-hidden="true"></span>`;
 	const content = html`
 		<span class="status-bar__text">${component.text}</span>
 		${interactive ? html`
@@ -16,6 +17,7 @@ export function statusBarTemplate(component: NLDDStatusBar) {
 	`;
 	if (component.href) {
 		return html`
+			${abovePage}
 			<a class="status-bar"
 				href=${component.href}
 				target=${component.target || nothing}
@@ -25,10 +27,11 @@ export function statusBarTemplate(component: NLDDStatusBar) {
 	}
 	if (component.button) {
 		return html`
+			${abovePage}
 			<button class="status-bar"
 				type="button"
 			>${content}</button>
 		`;
 	}
-	return html`<div class="status-bar">${content}</div>`;
+	return html`${abovePage}<div class="status-bar">${content}</div>`;
 }

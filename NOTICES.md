@@ -63,7 +63,7 @@ Bestanden:
 - `src/assets/favicon/favicon.svg` (in het npm-pakket: `@nldd/design-system/favicon.svg`)
 - `src/assets/favicon/touch-icon.png` (in het npm-pakket: `@nldd/design-system/touch-icon.png`)
 
-Daarnaast de huisstijlelementen die het designsysteem in CSS overneemt: het lint in `nldd-top-navigation-bar` en de huisstijlkleuren in `src/assets/styles/colors.generated.css`.
+Daarnaast de huisstijlelementen die het designsysteem in CSS overneemt: het lint in `nldd-top-navigation-bar` en `nldd-page-footer` en de huisstijlkleuren in `src/assets/styles/colors.generated.css`. Een site buiten de Rijksoverheid laat het lint weg met `no-logo` op `nldd-top-navigation-bar` en `no-ribbon` op `nldd-page-footer`.
 
 De Staat der Nederlanden (Ministerie van Algemene Zaken) heeft auteursrecht voorbehouden op het ontwerp van het rijkslogo en de huisstijl, conform de *Regeling voorbehouden auteursrecht beeldmerk en huisstijl herkenbare Rijksoverheid* (Stcrt. 2008, nr. 115) en artikel 15b van de Auteurswet 1912: https://wetten.overheid.nl/BWBR0024004/2008-08-07. Het beeldmerk is als hoogheidsteken gedeponeerd.
 

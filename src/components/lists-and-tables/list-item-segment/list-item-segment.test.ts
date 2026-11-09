@@ -73,6 +73,15 @@ describe('nldd-list-item-segment', () => {
 		expect(control(without).getAttribute('aria-expanded')).toBeNull();
 	});
 
+	it('says collapsed for an expandable segment without expanded', async () => {
+		const [closed, open] = await mount(
+			'<nldd-list-item-segment button expandable><nldd-text-cell text="X"></nldd-text-cell></nldd-list-item-segment>'
+			+ '<nldd-list-item-segment button expandable expanded><nldd-text-cell text="Y"></nldd-text-cell></nldd-list-item-segment>',
+		);
+		expect(control(closed).getAttribute('aria-expanded')).toBe('false');
+		expect(control(open).getAttribute('aria-expanded')).toBe('true');
+	});
+
 	it('puts aria-current on a current link, with current-type as its value', async () => {
 		const [a] = await mount('<nldd-list-item-segment href="#racks" current><nldd-text-cell text="Racks"></nldd-text-cell></nldd-list-item-segment>', 'type="navigation" aria-label="Op deze pagina"');
 		expect(control(a).getAttribute('aria-current')).toBe('page');
@@ -649,5 +658,37 @@ describe('<nldd-list-item-segment> with download', () => {
 		el = await fixture('<nldd-list-item-segment href="/verslag.pdf" target="_blank" download="verslag.pdf"><nldd-text-cell text="Verslag"></nldd-text-cell></nldd-list-item-segment>');
 		await waitForUpdate(el);
 		expect(el.matches(':state(download-with-target)')).toBe(true);
+	});
+});
+
+describe('nldd-list-item-segment – popovertarget positions its overlay', () => {
+	let root: HTMLElement;
+
+	afterEach(() => {
+		if (root) cleanup(root);
+	});
+
+	const setup = async (menuAttrs = '') => {
+		root = await fixture(`<div><nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment button accessible-label="Acties voor Dossier D-318" popovertarget="opties"></nldd-list-item-segment></nldd-list-item></nldd-list><nldd-menu id="opties" ${menuAttrs}><nldd-menu-item text="Bekijken"></nldd-menu-item></nldd-menu></div>`);
+		const trigger = root.querySelector('nldd-list-item-segment') as HTMLElement & { updateComplete: Promise<unknown> };
+		await trigger.updateComplete;
+		const menu = root.querySelector('#opties') as HTMLElement & { anchorElement: Element | null };
+		return { trigger, menu };
+	};
+
+	it('anchors the overlay to itself, without an anchor on the overlay', async () => {
+		const { trigger, menu } = await setup();
+		expect(menu.anchorElement).toBe(trigger);
+	});
+
+	it('leaves an overlay with an anchor of its own alone', async () => {
+		const { menu } = await setup('anchor="elders"');
+		expect(menu.anchorElement).toBeNull();
+	});
+
+	it('lets go of the overlay when it leaves the page', async () => {
+		const { trigger, menu } = await setup();
+		trigger.remove();
+		expect(menu.anchorElement).toBeNull();
 	});
 });

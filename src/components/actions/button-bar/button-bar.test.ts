@@ -116,6 +116,36 @@ describe('nldd-button-bar – child building & attribute propagation', () => {
 		expect(el.querySelector('nldd-icon-button')!.getAttribute('size')).toBe('sm');
 	});
 
+	it('writes no default size or appearance onto its buttons', async () => {
+		el = await fixture<NLDDButtonBar>(`
+			<nldd-button-bar>
+				<nldd-button text="A"></nldd-button>
+				<nldd-icon-button icon="x" text="Close"></nldd-icon-button>
+			</nldd-button-bar>
+		`);
+		await waitForUpdate(el);
+
+		for (const button of el.querySelectorAll('nldd-button, nldd-icon-button')) {
+			expect(button.hasAttribute('size')).toBe(false);
+			expect(button.hasAttribute('appearance')).toBe(false);
+		}
+	});
+
+	it('overrides a size and appearance set as properties, as a framework sets them', async () => {
+		el = await fixture<NLDDButtonBar>('<nldd-button-bar></nldd-button-bar>');
+		const button = document.createElement('nldd-button') as HTMLElement & { size: string; appearance: string; text: string };
+		button.text = 'A';
+		button.size = 'lg';
+		button.appearance = 'primary';
+		el.append(button);
+		await waitForUpdate(el);
+		await waitForUpdate(button);
+
+		expect(button.size).toBe('md');
+		expect(button.appearance).toBe('neutral-tinted');
+		expect(button.hasAttribute('size')).toBe(false);
+	});
+
 	it('propagates lg size to icon-button children', async () => {
 		el = await fixture<NLDDButtonBar>(`
 			<nldd-button-bar size="lg">

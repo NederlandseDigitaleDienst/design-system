@@ -53,7 +53,7 @@ export function stepBarItemTemplate(component: NLDDStepBarItem): TemplateResult 
 			aria-hidden="true"
 		>${marker}</span>
 		<span class="step-bar__item-title">
-			${component.text || html`<slot></slot>`}
+			${component._textSlot.has ? nothing : component.text}<slot @slotchange=${component._textSlot.onChange}></slot>
 			<span class="step-bar__item-status">, ${component._statusText}</span>
 		</span>
 	`;

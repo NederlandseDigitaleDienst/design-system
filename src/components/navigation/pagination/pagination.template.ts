@@ -13,7 +13,7 @@ export function paginationTemplate(component: NLDDPagination): TemplateResult {
 
 	const renderPageButton = (page: number) => {
 		const isCurrent = page === component.current;
-		const label = t('components.pagination.page-action', { page });
+		const label = t('components.pagination.go-to-page-action', { page });
 
 		if (hasHref) {
 			return html`
@@ -50,7 +50,7 @@ export function paginationTemplate(component: NLDDPagination): TemplateResult {
 			<div class="pagination__previous-button">
 				<nldd-icon-button
 					icon="chevron-left-small"
-					text=${t('components.pagination.previous-action')}
+					text=${t('components.pagination.go-to-previous-page-action')}
 					appearance="neutral-tinted"
 					no-highlight-border
 					?disabled=${isDisabled || atFirst}
@@ -100,7 +100,7 @@ export function paginationTemplate(component: NLDDPagination): TemplateResult {
 			<div class="pagination__next-button">
 				<nldd-icon-button
 					icon="chevron-right-small"
-					text=${t('components.pagination.next-action')}
+					text=${t('components.pagination.go-to-next-page-action')}
 					appearance="neutral-tinted"
 					no-highlight-border
 					?disabled=${isDisabled || atLast}

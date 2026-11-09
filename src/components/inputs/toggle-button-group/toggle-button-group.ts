@@ -34,6 +34,7 @@ import { toggleButtonGroupTemplate } from './toggle-button-group.template.js';
 import type { NLDDToggleButton, ToggleButtonAppearance, ToggleButtonSize } from '../toggle-button/toggle-button.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { radioPositions } from '../../../utilities/radio-position.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 type GroupType = 'button' | 'checkbox' | 'radio';
 
@@ -62,7 +63,7 @@ export class NLDDToggleButtonGroup extends LitElement {
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<GroupType>('checkbox') })
 	type: GroupType = 'checkbox';
 
 	@property({ type: String })
@@ -258,6 +259,7 @@ export class NLDDToggleButtonGroup extends LitElement {
 	 * selected; focus goes to the first of them, in DOM order.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const buttons = this._getEnabledButtons();
 		(buttons.find(button => button.selected) ?? buttons[0])?.focus(options);
 	}

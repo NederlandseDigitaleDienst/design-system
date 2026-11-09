@@ -56,7 +56,9 @@ export class PopupAnchorController {
 	/** Bind to the popup slot's `slotchange`. */
 	handleSlotChange = (event: Event): void => {
 		const slot = event.target as HTMLSlotElement;
-		const overlay = (slot.assignedElements().find((el) => el.matches(OVERLAY_SELECTOR)) as Overlay | undefined) ?? null;
+		// Flattened, so a component can forward its own slot into this one
+		// (nldd-split-button hands its popup to the chevron this way).
+		const overlay = (slot.assignedElements({ flatten: true }).find((el) => el.matches(OVERLAY_SELECTOR)) as Overlay | undefined) ?? null;
 		this.setOverlay(overlay);
 	};
 
@@ -83,7 +85,12 @@ export class PopupAnchorController {
 	 *  browser's light-dismiss runs. Covers mouse, touch and pen — `mousedown`
 	 *  alone would skip touch, where no mousedown precedes the synthetic click. */
 	handlePointerdown = (): void => {
-		this._wasOpenOnPointerdown = this._overlay?.matches(':popover-open') ?? false;
+		const overlay = this._overlay;
+		if (!overlay) {
+			this._wasOpenOnPointerdown = false;
+			return;
+		}
+		this._wasOpenOnPointerdown = '_shownForInvoker' in overlay ? overlay._shownForInvoker() : overlay.matches(':popover-open');
 	};
 
 	/** Call from the control's click handler. Returns true when the click was
@@ -98,6 +105,7 @@ export class PopupAnchorController {
 		// guard keeps showPopover() from throwing on an already-open overlay.
 		const wasOpen = event.detail > 0 && this._wasOpenOnPointerdown;
 		this._wasOpenOnPointerdown = false;
+		if ('_endInvokerGesture' in this._overlay) this._overlay._endInvokerGesture();
 		if (!wasOpen && !this._overlay.matches(':popover-open')) this._overlay.showPopover();
 		return true;
 	}

@@ -213,6 +213,40 @@ describe('nldd-container', () => {
 		expect(el.getAttribute('width')).toBe('fit-content');
 	});
 
+	it('writes no empty size attributes, so :host([min-height]) only holds when it is set', async () => {
+		el = await fixture('<nldd-container></nldd-container>');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('min-width')).toBe(false);
+		expect(el.hasAttribute('max-width')).toBe(false);
+		expect(el.hasAttribute('min-height')).toBe(false);
+		const box = el.shadowRoot!.querySelector('.container')!;
+		expect(getComputedStyle(box).display).not.toBe('flex');
+	});
+
+	it('hides itself on touch or on a pointer device, following the shortcut query', async () => {
+		const touchOnly = matchMedia('(any-hover: none)').matches;
+		el = await fixture('<nldd-container hide-on="touch"></nldd-container>');
+		expect(getComputedStyle(el).display).toBe(touchOnly ? 'none' : 'block');
+		el.setAttribute('hide-on', 'pointer');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el).display).toBe(touchOnly ? 'block' : 'none');
+		el.removeAttribute('hide-on');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el).display).toBe('block');
+	});
+
+	it('has a hiding rule for each hide-on value, under its own query', async () => {
+		el = await fixture('<nldd-container></nldd-container>');
+		const rules = el.shadowRoot!.adoptedStyleSheets.flatMap((sheet) => [...sheet.cssRules]);
+		const hidingSelector = (query: string): string | undefined => {
+			const media = rules.find((rule): rule is CSSMediaRule => rule instanceof CSSMediaRule && rule.conditionText === query);
+			const inner = media && [...media.cssRules].find((rule): rule is CSSStyleRule => rule instanceof CSSStyleRule && rule.style.display === 'none');
+			return inner?.selectorText;
+		};
+		expect(hidingSelector('(any-hover: none)')).toBe(':host([hide-on="touch"])');
+		expect(hidingSelector('(any-hover: hover)')).toBe(':host([hide-on="pointer"])');
+	});
+
 	it('puts min-height in a custom property and removes it when cleared', async () => {
 		el = await fixture('<nldd-container min-height="240px"></nldd-container>');
 		await waitForUpdate(el);
@@ -286,6 +320,47 @@ describe('nldd-container – width="fit-content"', () => {
 		await waitForUpdate(el);
 		const inner = el.querySelector('nldd-container') as HTMLElement;
 		expect(inner.getBoundingClientRect().width).toBe(96);
+	});
+
+	it('gives a full container inside it the width of its content, not 0', async () => {
+		el = await fixture(`
+			<nldd-container layout="row">
+				<nldd-container width="fit-content">
+					<nldd-container>
+						<nldd-container>
+							<div style="width: 120px; height: 24px;"></div>
+						</nldd-container>
+					</nldd-container>
+				</nldd-container>
+			</nldd-container>
+		`);
+		await waitForUpdate(el);
+		const [, middle, inner] = el.querySelectorAll<HTMLElement>('nldd-container');
+		await waitForUpdate(inner);
+		expect(middle.getBoundingClientRect().width).toBe(120);
+		expect(inner.getBoundingClientRect().width).toBe(120);
+	});
+
+	it('measures itself again once the parent fills its own parent', async () => {
+		el = await fixture(`
+			<div style="width: 400px;">
+				<nldd-container width="fit-content">
+					<nldd-container>
+						<div style="width: 120px; height: 24px;"></div>
+					</nldd-container>
+				</nldd-container>
+			</div>
+		`);
+		const outer = el.querySelector('nldd-container') as HTMLElement & { width: string };
+		const inner = outer.querySelector('nldd-container') as HTMLElement;
+		await waitForUpdate(inner);
+		const query = () => getComputedStyle(inner.shadowRoot!.querySelector('.container')!).containerType;
+		expect(query()).toBe('normal');
+		outer.width = 'full';
+		await waitForUpdate(outer);
+		await waitForUpdate(inner);
+		expect(query()).toBe('inline-size');
+		expect(inner.getBoundingClientRect().width).toBe(400);
 	});
 });
 

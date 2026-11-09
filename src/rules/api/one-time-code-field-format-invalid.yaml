@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-one-time-code-field[format]:not([format*="#"])'
+message: '`format` needs a `#` for each box, such as `###-###`; without one the field ignores it.'
+examples:
+  passed: ['<nldd-one-time-code-field format="###-###"></nldd-one-time-code-field>']
+  failed: ['<nldd-one-time-code-field format="000-000"></nldd-one-time-code-field>']

@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-swatch-picker-item'
+assert: '[color], [text]'
+message: 'An nldd-swatch-picker-item with a `custom-color` or an `image` has no accessible name. Add `text`; only a category `color` brings a name of its own.'
+examples:
+  passed: ['<nldd-swatch-picker-item color="rood" value="rood"></nldd-swatch-picker-item>', '<nldd-swatch-picker-item custom-color="#7a1f3d" text="Huisstijl" value="huisstijl"></nldd-swatch-picker-item>']
+  failed: ['<nldd-swatch-picker-item custom-color="#7a1f3d" value="huisstijl"></nldd-swatch-picker-item>', '<nldd-swatch-picker-item image="/eiken.jpg" value="eiken"></nldd-swatch-picker-item>']

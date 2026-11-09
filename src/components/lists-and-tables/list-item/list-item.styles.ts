@@ -189,21 +189,21 @@ export const listItemStyles = css`
 		--_list-item-background-color: var(--semantics-list-items-is-selected-background-color);
 		--context-content-color: var(--semantics-list-items-is-selected-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
-		/* A checked control on the gray row takes the content color: the accent
-		   can fall under 3:1 against it. */
-		--context-selected-indicator-color: var(--semantics-list-items-is-selected-content-color);
-		--context-selected-contrast-color: var(--semantics-list-items-is-selected-background-color);
 	}
 
+	/* On the row, not the host, so a ring inside matches the fill without
+	   reaching the child rows. :where keeps it as light as the fill it mirrors. */
+	:host(:where([selected], [checkbox][checked], [current], [data-current])) .list-item {
+		--context-parent-background-color: var(--semantics-list-items-is-selected-background-color);
+	}
 
 	/* A checked checkbox action selects the whole row, so the fill runs across
 	   the disclosure action too instead of stopping at its boundary. */
 	.list-item.is-action-checked {
 		--_list-item-background-color: var(--semantics-list-items-is-selected-background-color);
+		--context-parent-background-color: var(--semantics-list-items-is-selected-background-color);
 		--context-content-color: var(--semantics-list-items-is-selected-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
-		--context-selected-indicator-color: var(--semantics-list-items-is-selected-content-color);
-		--context-selected-contrast-color: var(--semantics-list-items-is-selected-background-color);
 	}
 
 	/* Hover only on hover-capable devices, so a touch that turns into a scroll
@@ -216,6 +216,7 @@ export const listItemStyles = css`
 	@media (hover: hover) {
 		:host(:not([disabled])) .list-item__action:hover {
 			--_list-item-background-color: var(--semantics-list-items-is-hovered-background-color);
+			--context-parent-background-color: var(--semantics-list-items-is-hovered-background-color);
 			--context-content-color: var(--semantics-list-items-is-hovered-content-color);
 			--context-content-secondary-color: var(--semantics-list-items-is-hovered-content-color);
 		}
@@ -223,6 +224,7 @@ export const listItemStyles = css`
 		:host(:is([selected], [checkbox][checked]):not([disabled])) .list-item__action:hover,
 		:host(:is([current], [data-current]):not([disabled])) .list-item__action:hover {
 			--_list-item-background-color: var(--semantics-list-items-is-selected-is-hovered-background-color);
+			--context-parent-background-color: var(--semantics-list-items-is-selected-is-hovered-background-color);
 			--context-content-color: var(--semantics-list-items-is-selected-content-color);
 			--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 		}
@@ -253,6 +255,7 @@ export const listItemStyles = css`
 	   hovering it as well, and the state it just gave focus to has to win. */
 	:host(:is([current], [data-current]):focus-within) .list-item,
 	:host(:is([current], [data-current]):focus-within) .list-item__action {
+		--context-parent-background-color: var(--semantics-list-items-is-highlighted-background-color);
 		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
 	}
@@ -289,6 +292,7 @@ export const listItemStyles = css`
 	/* The content color has to travel with the fill: the neutral press rule
 	   above sets it too, and black on a deep accent is unreadable. */
 	:host(:is([current], [data-current]):focus-within:not([disabled])) .list-item__action:hover {
+		--context-parent-background-color: var(--semantics-list-items-is-highlighted-is-hovered-background-color);
 		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
 	}
@@ -297,6 +301,7 @@ export const listItemStyles = css`
 	   the press (pointercancel) instead of flashing it. */
 	:host(:not([disabled])) .list-item__action.is-pressed {
 		--_list-item-background-color: var(--semantics-list-items-is-active-background-color);
+		--context-parent-background-color: var(--semantics-list-items-is-active-background-color);
 		--context-content-color: var(--semantics-list-items-is-active-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-active-content-color);
 	}
@@ -304,12 +309,14 @@ export const listItemStyles = css`
 	:host(:is([selected], [checkbox][checked]):not([disabled])) .list-item__action.is-pressed,
 	:host(:is([current], [data-current]):not([disabled])) .list-item__action.is-pressed {
 		--_list-item-background-color: var(--semantics-list-items-is-selected-is-active-background-color);
+		--context-parent-background-color: var(--semantics-list-items-is-selected-is-active-background-color);
 		--context-content-color: var(--semantics-list-items-is-selected-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 	}
 
 	:host(:is([selected], [checkbox][checked])) .list-item__action {
 		--_list-item-background-color: var(--semantics-list-items-is-selected-background-color);
+		--context-parent-background-color: var(--semantics-list-items-is-selected-background-color);
 		--context-content-color: var(--semantics-list-items-is-selected-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 	}
@@ -322,9 +329,16 @@ export const listItemStyles = css`
 		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
 	}
 
+	/* The same two selectors as the fill above, so the hover rule cannot win. */
+	:host(:is([current], [data-current]):not([disabled])) .list-item__action.is-pressed,
+	:host(:is([current], [data-current]):focus-within:not([disabled])) .list-item__action.is-pressed {
+		--context-parent-background-color: var(--semantics-list-items-is-highlighted-is-active-background-color);
+	}
+
 	.list-item.is-highlighted,
 	:host(:is([selected], [checkbox][checked])) .list-item.is-highlighted .list-item__action {
 		--_list-item-background-color: var(--semantics-list-items-is-highlighted-background-color);
+		--context-parent-background-color: var(--semantics-list-items-is-highlighted-background-color);
 		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
 	}

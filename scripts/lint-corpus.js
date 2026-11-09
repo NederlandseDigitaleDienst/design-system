@@ -5,13 +5,16 @@
  * Reads a comma-separated list of directories from NLDD_LINT_CORPUS, so no local
  * path ends up in this repository.
  *
- * Usage: NLDD_LINT_CORPUS=../app-a/src,../app-b/src node scripts/lint-corpus.js [rule]
+ * Usage: NLDD_LINT_CORPUS=../app-a/src,../app-b/src node scripts/lint-corpus.js [--pure] [rule]
+ *
+ * With --pure the opt-in group pure runs too, over every file and stylesheet.
  */
 
 import { readFileSync } from 'node:fs';
 import { basename, relative, resolve } from 'node:path';
-import { createLinter } from '../lint/linter.js';
-import { findFiles } from '../lint/project.js';
+import { createLinter, loadData } from '../lint/linter.js';
+import { DEFAULT_EXTENSIONS, findFiles, STYLESHEET_EXTENSIONS } from '../lint/project.js';
+import { OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
 
 const directories = (process.env.NLDD_LINT_CORPUS ?? '').split(',').filter(Boolean);
 if (directories.length === 0) {
@@ -19,8 +22,12 @@ if (directories.length === 0) {
 	process.exit(2);
 }
 
-const only = process.argv[2];
-const linter = createLinter();
+const args = process.argv.slice(2);
+const pure = args.includes('--pure');
+const only = args.find((arg) => !arg.startsWith('--'));
+const data = loadData();
+const linter = createLinter(data, { severities: resolveSeverities(data, {}, { optIn: pure ? OPT_IN_GROUPS : [] }) });
+const extensions = pure ? [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS] : DEFAULT_EXTENSIONS;
 const perRule = new Map();
 const totals = { failed: 0, passed: 0, cantTell: 0 };
 let fileCount = 0;
@@ -29,9 +36,9 @@ const started = performance.now();
 for (const directory of directories) {
 	const root = resolve(directory);
 	const app = basename(root.replace(/(\/(src|frontend|web))+$/, ''));
-	for (const filename of findFiles([root], root)) {
+	for (const filename of findFiles([root], root, [], extensions)) {
 		const source = readFileSync(filename, 'utf8');
-		if (!source.includes('nldd-')) continue;
+		if (!pure && !source.includes('nldd-')) continue;
 		fileCount++;
 		const { findings, counts } = await linter.lintSource(source, filename);
 		for (const key of Object.keys(totals)) totals[key] += counts[key];

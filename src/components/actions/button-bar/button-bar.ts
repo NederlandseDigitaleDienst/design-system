@@ -44,6 +44,16 @@ export type BarChild =
 
 const BUTTON_TAGS = ['nldd-button', 'nldd-icon-button'];
 
+/**
+ * Hands a value the bar decides to a button. The property, not the attribute:
+ * a framework such as Vue sets these as properties, only the property
+ * overrides that, and the button's converter leaves no attribute at its default.
+ */
+function assign(el: Element, name: 'size' | 'appearance', value: string): void {
+	if (name in el) (el as unknown as Record<string, string>)[name] = value;
+	else el.setAttribute(name, value);
+}
+
 @customElement('nldd-button-bar')
 export class NLDDButtonBar extends LitElement {
 	static override styles = buttonBarStyles;
@@ -116,13 +126,13 @@ export class NLDDButtonBar extends LitElement {
 	private _propagateSize(): void {
 		Array.from(this.children)
 			.filter(el => BUTTON_TAGS.includes(el.tagName.toLowerCase()))
-			.forEach(el => el.setAttribute('size', this.size));
+			.forEach(el => assign(el, 'size', this.size));
 	}
 
 	private _propagateAppearance(): void {
 		Array.from(this.children)
 			.filter(el => BUTTON_TAGS.includes(el.tagName.toLowerCase()))
-			.forEach(el => el.setAttribute('appearance', this.appearance));
+			.forEach(el => assign(el, 'appearance', this.appearance));
 	}
 
 	private _propagateDisabled(): void {
@@ -160,8 +170,8 @@ export class NLDDButtonBar extends LitElement {
 			}
 
 			if (BUTTON_TAGS.includes(tag)) {
-				el.setAttribute('size', this.size);
-				el.setAttribute('appearance', this.appearance);
+				assign(el, 'size', this.size);
+				assign(el, 'appearance', this.appearance);
 				// The bar draws one group border (.button-bar::after); children drop theirs.
 				el.setAttribute('no-highlight-border', '');
 			}

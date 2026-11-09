@@ -7,10 +7,10 @@
  *
  * @element nldd-document-tab-bar
  * @attr {string} accessible-label - Accessible name for the navigation landmark
- * @attr {object} translations - Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.overflow-action' (default: 'Meer')
+ * @attr {object} translations - Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.show-more-tabs-action' (default: 'Toon meer tabbladen')
  *
  * @migration The `overflow-button-label` attribute has been removed.
- *            Use `translations` property instead: `.translations=${{ 'components.document-tab-bar.overflow-action': 'Tabs' }}`
+ *            Use `translations` property instead: `.translations=${{ 'components.document-tab-bar.show-more-tabs-action': 'Tabs' }}`
  * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use when items have hrefs
  *
  * The tabs can always be put in another order: drag one, or move the focused
@@ -60,6 +60,7 @@ import './../../actions/menu/menu.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 // Pointer movement threshold in px before drag mode activates.
 // Distinguishes a click (select) from a drag (reorder).
@@ -147,6 +148,7 @@ export class NLDDDocumentTabBarItem extends LitElement {
 	_navigation = false;
 
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLElement>('.document-tab-bar__item-tab')?.focus(options);
 	}
 

@@ -66,6 +66,7 @@
  *   slotted content does not trigger the error-state overlay automatically.
  *   Consumers slotting their own image are responsible for handling its
  *   error state (e.g. swapping the slot content or styling a fallback).
+ * @accepts img, picture, source, svg
  * @slot caption - Rich caption content (overrides the `caption` attribute)
  */
 
@@ -150,7 +151,7 @@ export class NLDDImage extends LitElement {
 	@property({ type: String, attribute: 'fetchpriority' })
 	fetchPriority?: ImageFetchPriority;
 
-	@property({ type: String, attribute: 'aspect-ratio', reflect: true })
+	@property({ reflect: true, attribute: 'aspect-ratio', converter: reflectNonDefault<string>('') })
 	aspectRatio = '';
 
 	@property({ reflect: true, attribute: 'object-fit', converter: reflectNonDefault<ImageObjectFit>('cover') })

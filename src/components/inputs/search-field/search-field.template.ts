@@ -10,7 +10,8 @@ export function searchFieldTemplate(component: NLDDSearchField): TemplateResult 
 	// Only render the fade + end (clear / search buttons) when at least one is
 	// shown; an empty end would otherwise reserve its padding as a dead click
 	// zone on the right, shrinking the input's focus-on-click area.
-	const hasEnd = Boolean(component.value) || component.showSearchButton;
+	const hasSearchButton = component.searchButton !== null;
+	const hasEnd = Boolean(component.value) || hasSearchButton;
 
 	return html`
 		<div class="search-field">
@@ -62,10 +63,10 @@ export function searchFieldTemplate(component: NLDDSearchField): TemplateResult 
 							></nldd-icon-button>
 						</div>
 					` : nothing}
-					${component.showSearchButton ? html`
+					${hasSearchButton ? html`
 						<div class="search-field__search-button">
 							<nldd-button
-								appearance="neutral-tinted"
+								appearance=${component.searchButton === 'primary' ? 'primary' : 'secondary'}
 								size=${buttonSize}
 								text=${component._t('components.search-field.search-action')}
 								@click=${component._handleSearch}

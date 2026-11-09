@@ -3,13 +3,20 @@
 import { readFileSync } from 'node:fs';
 
 /** What a rule is about. The first that fits, top to bottom, is the group of a rule. */
-export const GROUPS = ['api', 'a11y', 'copy', 'structure', 'pattern'];
+export const GROUPS = ['api', 'a11y', 'copy', 'structure', 'pattern', 'pure'];
+
+/**
+ * Groups a project turns on itself, with `--pure` or a level in its config. They ask
+ * more than using the components right, so they never fire unasked.
+ */
+export const OPT_IN_GROUPS = ['pure'];
 
 /**
  * Turns config keys and --select and --ignore into a level per rule. A key is a
  * group or a rule, and a rule beats its group whatever the order.
  */
-export function resolveSeverities(data, levels = {}, { select, ignore } = {}) {
+export function resolveSeverities(data, levels = {}, { select, ignore, optIn = [] } = {}) {
+	const levelOf = new Map(data.rules.map((rule) => [rule.id, rule.severity]));
 	const groupOf = new Map([
 		...Object.keys(BUILT_IN_RULES).map((id) => [id, 'api']),
 		...data.rules.map((rule) => [rule.id, rule.group]),
@@ -23,6 +30,14 @@ export function resolveSeverities(data, levels = {}, { select, ignore } = {}) {
 	);
 	for (const [id, group] of groupOf) {
 		if (!severities[id] && levels[group]) severities[id] = levels[group];
+		if (OPT_IN_GROUPS.includes(group)) {
+			// The command line beats the config for the group, not for a rule the config names.
+			const namedInConfig = Object.keys(levels).some((key) => canonical(key) === id);
+			if (optIn.includes(group) && !namedInConfig && severities[id] === 'off') delete severities[id];
+			const chosen = severities[id] || optIn.includes(group) || (select?.length && matches(id, select));
+			// The linter runs a rule of such a group only with a level written out.
+			severities[id] = chosen ? (severities[id] ?? levelOf.get(id)) : 'off';
+		}
 		if (select?.length && !matches(id, select)) severities[id] = 'off';
 		if (ignore?.length && matches(id, ignore)) severities[id] = 'off';
 	}

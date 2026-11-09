@@ -16,7 +16,7 @@
 const carried = new WeakMap<HTMLElement, { scheme: string | null; lang: string | null }>();
 
 /** The language of an element, looking past shadow roots to their hosts. */
-function langOf(el: Element): string | null {
+export function langOf(el: Element): string | null {
 	let node: Element | null = el;
 	while (node) {
 		const owner: Element | null = node.closest('[lang]');
@@ -27,15 +27,22 @@ function langOf(el: Element): string | null {
 	return null;
 }
 
-/** Gives `element` the color scheme and language of `origin`. Call it each
- *  time the element shows, since the page around the origin may have changed. */
-export function carryContext(element: HTMLElement, origin: Element | null): void {
+/**
+ * Gives `element` the color scheme and language of `origin`. Call it each time
+ * the element shows, since the page around the origin may have changed.
+ *
+ * Reading the color scheme takes `getComputedStyle`, which recalculates the
+ * styles of the page when they are dirty. An element nobody sees, such as the
+ * hidden description of a tooltip, only needs the language: pass
+ * `{ scheme: false }` and nothing is recalculated.
+ */
+export function carryContext(element: HTMLElement, origin: Element | null, { scheme: withScheme = true } = {}): void {
 	if (!origin?.isConnected) return;
 	const previous = carried.get(element) ?? { scheme: null, lang: null };
 	const next = { scheme: previous.scheme, lang: previous.lang };
 
 	const ownScheme = element.style.colorScheme;
-	if (!ownScheme || ownScheme === previous.scheme) {
+	if (withScheme && (!ownScheme || ownScheme === previous.scheme)) {
 		const scheme = getComputedStyle(origin).colorScheme;
 		if (scheme && scheme !== 'normal') {
 			element.style.colorScheme = scheme;

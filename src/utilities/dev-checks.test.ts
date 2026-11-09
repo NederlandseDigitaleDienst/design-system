@@ -1,8 +1,10 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import '../components/index.js';
 import data from '../../lint/data.generated.json';
 import { devRules } from './dev-rules.generated.js';
-import { findRoots, findViolations } from './dev-checks.js';
+import { createRegistrationCheck, findRoots, findUndefined, findViolations, lacksFoucGuard } from './dev-checks.js';
+import { loadingTags } from './loading-tags.js';
+import foucCss from '../assets/styles/fouc.css?inline';
 
 const patterns = import.meta.glob('../patterns/**/*.html', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 
@@ -18,7 +20,8 @@ describe('rules in the browser', () => {
 
 	afterEach(() => root?.remove());
 
-	for (const { id, examples } of data.rules.filter((each) => each.examples && each.severity !== 'hint')) {
+	// The group pure is a choice of the project and judges its source, so it stays out of the browser.
+	for (const { id, examples } of data.rules.filter((each) => each.examples && each.severity !== 'hint' && each.group !== 'pure')) {
 		const rule = devRules.find((each) => each.id === id)!;
 
 		it(`${id} agrees with its examples`, async () => {
@@ -113,5 +116,70 @@ describe('rules in the browser', () => {
 		button.accessibleLabel = 'Sluit';
 		await button.updateComplete;
 		expect(findViolations(root, rule)).toEqual([]);
+	});
+});
+
+describe('unregistered elements', () => {
+	it('finds an nldd-* element no module defines, and leaves other tags alone', () => {
+		const root = document.createElement('div');
+		root.innerHTML = '<nldd-button text="Opslaan"></nldd-button><nldd-not-imported></nldd-not-imported><other-library-element></other-library-element>';
+		expect(findUndefined([root]).map((element) => element.localName)).toEqual(['nldd-not-imported']);
+	});
+
+	it('waits for a module the autoloader is still loading', () => {
+		vi.useFakeTimers();
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const element = document.createElement('nldd-slow-to-load');
+		document.body.append(element);
+		loadingTags.add('nldd-slow-to-load');
+		try {
+			const check = createRegistrationCheck();
+			check();
+			vi.advanceTimersByTime(5000);
+			check();
+			expect(warn).not.toHaveBeenCalled();
+			loadingTags.delete('nldd-slow-to-load');
+			check();
+			expect(warn).toHaveBeenCalledOnce();
+		} finally {
+			loadingTags.delete('nldd-slow-to-load');
+			element.remove();
+			warn.mockRestore();
+			vi.useRealTimers();
+		}
+	});
+});
+
+describe('FOUC guard', () => {
+	let root: HTMLElement | undefined;
+	let style: HTMLStyleElement | undefined;
+
+	afterEach(() => {
+		root?.remove();
+		style?.remove();
+	});
+
+	const mount = (markup: string) => {
+		root = document.createElement('div');
+		root.innerHTML = markup;
+		document.body.append(root);
+	};
+
+	it('says nothing on a page without components', () => {
+		mount('<p>Mijn Dienst</p>');
+		expect(lacksFoucGuard(root)).toBe(false);
+	});
+
+	it('finds a page with components and no guard', () => {
+		mount('<nldd-button text="Bewaar"></nldd-button>');
+		expect(lacksFoucGuard(root)).toBe(true);
+	});
+
+	it('finds the guard once fouc.css is loaded', () => {
+		style = document.createElement('style');
+		style.textContent = foucCss;
+		document.head.append(style);
+		mount('<nldd-button text="Bewaar"></nldd-button>');
+		expect(lacksFoucGuard(root)).toBe(false);
 	});
 });

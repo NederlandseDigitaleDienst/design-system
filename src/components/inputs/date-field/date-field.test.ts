@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import dateFieldCss from './date-field.styles.ts?raw';
 import './date-field.js';
@@ -421,6 +421,7 @@ describe('nldd-date-field', () => {
 		el = await fixture<NLDDDateField>('<nldd-date-field range></nldd-date-field>');
 		await waitForUpdate(el);
 		textInput(el).focus();
+		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
 
 		picker(el)!.dispatchEvent(new CustomEvent('change', {
 			detail: { start: '2026-07-08', end: '2026-07-15' }, bubbles: true, composed: true,
@@ -440,6 +441,66 @@ describe('nldd-date-field', () => {
 		textInput(el).focus();
 		el._handlePickerDismiss(new Event('dismiss'));
 		await closePopover(el);
+		expect(el.shadowRoot!.activeElement).toBe(pickerButton(el));
+	});
+
+	// Safari does not focus a button on click, so after a click beside the popover
+	// its own restore lands on the text field.
+	it('zet de focus na een klik naast de kalender terug op de knop, niet op het veld', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field></nldd-date-field>');
+		await waitForUpdate(el);
+		document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'mouse' }));
+		textInput(el).focus();
+		await closePopover(el);
+		expect(el.shadowRoot!.activeElement).toBe(pickerButton(el));
+	});
+
+	it('laat de focus staan als de klik naast de kalender in een ander veld viel', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field></nldd-date-field>');
+		await waitForUpdate(el);
+		const other = document.createElement('input');
+		document.body.append(other);
+		other.focus();
+		await closePopover(el);
+		expect(document.activeElement).toBe(other);
+		other.remove();
+	});
+
+	// With delegatesFocus, Safari focuses the text field on that press, and the
+	// field shows its ring for as long as the button is held.
+	it('verplaatst de focus niet als de kalenderknop wordt ingedrukt', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field></nldd-date-field>');
+		await waitForUpdate(el);
+		const press = new MouseEvent('mousedown', { bubbles: true, composed: true, cancelable: true });
+		pickerButton(el)!.dispatchEvent(press);
+		expect(press.defaultPrevented).toBe(true);
+	});
+
+	// A caret in the end field would open the keyboard on a phone.
+	it('zet de focus na een periode met een tik terug op de kalenderknop', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field range></nldd-date-field>');
+		await waitForUpdate(el);
+		textInput(el).focus();
+		document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch' }));
+		picker(el)!.dispatchEvent(new CustomEvent('change', {
+			detail: { start: '2026-07-08', end: '2026-07-15' }, bubbles: true, composed: true,
+		}));
+		await closePopover(el);
+		expect(el.shadowRoot!.activeElement).toBe(pickerButton(el));
+	});
+
+	// WebKit draws a ring for a script focus, also after a tap; the keyboard keeps it.
+	it('zet de focus na een tik of klik zonder ring terug op de kalenderknop', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field></nldd-date-field>');
+		await waitForUpdate(el);
+		textInput(el).focus();
+		document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch' }));
+		const focus = vi.spyOn(pickerButton(el)!, 'focus');
+		el._handlePickerDismiss(new Event('dismiss'));
+		await closePopover(el);
+		expect(focus).toHaveBeenCalled();
+		// Every focus on the button goes without a ring, also the field's own.
+		expect(focus.mock.calls.every(([options]) => (options as { focusVisible?: boolean } | undefined)?.focusVisible === false)).toBe(true);
 		expect(el.shadowRoot!.activeElement).toBe(pickerButton(el));
 	});
 
@@ -899,7 +960,7 @@ describe('nldd-date-field meldt wat value niet kan zeggen', () => {
 		await type(el, 'Test');
 		expect(el.value).toBe('');
 		expect(el.internals.validity.badInput).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een datum in als dd-mm-jjjj');
+		expect(el.internals.validationMessage).toBe('Een datum als dd-mm-jjjj');
 	});
 
 	it('is valid again once the text is a date or gone', async () => {
@@ -916,10 +977,10 @@ describe('nldd-date-field meldt wat value niet kan zeggen', () => {
 		el = await fixture<NLDDDateField>('<nldd-date-field min="2026-06-01" max="2026-06-30"></nldd-date-field>');
 		await type(el, '15-05-2026');
 		expect(el.internals.validity.rangeUnderflow).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een datum in vanaf 01-06-2026');
+		expect(el.internals.validationMessage).toBe('Een datum vanaf 01-06-2026');
 		await type(el, '15-07-2026');
 		expect(el.internals.validity.rangeOverflow).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een datum in tot en met 30-06-2026');
+		expect(el.internals.validationMessage).toBe('Een datum tot en met 30-06-2026');
 	});
 
 	it('checks both halves of a period', async () => {
@@ -934,7 +995,7 @@ describe('nldd-date-field meldt wat value niet kan zeggen', () => {
 		el = await fixture<NLDDDateField>('<nldd-date-field range required></nldd-date-field>');
 		await typeIn(el, inputs(el)[0], '01-07-2026');
 		expect(el.internals.validity.valueMissing).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul ook de einddatum in');
+		expect(el.internals.validationMessage).toBe('De einddatum ontbreekt');
 		cleanup(el);
 
 		el = await fixture<NLDDDateField>('<nldd-date-field range></nldd-date-field>');

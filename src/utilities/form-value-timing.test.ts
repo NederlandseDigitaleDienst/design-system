@@ -5,6 +5,7 @@ import '../components/inputs/switch/switch.js';
 import '../components/inputs/radio-button/radio-button.js';
 import '../components/inputs/toggle-button/toggle-button.js';
 import '../components/inputs/text-field/text-field.js';
+import '../components/inputs/one-time-code-field/one-time-code-field.js';
 import '../components/inputs/password-field/password-field.js';
 import '../components/inputs/search-field/search-field.js';
 import '../components/inputs/multi-line-text-field/multi-line-text-field.js';
@@ -91,6 +92,12 @@ const cases: Case[] = [
 		html: '<nldd-text-field name="field" accessible-label="Veld"></nldd-text-field>',
 		act: el => type(el, 'hallo'),
 		expected: 'hallo',
+	},
+	{
+		name: 'nldd-one-time-code-field',
+		html: '<nldd-one-time-code-field name="field" accessible-label="Veld"></nldd-one-time-code-field>',
+		act: el => type(el, '123456'),
+		expected: '123456',
 	},
 	{
 		name: 'nldd-password-field',

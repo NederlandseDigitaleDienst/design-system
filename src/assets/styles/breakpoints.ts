@@ -22,6 +22,16 @@ export const queryBreakpoints = {
 } as const;
 
 /**
+ * Where a page section with two columns side by side (1/2-1/2, 1/3-2/3,
+ * 2/3-1/3) stacks them, measured on the section. From 50rem the wide column of
+ * 1/3-2/3 gets about 400px next to 280px, enough for the content it carries;
+ * one width for all three, so sections on one page stack together.
+ */
+export const splitSectionBreakpoints = {
+	stackedMax: '50rem',
+} as const;
+
+/**
  * The root font size in CSS pixels: what 1rem is in an `@container` condition.
  * An `@media` condition and `matchMedia` take the browser's initial font size
  * instead, which differs only when a site sets `font-size` on `<html>`; pass

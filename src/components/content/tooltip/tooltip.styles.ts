@@ -27,6 +27,11 @@ export const tooltipStyles = css`
 		display: contents;
 	}
 
+	:host([timing="instant"]) {
+		--_tooltip-hide-duration: 0s;
+		--_tooltip-show-duration: 0s;
+	}
+
 	:host([hidden]) {
 		display: none;
 	}
@@ -34,7 +39,11 @@ export const tooltipStyles = css`
 
 	/* # Block */
 
+	/* A parent whose triggers sit close together sets
+	   --context-tooltip-pointer-events to none, so a click on the tooltip
+	   reaches the control underneath. Unset, the tooltip inherits as before. */
 	.tooltip {
+		pointer-events: var(--context-tooltip-pointer-events);
 		position: fixed;
 		opacity: 0;
 		margin: 0;
@@ -102,6 +111,7 @@ export const tooltipStyles = css`
 
 	.tooltip__text {
 		min-width: 0;
+		text-wrap: pretty;
 	}
 
 	.tooltip__shortcut {

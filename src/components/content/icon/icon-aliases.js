@@ -112,6 +112,9 @@ export const aliases = {
 	// check-mark-small
 	'checked-small': 'check-mark-small',
 
+	// check-mark-square
+	'checkbox': 'check-mark-square',
+
 	// chevron-left
 	'back': 'chevron-left',
 
@@ -636,6 +639,9 @@ export const aliases = {
 	// sparkles
 	'ai': 'sparkles',
 	'magic': 'sparkles',
+
+	// speaker
+	'no-volume': 'speaker',
 
 	// speaker-slash
 	'mute': 'speaker-slash',

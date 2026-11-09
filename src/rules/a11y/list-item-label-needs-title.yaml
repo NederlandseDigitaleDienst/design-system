@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-list-item:state(label-without-title)'
+message: '`accessible-label` does not start with what the row shows. The label replaces the row''s text for assistive technology, so someone who says the visible words to voice control finds nothing (WCAG 2.5.3). Start the label with the title, or leave it off and let the row''s text be the name.'

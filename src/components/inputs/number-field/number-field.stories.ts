@@ -41,8 +41,8 @@ export default {
 		},
 		value: {
 			control: { type: 'number' },
-			description: 'Huidige waarde',
-			table: { defaultValue: { summary: 0 } },
+			description: 'Huidige waarde. Leeg is geen antwoord: dan gelden min en max niet, alleen required.',
+			table: { defaultValue: { summary: '(leeg)' } },
 		},
 		min: {
 			control: { type: 'number' },
@@ -63,6 +63,11 @@ export default {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
+		},
+		required: {
+			control: 'boolean',
+			description: 'Er moet een waarde ingevuld zijn; leeg is dan ongeldig',
+			table: { defaultValue: { summary: false } },
 		},
 		invalid: {
 			control: 'boolean',
@@ -85,18 +90,20 @@ export default {
 		max: 10,
 		step: 1,
 		accessibleLabel: '',
+		required: false,
 		invalid: false,
 		disabled: false,
 	},
 };
 
-const Template = ({ size, hideSpinButtons, name, value, min, max, step, width, accessibleLabel, invalid, disabled }: Record<string, any>) => html`
+const Template = ({ size, hideSpinButtons, name, value, min, max, step, width, accessibleLabel, required, invalid, disabled }: Record<string, any>) => html`
 	<nldd-number-field
-		value=${value}
+		value=${value ?? nothing}
 		min=${min}
 		max=${max}
 		step=${step}
 		size=${size}
+		?required=${required}
 		?invalid=${invalid}
 		?disabled=${disabled}
 		name=${name}

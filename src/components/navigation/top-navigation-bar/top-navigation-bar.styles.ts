@@ -168,6 +168,11 @@ export const topNavigationBarStyles = css`
 		}
 	}
 
+	:host([data-under-status-bar]) .top-navigation-bar__logo::before,
+	:host([data-under-status-bar]) .top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top {
+		display: none;
+	}
+
 	@keyframes top-navigation-bar-ribbon-at-top {
 		to {
 			visibility: hidden;
@@ -203,6 +208,9 @@ export const topNavigationBarStyles = css`
 		display: grid;
 		grid-column: 2 / 4;
 		grid-template-columns: subgrid;
+		/* Safari keeps the height of a columns-only subgrid when its width
+		   changes; taking the row from the bar too makes it measure again. */
+		grid-template-rows: subgrid;
 		align-items: center;
 	}
 
@@ -257,11 +265,9 @@ export const topNavigationBarStyles = css`
 
 		/* The distance the text keeps from the top edge once it outgrows the
 		   ribbon. Only at the top: space under it would raise the bar for
-		   nothing. The minimum gives up the same 16, so the text still centres
-		   on the middle of the ribbon rather than 8px below it. */
+		   nothing. */
 		@container (max-width: ${smMax}) {
 			align-self: start;
-			min-height: calc(var(--_top-navigation-bar-logo-height) - var(--primitives-space-16));
 			padding-block-start: var(--primitives-space-16);
 		}
 	}
@@ -289,14 +295,14 @@ export const topNavigationBarStyles = css`
 		   ellipsis cannot be read at all. */
 		overflow-wrap: anywhere;
 
-		/* Centred against the ribbon, and what does not fit grows downward: an
+		/* On the bottom of the ribbon, and what does not fit grows downward: an
 		   auto margin takes positive free space and never negative, so the text
 		   cannot ride up past the top. Growing is the flex item's job here, and
-		   an item that grows leaves nothing for the margins to centre with. */
+		   an item that grows leaves nothing for the margin to push with. */
 		@container (max-width: ${smMax}) {
 			flex-grow: 0;
 			flex-basis: auto;
-			margin-block: auto;
+			margin-block-start: auto;
 		}
 	}
 
@@ -348,14 +354,10 @@ export const topNavigationBarStyles = css`
 	.top-navigation-bar__website-title-bar {
 		display: flex;
 		align-items: center;
-
-		@container (max-width: ${smMax}) {
-			justify-content: center;
-		}
+		justify-content: flex-start;
 
 		@container (min-width: ${mdMin}) {
 			padding-inline-end: var(--semantics-menu-bar-items-inline-padding);
-			justify-content: flex-start;
 		}
 	}
 
@@ -386,7 +388,6 @@ export const topNavigationBarStyles = css`
 			min-width: 0;
 			white-space: normal;
 			overflow-wrap: break-word;
-			text-align: center;
 		}
 
 		@container (min-width: ${mdMin}) {

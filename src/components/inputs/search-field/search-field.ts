@@ -9,7 +9,7 @@
  * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
  * @attr {string} placeholder - Placeholder text for the input
  * @attr {string} accessible-label - Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen'). Without a visible label the placeholder is the only text on screen, so a name of your own starts with it: someone who works the computer by voice says what they see, and a name that leaves it out does not answer (WCAG 2.5.3).
- * @attr {boolean} show-search-button - When set, shows a search button on the right
+ * @attr {string} search-button - Shows a search button on the right, in the appearance you name: 'secondary' (also with no value) | 'primary'. Leave it out for no button: Enter searches as well. 'primary' is for a page where searching is the main task, such as a search page; in a header or above a list the quiet one fits.
  * @attr {string} shortcut - Keyboard shortcut hint shown at the right end of the empty field, e.g. 'Cmd+K' or '/'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up focusing the field in your app. Hidden while the field has focus or a value, and on touch-only devices. Joins the field's description for screen readers.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
@@ -45,8 +45,12 @@ import { DescribedBy, applyDescribedBy } from '../../../utilities/described-by-m
 import { ShortcutAvailabilityController, shortcutsAvailable } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type SearchFieldSize = 'sm' | 'md';
+
+
+export type SearchButtonAppearance = '' | 'secondary' | 'primary';
 
 @customElement('nldd-search-field')
 export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
@@ -88,8 +92,9 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	@property({ type: Boolean, reflect: true, attribute: 'show-search-button' })
-	showSearchButton = false;
+	/** Shows a search button in this appearance; null for none, an empty string for the default. */
+	@property({ type: String, reflect: true, attribute: 'search-button' })
+	searchButton: SearchButtonAppearance | null = null;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	shortcut = '';
@@ -259,6 +264,7 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	 * `searchFieldEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._input?.focus(options);
 	}
 

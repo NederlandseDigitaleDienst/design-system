@@ -41,6 +41,7 @@ import { barSplitViewStyles } from './bar-split-view.styles.js';
 import { barSplitViewTemplate } from './bar-split-view.template.js';
 import { breakpointPx, rootFontSize } from '../../../../assets/styles/breakpoints.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 
 export type Breakpoint = 'sm' | 'md' | 'lg';
 type BreakpointOrUnmeasured = Breakpoint | null;
@@ -53,7 +54,7 @@ export class NLDDBarSplitView extends LitElement {
 	// sticky-bar offsets below.
 	private _scrollMode = new ScrollModeController(this, () => this._updateInsets());
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<'inherit' | 'base' | 'tinted'>('inherit') })
 	background: 'inherit' | 'base' | 'tinted' = 'inherit';
 
 	// null until connectedCallback measures the viewport. Before measurement the

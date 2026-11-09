@@ -55,6 +55,7 @@ export const cardStyles = css`
 	/* # Block */
 
 	.card {
+		--context-parent-background-color: var(--_card-background-color);
 		display: flex;
 		position: relative;
 		border-radius: var(--_card-corner-radius);
@@ -64,37 +65,34 @@ export const cardStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 		isolation: isolate;
+		outline: var(--_card-highlight-border-width) solid var(--_card-border-color);
+		outline-offset: calc(-1 * var(--_card-highlight-border-width));
 		transition: background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
 	}
 
 	@media (hover: hover) {
 		.card:has(> .card__action:hover) {
 			--_card-border-color: var(--_card-is-hovered-border-color);
+			--context-parent-background-color: var(--_card-is-hovered-background-color);
 			background-color: var(--_card-is-hovered-background-color);
 		}
 	}
 
 	:host([data-action-pressed]) .card {
 		--_card-border-color: var(--_card-is-active-border-color);
+		--context-parent-background-color: var(--_card-is-active-background-color);
 		background-color: var(--_card-is-active-background-color);
-	}
-
-	.card::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		box-shadow: inset 0 0 0 var(--_card-highlight-border-width) var(--_card-border-color);
-		pointer-events: none;
 	}
 
 
 	/* # Link / button overlay */
 
+	/* z-index 1, not 0: content that is only position: relative, such as an
+	   nldd-image, would otherwise paint over the overlay and take its clicks. */
 	.card__action {
 		position: absolute;
 		inset: 0;
-		z-index: 0;
+		z-index: 1;
 		border-radius: inherit;
 	}
 

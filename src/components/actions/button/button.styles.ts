@@ -515,6 +515,7 @@ export const buttonStyles = css`
 		min-width: 0;
 		color: var(--_button-secondary-content-color);
 		font: var(--_button-supporting-font);
+		text-wrap: pretty;
 	}
 
 	.button:hover .button__supporting-text {

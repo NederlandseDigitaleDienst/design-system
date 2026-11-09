@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './radio-button-field.js';
 import '../../layout/container/container.js';
 
@@ -20,6 +20,13 @@ export default {
 		},
 	},
 	argTypes: {
+		color: {
+			control: 'select',
+			options: ['(auto)', 'inherit'],
+			mapping: { '(auto)': '' },
+			description: 'Met inherit krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
+			table: { defaultValue: { summary: '(auto)' } },
+		},
 		label: {
 			control: 'text',
 			description: 'Label tekst',
@@ -51,6 +58,7 @@ export default {
 
 	},
 	args: {
+		color: '',
 		label: 'Radio button field',
 		value: 'option-1',
 		checked: false,
@@ -60,8 +68,9 @@ export default {
 	},
 };
 
-const Template = ({ label, value, checked, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ color, label, value, checked, invalid, disabled, required }: Record<string, any>) => html`
 	<nldd-radio-button-field
+		color=${color || nothing}
 		label=${label}
 		?checked=${checked}
 		?invalid=${invalid}
@@ -74,6 +83,32 @@ const Template = ({ label, value, checked, invalid, disabled, required }: Record
 export const Standaard = {
 	render: Template,
 	args: {},
+};
+
+export const KleurInherit = {
+	name: 'Kleur inherit',
+	render: () => html`
+		<nldd-container
+			layout="wrap"
+			gap="32"
+			padding="24"
+			style="--context-parent-background-color: var(--semantics-surfaces-accent-filled-background-color); background-color: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color);"
+		>
+			<nldd-radio-button-field
+				color="inherit"
+				name="demo-kleur"
+				value="post"
+				label="Per post"
+			></nldd-radio-button-field>
+			<nldd-radio-button-field
+				color="inherit"
+				name="demo-kleur"
+				value="mail"
+				label="Per e-mail"
+				checked
+			></nldd-radio-button-field>
+		</nldd-container>
+	`,
 };
 
 export const AlleToestanden = {

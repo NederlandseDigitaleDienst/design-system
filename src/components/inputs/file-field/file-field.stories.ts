@@ -62,6 +62,7 @@ export default {
 		size: 'md',
 		accept: '',
 		multiple: false,
+		directory: false,
 		accessibleLabel: 'Bijlage',
 		valid: false,
 		invalid: false,
@@ -89,6 +90,11 @@ export default {
 		multiple: {
 			control: 'boolean',
 			description: 'Meerdere bestanden kiezen',
+			table: { defaultValue: { summary: false } },
+		},
+		directory: {
+			control: 'boolean',
+			description: 'Ook een map kiezen: kiezen opent een menu met bestanden of een map',
 			table: { defaultValue: { summary: false } },
 		},
 		accessibleLabel: {
@@ -128,6 +134,7 @@ export const Standaard = ({
 	size,
 	accept,
 	multiple,
+	directory,
 	accessibleLabel,
 	valid,
 	invalid,
@@ -140,6 +147,7 @@ export const Standaard = ({
 		size=${size || nothing}
 		accept=${accept || nothing}
 		?multiple=${multiple}
+		?directory=${directory}
 		accessible-label=${accessibleLabel || nothing}
 		?valid=${valid}
 		?invalid=${invalid}
@@ -192,6 +200,32 @@ export const Meerdere = {
 };
 
 /**
+ * Met `directory` kun je ook een map aanleveren, met alles wat erin staat. Een
+ * dialoog kiest bestanden of een map, nooit allebei, dus kiezen en wijzigen
+ * openen een menu met de twee. Een vlak heeft ruimte voor allebei en toont
+ * twee knoppen, met de sleephint eronder. Slepen kan met allebei tegelijk. Het veld noemt
+ * de map ("site (124 bestanden)"), `paths` zegt waar elk bestand stond, en een
+ * formulier stuurt elk bestand mee met zijn pad als naam.
+ */
+export const MetMappen = {
+	name: 'Met mappen',
+	render: () => html`
+		<nldd-container gap="16">
+			<nldd-file-field
+				directory
+				accessible-label="Site"
+			></nldd-file-field>
+			<nldd-file-field
+				variant="area"
+				directory
+				accessible-label="Site als vlak"
+			></nldd-file-field>
+		</nldd-container>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
  * In een `nldd-form-field` krijgt het veld zijn label, maat en foutmelding
  * automatisch aangereikt, net als elk ander invoerveld.
  */
@@ -206,7 +240,7 @@ export const InEenFormulierveld = {
 				unmet="bewijsstuk-verplicht"
 			></nldd-file-field>
 			<nldd-validation-list>
-				<nldd-validation-item id="bewijsstuk-verplicht">Kies een bestand</nldd-validation-item>
+				<nldd-validation-item id="bewijsstuk-verplicht">Een bestand is verplicht</nldd-validation-item>
 			</nldd-validation-list>
 		</nldd-form-field>
 	`,

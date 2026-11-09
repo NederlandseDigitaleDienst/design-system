@@ -30,6 +30,14 @@ Kan een component iets niet wat het zou moeten kunnen, of is het kapot, dan is d
 
 Wat je vormgeeft is daarmee geen keuze van deze skill. Wanneer een sticky header mag, hoeveel chroom een scherm verdient, hoe je microcopy schrijft: dat staat in [`design-guidelines.md`](../nldd-design/design-guidelines.md), en dat is de enige bron. Lees die voordat je iets ontwerpt. Hier staat de mechaniek eronder.
 
+### Geen eigen vormgeving
+
+Zet geen eigen stijl op een `nldd-*`-component: geen `class` of `style` erop, geen selector die erop mikt, en geen `div` of `span` eromheen die iets opmaakt. Stuur een component via zijn attributen en slots. Kale HTML mag alleen waar een component hem zelf opmaakt; de [referentie](../nldd-design/reference.md) zegt per component welke, onder "Plain HTML it styles". Eigen CSS moet je bij elke release zelf nalopen: een hernoemde variabele of een toegankelijkheidsfix in een component bereikt hem niet. Zet in je project `"rules": { "pure": "error" }` in `.nldd-lint.json`, dan bewaakt `nldd lint` het (zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md)).
+
+Mis je een component, dan mag je er zelf een bouwen. Geef het een eigen naam, zonder `nldd-`, zodat niemand het voor een component van het systeem aanziet. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in een melding via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md): dan kan er besloten worden of het een officieel NLDD-component wordt. Staan de stijlen ervan in een eigen map, zet die dan in `exclude` van `.nldd-lint.json`, zodat `pure` ze niet meetelt.
+
+Kan een `nldd-*`-component iets niet wat het hoort te kunnen, dan is dat een gat in het systeem. Wat een omweg daarvoor tot die tijd bij zich draagt, en hoe je het met een check afdwingt, staat in [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md#het-doel-alles-komt-uit-het-systeem).
+
 ### Componeer, herstijl niet
 
 Gebruik componenten zoals ze zijn en stuur ze via hun attributen. Reik niet in de shadow DOM, override geen interne ARIA, plak geen klassen op childcomponenten.
@@ -49,6 +57,25 @@ Importeer de componenten en de stijlen één keer, bij het opstarten van je app:
 import '@nldd/design-system';          // registreert alle nldd-* componenten
 import '@nldd/design-system/styles';   // CSS-variabelen + Rijksoverheid-fonts
 ```
+
+Wil je dat een pagina alleen laadt wat erop staat, importeer dan de autoloader in plaats van de hoofdingang:
+
+```js
+import '@nldd/design-system/autoloader';   // laadt elk component zodra het op de pagina komt
+```
+
+Die let op elk `nldd-*`-element dat nog niet gedefinieerd is, ook in wat er later bijkomt, en laadt dan de module van die tag. Je bundler maakt er per component een chunk van, en niemand hoeft een importlijst bij te houden. Losse subpaden (`@nldd/design-system/button`) en de hoofdingang mogen ernaast staan: ze laden dezelfde modules. De autoloader kijkt in het document, niet in de shadow root van je eigen componenten; roep daarvoor `discover(root)` aan.
+
+### Laden zonder bundler
+
+Een server-gerenderde app of een statische site zonder bundler gebruikt `dist/cdn/autoloader.js`. Daar zit lit in, dus het werkt met een gewone module-script, zonder import map:
+
+```html
+<link rel="stylesheet" href="/nldd/css/global.css">
+<script type="module" src="/nldd/cdn/autoloader.js"></script>
+```
+
+Kopieer daarvoor `dist/css`, `dist/fonts` en `dist/cdn` uit het pakket naar je statische map. Een fragment dat htmx of Turbo inwisselt, laadt zijn componenten dan vanzelf. `dist/nldd.min.js` is de andere vorm: alles in één bestand, ook wat de pagina niet toont.
 
 ### Favicon
 
@@ -130,13 +157,13 @@ Wat je in de devtools ziet staan, is gelaagd:
 
 Er is geen componentlaag om een component mee bij te stellen. Wil je er een anders, meld het dan; zie `nldd-design-contribute`.
 
-Houd je daarna nog eigen CSS over voor iets dat geen component is, dan is een `--primitives-*` de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
+Eigen CSS hoort er niet te zijn (zie "Geen eigen vormgeving"). Staat er tijdelijk toch een omweg, in afwachting van een issue, dan is een `--primitives-*` daarin de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
 
 **Zet geen `light-dark()` om een primitive heen.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Wikkel je die in nog een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond. Eén verwijzing volstaat.
 
 `light-dark()` heb je alleen nodig voor kleuren die niet uit het palet komen, of wanneer je per schema bewust een ándere stap wilt (bijvoorbeeld 100 in licht en 150 in donker, voor iets meer contrast).
 
-**Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `color-scheme: light` (of `dark`) op een root-element. Er is geen aparte thema-toggle-API op `nldd-shell`.
+**Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `data-scheme="light"` (of `"dark"`) op `<html>`; zonder het attribuut volgt de pagina de voorkeur van het systeem. Een schakelaar in je app zet of haalt dat attribuut weg. Componenten die bij een wissel opnieuw moeten tekenen, letten zelf op het attribuut.
 
 ## Gebruikspatronen
 

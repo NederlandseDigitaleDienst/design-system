@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-swatch-picker-item[color][custom-color], nldd-swatch-picker-item[image][color], nldd-swatch-picker-item[image][custom-color]'
+message: 'An nldd-swatch-picker-item shows one of `color`, `custom-color` or `image`: an image covers a color, and a category `color` wins over `custom-color`. Keep one.'
+examples:
+  passed: ['<nldd-swatch-picker-item image="/eiken.jpg" text="Eiken" value="eiken"></nldd-swatch-picker-item>']
+  failed: ['<nldd-swatch-picker-item color="rood" custom-color="#7a1f3d" value="rood"></nldd-swatch-picker-item>', '<nldd-swatch-picker-item image="/eiken.jpg" color="bruin" text="Eiken" value="eiken"></nldd-swatch-picker-item>']

@@ -212,7 +212,7 @@ export class NLDDList extends LitElement {
 	 * option is kept in view via `scrollIntoView`. Unset → no cap. No effect
 	 * outside listbox mode.
 	 */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	height = '';
 
 	/** Accessible name for the list, forwarded to the inner role: the list in
@@ -411,6 +411,9 @@ export class NLDDList extends LitElement {
 		}
 		if (changed.has('appearance')) {
 			this._updateItemContext();
+		}
+		if (changed.has('dividers') && changed.get('dividers') !== undefined) {
+			this._getItems().forEach(item => item._measureDividerMarkers());
 		}
 		if (changed.has('type')) {
 			this._applyHostType();
@@ -1455,7 +1458,7 @@ export class NLDDList extends LitElement {
 				activeId: this._searchFocused ? this._activeId : '',
 				searchPlaceholder: this._t('components.list.search-placeholder-label'),
 				searchAccessibleLabel: this.accessibleLabel || this._t('components.list.search-placeholder-label'),
-				searchClearLabel: this._t('components.list.search-clear-action'),
+				searchClearLabel: this._t('components.list.clear-search-action'),
 				hasSearchBarEnd: this._hasSearchBarEnd,
 				onSearchInput: this._onSearchInput,
 				onSearchKeyDown: this._onSearchKeyDown,

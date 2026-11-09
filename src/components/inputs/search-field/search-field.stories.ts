@@ -28,7 +28,7 @@ export default {
 		shortcutWindows: '',
 		shortcutLinux: '',
 		accessibleLabel: '',
-		showSearchButton: false,
+		searchButton: undefined,
 		invalid: false,
 		disabled: false,
 		name: '',
@@ -79,11 +79,13 @@ export default {
 			control: 'text',
 			description: 'Toegankelijke naam van het veld; valt terug op de placeholder',
 		},
-		showSearchButton: {
-			name: 'show-search-button',
-			control: 'boolean',
-			description: 'Toont een zoekknop aan de rechterkant',
-			table: { defaultValue: { summary: false } },
+		searchButton: {
+			name: 'search-button',
+			control: 'select',
+			options: ['(geen)', 'secondary', 'primary'],
+			mapping: { '(geen)': undefined },
+			description: 'Toont een zoekknop aan de rechterkant, in deze appearance',
+			table: { defaultValue: { summary: '(geen)' } },
 		},
 		invalid: {
 			control: 'boolean',
@@ -131,7 +133,7 @@ export default {
 	},
 };
 
-const Template = ({ size, width, placeholder, shortcut, shortcutMac, shortcutWindows, shortcutLinux, accessibleLabel, showSearchButton, invalid, disabled, name, value, required, minlength, maxlength, pattern, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, shortcut, shortcutMac, shortcutWindows, shortcutLinux, accessibleLabel, searchButton, invalid, disabled, name, value, required, minlength, maxlength, pattern, noSpellcheck }: Record<string, any>) => html`
 	<nldd-search-field
 		size=${size}
 		width=${width}
@@ -141,7 +143,7 @@ const Template = ({ size, width, placeholder, shortcut, shortcutMac, shortcutWin
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
 		accessible-label=${accessibleLabel}
-		?show-search-button=${showSearchButton}
+		search-button=${searchButton ?? nothing}
 		?invalid=${invalid}
 		?disabled=${disabled}
 		name=${name}
@@ -161,7 +163,7 @@ export const Standaard = {
 
 export const MetZoekKnop = {
 	render: Template,
-	args: { showSearchButton: true },
+	args: { searchButton: 'secondary' },
 };
 
 export const AlleToestanden = {
@@ -179,13 +181,18 @@ export const AlleToestanden = {
 		<nldd-search-field
 			size="md"
 			placeholder="Zoeken"
-			show-search-button
+			search-button
 		></nldd-search-field>
 		<nldd-search-field
 			size="md"
 			placeholder="Zoeken"
 			value="Zoekterm"
-			show-search-button
+			search-button
+		></nldd-search-field>
+		<nldd-search-field
+			size="md"
+			placeholder="Zoeken"
+			search-button="primary"
 		></nldd-search-field>
 		<nldd-search-field
 			size="sm"
@@ -199,13 +206,13 @@ export const AlleToestanden = {
 		<nldd-search-field
 			size="sm"
 			placeholder="Zoeken"
-			show-search-button
+			search-button
 		></nldd-search-field>
 		<nldd-search-field
 			size="sm"
 			placeholder="Zoeken"
 			value="Zoekterm"
-			show-search-button
+			search-button
 		></nldd-search-field>
 		<nldd-search-field
 			size="md"

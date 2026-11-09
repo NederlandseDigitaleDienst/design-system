@@ -95,6 +95,7 @@ export const descriptionCellStyles = css`
 		align-self: stretch !important;
 		color: var(--context-content-secondary-color, var(--semantics-content-secondary-color)) !important;
 		font: var(--primitives-font-body-sm-regular-flat) !important;
+		text-wrap: pretty !important;
 	}
 
 	@media (forced-colors: active) {
@@ -111,6 +112,7 @@ export const descriptionCellStyles = css`
 		align-self: stretch !important;
 		color: var(--context-content-color, var(--semantics-content-color)) !important;
 		font: var(--primitives-font-body-md-regular-tight) !important;
+		text-wrap: pretty !important;
 	}
 
 	@media (forced-colors: active) {

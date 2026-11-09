@@ -4,6 +4,7 @@ import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTopNavigationBar } from './top-navigation-bar.js';
 import './top-navigation-bar.js';
+import '../../status-and-feedback/status-bar/status-bar.js';
 
 function navWithGlobalItems(): string {
 	return `
@@ -127,6 +128,18 @@ describe('nldd-top-navigation-bar – menu item selection', () => {
 		await waitForUpdate(el);
 		expect(items[0].hasAttribute('current')).toBe(false);
 		expect(items[1].hasAttribute('current')).toBe(true);
+	});
+
+	it('deselects an item made current as a property, as a framework does', async () => {
+		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
+		await waitForUpdate(el);
+
+		const items = el.querySelectorAll<HTMLElement & { current: boolean }>('nldd-menu-bar[slot="global"] > nldd-menu-bar-item');
+		items[0].current = true;
+		items[1].click();
+		await waitForUpdate(el);
+		expect(items[0].current).toBe(false);
+		expect(items[1].current).toBe(true);
 	});
 
 	it('dispatches itemselect event on item click', async () => {
@@ -370,6 +383,29 @@ describe('nldd-top-navigation-bar – menu sheet drill-down', () => {
 		expect(titleBar.hasAttribute('back-text')).toBe(false);
 	});
 
+	it('puts the full title of each level above the rows, for the bar to take over on scroll', async () => {
+		el = await fixture<NLDDTopNavigationBar>(drillFixture);
+		await waitForUpdate(el);
+		const list = await openSheet(el);
+		const sheet = (el as any)._menuSheet;
+		const titleBar = sheet.titleBar as HTMLElement;
+		const title = sheet.title as HTMLElement;
+		expect(title.localName).toBe('nldd-title');
+		expect(titleBar.getAttribute('collapse-anchor')).toBe(title.id);
+		expect(title.getAttribute('text')).toBe('Menu');
+		// Above the rows, in the same section.
+		expect(title.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
+		(list.querySelectorAll('nldd-list-item')[1] as HTMLElement)
+			.shadowRoot!.querySelector<HTMLButtonElement>('button.list-item__action')!.click();
+		await waitForUpdate(el);
+		expect(title.getAttribute('text')).toBe('Onderwerpen');
+
+		titleBar.dispatchEvent(new CustomEvent('back', { bubbles: true, composed: true }));
+		await waitForUpdate(el);
+		expect(title.getAttribute('text')).toBe('Menu');
+	});
+
 	it('returns focus to the opener row when walking back (APG)', async () => {
 		el = await fixture<NLDDTopNavigationBar>(drillFixture);
 		await waitForUpdate(el);
@@ -574,11 +610,10 @@ describe('nldd-top-navigation-bar – wordmark beside the ribbon', () => {
 		return { bar, logo: q('.top-navigation-bar__logo'), content: q('.top-navigation-bar__wordmark-content') };
 	};
 
-	it('centres a wordmark that fits against the ribbon', async () => {
+	it('puts a wordmark that fits on the bottom of the ribbon', async () => {
 		const { logo, content } = await mount('375px', '');
-		const midden = (r: DOMRect) => r.top + r.height / 2;
 		expect(content.height).toBeLessThan(logo.height);
-		expect(Math.abs(midden(content) - midden(logo))).toBeLessThan(1);
+		expect(Math.abs(content.bottom - logo.bottom)).toBeLessThan(1);
 	});
 
 	it('keeps 16px from the top and grows downward when it does not fit', async () => {
@@ -827,6 +862,44 @@ describe('nldd-top-navigation-bar – ribbon at the top', () => {
 	])('keeps the ribbon that hides on scroll inside %s', async (_, attributes) => {
 		el = await fixture(`<nldd-top-navigation-bar ${attributes}></nldd-top-navigation-bar>`);
 		expect(el.shadowRoot!.querySelector('.top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top')).not.toBeNull();
+	});
+});
+
+describe('nldd-top-navigation-bar – under a status bar', () => {
+	let wrap: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => {
+		if (wrap) cleanup(wrap);
+		removeTokens();
+	});
+
+	const nav = () => wrap.querySelector('nldd-top-navigation-bar')!;
+
+	it('leaves the ribbon above the page to a status bar above it', async () => {
+		wrap = await fixture('<div><nldd-status-bar text="Gepland onderhoud"></nldd-status-bar><nldd-top-navigation-bar></nldd-top-navigation-bar></div>');
+		await nextFrames();
+		expect(nav().hasAttribute('data-under-status-bar')).toBe(true);
+	});
+
+	it('draws the ribbon above the page without one', async () => {
+		wrap = await fixture('<div><nldd-top-navigation-bar></nldd-top-navigation-bar></div>');
+		await nextFrames();
+		expect(nav().hasAttribute('data-under-status-bar')).toBe(false);
+	});
+
+	it('measures again when a status bar comes or goes', async () => {
+		wrap = await fixture('<div><nldd-top-navigation-bar></nldd-top-navigation-bar></div>');
+		const bar = document.createElement('nldd-status-bar');
+		bar.setAttribute('text', 'Gepland onderhoud');
+		wrap.prepend(bar);
+		await waitForUpdate(bar);
+		await nextFrames();
+		expect(nav().hasAttribute('data-under-status-bar')).toBe(true);
+		bar.remove();
+		await nextFrames();
+		expect(nav().hasAttribute('data-under-status-bar')).toBe(false);
 	});
 });
 

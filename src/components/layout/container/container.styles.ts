@@ -75,6 +75,19 @@ export const containerStyles = css`
 		display: none;
 	}
 
+	/* Same query as shortcutsAvailable() in utilities/shortcut.ts. */
+	@media (any-hover: none) {
+		:host([hide-on="touch"]) {
+			display: none;
+		}
+	}
+
+	@media (any-hover: hover) {
+		:host([hide-on="pointer"]) {
+			display: none;
+		}
+	}
+
 
 	/* # Outer chrome — padding + query container. Size queries measure the
 	   content box, so .container reports the same padded interior width the
@@ -132,7 +145,7 @@ export const containerStyles = css`
 		}
 	}
 
-	:host([width="fit-content"]) .container {
+	.container.is-sized-by-content {
 		container-type: normal;
 	}
 

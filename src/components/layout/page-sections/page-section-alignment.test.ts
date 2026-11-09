@@ -46,3 +46,34 @@ describe('page sections with columns: vertical-alignment', () => {
 		expect(Math.round(right.width)).toBe(Math.round(columns.width));
 	});
 });
+
+describe('page sections with columns: stacking', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const sideBySide = async (block: string, width: number) => {
+		el = await fixture(`
+			<nldd-${block} style="width: ${width}px">
+				<div slot="left">Links</div>
+				<div slot="right">Rechts</div>
+			</nldd-${block}>
+		`);
+		await waitForUpdate(el);
+		const left = el.querySelector('[slot="left"]')!.getBoundingClientRect();
+		const right = el.querySelector('[slot="right"]')!.getBoundingClientRect();
+		cleanup(el);
+		return Math.abs(left.top - right.top) < 1;
+	};
+
+	// One width for all three, so sections on one page stack together.
+	for (const block of SECTIONS) {
+		it(`nldd-${block} stacks below 50rem and stands side by side from there`, async () => {
+			expect(await sideBySide(block, 800)).toBe(false);
+			expect(await sideBySide(block, 802)).toBe(true);
+			expect(await sideBySide(block, 600)).toBe(false);
+		});
+	}
+});

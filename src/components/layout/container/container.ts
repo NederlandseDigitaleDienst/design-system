@@ -69,7 +69,7 @@
  * @attr {number} sm-column-count - Column count when this container is sm-wide
  * @attr {number} md-column-count - Column count when this container is md-wide
  * @attr {number} lg-column-count - Column count when this container is lg-wide
- * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it.
+ * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it. The same holds for a 'full' container inside a 'fit-content' one, since filling a parent that sizes to its content is sizing to the content too.
  * @attr {string} min-width - Minimum width as a CSS length (e.g. '280px')
  * @attr {string} max-width - Maximum width as a CSS length (e.g. '480px')
  * @attr {string} min-height - Minimum height as a CSS length (e.g. '240px'), padding included. Reserves the room that content still on its way will take; vertical-alignment then places the children within it.
@@ -111,13 +111,14 @@
  * @attr {string} lg-padding-right - Padding right at lg
  * @attr {string} lg-padding-bottom - Padding bottom at lg
  * @attr {string} lg-padding-left - Padding left at lg
+ * @attr {string} hide-on - 'touch' | 'pointer'. Takes the container and all it holds away, for screen readers as well, on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`), the same test that hides keyboard shortcuts. For what only works with one of the two, such as a setting about hover. Not for content: what one visitor gets, the other should get too.
  * @attr {string} horizontal-alignment - 'left' | 'center' | 'right'
  * @attr {string} vertical-alignment - 'top' | 'center' | 'bottom'
  *
  * @slot - Container content
  */
 import { LitElement, PropertyValues } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { containerStyles } from './container.styles.js';
@@ -132,6 +133,7 @@ type ColumnCount = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type HorizontalAlignment = 'left' | 'center' | 'right';
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 type Scope = '' | 'sm' | 'md' | 'lg';
+type HideOn = '' | 'touch' | 'pointer';
 
 const HORIZONTAL_TO_FLEX: Record<HorizontalAlignment, string> = {
 	left: 'flex-start',
@@ -179,14 +181,17 @@ export class NLDDContainer extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
-	@property({ type: String, reflect: true, attribute: 'min-width' })
+	@property({ reflect: true, attribute: 'min-width', converter: reflectNonDefault<string>('') })
 	minWidth = '';
 
-	@property({ type: String, reflect: true, attribute: 'max-width' })
+	@property({ reflect: true, attribute: 'max-width', converter: reflectNonDefault<string>('') })
 	maxWidth = '';
 
-	@property({ type: String, reflect: true, attribute: 'min-height' })
+	@property({ reflect: true, attribute: 'min-height', converter: reflectNonDefault<string>('') })
 	minHeight = '';
+
+	@property({ reflect: true, attribute: 'hide-on', converter: reflectNonDefault<string>('') })
+	hideOn: HideOn = '';
 
 	@property({ type: String, reflect: true })
 	gap: PaddingSize | undefined = undefined;
@@ -290,9 +295,45 @@ export class NLDDContainer extends LitElement {
 	@property({ type: String, reflect: true, attribute: 'vertical-alignment' })
 	verticalAlignment: VerticalAlignment | undefined = undefined;
 
-	override updated(_changed: PropertyValues): void {
+	/**
+	 * Whether this container takes its width from its content, while not saying
+	 * so itself: a 'full' container inside a 'fit-content' one. A query container
+	 * reports no width of its own content to its parent, so with containment it
+	 * would measure 0 wide here. It then measures nothing, as 'fit-content' does.
+	 */
+	@state()
+	private _sizedByContent = false;
+
+	/** @internal Also called by an ancestor container whose width changes. */
+	get _isSizedByContent(): boolean {
+		return this.width === 'fit-content' || this._sizedByContent;
+	}
+
+	/** @internal */
+	_syncSizedByContent(): void {
+		const parent = this.parentElement?.closest('nldd-container') as NLDDContainer | null;
+		const fills = !this.width || this.width === 'full';
+		this._sizedByContent = fills && Boolean(parent?._isSizedByContent);
+	}
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this._syncSizedByContent();
+	}
+
+	override willUpdate(changed: PropertyValues): void {
+		if (changed.has('width')) this._syncSizedByContent();
+	}
+
+	override updated(changed: PropertyValues): void {
 		this.writeCustomProperties();
 		this.writeDimensionProperties();
+		// Only the nearest containers: each passes a change on to its own.
+		if (changed.has('width') || changed.has('_sizedByContent')) {
+			this.querySelectorAll<NLDDContainer>('nldd-container').forEach((child) => {
+				if (child.parentElement?.closest('nldd-container') === this) child._syncSizedByContent?.();
+			});
+		}
 	}
 
 	/** A length goes into a custom property; the keywords are selectors in the

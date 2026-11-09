@@ -34,6 +34,7 @@
  * @attr {string} avatar-alt - Alt text for the avatar-src image; empty means decorative
  *
  * @slot avatars - One avatar (`nldd-avatar` or `img`), or an `nldd-avatar-group` for more
+ * @accepts img
  * @slot text - Name line as rich content (a link to the author's profile, for instance)
  * @slot supporting-text - Supporting text as rich content (a time element, for instance)
  */

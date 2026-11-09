@@ -15,6 +15,7 @@
  *
  * @element nldd-page-footer
  *
+ * @attr {boolean} no-ribbon - Leaves out the ribbon under the footer, and the room it takes, as `no-logo` does on nldd-top-navigation-bar. The ribbon belongs to the house style of the Rijksoverheid, so a site outside it, or one anyone may run, turns it off. An empty footer then takes no height at all.
  * @attr {string} [width] - Body max-width, mirroring a page section: 'full' removes the constraint so the content spans the full width; any CSS length (e.g. '480px') overrides the default max-width.
  *
  * @slot breadcrumbs - `nldd-breadcrumbs` for the top row.
@@ -24,6 +25,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import {
 	pageFooterStyles,
@@ -38,6 +40,7 @@ import {
 import { nlddPageFooterTranslations, type NLDDPageFooterTranslations } from './page-footer.i18n.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
+import { markListItems } from '../../../utilities/list-items.js';
 
 
 // # nldd-page-footer-legal-bar-item
@@ -49,13 +52,16 @@ import { setState } from '../../../utilities/element-state.js';
  *
  * @element nldd-page-footer-legal-bar-item
  *
- * @attr {string} text - Item label. Falls back to the default slot.
+ * @attr {string} text - Item label. Content in the default slot wins.
  * @attr {string} href - Link target. When omitted, the item renders as plain text.
  *
- * @slot - Item label (alternative to `text`).
+ * @slot - Item label. Wins over `text`.
  */
 export class NLDDPageFooterLegalBarItem extends LitElement {
 	static override styles = pageFooterLegalBarItemStyles;
+
+	/** @internal Whether the default slot holds text, which wins over `text`. */
+	_textSlot = new SlotContent(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
@@ -118,6 +124,7 @@ export class NLDDPageFooterLegalBar extends LitElement {
 
 	_onSlotChange = (e: Event) => {
 		const slot = e.target as HTMLSlotElement;
+		markListItems(slot.assignedElements());
 		const hasContent = slot.assignedElements().length > 0;
 		const name = slot.getAttribute('name') ?? '';
 		if (name === 'start') this._hasStart = hasContent;
@@ -146,6 +153,9 @@ export class NLDDPageFooter extends LitElement {
 	 *  Mirrors a page section's width. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-ribbon' })
+	noRibbon = false;
 
 	@state()
 	_hasBreadcrumbs = false;

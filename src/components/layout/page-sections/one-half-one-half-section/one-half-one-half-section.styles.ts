@@ -1,10 +1,11 @@
 import { css, unsafeCSS } from 'lit';
-import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
+import { queryBreakpoints, splitSectionBreakpoints } from '../../../../assets/styles/breakpoints.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 const mdMax = unsafeCSS(queryBreakpoints.mdMax);
 const lgMin = unsafeCSS(queryBreakpoints.lgMin);
+const stackedMax = unsafeCSS(splitSectionBreakpoints.stackedMax);
 
 export const oneHalfOneHalfSectionStyles = css`
 	:host {
@@ -108,6 +109,13 @@ export const oneHalfOneHalfSectionStyles = css`
 		display: flex;
 		flex-wrap: wrap;
 
+		/* nowrap stops the column-direction wrap container from stretching the
+		   shorter column to fill height. */
+		@container (max-width: ${stackedMax}) {
+			flex-direction: column;
+			flex-wrap: nowrap;
+		}
+
 		@container (max-width: ${smMax}) {
 			gap: var(--semantics-page-sections-sm-gap);
 		}
@@ -122,11 +130,15 @@ export const oneHalfOneHalfSectionStyles = css`
 	}
 
 	:host([vertical-alignment="center"]) .one-half-one-half-section__columns {
-		align-items: center;
+		@container (width > ${stackedMax}) {
+			align-items: center;
+		}
 	}
 
 	:host([vertical-alignment="bottom"]) .one-half-one-half-section__columns {
-		align-items: flex-end;
+		@container (width > ${stackedMax}) {
+			align-items: flex-end;
+		}
 	}
 
 	.one-half-one-half-section__left-column {

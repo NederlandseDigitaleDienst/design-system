@@ -1,5 +1,5 @@
 import { _setOSOverride } from '../../../utilities/os.js';
-import { describe, it, expect, afterEach, onTestFinished } from 'vitest';
+import { describe, it, expect, afterEach, onTestFinished, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTooltip } from './tooltip.js';
@@ -446,5 +446,64 @@ describe('nldd-tooltip – aria-describedby', () => {
 			const id = el.querySelector('button')!.getAttribute('aria-describedby')!;
 			expect(document.getElementById(id)!.textContent).toBe('Opslaan Ctrl S');
 		});
+	});
+});
+
+describe('nldd-tooltip – description in the light DOM', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('reads no computed style on mount, so a long list of tooltips forces no recalculation', async () => {
+		const spy = vi.spyOn(window, 'getComputedStyle');
+		el = await fixture(`<div>${
+			Array.from({ length: 20 }, (_, i) => `<nldd-tooltip text="Actie ${i}"><button type="button">Rij ${i}</button></nldd-tooltip>`).join('')
+		}</div>`);
+		await Promise.all([...el.querySelectorAll('nldd-tooltip')].map((tooltip) => (tooltip as NLDDTooltip).updateComplete));
+		expect(spy).not.toHaveBeenCalled();
+		spy.mockRestore();
+	});
+
+	it('still gives the hidden description the language of the tooltip', async () => {
+		el = await fixture('<div lang="en"><nldd-tooltip text="Save"><button type="button">Save</button></nldd-tooltip></div>');
+		const tooltip = el.querySelector('nldd-tooltip') as NLDDTooltip;
+		await waitForUpdate(tooltip);
+		const id = el.querySelector('button')!.getAttribute('aria-describedby')!;
+		const description = document.getElementById(id)!;
+		expect(description.textContent).toBe('Save');
+		expect(description.getAttribute('lang')).toBe('en');
+		expect(description.style.colorScheme).toBe('');
+	});
+
+	it('verdwijnt bij scrollen als hover hem toonde', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
+		el = tooltip;
+		await waitForUpdate(tooltip);
+		await triggerShow(tooltip, tooltip.querySelector('button')!);
+		document.dispatchEvent(new Event('scroll'));
+		await until(() => !isTooltipVisible(tooltip));
+		expect(isTooltipVisible(tooltip)).toBe(false);
+	});
+
+	it('blijft bij scrollen als focus hem toonde', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
+		el = tooltip;
+		await waitForUpdate(tooltip);
+		tooltip.querySelector('button')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+		await until(() => isTooltipVisible(tooltip));
+		document.dispatchEvent(new Event('scroll'));
+		await waitForUpdate(tooltip);
+		expect(isTooltipVisible(tooltip)).toBe(true);
+	});
+
+	it('blijft bij scrollen als open hem vastzet', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test" open><button>Trigger</button></nldd-tooltip>');
+		el = tooltip;
+		await until(() => isTooltipVisible(tooltip));
+		document.dispatchEvent(new Event('scroll'));
+		await waitForUpdate(tooltip);
+		expect(isTooltipVisible(tooltip)).toBe(true);
 	});
 });

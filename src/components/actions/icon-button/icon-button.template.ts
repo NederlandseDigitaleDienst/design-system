@@ -4,16 +4,15 @@ import { linkRel } from '../../../utilities/link-rel.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/tooltip/tooltip.js';
+import { popoverTargetOf } from '../../../utilities/popover-target.js';
 
 function renderContent(component: NLDDIconButton) {
 	return html`
 		<span class="icon-button__icon-area">
 			<span class="icon-button__icon">
-				${component.icon
+				<slot name="icon" @slotchange=${component._onIconSlotChange}>${component.icon
 					? html`<nldd-icon icon=${component.icon}></nldd-icon>`
-					: html`<slot name="icon" @slotchange=${component._onIconSlotChange}>
-							<nldd-icon icon="icon-placeholder"></nldd-icon>
-						</slot>`}
+					: html`<nldd-icon icon="icon-placeholder"></nldd-icon>`}</slot>
 			</span>
 			${component.expandable ? html`
 				<span class="icon-button__disclosure-icon">
@@ -116,8 +115,7 @@ export function template(this: NLDDIconButton) {
 				aria-expanded=${ariaExpanded}
 				aria-busy=${ariaBusy}
 				tabindex=${this.noTab ? '-1' : nothing}
-				popovertarget=${this.popovertarget || nothing}
-				.popoverTargetElement=${this.popoverTargetElement}
+				.popoverTargetElement=${popoverTargetOf(this, this.popovertarget, this.popoverTargetElement)}
 				.popoverTargetAction=${this.popoverTargetAction}
 				@pointerdown=${this._popup.handlePointerdown}
 				@click=${this._handleClick}

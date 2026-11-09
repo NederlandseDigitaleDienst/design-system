@@ -418,6 +418,45 @@ describe('nldd-time-field – picker', () => {
 		expect(popover.matches(':popover-open')).toBe(false);
 	});
 
+	// With delegatesFocus, Safari focuses the text field on that press, and the
+	// field shows its ring for as long as the button is held.
+	it('verplaatst de focus niet als de knop wordt ingedrukt', async () => {
+		el = await fixture<NLDDTimeField>('<nldd-time-field></nldd-time-field>');
+		await waitForUpdate(el);
+		const press = new MouseEvent('mousedown', { bubbles: true, composed: true, cancelable: true });
+		el.shadowRoot!.querySelector<HTMLElement>('.time-field__picker-button nldd-icon-button')!.dispatchEvent(press);
+		expect(press.defaultPrevented).toBe(true);
+	});
+
+	// Safari does not focus a button on click, so after a click beside the popover
+	// its own restore lands on the text field.
+	it('zet de focus na een klik naast de popover terug op de knop, niet op het veld', async () => {
+		el = await fixture<NLDDTimeField>('<nldd-time-field value="09:30"></nldd-time-field>');
+		await waitForUpdate(el);
+		const trigger = el.shadowRoot!.querySelector<HTMLElement>('.time-field__picker-button nldd-icon-button')!;
+		document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'mouse' }));
+		el.shadowRoot!.querySelector<HTMLInputElement>('input')!.focus();
+		el._handlePopoverToggle(Object.assign(new Event('toggle'), { newState: 'closed' }));
+		await Promise.resolve();
+		expect(el.shadowRoot!.activeElement).toBe(trigger);
+	});
+
+	// WebKit draws a ring for a script focus, also after a tap; the keyboard keeps it.
+	it('zet de focus na een tik of klik zonder ring terug op de knop', async () => {
+		el = await fixture<NLDDTimeField>('<nldd-time-field value="09:30"></nldd-time-field>');
+		await waitForUpdate(el);
+		const trigger = el.shadowRoot!.querySelector<HTMLElement>('.time-field__picker-button nldd-icon-button')!;
+		document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch' }));
+		const focus = vi.spyOn(trigger, 'focus');
+		el._handlePickerDismiss(new Event('dismiss'));
+		el._handlePopoverToggle(Object.assign(new Event('toggle'), { newState: 'closed' }));
+		await Promise.resolve();
+		expect(focus).toHaveBeenCalledWith({ focusVisible: false });
+		// Every focus on the button goes without a ring, also the field's own.
+		expect(focus.mock.calls.every(([options]) => (options as { focusVisible?: boolean } | undefined)?.focusVisible === false)).toBe(true);
+	});
+
+
 	// An empty picker would show two columns on 00. The starting point puts the
 	// wheels on a time without filling in the field yet.
 	it('opent de picker op een beginpunt als het veld leeg is', async () => {
@@ -658,17 +697,17 @@ describe('nldd-time-field meldt wat value niet kan zeggen', () => {
 		await send('Test');
 		expect(el.value).toBe('');
 		expect(el.internals.validity.badInput).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een tijd in als uu:mm');
+		expect(el.internals.validationMessage).toBe('Een tijd als uu:mm');
 	});
 
 	it('names the bound a typed time falls outside', async () => {
 		el = await fixture<NLDDTimeField>('<nldd-time-field min="09:00" max="17:00"></nldd-time-field>');
 		await send('08:00');
 		expect(el.internals.validity.rangeUnderflow).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een tijd in vanaf 09:00');
+		expect(el.internals.validationMessage).toBe('Een tijd vanaf 09:00');
 		await send('18:00');
 		expect(el.internals.validity.rangeOverflow).toBe(true);
-		expect(el.internals.validationMessage).toBe('Vul een tijd in tot en met 17:00');
+		expect(el.internals.validationMessage).toBe('Een tijd tot en met 17:00');
 		await send('12:00');
 		expect(el.internals.validity.valid).toBe(true);
 	});

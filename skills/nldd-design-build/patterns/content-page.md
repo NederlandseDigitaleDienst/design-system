@@ -44,11 +44,13 @@ Met een inhoudsopgave:
 <style>
   /* The section owns the switch; this shows the button, and the space above
      it, only when there is a sheet to open. */
+  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
   nldd-sidebar-section:not([collapsed]) :is(#inhoud-openen, nldd-spacer:has(+ #inhoud-openen)) {
     display: none;
   }
 
   /* The sheet has its own title bar with the same name. */
+  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
   nldd-sidebar-section[collapsed] :is(#inhoud-kop, #inhoud-kop + nldd-spacer) {
     display: none;
   }
@@ -86,6 +88,21 @@ Met een inhoudsopgave:
                 text="English"
                 type="radio"
                 lang="en"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
               ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>
@@ -125,6 +142,7 @@ Met een inhoudsopgave:
           id="inhoud-kop"
           size="5"
           text="Op deze pagina"
+          heading-level="2"
         ></nldd-title>
         <nldd-spacer size="8"></nldd-spacer>
         <nldd-list
@@ -337,6 +355,21 @@ Zonder inhoudsopgave, voor een korte pagina:
                 text="English"
                 type="radio"
                 lang="en"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Frysk"
+                type="radio"
+                lang="fy"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamento"
+                type="radio"
+                lang="pap-AW"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="Papiamentu"
+                type="radio"
+                lang="pap-CW"
               ></nldd-menu-item>
             </nldd-menu>
           </nldd-menu-bar-item>

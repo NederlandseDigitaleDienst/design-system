@@ -61,6 +61,7 @@ function renderPicker(component: NLDDTimeField): TemplateResult | typeof nothing
 				text=${component._t('components.time-field.to-pick-time-action')}
 				tooltip-timing="never"
 				?disabled=${component.disabled}
+				@mousedown=${component._handlePickerPress}
 				@click=${component._handlePickerClick}
 			></nldd-icon-button>
 			<nldd-popover
