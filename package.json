@@ -647,8 +647,8 @@
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/addon-themes": "^10.6.0",
     "@storybook/web-components-vite": "^10.6.0",
-    "@vitest/browser-playwright": "5.0.5",
-    "@vitest/coverage-v8": "5.0.5",
+    "@vitest/browser-playwright": "5.1.0",
+    "@vitest/coverage-v8": "5.1.0",
     "ajv": "^8.20.0",
     "axe-core": "^4.13.0",
     "conventional-changelog": "^8.1.0",
@@ -664,7 +664,7 @@
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.58.0",
     "vite": "8.3.5",
-    "vitest": "5.0.5",
+    "vitest": "5.1.0",
     "vue": "^3.5.40",
     "vue-tsc": "^3.3.7",
     "yaml": "^2.9.1"
@@ -709,7 +709,7 @@
     "conventional-changelog-conventionalcommits": "10.2.1"
   },
   "optionalDependencies": {
-    "oxc-parser": "^0.156.0"
+    "oxc-parser": "^0.157.0"
   },
   "bin": {
     "nldd": "lint/cli.js"
