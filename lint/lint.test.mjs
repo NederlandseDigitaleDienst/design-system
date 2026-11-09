@@ -1384,6 +1384,22 @@ describe('the group pure', () => {
 		assert.deepEqual(JSON.parse(run(root, 'lint', '--format', 'json').stdout).baseline, { accepted: 0, noLongerFound: 1 });
 	});
 
+	it('moves a baseline entry along only when one file fits, and keeps one it cannot compare', () => {
+		const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+		const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.tsx'), 'export const A = () => <p>x</p>;\n');
+		run(root, 'lint', '--pure', '--update-baseline');
+		execFileSync('mv', [join(root, 'a.tsx'), join(root, 'b.tsx')]);
+		run(root, 'lint', '--tighten-baseline');
+		assert.deepEqual(readBaseline(root)['a.tsx'], { 'html-no-text|p': 1 });
+		writeFileSync(join(root, 'c.tsx'), 'export const C = () => <p>z</p>;\n');
+		run(root, 'lint', '--pure', '--tighten-baseline');
+		assert.equal(readBaseline(root)['a.tsx'], undefined);
+		assert.equal(readBaseline(root)['b.tsx'], undefined);
+		assert.equal(readBaseline(root)['c.tsx'], undefined);
+	});
+
 	it('moves a baseline entry along in a run without pure, and reads every file the baseline names', () => {
 		const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
 		const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });

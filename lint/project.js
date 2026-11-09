@@ -166,10 +166,13 @@ export function tightenBaseline(results, root, canonical, ran) {
 	let dropped = 0;
 	for (const [file, entries] of Object.entries(baseline)) {
 		if (!existsSync(join(root, file))) {
-			// A file that moved takes its entry along, when it was read under its new name
-			// and still has exactly what was accepted. Anything else drops it.
-			const moved = [...read].find(([name, found]) => !baseline[name] && sameCounts(entries, found));
-			if (moved) baseline[moved[0]] = entries;
+			// A file that moved takes its entry along, when exactly one file was read under
+			// a new name with exactly what was accepted. With nothing of its own that ran,
+			// there is nothing to compare, so the entry waits for a run that can. Two
+			// candidates are a guess, and a guess drops it: its findings then show.
+			if (Object.keys(ranOnly(entries)).length === 0) continue;
+			const moved = [...read].filter(([name, found]) => !baseline[name] && sameCounts(entries, found));
+			if (moved.length === 1) baseline[moved[0][0]] = entries;
 			else dropped += Object.values(entries).reduce((sum, count) => sum + count, 0);
 			delete baseline[file];
 			continue;
