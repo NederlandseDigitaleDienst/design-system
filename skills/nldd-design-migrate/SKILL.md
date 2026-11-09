@@ -53,7 +53,7 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 
 Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die niets anders zag:
 
-1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een toastbibliotheek, en elk eigen stylesheet. Alleen kale HTML die een component zelf opmaakt mag blijven, zoals de `<select>` in `nldd-dropdown`, inline tekst in `nldd-text`, de kop in het standaardslot van `nldd-title` en lopende tekst in `nldd-rich-text`; de slotbeschrijvingen in de [componentreferentie](../nldd-design/reference.md) zeggen welke. Daarnaast `canvas`, waar een grafiek op tekent. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. Uitzonderingen horen niet in de baseline, want die is migratieschuld. Wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, volgens de regel voor een omweg hierboven. Klaar is een lege baseline.
+1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een eigen meldingenbibliotheek (react-hot-toast en dergelijke), en elk eigen stylesheet. Alleen kale HTML die een component zelf opmaakt mag blijven, zoals de `<select>` in `nldd-dropdown`, inline tekst in `nldd-text`, de kop in het standaardslot van `nldd-title` en lopende tekst in `nldd-rich-text`; de slotbeschrijvingen in de [componentreferentie](../nldd-design/reference.md) zeggen welke. Daarnaast `canvas`, waar een grafiek op tekent. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. Uitzonderingen horen niet in de baseline, want die is migratieschuld. Wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, volgens de regel voor een omweg hierboven. Klaar is een lege baseline.
 2. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
 3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
 4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
@@ -149,7 +149,7 @@ Met de hand bijhouden welk bestand welke subpaden nodig heeft, houdt niemand vol
 
 Een component dat een native control omhult, zoals `nldd-dropdown` om een `<select>` of `nldd-text-field` met zijn eigen input, stopt de native `change` en zendt een eigen `CustomEvent` uit vanaf de host. `close` op sheets, popovers en modals heeft `bubbles: false`. Een framework dat luistert op het native control, of dat events vanaf de root delegeert, krijgt daardoor niets binnen, en een handler die nooit draait geeft geen fout. Luister op het `nldd-*`-element zelf, naar het event dat het component documenteert.
 
-Kom je van React, lees dan [`from-react.md`](from-react.md): daar maakte dit in één codebase 37 handlers stil onbruikbaar, en daar staan de helpers die het oplossen.
+Kom je van React, lees dan [`from-react.md`](from-react.md): daar staan de helpers die het oplossen.
 
 ## Layout: instorten tot nul breedte
 
@@ -250,12 +250,6 @@ Twee gewoonten die dat voorkomen:
 - **Loop bij elke upgrade je eigen omwegen langs.** De changelog vertelt wat er verandert, niet welke van jouw reparaties overbodig zijn geworden. Dat moet je zelf nagaan, en het is de enige manier waarop een fossiel weer verdwijnt.
 
 Houd je een lijst bij van wat het systeem niet kan, noteer dan per punt de versie waartegen je mat. Zonder dat wordt het een lijst die mensen blijven citeren nadat die niet meer waar is.
-
-## Bekende beperkingen
-
-Gemeten tegen de genoemde versies. Controleer bij een upgrade in de [changelog](../nldd-design/changelog.md) of een punt is opgelost, en haal je omweg dan weg.
-
-- **`nldd-page sticky-footer` plakt zijn eigen hoogte boven de onderrand** (0.18.0 en 0.19.0). Dit gebeurt als het document scrolt: op elke telefoon, en in elke app zonder horizontale split view. Een footer van 196 px op een scherm van 844 px hoog stond van 452 tot 648 in plaats van 648 tot 844. Je merkt het pas met inhoud die hoger is dan het venster. Meet het met `page.shadowRoot.querySelector('footer').getBoundingClientRect().bottom`, dat gelijk hoort te zijn aan `innerHeight`. Gemeld in [#366](https://github.com/NederlandseDigitaleDienst/design-system/issues/366); een omweg wijst daarnaar.
 
 ## Subagents inzetten
 
