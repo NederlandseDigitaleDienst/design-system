@@ -33,6 +33,7 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 					<nldd-menu
 						slot="popup"
 						placement="bottom-end"
+						@beforetoggle=${(event: ToggleEvent) => { if (event.newState === 'open') component.requestUpdate(); }}
 					>
 						${component._overflowItems.map(item => html`
 							<nldd-menu-item

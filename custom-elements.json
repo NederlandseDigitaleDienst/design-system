@@ -2306,6 +2306,30 @@
           "description": "The menu-item under a point, piercing shadow boundaries.\n`document.elementFromPoint` stops at the outermost shadow host, so a menu\nnested inside another component's shadow DOM (nldd-split-button, say) would\nresolve to that host and never find the item. Descending the shadow roots\nrestores it and is a no-op for light-DOM menus."
         },
         {
+          "kind": "function",
+          "name": "menuElementFromPoint",
+          "return": {
+            "type": {
+              "text": "Element | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "y",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The element under a point, in the tree of the menu it lies in. Like\n`menuItemFromPoint` it descends shadow roots, but only until it reaches a\nmenu, so an item still resolves to the item and not to the inside of it.\nNull where the point is on nothing."
+        },
+        {
           "kind": "class",
           "description": "The pointer gestures of a menu, each with its own coordinates and listeners:\n\n1. **Press, drag and release.** A native `<select>` lets you press on one\n   option, drag to another and release to pick that one. Click events don't\n   fire across two elements, so the release is caught on document and, when\n   it lands on another enabled item, that item is selected. The click on the\n   pressed item still owns a press without a drag.\n2. **No press flash while scrolling.** On touch, pressing an item sets\n   :active and the sticky :hover lands on it, so the press highlight shows.\n   When the gesture turns into a scroll of a cramped menu, :active lingers\n   until the browser recognizes the pan. Past the threshold the host gets\n   `scroll-active`, and the styles drop the press highlight while it is set.\n   A tap never moves that far, so it keeps its brief feedback.\n3. **A tap beside the menu.** An outside touch is also how a page scroll\n   begins, so the menu only hears of it once the finger lifts without\n   having moved past the threshold.",
           "name": "MenuPointerController",
@@ -2439,6 +2463,14 @@
           "name": "menuItemFromPoint",
           "declaration": {
             "name": "menuItemFromPoint",
+            "module": "src/components/actions/menu/menu.pointer.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "menuElementFromPoint",
+          "declaration": {
+            "name": "menuElementFromPoint",
             "module": "src/components/actions/menu/menu.pointer.ts"
           }
         },
@@ -43308,7 +43340,7 @@
           "slots": [
             {
               "name": "icon",
-              "description": "Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made when the slot changes: a change inside the icon itself, such as a new `src`, does not reach the copy."
+              "description": "Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made again each time the menu opens, so a new `src` shows there too."
             }
           ]
         },
@@ -50302,7 +50334,7 @@
                   }
                 }
               ],
-              "description": "Remembers what has focus now. With nothing focused, as after a click on a\nbutton in Safari, it remembers `fallback`: an overlay's anchor, so Tab\ngoes on from there."
+              "description": "Remembers what has focus now, inside any shadow roots, so focus goes\nback to that element and not to the host it sits in. With nothing\nfocused, as after a click on a button in Safari, it remembers\n`fallback`: an overlay's anchor, so Tab goes on from there."
             },
             {
               "kind": "method",

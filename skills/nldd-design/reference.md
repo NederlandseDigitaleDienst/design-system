@@ -3374,7 +3374,7 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 
 | Slot | Description |
 | --- | --- |
-| `icon` | Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made when the slot changes: a change inside the icon itself, such as a new `src`, does not reach the copy. |
+| `icon` | Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made again each time the menu opens, so a new `src` shows there too. |
 
 **Events**
 

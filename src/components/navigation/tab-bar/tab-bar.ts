@@ -42,7 +42,7 @@
  * @attr {string} controls - Id of the element this tab shows, looked up in the tab's own tree. The tab announces it as the content it controls (`aria-controls`). Give that element `role="tabpanel"` and an `aria-labelledby` with the id of this item, which names it after the tab. No effect in a `navigation` bar.
  * @prop {Element | null} controlsElement - The element this tab shows, for where an id does not reach: content in another shadow root, or content a framework renders after the tab (`controls` is looked up when the page loads and on every update of the tab, such as when it becomes current). Wins over `controls`. Browsers without element references (`ariaControlsElements`) get no relation.
  *
- * @slot icon - Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made when the slot changes: a change inside the icon itself, such as a new `src`, does not reach the copy.
+ * @slot icon - Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made again each time the menu opens, so a new `src` shows there too.
  *
  * @fires select - When the item is activated; detail: { item: NLDDTabBarItem }
  */

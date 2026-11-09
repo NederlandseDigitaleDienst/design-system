@@ -1008,6 +1008,25 @@ describe('nldd-tab-bar – overloop', () => {
 		expect(copy).not.toBe(img);
 	});
 
+	it('kopieert het icoon opnieuw als het menu opengaat', async () => {
+		const { bar, items } = await make(320);
+		const img = document.createElement('img');
+		img.slot = 'icon';
+		img.alt = '';
+		img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+		const last = items[items.length - 1];
+		last.append(img);
+		await new Promise(requestAnimationFrame);
+		await bar.updateComplete;
+		img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+		const menu = bar.shadowRoot!.querySelector('.tab-bar__overflow-button nldd-menu') as HTMLElement;
+		menu.showPopover();
+		await bar.updateComplete;
+		const entry = menuItems(bar).find(item => item.getAttribute('text') === last.getAttribute('text'))!;
+		expect(entry.querySelector<HTMLImageElement>(':scope > img[slot="icon"]')!.src).toBe(img.src);
+		menu.hidePopover();
+	});
+
 	it('verplaatst geen tabs in de DOM', async () => {
 		const { items } = await make(320, 3);
 		expect([...host.querySelectorAll('nldd-tab-bar-item')]).toEqual(items);
