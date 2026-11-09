@@ -871,3 +871,44 @@ describe('nldd-sheet – open attribute', () => {
 		expect(dialog().classList.contains('is-closing')).toBe(false);
 	});
 });
+
+describe('nldd-sheet – focus terug na sluiten', () => {
+	let wrapper: HTMLElement | undefined;
+	afterEach(() => { if (wrapper) cleanup(wrapper); });
+
+	async function openFrom(): Promise<{ overlay: NLDDSheet; trigger: HTMLButtonElement; field: HTMLInputElement }> {
+		wrapper = await fixture(`
+			<div>
+				<button id="trigger">Open</button>
+				<input id="field" aria-label="Veld">
+				<nldd-sheet><button>Binnen</button></nldd-sheet>
+			</div>
+		`);
+		const overlay = wrapper.querySelector('nldd-sheet') as NLDDSheet;
+		await waitForUpdate(overlay);
+		const trigger = wrapper.querySelector<HTMLButtonElement>('#trigger')!;
+		trigger.focus();
+		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+		overlay.show();
+		await waitForUpdate(overlay);
+		return { overlay, trigger, field: wrapper.querySelector<HTMLInputElement>('#field')! };
+	}
+
+	it('geeft de focus terug aan het element dat hem had bij openen', async () => {
+		const { overlay, trigger } = await openFrom();
+		const focus = vi.spyOn(trigger, 'focus');
+		const closed = new Promise((resolve) => overlay.addEventListener('close', resolve, { once: true }));
+		overlay.hide();
+		await closed;
+		expect(focus).toHaveBeenCalled();
+		expect(document.activeElement).toBe(trigger);
+	});
+
+	it('laat de focus staan die een close-handler verplaatste', async () => {
+		const { overlay, field } = await openFrom();
+		const closed = new Promise((resolve) => overlay.addEventListener('close', () => { field.focus(); resolve(null); }, { once: true }));
+		overlay.hide();
+		await closed;
+		expect(document.activeElement).toBe(field);
+	});
+});
