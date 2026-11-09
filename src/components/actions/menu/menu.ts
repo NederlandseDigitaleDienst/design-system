@@ -17,7 +17,7 @@ import { FocusReturn } from '../../../utilities/return-focus.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { NLDDMenuItem } from './menu-item.js';
-import { MenuPointerController } from './menu.pointer.js';
+import { MenuPointerController, menuElementFromPoint } from './menu.pointer.js';
 import { SubmenuLevel } from './menu.chain.js';
 import { SafeTriangleController, rectContainsPoint, type Point } from './menu.safe-triangle.js';
 import { NLDDMenuGroup } from './menu-group.js';
@@ -633,9 +633,9 @@ export class NLDDMenu extends LitElement {
 	 * out of this menu (a divider, the padding, the page) leaves the items. A
 	 * point in another menu is that menu's to handle. */
 	releaseAt(p: Point): void {
-		const el = document.elementFromPoint(p.x, p.y);
-		const menu = el?.closest('nldd-menu') ?? this;
-		if (menu !== this) return;
+		const el = menuElementFromPoint(p.x, p.y);
+		const menu = el?.closest('nldd-menu');
+		if (menu && menu !== this) return;
 		const item = el?.closest('nldd-menu-item') as NLDDMenuItem | null;
 		if (item) this._activateItem(item);
 		else this._leaveItems();

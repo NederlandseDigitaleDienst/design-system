@@ -156,7 +156,7 @@ export class NLDDTabBarItem extends LitElement {
 			this._awaitingLoad = true;
 			document.addEventListener('DOMContentLoaded', () => {
 				this._awaitingLoad = false;
-				this._applyControls();
+				if (this.isConnected) this._applyControls();
 			}, { once: true });
 		}
 	}

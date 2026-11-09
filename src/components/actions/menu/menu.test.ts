@@ -3438,6 +3438,31 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 			cleanup(root);
 		});
 
+		it('finds its own item when the menu sits in a shadow root', async () => {
+			drillInSpy = vi.spyOn(NLDDMenuCtor.prototype as unknown as { _drillInMode: boolean }, '_drillInMode', 'get');
+			drillInSpy.mockReturnValue(false);
+			const host = document.createElement('div');
+			document.body.append(host);
+			host.attachShadow({ mode: 'open' }).innerHTML = dividerMarkup;
+			const root = host.shadowRoot!.querySelector('nldd-menu') as unknown as HoverMenu & { releaseAt(p: { x: number; y: number }): void };
+			await waitForUpdate(root);
+			root.showPopover();
+			await waitForUpdate(root);
+			const items = root.querySelectorAll(':scope > nldd-menu-item');
+			const item = items[1] as HTMLElement;
+			const submenu = item.querySelector(':scope > nldd-menu') as HTMLElement;
+			root._activateItem(item);
+			await until(() => submenu.matches(':popover-open'));
+			const rect = item.getBoundingClientRect();
+			root.releaseAt({ x: rect.left + 4, y: rect.top + rect.height / 2 });
+			expect(submenu.matches(':popover-open')).toBe(true);
+			const above = items[0].getBoundingClientRect();
+			root.releaseAt({ x: above.left + 4, y: above.top + above.height / 2 });
+			expect(submenu.matches(':popover-open')).toBe(false);
+			expect(items[0].hasAttribute('highlighted')).toBe(true);
+			host.remove();
+		});
+
 		it('closes the open submenu when the pointer turns away out of the menu', async () => {
 			const { root, item, submenu } = await setupDivider();
 			root._activateItem(item);

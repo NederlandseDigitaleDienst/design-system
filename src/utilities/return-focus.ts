@@ -24,22 +24,33 @@ export function deepActiveElement(): HTMLElement | null {
  */
 export function returnFocus(target: HTMLElement | null | undefined, overlay: Element): void {
 	if (!target || target === document.body || !target.isConnected) return;
-	const active = document.activeElement;
-	const free = !active || active === document.body || active === target
-		|| active === overlay || overlay.contains(active);
+	// Compared deep: in a shadow root, document.activeElement is the same host
+	// for the opener, the overlay and any other field beside them.
+	const active = deepActiveElement();
+	// On the target or inside it: the anchor fallback is a host, such as an
+	// nldd-button, whose inner button the browser may have focused.
+	const onTarget = !!active && isWithin(active, target);
+	const free = !active || active === document.body || onTarget || isWithin(active, overlay);
 	if (!free) return;
 	if (!isPointerMode()) {
 		target.focus();
 		return;
 	}
-	if (active === target) {
-		const deep = deepActiveElement();
-		if (!deep?.matches(':focus-visible') || isTextEntry(deep)) return;
-		deep.blur();
+	if (active && onTarget) {
+		if (!active.matches(':focus-visible') || isTextEntry(active)) return;
+		active.blur();
 	}
 	// @ts-expect-error lib.dom lacks focusVisible; this fails once it has it.
 	const noRing: FocusOptions = { focusVisible: false };
 	target.focus(noRing);
+}
+
+/** Whether `node` is `container` or inside it, across shadow roots. */
+function isWithin(node: Node, container: Element): boolean {
+	for (let n: Node | null = node; n; n = n.parentNode ?? (n instanceof ShadowRoot ? n.host : null)) {
+		if (n === container) return true;
+	}
+	return false;
 }
 
 function isTextEntry(el: HTMLElement): boolean {
@@ -63,11 +74,12 @@ function isTextEntry(el: HTMLElement): boolean {
 export class FocusReturn {
 	private _target: HTMLElement | null = null;
 
-	/** Remembers what has focus now. With nothing focused, as after a click on a
-	 *  button in Safari, it remembers `fallback`: an overlay's anchor, so Tab
-	 *  goes on from there. */
+	/** Remembers what has focus now, inside any shadow roots, so focus goes
+	 *  back to that element and not to the host it sits in. With nothing
+	 *  focused, as after a click on a button in Safari, it remembers
+	 *  `fallback`: an overlay's anchor, so Tab goes on from there. */
 	remember(fallback?: Element | null): void {
-		const active = document.activeElement as HTMLElement | null;
+		const active = deepActiveElement();
 		this._target = active && active !== document.body
 			? active
 			: (fallback as HTMLElement | null | undefined) ?? null;

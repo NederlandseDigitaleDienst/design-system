@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { returnFocus } from './return-focus.js';
+import { FocusReturn, returnFocus } from './return-focus.js';
 
 function setUp() {
 	const root = document.createElement('div');
@@ -73,5 +73,40 @@ describe('returnFocus', () => {
 		returnFocus(null, els.overlay);
 		returnFocus(document.body, els.overlay);
 		expect(document.activeElement).toBe(els.inside);
+	});
+
+	describe('in een shadow root', () => {
+		/** Opener, a field and the overlay together in one shadow root, as in an app built from components. */
+		function setUpShadow() {
+			const host = document.createElement('div');
+			document.body.append(host);
+			const shadow = host.attachShadow({ mode: 'open' });
+			shadow.innerHTML = `
+				<button id="target">Trigger</button>
+				<input id="elsewhere" aria-label="Veld">
+				<div id="overlay"><button id="inside">Binnen</button></div>
+			`;
+			const get = <T extends HTMLElement>(id: string) => shadow.querySelector<T>(`#${id}`)!;
+			return { root: host, target: get('target'), elsewhere: get('elsewhere'), overlay: get('overlay'), inside: get('inside') };
+		}
+
+		it('onthoudt het element zelf, niet de host eromheen', () => {
+			const els = setUpShadow(); root = els.root;
+			els.target.focus();
+			const focusReturn = new FocusReturn();
+			focusReturn.remember();
+			els.inside.focus();
+			keyboard();
+			focusReturn.restore(els.overlay);
+			expect(els.root.shadowRoot!.activeElement).toBe(els.target);
+		});
+
+		it('laat focus staan op een veld naast de opener', () => {
+			const els = setUpShadow(); root = els.root;
+			els.elsewhere.focus();
+			pointer();
+			returnFocus(els.target, els.overlay);
+			expect(els.root.shadowRoot!.activeElement).toBe(els.elsewhere);
+		});
 	});
 });
