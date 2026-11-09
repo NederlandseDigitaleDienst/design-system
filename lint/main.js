@@ -14,7 +14,8 @@ const USAGE = `Usage:
     --format text|json|github       default: text
     --fix                           apply the fixes that are certain: what only got another name
     --pure                          also check that everything comes from the system: no class,
-                                    style, plain HTML or stylesheet of your own (the group pure)
+                                    style, plain HTML or stylesheet of your own (the group pure).
+                                    Reads every file, stylesheets included, so it takes longer
     --update-baseline               accept what is there now, report only new findings
     --tighten-baseline              lower the baseline to what is still there; never raises it
     --max-warnings <n>              exit 1 above this number of warnings
