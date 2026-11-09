@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import '../components/index.js';
 import data from '../../lint/data.generated.json';
 import { devRules } from './dev-rules.generated.js';
-import { findRoots, findViolations, lacksFoucGuard } from './dev-checks.js';
+import { findRoots, findUndefined, findViolations, lacksFoucGuard } from './dev-checks.js';
 import foucCss from '../assets/styles/fouc.css?inline';
 
 const patterns = import.meta.glob('../patterns/**/*.html', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
@@ -114,6 +114,14 @@ describe('rules in the browser', () => {
 		button.accessibleLabel = 'Sluit';
 		await button.updateComplete;
 		expect(findViolations(root, rule)).toEqual([]);
+	});
+});
+
+describe('unregistered elements', () => {
+	it('finds an nldd-* element no module defines, and leaves other tags alone', () => {
+		const root = document.createElement('div');
+		root.innerHTML = '<nldd-button text="Opslaan"></nldd-button><nldd-not-imported></nldd-not-imported><other-library-element></other-library-element>';
+		expect(findUndefined([root]).map((element) => element.localName)).toEqual(['nldd-not-imported']);
 	});
 });
 
