@@ -321,6 +321,47 @@ describe('nldd-container – width="fit-content"', () => {
 		const inner = el.querySelector('nldd-container') as HTMLElement;
 		expect(inner.getBoundingClientRect().width).toBe(96);
 	});
+
+	it('gives a full container inside it the width of its content, not 0', async () => {
+		el = await fixture(`
+			<nldd-container layout="row">
+				<nldd-container width="fit-content">
+					<nldd-container>
+						<nldd-container>
+							<div style="width: 120px; height: 24px;"></div>
+						</nldd-container>
+					</nldd-container>
+				</nldd-container>
+			</nldd-container>
+		`);
+		await waitForUpdate(el);
+		const [, middle, inner] = el.querySelectorAll<HTMLElement>('nldd-container');
+		await waitForUpdate(inner);
+		expect(middle.getBoundingClientRect().width).toBe(120);
+		expect(inner.getBoundingClientRect().width).toBe(120);
+	});
+
+	it('measures itself again once the parent fills its own parent', async () => {
+		el = await fixture(`
+			<div style="width: 400px;">
+				<nldd-container width="fit-content">
+					<nldd-container>
+						<div style="width: 120px; height: 24px;"></div>
+					</nldd-container>
+				</nldd-container>
+			</div>
+		`);
+		const outer = el.querySelector('nldd-container') as HTMLElement & { width: string };
+		const inner = outer.querySelector('nldd-container') as HTMLElement;
+		await waitForUpdate(inner);
+		const query = () => getComputedStyle(inner.shadowRoot!.querySelector('.container')!).containerType;
+		expect(query()).toBe('normal');
+		outer.width = 'full';
+		await waitForUpdate(outer);
+		await waitForUpdate(inner);
+		expect(query()).toBe('inline-size');
+		expect(inner.getBoundingClientRect().width).toBe(400);
+	});
 });
 
 describe('nldd-container onder een universele reset', () => {
