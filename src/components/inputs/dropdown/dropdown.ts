@@ -23,9 +23,11 @@
  * @attr {string} accessible-label - Accessible name, forwarded as aria-label to the slotted select
  * @attr {boolean} required - Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone.
  *
+ * @prop {string} value - The value of the slotted select. Setting it before the select is there applies it once the select arrives.
+ *
  * @slot - A native `<select>` element with `<option>` and/or `<optgroup>` children
  *
- * @fires change - Bubbles up from the slotted select; detail: { value: string }
+ * @fires change - The native change of the slotted select, left to bubble, so a listener on the select, on the dropdown or higher up all hear it. Read the choice from `value`.
  *
  * @example
  * ```html
@@ -90,6 +92,28 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 
 	private _select: HTMLSelectElement | null = null;
 
+	/** A value set before the select was slotted, applied when it arrives. */
+	private _pendingValue: string | null = null;
+
+	/**
+	 * The value of the slotted `<select>`, so a framework can bind to the
+	 * dropdown itself instead of reaching for the select inside it.
+	 */
+	get value(): string {
+		const select = this._select ?? this.querySelector('select');
+		return select ? select.value : this._pendingValue ?? '';
+	}
+
+	set value(value: string) {
+		const select = this._select ?? this.querySelector('select');
+		if (select) {
+			select.value = value;
+			this._pendingValue = null;
+		} else {
+			this._pendingValue = value;
+		}
+	}
+
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
@@ -101,6 +125,17 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	private _appliedRequired: string | null = null;
 
 	// — Lifecycle ——————————————————————————————————————————————————————————————
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		// A framework may set `value` before the element upgrades, which leaves an
+		// own property shadowing the accessor. Hand it to the accessor instead.
+		if (Object.prototype.hasOwnProperty.call(this, 'value')) {
+			const value = (this as { value: string }).value;
+			delete (this as { value?: string }).value;
+			this.value = value;
+		}
+	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
 		if (changedProperties.has('disabled')) {
@@ -133,7 +168,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 			.find((el): el is HTMLSelectElement => el.tagName === 'SELECT') ?? null;
 
 		if (this._select && this._select !== select) {
-			this._select.removeEventListener('change', this._handleSelectChange);
 			this._select.removeEventListener('focus', this._handleSelectFocus);
 			this._select.removeEventListener('blur', this._handleSelectBlur);
 			this._select.removeEventListener('keydown', this._handleSelectKeydown);
@@ -150,7 +184,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 
 		setState(this, 'unnamed-select', !this.accessibleLabel && !select.hasAttribute("aria-label") && !select.hasAttribute("aria-labelledby") && !select.labels?.length);
 
-		select.addEventListener('change', this._handleSelectChange);
 		select.addEventListener('focus', this._handleSelectFocus);
 		select.addEventListener('blur', this._handleSelectBlur);
 		select.addEventListener('keydown', this._handleSelectKeydown);
@@ -159,6 +192,10 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		this._syncAriaInvalid();
 		this._syncAccessibleLabel();
 		this._syncRequired();
+		if (this._pendingValue !== null) {
+			select.value = this._pendingValue;
+			this._pendingValue = null;
+		}
 	}
 
 	// — Internal helpers ——————————————————————————————————————————————————————
@@ -213,15 +250,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 			this._select.removeAttribute('aria-invalid');
 		}
 	}
-
-	private _handleSelectChange = (e: Event): void => {
-		e.stopPropagation();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this._select?.value ?? '' },
-			bubbles: true,
-			composed: true,
-		}));
-	};
 
 	/**
 	 * Suppress the native `:focus-visible` ring on the wrapper when focus
