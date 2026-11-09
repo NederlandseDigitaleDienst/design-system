@@ -1,4 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Composition } from '../../../.storybook/Composition.jsx';
 import { Rules } from '../../../.storybook/Rules.jsx';
 import * as Stories from './menu-from-a-button.stories';
 
@@ -10,13 +11,7 @@ Een menu bij een knop toont extra acties of keuzes wanneer iemand die nodig heef
 
 ## Compositie
 
-```
-nldd-button (of nldd-icon-button)   expandable
-  └─ nldd-menu                      slot="popup"
-       ├─ nldd-menu-item            text, icon, shortcut, href
-       ├─ nldd-menu-divider
-       └─ nldd-menu-group           text, een kopje boven een groep items
-```
+<Composition pattern="menu-from-a-button" />
 
 <Canvas of={Stories.Standaard} />
 

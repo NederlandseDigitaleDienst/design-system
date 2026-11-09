@@ -1,0 +1,19 @@
+composition:
+  - tag: nldd-button
+    or: [nldd-icon-button]
+    attrs: [expandable]
+    children:
+      - tag: nldd-menu
+        slot: popup
+        children:
+          - tag: nldd-menu-group
+            optional: true
+            attrs: [text]
+            note: een kopje boven een groep items
+            children:
+              - tag: nldd-menu-item
+          - tag: nldd-menu-item
+            attrs: [text, icon, shortcut, href]
+          - tag: nldd-menu-divider
+            optional: true
+            note: vóór een destructieve actie

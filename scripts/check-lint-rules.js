@@ -6,19 +6,26 @@
  *    renaming a component fails here, in the same pull request;
  *  - its `see` points at something that exists;
  *  - every pattern's example passes every rule, so a pattern is always valid;
- *  - every state a rule reads is set, and every state that is set is read.
+ *  - every state a rule reads is set, and every state that is set is read;
+ *  - every pattern has a spec with the shape of its schema, its page draws that
+ *    spec, it names what exists, and its examples follow it.
  *
  * Usage: node scripts/check-lint-rules.js
  */
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import Ajv from 'ajv';
 import { parse } from 'css-what';
 import { applyFixes } from '../lint/fix.js';
+import { parse as parseYaml } from 'yaml';
+import { parseHtml } from '../lint/frontends.js';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
 import { OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
 import { selectorsOf } from '../lint/rule-index.js';
+import { describeErrors } from './lib/lint-data.js';
+import { checkComposition, checkNodes, resolveSpec, unshownParts } from './lib/pattern-spec.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const data = loadData();
@@ -214,6 +221,68 @@ function checkStatesAreRead() {
 	}
 }
 
+/** The drawn tree of a pattern has to name what exists, and the example has to follow it. */
+function checkCompositions() {
+	const directory = join(repoRoot, 'src/patterns');
+	const validate = new Ajv({ allErrors: true }).compile(JSON.parse(readFileSync(join(directory, 'pattern.schema.json'), 'utf8')));
+	const readSpec = (path, label) => {
+		let spec;
+		try {
+			spec = parseYaml(readFileSync(path, 'utf8'));
+		} catch (error) {
+			problems.push(`${label}: ${error.message}`);
+			return undefined;
+		}
+		if (validate(spec)) return spec;
+		problems.push(`${label}: ${describeErrors(validate.errors)}`);
+		return undefined;
+	};
+	const shared = readSpec(join(directory, 'shared.pattern.yaml'), 'patterns/shared');
+	if (!shared?.define) {
+		if (shared) problems.push('patterns/shared: needs `define`.');
+		return;
+	}
+	const shown = new Set();
+	for (const entry of readdirSync(directory, { withFileTypes: true })) {
+		if (!entry.isDirectory()) continue;
+		const label = `patterns/${entry.name}`;
+		const specPath = join(directory, entry.name, `${entry.name}.pattern.yaml`);
+		if (!existsSync(specPath)) {
+			problems.push(`${label}: has no ${entry.name}.pattern.yaml.`);
+			continue;
+		}
+		const spec = readSpec(specPath, label);
+		if (!spec) continue;
+		if (!spec.composition) {
+			problems.push(`${label}: needs \`composition\`.`);
+			continue;
+		}
+		const pagePath = join(directory, entry.name, `${entry.name}.mdx`);
+		const page = existsSync(pagePath) ? readFileSync(pagePath, 'utf8') : '';
+		if (!page.includes(`<Composition pattern="${entry.name}" />`)) problems.push(`${label}: the page does not draw its spec with <Composition pattern="${entry.name}" />.`);
+		if (/[├└]─/.test(page)) problems.push(`${label}: the page has a hand-drawn tree.`);
+		let resolved;
+		try {
+			resolved = resolveSpec(spec, shared);
+		} catch (error) {
+			problems.push(`${label}: ${error.message}`);
+			continue;
+		}
+		const examples = patternFiles(join(directory, entry.name)).map((file) => ({ file: basename(file), roots: parseHtml(readFileSync(file, 'utf8')) }));
+		const starts = Object.entries(resolved.examples).filter(([file, name]) => {
+			if (!resolved.define[name]) problems.push(`${label}: ${file} starts at ${name}, which is no definition.`);
+			return resolved.define[name];
+		});
+		const fragments = Object.fromEntries(starts.map(([file, name]) => [file, [resolved.define[name]]]));
+		const defined = resolved.local.map((name) => resolved.define[name]);
+		for (const problem of checkComposition(resolved.composition, { tags: data.tags, examples, fragments, defined, shown })) {
+			problems.push(`${label}: ${problem}`);
+		}
+	}
+	for (const problem of checkNodes(Object.values(shared.define), data.tags)) problems.push(`patterns/shared: ${problem}`);
+	for (const part of unshownParts(shared.define, shown)) problems.push(`patterns/shared: no example shows ${part}.`);
+}
+
 /** Text in a component is a second source. The only output left there is a real failure. */
 function checkNoWarnings() {
 	for (const [file, source] of componentSources) {
@@ -336,6 +405,7 @@ for (const rule of data.rules) {
 }
 const patterns = await checkPatterns();
 checkStatesAreRead();
+checkCompositions();
 checkNoWarnings();
 checkBrowserSelectors();
 checkSlottedIsAccepted();

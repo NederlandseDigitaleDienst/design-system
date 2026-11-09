@@ -1,4 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Composition } from '../../../.storybook/Composition.jsx';
 import { Rules } from '../../../.storybook/Rules.jsx';
 import * as Stories from './list.stories';
 
@@ -10,17 +11,7 @@ Een lijst toont vergelijkbare items in een vorm die bezoekers snel kunnen scanne
 
 ## Compositie
 
-```
-nldd-list                      accessible-label, appearance, type
-  └─ nldd-list-item            size, en hoogstens één van href, button, checkbox, radio
-       └─ cellen, in de volgorde waarin ze staan
-            nldd-icon-cell     een icoon vooraan
-            nldd-spacer-cell   de ruimte tussen twee cellen
-            nldd-text-cell     text, overline, supporting-text; vult de rij
-            nldd-cell          een badge, een checkbox, wat de rij verder draagt
-            nldd-text-cell     width="fit-content", komt daardoor achteraan
-            nldd-icon-cell     de chevron van een rij die iets opent
-```
+<Composition pattern="list" />
 
 <Canvas of={Stories.Standaard} />
 

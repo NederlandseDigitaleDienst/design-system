@@ -1,4 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Composition } from '../../../.storybook/Composition.jsx';
 import { Rules } from '../../../.storybook/Rules.jsx';
 import * as Stories from './toolbar-with-actions.stories';
 
@@ -10,13 +11,7 @@ Een werkbalk bundelt acties die gelden voor een heel scherm of paneel, zoals iet
 
 ## Compositie
 
-```
-nldd-toolbar                       size, label
-  ├─ nldd-toolbar-item             slot="start" | "center" | "end", priority
-  │    ├─ de control               nldd-button, nldd-icon-button, nldd-search-field, …
-  │    └─ nldd-menu-item           slot="overflow", dezelfde actie in het menu
-  └─ nldd-menu-item                slot="overflow", acties die altijd in het menu staan
-```
+<Composition pattern="toolbar-with-actions" />
 
 <Canvas of={Stories.Standaard} />
 

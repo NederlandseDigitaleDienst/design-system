@@ -1,0 +1,41 @@
+composition:
+  - tag: nldd-shell
+    note: de buitenste schil
+    children:
+      - tag: nldd-page
+        children:
+          - ref: page-header
+            note: de header, met back-text en back-href naar de pagina erboven
+          - choice:
+              - tag: nldd-sidebar-section
+                attrs: [sidebar-label, grow]
+                note: met een inhoudsopgave, breed een kolom, smal een sheet
+                children:
+                  - slot: header
+                    note: de nldd-title met de h1, en op smal de knop naar de sheet
+                  - slot: sidebar
+                    note: de inhoudsopgave, een nldd-list type="navigation" met current-type="location"
+                  - tag: nldd-rich-text
+                    note: de uitleg, met een id op elke h2
+                  - tag: nldd-card
+                    note: de actie, na de uitleg
+              - tag: nldd-two-thirds-one-third-section
+                note: kort met een vervolgactie
+                children:
+                  - slot: header
+                    note: de nldd-title met de h1
+                  - slot: left
+                    note: de nldd-rich-text met de uitleg
+                  - slot: right
+                    note: de nldd-card met de actie
+              - label: kort zonder vervolgactie
+                note: nldd-simple-section, de h1 in het header-slot, de nldd-rich-text eronder
+          - tag: nldd-simple-section
+            attrs: ['background="tinted"']
+            note: waar je hierna heen kunt
+            children:
+              - tag: nldd-collection
+                children:
+                  - tag: nldd-card
+                    attrs: [href]
+          - ref: page-footer

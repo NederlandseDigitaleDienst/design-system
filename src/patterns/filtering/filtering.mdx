@@ -1,4 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Composition } from '../../../.storybook/Composition.jsx';
 import { Rules } from '../../../.storybook/Rules.jsx';
 import * as Stories from './filtering.stories';
 
@@ -10,21 +11,7 @@ Met filters verkleinen bezoekers een lijst tot de resultaten die aan hun voorwaa
 
 ## Compositie
 
-```
-nldd-page
-  └─ nldd-sidebar-section           sidebar-label, breed een kolom, smal een sheet
-       ├─ nldd-title                slot="header", boven beide kolommen
-       ├─ nldd-container            slot="sidebar", met padding
-       │    ├─ nldd-skip-link       href naar de resultaten, alleen in de kolom
-       │    ├─ nldd-title           per filtergroep
-       │    └─ nldd-list            een rij per optie, de rij is de checkbox
-       ├─ nldd-toolbar              zoeken links, de knop naar de filters rechts
-       ├─ nldd-container            layout="wrap", de strip met actieve filters
-       │    └─ nldd-token           control="dismiss", één per actieve waarde
-       ├─ nldd-text                 het aantal resultaten, met aria-live
-       └─ nldd-list                 met slot="no-results"
-            └─ nldd-list-item       de naam, de status als dot, een chevron
-```
+<Composition pattern="filtering" />
 
 <Canvas of={Stories.Standaard} />
 

@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/content-page/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/content-page/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,28 +11,31 @@ Een contentpagina toont de details op het laagste niveau van de website. Hier vi
 ## Compositie
 
 ```
-nldd-shell                            de buitenste schil
+nldd-shell                                        de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                  de header
-       │    └─ nldd-skip-link            om de balk heen
-       │         └─ nldd-top-navigation-bar   back-text en back-href naar de pagina erboven
-       │              └─ nldd-menu-bar        slot="utility", zoeken en taal
-       ├─ nldd-sidebar-section           met een inhoudsopgave: sidebar-label en grow, breed een kolom, smal een sheet
-       │    ├─ slot="header"             de nldd-title met de h1, en op smal de knop naar de sheet
-       │    ├─ slot="sidebar"            de inhoudsopgave, een nldd-list type="navigation" met current-type="location"
-       │    ├─ nldd-rich-text            de uitleg, met een id op elke h2
-       │    └─ nldd-card                 de actie, na de uitleg
-       ├─ nldd-two-thirds-one-third-section    of, kort met een vervolgactie
-       │    ├─ slot="header"             de nldd-title met de h1
-       │    ├─ slot="left"               de nldd-rich-text met de uitleg
-       │    └─ slot="right"              de nldd-card met de actie
-       ├─ nldd-simple-section            of, kort zonder vervolgactie: de h1 in het header-slot, de nldd-rich-text eronder
-       ├─ nldd-simple-section            background="tinted", waar je hierna heen kunt
+       ├─ slot="header"                           de header, met back-text en back-href naar de pagina erboven
+       │    ├─ nldd-status-bar                    alleen als er iets te melden is, boven de balk; optioneel
+       │    └─ nldd-skip-link                     om de balk heen
+       │         └─ nldd-top-navigation-bar
+       │              └─ nldd-menu-bar            slot="utility"; zoeken en taal; optioneel
+       ├─ één van
+       │    ├─ nldd-sidebar-section               sidebar-label, grow; met een inhoudsopgave, breed een kolom, smal een sheet
+       │    │    ├─ slot="header"                 de nldd-title met de h1, en op smal de knop naar de sheet
+       │    │    ├─ slot="sidebar"                de inhoudsopgave, een nldd-list type="navigation" met current-type="location"
+       │    │    ├─ nldd-rich-text                de uitleg, met een id op elke h2
+       │    │    └─ nldd-card                     de actie, na de uitleg
+       │    ├─ nldd-two-thirds-one-third-section  kort met een vervolgactie
+       │    │    ├─ slot="header"                 de nldd-title met de h1
+       │    │    ├─ slot="left"                   de nldd-rich-text met de uitleg
+       │    │    └─ slot="right"                  de nldd-card met de actie
+       │    └─ kort zonder vervolgactie           nldd-simple-section, de h1 in het header-slot, de nldd-rich-text eronder
+       ├─ nldd-simple-section                     background="tinted"; waar je hierna heen kunt
        │    └─ nldd-collection
-       │         └─ nldd-card            href
-       └─ slot="footer"                  nldd-page-footer
-            ├─ slot="breadcrumbs"        waar deze pagina staat
-            └─ slot="legal-bar"
+       │         └─ nldd-card                     href
+       └─ nldd-page-footer                        slot="footer"; de footer
+            ├─ nldd-breadcrumbs                   slot="breadcrumbs"; waar deze pagina staat; optioneel
+            ├─ nldd-container                     de hoofdinhoud, vrij in te vullen; optioneel
+            └─ nldd-page-footer-legal-bar         slot="legal-bar"
 ```
 
 Met een inhoudsopgave:

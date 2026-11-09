@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/home-page/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/home-page/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,29 +11,33 @@ De home is het startpunt van een website. Het laat zien wat bezoekers er kunnen 
 ## Compositie
 
 ```
-nldd-shell                            de buitenste schil
+nldd-shell                                   de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                  de header
-       │    └─ nldd-skip-link            om de balk heen
-       │         └─ nldd-top-navigation-bar   zoeken en taal, geen terugknop
-       ├─ nldd-hero                      de opening, met main-background
-       │    └─ slot="media"              nldd-image, hier nog zonder beeld
-       ├─ nldd-simple-section            background="tinted", wat je hier kunt
-       │    ├─ slot="header"             de titel en een intro van een zin of twee
-       │    └─ nldd-collection           layout="grid", item-min-width
-       │         └─ nldd-card            een onderwerp, een zin en een knop met de actie in de footer
-       ├─ nldd-one-half-one-half-section afbeelding links, tekst rechts
-       │    ├─ slot="left"               nldd-image met aspect-ratio
-       │    └─ slot="right"              titel, tekst en een nldd-link verder
-       ├─ nldd-two-thirds-one-third-section    background="tinted"
-       │    ├─ slot="left"               de titel en de lopende uitleg
-       │    └─ slot="right"              een ondersteunende kaart
+       ├─ slot="header"                      de header, geen terugknop
+       │    ├─ nldd-status-bar               alleen als er iets te melden is, boven de balk; optioneel
+       │    └─ nldd-skip-link                om de balk heen
+       │         └─ nldd-top-navigation-bar
+       │              └─ nldd-menu-bar       slot="utility"; zoeken en taal; optioneel
+       ├─ nldd-hero                          main-background; de opening
+       │    └─ slot="media"                  nldd-image, hier nog zonder beeld
+       ├─ nldd-simple-section                background="tinted"; wat je hier kunt
+       │    ├─ slot="header"                 de titel en een intro van een zin of twee
+       │    └─ nldd-collection               layout="grid", item-min-width
+       │         └─ nldd-card                een onderwerp, een zin en een knop met de actie in de footer
+       ├─ nldd-one-half-one-half-section     afbeelding links, tekst rechts
+       │    ├─ nldd-image                    slot="left", aspect-ratio
+       │    └─ slot="right"                  titel, tekst en een nldd-link verder
+       ├─ nldd-two-thirds-one-third-section  background="tinted"
+       │    ├─ slot="left"                   de titel en de lopende uitleg
+       │    └─ slot="right"                  een ondersteunende kaart
        ├─ nldd-one-third-two-thirds-section
-       │    ├─ slot="left"               de titel en een korte uitleg
-       │    └─ slot="right"              een nldd-list type="navigation" naar de onderwerpen
-       ├─ nldd-simple-section            background="tinted", de oproep
-       └─ slot="footer"                  nldd-page-footer
-            └─ slot="legal-bar"
+       │    ├─ slot="left"                   de titel en een korte uitleg
+       │    └─ slot="right"                  een nldd-list type="navigation" naar de onderwerpen
+       ├─ nldd-simple-section                background="tinted"; de oproep
+       └─ nldd-page-footer                   slot="footer"; de footer
+            ├─ nldd-breadcrumbs              slot="breadcrumbs"; waar deze pagina staat; optioneel
+            ├─ nldd-container                de hoofdinhoud, vrij in te vullen; optioneel
+            └─ nldd-page-footer-legal-bar    slot="legal-bar"
 ```
 
 ```html

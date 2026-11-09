@@ -202,6 +202,12 @@ export function buildDevRules(rules, classes, tags) {
 	return [...authored, ...valueRules(tags)];
 }
 
+/** What ajv found, naming the field an unknown one is about. */
+export function describeErrors(errors) {
+	const say = ({ instancePath, message, params }) => `${instancePath} ${message}${params.additionalProperty ? `: ${params.additionalProperty}` : ''}`;
+	return errors.map(say).join('; ');
+}
+
 export function loadRules(rulesDir, schema) {
 	const validate = new Ajv({ allErrors: true }).compile(schema);
 	const entries = readdirSync(rulesDir, { recursive: true }).filter((file) => file.endsWith('.yaml')).sort();
@@ -215,8 +221,7 @@ export function loadRules(rulesDir, schema) {
 		seen.add(id);
 		const rule = parseYaml(readFileSync(join(rulesDir, file), 'utf8'));
 		if (!validate(rule)) {
-			const problems = validate.errors.map((error) => `${error.instancePath} ${error.message}`);
-			throw new Error(`${file}: ${problems.join('; ')}`);
+			throw new Error(`${file}: ${describeErrors(validate.errors)}`);
 		}
 		return { id, group, ...rule };
 	});

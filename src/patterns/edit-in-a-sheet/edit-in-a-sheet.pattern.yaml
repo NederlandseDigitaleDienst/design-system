@@ -1,0 +1,25 @@
+composition:
+  - label: de pagina eronder
+    note: de lijst of het detail waar de sheet vandaan komt
+  - tag: nldd-sheet
+    attrs: [open, placement, width]
+    note: in de document-root
+    children:
+      - tag: nldd-page
+        children:
+          - tag: nldd-top-title-bar
+            slot: header
+            attrs: [text, dismiss-text, collapse-anchor]
+          - tag: nldd-simple-section
+            children:
+              - tag: nldd-title
+                slot: header
+                note: het id waar de balk naar wijst
+              - tag: nldd-form
+                children:
+                  - tag: nldd-form-field
+                    note: per veld, met de waarde die er al staat
+                  - tag: nldd-form-actions
+                    children:
+                      - tag: nldd-button-group
+                        note: de actie, onder het laatste veld

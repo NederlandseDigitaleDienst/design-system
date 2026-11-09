@@ -1,0 +1,37 @@
+composition:
+  - tag: nldd-page
+    children:
+      - tag: nldd-sidebar-section
+        attrs: [sidebar-label]
+        note: breed een kolom, smal een sheet
+        children:
+          - tag: nldd-title
+            slot: header
+            note: boven beide kolommen
+          - tag: nldd-container
+            slot: sidebar
+            note: met padding
+            children:
+              - tag: nldd-skip-link
+                attrs: [href]
+                note: naar de resultaten, alleen in de kolom
+              - tag: nldd-title
+                note: per filtergroep
+              - tag: nldd-list
+                note: een rij per optie, de rij is de checkbox
+          - tag: nldd-toolbar
+            note: zoeken links, de knop naar de filters rechts
+          - tag: nldd-container
+            attrs: ['layout="wrap"']
+            note: de strip met actieve filters
+            children:
+              - tag: nldd-token
+                attrs: ['control="dismiss"']
+                note: één per actieve waarde
+          - tag: nldd-text
+            note: het aantal resultaten, met aria-live
+          - tag: nldd-list
+            children:
+              - tag: nldd-list-item
+                note: de naam, de status als dot, een chevron
+              - slot: no-results

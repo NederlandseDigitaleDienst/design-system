@@ -1,0 +1,26 @@
+composition:
+  - tag: nldd-shell
+    note: de buitenste schil
+    children:
+      - tag: nldd-page
+        children:
+          - ref: page-header
+            note: de header, met back-text en back-href naar de home
+          - choice:
+              - tag: nldd-one-third-two-thirds-section
+                note: met een lijst
+                children:
+                  - slot: left
+                    note: de nldd-title met de h1 en een korte intro
+                  - tag: nldd-list
+                    slot: right
+                    attrs: ['type="navigation"']
+              - tag: nldd-simple-section
+                note: met kaarten
+                children:
+                  - slot: header
+                    note: de nldd-title met de h1 en een korte intro
+                  - tag: nldd-collection
+                    attrs: ['layout="grid"']
+                    note: met een nldd-card per pagina
+          - ref: page-footer
