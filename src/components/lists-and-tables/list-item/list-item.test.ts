@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, deepActiveElement, installUniversalReset, nextFrames } from '../../../test-utils.js';
 import { _resetInputModalityForTesting, getInputModality } from '../../../utilities/input-modality.js';
 import './list-item.js';
@@ -1503,5 +1504,85 @@ describe('<nldd-list-item> with download', () => {
 		`);
 		await waitForUpdate(el);
 		expect(el.matches(':state(label-without-title)')).toBe(false);
+	});
+});
+
+describe('nldd-list-item – context background', () => {
+	let el: HTMLElement;
+	let unloadTokens: () => void;
+
+	beforeEach(() => {
+		unloadTokens = loadTokens();
+	});
+
+	afterEach(async () => {
+		await userEvent.unhover(document.body);
+		if (el) cleanup(el);
+		unloadTokens();
+	});
+
+	const probe = (id: string) => `<nldd-cell><span class="probe" id="${id}" style="display: block; background-color: var(--context-parent-background-color)"></span></nldd-cell>`;
+	const ring = (root: ParentNode, id: string) => getComputedStyle(root.querySelector(`#${id}`)!).backgroundColor;
+	const paint = (row: Element, selector = '.list-item__action') =>
+		getComputedStyle(row.shadowRoot!.querySelector(selector)!, '::before').backgroundColor;
+
+	it('hands a ring the fill of the row on hover, press, selected, current and highlighted', async () => {
+		el = await fixture(`<nldd-list>
+			<nldd-list-item id="hovered" button>${probe('p-hovered')}</nldd-list-item>
+			<nldd-list-item id="pressed" button>${probe('p-pressed')}</nldd-list-item>
+			<nldd-list-item id="selected" button selected>${probe('p-selected')}</nldd-list-item>
+			<nldd-list-item id="current" href="#" current>${probe('p-current')}</nldd-list-item>
+			<nldd-list-item id="still" selected>${probe('p-still')}</nldd-list-item>
+		</nldd-list>`);
+		const rows = [...el.querySelectorAll('nldd-list-item')] as HTMLElement[];
+		await Promise.all(rows.map((row) => waitForUpdate(row)));
+		const row = (id: string) => el.querySelector(`#${id}`)!;
+
+		const transparent = 'rgba(0, 0, 0, 0)';
+		const pressed = row('pressed').shadowRoot!.querySelector('.list-item__action')!;
+		pressed.classList.add('is-pressed');
+		expect(paint(row('pressed'))).not.toBe(transparent);
+		expect(ring(el, 'p-pressed')).toBe(paint(row('pressed')));
+
+		expect(ring(el, 'p-selected')).toBe(paint(row('selected')));
+		expect(ring(el, 'p-current')).toBe(paint(row('current')));
+		expect(ring(el, 'p-still')).toBe(paint(row('still'), '.list-item'));
+
+		(row('current').shadowRoot!.querySelector('.list-item__action') as HTMLElement).focus();
+		expect(ring(el, 'p-current')).toBe(paint(row('current')));
+
+		await userEvent.hover(row('hovered').shadowRoot!.querySelector('.list-item__action')!);
+		expect(paint(row('hovered'))).not.toBe(transparent);
+		expect(ring(el, 'p-hovered')).toBe(paint(row('hovered')));
+
+		row('still').shadowRoot!.querySelector('.list-item')!.classList.add('is-highlighted');
+		expect(ring(el, 'p-still')).toBe(paint(row('still'), '.list-item'));
+	});
+
+	it('leaves the child rows of a selected row on the surface', async () => {
+		el = await fixture(`<nldd-list>
+			<nldd-list-item id="parent" button selected expanded>
+				${probe('p-parent')}
+				<nldd-list-item slot="children" button>${probe('p-child')}</nldd-list-item>
+			</nldd-list-item>
+			<nldd-list-item button>${probe('p-plain')}</nldd-list-item>
+		</nldd-list>`);
+		const rows = [...el.querySelectorAll('nldd-list-item')] as HTMLElement[];
+		await Promise.all(rows.map((row) => waitForUpdate(row)));
+		expect(ring(el, 'p-parent')).not.toBe(ring(el, 'p-plain'));
+		expect(ring(el, 'p-child')).toBe(ring(el, 'p-plain'));
+	});
+
+	it('hands a ring the fill of a hovered segment', async () => {
+		el = await fixture(`<nldd-list><nldd-list-item>
+			<nldd-list-item-segment id="segment" button>${probe('p-segment')}</nldd-list-item-segment>
+		</nldd-list-item></nldd-list>`);
+		const segment = el.querySelector('#segment') as HTMLElement;
+		await waitForUpdate(segment);
+		const control = segment.shadowRoot!.querySelector('.list-item-segment')!;
+		await userEvent.hover(control);
+		const fill = getComputedStyle(control, '::before').backgroundColor;
+		expect(fill).not.toBe('rgba(0, 0, 0, 0)');
+		expect(ring(el, 'p-segment')).toBe(fill);
 	});
 });
