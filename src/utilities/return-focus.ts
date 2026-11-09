@@ -26,12 +26,9 @@ export function returnFocus(target: HTMLElement | null | undefined, overlay: Ele
 	if (!target || target === document.body || !target.isConnected) return;
 	// Compared deep: in a shadow root, document.activeElement is the same host
 	// for the opener, the overlay and any other field beside them.
-	const active = deepActiveElement();
-	// On the target or inside it: the anchor fallback is a host, such as an
-	// nldd-button, whose inner button the browser may have focused.
-	const onTarget = !!active && isWithin(active, target);
-	const free = !active || active === document.body || onTarget || isWithin(active, overlay);
-	if (!free) return;
+	// On the target or inside it counts as free too: the anchor fallback is a
+	// host, such as an nldd-button, whose inner button the browser may have focused.
+	if (!focusIsFree(overlay) && !focusIsFree(target)) return;
 	focusAsLastInput(target);
 }
 
