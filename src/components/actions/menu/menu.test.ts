@@ -3356,6 +3356,18 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 			cleanup(root);
 		});
 
+		it('does not take a repeated event on the same spot for slowing down', async () => {
+			const { root, items, isOpen } = await setup();
+			root._activateItem(items[0]);
+			move(items[0], 10);
+			await wait(5);
+			move(items[0], 10);
+			await waitForUpdate(root);
+			expect(isOpen(items[0])).toBe(false);
+			await until(() => isOpen(items[0]));
+			cleanup(root);
+		});
+
 		it('opens nothing while the pointer moves fast over an item', async () => {
 			const { root, items, isOpen } = await setup();
 			root._activateItem(items[0]);

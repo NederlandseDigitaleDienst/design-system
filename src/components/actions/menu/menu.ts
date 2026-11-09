@@ -697,7 +697,8 @@ export class NLDDMenu extends LitElement {
 		if (last) {
 			const elapsed = event.timeStamp - last.t;
 			const distance = Math.hypot(event.clientX - last.x, event.clientY - last.y);
-			if (elapsed > 0 && distance / elapsed < HOVER_SLOW_PX_PER_MS) {
+			// A move of 0 px, as a repeated event can be, is no slowing down: it waits for rest.
+			if (elapsed > 0 && distance > 0 && distance / elapsed < HOVER_SLOW_PX_PER_MS) {
 				this._openHoverItem();
 				return;
 			}
