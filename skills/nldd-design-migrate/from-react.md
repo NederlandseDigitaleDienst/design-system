@@ -99,3 +99,52 @@ React 18 kent geen properties op custom elements. Het schrijft een prop als attr
 De JSX-typen van het pakket laten een booleaans attribuut alleen `true` of niets toe. Dan weigert `tsc` `disabled={busy}` en dwingt het `disabled={busy || undefined}` af, waarmee React het attribuut weglaat. In React 19 is dat strenger dan nodig, maar het klopt in beide.
 
 Bij `expanded` op een rij zonder kinderen betekent afwezig "niet uitklapbaar". Zet `expandable` erbij voor een rij die dicht is maar wel uitklapt: dan zegt een afwezige `expanded` "dicht". Dat geldt voor `nldd-list-item` en `nldd-list-item-segment`.
+
+## Links in een shadow root en je router
+
+React Router, de `Link` van Next en de router van Docusaurus vangen klikken op hun eigen `<a>`-elementen. Een `nldd-link`, een `nldd-card` met `href` of een `nldd-list-item` met `href` rendert zijn anker in een shadow root, en dat ziet de router niet. Elke klik laadt dan de hele pagina opnieuw. Er gaat niets stuk en er komt geen waarschuwing; de site wordt alleen trager en verliest zijn state.
+
+Eén listener op `document` lost het op voor de hele app. `composedPath()` geeft ook het anker in de shadow root:
+
+```tsx
+useEffect(() => {
+  function onClick(event: MouseEvent) {
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const anchor = event
+      .composedPath()
+      .find((node): node is HTMLAnchorElement => node instanceof HTMLAnchorElement);
+    // Anchors in the light DOM belong to the router's own links.
+    if (!anchor || !(anchor.getRootNode() instanceof ShadowRoot)) return;
+    if ((anchor.target && anchor.target !== '_self') || anchor.hasAttribute('download')) return;
+    const url = new URL(anchor.href, location.href);
+    if (url.origin !== location.origin) return;
+    event.preventDefault();
+    navigate(url.pathname + url.search + url.hash);
+  }
+  document.addEventListener('click', onClick);
+  return () => document.removeEventListener('click', onClick);
+}, [navigate]);
+```
+
+Sla bestanden over die geen route zijn, zoals een RSS-feed of een download zonder `download`-attribuut.
+
+## Renderen op de server
+
+Een framework dat op de server rendert (Next, Docusaurus, Remix) laadt je modules ook in Node, waar `customElements` niet bestaat. Laad de componenten daarom alleen in de browser, met een dynamische import achter een controle, en laat de server de tags gewoon als tekst uitschrijven:
+
+```ts
+if (typeof window !== 'undefined') {
+  void import('@nldd/design-system/autoloader');
+}
+```
+
+De stylesheet mag wel overal geïmporteerd worden. Wat er zonder script van de pagina overblijft, staat in [`SKILL.md`](SKILL.md) onder "Zonder JavaScript staat er geen kop".
+
+Typ refs naar een component met zijn eigen klasse, uit het subpad van dat component, zodat `tsc` de properties en methoden kent:
+
+```tsx
+import type { NLDDSidebarSection } from '@nldd/design-system/sidebar-section';
+
+const section = useRef<NLDDSidebarSection>(null);
+```
