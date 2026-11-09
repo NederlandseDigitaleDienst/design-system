@@ -321,13 +321,18 @@ export class NLDDContainer extends LitElement {
 		this._syncSizedByContent();
 	}
 
+	override willUpdate(changed: PropertyValues): void {
+		if (changed.has('width')) this._syncSizedByContent();
+	}
+
 	override updated(changed: PropertyValues): void {
 		this.writeCustomProperties();
 		this.writeDimensionProperties();
+		// Only the nearest containers: each passes a change on to its own.
 		if (changed.has('width') || changed.has('_sizedByContent')) {
-			if (changed.has('width')) this._syncSizedByContent();
-			this.querySelectorAll<NLDDContainer>('nldd-container')
-				.forEach((child) => child._syncSizedByContent?.());
+			this.querySelectorAll<NLDDContainer>('nldd-container').forEach((child) => {
+				if (child.parentElement?.closest('nldd-container') === this) child._syncSizedByContent?.();
+			});
 		}
 	}
 

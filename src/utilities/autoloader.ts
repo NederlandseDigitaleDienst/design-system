@@ -47,6 +47,11 @@ function load(tag: string): Promise<unknown> | undefined {
  * Loads the modules for every nldd-* element in `root` that is not defined yet,
  * `root` itself included. Resolves once they are all registered.
  */
+/** For the observer, which has no caller to hand a failed load to. */
+function report(error: unknown): void {
+	console.error('[nldd] A component module failed to load.', error);
+}
+
 export async function discover(root: ParentNode = document): Promise<void> {
 	const tags = new Set<string>();
 	if (root instanceof Element && isUndefinedComponent(root)) tags.add(root.localName);
@@ -64,16 +69,17 @@ let observer: MutationObserver | undefined;
  */
 export function startAutoloader(root: Document | ShadowRoot = document): void {
 	if (typeof MutationObserver === 'undefined') return;
+	if (root === document && observer) return;
 	const watcher = new MutationObserver((mutations) => {
 		for (const mutation of mutations) {
 			for (const node of mutation.addedNodes) {
-				if (node instanceof Element) void discover(node);
+				if (node instanceof Element) discover(node).catch(report);
 			}
 		}
 	});
 	watcher.observe(root, { childList: true, subtree: true });
 	if (root === document) observer = watcher;
-	void discover(root);
+	discover(root).catch(report);
 }
 
 /** Stops watching the document. */
@@ -82,4 +88,4 @@ export function stopAutoloader(): void {
 	observer = undefined;
 }
 
-if (typeof document !== 'undefined' && !observer) startAutoloader();
+if (typeof document !== 'undefined') startAutoloader();

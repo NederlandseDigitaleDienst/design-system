@@ -16,7 +16,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Breaking
 
-- **`nldd-dropdown` no longer sends a `change` of its own.** The native `change` of the slotted `<select>` bubbles on instead, so a listener on the select, on the dropdown or higher up hears it, a React `onChange` on the select included. It has no `detail`: read the choice from `value` on the dropdown or on the select.
+- **`nldd-dropdown` no longer sends a `change` of its own.** The native `change` of the slotted `<select>` bubbles on instead, so a listener on the select, on the dropdown or higher up hears it, a React `onChange` on the select included. It has no `detail`, and its `target` is the select, not the dropdown: read the choice from `value` on either, and compare `currentTarget` where you checked `target` against the dropdown.
 
 ### Added
 

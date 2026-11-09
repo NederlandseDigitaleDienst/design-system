@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import manifest from '../../custom-elements.json';
 import { loaders } from './autoloader.generated.js';
-import { discover, stopAutoloader } from './autoloader.js';
+import { discover, startAutoloader, stopAutoloader } from './autoloader.js';
 import { until } from '../test-utils.js';
 
 const tags = manifest.modules.flatMap((module) =>
@@ -42,5 +42,17 @@ describe('autoloader', () => {
 		host.innerHTML = '<nldd-not-a-component></nldd-not-a-component>';
 		await expect(discover(host)).resolves.toBeUndefined();
 		stopAutoloader();
+	});
+
+	it('starts once for the document, so one stop ends it', async () => {
+		startAutoloader();
+		startAutoloader();
+		stopAutoloader();
+		expect(customElements.get('nldd-status-bar')).toBeUndefined();
+		host = document.createElement('div');
+		document.body.append(host);
+		host.innerHTML = '<nldd-status-bar></nldd-status-bar>';
+		await new Promise((resolve) => setTimeout(resolve, 300));
+		expect(customElements.get('nldd-status-bar')).toBeUndefined();
 	});
 });
