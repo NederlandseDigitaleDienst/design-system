@@ -10,9 +10,9 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
  * The apex is pinned once the cursor crosses the top or bottom edge of the
  * opener and stays fixed until the cursor enters the submenu, so the user has
  * a predictable, stable area to traverse. Leaving the opener sideways gives no
- * protection. There is no auto-close on hover-out: moving the cursor to empty
- * space leaves the chain open, and click-outside (popover light-dismiss) is the
- * only gesture that collapses it.
+ * protection. Turning away onto anything that is not an item (a divider, the
+ * padding of the menu, or out of the menu altogether) closes the submenu,
+ * since no item is left under the cursor.
  */
 
 export interface Point {
@@ -84,8 +84,9 @@ export interface SafeTriangleHost extends ReactiveControllerHost {
 	isPointInSubmenus(point: Point, submenu: HTMLElement): boolean;
 	/** Highlight the opener, clearing any peer. */
 	highlightOpener(): void;
-	/** Activate the item under a point, as a mouseenter would have. */
-	activateItemAt(point: Point): void;
+	/** The cursor is free again at a point: what is there takes over, as a
+	 *  mouseenter would have done while the cursor was protected. */
+	releaseAt(point: Point): void;
 	/** Draw the wedge on screen, for tuning. */
 	readonly debugSafeTriangle: boolean;
 }
@@ -170,7 +171,7 @@ export class SafeTriangleController implements ReactiveController {
 				this.movingToward = false;
 				this._lastPos = p;
 				this._removeOverlay();
-				if (wasMoving) this._host.activateItemAt(p);
+				if (wasMoving) this._host.releaseAt(p);
 			}
 		} else {
 			const shape = wedge(this._apex, p, r);
@@ -185,7 +186,7 @@ export class SafeTriangleController implements ReactiveController {
 		if (opener && this.movingToward && !opener.hasAttribute('highlighted')) this._host.highlightOpener();
 		// Turned away: the cursor may sit on a peer whose mouseenter fired while
 		// still protected, and that will not fire again until it leaves.
-		if (wasMoving && !this.movingToward) this._host.activateItemAt(p);
+		if (wasMoving && !this.movingToward) this._host.releaseAt(p);
 		this._scheduleStall();
 	}
 
@@ -202,7 +203,7 @@ export class SafeTriangleController implements ReactiveController {
 			this._stallTimer = null;
 			this.movingToward = false;
 			this._apex = null;
-			if (this._lastPos) this._host.activateItemAt(this._lastPos);
+			if (this._lastPos) this._host.releaseAt(this._lastPos);
 		}, STALL_DISMISS_MS);
 	}
 

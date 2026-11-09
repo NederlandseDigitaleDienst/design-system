@@ -6,7 +6,7 @@ import type { NLDDToken } from './token.js';
 export function tokenTemplate(component: NLDDToken): TemplateResult {
 	return html`
 		<div class="token">
-			<span class="token__text">${component.text || html`<slot></slot>`}</span>
+			<span class="token__text">${component._textSlot.has ? nothing : component.text}<slot @slotchange=${component._textSlot.onChange}></slot></span>
 			${component.control === 'dismiss' ? html`
 				<div class="token__dismiss-action">
 					<nldd-icon-button

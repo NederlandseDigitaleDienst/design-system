@@ -93,22 +93,22 @@ export class NLDDTable extends LitElement {
 	background: TableBackground = 'base';
 
 	/** CSS grid track list applied once as the table's columns. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	columns = '';
 
 	/** Track list when the table is sm-wide (≤640px); falls back to `columns`. */
-	@property({ type: String, reflect: true, attribute: 'sm-columns' })
+	@property({ reflect: true, attribute: 'sm-columns', converter: reflectNonDefault<string>('') })
 	smColumns = '';
 
 	/** Track list when the table is md-wide (641–1007px); falls back to `columns`. */
-	@property({ type: String, reflect: true, attribute: 'md-columns' })
+	@property({ reflect: true, attribute: 'md-columns', converter: reflectNonDefault<string>('') })
 	mdColumns = '';
 
 	/** Track list when the table is lg-wide (≥1008px); falls back to `columns`. */
-	@property({ type: String, reflect: true, attribute: 'lg-columns' })
+	@property({ reflect: true, attribute: 'lg-columns', converter: reflectNonDefault<string>('') })
 	lgColumns = '';
 
-	@property({ type: String, reflect: true, attribute: 'accessible-label' })
+	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
 	accessibleLabel = '';
 
 	@property({ type: Object })

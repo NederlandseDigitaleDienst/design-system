@@ -34,9 +34,9 @@
  * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  *
- * @slot text - Slot for custom button content (e.g. text with inline markup). Used when the text attribute is empty or not set (an empty string counts as "not set", since the attribute and the unset property are indistinguishable). Provide accessible-label when the slotted content isn't plain text.
- * @slot start-icon - Slot for a custom start icon (e.g. custom SVG). Only used when start-icon attribute is not set.
- * @slot end-icon - Slot for a custom end icon (e.g. custom SVG). Only used when end-icon attribute is not set.
+ * @slot text - Slot for custom button content (e.g. text with inline markup). Wins over `text`. Provide accessible-label when the slotted content isn't plain text.
+ * @slot start-icon - Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`.
+ * @slot end-icon - Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay.
  *
  * @fires click - When button is clicked (not fired when disabled)
@@ -127,7 +127,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: String, reflect: true, attribute: 'popup-type' })
 	popupType?: PopupType;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
 	type: ButtonType = 'button';
 
 	@property({ type: String })
@@ -189,11 +189,11 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: Boolean, reflect: true, attribute: 'no-highlight-border' })
 	noHighlightBorder = false;
 
-	/** Icon name for the start icon (before text). When not set, the start-icon slot is used. */
+	/** Icon name for the start icon (before text). An icon in the start-icon slot wins. */
 	@property({ type: String, attribute: 'start-icon' })
 	startIcon = '';
 
-	/** Icon name for the end icon (after text). When not set, the end-icon slot is used. */
+	/** Icon name for the end icon (after text). An icon in the end-icon slot wins. */
 	@property({ type: String, attribute: 'end-icon' })
 	endIcon = '';
 

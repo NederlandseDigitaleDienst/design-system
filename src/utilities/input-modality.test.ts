@@ -28,6 +28,15 @@ describe('input-modality', () => {
 		expect(isKeyboardMode()).toBe(true);
 	});
 
+	it('ziet een toets die een component tegenhoudt', () => {
+		const el = document.createElement('div');
+		document.body.append(el);
+		el.addEventListener('keydown', (e) => e.stopPropagation());
+		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		el.remove();
+		expect(isKeyboardMode()).toBe(true);
+	});
+
 	it('switches to keyboard after Tab keydown', () => {
 		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 		expect(getInputModality()).toBe('keyboard');

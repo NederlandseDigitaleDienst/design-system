@@ -27,13 +27,13 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
+import { PageSectionMixin, pageSectionBackgroundStyles } from '../../../../utilities/page-section-mixin.js';
 import { oneThirdTwoThirdsSectionStyles } from './one-third-two-thirds-section.styles.js';
 import { oneThirdTwoThirdsSectionTemplate } from './one-third-two-thirds-section.template.js';
 
 @customElement('nldd-one-third-two-thirds-section')
 export class NLDDOneThirdTwoThirdsSection extends PageSectionMixin(LitElement) {
-	static override styles = oneThirdTwoThirdsSectionStyles;
+	static override styles = [pageSectionBackgroundStyles, oneThirdTwoThirdsSectionStyles];
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

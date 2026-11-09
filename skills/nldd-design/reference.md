@@ -37,6 +37,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 - `link-no-vague-text` (hint): Make the destination or the subject the link text, such as "Lees meer over dakisolatie".
 - `login-link-needs-full-verb` (hint): A link to the login screen does not log in itself, so use the full verb: "Inloggen".
 - `sheet-form-max-one-action` (hint): Keep one action under the form. The way out is `dismiss-text` on the title bar.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `toolbar-needs-two-actions` (hint): Use a plain button for a single action.
 - `toolbar-primary-needs-priority` (hint): Give the primary action the highest `priority`, so it is the last to move to the overflow.
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
@@ -81,9 +82,9 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 
 | Slot | Description |
 | --- | --- |
-| `text` | Slot for custom button content (e.g. text with inline markup). Used when the text attribute is empty or not set (an empty string counts as "not set", since the attribute and the unset property are indistinguishable). Provide accessible-label when the slotted content isn't plain text. |
-| `start-icon` | Slot for a custom start icon (e.g. custom SVG). Only used when start-icon attribute is not set. |
-| `end-icon` | Slot for a custom end icon (e.g. custom SVG). Only used when end-icon attribute is not set. |
+| `text` | Slot for custom button content (e.g. text with inline markup). Wins over `text`. Provide accessible-label when the slotted content isn't plain text. |
+| `start-icon` | Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`. |
+| `end-icon` | Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`. |
 | `popup` | A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay. |
 
 **Events**
@@ -158,6 +159,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 - `icon-button-needs-name`: nldd-icon-button needs `text` or `accessible-label`, otherwise it has no accessible name.
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
 - `row-action-goes-in-segment` (hint): Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `toolbar-needs-two-actions` (hint): Use a plain button for a single action.
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
@@ -197,7 +199,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 
 | Slot | Description |
 | --- | --- |
-| `icon` | Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set; falls back to a placeholder icon when the slot is empty. |
+| `icon` | Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set. |
 | `popup` | A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay. |
 
 **Events**
@@ -285,6 +287,7 @@ A single item within an nldd-menu.
 - `menu-needs-two-actions` (hint): Use a plain button for a single action.
 - `menu-no-late-submenu`: An nldd-menu child was added after mount. Submenu attachment is resolved once at firstUpdated, so this menu will not be treated as a submenu. Define the nldd-menu child before the item is connected to the DOM.
 - `menu-no-manual-choice` (hint): Use type="radio" or type="checkbox" with `selected`, which gives the item the role and the state a screen reader reads out.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `toolbar-needs-two-actions` (hint): Use a plain button for a single action.
 
 **Attributes**
@@ -294,7 +297,7 @@ A single item within an nldd-menu.
 | `destructive` | `boolean` | Marks the item as destructive (red text; red highlight bg). Use for irreversible actions like "Delete". Color is the only built-in signal, so per WCAG 1.4.1 the item's own label must convey the destructive nature (e.g. "Verwijder") — don't rely on the red alone. Confirming the action (e.g. a follow-up dialog) is the consumer's responsibility. |
 | `text` | `string` | Display text. Supports **bold** markdown syntax. |
 | `details` | `string` | Secondary label shown on the right side. |
-| `icon` | `string` | Icon name rendered before the text. |
+| `icon` | `string` | Icon name rendered before the text. An icon in the `icon` slot takes its place. |
 | `shortcut` | `string` | Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable. |
 | `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
 | `href` | `string` | Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled. |
@@ -305,6 +308,12 @@ A single item within an nldd-menu.
 | `aliases` | `string` | Space-separated alternative search terms. |
 | `query` | `string` | Query substring to bold-highlight in text. Set by menu's filter(); also settable by consumers. |
 | `query-mark-mode` | `string` | 'match' \| 'predictive' (default: 'predictive'). See text-cell for details. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `icon` | An icon of your own before the text, such as an `<img>`: one that is not in the icon set. Wins over `icon`. |
 
 **Events**
 
@@ -709,6 +718,7 @@ A compact property that has been assigned to something: a category, a type, a ro
 
 **Rules** (`nldd lint`)
 
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `tag-goes-below-title` (hint): Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.
 - `tag-icon-only-needs-name`: An icon-only tag without an `accessible-label` has no accessible name. Add `accessible-label` so screen readers can announce it.
 
@@ -719,7 +729,7 @@ A compact property that has been assigned to something: a category, a type, a ro
 | `variant` | `string` | What is visible: 'text' \| 'icon' \| 'icon-and-text'. Unset → detected from which of text/icon is present. |
 | `color` | `string` | Color variant. Semantic: 'neutral' \| 'accent' \| 'success' \| 'warning' \| 'critical'. Rijkshuisstijl colors: 'lintblauw' \| 'donkerblauw' \| 'hemelblauw' \| 'lichtblauw' \| 'paars' \| 'violet' \| 'robijnrood' \| 'roze' \| 'rood' \| 'oranje' \| 'donkergeel' \| 'geel' \| 'donkerbruin' \| 'bruin' \| 'donkergroen' \| 'groen' \| 'mosgroen' \| 'mintgroen'. (default: 'neutral') |
 | `size` | `string` | Tag size: 'sm' \| 'md' (default: 'md') |
-| `text` | `string` | Tag text (alternative to the default slot) |
+| `text` | `string` | Tag text. Content in the default slot wins. |
 | `icon` | `string` | Icon before the text |
 | `accessible-label` | `string` | Accessible label for screen readers. Use this on icon-only tags without visible text. |
 
@@ -727,8 +737,8 @@ A compact property that has been assigned to something: a category, a type, a ro
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Tag text |
-| `icon` | Custom icon before the text |
+| _(default)_ | Tag text. Wins over `text`. |
+| `icon` | Custom icon before the text. Wins over `icon`. |
 
 ### `<nldd-text>`
 
@@ -809,13 +819,14 @@ A self-contained piece of data the user is handling: a person in an address fiel
 **Rules** (`nldd lint`)
 
 - `filter-token-needs-dismiss` (hint): Set control="dismiss": each token is its own way back.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `token-strip-needs-wrap` (hint): Set layout="wrap" on the strip: the default stacks the tokens under each other.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `text` | `string` | Token text; falls back to the default slot when unset. |
+| `text` | `string` | Token text. Content in the default slot wins. |
 | `control` | `'none' \| 'dismiss' \| 'menu'` | Control type (default: 'none') |
 | `dismiss-text` | `string` | Accessible label for the dismiss button. Unset, it names the token: `Verwijder "{text}"`, so a row of tokens does not read as a row of identical buttons. |
 | `menu-text` | `string` | Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`. |
@@ -828,7 +839,7 @@ A self-contained piece of data the user is handling: a person in an address fiel
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Token text |
+| _(default)_ | Token text. Wins over `text`. |
 | `menu` | An nldd-menu that the token opens from its menu button (control="menu"). |
 
 **Events**
@@ -1623,6 +1634,10 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 ### `<nldd-segmented-control-item>`
 
+**Rules** (`nldd lint`)
+
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1647,7 +1662,7 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 | Slot | Description |
 | --- | --- |
-| `icon` | Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set. |
+| `icon` | Slot for a custom icon (e.g. custom SVG). Wins over `icon`. |
 
 **Events**
 
@@ -1986,6 +2001,7 @@ A selectable button that toggles between selected and unselected. Available as a
 **Rules** (`nldd lint`)
 
 - `button-bar-no-toggle-button`: The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `toggle-button-icon-variant-needs-icon`: nldd-toggle-button with variant="icon" has no `icon` and no slot="icon" content, so a placeholder icon is shown.
 - `toggle-button-needs-name`: nldd-toggle-button needs `text` or `accessible-label`, otherwise it has no accessible name.
 
@@ -2017,7 +2033,7 @@ A selectable button that toggles between selected and unselected. Available as a
 
 | Slot | Description |
 | --- | --- |
-| `icon` | Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set. |
+| `icon` | Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`. |
 
 **Events**
 
@@ -2646,19 +2662,20 @@ A single entry in an `nldd-page-footer-legal-bar`. Renders as a link when `href`
 - `navigation-no-vague-label` (hint): Name the subject or the goal instead, such as "Ondersteuning" for "Service", so nobody has to guess what is behind it.
 - `page-footer-needs-privacy-link` (hint): Add a direct link "Privacy": European privacy regulators ask for one on every page.
 - `page-footer-no-vague-about` (hint): Call it "Over deze website": "Over" could just as well be about the organization.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `text` | `string` | Item label. Falls back to the default slot. |
+| `text` | `string` | Item label. Content in the default slot wins. |
 | `href` | `string` | Link target. When omitted, the item renders as plain text. |
 
 **Slots**
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Item label (alternative to `text`). |
+| _(default)_ | Item label. Wins over `text`. |
 
 ### `<nldd-popover>`
 
@@ -3048,19 +3065,23 @@ A trail of `nldd-breadcrumbs-item`s separated by `›`, rendered as a `<nav>` la
 
 A single entry in an `nldd-breadcrumbs` list. Renders as a link when `href` is set, as plain text marked `aria-current="page"` when `current` is set, and as plain text otherwise. Each item renders its own trailing `›` separator; the last item in the list hides it via `:host(:last-of-type)`.
 
+**Rules** (`nldd lint`)
+
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
+
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `href` | `string` | Link target. Ignored when `current` is set. |
 | `current` | `boolean` | Marks this item as the current page (renders as plain text + `aria-current="page"`). Typical use is on the last item. |
-| `text` | `string` | Item label. Falls back to the default slot. |
+| `text` | `string` | Item label. Content in the default slot wins. |
 
 **Slots**
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Item label (alternative to `text`). |
+| _(default)_ | Item label. Wins over `text`. |
 
 ### `<nldd-document-tab-bar>`
 
@@ -3129,6 +3150,7 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
 - `link-no-vague-text` (hint): Make the destination or the subject the link text, such as "Lees meer over dakisolatie".
 - `login-link-needs-full-verb` (hint): A link to the login screen does not log in itself, so use the full verb: "Inloggen".
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 
 **Attributes**
 
@@ -3139,7 +3161,7 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `size` | `string` | Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' \| 'sm' \| 'md' \| 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap. |
-| `text` | `string` | Link text (alternative to the default slot) |
+| `text` | `string` | Link text. Content in the default slot wins. |
 | `start-icon` | `string` | Icon before the text |
 | `end-icon` | `string` | Icon after the text |
 | `accessible-label` | `string` | Accessible label for screen readers |
@@ -3151,9 +3173,9 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Link text (alternative to the text attribute) |
-| `start-icon` | Custom icon before the text |
-| `end-icon` | Custom icon after the text |
+| _(default)_ | Link text. Wins over `text`. |
+| `start-icon` | Custom icon before the text. Wins over `start-icon`. |
+| `end-icon` | Custom icon after the text. Wins over `end-icon`. |
 
 ### `<nldd-link-group>`
 
@@ -3210,6 +3232,7 @@ Interactive building block for use in a menu bar. Renders as an <a> (with href) 
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
 - `login-link-needs-full-verb` (hint): A link to the login screen does not log in itself, so use the full verb: "Inloggen".
 - `navigation-no-vague-label` (hint): Name the subject or the goal instead, such as "Ondersteuning" for "Service", so nobody has to guess what is behind it.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `top-navigation-bar-max-three-items` (hint): Keep the bar to search, language and account: the pages together are the navigation.
 - `top-navigation-bar-utility-needs-priority` (hint): Set content-priority="text", so "Zoeken" and "NL" stay readable on a narrow screen.
 
@@ -3331,6 +3354,7 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 **Rules** (`nldd lint`)
 
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `tab-bar-href-needs-navigation`: Tabs with `href` go to another page: add `navigation`, so the bar is a nav with aria-current="page" instead of a tablist, and set `current` on the tab of the page you are on.
 - `tab-bar-item-selected-renamed`: `selected` is now `current` and the old attribute does nothing; rename it.
 
@@ -3342,14 +3366,15 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 | `text` | `string` | Tab text; also used as accessible name for icon-only items |
 | `href` | `string` | Optional link URL; renders an anchor instead of a button |
 | `variant` | `'icon-and-text'\|'text'\|'icon'` | Forces this presentation on this item, over the one from nldd-tab-bar |
-| `icon` | `string` | Icon name for nldd-icon; an alternative to the icon slot. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided. |
+| `icon` | `string` | Icon name for nldd-icon; an icon in the icon slot wins. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided. |
 | `size` | `'md'\|'lg'` | Size: 'md' (default) \| 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout. |
+| `controls` | `string` | Id of the element this tab shows, looked up in the tab's own tree. The tab announces it as the content it controls (`aria-controls`). Give that element `role="tabpanel"` and an `aria-labelledby` with the id of this item, which names it after the tab. No effect in a `navigation` bar. |
 
 **Slots**
 
 | Slot | Description |
 | --- | --- |
-| `icon` | Icon content |
+| `icon` | Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made again each time the menu opens, so a new `src` shows there too. |
 
 **Events**
 
@@ -3767,6 +3792,7 @@ One step in an `nldd-step-bar`. `status="current"` marks the step you are on; th
 
 **Rules** (`nldd lint`)
 
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `step-bar-max-one-current`: More than one step has `status="current"`; the last one wins. Mark only the step you are on.
 - `step-bar-max-seven-items` (hint): More than 7 steps do not fit a step bar. Put them under each other in an nldd-list with an nldd-step-cell per row.
 
@@ -3775,7 +3801,7 @@ One step in an `nldd-step-bar`. `status="current"` marks the step you are on; th
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `status` | `'past' \| 'current' \| 'future'` | How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only |
-| `text` | `string` | Label under the disc |
+| `text` | `string` | Label under the disc. Content in the default slot wins. |
 | `icon` | `string` | Icon in the disc instead of the number or the check mark |
 | `href` | `string` | Makes the step a link (back to a completed step, for instance) |
 | `button` | `boolean` | Makes the step a button, for flows without a URL per step; ignored when `href` is set |
@@ -3784,7 +3810,7 @@ One step in an `nldd-step-bar`. `status="current"` marks the step you are on; th
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Label (an alternative to `text`) |
+| _(default)_ | Label. Wins over `text`. |
 
 ## lists-and-tables
 
@@ -3863,6 +3889,7 @@ A cell component for displaying icons in lists with configurable alignment and s
 
 - `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
 - `row-link-needs-chevron` (hint): End the row with an nldd-icon-cell with icon="chevron-right", which says there is more behind it without the word "openen".
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 
 **Attributes**
 
@@ -3871,7 +3898,7 @@ A cell component for displaying icons in lists with configurable alignment and s
 | `size` | `string` | Size: '16' \| '20' \| '24' \| '32' (default: '24') |
 | `color` | `'content' \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'` | Color variant of the icon (default: 'content') |
 | `vertical-alignment` | `string` | Vertical alignment: 'top' \| 'center' \| 'bottom' (default: 'center') |
-| `icon` | `string` | Icon name (renders `<nldd-icon>`). Takes precedence over the default slot. |
+| `icon` | `string` | Icon name (renders `<nldd-icon>`). Content in the default slot wins. |
 | `disclosure` | `boolean` | Marks this icon as the chevron of a row or segment that opens and closes: the row turns it with `expanded`. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |
@@ -3880,7 +3907,7 @@ A cell component for displaying icons in lists with configurable alignment and s
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Fallback for custom icon content when `icon` is not set. |
+| _(default)_ | Custom icon content, for iconography outside the icon set. Wins over `icon`. |
 
 ### `<nldd-list>`
 
@@ -4155,6 +4182,7 @@ A cell component for displaying text content in lists with configurable alignmen
 
 - `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
 - `navigation-no-vague-label` (hint): Name the subject or the goal instead, such as "Ondersteuning" for "Service", so nobody has to guess what is behind it.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 
 **Attributes**
 
@@ -4168,7 +4196,7 @@ A cell component for displaying text content in lists with configurable alignmen
 | `min-height` | `string` | Minimum height as CSS length (e.g. '44px', '3rem') |
 | `horizontal-alignment` | `string` | Horizontal alignment: 'left' \| 'center' \| 'right' (default: 'left') |
 | `vertical-alignment` | `string` | Vertical alignment: 'top' \| 'center' \| 'bottom' (default: 'center') |
-| `text` | `string` | Main text content. Supports **bold** syntax for inline bold segments. Falls back to default slot. |
+| `text` | `string` | Main text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins. |
 | `supporting-text` | `string` | Optional supporting text displayed below the main content. Supports **bold**. Falls back to `supporting-text` slot. |
 | `overline` | `string` | Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot. |
 | `query` | `string` | Query substring to bold-highlight across text fields. Empty = no marking. |
@@ -4182,7 +4210,7 @@ A cell component for displaying text content in lists with configurable alignmen
 | Slot | Description |
 | --- | --- |
 | `overline` | Rich content for the overline region. Overrides the `overline` attribute when content is assigned. |
-| _(default)_ | (default) Rich content for the main text region. Overrides the `text` attribute when content is assigned. |
+| _(default)_ | (default) Rich content for the main text region. Wins over `text`. |
 | `supporting-text` | Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned. |
 
 ### `<nldd-title-cell>`
@@ -4192,6 +4220,7 @@ A cell component for displaying a title with optional overline and supporting te
 **Rules** (`nldd lint`)
 
 - `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
+- `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 
 **Attributes**
 
@@ -4205,7 +4234,7 @@ A cell component for displaying a title with optional overline and supporting te
 | `min-height` | `string` | Minimum height as CSS length (e.g. '44px', '3rem') |
 | `horizontal-alignment` | `'left' \| 'center' \| 'right'` | Horizontal alignment (default: 'left') |
 | `vertical-alignment` | `'top' \| 'center' \| 'bottom'` | Vertical alignment (default: 'center') |
-| `text` | `string` | Title text content. Supports **bold** syntax for inline bold segments. Falls back to default slot. |
+| `text` | `string` | Title text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins. |
 | `supporting-text` | `string` | Optional supporting text displayed below the title. Supports **bold**. Falls back to `supporting-text` slot. |
 | `overline` | `string` | Optional overline text displayed above the title. Supports **bold**. Falls back to `overline` slot. |
 | `heading-level` | `number` | Heading level for the title element: 1–6 (default: none, renders a <p>) |
@@ -4220,7 +4249,7 @@ A cell component for displaying a title with optional overline and supporting te
 | Slot | Description |
 | --- | --- |
 | `overline` | Rich content for the overline region. Overrides the `overline` attribute when content is assigned. |
-| _(default)_ | (default) Rich content for the title. Overrides the `text` attribute when content is assigned. |
+| _(default)_ | (default) Rich content for the title. Wins over `text`. |
 | `supporting-text` | Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned. |
 
 ## Iconen

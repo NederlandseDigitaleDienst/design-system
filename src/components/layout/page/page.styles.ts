@@ -238,8 +238,9 @@ export const pageStyles = css`
 		opacity: 0;
 	}
 
-	/* Root-scroll mode: footer sticks to the document bottom, above any bottom bars. */
+	/* Root-scroll mode: the footer sits inside .page__scroll, where the inset
+	   already holds its own height. */
 	:host([data-scroll="root"][sticky-footer]) .page__footer {
-		bottom: var(--context-inset-bottom, 0px);
+		bottom: var(--_page-outer-inset-bottom);
 	}
 `;

@@ -52,6 +52,7 @@ import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 import { setState } from '../../../utilities/element-state.js';
+import { FocusReturn } from '../../../utilities/return-focus.js';
 
 type Placement = 'left' | 'right' | 'bottom';
 
@@ -79,7 +80,7 @@ export class NLDDSheet extends LitElement {
 	 * length/percentage sets a specific size. Clamped to `100dvh - top-
 	 * inset` via `max-height` so the dismiss-tap area always remains.
 	 */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	height = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<Placement>('right') })
@@ -173,6 +174,7 @@ export class NLDDSheet extends LitElement {
 			this._closing = false;
 			dialog.classList.remove('is-closing');
 		} else {
+			this._focusReturn.remember();
 			dialog.showModal();
 		}
 		this.open = true;
@@ -271,11 +273,15 @@ export class NLDDSheet extends LitElement {
 	 */
 	private _closeEmitted = false;
 
+	private _focusReturn = new FocusReturn();
+
 	private _emitClose(): void {
 		this.open = false;
 		if (this._closeEmitted) return;
 		this._closeEmitted = true;
 		this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
+		// After the event, so focus a close handler moves elsewhere stays there.
+		this._focusReturn.restore(this);
 	}
 
 	_handleDialogClose(e: Event): void {

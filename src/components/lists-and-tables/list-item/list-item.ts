@@ -783,14 +783,6 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/**
-	 * Measures the divider markers and writes the result as `--_list-item-divider-inset-
-	 * start/-end` on the host. No markers → the vars are cleared and CSS falls
-	 * back to the content width. Union semantics: the divider runs from the
-	 * FIRST `divider-start` to the LAST `divider-end`; a side without markers
-	 * keeps its default. Insets are measured against the row block (the widened
-	 * box on interactive rows), so the values compose with the edge geometry.
-	 */
-	/**
 	 * The cell the divider starts at when nobody said otherwise: the row's first
 	 * text or title cell. The line lands on the words rather than on whatever
 	 * leads up to them — an icon, an avatar, a checkbox, or the spacers a tree
@@ -811,11 +803,25 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		return this._ownDescendants('nldd-text-cell, nldd-title-cell');
 	}
 
-	private _measureDividerMarkers(): void {
+	/**
+	 * Measures the divider markers and writes the result as `--_list-item-divider-inset-
+	 * start/-end` on the host. No markers → the vars are cleared and CSS falls
+	 * back to the content width. Union semantics: the divider runs from the
+	 * FIRST `divider-start` to the LAST `divider-end`; a side without markers
+	 * keeps its default. Insets are measured against the row block (the widened
+	 * box on interactive rows), so the values compose with the edge geometry.
+	 * A list with `dividers="never"` draws no line, so its rows measure nothing.
+	 *
+	 * @internal Also called by the list when its `dividers` changes.
+	 */
+	_measureDividerMarkers(): void {
 		if (this.hasAttribute('data-nldd-clone')) return;
-		const explicitStarts = this._ownDescendants('[divider-start]');
-		const starts = explicitStarts.length ? explicitStarts : this._implicitDividerStart();
-		const ends = this._ownDescendants('[divider-end]');
+		// No markers means no observer and no inline vars, the same as a row
+		// without cells.
+		const drawsDivider = this._parentList?.getAttribute('dividers') !== 'never';
+		const explicitStarts = drawsDivider ? this._ownDescendants('[divider-start]') : [];
+		const starts = !drawsDivider ? [] : explicitStarts.length ? explicitStarts : this._implicitDividerStart();
+		const ends = drawsDivider ? this._ownDescendants('[divider-end]') : [];
 
 		// Re-target the resize observer ONLY when the marker set changed: every
 		// observe() fires an initial notification, so retargeting on each

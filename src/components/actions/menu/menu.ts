@@ -13,10 +13,11 @@ import '../../content/icon/icon.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { isKeyboardMode, isTouchMode } from '../../../utilities/input-modality.js';
+import { FocusReturn } from '../../../utilities/return-focus.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { NLDDMenuItem } from './menu-item.js';
-import { MenuPointerController } from './menu.pointer.js';
+import { MenuPointerController, menuElementFromPoint } from './menu.pointer.js';
 import { SubmenuLevel } from './menu.chain.js';
 import { SafeTriangleController, rectContainsPoint, type Point } from './menu.safe-triangle.js';
 import { NLDDMenuGroup } from './menu-group.js';
@@ -57,6 +58,12 @@ function nameOfAnchor(anchor: Element): string {
 
 /** How long the options have to stay the same before their number is said. */
 const ANNOUNCE_RESULTS_DELAY_MS = 500;
+/** A submenu opens when the pointer has not moved over its item for this long. */
+const HOVER_REST_MS = 40;
+/** Or when it moves slower than this, about 100 pixels a second. */
+const HOVER_SLOW_PX_PER_MS = 0.1;
+/** Or, at the latest, when it has stayed on the item this long. */
+const HOVER_OPEN_MAX_MS = 150;
 
 /**
  * A floating menu component using the Popover API.
@@ -101,10 +108,10 @@ export class NLDDMenu extends LitElement {
 	 * Leave unset to let the menu size to its content between a minimum and a
 	 * viewport-aware maximum of min(100vw - inset, 640px).
 	 */
-	@property({ type: String, reflect: true })
+	@property({ type: String })
 	width = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	anchor = '';
 
 	/**
@@ -223,6 +230,8 @@ export class NLDDMenu extends LitElement {
 	_parentItem: NLDDMenuItem | null = null;
 
 	private _isOpen = false;
+
+	private _focusReturn = new FocusReturn();
 	/** Tracked so the pointerdown re-sync moves along when the anchor changes. */
 	private _previousAnchorForResync: Element | null = null;
 	/** Set on the root when a pointer gesture (outside/anchor pointerdown
@@ -533,7 +542,12 @@ export class NLDDMenu extends LitElement {
 	// See menu.safe-triangle.ts for the wedge that keeps a submenu open on a
 	// diagonal route to it.
 
+	/** The item whose submenu opens once the pointer comes to rest on it. */
+	private _hoverOpenItem: NLDDMenuItem | null = null;
 	private _hoverOpenTimer: number | null = null;
+	/** When the submenu opens however the pointer keeps moving. */
+	private _hoverOpenDeadline = 0;
+	private _lastHoverMove: { x: number; y: number; t: number } | null = null;
 
 	/** @internal */
 	readonly _safeTriangle = new SafeTriangleController(this);
@@ -571,7 +585,7 @@ export class NLDDMenu extends LitElement {
 
 	/**
 	 * Item-activation logic shared between the native `mouseenter` capture
-	 * handler and the safe-triangle recovery paths (sideways exit, direction
+	 * handler and the safe triangle's `releaseAt` (sideways exit, direction
 	 * reversal, stall dismissal). Those paths know which item is under the
 	 * cursor — they don't need to synthesize a MouseEvent just to re-enter
 	 * the handler. Factoring out the body keeps the entry contracts honest:
@@ -607,50 +621,103 @@ export class NLDDMenu extends LitElement {
 
 		// Always cancel any pending hover-open from a previous item — moving
 		// the cursor onto a peer (with or without submenu) means the previous
-		// item's submenu should not open after its delay. Then schedule a new
-		// one only when the new item itself has a submenu.
+		// item's submenu should not open. Then wait for the pointer to come to
+		// rest on the new item, if it has a submenu.
 		this._cancelHoverOpen();
-		if (item._hasSubmenu && this._activeSubmenuOpener !== item) {
-			this._hoverOpenTimer = window.setTimeout(() => {
-				this._hoverOpenTimer = null;
-				item._handleClick();
-			}, 150);
-		}
+		if (item._hasSubmenu && this._activeSubmenuOpener !== item) this._scheduleHoverOpen(item);
 	}
 
-	/** @internal Resolve the menu-item under a viewport point and activate it
-	 * via `_activateItem`. Used by the safe triangle, whose natural mouseenter
-	 * has already fired (and bailed): it re-triggers activation without
-	 * synthesizing a MouseEvent. */
-	activateItemAt(p: Point): void {
-		const el = document.elementFromPoint(p.x, p.y);
+	/** @internal For the safe triangle: the cursor has turned away from the
+	 * submenu, or stalled, at `p`. An item of this menu there takes over, as its
+	 * mouseenter would have while the cursor was protected. Anything else in or
+	 * out of this menu (a divider, the padding, the page) leaves the items. A
+	 * point in another menu is that menu's to handle: a menu is an auto
+	 * popover, so the only other one open is a submenu in this chain. */
+	releaseAt(p: Point): void {
+		const el = menuElementFromPoint(p.x, p.y);
+		const menu = el?.closest('nldd-menu');
+		if (menu && menu !== this) return;
 		const item = el?.closest('nldd-menu-item') as NLDDMenuItem | null;
 		if (item) this._activateItem(item);
+		else this._leaveItems();
+	}
+
+	/** The pointer is over none of this menu's items: nothing stays open or
+	 *  highlighted for an item it has left. */
+	private _leaveItems(): void {
+		this._cancelHoverOpen();
+		(this._activeSubmenu as HTMLElement | null)?.hidePopover?.();
+		if (this.variant !== 'listbox') this._clearHighlight();
 	}
 
 	/** Padding, dividers, header and footer are still inside the menu, so
-	 * mouseleave doesn't fire there: drop the highlight once the pointer is over
-	 * none of the items. */
+	 * mouseleave doesn't fire there: once the pointer is over none of the items,
+	 * drop the highlight, the pending hover-open and the open submenu. */
 	private _handleMouseover = (event: MouseEvent): void => {
 		if (isTouchMode() || this.variant === 'listbox') return;
-		if (this._activeSubmenu || this._safeTriangle.movingToward) return;
 		if (event.composedPath().some((node) => node instanceof Element && node.localName === 'nldd-menu-item')) return;
-		this._clearHighlight();
+		// On its way to the open submenu, the pointer may cross padding; the
+		// safe triangle decides when it has turned away (releaseAt).
+		if (this._safeTriangle.movingToward) return;
+		this._leaveItems();
 	};
 
 	private _handleMouseleave = (): void => {
 		if (this.variant !== 'listbox') this._clearHighlight();
 		this._cancelHoverOpen();
-		// No auto-close on hover-out: leaving the menu rect leaves the chain
-		// open. Click-outside (popover light-dismiss) is the only gesture
-		// that collapses the chain.
+		// The submenu does not close here: the cursor may be on its way to it.
+		// The safe triangle knows, and closes it through releaseAt once the
+		// cursor has turned away.
 	};
 
-	private _cancelHoverOpen(): void {
-		if (this._hoverOpenTimer !== null) {
-			clearTimeout(this._hoverOpenTimer);
-			this._hoverOpenTimer = null;
+	/**
+	 * Opens the item's submenu once the pointer comes to rest on it: it stops
+	 * ({@link HOVER_REST_MS} without a move), slows below
+	 * {@link HOVER_SLOW_PX_PER_MS}, or has stayed on the item for
+	 * {@link HOVER_OPEN_MAX_MS}. A pointer passing over the menu on its way
+	 * somewhere does none of that, so it opens nothing.
+	 */
+	private _scheduleHoverOpen(item: NLDDMenuItem): void {
+		this._hoverOpenItem = item;
+		this._hoverOpenDeadline = performance.now() + HOVER_OPEN_MAX_MS;
+		this._waitForRest();
+	}
+
+	/** (Re)starts the wait for the pointer to rest, never past the deadline. */
+	private _waitForRest(): void {
+		if (this._hoverOpenTimer !== null) clearTimeout(this._hoverOpenTimer);
+		const wait = Math.min(HOVER_REST_MS, this._hoverOpenDeadline - performance.now());
+		this._hoverOpenTimer = window.setTimeout(() => this._openHoverItem(), Math.max(0, wait));
+	}
+
+	private _handleHoverMove = (event: MouseEvent): void => {
+		const item = this._hoverOpenItem;
+		if (!item || !event.composedPath().includes(item)) return;
+		const last = this._lastHoverMove;
+		this._lastHoverMove = { x: event.clientX, y: event.clientY, t: event.timeStamp };
+		if (last) {
+			const elapsed = event.timeStamp - last.t;
+			const distance = Math.hypot(event.clientX - last.x, event.clientY - last.y);
+			// A move of 0 px, as a repeated event can be, is no slowing down: it waits for rest.
+			if (elapsed > 0 && distance > 0 && distance / elapsed < HOVER_SLOW_PX_PER_MS) {
+				this._openHoverItem();
+				return;
+			}
 		}
+		this._waitForRest();
+	};
+
+	private _openHoverItem(): void {
+		const item = this._hoverOpenItem;
+		this._cancelHoverOpen();
+		item?._handleClick();
+	}
+
+	private _cancelHoverOpen(): void {
+		if (this._hoverOpenTimer !== null) clearTimeout(this._hoverOpenTimer);
+		this._hoverOpenTimer = null;
+		this._hoverOpenItem = null;
+		this._lastHoverMove = null;
 	}
 
 	private _handleMenuItemFocused = (event: Event): void => {
@@ -896,6 +963,7 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('focusout', this._handleFocusOut);
 		this.addEventListener('mouseenter', this._handleMenuItemMouseenter, true);
 		this.addEventListener('mouseover', this._handleMouseover);
+		this.addEventListener('mousemove', this._handleHoverMove);
 		this.addEventListener('mouseleave', this._handleMouseleave);
 		this.addEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.addEventListener('submenu-open', this._handleSubmenuOpen);
@@ -947,6 +1015,7 @@ export class NLDDMenu extends LitElement {
 		this._tabbing = false;
 		this.removeEventListener('mouseenter', this._handleMenuItemMouseenter, true);
 		this.removeEventListener('mouseover', this._handleMouseover);
+		this.removeEventListener('mousemove', this._handleHoverMove);
 		this.removeEventListener('mouseleave', this._handleMouseleave);
 		this.removeEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.removeEventListener('submenu-open', this._handleSubmenuOpen);
@@ -1535,7 +1604,11 @@ export class NLDDMenu extends LitElement {
 	};
 
 	private _handleBeforeToggle = (event: Event): void => {
-		if ((event as ToggleEvent).newState === 'open') this.removeAttribute('positioned');
+		if ((event as ToggleEvent).newState !== 'open') return;
+		this.removeAttribute('positioned');
+		// A listbox leaves focus on its control, and a submenu hands it to its
+		// parent item, so only a root menu that takes focus gives it back.
+		if (this.variant !== 'listbox' && !this._isSubmenu) this._focusReturn.remember(this._getAnchorEl());
 	};
 
 	private _handleToggle = async (event: Event): Promise<void> => {
@@ -1561,6 +1634,7 @@ export class NLDDMenu extends LitElement {
 			document.removeEventListener('pointerdown', this._handleDocumentPointerdown, true);
 			this._pointer.stopOutsideTap();
 			this._clearHighlight();
+			this._focusReturn.restore(this);
 			return;
 		}
 

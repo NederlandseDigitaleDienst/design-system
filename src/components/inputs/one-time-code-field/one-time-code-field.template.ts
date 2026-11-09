@@ -30,8 +30,8 @@ function renderBoxes(component: NLDDOneTimeCodeField): TemplateResult[] {
  *  with the boxes; any other character stays text. */
 function renderSeparator(part: string): TemplateResult {
 	const mark = part.trim();
-	if (mark === '') return html`<span class="one-time-code-field__separator is-space"></span>`;
-	if (mark === '-' || mark === '–') return html`<span class="one-time-code-field__separator is-dash"></span>`;
+	if (mark === '') return html`<span class="one-time-code-field__separator one-time-code-field__separator--space"></span>`;
+	if (mark === '-' || mark === '–') return html`<span class="one-time-code-field__separator one-time-code-field__separator--dash"></span>`;
 	// Inline on purpose: the separator keeps its white space, so a line break here would show.
 	return html`<span class="one-time-code-field__separator">${part}</span>`;
 }

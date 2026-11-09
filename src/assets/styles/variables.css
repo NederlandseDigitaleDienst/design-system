@@ -1546,6 +1546,12 @@
 	--semantics-buttons-inherit-filled-highlight-border-color: currentColor;
 	--semantics-buttons-inherit-filled-divider-color: color-mix(in oklab, var(--semantics-content-contrast-color) 25%, transparent);
 
+	/* ## Button groups */
+
+	--semantics-button-groups-xs-gap: var(--primitives-space-4);
+	--semantics-button-groups-sm-gap: var(--primitives-space-6);
+	--semantics-button-groups-md-gap: var(--primitives-space-8);
+
 	/* ## Input fields */
 
 	--semantics-input-fields-border-width: var(--primitives-border-width-regular);

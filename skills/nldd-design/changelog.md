@@ -20,9 +20,47 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-design-migrate` and `nldd-design-build` make a pure app the goal:** no stylesheet of your own, no `class` or `style`, no `div` or `span` that styles anything. A migration is done when the purity check passes with an empty baseline, and that check is the first one to build. A workaround for what the system cannot do yet carries its issue link, the version and why, in the code and not in the baseline. The token bridge from Tailwind is scaffolding, and the small CSS file the Tailwind page used to allow is gone.
 - **`nldd-design-migrate` has a page for React apps, `from-react.md`,** with the events React does not see. In React 18 `disabled={busy}` always disables, because `false` reaches the component as the text `"false"`; the skill shows JSX types that only allow `true` or nothing. The `useNlddEvent` and `useNlddValue` helpers it recommends bind again after every render.
 - **New sections in `nldd-design-migrate`:** import per subpath and never next to the main entry, global CSS that carries behavior, an `nldd-container` that measures zero wide in a parent sized by its content, a separate round on visual hierarchy, and testing without a backend.
-- **Known limitations in `nldd-design-migrate`,** starting with the `nldd-page sticky-footer` offset in 0.18.0 and 0.19.0 (#366).
 - **A design guideline: no frame around a list, an empty state or a single number.**
 - **`nldd-design-build` says how to force light or dark:** `data-scheme` on `<html>`, not `color-scheme` in your own CSS.
+
+## [0.20.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.19.0...v0.20.0) (2026-11-09)
+
+### Highlights
+
+- **What you put in a slot now wins over the attribute for the same content, in every component.** See Breaking.
+- **3 accessibility fixes.** A tab can now point at the content it shows, a framework can no longer leave two items of the top navigation current, and in Safari focus goes back to the button that opened a popover or menu instead of to the page. See Added and Fixed.
+
+### Breaking
+
+- **Content in a slot wins over the attribute for the same content.** Where a component takes both, such as `icon` and `slot="icon"`, or `text` and the default slot, the slot now shows and the attribute is what shows while the slot is empty. Before, the attribute won in `nldd-button`, `nldd-icon-button`, `nldd-toggle-button`, `nldd-segmented-control-item`, `nldd-tag`, `nldd-link`, `nldd-tab-bar-item`, `nldd-icon-cell`, `nldd-token`, `nldd-breadcrumbs-item`, `nldd-page-footer-legal-bar-item` and `nldd-step-bar-item`. Only markup that sets both notices; the new lint rule `slot-attribute-no-effect` finds it. Whitespace between the tags does not count as content.
+- **Components no longer write an attribute that only repeats the default,** such as `type="button"` on `nldd-button`, `size="16"` on `nldd-spacer`, `background="inherit"` on `nldd-page` or an empty `href=""` on `nldd-card`. The property still holds the value, so only code that selects on the attribute notices: read the property instead. `value` on `nldd-progress-bar` and `nldd-progress-circle` keeps its attribute.
+- **`nldd-button-group` and `nldd-button-bar` no longer write their defaults onto their buttons,** such as `size="md"` or `appearance="neutral-tinted"`. Another size or appearance is still written.
+- **`nldd-menu` no longer reflects `width`,** also not a width you set yourself. The width still applies. If you selected on `nldd-menu[width]`, use a class of your own instead.
+
+### Added
+
+- **`controls` and `controlsElement` on `nldd-tab-bar-item`,** to point a tab at the content it shows. The tab announces it as the content it controls (`aria-controls`), which an `aria-controls` on the item could not do, since it never reached the tab inside. Give that content `role="tabpanel"` and an `aria-labelledby` with the id of the item.
+- **An `icon` slot on `nldd-menu-item`,** for an icon outside the icon set, such as an `<img>`.
+- **The lint rule `slot-attribute-no-effect`,** which warns when an attribute and the slot for the same content are both set.
+- **`--semantics-button-groups-{xs,sm,md}-gap`,** the space between the buttons in `nldd-button-group` and `nldd-toggle-button-group`. Both groups read it, with the same values as before.
+
+### Changed
+
+- **The menu sheet of `nldd-top-navigation-bar` shows the full title of each level above its rows,** "Menu" included, and its title bar takes the title over once you scroll past it. A long title was cut off in the bar on a phone.
+- **A page section paints its `background` from its own styles,** instead of an inline `style` on the element.
+- **`nldd-menu` opens a submenu once the pointer comes to rest on its item,** when it stops or slows down, instead of after a fixed 150ms. A pointer passing over the menu still opens nothing, and 150ms remains the longest it waits.
+- **A press beside the boxes of `nldd-one-time-code-field` no longer focuses it,** also on either side when it is `centered`. The boxes and the gaps between them still do, and so does its label.
+- **The rows of an `nldd-list` with `dividers="never"` measure nothing,** so they carry no `--_list-item-divider-inset-*` and keep no resize observer.
+
+### Fixed
+
+- **An open submenu of `nldd-menu` closes when the pointer turns away from it,** onto a divider, header, footer, the padding of the menu or out of the menu, instead of staying open with no item under the cursor. On its way to the submenu the pointer is still protected.
+- **`nldd-top-navigation-bar` also clears `current` on an item a framework made current as a property,** so two items can no longer be current at once.
+- **A tab with an icon in its `icon` slot keeps that icon in the "Meer tabs" menu of `nldd-tab-bar`,** where only an icon from the `icon` attribute went along.
+- **`nldd-popover`, `nldd-menu`, `nldd-sheet` and `nldd-window` return focus without a focus ring after a tap or click.** Safari drew a ring around the element that had focus before the overlay opened, also when you only used a finger or mouse. With the keyboard the ring stays. A popover or menu opened from a button that Safari gave no focus now returns focus to that button instead of the page, so Tab goes on from there.
+- **The footer of `nldd-page sticky-footer` sticks to the bottom of the screen where the document scrolls,** on every phone and in an app without a split view. It stood its own height above the bottom.
+- **An image in `nldd-card href` or `nldd-card button` no longer takes the hover and the click of the card.** Over an `nldd-image`, or other content that is only `position: relative`, the card did not change shade and a click did not follow the link. Content you lift with `position: relative; z-index: 1` stays above the card, as before.
+- **A badge, avatar group or other ring inside a hovered, pressed, selected, current or highlighted row of `nldd-list-item` or `nldd-list-item-segment` takes the fill of the row,** instead of a ring in the color of the surface around the list. The rows under a selected row keep the surface.
 
 ## [0.19.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.18.0...v0.19.0) (2026-11-08)
 

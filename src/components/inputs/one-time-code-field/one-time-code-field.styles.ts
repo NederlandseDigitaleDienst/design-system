@@ -30,6 +30,7 @@ export const oneTimeCodeFieldStyles = css`
 		display: block;
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;
+		pointer-events: none;
 	}
 
 	:host([hidden]) {
@@ -77,6 +78,7 @@ export const oneTimeCodeFieldStyles = css`
 		position: relative;
 		width: fit-content;
 		max-width: 100%;
+		pointer-events: auto;
 	}
 
 	:host([centered]) .one-time-code-field {
@@ -165,12 +167,12 @@ export const oneTimeCodeFieldStyles = css`
 		white-space: pre;
 	}
 
-	.one-time-code-field__separator.is-space {
+	.one-time-code-field__separator--space {
 		width: var(--_one-time-code-field-space-width);
 		flex-shrink: 0;
 	}
 
-	.one-time-code-field__separator.is-dash {
+	.one-time-code-field__separator--dash {
 		border-radius: calc(var(--_one-time-code-field-dash-height) / 2);
 		background-color: currentColor;
 		width: var(--_one-time-code-field-dash-width);

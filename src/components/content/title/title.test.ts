@@ -16,10 +16,11 @@ describe('nldd-title', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('defaults to size 3', async () => {
+	it('defaults to size 3, without writing the default to the DOM', async () => {
 		el = await fixture('<nldd-title></nldd-title>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('size')).toBe('3');
+		expect((el as unknown as { size: number }).size).toBe(3);
+		expect(el.hasAttribute('size')).toBe(false);
 	});
 
 	it('reflects size attribute', async () => {

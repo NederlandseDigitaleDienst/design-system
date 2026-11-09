@@ -43,10 +43,10 @@ export class NLDDInlineDialog extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<InlineDialogSize>('md') })
 	size: InlineDialogSize = 'md';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
-	@property({ type: String, reflect: true, attribute: 'icon-color' })
+	@property({ reflect: true, attribute: 'icon-color', converter: reflectNonDefault<InlineDialogIconColor | ''>('') })
 	iconColor: InlineDialogIconColor | '' = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

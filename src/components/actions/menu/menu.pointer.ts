@@ -27,6 +27,23 @@ export function menuItemFromPoint(x: number, y: number): NLDDMenuItem | null {
 	return null;
 }
 
+/**
+ * The element under a point, in the tree of the menu it lies in. Like
+ * `menuItemFromPoint` it descends shadow roots, but only until it reaches a
+ * menu, so an item still resolves to the item and not to the inside of it.
+ * Null where the point is on nothing.
+ */
+export function menuElementFromPoint(x: number, y: number): Element | null {
+	let root: Document | ShadowRoot = document;
+	const MAX_PIERCE_DEPTH = 20;
+	for (let depth = 0; depth < MAX_PIERCE_DEPTH; depth++) {
+		const el: Element | null = root.elementFromPoint(x, y);
+		if (!el || el.closest('nldd-menu') || !el.shadowRoot) return el;
+		root = el.shadowRoot;
+	}
+	return null;
+}
+
 /** What the gestures need from their menu. */
 export interface MenuPointerHost extends ReactiveControllerHost, HTMLElement {
 	/** Whether the menu is open now. */

@@ -81,7 +81,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	@property({ type: Number })
 	step = 1;
 
-	@property({ type: Number, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<number>(7) })
 	rows = 7;
 
 	@property({ reflect: true, converter: reflectNonDefault('') })

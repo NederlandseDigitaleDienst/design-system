@@ -8,7 +8,7 @@ export const buttonGroupStyles = css`
 	:host {
 		--_button-group-flex-direction: column;
 		--_button-group-flex-wrap: nowrap;
-		--_button-group-gap: var(--primitives-space-8);
+		--_button-group-gap: var(--semantics-button-groups-md-gap);
 
 		box-sizing: border-box;
 		display: flex;
@@ -24,7 +24,7 @@ export const buttonGroupStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_button-group-gap: var(--primitives-space-6);
+		--_button-group-gap: var(--semantics-button-groups-sm-gap);
 	}
 
 	:host([hidden]) {

@@ -73,10 +73,8 @@ export function pageFooterLegalBarTemplate(component: NLDDPageFooterLegalBar): T
 }
 
 export function pageFooterLegalBarItemTemplate(component: NLDDPageFooterLegalBarItem): TemplateResult {
-	// `text=""` (empty string) intentionally falls through to the slot —
-	// Lit normalizes the absent-attribute case to '', so a single falsy
-	// check covers both "no text attr" and "explicit empty text".
-	const label = component.text || html`<slot></slot>`;
+	// What is in the slot wins; `text` shows while it is empty.
+	const label = html`${component._textSlot.has ? nothing : component.text}<slot @slotchange=${component._textSlot.onChange}></slot>`;
 	if (component.href) {
 		return html`
 			<span class="page-footer__legal-bar-item">

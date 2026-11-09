@@ -28,11 +28,11 @@ describe('nldd-icon-cell', () => {
 		expect(el.getAttribute('vertical-alignment')).toBe('top');
 	});
 
-	it('defaults to size 24 and reflects it', async () => {
+	it('defaults to size 24, without writing the default to the DOM', async () => {
 		el = await fixture('<nldd-icon-cell></nldd-icon-cell>');
 		await waitForUpdate(el);
 		expect((el as unknown as { size: string }).size).toBe('24');
-		expect(el.getAttribute('size')).toBe('24');
+		expect(el.hasAttribute('size')).toBe(false);
 	});
 
 	it('reflects size attribute', async () => {
@@ -61,4 +61,18 @@ describe('nldd-icon-cell', () => {
 		expect(el.shadowRoot!.querySelector('slot')).not.toBeNull();
 	});
 
+
+	it('laat inhoud in het slot winnen van icon', async () => {
+		el = await fixture('<nldd-icon-cell icon="star"><img alt=""></nldd-icon-cell>');
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('nldd-icon')).toBeNull();
+	});
+
+	it('toont icon als het slot alleen witruimte heeft', async () => {
+		el = await fixture(`<nldd-icon-cell icon="star">
+		</nldd-icon-cell>`);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('nldd-icon')?.getAttribute('icon')).toBe('star');
+	});
 });

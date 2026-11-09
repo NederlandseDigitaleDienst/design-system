@@ -58,8 +58,12 @@ export class TopNavigationMenuSheet {
 	list: HTMLElement | null = null;
 	/** @internal Exposed for tests. */
 	titleBar: HTMLElement | null = null;
+	/** @internal Exposed for tests. The full title of the level, which the
+	 *  title bar takes over once it scrolls away. */
+	title: HTMLElement | null = null;
 
 	private _sheet: Sheet | null = null;
+	private _page: HTMLElement | null = null;
 	/** The last entry is the visible level. Reset to the root on every open,
 	 *  so a reopened sheet starts at the top wherever you drilled to before. */
 	private _stack: SheetLevel[] = [];
@@ -112,6 +116,8 @@ export class TopNavigationMenuSheet {
 		this._sheet = null;
 		this.list = null;
 		this.titleBar = null;
+		this.title = null;
+		this._page = null;
 		this._stack = [];
 	}
 
@@ -132,7 +138,17 @@ export class TopNavigationMenuSheet {
 		this.titleBar = titleBar;
 		page.appendChild(titleBar);
 
+		// The bar cuts its title off where it does not fit, so the full title of
+		// the level stands above the rows and the bar takes it over on scroll.
+		const title = document.createElement('nldd-title');
+		title.id = `nldd-menu-sheet-title-${++sheetCount}`;
+		title.setAttribute('slot', 'header');
+		title.setAttribute('size', '2');
+		titleBar.setAttribute('collapse-anchor', title.id);
+		this.title = title;
+
 		const section = document.createElement('nldd-simple-section');
+		section.appendChild(title);
 		const list = document.createElement('nldd-list');
 		// A navigation list, as the bar it stands in for is a navigation: the
 		// current row then carries aria-current on its link, where `selected`
@@ -144,6 +160,7 @@ export class TopNavigationMenuSheet {
 		section.appendChild(list);
 
 		page.appendChild(section);
+		this._page = page;
 		sheet.appendChild(page);
 		document.body.appendChild(sheet);
 		return sheet;
@@ -162,8 +179,8 @@ export class TopNavigationMenuSheet {
 	 *  rows. With `moveFocus` after a step down or back, focus lands on the row
 	 *  that opened the level going back, else on the first row. */
 	private _render(moveFocus = false, focusOpenerText?: string): void {
-		const { list, titleBar } = this;
-		if (!list || !titleBar || this._stack.length === 0) return;
+		const { list, titleBar, title } = this;
+		if (!list || !titleBar || !title || this._stack.length === 0) return;
 
 		const depth = this._stack.length;
 		const level = this._stack[depth - 1];
@@ -174,6 +191,10 @@ export class TopNavigationMenuSheet {
 			|| this._host._t('components.top-navigation-bar.global-menu-bar-label'));
 
 		titleBar.setAttribute('text', level.title);
+		title.setAttribute('text', level.title);
+		// Every level starts at its title, not where the last one was scrolled to.
+		const scroller = (this._page as { scrollTarget?: HTMLElement } | null)?.scrollTarget;
+		if (scroller && scroller !== document.scrollingElement) scroller.scrollTop = 0;
 		// The back button shows the previous level's title ("Menu").
 		if (depth > 1) titleBar.setAttribute('back-text', this._stack[depth - 2].title);
 		else titleBar.removeAttribute('back-text');
@@ -224,12 +245,16 @@ export class TopNavigationMenuSheet {
 	}
 }
 
+/** Numbers the title of each bar's sheet, so two bars never share an id. */
+let sheetCount = 0;
+
 async function loadDependencies(): Promise<void> {
 	await Promise.all([
 		import('../../layout/sheet/sheet.js'),
 		import('../../layout/page/page.js'),
 		import('../../layout/page-sections/simple-section/simple-section.js'),
 		import('../../navigation/top-title-bar/top-title-bar.js'),
+		import('../../content/title/title.js'),
 		import('../../lists-and-tables/list/list.js'),
 		import('../../lists-and-tables/list-item/list-item.js'),
 		import('../../lists-and-tables/cells/text-cell/text-cell.js'),

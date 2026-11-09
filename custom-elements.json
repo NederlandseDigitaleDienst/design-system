@@ -467,7 +467,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Icon name for the start icon (before text). When not set, the start-icon slot is used.",
+              "description": "Icon name for the start icon (before text). An icon in the start-icon slot wins.",
               "attribute": "start-icon"
             },
             {
@@ -477,7 +477,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Icon name for the end icon (after text). When not set, the end-icon slot is used.",
+              "description": "Icon name for the end icon (after text). An icon in the end-icon slot wins.",
               "attribute": "end-icon"
             },
             {
@@ -953,15 +953,15 @@
           "slots": [
             {
               "name": "text",
-              "description": "Slot for custom button content (e.g. text with inline markup). Used when the text attribute is empty or not set (an empty string counts as \"not set\", since the attribute and the unset property are indistinguishable). Provide accessible-label when the slotted content isn't plain text."
+              "description": "Slot for custom button content (e.g. text with inline markup). Wins over `text`. Provide accessible-label when the slotted content isn't plain text."
             },
             {
               "name": "start-icon",
-              "description": "Slot for a custom start icon (e.g. custom SVG). Only used when start-icon attribute is not set."
+              "description": "Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`."
             },
             {
               "name": "end-icon",
-              "description": "Slot for a custom end icon (e.g. custom SVG). Only used when end-icon attribute is not set."
+              "description": "Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`."
             },
             {
               "name": "popup",
@@ -1187,7 +1187,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Icon name for the nldd-icon element. When not set, the icon slot is used,\nfalling back to a placeholder icon when that slot is also empty.",
+              "description": "Icon name for the nldd-icon element. An icon in the icon slot wins; with\nneither, a placeholder icon shows.",
               "attribute": "icon"
             },
             {
@@ -1609,7 +1609,7 @@
           "slots": [
             {
               "name": "icon",
-              "description": "Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set; falls back to a placeholder icon when the slot is empty."
+              "description": "Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set."
             },
             {
               "name": "popup",
@@ -1769,6 +1769,12 @@
           "kind": "class",
           "description": "A single item within an nldd-menu.",
           "name": "NLDDMenuItem",
+          "slots": [
+            {
+              "name": "icon",
+              "description": "An icon of your own before the text, such as an `<img>`: one that is not in the icon set. Wins over `icon`."
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -2015,7 +2021,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Icon name rendered before the text.",
+              "description": "Icon name rendered before the text. An icon in the `icon` slot takes its place.",
               "name": "icon",
               "default": "''",
               "fieldName": "icon"
@@ -2300,6 +2306,30 @@
           "description": "The menu-item under a point, piercing shadow boundaries.\n`document.elementFromPoint` stops at the outermost shadow host, so a menu\nnested inside another component's shadow DOM (nldd-split-button, say) would\nresolve to that host and never find the item. Descending the shadow roots\nrestores it and is a no-op for light-DOM menus."
         },
         {
+          "kind": "function",
+          "name": "menuElementFromPoint",
+          "return": {
+            "type": {
+              "text": "Element | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "y",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The element under a point, in the tree of the menu it lies in. Like\n`menuItemFromPoint` it descends shadow roots, but only until it reaches a\nmenu, so an item still resolves to the item and not to the inside of it.\nNull where the point is on nothing."
+        },
+        {
           "kind": "class",
           "description": "The pointer gestures of a menu, each with its own coordinates and listeners:\n\n1. **Press, drag and release.** A native `<select>` lets you press on one\n   option, drag to another and release to pick that one. Click events don't\n   fire across two elements, so the release is caught on document and, when\n   it lands on another enabled item, that item is selected. The click on the\n   pressed item still owns a press without a drag.\n2. **No press flash while scrolling.** On touch, pressing an item sets\n   :active and the sticky :hover lands on it, so the press highlight shows.\n   When the gesture turns into a scroll of a cramped menu, :active lingers\n   until the browser recognizes the pan. Past the threshold the host gets\n   `scroll-active`, and the styles drop the press highlight while it is set.\n   A tap never moves that far, so it keeps its brief feedback.\n3. **A tap beside the menu.** An outside touch is also how a page scroll\n   begins, so the menu only hears of it once the finger lifts without\n   having moved past the threshold.",
           "name": "MenuPointerController",
@@ -2433,6 +2463,14 @@
           "name": "menuItemFromPoint",
           "declaration": {
             "name": "menuItemFromPoint",
+            "module": "src/components/actions/menu/menu.pointer.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "menuElementFromPoint",
+          "declaration": {
+            "name": "menuElementFromPoint",
             "module": "src/components/actions/menu/menu.pointer.ts"
           }
         },
@@ -2845,8 +2883,7 @@
               },
               "default": "''",
               "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
-              "attribute": "width",
-              "reflects": true
+              "attribute": "width"
             },
             {
               "kind": "field",
@@ -6869,7 +6906,7 @@
               },
               "default": "''",
               "fieldName": "text",
-              "description": "Tag text (alternative to the default slot)"
+              "description": "Tag text. Content in the default slot wins."
             },
             {
               "name": "icon",
@@ -6899,11 +6936,11 @@
           "slots": [
             {
               "name": "",
-              "description": "Tag text"
+              "description": "Tag text. Wins over `text`."
             },
             {
               "name": "icon",
-              "description": "Custom icon before the text"
+              "description": "Custom icon before the text. Wins over `icon`."
             }
           ]
         }
@@ -7392,7 +7429,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Token text. Falls back to the default slot when unset, so slotted or richer\ncontent keeps working.",
+              "description": "Token text. Content in the default slot wins.",
               "attribute": "text"
             },
             {
@@ -7496,7 +7533,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Token text; falls back to the default slot when unset.",
+              "description": "Token text. Content in the default slot wins.",
               "fieldName": "text"
             },
             {
@@ -7575,7 +7612,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Token text"
+              "description": "Token text. Wins over `text`."
             },
             {
               "name": "menu",
@@ -19075,7 +19112,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Icon name for nldd-icon. When not set, the icon slot is used; the icon and\nicon-and-text variants show a placeholder icon when neither is provided.",
+              "description": "Icon name for nldd-icon. An icon in the icon slot wins; the icon and\nicon-and-text variants show a placeholder icon when neither is provided.",
               "attribute": "icon"
             },
             {
@@ -19302,7 +19339,7 @@
           "slots": [
             {
               "name": "icon",
-              "description": "Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set."
+              "description": "Slot for a custom icon (e.g. custom SVG). Wins over `icon`."
             }
           ]
         },
@@ -28715,7 +28752,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Icon name for the nldd-icon element. When not set, the icon slot is used; the\nicon and icon-and-text variants show a placeholder icon when neither is provided.",
+              "description": "Icon name for the nldd-icon element. An icon in the icon slot wins; the\nicon and icon-and-text variants show a placeholder icon when neither is provided.",
               "attribute": "icon"
             },
             {
@@ -29255,7 +29292,7 @@
           "slots": [
             {
               "name": "icon",
-              "description": "Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set."
+              "description": "Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`."
             }
           ]
         }
@@ -31831,7 +31868,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Item label (alternative to `text`)."
+              "description": "Item label. Wins over `text`."
             }
           ],
           "members": [
@@ -31860,7 +31897,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Item label. Falls back to the default slot.",
+              "description": "Item label. Content in the default slot wins.",
               "name": "text",
               "default": "''",
               "fieldName": "text"
@@ -38751,7 +38788,7 @@
               },
               "default": "''",
               "fieldName": "icon",
-              "description": "Icon name (renders `<nldd-icon>`). Takes precedence over the default slot."
+              "description": "Icon name (renders `<nldd-icon>`). Content in the default slot wins."
             },
             {
               "name": "hide-below",
@@ -38798,7 +38835,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Fallback for custom icon content when `icon` is not set."
+              "description": "Custom icon content, for iconography outside the icon set. Wins over `icon`."
             }
           ]
         }
@@ -39523,7 +39560,7 @@
               },
               "default": "''",
               "fieldName": "text",
-              "description": "Main text content. Supports **bold** syntax for inline bold segments. Falls back to default slot."
+              "description": "Main text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins."
             },
             {
               "name": "supporting-text",
@@ -39622,7 +39659,7 @@
             },
             {
               "name": "",
-              "description": "(default) Rich content for the main text region. Overrides the `text` attribute when content is assigned."
+              "description": "(default) Rich content for the main text region. Wins over `text`."
             },
             {
               "name": "supporting-text",
@@ -39924,7 +39961,7 @@
               },
               "default": "''",
               "fieldName": "text",
-              "description": "Title text content. Supports **bold** syntax for inline bold segments. Falls back to default slot."
+              "description": "Title text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins."
             },
             {
               "name": "supporting-text",
@@ -40032,7 +40069,7 @@
             },
             {
               "name": "",
-              "description": "(default) Rich content for the title. Overrides the `text` attribute when content is assigned."
+              "description": "(default) Rich content for the title. Wins over `text`."
             },
             {
               "name": "supporting-text",
@@ -41460,7 +41497,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Item label (alternative to `text`)."
+              "description": "Item label. Wins over `text`."
             }
           ],
           "members": [
@@ -41516,7 +41553,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Item label. Falls back to the default slot.",
+              "description": "Item label. Content in the default slot wins.",
               "name": "text",
               "default": "''",
               "fieldName": "text"
@@ -42244,7 +42281,7 @@
               },
               "default": "''",
               "fieldName": "text",
-              "description": "Link text (alternative to the default slot)"
+              "description": "Link text. Content in the default slot wins."
             },
             {
               "name": "start-icon",
@@ -42320,15 +42357,15 @@
           "slots": [
             {
               "name": "",
-              "description": "Link text (alternative to the text attribute)"
+              "description": "Link text. Wins over `text`."
             },
             {
               "name": "start-icon",
-              "description": "Custom icon before the text"
+              "description": "Custom icon before the text. Wins over `start-icon`."
             },
             {
               "name": "end-icon",
-              "description": "Custom icon after the text"
+              "description": "Custom icon after the text. Wins over `end-icon`."
             }
           ]
         }
@@ -43162,6 +43199,26 @@
             },
             {
               "kind": "field",
+              "name": "controls",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Id of the element this tab shows, looked up in the tab's own tree.",
+              "attribute": "controls",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "controlsElement",
+              "type": {
+                "text": "Element | null"
+              },
+              "default": "null",
+              "description": "The element this tab shows, for where an id does not reach. Wins over `controls`."
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "'md' | 'lg'"
@@ -43242,8 +43299,17 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Icon name for nldd-icon; an alternative to the icon slot. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.",
+              "description": "Icon name for nldd-icon; an icon in the icon slot wins. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.",
               "fieldName": "icon"
+            },
+            {
+              "name": "controls",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Id of the element this tab shows, looked up in the tab's own tree. The tab announces it as the content it controls (`aria-controls`). Give that element `role=\"tabpanel\"` and an `aria-labelledby` with the id of this item, which names it after the tab. No effect in a `navigation` bar.",
+              "fieldName": "controls"
             },
             {
               "name": "size",
@@ -43274,7 +43340,7 @@
           "slots": [
             {
               "name": "icon",
-              "description": "Icon content"
+              "description": "Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made again each time the menu opens, so a new `src` shows there too."
             }
           ]
         },
@@ -43509,6 +43575,15 @@
               "name": "_sheet",
               "type": {
                 "text": "Sheet | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_page",
+              "type": {
+                "text": "HTMLElement | null"
               },
               "privacy": "private",
               "default": "null"
@@ -46696,7 +46771,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Label (an alternative to `text`)"
+              "description": "Label. Wins over `text`."
             }
           ],
           "members": [
@@ -46775,7 +46850,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Label under the disc",
+              "description": "Label under the disc. Content in the default slot wins.",
               "name": "text",
               "default": "''",
               "fieldName": "text"
@@ -49167,8 +49242,14 @@
       "path": "src/utilities/page-section-mixin.ts",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "pageSectionBackgroundStyles",
+          "default": "css` :host([background=\"base\"]) { --context-parent-background-color: var(--semantics-surfaces-base-background-color); } :host([background=\"tinted\"]) { --context-parent-background-color: var(--semantics-surfaces-tinted-background-color); } :host([background=\"accent-tinted\"]) { --context-parent-background-color: var(--semantics-surfaces-accent-tinted-background-color); } :host([background=\"base\"]), :host([background=\"tinted\"]), :host([background=\"accent-tinted\"]) { background-color: var(--context-parent-background-color); } `",
+          "description": "The surface a `background` paints, and passes on through\n`--context-parent-background-color` so cards and nested sections read the\nsame surface. Every section puts this first in its `styles`."
+        },
+        {
           "kind": "mixin",
-          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted` | `accent-tinted`\n  (a tint of the theme's accent, with the contrast of `tinted`). Setting\n  one of those also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
+          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities. Padding and height are written as custom\nproperties on the host, which inherit through the shadow boundary into the\nsection's block element and slotted content; the background comes from\n`pageSectionBackgroundStyles`:\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted` | `accent-tinted`\n  (a tint of the theme's accent, with the contrast of `tinted`). Setting\n  one of those also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
           "name": "PageSectionMixin",
           "members": [
             {
@@ -49324,16 +49405,6 @@
                   }
                 }
               ]
-            },
-            {
-              "kind": "method",
-              "name": "_applyBackground",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
             },
             {
               "kind": "method",
@@ -49500,6 +49571,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "pageSectionBackgroundStyles",
+          "declaration": {
+            "name": "pageSectionBackgroundStyles",
+            "module": "src/utilities/page-section-mixin.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "PageSectionMixin",
@@ -50197,6 +50276,134 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/return-focus.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "deepActiveElement",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "description": "The element that really holds focus, inside any shadow roots."
+        },
+        {
+          "kind": "function",
+          "name": "returnFocus",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            },
+            {
+              "name": "overlay",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Hands focus back to `target` once `overlay` (a popover, menu, sheet or window)\nhas closed. Call it after the close, with the element that had focus when the\noverlay opened.\n\n- Focus the user moved elsewhere, by a click into a field or Tab out of the\n  overlay, stays there. Only focus still in the overlay, on nothing, or on\n  `target` itself is handed back.\n- After the keyboard, `target` gets a plain `focus()` and its ring.\n- After a mouse or a finger, it gets no ring. The browser's own close step\n  has often moved focus back already, and WebKit draws a ring for that\n  script focus. A second `focus()` would be a no-op, so it blurs first and\n  focuses with `focusVisible: false`. Chromium leaves the ring off itself.\n  A text field keeps its ring, as it does on any click."
+        },
+        {
+          "kind": "class",
+          "description": "Remembers where focus was when an overlay opened, and hands it back when it\ncloses, through `returnFocus`. One per overlay:\n\n```ts\nprivate _focusReturn = new FocusReturn();\n// on open, before the overlay takes focus\nthis._focusReturn.remember(anchor);\n// once it has closed\nthis._focusReturn.restore(this);\n```",
+          "name": "FocusReturn",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_target",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_fallback",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "remember",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "fallback",
+                  "optional": true,
+                  "type": {
+                    "text": "Element | null"
+                  }
+                }
+              ],
+              "description": "Remembers what has focus now, inside any shadow roots, so focus goes\nback to that element and not to the host it sits in. With nothing\nfocused, as after a click on a button in Safari, it remembers\n`fallback`: an overlay's anchor, so Tab goes on from there. The\nfallback also stands in for a remembered element that has left the page\nby the time the overlay closes, as when a framework renders it anew."
+            },
+            {
+              "kind": "method",
+              "name": "restore",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "overlay",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Hands focus back once `overlay` has closed."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "deepActiveElement",
+          "declaration": {
+            "name": "deepActiveElement",
+            "module": "src/utilities/return-focus.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "returnFocus",
+          "declaration": {
+            "name": "returnFocus",
+            "module": "src/utilities/return-focus.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FocusReturn",
+          "declaration": {
+            "name": "FocusReturn",
+            "module": "src/utilities/return-focus.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/row-header-mixin.ts",
       "declarations": [
         {
@@ -50672,6 +50879,67 @@
           "declaration": {
             "name": "shortcutLabel",
             "module": "src/utilities/shortcut.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/slot-content.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "hasSlotContent",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "slot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            }
+          ],
+          "description": "Whether a slot holds something to show: an element, or text that is more\nthan whitespace.\n\nA default slot also gets the whitespace and line breaks between the tags of\nthe markup around it, and that whitespace switches off the slot's fallback\ncontent. A component that lets its slot win over an attribute therefore\nrenders the attribute beside the slot, and hides it when this says so."
+        },
+        {
+          "kind": "class",
+          "description": "Tracks whether a slot holds something, for a component whose slot wins over\nan attribute. Pass `onChange` to the slot's `@slotchange` and render the\nattribute only while `has` is false:\n\n```ts\nprivate _textSlot = new SlotContent(this);\n// in the template\nhtml`${this._textSlot.has ? nothing : this.text}<slot",
+          "name": "SlotContent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "has",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "onChange"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "hasSlotContent",
+          "declaration": {
+            "name": "hasSlotContent",
+            "module": "src/utilities/slot-content.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SlotContent",
+          "declaration": {
+            "name": "SlotContent",
+            "module": "src/utilities/slot-content.ts"
           }
         }
       ]

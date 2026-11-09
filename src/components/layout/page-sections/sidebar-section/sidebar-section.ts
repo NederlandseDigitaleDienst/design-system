@@ -72,7 +72,7 @@ import { LitElement, type PropertyValues } from 'lit';
 import { property, query } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
+import { PageSectionMixin, pageSectionBackgroundStyles } from '../../../../utilities/page-section-mixin.js';
 import { breakpointPx } from '../../../../assets/styles/breakpoints.js';
 import { sidebarSectionStyles } from './sidebar-section.styles.js';
 import { sidebarSectionTemplate } from './sidebar-section.template.js';
@@ -86,7 +86,7 @@ import { focusTemporarily, hashTarget, samePageHash } from '../../../../utilitie
 
 @customElement('nldd-sidebar-section')
 export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
-	static override styles = sidebarSectionStyles;
+	static override styles = [pageSectionBackgroundStyles, sidebarSectionStyles];
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
@@ -101,10 +101,10 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	@property({ type: Boolean, reflect: true, attribute: 'no-collapse' })
 	noCollapse = false;
 
-	@property({ type: String, reflect: true, attribute: 'sticky-top' })
+	@property({ reflect: true, attribute: 'sticky-top', converter: reflectNonDefault<string>('') })
 	stickyTop = '';
 
-	@property({ type: String, reflect: true, attribute: 'sticky-bottom' })
+	@property({ reflect: true, attribute: 'sticky-bottom', converter: reflectNonDefault<string>('') })
 	stickyBottom = '';
 
 	@property({ type: Boolean, reflect: true })

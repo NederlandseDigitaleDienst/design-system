@@ -74,7 +74,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	 * Caps the bar content to a max-width so it lines up with page-section
 	 * content. `full` spans the full width; any CSS length overrides the default.
 	 */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	// ## Logo properties
@@ -301,7 +301,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 			detail.item.current = true;
 			globalItems.forEach(item => {
 				if (item !== detail.item) {
-					item.removeAttribute('current');
+					(item as Element & { current: boolean }).current = false;
 				}
 			});
 		}

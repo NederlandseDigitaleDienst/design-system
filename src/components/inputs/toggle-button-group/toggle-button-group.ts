@@ -63,7 +63,7 @@ export class NLDDToggleButtonGroup extends LitElement {
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<GroupType>('checkbox') })
 	type: GroupType = 'checkbox';
 
 	@property({ type: String })

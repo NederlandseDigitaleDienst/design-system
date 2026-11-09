@@ -83,7 +83,7 @@ export class NLDDProgressCircleSegmentIndicator extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<ProgressCircleColor>('accent') })
 	color: ProgressCircleColor = 'accent';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	name = '';
 
 	override render() {
@@ -105,7 +105,7 @@ export class NLDDProgressCircle extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<ProgressCircleVariant>('progress') })
 	variant: ProgressCircleVariant = 'progress';
 
-	@property({ type: Number, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<number>(100) })
 	max = 100;
 
 	@property({ type: Number, reflect: true })
@@ -123,13 +123,13 @@ export class NLDDProgressCircle extends LitElement {
 	@property({ reflect: true, attribute: 'value-format', converter: reflectNonDefault<ProgressCircleValueFormat>('percentage') })
 	valueFormat: ProgressCircleValueFormat = 'percentage';
 
-	@property({ type: String, reflect: true, attribute: 'value-text' })
+	@property({ reflect: true, attribute: 'value-text', converter: reflectNonDefault<string>('') })
 	valueText = '';
 
 	@property({ reflect: true, attribute: 'value-display', converter: reflectNonDefault<ProgressCircleValueDisplay>('tooltip') })
 	valueDisplay: ProgressCircleValueDisplay = 'tooltip';
 
-	@property({ type: String, reflect: true, attribute: 'accessible-label' })
+	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
 	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })

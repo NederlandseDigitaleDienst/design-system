@@ -141,7 +141,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 
 	/** Makes the avatar one link: the shape itself becomes the <a>, so the click
 	 *  area and the focus ring follow its shape (an overlay would be square). */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
 
 	/** Take the control out of the tab order (`tabindex="-1"`) — for an avatar

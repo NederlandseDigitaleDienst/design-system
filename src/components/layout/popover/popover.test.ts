@@ -6,6 +6,7 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './popover.js';
 import '../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDPopover } from './popover.js';
+import { isKeyboardMode } from '../../../utilities/input-modality.js';
 
 describe('nldd-popover', () => {
 	let el: HTMLElement;
@@ -248,7 +249,7 @@ describe('nldd-popover', () => {
 			const trigger = wrapper.querySelector<HTMLButtonElement>('#trigger-return-focus')!;
 			await waitForUpdate(popover);
 
-			// Focus the trigger so _previousFocus remembers it on open
+			// Focus the trigger so it is remembered on open
 			trigger.focus();
 			expect(document.activeElement).toBe(trigger);
 
@@ -259,6 +260,88 @@ describe('nldd-popover', () => {
 			await waitForUpdate(popover);
 
 			expect(document.activeElement).toBe(trigger);
+		});
+
+		describe('ring op de teruggezette focus', () => {
+			/** Sets the last input, opens with the trigger focused, then closes. */
+			async function openAndClose(input: 'pointer' | 'keyboard', close: 'hide' | 'escape' = 'hide') {
+				const wrapper = await fixture(`
+					<div>
+						<button id="trigger-ring">Trigger</button>
+						<nldd-popover anchor="trigger-ring" accessible-label="Test"></nldd-popover>
+					</div>
+				`);
+				el = wrapper;
+				const popover = wrapper.querySelector('nldd-popover') as NLDDPopover;
+				const trigger = wrapper.querySelector<HTMLButtonElement>('#trigger-ring')!;
+				await waitForUpdate(popover);
+				trigger.focus();
+				// Before show(): a pointerdown while open would light-dismiss it.
+				if (input === 'pointer') {
+					document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch' }));
+				} else {
+					document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+				}
+				popover.show();
+				await waitForUpdate(popover);
+				expect(popover.open).toBe(true);
+				const focus = vi.spyOn(trigger, 'focus');
+				if (close === 'escape') {
+					popover.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+				} else {
+					popover.hide();
+				}
+				await waitForUpdate(popover);
+				expect(popover.open).toBe(false);
+				return { trigger, focus };
+			}
+
+			it('geeft de focus terug aan de knop als een veld erin autofocus heeft', async () => {
+				const wrapper = await fixture(`
+					<div>
+						<button id="trigger-autofocus">Trigger</button>
+						<nldd-popover anchor="trigger-autofocus" accessible-label="Test"><input autofocus></nldd-popover>
+					</div>
+				`);
+				el = wrapper;
+				const popover = wrapper.querySelector('nldd-popover') as NLDDPopover;
+				const trigger = wrapper.querySelector<HTMLButtonElement>('#trigger-autofocus')!;
+				await waitForUpdate(popover);
+				trigger.focus();
+				document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+				popover.show();
+				await waitForUpdate(popover);
+				expect(document.activeElement).toBe(popover.querySelector('input'));
+				// The browser's hide step moves focus back on its own; the popover
+				// must still know the trigger, or the pointer path can't clear its ring.
+				const focus = vi.spyOn(trigger, 'focus');
+				popover.hide();
+				await waitForUpdate(popover);
+				expect(focus).toHaveBeenCalled();
+				expect(document.activeElement).toBe(trigger);
+			});
+
+			it('zet de focus na een aanwijzer terug zonder ring', async () => {
+				// WebKit draws a ring on the focus its hide step restores; blur and
+				// focus with focusVisible: false clears it (checked in WebKit by hand).
+				const { trigger, focus } = await openAndClose('pointer');
+				expect(focus).toHaveBeenCalledWith({ focusVisible: false });
+				expect(document.activeElement).toBe(trigger);
+			});
+
+			it('laat de ring staan na het toetsenbord', async () => {
+				const { trigger, focus } = await openAndClose('keyboard');
+				expect(focus).toHaveBeenCalledWith();
+				expect(document.activeElement).toBe(trigger);
+				expect(trigger.matches(':focus-visible')).toBe(true);
+			});
+
+			it('geeft de ring terug na Escape, ook na een aanwijzer', async () => {
+				// The popover stops Escape at its host; the modality must still see it.
+				const { trigger } = await openAndClose('pointer', 'escape');
+				expect(isKeyboardMode()).toBe(true);
+				expect(document.activeElement).toBe(trigger);
+			});
 		});
 
 		it('Tab op laatste focusable sluit de popover', async () => {
