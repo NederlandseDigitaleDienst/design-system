@@ -458,6 +458,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-menu-bar:state(unnamed)"
 	},
 	{
+		"id": "menu-item-form-id-invalid",
+		"message": "The id in `form` is an element without a form, so this item submits nothing. An nldd-form only has one once it has rendered.",
+		"context": "nldd-menu-item:state(form-target-not-a-form)"
+	},
+	{
+		"id": "menu-item-form-id-not-found",
+		"message": "Nothing in this root has the id in `form`, so this item submits nothing.",
+		"context": "nldd-menu-item:state(no-form-target)"
+	},
+	{
 		"id": "menu-navigation-no-filter",
 		"message": "filter() belongs to a menu of actions or options. A navigation menu is a short list of links and is not filtered.",
 		"context": "nldd-menu[variant=\"navigation\"]:state(filtered)"
@@ -1065,8 +1075,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-menu-item-type",
-		"message": "`type` on nldd-menu-item takes: button, checkbox, radio.",
-		"context": "nldd-menu-item[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"])"
+		"message": "`type` on nldd-menu-item takes: button, checkbox, radio, submit.",
+		"context": "nldd-menu-item[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"], [type=\"submit\"])"
 	},
 	{
 		"id": "invalid-value-menu-item-query-mark-mode",

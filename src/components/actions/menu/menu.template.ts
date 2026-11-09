@@ -14,6 +14,7 @@ const menuRoleMap = {
 // host, so the link inside it keeps the role it has by itself.
 const itemRoleMap = {
 	button: { menu: 'menuitem', listbox: 'option' },
+	submit: { menu: 'menuitem', listbox: 'option' },
 	checkbox: { menu: 'menuitemcheckbox', listbox: 'option' },
 	radio: { menu: 'menuitemradio', listbox: 'option' },
 } as const;
@@ -113,7 +114,7 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 }
 
 export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null = null) {
-	const hasCheckState = this.type !== 'button' && variant === 'menu';
+	const hasCheckState = (this.type === 'checkbox' || this.type === 'radio') && variant === 'menu';
 	// A plain item keeps the column empty when its menu has checkable items.
 	const hasCheckColumn = hasCheckState || (this.checkColumn && variant === 'menu');
 	// No role until a menu claims this item. `menuitem` says there is a menu

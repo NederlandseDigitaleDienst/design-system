@@ -16,10 +16,10 @@ import { setState } from './element-state.js';
  * one in the document around it. Put the two in the same tree, or hand the
  * button its form another way.
  *
- * Shared by nldd-button and nldd-split-button, whose action button sits in a
- * shadow root and so has no form owner of its own.
+ * Shared by nldd-button, nldd-split-button and a `submit` nldd-menu-item,
+ * whose button sits in a shadow root and so has no form owner of its own.
  */
-export function ownerForm(host: HTMLElement, internals: ElementInternals): HTMLFormElement | null {
+export function ownerForm(host: HTMLElement, internals?: ElementInternals): HTMLFormElement | null {
 	const id = host.getAttribute('form');
 	const root = host.getRootNode() as Document | ShadowRoot;
 	const target = id && 'getElementById' in root ? root.getElementById(id) : null;
@@ -33,5 +33,7 @@ export function ownerForm(host: HTMLElement, internals: ElementInternals): HTMLF
 	// outside.
 	setState(host, 'no-form-target', Boolean(id) && !target);
 	setState(host, 'form-target-not-a-form', Boolean(target) && !form);
-	return id ? form : internals.form;
+	// Without internals the host is not form-associated: it acts on the form it stands in.
+	if (id) return form;
+	return internals ? internals.form : host.closest('form');
 }

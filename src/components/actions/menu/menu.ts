@@ -1597,7 +1597,7 @@ export class NLDDMenu extends LitElement {
 		(Array.from(this.querySelectorAll('nldd-menu-divider, nldd-menu-group')) as (NLDDMenuDivider | NLDDMenuGroup)[])
 			.forEach(part => { part.menuVariant = this.variant; });
 		const own = items.filter(item => item.closest('nldd-menu') === this);
-		const checkColumn = this.variant === 'menu' && own.some(item => item.type !== 'button');
+		const checkColumn = this.variant === 'menu' && own.some(item => item.type === 'checkbox' || item.type === 'radio');
 		own.forEach(item => {
 			item.checkColumn = checkColumn;
 		});

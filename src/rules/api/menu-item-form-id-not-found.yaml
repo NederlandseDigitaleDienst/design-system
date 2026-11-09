@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-menu-item:state(no-form-target)'
+message: 'Nothing in this root has the id in `form`, so this item submits nothing.'
