@@ -13412,6 +13412,14 @@
             },
             {
               "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value of the slotted `<select>`, so a framework can bind to the\ndropdown itself instead of reaching for the select inside it."
+            },
+            {
+              "kind": "field",
               "name": "required",
               "type": {
                 "text": "boolean"
@@ -13559,7 +13567,7 @@
           "events": [
             {
               "name": "change",
-              "description": "Bubbles up from the slotted select; detail: { value: string }"
+              "description": "The native change of the slotted select, left to bubble, so a listener on the select, on the dropdown or higher up all hear it. Read the choice from `value`."
             }
           ],
           "slots": [
@@ -40192,6 +40200,17 @@
             },
             {
               "kind": "field",
+              "name": "expandable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The segment opens something, also while it is closed. Without it an absent\n`expanded` means \"discloses nothing\", and `false` can only be set as a\nproperty, which a framework that writes attributes cannot do.",
+              "attribute": "expandable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "accessibleLabel",
               "type": {
                 "text": "string"
@@ -40215,7 +40234,7 @@
               "type": {
                 "text": "boolean | undefined"
               },
-              "description": "Undefined (attribute absent) means \"discloses nothing\" — no aria-expanded is emitted.",
+              "description": "Undefined (attribute absent) means \"discloses nothing\", no aria-expanded is emitted, unless the segment is `expandable`.",
               "attribute": "expanded",
               "reflects": true
             },
@@ -40399,6 +40418,15 @@
               "name": "disclosure",
               "default": "false",
               "fieldName": "disclosure"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The segment opens something, also while it is closed: without `expanded` it says \"collapsed\" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not.",
+              "name": "expandable",
+              "default": "false",
+              "fieldName": "expandable"
             },
             {
               "type": {
@@ -40638,6 +40666,17 @@
             },
             {
               "kind": "field",
+              "name": "expandable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The row opens something, also while it is closed. Without it an absent\n`expanded` means \"discloses nothing\", and `false` can only be set as a\nproperty, which a framework that writes attributes cannot do.",
+              "attribute": "expandable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "accessibleLabel",
               "type": {
                 "text": "string"
@@ -40850,6 +40889,15 @@
               "name": "radio",
               "default": "false",
               "fieldName": "radio"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The row opens something, also while it is closed: without `expanded` it says \"collapsed\" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. A row with children in a tree already is one.",
+              "name": "expandable",
+              "default": "false",
+              "fieldName": "expandable"
             },
             {
               "type": {
