@@ -61,12 +61,17 @@ jobs:
         run: npm run build:styles
       - name: Build components
         run: npm run build:components
-      # Without this the library build removes the DEV checks from the main export.
-      # The `?.` matters: a project without Vite has no import.meta.env.
+      # The DEV checks have to reach the package. The `?.` matters: a project
+      # without Vite has no import.meta.env.
       - name: Verify DEV checks survive the build
         run: |
-          grep -q 'import.meta.env?.DEV' dist/components/components.js
-          ! grep -q 'import.meta.env.DEV' dist/components/components.js
+          grep -rqF 'import.meta.env?.DEV' dist/components
+          ! grep -rqF --include='*.js' 'import.meta.env.DEV' dist/components
+      # The main entry imports the modules of the subpaths, so an app that mixes
+      # the two registers each component once. A bundle of its own would carry a
+      # second copy, and its customElements.define would throw.
+      - name: Verify the main entry shares the modules of the subpaths
+        run: grep -qF "from './actions/button/button.js'" dist/components/index.js
       # The linter is what consumers run, from the tarball: lint/ has to be in it
       # and its dependencies have to resolve outside this repository.
       - name: Smoke test the packed linter

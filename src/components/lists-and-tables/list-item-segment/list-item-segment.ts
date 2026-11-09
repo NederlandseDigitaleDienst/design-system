@@ -49,6 +49,7 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {boolean} button - Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the segment a `role="checkbox"` control. Wins over `button`, loses to `href`.
  * @attr {boolean} disclosure - Marks the segment as the row's disclosure control: `aria-expanded` comes from the parent item's `expanded`, so the state lives in one place. A slotted `nldd-icon-cell` rotates a quarter turn while the row is open
+ * @attr {boolean} expandable - The segment opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not.
  * @attr {string} accessible-label - Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action.
  * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
  * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded.
@@ -105,13 +106,21 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	@property({ type: Boolean, reflect: true })
 	disclosure = false;
 
+	/**
+	 * The segment opens something, also while it is closed. Without it an absent
+	 * `expanded` means "discloses nothing", and `false` can only be set as a
+	 * property, which a framework that writes attributes cannot do.
+	 */
+	@property({ type: Boolean, reflect: true })
+	expandable = false;
+
 	@property({ attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })
 	checked = false;
 
-	/** Undefined (attribute absent) means "discloses nothing" — no aria-expanded is emitted. */
+	/** Undefined (attribute absent) means "discloses nothing", no aria-expanded is emitted, unless the segment is `expandable`. */
 	@property({ type: Boolean, reflect: true })
 	expanded?: boolean;
 
@@ -295,8 +304,14 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	 *  hook — the same mechanism nldd-list already uses for .is-boxed / .is-first. */
 	override updated() {
 		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
-		const expanded = this.disclosure ? this._rowExpanded : this.expanded;
-		this.classList.toggle('is-expanded', expanded === true);
+		this.classList.toggle('is-expanded', this._resolvedExpanded === true);
+	}
+
+	/** The state the control announces: the row's for a disclosure segment, and
+	 *  "collapsed" rather than nothing for an `expandable` one. */
+	private get _resolvedExpanded(): boolean | undefined {
+		if (this.disclosure) return this._rowExpanded;
+		return this.expandable ? this.expanded === true : this.expanded;
 	}
 
 	override render() {
@@ -309,7 +324,7 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 			this.rel,
 			this.download,
 			this.checked,
-			this.disclosure ? this._rowExpanded : this.expanded,
+			this._resolvedExpanded,
 			this.current ? this.currentType : undefined,
 			this.disabled,
 			this.accessibleLabel,

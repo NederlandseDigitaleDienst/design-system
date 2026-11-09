@@ -73,6 +73,15 @@ describe('nldd-list-item-segment', () => {
 		expect(control(without).getAttribute('aria-expanded')).toBeNull();
 	});
 
+	it('says collapsed for an expandable segment without expanded', async () => {
+		const [closed, open] = await mount(
+			'<nldd-list-item-segment button expandable><nldd-text-cell text="X"></nldd-text-cell></nldd-list-item-segment>'
+			+ '<nldd-list-item-segment button expandable expanded><nldd-text-cell text="Y"></nldd-text-cell></nldd-list-item-segment>',
+		);
+		expect(control(closed).getAttribute('aria-expanded')).toBe('false');
+		expect(control(open).getAttribute('aria-expanded')).toBe('true');
+	});
+
 	it('puts aria-current on a current link, with current-type as its value', async () => {
 		const [a] = await mount('<nldd-list-item-segment href="#racks" current><nldd-text-cell text="Racks"></nldd-text-cell></nldd-list-item-segment>', 'type="navigation" aria-label="Op deze pagina"');
 		expect(control(a).getAttribute('aria-current')).toBe('page');

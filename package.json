@@ -3,13 +3,22 @@
   "version": "0.20.0",
   "description": "Designsysteem voor de Nederlandse Digitale Dienst",
   "type": "module",
-  "main": "dist/components/components.js",
-  "module": "dist/components/components.js",
+  "main": "dist/components/index.js",
+  "module": "dist/components/index.js",
+  "types": "dist/components/index.d.ts",
   "unpkg": "dist/nldd.min.js",
   "jsdelivr": "dist/nldd.min.js",
   "exports": {
-    ".": "./dist/components/components.js",
+    ".": {
+      "types": "./dist/components/index.d.ts",
+      "default": "./dist/components/index.js"
+    },
     "./bundle": "./dist/nldd.min.js",
+    "./autoloader": {
+      "types": "./dist/utilities/autoloader.d.ts",
+      "default": "./dist/utilities/autoloader.js"
+    },
+    "./cdn/*": "./dist/cdn/*",
     "./button": {
       "types": "./dist/components/actions/button/button.d.ts",
       "default": "./dist/components/actions/button/button.js"
@@ -474,6 +483,30 @@
       "types": "./dist/components/status-and-feedback/just-in-time-education/just-in-time-education.d.ts",
       "default": "./dist/components/status-and-feedback/just-in-time-education/just-in-time-education.js"
     },
+    "./menu-divider": {
+      "types": "./dist/components/actions/menu/menu-divider.d.ts",
+      "default": "./dist/components/actions/menu/menu-divider.js"
+    },
+    "./menu-group": {
+      "types": "./dist/components/actions/menu/menu-group.d.ts",
+      "default": "./dist/components/actions/menu/menu-group.js"
+    },
+    "./menu-item": {
+      "types": "./dist/components/actions/menu/menu-item.d.ts",
+      "default": "./dist/components/actions/menu/menu-item.js"
+    },
+    "./toolbar-item": {
+      "types": "./dist/components/actions/toolbar/toolbar-item.d.ts",
+      "default": "./dist/components/actions/toolbar/toolbar-item.js"
+    },
+    "./toolbar-title": {
+      "types": "./dist/components/actions/toolbar/toolbar-title.d.ts",
+      "default": "./dist/components/actions/toolbar/toolbar-title.js"
+    },
+    "./kanban-column": {
+      "types": "./dist/components/layout/kanban/kanban-column.d.ts",
+      "default": "./dist/components/layout/kanban/kanban-column.js"
+    },
     "./styles": "./dist/css/global.css",
     "./styles/open-font": "./dist/css/global-open-font.css",
     "./styles/system-font": "./dist/css/global-open-font.css",
@@ -516,6 +549,9 @@
     },
     "./vue": {
       "types": "./dist/types/vue.d.ts"
+    },
+    "./react": {
+      "types": "./dist/types/react.d.ts"
     }
   },
   "files": [
@@ -541,9 +577,10 @@
     "generate:colors": "node scripts/generate-colors.js && npm run generate:themes",
     "generate:themes": "node scripts/generate-themes.js",
     "generate:component-reference": "node scripts/generate-component-reference.js",
-    "generate:cem": "cem analyze && npm run generate:vue-types && npm run generate:lint-data",
+    "generate:cem": "cem analyze && npm run generate:vue-types && npm run generate:react-types && npm run generate:autoloader && npm run generate:lint-data",
     "generate:lint-data": "node scripts/generate-lint-data.js",
     "generate:vue-types": "node scripts/generate-vue-types.js",
+    "generate:react-types": "node scripts/generate-react-types.js",
     "generate:skill-changelog": "node scripts/generate-skill-changelog.js",
     "generate:skill-principles": "node scripts/generate-skill-principles.js",
     "generate:skill-patterns": "node scripts/generate-skill-patterns.js",
@@ -557,11 +594,10 @@
     "validate:changelog": "node scripts/validate-changelog.js",
     "lint:stories": "node scripts/lint-stories.js",
     "lint:www": "node lint/cli.js lint www/",
-    "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:bundle && npm run build:components:standalone && npm run build:exports && npm run generate:cem",
+    "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:standalone && npm run build:components:cdn && npm run build:exports && npm run generate:cem",
     "build:icons": "node scripts/generate-icon-registry.js && node scripts/generate-logo.js",
     "optimize:icons": "node scripts/optimize-icons.js",
     "build:components:modules": "tsc -p tsconfig.build.json",
-    "build:components:bundle": "vite build",
     "build:exports": "node scripts/generate-exports.js",
     "clean": "rm -rf dist",
     "clean:components": "rm -rf dist/components dist/nldd.min.js",
@@ -592,7 +628,10 @@
     "pretypecheck": "npm run build:icons",
     "typecheck": "tsc --noEmit",
     "test:vue-types": "vue-tsc --noEmit -p type-tests/vue/tsconfig.json",
+    "test:react-types": "tsc -p type-tests/react/tsconfig.json",
     "build:components:standalone": "vite build --config vite.bundle.config.ts",
+    "build:components:cdn": "vite build --config vite.cdn.config.ts",
+    "generate:autoloader": "node scripts/generate-autoloader.js",
     "generate:translations": "node scripts/generate-translations.js"
   },
   "devDependencies": {
@@ -608,8 +647,8 @@
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/addon-themes": "^10.6.0",
     "@storybook/web-components-vite": "^10.6.0",
-    "@vitest/browser-playwright": "5.0.5",
-    "@vitest/coverage-v8": "5.0.5",
+    "@vitest/browser-playwright": "5.1.0",
+    "@vitest/coverage-v8": "5.1.0",
     "ajv": "^8.20.0",
     "axe-core": "^4.13.0",
     "conventional-changelog": "^8.1.0",
@@ -625,7 +664,7 @@
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.58.0",
     "vite": "8.3.5",
-    "vitest": "5.0.5",
+    "vitest": "5.1.0",
     "vue": "^3.5.40",
     "vue-tsc": "^3.3.7",
     "yaml": "^2.9.1"
@@ -670,7 +709,7 @@
     "conventional-changelog-conventionalcommits": "10.2.1"
   },
   "optionalDependencies": {
-    "oxc-parser": "^0.156.0"
+    "oxc-parser": "^0.157.0"
   },
   "bin": {
     "nldd": "lint/cli.js"

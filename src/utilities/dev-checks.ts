@@ -11,6 +11,7 @@
  */
 
 import { devRules } from './dev-rules.generated.js';
+import { loadingTags } from './loading-tags.js';
 
 export interface DevRule {
 	id: string;
@@ -127,17 +128,58 @@ export function checkFoucGuard(): void {
 	}
 }
 
+/**
+ * How long an nldd-* element may stay undefined before it counts as never
+ * registered. Long enough for a module that loads on demand, the autoloader's
+ * included, over a slow connection.
+ */
+const UNREGISTERED_MS = 3000;
+
+/** The nldd-* elements in these roots that no module has defined (yet). */
+export function findUndefined(roots: ParentNode[] = findRoots()): Element[] {
+	return roots.flatMap((root) => [...root.querySelectorAll(':not(:defined)')])
+		.filter((element) => element.localName.startsWith('nldd-'));
+}
+
+/**
+ * An element that is never defined runs no code, so it cannot state a fact for
+ * a rule. Like the FOUC guard, this one reports itself: once per tag, after
+ * the tag has stayed undefined for a while.
+ */
+/** @internal Exported for tests. */
+export function createRegistrationCheck() {
+	const firstSeen = new WeakMap<Element, number>();
+	const reported = new Set<string>();
+	return () => {
+		const now = Date.now();
+		for (const element of findUndefined()) {
+			const seen = firstSeen.get(element);
+			if (seen === undefined) {
+				firstSeen.set(element, now);
+				continue;
+			}
+			if (now - seen < UNREGISTERED_MS || reported.has(element.localName) || loadingTags.has(element.localName)) continue;
+			reported.add(element.localName);
+			console.warn(`[nldd] <${element.localName}> is not registered, so it renders nothing of its own. Import its module from @nldd/design-system, or check the name.`, element);
+		}
+	};
+}
+
 let started = false;
 
 export function startDevChecks(): void {
 	if (started || typeof MutationObserver === 'undefined') return;
 	started = true;
 	const report = createReporter();
+	const checkRegistrations = createRegistrationCheck();
 	const stateRules = devRules.filter((rule) => rule.context.includes(':state('));
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	const schedule = () => {
 		clearTimeout(timer);
-		timer = setTimeout(() => report(), SETTLE_MS);
+		timer = setTimeout(() => {
+			report();
+			checkRegistrations();
+		}, SETTLE_MS);
 	};
 	new MutationObserver(schedule).observe(document.documentElement, {
 		subtree: true,
@@ -145,7 +187,9 @@ export function startDevChecks(): void {
 		attributes: true,
 	});
 	setInterval(() => {
-		if (!document.hidden) report(stateRules);
+		if (document.hidden) return;
+		report(stateRules);
+		checkRegistrations();
 	}, RECHECK_MS);
 	schedule();
 	setTimeout(checkFoucGuard, SETTLE_MS);

@@ -9,6 +9,38 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Migrating a React app takes less work.** `nldd-dropdown` lets the native `change` of its select through, the package ships JSX types, and the main entry and the subpaths share their modules. See Breaking, Added and Fixed.
+- **An autoloader.** `import '@nldd/design-system/autoloader'`, or `dist/cdn/autoloader.js` on a page without a bundler, loads each component the first time it appears, also in a fragment that htmx or Turbo swaps in. No import list to keep up to date. See Added.
+
+### Breaking
+
+- **`nldd-dropdown` no longer sends a `change` of its own.** The native `change` of the slotted `<select>` bubbles on instead, so a listener on the select, on the dropdown or higher up hears it, a React `onChange` on the select included. It has no `detail`, and its `target` is the select, not the dropdown: replace `event.detail.value` with `event.target.value`, or read `value` on the dropdown, and compare `currentTarget` where you checked `target` against the dropdown.
+
+### Added
+
+- **`value` on `nldd-dropdown`,** which reads and writes the value of the slotted `<select>`, also when it is set before the select or its options are there, as with options loaded later. A choice someone makes in the meantime wins.
+- **`expandable` on `nldd-list-item` and `nldd-list-item-segment`,** for a row or segment that opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. Markup could not write a closed disclosure before, since `expanded="false"` reads as on.
+- **JSX types for React, in `@nldd/design-system/react`.** Every `nldd-*` tag with its attributes, for React 18 and 19. A boolean takes `true` or nothing, so `disabled={busy}`, which React 18 always reads as on, does not compile.
+- **`@nldd/design-system/autoloader`,** which watches the page for `nldd-*` elements that are not defined yet and loads the module of each tag once, so a page loads only the components it shows. `discover(root)` does the same for a shadow root of your own. `dist/cdn/autoloader.js` is the same with lit inside, a chunk per component, for a `<script type="module">` without a bundler or an import map.
+- **`type="submit"` and `form` on `nldd-menu-item`.** A submit item submits the form it stands in, or the one `form` names, when it is chosen, so logging out or deleting from a menu can be a POST without script. Two lint rules, `menu-item-form-id-not-found` and `menu-item-form-id-invalid`, say when `form` finds nothing to submit.
+- **A development warning for an `nldd-*` element that is never registered.** A tag that stays undefined for a few seconds is a missing import, or a typo; the console now names it.
+- **A subpath for each part of `nldd-menu`, `nldd-toolbar` and `nldd-kanban`,** such as `@nldd/design-system/menu-item`, so every tag can be imported by its own name.
+
+### Changed
+
+- **`nldd-design-migrate` and `nldd-design-build` make a pure app the goal:** no stylesheet of your own, no `class` or `style`, no `div` or `span` that styles anything. A migration is done when the purity check passes with an empty baseline, and that check is the first one to build. If a component is missing, you may build your own under a name without `nldd-`. That need not be a workaround, since you may want to keep control over it as your project moves; say in a report what you built, so it can be decided whether it becomes an official one. Styling an `nldd-*` component stays out. A workaround for what the system cannot do yet carries its issue link, the version and why, in the code and not in the baseline. The token bridge from Tailwind is scaffolding, and the small CSS file the Tailwind page used to allow is gone.
+- **`nldd-design-migrate` has a page for React apps, `from-react.md`,** with the events React does not see. In React 18 `disabled={busy}` always disables, because `false` reaches the component as the text `"false"`; the skill shows JSX types that only allow `true` or nothing. The `useNlddEvent` and `useNlddValue` helpers it recommends bind again after every render.
+- **New sections in `nldd-design-migrate`:** import per subpath and never next to the main entry, global CSS that carries behavior, an `nldd-container` that measures zero wide in a parent sized by its content, a separate round on visual hierarchy, and testing without a backend.
+- **A design guideline: be sparing with frames, outlines and colored areas.** When too many parts each get their own, everything gets the same emphasis and the hierarchy is gone. Use them where they group content or stress what matters, and otherwise structure with whitespace, alignment, type and subtle dividers.
+- **`nldd-design-build` says how to force light or dark:** `data-scheme` on `<html>`, not `color-scheme` in your own CSS.
+
+### Fixed
+
+- **An `nldd-container` inside an `nldd-container width="fit-content"` takes the width of its content instead of 0.** The inner container measured its own width for its breakpoints, and that measuring kept it from reporting its content to the fit-content parent, so text in it broke after every word. Like the fit-content container itself, it now follows the breakpoints of the container around it.
+- **Importing `@nldd/design-system` next to a subpath no longer throws "has already been used with this registry".** The main entry imports the same modules as the subpaths, instead of a bundle with its own copy of every component.
+
 ## [0.20.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.19.0...v0.20.0) (2026-11-09)
 
 ### Highlights

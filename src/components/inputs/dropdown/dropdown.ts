@@ -23,9 +23,11 @@
  * @attr {string} accessible-label - Accessible name, forwarded as aria-label to the slotted select
  * @attr {boolean} required - Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone.
  *
+ * @prop {string} value - The value of the slotted select. Setting it before the select or its option is there applies it once that option arrives, unless someone picks an option first.
+ *
  * @slot - A native `<select>` element with `<option>` and/or `<optgroup>` children
  *
- * @fires change - Bubbles up from the slotted select; detail: { value: string }
+ * @fires change - The native change of the slotted select, left to bubble, so a listener on the select, on the dropdown or higher up all hear it. Read the choice from `value`.
  *
  * @example
  * ```html
@@ -90,6 +92,52 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 
 	private _select: HTMLSelectElement | null = null;
 
+	/** A value set before the select or a matching option was there, kept
+	 *  until one arrives or someone picks an option. */
+	private _pendingValue: string | null = null;
+
+	/** Watches the options of the select while a value is pending. */
+	private _optionsObserver: MutationObserver | null = null;
+
+	/**
+	 * The value of the slotted `<select>`, so a framework can bind to the
+	 * dropdown itself instead of reaching for the select inside it.
+	 */
+	get value(): string {
+		if (this._pendingValue !== null) return this._pendingValue;
+		return (this._select ?? this.querySelector('select'))?.value ?? '';
+	}
+
+	set value(value: string) {
+		this._pendingValue = value;
+		this._applyPendingValue(this._select ?? this.querySelector('select'));
+	}
+
+	/** Sets the pending value on the select. Without a matching option yet, the
+	 *  select keeps its own choice and the value is set when the option comes. */
+	private _applyPendingValue(select: HTMLSelectElement | null): void {
+		if (!select || this._pendingValue === null) return;
+		const value = this._pendingValue;
+		if ([...select.options].some((option) => option.value === value)) {
+			select.value = value;
+			this._clearPendingValue();
+		} else if (!this._optionsObserver) {
+			this._optionsObserver = new MutationObserver(() => this._applyPendingValue(this._select));
+			this._optionsObserver.observe(select, { childList: true, subtree: true });
+		}
+	}
+
+	private _clearPendingValue(): void {
+		this._pendingValue = null;
+		this._optionsObserver?.disconnect();
+		this._optionsObserver = null;
+	}
+
+	/** A choice someone makes wins over a value still waiting for its option. */
+	private _handleSelectChange = (): void => {
+		this._clearPendingValue();
+	};
+
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
@@ -101,6 +149,25 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	private _appliedRequired: string | null = null;
 
 	// — Lifecycle ——————————————————————————————————————————————————————————————
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		// A framework may set `value` before the element upgrades, which leaves an
+		// own property shadowing the accessor. Hand it to the accessor instead.
+		if (Object.prototype.hasOwnProperty.call(this, 'value')) {
+			const value = (this as { value: string }).value;
+			delete (this as { value?: string }).value;
+			this.value = value;
+		}
+		// Back after a move: watch the options again for a value still pending.
+		this._applyPendingValue(this._select);
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this._optionsObserver?.disconnect();
+		this._optionsObserver = null;
+	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
 		if (changedProperties.has('disabled')) {
@@ -133,11 +200,13 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 			.find((el): el is HTMLSelectElement => el.tagName === 'SELECT') ?? null;
 
 		if (this._select && this._select !== select) {
-			this._select.removeEventListener('change', this._handleSelectChange);
 			this._select.removeEventListener('focus', this._handleSelectFocus);
 			this._select.removeEventListener('blur', this._handleSelectBlur);
 			this._select.removeEventListener('keydown', this._handleSelectKeydown);
 			this._select.removeEventListener('toggle', this._handleSelectToggle);
+			this._select.removeEventListener('change', this._handleSelectChange);
+			this._optionsObserver?.disconnect();
+			this._optionsObserver = null;
 		}
 
 		this._select = select;
@@ -150,15 +219,16 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 
 		setState(this, 'unnamed-select', !this.accessibleLabel && !select.hasAttribute("aria-label") && !select.hasAttribute("aria-labelledby") && !select.labels?.length);
 
-		select.addEventListener('change', this._handleSelectChange);
 		select.addEventListener('focus', this._handleSelectFocus);
 		select.addEventListener('blur', this._handleSelectBlur);
 		select.addEventListener('keydown', this._handleSelectKeydown);
 		select.addEventListener('toggle', this._handleSelectToggle);
+		select.addEventListener('change', this._handleSelectChange);
 		this._syncDisabled();
 		this._syncAriaInvalid();
 		this._syncAccessibleLabel();
 		this._syncRequired();
+		this._applyPendingValue(select);
 	}
 
 	// — Internal helpers ——————————————————————————————————————————————————————
@@ -213,15 +283,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 			this._select.removeAttribute('aria-invalid');
 		}
 	}
-
-	private _handleSelectChange = (e: Event): void => {
-		e.stopPropagation();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this._select?.value ?? '' },
-			bubbles: true,
-			composed: true,
-		}));
-	};
 
 	/**
 	 * Suppress the native `:focus-visible` ring on the wrapper when focus

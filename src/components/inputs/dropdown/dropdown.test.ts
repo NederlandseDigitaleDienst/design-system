@@ -1,7 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
-import type { NLDDDropdown } from './dropdown.js';
-import './dropdown.js';
+import { NLDDDropdown } from './dropdown.js';
 
 function selectFixture(): string {
 	return `
@@ -274,19 +273,99 @@ describe('nldd-dropdown – change event', () => {
 		expect(el.shadowRoot!.textContent).not.toContain('België');
 	});
 
-	it('dispatches a change event with value detail', async () => {
+	it('lets the native change of the select bubble, once', async () => {
 		el = await fixture<NLDDDropdown>(selectFixture());
 		await waitForUpdate(el);
-
-		let detail: any;
-		el.addEventListener('change', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
-
 		const select = el.querySelector('select')!;
+		const onSelect: Event[] = [];
+		const onHost: Event[] = [];
+		const onDocument: Event[] = [];
+		const record = (list: Event[]) => (e: Event) => list.push(e);
+		select.addEventListener('change', record(onSelect));
+		el.addEventListener('change', record(onHost));
+		const onDocumentListener = record(onDocument);
+		document.addEventListener('change', onDocumentListener);
+
 		select.value = 'be';
 		select.dispatchEvent(new Event('change', { bubbles: true }));
+		document.removeEventListener('change', onDocumentListener);
 
-		expect(detail).toBeDefined();
-		expect(detail.value).toBe('be');
+		expect(onSelect).toHaveLength(1);
+		expect(onHost).toEqual(onSelect);
+		expect(onDocument).toEqual(onSelect);
+		expect(el.value).toBe('be');
+	});
+
+	it('reads and writes value through the select', async () => {
+		el = await fixture<NLDDDropdown>(selectFixture());
+		await waitForUpdate(el);
+		el.value = 'be';
+		expect(el.querySelector('select')!.value).toBe('be');
+		expect(el.value).toBe('be');
+	});
+
+	it('applies a value set before the select arrives', async () => {
+		el = await fixture<NLDDDropdown>('<nldd-dropdown></nldd-dropdown>');
+		el.value = 'be';
+		expect(el.value).toBe('be');
+		el.innerHTML = '<select aria-label="Land"><option value="nl">Nederland</option><option value="be">België</option></select>';
+		await waitForUpdate(el);
+		expect(el.querySelector('select')!.value).toBe('be');
+	});
+
+	it('keeps a value until its option arrives, as with options loaded later', async () => {
+		el = await fixture<NLDDDropdown>('<nldd-dropdown><select aria-label="Land"></select></nldd-dropdown>');
+		await waitForUpdate(el);
+		el.value = 'be';
+		expect(el.value).toBe('be');
+		const select = el.querySelector('select')!;
+		select.innerHTML = '<option value="nl">Nederland</option>';
+		await waitForUpdate(el);
+		expect(el.value).toBe('be');
+		expect(select.selectedIndex).toBe(0);
+		select.insertAdjacentHTML('beforeend', '<option value="be">België</option>');
+		await waitForUpdate(el);
+		expect(select.value).toBe('be');
+		expect(el.value).toBe('be');
+	});
+
+	it('keeps waiting for the option after the dropdown is moved', async () => {
+		el = await fixture<NLDDDropdown>('<nldd-dropdown><select aria-label="Land"><option value="nl">Nederland</option></select></nldd-dropdown>');
+		await waitForUpdate(el);
+		el.value = 'be';
+		const parent = el.parentElement!;
+		el.remove();
+		parent.append(el);
+		const select = el.querySelector('select')!;
+		select.insertAdjacentHTML('beforeend', '<option value="be">België</option>');
+		await waitForUpdate(el);
+		expect(select.value).toBe('be');
+	});
+
+	it('lets a choice someone makes win over a value still waiting for its option', async () => {
+		el = await fixture<NLDDDropdown>('<nldd-dropdown><select aria-label="Land"><option value="nl">Nederland</option></select></nldd-dropdown>');
+		await waitForUpdate(el);
+		el.value = 'be';
+		const select = el.querySelector('select')!;
+		select.value = 'nl';
+		select.dispatchEvent(new Event('change', { bubbles: true }));
+		select.insertAdjacentHTML('beforeend', '<option value="be">België</option>');
+		await waitForUpdate(el);
+		expect(select.value).toBe('nl');
+		expect(el.value).toBe('nl');
+	});
+
+	it('takes a value set before the element upgraded', async () => {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = '<nldd-dropdown-later><select aria-label="Land"><option value="nl">Nederland</option><option value="be">België</option></select></nldd-dropdown-later>';
+		document.body.append(wrapper);
+		const later = wrapper.firstElementChild as HTMLElement & { value: string };
+		later.value = 'be';
+		customElements.define('nldd-dropdown-later', class extends NLDDDropdown {});
+		await (later as unknown as NLDDDropdown).updateComplete;
+		expect(later.value).toBe('be');
+		expect(later.querySelector('select')!.value).toBe('be');
+		wrapper.remove();
 	});
 
 	it('past inline host width toe als width property gezet is', async () => {

@@ -69,7 +69,7 @@
  * @attr {number} sm-column-count - Column count when this container is sm-wide
  * @attr {number} md-column-count - Column count when this container is md-wide
  * @attr {number} lg-column-count - Column count when this container is lg-wide
- * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it.
+ * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it. The same holds for a 'full' container inside a 'fit-content' one, since filling a parent that sizes to its content is sizing to the content too.
  * @attr {string} min-width - Minimum width as a CSS length (e.g. '280px')
  * @attr {string} max-width - Maximum width as a CSS length (e.g. '480px')
  * @attr {string} min-height - Minimum height as a CSS length (e.g. '240px'), padding included. Reserves the room that content still on its way will take; vertical-alignment then places the children within it.
@@ -118,7 +118,7 @@
  * @slot - Container content
  */
 import { LitElement, PropertyValues } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { containerStyles } from './container.styles.js';
@@ -295,9 +295,45 @@ export class NLDDContainer extends LitElement {
 	@property({ type: String, reflect: true, attribute: 'vertical-alignment' })
 	verticalAlignment: VerticalAlignment | undefined = undefined;
 
-	override updated(_changed: PropertyValues): void {
+	/**
+	 * Whether this container takes its width from its content, while not saying
+	 * so itself: a 'full' container inside a 'fit-content' one. A query container
+	 * reports no width of its own content to its parent, so with containment it
+	 * would measure 0 wide here. It then measures nothing, as 'fit-content' does.
+	 */
+	@state()
+	private _sizedByContent = false;
+
+	/** @internal Also called by an ancestor container whose width changes. */
+	get _isSizedByContent(): boolean {
+		return this.width === 'fit-content' || this._sizedByContent;
+	}
+
+	/** @internal */
+	_syncSizedByContent(): void {
+		const parent = this.parentElement?.closest('nldd-container') as NLDDContainer | null;
+		const fills = !this.width || this.width === 'full';
+		this._sizedByContent = fills && Boolean(parent?._isSizedByContent);
+	}
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this._syncSizedByContent();
+	}
+
+	override willUpdate(changed: PropertyValues): void {
+		if (changed.has('width')) this._syncSizedByContent();
+	}
+
+	override updated(changed: PropertyValues): void {
 		this.writeCustomProperties();
 		this.writeDimensionProperties();
+		// Only the nearest containers: each passes a change on to its own.
+		if (changed.has('width') || changed.has('_sizedByContent')) {
+			this.querySelectorAll<NLDDContainer>('nldd-container').forEach((child) => {
+				if (child.parentElement?.closest('nldd-container') === this) child._syncSizedByContent?.();
+			});
+		}
 	}
 
 	/** A length goes into a custom property; the keywords are selectors in the

@@ -145,7 +145,7 @@ export const containerStyles = css`
 		}
 	}
 
-	:host([width="fit-content"]) .container {
+	.container.is-sized-by-content {
 		container-type: normal;
 	}
 

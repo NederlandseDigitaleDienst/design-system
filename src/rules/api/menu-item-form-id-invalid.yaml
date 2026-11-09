@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-menu-item:state(form-target-not-a-form)'
+message: 'The id in `form` is an element without a form, so this item submits nothing. An nldd-form only has one once it has rendered.'

@@ -283,6 +283,8 @@ A single item within an nldd-menu.
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
 - `logout-no-link` (hint): Make it a button: logging out happens at once.
 - `menu-item-destructive-goes-last` (hint): Put the destructive item last, behind an nldd-menu-divider, away from the actions people click through.
+- `menu-item-form-id-invalid`: The id in `form` is an element without a form, so this item submits nothing. An nldd-form only has one once it has rendered.
+- `menu-item-form-id-not-found`: Nothing in this root has the id in `form`, so this item submits nothing.
 - `menu-navigation-no-other-items`: variant="navigation" is a list of links. A checkbox or radio item, or a shortcut, belongs to an action menu and has no role to live in here. Use the default variant for actions.
 - `menu-needs-two-actions` (hint): Use a plain button for a single action.
 - `menu-no-late-submenu`: An nldd-menu child was added after mount. Submenu attachment is resolved once at firstUpdated, so this menu will not be treated as a submenu. Define the nldd-menu child before the item is connected to the DOM.
@@ -301,7 +303,8 @@ A single item within an nldd-menu.
 | `shortcut` | `string` | Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable. |
 | `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
 | `href` | `string` | Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled. |
-| `type` | `string` | Item type: 'button' \| 'checkbox' \| 'radio'. Default: 'button'. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves. |
+| `type` | `string` | Item type: 'button' \| 'submit' \| 'checkbox' \| 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves. |
+| `form` | `string` | Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root. |
 | `selected` | `boolean` | Selected state for checkbox and radio types. |
 | `disabled` | `boolean` | Disabled state. |
 | `value` | `string` | A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated. |
@@ -1296,7 +1299,7 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 
 | Event | Description |
 | --- | --- |
-| `change` | Bubbles up from the slotted select; detail: { value: string } |
+| `change` | The native change of the slotted select, left to bubble, so a listener on the select, on the dropdown or higher up all hear it. Read the choice from `value`. |
 
 ### `<nldd-file-field>`
 
@@ -2264,7 +2267,7 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 | `sm-column-count` | `number` | Column count when this container is sm-wide |
 | `md-column-count` | `number` | Column count when this container is md-wide |
 | `lg-column-count` | `number` | Column count when this container is lg-wide |
-| `width` | `string` | 'full' (default, fills the parent) \| 'fit-content' \| a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it. |
+| `width` | `string` | 'full' (default, fills the parent) \| 'fit-content' \| a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it. The same holds for a 'full' container inside a 'fit-content' one, since filling a parent that sizes to its content is sizing to the content too. |
 | `min-width` | `string` | Minimum width as a CSS length (e.g. '280px') |
 | `max-width` | `string` | Maximum width as a CSS length (e.g. '480px') |
 | `min-height` | `string` | Minimum height as a CSS length (e.g. '240px'), padding included. Reserves the room that content still on its way will take; vertical-alignment then places the children within it. |
@@ -4005,6 +4008,7 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `button` | `boolean` | Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it. |
 | `checkbox` | `boolean` | Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`. |
 | `radio` | `boolean` | Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it. |
+| `expandable` | `boolean` | The row opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. A row with children in a tree already is one. |
 | `accessible-label` | `string` | Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it. |
 | `reorderable` | `boolean` | Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility. |
 | `selected` | `boolean` | Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`. |
@@ -4058,6 +4062,7 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 | `button` | `boolean` | Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it. |
 | `checkbox` | `boolean` | Makes the segment a `role="checkbox"` control. Wins over `button`, loses to `href`. |
 | `disclosure` | `boolean` | Marks the segment as the row's disclosure control: `aria-expanded` comes from the parent item's `expanded`, so the state lives in one place. A slotted `nldd-icon-cell` rotates a quarter turn while the row is open |
+| `expandable` | `boolean` | The segment opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. |
 | `accessible-label` | `string` | Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action. |
 | `checked` | `boolean` | Checked state of a `checkbox` segment; it toggles on activation |
 | `expanded` | `boolean` | Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded. |

@@ -3507,3 +3507,89 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 		});
 	});
 });
+
+describe('nldd-menu-item type="submit"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('submits the form it stands in when chosen, and stays a plain menuitem', async () => {
+		el = await fixture(`
+			<form method="post" action="/uitloggen">
+				<nldd-menu open>
+					<nldd-menu-item type="submit" text="Uitloggen"></nldd-menu-item>
+				</nldd-menu>
+			</form>
+		`);
+		const form = el as HTMLFormElement;
+		const item = el.querySelector('nldd-menu-item') as HTMLElement & { select(): void };
+		await waitForUpdate(item);
+		const order: string[] = [];
+		item.addEventListener('select', () => order.push('select'));
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			order.push('submit');
+		});
+		item.select();
+		expect(order).toEqual(['select', 'submit']);
+		expect(getButton(item).getAttribute('role')).toBe('menuitem');
+		expect(getButton(item).hasAttribute('aria-checked')).toBe(false);
+	});
+
+	it('submits the form its form attribute names', async () => {
+		el = await fixture(`
+			<div>
+				<form id="verwijder-aanvraag" method="post"></form>
+				<nldd-menu open>
+					<nldd-menu-item type="submit" form="verwijder-aanvraag" text="Verwijder aanvraag"></nldd-menu-item>
+				</nldd-menu>
+			</div>
+		`);
+		const form = el.querySelector('form')!;
+		const item = el.querySelector('nldd-menu-item') as HTMLElement & { select(): void };
+		await waitForUpdate(item);
+		let submitted = false;
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			submitted = true;
+		});
+		item.select();
+		expect(submitted).toBe(true);
+	});
+
+	it('submits nothing while disabled', async () => {
+		el = await fixture(`
+			<form method="post" action="/uitloggen">
+				<nldd-menu open>
+					<nldd-menu-item type="submit" text="Uitloggen" disabled></nldd-menu-item>
+				</nldd-menu>
+			</form>
+		`);
+		const item = el.querySelector('nldd-menu-item') as HTMLElement & { select(): void };
+		await waitForUpdate(item);
+		let submitted = false;
+		el.addEventListener('submit', (event) => {
+			event.preventDefault();
+			submitted = true;
+		});
+		item.select();
+		expect(submitted).toBe(false);
+	});
+
+	it('gives the menu no check-mark column', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Profiel"></nldd-menu-item>
+				<nldd-menu-item type="submit" text="Uitloggen"></nldd-menu-item>
+			</nldd-menu>
+		`);
+		(el as HTMLElement & { showPopover(): void }).showPopover();
+		await waitForUpdate(el);
+		const items = [...el.querySelectorAll('nldd-menu-item')] as (HTMLElement & { updateComplete: Promise<unknown> })[];
+		await Promise.all(items.map((item) => item.updateComplete));
+		const checkCell = (item: Element) => item.shadowRoot!.querySelector('nldd-icon-cell[horizontal-alignment="center"]');
+		expect(items.map(checkCell)).toEqual([null, null]);
+	});
+});
