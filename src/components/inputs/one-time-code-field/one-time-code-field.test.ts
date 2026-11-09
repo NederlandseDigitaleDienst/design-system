@@ -39,7 +39,7 @@ describe('nldd-one-time-code-field', () => {
 		expect(boxes()).toHaveLength(5);
 		expect(input().maxLength).toBe(5);
 		const separators = [...el.shadowRoot!.querySelectorAll('.one-time-code-field__separator')];
-		expect(separators.map((separator) => separator.className)).toEqual(['one-time-code-field__separator is-dash']);
+		expect(separators.map((separator) => separator.className)).toEqual(['one-time-code-field__separator one-time-code-field__separator--dash']);
 		await type('123-45');
 		expect(el.value).toBe('12345');
 	});
@@ -47,7 +47,7 @@ describe('nldd-one-time-code-field', () => {
 	it('draws a space as room between the groups, and keeps another character as text', async () => {
 		el = await fixture('<nldd-one-time-code-field format="## ##/##"></nldd-one-time-code-field>');
 		const [space, slash] = el.shadowRoot!.querySelectorAll<HTMLElement>('.one-time-code-field__separator');
-		expect(space.classList.contains('is-space')).toBe(true);
+		expect(space.classList.contains('one-time-code-field__separator--space')).toBe(true);
 		expect(slash.textContent).toBe('/');
 	});
 
