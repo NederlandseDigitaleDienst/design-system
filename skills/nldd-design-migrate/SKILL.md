@@ -212,7 +212,7 @@ In die ronde leverden deze punten het meeste op. De regels zelf staan elders, hi
 - De paginatitel in het `header`-slot van de eerste sectie, op elke pagina gelijk: [`page-structure`](../nldd-design-build/patterns/page-structure.md).
 - Navigatie tussen pagina's met `nldd-tab-bar navigation` en een `href` per item; een `nldd-segmented-control` kiest uit een vaste set ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren)).
 - Een kaart met knoppen erin is geen link; zie de kaarten onder "Toegankelijkheid" hierboven.
-- Geen kader om een lijst, een lege stand of een los getal ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#visueel-en-layout)).
+- Terughoudend met kaders en gekleurde vlakken: een lijst, een lege stand of een los getal heeft er meestal geen nodig ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#visueel-en-layout)).
 - Geen knoppen die uit staan ([ontwerprichtlijnen](../nldd-design/design-guidelines.md#invoer-en-formulieren)).
 
 ## Testen zonder backend
