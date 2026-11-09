@@ -9,6 +9,21 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Migrating a React app takes less work.** `nldd-dropdown` lets the native `change` of its select through, the package ships JSX types, and the main entry and the subpaths share their modules. See Breaking, Added and Fixed.
+
+### Breaking
+
+- **`nldd-dropdown` no longer sends a `change` of its own.** The native `change` of the slotted `<select>` bubbles on instead, so a listener on the select, on the dropdown or higher up hears it, a React `onChange` on the select included. It has no `detail`: read the choice from `value` on the dropdown or on the select.
+
+### Added
+
+- **`value` on `nldd-dropdown`,** which reads and writes the value of the slotted `<select>`, also when it is set before the select is there.
+- **`expandable` on `nldd-list-item` and `nldd-list-item-segment`,** for a row or segment that opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. Markup could not write a closed disclosure before, since `expanded="false"` reads as on.
+- **JSX types for React, in `@nldd/design-system/react`.** Every `nldd-*` tag with its attributes, for React 18 and 19. A boolean takes `true` or nothing, so `disabled={busy}`, which React 18 always reads as on, does not compile.
+- **A subpath for each part of `nldd-menu`, `nldd-toolbar` and `nldd-kanban`,** such as `@nldd/design-system/menu-item`, so every tag can be imported by its own name.
+
 ### Changed
 
 - **`nldd-design-migrate` and `nldd-design-build` make a pure app the goal:** no stylesheet of your own, no `class` or `style`, no `div` or `span` that styles anything. A migration is done when the purity check passes with an empty baseline, and that check is the first one to build. If a component is missing, you may build your own under a name without `nldd-`. That need not be a workaround, since you may want to keep control over it as your project moves; say in a report what you built, so it can be decided whether it becomes an official one. Styling an `nldd-*` component stays out. A workaround for what the system cannot do yet carries its issue link, the version and why, in the code and not in the baseline. The token bridge from Tailwind is scaffolding, and the small CSS file the Tailwind page used to allow is gone.
@@ -16,6 +31,10 @@ here; consult the commit history if you need that level of detail.
 - **New sections in `nldd-design-migrate`:** import per subpath and never next to the main entry, global CSS that carries behavior, an `nldd-container` that measures zero wide in a parent sized by its content, a separate round on visual hierarchy, and testing without a backend.
 - **A design guideline: no frame around a list, an empty state or a single number.**
 - **`nldd-design-build` says how to force light or dark:** `data-scheme` on `<html>`, not `color-scheme` in your own CSS.
+
+### Fixed
+
+- **Importing `@nldd/design-system` next to a subpath no longer throws "has already been used with this registry".** The main entry imports the same modules as the subpaths, instead of a bundle with its own copy of every component.
 
 ## [0.20.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.19.0...v0.20.0) (2026-11-09)
 

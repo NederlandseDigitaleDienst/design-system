@@ -1,29 +1,32 @@
 # Migreren vanaf React
 
-Aanvulling op [`SKILL.md`](SKILL.md), de hoofdpagina van deze skill, voor een React-app. Lees die eerst; hieronder staat alleen wat specifiek is voor React. De booleanvalkuil onderaan geldt alleen voor React 18, want React 19 zet properties op custom elements. De events gelden voor beide: het component stopt de native `change`, welke React-versie er ook luistert.
+Aanvulling op [`SKILL.md`](SKILL.md), de hoofdpagina van deze skill, voor een React-app. Lees die eerst; hieronder staat alleen wat specifiek is voor React. De booleanvalkuil onderaan geldt alleen voor React 18, want React 19 zet properties op custom elements. De events gelden voor beide.
 
-## Events: de regel die de meeste code breekt
+Importeer eerst de JSX-typen van het pakket, één keer, bijvoorbeeld in een `.d.ts` die je tsconfig meeneemt:
 
-**React's synthetische events bereiken geen controls die in een custom element geslot zijn.**
+```ts
+import '@nldd/design-system/react';
+```
 
-`nldd-dropdown` is een visuele schil om een echte `<select>` die je als child meegeeft. Het component luistert op die select, roept `stopPropagation()` aan op de native `change`, en zendt daarna zijn eigen `CustomEvent` uit vanaf de host. React delegeert vanaf de root, dus:
+Dan kent `tsc` elke `nldd-*`-tag met zijn attributen, en weigert hij de booleanvalkuil hieronder.
 
-- het gestopte native event bereikt de delegate nooit, en
-- wat er wel aankomt is een `CustomEvent` die React niet op `onChange` mapt.
+## Events: wat React niet ziet
 
-Een React `onChange` op die select **vuurt nooit**. In één codebase maakte dat **37 handlers** stil onbruikbaar. Rolbeheer werkte helemaal niet, deelrechten waren niet te geven, een filter stuurde geen enkele request. Niets in de UI liet dat blijken.
+**React koppelt geen listeners aan custom events, en delegeert de rest vanaf de root.** Een event dat een component zelf uitzendt, bereikt dus geen `onChange` of `onClose` op dat component:
 
-Hetzelfde geldt voor:
+- `nldd-text-field` en verwanten hebben een eigen input in hun shadow root. Ze stoppen de native `change` en zenden een eigen `CustomEvent` uit vanaf de host, en dat mapt React niet op `onChange`.
+- `close` op sheets, popovers en modals heeft `bubbles: false`, net als bij een native `<dialog>`. Een `onClose`-prop vuurt nooit en een dismissal reist niet omhoog. Mis je dat, dan heeft de overlay twee klikken nodig om te heropenen.
 
-- `nldd-text-field` en verwanten, die een eigen shadow input hebben en opnieuw uitzenden.
-- `close` op sheets, popovers en modals: dat heeft `bubbles: false`, dus een `onClose`-prop vuurt nooit en een dismissal reist niet omhoog. Mis je dat, dan heeft de overlay twee klikken nodig om te heropenen.
+Een handler die nooit draait geeft geen fout. Rolbeheer dat niet werkt, een filter dat geen request stuurt: niets in de UI laat het zien.
+
+`nldd-dropdown` hoort daar niet bij. De `<select>` die je meegeeft is van jou, en zijn native `change` gaat door, dus een `onChange` op die select werkt.
 
 **Schrijf op dag één een `useNlddEvent(ref, type, handler)`-helper** plus een `useNlddValue`-spiegel voor gecontroleerde waarden, en laat alles door je eigen wrapper-componenten lopen. Zet de ref op het `nldd-*`-element zelf, niet op het control erin. Audit daarna: grep elke React-handler die gebonden is aan een element binnen een `nldd-*` tag.
 
 Twee dingen gaan bij een gecontroleerd veld vaak mis:
 
 - **Luister naar `input`, niet naar `change`.** `nldd-text-field` stuurt `input` bij elke toetsaanslag en `change` pas bij het verlaten van het veld. Volgt je state `change`, dan loopt hij achter op wat er getypt wordt, en zet de spiegel bij elke render tussendoor de oude waarde terug.
-- **`nldd-dropdown` heeft zelf geen `value`.** Zet de waarde op de `<select>` die je meegeeft, en geef de spiegel een ref naar die select.
+- **Geef de spiegel een ref naar het `nldd-*`-element.** Ook `nldd-dropdown` heeft een `value`, die naar de `<select>` erin doorgeeft.
 
 Vervang een gecontroleerde `value=` ook niet door `defaultValue=` "om dit op te lossen". Dat lijkt te werken en is een bug: data komt meestal uit een query, dus de eerste render heeft een lege lijst, de default bevriest op `""` en herstelt zich nooit.
 
@@ -93,15 +96,6 @@ Merk je dit pas achteraf, dan is het symptoom een knop of veld dat in de ene wee
 
 React 18 kent geen properties op custom elements. Het schrijft een prop als attribuut, met de waarde als tekst. Een booleaans attribuut van een component staat aan zodra het er is, welke waarde er ook in staat. Dus `disabled={busy}` schakelt de knop altijd uit: `disabled="true"` als `busy` true is, `disabled="false"` als het false is. Geen waarschuwing, geen fout. (React 19 zet de property als het element die heeft, en heeft dit probleem niet.)
 
-Wat werkte: genereer de JSX-typen uit `custom-elements.json` en laat een booleaans attribuut alleen `true | undefined` toe. Dan weigert `tsc` `disabled={busy}` en dwingt het `disabled={busy || undefined}` af, waarmee React het attribuut weglaat.
+De JSX-typen van het pakket laten een booleaans attribuut alleen `true` of niets toe. Dan weigert `tsc` `disabled={busy}` en dwingt het `disabled={busy || undefined}` af, waarmee React het attribuut weglaat. In React 19 is dat strenger dan nodig, maar het klopt in beide.
 
-```ts
-// Generated from custom-elements.json: a boolean is present or absent, never false.
-'nldd-button': {
-  disabled?: true;
-  text?: string;
-  // ...
-};
-```
-
-Het manifest typt sommige booleans als `boolean | undefined`, zoals `expanded` op `nldd-list-item` en `nldd-list-item-segment`. Behandel die in de generator net zo. Bij `expanded` op een rij zonder kinderen betekent `undefined` "niet uitklapbaar" en `false` "dicht maar uitklapbaar". Een attribuut kan alleen aan of afwezig zeggen, dus `false` zet je met de property, via een ref.
+Bij `expanded` op een rij zonder kinderen betekent afwezig "niet uitklapbaar". Zet `expandable` erbij voor een rij die dicht is maar wel uitklapt: dan zegt een afwezige `expanded` "dicht". Dat geldt voor `nldd-list-item` en `nldd-list-item-segment`.

@@ -49,9 +49,8 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 | Niet-bestaande variabele **met** hex-fallback | De fallback rendert; de token is versiering en donkere modus bevriest |
 | `className` in plaats van `class` op een rauw element | De klasse doet niets |
 | React `onChange` op een geslot native control | De handler draait nooit |
-| `disabled={busy}` in React 18 | De knop staat altijd uit, ook als `busy` false is |
+| `disabled={busy}` in React 18, zonder de JSX-typen van het pakket | De knop staat altijd uit, ook als `busy` false is |
 | Breedteloze container om een kind dat zijn ouder meet | Nul pixels, hoogte blijft |
-| `import '@nldd/design-system'` naast losse subpaden | `customElements.define` gooit "has already been used" |
 
 ## Bouw de checks vóór je iets omzet
 
@@ -138,20 +137,17 @@ Zoek dus in de CSS die weggaat op selectors met `[data-`, `:root[` en `html[`, e
 
 Kom je van Tailwind, lees dan [`from-tailwind.md`](from-tailwind.md): daar zit een extra valstrik, omdat de compiler regels verzint voor klassen die nergens bestaan.
 
-## Importeer per subpad, en meng niet
+## Importeer per subpad
 
 `import '@nldd/design-system'` registreert elk component, en dat komt allemaal in de eerste download. In een React-app met Vite was dat 2,8 MB JavaScript. Importeer per bestand alleen de subpaden die dat bestand gebruikt (`@nldd/design-system/button`, `@nldd/design-system/sheet`); in dezelfde app zakte de eerste lading daarmee naar 1,6 MB (384 kB gzip).
 
-Meng die twee vormen niet. De hoofdingang is één gebundeld bestand met een eigen kopie van elk component, dus een subpad ernaast laadt een tweede kopie, en het tweede `customElements.define` voor dezelfde tag faalt met "has already been used with this registry".
+De hoofdingang importeert dezelfde modules als de subpaden, dus een overgebleven `import '@nldd/design-system'` naast losse subpaden kost alleen downloadgrootte, geen tweede registratie.
 
-Met de hand bijhouden welk bestand welke subpaden nodig heeft, houdt niemand vol. Genereer de imports uit `custom-elements.json`: lees per bestand de `nldd-*`-tags, zoek per tag de module die hem definieert, en schrijf de importregels. Geef het script een `--check`-stand die faalt als de imports niet kloppen, en draai die in CI. Dat is dan meteen je registratiecheck. Twee dingen om in te bouwen:
-
-- Niet elk onderdeel heeft een eigen subpad: de onderdelen van `menu`, `toolbar` en `kanban` (`nldd-menu-item`, `nldd-menu-group`, `nldd-toolbar-item`, `nldd-kanban-column` en verwanten) worden geregistreerd door het subpad van hun map. `custom-elements.json` geeft per tag het pad van de module; staat dat pad niet in de `exports` van `package.json`, neem dan het subpad van de map.
-- Een klasse, zoals `NLDDNotification` voor zijn statische `show()`, importeer je uit hetzelfde subpad. Dat is dezelfde module als de registratie, dus er komt geen tweede kopie bij.
+Met de hand bijhouden welk bestand welke subpaden nodig heeft, houdt niemand vol. Genereer de imports uit `custom-elements.json`: lees per bestand de `nldd-*`-tags, zoek per tag de module die hem definieert, en schrijf de importregels. Geef het script een `--check`-stand die faalt als de imports niet kloppen, en draai die in CI. Dat is dan meteen je registratiecheck. Elke tag heeft een subpad met de naam van zijn module, ook de onderdelen van `menu`, `toolbar` en `kanban` (`@nldd/design-system/menu-item`, `@nldd/design-system/kanban-column`). Een klasse, zoals `NLDDNotification` voor zijn statische `show()`, importeer je uit hetzelfde subpad als de registratie.
 
 ## Events: wat een component zelf uitzendt
 
-Een component dat een native control omhult, zoals `nldd-dropdown` om een `<select>` of `nldd-text-field` met zijn eigen input, stopt de native `change` en zendt een eigen `CustomEvent` uit vanaf de host. `close` op sheets, popovers en modals heeft `bubbles: false`. Een framework dat luistert op het native control, of dat events vanaf de root delegeert, krijgt daardoor niets binnen, en een handler die nooit draait geeft geen fout. Luister op het `nldd-*`-element zelf, naar het event dat het component documenteert.
+Een component met een eigen control in zijn shadow root, zoals `nldd-text-field` met zijn input, stopt de native `change` en zendt een eigen `CustomEvent` uit vanaf de host. `close` op sheets, popovers en modals heeft `bubbles: false`, net als de `close` van een native `<dialog>`. `nldd-dropdown` is anders: de `<select>` is van jou en zijn native `change` gaat gewoon door. Een framework dat luistert op het native control, of dat events vanaf de root delegeert, krijgt daardoor niets binnen, en een handler die nooit draait geeft geen fout. Luister op het `nldd-*`-element zelf, naar het event dat het component documenteert.
 
 Kom je van React, lees dan [`from-react.md`](from-react.md): daar staan de helpers die het oplossen.
 
@@ -282,7 +278,7 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 1. Installeren, stylesheet importeren, en componenten registreren per subpad, met een gegenereerde importlijst.
 2. De checks bouwen, de zuiverheidscheck met zijn baseline voorop. Van elk bewijzen dat die faalt.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
-4. De event-, value- en overlay-helpers schrijven, plus getypte JSX-bindings waarin een boolean alleen `true` of afwezig kan zijn.
+4. De event-, value- en overlay-helpers schrijven, en in een React-app de JSX-typen van het pakket importeren (`@nldd/design-system/react`).
 5. Per scherm de vormgeving direct vervangen door componenten, en de CSS van dat scherm in dezelfde commit weghalen. Zet inline stijlen niet eerst om naar klassen: dat verplaatst eigen CSS in plaats van hem weg te halen. Bewaar ook geen opruimronde voor het eind. Een migratie die dat deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten. Wat geen component kan, wordt een issue en een uitzondering in de code met de issuelink.
 6. Inventariseren welke globale regels gedrag dragen. Daarna het oude CSS-framework **vroeg** weghalen en repareren wat dat blootlegt.
 7. De app-shell omzetten (layout, navigatie, header), achter een vlag als de navigatie voor iedereen verandert.
