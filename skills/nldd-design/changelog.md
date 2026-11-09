@@ -47,6 +47,7 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-top-navigation-bar` also clears `current` on an item a framework made current as a property,** so two items can no longer be current at once.
 - **A tab with an icon in its `icon` slot keeps that icon in the "Meer tabs" menu of `nldd-tab-bar`,** where only an icon from the `icon` attribute went along.
 - **`nldd-popover`, `nldd-menu`, `nldd-sheet` and `nldd-window` return focus without a focus ring after a tap or click.** Safari drew a ring around the element that had focus before the overlay opened, also when you only used a finger or mouse. With the keyboard the ring stays. A popover or menu opened from a button that Safari gave no focus now returns focus to that button instead of the page, so Tab goes on from there.
+- **The footer of `nldd-page sticky-footer` sticks to the bottom of the screen where the document scrolls,** on every phone and in an app without a split view. It stood its own height above the bottom.
 
 ## [0.19.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.18.0...v0.19.0) (2026-11-08)
 

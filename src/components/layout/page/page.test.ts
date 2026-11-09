@@ -182,6 +182,18 @@ describe('nldd-page', () => {
 			await new Promise(r => setTimeout(r, 100));
 			expect(probeBottom(el)).toBe('60px');
 		});
+
+		it('sticks its own footer to the inset it came in with, not above itself', async () => {
+			el = await fixture(`
+				<nldd-page sticky-footer style="--context-scroll-mode: root; --context-inset-bottom: 20px;">
+					<div slot="footer" style="height: 40px;">Footer</div>
+				</nldd-page>
+			`);
+			await waitForUpdate(el);
+			await new Promise(r => setTimeout(r, 100));
+			const footer = el.shadowRoot!.querySelector('.page__footer') as HTMLElement;
+			expect(getComputedStyle(footer).bottom).toBe('20px');
+		});
 	});
 
 	describe('scroll height for sticky content', () => {
