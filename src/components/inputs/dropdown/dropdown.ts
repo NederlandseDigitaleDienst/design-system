@@ -159,6 +159,8 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 			delete (this as { value?: string }).value;
 			this.value = value;
 		}
+		// Back after a move: watch the options again for a value still pending.
+		this._applyPendingValue(this._select);
 	}
 
 	override disconnectedCallback(): void {

@@ -329,6 +329,19 @@ describe('nldd-dropdown – change event', () => {
 		expect(el.value).toBe('be');
 	});
 
+	it('keeps waiting for the option after the dropdown is moved', async () => {
+		el = await fixture<NLDDDropdown>('<nldd-dropdown><select aria-label="Land"><option value="nl">Nederland</option></select></nldd-dropdown>');
+		await waitForUpdate(el);
+		el.value = 'be';
+		const parent = el.parentElement!;
+		el.remove();
+		parent.append(el);
+		const select = el.querySelector('select')!;
+		select.insertAdjacentHTML('beforeend', '<option value="be">België</option>');
+		await waitForUpdate(el);
+		expect(select.value).toBe('be');
+	});
+
 	it('lets a choice someone makes win over a value still waiting for its option', async () => {
 		el = await fixture<NLDDDropdown>('<nldd-dropdown><select aria-label="Land"><option value="nl">Nederland</option></select></nldd-dropdown>');
 		await waitForUpdate(el);
