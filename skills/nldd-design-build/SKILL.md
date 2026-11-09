@@ -32,9 +32,11 @@ Wat je vormgeeft is daarmee geen keuze van deze skill. Wanneer een sticky header
 
 ### Geen eigen vormgeving
 
-Een app op dit systeem heeft geen eigen stylesheet, geen `class` of `style` en geen `div` of `span` die iets opmaakt. Wat er staat, zijn `nldd-*`-componenten met attributen en slots. Eigen CSS moet je bij elke release zelf nalopen: een hernoemde variabele of een toegankelijkheidsfix in een component bereikt hem niet.
+Zet geen eigen stijl op een `nldd-*`-component: geen `class` of `style` erop, geen selector die erop mikt, en geen `div` of `span` eromheen die iets opmaakt. Stuur een component via zijn attributen en slots. Eigen CSS moet je bij elke release zelf nalopen: een hernoemde variabele of een toegankelijkheidsfix in een component bereikt hem niet.
 
-Kom je iets tegen dat geen component kan, dan is dat een gat in het systeem: meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Wat een omweg tot die tijd bij zich draagt, en hoe je het met een check afdwingt, staat in [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md#het-doel-alles-komt-uit-het-systeem).
+Mis je een component, dan mag je er zelf een bouwen. Geef het een eigen naam, zonder `nldd-`, zodat niemand het voor een component van het systeem aanziet. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in een melding via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md): dan kan er besloten worden of het een officieel NLDD-component wordt.
+
+Kan een `nldd-*`-component iets niet wat het hoort te kunnen, dan is dat een gat in het systeem. Wat een omweg daarvoor tot die tijd bij zich draagt, en hoe je het met een check afdwingt, staat in [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md#het-doel-alles-komt-uit-het-systeem).
 
 ### Componeer, herstijl niet
 
