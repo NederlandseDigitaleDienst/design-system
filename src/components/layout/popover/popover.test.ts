@@ -296,6 +296,31 @@ describe('nldd-popover', () => {
 				return { trigger, focus };
 			}
 
+			it('geeft de focus terug aan de knop als een veld erin autofocus heeft', async () => {
+				const wrapper = await fixture(`
+					<div>
+						<button id="trigger-autofocus">Trigger</button>
+						<nldd-popover anchor="trigger-autofocus" accessible-label="Test"><input autofocus></nldd-popover>
+					</div>
+				`);
+				el = wrapper;
+				const popover = wrapper.querySelector('nldd-popover') as NLDDPopover;
+				const trigger = wrapper.querySelector<HTMLButtonElement>('#trigger-autofocus')!;
+				await waitForUpdate(popover);
+				trigger.focus();
+				document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+				popover.show();
+				await waitForUpdate(popover);
+				expect(document.activeElement).toBe(popover.querySelector('input'));
+				// The browser's hide step moves focus back on its own; the popover
+				// must still know the trigger, or the pointer path can't clear its ring.
+				const focus = vi.spyOn(trigger, 'focus');
+				popover.hide();
+				await waitForUpdate(popover);
+				expect(focus).toHaveBeenCalled();
+				expect(document.activeElement).toBe(trigger);
+			});
+
 			it('zet de focus na een aanwijzer terug zonder ring', async () => {
 				// WebKit draws a ring on the focus its hide step restores; blur and
 				// focus with focusVisible: false clears it (checked in WebKit by hand).

@@ -5,7 +5,7 @@ import './menu.js';
 import '../button/button.js';
 import '../../inputs/combo-box/combo-box.js';
 import '../../inputs/token-field/token-field.js';
-import { pointInPolygon, wedge, apexAt } from './menu.safe-triangle.js';
+import { pointInPolygon, wedge, apexAt, STALL_DISMISS_MS, SafeTriangleController } from './menu.safe-triangle.js';
 import { menuItemFromPoint } from './menu.pointer.js';
 
 function getButton(el: Element): HTMLElement {
@@ -1304,6 +1304,27 @@ describe('nldd-menu safe-triangle internals', () => {
 		// Outside the widening wedge at the midpoint.
 		expect(pointInPolygon({ x: 50, y: 40 }, wedge)).toBe(false);
 		expect(pointInPolygon({ x: 50, y: -40 }, wedge)).toBe(false);
+	});
+
+	it('frees the cursor where it stalls on its way to the submenu', async () => {
+		const releaseAt = vi.fn();
+		const host = {
+			addController: () => {}, removeController: () => {}, requestUpdate: () => {},
+			updateComplete: Promise.resolve(true),
+			safeTriangleOpener: null, isPointInSubmenus: () => false, highlightOpener: () => {},
+			releaseAt, debugSafeTriangle: false,
+		};
+		const triangle = new SafeTriangleController(host);
+		const internals = triangle as unknown as { _lastPos: unknown; _scheduleStall(): void };
+		const point = { x: 40, y: 12 };
+		triangle.movingToward = true;
+		internals._lastPos = point;
+		internals._scheduleStall();
+		await new Promise((resolve) => setTimeout(resolve, STALL_DISMISS_MS / 2));
+		expect(releaseAt).not.toHaveBeenCalled();
+		await new Promise((resolve) => setTimeout(resolve, STALL_DISMISS_MS / 2 + 50));
+		expect(releaseAt).toHaveBeenCalledWith(point);
+		expect(triangle.movingToward).toBe(false);
 	});
 });
 
@@ -3404,6 +3425,16 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 			expect(document.elementFromPoint(point.x, point.y)?.closest('nldd-menu-item')).toBeNull();
 			root.releaseAt(point);
 			expect(submenu.matches(':popover-open')).toBe(false);
+			cleanup(root);
+		});
+
+		it('keeps the submenu open when the pointer comes free on its opener', async () => {
+			const { root, item, submenu } = await setupDivider();
+			root._activateItem(item);
+			await until(() => submenu.matches(':popover-open'));
+			const rect = item.getBoundingClientRect();
+			root.releaseAt({ x: rect.left + 4, y: rect.top + rect.height / 2 });
+			expect(submenu.matches(':popover-open')).toBe(true);
 			cleanup(root);
 		});
 

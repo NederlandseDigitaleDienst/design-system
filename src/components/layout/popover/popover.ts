@@ -578,8 +578,12 @@ export class NLDDPopover extends LitElement {
 	// Clearing `positioned` here (beforetoggle fires before the popover is shown) keeps
 	// it hidden via CSS until reposition() has placed it. (The sm bottom-sheet is
 	// CSS-animated, so its hide rule is scoped to md; this is harmless there.)
+	// Focus is remembered here too: by the toggle event, an [autofocus] inside
+	// has already taken it.
 	private _handleBeforeToggle = (event: Event): void => {
-		if ((event as ToggleEvent).newState === 'open') this.removeAttribute('positioned');
+		if ((event as ToggleEvent).newState !== 'open') return;
+		this.removeAttribute('positioned');
+		this._focusReturn.remember(this._getAnchorEl());
 	};
 
 	private _handleToggle = async (event: Event): Promise<void> => {
@@ -598,7 +602,6 @@ export class NLDDPopover extends LitElement {
 			return;
 		}
 
-		this._focusReturn.remember(this._getAnchorEl());
 		await this.reposition();
 		this.setAttribute('positioned', ''); // placed — reveal it (see _handleBeforeToggle)
 		// Start scroll/resize/layout-change tracking. Floating UI's autoUpdate
