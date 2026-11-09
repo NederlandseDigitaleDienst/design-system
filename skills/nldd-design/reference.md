@@ -559,6 +559,8 @@ Shows a quote with an optional source attribution.
 | _(default)_ | The paragraph or paragraphs of the quote; prefer <p> elements |
 | `attribution` | Optional source attribution (author, title, and so on). An nldd-identity is allowed here; the em dash ("— ") is then left out. |
 
+**Plain HTML it styles:** `<p>`. `nldd lint --pure` reports plain HTML only where no component styles it.
+
 ### `<nldd-code-viewer>`
 
 A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. The viewer grows with its content. Set `max-height` to show a long file in a frame of its own: the block grows up to that height and scrolls beyond it. A scroller that overflows, in either direction, is a tab stop with a role and a name, so the keyboard reaches what a pointer can scroll to. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Set `diff` when the content is a unified diff, as git and pull request tools hand it out. The viewer shows the code it changes: an added line green and a removed line red, a column with the old and one with the new line number, a column with the `+` or `−`, and the `@@` header of each hunk between them. Within a removed line that is directly followed by an added one, the words that differ are marked, unless more than half of the line changed. File headers (`diff --git`, `---`, `+++`) are left out: name the file in the page around the viewer, and give each file of a multi-file diff a viewer of its own. `language` still highlights the code. A screen reader hears a summary first ("2 regels toegevoegd, 1 regel verwijderd") and "Toegevoegd" or "Verwijderd" with the line number before each changed line. A selection copies the code; the copy button copies the diff. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.
@@ -629,6 +631,8 @@ An editorial line that shows authors or editors: optional avatar or avatars, a n
 | `text` | Name line as rich content (a link to the author's profile, for instance) |
 | `supporting-text` | Supporting text as rich content (a time element, for instance) |
 
+**Plain HTML it styles:** `<img>`. `nldd lint --pure` reports plain HTML only where no component styles it.
+
 ### `<nldd-image>`
 
 Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image. Without an image (no `src`, `srcset`, `lqip` or slotted media) it shows a neutral area with an image icon, in the box, shape and caption a real image would get: a place where an image belongs, for a prototype or a pattern, or an image someone forgot. Without `aspect-ratio` that area is 16/9. While the built-in `<img>` loads without an `lqip`, the same area shows without the icon, and it goes once the image is in.
@@ -668,6 +672,8 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 | --- | --- |
 | _(default)_ | Custom `<img>`, `<picture>` or inline `<svg>` (overrides the src-based default). An inline svg keeps its own colors and scales by its viewBox, so a drawing gets the same box, ratio and caption as a photo. Slotted media carries its own text alternative: an `alt` on the img (empty when it conveys nothing), or `role="img"` with an `aria-label`, `aria-labelledby` or `<title>` on the svg. The internal `error` listener is attached only to the built-in `<img>`, so slotted content does not trigger the error-state overlay automatically. Consumers slotting their own image are responsible for handling its error state (e.g. swapping the slot content or styling a fallback). |
 | `caption` | Rich caption content (overrides the `caption` attribute) |
+
+**Plain HTML it styles:** `<img>`, `<picture>`, `<source>`, `<svg>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-keyboard-shortcut>`
 
@@ -714,6 +720,8 @@ A container for rich text content that automatically applies responsive typograp
 | `centered` | `boolean` | Centers the main column inside the container; without it, content is left-aligned |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `hyphens` | `boolean` | Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own. |
+
+**Plain HTML it styles:** `<p>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`, `<strong>`, `<b>`, `<em>`, `<i>`, `<u>`, `<s>`, `<del>`, `<ins>`, `<code>`, `<kbd>`, `<samp>`, `<var>`, `<small>`, `<mark>`, `<q>`, `<cite>`, `<abbr>`, `<sub>`, `<sup>`, `<br>`, `<span>`, `<ul>`, `<ol>`, `<li>`, `<dl>`, `<dt>`, `<dd>`, `<blockquote>`, `<pre>`, `<figure>`, `<figcaption>`, `<img>`, `<picture>`, `<source>`, `<table>`, `<thead>`, `<tbody>`, `<tfoot>`, `<tr>`, `<th>`, `<td>`, `<caption>`, `<hr>`, `<div>`, `<section>`, `<video>`, `<iframe>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-tag>`
 
@@ -773,6 +781,8 @@ One run of body text at a size from the type scale. It is what you reach for whe
 | --- | --- |
 | _(default)_ | The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone. |
 
+**Plain HTML it styles:** `<strong>`, `<b>`, `<em>`, `<i>`, `<a>`, `<code>`, `<mark>`, `<q>`, `<span>`. `nldd lint --pure` reports plain HTML only where no component styles it.
+
 ### `<nldd-title>`
 
 A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. `size` is how it looks, `heading-level` what it is, and the two are set apart. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text, and a filled slot takes the place of the attribute. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.
@@ -814,6 +824,8 @@ A title bar with an optional overline, title, and supporting text on the left, a
 | _(default)_ | Title that is more than text, such as a link. Takes the place of text, and brings its own h1–h6 for semantics. |
 | `supporting-text` | Supporting text that is more than text. Takes the place of the supporting-text attribute. |
 | `end` | Whatever belongs at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there. |
+
+**Plain HTML it styles:** `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-token>`
 
@@ -918,6 +930,8 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 | `enctype` | `string` | Encoding type for submission |
 | `novalidate` | `boolean` | Skip native browser validation |
 
+**Plain HTML it styles:** `<form>`. `nldd lint --pure` reports plain HTML only where no component styles it.
+
 **Events**
 
 | Event | Description |
@@ -992,6 +1006,8 @@ A field around one input: its label, supporting label, optional badge, validatio
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Help text content. May contain inline elements including links. |
+
+**Plain HTML it styles:** `<a>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-form-section>`
 
@@ -1294,6 +1310,8 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 | Slot | Description |
 | --- | --- |
 | _(default)_ | A native `<select>` element with `<option>` and/or `<optgroup>` children |
+
+**Plain HTML it styles:** `<select>`, `<option>`, `<optgroup>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 **Events**
 
@@ -2398,8 +2416,10 @@ The section that says what a page is for: it names the main goal of what you can
 
 | Slot | Description |
 | --- | --- |
-| `media` | Image or illustration (img or nldd-image); fills the area and is clipped. Takes precedence over the media-src attributes. Set `alt=""` when the image is decorative; otherwise give a describing alt text. |
+| `media` | Image or illustration (img or nldd-image); fills the area and is clipped. |
 | _(default)_ | Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance) |
+
+**Plain HTML it styles:** `<img>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-kanban>`
 

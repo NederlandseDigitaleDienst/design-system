@@ -26,6 +26,7 @@
  * @prop {string} value - The value of the slotted select. Setting it before the select or its option is there applies it once that option arrives, unless someone picks an option first.
  *
  * @slot - A native `<select>` element with `<option>` and/or `<optgroup>` children
+ * @accepts select, option, optgroup
  *
  * @fires change - The native change of the slotted select, left to bubble, so a listener on the select, on the dropdown or higher up all hear it. Read the choice from `value`.
  *

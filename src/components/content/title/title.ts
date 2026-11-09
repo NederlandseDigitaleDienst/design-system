@@ -35,6 +35,7 @@
  *
  * @slot overline - Overline that is more than text. Takes the place of the overline attribute.
  * @slot - Title that is more than text, such as a link. Takes the place of text, and brings its own h1–h6 for semantics.
+ * @accepts h1, h2, h3, h4, h5, h6, a
  * @slot supporting-text - Supporting text that is more than text. Takes the place of the supporting-text attribute.
  * @slot end - Whatever belongs at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there.
  */

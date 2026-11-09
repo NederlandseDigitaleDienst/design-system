@@ -86,6 +86,10 @@ export function nlddFileLevelJsdoc() {
 						element.events = doc.events.map((e) => ({ name: e.name, description: e.description }));
 					}
 
+					// Not part of the manifest schema: the linter reads it to tell plain
+					// HTML the component styles from HTML an app styles itself.
+					if (doc.accepts.length > 0) element.accepts = doc.accepts;
+
 					if (doc.slots.length > 0) {
 						element.slots = doc.slots.map((s) => ({ name: s.name, description: s.description }));
 					}

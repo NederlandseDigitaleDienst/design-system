@@ -20,7 +20,8 @@ describe('rules in the browser', () => {
 
 	afterEach(() => root?.remove());
 
-	for (const { id, examples } of data.rules.filter((each) => each.examples && each.severity !== 'hint')) {
+	// The group pure is a choice of the project and judges its source, so it stays out of the browser.
+	for (const { id, examples } of data.rules.filter((each) => each.examples && each.severity !== 'hint' && each.group !== 'pure')) {
 		const rule = devRules.find((each) => each.id === id)!;
 
 		it(`${id} agrees with its examples`, async () => {

@@ -65,6 +65,45 @@ function createFieldLabelCheck(isInput, allowMaybe) {
 	};
 }
 
+/**
+ * Whether the nearest component around a plain element styles it, as nldd-dropdown
+ * does its <select> and nldd-rich-text everything in it. Each component says so
+ * with `@accepts` in its JSDoc.
+ *
+ * What a file renders is judged in that file: that a parent elsewhere might put it
+ * inside an nldd-rich-text does not make plain HTML written here the system's. A
+ * tree the file builds under a name (a helper component, a variable) is judged where
+ * the file uses that name. Used nowhere here, or under a component of the app, it is
+ * unknown.
+ */
+function createAcceptedCheck(tags, allowUnknown) {
+	// `chain` holds the plain elements between the node and the component: the
+	// component styles its own children (::slotted) or descendants of what it styles,
+	// so each of them has to be accepted too. `seen` keeps a component that places
+	// itself from going round in circles.
+	const accepted = (node, from, chain, seen) => {
+		for (let parent = from; parent; parent = parent.parent) {
+			if (parent.name === '#root') {
+				if (!parent.detached) return false;
+				if (!parent.placements) return allowUnknown;
+				if (seen.has(parent)) return false;
+				const next = new Set(seen).add(parent);
+				// Accepted in any of the places the file uses it is enough.
+				return parent.placements.some((place) => accepted(node, place.parent, chain, next));
+			}
+			if (parent.opaque) return allowUnknown;
+			if (!parent.name.startsWith('nldd-')) {
+				chain.push(parent.name);
+				continue;
+			}
+			const accepts = tags[parent.name]?.accepts ?? [];
+			return accepts.includes('*') || [node.name, ...chain].every((name) => accepts.includes(name));
+		}
+		return false;
+	};
+	return (node) => accepted(node, node.parent, [], new Set());
+}
+
 function classPseudos(classes) {
 	return Object.fromEntries(
 		Object.entries(classes).map(([name, tags]) => {
@@ -88,6 +127,7 @@ function forWorld(tokens, classes, widen) {
 		}
 		if (!widen) return token;
 		if (token.type === 'pseudo' && token.name === 'named-by-field') return { ...token, name: 'may-be-named-by-field' };
+		if (token.type === 'pseudo' && token.name === 'accepted') return { ...token, name: 'may-be-accepted' };
 		if (token.type === 'tag' || (token.type === 'pseudo' && token.name in classes)) {
 			return { type: 'pseudo', name: 'is', data: [[token], [unknown]] };
 		}
@@ -101,15 +141,27 @@ function forWorld(tokens, classes, widen) {
 	});
 }
 
-export function createEngine({ classes = {} } = {}) {
+export function createEngine({ classes = {}, tags = {} } = {}) {
 	const shared = classPseudos(classes);
 	const pseudos = {
 		...shared,
 		'named-by-field': createFieldLabelCheck(shared['form-input'] ?? (() => false), false),
 		'may-be-named-by-field': createFieldLabelCheck(shared['form-input'] ?? (() => false), true),
+		accepted: createAcceptedCheck(tags, false),
+		'may-be-accepted': createAcceptedCheck(tags, true),
+		// Inside an element of this name in this file. A drawing's own classes and styles are its business.
+		within: (node, name) => {
+			for (let parent = node.parent; parent; parent = parent.parent) if (parent.name === name) return true;
+			return false;
+		},
+		// No element and no text: an empty mount point such as <div id="app"></div>.
+		blank: (node) => node.children.length === 0 && !node.text,
 		// Only exists on a running page, so in source it is never true.
 		state: () => false,
 		unknown: (node) => node.opaque,
+		// The attribute is in the markup, with a value or bound to one. `[class]` asks for a
+		// value we can read, so a bound class would only ever be cantTell.
+		written: (node, name) => node.attrs.has(name),
 		bound: (node, name) => node.opaque || node.spread || node.attrs.get(name) === BOUND,
 	};
 	const cache = new Map();

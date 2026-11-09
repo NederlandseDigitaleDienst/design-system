@@ -23,15 +23,15 @@ Wat je in de componentdocumentatie kunt opzoeken staat hier niet in; wat hier st
 
 ## Het doel: alles komt uit het systeem
 
-Een migratie is af als de app geen eigen vormgeving meer heeft. Geen stylesheet van jezelf, geen `class` of `className`, geen `style`, geen `div` of `span` die iets opmaakt, geen hexkleur, geen eigen iconenset. Wat er staat, zijn `nldd-*`-componenten met attributen en slots, en waar je er een mist een component van jezelf. Dat is de definitie van klaar, en de zuiverheidscheck hieronder bewaakt hem vanaf de eerste dag.
+Een migratie is af als de app geen eigen vormgeving meer heeft. Geen stylesheet van jezelf, geen `class` of `className`, geen `style`, geen `div` of `span` die iets opmaakt, geen hexkleur, geen eigen iconenset. Wat er staat, zijn `nldd-*`-componenten met attributen en slots, en waar je er een mist een component van jezelf. Dat is de definitie van klaar, en `nldd lint --pure` bewaakt hem vanaf de eerste dag.
 
 Elke regel eigen CSS is een plek die je bij elke release zelf moet nalopen: een hernoemde variabele, een nieuw thema of een toegankelijkheidsfix in een component bereikt hem niet.
 
 Kan het systeem iets niet wat je nodig hebt, dan is dat een gat in het systeem. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Zet geen eigen stijl op een `nldd-*`-component om het te laten doen wat het niet kan.
 
-Mist er een heel component, dan mag je het zelf bouwen, met een eigen naam zonder `nldd-`. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in je melding, dan kan er besloten worden of het een officieel NLDD-component wordt. Een eigen component valt buiten de zuiverheidscheck; zie [Geen eigen vormgeving](../nldd-design-build/SKILL.md#geen-eigen-vormgeving).
+Mist er een heel component, dan mag je het zelf bouwen, met een eigen naam zonder `nldd-`. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in je melding, dan kan er besloten worden of het een officieel NLDD-component wordt. Een eigen component valt buiten de zuiverheidscheck: zet de map met zijn stijlen in `exclude` van `.nldd-lint.json`. Zie [Geen eigen vormgeving](../nldd-design-build/SKILL.md#geen-eigen-vormgeving).
 
-Voor een omweg op of om een `nldd-*`-component geldt: tot het gat is opgelost mag hij er staan, met in de code drie dingen erbij: de issuelink, de versie waarop je het vaststelde, en één zin waarom het component het zelf niet kan. Lukt die zin niet, dan is het smaak en hoort de omweg weg. De rest van deze skill verwijst naar deze regel.
+Voor een omweg op of om een `nldd-*`-component geldt: tot het gat is opgelost mag hij er staan, met een onderdrukking van de regel uit `pure` die drie dingen als reden draagt: de issuelink, de versie waarop je het vaststelde, en één zin waarom het component het zelf niet kan. Lukt die zin niet, dan is het smaak en hoort de omweg weg. De rest van deze skill verwijst naar deze regel.
 
 ## Het uitgangspunt: dit systeem faalt stil
 
@@ -56,14 +56,14 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 
 Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die niets anders zag:
 
-1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een eigen meldingenbibliotheek (react-hot-toast en dergelijke), en elk eigen stylesheet. Alleen kale HTML die een component zelf opmaakt mag blijven, zoals de `<select>` in `nldd-dropdown`, inline tekst in `nldd-text`, de kop in het standaardslot van `nldd-title` en lopende tekst in `nldd-rich-text`; de slotbeschrijvingen in de [componentreferentie](../nldd-design/reference.md) zeggen welke. Daarnaast `canvas`, waar een grafiek op tekent, en je eigen componenten: hun stijl zit in hun eigen bestand en shadow root, niet in de markup van de app. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. Uitzonderingen horen niet in de baseline, want die is migratieschuld. Wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, volgens de regel voor een omweg hierboven. Klaar is een lege baseline.
+1. **Zuiverheidscheck.** Zet de groep `pure` van `nldd lint` aan in `.nldd-lint.json` (`"rules": { "pure": "error" }`) en accepteer wat er nu staat met `npx @nldd/design-system lint --update-baseline`. Hij meldt elke `class` of `className`, elke `style`, kale HTML die opmaakt (`div`, `p`, `h2`, `button`, `img` en verwanten) en elk eigen stylesheet, ook een CSS-bestand en een `<style>`-blok in Vue. Kale HTML die een component zelf opmaakt, zoals de `<select>` in `nldd-dropdown` of de tekst in `nldd-rich-text`, laat hij staan; welke per component staat in de [referentie](../nldd-design/reference.md) onder "Plain HTML it styles". De baseline telt per bestand en faalt zodra een telling stijgt. Draai `--tighten-baseline` in de commit waarin een bestand schoner wordt: dat verlaagt de telling en voegt nooit iets toe, en de samenvatting zegt het als de baseline ruimer is dan nodig. `--update-baseline` accepteert ook wat nieuw is, dus dat hoort niet meer in een gewone commit. Wat bewust blijft tot een issue is opgelost, krijgt een onderdrukking volgens de regel voor een omweg hierboven (`nldd-lint-disable-next-line style-no-own -- <issue>`), niet een plek in de baseline. Klaar is een lege baseline. Een iconenbibliotheek of meldingenbibliotheek ziet de linter niet, want die zijn componenten van de app: controleer je afhankelijkheden daar zelf op.
 2. **Registratiecheck.** Met de autoloader valt deze weg, en in een dev-build meldt de console elke `nldd-*`-tag die na een paar seconden nog niet geregistreerd is. Schrijf je de imports zelf uit, vergelijk dan elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
 3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
 4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
 5. **Klassencheck.** Elke klasse die de app nog rendert moet een regel achter zich hebben, én elke regel in je oude CSS moet een gebruiker hebben. Beide richtingen.
 6. **Gedragscheck.** De vijf hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
 
-De token- en klassencheck zijn steigers. Ze bewaken de CSS die er tijdens de omzetting nog staat, en verdwijnen samen met het laatste stylesheet. De zuiverheidscheck blijft, want hij houdt de app daarna puur.
+De token- en klassencheck zijn steigers. Ze bewaken de CSS die er tijdens de omzetting nog staat, en verdwijnen samen met het laatste stylesheet. De groep `pure` blijft aan, want hij houdt de app daarna puur. Zet hem in de config en niet alleen als `--pure` in CI: dan doet een lokale `--update-baseline` hetzelfde als CI.
 
 Hang de eerste vijf in pre-commit **en** in CI. Zorg dat je lokale hook hetzelfde commando draait als CI: een hook op `tsc --noEmit` terwijl CI `tsc -b` draait laat kapotte commits er stelselmatig door.
 
@@ -275,7 +275,7 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 ## Een volgorde die werkte
 
 1. Installeren, stylesheet importeren, en componenten registreren met de autoloader of per subpad.
-2. De checks bouwen, de zuiverheidscheck met zijn baseline voorop. Van elk bewijzen dat die faalt.
+2. De checks bouwen, met de groep `pure` en zijn baseline voorop. Van elk bewijzen dat die faalt.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
 4. De event-, value- en overlay-helpers schrijven, en in een React-app de JSX-typen van het pakket importeren (`@nldd/design-system/react`).
 5. Per scherm de vormgeving direct vervangen door componenten, en de CSS van dat scherm in dezelfde commit weghalen. Zet inline stijlen niet eerst om naar klassen: dat verplaatst eigen CSS in plaats van hem weg te halen. Bewaar ook geen opruimronde voor het eind. Een migratie die dat deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten. Wat geen component kan, wordt een issue en een uitzondering in de code met de issuelink.
@@ -287,6 +287,6 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 11. Een ronde op visuele hiërarchie, met een reviewer die niets heeft omgezet.
 12. Je eigen workarounds langslopen: welke zijn overbodig geworden.
 13. De commentronde.
-14. Het laatste stylesheet weghalen, de token- en klassencheck mee. De baseline van de zuiverheidscheck is leeg, en elke uitzondering in de code wijst naar een open issue.
+14. Het laatste stylesheet weghalen, de token- en klassencheck mee. De baseline is leeg, en elke onderdrukking van een regel uit `pure` wijst naar een open issue.
 
 Reken erop dat de verhouding rauwe markup je schatting bepaalt. In dit geval stonden 292 rauwe `<button>` tegenover 61 `<Button>`: het herimplementeren van de primitive converteerde een vijfde, de rest was handwerk op de aanroepplek. Tel allebei voordat je iets belooft.

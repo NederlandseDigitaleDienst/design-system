@@ -66,6 +66,7 @@
  * @attr {string} media-alt - Alt text for media-src; empty means decorative
  *
  * @slot media - Image or illustration (img or nldd-image); fills the area and is clipped.
+ * @accepts img
  *   Takes precedence over the media-src attributes. Set `alt=""` when the image is decorative;
  *   otherwise give a describing alt text.
  * @slot - Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance)

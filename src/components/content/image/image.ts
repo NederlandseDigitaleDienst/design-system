@@ -66,6 +66,7 @@
  *   slotted content does not trigger the error-state overlay automatically.
  *   Consumers slotting their own image are responsible for handling its
  *   error state (e.g. swapping the slot content or styling a fallback).
+ * @accepts img, picture, source, svg
  * @slot caption - Rich caption content (overrides the `caption` attribute)
  */
 

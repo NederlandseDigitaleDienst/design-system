@@ -5272,6 +5272,9 @@
           },
           "tagName": "nldd-blockquote",
           "customElement": true,
+          "accepts": [
+            "p"
+          ],
           "slots": [
             {
               "name": "",
@@ -5914,6 +5917,9 @@
           },
           "tagName": "nldd-identity",
           "customElement": true,
+          "accepts": [
+            "img"
+          ],
           "slots": [
             {
               "name": "avatars",
@@ -6317,6 +6323,12 @@
           },
           "tagName": "nldd-image",
           "customElement": true,
+          "accepts": [
+            "img",
+            "picture",
+            "source",
+            "svg"
+          ],
           "slots": [
             {
               "name": "",
@@ -6792,7 +6804,64 @@
             "package": "lit"
           },
           "tagName": "nldd-rich-text",
-          "customElement": true
+          "customElement": true,
+          "accepts": [
+            "p",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "a",
+            "strong",
+            "b",
+            "em",
+            "i",
+            "u",
+            "s",
+            "del",
+            "ins",
+            "code",
+            "kbd",
+            "samp",
+            "var",
+            "small",
+            "mark",
+            "q",
+            "cite",
+            "abbr",
+            "sub",
+            "sup",
+            "br",
+            "span",
+            "ul",
+            "ol",
+            "li",
+            "dl",
+            "dt",
+            "dd",
+            "blockquote",
+            "pre",
+            "figure",
+            "figcaption",
+            "img",
+            "picture",
+            "source",
+            "table",
+            "thead",
+            "tbody",
+            "tfoot",
+            "tr",
+            "th",
+            "td",
+            "caption",
+            "hr",
+            "div",
+            "section",
+            "video",
+            "iframe"
+          ]
         }
       ],
       "exports": [
@@ -7169,6 +7238,17 @@
           },
           "tagName": "nldd-text",
           "customElement": true,
+          "accepts": [
+            "strong",
+            "b",
+            "em",
+            "i",
+            "a",
+            "code",
+            "mark",
+            "q",
+            "span"
+          ],
           "slots": [
             {
               "name": "",
@@ -7394,6 +7474,15 @@
           },
           "tagName": "nldd-title",
           "customElement": true,
+          "accepts": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "a"
+          ],
           "slots": [
             {
               "name": "overline",
@@ -8129,6 +8218,9 @@
           },
           "tagName": "nldd-form-field-help-text",
           "customElement": true,
+          "accepts": [
+            "a"
+          ],
           "slots": [
             {
               "name": "",
@@ -8320,6 +8412,9 @@
               "name": "reset",
               "description": ""
             }
+          ],
+          "accepts": [
+            "form"
           ]
         }
       ],
@@ -13589,6 +13684,11 @@
               "name": "change",
               "description": "The native change of the slotted select, left to bubble, so a listener on the select, on the dropdown or higher up all hear it. Read the choice from `value`."
             }
+          ],
+          "accepts": [
+            "select",
+            "option",
+            "optgroup"
           ],
           "slots": [
             {
@@ -33393,10 +33493,13 @@
           },
           "tagName": "nldd-hero",
           "customElement": true,
+          "accepts": [
+            "img"
+          ],
           "slots": [
             {
               "name": "media",
-              "description": "Image or illustration (img or nldd-image); fills the area and is clipped. Takes precedence over the media-src attributes. Set `alt=\"\"` when the image is decorative; otherwise give a describing alt text."
+              "description": "Image or illustration (img or nldd-image); fills the area and is clipped."
             },
             {
               "name": "",
@@ -50509,6 +50612,42 @@
           "description": "Hands focus back to `target` once `overlay` (a popover, menu, sheet or window)\nhas closed. Call it after the close, with the element that had focus when the\noverlay opened.\n\n- Focus the user moved elsewhere, by a click into a field or Tab out of the\n  overlay, stays there. Only focus still in the overlay, on nothing, or on\n  `target` itself is handed back.\n- After the keyboard, `target` gets a plain `focus()` and its ring.\n- After a mouse or a finger, it gets no ring. The browser's own close step\n  has often moved focus back already, and WebKit draws a ring for that\n  script focus. A second `focus()` would be a no-op, so it blurs first and\n  focuses with `focusVisible: false`. Chromium leaves the ring off itself.\n  A text field keeps its ring, as it does on any click."
         },
         {
+          "kind": "function",
+          "name": "focusAsLastInput",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Focuses `target` the way the last input asks for: with its ring after the\nkeyboard, without one after a mouse or a finger. For a component that moves\nfocus itself once its own overlay has closed, where `returnFocus` would leave\nit where the browser put it."
+        },
+        {
+          "kind": "function",
+          "name": "focusIsFree",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "container",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Whether focus is on nothing or still inside `container`, so moving it does\nnot take it from something the user chose. After a click beside an overlay,\nthe browser has put it back where the overlay found it, and in Safari, where\na click does not focus a button, that can be a text field next to it."
+        },
+        {
           "kind": "class",
           "description": "Remembers where focus was when an overlay opened, and hands it back when it\ncloses, through `returnFocus`. One per overlay:\n\n```ts\nprivate _focusReturn = new FocusReturn();\n// on open, before the overlay takes focus\nthis._focusReturn.remember(anchor);\n// once it has closed\nthis._focusReturn.restore(this);\n```",
           "name": "FocusReturn",
@@ -50585,6 +50724,22 @@
           "name": "returnFocus",
           "declaration": {
             "name": "returnFocus",
+            "module": "src/utilities/return-focus.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "focusAsLastInput",
+          "declaration": {
+            "name": "focusAsLastInput",
+            "module": "src/utilities/return-focus.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "focusIsFree",
+          "declaration": {
+            "name": "focusIsFree",
             "module": "src/utilities/return-focus.ts"
           }
         },

@@ -26,23 +26,43 @@ export function returnFocus(target: HTMLElement | null | undefined, overlay: Ele
 	if (!target || target === document.body || !target.isConnected) return;
 	// Compared deep: in a shadow root, document.activeElement is the same host
 	// for the opener, the overlay and any other field beside them.
-	const active = deepActiveElement();
-	// On the target or inside it: the anchor fallback is a host, such as an
-	// nldd-button, whose inner button the browser may have focused.
-	const onTarget = !!active && isWithin(active, target);
-	const free = !active || active === document.body || onTarget || isWithin(active, overlay);
-	if (!free) return;
-	if (!isPointerMode()) {
+	// On the target or inside it counts as free too: the anchor fallback is a
+	// host, such as an nldd-button, whose inner button the browser may have focused.
+	if (!focusIsFree(overlay) && !focusIsFree(target)) return;
+	focusAsLastInput(target);
+}
+
+/**
+ * Focuses `target` the way the last input asks for: with its ring after the
+ * keyboard, without one after a mouse or a finger. For a component that moves
+ * focus itself once its own overlay has closed, where `returnFocus` would leave
+ * it where the browser put it.
+ */
+export function focusAsLastInput(target: HTMLElement): void {
+	// A text field keeps its ring, as it does on any click.
+	if (!isPointerMode() || isTextEntry(target)) {
 		target.focus();
 		return;
 	}
-	if (active && onTarget) {
+	const active = deepActiveElement();
+	if (active && isWithin(active, target)) {
 		if (!active.matches(':focus-visible') || isTextEntry(active)) return;
 		active.blur();
 	}
 	// @ts-expect-error lib.dom lacks focusVisible; this fails once it has it.
 	const noRing: FocusOptions = { focusVisible: false };
 	target.focus(noRing);
+}
+
+/**
+ * Whether focus is on nothing or still inside `container`, so moving it does
+ * not take it from something the user chose. After a click beside an overlay,
+ * the browser has put it back where the overlay found it, and in Safari, where
+ * a click does not focus a button, that can be a text field next to it.
+ */
+export function focusIsFree(container: Element): boolean {
+	const active = deepActiveElement();
+	return !active || active === document.body || isWithin(active, container);
 }
 
 /** Whether `node` is `container` or inside it, across shadow roots. */

@@ -61,6 +61,7 @@ import { timeFieldStyles } from './time-field.styles.js';
 import { timeFieldTemplate } from './time-field.template.js';
 import { nlddTimeFieldTranslations, type NLDDTimeFieldTranslations } from './time-field.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { focusAsLastInput, focusIsFree } from '../../../utilities/return-focus.js';
 import { translate } from '../../../utilities/translations.js';
 import {
 	checkText,
@@ -315,6 +316,13 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		return this.accessibleLabel || this._t('components.time-field.to-pick-time-action');
 	}
 
+	/** Keeps a press on the button from moving focus. With delegatesFocus, Safari,
+	 *  which does not focus a button on click, focuses the text field instead, and
+	 *  the field shows its ring for as long as the button is held. */
+	public _handlePickerPress(e: MouseEvent): void {
+		e.preventDefault();
+	}
+
 	public _handlePickerClick(): void {
 		if (this._pickerOpen) this._popover?.hide();
 		else this._popover?.show();
@@ -360,11 +368,18 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		this._pickerOpen = (e as ToggleEvent).newState === 'open';
 		if (this._pickerOpen) this._openPicker();
 		else this._settlePicker();
-		if (this._pickerOpen || !this._focusTriggerOnClose) return;
+		if (this._pickerOpen) return;
+		// Nothing asked, as after a click beside the popover: back to the button,
+		// unless the click put focus somewhere else on the page. Checked after the
+		// popover's own restore, which in Safari lands on the text field.
+		const asked = this._focusTriggerOnClose;
 		this._focusTriggerOnClose = false;
 		// Microtask, not rAF: this beats that same restore but does not get
 		// throttled while the tab has no focus.
-		queueMicrotask(() => this._pickerTrigger?.focus());
+		queueMicrotask(() => {
+			const trigger = this._pickerTrigger;
+			if (trigger && (asked || focusIsFree(this))) focusAsLastInput(trigger);
+		});
 	}
 
 	private _openPicker(): void {

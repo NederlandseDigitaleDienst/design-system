@@ -45,7 +45,7 @@ function hintSummary(results, root, explainRule) {
 	return lines;
 }
 
-export function formatText(results, { root, files, ms, skipped, explainRule }) {
+export function formatText(results, { root, files, ms, skipped, loose, explainRule }) {
 	const lines = [];
 	for (const { filename, source, findings } of results) {
 		const sourceLines = source.split('\n');
@@ -65,7 +65,7 @@ export function formatText(results, { root, files, ms, skipped, explainRule }) {
 	const errors = count('error');
 	const warnings = count('warn');
 	const hints = count('hint') ? `, ${plural(count('hint'), 'hint')}` : '';
-	const known = skipped ? dim(` (${skipped} in baseline)`) : '';
+	const known = (skipped ? dim(` (${skipped} in baseline)`) : '') + (loose ? dim(` (${loose} accepted no longer found: run --tighten-baseline)`) : '');
 	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')}${hints} in ${plural(files, 'file')} (${ms} ms)`;
 	const fixable = all.filter(({ fix }) => fix).length;
 	const canFix = fixable ? `, ${fixable} fixable with --fix` : '';
@@ -93,7 +93,7 @@ export function formatStatistics(results, { files, ms, skipped }) {
 }
 
 /** Everything an agent needs to fix a finding without opening the docs. */
-export function formatJson(results, { root, explainRule }) {
+export function formatJson(results, { root, explainRule, skipped = 0, loose = 0 }) {
 	const findings = results.flatMap(({ filename, findings: list }) =>
 		list.map((finding) => {
 			const detail = explainRule(finding.rule);
@@ -111,7 +111,7 @@ export function formatJson(results, { root, explainRule }) {
 			};
 		}),
 	);
-	return JSON.stringify({ findings }, null, 2);
+	return JSON.stringify({ findings, baseline: { accepted: skipped, noLongerFound: loose } }, null, 2);
 }
 
 function escapeGithub(text) {
@@ -120,8 +120,9 @@ function escapeGithub(text) {
 
 const escapeProperty = (text) => escapeGithub(text).replace(/:/g, '%3A').replace(/,/g, '%2C');
 
-export function formatGithub(results, { root }) {
+export function formatGithub(results, { root, loose = 0 }) {
 	const lines = [];
+	if (loose) lines.push(`::notice title=baseline::${loose} accepted findings are no longer found: run nldd lint --tighten-baseline.`);
 	for (const { filename, findings } of results) {
 		for (const { severity, line, column, rule, message } of findings) {
 			const level = { error: 'error', warn: 'warning', hint: 'notice' }[severity];

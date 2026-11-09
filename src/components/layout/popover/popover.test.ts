@@ -543,6 +543,35 @@ describe('nldd-popover', () => {
 			expect(document.activeElement).toBe(autoTarget);
 		});
 
+		// WebKit draws a ring for a script focus, also after a click on the trigger.
+		it('focust [autofocus] zonder ring na een klik, met ring na het toetsenbord', async () => {
+			const wrapper = await fixture(`
+				<div>
+					<button id="trigger-autofocus-ring">Trigger</button>
+					<nldd-popover anchor="trigger-autofocus-ring" accessible-label="Test">
+						<button id="auto-ring" autofocus>Wel</button>
+					</nldd-popover>
+				</div>
+			`);
+			el = wrapper;
+			const popover = wrapper.querySelector('nldd-popover') as NLDDPopover;
+			await waitForUpdate(popover);
+			const target = wrapper.querySelector<HTMLElement>('#auto-ring')!;
+			const focus = vi.spyOn(target, 'focus');
+
+			document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'mouse' }));
+			popover.show();
+			await waitForUpdate(popover);
+			expect(focus).toHaveBeenLastCalledWith({ focusVisible: false });
+			popover.hide();
+			await waitForUpdate(popover);
+
+			document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+			popover.show();
+			await waitForUpdate(popover);
+			expect(focus).toHaveBeenLastCalledWith();
+		});
+
 		it('focust de popover-host zelf als er geen [autofocus] is', async () => {
 			const wrapper = await fixture(`
 				<div>

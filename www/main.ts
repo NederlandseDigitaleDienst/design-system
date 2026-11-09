@@ -66,12 +66,16 @@ for (const title of document.querySelectorAll<HTMLElement>('[data-icon-count]'))
 /**
  * The swatch picker in "Eén overheid" sets the theme of the whole page, so
  * the visitor sees the system change colour around them. Lintblauw is the
- * default and has no theme of its own.
+ * default and has no theme of its own. The title names the chosen colour,
+ * since there is no hover on a phone and several of them look alike.
  */
-document.querySelector('#thema-keuze')?.addEventListener('change', (event) => {
+const themePicker = document.querySelector('#thema-keuze');
+themePicker?.addEventListener('change', (event) => {
 	const value = (event as CustomEvent<{ value: string }>).detail.value;
 	if (value === 'lintblauw') root.removeAttribute('data-nldd-theme');
 	else root.setAttribute('data-nldd-theme', value);
+	const name = themePicker.querySelector(`nldd-swatch-picker-item[value="${value}"]`)?.getAttribute('text');
+	if (name) document.querySelector('#thema-titel')?.setAttribute('text', `Thema: ${name}`);
 });
 
 /** Light, dark or the system setting, for the whole page. */

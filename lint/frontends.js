@@ -15,6 +15,7 @@ import {
 	createNode,
 	createRoot,
 	isOpaqueTag,
+	walk,
 } from './tree.js';
 
 const TRANSPARENT = new Set([
@@ -56,8 +57,13 @@ function readAttribute(element, name, value) {
 	else if (/^(:|v-bind:|x-bind:|\.|\?)/.test(name)) {
 		const bare = name.replace(/^(v-bind|x-bind)?[:.?]/, '').replace(/\.(prop|attr|camel)$/, '');
 		element.attrs.set(bare, BOUND);
-	} else if (/^\[(class\.|style\.|@)/.test(name)) {
-		// Angular's way to set one class, one style or an animation: no attribute.
+	} else if (/^\[(class\.|style\.)/.test(name) || /^\[(ngClass|ngStyle|className)\]$/.test(name)) {
+		// Angular's way to set one class or style, or a set of them. Not an attribute of
+		// its own, but the element ends up with a class or a style, which the group pure asks.
+		const attribute = /^\[(class\.|ngClass|className)/.test(name) ? 'class' : 'style';
+		if (!element.attrs.has(attribute)) element.attrs.set(attribute, BOUND);
+	} else if (/^\[@/.test(name)) {
+		// An Angular animation: no attribute.
 	} else if (/^\[.+\]$/.test(name)) {
 		element.attrs.set(name.replace(/^\[\(?|\)?\]$/g, '').replace(/^attr\./, ''), BOUND);
 	} else if (/^(@|#|v-|\(|\*)/.test(name)) {
@@ -81,6 +87,12 @@ function readHtmlChildren(children, parent, given) {
 	const hole = given.lit && children.find((node) => node.type === 'text' && node.data.includes('${'));
 	if (hole) appendUnknown(parent, hole.startIndex ?? 0);
 	for (const node of children) {
+		if (node.type === 'text' && node.data.trim()) parent.text = true;
+		// htmlparser2 gives <style> a type of its own. The group pure reads every block in it.
+		if (node.type === 'style') {
+			for (const offset of styleBlockOffsets(node)) appendChild(parent, createNode('style', offset));
+			continue;
+		}
 		if (node.type !== 'tag') continue;
 		const { name, attribs } = node;
 		// In a document, a template is inert until something stamps it out, here or elsewhere.
@@ -200,10 +212,77 @@ export function parseVue(source) {
 	const template = documentNode.children.find(
 		(node) => node.type === 'tag' && node.name === 'template',
 	);
-	if (!template) return [];
+	const roots = [];
+	if (template) {
+		const root = createRoot();
+		readHtmlChildren(template.children, root, {});
+		roots.push(root);
+	}
+	// A style block is the component's own stylesheet, so it stands as the element it is.
+	const blocks = documentNode.children.filter((each) => each.name === 'style').flatMap(styleBlockOffsets);
+	if (blocks.length > 0) roots.push(stylesheetRoot(blocks));
+	return roots;
+}
+
+/** Where each block of a <style> element starts in the file. */
+function styleBlockOffsets(node) {
+	const text = node.children?.find((child) => child.type === 'text');
+	return text ? cssBlockOffsets(text.data).map((offset) => (text.startIndex ?? 0) + offset) : [];
+}
+
+/** One <style> element per block, so a suppression or a baseline count covers one block and not the whole sheet. */
+function stylesheetRoot(offsets) {
 	const root = createRoot();
-	readHtmlChildren(template.children, root, {});
-	return [root];
+	for (const offset of offsets) appendChild(root, createNode('style', offset));
+	return root;
+}
+
+/**
+ * The stylesheet with comments and imports of the design system blanked out, so
+ * what is left is the app's own and every offset still points at the source.
+ */
+const ownCss = (source) =>
+	source
+		.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '))
+		.replace(/^\s*\/\/.*$/gm, (comment) => ' '.repeat(comment.length))
+		.replace(/@(import|use|forward)\s+(url\()?['"]?[^'";)]*(@nldd\/design-system|\/nldd\/css\/)[^;]*;/g, (line) => ' '.repeat(line.length));
+
+/**
+ * Where each top-level block of the app's own CSS starts: a rule with its braces,
+ * or a statement up to its semicolon.
+ */
+function cssBlockOffsets(source, indented = false) {
+	// Strings and url() can hold a brace or a semicolon, so their contents are blanked first.
+	const own = ownCss(source).replace(/(["'])(?:\\.|(?!\1).)*\1|url\([^)]*\)/g, (text) => text[0] + ' '.repeat(text.length - 1));
+	// Sass without braces: a block is a line that starts at the margin.
+	if (indented) return [...own.matchAll(/^\S/gm)].map((match) => match.index);
+	const offsets = [];
+	let depth = 0;
+	let inBlock = false;
+	for (let at = 0; at < own.length; at++) {
+		const char = own[at];
+		if (!inBlock && depth === 0 && /\S/.test(char)) {
+			offsets.push(at);
+			inBlock = true;
+		}
+		if (char === '{') depth += 1;
+		else if (char === '}') {
+			depth = Math.max(0, depth - 1);
+			if (depth === 0) inBlock = false;
+		} else if (char === ';' && depth === 0) inBlock = false;
+	}
+	return offsets;
+}
+
+/**
+ * A stylesheet file is a <style> element in a file of its own, so the rule about
+ * one reads both. A file that only imports the design system's own CSS is not one.
+ * Each block is an element of its own, starting where it does, so a comment above
+ * a block suppresses that block.
+ */
+export function parseStylesheet(source, filename = '') {
+	const offsets = cssBlockOffsets(source, filename.endsWith('.sass'));
+	return offsets.length === 0 ? [] : [stylesheetRoot(offsets)];
 }
 
 /** Every code block and inline tag in a Markdown file is a tree of its own. */
@@ -302,15 +381,103 @@ function jsxName(node) {
 	return `${node.namespace.name}:${node.name.name}`;
 }
 
-function collectJsx(node, found) {
+/** Expressions a value passes through unchanged: `a ? <x /> : <y />`, `(<x />)`, `<x /> as JSX.Element`. */
+const PASSES_ON_VALUE = new Set([
+	'ConditionalExpression', 'LogicalExpression', 'ParenthesizedExpression', 'SequenceExpression',
+	'TSAsExpression', 'TSSatisfiesExpression', 'TSNonNullExpression', 'TSTypeAssertion',
+]);
+
+/** Between `export` and the component it exports: `export const A = memo(() => ...)`, a class and its render. */
+const PASSES_ON_EXPORT = new Set([
+	...PASSES_ON_VALUE, 'VariableDeclaration', 'VariableDeclarator', 'CallExpression',
+	'ClassDeclaration', 'ClassExpression', 'ClassBody', 'MethodDefinition', 'PropertyDefinition',
+]);
+
+const FUNCTIONS = new Set(['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression']);
+
+/**
+ * Finds every JSX tree. What an exported component returns is what this file
+ * renders. Any other tree is built to be placed somewhere, maybe inside a component
+ * of this same file, and is marked detached. A tree that a function bound to a name
+ * returns, or that a name is bound to directly, gets that name as its owner, so its
+ * place can be looked up: `<Row />`, `{items}`. JSX assigned later or pushed into an
+ * array has no owner and stays unknown.
+ */
+function collectJsx(node, found, state = {}, exportedNames = new Set()) {
 	if (!node || typeof node !== 'object') return;
+	const { exported = false, renders = false, returned = false, fnOwner, valueOwner } = state;
 	if (Array.isArray(node)) {
-		for (const item of node) collectJsx(item, found);
-	} else if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
-		found.push(node);
-	} else {
-		for (const key of Object.keys(node)) collectJsx(node[key], found);
+		for (const item of node) collectJsx(item, found, state, exportedNames);
+		return;
 	}
+	if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
+		found.push({ node, detached: !(renders && returned), owner: returned ? fnOwner : valueOwner });
+		return;
+	}
+	const isFunction = FUNCTIONS.has(node.type);
+	// `function A() {}` with `export default A` further down, or `export { A }`.
+	const named = (node.type === 'FunctionDeclaration' || node.type === 'VariableDeclarator' || node.type === 'ClassDeclaration') && exportedNames.has(node.id?.name);
+	const isExported = exported || named;
+	// The name a function returns its JSX under: its own, or the one it is bound to.
+	const ownName = node.type === 'FunctionDeclaration' ? node.id?.name : isFunction ? valueOwner : fnOwner;
+	for (const key of Object.keys(node)) {
+		if (key === 'parent') continue;
+		let nextValueOwner;
+		if (node.type === 'VariableDeclarator' && key === 'init' && node.id?.type === 'Identifier') nextValueOwner = node.id.name;
+		else if (PASSES_ON_VALUE.has(node.type)) nextValueOwner = valueOwner;
+		// `memo(() => ...)`, `useMemo(() => ...)`, `xs.map((x) => ...)`: the callback is what the name holds.
+		else if (node.type === 'CallExpression' && key === 'arguments') nextValueOwner = valueOwner;
+		collectJsx(node[key], found, {
+			exported: node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration' || (isExported && (named || PASSES_ON_EXPORT.has(node.type))),
+			// A function renders when it is the exported one; a function inside it does not.
+			renders: isFunction ? isExported : renders,
+			returned: (node.type === 'ReturnStatement' && key === 'argument')
+				|| (node.type === 'ArrowFunctionExpression' && key === 'body')
+				|| (returned && PASSES_ON_VALUE.has(node.type)),
+			fnOwner: isFunction ? ownName : fnOwner,
+			valueOwner: nextValueOwner,
+		}, exportedNames);
+	}
+}
+
+/** Every name the file binds, with how often: a name bound twice cannot be looked up by name alone. */
+function bindingCounts(program) {
+	const counts = new Map();
+	const add = (name) => name && counts.set(name, (counts.get(name) ?? 0) + 1);
+	const pattern = (node) => {
+		if (!node) return;
+		if (node.type === 'Identifier') add(node.name);
+		else if (node.type === 'ObjectPattern') node.properties.forEach((property) => pattern(property.value ?? property.argument));
+		else if (node.type === 'ArrayPattern') node.elements.forEach(pattern);
+		else if (node.type === 'AssignmentPattern') pattern(node.left);
+		else if (node.type === 'RestElement') pattern(node.argument);
+		else if (node.type === 'TSParameterProperty') pattern(node.parameter);
+	};
+	const visit = (node) => {
+		if (!node || typeof node !== 'object') return;
+		if (Array.isArray(node)) return node.forEach(visit);
+		if (node.type === 'VariableDeclarator') pattern(node.id);
+		if ((node.type === 'FunctionDeclaration' || node.type === 'ClassDeclaration') && node.id) add(node.id.name);
+		if (FUNCTIONS.has(node.type)) node.params?.forEach(pattern);
+		for (const key of Object.keys(node)) if (key !== 'parent') visit(node[key]);
+	};
+	visit(program);
+	return counts;
+}
+
+/** The names a module exports by reference rather than in place. */
+function exportedNamesOf(program) {
+	const names = new Set();
+	for (const statement of program.body ?? []) {
+		if (statement.type === 'ExportDefaultDeclaration' && statement.declaration?.type === 'Identifier') names.add(statement.declaration.name);
+		// `export default withRouter(Page)`: the component inside the wrapper is what is exported.
+		const wrapped = (call) => call?.type === 'CallExpression' && call.arguments.forEach((arg) => (arg.type === 'Identifier' ? names.add(arg.name) : wrapped(arg)));
+		if (statement.type === 'ExportDefaultDeclaration') wrapped(statement.declaration);
+		if (statement.type === 'ExportNamedDeclaration' && !statement.source) {
+			for (const specifier of statement.specifiers ?? []) names.add(specifier.local?.name);
+		}
+	}
+	return names;
 }
 
 /** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
@@ -345,7 +512,7 @@ function readJsxAttributes(element, attributes, roots) {
 		// An element passed as a prop renders elsewhere, so it is a tree of its own.
 		const nested = [];
 		collectJsx(attribute.value, nested);
-		for (const node of nested) roots.push(jsxTree(node, roots));
+		for (const { node } of nested) roots.push(jsxTree(node, roots, true));
 	}
 }
 
@@ -357,8 +524,10 @@ function readJsxExpression(expression, parent, flags, roots) {
 			readJsxNode(expression, parent, flags, roots);
 			break;
 		case 'JSXEmptyExpression':
+			break;
 		case 'Literal':
 		case 'TemplateLiteral':
+			if (expression.value !== '' && expression.value !== null) parent.text = true;
 			break;
 		case 'LogicalExpression':
 			// The left of `a && <x />` renders nothing worth counting.
@@ -376,11 +545,15 @@ function readJsxExpression(expression, parent, flags, roots) {
 			const found = [];
 			collectJsx(expression, found);
 			if (found.length === 0) appendUnknown(parent, expression.start);
-			for (const node of found) {
+			for (const { node } of found) {
 				readJsxNode(node, parent, { ...flags, repeated: true }, roots);
 			}
 			break;
 		}
+		case 'Identifier':
+			// `{items}`: whatever the file bound to that name renders here.
+			appendUnknown(parent, expression.start).ref = expression.name;
+			break;
 		default:
 			appendUnknown(parent, expression.start);
 	}
@@ -388,6 +561,7 @@ function readJsxExpression(expression, parent, flags, roots) {
 
 function readJsxChildren(children, parent, flags, roots) {
 	for (const child of children) {
+		if (child.type === 'JSXText' && child.value.trim()) parent.text = true;
 		if (child.type === 'JSXElement' || child.type === 'JSXFragment') {
 			readJsxNode(child, parent, flags, roots);
 		} else if (child.type === 'JSXExpressionContainer') {
@@ -418,8 +592,9 @@ function readJsxNode(node, parent, flags, roots) {
 	readJsxChildren(node.children, element, {}, roots);
 }
 
-function jsxTree(node, roots) {
+function jsxTree(node, roots, detached = true) {
 	const root = createRoot();
+	if (detached) root.detached = true;
 	readJsxNode(node, root, {}, roots);
 	return root;
 }
@@ -432,13 +607,42 @@ export async function parseJsx(source, filename) {
 	});
 	const { program, errors } = oxcParser.parseSync(filename, source);
 	const found = [];
-	collectJsx(program, found);
+	collectJsx(program, found, {}, exportedNamesOf(program));
+	const bindings = bindingCounts(program);
 	const roots = [];
-	for (const node of found) roots.push(jsxTree(node, roots));
+	const owners = new Map();
+	for (const { node, detached, owner } of found) {
+		const root = jsxTree(node, roots, detached);
+		roots.push(root);
+		// A name bound more than once (a parameter that shadows it, two components with
+		// the same local) might be the other one where it is used: then it stays unknown.
+		if (detached && owner && bindings.get(owner) === 1) owners.set(root, owner);
+	}
+	placeDetachedRoots(roots, owners);
 	if (errors?.length) {
 		roots.syntaxError = { message: errors[0].message, offset: errors[0].labels?.[0]?.start ?? 0 };
 	}
 	return roots;
+}
+
+/**
+ * A tree bound to a name lands where this file uses that name: `<Row />` for a
+ * component, `{items}` for a value. Those places tell what is around it, so a
+ * rule can judge its plain HTML. Used nowhere in the file, it stays unknown.
+ */
+function placeDetachedRoots(roots, owners) {
+	if (owners.size === 0) return;
+	const uses = new Map();
+	for (const root of roots) {
+		walk(root, (node) => {
+			const name = node.ref ?? (node.opaque ? node.name : undefined);
+			if (name) uses.set(name, [...(uses.get(name) ?? []), node]);
+		});
+	}
+	for (const [root, owner] of owners) {
+		const places = uses.get(owner);
+		if (places?.length) root.placements = places;
+	}
 }
 
 /** Names a framework wrapper by the tag it renders, with kebab-case props. */
@@ -473,6 +677,10 @@ const PARSERS = {
 	'.jsx': parseJsx,
 	'.tsx': parseJsx,
 	'.ts': parseLit,
+	'.css': parseStylesheet,
+	'.scss': parseStylesheet,
+	'.sass': parseStylesheet,
+	'.less': parseStylesheet,
 };
 
 /** @returns {Promise<import('./tree.js').TreeNode[]>} */

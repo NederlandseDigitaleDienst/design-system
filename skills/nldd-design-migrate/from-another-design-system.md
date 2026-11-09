@@ -49,7 +49,7 @@ Gooi die vergelijking niet zomaar weg als de oude pagina eruit gaat. Dan meet di
 
 ## Wat je meeneemt zonder het te merken
 
-**Eigen CSS op componenten.** In je vorige systeem was dat misschien normaal. Hier hoort het er aan het eind niet te zijn: stuur via attributen en slots. Kan het component het niet, dan is dat een melding via `nldd-design-contribute`, en krijgt de omweg tot die tijd wat de regel voor een omweg in [`SKILL.md`](SKILL.md#het-doel-alles-komt-uit-het-systeem) vraagt.
+**Eigen CSS op componenten.** In je vorige systeem was dat misschien normaal. Hier hoort het er aan het eind niet te zijn: stuur via attributen en slots. Kan het component het niet, dan is dat een melding via `nldd-design-contribute`, en krijgt de omweg tot die tijd een onderdrukking van `nldd lint --pure` met wat de regel voor een omweg in [`SKILL.md`](SKILL.md#het-doel-alles-komt-uit-het-systeem) vraagt.
 
 **Sjablonen zonder aanroeper.** Bij een omzetting ontstaan wezen: een bestand dat niemand meer rendert. Bij het opruimen haal je die weg zonder het te merken, wat prima is, maar controleer of er niets omheen hangt.
 
