@@ -8,7 +8,7 @@ Dit is een andere uitgangspositie dan een migratie vanaf losse CSS. Je team kent
 
 Dit is de duurste fout vanuit deze herkomst, en die voelt als kennis in plaats van als gokken.
 
-Onze variabelen hebben drie prefixen: `--primitives-`, `--semantics-` en `--context-`, plus de lokale `--_{component}-` binnen een component. Er is **geen** `--nldd-`-prefix. Wie van een ander systeem komt, schrijft toch iets als:
+Onze variabelen hebben vier prefixen: `--primitives-`, `--semantics-`, `--context-` en `--components-` (die laatste alleen voor een thema), plus de lokale `--_{component}-` binnen een component. Er is **geen** `--nldd-`-prefix. Wie van een ander systeem komt, schrijft toch iets als:
 
 ```css
 /* Ziet eruit als een themawaarde. Bestaat niet. */
@@ -21,7 +21,7 @@ De naam bestaat nergens, dus de browser neemt de terugval. In de lichte weergave
 
 De echte namen zijn beschrijvend en Nederlands waar het om kleur gaat: `--semantics-surfaces-base-background-color`, `--semantics-surfaces-tinted-background-color`, `--primitives-color-groen-500`, `-oranje-`, `-lintblauw-`. Zoek ze op in [`reference.md`](../nldd-design/reference.md) en in `node_modules/@nldd/design-system/dist/css/`, en grep het pakket voordat je een naam opschrijft.
 
-Hetzelfde geldt voor icoonnamen en voor attributen: een `variant`- of `appearance`-waarde uit je vorige systeem is hier meestal geen bestaande waarde, en een onbekende waarde valt stil terug op de standaard.
+Hetzelfde geldt voor icoonnamen en voor attributen: een `variant`- of `appearance`-waarde uit je vorige systeem is hier meestal geen bestaande waarde, en een onbekende waarde valt in de browser stil terug op de standaard. `nldd lint` meldt hem wel, zie de markupcheck in de hoofdskill.
 
 ## De donkere weergave legt bloot wat je hebt gemist
 

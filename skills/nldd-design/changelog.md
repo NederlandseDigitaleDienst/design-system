@@ -18,6 +18,7 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **Migrating a React app takes less work.** `nldd-dropdown` lets the native `change` of its select through, the package ships JSX types, and the main entry and the subpaths share their modules. See Breaking, Added and Fixed.
+- **An autoloader.** `import '@nldd/design-system/autoloader'`, or `dist/cdn/autoloader.js` on a page without a bundler, loads each component the first time it appears, also in a fragment that htmx or Turbo swaps in. No import list to keep up to date. See Added.
 
 ### Breaking
 
@@ -28,6 +29,9 @@ here; consult the commit history if you need that level of detail.
 - **`value` on `nldd-dropdown`,** which reads and writes the value of the slotted `<select>`, also when it is set before the select is there.
 - **`expandable` on `nldd-list-item` and `nldd-list-item-segment`,** for a row or segment that opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. Markup could not write a closed disclosure before, since `expanded="false"` reads as on.
 - **JSX types for React, in `@nldd/design-system/react`.** Every `nldd-*` tag with its attributes, for React 18 and 19. A boolean takes `true` or nothing, so `disabled={busy}`, which React 18 always reads as on, does not compile.
+- **`@nldd/design-system/autoloader`,** which watches the page for `nldd-*` elements that are not defined yet and loads the module of each tag once, so a page loads only the components it shows. `discover(root)` does the same for a shadow root of your own. `dist/cdn/autoloader.js` is the same with lit inside, a chunk per component, for a `<script type="module">` without a bundler or an import map.
+- **`type="submit"` and `form` on `nldd-menu-item`.** A submit item submits the form it stands in, or the one `form` names, when it is chosen, so logging out or deleting from a menu can be a POST without script. Two lint rules, `menu-item-form-id-not-found` and `menu-item-form-id-invalid`, say when `form` finds nothing to submit.
+- **A development warning for an `nldd-*` element that is never registered.** A tag that stays undefined for a few seconds is a missing import, or a typo; the console now names it.
 - **A subpath for each part of `nldd-menu`, `nldd-toolbar` and `nldd-kanban`,** such as `@nldd/design-system/menu-item`, so every tag can be imported by its own name.
 
 ### Changed
@@ -40,6 +44,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **An `nldd-container` inside an `nldd-container width="fit-content"` takes the width of its content instead of 0.** The inner container measured its own width for its breakpoints, and that measuring kept it from reporting its content to the fit-content parent, so text in it broke after every word. Like the fit-content container itself, it now follows the breakpoints of the container around it.
 - **Importing `@nldd/design-system` next to a subpath no longer throws "has already been used with this registry".** The main entry imports the same modules as the subpaths, instead of a bundle with its own copy of every component.
 
 ## [0.20.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.19.0...v0.20.0) (2026-11-09)

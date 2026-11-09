@@ -57,7 +57,7 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die niets anders zag:
 
 1. **Zuiverheidscheck.** Weiger in de markup alles wat het systeem al levert: `className` of `class`, `style`, losse elementen die opmaak dragen (`div`, `span`, `button`, `input`, `h1` tot `h6`, `a`), hexkleuren, een eigen iconenset, een eigen meldingenbibliotheek (react-hot-toast en dergelijke), en elk eigen stylesheet. Alleen kale HTML die een component zelf opmaakt mag blijven, zoals de `<select>` in `nldd-dropdown`, inline tekst in `nldd-text`, de kop in het standaardslot van `nldd-title` en lopende tekst in `nldd-rich-text`; de slotbeschrijvingen in de [componentreferentie](../nldd-design/reference.md) zeggen welke. Daarnaast `canvas`, waar een grafiek op tekent, en je eigen componenten: hun stijl zit in hun eigen bestand en shadow root, niet in de markup van de app. Al het andere staat in een baseline: een telling per bestand die in CI faalt zodra hij stijgt, en die je verlaagt in de commit waarin een bestand schoner wordt. Uitzonderingen horen niet in de baseline, want die is migratieschuld. Wat bewust blijft tot een issue is opgelost, krijgt in de code een uitzondering die de check overslaat, volgens de regel voor een omweg hierboven. Klaar is een lege baseline.
-2. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
+2. **Registratiecheck.** Met de autoloader valt deze weg, en in een dev-build meldt de console elke `nldd-*`-tag die na een paar seconden nog niet geregistreerd is. Schrijf je de imports zelf uit, vergelijk dan elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
 3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
 4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
 5. **Klassencheck.** Elke klasse die de app nog rendert moet een regel achter zich hebben, én elke regel in je oude CSS moet een gebruiker hebben. Beide richtingen.
@@ -143,7 +143,7 @@ Kom je van Tailwind, lees dan [`from-tailwind.md`](from-tailwind.md): daar zit e
 
 De hoofdingang importeert dezelfde modules als de subpaden, dus een overgebleven `import '@nldd/design-system'` naast losse subpaden kost alleen downloadgrootte, geen tweede registratie.
 
-Met de hand bijhouden welk bestand welke subpaden nodig heeft, houdt niemand vol. Genereer de imports uit `custom-elements.json`: lees per bestand de `nldd-*`-tags, zoek per tag de module die hem definieert, en schrijf de importregels. Geef het script een `--check`-stand die faalt als de imports niet kloppen, en draai die in CI. Dat is dan meteen je registratiecheck. Elke tag heeft een subpad met de naam van zijn module, ook de onderdelen van `menu`, `toolbar` en `kanban` (`@nldd/design-system/menu-item`, `@nldd/design-system/kanban-column`). Een klasse, zoals `NLDDNotification` voor zijn statische `show()`, importeer je uit hetzelfde subpad als de registratie.
+Met de hand bijhouden welk bestand welke subpaden nodig heeft, houdt niemand vol. De eenvoudigste uitweg is de autoloader (`import '@nldd/design-system/autoloader'`, zie "Installeren en bootstrappen" in [`nldd-design-build`](../nldd-design-build/SKILL.md)): die laadt elk component zodra het op de pagina komt, en een importlijst is er dan niet. Wil je de imports toch uitschrijven, genereer ze dan uit `custom-elements.json`: lees per bestand de `nldd-*`-tags, zoek per tag de module die hem definieert, en schrijf de importregels. Geef het script een `--check`-stand die faalt als de imports niet kloppen, en draai die in CI. Dat is dan meteen je registratiecheck. Elke tag heeft een subpad met de naam van zijn module, ook de onderdelen van `menu`, `toolbar` en `kanban` (`@nldd/design-system/menu-item`, `@nldd/design-system/kanban-column`). Een klasse, zoals `NLDDNotification` voor zijn statische `show()`, importeer je uit hetzelfde subpad als de registratie.
 
 ## Events: wat een component zelf uitzendt
 
@@ -153,10 +153,9 @@ Kom je van React, lees dan [`from-react.md`](from-react.md): daar staan de helpe
 
 ## Layout: instorten tot nul breedte
 
-Vier vormen om te kennen:
+Drie vormen om te kennen:
 
-- **`width="fit-content"` samen met `layout="row"` rendert 0 pixels.** De host is `display: block` met `width: fit-content`, terwijl de layout `display: flex` op een element in de shadow root zet. Een block-box om een flex-kind dat geen intrinsieke breedte meldt, wordt nul.
-- **`nldd-container` in een ouder die zijn breedte van de inhoud haalt,** zoals een andere `nldd-container` met `width="fit-content"`. De container is een query container op inline-size, en zo'n container telt voor zijn ouder niet mee met de breedte van zijn inhoud: hij meet 0 breed. De tekst erin breekt dan na elk woord en de pagina wordt een smalle, hoge kolom. Laat de ouder de volle breedte nemen, of laat de binnenste container weg waar hij niets indeelt.
+- **`nldd-container` in een eigen element dat zijn breedte van de inhoud haalt,** zoals een `div` met `display: inline-flex`, `width: fit-content` of een float. De container is een query container op inline-size, en zo'n container telt voor zijn ouder niet mee met de breedte van zijn inhoud: hij meet 0 breed. De tekst erin breekt dan na elk woord en de pagina wordt een smalle, hoge kolom. In een `nldd-container width="fit-content"` regelt de container dat zelf; in een eigen element niet, en dat is een reden te meer om dat element weg te laten.
 - **Het omgekeerde.** Een container zonder breedte kan zijn buur uithongeren: een badge-kolom groeide tot 926px en hield de naam ernaast op nul.
 - **Een rij die een lange naam niet laat krimpen.** Een lange naam claimt de hele rij en duwt de rest van het scherm af. Krimpt een component niet onder zijn inhoud, dan is dat een melding, met een omweg volgens de regel bovenaan.
 
@@ -275,7 +274,7 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 
 ## Een volgorde die werkte
 
-1. Installeren, stylesheet importeren, en componenten registreren per subpad, met een gegenereerde importlijst.
+1. Installeren, stylesheet importeren, en componenten registreren met de autoloader of per subpad.
 2. De checks bouwen, de zuiverheidscheck met zijn baseline voorop. Van elk bewijzen dat die faalt.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
 4. De event-, value- en overlay-helpers schrijven, en in een React-app de JSX-typen van het pakket importeren (`@nldd/design-system/react`).

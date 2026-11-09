@@ -58,6 +58,25 @@ import '@nldd/design-system';          // registreert alle nldd-* componenten
 import '@nldd/design-system/styles';   // CSS-variabelen + Rijksoverheid-fonts
 ```
 
+Wil je dat een pagina alleen laadt wat erop staat, importeer dan de autoloader in plaats van de hoofdingang:
+
+```js
+import '@nldd/design-system/autoloader';   // laadt elk component zodra het op de pagina komt
+```
+
+Die let op elk `nldd-*`-element dat nog niet gedefinieerd is, ook in wat er later bijkomt, en laadt dan de module van die tag. Je bundler maakt er per component een chunk van, en niemand hoeft een importlijst bij te houden. Losse subpaden (`@nldd/design-system/button`) en de hoofdingang mogen ernaast staan: ze laden dezelfde modules. De autoloader kijkt in het document, niet in de shadow root van je eigen componenten; roep daarvoor `discover(root)` aan.
+
+### Laden zonder bundler
+
+Een server-gerenderde app of een statische site zonder bundler gebruikt `dist/cdn/autoloader.js`. Daar zit lit in, dus het werkt met een gewone module-script, zonder import map:
+
+```html
+<link rel="stylesheet" href="/nldd/css/global.css">
+<script type="module" src="/nldd/cdn/autoloader.js"></script>
+```
+
+Kopieer daarvoor `dist/css`, `dist/fonts` en `dist/cdn` uit het pakket naar je statische map. Een fragment dat htmx of Turbo inwisselt, laadt zijn componenten dan vanzelf. `dist/nldd.min.js` is de andere vorm: alles in één bestand, ook wat de pagina niet toont.
+
 ### Favicon
 
 Het pakket levert het rijkswapen op een lintblauw vlak mee, als `@nldd/design-system/favicon.svg`. Kopieer het bestand naar de map die je statisch serveert en verwijs ernaar:

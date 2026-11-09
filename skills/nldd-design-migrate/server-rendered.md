@@ -8,7 +8,7 @@ Eén zin organiseert bijna alles wat hier misgaat:
 
 De componenten zijn Lit-elementen met een shadow root. Bij een paginalading loopt de hele opstart: registratie, eerste render, observers. Bij een fragmentwissel komt er markup binnen in een document dat al draait, en dan gelden er andere regels.
 
-## Vier valkuilen op die grens
+## Op die grens
 
 **Open een overlay met `open` in de markup.** Een net ingewisselde overlay heeft zijn shadow-`<dialog>` nog niet gerenderd. Het attribuut `open` wacht zelf op die eerste render, en werkt voor sheet, window, modal en popover zonder een regel JavaScript:
 
@@ -22,9 +22,11 @@ De componenten zijn Lit-elementen met een shadow root. Bij een paginalading loop
 
 **`href` en een fragment-attribuut op hetzelfde element vechten.** Componenten die intern een `<a>` renderen (`nldd-list-item`, `nldd-card`, `nldd-menu-item`) laten die anchor winnen: de browser navigeert weg en gooit de respons weg. Kies er één, of onderschep de default click.
 
-**Een POST vanuit een shadow root kan niet via een formulier.** Uitloggen en verwijderen horen POST te zijn, maar een menu-item in een shadow root kun je niet in een `<form>` wikkelen. Doe de POST vanuit JavaScript met het CSRF-token uit de markup.
+**Een POST vanuit een menu doe je met `type="submit"`.** Uitloggen en verwijderen horen POST te zijn. Geef het `nldd-menu-item` dan `type="submit"` en wijs met `form` naar een gewoon formulier met het CSRF-token erin; het item verstuurt dat formulier zodra het gekozen wordt, zonder JavaScript van jou.
 
 **Zelfgerenderde formuliervelden koppelen zichzelf niet.** Render je de invoervelden zelf in plaats van via een component, dan moet je de validatie-attributen expliciet meerenderen. Doe je dat niet, dan krijgt de melding hoogte nul en is die onzichtbaar, ook voor een schermlezer.
+
+**Laat de componenten zichzelf laden.** Met `dist/cdn/autoloader.js` (zie "Laden zonder bundler" in [`nldd-design-build`](../nldd-design-build/SKILL.md)) laadt een ingewisseld fragment de componenten die erin staan, ook als de pagina ze nog niet had.
 
 Dezelfde familie, breder: **een component doet eenmalig werk op een moment dat jouw stack nog niet klaar is, of doet het werk alleen op een trigger die niet terugkomt.** Verplaats je elementen in de DOM of verwissel je hun inhoud, controleer dan of het component dat werk opnieuw doet.
 
@@ -70,13 +72,13 @@ Haal je de gebouwde bundel binnen in je repo in plaats van via npm, dan geldt er
 
 > **Vendoring ruilt "stil kapot gaan op een moment dat je niet koos" in voor "bewust achterlopen".**
 
-Niets werkt die bundel automatisch bij, dus een hernoeming in het designsysteem kan je app niet breken. Bij npm met een caret-range komt een nieuwe minor binnen bij de eerstvolgende installatie, en een attribuut dat stil is hernoemd laat dan al je meldingen verdwijnen zonder dat iemand iets wijzigde.
+Niets werkt die bundel bij zonder dat jij het doet. Met npm is het verschil kleiner dan het lijkt: zolang het pakket onder 1.0 zit, is elke brekende release een minor, en `^0.20.0` neemt alleen patches mee. Een hernoeming komt dus ook via npm niet ongevraagd binnen. Vendoren is vooral een keuze voor een bouw zonder npm-stap.
 
 De keerzijde: je loopt achter, en je weet niet hoeveel. Leg de versie daarom op één plek vast die je taakrunner en je bundel allebei gebruiken, en zet die in de repo zodat een upgrade een zichtbare commit is.
 
 Twee dingen om bij zo'n upgrade te doen:
 
-- **Lees de changelog van elke tussenliggende versie, niet alleen van de doelversie.** Een hernoeming zonder terugvalgedrag en een verwijderd element kunnen in dezelfde release zitten, en dan krijg je twee faalvormen tegelijk: de meldingen verdwijnen en de oude elementen worden permanent zichtbaar, want een ongedefinieerd custom element heeft geen shadow-stijlen.
+- **Draai de linter van de doelversie over je templates**, met `npx @nldd/design-system@<versie> lint`. Die meldt elke hernoeming en elk verwijderd element tussen jouw versie en die, en zet een hernoeming met `--fix` ook om. Wat hij niet ziet, gedrag dat anders werkt, staat in de changelog van elke tussenliggende versie. [`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md) beschrijft de hele ronde.
 - **Loop je eigen instructiebestanden na.** Schrijf je regels op voor je team of voor een agent, dan verouderen die stil bij een upgrade. Dat bestand is wat er straks nieuwe code mee schrijft, dus het is riskanter dan een verouderd comment.
 
 ## Eigen CSS op een component: alleen tijdelijk, met een issue
