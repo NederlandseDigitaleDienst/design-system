@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.20.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.19.0...v0.20.0) (2026-11-09)
+
 ### Highlights
 
 - **What you put in a slot now wins over the attribute for the same content, in every component.** See Breaking.
