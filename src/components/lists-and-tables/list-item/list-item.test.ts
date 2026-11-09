@@ -1081,6 +1081,28 @@ describe('nldd-list-item – row-wide disclosure', () => {
 		if (el) cleanup(el);
 	});
 
+	it('says collapsed for an expandable row without expanded, and tells its disclosure segment', async () => {
+		el = await fixture(`
+			<nldd-list accessible-label="X">
+				<nldd-list-item button expandable><nldd-text-cell text="Rij"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item expandable>
+					<nldd-list-item-segment button disclosure accessible-label="Open"><nldd-icon-cell icon="chevron-right"></nldd-icon-cell></nldd-list-item-segment>
+					<nldd-text-cell text="Rij"></nldd-text-cell>
+				</nldd-list-item>
+			</nldd-list>
+		`);
+		await waitForUpdate(el);
+		const [row, segmented] = el.querySelectorAll<NLDDListItem>('nldd-list-item');
+		const action = row.shadowRoot!.querySelector('.list-item__action')!;
+		expect(action.getAttribute('aria-expanded')).toBe('false');
+		row.expanded = true;
+		await waitForUpdate(row);
+		expect(action.getAttribute('aria-expanded')).toBe('true');
+		const segment = segmented.querySelector('nldd-list-item-segment')!;
+		await waitForUpdate(segment);
+		expect(segment.shadowRoot!.querySelector('.list-item-segment')!.getAttribute('aria-expanded')).toBe('false');
+	});
+
 	it('turns a chevron cell marked disclosure with its own expanded state', async () => {
 		el = await fixture(`
 			<nldd-list type="tree" accessible-label="X">
