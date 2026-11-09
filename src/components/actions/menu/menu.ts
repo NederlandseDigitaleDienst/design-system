@@ -631,7 +631,8 @@ export class NLDDMenu extends LitElement {
 	 * submenu, or stalled, at `p`. An item of this menu there takes over, as its
 	 * mouseenter would have while the cursor was protected. Anything else in or
 	 * out of this menu (a divider, the padding, the page) leaves the items. A
-	 * point in another menu is that menu's to handle. */
+	 * point in another menu is that menu's to handle: a menu is an auto
+	 * popover, so the only other one open is a submenu in this chain. */
 	releaseAt(p: Point): void {
 		const el = menuElementFromPoint(p.x, p.y);
 		const menu = el?.closest('nldd-menu');

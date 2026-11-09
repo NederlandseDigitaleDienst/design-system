@@ -144,6 +144,9 @@ export class NLDDTabBarItem extends LitElement {
 		this._applyControls();
 	}
 
+	/** A lookup waits for the page to load at most once. */
+	private _awaitingLoad = false;
+
 	/** Points the tab at the element it shows. By reference, not by id: the tab
 	 *  sits in this item's shadow root, where an id from the page does not
 	 *  resolve. Content that follows the tab bar may not be parsed yet on the
@@ -164,9 +167,6 @@ export class NLDDTabBarItem extends LitElement {
 			}, { once: true });
 		}
 	}
-
-	/** A lookup waits for the page to load at most once. */
-	private _awaitingLoad = false;
 
 	private _findControls(): Element | null {
 		if (!this.controls) return null;
