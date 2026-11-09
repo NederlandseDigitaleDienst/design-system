@@ -275,6 +275,12 @@ export const menuItemStyles = css`
 		}
 	}
 
+	/* The icon cell gives what it holds display: block; the slot that passes the
+	   icon on must stay out of the layout. */
+	.menu__item-icon {
+		display: contents;
+	}
+
 	/* A link item (href) renders as <a>; strip the UA link color/underline so
 	   it is visually identical to the button variant. The text color is owned
 	   by the inner nldd-text-cell. The control cursor token (default, like the

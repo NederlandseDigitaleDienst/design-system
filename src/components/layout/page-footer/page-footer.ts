@@ -25,6 +25,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import {
 	pageFooterStyles,
@@ -51,13 +52,16 @@ import { markListItems } from '../../../utilities/list-items.js';
  *
  * @element nldd-page-footer-legal-bar-item
  *
- * @attr {string} text - Item label. Falls back to the default slot.
+ * @attr {string} text - Item label. Content in the default slot wins.
  * @attr {string} href - Link target. When omitted, the item renders as plain text.
  *
- * @slot - Item label (alternative to `text`).
+ * @slot - Item label. Wins over `text`.
  */
 export class NLDDPageFooterLegalBarItem extends LitElement {
 	static override styles = pageFooterLegalBarItemStyles;
+
+	/** @internal Whether the default slot holds text, which wins over `text`. */
+	_textSlot = new SlotContent(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';

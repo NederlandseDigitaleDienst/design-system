@@ -24,13 +24,13 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
+import { PageSectionMixin, pageSectionBackgroundStyles } from '../../../../utilities/page-section-mixin.js';
 import { fullBleedSectionStyles } from './full-bleed-section.styles.js';
 import { fullBleedSectionTemplate } from './full-bleed-section.template.js';
 
 @customElement('nldd-full-bleed-section')
 export class NLDDFullBleedSection extends PageSectionMixin(LitElement) {
-	static override styles = fullBleedSectionStyles;
+	static override styles = [pageSectionBackgroundStyles, fullBleedSectionStyles];
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

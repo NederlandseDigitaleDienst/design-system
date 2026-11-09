@@ -87,10 +87,12 @@ export const cardStyles = css`
 
 	/* # Link / button overlay */
 
+	/* z-index 1, not 0: content that is only position: relative, such as an
+	   nldd-image, would otherwise paint over the overlay and take its clicks. */
 	.card__action {
 		position: absolute;
 		inset: 0;
-		z-index: 0;
+		z-index: 1;
 		border-radius: inherit;
 	}
 

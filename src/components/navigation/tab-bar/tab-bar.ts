@@ -37,10 +37,12 @@
  * @attr {string} text - Tab text; also used as accessible name for icon-only items
  * @attr {string} href - Optional link URL; renders an anchor instead of a button
  * @attr {'icon-and-text'|'text'|'icon'} variant - Forces this presentation on this item, over the one from nldd-tab-bar
- * @attr {string} icon - Icon name for nldd-icon; an alternative to the icon slot. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.
+ * @attr {string} icon - Icon name for nldd-icon; an icon in the icon slot wins. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.
  * @attr {'md'|'lg'} size - Size: 'md' (default) | 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout.
+ * @attr {string} controls - Id of the element this tab shows, looked up in the tab's own tree. The tab announces it as the content it controls (`aria-controls`). Give that element `role="tabpanel"` and an `aria-labelledby` with the id of this item, which names it after the tab. No effect in a `navigation` bar.
+ * @prop {Element | null} controlsElement - The element this tab shows, for where an id does not reach: content in another shadow root, or content a framework renders after the tab (`controls` is looked up when the page loads and on every update of the tab, such as when it becomes current). Wins over `controls`. Browsers without element references (`ariaControlsElements`) get no relation.
  *
- * @slot icon - Icon content
+ * @slot icon - Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made again each time the menu opens, so a new `src` shows there too.
  *
  * @fires select - When the item is activated; detail: { item: NLDDTabBarItem }
  */
@@ -87,8 +89,16 @@ export class NLDDTabBarItem extends LitElement {
 
 	/** Icon name for nldd-icon. The icon and icon-and-text variants show a
 	 *  placeholder icon when no icon (attribute or slot) is provided. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
+
+	/** Id of the element this tab shows, looked up in the tab's own tree. */
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	controls = '';
+
+	/** The element this tab shows, for where an id does not reach. Wins over `controls`. */
+	@property({ attribute: false })
+	controlsElement: Element | null = null;
 
 	/** Set by nldd-tab-bar. Sizes the variant-driven layout: 'md' (default) or 'lg' (larger touch target). */
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'lg'>('md') })
@@ -131,6 +141,37 @@ export class NLDDTabBarItem extends LitElement {
 
 	override updated(): void {
 		this.setAttribute('variant', this._effectiveVariant);
+		this._applyControls();
+	}
+
+	/** A lookup waits for the page to load at most once. */
+	private _awaitingLoad = false;
+
+	/** Points the tab at the element it shows. By reference, not by id: the tab
+	 *  sits in this item's shadow root, where an id from the page does not
+	 *  resolve. Content that follows the tab bar may not be parsed yet on the
+	 *  first update, so a missing id is looked up again once the page is in. */
+	private _applyControls(): void {
+		const tab = this.renderRoot.querySelector('[role="tab"]') as (Element & { ariaControlsElements?: Element[] | null }) | null;
+		const target = this.controlsElement ?? this._findControls();
+		// Only on a change: each write updates the accessibility tree, and this
+		// runs on every update of the tab, such as becoming current.
+		if (tab && 'ariaControlsElements' in tab && (tab.ariaControlsElements?.[0] ?? null) !== target) {
+			tab.ariaControlsElements = target ? [target] : null;
+		}
+		if (!target && this.controls && !this.controlsElement && document.readyState === 'loading' && !this._awaitingLoad) {
+			this._awaitingLoad = true;
+			document.addEventListener('DOMContentLoaded', () => {
+				this._awaitingLoad = false;
+				if (this.isConnected) this._applyControls();
+			}, { once: true });
+		}
+	}
+
+	private _findControls(): Element | null {
+		if (!this.controls) return null;
+		const root = this.getRootNode() as Document | ShadowRoot;
+		return root.getElementById?.(this.controls) ?? null;
 	}
 
 	override focus(options?: FocusOptions): void {
@@ -141,6 +182,13 @@ export class NLDDTabBarItem extends LitElement {
 	_onIconSlotChange(e: Event): void {
 		const slot = e.target as HTMLSlotElement;
 		this._hasIconSlot = slot.assignedElements({ flatten: true }).length > 0;
+		// The bar lists this tab in its overflow menu with a copy of the icon.
+		this.closest('nldd-tab-bar')?.requestUpdate();
+	}
+
+	/** The icon in the slot, which the overflow menu copies. */
+	get _slottedIcon(): Element | null {
+		return this.querySelector(':scope > [slot="icon"]');
 	}
 
 	_handleClick(event: Event): void {

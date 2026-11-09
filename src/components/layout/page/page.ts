@@ -67,6 +67,7 @@ import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../.
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
 import { setState } from '../../../utilities/element-state.js';
+import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 type Landmarks = 'auto' | 'page' | 'region';
 
@@ -87,7 +88,7 @@ const _connectedPages = new Set<NLDDPage>();
 export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	static override styles = pageStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<'inherit' | 'base' | 'tinted'>('inherit') })
 	background: 'inherit' | 'base' | 'tinted' = 'inherit';
 
 	@property({ type: String, attribute: 'accessible-label' })
@@ -99,7 +100,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	@property({ type: Boolean, reflect: true, attribute: 'sticky-footer' })
 	stickyFooter = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<Landmarks>('auto') })
 	landmarks: Landmarks = 'auto';
 
 	@state()

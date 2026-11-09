@@ -23,15 +23,16 @@ import { nlddPaginationTranslations } from './pagination.i18n.js';
 import type { NLDDPaginationTranslations } from './pagination.i18n.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { translate } from '../../../utilities/translations.js';
+import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 @customElement('nldd-pagination')
 export class NLDDPagination extends LitElement {
 	static override styles = paginationStyles;
 
-	@property({ type: Number, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<number>(1) })
 	current = 1;
 
-	@property({ type: Number, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<number>(1) })
 	total = 1;
 
 	@property({ type: Boolean, reflect: true })

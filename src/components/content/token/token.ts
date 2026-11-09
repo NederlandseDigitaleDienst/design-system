@@ -10,7 +10,7 @@
  *
  * @element nldd-token
  *
- * @attr {string} text - Token text; falls back to the default slot when unset.
+ * @attr {string} text - Token text. Content in the default slot wins.
  * @attr {'none' | 'dismiss' | 'menu'} control - Control type (default: 'none')
  * @attr {string} dismiss-text - Accessible label for the dismiss button. Unset, it names the token: `Verwijder "{text}"`, so a row of tokens does not read as a row of identical buttons.
  * @attr {string} menu-text - Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`.
@@ -19,7 +19,7 @@
  * @attr {boolean} expanded - Reflects whether the token's menu is open (control="menu"); managed by the token.
  * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  *
- * @slot - Token text
+ * @slot - Token text. Wins over `text`.
  * @slot menu - An nldd-menu that the token opens from its menu button (control="menu").
  *
  * @fires dismiss - When the dismiss button is clicked
@@ -27,6 +27,7 @@
 import { LitElement } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tokenStyles } from './token.styles.js';
 import { tokenTemplate } from './token.template.js';
@@ -41,8 +42,10 @@ export type TokenControl = 'none' | 'dismiss' | 'menu';
 export class NLDDToken extends LitElement {
 	static override styles = tokenStyles;
 
-	/** Token text. Falls back to the default slot when unset, so slotted or richer
-	 *  content keeps working. */
+	/** @internal Whether the default slot holds text, which wins over `text`. */
+	_textSlot = new SlotContent(this);
+
+	/** Token text. Content in the default slot wins. */
 	@property({ type: String })
 	text = '';
 

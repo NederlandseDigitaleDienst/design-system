@@ -119,11 +119,18 @@ describe('nldd-button', () => {
 		expect(assigned[0].textContent).toBe('Bold label');
 	});
 
-	it('text attribute takes precedence over the text slot (no slot rendered)', async () => {
-		el = await fixture('<nldd-button text="Attr wins"><span slot="text">Slotted</span></nldd-button>');
+	it('the text slot wins over the text attribute', async () => {
+		el = await fixture('<nldd-button text="Attribuut"><span slot="text">Slot</span></nldd-button>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.button__text slot[name="text"]')).toBeNull();
-		expect(el.shadowRoot!.querySelector('.button__text')!.textContent).toContain('Attr wins');
+		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('.button__text slot[name="text"]')!;
+		expect(slot.assignedElements()).toEqual([el.querySelector('span')]);
+	});
+
+	it('shows the text attribute when the text slot is empty', async () => {
+		el = await fixture('<nldd-button text="Opslaan"></nldd-button>');
+		await waitForUpdate(el);
+		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('.button__text slot[name="text"]')!;
+		expect(slot.assignedNodes({ flatten: true }).map(n => n.textContent).join('')).toBe('Opslaan');
 	});
 
 	it('forwards aria-label to the inner button element', async () => {

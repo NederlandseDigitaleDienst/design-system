@@ -37,6 +37,7 @@ import { customElement } from '../../../../utilities/custom-element.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
 import { splitViewPaneStyles } from './split-view-pane.styles.js';
 import { splitViewPaneTemplate } from './split-view-pane.template.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 
 @customElement('nldd-split-view-pane')
 export class NLDDSplitViewPane extends LitElement {
@@ -46,7 +47,7 @@ export class NLDDSplitViewPane extends LitElement {
 	// clip) in root-scroll mode, letting a slotted nldd-page stick to the document.
 	private _scrollMode = new ScrollModeController(this);
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<'inherit' | 'base' | 'tinted'>('inherit') })
 	background: 'inherit' | 'base' | 'tinted' = 'inherit';
 
 	@property({ type: Boolean, reflect: true, attribute: 'hide-back' })

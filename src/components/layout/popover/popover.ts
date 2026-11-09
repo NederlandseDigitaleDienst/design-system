@@ -81,6 +81,7 @@ import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { setState } from '../../../utilities/element-state.js';
+import { FocusReturn } from '../../../utilities/return-focus.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -92,7 +93,7 @@ export class NLDDPopover extends LitElement {
 	@property({ type: Boolean, reflect: true, attribute: 'sm-full-height' })
 	smFullHeight = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	anchor = '';
 
 	@property({ attribute: false })
@@ -134,7 +135,7 @@ export class NLDDPopover extends LitElement {
 	open = false;
 
 	private _isOpen = false;
-	private _previousFocus: HTMLElement | null = null;
+	private _focusReturn = new FocusReturn();
 	private _pointerdownOnAnchorWhileOpen = false;
 	/** Cleanup function from Floating UI's autoUpdate, only active while open. */
 	private _cleanupAutoUpdate: (() => void) | null = null;
@@ -577,8 +578,12 @@ export class NLDDPopover extends LitElement {
 	// Clearing `positioned` here (beforetoggle fires before the popover is shown) keeps
 	// it hidden via CSS until reposition() has placed it. (The sm bottom-sheet is
 	// CSS-animated, so its hide rule is scoped to md; this is harmless there.)
+	// Focus is remembered here too: by the toggle event, an [autofocus] inside
+	// has already taken it.
 	private _handleBeforeToggle = (event: Event): void => {
-		if ((event as ToggleEvent).newState === 'open') this.removeAttribute('positioned');
+		if ((event as ToggleEvent).newState !== 'open') return;
+		this.removeAttribute('positioned');
+		this._focusReturn.remember(this._getAnchorEl());
 	};
 
 	private _handleToggle = async (event: Event): Promise<void> => {
@@ -592,12 +597,11 @@ export class NLDDPopover extends LitElement {
 			// Stop scroll/resize tracking, no longer needed once closed.
 			this._cleanupAutoUpdate?.();
 			this._cleanupAutoUpdate = null;
-			this._returnFocus();
+			this._focusReturn.restore(this);
 			this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
 			return;
 		}
 
-		this._previousFocus = (document.activeElement as HTMLElement | null) ?? this._getAnchorEl() as HTMLElement | null;
 		await this.reposition();
 		this.setAttribute('positioned', ''); // placed — reveal it (see _handleBeforeToggle)
 		// Start scroll/resize/layout-change tracking. Floating UI's autoUpdate
@@ -625,7 +629,6 @@ export class NLDDPopover extends LitElement {
 			event.preventDefault();
 			event.stopPropagation();
 			this.hide();
-			(this._getAnchorEl() as HTMLElement | null)?.focus();
 			return;
 		}
 		if (event.key !== 'Tab') return;
@@ -680,12 +683,6 @@ export class NLDDPopover extends LitElement {
 			return;
 		}
 		this.focus();
-	}
-
-	private _returnFocus(): void {
-		const target = this._previousFocus ?? (this._getAnchorEl() as HTMLElement | null);
-		this._previousFocus = null;
-		target?.focus();
 	}
 
 	private _getFocusables(): HTMLElement[] {

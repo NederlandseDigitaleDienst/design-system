@@ -34,7 +34,7 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
+import { PageSectionMixin, pageSectionBackgroundStyles } from '../../../../utilities/page-section-mixin.js';
 import { simpleSectionStyles } from './simple-section.styles.js';
 import { simpleSectionTemplate } from './simple-section.template.js';
 
@@ -43,7 +43,7 @@ type VerticalAlignment = 'top' | 'center' | 'bottom';
 
 @customElement('nldd-simple-section')
 export class NLDDSimpleSection extends PageSectionMixin(LitElement) {
-	static override styles = simpleSectionStyles;
+	static override styles = [pageSectionBackgroundStyles, simpleSectionStyles];
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

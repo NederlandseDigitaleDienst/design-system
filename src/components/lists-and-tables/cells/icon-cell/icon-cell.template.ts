@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import type { NLDDIconCell } from './icon-cell.js';
 
 export function template(this: NLDDIconCell) {
@@ -11,9 +11,9 @@ export function template(this: NLDDIconCell) {
 			part="icon"
 			class="icon-cell__glyph"
 		>
-			${this.icon
+			${this.icon && !this._slot.has
 				? html`<nldd-icon icon=${this.icon}></nldd-icon>`
-				: html`<slot></slot>`}
+				: nothing}<slot @slotchange=${this._slot.onChange}></slot>
 		</span>
 	`;
 }

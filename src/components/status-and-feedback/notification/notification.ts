@@ -151,10 +151,10 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	@property({ type: String, reflect: true, attribute: 'supporting-text' })
+	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
 	supportingText = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<number>(DEFAULT_DURATION) })

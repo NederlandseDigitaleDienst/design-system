@@ -310,7 +310,7 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	value = '';
 
 	/** Something has to be chosen. Carried by a hidden radio of the group's own,

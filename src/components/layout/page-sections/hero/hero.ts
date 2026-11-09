@@ -73,7 +73,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
+import { PageSectionMixin, pageSectionBackgroundStyles } from '../../../../utilities/page-section-mixin.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
@@ -100,7 +100,7 @@ export type HeroMainBackground = 'accent' | 'base';
 
 @customElement('nldd-hero')
 export class NLDDHero extends PageSectionMixin(LitElement) {
-	static override styles = [heroStyles, heroCornerStyles];
+	static override styles = [pageSectionBackgroundStyles, heroStyles, heroCornerStyles];
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

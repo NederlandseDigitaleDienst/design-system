@@ -69,7 +69,7 @@ export class NLDDModalDialog extends LitElement {
 	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
 	supportingText = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
 
 	/** Accessible name for the dialog — forwarded as aria-label. Falls back to text. */

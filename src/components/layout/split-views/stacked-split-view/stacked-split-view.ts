@@ -21,6 +21,7 @@ import { customElement } from '../../../../utilities/custom-element.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
 import { stackedSplitViewStyles } from './stacked-split-view.styles.js';
 import { stackedSplitViewTemplate } from './stacked-split-view.template.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 
 @customElement('nldd-stacked-split-view')
 export class NLDDStackedSplitView extends LitElement {
@@ -29,10 +30,10 @@ export class NLDDStackedSplitView extends LitElement {
 
 	static override styles = stackedSplitViewStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<'inherit' | 'base' | 'tinted'>('inherit') })
 	background: 'inherit' | 'base' | 'tinted' = 'inherit';
 
-	@property({ type: Number, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<number>(2) })
 	panes = 2;
 
 	@state()

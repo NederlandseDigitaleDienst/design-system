@@ -11,6 +11,7 @@ import { property } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { spacerCellStyles } from './spacer-cell.styles.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 
 type Size = '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96' | 'flexible';
 
@@ -18,7 +19,7 @@ type Size = '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24' | '28' | '3
 export class NLDDSpacerCell extends VisibilityMixin(LitElement, 'cells-container') {
 	static override styles = spacerCellStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<Size>('16') })
 	size: Size = '16';
 
 	override render() {

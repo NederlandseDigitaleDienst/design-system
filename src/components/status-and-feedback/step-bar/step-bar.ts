@@ -54,6 +54,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddStepBarTranslations, type NLDDStepBarTranslations } from './step-bar.i18n.js';
@@ -78,15 +79,18 @@ export type StepBarStatus = 'past' | 'current' | 'future';
  * @element nldd-step-bar-item
  *
  * @attr {'past' | 'current' | 'future'} status - How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only
- * @attr {string} text - Label under the disc
+ * @attr {string} text - Label under the disc. Content in the default slot wins.
  * @attr {string} icon - Icon in the disc instead of the number or the check mark
  * @attr {string} href - Makes the step a link (back to a completed step, for instance)
  * @attr {boolean} button - Makes the step a button, for flows without a URL per step; ignored when `href` is set
  *
- * @slot - Label (an alternative to `text`)
+ * @slot - Label. Wins over `text`.
  */
 export class NLDDStepBarItem extends LitElement {
 	static override styles = stepBarItemStyles;
+
+	/** @internal Whether the default slot holds text, which wins over `text`. */
+	_textSlot = new SlotContent(this);
 
 	@property({ type: String, reflect: true })
 	status?: StepBarStatus;
@@ -97,7 +101,7 @@ export class NLDDStepBarItem extends LitElement {
 	@property({ type: String })
 	icon = '';
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
 
 	/** For flows without a URL per step (a process that runs inside one window). Ignored

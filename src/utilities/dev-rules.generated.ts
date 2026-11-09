@@ -676,6 +676,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-skip-link:state(target-not-focusable)"
 	},
 	{
+		"id": "slot-attribute-no-effect",
+		"message": "The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.",
+		"context": "nldd-button[text]:not([text=\"\"]):has(> [slot=\"text\"]), nldd-button[start-icon]:not([start-icon=\"\"]):has(> [slot=\"start-icon\"]), nldd-button[end-icon]:not([end-icon=\"\"]):has(> [slot=\"end-icon\"]), nldd-icon-button[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-menu-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-toggle-button[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-segmented-control-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-tag[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-link[start-icon]:not([start-icon=\"\"]):has(> [slot=\"start-icon\"]), nldd-link[end-icon]:not([end-icon=\"\"]):has(> [slot=\"end-icon\"]), nldd-tab-bar-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-menu-bar-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-tag[text]:not([text=\"\"]):has(> :not([slot])), nldd-link[text]:not([text=\"\"]):has(> :not([slot])), nldd-icon-cell[icon]:not([icon=\"\"]):has(> :not([slot])), nldd-token[text]:not([text=\"\"]):has(> :not([slot])), nldd-breadcrumbs-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-page-footer-legal-bar-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-step-bar-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-text-cell[text]:not([text=\"\"]):has(> :not([slot])), nldd-title-cell[text]:not([text=\"\"]):has(> :not([slot]))"
+	},
+	{
 		"id": "split-button-max-one-popup",
 		"message": "nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.",
 		"context": "nldd-split-button",

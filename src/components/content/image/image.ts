@@ -150,7 +150,7 @@ export class NLDDImage extends LitElement {
 	@property({ type: String, attribute: 'fetchpriority' })
 	fetchPriority?: ImageFetchPriority;
 
-	@property({ type: String, attribute: 'aspect-ratio', reflect: true })
+	@property({ reflect: true, attribute: 'aspect-ratio', converter: reflectNonDefault<string>('') })
 	aspectRatio = '';
 
 	@property({ reflect: true, attribute: 'object-fit', converter: reflectNonDefault<ImageObjectFit>('cover') })

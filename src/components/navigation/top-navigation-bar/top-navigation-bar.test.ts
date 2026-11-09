@@ -130,6 +130,18 @@ describe('nldd-top-navigation-bar – menu item selection', () => {
 		expect(items[1].hasAttribute('current')).toBe(true);
 	});
 
+	it('deselects an item made current as a property, as a framework does', async () => {
+		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
+		await waitForUpdate(el);
+
+		const items = el.querySelectorAll<HTMLElement & { current: boolean }>('nldd-menu-bar[slot="global"] > nldd-menu-bar-item');
+		items[0].current = true;
+		items[1].click();
+		await waitForUpdate(el);
+		expect(items[0].current).toBe(false);
+		expect(items[1].current).toBe(true);
+	});
+
 	it('dispatches itemselect event on item click', async () => {
 		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
 		await waitForUpdate(el);
@@ -369,6 +381,29 @@ describe('nldd-top-navigation-bar – menu sheet drill-down', () => {
 		await waitForUpdate(el);
 		expect(labels(list)).toEqual(['Home', 'Onderwerpen']);
 		expect(titleBar.hasAttribute('back-text')).toBe(false);
+	});
+
+	it('puts the full title of each level above the rows, for the bar to take over on scroll', async () => {
+		el = await fixture<NLDDTopNavigationBar>(drillFixture);
+		await waitForUpdate(el);
+		const list = await openSheet(el);
+		const sheet = (el as any)._menuSheet;
+		const titleBar = sheet.titleBar as HTMLElement;
+		const title = sheet.title as HTMLElement;
+		expect(title.localName).toBe('nldd-title');
+		expect(titleBar.getAttribute('collapse-anchor')).toBe(title.id);
+		expect(title.getAttribute('text')).toBe('Menu');
+		// Above the rows, in the same section.
+		expect(title.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
+		(list.querySelectorAll('nldd-list-item')[1] as HTMLElement)
+			.shadowRoot!.querySelector<HTMLButtonElement>('button.list-item__action')!.click();
+		await waitForUpdate(el);
+		expect(title.getAttribute('text')).toBe('Onderwerpen');
+
+		titleBar.dispatchEvent(new CustomEvent('back', { bubbles: true, composed: true }));
+		await waitForUpdate(el);
+		expect(title.getAttribute('text')).toBe('Menu');
 	});
 
 	it('returns focus to the opener row when walking back (APG)', async () => {

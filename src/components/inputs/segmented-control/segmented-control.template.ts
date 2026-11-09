@@ -40,9 +40,9 @@ export function segmentedControlItemTemplate(component: NLDDSegmentedControlItem
 		<span class="segmented-control__item-icon"
 			aria-hidden=${isIcon ? nothing : 'true'}
 		>
-			${component.icon
+			<slot name="icon">${component.icon
 				? html`<nldd-icon icon=${component.icon}></nldd-icon>`
-				: html`<slot name="icon">${showPlaceholder ? html`<nldd-icon icon="icon-placeholder"></nldd-icon>` : nothing}</slot>`}
+				: showPlaceholder ? html`<nldd-icon icon="icon-placeholder"></nldd-icon>` : nothing}</slot>
 		</span>
 		<span class="segmented-control__item-text"
 			aria-hidden=${isIcon ? 'true' : nothing}

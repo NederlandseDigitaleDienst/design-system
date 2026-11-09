@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './one-time-code-field.js';
@@ -38,7 +39,7 @@ describe('nldd-one-time-code-field', () => {
 		expect(boxes()).toHaveLength(5);
 		expect(input().maxLength).toBe(5);
 		const separators = [...el.shadowRoot!.querySelectorAll('.one-time-code-field__separator')];
-		expect(separators.map((separator) => separator.className)).toEqual(['one-time-code-field__separator is-dash']);
+		expect(separators.map((separator) => separator.className)).toEqual(['one-time-code-field__separator one-time-code-field__separator--dash']);
 		await type('123-45');
 		expect(el.value).toBe('12345');
 	});
@@ -46,7 +47,7 @@ describe('nldd-one-time-code-field', () => {
 	it('draws a space as room between the groups, and keeps another character as text', async () => {
 		el = await fixture('<nldd-one-time-code-field format="## ##/##"></nldd-one-time-code-field>');
 		const [space, slash] = el.shadowRoot!.querySelectorAll<HTMLElement>('.one-time-code-field__separator');
-		expect(space.classList.contains('is-space')).toBe(true);
+		expect(space.classList.contains('one-time-code-field__separator--space')).toBe(true);
 		expect(slash.textContent).toBe('/');
 	});
 
@@ -279,6 +280,46 @@ describe('nldd-one-time-code-field', () => {
 		await press(2);
 		expect(active()).toBe(2);
 		expect(boxes()[2].querySelector('.one-time-code-field__caret.is-after')).not.toBeNull();
+	});
+
+	describe('pressing beside the boxes', () => {
+		let unloadTokens: () => void;
+		afterEach(() => unloadTokens?.());
+
+		const setup = async (attributes = '') => {
+			unloadTokens = loadTokens();
+			el = await fixture(`<nldd-one-time-code-field ${attributes} accessible-label="Code" style="width: 800px"></nldd-one-time-code-field>`);
+			await el.updateComplete;
+			const host = el.getBoundingClientRect();
+			const boxes = el.shadowRoot!.querySelector('.one-time-code-field__boxes')!.getBoundingClientRect();
+			// Relative to the host, as userEvent.click positions it. Forced: beside
+			// the boxes the host takes no pointer events, so Playwright would wait.
+			const at = (x: number) => ({ position: { x: Math.round(x - host.left), y: Math.round(host.height / 2) }, force: true });
+			return { host, boxes, at };
+		};
+
+		it('does not focus the field from the space to the right of the boxes', async () => {
+			const { host, boxes, at } = await setup();
+			expect(boxes.right).toBeLessThan(host.right - 40);
+			await userEvent.click(el, at(host.right - 20));
+			expect(el.matches(':focus-within')).toBe(false);
+		});
+
+		it('does not focus a centered field from the space on either side', async () => {
+			const { host, boxes, at } = await setup('centered');
+			await userEvent.click(el, at(host.left + (boxes.left - host.left) / 2));
+			expect(el.matches(':focus-within')).toBe(false);
+			await userEvent.click(el, at(boxes.right + (host.right - boxes.right) / 2));
+			expect(el.matches(':focus-within')).toBe(false);
+		});
+
+		it('still focuses the field from a box and from the gap between two', async () => {
+			await setup();
+			const [first, second] = [...el.shadowRoot!.querySelectorAll('.one-time-code-field__box')].map((box) => box.getBoundingClientRect());
+			const host = el.getBoundingClientRect();
+			await userEvent.click(el, { position: { x: Math.round((first.right + second.left) / 2 - host.left), y: Math.round(host.height / 2) } });
+			expect(el.matches(':focus-within')).toBe(true);
+		});
 	});
 
 	it('lands in the first empty box when focus comes from the keyboard', async () => {
