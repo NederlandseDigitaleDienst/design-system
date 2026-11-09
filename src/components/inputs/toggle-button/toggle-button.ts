@@ -35,7 +35,7 @@
  * @attr {boolean} required - Required state. Set by nldd-toggle-button-group.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
- * @slot icon - Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set.
+ * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`.
  *
  * @fires change - When selection changes; detail: { selected: boolean, value: string }
  */
@@ -108,7 +108,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	/** Icon name for the nldd-icon element. When not set, the icon slot is used; the
+	/** Icon name for the nldd-icon element. An icon in the icon slot wins; the
 	 *  icon and icon-and-text variants show a placeholder icon when neither is provided. */
 	@property({ type: String })
 	icon = '';

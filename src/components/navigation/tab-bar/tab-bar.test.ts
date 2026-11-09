@@ -218,13 +218,18 @@ describe('nldd-tab-bar-item – content variant detection', () => {
 		expect(el.getAttribute('variant')).toBe('icon-and-text');
 	});
 
-	it('renders nldd-icon when icon attribute is set (no slot fallback)', async () => {
+	it('renders nldd-icon when icon attribute is set, as the fallback of the slot', async () => {
 		el = await fixture<NLDDTabBarItem>('<nldd-tab-bar-item text="Home" icon="house"></nldd-tab-bar-item>');
 		await waitForUpdate(el);
-		const icon = el.shadowRoot!.querySelector('.tab-bar__item-icon nldd-icon');
-		expect(icon).not.toBeNull();
+		const icon = el.shadowRoot!.querySelector('.tab-bar__item-icon slot nldd-icon');
 		expect(icon!.getAttribute('icon')).toBe('house');
-		expect(el.shadowRoot!.querySelector('.tab-bar__item-icon slot')).toBeNull();
+	});
+
+	it('lets an icon in the slot win over the icon attribute', async () => {
+		el = await fixture<NLDDTabBarItem>('<nldd-tab-bar-item text="Home" icon="house"><img slot="icon" alt=""></nldd-tab-bar-item>');
+		await waitForUpdate(el);
+		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('.tab-bar__item-icon slot')!;
+		expect(slot.assignedElements()).toEqual([el.querySelector('img')]);
 	});
 
 	it('variant="icon-and-text" with text but no icon shows the placeholder', async () => {
@@ -988,6 +993,21 @@ describe('nldd-tab-bar – overloop', () => {
 		expect(menuItems(bar).map(item => item.getAttribute('text'))).not.toContain('Dossier D-319');
 	});
 
+	it('neemt een icoon uit het icon-slot mee naar het menu', async () => {
+		const { bar, items } = await make(320);
+		const img = document.createElement('img');
+		img.slot = 'icon';
+		img.alt = '';
+		const last = items[items.length - 1];
+		last.append(img);
+		await new Promise(requestAnimationFrame);
+		await bar.updateComplete;
+		const entry = menuItems(bar).find(item => item.getAttribute('text') === last.getAttribute('text'))!;
+		const copy = entry.querySelector(':scope > img[slot="icon"]');
+		expect(copy).not.toBeNull();
+		expect(copy).not.toBe(img);
+	});
+
 	it('verplaatst geen tabs in de DOM', async () => {
 		const { items } = await make(320, 3);
 		expect([...host.querySelectorAll('nldd-tab-bar-item')]).toEqual(items);
@@ -1055,5 +1075,44 @@ describe('nldd-tab-bar – overloop', () => {
 		bar._updateOverflow();
 		await bar.updateComplete;
 		expect(hidden(items)).toEqual([false, false, false, false]);
+	});
+});
+
+describe('nldd-tab-bar-item – controls', () => {
+	let host: HTMLDivElement;
+	afterEach(() => host?.remove());
+
+	const make = async (attrs: string) => {
+		host = document.createElement('div');
+		host.innerHTML = `
+			<nldd-tab-bar accessible-label="Mijn Dienst">
+				<nldd-tab-bar-item id="tab-1" text="Aanvraag A-1042" current ${attrs}></nldd-tab-bar-item>
+			</nldd-tab-bar>
+			<div id="inhoud-1" role="tabpanel" aria-labelledby="tab-1">Inhoud</div>
+			<div id="inhoud-2" role="tabpanel">Andere inhoud</div>`;
+		document.body.append(host);
+		const item = host.querySelector('nldd-tab-bar-item') as NLDDTabBarItem;
+		await item.updateComplete;
+		const tab = item.shadowRoot!.querySelector('[role="tab"]') as Element & { ariaControlsElements: Element[] | null };
+		return { item, tab };
+	};
+
+	it('wijst de tab via controls naar zijn inhoud', async () => {
+		const { tab } = await make('controls="inhoud-1"');
+		expect(tab.ariaControlsElements).toEqual([host.querySelector('#inhoud-1')]);
+	});
+
+	it('laat controlsElement winnen van controls', async () => {
+		const { item, tab } = await make('controls="inhoud-1"');
+		item.controlsElement = host.querySelector('#inhoud-2');
+		await item.updateComplete;
+		expect(tab.ariaControlsElements).toEqual([host.querySelector('#inhoud-2')]);
+	});
+
+	it('haalt de relatie weg als controls verdwijnt', async () => {
+		const { item, tab } = await make('controls="inhoud-1"');
+		item.removeAttribute('controls');
+		await item.updateComplete;
+		expect(tab.ariaControlsElements).toBeNull();
 	});
 });

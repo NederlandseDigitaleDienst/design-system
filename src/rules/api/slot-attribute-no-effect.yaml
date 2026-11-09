@@ -1,0 +1,35 @@
+severity: warn
+context: >-
+  nldd-button[text]:has(> [slot="text"]),
+  nldd-button[start-icon]:has(> [slot="start-icon"]),
+  nldd-button[end-icon]:has(> [slot="end-icon"]),
+  nldd-icon-button[icon]:has(> [slot="icon"]),
+  nldd-menu-item[icon]:has(> [slot="icon"]),
+  nldd-toggle-button[icon]:has(> [slot="icon"]),
+  nldd-segmented-control-item[icon]:has(> [slot="icon"]),
+  nldd-tag[icon]:has(> [slot="icon"]),
+  nldd-link[start-icon]:has(> [slot="start-icon"]),
+  nldd-link[end-icon]:has(> [slot="end-icon"]),
+  nldd-tab-bar-item[icon]:has(> [slot="icon"]),
+  nldd-menu-bar-item[icon]:has(> [slot="icon"]),
+  nldd-tag[text]:has(> :not([slot])),
+  nldd-link[text]:has(> :not([slot])),
+  nldd-icon-cell[icon]:has(> :not([slot])),
+  nldd-token[text]:has(> :not([slot])),
+  nldd-breadcrumbs-item[text]:has(> :not([slot])),
+  nldd-page-footer-legal-bar-item[text]:has(> :not([slot])),
+  nldd-step-bar-item[text]:has(> :not([slot])),
+  nldd-text-cell[text]:has(> :not([slot])),
+  nldd-title-cell[text]:has(> :not([slot]))
+message: 'The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.'
+examples:
+  passed:
+    - '<nldd-button text="Opslaan"></nldd-button>'
+    - '<nldd-button start-icon="plus"><span slot="text">Opslaan</span></nldd-button>'
+    - '<nldd-tab-bar-item text="Aanvraag A-1042"><img slot="icon" alt=""></nldd-tab-bar-item>'
+    - '<nldd-token text="Dakisolatie"></nldd-token>'
+  failed:
+    - '<nldd-button text="Opslaan"><span slot="text">Opslaan</span></nldd-button>'
+    - '<nldd-tab-bar-item text="Aanvraag A-1042" icon="star"><img slot="icon" alt=""></nldd-tab-bar-item>'
+    - '<nldd-icon-cell icon="star"><img alt=""></nldd-icon-cell>'
+    - '<nldd-token text="Dakisolatie"><strong>Dakisolatie</strong></nldd-token>'

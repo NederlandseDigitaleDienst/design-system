@@ -175,16 +175,22 @@ describe('nldd-menu-item', () => {
 	it('renders an icon-cell when the icon attribute is set', async () => {
 		el = await fixture('<nldd-menu-item text="Save" icon="file"></nldd-menu-item>');
 		await waitForUpdate(el);
-		// Target the content icon by its value, so this stays unambiguous even if
-		// the item later also renders a check icon-cell (checkbox/radio types).
-		const iconCell = el.shadowRoot!.querySelector('nldd-icon-cell[icon="file"]');
-		expect(iconCell).not.toBeNull();
+		const icon = el.shadowRoot!.querySelector('nldd-icon[icon="file"]');
+		expect(icon?.closest('nldd-icon-cell')?.hidden).toBe(false);
 	});
 
-	it('does not render an icon-cell when the icon attribute is missing', async () => {
+	it('hides the icon-cell when there is no icon', async () => {
 		el = await fixture('<nldd-menu-item text="Save"></nldd-menu-item>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon-cell')).toBeNull();
+		expect(el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-cell')!.hidden).toBe(true);
+	});
+
+	it('shows an icon from the icon slot, over the icon attribute', async () => {
+		el = await fixture('<nldd-menu-item text="Save" icon="file"><img slot="icon" alt=""></nldd-menu-item>');
+		await waitForUpdate(el);
+		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="icon"]')!;
+		expect(slot.assignedElements()).toEqual([el.querySelector('img')]);
+		expect(slot.closest('nldd-icon-cell')!.hidden).toBe(false);
 	});
 
 	it('reflects details attribute', async () => {

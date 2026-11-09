@@ -25,7 +25,7 @@ export function syncListItemRole(host: HTMLElement, variant: MenuVariant | null)
  * @attr {boolean} destructive - Marks the item as destructive (red text; red highlight bg). Use for irreversible actions like "Delete". Color is the only built-in signal, so per WCAG 1.4.1 the item's own label must convey the destructive nature (e.g. "Verwijder") — don't rely on the red alone. Confirming the action (e.g. a follow-up dialog) is the consumer's responsibility.
  * @attr {string} text - Display text. Supports **bold** markdown syntax.
  * @attr {string} details - Secondary label shown on the right side.
- * @attr {string} icon - Icon name rendered before the text.
+ * @attr {string} icon - Icon name rendered before the text. An icon in the `icon` slot takes its place.
  * @attr {string} shortcut - Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {string} href - Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled.
@@ -36,6 +36,8 @@ export function syncListItemRole(host: HTMLElement, variant: MenuVariant | null)
  * @attr {string} aliases - Space-separated alternative search terms.
  * @attr {string} query - Query substring to bold-highlight in text. Set by menu's filter(); also settable by consumers.
  * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive'). See text-cell for details.
+ *
+ * @slot icon - An icon of your own before the text, such as an `<img>`: one that is not in the icon set. Wins over `icon`.
  *
  * @fires select - Fired when the item is clicked and not disabled.
  */
@@ -113,6 +115,14 @@ export class NLDDMenuItem extends LitElement {
 	 * the parent nldd-menu via the `submenu-open`/`submenu-close` lifecycle. */
 	@state()
 	_submenuOpen = false;
+
+	/** Whether the icon slot holds something. */
+	@state()
+	_hasIconSlot = false;
+
+	_onIconSlotChange = (e: Event): void => {
+		this._hasIconSlot = (e.target as HTMLSlotElement).assignedElements().length > 0;
+	};
 
 	private static _idCounter = 0;
 

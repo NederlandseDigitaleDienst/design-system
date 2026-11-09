@@ -22,7 +22,7 @@
  * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {string} size - Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' | 'sm' | 'md' | 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap.
- * @attr {string} text - Link text (alternative to the default slot)
+ * @attr {string} text - Link text. Content in the default slot wins.
  * @attr {string} start-icon - Icon before the text
  * @attr {string} end-icon - Icon after the text
  * @attr {string} accessible-label - Accessible label for screen readers
@@ -30,14 +30,15 @@
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {object} translations - Override translation keys (e.g. the "opent in nieuw tabblad" announcement); unset keys fall back to Dutch.
  *
- * @slot - Link text (alternative to the text attribute)
- * @slot start-icon - Custom icon before the text
- * @slot end-icon - Custom icon after the text
+ * @slot - Link text. Wins over `text`.
+ * @slot start-icon - Custom icon before the text. Wins over `start-icon`.
+ * @slot end-icon - Custom icon after the text. Wins over `end-icon`.
  */
 
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { linkStyles } from './link.styles.js';
 import { template } from './link.template.js';
@@ -50,6 +51,9 @@ type Size = 'xs' | 'sm' | 'md' | 'lg' | 'inherit';
 @customElement('nldd-link')
 export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations) {
 	static override styles = linkStyles;
+
+	/** @internal Whether the default slot holds text, which wins over `text`. */
+	_textSlot = new SlotContent(this);
 
 	@property({ type: String, reflect: true })
 	href: string | undefined = undefined;

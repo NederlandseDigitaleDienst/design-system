@@ -18,6 +18,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { breadcrumbsStyles, breadcrumbsItemStyles } from './breadcrumbs.styles.js';
 import { breadcrumbsTemplate, breadcrumbsItemTemplate } from './breadcrumbs.template.js';
@@ -37,12 +38,15 @@ import { translate } from '../../../utilities/translations.js';
  *
  * @attr {string} href - Link target. Ignored when `current` is set.
  * @attr {boolean} current - Marks this item as the current page (renders as plain text + `aria-current="page"`). Typical use is on the last item.
- * @attr {string} text - Item label. Falls back to the default slot.
+ * @attr {string} text - Item label. Content in the default slot wins.
  *
- * @slot - Item label (alternative to `text`).
+ * @slot - Item label. Wins over `text`.
  */
 export class NLDDBreadcrumbsItem extends LitElement {
 	static override styles = breadcrumbsItemStyles;
+
+	/** @internal Whether the default slot holds text, which wins over `text`. */
+	_textSlot = new SlotContent(this);
 
 	@property({ type: String, reflect: true })
 	href?: string;

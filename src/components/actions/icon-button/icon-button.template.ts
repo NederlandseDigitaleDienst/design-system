@@ -10,11 +10,9 @@ function renderContent(component: NLDDIconButton) {
 	return html`
 		<span class="icon-button__icon-area">
 			<span class="icon-button__icon">
-				${component.icon
+				<slot name="icon" @slotchange=${component._onIconSlotChange}>${component.icon
 					? html`<nldd-icon icon=${component.icon}></nldd-icon>`
-					: html`<slot name="icon" @slotchange=${component._onIconSlotChange}>
-							<nldd-icon icon="icon-placeholder"></nldd-icon>
-						</slot>`}
+					: html`<nldd-icon icon="icon-placeholder"></nldd-icon>`}</slot>
 			</span>
 			${component.expandable ? html`
 				<span class="icon-button__disclosure-icon">

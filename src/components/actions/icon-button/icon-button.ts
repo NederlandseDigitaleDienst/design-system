@@ -30,7 +30,7 @@
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  * @attr {string} popovertarget - ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
  *
- * @slot icon - Slot for a custom icon (e.g. custom SVG). Only used when icon attribute is not set; falls back to a placeholder icon when the slot is empty.
+ * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay.
  *
  * @example
@@ -177,8 +177,8 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	/** Icon name for the nldd-icon element. When not set, the icon slot is used,
-	 *  falling back to a placeholder icon when that slot is also empty. */
+	/** Icon name for the nldd-icon element. An icon in the icon slot wins; with
+	 *  neither, a placeholder icon shows. */
 	@property({ type: String })
 	icon = '';
 

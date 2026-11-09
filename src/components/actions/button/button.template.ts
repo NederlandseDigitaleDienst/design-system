@@ -11,18 +11,16 @@ interface TemplateHelpers {
 }
 
 function renderContent(component: NLDDButton) {
-	// `button__text` falls back to the slot on falsy `text`. The property
-	// defaults to '', so `text=""` and an absent attribute are indistinguishable
-	// — both intentionally render the slot rather than an empty label.
+	// What is in a slot wins; the attribute is its fallback content.
 	return html`
 		<span class="button__content">
-			${component.startIcon ? html`
+			<slot name="start-icon">${component.startIcon ? html`
 				<span class="button__start-icon">
 					<nldd-icon icon=${component.startIcon}></nldd-icon>
 				</span>
-			` : html`<slot name="start-icon"></slot>`}
+			` : nothing}</slot>
 			<span class="button__text-area">
-				<span class="button__text">${component.text ? component.text : html`<slot name="text"></slot>`}</span>
+				<span class="button__text"><slot name="text">${component.text}</slot></span>
 				${component.supportingText ? html`<span class="button__supporting-text">${component.supportingText}</span>` : nothing}
 			</span>
 			${hasShortcut(component) ? html`
@@ -38,11 +36,11 @@ function renderContent(component: NLDDButton) {
 					></nldd-keyboard-shortcut>
 				</span>
 			` : nothing}
-			${component.endIcon ? html`
+			<slot name="end-icon">${component.endIcon ? html`
 				<span class="button__end-icon">
 					<nldd-icon icon=${component.endIcon}></nldd-icon>
 				</span>
-			` : html`<slot name="end-icon"></slot>`}
+			` : nothing}</slot>
 		</span>
 		${component.expandable ? html`
 			<nldd-icon class="button__disclosure-icon"

@@ -61,4 +61,18 @@ describe('nldd-icon-cell', () => {
 		expect(el.shadowRoot!.querySelector('slot')).not.toBeNull();
 	});
 
+
+	it('laat inhoud in het slot winnen van icon', async () => {
+		el = await fixture('<nldd-icon-cell icon="star"><img alt=""></nldd-icon-cell>');
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('nldd-icon')).toBeNull();
+	});
+
+	it('toont icon als het slot alleen witruimte heeft', async () => {
+		el = await fixture(`<nldd-icon-cell icon="star">
+		</nldd-icon-cell>`);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('nldd-icon')?.getAttribute('icon')).toBe('star');
+	});
 });

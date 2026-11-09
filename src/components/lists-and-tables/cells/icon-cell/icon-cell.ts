@@ -9,10 +9,10 @@
  * @attr {string} size - Size: '16' | '20' | '24' | '32' (default: '24')
  * @attr {'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'} color - Color variant of the icon (default: 'content')
  * @attr {string} vertical-alignment - Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')
- * @attr {string} icon - Icon name (renders `<nldd-icon>`). Takes precedence over the default slot.
+ * @attr {string} icon - Icon name (renders `<nldd-icon>`). Content in the default slot wins.
  * @attr {boolean} disclosure - Marks this icon as the chevron of a row or segment that opens and closes: the row turns it with `expanded`.
  *
- * @slot - Fallback for custom icon content when `icon` is not set.
+ * @slot - Custom icon content, for iconography outside the icon set. Wins over `icon`.
  *
  * @csspart icon - The glyph itself, whether it comes from `icon` or from the slot. Transform this rather than the cell: a transform on the host changes the box `getBoundingClientRect()` reports, and a row measures its cells to place the divider.
  */
@@ -24,6 +24,7 @@ import { iconCellStyles } from './icon-cell.styles.js';
 import { template } from './icon-cell.template.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
 import '../../../content/icon/icon.js';
+import { SlotContent } from '../../../../utilities/slot-content.js';
 
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 type Size = '16' | '20' | '24' | '32';
@@ -44,6 +45,9 @@ export class NLDDIconCell extends VisibilityMixin(LitElement, 'cells-container')
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
+
+	/** @internal Whether the default slot holds an icon, which wins over `icon`. */
+	_slot = new SlotContent(this);
 
 	override render() {
 		return template.call(this);

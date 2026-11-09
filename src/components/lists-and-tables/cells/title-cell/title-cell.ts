@@ -28,13 +28,13 @@
  * @attr {'left' | 'center' | 'right'} horizontal-alignment - Horizontal alignment (default: 'left')
  * @attr {'top' | 'center' | 'bottom'} vertical-alignment - Vertical alignment (default: 'center')
  *
- * @attr {string} text - Title text content. Supports **bold** syntax for inline bold segments. Falls back to default slot.
+ * @attr {string} text - Title text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins.
  * @attr {string} supporting-text - Optional supporting text displayed below the title. Supports **bold**. Falls back to `supporting-text` slot.
  * @attr {string} overline - Optional overline text displayed above the title. Supports **bold**. Falls back to `overline` slot.
  * @attr {number} heading-level - Heading level for the title element: 1–6 (default: none, renders a <p>)
  *
  * @slot overline - Rich content for the overline region. Overrides the `overline` attribute when content is assigned.
- * @slot - (default) Rich content for the title. Overrides the `text` attribute when content is assigned.
+ * @slot - (default) Rich content for the title. Wins over `text`.
  * @slot supporting-text - Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned.
  *
  * ### Query mark

@@ -9,8 +9,19 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **What you put in a slot now wins over the attribute for the same content, in every component.** See Breaking.
+
+### Breaking
+
+- **Content in a slot wins over the attribute for the same content.** Where a component takes both, such as `icon` and `slot="icon"`, or `text` and the default slot, the slot now shows and the attribute is what shows while the slot is empty. Before, the attribute won in `nldd-button`, `nldd-icon-button`, `nldd-toggle-button`, `nldd-segmented-control-item`, `nldd-tag`, `nldd-link`, `nldd-tab-bar-item`, `nldd-icon-cell`, `nldd-token`, `nldd-breadcrumbs-item`, `nldd-page-footer-legal-bar-item` and `nldd-step-bar-item`. Only markup that sets both notices; the new lint rule `slot-attribute-no-effect` finds it. Whitespace between the tags does not count as content.
+
 ### Added
 
+- **`controls` and `controlsElement` on `nldd-tab-bar-item`,** to point a tab at the content it shows. The tab announces it as the content it controls (`aria-controls`), which an `aria-controls` on the item could not do, since it never reached the tab inside. Give that content `role="tabpanel"` and an `aria-labelledby` with the id of the item.
+- **An `icon` slot on `nldd-menu-item`,** for an icon outside the icon set, such as an `<img>`.
+- **The lint rule `slot-attribute-no-effect`,** which warns when an attribute and the slot for the same content are both set.
 - **`--semantics-button-groups-{xs,sm,md}-gap`,** the space between the buttons in `nldd-button-group` and `nldd-toggle-button-group`. Both groups read it, with the same values as before.
 
 ### Changed
@@ -27,6 +38,7 @@ here; consult the commit history if you need that level of detail.
 
 - **An open submenu of `nldd-menu` closes when the pointer turns away from it,** onto a divider, header, footer, the padding of the menu or out of the menu, instead of staying open with no item under the cursor. On its way to the submenu the pointer is still protected.
 - **`nldd-top-navigation-bar` also clears `current` on an item a framework made current as a property,** so two items can no longer be current at once.
+- **A tab with an icon in its `icon` slot keeps that icon in the "Meer tabs" menu of `nldd-tab-bar`,** where only an icon from the `icon` attribute went along.
 - **`nldd-popover`, `nldd-menu`, `nldd-sheet` and `nldd-window` return focus without a focus ring after a tap or click.** Safari drew a ring around the element that had focus before the overlay opened, also when you only used a finger or mouse. With the keyboard the ring stays. A popover or menu opened from a button that Safari gave no focus now returns focus to that button instead of the page, so Tab goes on from there.
 
 ## [0.19.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.18.0...v0.19.0) (2026-11-08)

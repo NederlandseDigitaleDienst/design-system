@@ -29,12 +29,12 @@
  * @attr {string} horizontal-alignment - Horizontal alignment: 'left' | 'center' | 'right' (default: 'left')
  * @attr {string} vertical-alignment - Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')
  *
- * @attr {string} text - Main text content. Supports **bold** syntax for inline bold segments. Falls back to default slot.
+ * @attr {string} text - Main text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins.
  * @attr {string} supporting-text - Optional supporting text displayed below the main content. Supports **bold**. Falls back to `supporting-text` slot.
  * @attr {string} overline - Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot.
  *
  * @slot overline - Rich content for the overline region. Overrides the `overline` attribute when content is assigned.
- * @slot - (default) Rich content for the main text region. Overrides the `text` attribute when content is assigned.
+ * @slot - (default) Rich content for the main text region. Wins over `text`.
  * @slot supporting-text - Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned.
  *
  * ### Query mark
