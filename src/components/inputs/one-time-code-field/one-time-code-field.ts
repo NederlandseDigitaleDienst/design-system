@@ -242,21 +242,12 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 		super.connectedCallback();
 		this._resizeObserver = new ResizeObserver(() => this._fit());
 		this._resizeObserver.observe(this);
-		this.addEventListener('mousedown', this._ignorePressBesideBoxes);
 	}
 
 	override disconnectedCallback(): void {
 		this._resizeObserver?.disconnect();
-		this.removeEventListener('mousedown', this._ignorePressBesideBoxes);
 		super.disconnectedCallback();
 	}
-
-	/** The host spans the row, the boxes do not: a press in the space beside
-	 *  them would otherwise focus the field through delegatesFocus. */
-	private _ignorePressBesideBoxes = (e: MouseEvent): void => {
-		const field = this.renderRoot.querySelector('.one-time-code-field');
-		if (field && !e.composedPath().includes(field)) e.preventDefault();
-	};
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);

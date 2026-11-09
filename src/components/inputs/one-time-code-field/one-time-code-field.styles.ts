@@ -30,6 +30,7 @@ export const oneTimeCodeFieldStyles = css`
 		display: block;
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;
+		pointer-events: none;
 	}
 
 	:host([hidden]) {
@@ -77,6 +78,7 @@ export const oneTimeCodeFieldStyles = css`
 		position: relative;
 		width: fit-content;
 		max-width: 100%;
+		pointer-events: auto;
 	}
 
 	:host([centered]) .one-time-code-field {

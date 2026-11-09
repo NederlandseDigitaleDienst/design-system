@@ -292,8 +292,9 @@ describe('nldd-one-time-code-field', () => {
 			await el.updateComplete;
 			const host = el.getBoundingClientRect();
 			const boxes = el.shadowRoot!.querySelector('.one-time-code-field__boxes')!.getBoundingClientRect();
-			// Relative to the host, as userEvent.click positions it.
-			const at = (x: number) => ({ position: { x: Math.round(x - host.left), y: Math.round(host.height / 2) } });
+			// Relative to the host, as userEvent.click positions it. Forced: beside
+			// the boxes the host takes no pointer events, so Playwright would wait.
+			const at = (x: number) => ({ position: { x: Math.round(x - host.left), y: Math.round(host.height / 2) }, force: true });
 			return { host, boxes, at };
 		};
 
