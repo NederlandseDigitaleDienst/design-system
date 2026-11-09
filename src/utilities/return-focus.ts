@@ -73,22 +73,25 @@ function isTextEntry(el: HTMLElement): boolean {
  */
 export class FocusReturn {
 	private _target: HTMLElement | null = null;
+	private _fallback: HTMLElement | null = null;
 
 	/** Remembers what has focus now, inside any shadow roots, so focus goes
 	 *  back to that element and not to the host it sits in. With nothing
 	 *  focused, as after a click on a button in Safari, it remembers
-	 *  `fallback`: an overlay's anchor, so Tab goes on from there. */
+	 *  `fallback`: an overlay's anchor, so Tab goes on from there. The
+	 *  fallback also stands in for a remembered element that has left the page
+	 *  by the time the overlay closes, as when a framework renders it anew. */
 	remember(fallback?: Element | null): void {
 		const active = deepActiveElement();
-		this._target = active && active !== document.body
-			? active
-			: (fallback as HTMLElement | null | undefined) ?? null;
+		this._fallback = (fallback as HTMLElement | null | undefined) ?? null;
+		this._target = active && active !== document.body ? active : this._fallback;
 	}
 
 	/** Hands focus back once `overlay` has closed. */
 	restore(overlay: Element): void {
-		const target = this._target;
+		const target = this._target?.isConnected ? this._target : this._fallback;
 		this._target = null;
+		this._fallback = null;
 		returnFocus(target, overlay);
 	}
 }

@@ -75,6 +75,20 @@ describe('returnFocus', () => {
 		expect(document.activeElement).toBe(els.inside);
 	});
 
+	it('valt terug op de anchor als het onthouden element uit de pagina is', () => {
+		const els = setUp(); root = els.root;
+		const anchor = document.createElement('button');
+		els.root.append(anchor);
+		els.target.focus();
+		const focusReturn = new FocusReturn();
+		focusReturn.remember(anchor);
+		els.inside.focus();
+		els.target.remove();
+		keyboard();
+		focusReturn.restore(els.overlay);
+		expect(document.activeElement).toBe(anchor);
+	});
+
 	describe('in een shadow root', () => {
 		/** Opener, a field and the overlay together in one shadow root, as in an app built from components. */
 		function setUpShadow() {

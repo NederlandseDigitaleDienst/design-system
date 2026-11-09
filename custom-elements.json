@@ -43581,6 +43581,15 @@
             },
             {
               "kind": "field",
+              "name": "_page",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "_stack",
               "type": {
                 "text": "SheetLevel[]"
@@ -50318,6 +50327,15 @@
               "default": "null"
             },
             {
+              "kind": "field",
+              "name": "_fallback",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "remember",
               "return": {
@@ -50334,7 +50352,7 @@
                   }
                 }
               ],
-              "description": "Remembers what has focus now, inside any shadow roots, so focus goes\nback to that element and not to the host it sits in. With nothing\nfocused, as after a click on a button in Safari, it remembers\n`fallback`: an overlay's anchor, so Tab goes on from there."
+              "description": "Remembers what has focus now, inside any shadow roots, so focus goes\nback to that element and not to the host it sits in. With nothing\nfocused, as after a click on a button in Safari, it remembers\n`fallback`: an overlay's anchor, so Tab goes on from there. The\nfallback also stands in for a remembered element that has left the page\nby the time the overlay closes, as when a framework renders it anew."
             },
             {
               "kind": "method",
