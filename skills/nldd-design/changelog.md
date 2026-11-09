@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.21.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.21.0...v0.21.1) (2026-11-09)
+
 ### Highlights
 
 - **`nldd lint --pure` checks that an app has no styling of its own:** no `class`, `style`, styled plain HTML or stylesheet. See Added.

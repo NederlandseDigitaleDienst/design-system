@@ -1,6 +1,6 @@
 {
   "name": "@nldd/design-system",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "Designsysteem voor de Nederlandse Digitale Dienst",
   "type": "module",
   "main": "dist/components/index.js",
