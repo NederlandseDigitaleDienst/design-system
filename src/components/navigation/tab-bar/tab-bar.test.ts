@@ -1134,4 +1134,23 @@ describe('nldd-tab-bar-item – controls', () => {
 		await item.updateComplete;
 		expect(tab.ariaControlsElements).toBeNull();
 	});
+
+	it('schrijft de relatie niet opnieuw als alleen iets anders van de tab verandert', async () => {
+		const { item, tab } = await make('controls="inhoud-1"');
+		const set = vi.fn();
+		const own = Object.getOwnPropertyDescriptor(Element.prototype, 'ariaControlsElements')!;
+		Object.defineProperty(tab, 'ariaControlsElements', {
+			configurable: true,
+			get: () => own.get!.call(tab),
+			set: (value) => { set(value); own.set!.call(tab, value); },
+		});
+		item.current = false;
+		await item.updateComplete;
+		item.current = true;
+		await item.updateComplete;
+		expect(set).not.toHaveBeenCalled();
+		item.controls = 'inhoud-2';
+		await item.updateComplete;
+		expect(set).toHaveBeenCalledWith([host.querySelector('#inhoud-2')]);
+	});
 });

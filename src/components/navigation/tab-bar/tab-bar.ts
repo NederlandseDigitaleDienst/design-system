@@ -151,7 +151,11 @@ export class NLDDTabBarItem extends LitElement {
 	private _applyControls(): void {
 		const tab = this.renderRoot.querySelector('[role="tab"]') as (Element & { ariaControlsElements?: Element[] | null }) | null;
 		const target = this.controlsElement ?? this._findControls();
-		if (tab && 'ariaControlsElements' in tab) tab.ariaControlsElements = target ? [target] : null;
+		// Only on a change: each write updates the accessibility tree, and this
+		// runs on every update of the tab, such as becoming current.
+		if (tab && 'ariaControlsElements' in tab && (tab.ariaControlsElements?.[0] ?? null) !== target) {
+			tab.ariaControlsElements = target ? [target] : null;
+		}
 		if (!target && this.controls && !this.controlsElement && document.readyState === 'loading' && !this._awaitingLoad) {
 			this._awaitingLoad = true;
 			document.addEventListener('DOMContentLoaded', () => {
