@@ -19,6 +19,13 @@ here; consult the commit history if you need that level of detail.
 - **`nldd lint --tighten-baseline` lowers the baseline to what is still there, and never raises it.** With it a baseline is a ratchet: a file can only get cleaner, and the summary (also in JSON and as a GitHub notice) says when the baseline accepts more than it needs to. A file that moved takes its entry along when it still holds exactly what was accepted. A rule that is off keeps what it accepted. An `--update-baseline` without the group pure keeps what that group accepted.
 - **The reference says which plain HTML a component styles itself,** for `nldd-text`, `nldd-rich-text`, `nldd-title`, `nldd-dropdown`, `nldd-form`, `nldd-form-field-help-text`, `nldd-image`, `nldd-identity`, `nldd-hero` and `nldd-blockquote`.
 
+### Fixed
+
+- **`nldd-date-field` and `nldd-time-field` hand focus back to their button without a ring after a tap or a click.** WebKit drew one for that focus, also on a phone. With the keyboard the ring stays. Pressing the button no longer flashes the ring of the whole field in Safari, which moved focus to the text field for as long as the button was held.
+- **`nldd-popover` focuses its `autofocus` child without a ring when it was opened with a mouse or a finger,** as the hour in `nldd-time-field` and the day in `nldd-date-field`. WebKit drew one for that focus. After the keyboard the ring stays, and so does the ring of a text field.
+- **After a click beside the popover of `nldd-date-field` or `nldd-time-field`, focus goes back to the button,** as after a choice. In Safari it landed in the text field, unless the click put it somewhere else on the page.
+- **A period chosen in `nldd-date-field` with a tap or a click returns focus to the calendar button,** where it put the caret in the end field and opened the keyboard on a phone. With the keyboard it still lands at the end of the end field.
+
 ## [0.21.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.20.0...v0.21.0) (2026-11-09)
 
 ### Highlights

@@ -81,7 +81,7 @@ import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { setState } from '../../../utilities/element-state.js';
-import { FocusReturn } from '../../../utilities/return-focus.js';
+import { FocusReturn, focusAsLastInput } from '../../../utilities/return-focus.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -679,7 +679,9 @@ export class NLDDPopover extends LitElement {
 		this.classList.toggle('is-pointer-focus', isPointerMode());
 		const autofocusEl = this.querySelector<HTMLElement>('[autofocus]');
 		if (autofocusEl) {
-			autofocusEl.focus();
+			// With its ring after the keyboard only: WebKit draws one for a script
+			// focus, also when the popover was opened with a mouse or a finger.
+			focusAsLastInput(autofocusEl);
 			return;
 		}
 		this.focus();

@@ -50612,6 +50612,42 @@
           "description": "Hands focus back to `target` once `overlay` (a popover, menu, sheet or window)\nhas closed. Call it after the close, with the element that had focus when the\noverlay opened.\n\n- Focus the user moved elsewhere, by a click into a field or Tab out of the\n  overlay, stays there. Only focus still in the overlay, on nothing, or on\n  `target` itself is handed back.\n- After the keyboard, `target` gets a plain `focus()` and its ring.\n- After a mouse or a finger, it gets no ring. The browser's own close step\n  has often moved focus back already, and WebKit draws a ring for that\n  script focus. A second `focus()` would be a no-op, so it blurs first and\n  focuses with `focusVisible: false`. Chromium leaves the ring off itself.\n  A text field keeps its ring, as it does on any click."
         },
         {
+          "kind": "function",
+          "name": "focusAsLastInput",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Focuses `target` the way the last input asks for: with its ring after the\nkeyboard, without one after a mouse or a finger. For a component that moves\nfocus itself once its own overlay has closed, where `returnFocus` would leave\nit where the browser put it."
+        },
+        {
+          "kind": "function",
+          "name": "focusIsFree",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "container",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Whether focus is on nothing or still inside `container`, so moving it does\nnot take it from something the user chose. After a click beside an overlay,\nthe browser has put it back where the overlay found it, and in Safari, where\na click does not focus a button, that can be a text field next to it."
+        },
+        {
           "kind": "class",
           "description": "Remembers where focus was when an overlay opened, and hands it back when it\ncloses, through `returnFocus`. One per overlay:\n\n```ts\nprivate _focusReturn = new FocusReturn();\n// on open, before the overlay takes focus\nthis._focusReturn.remember(anchor);\n// once it has closed\nthis._focusReturn.restore(this);\n```",
           "name": "FocusReturn",
@@ -50688,6 +50724,22 @@
           "name": "returnFocus",
           "declaration": {
             "name": "returnFocus",
+            "module": "src/utilities/return-focus.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "focusAsLastInput",
+          "declaration": {
+            "name": "focusAsLastInput",
+            "module": "src/utilities/return-focus.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "focusIsFree",
+          "declaration": {
+            "name": "focusIsFree",
             "module": "src/utilities/return-focus.ts"
           }
         },

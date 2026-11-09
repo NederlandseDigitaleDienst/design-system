@@ -61,6 +61,8 @@ import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { focusAsLastInput, focusIsFree } from '../../../utilities/return-focus.js';
+import { isPointerMode } from '../../../utilities/input-modality.js';
 import {
 	checkEnds,
 	commitText,
@@ -369,6 +371,13 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 		return this.accessibleLabel || this._t('components.date-field.to-pick-date-action');
 	}
 
+	/** Keeps a press on the button from moving focus. With delegatesFocus, Safari,
+	 *  which does not focus a button on click, focuses the text field instead, and
+	 *  the field shows its ring for as long as the button is held. */
+	public _handlePickerPress(e: MouseEvent): void {
+		e.preventDefault();
+	}
+
 	public _handlePickerClick(): void {
 		if (this._pickerOpen) this._popover?.hide();
 		else this._popover?.show();
@@ -393,10 +402,13 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	 * same restoration but is not throttled while the tab is unfocused.
 	 */
 	private _applyCloseFocus(): void {
-		const intent = this._focusOnClose;
+		// Nothing asked, as after a click beside the popover: back to the button,
+		// unless the click put focus somewhere else on the page.
+		const intent = this._focusOnClose ?? (focusIsFree(this) ? 'trigger' : null);
 		this._focusOnClose = null;
 		if (intent === 'trigger') {
-			this._pickerTrigger?.focus();
+			const trigger = this._pickerTrigger;
+			if (trigger) focusAsLastInput(trigger);
 			return;
 		}
 		if (intent === 'last-input') {
@@ -459,10 +471,11 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/**
-	 * The picker speaks ISO already, so there is nothing to convert. A finished
-	 * period lands the caret at the end of the end field - you just settled the
-	 * second date, so that is where an edit continues - while a single date is final
-	 * in one click and returns to the calendar button.
+	 * The picker speaks ISO already, so there is nothing to convert. A period
+	 * finished with the keyboard lands the caret at the end of the end field - you
+	 * just settled the second date, so that is where an edit continues. After a
+	 * mouse or a finger it returns to the calendar button, as a single date does:
+	 * a caret there would open the keyboard on a phone.
 	 */
 	public _handlePickerChange(e: Event): void {
 		e.stopPropagation();
@@ -470,7 +483,7 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 		if (this.range) {
 			if (typeof detail?.start !== 'string' || typeof detail?.end !== 'string') return;
 			this.value = joinValue([detail.start, detail.end]);
-			this._focusOnClose = 'last-input';
+			this._focusOnClose = isPointerMode() ? 'trigger' : 'last-input';
 		} else {
 			if (typeof detail?.value !== 'string') return;
 			this.value = detail.value;
