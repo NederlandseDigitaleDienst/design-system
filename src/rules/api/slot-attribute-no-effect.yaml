@@ -1,3 +1,5 @@
+# Text written straight into a default slot is not reported: a selector does
+# not see text nodes, only elements. The browser check cannot see it either.
 severity: warn
 context: >-
   nldd-button[text]:has(> [slot="text"]),

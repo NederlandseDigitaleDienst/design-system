@@ -182,7 +182,10 @@ describe('nldd-menu-item', () => {
 	it('hides the icon-cell when there is no icon', async () => {
 		el = await fixture('<nldd-menu-item text="Save"></nldd-menu-item>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-cell')!.hidden).toBe(true);
+		const cell = el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-cell')!;
+		expect(cell.hidden).toBe(true);
+		expect(getComputedStyle(cell).display).toBe('none');
+		expect(getComputedStyle(cell.nextElementSibling!).display).toBe('none');
 	});
 
 	it('shows an icon from the icon slot, over the icon attribute', async () => {

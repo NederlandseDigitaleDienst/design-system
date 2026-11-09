@@ -40,9 +40,9 @@
  * @attr {string} icon - Icon name for nldd-icon; an icon in the icon slot wins. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.
  * @attr {'md'|'lg'} size - Size: 'md' (default) | 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout.
  * @attr {string} controls - Id of the element this tab shows, looked up in the tab's own tree. The tab announces it as the content it controls (`aria-controls`). Give that element `role="tabpanel"` and an `aria-labelledby` with the id of this item, which names it after the tab. No effect in a `navigation` bar.
- * @prop {Element | null} controlsElement - The element this tab shows, for where an id does not reach (another shadow root). Wins over `controls`.
+ * @prop {Element | null} controlsElement - The element this tab shows, for where an id does not reach: content in another shadow root, or content a framework renders after the tab (`controls` is looked up when the page loads and on every update of the tab, such as when it becomes current). Wins over `controls`. Browsers without element references (`ariaControlsElements`) get no relation.
  *
- * @slot icon - Icon content, such as an `<img>`. Wins over `icon`, and goes along to the overflow menu.
+ * @slot icon - Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made when the slot changes: a change inside the icon itself, such as a new `src`, does not reach the copy.
  *
  * @fires select - When the item is activated; detail: { item: NLDDTabBarItem }
  */
@@ -152,10 +152,17 @@ export class NLDDTabBarItem extends LitElement {
 		const tab = this.renderRoot.querySelector('[role="tab"]') as (Element & { ariaControlsElements?: Element[] | null }) | null;
 		const target = this.controlsElement ?? this._findControls();
 		if (tab && 'ariaControlsElements' in tab) tab.ariaControlsElements = target ? [target] : null;
-		if (!target && this.controls && !this.controlsElement && document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', () => this._applyControls(), { once: true });
+		if (!target && this.controls && !this.controlsElement && document.readyState === 'loading' && !this._awaitingLoad) {
+			this._awaitingLoad = true;
+			document.addEventListener('DOMContentLoaded', () => {
+				this._awaitingLoad = false;
+				this._applyControls();
+			}, { once: true });
 		}
 	}
+
+	/** A lookup waits for the page to load at most once. */
+	private _awaitingLoad = false;
 
 	private _findControls(): Element | null {
 		if (!this.controls) return null;
