@@ -223,9 +223,8 @@ export class NLDDForm extends HTMLElement {
 		// others valid too, and they hear nothing of it. Every control with that
 		// name is judged again, which only does work for a radio.
 		const name = control.getAttribute('name');
-		const peers = name
-			? Array.from(this._form?.elements ?? []).filter(el => el.getAttribute('name') === name)
-			: [control];
+		const named = name ? this._form?.elements.namedItem(name) : null;
+		const peers = named instanceof RadioNodeList ? Array.from(named) as Element[] : [control];
 		const judge = () => {
 			for (const el of peers) {
 				if (!this._judged.has(el)) continue;
