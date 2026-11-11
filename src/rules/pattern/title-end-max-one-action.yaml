@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-title > :is(nldd-button-group, nldd-toolbar)[slot="end"], nldd-title > :is(nldd-button, nldd-icon-button)[slot="end"] ~ :is(nldd-button, nldd-icon-button)[slot="end"]'
+message: 'Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.'
+see: patronen/toolbar-with-actions
+examples:
+  passed: ['<nldd-title heading-level="1" text="Aanvraag A-1042"><nldd-button slot="end" text="Bewerken"></nldd-button></nldd-title>']
+  failed: ['<nldd-title heading-level="1" text="Aanvraag A-1042"><nldd-button-group slot="end"><nldd-button text="Bewerken"></nldd-button><nldd-button text="Verwijderen"></nldd-button></nldd-button-group></nldd-title>', '<nldd-title heading-level="1" text="Aanvraag A-1042"><nldd-button slot="end" text="Bewerken"></nldd-button><nldd-button slot="end" text="Verwijderen"></nldd-button></nldd-title>']

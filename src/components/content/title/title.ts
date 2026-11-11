@@ -50,7 +50,7 @@
  * @slot - Title that is more than text, such as a link. Takes the place of text, and brings its own h1–h6 for semantics.
  * @accepts h1, h2, h3, h4, h5, h6, a, strong, b, em, i, code, mark, q
  * @slot supporting-text - Supporting text that is more than text. Takes the place of the supporting-text attribute.
- * @slot end - Whatever belongs at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there.
+ * @slot end - One thing at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there. More than one action goes in an nldd-toolbar below the title, not in this slot: the line has no room for a row of buttons on a narrow screen, and a toolbar moves what does not fit to its overflow menu.
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';

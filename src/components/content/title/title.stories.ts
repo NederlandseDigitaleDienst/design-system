@@ -161,7 +161,7 @@ export const MetOverlineEnSupportingText = {
 	parameters: { controls: { disable: true } },
 };
 
-export const MetActies = {
+export const MetActie = {
 	render: () => html`
 	<nldd-title
 		text="Aanvraag A-1042"
@@ -169,18 +169,8 @@ export const MetActies = {
 	>
 		<nldd-button
 			slot="end"
-			appearance="secondary"
 			size="sm"
 			text="Bewerken"
-		></nldd-button>
-		<nldd-spacer
-			slot="end"
-			size="8"
-		></nldd-spacer>
-		<nldd-button
-			slot="end"
-			size="sm"
-			text="Bewaar"
 		></nldd-button>
 	</nldd-title>
 `,

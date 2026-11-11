@@ -6,7 +6,7 @@
 
 # Patroon: werkbalk met acties
 
-Een werkbalk bundelt acties die gelden voor een heel scherm of paneel, zoals iets nieuws maken, filteren, exporteren of van weergave wisselen. Gebruik de werkbalk als er meerdere van zulke acties zijn en ze ook op een smal scherm bereikbaar moeten blijven. Gaat een actie over één rij, plaats die dan bij die rij in de [lijst](list.md). Is er maar één actie, gebruik dan een losse knop.
+Een werkbalk bundelt acties die gelden voor een heel scherm of paneel, zoals iets nieuws maken, filteren, exporteren of van weergave wisselen. Gebruik de werkbalk als er meerdere van zulke acties zijn en ze ook op een smal scherm bereikbaar moeten blijven. Gaat een actie over één rij, plaats die dan bij die rij in de [lijst](list.md). Is er maar één actie, gebruik dan een losse knop. Op een pagina staat de werkbalk onder de titel, niet in het slot `end` van de [`nldd-title`](../../nldd-design/reference.md#nldd-title): dat slot is voor één ding.
 
 ## Compositie
 
@@ -143,6 +143,7 @@ Hints: zo is het bedoeld. Die laten niets falen.
 
 - `tab-bar-needs-priority`: Give the tab bar a high `priority`, so it is the last to move to the overflow.
 - `tab-bar-overflow-needs-radio-group`: Give the tab bar an nldd-menu-group in `slot="overflow"`, with a type="radio" item per tab.
+- `title-end-max-one-action`: Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.
 - `toolbar-needs-two-actions`: Use a plain button for a single action.
 - `toolbar-primary-needs-priority`: Give the primary action the highest `priority`, so it is the last to move to the overflow.
 - `toolbar-second-needs-name`: Give each toolbar an `accessible-label` when a page has more than one.
