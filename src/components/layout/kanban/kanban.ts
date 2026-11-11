@@ -237,7 +237,11 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 	private _move(item: HTMLElement, from: NLDDKanbanColumn, fromIndex: number, to: NLDDKanbanColumn, toIndex: number): boolean {
 		const focused = this._deepActiveElement();
 		const hadFocus = !!focused && this._holds(item, focused);
-		this.dispatchEvent(new CustomEvent<NLDDMoveEventDetail>('move', { detail: { item, fromColumn: this._columnKey(from), fromIndex, toColumn: this._columnKey(to), toIndex }, bubbles: true, composed: true }));
+		this.dispatchEvent(new CustomEvent<NLDDMoveEventDetail>('move', {
+			detail: { item, fromColumn: this._columnKey(from), fromIndex, toColumn: this._columnKey(to), toIndex },
+			bubbles: true,
+			composed: true,
+		}));
 		const total = to.items.filter((el) => el !== item).length + 1;
 		this._announce(this._t('components.kanban.moved-text', { column: to.label, position: toIndex + 1, total }));
 		if (hadFocus) {

@@ -215,7 +215,9 @@ export class NLDDForm extends HTMLElement {
 	private _handleInput = (e: Event) => {
 		const control = e.target as Element | null;
 		if (!control || !this._judged.has(control)) return;
-		// A checkbox fires both input and change for one click: judge it once.
+		// An nldd-checkbox fires both input and change for one click: judge it once
+		// while its render is pending. A control without one is judged on the spot,
+		// where twice is only the same answer again.
 		if (this._pending.has(control)) return;
 		// A radio answers for every option with its name: picking one makes the
 		// others valid too, and they hear nothing of it. Every control with that

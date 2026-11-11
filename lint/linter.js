@@ -175,7 +175,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 
 	/** A rule whose context picks a value of a name that is gone: its fix is only right for that value. */
 	const testsRemovedValue = (rule) =>
-		rule.removed?.some((name) => new RegExp(`\\[${name}\\s*[~|^$*]?=`).test(rule.context));
+		rule.removed?.some((name) => new RegExp(`\\[${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[~|^$*]?=`).test(rule.context));
 
 	function lintRoots(roots, isPlainHtml) {
 		const findings = [];
