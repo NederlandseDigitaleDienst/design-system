@@ -43,8 +43,8 @@ export const bannerStyles = css`
 	   the reserved right padding tracks the control size rather than a fixed
 	   value. --_banner-text-icon-offset follows --_banner-icon-size on its own.
 
-	   --_banner-dismiss-inset pulls the 32px button up until its center sits on the
-	   24px icon's center (8 - (32 - 24) / 2 = 4), and the same value on the
+	   --_banner-dismiss-inset pulls the 34px button up until its center sits on the
+	   24px icon's center (8 - (34 - 24) / 2 = 3), and the same value on the
 	   right gives the button equal air on both sides of its corner. */
 
 	:host([size="sm"]) {

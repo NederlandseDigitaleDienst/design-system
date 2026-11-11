@@ -1253,10 +1253,9 @@
 
 	/* ## Blockquotes */
 
-	--semantics-blockquotes-max-width: var(--primitives-area-720);
 	--semantics-blockquotes-sm-spacing: calc(var(--primitives-font-size-200) * var(--primitives-line-height-snug));
 	--semantics-blockquotes-md-spacing: calc(var(--primitives-font-size-300) * var(--primitives-line-height-snug));
-	--semantics-blockquotes-border: var(--primitives-border-width-regular) solid var(--semantics-content-color);
+	--semantics-blockquotes-border: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-250));
 	--semantics-blockquotes-sm-quote-font:
 		italic
 		var(--primitives-font-weight-body-regular)
@@ -1275,7 +1274,7 @@
 	/* ## Controls */
 
 	--semantics-controls-xs-min-size: var(--primitives-space-24);
-	--semantics-controls-sm-min-size: var(--primitives-space-32);
+	--semantics-controls-sm-min-size: calc(var(--primitives-space-32) + var(--primitives-space-2));
 	--semantics-controls-md-min-size: var(--primitives-space-44);
 	--semantics-controls-lg-min-size: var(--primitives-space-56);
 

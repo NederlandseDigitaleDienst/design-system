@@ -41,7 +41,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		appearance: 'simple',
+		embedded: false,
 		language: '',
 		lineNumbers: false,
 		value: '',
@@ -56,11 +56,10 @@ export default {
 		accessibleLabel: 'Code',
 	},
 	argTypes: {
-		appearance: {
-			control: 'select',
-			options: ['simple', 'input-field'],
-			description: 'Visuele stijl. "simple" (default) is kaal zonder focusring en zonder eigen ruimte; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
-			table: { defaultValue: { summary: 'simple' } },
+		embedded: {
+			control: 'boolean',
+			description: 'Zonder kader, vulling, padding en focusring, voor een editor in een eigen compositie die die zelf levert',
+			table: { defaultValue: { summary: false } },
 		},
 		language: {
 			control: 'select',
@@ -129,7 +128,7 @@ export default {
 };
 
 const Template = ({
-	appearance,
+	embedded,
 	language,
 	lineNumbers,
 	value,
@@ -144,7 +143,7 @@ const Template = ({
 	accessibleLabel,
 }: Record<string, unknown>) => html`
 	<nldd-code-editor
-		appearance=${appearance as string}
+		?embedded=${embedded}
 		language=${language || nothing}
 		?line-numbers=${lineNumbers}
 		.value=${value || ''}
@@ -164,32 +163,35 @@ export const Standaard = {
 	render: Template,
 };
 
-export const AppearanceInputField = {
-	name: 'Appearance input-field',
+export const Embedded = {
 	render: () => html`
 		<nldd-code-editor
-			appearance="input-field"
+			embedded
 			language="yaml"
 			rows="8"
 			.value=${SAMPLE_YAML}
 			accessible-label="Code"
 		></nldd-code-editor>
 	`,
-	parameters: { controls: { disable: true } },
+	parameters: {
+		docs: {
+			description: {
+				story: 'Embedded heeft geen kader, focusring of eigen ruimte. Bij focus toont een prominente accent-caret waar je staat. Bedoeld om in een eigen compositie (bv. een message field) te plaatsen die zelf de chrome en focusbehandeling levert.',
+			},
+		},
+	},
 };
 
 export const MetSyntaxkleuring = {
 	render: () => html`
 		<nldd-container gap="16">
 			<nldd-code-editor
-				appearance="input-field"
 				language="yaml"
 				rows="8"
 				.value=${SAMPLE_YAML}
 				accessible-label="YAML"
 			></nldd-code-editor>
 			<nldd-code-editor
-				appearance="input-field"
 				language="json"
 				rows="6"
 				.value=${SAMPLE_JSON}
@@ -203,7 +205,6 @@ export const MetSyntaxkleuring = {
 export const MetRegelnummers = {
 	render: () => html`
 		<nldd-code-editor
-			appearance="input-field"
 			language="json"
 			line-numbers
 			rows="6"
@@ -214,26 +215,6 @@ export const MetRegelnummers = {
 	parameters: { controls: { disable: true } },
 };
 
-export const AppearanceSimple = {
-	name: 'Appearance simple',
-	render: () => html`
-		<nldd-code-editor
-			appearance="simple"
-			language="yaml"
-			rows="8"
-			.value=${SAMPLE_YAML}
-			accessible-label="Code"
-		></nldd-code-editor>
-	`,
-	parameters: {
-		docs: {
-			description: {
-				story: 'De simple appearance heeft geen kader, focusring of eigen ruimte — bij focus toont een prominente accent-caret waar je staat. Bedoeld om in een eigen compositie (bv. een message field) te plaatsen die zelf de chrome en focusbehandeling levert.',
-			},
-		},
-	},
-};
-
 export const InEenContainer = {
 	render: () => html`
 		<nldd-container
@@ -242,7 +223,7 @@ export const InEenContainer = {
 			style="background: var(--semantics-surfaces-tinted-background-color); border-radius: var(--primitives-corner-radius-lg);"
 		>
 			<nldd-code-editor
-				appearance="simple"
+				embedded
 				language="yaml"
 				rows="6"
 				.value=${SAMPLE_YAML}
@@ -263,7 +244,6 @@ export const InEenContainer = {
 export const MetWrap = {
 	render: () => html`
 		<nldd-code-editor
-			appearance="input-field"
 			wrap
 			rows="4"
 			.value=${'function deeplyNestedFunctionWithAVeryLongNameThatExceedsTheTypicalContainerWidth(parameterOne, parameterTwo, parameterThree) { return parameterOne + parameterTwo + parameterThree; }'}
@@ -277,7 +257,6 @@ export const ToestandReadonly = {
 	name: 'Toestand readonly',
 	render: () => html`
 		<nldd-code-editor
-			appearance="input-field"
 			language="json"
 			readonly
 			.value=${SAMPLE_JSON}
@@ -291,7 +270,6 @@ export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: () => html`
 		<nldd-code-editor
-			appearance="input-field"
 			disabled
 			.value=${'# disabled\nfoo: bar'}
 			accessible-label="Code"

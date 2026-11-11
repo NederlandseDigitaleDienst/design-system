@@ -303,7 +303,7 @@ nldd-sheet                                    het detail van een rij, in de docu
               <nldd-title
                 id="zijbalk-titel"
                 slot="header"
-                size="4"
+                size="display-4"
                 text="Dossiers"
                 heading-level="2"
               ></nldd-title>
@@ -346,7 +346,7 @@ nldd-sheet                                    het detail van een rij, in de docu
               <nldd-title
                 id="dossiers-titel"
                 slot="header"
-                size="2"
+                size="display-2"
                 text="Alle dossiers"
                 heading-level="1"
               ></nldd-title>

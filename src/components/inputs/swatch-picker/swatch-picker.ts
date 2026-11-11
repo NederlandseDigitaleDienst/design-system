@@ -16,7 +16,7 @@
  * Exports both NLDDSwatchPicker and NLDDSwatchPickerItem.
  *
  * @element nldd-swatch-picker
- * @attr {string} size - Swatch size, on the control scale: 'xs' (24px) | 'sm' (32px) | 'md' (44px) (default: 'md')
+ * @attr {string} size - Swatch size, on the control scale: 'xs' (24px) | 'sm' (34px) | 'md' (44px) (default: 'md')
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label. In an nldd-form-field the field names it.
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it.

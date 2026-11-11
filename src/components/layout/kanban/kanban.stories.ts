@@ -165,7 +165,7 @@ export const MetEigenKop = {
 						vertical-alignment="center"
 					>
 						<nldd-title
-							size="5"
+							size="display-5"
 							heading-level="3"
 							text=${text}
 						></nldd-title>

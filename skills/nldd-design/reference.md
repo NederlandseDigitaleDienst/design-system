@@ -536,7 +536,7 @@ Shows several avatars as one group: they overlap, and each one gets a ring in th
 
 ### `<nldd-blockquote>`
 
-Shows a quote with an optional source attribution.
+Shows a quote with an optional source attribution. The quote is at most 30em wide, measured in its own letters, so a line holds about the same number of characters at every size, custom sizes included. Within that, it takes the width of its parent.
 
 **Rules** (`nldd lint`)
 
@@ -547,8 +547,9 @@ Shows a quote with an optional source attribution.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `size` | `string` | Size of the quote: 'md' (default) or 'lg', for a quote that stands out on its own, such as on a landing page. Only the quote grows; the attribution and the border stay as they are |
 | `cite` | `string` | URL of the source (forwarded to the <blockquote> element) |
-| `sm-custom-size` | `string` | A size of your own for the quote at sm, any CSS length (e.g. '32px', '2rem', 'clamp(1.5rem, 4vw, 3rem)'), for a quote that stands out on its own, such as on a landing page. A quote in running text keeps its own size. Set per breakpoint on purpose: a breakpoint without one keeps the quote's own size, so a quote made large for a wide screen never breaks a narrow one. Never smaller than the quote's own size at the same breakpoint: a smaller value shows at that size, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Only the quote grows, with its line height and the space between paragraphs; the attribution and the border stay as they are. An invalid value falls back to the quote's own size |
+| `sm-custom-size` | `string` | A size of your own for the quote at sm, any CSS length (e.g. '32px', '2rem', 'clamp(1.5rem, 4vw, 3rem)'), for a quote that stands out on its own, such as on a landing page. For a larger quote, try `size="lg"` first. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a quote made large for a wide screen never breaks a narrow one. Never smaller than the size from `size` at the same breakpoint: a smaller value shows at that size, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Only the quote grows, with its line height and the space between paragraphs; the attribution and the border stay as they are. An invalid value falls back to `size` |
 | `md-custom-size` | `string` | The same, at md |
 | `lg-custom-size` | `string` | The same, at lg |
 
@@ -785,7 +786,7 @@ One run of body text at a size from the type scale. It is what you reach for whe
 
 ### `<nldd-title>`
 
-A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. `size` is how it looks, `heading-level` what it is, and the two are set apart. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text, and a filled slot takes the place of the attribute. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.
+A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. The level also sets the size: an h2 looks like `display-2`. Set `size` where the look should differ from the level, such as a section heading that is smaller than its place. A heading of your own in the default slot sets the level the same way, so `<h2>` there looks like `display-2` without a `heading-level`. A title without a level is no heading and shows as body text, whatever its `size`: give it a level, or for large letters that are not a heading use nldd-text with a display size. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text, and a filled slot takes the place of the attribute. Both grow and shrink with the size of the title, and keep to the width of a line of reading (40em), with balanced lines. The supporting text is a line or two, not a paragraph. Inline elements in a slotted heading (a link, strong, em, code, mark, q) look as they do in nldd-text. A shadow root cannot reach inside a slotted element, so that styling comes from a global stylesheet: `dist/css/title.css`, or `global.css`, which includes it. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.
 
 **Rules** (`nldd lint`)
 
@@ -795,26 +796,27 @@ A title bar with an optional overline, title, and supporting text on the left, a
 - `row-navigation-no-heading` (hint): Use the `text` of an nldd-text-cell: a row is not a heading.
 - `tag-goes-below-title` (hint): Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.
 - `title-custom-size-invalid`: This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
-- `title-custom-size-no-effect`: This custom size is smaller than size 1 at this breakpoint and shows as size 1. Use `size` for headings up to size 1.
-- `title-needs-heading-level` (hint): A title without `heading-level` is not a heading. Give it a level, or for large letters that are not a heading use nldd-text with a display size.
+- `title-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `heading-level` or `size` for headings up to `display-1`.
+- `title-needs-heading-level`: A title without `heading-level` is not a heading, and shows as body text. Give it a level, or for large letters that are not a heading use nldd-text with a display size.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 - `title-no-full-stop` (hint): Drop the full stop: a heading has none, also when it is a sentence.
 - `title-no-question` (hint): Give the answer as the heading, such as "De beoordeling duurt zes weken" for "Hoe lang duurt het?".
+- `title-size-renamed`: The sizes of a title are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title.
 - `title-subtitle-slot-renamed`: The subtitle slot is now supporting-text, and what is in the old one is not shown. Rename it here and on every other nldd-title.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `number` | Visual size of the title: 1–6 (default: 3) |
-| `sm-custom-size` | `string` | A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. A var() works when the variable holds a length; one that is not defined leaves the title without its size, the floor included. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of size 1. An invalid value falls back to `size` |
+| `size` | `string` | Visual size of the title, when it should differ from its level: 'display-1' to 'display-6', from large to small (default: the display size of the level). Has no effect without a level |
+| `sm-custom-size` | `string` | A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than `display-1`. A var() works when the variable holds a length; one that is not defined leaves the title without its size, the floor included. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than `display-1` at the same breakpoint: a smaller value shows as `display-1`, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of `display-1`. An invalid value falls back to `size` |
 | `md-custom-size` | `string` | The same, at md |
 | `lg-custom-size` | `string` | The same, at lg |
 | `color` | `string` | 'content' (the default) takes the system's own content colors. 'inherit' lets the title follow the text color of the surface instead (for colored areas such as the filled categories); overline and supporting-text get the same color at a lowered opacity. |
 | `text` | `string` | Title text. Content in the default slot takes its place. |
 | `supporting-text` | `string` | Text below the title. Content in the supporting-text slot takes its place. |
 | `overline` | `string` | Text above the title. Content in the overline slot takes its place. |
-| `heading-level` | `1\|2\|3\|4\|5\|6` | Renders text as h1–h6. Absent renders a p, which is no heading: for large letters that are not a heading, use nldd-text with a display size. |
+| `heading-level` | `1\|2\|3\|4\|5\|6` | Renders text as h1–h6, and sets the default size. Absent renders a p in body text, unless the default slot brings its own heading. |
 
 **Slots**
 
@@ -825,7 +827,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 | `supporting-text` | Supporting text that is more than text. Takes the place of the supporting-text attribute. |
 | `end` | Whatever belongs at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there. |
 
-**Plain HTML it styles:** `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`. `nldd lint --pure` reports plain HTML only where no component styles it.
+**Plain HTML it styles:** `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`, `<strong>`, `<b>`, `<em>`, `<i>`, `<code>`, `<mark>`, `<q>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-token>`
 
@@ -1132,10 +1134,12 @@ A checkbox with an inline label for use in forms. Form-associated: participates 
 
 ### `<nldd-code-editor>`
 
-A monospace editor for code, YAML, JSON and other technical content, built on CodeMirror 6 (via NLDDCodeMirrorElement). Visually pairs with nldd-code-viewer for a matching read-only surface. Default `appearance="simple"` is a bare, flush editor (no frame, no focus ring) for use inside an nldd-form-field or a consumer composition that owns its own chrome and focus treatment; the caret is rendered as a prominent accent as the focus cue. `appearance="input-field"` adds the framed surface (border ring, tinted fill, inner padding, radius) and a focus ring for standalone use. The simple variant has no surrounding space of its own: let a layout container own the spacing and forward clicks with `focusFromPoint()` so clicking the padding still starts editing. Optional `language` enables lazy syntax highlighting; `line-numbers` adds a gutter (click a number to move the caret to that line).
+A monospace editor for code, YAML, JSON and other technical content, built on CodeMirror 6 (via NLDDCodeMirrorElement). Visually pairs with nldd-code-viewer for a matching read-only surface. Framed like the other input fields by default: border ring, fill, inner padding, radius and a focus ring. `embedded` drops all of that, for an editor inside a composition that owns its own chrome and focus treatment; the caret is then a prominent accent as the focus cue. Embedded, it has no surrounding space of its own: let a layout container own the spacing and forward clicks with `focusFromPoint()` so clicking the padding still starts editing. Optional `language` enables lazy syntax highlighting; `line-numbers` adds a gutter (click a number to move the caret to that line).
 
 **Rules** (`nldd lint`)
 
+- `editor-appearance-no-effect`: An editor is framed by default and `appearance="input-field"` does nothing; remove it.
+- `editor-appearance-renamed`: `appearance="simple"` is now the boolean `embedded`. Replace it here and on every other editor.
 - `editor-needs-name`: An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
@@ -1153,7 +1157,7 @@ A monospace editor for code, YAML, JSON and other technical content, built on Co
 | `wrap` | `boolean` | Wrap long lines instead of horizontal scroll |
 | `rows` | `number` | Minimum visible rows (the floor in every resize mode). Default: 6. |
 | `resize` | `string` | 'none' (fixed) \| 'vertical' (drag) \| 'auto' (grow, default) |
-| `appearance` | `string` | 'simple' (default, bare) \| 'input-field' (framed surface) |
+| `embedded` | `boolean` | Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them |
 | `language` | `string` | Highlight grammar (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python). Empty disables highlighting. |
 | `line-numbers` | `boolean` | Show a line-number gutter |
 | `accessible-label` | `string` | Accessible label forwarded to the editor. Set automatically by nldd-form-field. |
@@ -1761,7 +1765,7 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `string` | Swatch size, on the control scale: 'xs' (24px) \| 'sm' (32px) \| 'md' (44px) (default: 'md') |
+| `size` | `string` | Swatch size, on the control scale: 'xs' (24px) \| 'sm' (34px) \| 'md' (44px) (default: 'md') |
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label. In an nldd-form-field the field names it. |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
 | `invalid` | `boolean` | Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it. |
@@ -1862,10 +1866,12 @@ A switch toggle with an inline label for use in forms.
 
 ### `<nldd-text-editor>`
 
-A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `appearance="simple"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `appearance="input-field"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style "set" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax="hidden"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads "Taak, open" or "Taak, afgerond" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a "Kopieer" button at the right edge that copies the code without its fences and says "Gekopieerd" or "Kopiëren mislukt", as the code viewer does. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href="…" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.
+A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Framed like the other input fields by default. `embedded` drops the frame, fill, padding and focus ring, for an editor inside a composition (e.g. a message field) that owns its chrome and focus; the caret is then a prominent accent. Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style "set" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax="hidden"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads "Taak, open" or "Taak, afgerond" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a "Kopieer" button at the right edge that copies the code without its fences and says "Gekopieerd" or "Kopiëren mislukt", as the code viewer does. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href="…" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.
 
 **Rules** (`nldd lint`)
 
+- `editor-appearance-no-effect`: An editor is framed by default and `appearance="input-field"` does nothing; remove it.
+- `editor-appearance-renamed`: `appearance="simple"` is now the boolean `embedded`. Replace it here and on every other editor.
 - `editor-needs-name`: An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).
 - `text-editor-command-not-found`: runCommand() got a name that is not a command.
 - `text-editor-typeahead-query-invalid`: The query of this typeahead is not a valid regular expression; the default is used.
@@ -1886,7 +1892,7 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 | `wrap` | `boolean` | Wrap long lines (default true; prose wraps) |
 | `rows` | `number` | Minimum visible rows (the floor in every resize mode). Default: 6. |
 | `resize` | `string` | 'none' (fixed) \| 'vertical' (drag) \| 'auto' (grow, default) |
-| `appearance` | `string` | 'simple' (default, bare) \| 'input-field' (framed surface) |
+| `embedded` | `boolean` | Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them |
 | `syntax` | `string` | 'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way. |
 | `accessible-label` | `string` | Accessible label forwarded to the editor. Set automatically by nldd-form-field. |
 | `annotatable` | `boolean` | Enable the annotation overlay (off by default). Annotations only render when this is set. |
@@ -4246,12 +4252,13 @@ A cell component for displaying a title with optional overline and supporting te
 
 - `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
+- `title-cell-size-renamed`: The sizes of a title cell are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title-cell.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `1\|2\|3\|4\|5\|6` | Visual size of the title (unset: looks like 5, and becomes 6 in an `nldd-table-row`, where a title the size of the other cells reads better) |
+| `size` | `string` | Visual size of the title: 'display-1' to 'display-6', from large to small (unset: looks like 'display-5', and becomes 'display-6' in an `nldd-table-row`, where a title the size of the other cells reads better). Unlike nldd-title, `heading-level` does not set it: every row in a list looks the same, whatever its level |
 | `color` | `'content' \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'` | Text color variant (default: 'content'). `secondary` demotes the title to match the muted overline/supporting-text. `accent`, `success`, `warning` and `critical` tint all three regions so the cell reads as a coherent state. |
 | `width` | `string` | 'full' \| 'fit-content' \| CSS length (e.g. '200px', '20rem'). Default: 'full' |
 | `min-width` | `string` | Minimum width as CSS length (e.g. '80px', '5rem') |

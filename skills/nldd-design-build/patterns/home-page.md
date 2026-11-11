@@ -95,7 +95,6 @@ nldd-shell                            de buitenste schil
       <nldd-image slot="media"></nldd-image>
       <nldd-title
         color="inherit"
-        size="1"
         text="Regel je aanvraag online"
         heading-level="1"
       ></nldd-title>
@@ -114,7 +113,6 @@ nldd-shell                            de buitenste schil
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="2"
         text="Alles rond je aanvraag regel je hier"
         heading-level="2"
       ></nldd-title>
@@ -132,7 +130,7 @@ nldd-shell                            de buitenste schil
         <nldd-card>
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Aanvraag"
               heading-level="3"
             ></nldd-title>
@@ -156,7 +154,7 @@ nldd-shell                            de buitenste schil
         <nldd-card>
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Behandeling"
               heading-level="3"
             ></nldd-title>
@@ -180,7 +178,7 @@ nldd-shell                            de buitenste schil
         <nldd-card>
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Brieven en besluiten"
               heading-level="3"
             ></nldd-title>
@@ -211,7 +209,6 @@ nldd-shell                            de buitenste schil
       ></nldd-image>
       <nldd-title
         slot="right"
-        size="2"
         text="Je dossier houdt alles bij elkaar"
         heading-level="2"
       ></nldd-title>
@@ -239,7 +236,6 @@ nldd-shell                            de buitenste schil
     <nldd-two-thirds-one-third-section background="tinted">
       <nldd-title
         slot="left"
-        size="2"
         text="Een aanvraag gaat langs drie vaste stappen"
         heading-level="2"
       ></nldd-title>
@@ -254,7 +250,7 @@ nldd-shell                            de buitenste schil
       <nldd-card slot="right">
         <nldd-container padding="16">
           <nldd-title
-            size="4"
+            size="display-4"
             text="De behandelaar helpt je verder"
             heading-level="3"
           ></nldd-title>
@@ -275,7 +271,6 @@ nldd-shell                            de buitenste schil
     <nldd-one-third-two-thirds-section>
       <nldd-title
         slot="left"
-        size="2"
         text="Hiervoor kun je een aanvraag doen"
         heading-level="2"
       ></nldd-title>
@@ -344,7 +339,6 @@ nldd-shell                            de buitenste schil
 
     <nldd-simple-section background="tinted">
       <nldd-title
-        size="2"
         text="Aanvragen kost tien minuten"
         supporting-text="Houd je DigiD bij de hand."
         heading-level="2"

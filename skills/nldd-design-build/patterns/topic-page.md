@@ -97,7 +97,6 @@ nldd-shell                            de buitenste schil
       <nldd-image slot="media"></nldd-image>
       <nldd-title
         color="inherit"
-        size="1"
         text="Isoleren"
         heading-level="1"
       ></nldd-title>
@@ -116,7 +115,6 @@ nldd-shell                            de buitenste schil
     <nldd-one-half-one-half-section vertical-alignment="center">
       <nldd-title
         slot="left"
-        size="2"
         text="Isoleren houdt de warmte binnen"
         heading-level="2"
       ></nldd-title>
@@ -148,7 +146,6 @@ nldd-shell                            de buitenste schil
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="2"
         text="Voor dakisolatie doe je een aanvraag"
         heading-level="2"
       ></nldd-title>
@@ -169,7 +166,7 @@ nldd-shell                            de buitenste schil
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Aanvraag indienen"
               heading-level="3"
             ></nldd-title>
@@ -185,7 +182,7 @@ nldd-shell                            de buitenste schil
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Behandeling volgen"
               heading-level="3"
             ></nldd-title>
@@ -201,7 +198,7 @@ nldd-shell                            de buitenste schil
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Bezwaar maken"
               heading-level="3"
             ></nldd-title>
@@ -217,7 +214,6 @@ nldd-shell                            de buitenste schil
     <nldd-one-third-two-thirds-section>
       <nldd-title
         slot="left"
-        size="2"
         text="Soorten isolatie"
         heading-level="2"
       ></nldd-title>
@@ -287,7 +283,7 @@ nldd-shell                            de buitenste schil
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="3"
+        size="display-3"
         text="Verwante onderwerpen"
         heading-level="2"
       ></nldd-title>
@@ -301,7 +297,7 @@ nldd-shell                            de buitenste schil
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Warmtepomp"
               heading-level="3"
             ></nldd-title>
@@ -317,7 +313,7 @@ nldd-shell                            de buitenste schil
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Energie besparen"
               heading-level="3"
             ></nldd-title>
@@ -333,7 +329,7 @@ nldd-shell                            de buitenste schil
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Zonnepanelen"
               heading-level="3"
             ></nldd-title>

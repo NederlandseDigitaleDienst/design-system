@@ -107,7 +107,7 @@ const content = html`
 	<nldd-simple-section>
 		<nldd-title
 			id="page-title"
-			size="2"
+			size="display-2"
 			text="Aanvraag A-1042"
 			heading-level="1"
 		></nldd-title>

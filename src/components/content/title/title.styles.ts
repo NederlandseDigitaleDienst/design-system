@@ -7,6 +7,29 @@ const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 const mdMax = unsafeCSS(queryBreakpoints.mdMax);
 const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 
+const OVERLINE_SIZES: Record<number, string> = { 1: 'md', 2: 'md', 3: 'md', 4: 'sm', 5: 'sm', 6: 'xs' };
+const SUPPORTING_TEXT_SIZES: Record<number, string> = { 1: 'md', 2: 'md', 3: 'md', 4: 'md', 5: 'sm', 6: 'sm' };
+
+/** The display size n, for `size="display-n"` or for level n without a size, from the viewport and from a layout-container alike, with the overline and supporting text that go with it. */
+function sizeRule(n: number): string {
+	const at = (bp: string) => `--_title-font: var(--primitives-font-display-${n}-${bp});`;
+	const queries: Array<[string, string]> = [
+		['sm', `(max-width: ${queryBreakpoints.smMax})`],
+		['md', `(min-width: ${queryBreakpoints.mdMin}) and (max-width: ${queryBreakpoints.mdMax})`],
+		['lg', `(min-width: ${queryBreakpoints.lgMin})`],
+	];
+	return `
+	:host([data-level][size="display-${n}"]),
+	:host(:not([size^="display-"])[data-level="${n}"]) {
+		--_title-overline-font: var(--primitives-font-body-${OVERLINE_SIZES[n]}-regular-tight);
+		--_title-supporting-text-font: var(--primitives-font-body-${SUPPORTING_TEXT_SIZES[n]}-regular-tight);
+
+${queries.map(([bp, q]) => `		@media ${q} {\n\t\t\t${at(bp)}\n\t\t}\n`).join('\n')}
+${queries.map(([bp, q]) => `		@container layout-container ${q} {\n\t\t\t${at(bp)}\n\t\t}\n`).join('\n')}
+	}
+`;
+}
+
 export const titleStyles = css`
 	:host {
 		box-sizing: border-box;
@@ -26,167 +49,22 @@ export const titleStyles = css`
 		--_title-md-custom-font: var(--primitives-font-weight-display-bold) max(var(--_title-md-custom-size), var(--primitives-font-size-800)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
 		--_title-lg-custom-font: var(--primitives-font-weight-display-bold) max(var(--_title-lg-custom-size), var(--primitives-font-size-1000)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
 
-		@media (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-3-sm);
-		}
-
-		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-3-md);
-		}
-
-		@media (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-3-lg);
-		}
-
-		@container layout-container (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-3-sm);
-		}
-
-		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-3-md);
-		}
-
-		@container layout-container (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-3-lg);
-		}
+		--_title-font: var(--primitives-font-body-md-regular-snug);
+		--_title-overline-font: var(--primitives-font-body-sm-regular-tight);
+		--_title-supporting-text-font: var(--primitives-font-body-md-regular-tight);
+		--_title-secondary-text-max-width: var(--semantics-text-max-width);
 
 		${inheritedTextReset}
 		display: flex;
 	}
 
-	:host([size="1"]) {
-		@media (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-1-sm);
-		}
+	/* # Size */
 
-		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-1-md);
-		}
-
-		@media (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-1-lg);
-		}
-
-		@container layout-container (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-1-sm);
-		}
-
-		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-1-md);
-		}
-
-		@container layout-container (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-1-lg);
-		}
-	}
-
-	:host([size="2"]) {
-		@media (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-2-sm);
-		}
-
-		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-2-md);
-		}
-
-		@media (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-2-lg);
-		}
-
-		@container layout-container (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-2-sm);
-		}
-
-		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-2-md);
-		}
-
-		@container layout-container (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-2-lg);
-		}
-	}
-
-	:host([size="4"]) {
-		@media (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-4-sm);
-		}
-
-		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-4-md);
-		}
-
-		@media (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-4-lg);
-		}
-
-		@container layout-container (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-4-sm);
-		}
-
-		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-4-md);
-		}
-
-		@container layout-container (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-4-lg);
-		}
-	}
-
-	:host([size="5"]) {
-		@media (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-5-sm);
-		}
-
-		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-5-md);
-		}
-
-		@media (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-5-lg);
-		}
-
-		@container layout-container (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-5-sm);
-		}
-
-		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-5-md);
-		}
-
-		@container layout-container (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-5-lg);
-		}
-	}
-
-	:host([size="6"]) {
-		@media (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-6-sm);
-		}
-
-		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-6-md);
-		}
-
-		@media (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-6-lg);
-		}
-
-		@container layout-container (max-width: ${smMax}) {
-			--_title-font: var(--primitives-font-display-6-sm);
-		}
-
-		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_title-font: var(--primitives-font-display-6-md);
-		}
-
-		@container layout-container (min-width: ${lgMin}) {
-			--_title-font: var(--primitives-font-display-6-lg);
-		}
-	}
+	${unsafeCSS([1, 2, 3, 4, 5, 6].map((n) => sizeRule(n)).join('\n'))}
 
 	/* ## Custom size */
 
-	:host([data-sm-custom-size]) {
+	:host([data-level][data-sm-custom-size]) {
 		@media (max-width: ${smMax}) {
 			--_title-font: var(--_title-sm-custom-font);
 		}
@@ -196,7 +74,7 @@ export const titleStyles = css`
 		}
 	}
 
-	:host([data-md-custom-size]) {
+	:host([data-level][data-md-custom-size]) {
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_title-font: var(--_title-md-custom-font);
 		}
@@ -206,7 +84,7 @@ export const titleStyles = css`
 		}
 	}
 
-	:host([data-lg-custom-size]) {
+	:host([data-level][data-lg-custom-size]) {
 		@media (min-width: ${lgMin}) {
 			--_title-font: var(--_title-lg-custom-font);
 		}
@@ -245,18 +123,22 @@ export const titleStyles = css`
 
 	.title__overline {
 		margin: 0;
+		max-width: var(--_title-secondary-text-max-width);
 		color: var(--semantics-content-secondary-color);
-		font: var(--primitives-font-body-sm-regular-tight);
+		font: var(--_title-overline-font);
 		overflow-wrap: anywhere;
+		text-wrap: balance;
 	}
 
 	::slotted([slot="overline"]) {
 		${slottedReset}
 		${inheritedTextReset}
 		margin: 0 !important;
+		max-width: var(--_title-secondary-text-max-width) !important;
 		color: var(--semantics-content-secondary-color) !important;
-		font: var(--primitives-font-body-sm-regular-tight) !important;
+		font: var(--_title-overline-font) !important;
 		overflow-wrap: anywhere !important;
+		text-wrap: balance !important;
 	}
 
 	/* The measure is in ch, so one value covers every size: ch scales with the
@@ -293,28 +175,22 @@ export const titleStyles = css`
 
 	.title__supporting-text {
 		margin: 0;
+		max-width: var(--_title-secondary-text-max-width);
 		color: var(--semantics-content-secondary-color);
-		font: var(--primitives-font-body-md-regular-tight);
+		font: var(--_title-supporting-text-font);
 		overflow-wrap: anywhere;
+		text-wrap: balance;
 	}
 
 	::slotted([slot="supporting-text"]) {
 		${slottedReset}
 		${inheritedTextReset}
 		margin: 0 !important;
+		max-width: var(--_title-secondary-text-max-width) !important;
 		color: var(--semantics-content-secondary-color) !important;
-		font: var(--primitives-font-body-md-regular-tight) !important;
+		font: var(--_title-supporting-text-font) !important;
 		overflow-wrap: anywhere !important;
-	}
-
-	:host([size="5"]) .title__supporting-text,
-	:host([size="6"]) .title__supporting-text {
-		font: var(--primitives-font-body-sm-regular-tight);
-	}
-
-	:host([size="5"]) ::slotted([slot="supporting-text"]),
-	:host([size="6"]) ::slotted([slot="supporting-text"]) {
-		font: var(--primitives-font-body-sm-regular-tight) !important;
+		text-wrap: balance !important;
 	}
 
 	:host([color="inherit"]) .title__text {

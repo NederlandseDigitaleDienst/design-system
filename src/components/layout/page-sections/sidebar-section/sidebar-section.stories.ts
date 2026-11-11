@@ -10,7 +10,7 @@ import '../../container/container.js';
 
 const sidebar = html`
 	<nldd-title
-		size="5"
+		size="display-5"
 		text="Filters"
 		heading-level="2"
 	></nldd-title>

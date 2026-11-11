@@ -88,6 +88,10 @@ function checkFix({ id, fix, removed = [] }) {
 	for (const name of fix?.remove ?? []) {
 		if (!removed.includes(name)) problems.push(`${id}: the fix removes ${name}, which is not in removed.`);
 	}
+	for (const [from, to] of Object.entries(fix?.flag ?? {})) {
+		if (!removed.includes(from)) problems.push(`${id}: the fix turns ${from} into a flag, and ${from} is not in removed.`);
+		if (!allAttributes.has(to)) problems.push(`${id}: the fix turns ${from} into ${to}, which no component has.`);
+	}
 	if (fix?.tag && !data.tags[fix.tag]) problems.push(`${id}: the fix renames to ${fix.tag}, which does not exist.`);
 	if (fix?.tag && removed.length === 0) problems.push(`${id}: the fix renames a tag, and removed does not name it.`);
 	for (const [attribute, values] of Object.entries(fix?.value ?? {})) {

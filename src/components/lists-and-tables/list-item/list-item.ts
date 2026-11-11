@@ -546,7 +546,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/**
 	 * Cells whose `size` means the sm/md scale. NOT every cell: `size` on
 	 * nldd-icon-cell and nldd-spacer-cell is a pixel value and on nldd-title-cell
-	 * a 1-6 heading scale, so pushing 'sm' there would corrupt them.
+	 * the display scale, so pushing 'sm' there would corrupt them.
 	 */
 	private static readonly SIZED_CELLS = 'nldd-text-cell, nldd-drag-handle-cell';
 

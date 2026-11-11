@@ -16,21 +16,21 @@ describe('nldd-title-cell', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('leaves size unset by default, styled as size 5', async () => {
+	it('leaves size unset by default, styled as display-5', async () => {
 		el = await fixture('<nldd-title-cell text="A"></nldd-title-cell>');
 		await waitForUpdate(el);
 		expect((el as NLDDTitleCell).size).toBeUndefined();
 		expect(el.hasAttribute('size')).toBe(false);
 		const unsetFont = getComputedStyle(el).getPropertyValue('--_title-cell-font');
-		el.setAttribute('size', '5');
+		el.setAttribute('size', 'display-5');
 		await waitForUpdate(el);
 		expect(getComputedStyle(el).getPropertyValue('--_title-cell-font')).toBe(unsetFont);
 	});
 
 	it('reflects size attribute', async () => {
-		el = await fixture('<nldd-title-cell size="2"></nldd-title-cell>');
+		el = await fixture('<nldd-title-cell size="display-2"></nldd-title-cell>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('size')).toBe('2');
+		expect(el.getAttribute('size')).toBe('display-2');
 	});
 
 	it('defaults to full width', async () => {

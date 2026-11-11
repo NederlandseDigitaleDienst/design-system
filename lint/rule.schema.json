@@ -22,6 +22,7 @@
 				"rename": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Attributes in `removed` that got another name, old to new." },
 				"value": { "type": "object", "additionalProperties": { "type": "object", "additionalProperties": { "type": "string" } }, "description": "Per attribute, values that got another name, old to new. Only a value written out in the markup." },
 				"remove": { "type": "array", "items": { "type": "string" }, "description": "Attributes in `removed` that do nothing any more." },
+				"flag": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Attributes in `removed` whose value became a boolean attribute, old to new. The context names the value; only a value written out in the markup." },
 				"tag": { "type": "string", "description": "The new tag of a component in `removed` that got another name." }
 			}
 		},

@@ -159,7 +159,7 @@ describe('nldd-text – display sizes and custom size', () => {
 	};
 
 	const titleStyle = async (size: number) => {
-		const title = await fixture<HTMLElement>(`<nldd-title size="${size}" text="240" heading-level="2"></nldd-title>`);
+		const title = await fixture<HTMLElement>(`<nldd-title size="display-${size}" text="240" heading-level="2"></nldd-title>`);
 		const style = getComputedStyle(title.shadowRoot!.querySelector('.title__text')!);
 		const result = { fontSize: style.fontSize, fontWeight: style.fontWeight, fontFamily: style.fontFamily, lineHeight: style.lineHeight };
 		cleanup(title);

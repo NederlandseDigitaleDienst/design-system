@@ -15,6 +15,38 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-text-editor` and `nldd-code-editor` are framed by default, like the other fields.** `embedded` gives the bare editor for a composition of your own. See Breaking.
+- **Small controls are 34px high instead of 32px.** See Changed.
+- **`nldd-title` takes its size from its level, and its sizes are `display-1` to `display-6`, also on `nldd-title-cell`.** A title without a level is body text. See Breaking.
+
+### Breaking
+
+- **`nldd-title` takes its size from its level, and `size` takes `display-1` to `display-6` instead of a number.** An h2 looks like `display-2` without a `size` of its own, and so does an `<h2>` you put in the default slot. Set `size` where a heading should look smaller than its place, not a lower level. A title with a `heading-level` other than 3 and no `size` changes size: give it `size="display-3"` to keep the old look. `nldd lint --fix` renames the numbers to `display-n`, the same names as the display sizes of `nldd-text`.
+- **An `nldd-title` without a level shows as body text.** It was `display-3`, which made a paragraph look like a heading. A `size` or custom size does nothing without a level now. Give the title a `heading-level` or a heading in the slot, or use `nldd-text` with a display size for large letters that are not a heading. `nldd lint` finds these titles: `title-needs-heading-level` was a hint and is now a warning.
+- **`nldd-title-cell` takes `display-1` to `display-6` for `size` instead of a number,** like `nldd-title`. Its default stays `display-5`, and `display-6` in a table row: unlike a title, a cell does not take its size from `heading-level`, so every row in a list looks the same. `nldd lint --fix` renames the numbers.
+
+- **`nldd-text-editor` and `nldd-code-editor` have a frame by default, and `appearance` is gone.** An editor without `appearance` now gets the border, fill, padding and focus ring of the other input fields. For an editor inside a composition that provides those itself, such as a message field with its own toolbar, set the boolean `embedded`. `nldd lint --fix` replaces `appearance="simple"` with `embedded` and removes `appearance="input-field"`, which does nothing now. An editor that had no `appearance` and sits in a frame of its own needs `embedded` by hand, because the linter cannot tell it apart from one that should get the frame.
+
+### Added
+
+- **`nldd-blockquote` has a `size`: `md`, the size it has now, and `lg` for a quote that stands out on its own, such as on a landing page.** Only the quote grows, to 23, 29 and 36px from sm to lg; the attribution and the border stay as they are. A custom size never goes below the size from `size`.
+- **A link, `strong`, `em`, `code`, `mark` and `q` in a heading in the default slot of `nldd-title` look as they do in `nldd-text`.** A link had the browser's own blue. The styling comes from `title.css`, a global stylesheet like `rich-text.css`, because a shadow root cannot reach inside a slotted heading. `global.css` includes it; import `dist/css/title.css` yourself if you pick stylesheets one by one.
+
+### Changed
+
+- **The overline and supporting text of `nldd-title` grow and shrink with the title.** The overline is md from `display-1` to `display-3`, sm at 4 and 5 and xs at 6, so it no longer gets lost above a large title. The supporting text stays md, and sm at 5 and 6. Both keep to the width of a line of reading (40em), like `nldd-text`, and break into balanced lines.
+- **An `nldd-blockquote` is as wide as 30em of its own letters, instead of a fixed 720px.** A line holds about the same number of characters at every size, so a large quote no longer breaks after every few words. At the default size it is about as wide as before. Within that, it takes the width of its parent, as before.
+- **The line before a quote is a light gray instead of the text color,** in `nldd-blockquote` and in a `<blockquote>` in `nldd-rich-text`. It marks the quote without drawing the eye away from it. `--semantics-blockquotes-border` now points to `--primitives-color-neutral-200`, and to `neutral-250` in dark mode, where the background is lighter too.
+- **The title of a level in the menu sheet of `nldd-top-navigation-bar` is an h2.** It was a paragraph that looked like a heading.
+- **Small controls are 34px high instead of 32px.** `--semantics-controls-sm-min-size` grew by 2px, and everything built on it grows along: buttons, icon buttons, fields and dropdowns at `size="sm"`, the track of `nldd-switch` and the dismiss button of `nldd-banner` and `nldd-notification`. A small field and a small button next to each other stay the same height.
+
+### Removed
+
+- **`--semantics-blockquotes-max-width`.** `nldd-blockquote` measures its width in em now, and nothing else read this token.
+
+
 ## [0.21.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.21.0...v0.21.1) (2026-11-09)
 
 ### Highlights

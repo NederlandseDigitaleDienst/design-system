@@ -167,6 +167,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-dropdown:state(unnamed-select)"
 	},
 	{
+		"id": "editor-appearance-no-effect",
+		"message": "An editor is framed by default and `appearance=\"input-field\"` does nothing; remove it.",
+		"context": "nldd-text-editor[appearance=\"input-field\"], nldd-code-editor[appearance=\"input-field\"]"
+	},
+	{
+		"id": "editor-appearance-renamed",
+		"message": "`appearance=\"simple\"` is now the boolean `embedded`. Replace it here and on every other editor.",
+		"context": "nldd-text-editor[appearance=\"simple\"], nldd-code-editor[appearance=\"simple\"]"
+	},
+	{
 		"id": "editor-needs-name",
 		"message": "An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).",
 		"context": "nldd-code-editor, nldd-text-editor",
@@ -897,14 +907,29 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text[size^=\"display-\"][weight]:not([weight=\"\"])"
 	},
 	{
+		"id": "title-cell-size-renamed",
+		"message": "The sizes of a title cell are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title-cell.",
+		"context": "nldd-title-cell[size=\"1\"], nldd-title-cell[size=\"2\"], nldd-title-cell[size=\"3\"], nldd-title-cell[size=\"4\"], nldd-title-cell[size=\"5\"], nldd-title-cell[size=\"6\"]"
+	},
+	{
 		"id": "title-custom-size-invalid",
 		"message": "This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as \"96px\" or \"6rem\", not a keyword.",
 		"context": "nldd-title:state(invalid-custom-size)"
 	},
 	{
 		"id": "title-custom-size-no-effect",
-		"message": "This custom size is smaller than size 1 at this breakpoint and shows as size 1. Use `size` for headings up to size 1.",
+		"message": "This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `heading-level` or `size` for headings up to `display-1`.",
 		"context": "nldd-title:state(custom-size-below-floor)"
+	},
+	{
+		"id": "title-needs-heading-level",
+		"message": "A title without `heading-level` is not a heading, and shows as body text. Give it a level, or for large letters that are not a heading use nldd-text with a display size.",
+		"context": "nldd-title:not([heading-level]:not([heading-level=\"\"])):not(:has(> h1, > h2, > h3, > h4, > h5, > h6))"
+	},
+	{
+		"id": "title-size-renamed",
+		"message": "The sizes of a title are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title.",
+		"context": "nldd-title[size=\"1\"], nldd-title[size=\"2\"], nldd-title[size=\"3\"], nldd-title[size=\"4\"], nldd-title[size=\"5\"], nldd-title[size=\"6\"]"
 	},
 	{
 		"id": "title-subtitle-slot-renamed",
@@ -1134,6 +1159,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-avatar[tooltip-timing]:not([tooltip-timing=\"delay\"], [tooltip-timing=\"instant\"], [tooltip-timing=\"never\"])"
 	},
 	{
+		"id": "invalid-value-blockquote-size",
+		"message": "`size` on nldd-blockquote takes: lg, md.",
+		"context": "nldd-blockquote[size]:not([size=\"lg\"], [size=\"md\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
 		"id": "invalid-value-code-viewer-appearance",
 		"message": "`appearance` on nldd-code-viewer takes: box-base, box-tinted, simple.",
 		"context": "nldd-code-viewer[appearance]:not([appearance=\"box-base\"], [appearance=\"box-tinted\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -1244,6 +1274,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text[horizontal-alignment]:not([horizontal-alignment=\"center\"], [horizontal-alignment=\"left\"], [horizontal-alignment=\"right\"])"
 	},
 	{
+		"id": "invalid-value-title-size",
+		"message": "`size` on nldd-title takes: display-1, display-2, display-3, display-4, display-5, display-6.",
+		"context": "nldd-title[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
 		"id": "invalid-value-title-color",
 		"message": "`color` on nldd-title takes: content, inherit.",
 		"context": "nldd-title[color]:not([color=\"content\"], [color=\"inherit\"])"
@@ -1287,11 +1322,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-code-editor-resize",
 		"message": "`resize` on nldd-code-editor takes: auto, none, vertical.",
 		"context": "nldd-code-editor[resize]:not([resize=\"auto\"], [resize=\"none\"], [resize=\"vertical\"])"
-	},
-	{
-		"id": "invalid-value-code-editor-appearance",
-		"message": "`appearance` on nldd-code-editor takes: input-field, simple.",
-		"context": "nldd-code-editor[appearance]:not([appearance=\"input-field\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-combo-box-size",
@@ -1467,11 +1497,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-text-editor-resize",
 		"message": "`resize` on nldd-text-editor takes: auto, none, vertical.",
 		"context": "nldd-text-editor[resize]:not([resize=\"auto\"], [resize=\"none\"], [resize=\"vertical\"])"
-	},
-	{
-		"id": "invalid-value-text-editor-appearance",
-		"message": "`appearance` on nldd-text-editor takes: input-field, simple.",
-		"context": "nldd-text-editor[appearance]:not([appearance=\"input-field\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-text-editor-syntax",
@@ -2432,6 +2457,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-text-cell-query-mark-mode",
 		"message": "`query-mark-mode` on nldd-text-cell takes: match, predictive.",
 		"context": "nldd-text-cell[query-mark-mode]:not([query-mark-mode=\"match\"], [query-mark-mode=\"predictive\"])"
+	},
+	{
+		"id": "invalid-value-title-cell-size",
+		"message": "`size` on nldd-title-cell takes: display-1, display-2, display-3, display-4, display-5, display-6.",
+		"context": "nldd-title-cell[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-title-cell-color",

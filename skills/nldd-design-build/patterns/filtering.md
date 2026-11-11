@@ -54,7 +54,7 @@ nldd-page
   >
     <nldd-title
       slot="header"
-      size="2"
+      size="display-2"
       text="Dossiers"
       heading-level="1"
     ></nldd-title>
@@ -70,7 +70,7 @@ nldd-page
         href="#resultaten"
       ></nldd-skip-link>
       <nldd-title
-        size="5"
+        size="display-5"
         text="Status"
         heading-level="2"
       ></nldd-title>
@@ -117,7 +117,7 @@ nldd-page
       </nldd-list>
       <nldd-spacer size="24"></nldd-spacer>
       <nldd-title
-        size="5"
+        size="display-5"
         text="Team"
         heading-level="2"
       ></nldd-title>

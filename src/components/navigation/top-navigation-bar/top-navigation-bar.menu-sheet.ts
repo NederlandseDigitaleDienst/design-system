@@ -143,7 +143,7 @@ export class TopNavigationMenuSheet {
 		const title = document.createElement('nldd-title');
 		title.id = `nldd-menu-sheet-title-${++sheetCount}`;
 		title.setAttribute('slot', 'header');
-		title.setAttribute('size', '2');
+		title.setAttribute('heading-level', '2');
 		titleBar.setAttribute('collapse-anchor', title.id);
 		this.title = title;
 

@@ -5,15 +5,14 @@
  * on CodeMirror 6 (via NLDDCodeMirrorElement). Visually pairs with
  * nldd-code-viewer for a matching read-only surface.
  *
- * Default `appearance="simple"` is a bare, flush editor (no frame, no focus ring)
- * for use inside an nldd-form-field or a consumer composition that owns its own
- * chrome and focus treatment; the caret is rendered as a prominent accent as
- * the focus cue. `appearance="input-field"` adds the framed surface (border ring, tinted
- * fill, inner padding, radius) and a focus ring for standalone use.
+ * Framed like the other input fields by default: border ring, fill, inner
+ * padding, radius and a focus ring. `embedded` drops all of that, for an editor
+ * inside a composition that owns its own chrome and focus treatment; the caret
+ * is then a prominent accent as the focus cue.
  *
- * The simple variant has no surrounding space of its own: let a layout
- * container own the spacing and forward clicks with `focusFromPoint()` so
- * clicking the padding still starts editing.
+ * Embedded, it has no surrounding space of its own: let a layout container own
+ * the spacing and forward clicks with `focusFromPoint()` so clicking the
+ * padding still starts editing.
  *
  * Optional `language` enables lazy syntax highlighting; `line-numbers` adds a
  * gutter (click a number to move the caret to that line).
@@ -30,7 +29,7 @@
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
- * @attr {string} appearance - 'simple' (default, bare) | 'input-field' (framed surface)
+ * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
  * @attr {string} language - Highlight grammar (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python). Empty disables highlighting.
  * @attr {boolean} line-numbers - Show a line-number gutter
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
@@ -53,7 +52,6 @@ import { codeEditorStyles } from './code-editor.styles.js';
 import { codeEditorTemplate } from './code-editor.template.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
-export type CodeEditorAppearance = 'input-field' | 'simple';
 
 @customElement('nldd-code-editor')
 export class NLDDCodeEditor extends NLDDCodeMirrorInput {
@@ -66,8 +64,8 @@ export class NLDDCodeEditor extends NLDDCodeMirrorInput {
 	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
 	resize: ResizeMode = 'auto';
 
-	@property({ reflect: true, converter: reflectNonDefault<CodeEditorAppearance>('simple') })
-	appearance: CodeEditorAppearance = 'simple';
+	@property({ type: Boolean, reflect: true })
+	embedded = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	language = '';

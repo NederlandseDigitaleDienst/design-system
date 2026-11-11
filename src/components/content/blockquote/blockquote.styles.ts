@@ -19,12 +19,16 @@ export const blockquoteStyles = css`
 		--_blockquote-spacing: var(--semantics-blockquotes-md-spacing);
 		--_blockquote-quote-font: var(--semantics-blockquotes-md-quote-font);
 		--_blockquote-attribution-font: var(--semantics-blockquotes-md-attribution-font);
+		--_blockquote-quote-max-width: 30em;
+		--_blockquote-sm-size: var(--primitives-font-size-200);
+		--_blockquote-md-size: var(--primitives-font-size-300);
+		--_blockquote-lg-size: var(--primitives-font-size-300);
 		--_blockquote-sm-custom-size: initial;
 		--_blockquote-md-custom-size: initial;
 		--_blockquote-lg-custom-size: initial;
-		--_blockquote-sm-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-sm-custom-size), var(--primitives-font-size-200)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
-		--_blockquote-md-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-md-custom-size), var(--primitives-font-size-300)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
-		--_blockquote-lg-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-lg-custom-size), var(--primitives-font-size-300)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		--_blockquote-sm-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-sm-custom-size), var(--_blockquote-sm-size)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		--_blockquote-md-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-md-custom-size), var(--_blockquote-md-size)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		--_blockquote-lg-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-lg-custom-size), var(--_blockquote-lg-size)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
 
 		@media (max-width: ${smMax}) {
 			--_blockquote-spacing: var(--semantics-blockquotes-sm-spacing);
@@ -40,11 +44,42 @@ export const blockquoteStyles = css`
 
 		${inheritedTextReset}
 		display: block;
-		max-width: var(--semantics-blockquotes-max-width);
 	}
 
 	:host([hidden]) {
 		display: none;
+	}
+
+	/* ## Size */
+
+	:host([size="lg"]) {
+		--_blockquote-sm-size: var(--primitives-font-size-300);
+		--_blockquote-md-size: var(--primitives-font-size-500);
+		--_blockquote-lg-size: var(--primitives-font-size-700);
+
+		@media (max-width: ${smMax}) {
+			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-sm-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		}
+
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-md-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		}
+
+		@media (min-width: ${lgMin}) {
+			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-lg-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-sm-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-md-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-lg-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		}
 	}
 
 	/* ## Custom size */
@@ -99,6 +134,7 @@ export const blockquoteStyles = css`
 
 	.blockquote__quote {
 		display: flex;
+		max-width: var(--_blockquote-quote-max-width);
 		flex-direction: column;
 		gap: calc(1lh / 2);
 		font: var(--_blockquote-quote-font);

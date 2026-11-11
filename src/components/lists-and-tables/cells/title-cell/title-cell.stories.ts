@@ -12,7 +12,7 @@ export default {
 	component: 'nldd-title-cell',
 	tags: ['autodocs'],
 	args: {
-		size: 5,
+		size: '',
 		color: 'content',
 		width: '',
 		minWidth: '',
@@ -30,9 +30,10 @@ export default {
 	argTypes: {
 		size: {
 			control: 'select',
-			options: [1, 2, 3, 4, 5, 6],
-			description: 'Visuele grootte van de titel',
-			table: { defaultValue: { summary: '5' } },
+			options: ['(auto)', 'display-1', 'display-2', 'display-3', 'display-4', 'display-5', 'display-6'],
+			mapping: { '(auto)': '' },
+			description: 'Visuele grootte van de titel. Zonder is hij `display-5`, en `display-6` in een tabelrij.',
+			table: { defaultValue: { summary: '(auto)' } },
 		},
 		color: {
 			control: 'select',
@@ -111,7 +112,7 @@ export default {
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-title-cell
-			size=${args.size}
+			size=${args.size || nothing}
 			color=${args.color}
 			width=${args.width || nothing}
 			horizontal-alignment=${args.horizontalAlignment}
@@ -235,8 +236,8 @@ export const AlleGrootten = {
 			${[1, 2, 3, 4, 5, 6].map(s => html`
 				<nldd-list-item>
 					<nldd-title-cell
-						size=${s}
-						text="Titelcel (grootte ${s})"
+						size="display-${s}"
+						text="Titelcel (display-${s})"
 					></nldd-title-cell>
 				</nldd-list-item>
 			`)}

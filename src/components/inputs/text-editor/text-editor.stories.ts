@@ -707,7 +707,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		appearance: 'simple',
+		embedded: false,
 		syntax: 'visible',
 		value: SAMPLE,
 		placeholder: '',
@@ -722,11 +722,10 @@ export default {
 		accessibleLabel: 'Tekst',
 	},
 	argTypes: {
-		appearance: {
-			control: 'select',
-			options: ['simple', 'input-field'],
-			description: 'Visuele stijl. "simple" is kaal zonder focusring; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
-			table: { defaultValue: { summary: 'simple' } },
+		embedded: {
+			control: 'boolean',
+			description: 'Zonder kader, vulling, padding en focusring, voor een editor in een eigen compositie die die zelf levert',
+			table: { defaultValue: { summary: false } },
 		},
 		syntax: {
 			control: 'select',
@@ -794,7 +793,7 @@ export default {
 };
 
 const Template = ({
-	appearance,
+	embedded,
 	syntax,
 	value,
 	placeholder,
@@ -809,7 +808,7 @@ const Template = ({
 	accessibleLabel,
 }: Record<string, any>) => html`
 	<nldd-text-editor
-		appearance=${appearance as string}
+		?embedded=${embedded}
 		syntax=${syntax as string}
 		.value=${value || ''}
 		placeholder=${placeholder || nothing}
@@ -829,11 +828,10 @@ export const Standaard = {
 	render: Template,
 };
 
-export const AppearanceInputField = {
-	name: 'Appearance input-field',
+export const Embedded = {
 	render: () => html`
 		<nldd-text-editor
-			appearance="input-field"
+			embedded
 			rows="10"
 			.value=${SAMPLE}
 			accessible-label="Tekst"
@@ -842,7 +840,7 @@ export const AppearanceInputField = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'De `input-field`-appearance: kader, vulling, padding, hoeken en focusring — een op zichzelf staand veld. De default is `simple` (kaal), bedoeld om in een eigen compositie te plaatsen die de chrome en focusbehandeling levert.',
+				story: 'Embedded heeft geen kader, vulling, padding of focusring. Bij focus toont een prominente accent-caret waar je staat. Bedoeld om in een eigen compositie te plaatsen die zelf de chrome en focusbehandeling levert, zoals de werkbalk-voorbeelden hieronder.',
 			},
 		},
 	},
@@ -1198,7 +1196,7 @@ export const Gemengd = {
 		];
 		return toolbarEditor(html`
 			<nldd-text-editor
-				appearance="simple"
+				embedded
 				rows="15"
 				annotatable
 				accessible-label="Tekst"
@@ -1213,7 +1211,7 @@ export const Gemengd = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Alles samen: een echte toolbar (DS-componenten, headless gekoppeld) boven een `simple`-editor met annotaties en @-mentions, door verschillende soorten content heen (koppen, vet, inline code, een lijst, een blockquote en links). De annotatie-overlay en de mention-tokens bestaan naast elkaar zonder elkaar in de weg te zitten; de tekst blijft schone markdown.',
+				story: 'Alles samen: een echte toolbar (DS-componenten, headless gekoppeld) boven een `embedded` editor met annotaties en @-mentions, door verschillende soorten content heen (koppen, vet, inline code, een lijst, een blockquote en links). De annotatie-overlay en de mention-tokens bestaan naast elkaar zonder elkaar in de weg te zitten; de tekst blijft schone markdown.',
 			},
 		},
 	},
@@ -1222,7 +1220,7 @@ export const Gemengd = {
 export const MetWerkbalk = {
 	render: () =>
 		toolbarEditor(
-			html`<nldd-text-editor appearance="simple" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
+			html`<nldd-text-editor embedded rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
 		),
 	parameters: {
 		controls: { disable: true },
@@ -1265,7 +1263,7 @@ const HIDDEN_SYNTAX_SAMPLE = [
 export const VerborgenOpmaak = {
 	render: () => toolbarEditor(html`
 		<nldd-text-editor
-			appearance="simple"
+			embedded
 			syntax="hidden"
 			rows="15"
 			accessible-label="Tekst"
