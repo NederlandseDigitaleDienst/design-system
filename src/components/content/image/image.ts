@@ -23,8 +23,7 @@
  * @attr {string} alt - Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own.
  * @attr {string} srcset - Responsive source set
  * @attr {string} sizes - Source sizes hint
- * @attr {number|'full'} width - Display width. `full` (default) fills the parent.
- *   A numeric value sets host `max-width` AND the `<img>` layout-hint width.
+ * @attr {number|string|'full'} width - Display width, never wider than the parent. `full` (default) fills the parent. A number is pixels and also sets the `<img>` layout-hint width; any other CSS length (`20rem`, `50%`) only sets the width, so reserve space with `height` or `aspect-ratio`. Written as an inline `max-width` on the host, so it holds against a rule from a parent such as `nldd-rich-text`, and against one of your own.
  * @attr {number} height - Intrinsic height (for layout reservation)
  * @attr {'lazy'|'eager'} loading - Loading strategy (default: 'lazy').
  *   Lazy defers fetch until the image is near the viewport — the right
@@ -253,6 +252,19 @@ export class NLDDImage extends LitElement {
 		return undefined;
 	}
 
+	/** Width as a CSS length for the host's max-width: a number becomes
+	 *  pixels, another CSS length passes through. Undefined for 'full', for a
+	 *  non-positive number and for anything that is not a length. */
+	get _cssWidth(): string | undefined {
+		const n = this._numericWidth;
+		if (n !== undefined) return `${n}px`;
+		const w = String(this.width ?? '').trim();
+		if (!w || Number.isFinite(Number(w))) return undefined;
+		// `width` rejects a negative length, and min() a keyword such as `inherit`.
+		if (typeof CSS === 'undefined' || !CSS.supports('width', w)) return undefined;
+		return CSS.supports('max-width', `min(${w}, 100%)`) ? w : undefined;
+	}
+
 	get _hasCaption(): boolean {
 		return !!this.caption || !!this.credit || this._hasSlottedCaption;
 	}
@@ -266,20 +278,19 @@ export class NLDDImage extends LitElement {
 		}
 	}
 
+	private _ownMaxWidth = '';
+
 	override updated(changed: Map<string, unknown>): void {
-		// Apply the numeric `width` as a custom property the stylesheet picks
-		// up. Setting style.maxWidth directly would override any consumer CSS
-		// targeting the host's max-width; routing through --_image-max-width lets
-		// the consumer's cascade win for the rare case where they need a
-		// different cap. 'full' clears the constraint.
+		// Inline, so the width wins over a parent's rule on the host such as
+		// `nldd-rich-text > * { max-width: 100% }`, which beats any :host rule.
 		if (changed.has('width')) {
-			const n = this._numericWidth;
-			if (n !== undefined) {
-				this.style.setProperty('--_image-max-width', `${n}px`);
-			} else {
-				this.style.removeProperty('--_image-max-width');
-			}
-			setState(this, 'invalid-width', n === undefined && this.width !== 'full'
+			const w = this._cssWidth;
+			// Touch only what this component set, so a max-width of the page's own stays.
+			// Compared as the browser stores it, which may differ from what was written.
+			if (w !== undefined) this.style.maxWidth = `min(${w}, 100%)`;
+			else if (this._ownMaxWidth && this.style.maxWidth === this._ownMaxWidth) this.style.maxWidth = '';
+			this._ownMaxWidth = w !== undefined ? this.style.maxWidth : '';
+			setState(this, 'invalid-width', w === undefined && this.width !== 'full'
 				&& this.width !== null && this.width !== undefined && String(this.width) !== '');
 		}
 		this._syncAlternative();

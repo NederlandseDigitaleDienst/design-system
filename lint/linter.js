@@ -173,6 +173,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		return !node.wrapped && !maybeInput;
 	}
 
+	/** A rule whose context picks a value of a name that is gone: its fix is only right for that value. */
+	const testsRemovedValue = (rule) =>
+		rule.removed?.some((name) => new RegExp(`\\[${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[~|^$*]?=`).test(rule.context));
+
 	function lintRoots(roots, isPlainHtml) {
 		const findings = [];
 		const counts = { failed: 0, passed: 0, cantTell: 0 };
@@ -190,7 +194,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 						message: rule.message,
 						node,
 						covers: [...(rule.removed ?? []), ...Object.keys(rule.fix?.value ?? {})],
-						fix: isOurs(node, rule, isPlainHtml) ? rule.fix : undefined,
+						fix: isOurs(node, rule, isPlainHtml) && !(outcome === 'cantTell' && testsRemovedValue(rule)) ? rule.fix : undefined,
 					});
 				}
 			}

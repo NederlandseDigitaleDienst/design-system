@@ -8,6 +8,10 @@
  * (`page-footer-container`) so the responsive padding and gap react to the
  * footer's own width, not the viewport.
  *
+ * It goes in the `footer` slot of nldd-page, which makes it the contentinfo
+ * landmark, or drops it for a page that does not carry the landmarks of the
+ * document. The footer itself has no role, so it never nests a second one.
+ *
  * The host has `id="page-footer"` so a skip-link can target it directly.
  *
  * Use the sub-components `nldd-page-footer-legal-bar` and
@@ -168,14 +172,6 @@ export class NLDDPageFooter extends LitElement {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		// Expose the contentinfo landmark on the host. VoiceOver/Safari
-		// (and a few other AT+browser combos) don't reliably traverse a
-		// shadow root to surface a <footer> as a landmark, so the role
-		// goes on the host element where the AT tree builder always sees
-		// it. Don't override a consumer-provided role.
-		if (!this.hasAttribute('role')) {
-			this.setAttribute('role', 'contentinfo');
-		}
 		// Skip-link target: `<a href="#page-footer">` can only reach an id
 		// in the light DOM, not one inside our shadow root. Set it on the
 		// host (don't override a consumer-provided id).
@@ -206,7 +202,7 @@ export class NLDDPageFooter extends LitElement {
 		else this._hasMain = hasContent;
 	};
 
-	// Reflect the visible-row count as host attributes for styling. Done here
+	// Reflect an empty footer as a host attribute for styling. Done here
 	// (not in the slotchange handler) so a fully empty footer — whose empty
 	// slots may never fire slotchange — still gets `empty` on first render.
 	override updated(changed: PropertyValues): void {
@@ -214,9 +210,8 @@ export class NLDDPageFooter extends LitElement {
 			(this._hasBreadcrumbs ? 1 : 0) +
 			(this._hasMain ? 1 : 0) +
 			(this._hasLegalBar ? 1 : 0);
-		// One visible row → centered single-slot padding; zero rows → the gray
-		// band drops and only the ribbon shows (see :host([empty]) in the styles).
-		this.toggleAttribute('single-slot', visibleCount === 1);
+		// Zero rows: the gray band drops and only the ribbon shows
+		// (see :host([empty]) in the styles).
 		this.toggleAttribute('empty', visibleCount === 0);
 
 		if (changed.has('width')) {

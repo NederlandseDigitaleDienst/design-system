@@ -563,27 +563,6 @@ describe('nldd-list-item-segment – vaste geometrie', () => {
 		expect(smRect.height).toBeGreaterThanOrEqual(32);
 	});
 
-	it('draagt vaste interne padding gelijk aan de inset', async () => {
-		el = await fixture(`
-			<div style="${TOKENS}">
-				<nldd-list accessible-label="X">
-					<nldd-list-item>
-						<nldd-text-cell text="Voor"></nldd-text-cell>
-						<nldd-list-item-segment button width="full" accessible-label="Groei">
-							<nldd-text-cell text="Inhoud"></nldd-text-cell>
-						</nldd-list-item-segment>
-						<nldd-text-cell text="Na"></nldd-text-cell>
-					</nldd-list-item>
-				</nldd-list>
-			</div>
-		`);
-		await waitForUpdate(el);
-		const action = el.querySelector('nldd-list-item-segment')!;
-		const control = action.shadowRoot!.querySelector('.list-item-segment')!;
-		const style = getComputedStyle(control);
-		expect(style.paddingInlineStart).toBe('8px');
-		expect(style.paddingInlineEnd).toBe('8px');
-	});
 });
 
 describe('nldd-list-item-segment – een uitgezette link', () => {

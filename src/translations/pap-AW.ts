@@ -252,7 +252,7 @@ export const papAW: Record<TranslationKey, string> = {
 	'components.kanban.readonly-text': 'E tabla aki ta solamente pa lesa',
 	'components.kanban.drag-return-text': 'Atras na e luga anterior',
 	'components.window.accessible-label': 'Bentana',
-	'components.drag-handle-cell.accessible-label': 'Agarrador, primi spacio of enter pa move',
+	'components.reorder-handle-cell.accessible-label': 'Agarrador, primi spacio of enter pa move',
 	'components.list-item.link-hint-new-tab-lowercase-label': 'ta habri den un tab nobo',
 	'components.list-item.link-hint-external-lowercase-label': 'otro sitio web',
 	'components.list-item.link-hint-external-new-tab-lowercase-label': 'otro sitio web, ta habri den un tab nobo',

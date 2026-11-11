@@ -1,10 +1,10 @@
 severity: warn
-context: 'nldd-modal-dialog:has(> [slot=actions])'
+context: 'nldd-modal-dialog:has(> nldd-button[slot=actions]):not(:has(> [slot=actions]:not(nldd-button)))'
 count:
-  of: '[slot=actions]'
+  of: 'nldd-button[slot=actions]'
   min: 2
 message: 'One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.'
 see: patronen/irreversible-action
 examples:
-  passed: ['<nldd-modal-dialog><nldd-button slot="actions" text="Behoud"></nldd-button><nldd-button slot="actions" text="Verwijder"></nldd-button></nldd-modal-dialog>']
+  passed: ['<nldd-modal-dialog><nldd-button slot="actions" text="Behoud"></nldd-button><nldd-button slot="actions" text="Verwijder"></nldd-button></nldd-modal-dialog>', '<nldd-modal-dialog><div slot="actions"><nldd-button text="Behoud"></nldd-button><nldd-button text="Verwijder"></nldd-button></div></nldd-modal-dialog>']
   failed: ['<nldd-modal-dialog><nldd-button slot="actions" text="Verwijder"></nldd-button></nldd-modal-dialog>']

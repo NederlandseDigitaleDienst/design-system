@@ -704,7 +704,6 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 
 <!-- GOED — geen class, meerdere attributen: de tag staat alleen op de eerste regel -->
 <nldd-title
-	size="1"
 	text="Subsidieaanvraag"
 	heading-level="1"
 ></nldd-title>
@@ -729,7 +728,7 @@ ${component.hasBadge ? html`<span class="dialog__badge">${component.badge}</span
 <nldd-icon class="checkbox__icon" icon="check-mark-small"></nldd-icon>
 
 <!-- FOUT — eerste attribuut op de tag-regel zonder class -->
-<nldd-title size="1"
+<nldd-title size="display-1"
 	text="Subsidieaanvraag"
 ></nldd-title>
 

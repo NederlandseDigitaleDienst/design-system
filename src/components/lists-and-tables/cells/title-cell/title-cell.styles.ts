@@ -109,23 +109,23 @@ export const titleCellStyles = css`
 
 	/* # Size */
 
-	:host([size="1"]) {
+	:host([size="display-1"]) {
 		--_title-cell-font: var(--primitives-font-display-1-sm);
 	}
 
-	:host([size="2"]) {
+	:host([size="display-2"]) {
 		--_title-cell-font: var(--primitives-font-display-2-sm);
 	}
 
-	:host([size="3"]) {
+	:host([size="display-3"]) {
 		--_title-cell-font: var(--primitives-font-display-3-sm);
 	}
 
-	:host([size="4"]) {
+	:host([size="display-4"]) {
 		--_title-cell-font: var(--primitives-font-display-4-sm);
 	}
 
-	:host([size="6"]) {
+	:host([size="display-6"]) {
 		--_title-cell-font: var(--primitives-font-display-6-sm);
 	}
 

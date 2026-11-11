@@ -84,14 +84,43 @@ describe('nldd-image', () => {
 		expect(img.hasAttribute('width')).toBe(false);
 	});
 
-	it('applies max-width via --_image-max-width custom property and width hint on img when width is numeric', async () => {
+	it('applies an inline max-width and a width hint on img when width is numeric', async () => {
 		el = await fixture<NLDDImage>('<nldd-image src="/foo.jpg" alt="Foo" width="240"></nldd-image>');
 		await waitForUpdate(el);
-		// The component routes width through --_image-max-width so consumer CSS can
-		// override the host's max-width if needed.
-		expect(el.style.getPropertyValue('--_image-max-width')).toBe('240px');
+		expect(el.style.maxWidth).toBe('min(240px, 100%)');
 		const img = el.shadowRoot!.querySelector('img')!;
 		expect(img.getAttribute('width')).toBe('240');
+	});
+
+	it('takes a CSS length as width, without a width hint on img', async () => {
+		el = await fixture<NLDDImage>('<nldd-image src="/foo.jpg" alt="Foo" width="20rem"></nldd-image>');
+		await waitForUpdate(el);
+		expect(el.style.maxWidth).toBe('min(20rem, 100%)');
+		expect(el.shadowRoot!.querySelector('img')!.hasAttribute('width')).toBe(false);
+		expect(el.matches(':state(invalid-width)')).toBe(false);
+	});
+
+	it('leaves a max-width of the page alone, and clears only its own', async () => {
+		const image = await fixture<NLDDImage>('<nldd-image src="/foo.jpg" alt="Foo" style="max-width: 300px"></nldd-image>');
+		el = image;
+		await waitForUpdate(image);
+		expect(image.style.maxWidth).toBe('300px');
+		image.width = '240';
+		await image.updateComplete;
+		expect(image.style.maxWidth).toBe('min(240px, 100%)');
+		image.width = 'full';
+		await image.updateComplete;
+		expect(el.style.maxWidth).toBe('');
+	});
+
+	it('falls back to full for a width that is not a length', async () => {
+		for (const width of ['none', 'inherit', 'wide', '-10px', '0']) {
+			el = await fixture<NLDDImage>(`<nldd-image src="/foo.jpg" alt="Foo" width="${width}"></nldd-image>`);
+			await waitForUpdate(el);
+			expect(el.style.maxWidth, width).toBe('');
+			expect(el.matches(':state(invalid-width)'), width).toBe(true);
+			cleanup(el);
+		}
 	});
 
 	it('reflects aspect-ratio as inline style on the media wrapper (colon → slash)', async () => {

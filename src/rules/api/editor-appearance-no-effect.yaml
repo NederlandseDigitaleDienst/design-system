@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-text-editor[appearance="input-field"], nldd-code-editor[appearance="input-field"]'
+removed: ['appearance']
+fix: { remove: ['appearance'] }
+message: 'An editor is framed by default and `appearance="input-field"` does nothing; remove it.'
+examples:
+  passed: ['<nldd-text-editor accessible-label="Notitie"></nldd-text-editor>']
+  failed: ['<nldd-text-editor accessible-label="Notitie" appearance="input-field"></nldd-text-editor>', '<nldd-code-editor accessible-label="Code" appearance="input-field"></nldd-code-editor>']

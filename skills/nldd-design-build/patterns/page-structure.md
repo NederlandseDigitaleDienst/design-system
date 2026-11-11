@@ -84,7 +84,6 @@ nldd-shell                            de buitenste schil
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
@@ -99,7 +98,7 @@ nldd-shell                            de buitenste schil
     >
       <nldd-title
         slot="header"
-        size="3"
+        size="display-3"
         text="Intrekken kun je niet terugdraaien"
         heading-level="2"
       ></nldd-title>
@@ -162,7 +161,7 @@ nldd-shell                            de buitenste schil
 
 **Een vlak maak je met `background`, niet met eigen CSS.** Elke sectie kent het, en het cascadeert het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling.
 
-**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [`nldd-title`](../../nldd-design/reference.md#nldd-title) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en direct onder de paginatitel een `h2`, en laat de grootte los daarvan. De koppen in een rich text tellen gewoon mee.
+**Eén `h1` per pagina, en geen niveau overslaan.** `heading-level` op een [`nldd-title`](../../nldd-design/reference.md#nldd-title) is wat die is, en daarmee ook hoe groot die standaard is. Moet een kop kleiner, geef hem dan een `size` en geen lager niveau. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en direct onder de paginatitel een `h2`, en zet een vaste `size` als het blok overal even groot moet zijn. De koppen in een rich text tellen gewoon mee.
 
 ## De header
 
@@ -228,7 +227,6 @@ Op een onderliggende pagina:
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
@@ -298,7 +296,6 @@ Op de home, zonder terugknop:
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Regel je aanvraag online"
         heading-level="1"
       ></nldd-title>
@@ -380,7 +377,6 @@ Op de home, zonder terugknop:
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
@@ -501,7 +497,6 @@ In het menu staat bovenaan de link naar het persoonlijke deel, want daar logt ie
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
@@ -582,7 +577,6 @@ In het menu staat bovenaan de link naar het persoonlijke deel, want daar logt ie
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
@@ -606,7 +600,6 @@ Op een onderliggende pagina:
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
@@ -639,7 +632,7 @@ Op een onderliggende pagina:
       >
         <nldd-container>
           <nldd-title
-            size="5"
+            size="display-5"
             text="Aanvragen"
             heading-level="2"
           ></nldd-title>
@@ -664,7 +657,7 @@ Op een onderliggende pagina:
         </nldd-container>
         <nldd-container>
           <nldd-title
-            size="5"
+            size="display-5"
             text="Onderwerpen"
             heading-level="2"
           ></nldd-title>
@@ -689,7 +682,7 @@ Op een onderliggende pagina:
         </nldd-container>
         <nldd-container>
           <nldd-title
-            size="5"
+            size="display-5"
             text="Mijn Dienst"
             heading-level="2"
           ></nldd-title>
@@ -748,7 +741,6 @@ Op de home, zonder kruimelpad:
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Regel je aanvraag online"
         heading-level="1"
       ></nldd-title>
@@ -767,7 +759,7 @@ Op de home, zonder kruimelpad:
       >
         <nldd-container>
           <nldd-title
-            size="5"
+            size="display-5"
             text="Aanvragen"
             heading-level="2"
           ></nldd-title>
@@ -792,7 +784,7 @@ Op de home, zonder kruimelpad:
         </nldd-container>
         <nldd-container>
           <nldd-title
-            size="5"
+            size="display-5"
             text="Onderwerpen"
             heading-level="2"
           ></nldd-title>
@@ -817,7 +809,7 @@ Op de home, zonder kruimelpad:
         </nldd-container>
         <nldd-container>
           <nldd-title
-            size="5"
+            size="display-5"
             text="Mijn Dienst"
             heading-level="2"
           ></nldd-title>
@@ -888,7 +880,7 @@ Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagi
 
 - `language-item-needs-name`: Set an `accessible-label` such as "Taal: Nederlands (NL)": a screen reader otherwise spells out the letters.
 - `language-name-needs-lang`: Set `lang`, so a screen reader pronounces the name in that language.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `website-no-sticky-header`: A website lets its header scroll away: a fixed one takes room from the content.

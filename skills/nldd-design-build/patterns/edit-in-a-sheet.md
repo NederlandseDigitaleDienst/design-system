@@ -29,7 +29,7 @@ nldd-sheet                     open, placement, width; in de document-root
   <nldd-simple-section>
     <nldd-title
       slot="header"
-      size="2"
+      size="display-2"
       text="Aanvragen"
       heading-level="1"
     ></nldd-title>
@@ -81,7 +81,7 @@ nldd-sheet                     open, placement, width; in de document-root
       <nldd-title
         id="aanvraag-titel"
         slot="header"
-        size="2"
+        size="display-2"
         text="Aanvraag A-1042 bewerken"
         heading-level="1"
       ></nldd-title>

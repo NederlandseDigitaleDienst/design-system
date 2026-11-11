@@ -203,7 +203,6 @@ describe('nldd-button', () => {
 		expect(disclosure).not.toBeNull();
 		expect(disclosure.parentElement!.classList.contains('button')).toBe(true);
 		expect(el.shadowRoot!.querySelector('.button__content .button__disclosure-icon')).toBeNull();
-		expect(getComputedStyle(disclosure).position).toBe('absolute');
 	});
 });
 

@@ -698,7 +698,7 @@ export const MetPopover = {
 					gap="8"
 				>
 					<nldd-title
-						size="6"
+						size="display-6"
 						text="Dakisolatie"
 						heading-level="2"
 					></nldd-title>

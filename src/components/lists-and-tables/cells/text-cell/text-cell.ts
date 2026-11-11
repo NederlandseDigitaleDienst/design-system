@@ -54,6 +54,7 @@
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { textCellStyles } from './text-cell.styles.js';
@@ -68,7 +69,7 @@ type HorizontalAlignment = 'left' | 'center' | 'right';
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 
 @customElement('nldd-text-cell')
-export class NLDDTextCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
+export class NLDDTextCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container'))) {
 	static override styles = [textCellStyles];
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })

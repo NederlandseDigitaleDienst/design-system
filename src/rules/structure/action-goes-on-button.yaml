@@ -1,0 +1,6 @@
+severity: warn
+context: ':is(nldd-modal-dialog, nldd-inline-dialog) > [slot=actions]:not(nldd-button)'
+message: 'Put slot="actions" on each nldd-button, not on an element around them.'
+examples:
+  passed: ['<nldd-modal-dialog><nldd-button slot="actions" text="Behoud"></nldd-button><nldd-button slot="actions" text="Verwijder"></nldd-button></nldd-modal-dialog>']
+  failed: ['<nldd-modal-dialog><div slot="actions"><nldd-button text="Behoud"></nldd-button><nldd-button text="Verwijder"></nldd-button></div></nldd-modal-dialog>', '<nldd-inline-dialog><nldd-button-group slot="actions"><nldd-button text="Behoud"></nldd-button><nldd-button text="Verwijder"></nldd-button></nldd-button-group></nldd-inline-dialog>']

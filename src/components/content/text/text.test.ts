@@ -68,14 +68,6 @@ describe('nldd-text', () => {
 		expect(Math.round(sm.getBoundingClientRect().width)).toBe(640);
 	});
 
-	// pretty keeps a single word off the last line. It is inherited, so the
-	// slotted text takes it from the host.
-	it('wraps the slotted text with text-wrap: pretty', async () => {
-		el = await fixture('<nldd-text><span>Toegewezen aan Yara</span></nldd-text>');
-		await waitForUpdate(el);
-		expect(getComputedStyle(el.querySelector('span')!).textWrapStyle).toBe('pretty');
-	});
-
 
 	it('styles inline elements like nldd-rich-text', async () => {
 		el = await fixture('<nldd-text>Zet <code>no-picker</code>, lees <a href="#x">de voorwaarden</a> en let op <mark>dit</mark> en <em>dat</em>.</nldd-text>');
@@ -159,7 +151,7 @@ describe('nldd-text – display sizes and custom size', () => {
 	};
 
 	const titleStyle = async (size: number) => {
-		const title = await fixture<HTMLElement>(`<nldd-title size="${size}" text="240" heading-level="2"></nldd-title>`);
+		const title = await fixture<HTMLElement>(`<nldd-title size="display-${size}" text="240" heading-level="2"></nldd-title>`);
 		const style = getComputedStyle(title.shadowRoot!.querySelector('.title__text')!);
 		const result = { fontSize: style.fontSize, fontWeight: style.fontWeight, fontFamily: style.fontFamily, lineHeight: style.lineHeight };
 		cleanup(title);

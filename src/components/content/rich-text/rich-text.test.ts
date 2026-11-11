@@ -357,22 +357,82 @@ describe('nldd-rich-text code blocks', () => {
 		expect(getComputedStyle(pre).boxShadow).not.toBe('none');
 	});
 
-	it('houdt de chip op inline code', async () => {
-		await render('<p>tekst met <code>inline</code> code</p>');
-		const code = card.querySelector('p > code')!;
+});
 
-		expect(getComputedStyle(code).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
-		expect(parseFloat(getComputedStyle(code).paddingLeft)).toBeGreaterThan(0);
+describe('nldd-rich-text with an nldd-image', () => {
+	let styles: HTMLStyleElement[] = [];
+	let wrap: HTMLElement;
+
+	beforeAll(async () => {
+		await import('../image/image.js');
+		styles = [variablesCss, richTextCss].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
 	});
 
-	// A heading is short and reads best in lines of even length, as nldd-title
-	// does it; running text only needs to keep a single word off its last line.
-	it('balances headings and wraps running text with pretty', async () => {
-		const root = await render('<h2>Kop</h2><p>Alinea</p><ul><li>Item</li></ul><blockquote>Citaat</blockquote>');
-		const wrap = (selector: string) => getComputedStyle(root.querySelector(selector)!).textWrapStyle;
-		expect(wrap('h2')).toBe('balance');
-		expect(wrap('p')).toBe('pretty');
-		expect(wrap('li')).toBe('pretty');
-		expect(wrap('blockquote')).toBe('pretty');
+	afterAll(() => {
+		styles.forEach((s) => s.remove());
+	});
+
+	afterEach(() => {
+		if (wrap) wrap.remove();
+	});
+
+	it('keeps the width of the image, and no wider than the column', async () => {
+		wrap = document.createElement('div');
+		wrap.style.width = '900px';
+		const src = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"/>')}`;
+		wrap.innerHTML = `<nldd-rich-text><nldd-image src="${src}" alt="Foo" width="240" loading="eager"></nldd-image></nldd-rich-text>`;
+		document.body.appendChild(wrap);
+		const image = wrap.querySelector('nldd-image')! as HTMLElement & { updateComplete: Promise<boolean> };
+		await image.updateComplete;
+		await image.shadowRoot!.querySelector('img')!.decode();
+		expect(image.getBoundingClientRect().width).toBe(240);
+
+		wrap.style.width = '160px';
+		expect(image.getBoundingClientRect().width).toBeLessThanOrEqual(160);
+	});
+});
+
+describe('nldd-rich-text inline content', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const inline = (node: Element) => node.matches(':state(inline-content)');
+
+	it('states bare text and inline elements as direct children', async () => {
+		for (const markup of [
+			'Een melding van de server.',
+			'<strong>Let op:</strong>',
+			'<div>U moet <a href="#">inloggen</a>.</div>',
+			'<label>Naam</label>',
+			'<nldd-icon name="info"></nldd-icon>',
+		]) {
+			el = await fixture(`<nldd-rich-text>${markup}</nldd-rich-text>`);
+			expect(inline(el), markup).toBe(true);
+			cleanup(el);
+		}
+	});
+
+	it('does not state block content, whitespace or inline text inside a paragraph', async () => {
+		el = await fixture('<nldd-rich-text>\n\t<p>U moet <strong>nu</strong> inloggen.</p>\n\t<ul><li>Een</li></ul>\n</nldd-rich-text>');
+		expect(inline(el)).toBe(false);
+	});
+
+	it('follows text that arrives later', async () => {
+		el = await fixture('<nldd-rich-text><p>Laden</p></nldd-rich-text>');
+		el.replaceChildren('Een melding van de server.');
+		await new Promise((r) => setTimeout(r));
+		expect(inline(el)).toBe(true);
+
+		(el.firstChild as Text).data = ' ';
+		await new Promise((r) => setTimeout(r));
+		expect(inline(el)).toBe(false);
 	});
 });

@@ -250,7 +250,7 @@ export const fy: Record<TranslationKey, string> = {
 	'components.kanban.readonly-text': 'Dit boerd is allinne-lêze',
 	'components.kanban.drag-return-text': 'Werom nei it âlde plak',
 	'components.window.accessible-label': 'Finster',
-	'components.drag-handle-cell.accessible-label': 'Sleephandel, druk op spaasje of enter om te ferpleatsen',
+	'components.reorder-handle-cell.accessible-label': 'Sleephandel, druk op spaasje of enter om te ferpleatsen',
 	'components.list-item.link-hint-new-tab-lowercase-label': 'iepenet yn in nij ljepblêd',
 	'components.list-item.link-hint-external-lowercase-label': 'oare webside',
 	'components.list-item.link-hint-external-new-tab-lowercase-label': 'oare webside, iepenet yn in nij ljepblêd',

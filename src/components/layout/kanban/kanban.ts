@@ -8,7 +8,7 @@
  * a column scrolls on its own once its items do not fit the height you give the
  * board.
  *
- * An item moves in three ways, and all three fire the same `nldd-move`:
+ * An item moves in three ways, and all three fire the same `move`:
  *
  * - **Dragging.** Pick up the whole item and drop it in a column. A press that
  *   does not move is still a click, so an item that is a link or a button keeps
@@ -27,11 +27,11 @@
  * look, or a board that is closed. `moveItem()` still moves, so your app can
  * still show a move someone else made. An attempt to move an item, dragging it
  * past a click or Alt with an arrow, shows "Dit bord is alleen-lezen" at the
- * item, says it to a screen reader and fires `nldd-move-denied`, so your app
+ * item, says it to a screen reader and fires `move-denied`, so your app
  * can say why in an `nldd-notification`. Say it above the board too: only
  * your app knows the reason, and then nobody has to try.
  *
- * The board moves nothing itself. `nldd-move` says which item goes where, and
+ * The board moves nothing itself. `move` says which item goes where, and
  * your app moves it in its data, or in the DOM, in the handler: the app owns the
  * order, so a framework that renders the columns never fights the board over
  * them. `toIndex` is the place the item takes in `toColumn`, counted without
@@ -48,10 +48,10 @@
  *
  * @slot - The columns: `nldd-kanban-column`
  *
- * @fires nldd-move - An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)
- * @fires nldd-move-denied - An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`
+ * @fires move - An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)
+ * @fires move-denied - An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`
  *
- * @method moveItem(item, toColumn, toIndex?) - Moves an item to a column, given as its `value` or as the element, at `toIndex` or at the end; fires `nldd-move` and says where it landed. Returns whether it moved.
+ * @method moveItem(item, toColumn, toIndex?) - Moves an item to a column, given as its `value` or as the element, at `toIndex` or at the end; fires `move` and says where it landed. Returns whether it moved.
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
@@ -232,12 +232,12 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 		return this._move(item, from, fromIndex, to, index);
 	}
 
-	/** Fires nldd-move, says where the item landed and puts focus back on what
+	/** Fires move, says where the item landed and puts focus back on what
 	 *  had it, once the app has moved the item in the handler. */
 	private _move(item: HTMLElement, from: NLDDKanbanColumn, fromIndex: number, to: NLDDKanbanColumn, toIndex: number): boolean {
 		const focused = this._deepActiveElement();
 		const hadFocus = !!focused && this._holds(item, focused);
-		this.dispatchEvent(new CustomEvent<NLDDMoveEventDetail>('nldd-move', {
+		this.dispatchEvent(new CustomEvent<NLDDMoveEventDetail>('move', {
 			detail: { item, fromColumn: this._columnKey(from), fromIndex, toColumn: this._columnKey(to), toIndex },
 			bubbles: true,
 			composed: true,
@@ -737,7 +737,7 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 			maxWidth: `${rect.width}px`,
 		});
 		this._deniedNote = note;
-		this.dispatchEvent(new CustomEvent('nldd-move-denied', { detail: { item }, bubbles: true, composed: true }));
+		this.dispatchEvent(new CustomEvent('move-denied', { detail: { item }, bubbles: true, composed: true }));
 	}
 
 	/** A note in the look of a tooltip, over everything, for the eye only: what

@@ -3,6 +3,11 @@ import type { DevRule } from './dev-checks.js';
 
 export const devRules: DevRule[] = [
 	{
+		"id": "action-goes-on-button",
+		"message": "Put slot=\"actions\" on each nldd-button, not on an element around them.",
+		"context": ":is(nldd-modal-dialog, nldd-inline-dialog) > [slot=\"actions\"]:not(nldd-button)"
+	},
+	{
 		"id": "avatar-group-no-other-children",
 		"message": "nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.",
 		"context": "nldd-avatar-group",
@@ -77,7 +82,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "button-group-needs-width",
-		"message": "The group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query while orientation is auto), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.",
+		"message": "The group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query while orientation is auto), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width, or set orientation=\"horizontal\" so the group takes the width of its buttons.",
 		"context": "nldd-button-group:state(no-width)"
 	},
 	{
@@ -167,6 +172,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-dropdown:state(unnamed-select)"
 	},
 	{
+		"id": "editor-appearance-no-effect",
+		"message": "An editor is framed by default and `appearance=\"input-field\"` does nothing; remove it.",
+		"context": "nldd-text-editor[appearance=\"input-field\"], nldd-code-editor[appearance=\"input-field\"]"
+	},
+	{
+		"id": "editor-appearance-renamed",
+		"message": "`appearance=\"simple\"` is now the boolean `embedded`. Replace it here and on every other editor.",
+		"context": "nldd-text-editor[appearance=\"simple\"], nldd-code-editor[appearance=\"simple\"]"
+	},
+	{
 		"id": "editor-needs-name",
 		"message": "An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).",
 		"context": "nldd-code-editor, nldd-text-editor",
@@ -241,12 +256,12 @@ export const devRules: DevRule[] = [
 	{
 		"id": "hide-above-lg-no-effect",
 		"message": "hide-above=\"lg\" never hides anything: there is no breakpoint above lg. The smallest value that hides is \"sm\". Leave the attribute off if you meant \"always visible\".",
-		"context": ":is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-above=\"lg\"]"
+		"context": ":is(nldd-cell, nldd-description-cell, nldd-icon-cell, nldd-reorder-handle-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-above=\"lg\"]"
 	},
 	{
 		"id": "hide-below-sm-no-effect",
 		"message": "hide-below=\"sm\" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is \"md\". Leave the attribute off if you meant \"always visible\".",
-		"context": ":is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-below=\"sm\"]"
+		"context": ":is(nldd-cell, nldd-description-cell, nldd-icon-cell, nldd-reorder-handle-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-below=\"sm\"]"
 	},
 	{
 		"id": "icon-button-needs-name",
@@ -280,7 +295,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "image-width-invalid",
-		"message": "`width` is not a positive number. Falling back to \"full\".",
+		"message": "`width` is not a positive number or a CSS length. Falling back to \"full\".",
 		"context": "nldd-image:state(invalid-width)"
 	},
 	{
@@ -404,7 +419,12 @@ export const devRules: DevRule[] = [
 		"id": "list-item-no-other-children",
 		"message": "A row takes cells and segments. Anything else sits outside its layout.",
 		"context": "nldd-list-item",
-		"report": ":has(> :not([slot], :is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell), nldd-list-item-segment, input[type=\"hidden\"]))"
+		"report": ":has(> :not([slot], :is(nldd-cell, nldd-description-cell, nldd-icon-cell, nldd-reorder-handle-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell), nldd-list-item-segment, input[type=\"hidden\"]))"
+	},
+	{
+		"id": "list-item-reorderable-only-renamed",
+		"message": "The `reorderable-only` attribute is now `reorder-handle`. Rename it here and on every other cell; nldd-reorder-handle-cell carries it by itself.",
+		"context": "[reorderable-only]"
 	},
 	{
 		"id": "list-item-segment-disclosure-needs-button",
@@ -496,9 +516,9 @@ export const devRules: DevRule[] = [
 	{
 		"id": "modal-dialog-needs-two-actions",
 		"message": "One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.",
-		"context": "nldd-modal-dialog:has(> [slot=\"actions\"])",
+		"context": "nldd-modal-dialog:has(> nldd-button[slot=\"actions\"]):not(:has(> [slot=\"actions\"]:not(nldd-button)))",
 		"count": {
-			"of": "[slot=\"actions\"]",
+			"of": "nldd-button[slot=\"actions\"]",
 			"min": 2
 		}
 	},
@@ -552,8 +572,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "page-footer-goes-in-page",
-		"message": "nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.",
-		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-page-footer"
+		"message": "Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.",
+		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-page-footer, nldd-page > nldd-page-footer:not([slot=\"footer\"]), nldd-page > :not([slot=\"footer\"]) nldd-page-footer, body nldd-page-footer:not(nldd-page nldd-page-footer)"
 	},
 	{
 		"id": "page-footer-needs-slot",
@@ -608,6 +628,16 @@ export const devRules: DevRule[] = [
 			"accessibleLabel",
 			"accessibleLabeledBy"
 		]
+	},
+	{
+		"id": "reorder-handle-cell-tag-renamed",
+		"message": "`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-drag-handle-cell"
+	},
+	{
+		"id": "rich-text-no-inline-content",
+		"message": "Bare text or an inline element is a direct child, and each one lands in a column of 0px. Wrap it in a block element such as `p` where the content is made, or put plain text in nldd-text.",
+		"context": "nldd-rich-text:state(inline-content)"
 	},
 	{
 		"id": "row-max-one-control",
@@ -897,14 +927,29 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text[size^=\"display-\"][weight]:not([weight=\"\"])"
 	},
 	{
+		"id": "title-cell-size-renamed",
+		"message": "The sizes of a title cell are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title-cell.",
+		"context": "nldd-title-cell[size=\"1\"], nldd-title-cell[size=\"2\"], nldd-title-cell[size=\"3\"], nldd-title-cell[size=\"4\"], nldd-title-cell[size=\"5\"], nldd-title-cell[size=\"6\"]"
+	},
+	{
 		"id": "title-custom-size-invalid",
 		"message": "This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as \"96px\" or \"6rem\", not a keyword.",
 		"context": "nldd-title:state(invalid-custom-size)"
 	},
 	{
 		"id": "title-custom-size-no-effect",
-		"message": "This custom size is smaller than size 1 at this breakpoint and shows as size 1. Use `size` for headings up to size 1.",
+		"message": "This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `heading-level` or `size` for headings up to `display-1`.",
 		"context": "nldd-title:state(custom-size-below-floor)"
+	},
+	{
+		"id": "title-needs-heading-level",
+		"message": "A title without `heading-level` is not a heading, and shows as body text. Give it a level, or for large letters that are not a heading use nldd-text with a display size.",
+		"context": "nldd-title:not([heading-level]:not([heading-level=\"\"])):not(:has(> h1, > h2, > h3, > h4, > h5, > h6))"
+	},
+	{
+		"id": "title-size-renamed",
+		"message": "The sizes of a title are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title.",
+		"context": "nldd-title[size=\"1\"], nldd-title[size=\"2\"], nldd-title[size=\"3\"], nldd-title[size=\"4\"], nldd-title[size=\"5\"], nldd-title[size=\"6\"]"
 	},
 	{
 		"id": "title-subtitle-slot-renamed",
@@ -1134,6 +1179,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-avatar[tooltip-timing]:not([tooltip-timing=\"delay\"], [tooltip-timing=\"instant\"], [tooltip-timing=\"never\"])"
 	},
 	{
+		"id": "invalid-value-blockquote-size",
+		"message": "`size` on nldd-blockquote takes: lg, md.",
+		"context": "nldd-blockquote[size]:not([size=\"lg\"], [size=\"md\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
 		"id": "invalid-value-code-viewer-appearance",
 		"message": "`appearance` on nldd-code-viewer takes: box-base, box-tinted, simple.",
 		"context": "nldd-code-viewer[appearance]:not([appearance=\"box-base\"], [appearance=\"box-tinted\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -1244,6 +1294,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text[horizontal-alignment]:not([horizontal-alignment=\"center\"], [horizontal-alignment=\"left\"], [horizontal-alignment=\"right\"])"
 	},
 	{
+		"id": "invalid-value-title-size",
+		"message": "`size` on nldd-title takes: display-1, display-2, display-3, display-4, display-5, display-6.",
+		"context": "nldd-title[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
 		"id": "invalid-value-title-color",
 		"message": "`color` on nldd-title takes: content, inherit.",
 		"context": "nldd-title[color]:not([color=\"content\"], [color=\"inherit\"])"
@@ -1287,11 +1342,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-code-editor-resize",
 		"message": "`resize` on nldd-code-editor takes: auto, none, vertical.",
 		"context": "nldd-code-editor[resize]:not([resize=\"auto\"], [resize=\"none\"], [resize=\"vertical\"])"
-	},
-	{
-		"id": "invalid-value-code-editor-appearance",
-		"message": "`appearance` on nldd-code-editor takes: input-field, simple.",
-		"context": "nldd-code-editor[appearance]:not([appearance=\"input-field\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-combo-box-size",
@@ -1467,11 +1517,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-text-editor-resize",
 		"message": "`resize` on nldd-text-editor takes: auto, none, vertical.",
 		"context": "nldd-text-editor[resize]:not([resize=\"auto\"], [resize=\"none\"], [resize=\"vertical\"])"
-	},
-	{
-		"id": "invalid-value-text-editor-appearance",
-		"message": "`appearance` on nldd-text-editor takes: input-field, simple.",
-		"context": "nldd-text-editor[appearance]:not([appearance=\"input-field\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-text-editor-syntax",
@@ -2349,11 +2394,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-description-cell[vertical-alignment]:not([vertical-alignment=\"bottom\"], [vertical-alignment=\"center\"], [vertical-alignment=\"top\"])"
 	},
 	{
-		"id": "invalid-value-drag-handle-cell-size",
-		"message": "`size` on nldd-drag-handle-cell takes: md, sm.",
-		"context": "nldd-drag-handle-cell[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-icon-cell-size",
 		"message": "`size` on nldd-icon-cell takes: 16, 20, 24, 32.",
 		"context": "nldd-icon-cell[size]:not([size=\"16\"], [size=\"20\"], [size=\"24\"], [size=\"32\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -2367,6 +2407,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-icon-cell-vertical-alignment",
 		"message": "`vertical-alignment` on nldd-icon-cell takes: bottom, center, top.",
 		"context": "nldd-icon-cell[vertical-alignment]:not([vertical-alignment=\"bottom\"], [vertical-alignment=\"center\"], [vertical-alignment=\"top\"])"
+	},
+	{
+		"id": "invalid-value-reorder-handle-cell-size",
+		"message": "`size` on nldd-reorder-handle-cell takes: md, sm.",
+		"context": "nldd-reorder-handle-cell[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-spacer-cell-size",
@@ -2432,6 +2477,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-text-cell-query-mark-mode",
 		"message": "`query-mark-mode` on nldd-text-cell takes: match, predictive.",
 		"context": "nldd-text-cell[query-mark-mode]:not([query-mark-mode=\"match\"], [query-mark-mode=\"predictive\"])"
+	},
+	{
+		"id": "invalid-value-title-cell-size",
+		"message": "`size` on nldd-title-cell takes: display-1, display-2, display-3, display-4, display-5, display-6.",
+		"context": "nldd-title-cell[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-title-cell-color",

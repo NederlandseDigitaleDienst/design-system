@@ -830,6 +830,16 @@ describe('--fix', () => {
 		assert.equal(remove('a.html', '<nldd-sheet accessible-label="a" [full-height]="b"></nldd-sheet>'), '<nldd-sheet accessible-label="a"></nldd-sheet>');
 	});
 
+	it('turns a written value into a boolean attribute, and leaves a bound one', () => {
+		const flag = (name, source) => fixed(name, source).text;
+		assert.equal(flag('a.html', '<nldd-text-editor appearance="simple" accessible-label="a"></nldd-text-editor>'), '<nldd-text-editor embedded accessible-label="a"></nldd-text-editor>');
+		assert.equal(flag('a.html', '<nldd-code-editor accessible-label="a" appearance=simple></nldd-code-editor>'), '<nldd-code-editor accessible-label="a" embedded></nldd-code-editor>');
+		assert.equal(flag('a.vue', '<template><nldd-text-editor\n  appearance="simple"\n  accessible-label="a"\n/></template>'), '<template><nldd-text-editor\n  embedded\n  accessible-label="a"\n/></template>');
+		assert.equal(flag('a.tsx', 'const a = <nldd-text-editor accessible-label="a" appearance="simple" />;'), 'const a = <nldd-text-editor accessible-label="a" embedded />;');
+		const bound = '<template><nldd-text-editor accessible-label="a" :appearance="b" /></template>';
+		assert.equal(flag('a.vue', bound), bound);
+	});
+
 	it('replaces a deprecated attribute, and the rule takes over its finding', () => {
 		const { text, stdout } = fixed('a.html', '<nldd-navigation-split-view sidebar-accessible-label="a"></nldd-navigation-split-view>');
 		assert.equal(text, '<nldd-navigation-split-view primary-sidebar-accessible-label="a"></nldd-navigation-split-view>');
@@ -1098,7 +1108,7 @@ describe('found in the sixth review', () => {
 	});
 
 	it('leaves properties of every element alone', async () => {
-		assert.deepEqual(await rulesIn('<template><nldd-rich-text :innerHTML="a" /><nldd-title :textContent="b" /></template>', 'a.vue'), []);
+		assert.deepEqual(await rulesIn('<template><nldd-rich-text :innerHTML="a" /><nldd-title heading-level="1" :textContent="b" /></template>', 'a.vue'), []);
 	});
 
 	it('leaves Alpine alone and reads its binding', async () => {

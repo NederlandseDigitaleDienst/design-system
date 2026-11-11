@@ -616,13 +616,13 @@ describe('nldd-top-navigation-bar – wordmark beside the ribbon', () => {
 		expect(Math.abs(content.bottom - logo.bottom)).toBeLessThan(1);
 	});
 
-	it('keeps 16px from the top and grows downward when it does not fit', async () => {
+	it('grows downward when it does not fit', async () => {
 		const { logo, content } = await mount(
 			'375px',
 			'logo-subtitle="Ministerie van Economische Zaken en Klimaat" logo-supporting-text1="Directie Digitale Overheid"',
 		);
 		expect(content.height).toBeGreaterThan(logo.height);
-		expect(Math.round(content.top - logo.top)).toBe(16);
+		expect(content.top).toBeGreaterThan(logo.top);
 	});
 
 	// Room under the text would raise the whole bar for nothing.

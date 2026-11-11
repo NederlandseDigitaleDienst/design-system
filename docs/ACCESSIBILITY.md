@@ -23,7 +23,7 @@ Of een pagina voldoet, bepaal je per pagina. De componenten zijn daarvoor een vo
 ## Wat jij nog moet doen
 
 - **Geef een naam aan wat geen zichtbare tekst heeft.** Een knop met alleen een icoon, een kaart die een link is en een lijst krijgen een `accessible-label`.
-- **Houd de koppen op orde.** Eén `h1` per pagina, en geen niveau overslaan. `size` op een titel is hoe hij eruitziet, `heading-level` wat hij is.
+- **Houd de koppen op orde.** Eén `h1` per pagina, en geen niveau overslaan. `heading-level` op een titel is wat hij is en bepaalt zijn standaardgrootte. Moet hij kleiner, geef hem dan een `size` en geen lager niveau.
 - **Beschrijf afbeeldingen.** Een afbeelding die iets zegt krijgt een `alt`; een afbeelding die alleen sfeer is krijgt `decorative`.
 - **Zet de taal.** Een `lang` op de pagina, en op elk stuk tekst in een andere taal.
 - **Koppel een label aan elk veld.** Zet een invoerveld in een `nldd-form-field`, dan zitten het label, de hulptekst en de foutmelding eraan vast.

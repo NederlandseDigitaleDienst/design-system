@@ -54,11 +54,19 @@ describe('nldd-code-editor', () => {
 		expect(el.hasAttribute('wrap')).toBe(true);
 	});
 
-	it('default appearance is simple', async () => {
+	it('is not embedded by default', async () => {
 		el = await fixture('<nldd-code-editor accessible-label="Code"></nldd-code-editor>');
 		await waitForUpdate(el);
-		expect((el as unknown as { appearance: string }).appearance).toBe('simple');
-		expect(el.hasAttribute('appearance')).toBe(false);
+		expect((el as unknown as { embedded: boolean }).embedded).toBe(false);
+		expect(el.hasAttribute('embedded')).toBe(false);
+	});
+
+	it('reflects embedded', async () => {
+		el = await fixture('<nldd-code-editor accessible-label="Code"></nldd-code-editor>');
+		await waitForUpdate(el);
+		(el as unknown as { embedded: boolean }).embedded = true;
+		await (el as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+		expect(el.hasAttribute('embedded')).toBe(true);
 	});
 
 	it('readonly blijft focusbaar (content editable, niet "false")', async () => {

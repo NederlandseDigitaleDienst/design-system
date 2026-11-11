@@ -12,21 +12,19 @@ export const codeEditorStyles = css`
 	:host {
 		--_code-editor-caret-width: var(--primitives-border-width-regular);
 		--_code-editor-caret-color: var(--components-code-editor-caret-color);
-		--_code-editor-corner-radius: 0;
-		--_code-editor-background-color: transparent;
-		--_code-editor-gutter-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_code-editor-corner-radius: var(--primitives-corner-radius-lg);
+		--_code-editor-background-color: var(--semantics-input-fields-background-color);
+		--_code-editor-gutter-background-color: var(--_code-editor-background-color);
 		--_code-editor-gutter-border-width: var(--semantics-dividers-thickness);
 		--_code-editor-gutter-border-color: var(--semantics-dividers-color);
-		--_code-editor-line-number-padding-left: var(--primitives-space-8);
+		--_code-editor-line-number-padding-left: var(--_code-editor-padding-inline);
 		--_code-editor-line-number-padding-right: var(--primitives-space-8);
 		--_code-editor-line-numbers-content-padding-left: var(--primitives-space-8);
 		--_code-editor-input-field-border-z-index: 1;
-		--_code-editor-input-field-border-color: transparent;
-		--_code-editor-input-field-border-shadow: none;
-		--_code-editor-padding-block: 0px;
-		/* Room for the caret's own ink at the first and last position of a line.
-		   Without it the edge carets are clipped. */
-		--_code-editor-padding-inline: var(--_code-editor-caret-width);
+		--_code-editor-input-field-border-color: var(--semantics-input-fields-border-color);
+		--_code-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_code-editor-input-field-border-color);
+		--_code-editor-padding-block: var(--semantics-controls-md-inline-padding);
+		--_code-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 		--_code-editor-content-color: var(--semantics-content-color);
 		--_code-editor-font: var(--primitives-font-monospace-sm-regular-snug);
 		--_code-editor-rows: 6;
@@ -54,19 +52,19 @@ export const codeEditorStyles = css`
 	}
 
 
-	/* ## Appearance — input-field adds the framed surface + a default content padding */
+	/* ## Embedded */
 
-	:host([appearance="input-field"]) {
-		--_code-editor-corner-radius: var(--primitives-corner-radius-lg);
-		/* Match the other input fields (text-field, textarea): the input-field
-		   surface + border + control padding, not the tinted surface. */
-		--_code-editor-background-color: var(--semantics-input-fields-background-color);
-		--_code-editor-gutter-background-color: var(--_code-editor-background-color);
-		--_code-editor-input-field-border-color: var(--semantics-input-fields-border-color);
-		--_code-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_code-editor-input-field-border-color);
-		--_code-editor-padding-block: var(--semantics-controls-md-inline-padding);
-		--_code-editor-padding-inline: var(--semantics-controls-md-inline-padding);
-		--_code-editor-line-number-padding-left: var(--_code-editor-padding-inline);
+	:host([embedded]) {
+		--_code-editor-corner-radius: 0;
+		--_code-editor-background-color: transparent;
+		--_code-editor-gutter-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_code-editor-line-number-padding-left: var(--primitives-space-8);
+		--_code-editor-input-field-border-color: transparent;
+		--_code-editor-input-field-border-shadow: none;
+		--_code-editor-padding-block: 0px;
+		/* Room for the caret's own ink at the first and last position of a line.
+		   Without it the edge carets are clipped. */
+		--_code-editor-padding-inline: var(--_code-editor-caret-width);
 	}
 
 
@@ -116,9 +114,9 @@ export const codeEditorStyles = css`
 		user-select: none;
 	}
 
-	/* Focus ring only on the input-field variant. The simple variant relies on a
-	   prominent caret and lets a wrapping composition own its focus treatment. */
-	:host([appearance="input-field"]) .code-editor:focus-within {
+	/* Embedded has no focus ring: it relies on a prominent caret and lets the
+	   wrapping composition own its focus treatment. */
+	:host(:not([embedded])) .code-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);

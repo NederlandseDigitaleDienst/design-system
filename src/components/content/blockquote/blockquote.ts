@@ -3,9 +3,14 @@
  *
  * Shows a quote with an optional source attribution.
  *
+ * The quote is at most 30em wide, measured in its own letters, so a line holds
+ * about the same number of characters at every size, custom sizes included.
+ * Within that, it takes the width of its parent.
+ *
  * @element nldd-blockquote
+ * @attr {string} size - Size of the quote: 'md' (default) or 'lg', for a quote that stands out on its own, such as on a landing page. Only the quote grows; the attribution and the border stay as they are
  * @attr {string} cite - URL of the source (forwarded to the <blockquote> element)
- * @attr {string} sm-custom-size - A size of your own for the quote at sm, any CSS length (e.g. '32px', '2rem', 'clamp(1.5rem, 4vw, 3rem)'), for a quote that stands out on its own, such as on a landing page. A quote in running text keeps its own size. Set per breakpoint on purpose: a breakpoint without one keeps the quote's own size, so a quote made large for a wide screen never breaks a narrow one. Never smaller than the quote's own size at the same breakpoint: a smaller value shows at that size, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Only the quote grows, with its line height and the space between paragraphs; the attribution and the border stay as they are. An invalid value falls back to the quote's own size
+ * @attr {string} sm-custom-size - A size of your own for the quote at sm, any CSS length (e.g. '32px', '2rem', 'clamp(1.5rem, 4vw, 3rem)'), for a quote that stands out on its own, such as on a landing page. For a larger quote, try `size="lg"` first. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a quote made large for a wide screen never breaks a narrow one. Never smaller than the size from `size` at the same breakpoint: a smaller value shows at that size, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Only the quote grows, with its line height and the space between paragraphs; the attribution and the border stay as they are. An invalid value falls back to `size`
  * @attr {string} md-custom-size - The same, at md
  * @attr {string} lg-custom-size - The same, at lg
  *
@@ -22,16 +27,28 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { blockquoteStyles } from './blockquote.styles.js';
 import { template } from './blockquote.template.js';
 
-/** The quote's own font size per breakpoint: the floor of a custom size. */
-const QUOTE_FONT_SIZE: Record<Breakpoint, string> = {
-	sm: 'var(--primitives-font-size-200)',
-	md: 'var(--primitives-font-size-300)',
-	lg: 'var(--primitives-font-size-300)',
+type BlockquoteSize = 'md' | 'lg';
+
+/** The font size of the quote per size and breakpoint: the floor of a custom size. */
+const QUOTE_FONT_SIZE: Record<BlockquoteSize, Record<Breakpoint, string>> = {
+	md: {
+		sm: 'var(--primitives-font-size-200)',
+		md: 'var(--primitives-font-size-300)',
+		lg: 'var(--primitives-font-size-300)',
+	},
+	lg: {
+		sm: 'var(--primitives-font-size-300)',
+		md: 'var(--primitives-font-size-500)',
+		lg: 'var(--primitives-font-size-700)',
+	},
 };
 
 @customElement('nldd-blockquote')
 export class NLDDBlockquote extends LitElement {
 	static override styles = blockquoteStyles;
+
+	@property({ reflect: true, converter: reflectNonDefault<BlockquoteSize>('md') })
+	size: BlockquoteSize = 'md';
 
 	@property({ type: String })
 	cite: string | undefined = undefined;
@@ -78,8 +95,8 @@ export class NLDDBlockquote extends LitElement {
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
 		if (!import.meta.env?.DEV) return;
-		if (changed.has('smCustomSize') || changed.has('mdCustomSize') || changed.has('lgCustomSize')) {
-			checkCustomFontSizeFloor(this, this._customSizes, QUOTE_FONT_SIZE);
+		if (changed.has('size') || changed.has('smCustomSize') || changed.has('mdCustomSize') || changed.has('lgCustomSize')) {
+			checkCustomFontSizeFloor(this, this._customSizes, QUOTE_FONT_SIZE[this.size] ?? QUOTE_FONT_SIZE.md);
 		}
 	}
 

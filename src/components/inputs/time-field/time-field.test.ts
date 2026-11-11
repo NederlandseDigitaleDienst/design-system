@@ -1,8 +1,14 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
+import { fixture, cleanup, waitForUpdate, reduceMotion } from '../../../test-utils.js';
 import { parseTime, roundToStep, type NLDDTimeField } from './time-field.js';
 import type { NLDDPopover } from '../../layout/popover/popover.js';
 import './time-field.js';
+
+// Closing a bottom sheet slides it down first; these tests are about what
+// happens once it is closed. The slide itself is tested in popover.test.ts.
+let restoreMotion: () => Promise<void>;
+beforeAll(async () => { restoreMotion = await reduceMotion(); });
+afterAll(async () => { await restoreMotion(); });
 
 async function typeInto(el: NLDDTimeField, text: string, commit = false) {
 	const input = el.shadowRoot!.querySelector('input')!;

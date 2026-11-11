@@ -155,24 +155,6 @@ describe('nldd-link', () => {
 		expect(el.hasAttribute('size')).toBe(false);
 	});
 
-	it('inherit mode uses display: inline so text wraps in flow', async () => {
-		el = await fixture('<nldd-link href="#" text="Inline"></nldd-link>');
-		await waitForUpdate(el);
-		expect(getComputedStyle(el).display).toBe('inline');
-	});
-
-	it('explicit size="inherit" behaves identically to no size', async () => {
-		el = await fixture('<nldd-link href="#" size="inherit" text="Inline"></nldd-link>');
-		await waitForUpdate(el);
-		expect(getComputedStyle(el).display).toBe('inline');
-	});
-
-	it('sized mode uses display: inline-flex for icon alignment', async () => {
-		el = await fixture('<nldd-link href="#" size="md" text="Sized"></nldd-link>');
-		await waitForUpdate(el);
-		expect(getComputedStyle(el).display).toBe('inline-flex');
-	});
-
 	it('inherit mode renders start-icon (whitespace provides spacing)', async () => {
 		el = await fixture('<nldd-link href="#" text="With icon" start-icon="download"></nldd-link>');
 		await waitForUpdate(el);

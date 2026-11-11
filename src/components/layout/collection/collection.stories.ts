@@ -119,7 +119,7 @@ const descriptionOrder = [0, 2, 3, 1, 2, 0, 1, 3, 3, 1, 0, 2];
 
 const itemContent = (i: any) => html`
 	<nldd-title
-		size="4"
+		size="display-4"
 		text="Item ${i + 1}"
 		heading-level="3"
 	></nldd-title>
@@ -318,7 +318,7 @@ export const HorizontaalMetItemMaxWidth = {
 	render: () => html`
 	${[1, 2, 6].map(count => html`
 		<nldd-title
-			size="5"
+			size="display-5"
 			text="${count} ${count === 1 ? 'kaart' : 'kaarten'}, standaard"
 			heading-level="3"
 		></nldd-title>
@@ -331,7 +331,7 @@ export const HorizontaalMetItemMaxWidth = {
 		</nldd-collection>
 		<nldd-spacer size="32"></nldd-spacer>
 		<nldd-title
-			size="5"
+			size="display-5"
 			text="${count} ${count === 1 ? 'kaart' : 'kaarten'}, item-max-width 400px"
 			heading-level="3"
 		></nldd-title>
@@ -355,7 +355,6 @@ export const InSimpleSectie = {
 		<nldd-simple-section>
 			<nldd-title
 				slot="header"
-				size="2"
 				text="Sectietitel"
 				heading-level="2"
 			></nldd-title>

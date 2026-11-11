@@ -142,7 +142,7 @@ const Template = (args: Record<string, any>) => html`
 	>
 		<nldd-title
 			color="inherit"
-			size="2"
+			size="display-2"
 			text="Regels die voor je werken"
 			heading-level="1"
 		></nldd-title>
@@ -171,7 +171,7 @@ export const Standaard = {
 const cornerContent = (text: string) => html`
 	<nldd-title
 		color="inherit"
-		size="4"
+		size="display-4"
 		text=${text}
 		heading-level="2"
 	></nldd-title>
@@ -245,7 +245,7 @@ export const AfgerondeHoekZonderMedia = {
 						>
 							<nldd-title
 								color="inherit"
-								size="1"
+								size="display-1"
 								text="Mijn Dienst"
 								heading-level="2"
 							></nldd-title>
@@ -255,7 +255,7 @@ export const AfgerondeHoekZonderMedia = {
 						>
 							<nldd-title
 								color="inherit"
-								size="1"
+								size="display-1"
 								text="Mijn Dienst"
 								heading-level="2"
 							></nldd-title>
@@ -320,7 +320,7 @@ export const AllePosities = {
 					>
 					<nldd-title
 						color="inherit"
-						size="4"
+						size="display-4"
 						text='main-position="${position}"'
 						heading-level="2"
 					></nldd-title>
@@ -361,7 +361,6 @@ export const Overlap = {
 					>
 					<nldd-title
 						color="inherit"
-						size="2"
 						text=${title}
 						heading-level="2"
 					></nldd-title>
@@ -400,7 +399,7 @@ export const VolleStrook = {
 				>
 				<nldd-title
 					color="inherit"
-					size="3"
+					size="display-3"
 					text="Volle onderstrook"
 					supporting-text='main-position="bottom-left"'
 					heading-level="1"
@@ -418,7 +417,7 @@ export const VolleStrook = {
 				>
 				<nldd-title
 					color="inherit"
-					size="3"
+					size="display-3"
 					text="Volle bovenstrook"
 					supporting-text='main-position="top-left"'
 					heading-level="2"
@@ -440,7 +439,7 @@ export const ZonderMedia = {
 			<nldd-hero>
 				<nldd-title
 					color="inherit"
-					size="2"
+					size="display-2"
 					text="Kleurvlak zonder fotografie"
 					supporting-text="De main beslaat de volledige hero"
 					heading-level="1"
@@ -448,7 +447,6 @@ export const ZonderMedia = {
 			</nldd-hero>
 			<nldd-hero main-background="base">
 				<nldd-title
-					size="2"
 					text="Base zonder media"
 					supporting-text="Rand zodat de vorm zichtbaar blijft"
 					heading-level="2"
@@ -475,7 +473,7 @@ export const MetRichText = {
 			>
 			<nldd-title
 				color="inherit"
-				size="2"
+				size="display-2"
 				text="Regels die voor je werken"
 				heading-level="1"
 			></nldd-title>

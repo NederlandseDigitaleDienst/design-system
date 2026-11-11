@@ -129,6 +129,16 @@ function removeEdits(source, offset, name) {
 	return [{ from, to: end, text: '' }];
 }
 
+/** A value written out in the markup that became a boolean: the whole attribute
+ *  turns into the new name. The rule's context says which value that is. */
+function flagEdits(source, offset, from, to) {
+	const found = findAttribute(source, offset, from);
+	if (!found || found.prefix || findAttribute(source, offset, to)) return [];
+	const end = endOfValue(source, found.end);
+	if (end === undefined) return [];
+	return [{ from: found.start, to: end, text: to }];
+}
+
 /**
  * The parser says where an element ends: a comment or a string that looks like its
  * closing tag does not count. Without a closing tag of its own it stays as it is.
@@ -150,6 +160,7 @@ function editsOf(source, { fix, offset, endOffset, tag }) {
 		...Object.entries(fix.rename ?? {}).flatMap(([from, to]) => renameEdits(source, offset, from, to)),
 		...Object.entries(fix.value ?? {}).flatMap(([name, values]) => valueEdits(source, offset, name, values)),
 		...(fix.remove ?? []).flatMap((name) => removeEdits(source, offset, name)),
+		...Object.entries(fix.flag ?? {}).flatMap(([from, to]) => flagEdits(source, offset, from, to)),
 		...(fix.tag ? tagEdits(source, offset, endOffset, tag, fix.tag) : []),
 	];
 }

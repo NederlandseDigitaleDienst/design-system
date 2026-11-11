@@ -17,7 +17,7 @@ import '../../actions/menu/menu.js';
  * status of een team.
  *
  * Een kaartje verplaats je op drie manieren, en alle drie geven hetzelfde
- * `nldd-move`-event:
+ * `move`-event:
  *
  * - **Slepen.** Pak het hele kaartje. Een klik zonder beweging blijft een klik.
  *   Op een touchscreen hou je het kaartje even vast voor het loskomt, zodat vegen
@@ -29,10 +29,10 @@ import '../../actions/menu/menu.js';
  *   een menu "Verplaatsen naar" en roep `moveItem()` aan. Het menu maak je zelf.
  *
  * Het bord verplaatst zelf niets. Je app verplaatst het kaartje in de handler
- * van `nldd-move`, in zijn data of in de DOM.
+ * van `move`, in zijn data of in de DOM.
  *
  * ```js
- * board.addEventListener('nldd-move', (event) => {
+ * board.addEventListener('move', (event) => {
  *   const { fromColumn, fromIndex, toColumn, toIndex } = event.detail;
  *   const [task] = columns[fromColumn].splice(fromIndex, 1);
  *   columns[toColumn].splice(toIndex, 0, task);
@@ -109,7 +109,7 @@ export const Standaard = {
 			accessible-label=${args.accessibleLabel || nothing}
 			height=${args.height || nothing}
 			?readonly=${args.readonly}
-			@nldd-move=${onMove}
+			@move=${onMove}
 		>
 			<nldd-kanban-column
 				value="nieuw"
@@ -152,7 +152,7 @@ export const MetEigenKop = {
 	render: () => html`
 		<nldd-kanban
 			accessible-label="Dossiers"
-			@nldd-move=${onMove}
+			@move=${onMove}
 		>
 			${[['uitvoering', 'Team Uitvoering', 'Dossier D-318'], ['beleid', 'Team Beleid', 'Dossier D-319']].map(([value, text, item]) => html`
 				<nldd-kanban-column
@@ -165,7 +165,7 @@ export const MetEigenKop = {
 						vertical-alignment="center"
 					>
 						<nldd-title
-							size="5"
+							size="display-5"
 							heading-level="3"
 							text=${text}
 						></nldd-title>
@@ -205,7 +205,7 @@ export const VasteHoogte = {
 		<nldd-kanban
 			height="360px"
 			accessible-label="Aanvragen"
-			@nldd-move=${onMove}
+			@move=${onMove}
 		>
 			<nldd-kanban-column
 				value="nieuw"
@@ -238,7 +238,7 @@ export const VasteHoogte = {
  * verplaatst nog wel, zodat je app een verplaatsing van een ander kan tonen.
  *
  * Probeert iemand toch te verplaatsen, dan staat "Dit bord is alleen-lezen" even
- * bij het kaartje, hoort een schermlezer hetzelfde en vuurt `nldd-move-denied`,
+ * bij het kaartje, hoort een schermlezer hetzelfde en vuurt `move-denied`,
  * zodat je app in een `nldd-notification` kan zeggen waarom. Zeg het ook boven
  * het bord: alleen je app weet de reden, en dan hoeft niemand het te proberen.
  */
@@ -248,7 +248,7 @@ export const ToestandReadonly = {
 		<nldd-kanban
 			readonly
 			accessible-label="Aanvragen"
-			@nldd-move=${onMove}
+			@move=${onMove}
 		>
 			<nldd-kanban-column
 				value="nieuw"
@@ -278,7 +278,7 @@ export const ToestandReadonly = {
  * Het menu is van de app; het bord levert `columns` en `moveItem()`. De items
  * zijn radio-items, met de kolom waar het kaartje nu staat geselecteerd: je kiest
  * de plek van het kaartje, net zoals je een status kiest. Zet die keuze in de
- * handler van `nldd-move`, dan klopt hij ook na slepen of het toetsenbord.
+ * handler van `move`, dan klopt hij ook na slepen of het toetsenbord.
  */
 export const ZonderSlepen = {
 	name: 'Zonder slepen',
@@ -338,7 +338,7 @@ export const ZonderSlepen = {
 		return html`
 			<nldd-kanban
 				accessible-label="Aanvragen"
-				@nldd-move=${moved}
+				@move=${moved}
 			>
 				<nldd-kanban-column
 					value="nieuw"

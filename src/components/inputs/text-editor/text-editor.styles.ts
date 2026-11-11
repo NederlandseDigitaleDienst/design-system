@@ -13,15 +13,13 @@ export const textEditorStyles = css`
 		--_text-editor-drag-ghost-background-color: var(--components-text-editor-drag-ghost-background-color);
 		--_text-editor-caret-ring-width: var(--primitives-border-width-thin);
 		--_text-editor-caret-ring-color: var(--semantics-surfaces-base-background-color);
-		--_text-editor-corner-radius: 0;
-		--_text-editor-background-color: transparent;
-		--_text-editor-input-field-border-color: transparent;
-		--_text-editor-input-field-border-shadow: none;
+		--_text-editor-corner-radius: var(--primitives-corner-radius-lg);
+		--_text-editor-background-color: var(--semantics-input-fields-background-color);
+		--_text-editor-input-field-border-color: var(--semantics-input-fields-border-color);
+		--_text-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_text-editor-input-field-border-color);
 		--_text-editor-input-field-border-z-index: 1;
-		--_text-editor-padding-block: 0px;
-		/* Room for the caret's own ink at the first and last position of a line:
-		   its width plus its ring. Without it the edge carets are clipped. */
-		--_text-editor-padding-inline: calc(var(--_text-editor-caret-width) + var(--_text-editor-caret-ring-width));
+		--_text-editor-padding-block: var(--semantics-controls-md-inline-padding);
+		--_text-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 		--_text-editor-content-color: var(--semantics-content-color);
 		--_text-editor-mark-color: var(--semantics-content-secondary-color);
 		--_text-editor-link-color: var(--semantics-links-color);
@@ -160,15 +158,17 @@ export const textEditorStyles = css`
 	}
 
 
-	/* ## Appearance — input-field adds the framed surface + a default content padding */
+	/* ## Embedded */
 
-	:host([appearance="input-field"]) {
-		--_text-editor-corner-radius: var(--primitives-corner-radius-lg);
-		--_text-editor-background-color: var(--semantics-input-fields-background-color);
-		--_text-editor-input-field-border-color: var(--semantics-input-fields-border-color);
-		--_text-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_text-editor-input-field-border-color);
-		--_text-editor-padding-block: var(--semantics-controls-md-inline-padding);
-		--_text-editor-padding-inline: var(--semantics-controls-md-inline-padding);
+	:host([embedded]) {
+		--_text-editor-corner-radius: 0;
+		--_text-editor-background-color: transparent;
+		--_text-editor-input-field-border-color: transparent;
+		--_text-editor-input-field-border-shadow: none;
+		--_text-editor-padding-block: 0px;
+		/* Room for the caret's own ink at the first and last position of a line:
+		   its width plus its ring. Without it the edge carets are clipped. */
+		--_text-editor-padding-inline: calc(var(--_text-editor-caret-width) + var(--_text-editor-caret-ring-width));
 	}
 
 
@@ -212,9 +212,9 @@ export const textEditorStyles = css`
 		user-select: none;
 	}
 
-	/* Focus ring only on the input-field variant; simple relies on the accent caret and
-	   lets a wrapping composition own its focus treatment. */
-	:host([appearance="input-field"]) .text-editor:focus-within {
+	/* Embedded has no focus ring: it relies on the accent caret and lets the
+	   wrapping composition own its focus treatment. */
+	:host(:not([embedded])) .text-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);

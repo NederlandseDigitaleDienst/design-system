@@ -247,7 +247,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.sidebar-section.sheet-dismiss-action': 'Close',
 	'components.popover.accessible-label': 'Popover',
 	'components.window.accessible-label': 'Window',
-	'components.drag-handle-cell.accessible-label': 'Drag handle, press space or enter to move',
+	'components.reorder-handle-cell.accessible-label': 'Drag handle, press space or enter to move',
 	'components.list-item.link-hint-new-tab-lowercase-label': 'opens in a new tab',
 	'components.list-item.link-hint-external-lowercase-label': 'another website',
 	'components.list-item.link-hint-external-new-tab-lowercase-label': 'another website, opens in a new tab',

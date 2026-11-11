@@ -87,7 +87,6 @@ Met een lijst:
     <nldd-one-third-two-thirds-section>
       <nldd-title
         slot="left"
-        size="1"
         text="Aanvragen"
         heading-level="1"
       ></nldd-title>
@@ -280,7 +279,6 @@ Met kaarten:
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvragen"
         heading-level="1"
       ></nldd-title>
@@ -301,7 +299,7 @@ Met kaarten:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Aanvraag indienen"
               heading-level="2"
             ></nldd-title>
@@ -317,7 +315,7 @@ Met kaarten:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Behandeling volgen"
               heading-level="2"
             ></nldd-title>
@@ -333,7 +331,7 @@ Met kaarten:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Aanvraag wijzigen"
               heading-level="2"
             ></nldd-title>
@@ -349,7 +347,7 @@ Met kaarten:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Aanvraag intrekken"
               heading-level="2"
             ></nldd-title>
@@ -365,7 +363,7 @@ Met kaarten:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Besluit begrijpen"
               heading-level="2"
             ></nldd-title>
@@ -381,7 +379,7 @@ Met kaarten:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Bezwaar maken"
               heading-level="2"
             ></nldd-title>

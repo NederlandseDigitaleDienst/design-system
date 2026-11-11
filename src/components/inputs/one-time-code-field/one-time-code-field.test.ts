@@ -214,10 +214,10 @@ describe('nldd-one-time-code-field', () => {
 		expect(el.value).toBe('aB1c');
 	});
 
-	it('fires nldd-complete once, when the last box fills', async () => {
+	it('fires complete once, when the last box fills', async () => {
 		el = await fixture('<nldd-one-time-code-field length="4"></nldd-one-time-code-field>');
 		const complete = vi.fn();
-		el.addEventListener('nldd-complete', complete);
+		el.addEventListener('complete', complete);
 		await type('123');
 		expect(complete).not.toHaveBeenCalled();
 		await type('1234');
@@ -413,10 +413,10 @@ describe('nldd-one-time-code-field', () => {
 		expect(el.value).toBe(code);
 	});
 
-	it('fires nldd-complete again after a correction that leaves the code full', async () => {
+	it('fires complete again after a correction that leaves the code full', async () => {
 		el = await fixture('<nldd-one-time-code-field length="4"></nldd-one-time-code-field>');
 		const complete = vi.fn();
-		el.addEventListener('nldd-complete', complete);
+		el.addEventListener('complete', complete);
 		await type('1234');
 		await type('1294');
 		expect(complete).toHaveBeenCalledTimes(2);

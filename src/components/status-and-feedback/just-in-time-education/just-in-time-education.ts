@@ -8,7 +8,7 @@
  * No backdrop, non-modal: the background stays interactive. The control itself
  * stays where it is in the flow.
  *
- * With `dismissable` the component manages closing and fires nldd-close:
+ * With `dismissable` the component manages closing and fires close:
  *  - the user performs the suggested interaction on the control -> close{completed}
  *  - the dismiss button -> close{dismissed}
  *  - a click or key press OUTSIDE the coach mark -> close{ignored}
@@ -28,7 +28,7 @@
  *
  * @slot - The control the coach mark points at (stays in the normal flow).
  *
- * @fires nldd-close - When the coach mark closes. detail: { reason: 'completed' | 'dismissed' | 'ignored' }.
+ * @fires close - When the coach mark closes. detail: { reason: 'completed' | 'dismissed' | 'ignored' }. Does not bubble, like `close` on a dialog.
  *
  * @note Renders through the native Popover API (`popover="manual"`) in the top
  * layer, so it escapes ancestor stacking contexts and `overflow: hidden`
@@ -507,11 +507,9 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 
 	private _close(reason: JustInTimeEducationCloseReason): void {
 		this.active = false; // triggers updated() -> _closePopover()
-		this.dispatchEvent(new CustomEvent('nldd-close', {
-			detail: { reason },
-			bubbles: true,
-			composed: true,
-		}));
+		// Does not bubble, like `close` on a dialog, so a sheet or dialog around
+		// the coach mark does not take it for its own.
+		this.dispatchEvent(new CustomEvent('close', { detail: { reason } }));
 	}
 
 	override connectedCallback(): void {

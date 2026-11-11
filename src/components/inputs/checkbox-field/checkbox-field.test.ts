@@ -237,6 +237,18 @@ describe('nldd-checkbox-field – label click', () => {
 		expect(new FormData(form).get('roles')).toBe('admin');
 	});
 
+	it('keeps a required form from submitting until it is checked', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-checkbox-field name="akkoord" label="Akkoord" required></nldd-checkbox-field></form>');
+		el = form as unknown as NLDDCheckboxField;
+		const field = form.querySelector<NLDDCheckboxField>('nldd-checkbox-field')!;
+		await waitForUpdate(field);
+		expect(form.checkValidity()).toBe(false);
+		expect(field.internals.validity.valueMissing).toBe(true);
+		field.shadowRoot!.querySelector<HTMLElement>('.checkbox-field__label')!.click();
+		await waitForUpdate(field);
+		expect(form.checkValidity()).toBe(true);
+	});
+
 	it('focus() delegates through to the inner checkbox input', async () => {
 		el = await fixture<NLDDCheckboxField>('<nldd-checkbox-field label="Optie"></nldd-checkbox-field>');
 		await waitForUpdate(el);

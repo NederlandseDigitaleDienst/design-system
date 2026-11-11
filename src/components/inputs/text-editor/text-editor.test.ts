@@ -112,7 +112,7 @@ describe('nldd-text-editor', () => {
 
 	it('laat een selectie tot het eind van een regel stoppen bij de tekst, niet in de padding', async () => {
 		const removeTokens = loadTokens();
-		const el2 = await fixture<TextEditorEl>('<nldd-text-editor appearance="input-field" accessible-label="Tekst" style="width: 320px"></nldd-text-editor>');
+		const el2 = await fixture<TextEditorEl>('<nldd-text-editor accessible-label="Tekst" style="width: 320px"></nldd-text-editor>');
 		el2.value = 'Een eerste regel\nEen tweede regel\nDerde';
 		await el2.updateComplete;
 		await waitForUpdate(el2);
@@ -221,13 +221,21 @@ describe('nldd-text-editor', () => {
 		cleanup(el2);
 	});
 
-	it('default appearance simple en font sans', async () => {
+	it('is standaard niet embedded en font sans', async () => {
 		el = await fixture('<nldd-text-editor accessible-label="Tekst"></nldd-text-editor>');
 		await waitForUpdate(el);
-		const te = el as unknown as { appearance: string };
-		expect(te.appearance).toBe('simple');
-		expect(el.hasAttribute('appearance')).toBe(false);
+		const te = el as unknown as { embedded: boolean };
+		expect(te.embedded).toBe(false);
+		expect(el.hasAttribute('embedded')).toBe(false);
 		expect(el.hasAttribute('font')).toBe(false);
+	});
+
+	it('reflecteert embedded', async () => {
+		el = await fixture('<nldd-text-editor accessible-label="Tekst"></nldd-text-editor>');
+		await waitForUpdate(el);
+		(el as unknown as { embedded: boolean }).embedded = true;
+		await (el as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+		expect(el.hasAttribute('embedded')).toBe(true);
 	});
 
 	it('wrap staat standaard aan', async () => {
@@ -348,12 +356,12 @@ describe('nldd-text-editor', () => {
 		cleanup(el2);
 	});
 
-	it('emits nldd-text-editor-state when the selection lands on other formatting', async () => {
+	it('emits state-change when the selection lands on other formatting', async () => {
 		// The caret starts in the paragraph, so moving into the heading changes the
 		// state a toolbar shows.
 		const el2 = await withValue('gewoon\n\n# Kop');
 		let detail: { active: { heading: number } } | undefined;
-		el2.addEventListener('nldd-text-editor-state', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+		el2.addEventListener('state-change', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 		const view = (el2 as unknown as { view: { dispatch(spec: unknown): void } }).view;
 		view.dispatch({ selection: { anchor: 11 } });
 		await waitForUpdate(el2);
@@ -370,7 +378,7 @@ describe('nldd-text-editor', () => {
 		view.dispatch({ selection: { anchor: 2 } });
 		await waitForUpdate(el2);
 		let events = 0;
-		el2.addEventListener('nldd-text-editor-state', () => { events++; });
+		el2.addEventListener('state-change', () => { events++; });
 		// Moving within one paragraph leaves every toolbar toggle where it was.
 		view.dispatch({ selection: { anchor: 5 } });
 		view.dispatch({ selection: { anchor: 9 } });
@@ -632,7 +640,7 @@ describe('nldd-text-editor', () => {
 		const badge = el2.shadowRoot!.querySelector('.cm-annotation-badge') as HTMLElement | null;
 		expect(badge).not.toBeNull();
 		let detail: { ids: string[]; rect: DOMRect } | null = null;
-		el2.addEventListener('nldd-text-editor-annotation-click', (e) => {
+		el2.addEventListener('annotation-click', (e) => {
 			detail = (e as CustomEvent<{ ids: string[]; rect: DOMRect }>).detail;
 		});
 		badge!.click();

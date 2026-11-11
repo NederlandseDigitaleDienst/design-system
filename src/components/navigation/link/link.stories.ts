@@ -191,7 +191,7 @@ export const InLopendeTekst = {
 					In een h2 — link erft display-grootte
 				</nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
-				<nldd-title size="2">
+				<nldd-title size="display-2">
 					<h2>Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link>.</h2>
 				</nldd-title>
 			</nldd-container>

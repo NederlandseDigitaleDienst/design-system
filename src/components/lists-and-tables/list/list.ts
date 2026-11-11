@@ -5,6 +5,8 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { listStyles } from './list.styles.js';
 import { template } from './list.template.js';
 import type { NLDDListItem } from '../list-item/list-item.js';
+// The list reads its rows as they upgrade, so it brings their definition along.
+import '../list-item/list-item.js';
 import { nlddListTranslations } from './list.i18n.js';
 import type { NLDDListTranslations } from './list.i18n.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
@@ -158,7 +160,7 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  *
  * ### Reorder
  *
- * On reorder (type="list" + reorderable), the list dispatches `nldd-reorder` with
+ * On reorder (type="list" + reorderable), the list dispatches `reorder` with
  * `fromIndex` / `toIndex` and expects the consumer to mutate the DOM (or their
  * data model that renders the DOM). Focus is restored to the moved item's drag
  * handle via a single `requestAnimationFrame` — this assumes the consumer
@@ -182,7 +184,7 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * @slot empty - Shown when the list has no items at all. Empty by default: what an empty list should say is the app's to write, so put an `nldd-inline-dialog` here. There is nothing to search or filter in a list with no rows, so a `[slot="toolbar"]` is hidden along with them, and an unfilled slot takes the whole list off the page. A `type="listbox"` is the exception on both counts: its search field is where the rows come from, so the field, the toolbar and the list itself stay, and the message waits until there is a query, the same as `no-results` does. A list that fetches its rows is in this state until they arrive: put an `nldd-inline-dialog variant="loading"` here to hold the place rather than have the controls appear a moment later.
  * @slot no-results - Shown when the list has items but every one of them is `[hidden]`, which is what consumer-driven filtering leaves behind. A different state from `empty` and a different sentence: here the search field and the `[slot="toolbar"]` stay, because they are the way back to the rows. Falls back to `[slot="empty"]` when not given. In `type="listbox"` it is suppressed while the search field is empty (no query yet), so the consumer can show just the search field or its own hint outside the list.
  *
- * @fires nldd-reorder - Reorderable `type="list"`: `{ fromIndex, toIndex }` on drop
+ * @fires reorder - Reorderable `type="list"`: `{ fromIndex, toIndex }` on drop
  * @fires input - `type="listbox"`: search value changed; `{ value }`. Toggle `[hidden]` on items to filter.
  */
 @customElement('nldd-list')
@@ -1151,7 +1153,7 @@ export class NLDDList extends LitElement {
 
 		const path = event.composedPath() as Element[];
 		const hasDragHandle = path.some(
-			(el) => el instanceof Element && el.hasAttribute('reorderable-only'),
+			(el) => el instanceof Element && el.hasAttribute('reorder-handle'),
 		);
 		if (!hasDragHandle) return;
 
@@ -1221,7 +1223,7 @@ export class NLDDList extends LitElement {
 
 	// ArrowUp/ArrowDown on a focused drag handle moves the item immediately.
 	// Mirrors nldd-document-tab-bar: no grab-and-drop cycle — each arrow press
-	// reorders the DOM, fires nldd-reorder and restores focus on the handle.
+	// reorders the DOM, fires reorder and restores focus on the handle.
 	private _onKeyDown = (event: KeyboardEvent) => {
 		// Arrow-navigation and reorder both claim the arrow keys; _arrowNavActive
 		// is false whenever reorderable wins, so the two never run together.
@@ -1238,7 +1240,7 @@ export class NLDDList extends LitElement {
 
 		const path = event.composedPath() as Element[];
 		const handle = path.find(
-			(el) => el instanceof HTMLElement && el.hasAttribute('reorderable-only'),
+			(el) => el instanceof HTMLElement && el.hasAttribute('reorder-handle'),
 		) as HTMLElement | undefined;
 		if (!handle) return;
 
@@ -1257,21 +1259,15 @@ export class NLDDList extends LitElement {
 		event.preventDefault();
 
 		// Capture the actual focused element (may live inside the handle's shadow DOM,
-		// e.g. the <button> inside nldd-drag-handle-cell) so we can restore focus
-		// after the consumer reorders the DOM in response to nldd-reorder.
+		// e.g. the <button> inside nldd-reorder-handle-cell) so we can restore focus
+		// after the consumer reorders the DOM in response to reorder.
 		const focused = this._getDeepActiveElement() ?? handle;
 
 		// Mirror pointer-drag semantics: don't mutate the DOM ourselves — emit
-		// nldd-reorder with from/to indices and let the consumer reorder. toIndex
+		// reorder with from/to indices and let the consumer reorder. toIndex
 		// here is the target index relative to the CURRENT order (same contract
 		// as pointer drag: fromIndex vs toIndex in the pre-move list).
-		this.dispatchEvent(
-			new CustomEvent<NLDDReorderEventDetail>('nldd-reorder', {
-				detail: { fromIndex, toIndex: targetIndex },
-				bubbles: true,
-				composed: true,
-			}),
-		);
+		this.dispatchEvent(new CustomEvent<NLDDReorderEventDetail>('reorder', { detail: { fromIndex, toIndex: targetIndex }, bubbles: true, composed: true }));
 		this._announce(this._t('components.list.reorder-moved-text', { position: targetIndex + 1 }));
 
 		// Wait for the consumer to reorder, then restore focus on the moved item's handle.
@@ -1317,7 +1313,7 @@ export class NLDDList extends LitElement {
 		this._cloneOffsetY = clientY - rect.top;
 
 		// Clone the host (carries slotted light DOM), keep draggable so consumer
-		// CSS doesn't hide reorderable-only cells in the clone
+		// CSS doesn't hide reorder-handle cells in the clone
 		const hostClone = item.cloneNode(true) as HTMLElement;
 		hostClone.classList.remove('is-dragging');
 		hostClone.classList.remove('is-dragging-pointer');
@@ -1372,20 +1368,14 @@ export class NLDDList extends LitElement {
 		this._cleanupDrag();
 
 		if (fromIndex !== toIndex) {
-			this.dispatchEvent(
-				new CustomEvent<NLDDReorderEventDetail>('nldd-reorder', {
-					detail: { fromIndex, toIndex },
-					bubbles: true,
-					composed: true,
-				}),
-			);
+			this.dispatchEvent(new CustomEvent<NLDDReorderEventDetail>('reorder', { detail: { fromIndex, toIndex }, bubbles: true, composed: true }));
 			this._announce(this._t('components.list.reorder-dropped-text', { position: toIndex + 1 }));
 
 			// Restore focus to the drag handle on the moved item after the
-			// consumer has had a chance to reorder the DOM in response to nldd-reorder.
+			// consumer has had a chance to reorder the DOM in response to reorder.
 			requestAnimationFrame(() => {
 				const handle = movedItem
-					.querySelector('[reorderable-only]')
+					.querySelector('[reorder-handle]')
 					?.shadowRoot?.querySelector<HTMLElement>('button');
 				handle?.focus();
 			});

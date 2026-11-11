@@ -132,7 +132,7 @@ export { NLDDTitleCell } from './lists-and-tables/cells/title-cell/title-cell.js
 export { NLDDTextCell } from './lists-and-tables/cells/text-cell/text-cell.js';
 export { NLDDDescriptionCell } from './lists-and-tables/cells/description-cell/description-cell.js';
 
-export { NLDDDragHandleCell } from './lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js';
+export { NLDDReorderHandleCell } from './lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js';
 export { NLDDStepCell } from './lists-and-tables/cells/step-cell/step-cell.js';
 
 

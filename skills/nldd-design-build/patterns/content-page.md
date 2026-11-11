@@ -113,7 +113,6 @@ Met een inhoudsopgave:
     >
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag indienen"
         heading-level="1"
       ></nldd-title>
@@ -137,7 +136,7 @@ Met een inhoudsopgave:
       >
         <nldd-title
           id="inhoud-kop"
-          size="5"
+          size="display-5"
           text="Op deze pagina"
           heading-level="2"
         ></nldd-title>
@@ -191,7 +190,7 @@ Met een inhoudsopgave:
       <nldd-card background="tinted">
         <nldd-container padding="16">
           <nldd-title
-            size="4"
+            size="display-4"
             text="Aanvragen kost tien minuten"
             heading-level="2"
           ></nldd-title>
@@ -212,7 +211,7 @@ Met een inhoudsopgave:
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="3"
+        size="display-3"
         text="Hier kun je verder"
         heading-level="2"
       ></nldd-title>
@@ -226,7 +225,7 @@ Met een inhoudsopgave:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Behandeling volgen"
               heading-level="3"
             ></nldd-title>
@@ -242,7 +241,7 @@ Met een inhoudsopgave:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Bezwaar maken"
               heading-level="3"
             ></nldd-title>
@@ -258,7 +257,7 @@ Met een inhoudsopgave:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Isoleren"
               heading-level="3"
             ></nldd-title>
@@ -377,7 +376,6 @@ Zonder inhoudsopgave, voor een korte pagina:
     <nldd-two-thirds-one-third-section grow>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
@@ -394,7 +392,7 @@ Zonder inhoudsopgave, voor een korte pagina:
       >
         <nldd-container padding="16">
           <nldd-title
-            size="4"
+            size="display-4"
             text="Aanvraag nu intrekken"
             heading-level="2"
           ></nldd-title>
@@ -415,7 +413,7 @@ Zonder inhoudsopgave, voor een korte pagina:
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="3"
+        size="display-3"
         text="Hier kun je verder"
         heading-level="2"
       ></nldd-title>
@@ -429,7 +427,7 @@ Zonder inhoudsopgave, voor een korte pagina:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Aanvraag wijzigen"
               heading-level="3"
             ></nldd-title>
@@ -445,7 +443,7 @@ Zonder inhoudsopgave, voor een korte pagina:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Bezwaar maken"
               heading-level="3"
             ></nldd-title>
@@ -461,7 +459,7 @@ Zonder inhoudsopgave, voor een korte pagina:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Isoleren"
               heading-level="3"
             ></nldd-title>

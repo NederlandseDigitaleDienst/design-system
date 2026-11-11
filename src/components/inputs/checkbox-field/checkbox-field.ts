@@ -23,7 +23,7 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
+import { FormAssociated, uncheckedValidity, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { checkboxFieldStyles } from './checkbox-field.styles.js';
 import { checkboxFieldTemplate } from './checkbox-field.template.js';
 import type { NLDDCheckbox } from '../checkbox/checkbox.js';
@@ -91,6 +91,12 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;
+	}
+
+	/** The checkbox that carries `required` sits in a shadow root of its own,
+	 *  where the form cannot see it. */
+	override ownValidity(): OwnValidity | null {
+		return uncheckedValidity(this);
 	}
 
 	formResetCallback(): void {

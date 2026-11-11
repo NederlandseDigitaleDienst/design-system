@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-title[size="1"], nldd-title[size="2"], nldd-title[size="3"], nldd-title[size="4"], nldd-title[size="5"], nldd-title[size="6"]'
+fix: { value: { size: { '1': display-1, '2': display-2, '3': display-3, '4': display-4, '5': display-5, '6': display-6 } } }
+message: 'The sizes of a title are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title.'
+examples:
+  passed: ['<nldd-title text="Aanvragen" heading-level="2" size="display-4"></nldd-title>']
+  failed: ['<nldd-title text="Aanvragen" heading-level="2" size="4"></nldd-title>', '<nldd-title text="Aanvraag A-1042" heading-level="1" size="1"></nldd-title>']

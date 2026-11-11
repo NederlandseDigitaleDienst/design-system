@@ -34,7 +34,7 @@ import { nlddPageFooterTranslations } from '../components/layout/page-footer/pag
 import { nlddSidebarSectionTranslations } from '../components/layout/page-sections/sidebar-section/sidebar-section.i18n.js';
 import { nlddPopoverTranslations } from '../components/layout/popover/popover.i18n.js';
 import { nlddWindowTranslations } from '../components/layout/window/window.i18n.js';
-import { nlddDragHandleCellTranslations } from '../components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.i18n.js';
+import { nlddReorderHandleCellTranslations } from '../components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.i18n.js';
 import { nlddListItemSegmentTranslations } from '../components/lists-and-tables/list-item-segment/list-item-segment.i18n.js';
 import { nlddListItemTranslations } from '../components/lists-and-tables/list-item/list-item.i18n.js';
 import { nlddListTranslations } from '../components/lists-and-tables/list/list.i18n.js';
@@ -91,7 +91,7 @@ export const nl = {
 	...nlddSidebarSectionTranslations,
 	...nlddPopoverTranslations,
 	...nlddWindowTranslations,
-	...nlddDragHandleCellTranslations,
+	...nlddReorderHandleCellTranslations,
 	...nlddListItemSegmentTranslations,
 	...nlddListItemTranslations,
 	...nlddListTranslations,

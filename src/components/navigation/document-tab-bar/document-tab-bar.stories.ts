@@ -43,7 +43,7 @@ export default {
 const Template = ({ accessibleLabel }: Record<string, any>) => html`
 	<nldd-document-tab-bar
 		accessible-label=${accessibleLabel}
-		@tabdismiss=${sluit}
+		@tab-dismiss=${sluit}
 	>
 		<nldd-document-tab-bar-item
 			selected
@@ -81,7 +81,7 @@ export const VeelTabbladen = {
 	render: () => html`
 	<nldd-document-tab-bar
 		accessible-label="Documenten"
-		@tabdismiss=${sluit}
+		@tab-dismiss=${sluit}
 	>
 		<nldd-document-tab-bar-item
 			selected
@@ -147,7 +147,7 @@ export const ZonderSubtitel = {
 	render: () => html`
 	<nldd-document-tab-bar
 		accessible-label="Documenten"
-		@tabdismiss=${sluit}
+		@tab-dismiss=${sluit}
 	>
 		<nldd-document-tab-bar-item
 			selected

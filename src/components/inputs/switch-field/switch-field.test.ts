@@ -184,4 +184,55 @@ describe('nldd-switch-field – color="inherit"', () => {
 		expect(field.shadowRoot!.querySelector('nldd-switch')!.getAttribute('color')).toBe('inherit');
 		expect(getComputedStyle(field.shadowRoot!.querySelector('.switch-field__label')!).color).toBe('rgb(255, 255, 255)');
 	});
+	it('submits its value to the surrounding form when checked', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-switch-field name="meldingen" value="aan" label="Meldingen" checked></nldd-switch-field></form>');
+		el = form;
+		const field = form.querySelector('nldd-switch-field')!;
+		await waitForUpdate(field);
+		expect(new FormData(form).get('meldingen')).toBe('aan');
+	});
+
+	it('submits nothing when unchecked', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-switch-field name="meldingen" value="aan" label="Meldingen"></nldd-switch-field></form>');
+		el = form;
+		const field = form.querySelector('nldd-switch-field')!;
+		await waitForUpdate(field);
+		expect(new FormData(form).has('meldingen')).toBe(false);
+	});
+
+	it('commits the form value synchronously on label toggle', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-switch-field name="meldingen" value="aan" label="Meldingen"></nldd-switch-field></form>');
+		el = form;
+		const field = form.querySelector<NLDDSwitchField>('nldd-switch-field')!;
+		await waitForUpdate(field);
+		let valueAtChange: FormDataEntryValue | null = null;
+		field.addEventListener('change', () => { valueAtChange = new FormData(form).get('meldingen'); });
+		field.shadowRoot!.querySelector<HTMLElement>('.switch-field__label')!.click();
+		await waitForUpdate(field);
+		expect(valueAtChange).toBe('aan');
+	});
+
+	it('restores its initial state on form reset', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-switch-field name="meldingen" value="aan" label="Meldingen" checked></nldd-switch-field></form>');
+		el = form;
+		const field = form.querySelector<NLDDSwitchField>('nldd-switch-field')!;
+		await waitForUpdate(field);
+		field.checked = false;
+		await waitForUpdate(field);
+		form.reset();
+		await waitForUpdate(field);
+		expect(field.checked).toBe(true);
+		expect(new FormData(form).get('meldingen')).toBe('aan');
+	});
+
+	it('keeps a required form from submitting until it is on', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-switch-field name="akkoord" label="Akkoord" required></nldd-switch-field></form>');
+		el = form;
+		const field = form.querySelector<NLDDSwitchField>('nldd-switch-field')!;
+		await waitForUpdate(field);
+		expect(form.checkValidity()).toBe(false);
+		field.shadowRoot!.querySelector<HTMLElement>('.switch-field__label')!.click();
+		await waitForUpdate(field);
+		expect(form.checkValidity()).toBe(true);
+	});
 });

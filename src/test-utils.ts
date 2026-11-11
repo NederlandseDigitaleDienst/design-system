@@ -137,3 +137,17 @@ export async function until(
 		await new Promise(resolve => setTimeout(resolve, 10));
 	}
 }
+
+/**
+ * Emulates `prefers-reduced-motion: reduce` for the tests that follow, for a
+ * suite that is not about an animation but runs on the sm viewport, where
+ * overlays slide. Returns a function that clears the emulation again.
+ */
+export async function reduceMotion(): Promise<() => Promise<void>> {
+	const { cdp } = await import('vitest/browser');
+	// The Playwright provider's CDP session has send(); the generic type does not say so.
+	const session = cdp() as unknown as { send(method: string, params: object): Promise<unknown> };
+	const send = (value: string) => session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] });
+	await send('reduce');
+	return async () => { await send(''); };
+}

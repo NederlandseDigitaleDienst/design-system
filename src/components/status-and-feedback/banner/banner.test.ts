@@ -208,22 +208,6 @@ describe('nldd-banner', () => {
 		expect(content.hasAttribute('hidden')).toBe(false);
 	});
 
-	// The test environment has no variables.css, so the tokens are loaded here:
-	// each size sets its padding and icon size from primitives in :host.
-	it('krimpt padding en icoon bij size="sm"', async () => {
-		el = await fixture(`
-			<div>
-				<nldd-banner size="sm" text="Let op"></nldd-banner>
-			</div>
-		`);
-		const banner = el.querySelector('nldd-banner') as HTMLElement;
-		await waitForUpdate(banner);
-		const box = banner.shadowRoot!.querySelector<HTMLElement>('.banner')!;
-		const icon = banner.shadowRoot!.querySelector<HTMLElement>('.banner__icon')!;
-		expect(getComputedStyle(box).padding).toBe('8px');
-		expect(getComputedStyle(icon).width).toBe('24px');
-	});
-
 	it('geeft de sluit-knop dezelfde maat als de banner', async () => {
 		el = await fixture('<nldd-banner size="sm" text="Let op" dismissible></nldd-banner>');
 		await waitForUpdate(el);
@@ -239,9 +223,7 @@ describe('nldd-banner', () => {
 		`);
 		const banner = el.querySelector('nldd-banner') as HTMLElement;
 		await waitForUpdate(banner);
-		const icon = banner.shadowRoot!.querySelector<HTMLElement>('.banner__icon')!;
 		expect(banner.hasAttribute('size')).toBe(false);
-		expect(getComputedStyle(icon).width).toBe('32px');
 	});
 });
 

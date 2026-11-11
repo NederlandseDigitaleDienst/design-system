@@ -15,7 +15,7 @@
  * @element nldd-kanban-column
  * @attr {string} text - The column's name, shown in the header and used as its accessible name
  * @attr {string} accessible-label - Accessible name in place of `text`, for a column whose header comes from the slot
- * @attr {string} value - What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn`
+ * @attr {string} value - What the column stands for in your data, such as a status; `move` reports it as `fromColumn` and `toColumn`
  *
  * @slot header - The header, in place of `text` and the count
  * @slot - The items

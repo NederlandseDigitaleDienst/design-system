@@ -23,7 +23,7 @@
  *
  * @slot - The element the tooltip is shown for
  *
- * @fires nldd-tooltip-dismiss - When a user presses Escape while `open=true`.
+ * @fires dismiss - When a user presses Escape while `open=true`. Does not bubble, so a banner or notification around the tooltip does not take it for its own.
  *   The consumer owns the open lifecycle from there (we cannot clear `open`
  *   on our own), so this event is the consumer's chance to set `open` back to
  *   `false`. WCAG 1.4.13: a persistent hover or focus overlay has to be
@@ -422,10 +422,12 @@ export class NLDDTooltip extends LitElement {
 			// keyboard-triggered overlay content must be dismissible without
 			// moving focus. The consumer controls the open lifecycle (e.g.
 			// action-feedback timers) so we can't unilaterally set open=false
-			// here — but we DO emit nldd-tooltip-dismiss so the consumer can
+			// here — but we DO emit dismiss so the consumer can
 			// honor the request. preventDefault keeps the keystroke from
 			// bubbling to something else (modal close, etc.) when handled.
-			this.dispatchEvent(new CustomEvent('nldd-tooltip-dismiss', { bubbles: true, composed: true }));
+			// Does not bubble: nldd-banner and nldd-notification fire a `dismiss`
+			// of their own, and a tooltip inside one would close it.
+			this.dispatchEvent(new CustomEvent('dismiss'));
 			e.preventDefault();
 			e.stopPropagation();
 			return;

@@ -4,10 +4,7 @@ import type { NLDDPageFooter, NLDDPageFooterLegalBar, NLDDPageFooterLegalBarItem
 export function pageFooterTemplate(component: NLDDPageFooter): TemplateResult {
 	const showDividerAboveMain = component._hasBreadcrumbs && component._hasMain;
 	const showDividerAboveLegal = (component._hasBreadcrumbs || component._hasMain) && component._hasLegalBar;
-	// The host carries role="contentinfo" (set in connectedCallback) so AT
-	// that doesn't traverse the shadow root still sees the landmark. Using
-	// <div> here instead of <footer> avoids double-announcing the landmark
-	// in AT that DOES cross the boundary.
+	// A div and not a footer: the landmark is the footer of nldd-page around it.
 	return html`
 		<div class="page-footer">
 			<div class="page-footer__body">

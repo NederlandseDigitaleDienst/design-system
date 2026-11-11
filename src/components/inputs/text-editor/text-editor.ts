@@ -7,16 +7,17 @@
  * stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree,
  * so the data stays portable.
  *
- * Default `appearance="simple"` is bare (no frame, no focus ring) for use inside
- * a composition (e.g. a message field) that owns its chrome and focus; the
- * caret is a prominent accent. `appearance="input-field"` adds a framed surface + focus
+ * Framed like the other input fields by default. `embedded` drops the frame,
+ * fill, padding and focus ring, for an editor inside a composition (e.g. a
+ * message field) that owns its chrome and focus; the caret is then a
+ * prominent accent.
  *
  * Headless: there is no built-in toolbar. A consumer drives formatting via the
  * command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/
  * toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand
  * to toggle, and
  * setHeading/setList for picker-style "set" semantics), reads the active formats
- * with getState(), listens to the nldd-text-editor-state event to render toggle
+ * with getState(), listens to the state-change event to render toggle
  * states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are
  * bound out of the box.
  *
@@ -64,7 +65,7 @@
  * @attr {boolean} wrap - Wrap long lines (default true; prose wraps)
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
- * @attr {string} appearance - 'simple' (default, bare) | 'input-field' (framed surface)
+ * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
  * @attr {string} syntax - 'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
  *
@@ -79,10 +80,10 @@
  *
  * @fires input - When the content changes (detail: { value })
  * @fires change - When the content is committed on blur (detail: { value })
- * @fires nldd-text-editor-state - When the selection or content changes (detail: TextEditorState), for toolbar toggle state
- * @fires nldd-text-editor-mention - When an @-mention is inserted (detail: MentionInsertedDetail with id, text, from, to; clean offsets, like getSelection())
- * @fires nldd-text-editor-typeahead - When a candidate from one of the `typeaheads` is chosen (detail: TypeaheadChosenDetail with trigger, candidate, from, to; clean offsets)
- * @fires nldd-text-editor-annotation-click - When an annotation's count badge is clicked (detail: { ids: string[], rect: DOMRect }); rect is the badge's viewport box so a consumer can anchor its own note UI to it
+ * @fires state-change - When the selection or content changes (detail: TextEditorState), for toolbar toggle state
+ * @fires mention - When an @-mention is inserted (detail: MentionInsertedDetail with id, text, from, to; clean offsets, like getSelection())
+ * @fires typeahead - When a candidate from one of the `typeaheads` is chosen (detail: TypeaheadChosenDetail with trigger, candidate, from, to; clean offsets)
+ * @fires annotation-click - When an annotation's count badge is clicked (detail: { ids: string[], rect: DOMRect }); rect is the badge's viewport box so a consumer can anchor its own note UI to it
  */
 import { relabel } from './text-editor.labels.js';
 import { type PropertyValues } from 'lit';
@@ -147,7 +148,6 @@ import { codeCopy } from './text-editor.code-copy.js';
 import { setState } from '../../../utilities/element-state.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
-export type TextEditorAppearance = 'input-field' | 'simple';
 export type TextEditorSyntax = 'visible' | 'hidden';
 export type { HeadingLevel, ListType, TextEditorState, TextEditorActiveFormats } from './text-editor.commands.js';
 export type {
@@ -178,8 +178,8 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
 	resize: ResizeMode = 'auto';
 
-	@property({ reflect: true, converter: reflectNonDefault<TextEditorAppearance>('simple') })
-	appearance: TextEditorAppearance = 'simple';
+	@property({ type: Boolean, reflect: true })
+	embedded = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<TextEditorSyntax>('visible') })
 	syntax: TextEditorSyntax = 'visible';
@@ -769,7 +769,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			&& (Object.keys(state.active) as (keyof TextEditorActiveFormats)[]).every((key) => last.active[key] === state.active[key])
 		) return;
 		this._lastState = state;
-		this.dispatchEvent(new CustomEvent('nldd-text-editor-state', {
+		this.dispatchEvent(new CustomEvent('state-change', {
 			detail: state,
 			bubbles: true,
 			composed: true,
@@ -792,7 +792,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			this._emitMention({ id, text, from, to: from + mentionToken(choice.candidate).length });
 			return;
 		}
-		this.dispatchEvent(new CustomEvent('nldd-text-editor-typeahead', {
+		this.dispatchEvent(new CustomEvent('typeahead', {
 			detail: { trigger: choice.trigger, candidate: choice.candidate, from, to: docToClean(doc, choice.to) },
 			bubbles: true,
 			composed: true,
@@ -800,7 +800,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	}
 
 	private _emitMention(detail: MentionInsertedDetail): void {
-		this.dispatchEvent(new CustomEvent('nldd-text-editor-mention', {
+		this.dispatchEvent(new CustomEvent('mention', {
 			detail,
 			bubbles: true,
 			composed: true,
@@ -829,7 +829,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		}
 	};
 
-	/** A click on an annotation's count badge emits nldd-text-editor-annotation-click
+	/** A click on an annotation's count badge emits annotation-click
 	 *  with the id(s) it covers (a merged badge carries several) and the badge's
 	 *  viewport rect, so the consumer can anchor its own note UI to the badge. The
 	 *  tinted text stays plain-clickable for caret placement. */
@@ -839,7 +839,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		const ids = (badge.dataset.annotations ?? '').split(' ').filter(Boolean);
 		if (!ids.length) return;
 		event.preventDefault();
-		this.dispatchEvent(new CustomEvent('nldd-text-editor-annotation-click', {
+		this.dispatchEvent(new CustomEvent('annotation-click', {
 			detail: { ids, rect: badge.getBoundingClientRect() },
 			bubbles: true,
 			composed: true,

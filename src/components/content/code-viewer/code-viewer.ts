@@ -19,6 +19,10 @@
  * plain. Grammars are loaded lazily on first use, so a page that never sets
  * `language` ships zero grammar code.
  *
+ * ## Placeholders
+ * A value the reader fills in is written in the code itself, as `<org-id>`;
+ * the design guidelines say why. The viewer does not mark it.
+ *
  * ## Diff
  * Set `diff` when the content is a unified diff, as git and pull request tools
  * hand it out. The viewer shows the code it changes: an added line green and a

@@ -3,6 +3,10 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './form.js';
 import '../form-field/form-field.js';
 import '../form-actions/form-actions.js';
+import '../validation-list/validation-list.js';
+import '../../inputs/radio-button-group/radio-button-group.js';
+import '../../inputs/radio-button-field/radio-button-field.js';
+import '../../inputs/checkbox/checkbox.js';
 import type { NLDDForm } from './form.js';
 
 /**
@@ -362,6 +366,52 @@ describe('nldd-form', () => {
 			// Own (label-alignment=top) means column layout, not overridden by the
 			// container query on the parent's right alignment
 			expect(getComputedStyle(ownRoot).flexDirection).toBe('column');
+		});
+	});
+	describe('a required choice', () => {
+		const settle = () => new Promise(resolve => setTimeout(resolve, 20));
+
+		it('marks the radio group, which its field and validation list read, and clears it on a choice', async () => {
+			el = await fixture(`
+				<nldd-form>
+					<nldd-form-field label="Soort">
+						<nldd-radio-button-group name="soort" required>
+							<nldd-radio-button-field value="a" label="Dakisolatie"></nldd-radio-button-field>
+							<nldd-radio-button-field value="b" label="Warmtepomp"></nldd-radio-button-field>
+						</nldd-radio-button-group>
+						<nldd-validation-list>
+							<nldd-validation-item required>Kies een soort.</nldd-validation-item>
+						</nldd-validation-list>
+					</nldd-form-field>
+				</nldd-form>`);
+			await waitForUpdate(el);
+			el.querySelector('form')!.addEventListener('submit', e => e.preventDefault());
+			el.querySelector('form')!.requestSubmit();
+			await settle();
+			const group = el.querySelector('nldd-radio-button-group')!;
+			expect(group.hasAttribute('invalid')).toBe(true);
+			expect(el.querySelector('nldd-validation-item')!.hasAttribute('visible')).toBe(true);
+
+			(el.querySelector('nldd-radio-button-field') as HTMLElement).click();
+			await settle();
+			expect(group.hasAttribute('invalid')).toBe(false);
+			expect([...el.querySelectorAll('nldd-radio-button-field')].some(f => f.hasAttribute('invalid'))).toBe(false);
+		});
+
+		it('clears a required checkbox once it is checked', async () => {
+			el = await fixture(`
+				<nldd-form>
+					<nldd-checkbox name="akkoord" accessible-label="Akkoord" required></nldd-checkbox>
+				</nldd-form>`);
+			await waitForUpdate(el);
+			el.querySelector('form')!.addEventListener('submit', e => e.preventDefault());
+			el.querySelector('form')!.requestSubmit();
+			await settle();
+			const checkbox = el.querySelector('nldd-checkbox')!;
+			expect(checkbox.hasAttribute('invalid')).toBe(true);
+			checkbox.shadowRoot!.querySelector('input')!.click();
+			await settle();
+			expect(checkbox.hasAttribute('invalid')).toBe(false);
 		});
 	});
 });

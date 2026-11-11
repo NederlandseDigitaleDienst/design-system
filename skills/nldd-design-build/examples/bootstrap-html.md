@@ -25,7 +25,6 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
   <nldd-page>
     <nldd-simple-section>
       <nldd-title
-        size="1"
         text="Subsidieaanvraag"
         heading-level="1"
       ></nldd-title>
