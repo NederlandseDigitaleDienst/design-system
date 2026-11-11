@@ -145,6 +145,8 @@ export class NLDDRichText extends LitElement {
 			this._syncTables();
 			this._syncInlineContent();
 		});
+		// Text edits matter only to the dev check on bare text; in production they
+		// would wake the observer on every keystroke in an editable child for nothing.
 		this._mutationObserver.observe(this, { childList: true, subtree: true, characterData: !!import.meta.env?.DEV });
 		this._syncTables();
 		this._syncInlineContent();

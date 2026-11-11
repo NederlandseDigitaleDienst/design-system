@@ -100,6 +100,19 @@ describe('nldd-image', () => {
 		expect(el.matches(':state(invalid-width)')).toBe(false);
 	});
 
+	it('leaves a max-width of the page alone, and clears only its own', async () => {
+		const image = await fixture<NLDDImage>('<nldd-image src="/foo.jpg" alt="Foo" style="max-width: 300px"></nldd-image>');
+		el = image;
+		await waitForUpdate(image);
+		expect(image.style.maxWidth).toBe('300px');
+		image.width = '240';
+		await image.updateComplete;
+		expect(image.style.maxWidth).toBe('min(240px, 100%)');
+		image.width = 'full';
+		await image.updateComplete;
+		expect(el.style.maxWidth).toBe('');
+	});
+
 	it('falls back to full for a width that is not a length', async () => {
 		for (const width of ['none', 'inherit', 'wide', '-10px', '0']) {
 			el = await fixture<NLDDImage>(`<nldd-image src="/foo.jpg" alt="Foo" width="${width}"></nldd-image>`);

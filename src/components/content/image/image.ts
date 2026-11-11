@@ -278,12 +278,18 @@ export class NLDDImage extends LitElement {
 		}
 	}
 
+	private _ownMaxWidth = '';
+
 	override updated(changed: Map<string, unknown>): void {
 		// Inline, so the width wins over a parent's rule on the host such as
 		// `nldd-rich-text > * { max-width: 100% }`, which beats any :host rule.
 		if (changed.has('width')) {
 			const w = this._cssWidth;
-			this.style.maxWidth = w !== undefined ? `min(${w}, 100%)` : '';
+			// Touch only what this component set, so a max-width of the page's own stays.
+			const own = w !== undefined ? `min(${w}, 100%)` : '';
+			if (own) this.style.maxWidth = own;
+			else if (this._ownMaxWidth && this.style.maxWidth === this._ownMaxWidth) this.style.maxWidth = '';
+			this._ownMaxWidth = own;
 			setState(this, 'invalid-width', w === undefined && this.width !== 'full'
 				&& this.width !== null && this.width !== undefined && String(this.width) !== '');
 		}
