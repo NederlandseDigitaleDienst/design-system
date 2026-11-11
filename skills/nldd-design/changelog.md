@@ -41,6 +41,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **A report or a proposal goes through a GitHub issue, from inside NLDD too.** The `nldd-design-contribute` skill and `CONTRIBUTING.md` no longer offer the Mattermost channel as a second route.
 - **The design guideline on a choice from a fixed set names numbers and makes the dropdown a last resort.** Up to 7 options are all in view, in a radio group, a toggle button group or, for 2 to 5 short ones in one row, a segmented control. Above 7, an `nldd-combo-box` with autocomplete. An `nldd-dropdown` is the last resort, as Luke Wroblewski argues, because it hides its options, takes an extra step to see them and is the hardest on touch and with assistive technology.
 - **The overline and supporting text of `nldd-title` grow and shrink with the title.** The overline is md from `display-1` to `display-3`, sm at 4 and 5 and xs at 6, so it no longer gets lost above a large title. The supporting text stays md, and sm at 5 and 6. Both keep to the width of a line of reading (40em), like `nldd-text`, and break into balanced lines.
 - **An `nldd-blockquote` is as wide as 30em of its own letters, instead of a fixed 720px.** A line holds about the same number of characters at every size, so a large quote no longer breaks after every few words. At the default size it is about as wide as before. Within that, it takes the width of its parent, as before.

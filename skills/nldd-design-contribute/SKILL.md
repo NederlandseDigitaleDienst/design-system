@@ -1,6 +1,6 @@
 ---
 name: nldd-design-contribute
-description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het designsysteem', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het designsysteem', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Een GitHub-issue staat open voor iedereen; binnen NLDD kan het ook via het designsysteem-kanaal op Mattermost. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het designsysteem zelf check je die uit."
+description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het designsysteem', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het designsysteem', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Melden gaat via een issue op GitHub, voor iedereen. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het designsysteem zelf check je die uit."
 metadata:
   type: reference
 ---
@@ -9,14 +9,9 @@ metadata:
 
 Je gebruikt deze skill als je met `@nldd/design-system` werkt en iets tegenkomt dat erin zou moeten zitten: een component dat mist, een variant die je nabouwt, een compositie die je in elk project opnieuw maakt, of gedrag dat kapot is.
 
-## Eerst: waar hoort het heen
+## Maak een issue aan op GitHub
 
-Er zijn twee plekken, en allebei werken ze.
-
-- **Een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues)** staat open voor iedereen, binnen en buiten NLDD. Dat is de route die een spoor achterlaat: wie later hetzelfde tegenkomt, vindt de melding terug.
-- **Het designsysteem-kanaal op Mattermost**, als je binnen NLDD werkt. Korter dan een issue en de maintainer leest mee, dus voor een vraag of een twijfelgeval is dat de snelste weg. Een gesprek daar is genoeg; je hoeft er geen issue bij te openen, en andersom hoef je voor een issue niet eerst langs het kanaal.
-
-Het gaat op beide plekken om hetzelfde: een goed beschreven probleem. Wat hieronder staat geldt dus voor allebei, alleen de plek verschilt. En in geen van beide gevallen begin je met een pull request; daarover onderaan meer.
+Alles begint bij een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues), of je nu binnen of buiten NLDD werkt. Een issue laat een spoor achter: wie later hetzelfde tegenkomt, vindt de melding terug. Waar het om gaat is een goed beschreven probleem, en daar gaat de rest van deze skill over. Begin niet met een pull request; daarover onderaan meer.
 
 ## Beschrijf het probleem, niet alleen je oplossing
 
@@ -32,7 +27,7 @@ Concreet, voor een ontbrekend component of variant:
 
 ## Wat je bij een bug meegeeft
 
-Of je het in het kanaal zet of in een issue, dit is wat het meeste heen en weer scheelt:
+Dit is wat het meeste heen en weer scheelt:
 
 - **De versie** van `@nldd/design-system` waarin je het zag. Niet de versie in je `package.json` maar wat je echt draait: `npm ls @nldd/design-system`. Een `^0.8.44` met een oud lockfile draait iets anders dan je denkt, en de helft van de gemelde bugs blijkt al gerepareerd te zijn.
 - **Welk component** het betreft, en wat je verwachtte.
@@ -58,14 +53,14 @@ Let op de grens met de ontwerprichtlijnen: compositie hoort in een patroon, een 
 
 Eerlijk over hoe dit project werkt, zodat je weet wat je krijgt:
 
-- **De maintainer beslist**, en wat afvalt krijgt een reden, in het issue of in het kanaal.
-- **Ben je het oneens**, zeg dat op dezelfde plek. Komen jullie er niet uit, dan ligt de vraag bij het NLDD-team.
+- **De maintainer beslist**, en wat afvalt krijgt een reden in het issue.
+- **Ben je het oneens**, zeg dat in het issue. Komen jullie er niet uit, dan ligt de vraag bij het NLDD-team.
 - **Een afwijzing is geen oordeel over je probleem.** Een systeem dat elk verzoek inwilligt wordt onbruikbaar, dus "dit houd je dichter bij je eigen project" is een geldige uitkomst, en dan weet je waar je staat.
 - **Dichtbij houden is een keuze, geen troostprijs.** Een designsysteem is gelaagd: een core, daarboven soms een laag per organisatie, en daarnaast wat een project zelf bouwt. Hoe hoger in de boom, hoe duurzamer een component wordt, want meer teams geven er feedback op. Maar je hebt er ook minder invloed op, en het beweegt op een ander tempo dan het jouwe. Iets dat nog volop verandert houd je dus beter in je eigen project, tot het stil genoeg ligt om te delen.
 
 ## Als je zelf code schrijft
 
-Kan, maar meld het eerst, via het kanaal of een issue, en schrijf daarna de code. Anders bouw je misschien iets wat een bestaand component al kan, of iets dat op een ontwerpkeuze afketst die je niet kende.
+Kan, maar maak eerst een issue aan en schrijf daarna de code. Anders bouw je misschien iets wat een bestaand component al kan, of iets dat op een ontwerpkeuze afketst die je niet kende.
 
 ### Deze plugin helpt je niet bij het bouwen aan het systeem zelf
 
