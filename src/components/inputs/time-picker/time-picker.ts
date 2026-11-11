@@ -480,7 +480,9 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	 */
 	public _takeOver = {
 		passive: true,
-		handleEvent: (): void => {
+		handleEvent: (e: Event): void => {
+			// From here on a scroll of this column is the user's, wherever it lands.
+			this._placed.delete(e.currentTarget as HTMLElement);
 			// Both columns, or the other one would stand still halfway.
 			for (const column of [...this._glides.keys()]) {
 				this._stopGlide(column);
