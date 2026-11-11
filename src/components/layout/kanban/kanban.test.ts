@@ -25,7 +25,7 @@ async function board(): Promise<{ el: NLDDKanban; moves: NLDDMoveEventDetail[] }
 		</nldd-kanban>
 	`);
 	const moves: NLDDMoveEventDetail[] = [];
-	el.addEventListener('nldd-move', (event) => {
+	el.addEventListener('move', (event) => {
 		const { item, toColumn, toIndex } = (event as CustomEvent<NLDDMoveEventDetail>).detail;
 		moves.push((event as CustomEvent<NLDDMoveEventDetail>).detail);
 		const column = el.columns.find((candidate) => candidate.value === toColumn)!;
@@ -193,7 +193,7 @@ describe('nldd-kanban', () => {
 					<nldd-kanban-column value="c" text="C"></nldd-kanban-column>
 				</nldd-kanban>
 			`);
-			el.addEventListener('nldd-move', (event) => {
+			el.addEventListener('move', (event) => {
 				const { item, toColumn } = (event as CustomEvent<NLDDMoveEventDetail>).detail;
 				el.columns.find((column) => column.value === toColumn)!.append(item);
 			});
@@ -216,7 +216,7 @@ describe('nldd-kanban', () => {
 					<nldd-kanban-column value="bezig" text="In behandeling"></nldd-kanban-column>
 				</nldd-kanban>
 			`);
-			el.addEventListener('nldd-move', (event) => {
+			el.addEventListener('move', (event) => {
 				const { item, toColumn } = (event as CustomEvent<NLDDMoveEventDetail>).detail;
 				el.columns.find((column) => column.value === toColumn)!.append(item);
 			});
@@ -297,7 +297,7 @@ describe('nldd-kanban', () => {
 			await waitForUpdate(el);
 			const a = el.querySelector('#a') as HTMLElement;
 			const denied = vi.fn();
-			el.addEventListener('nldd-move-denied', (event) => denied((event as CustomEvent).detail.item));
+			el.addEventListener('move-denied', (event) => denied((event as CustomEvent).detail.item));
 			const click = vi.fn();
 			a.addEventListener('click', click);
 			const [x, y] = center(a);
@@ -327,7 +327,7 @@ describe('nldd-kanban', () => {
 			await waitForUpdate(el);
 			const a = el.querySelector('#a') as HTMLElement;
 			const denied = vi.fn();
-			el.addEventListener('nldd-move-denied', denied);
+			el.addEventListener('move-denied', denied);
 			a.focus();
 			alt(a, 'ArrowRight');
 			expect(moves).toHaveLength(0);

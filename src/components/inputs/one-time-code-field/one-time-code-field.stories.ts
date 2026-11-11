@@ -113,7 +113,7 @@ const Template = ({ size, centered, length, format, accessibleLabel, invalid, re
 		?required=${required}
 		@input=${action('input')}
 		@change=${action('change')}
-		@nldd-complete=${action('nldd-complete')}
+		@complete=${action('complete')}
 	></nldd-one-time-code-field>
 `;
 

@@ -28,7 +28,7 @@
  *
  * @slot - nldd-tab-bar-item elements
  *
- * @fires tabchange - When a tab is selected; detail: { item: NLDDTabBarItem }
+ * @fires tab-change - When a tab is selected; detail: { item: NLDDTabBarItem }
  *
  * ---
  *
@@ -476,7 +476,7 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 		this._activate(event.detail.item);
 	};
 
-	/** Makes a tab current (unless the bar navigates) and fires `tabchange`. */
+	/** Makes a tab current (unless the bar navigates) and fires `tab-change`. */
 	private _activate(item: NLDDTabBarItem): void {
 		if (this.disabled) return;
 		// Navigation tabs are controlled by the consumer (the current tab follows
@@ -489,7 +489,7 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 				other.current = other === item;
 			});
 		}
-		this.dispatchEvent(new CustomEvent('tabchange', {
+		this.dispatchEvent(new CustomEvent('tab-change', {
 			bubbles: true,
 			composed: true,
 			detail: { item },
@@ -533,7 +533,7 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 			// Auto-activate only for content-switching tabs, not navigation tabs
 			if (!this.navigation) {
 				items.forEach(item => { item.current = item === items[newIndex]; });
-				this.dispatchEvent(new CustomEvent('tabchange', {
+				this.dispatchEvent(new CustomEvent('tab-change', {
 					bubbles: true,
 					composed: true,
 					detail: { item: items[newIndex] },

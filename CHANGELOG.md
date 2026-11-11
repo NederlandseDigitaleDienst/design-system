@@ -15,6 +15,7 @@ here; consult the commit history if you need that level of detail.
 - **Small controls are 34px high instead of 32px.** See Changed.
 - **`nldd-title` takes its size from its level, and its sizes are `display-1` to `display-6`, also on `nldd-title-cell`.** A title without a level is body text. See Breaking.
 - **`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`, and any cell can be the grip with `reorder-handle`.** See Breaking.
+- **Every event has a plain name without `nldd-`, in kebab-case.** `nldd-reorder` is `reorder`, `tabchange` is `tab-change`. See Breaking.
 
 ### Breaking
 
@@ -25,6 +26,21 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-text-editor` and `nldd-code-editor` have a frame by default, and `appearance` is gone.** An editor without `appearance` now gets the border, fill, padding and focus ring of the other input fields. For an editor inside a composition that provides those itself, such as a message field with its own toolbar, set the boolean `embedded`. `nldd lint --fix` replaces `appearance="simple"` with `embedded` and removes `appearance="input-field"`, which does nothing now. An editor that had no `appearance` and sits in a frame of its own needs `embedded` by hand, because the linter cannot tell it apart from one that should get the frame.
 
 - **`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`, and `reorderable-only` is now `reorder-handle`.** The names follow `reorderable` and `nldd-reorder` on the list. `reorder-handle` is an attribute of every cell now, so typed JSX accepts it, and it makes that cell the grip: an `nldd-cell` with a control of your own, or a cell without one. The cell shows only while the list is `reorderable`, as before. `nldd-reorder-handle-cell` carries the attribute by itself, so it needs nothing else. The translation key is `components.reorder-handle-cell.accessible-label`. `nldd lint --fix` renames the tag, its import and the attribute.
+
+- **Events have a plain name without `nldd-`, in kebab-case, like `change` and `close` on the platform.** Rename your listeners; `nldd lint` cannot find them, so search your code for the old names:
+
+  | Component | Was | Is now |
+  |---|---|---|
+  | `nldd-list`, `nldd-document-tab-bar` | `nldd-reorder` | `reorder` |
+  | `nldd-kanban` | `nldd-move`, `nldd-move-denied` | `move`, `move-denied` |
+  | `nldd-tab-bar`, `nldd-document-tab-bar` | `tabchange` | `tab-change` |
+  | `nldd-document-tab-bar` | `tabdismiss`, `tabempty` | `tab-dismiss`, `tab-empty` |
+  | `nldd-one-time-code-field` | `nldd-complete` | `complete` |
+  | `nldd-text-editor` | `nldd-text-editor-state`, `-mention`, `-typeahead`, `-annotation-click` | `state-change`, `mention`, `typeahead`, `annotation-click` |
+  | `nldd-tooltip` | `nldd-tooltip-dismiss` | `dismiss` |
+  | `nldd-just-in-time-education` | `nldd-close` | `close` |
+
+  The `dismiss` of `nldd-tooltip` and the `close` of `nldd-just-in-time-education` no longer bubble, like `close` on a dialog: under their plain names they would reach an `nldd-banner`, `nldd-notification`, sheet or dialog around them, which fire the same name for themselves. Listen on the element itself.
 
 ### Added
 

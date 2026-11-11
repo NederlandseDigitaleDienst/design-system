@@ -17,7 +17,7 @@
  * toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand
  * to toggle, and
  * setHeading/setList for picker-style "set" semantics), reads the active formats
- * with getState(), listens to the nldd-text-editor-state event to render toggle
+ * with getState(), listens to the state-change event to render toggle
  * states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are
  * bound out of the box.
  *
@@ -80,10 +80,10 @@
  *
  * @fires input - When the content changes (detail: { value })
  * @fires change - When the content is committed on blur (detail: { value })
- * @fires nldd-text-editor-state - When the selection or content changes (detail: TextEditorState), for toolbar toggle state
- * @fires nldd-text-editor-mention - When an @-mention is inserted (detail: MentionInsertedDetail with id, text, from, to; clean offsets, like getSelection())
- * @fires nldd-text-editor-typeahead - When a candidate from one of the `typeaheads` is chosen (detail: TypeaheadChosenDetail with trigger, candidate, from, to; clean offsets)
- * @fires nldd-text-editor-annotation-click - When an annotation's count badge is clicked (detail: { ids: string[], rect: DOMRect }); rect is the badge's viewport box so a consumer can anchor its own note UI to it
+ * @fires state-change - When the selection or content changes (detail: TextEditorState), for toolbar toggle state
+ * @fires mention - When an @-mention is inserted (detail: MentionInsertedDetail with id, text, from, to; clean offsets, like getSelection())
+ * @fires typeahead - When a candidate from one of the `typeaheads` is chosen (detail: TypeaheadChosenDetail with trigger, candidate, from, to; clean offsets)
+ * @fires annotation-click - When an annotation's count badge is clicked (detail: { ids: string[], rect: DOMRect }); rect is the badge's viewport box so a consumer can anchor its own note UI to it
  */
 import { relabel } from './text-editor.labels.js';
 import { type PropertyValues } from 'lit';
@@ -769,7 +769,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			&& (Object.keys(state.active) as (keyof TextEditorActiveFormats)[]).every((key) => last.active[key] === state.active[key])
 		) return;
 		this._lastState = state;
-		this.dispatchEvent(new CustomEvent('nldd-text-editor-state', {
+		this.dispatchEvent(new CustomEvent('state-change', {
 			detail: state,
 			bubbles: true,
 			composed: true,
@@ -792,7 +792,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			this._emitMention({ id, text, from, to: from + mentionToken(choice.candidate).length });
 			return;
 		}
-		this.dispatchEvent(new CustomEvent('nldd-text-editor-typeahead', {
+		this.dispatchEvent(new CustomEvent('typeahead', {
 			detail: { trigger: choice.trigger, candidate: choice.candidate, from, to: docToClean(doc, choice.to) },
 			bubbles: true,
 			composed: true,
@@ -800,7 +800,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	}
 
 	private _emitMention(detail: MentionInsertedDetail): void {
-		this.dispatchEvent(new CustomEvent('nldd-text-editor-mention', {
+		this.dispatchEvent(new CustomEvent('mention', {
 			detail,
 			bubbles: true,
 			composed: true,
@@ -829,7 +829,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		}
 	};
 
-	/** A click on an annotation's count badge emits nldd-text-editor-annotation-click
+	/** A click on an annotation's count badge emits annotation-click
 	 *  with the id(s) it covers (a merged badge carries several) and the badge's
 	 *  viewport rect, so the consumer can anchor its own note UI to the badge. The
 	 *  tinted text stays plain-clickable for caret placement. */
@@ -839,7 +839,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		const ids = (badge.dataset.annotations ?? '').split(' ').filter(Boolean);
 		if (!ids.length) return;
 		event.preventDefault();
-		this.dispatchEvent(new CustomEvent('nldd-text-editor-annotation-click', {
+		this.dispatchEvent(new CustomEvent('annotation-click', {
 			detail: { ids, rect: badge.getBoundingClientRect() },
 			bubbles: true,
 			composed: true,

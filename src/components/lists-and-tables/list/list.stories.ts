@@ -515,7 +515,7 @@ export const ListboxEenvoudig = {
 // — Reorderable ———————————————————————————————————————————————————————————————
 
 export const Herschikbaar = {
-	// Imperative render is intentional: the nldd-reorder handler needs to mutate
+	// Imperative render is intentional: the reorder handler needs to mutate
 	// the DOM in-place to demonstrate actual reordering. A standard Storybook
 	// render function cannot do this because Lit templates are stateless.
 	render: () => {
@@ -539,7 +539,7 @@ export const Herschikbaar = {
 			<nldd-list
 				appearance="box-tinted"
 				reorderable
-				@nldd-reorder=${onReorder}
+				@reorder=${onReorder}
 			>
 				${labels.map((label) => html`
 					<nldd-list-item>
@@ -559,7 +559,7 @@ export const Herschikbaar = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zet `reorderable` op een lijst van type default om drag-and-keyboard reorder te activeren. De lijst dispatcht `nldd-reorder` met `{ fromIndex, toIndex }` — de consumer is verantwoordelijk voor het muteren van de DOM (of het datamodel).',
+				story: 'Zet `reorderable` op een lijst van type default om drag-and-keyboard reorder te activeren. De lijst dispatcht `reorder` met `{ fromIndex, toIndex }` — de consumer is verantwoordelijk voor het muteren van de DOM (of het datamodel).',
 			},
 		},
 	},

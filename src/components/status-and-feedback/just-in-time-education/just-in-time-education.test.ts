@@ -123,11 +123,14 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		await openCoachMark();
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		let reachedParent = false;
+		el.parentElement!.addEventListener('close', () => { reachedParent = true; });
 		el.complete();
 		await waitForUpdate(el);
 
 		expect(reason).toBe('completed');
+		expect(reachedParent).toBe(false);
 		expect(el.active).toBe(false);
 		expect(isCalloutOpen(el)).toBe(false);
 	});
@@ -148,7 +151,7 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		await openCoachMark(MARKUP_DISMISSABLE);
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
 		el.querySelector('button')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
 		await waitForUpdate(el);
 
@@ -159,7 +162,7 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		await openCoachMark();
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
 		el.querySelector('button')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
 		await waitForUpdate(el);
 
@@ -174,7 +177,7 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		expect(button).not.toBeNull();
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
 		button!.click();
 		await waitForUpdate(el);
 
@@ -191,7 +194,7 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		await nextTask(); // outside-listeners attach on the next task
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
 
 		document.body.click();
 		await waitForUpdate(el);
@@ -203,7 +206,7 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		await nextTask();
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
 
 		document.body.click();
 		document.body.click();
@@ -217,7 +220,7 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		await nextTask();
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
 
 		const card = el.shadowRoot!.querySelector<HTMLElement>('.just-in-time-education__main')!;
 		card.click();
@@ -240,7 +243,7 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		document.body.appendChild(sibling);
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
 
 		innerButton.click();
 		await waitForUpdate(el);
@@ -291,7 +294,7 @@ describe('nldd-just-in-time-education – sluit-routes', () => {
 		expect(el.shadowRoot!.activeElement).toBe(container);
 
 		let reason: string | undefined;
-		el.addEventListener('nldd-close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
+		el.addEventListener('close', (e: Event) => { reason = (e as CustomEvent).detail.reason; });
 
 		container.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 		await waitForUpdate(el);

@@ -298,7 +298,7 @@ describe('nldd-code-viewer', () => {
 			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
 			const tooltip = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-tooltip')!;
-			tooltip.dispatchEvent(new CustomEvent('nldd-tooltip-dismiss', { bubbles: true, composed: true }));
+			tooltip.dispatchEvent(new CustomEvent('dismiss', { bubbles: true, composed: true }));
 			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
 			expect(tooltip.hasAttribute('open')).toBe(false);

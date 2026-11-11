@@ -323,7 +323,7 @@ export const SimpelMetCellenAchteraan = {
  * de spacer ernaast, die zo ook alleen in sorteermodus ruimte inneemt.
  */
 export const MetSleepgreep = {
-	// Imperative render: the nldd-reorder handler mutates the DOM in place so
+	// Imperative render: the reorder handler mutates the DOM in place so
 	// keyboard + pointer drag actually move items. A standard Storybook render
 	// function can't do this because Lit templates are stateless.
 	render: () => {
@@ -345,7 +345,7 @@ export const MetSleepgreep = {
 			<nldd-list
 				appearance="box-tinted"
 				reorderable
-				@nldd-reorder=${onReorder}
+				@reorder=${onReorder}
 			>
 				<nldd-list-item>
 					<nldd-reorder-handle-cell size="sm"></nldd-reorder-handle-cell>

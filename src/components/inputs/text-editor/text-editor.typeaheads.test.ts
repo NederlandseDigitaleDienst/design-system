@@ -75,7 +75,7 @@ describe('nldd-text-editor typeaheads', () => {
 	it('writes what insert returns, and reports the choice with clean offsets', async () => {
 		el = await make('hoi :sm', [{ trigger: ':', source: byLabel(emoji), insert: (c) => c.symbol ?? '' }]);
 		let detail: unknown;
-		el.addEventListener('nldd-text-editor-typeahead', ((event: CustomEvent) => { detail = event.detail; }) as EventListener);
+		el.addEventListener('typeahead', ((event: CustomEvent) => { detail = event.detail; }) as EventListener);
 		const rows = await openList(el);
 		// The shortcode as Mattermost and Slack show it, the emoji itself in front.
 		expect(labels(rows)).toEqual([':smile:']);
@@ -189,8 +189,8 @@ describe('nldd-text-editor typeaheads', () => {
 		el = await make('@an', [{ trigger: ':', source: byLabel(emoji) }], byLabel(people));
 		let detail: unknown;
 		let other = false;
-		el.addEventListener('nldd-text-editor-mention', ((event: CustomEvent) => { detail = event.detail; }) as EventListener);
-		el.addEventListener('nldd-text-editor-typeahead', () => { other = true; });
+		el.addEventListener('mention', ((event: CustomEvent) => { detail = event.detail; }) as EventListener);
+		el.addEventListener('typeahead', () => { other = true; });
 		await openList(el);
 		moveCompletionSelection(true)(el.view);
 		acceptCompletion(el.view);

@@ -97,7 +97,7 @@ describe('nldd-list', () => {
 
 	// — Drag: keyboard (direct arrow-reorder) ——————————————————————————————
 
-	it('ArrowDown on a drag handle fires nldd-reorder with the target index', async () => {
+	it('ArrowDown on a drag handle fires reorder with the target index', async () => {
 		el = await fixture(`
 			<nldd-list reorderable>
 				<nldd-list-item><span reorder-handle tabindex="0">handle</span></nldd-list-item>
@@ -110,7 +110,7 @@ describe('nldd-list', () => {
 		const handle = el.querySelectorAll('[reorder-handle]')[0] as HTMLElement;
 
 		let reorderDetail: { fromIndex: number; toIndex: number } | null = null;
-		el.addEventListener('nldd-reorder', (e: Event) => {
+		el.addEventListener('reorder', (e: Event) => {
 			reorderDetail = (e as CustomEvent).detail;
 		});
 
@@ -132,7 +132,7 @@ describe('nldd-list', () => {
 		`);
 		await waitForUpdate(el);
 		const details: { fromIndex: number; toIndex: number }[] = [];
-		el.addEventListener('nldd-reorder', (e: Event) => details.push((e as CustomEvent).detail));
+		el.addEventListener('reorder', (e: Event) => details.push((e as CustomEvent).detail));
 		const press = async (target: Element) => {
 			target.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 			await waitForUpdate(el);
@@ -159,7 +159,7 @@ describe('nldd-list', () => {
 
 		const handle = el.querySelectorAll('[reorder-handle]')[0] as HTMLElement;
 		let fired = false;
-		el.addEventListener('nldd-reorder', () => { fired = true; });
+		el.addEventListener('reorder', () => { fired = true; });
 
 		handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, composed: true }));
 		await waitForUpdate(el);
@@ -178,7 +178,7 @@ describe('nldd-list', () => {
 		const handles = el.querySelectorAll('[reorder-handle]');
 		const lastHandle = handles[handles.length - 1] as HTMLElement;
 		let fired = false;
-		el.addEventListener('nldd-reorder', () => { fired = true; });
+		el.addEventListener('reorder', () => { fired = true; });
 
 		lastHandle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 		await waitForUpdate(el);
@@ -196,7 +196,7 @@ describe('nldd-list', () => {
 
 		const span = el.querySelectorAll('span[tabindex]')[0] as HTMLElement;
 		let fired = false;
-		el.addEventListener('nldd-reorder', () => { fired = true; });
+		el.addEventListener('reorder', () => { fired = true; });
 
 		span.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 		await waitForUpdate(el);
@@ -206,7 +206,7 @@ describe('nldd-list', () => {
 
 	// — Drag: pointer ————————————————————————————————————————————————————————
 
-	it('fires nldd-reorder with correct indices after pointer drag', async () => {
+	it('fires reorder with correct indices after pointer drag', async () => {
 		el = await fixture(`
 			<nldd-list reorderable>
 				<nldd-list-item><span reorder-handle>handle</span></nldd-list-item>
@@ -219,7 +219,7 @@ describe('nldd-list', () => {
 		const handle = el.querySelectorAll('[reorder-handle]')[0] as HTMLElement;
 
 		let reorderDetail: { fromIndex: number; toIndex: number } | null = null;
-		el.addEventListener('nldd-reorder', (e: Event) => {
+		el.addEventListener('reorder', (e: Event) => {
 			reorderDetail = (e as CustomEvent).detail;
 		});
 

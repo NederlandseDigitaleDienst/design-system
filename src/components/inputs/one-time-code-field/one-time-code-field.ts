@@ -17,7 +17,7 @@
  * what was there. From a pasted sentence, such as a text message, the field
  * takes the last word that is as long as the code, so "Your code is 123456"
  * fills in "123456". Once every box is full
- * the field fires `nldd-complete`, and again after a correction that leaves it
+ * the field fires `complete`, and again after a correction that leaves it
  * full. Submitting then is up to your app: send the form, or wait for a
  * button, but never both, or a correction submits twice.
  *
@@ -44,7 +44,7 @@
  *
  * @fires input - When the code changes; detail: { value: string }
  * @fires change - When the code is committed; detail: { value: string }
- * @fires nldd-complete - When every box is filled; detail: { value: string }
+ * @fires complete - When every box is filled; detail: { value: string }
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
@@ -157,7 +157,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	@state()
 	_box = 0;
 
-	/** The last complete code `nldd-complete` fired for, so the same code fires once. */
+	/** The last complete code `complete` fired for, so the same code fires once. */
 	private _completed = '';
 
 	/** Set while a touch focuses the field, so the focus keeps the box that was pressed. */
@@ -501,7 +501,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 		if (chars.includes('') || value.length < this.boxes) this._completed = '';
 		else if (value !== this._completed) {
 			this._completed = value;
-			this.dispatchEvent(new CustomEvent('nldd-complete', {
+			this.dispatchEvent(new CustomEvent('complete', {
 				detail: { value },
 				bubbles: true,
 				composed: true,

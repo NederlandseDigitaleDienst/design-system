@@ -15,7 +15,7 @@
  *
  * The tabs can always be put in another order: drag one, or move the focused
  * tab with Shift+Arrow left or right. The bar moves the element itself and
- * fires `nldd-reorder` with where it came from and where it went.
+ * fires `reorder` with where it came from and where it went.
  *
  * Closing a tab with the pointer leaves the other tabs at the width they had,
  * so the close button of the next one slides in under the pointer and a row
@@ -30,10 +30,10 @@
  * @slot - nldd-document-tab-bar-item elements
  * @slot end - Action buttons (e.g. new tab)
  *
- * @fires tabchange - Fired when a tab is selected; detail: { item }
- * @fires tabdismiss - Fired when a tab is dismissed; detail: { item, nextItem }
- * @fires tabempty - Fired when the last tab is dismissed
- * @fires nldd-reorder - Fired when a tab is moved, by dragging or with Shift+Arrow; detail: { fromIndex, toIndex }
+ * @fires tab-change - Fired when a tab is selected; detail: { item }
+ * @fires tab-dismiss - Fired when a tab is dismissed; detail: { item, nextItem }
+ * @fires tab-empty - Fired when the last tab is dismissed
+ * @fires reorder - Fired when a tab is moved, by dragging or with Shift+Arrow; detail: { fromIndex, toIndex }
  *
  * ---
  *
@@ -580,11 +580,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this._cleanupDrag();
 
 		if (fromIndex !== toIndex) {
-			this.dispatchEvent(new CustomEvent<NLDDReorderEventDetail>('nldd-reorder', {
-				detail: { fromIndex, toIndex },
-				bubbles: true,
-				composed: true,
-			}));
+			this.dispatchEvent(new CustomEvent<NLDDReorderEventDetail>('reorder', { detail: { fromIndex, toIndex }, bubbles: true, composed: true }));
 			this._announce(this._t('components.document-tab-bar.reorder-dropped-text', { position: toIndex + 1 }));
 
 			requestAnimationFrame(() => {
@@ -676,12 +672,12 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	}
 
 	private _ensureSelectedVisible(): void {
-		// Deliberately performs a silent light DOM reorder without firing nldd-reorder.
+		// Deliberately performs a silent light DOM reorder without firing reorder.
 		// This is triggered by the ResizeObserver when overflow recalculates, not by
-		// user action. Firing nldd-reorder here would cause consumers tracking tab order
+		// user action. Firing reorder here would cause consumers tracking tab order
 		// (e.g. persisting to a server) to receive spurious events on window resize.
 		// Consumers should treat DOM order as the source of truth for tab order and
-		// not rely on nldd-reorder being exhaustive.
+		// not rely on reorder being exhaustive.
 		const items = this._getItems();
 		const visibleCount = items.length - this._overflowCount;
 		const selectedIndex = items.findIndex(i => i.selected);
@@ -741,7 +737,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this._applyItemVisibility();
 		this._updateMenu();
 
-		this.dispatchEvent(new CustomEvent('tabchange', {
+		this.dispatchEvent(new CustomEvent('tab-change', {
 			bubbles: true,
 			composed: true,
 			detail: { item: targetItem },
@@ -806,7 +802,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		const selectedItem = event.detail.item as NLDDDocumentTabBarItem;
 		this._getItems().forEach(item => { item.selected = item === selectedItem; });
 		this._syncFallbackFocusable();
-		this.dispatchEvent(new CustomEvent('tabchange', {
+		this.dispatchEvent(new CustomEvent('tab-change', {
 			bubbles: true,
 			composed: true,
 			detail: event.detail,
@@ -849,7 +845,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 			if (closesTheRow) this._releaseOnRemoval = dismissedItem;
 		}
 
-		this.dispatchEvent(new CustomEvent('tabdismiss', {
+		this.dispatchEvent(new CustomEvent('tab-dismiss', {
 			bubbles: true,
 			composed: true,
 			detail: { item: dismissedItem, nextItem },
@@ -862,7 +858,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		}
 
 		if (isLastItem) {
-			this.dispatchEvent(new CustomEvent('tabempty', { bubbles: true, composed: true }));
+			this.dispatchEvent(new CustomEvent('tab-empty', { bubbles: true, composed: true }));
 		}
 
 		this._syncFallbackFocusable();
@@ -874,7 +870,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	 * per tab: a tab that comes back out of the overflow takes it too, and the
 	 * overflow button that disappears leaves room at the end instead of
 	 * spreading the tabs. Measured before the consumer removes the closed tab,
-	 * which it does in its `tabdismiss` handler.
+	 * which it does in its `tab-dismiss` handler.
 	 */
 	private _holdWidths(items: NLDDDocumentTabBarItem[]): void {
 		// A second close keeps the width of the first.
@@ -967,11 +963,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 			const newAllItems = this._getItems();
 			const toIndex = newAllItems.indexOf(item);
 
-			this.dispatchEvent(new CustomEvent<NLDDReorderEventDetail>('nldd-reorder', {
-				detail: { fromIndex, toIndex },
-				bubbles: true,
-				composed: true,
-			}));
+			this.dispatchEvent(new CustomEvent<NLDDReorderEventDetail>('reorder', { detail: { fromIndex, toIndex }, bubbles: true, composed: true }));
 
 			this._announce(this._t('components.document-tab-bar.reorder-dropped-text', { position: toIndex + 1 }));
 
@@ -1017,7 +1009,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 			// Auto-activate only for content-switching tabs, not navigation tabs
 			if (!this.navigation) {
 				this._getItems().forEach(item => { item.selected = item === items[newIndex]; });
-				this.dispatchEvent(new CustomEvent('tabchange', {
+				this.dispatchEvent(new CustomEvent('tab-change', {
 					bubbles: true,
 					composed: true,
 					detail: { item: items[newIndex] },

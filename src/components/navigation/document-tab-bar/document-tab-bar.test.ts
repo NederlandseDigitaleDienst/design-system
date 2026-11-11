@@ -290,12 +290,12 @@ describe('nldd-document-tab-bar – item selection', () => {
 		expect(items[1].selected).toBe(true);
 	});
 
-	it('dispatches tabchange event with item detail', async () => {
+	it('dispatches tab-change event with item detail', async () => {
 		el = await fixture<NLDDDocumentTabBar>(threeTabBar());
 		await waitForUpdate(el);
 
 		let detail: any;
-		el.addEventListener('tabchange', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+		el.addEventListener('tab-change', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 
 		clickItem(getItems(el)[1]);
 		await waitForUpdate(el);
@@ -330,12 +330,12 @@ describe('nldd-document-tab-bar – dismiss', () => {
 		if (el) cleanup(el);
 	});
 
-	it('dispatches tabdismiss with item and nextItem', async () => {
+	it('dispatches tab-dismiss with item and nextItem', async () => {
 		el = await fixture<NLDDDocumentTabBar>(threeTabBar());
 		await waitForUpdate(el);
 
 		let detail: any;
-		el.addEventListener('tabdismiss', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+		el.addEventListener('tab-dismiss', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 
 		const items = getItems(el);
 		clickDismiss(items[0]);
@@ -352,7 +352,7 @@ describe('nldd-document-tab-bar – dismiss', () => {
 		expect(items[0].selected).toBe(true);
 
 		let detail: any;
-		el.addEventListener('tabdismiss', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+		el.addEventListener('tab-dismiss', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 
 		clickDismiss(items[0]);
 		await waitForUpdate(el);
@@ -372,7 +372,7 @@ describe('nldd-document-tab-bar – dismiss', () => {
 
 		const items = getItems(el);
 		let detail: any;
-		el.addEventListener('tabdismiss', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+		el.addEventListener('tab-dismiss', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 
 		clickDismiss(items[1]);
 		await waitForUpdate(el);
@@ -386,7 +386,7 @@ describe('nldd-document-tab-bar – dismiss', () => {
 		await waitForUpdate(el);
 
 		let detail: any;
-		el.addEventListener('tabdismiss', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+		el.addEventListener('tab-dismiss', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 
 		clickDismiss(getItems(el)[1]);
 		await waitForUpdate(el);
@@ -394,7 +394,7 @@ describe('nldd-document-tab-bar – dismiss', () => {
 		expect(detail.nextItem).toBeNull();
 	});
 
-	it('dispatches tabempty when last item is dismissed', async () => {
+	it('dispatches tab-empty when last item is dismissed', async () => {
 		el = await fixture<NLDDDocumentTabBar>(`
 			<nldd-document-tab-bar accessible-label="Docs">
 				<nldd-document-tab-bar-item selected text="A"></nldd-document-tab-bar-item>
@@ -403,7 +403,7 @@ describe('nldd-document-tab-bar – dismiss', () => {
 		await waitForUpdate(el);
 
 		let emptyFired = false;
-		el.addEventListener('tabempty', () => { emptyFired = true; });
+		el.addEventListener('tab-empty', () => { emptyFired = true; });
 
 		clickDismiss(getItems(el)[0]);
 		await waitForUpdate(el);
@@ -688,7 +688,7 @@ describe('nldd-document-tab-bar – sluiten met de muis', () => {
 		`);
 		const bar = el.querySelector('nldd-document-tab-bar') as NLDDDocumentTabBar;
 		await waitForUpdate(bar);
-		bar.addEventListener('tabdismiss', (e) => ((e as CustomEvent).detail.item as HTMLElement).remove());
+		bar.addEventListener('tab-dismiss', (e) => ((e as CustomEvent).detail.item as HTMLElement).remove());
 		return bar;
 	};
 
@@ -732,7 +732,7 @@ describe('nldd-document-tab-bar – sluiten met de muis', () => {
 		`);
 		const bar = el.querySelector('nldd-document-tab-bar') as NLDDDocumentTabBar;
 		await waitForUpdate(bar);
-		bar.addEventListener('tabdismiss', (e) => ((e as CustomEvent).detail.item as HTMLElement).remove());
+		bar.addEventListener('tab-dismiss', (e) => ((e as CustomEvent).detail.item as HTMLElement).remove());
 		await new Promise(requestAnimationFrame);
 		const lefts = () => getItems(bar).filter(item => !item.hidden).map(item => Math.round(item.getBoundingClientRect().left));
 		const before = lefts();
