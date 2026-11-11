@@ -2,8 +2,6 @@ import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './title.js';
-import variablesCss from '../../../assets/styles/variables.css?raw';
-import { titleStyles } from './title.styles.js';
 
 describe('nldd-title', () => {
 	let el: HTMLElement;
@@ -393,13 +391,5 @@ describe('nldd-title – size from heading-level', () => {
 		el.querySelector('h2')!.replaceWith(document.createTextNode('Mijn Dienst'));
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-level')).toBe(false);
-	});
-	// The sizes are built in a loop, so validate:styles, which reads names
-	// written out in full, does not see them.
-	it('uses only tokens that exist, also in the names it builds', () => {
-		const used = new Set(titleStyles.cssText.match(/--(primitives|semantics)-[a-z0-9-]+/g));
-		expect(used.size).toBeGreaterThan(0);
-		const missing = [...used].filter(name => !variablesCss.includes(`${name}:`));
-		expect(missing).toEqual([]);
 	});
 });

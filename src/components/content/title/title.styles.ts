@@ -7,29 +7,6 @@ const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 const mdMax = unsafeCSS(queryBreakpoints.mdMax);
 const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 
-const OVERLINE_SIZES: Record<number, string> = { 1: 'md', 2: 'md', 3: 'md', 4: 'sm', 5: 'sm', 6: 'xs' };
-const SUPPORTING_TEXT_SIZES: Record<number, string> = { 1: 'md', 2: 'md', 3: 'md', 4: 'md', 5: 'sm', 6: 'sm' };
-
-/** The display size n, for `size="display-n"` or for level n without a size, from the viewport and from a layout-container alike, with the overline and supporting text that go with it. */
-function sizeRule(n: number): string {
-	const at = (bp: string) => `--_title-font: var(--primitives-font-display-${n}-${bp});`;
-	const queries: Array<[string, string]> = [
-		['sm', `(max-width: ${queryBreakpoints.smMax})`],
-		['md', `(min-width: ${queryBreakpoints.mdMin}) and (max-width: ${queryBreakpoints.mdMax})`],
-		['lg', `(min-width: ${queryBreakpoints.lgMin})`],
-	];
-	return `
-	:host([data-level][size="display-${n}"]),
-	:host(:not([size^="display-"])[data-level="${n}"]) {
-		--_title-overline-font: var(--primitives-font-body-${OVERLINE_SIZES[n]}-regular-tight);
-		--_title-supporting-text-font: var(--primitives-font-body-${SUPPORTING_TEXT_SIZES[n]}-regular-tight);
-
-${queries.map(([bp, q]) => `		@media ${q} {\n\t\t\t${at(bp)}\n\t\t}\n`).join('\n')}
-${queries.map(([bp, q]) => `		@container layout-container ${q} {\n\t\t\t${at(bp)}\n\t\t}\n`).join('\n')}
-	}
-`;
-}
-
 export const titleStyles = css`
 	:host {
 		box-sizing: border-box;
@@ -60,7 +37,185 @@ export const titleStyles = css`
 
 	/* # Size */
 
-	${unsafeCSS([1, 2, 3, 4, 5, 6].map((n) => sizeRule(n)).join('\n'))}
+	:host([data-level][size="display-1"]),
+	:host(:not([size^="display-"])[data-level="1"]) {
+		--_title-overline-font: var(--primitives-font-body-md-regular-tight);
+		--_title-supporting-text-font: var(--primitives-font-body-md-regular-tight);
+
+		@media (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-1-sm);
+		}
+
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-1-md);
+		}
+
+		@media (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-1-lg);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-1-sm);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-1-md);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-1-lg);
+		}
+	}
+
+	:host([data-level][size="display-2"]),
+	:host(:not([size^="display-"])[data-level="2"]) {
+		--_title-overline-font: var(--primitives-font-body-md-regular-tight);
+		--_title-supporting-text-font: var(--primitives-font-body-md-regular-tight);
+
+		@media (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-2-sm);
+		}
+
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-2-md);
+		}
+
+		@media (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-2-lg);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-2-sm);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-2-md);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-2-lg);
+		}
+	}
+
+	:host([data-level][size="display-3"]),
+	:host(:not([size^="display-"])[data-level="3"]) {
+		--_title-overline-font: var(--primitives-font-body-md-regular-tight);
+		--_title-supporting-text-font: var(--primitives-font-body-md-regular-tight);
+
+		@media (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-3-sm);
+		}
+
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-3-md);
+		}
+
+		@media (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-3-lg);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-3-sm);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-3-md);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-3-lg);
+		}
+	}
+
+	:host([data-level][size="display-4"]),
+	:host(:not([size^="display-"])[data-level="4"]) {
+		--_title-overline-font: var(--primitives-font-body-sm-regular-tight);
+		--_title-supporting-text-font: var(--primitives-font-body-md-regular-tight);
+
+		@media (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-4-sm);
+		}
+
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-4-md);
+		}
+
+		@media (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-4-lg);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-4-sm);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-4-md);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-4-lg);
+		}
+	}
+
+	:host([data-level][size="display-5"]),
+	:host(:not([size^="display-"])[data-level="5"]) {
+		--_title-overline-font: var(--primitives-font-body-sm-regular-tight);
+		--_title-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
+
+		@media (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-5-sm);
+		}
+
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-5-md);
+		}
+
+		@media (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-5-lg);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-5-sm);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-5-md);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-5-lg);
+		}
+	}
+
+	:host([data-level][size="display-6"]),
+	:host(:not([size^="display-"])[data-level="6"]) {
+		--_title-overline-font: var(--primitives-font-body-xs-regular-tight);
+		--_title-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
+
+		@media (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-6-sm);
+		}
+
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-6-md);
+		}
+
+		@media (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-6-lg);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_title-font: var(--primitives-font-display-6-sm);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--primitives-font-display-6-md);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_title-font: var(--primitives-font-display-6-lg);
+		}
+	}
 
 	/* ## Custom size */
 
