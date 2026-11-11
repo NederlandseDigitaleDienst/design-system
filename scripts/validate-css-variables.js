@@ -81,7 +81,7 @@ function findComponentFiles(dir) {
       if (entry.isDirectory()) {
         walk(fullPath);
       } else if (
-        (entry.name.endsWith('.ts') || entry.name.endsWith('.js')) &&
+        (entry.name.endsWith('.ts') || entry.name.endsWith('.js') || entry.name.endsWith('.css')) &&
         !entry.name.endsWith('.stories.js') &&
         !entry.name.endsWith('.stories.ts') &&
         !entry.name.endsWith('.test.ts') &&
