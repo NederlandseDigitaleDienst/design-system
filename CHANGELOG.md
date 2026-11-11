@@ -73,6 +73,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A required `nldd-radio-button-group` in `nldd-form` shows its error.** The form marked each option `invalid`, while the field and its validation list read the group, so a submit did nothing and the screen said nothing. The group now carries the mark while any option has it. And the options lose their mark once one is chosen: the form listened only for `input`, which `nldd-radio-button-field` never fires, so they stayed marked after a choice.
 - **`nldd-list` and `nldd-list-item` load in any order, as the autoloader does.** With the list first, it read its rows before they were rows and ran into endless recursion; with the rows first, each row read the appearance of a list that was not defined yet. The list now brings `nldd-list-item` along, and a row waits for its list to push its state.
 - **An `nldd-top-title-bar` with `collapse-anchor` loads before its `nldd-page` without an error.** It listened to the scroll target of a page that was not defined yet. It now waits for the page.
 - **An `nldd-segmented-control` with `width="fit-content"` keeps to its content in an `nldd-form-field`.** The field lays out its control in a flex column, which stretched it to the full width of the field. It now holds on to its own width in any flex or grid parent.
