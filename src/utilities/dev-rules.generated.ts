@@ -251,12 +251,12 @@ export const devRules: DevRule[] = [
 	{
 		"id": "hide-above-lg-no-effect",
 		"message": "hide-above=\"lg\" never hides anything: there is no breakpoint above lg. The smallest value that hides is \"sm\". Leave the attribute off if you meant \"always visible\".",
-		"context": ":is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-above=\"lg\"]"
+		"context": ":is(nldd-cell, nldd-description-cell, nldd-icon-cell, nldd-reorder-handle-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-above=\"lg\"]"
 	},
 	{
 		"id": "hide-below-sm-no-effect",
 		"message": "hide-below=\"sm\" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is \"md\". Leave the attribute off if you meant \"always visible\".",
-		"context": ":is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-below=\"sm\"]"
+		"context": ":is(nldd-cell, nldd-description-cell, nldd-icon-cell, nldd-reorder-handle-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-below=\"sm\"]"
 	},
 	{
 		"id": "icon-button-needs-name",
@@ -414,7 +414,12 @@ export const devRules: DevRule[] = [
 		"id": "list-item-no-other-children",
 		"message": "A row takes cells and segments. Anything else sits outside its layout.",
 		"context": "nldd-list-item",
-		"report": ":has(> :not([slot], :is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell), nldd-list-item-segment, input[type=\"hidden\"]))"
+		"report": ":has(> :not([slot], :is(nldd-cell, nldd-description-cell, nldd-icon-cell, nldd-reorder-handle-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell), nldd-list-item-segment, input[type=\"hidden\"]))"
+	},
+	{
+		"id": "list-item-reorderable-only-renamed",
+		"message": "The `reorderable-only` attribute is now `reorder-handle`. Rename it here and on every other cell; nldd-reorder-handle-cell carries it by itself.",
+		"context": "[reorderable-only]"
 	},
 	{
 		"id": "list-item-segment-disclosure-needs-button",
@@ -618,6 +623,11 @@ export const devRules: DevRule[] = [
 			"accessibleLabel",
 			"accessibleLabeledBy"
 		]
+	},
+	{
+		"id": "reorder-handle-cell-tag-renamed",
+		"message": "`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-drag-handle-cell"
 	},
 	{
 		"id": "rich-text-no-inline-content",
@@ -2379,11 +2389,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-description-cell[vertical-alignment]:not([vertical-alignment=\"bottom\"], [vertical-alignment=\"center\"], [vertical-alignment=\"top\"])"
 	},
 	{
-		"id": "invalid-value-drag-handle-cell-size",
-		"message": "`size` on nldd-drag-handle-cell takes: md, sm.",
-		"context": "nldd-drag-handle-cell[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-icon-cell-size",
 		"message": "`size` on nldd-icon-cell takes: 16, 20, 24, 32.",
 		"context": "nldd-icon-cell[size]:not([size=\"16\"], [size=\"20\"], [size=\"24\"], [size=\"32\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -2397,6 +2402,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-icon-cell-vertical-alignment",
 		"message": "`vertical-alignment` on nldd-icon-cell takes: bottom, center, top.",
 		"context": "nldd-icon-cell[vertical-alignment]:not([vertical-alignment=\"bottom\"], [vertical-alignment=\"center\"], [vertical-alignment=\"top\"])"
+	},
+	{
+		"id": "invalid-value-reorder-handle-cell-size",
+		"message": "`size` on nldd-reorder-handle-cell takes: md, sm.",
+		"context": "nldd-reorder-handle-cell[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-spacer-cell-size",

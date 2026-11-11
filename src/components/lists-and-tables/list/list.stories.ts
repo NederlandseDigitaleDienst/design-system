@@ -5,7 +5,7 @@ import '../cells/title-cell/title-cell.js';
 import '../cells/text-cell/text-cell.js';
 import '../cells/spacer-cell/spacer-cell.js';
 import '../cells/icon-cell/icon-cell.js';
-import '../cells/drag-handle-cell/drag-handle-cell.js';
+import '../cells/reorder-handle-cell/reorder-handle-cell.js';
 import '../../content/icon/icon.js';
 import '../../content/title/title.js';
 import '../../content/rich-text/rich-text.js';
@@ -543,12 +543,9 @@ export const Herschikbaar = {
 			>
 				${labels.map((label) => html`
 					<nldd-list-item>
-						<nldd-drag-handle-cell
-							size="sm"
-							reorderable-only
-						></nldd-drag-handle-cell>
+						<nldd-reorder-handle-cell size="sm"></nldd-reorder-handle-cell>
 						<nldd-spacer-cell
-							reorderable-only
+							reorder-handle
 							size="8"
 						></nldd-spacer-cell>
 						<nldd-text-cell text="${label}"></nldd-text-cell>

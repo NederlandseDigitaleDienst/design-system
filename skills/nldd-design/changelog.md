@@ -20,6 +20,7 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-text-editor` and `nldd-code-editor` are framed by default, like the other fields.** `embedded` gives the bare editor for a composition of your own. See Breaking.
 - **Small controls are 34px high instead of 32px.** See Changed.
 - **`nldd-title` takes its size from its level, and its sizes are `display-1` to `display-6`, also on `nldd-title-cell`.** A title without a level is body text. See Breaking.
+- **`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`, and any cell can be the grip with `reorder-handle`.** See Breaking.
 
 ### Breaking
 
@@ -28,6 +29,8 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-title-cell` takes `display-1` to `display-6` for `size` instead of a number,** like `nldd-title`. Its default stays `display-5`, and `display-6` in a table row: unlike a title, a cell does not take its size from `heading-level`, so every row in a list looks the same. `nldd lint --fix` renames the numbers.
 
 - **`nldd-text-editor` and `nldd-code-editor` have a frame by default, and `appearance` is gone.** An editor without `appearance` now gets the border, fill, padding and focus ring of the other input fields. For an editor inside a composition that provides those itself, such as a message field with its own toolbar, set the boolean `embedded`. `nldd lint --fix` replaces `appearance="simple"` with `embedded` and removes `appearance="input-field"`, which does nothing now. An editor that had no `appearance` and sits in a frame of its own needs `embedded` by hand, because the linter cannot tell it apart from one that should get the frame.
+
+- **`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`, and `reorderable-only` is now `reorder-handle`.** The names follow `reorderable` and `nldd-reorder` on the list. `reorder-handle` is an attribute of every cell now, so typed JSX accepts it, and it makes that cell the grip: an `nldd-cell` with a control of your own, or a cell without one. The cell shows only while the list is `reorderable`, as before. `nldd-reorder-handle-cell` carries the attribute by itself, so it needs nothing else. The translation key is `components.reorder-handle-cell.accessible-label`. `nldd lint --fix` renames the tag, its import and the attribute.
 
 ### Added
 

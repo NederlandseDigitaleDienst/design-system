@@ -165,7 +165,7 @@ const NESTED_CONTROLS = [
  *
  * @element nldd-list-item
  *
- * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
+ * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-reorder-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
  * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
@@ -184,7 +184,6 @@ const NESTED_CONTROLS = [
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
  * Divider markers, set on a CELL in the row rather than on the row itself:
- * @childattr {boolean} reorderable-only - Show this cell only while the row is `reorderable`
  * @childattr {boolean} divider-start - The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.
  * @childattr {boolean} divider-end - The divider stops after this cell. With several markers the line runs from the first start to the last end.
  *
@@ -551,7 +550,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * nldd-icon-cell and nldd-spacer-cell is a pixel value and on nldd-title-cell
 	 * the display scale, so pushing 'sm' there would corrupt them.
 	 */
-	private static readonly SIZED_CELLS = 'nldd-text-cell, nldd-drag-handle-cell';
+	private static readonly SIZED_CELLS = 'nldd-text-cell, nldd-reorder-handle-cell';
 
 	/** Remembers the size a cell was authored with, so a later push can restore it. */
 	private _ownCellSize = new WeakMap<Element, string | null>();

@@ -9,6 +9,7 @@ import '../cells/text-cell/text-cell.js';
 import '../cells/icon-cell/icon-cell.js';
 import '../list-item-segment/list-item-segment.js';
 import '../cells/cell/cell.js';
+import '../cells/reorder-handle-cell/reorder-handle-cell.js';
 import '../../actions/button/button.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../inputs/combo-box/combo-box.js';
@@ -99,14 +100,14 @@ describe('nldd-list', () => {
 	it('ArrowDown on a drag handle fires nldd-reorder with the target index', async () => {
 		el = await fixture(`
 			<nldd-list reorderable>
-				<nldd-list-item><span reorderable-only tabindex="0">handle</span></nldd-list-item>
-				<nldd-list-item><span reorderable-only tabindex="0">handle</span></nldd-list-item>
-				<nldd-list-item><span reorderable-only tabindex="0">handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle tabindex="0">handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle tabindex="0">handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle tabindex="0">handle</span></nldd-list-item>
 			</nldd-list>
 		`);
 		await waitForUpdate(el);
 
-		const handle = el.querySelectorAll('[reorderable-only]')[0] as HTMLElement;
+		const handle = el.querySelectorAll('[reorder-handle]')[0] as HTMLElement;
 
 		let reorderDetail: { fromIndex: number; toIndex: number } | null = null;
 		el.addEventListener('nldd-reorder', (e: Event) => {
@@ -121,16 +122,42 @@ describe('nldd-list', () => {
 		expect(reorderDetail!.toIndex).toBe(1);
 	});
 
+	it('drags from an nldd-reorder-handle-cell without any attribute, and from any cell with reorder-handle', async () => {
+		el = await fixture(`
+			<nldd-list reorderable>
+				<nldd-list-item><nldd-reorder-handle-cell></nldd-reorder-handle-cell></nldd-list-item>
+				<nldd-list-item><nldd-cell reorder-handle><button>Greep</button></nldd-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Geen greep"></nldd-text-cell></nldd-list-item>
+			</nldd-list>
+		`);
+		await waitForUpdate(el);
+		const details: { fromIndex: number; toIndex: number }[] = [];
+		el.addEventListener('nldd-reorder', (e: Event) => details.push((e as CustomEvent).detail));
+		const press = async (target: Element) => {
+			target.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+			await waitForUpdate(el);
+		};
+
+		const cell = el.querySelector('nldd-reorder-handle-cell')! as HTMLElement & { updateComplete: Promise<boolean> };
+		await cell.updateComplete;
+		expect(cell.hasAttribute('reorder-handle')).toBe(true);
+		await press(cell.shadowRoot!.querySelector('button')!);
+		await press(el.querySelector('nldd-cell button')!);
+		await press(el.querySelector('nldd-text-cell')!);
+
+		expect(details).toEqual([{ fromIndex: 0, toIndex: 1 }, { fromIndex: 1, toIndex: 2 }]);
+	});
+
 	it('ArrowUp on the first item is a no-op', async () => {
 		el = await fixture(`
 			<nldd-list reorderable>
-				<nldd-list-item><span reorderable-only tabindex="0">handle</span></nldd-list-item>
-				<nldd-list-item><span reorderable-only tabindex="0">handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle tabindex="0">handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle tabindex="0">handle</span></nldd-list-item>
 			</nldd-list>
 		`);
 		await waitForUpdate(el);
 
-		const handle = el.querySelectorAll('[reorderable-only]')[0] as HTMLElement;
+		const handle = el.querySelectorAll('[reorder-handle]')[0] as HTMLElement;
 		let fired = false;
 		el.addEventListener('nldd-reorder', () => { fired = true; });
 
@@ -142,13 +169,13 @@ describe('nldd-list', () => {
 	it('ArrowDown on the last item is a no-op', async () => {
 		el = await fixture(`
 			<nldd-list reorderable>
-				<nldd-list-item><span reorderable-only tabindex="0">handle</span></nldd-list-item>
-				<nldd-list-item><span reorderable-only tabindex="0">handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle tabindex="0">handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle tabindex="0">handle</span></nldd-list-item>
 			</nldd-list>
 		`);
 		await waitForUpdate(el);
 
-		const handles = el.querySelectorAll('[reorderable-only]');
+		const handles = el.querySelectorAll('[reorder-handle]');
 		const lastHandle = handles[handles.length - 1] as HTMLElement;
 		let fired = false;
 		el.addEventListener('nldd-reorder', () => { fired = true; });
@@ -182,14 +209,14 @@ describe('nldd-list', () => {
 	it('fires nldd-reorder with correct indices after pointer drag', async () => {
 		el = await fixture(`
 			<nldd-list reorderable>
-				<nldd-list-item><span reorderable-only>handle</span></nldd-list-item>
-				<nldd-list-item><span reorderable-only>handle</span></nldd-list-item>
-				<nldd-list-item><span reorderable-only>handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle>handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle>handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle>handle</span></nldd-list-item>
 			</nldd-list>
 		`);
 		await waitForUpdate(el);
 
-		const handle = el.querySelectorAll('[reorderable-only]')[0] as HTMLElement;
+		const handle = el.querySelectorAll('[reorder-handle]')[0] as HTMLElement;
 
 		let reorderDetail: { fromIndex: number; toIndex: number } | null = null;
 		el.addEventListener('nldd-reorder', (e: Event) => {
@@ -212,13 +239,13 @@ describe('nldd-list', () => {
 	it('pointer cancel cleans up is-dragging class and removes placeholder', async () => {
 		el = await fixture(`
 			<nldd-list reorderable>
-				<nldd-list-item><span reorderable-only>handle</span></nldd-list-item>
-				<nldd-list-item><span reorderable-only>handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle>handle</span></nldd-list-item>
+				<nldd-list-item><span reorder-handle>handle</span></nldd-list-item>
 			</nldd-list>
 		`);
 		await waitForUpdate(el);
 
-		const handle = el.querySelectorAll('[reorderable-only]')[0] as HTMLElement;
+		const handle = el.querySelectorAll('[reorder-handle]')[0] as HTMLElement;
 		const firstItem = el.querySelectorAll('nldd-list-item')[0];
 
 		handle.dispatchEvent(new PointerEvent('pointerdown', { clientY: 10, pointerId: 1, bubbles: true, composed: true }));

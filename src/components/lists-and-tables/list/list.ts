@@ -1153,7 +1153,7 @@ export class NLDDList extends LitElement {
 
 		const path = event.composedPath() as Element[];
 		const hasDragHandle = path.some(
-			(el) => el instanceof Element && el.hasAttribute('reorderable-only'),
+			(el) => el instanceof Element && el.hasAttribute('reorder-handle'),
 		);
 		if (!hasDragHandle) return;
 
@@ -1240,7 +1240,7 @@ export class NLDDList extends LitElement {
 
 		const path = event.composedPath() as Element[];
 		const handle = path.find(
-			(el) => el instanceof HTMLElement && el.hasAttribute('reorderable-only'),
+			(el) => el instanceof HTMLElement && el.hasAttribute('reorder-handle'),
 		) as HTMLElement | undefined;
 		if (!handle) return;
 
@@ -1259,7 +1259,7 @@ export class NLDDList extends LitElement {
 		event.preventDefault();
 
 		// Capture the actual focused element (may live inside the handle's shadow DOM,
-		// e.g. the <button> inside nldd-drag-handle-cell) so we can restore focus
+		// e.g. the <button> inside nldd-reorder-handle-cell) so we can restore focus
 		// after the consumer reorders the DOM in response to nldd-reorder.
 		const focused = this._getDeepActiveElement() ?? handle;
 
@@ -1319,7 +1319,7 @@ export class NLDDList extends LitElement {
 		this._cloneOffsetY = clientY - rect.top;
 
 		// Clone the host (carries slotted light DOM), keep draggable so consumer
-		// CSS doesn't hide reorderable-only cells in the clone
+		// CSS doesn't hide reorder-handle cells in the clone
 		const hostClone = item.cloneNode(true) as HTMLElement;
 		hostClone.classList.remove('is-dragging');
 		hostClone.classList.remove('is-dragging-pointer');
@@ -1387,7 +1387,7 @@ export class NLDDList extends LitElement {
 			// consumer has had a chance to reorder the DOM in response to nldd-reorder.
 			requestAnimationFrame(() => {
 				const handle = movedItem
-					.querySelector('[reorderable-only]')
+					.querySelector('[reorder-handle]')
 					?.shadowRoot?.querySelector<HTMLElement>('button');
 				handle?.focus();
 			});

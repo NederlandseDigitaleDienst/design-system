@@ -86,16 +86,16 @@ export const listItemStyles = css`
 		display: none;
 	}
 
-	:host(:not([reorderable])) ::slotted([reorderable-only]) {
+	:host(:not([reorderable])) ::slotted([reorder-handle]) {
 		display: none;
 	}
 
-	:host([reorderable]) ::slotted([reorderable-only]) {
+	:host([reorderable]) ::slotted([reorder-handle]) {
 		cursor: grab;
 		touch-action: none;
 	}
 
-	:host(.is-dragging) ::slotted([reorderable-only]) {
+	:host(.is-dragging) ::slotted([reorder-handle]) {
 		cursor: grabbing;
 	}
 

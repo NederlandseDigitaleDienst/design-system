@@ -9577,10 +9577,10 @@
         },
         {
           "kind": "js",
-          "name": "NLDDDragHandleCell",
+          "name": "NLDDReorderHandleCell",
           "declaration": {
-            "name": "NLDDDragHandleCell",
-            "module": "./lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js"
+            "name": "NLDDReorderHandleCell",
+            "module": "./lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js"
           }
         },
         {
@@ -38339,6 +38339,17 @@
             },
             {
               "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "rowHeader",
               "type": {
                 "text": "boolean"
@@ -38437,6 +38448,15 @@
               "description": "Vertical alignment of slotted content (default: 'center')"
             },
             {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle",
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
               "name": "row-header",
               "type": {
                 "text": "boolean"
@@ -38472,6 +38492,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "ReorderHandleMixin",
+              "module": "/src/utilities/reorder-handle-mixin.js"
+            },
             {
               "name": "RowHeaderMixin",
               "module": "/src/utilities/row-header-mixin.js"
@@ -38573,6 +38597,17 @@
             },
             {
               "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "rowHeader",
               "type": {
                 "text": "boolean"
@@ -38659,6 +38694,15 @@
               "description": "Vertical alignment (default: 'center')"
             },
             {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle",
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
               "name": "row-header",
               "type": {
                 "text": "boolean"
@@ -38694,6 +38738,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "ReorderHandleMixin",
+              "module": "/src/utilities/reorder-handle-mixin.js"
+            },
             {
               "name": "RowHeaderMixin",
               "module": "/src/utilities/row-header-mixin.js"
@@ -38736,86 +38784,6 @@
           "declaration": {
             "name": "NLDDDescriptionCell",
             "module": "src/components/lists-and-tables/cells/description-cell/description-cell.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A cell that displays a drag handle for reorderable list items. Always vertically centered and sized to fit the handle. To enable drag-to-reorder, add the `reorderable-only` attribute to this element. This attribute is required for `nldd-list` to detect the drag handle in the composed event path and activate pointer and keyboard drag mode: ```html <nldd-list reorderable> <nldd-list-item> <nldd-drag-handle-cell reorderable-only></nldd-drag-handle-cell> <nldd-text-cell text=\"Item\"></nldd-text-cell> </nldd-list-item> </nldd-list> ``` Without `reorderable-only`, pointer and keyboard drag will never trigger.",
-          "name": "NLDDDragHandleCell",
-          "members": [
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "Size"
-              },
-              "default": "'md'",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDDragHandleCellTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unset keys fall back to the Dutch default.",
-              "attribute": "translations"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "size",
-              "type": {
-                "text": "Size"
-              },
-              "default": "'md'",
-              "fieldName": "size",
-              "expandedType": {
-                "text": "'md' | 'sm'"
-              },
-              "description": "Handle size: 'sm' | 'md' (default: 'md')"
-            },
-            {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDDragHandleCellTranslations>"
-              },
-              "default": "{}",
-              "description": "Override translation keys; unset keys fall back to Dutch. Sets the handle's accessible label.",
-              "fieldName": "translations"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-drag-handle-cell",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "NLDDDragHandleCell",
-          "declaration": {
-            "name": "NLDDDragHandleCell",
-            "module": "src/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-drag-handle-cell",
-          "declaration": {
-            "name": "NLDDDragHandleCell",
-            "module": "src/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.ts"
           }
         }
       ]
@@ -38868,6 +38836,17 @@
               "default": "''",
               "attribute": "icon",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -38943,6 +38922,15 @@
               "description": "Icon name (renders `<nldd-icon>`). Content in the default slot wins."
             },
             {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle",
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -38973,6 +38961,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "ReorderHandleMixin",
+              "module": "/src/utilities/reorder-handle-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -39013,6 +39005,112 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The grip that drags its row in a `reorderable` nldd-list, by pointer or with the arrow keys. Always vertically centered and sized to fit the handle. It carries `reorder-handle` by itself, so it shows only while the row is `reorderable` and needs nothing else: ```html <nldd-list reorderable> <nldd-list-item> <nldd-reorder-handle-cell></nldd-reorder-handle-cell> <nldd-text-cell text=\"Item\"></nldd-text-cell> </nldd-list-item> </nldd-list> ``` Any other cell becomes the grip with `reorder-handle`, such as an nldd-cell with a control of your own.",
+          "name": "NLDDReorderHandleCell",
+          "members": [
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<NLDDReorderHandleCellTranslations>"
+              },
+              "default": "{}",
+              "description": "Override one or more translation keys. Unset keys fall back to the Dutch default.",
+              "attribute": "translations"
+            },
+            {
+              "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'md'",
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
+              "description": "Handle size: 'sm' | 'md' (default: 'md')"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<NLDDReorderHandleCellTranslations>"
+              },
+              "default": "{}",
+              "description": "Override translation keys; unset keys fall back to Dutch. Sets the handle's accessible label.",
+              "fieldName": "translations"
+            },
+            {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle",
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ReorderHandleMixin",
+              "module": "/src/utilities/reorder-handle-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-reorder-handle-cell",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDReorderHandleCell",
+          "declaration": {
+            "name": "NLDDReorderHandleCell",
+            "module": "src/components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-reorder-handle-cell",
+          "declaration": {
+            "name": "NLDDReorderHandleCell",
+            "module": "src/components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/lists-and-tables/cells/spacer-cell/spacer-cell.ts",
       "declarations": [
         {
@@ -39029,6 +39127,17 @@
               "default": "'16'",
               "attribute": "size",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -39071,6 +39180,15 @@
               "description": "Spacer size in pixels: '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96' (default: '16')"
             },
             {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle",
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -39094,6 +39212,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "ReorderHandleMixin",
+              "module": "/src/utilities/reorder-handle-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -39248,6 +39370,17 @@
             },
             {
               "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -39386,6 +39519,15 @@
               "description": "Icon name in the dot; wins over `text`"
             },
             {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle",
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -39409,6 +39551,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "ReorderHandleMixin",
+              "module": "/src/utilities/reorder-handle-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -39584,6 +39730,17 @@
             },
             {
               "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "rowHeader",
               "type": {
                 "text": "boolean"
@@ -39754,6 +39911,15 @@
               "description": "'match' | 'predictive' (default: 'predictive')"
             },
             {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle",
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
               "name": "row-header",
               "type": {
                 "text": "boolean"
@@ -39789,6 +39955,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "ReorderHandleMixin",
+              "module": "/src/utilities/reorder-handle-mixin.js"
+            },
             {
               "name": "RowHeaderMixin",
               "module": "/src/utilities/row-header-mixin.js"
@@ -39986,6 +40156,17 @@
             },
             {
               "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "rowHeader",
               "type": {
                 "text": "boolean"
@@ -40164,6 +40345,15 @@
               "description": "'match' | 'predictive' (default: 'predictive')"
             },
             {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle",
+              "inheritedFrom": {
+                "name": "ReorderHandleMixin",
+                "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
               "name": "row-header",
               "type": {
                 "text": "boolean"
@@ -40199,6 +40389,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "ReorderHandleMixin",
+              "module": "/src/utilities/reorder-handle-mixin.js"
+            },
             {
               "name": "RowHeaderMixin",
               "module": "/src/utilities/row-header-mixin.js"
@@ -40966,7 +41160,7 @@
               "type": {
                 "text": "ListItemSize"
               },
-              "description": "Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.",
+              "description": "Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-reorder-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.",
               "name": "size",
               "default": "'md'",
               "fieldName": "size",
@@ -41128,14 +41322,6 @@
                 "name": "withTranslations",
                 "module": "src/utilities/with-translations.ts"
               }
-            },
-            {
-              "name": "reorderable-only",
-              "description": "Show this cell only while the row is `reorderable`",
-              "type": {
-                "text": "boolean"
-              },
-              "forChildren": true
             },
             {
               "name": "divider-start",
@@ -50475,6 +50661,55 @@
           "declaration": {
             "name": "renderQueryMark",
             "module": "src/utilities/render-marked.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/reorder-handle-mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Adds the `reorder-handle` attribute to every cell, so any cell can be the\ngrip that drags its row in a `reorderable` nldd-list: nldd-reorder-handle-cell,\nwhich is one by default, or an nldd-cell with a control of your own, or a\ncell without a control.\n\nThe cell itself does nothing with it. The nldd-list-item around it shows\nthe cell only while the row is `reorderable`, and the nldd-list starts a\ndrag, by pointer or with the arrow keys, only from inside such a cell.",
+          "name": "ReorderHandleMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "reorderHandle",
+              "default": "handle",
+              "attribute": "reorder-handle",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "reorder-handle",
+              "default": "handle",
+              "fieldName": "reorderHandle"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "Base",
+              "type": {
+                "text": "TBase"
+              }
+            },
+            {
+              "name": "handle",
+              "default": "false"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ReorderHandleMixin",
+          "declaration": {
+            "name": "ReorderHandleMixin",
+            "module": "src/utilities/reorder-handle-mixin.ts"
           }
         }
       ]

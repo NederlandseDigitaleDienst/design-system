@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-drag-handle-cell'
+removed: ['nldd-drag-handle-cell']
+fix: { tag: nldd-reorder-handle-cell }
+message: '`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`. Rename the tag, its import and its class, here and on every page.'
+examples:
+  passed: ['<nldd-list-item><nldd-reorder-handle-cell></nldd-reorder-handle-cell></nldd-list-item>']
+  failed: ['<nldd-list-item><nldd-drag-handle-cell></nldd-drag-handle-cell></nldd-list-item>']

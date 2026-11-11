@@ -3862,6 +3862,7 @@ A generic cell for wrapping arbitrary content in a list item. Controls vertical 
 | `min-height` | `string` | Minimum height as CSS length (e.g. '44px', '3rem') |
 | `horizontal-alignment` | `'left' \| 'center' \| 'right'` | Horizontal alignment of slotted content (default: 'left') |
 | `vertical-alignment` | `'top' \| 'center' \| 'bottom'` | Vertical alignment of slotted content (default: 'center') |
+| `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
 | `row-header` | `boolean` | In an `nldd-table`, makes this cell the header of its row (role="rowheader" instead of "cell"). Semantics only: the cell looks the same. Ignored in a header row. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |
@@ -3889,6 +3890,7 @@ A cell component for displaying a title-description pair in lists. `vertical-ali
 | `max-width` | `string` | Maximum width as CSS length (e.g. '300px', '20rem') |
 | `min-height` | `string` | Minimum height as CSS length (e.g. '44px', '3rem') |
 | `vertical-alignment` | `'top' \| 'center' \| 'bottom'` | Vertical alignment (default: 'center') |
+| `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
 | `row-header` | `boolean` | In an `nldd-table`, makes this cell the header of its row (role="rowheader" instead of "cell"). Semantics only: the cell looks the same. Ignored in a header row. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |
@@ -3899,17 +3901,6 @@ A cell component for displaying a title-description pair in lists. `vertical-ali
 | --- | --- |
 | `title` | The label displayed above the description |
 | `description` | The description content |
-
-### `<nldd-drag-handle-cell>`
-
-A cell that displays a drag handle for reorderable list items. Always vertically centered and sized to fit the handle. To enable drag-to-reorder, add the `reorderable-only` attribute to this element. This attribute is required for `nldd-list` to detect the drag handle in the composed event path and activate pointer and keyboard drag mode: ```html <nldd-list reorderable> <nldd-list-item> <nldd-drag-handle-cell reorderable-only></nldd-drag-handle-cell> <nldd-text-cell text="Item"></nldd-text-cell> </nldd-list-item> </nldd-list> ``` Without `reorderable-only`, pointer and keyboard drag will never trigger.
-
-**Attributes**
-
-| Attribute | Type | Description |
-| --- | --- | --- |
-| `size` | `string` | Handle size: 'sm' \| 'md' (default: 'md') |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch. Sets the handle's accessible label. |
 
 ### `<nldd-icon-cell>`
 
@@ -3930,6 +3921,7 @@ A cell component for displaying icons in lists with configurable alignment and s
 | `vertical-alignment` | `string` | Vertical alignment: 'top' \| 'center' \| 'bottom' (default: 'center') |
 | `icon` | `string` | Icon name (renders `<nldd-icon>`). Content in the default slot wins. |
 | `disclosure` | `boolean` | Marks this icon as the chevron of a row or segment that opens and closes: the row turns it with `expanded`. |
+| `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |
 
@@ -4027,7 +4019,7 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `'sm'\|'md'` | Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone. |
+| `size` | `'sm'\|'md'` | Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-reorder-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone. |
 | `href` | `string` | Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action. |
 | `target` | `string` | Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
@@ -4044,7 +4036,6 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `current` | `boolean` | Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs. |
 | `current-type` | `'page'\|'step'\|'location'\|'date'\|'time'\|'true'` | The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on. |
 | `disabled` | `boolean` | Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row. |
-| `reorderable-only` | `boolean` | Show this cell only while the row is `reorderable` |
 | `divider-start` | `boolean` | The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line. |
 | `divider-end` | `boolean` | The divider stops after this cell. With several markers the line runs from the first start to the last end. |
 
@@ -4113,6 +4104,18 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 | --- | --- |
 | `change` | On a `checkbox` segment after it toggles; detail: { checked: boolean } |
 
+### `<nldd-reorder-handle-cell>`
+
+The grip that drags its row in a `reorderable` nldd-list, by pointer or with the arrow keys. Always vertically centered and sized to fit the handle. It carries `reorder-handle` by itself, so it shows only while the row is `reorderable` and needs nothing else: ```html <nldd-list reorderable> <nldd-list-item> <nldd-reorder-handle-cell></nldd-reorder-handle-cell> <nldd-text-cell text="Item"></nldd-text-cell> </nldd-list-item> </nldd-list> ``` Any other cell becomes the grip with `reorder-handle`, such as an nldd-cell with a control of your own.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `size` | `string` | Handle size: 'sm' \| 'md' (default: 'md') |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch. Sets the handle's accessible label. |
+| `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
+
 ### `<nldd-spacer-cell>`
 
 A cell component that provides fixed horizontal spacing within list items.
@@ -4122,6 +4125,7 @@ A cell component that provides fixed horizontal spacing within list items.
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Spacer size in pixels: '2' \| '4' \| '6' \| '8' \| '10' \| '12' \| '16' \| '20' \| '24' \| '28' \| '32' \| '40' \| '44' \| '48' \| '56' \| '64' \| '80' \| '96' (default: '16') |
+| `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |
 
@@ -4150,6 +4154,7 @@ A cell that draws steps under each other in an `nldd-list`: a vertical track wit
 | `line` | `'auto' \| 'top' \| 'bottom' \| 'both' \| 'none'` | Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line="both"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `level="none"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you |
 | `text` | `string` | Number or short text in the dot |
 | `icon` | `string` | Icon name in the dot; wins over `text` |
+| `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |
 
@@ -4233,6 +4238,7 @@ A cell component for displaying text content in lists with configurable alignmen
 | `overline` | `string` | Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot. |
 | `query` | `string` | Query substring to bold-highlight across text fields. Empty = no marking. |
 | `query-mark-mode` | `string` | 'match' \| 'predictive' (default: 'predictive') |
+| `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
 | `row-header` | `boolean` | In an `nldd-table`, makes this cell the header of its row (role="rowheader" instead of "cell"). Semantics only: the cell looks the same. Ignored in a header row. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |
@@ -4273,6 +4279,7 @@ A cell component for displaying a title with optional overline and supporting te
 | `heading-level` | `number` | Heading level for the title element: 1–6 (default: none, renders a <p>) |
 | `query` | `string` | Query substring to bold-highlight across text fields. Empty = no marking. |
 | `query-mark-mode` | `string` | 'match' \| 'predictive' (default: 'predictive') |
+| `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
 | `row-header` | `boolean` | In an `nldd-table`, makes this cell the header of its row (role="rowheader" instead of "cell"). Semantics only: the cell looks the same. Ignored in a header row. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |

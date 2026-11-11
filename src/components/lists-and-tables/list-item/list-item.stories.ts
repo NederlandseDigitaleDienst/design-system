@@ -4,7 +4,7 @@ import '../list/list.js';
 import '../cells/text-cell/text-cell.js';
 import '../cells/spacer-cell/spacer-cell.js';
 import '../cells/icon-cell/icon-cell.js';
-import '../cells/drag-handle-cell/drag-handle-cell.js';
+import '../cells/reorder-handle-cell/reorder-handle-cell.js';
 import '../../content/icon/icon.js';
 import '../list-item-segment/list-item-segment.js';
 
@@ -318,9 +318,9 @@ export const SimpelMetCellenAchteraan = {
 };
 
 /**
- * Voeg het `reorderable-only` attribuut toe aan `nldd-drag-handle-cell` zodat
- * `nldd-list` de hendel herkent in het composed event path. Zonder dit attribuut
- * werkt slepen via pointer en toetsenbord niet.
+ * `nldd-reorder-handle-cell` is de sleepgreep en verschijnt alleen als de lijst
+ * `reorderable` is. Een andere cel wordt een greep met `reorder-handle`, zoals
+ * de spacer ernaast, die zo ook alleen in sorteermodus ruimte inneemt.
  */
 export const MetSleepgreep = {
 	// Imperative render: the nldd-reorder handler mutates the DOM in place so
@@ -348,23 +348,17 @@ export const MetSleepgreep = {
 				@nldd-reorder=${onReorder}
 			>
 				<nldd-list-item>
-					<nldd-drag-handle-cell
-						size="sm"
-						reorderable-only
-					></nldd-drag-handle-cell>
+					<nldd-reorder-handle-cell size="sm"></nldd-reorder-handle-cell>
 					<nldd-spacer-cell
-						reorderable-only
+						reorder-handle
 						size="8"
 					></nldd-spacer-cell>
 					<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 				</nldd-list-item>
 				<nldd-list-item>
-					<nldd-drag-handle-cell
-						size="sm"
-						reorderable-only
-					></nldd-drag-handle-cell>
+					<nldd-reorder-handle-cell size="sm"></nldd-reorder-handle-cell>
 					<nldd-spacer-cell
-						reorderable-only
+						reorder-handle
 						size="8"
 					></nldd-spacer-cell>
 					<nldd-text-cell text="Aanvraag A-1043"></nldd-text-cell>

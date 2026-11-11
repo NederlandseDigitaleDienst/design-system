@@ -54,6 +54,7 @@
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { titleCellStyles } from './title-cell.styles.js';
@@ -68,7 +69,7 @@ type HorizontalAlignment = 'left' | 'center' | 'right';
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 
 @customElement('nldd-title-cell')
-export class NLDDTitleCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
+export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container'))) {
 	static override styles = [titleCellStyles];
 
 	/** Unset looks like display-5, and like display-6 in an nldd-table-row,

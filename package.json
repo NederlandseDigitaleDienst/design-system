@@ -387,9 +387,9 @@
       "types": "./dist/components/lists-and-tables/cells/description-cell/description-cell.d.ts",
       "default": "./dist/components/lists-and-tables/cells/description-cell/description-cell.js"
     },
-    "./drag-handle-cell": {
-      "types": "./dist/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.d.ts",
-      "default": "./dist/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js"
+    "./reorder-handle-cell": {
+      "types": "./dist/components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.d.ts",
+      "default": "./dist/components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js"
     },
     "./step-cell": {
       "types": "./dist/components/lists-and-tables/cells/step-cell/step-cell.d.ts",

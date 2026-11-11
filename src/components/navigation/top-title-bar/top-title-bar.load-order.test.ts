@@ -16,7 +16,7 @@ describe('nldd-top-title-bar – loaded before nldd-page', () => {
 		document.body.append(wrap);
 		try {
 			await import('./top-title-bar.js');
-			const bar = wrap.querySelector('nldd-top-title-bar')! as HTMLElement & { updateComplete: Promise<boolean>; _activeScrollTarget: EventTarget | null };
+			const bar = wrap.querySelector('nldd-top-title-bar')! as unknown as HTMLElement & { updateComplete: Promise<boolean>; _activeScrollTarget: EventTarget | null };
 			await bar.updateComplete;
 			expect(customElements.get('nldd-page')).toBeUndefined();
 			expect(bar._activeScrollTarget).toBeFalsy();
