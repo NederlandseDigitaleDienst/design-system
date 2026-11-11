@@ -206,7 +206,7 @@ export class NLDDPageFooter extends LitElement {
 		else this._hasMain = hasContent;
 	};
 
-	// Reflect the visible-row count as host attributes for styling. Done here
+	// Reflect an empty footer as a host attribute for styling. Done here
 	// (not in the slotchange handler) so a fully empty footer — whose empty
 	// slots may never fire slotchange — still gets `empty` on first render.
 	override updated(changed: PropertyValues): void {
@@ -214,9 +214,8 @@ export class NLDDPageFooter extends LitElement {
 			(this._hasBreadcrumbs ? 1 : 0) +
 			(this._hasMain ? 1 : 0) +
 			(this._hasLegalBar ? 1 : 0);
-		// One visible row → centered single-slot padding; zero rows → the gray
-		// band drops and only the ribbon shows (see :host([empty]) in the styles).
-		this.toggleAttribute('single-slot', visibleCount === 1);
+		// Zero rows: the gray band drops and only the ribbon shows
+		// (see :host([empty]) in the styles).
 		this.toggleAttribute('empty', visibleCount === 0);
 
 		if (changed.has('width')) {

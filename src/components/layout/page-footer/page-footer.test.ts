@@ -50,15 +50,14 @@ describe('nldd-page-footer', () => {
 		`);
 		await waitForUpdate(el);
 		const footer = el.shadowRoot!.querySelector('.page-footer') as HTMLElement;
-		const legal = el.shadowRoot!.querySelector('.page-footer__legal-bar') as HTMLElement;
 		expect(getComputedStyle(footer, '::after').content).not.toBe('none');
-		const withRibbon = parseFloat(getComputedStyle(legal).paddingBottom);
+		expect(parseFloat(getComputedStyle(footer).paddingBottom)).toBeGreaterThan(0);
+		const withRibbon = el.getBoundingClientRect().height;
 		el.setAttribute('no-ribbon', '');
 		await waitForUpdate(el);
 		expect(getComputedStyle(footer, '::after').content).toBe('none');
-		const withoutRibbon = parseFloat(getComputedStyle(legal).paddingBottom);
-		expect(withoutRibbon).toBeLessThan(withRibbon);
-		expect(withoutRibbon).toBeGreaterThan(0);
+		expect(getComputedStyle(footer).paddingBottom).toBe('0px');
+		expect(el.getBoundingClientRect().height).toBeLessThan(withRibbon);
 		unloadTokens();
 	});
 
@@ -141,18 +140,6 @@ describe('nldd-page-footer', () => {
 		expect(dividers.every(d => d.hidden)).toBe(true);
 	});
 
-	it('sets single-slot when only one row is visible', async () => {
-		el = await fixture(`
-			<nldd-page-footer>
-				<nldd-page-footer-legal-bar slot="legal-bar">
-					<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
-				</nldd-page-footer-legal-bar>
-			</nldd-page-footer>
-		`);
-		await waitForUpdate(el);
-		expect(el.hasAttribute('single-slot')).toBe(true);
-	});
-
 	it('feeds a CSS-length width to the body max-width and clears it for full/default', async () => {
 		el = await fixture('<nldd-page-footer width="480px"></nldd-page-footer>');
 		await waitForUpdate(el);
@@ -166,31 +153,6 @@ describe('nldd-page-footer', () => {
 		(el as HTMLElement & { width: string }).width = '';
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_page-footer-max-width')).toBe('');
-	});
-
-	it('sets single-slot when only the default (main) slot is populated', async () => {
-		el = await fixture(`
-			<nldd-page-footer>
-				<div>Main content</div>
-			</nldd-page-footer>
-		`);
-		await waitForUpdate(el);
-		expect(el.hasAttribute('single-slot')).toBe(true);
-	});
-
-	it('clears single-slot when multiple rows are visible', async () => {
-		el = await fixture(`
-			<nldd-page-footer>
-				<nldd-breadcrumbs slot="breadcrumbs">
-					<nldd-breadcrumbs-item text="Home" href="/"></nldd-breadcrumbs-item>
-				</nldd-breadcrumbs>
-				<nldd-page-footer-legal-bar slot="legal-bar">
-					<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
-				</nldd-page-footer-legal-bar>
-			</nldd-page-footer>
-		`);
-		await waitForUpdate(el);
-		expect(el.hasAttribute('single-slot')).toBe(false);
 	});
 
 	it('sets id="page-footer" on the host for skip-link targets', async () => {
