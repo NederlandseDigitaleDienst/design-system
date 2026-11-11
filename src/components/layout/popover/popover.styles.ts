@@ -103,6 +103,12 @@ export const popoverStyles = css`
 		}
 	}
 
+	:host(:popover-open[data-closing]) {
+		@media (max-width: ${smMax}) {
+			transform: translateY(100%);
+		}
+	}
+
 	:host::backdrop {
 		@media (max-width: ${smMax}) {
 			background-color: var(--semantics-overlays-backdrop-color);
