@@ -31,6 +31,7 @@ function renderColumn(
 			data-column=${column}
 			@keydown=${(e: KeyboardEvent) => component._handleKeydown(e, column)}
 			@scroll=${(e: Event) => component._handleScroll(e, column)}
+			@scrollend=${(e: Event) => component._handleScrollEnd(e, column)}
 			@wheel=${component._takeOver}
 			@touchstart=${component._takeOver}
 			@pointerdown=${component._takeOver}

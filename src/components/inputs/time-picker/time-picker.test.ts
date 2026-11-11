@@ -184,6 +184,26 @@ describe('nldd-time-picker – kiezen', () => {
 		expect(selection(el, 'hours').textContent!.trim()).toBe('04');
 	});
 
+	// Momentum scrolling on iOS can pause long enough to pass for the end. The
+	// column moving on after that must still be read, or the selection keeps the
+	// value it recorded while another one stands in the middle.
+	it('volgt een kolom die na het vastleggen nog doorscrollt', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 200ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		await new Promise((r) => setTimeout(r, 250));
+		const kolom = column(el, 'hours');
+		const opties = [...kolom.querySelectorAll<HTMLElement>('.time-picker__list-item')];
+		const midden = (o: HTMLElement) => o.offsetTop + o.offsetHeight / 2 - kolom.clientHeight / 2;
+		kolom.scrollTop = midden(opties[5]);
+		await until(() => el.value === '05:30', { timeout: 1000 });
+		kolom.scrollTop = midden(opties[3]);
+		await until(() => el.value === '03:30', { timeout: 1000 });
+		await new Promise((r) => setTimeout(r, 300));
+		expect(el.value).toBe('03:30');
+		expect(selection(el, 'hours').textContent!.trim()).toBe('03');
+		expect(Math.abs(kolom.scrollTop - midden(opties[3]))).toBeLessThan(1);
+	});
+
 	it('leest de duur ook in seconden', async () => {
 		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 0.2s; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
 		await waitForUpdate(el);
@@ -253,8 +273,8 @@ describe('nldd-time-picker – kiezen', () => {
 		expect(hoverRegels).toHaveLength(1);
 		expect(hoverRegels[0].style.backgroundColor).toBe('transparent');
 		// And back on once scrolling comes to rest.
-		await new Promise((r) => setTimeout(r, 250));
-		expect(getComputedStyle(item).pointerEvents).not.toBe('none');
+		kolom.scrollTop += 44;
+		await until(() => getComputedStyle(item).pointerEvents !== 'none', { timeout: 1000 });
 	});
 
 	it('bevestigt met Enter op de selectie', async () => {
@@ -559,7 +579,6 @@ describe('nldd-time-picker – wiel', () => {
 		const inSelection = () => el.shadowRoot!.querySelector('.time-picker__selection')!
 			.textContent!.replace(/\s+/g, '');
 		expect(inSelection()).toBe('14:30');
-		expect(el.value).toBe('09:30');
 		await new Promise((r) => setTimeout(r, 250));
 		expect(el.value).toBe('14:30');
 	});

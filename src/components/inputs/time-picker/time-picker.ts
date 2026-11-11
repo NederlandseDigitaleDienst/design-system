@@ -39,6 +39,13 @@ import { translate } from '../../../utilities/translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 const LAST_MINUTE_OF_DAY = 23 * 60 + 59;
+/** A column that cannot scroll, such as one in a closed popover, has no
+ *  position to read. */
+function canScroll(el: HTMLElement): boolean {
+	return el.scrollHeight > el.clientHeight;
+}
+
+const HAS_SCROLLEND = typeof window !== 'undefined' && 'onscrollend' in window;
 
 export function toMinutes(time: string): number {
 	const [hours, minutes] = time.split(':');
@@ -286,14 +293,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			?.focus();
 	}
 
-	/**
-	 * While we scroll ourselves (on opening, or after a choice) the scrolling must
-	 * not pick something again: that would overwrite the choice just made with
-	 * whatever happens to pass by.
-	 */
-	private _scrollingSelf = false;
 	private _scrollTimers: Record<'hours' | 'minutes', number> = { hours: 0, minutes: 0 };
-	private _selfScrollTimer = 0;
 	/** The value was just picked in the picker itself, so it glides to the middle. */
 	private _chosenHere = false;
 
@@ -314,40 +314,60 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		// dispatches input and change from something no longer in the document.
 		clearTimeout(this._scrollTimers.hours);
 		clearTimeout(this._scrollTimers.minutes);
-		clearTimeout(this._selfScrollTimer);
 		for (const column of [...this._glides.keys()]) this._stopGlide(column);
 		super.disconnectedCallback();
 	}
 
 	/**
 	 * Scrolling is choosing: whatever comes to rest in the middle is the value.
-	 * There is a `scrollend` event, but not everywhere, so this waits until
-	 * scrolling has been still for 120ms. Short enough to feel immediate, long
-	 * enough not to pick halfway through a swipe.
+	 * The position of the column is the only truth. The selection shows what is
+	 * in the middle on every frame, also while we scroll ourselves, and every
+	 * scroll that comes to rest is read back and recorded. No scroll is ever
+	 * ignored, so the selection, the column and the value cannot drift apart.
+	 *
+	 * Rest is `scrollend` where the browser has it, so a pause in momentum
+	 * scrolling is not taken for the end. Elsewhere it is 120ms without a scroll
+	 * event: short enough to feel immediate, long enough not to pick halfway
+	 * through a swipe.
 	 */
 	public _handleScroll(e: Event, column: 'hours' | 'minutes'): void {
-		if (this._scrollingSelf) {
-			// A smooth scroll takes longer than the timer set at its start, so
-			// every frame of it moves the end further on.
-			this._releaseSelfScroll();
-			return;
-		}
-		// Clearing the timers on disconnect is not enough on its own: a scroll event
-		// the browser had already queued still arrives afterwards and would set a
-		// fresh one on an element that is no longer in the document.
+		// A scroll event the browser had already queued can still arrive after
+		// disconnect, and would set a timer on an element no longer in the document.
 		if (!this.isConnected) return;
 		const el = e.currentTarget as HTMLElement;
-		// The selection follows every movement, the value only records once at rest.
+		if (!canScroll(el)) return;
 		const centered = this._centeredOption(el);
-		if (centered !== null) this._scrolledTo = { ...this._scrolledTo, [column]: centered };
+		if (centered !== null && centered !== this._scrolledTo[column]) {
+			this._scrolledTo = { ...this._scrolledTo, [column]: centered };
+		}
+		// A glide records where it ends.
+		if (this._glides.has(el)) return;
 		// As an attribute and not as reactive state: this happens every scroll
 		// frame, and re-rendering eighty values per frame is a waste.
 		this.toggleAttribute('data-scrolling', true);
+		this._settleLater(column, el, HAS_SCROLLEND ? 1000 : 120);
+	}
+
+	public _handleScrollEnd(e: Event, column: 'hours' | 'minutes'): void {
+		const el = e.currentTarget as HTMLElement;
+		if (!this.isConnected || this._glides.has(el) || !canScroll(el)) return;
+		this._settle(column, el);
+	}
+
+	/** With `scrollend` the timer is only a safety net, long enough never to
+	 *  fire in a pause of momentum scrolling. */
+	private _settleLater(column: 'hours' | 'minutes', el: HTMLElement, delay = 120): void {
 		clearTimeout(this._scrollTimers[column]);
-		this._scrollTimers[column] = window.setTimeout(() => {
-			this._selectCentred(column, el);
-			this.toggleAttribute('data-scrolling', false);
-		}, 120);
+		this._scrollTimers[column] = window.setTimeout(() => this._settle(column, el), delay);
+	}
+
+	/** Records whatever came to rest in the middle. */
+	private _settle(column: 'hours' | 'minutes', el: HTMLElement): void {
+		clearTimeout(this._scrollTimers[column]);
+		this.toggleAttribute('data-scrolling', false);
+		if (!canScroll(el)) return;
+		const centered = this._centeredOption(el);
+		if (centered !== null) this._select(column, centered);
 	}
 
 	private _cancelSettle(): void {
@@ -371,12 +391,6 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		return best === null ? null : Number(best.textContent);
 	}
 
-	/** Records whatever came to rest in the middle. */
-	private _selectCentred(column: 'hours' | 'minutes', el: HTMLElement): void {
-		const centered = this._centeredOption(el);
-		if (centered !== null) this._select(column, centered);
-	}
-
 	/**
 	 * Put the chosen value in the middle of the view. The column is seven values
 	 * tall, so `center` lands it on the fourth row with three above and three
@@ -388,7 +402,6 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	 * opens.
 	 */
 	public scrollSelectedIntoView(smooth = false): void {
-		this._scrollingSelf = true;
 		const glide = smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 		for (const name of ['hours', 'minutes'] as const) {
 			const column = this.shadowRoot?.querySelector<HTMLElement>(`[data-column="${name}"]`);
@@ -405,7 +418,6 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 				column.scrollTop = top;
 			}
 		}
-		this._releaseSelfScroll();
 	}
 
 	private _glides = new Map<HTMLElement, number>();
@@ -426,8 +438,12 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		const step = (now: number): void => {
 			const t = duration > 0 ? Math.min(1, (now - start) / duration) : 1;
 			column.scrollTop = from + distance * (1 - (1 - t) ** 3);
-			if (t < 1) this._glides.set(column, requestAnimationFrame(step));
-			else this._stopGlide(column);
+			if (t < 1) {
+				this._glides.set(column, requestAnimationFrame(step));
+				return;
+			}
+			this._stopGlide(column);
+			this._settle(column.dataset.column as 'hours' | 'minutes', column);
 		};
 		this._glides.set(column, requestAnimationFrame(step));
 	}
@@ -439,27 +455,21 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	}
 
 	/**
-	 * A wheel, a touch or a press on a column is the user taking over, also in
-	 * the moment after a glide while we still ignore its last scroll events.
-	 * The glides stop where they are, and their scrolling chooses again.
+	 * A wheel, a touch or a press on a column is the user taking over: the
+	 * glides stop where they are. A column the user then scrolls records where
+	 * that ends; one left alone records where its glide stopped.
 	 * Passive, so it never holds up the scrolling it listens to.
 	 */
 	public _takeOver = {
 		passive: true,
 		handleEvent: (): void => {
-			// Both columns, or the other one's glide would pass for the user's scrolling.
-			for (const column of [...this._glides.keys()]) this._stopGlide(column);
-			clearTimeout(this._selfScrollTimer);
-			this._scrollingSelf = false;
+			// Both columns, or the other one would stand still halfway.
+			for (const column of [...this._glides.keys()]) {
+				this._stopGlide(column);
+				this._settleLater(column.dataset.column as 'hours' | 'minutes', column);
+			}
 		},
 	};
-
-	/** Listen to scrolling again once our own has been still a little longer than
-	 *  the debounce above, so all its scroll events have been ignored. */
-	private _releaseSelfScroll(): void {
-		clearTimeout(this._selfScrollTimer);
-		this._selfScrollTimer = window.setTimeout(() => { this._scrollingSelf = false; }, 200);
-	}
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('rows')) {
