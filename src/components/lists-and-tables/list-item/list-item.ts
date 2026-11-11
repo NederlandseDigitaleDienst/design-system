@@ -192,6 +192,50 @@ const NESTED_CONTROLS = [
  *
  * @fires change - On a `checkbox` row after it toggles, and on a `radio` row when it becomes checked; detail: { checked: boolean }
  */
+type DividerInsets = { degenerate: boolean; start: number | null; end: number | null };
+
+/** Rows whose divider markers changed place without changing size, measured
+ *  together in the next frame. */
+const dividerQueue = new Set<NLDDListItem>();
+let dividerFrame = 0;
+/** Which row a watched element belongs to: the row itself or one of its markers. */
+const markerOwner = new WeakMap<Element, NLDDListItem>();
+let markerObserver: ResizeObserver | null = null;
+
+/**
+ * Measures every row first and writes every inset after, so a list of thousands
+ * of rows costs one layout instead of one per row: a write dirties the layout,
+ * and the next read would force it again.
+ */
+function measureDividers(rows: Iterable<NLDDListItem>): void {
+	const all = [...rows].filter(row => row.isConnected);
+	const insets = all.map(row => row._readDividerInsets());
+	all.forEach((row, i) => row._writeDividerInsets(insets[i]));
+}
+
+function queueDivider(row: NLDDListItem): void {
+	dividerQueue.add(row);
+	dividerFrame ||= requestAnimationFrame(() => {
+		dividerFrame = 0;
+		const rows = [...dividerQueue];
+		dividerQueue.clear();
+		measureDividers(rows);
+	});
+}
+
+/** One observer for every row. Its first report after `observe()` comes once
+ *  the page is laid out and before it paints, for all new rows at once. */
+function dividerObserver(): ResizeObserver {
+	return markerObserver ??= new ResizeObserver(entries => {
+		const rows = new Set<NLDDListItem>();
+		for (const entry of entries) {
+			const row = markerOwner.get(entry.target);
+			if (row) rows.add(row);
+		}
+		measureDividers(rows);
+	});
+}
+
 @customElement('nldd-list-item')
 export class NLDDListItem extends withTranslations(LitElement, nlddListItemTranslations) {
 	static override styles = [listItemStyles];
@@ -340,11 +384,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 *  every cell of every row again. */
 	private _rovingControlsCache: RovingControl[] | null = null;
 
-	/** Watches the row and its divider-marker cells for size changes; marker
+	/** The row and its divider markers, watched for size changes: marker
 	 *  insets are measured, so any reflow can move them. */
-	private _dividerMarkerObserver: ResizeObserver | null = null;
-
 	private _observedMarkerTargets: Element[] = [];
+	private _dividerStarts: Element[] = [];
+	private _dividerEnds: Element[] = [];
 
 	override connectedCallback() {
 		super.connectedCallback();
@@ -390,8 +434,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		this._clearPressed();
 		this._lightDomObserver?.disconnect();
 		this._lightDomObserver = null;
-		this._dividerMarkerObserver?.disconnect();
-		this._dividerMarkerObserver = null;
+		this._watchMarkers([]);
+		dividerQueue.delete(this);
 	}
 
 	private _onLightDomChange(): void {
@@ -540,8 +584,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// schedule a second update from inside the first.
 		queueMicrotask(() => this._updateChildren());
 		this._relayExpanded();
-		// First measurement after the first render: the marker offsets need
-		// laid-out boxes.
+		// The shadow DOM is there now, so the markers can be found. The observer
+		// measures them once the page is laid out, together with every other row.
 		this._measureDividerMarkers();
 	}
 
@@ -831,36 +875,51 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// without cells.
 		const drawsDivider = this._parentList?.getAttribute('dividers') !== 'never';
 		const explicitStarts = drawsDivider ? this._ownDescendants('[divider-start]') : [];
-		const starts = !drawsDivider ? [] : explicitStarts.length ? explicitStarts : this._implicitDividerStart();
-		const ends = drawsDivider ? this._ownDescendants('[divider-end]') : [];
+		this._dividerStarts = !drawsDivider ? [] : explicitStarts.length ? explicitStarts : this._implicitDividerStart();
+		this._dividerEnds = drawsDivider ? this._ownDescendants('[divider-end]') : [];
 
-		// Re-target the resize observer ONLY when the marker set changed: every
-		// observe() fires an initial notification, so retargeting on each
-		// measurement would loop the observer on itself.
-		const targets = starts.length || ends.length ? [this as Element, ...starts, ...ends] : [];
-		const sameTargets = targets.length === this._observedMarkerTargets.length
-			&& targets.every((target, i) => target === this._observedMarkerTargets[i]);
-		if (!sameTargets) {
-			this._dividerMarkerObserver?.disconnect();
-			this._observedMarkerTargets = targets;
-			if (targets.length) {
-				this._dividerMarkerObserver ??= new ResizeObserver(() => this._measureDividerMarkers());
-				targets.forEach(target => this._dividerMarkerObserver!.observe(target));
-			} else {
-				this._dividerMarkerObserver = null;
-			}
-		}
+		const targets = this._dividerStarts.length || this._dividerEnds.length
+			? [this as Element, ...this._dividerStarts, ...this._dividerEnds]
+			: [];
 		if (targets.length === 0) {
-			setState(this, 'degenerate-divider', false);
-			this.style.removeProperty('--_list-item-divider-inset-start');
-			this.style.removeProperty('--_list-item-divider-inset-end');
+			this._watchMarkers([]);
+			this._writeDividerInsets({ degenerate: false, start: null, end: null });
 			return;
 		}
+		// New targets get a first report from the observer, which measures them.
+		// The same targets in a new place report nothing, so they wait a frame.
+		if (!this._watchMarkers(targets)) queueDivider(this);
+	}
 
+	/** Watches these elements for this row, and only these. Returns whether the
+	 *  set changed: every observe() fires a first report, so retargeting on each
+	 *  measurement would loop the observer on itself. */
+	private _watchMarkers(targets: Element[]): boolean {
+		const same = targets.length === this._observedMarkerTargets.length
+			&& targets.every((target, i) => target === this._observedMarkerTargets[i]);
+		if (same) return false;
+		for (const target of this._observedMarkerTargets) {
+			markerObserver?.unobserve(target);
+			if (markerOwner.get(target) === this) markerOwner.delete(target);
+		}
+		this._observedMarkerTargets = targets;
+		for (const target of targets) {
+			markerOwner.set(target, this);
+			dividerObserver().observe(target);
+		}
+		return true;
+	}
+
+	/** @internal Reads where the markers are, without writing anything. Null
+	 *  when the row is not laid out yet. */
+	_readDividerInsets(): DividerInsets | null {
+		const starts = this._dividerStarts;
+		const ends = this._dividerEnds;
+		if (!starts.length && !ends.length) return { degenerate: false, start: null, end: null };
 		const block = this.shadowRoot?.querySelector('.list-item');
-		if (!block) return;
+		if (!block) return null;
 		const blockRect = block.getBoundingClientRect();
-		if (blockRect.width === 0) return;
+		if (blockRect.width === 0) return null;
 		const rtl = getComputedStyle(this).direction === 'rtl';
 		const startInsetOf = (rect: DOMRect) =>
 			rtl ? blockRect.right - rect.right : rect.left - blockRect.left;
@@ -870,7 +929,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// A marker that is not rendered (a cell hidden per breakpoint with
 		// hide-below, say) has an empty rect, and an empty rect measures as inset
 		// 0: the divider would start at the row's edge and bleed out of it. Skip
-		// them here rather than in `targets` — the observer keeps watching them,
+		// them here rather than in the targets: the observer keeps watching them,
 		// so the divider re-measures the moment such a cell comes back.
 		const rendered = (el: Element) => el.getClientRects().length > 0;
 		const visibleStarts = starts.filter(rendered);
@@ -878,25 +937,26 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 
 		// Union: smallest start inset (= first marker) and smallest end inset
 		// (= last marker) win.
-		const insetStart = visibleStarts.length
+		const start = visibleStarts.length
 			? Math.min(...visibleStarts.map(el => startInsetOf(el.getBoundingClientRect())))
 			: null;
-		const insetEnd = visibleEnds.length
+		const end = visibleEnds.length
 			? Math.min(...visibleEnds.map(el => endInsetOf(el.getBoundingClientRect())))
 			: null;
 
 		// A start past the last end: authoring error, fall back to full width.
-		const degenerate = insetStart !== null && insetEnd !== null
-			&& blockRect.width - insetStart - insetEnd <= 0;
-		setState(this, 'degenerate-divider', degenerate);
-		if (degenerate) {
-			this.style.removeProperty('--_list-item-divider-inset-start');
-			this.style.removeProperty('--_list-item-divider-inset-end');
-			return;
-		}
-		if (insetStart !== null) this.style.setProperty('--_list-item-divider-inset-start', `${insetStart}px`);
+		const degenerate = start !== null && end !== null && blockRect.width - start - end <= 0;
+		return { degenerate, start, end };
+	}
+
+	/** @internal Writes what `_readDividerInsets` found. */
+	_writeDividerInsets(insets: DividerInsets | null): void {
+		if (!insets) return;
+		setState(this, 'degenerate-divider', insets.degenerate);
+		const { start, end } = insets.degenerate ? { start: null, end: null } : insets;
+		if (start !== null) this.style.setProperty('--_list-item-divider-inset-start', `${start}px`);
 		else this.style.removeProperty('--_list-item-divider-inset-start');
-		if (insetEnd !== null) this.style.setProperty('--_list-item-divider-inset-end', `${insetEnd}px`);
+		if (end !== null) this.style.setProperty('--_list-item-divider-inset-end', `${end}px`);
 		else this.style.removeProperty('--_list-item-divider-inset-end');
 	}
 
