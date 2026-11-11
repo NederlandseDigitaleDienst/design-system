@@ -231,6 +231,25 @@ describe('nldd-time-picker – kiezen', () => {
 	// Scrolling changes the value but confirms nothing: a field showing the picker
 	// in a popover would otherwise snap shut the moment you stop scrolling, and
 	// then you never saw the second column.
+	it('vuurt niets bij het openen, ook niet op de randen van een kolom', async () => {
+		for (const value of ['00:00', '23:59']) {
+			el = await fixture<NLDDTimePicker>(
+				`<nldd-time-picker value="${value}" style="--semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>`,
+			);
+			await waitForUpdate(el);
+			const gezien: string[] = [];
+			el.addEventListener('input', (() => gezien.push('input')) as EventListener);
+			el.addEventListener('change', (() => gezien.push('change')) as EventListener);
+			el.scrollSelectedIntoView(true);
+			el.scrollSelectedIntoView(false);
+			for (const kolom of [column(el, 'hours'), column(el, 'minutes')]) kolom.dispatchEvent(new Event('scroll'));
+			await new Promise((r) => setTimeout(r, 1300));
+			expect(gezien, value).toEqual([]);
+			expect(el.value, value).toBe(value);
+			cleanup(el);
+		}
+	});
+
 	it('vuurt input bij scrollen en geen change', async () => {
 		el = await fixture<NLDDTimePicker>(
 			'<nldd-time-picker value="09:30" style="--semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>',

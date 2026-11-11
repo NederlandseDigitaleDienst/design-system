@@ -656,7 +656,7 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 | `alt` | `string` | Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own. |
 | `srcset` | `string` | Responsive source set |
 | `sizes` | `string` | Source sizes hint |
-| `width` | `number\|string\|'full'` | Display width, never wider than the parent. `full` (default) fills the parent. A number is pixels and also sets the `<img>` layout-hint width; any other CSS length (`20rem`, `50%`) only sets the width, so reserve space with `height` or `aspect-ratio`. |
+| `width` | `number\|string\|'full'` | Display width, never wider than the parent. `full` (default) fills the parent. A number is pixels and also sets the `<img>` layout-hint width; any other CSS length (`20rem`, `50%`) only sets the width, so reserve space with `height` or `aspect-ratio`. Written as an inline `max-width` on the host, so it holds against a rule from a parent such as `nldd-rich-text`, and against one of your own. |
 | `height` | `number` | Intrinsic height (for layout reservation) |
 | `loading` | `'lazy'\|'eager'` | Loading strategy (default: 'lazy'). Lazy defers fetch until the image is near the viewport — the right choice for below-the-fold content. Set to 'eager' on images that appear in the initial viewport, especially the LCP candidate (hero illustration, top-of-list thumbnail); leaving them lazy silently regresses Core Web Vitals because the LCP fetch waits for the intersection observer. Pair with `fetchpriority="high"` on the LCP image for the strongest signal. |
 | `decoding` | `'async'\|'sync'\|'auto'` | Decoding hint (default: 'async') |
