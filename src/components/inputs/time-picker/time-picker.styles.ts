@@ -35,6 +35,8 @@ export const timePickerStyles = css`
 		width: var(--_time-picker-width);
 		max-width: 100%;
 		font: var(--_time-picker-list-item-font);
+		-webkit-user-select: none;
+		user-select: none;
 	}
 
 	:host([hidden]) {
@@ -105,7 +107,6 @@ export const timePickerStyles = css`
 		font: var(--_time-picker-list-item-font);
 		font-variant-numeric: tabular-nums;
 		cursor: default;
-		user-select: none;
 		scroll-snap-align: center;
 	}
 

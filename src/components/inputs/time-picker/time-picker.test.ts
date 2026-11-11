@@ -231,6 +231,24 @@ describe('nldd-time-picker – kiezen', () => {
 	// Scrolling changes the value but confirms nothing: a field showing the picker
 	// in a popover would otherwise snap shut the moment you stop scrolling, and
 	// then you never saw the second column.
+	// Safari sends the scroll event of the glide's last frame after the glide is
+	// done. Taken for the user, it switched the mouse off on the values, and
+	// Safari only gave hover and clicks back once the mouse moved.
+	it('ziet de scroll van de eigen glijbeweging niet aan voor die van de gebruiker', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 100ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		const kolom = column(el, 'hours');
+		[...kolom.querySelectorAll<HTMLElement>('.time-picker__list-item')][15].click();
+		await waitForUpdate(el);
+		await until(() => !kolom.hasAttribute('data-gliding'), { timeout: 1000 });
+		kolom.dispatchEvent(new Event('scroll'));
+		expect(el.hasAttribute('data-scrolling')).toBe(false);
+
+		kolom.scrollTop += 44;
+		kolom.dispatchEvent(new Event('scroll'));
+		expect(el.hasAttribute('data-scrolling')).toBe(true);
+	});
+
 	it('vuurt niets bij het openen, ook niet op de randen van een kolom', async () => {
 		for (const value of ['00:00', '23:59']) {
 			el = await fixture<NLDDTimePicker>(
@@ -280,8 +298,8 @@ describe('nldd-time-picker – kiezen', () => {
 		const kolom = column(el, 'hours');
 		const item = kolom.querySelector('.time-picker__list-item')!;
 		expect(getComputedStyle(item).pointerEvents).not.toBe('none');
+		kolom.scrollTop += 44;
 		kolom.dispatchEvent(new Event('scroll'));
-		await waitForUpdate(el);
 		expect(getComputedStyle(item).pointerEvents).toBe('none');
 		// The styling itself as well, because a :hover already in place keeps
 		// matching until the browser redoes the hit test.

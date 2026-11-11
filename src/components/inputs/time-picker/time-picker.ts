@@ -341,7 +341,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			this._scrolledTo = { ...this._scrolledTo, [column]: centered };
 		}
 		// A glide records where it ends.
-		if (this._glides.has(el)) return;
+		if (this._glides.has(el) || this._isOwnScroll(el)) return;
 		// As an attribute and not as reactive state: this happens every scroll
 		// frame, and re-rendering eighty values per frame is a waste.
 		this.toggleAttribute('data-scrolling', true);
@@ -350,7 +350,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 
 	public _handleScrollEnd(e: Event, column: 'hours' | 'minutes'): void {
 		const el = e.currentTarget as HTMLElement;
-		if (!this.isConnected || this._glides.has(el) || !canScroll(el)) return;
+		if (!this.isConnected || this._glides.has(el) || this._isOwnScroll(el) || !canScroll(el)) return;
 		this._settle(column, el);
 	}
 
@@ -416,11 +416,28 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			else {
 				this._stopGlide(column);
 				column.scrollTop = top;
+				this._placed.set(column, column.scrollTop);
 			}
 		}
 	}
 
 	private _glides = new Map<HTMLElement, number>();
+
+	/** Where we put a column ourselves, until the user scrolls it elsewhere. */
+	private _placed = new WeakMap<HTMLElement, number>();
+
+	/**
+	 * Safari sends the scroll event of a glide's last frame, or of an instant
+	 * scroll, after we are done. Taken for the user, it switched pointer-events
+	 * off and on, and Safari then kept the values unhovered and unclickable
+	 * until the mouse moved.
+	 */
+	private _isOwnScroll(el: HTMLElement): boolean {
+		const placed = this._placed.get(el);
+		if (placed !== undefined && Math.abs(el.scrollTop - placed) < 1) return true;
+		this._placed.delete(el);
+		return false;
+	}
 
 	/**
 	 * Scroll to `top` ourselves, because `behavior: 'smooth'` lets the browser
@@ -443,6 +460,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 				return;
 			}
 			this._stopGlide(column);
+			this._placed.set(column, column.scrollTop);
 			this._settle(column.dataset.column as 'hours' | 'minutes', column);
 		};
 		this._glides.set(column, requestAnimationFrame(step));
