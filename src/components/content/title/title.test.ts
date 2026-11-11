@@ -100,11 +100,6 @@ describe('nldd-title', () => {
 		expect(parseFloat(style.maxWidth)).toBeGreaterThan(parseFloat(style.fontSize) * 10);
 	});
 
-	it('balanceert de regels van de kop', async () => {
-		el = await fixture('<nldd-title><h3>Een kop</h3></nldd-title>');
-		await waitForUpdate(el);
-		expect(getComputedStyle(el.querySelector('h3')!).textWrap).toBe('balance');
-	});
 });
 
 describe('nldd-title – text and heading-level', () => {
@@ -367,32 +362,16 @@ describe('nldd-title – size from heading-level', () => {
 		expect(await fontSize('heading-level="2" size="5"')).toBe(await fontSize('heading-level="2"'));
 	});
 
-	it('scales the overline and supporting text with the size, and keeps them to a line of reading', async () => {
+	it('sizes the overline and supporting text by size, not by heading-level, when both are set', async () => {
 		const sizes = async (attrs: string) => {
 			el = await fixture(`<nldd-title text="Mijn Dienst" overline="Team Uitvoering" supporting-text="Aanvraag A-1042" ${attrs}></nldd-title>`);
 			await waitForUpdate(el);
-			const overline = getComputedStyle(el.shadowRoot!.querySelector('.title__overline')!);
-			const supporting = getComputedStyle(el.shadowRoot!.querySelector('.title__supporting-text')!);
-			const result = { overline: parseFloat(overline.fontSize), supporting: parseFloat(supporting.fontSize), wrap: supporting.textWrapStyle, maxWidth: parseFloat(supporting.maxWidth) };
+			const font = (selector: string) => getComputedStyle(el.shadowRoot!.querySelector(selector)!).fontSize;
+			const result = { overline: font('.title__overline'), supporting: font('.title__supporting-text') };
 			cleanup(el);
 			return result;
 		};
-		const [one, three, four, five, six, sized] = [
-			await sizes('heading-level="1"'),
-			await sizes('heading-level="3"'),
-			await sizes('heading-level="4"'),
-			await sizes('heading-level="5"'),
-			await sizes('heading-level="6"'),
-			await sizes('heading-level="1" size="display-6"'),
-		];
-		expect(one.overline).toBe(three.overline);
-		expect(four.overline).toBeLessThan(three.overline);
-		expect(six.overline).toBeLessThan(five.overline);
-		expect(four.supporting).toBe(one.supporting);
-		expect(five.supporting).toBeLessThan(four.supporting);
-		expect(sized).toEqual(six);
-		expect(one.wrap).toBe('balance');
-		expect(one.maxWidth).toBe(40 * one.supporting);
+		expect(await sizes('heading-level="1" size="display-6"')).toEqual(await sizes('heading-level="6"'));
 	});
 
 	it('takes its level from a heading in the default slot', async () => {

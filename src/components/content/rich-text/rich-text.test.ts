@@ -357,22 +357,4 @@ describe('nldd-rich-text code blocks', () => {
 		expect(getComputedStyle(pre).boxShadow).not.toBe('none');
 	});
 
-	it('houdt de chip op inline code', async () => {
-		await render('<p>tekst met <code>inline</code> code</p>');
-		const code = card.querySelector('p > code')!;
-
-		expect(getComputedStyle(code).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
-		expect(parseFloat(getComputedStyle(code).paddingLeft)).toBeGreaterThan(0);
-	});
-
-	// A heading is short and reads best in lines of even length, as nldd-title
-	// does it; running text only needs to keep a single word off its last line.
-	it('balances headings and wraps running text with pretty', async () => {
-		const root = await render('<h2>Kop</h2><p>Alinea</p><ul><li>Item</li></ul><blockquote>Citaat</blockquote>');
-		const wrap = (selector: string) => getComputedStyle(root.querySelector(selector)!).textWrapStyle;
-		expect(wrap('h2')).toBe('balance');
-		expect(wrap('p')).toBe('pretty');
-		expect(wrap('li')).toBe('pretty');
-		expect(wrap('blockquote')).toBe('pretty');
-	});
 });

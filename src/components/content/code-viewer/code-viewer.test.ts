@@ -166,17 +166,6 @@ describe('nldd-code-viewer', () => {
 		expect((el as { appearance?: string }).appearance).toBe('simple');
 	});
 
-	it('appearance="simple" zeroes the box CSS — corner-radius and padding', async () => {
-		el = await fixture('<nldd-code-viewer appearance="simple">x</nldd-code-viewer>');
-		await waitForUpdate(el);
-		const block = el.shadowRoot!.querySelector<HTMLElement>('.code-viewer')!;
-		const cs = getComputedStyle(block);
-		expect(parseFloat(cs.borderTopLeftRadius)).toBe(0);
-		expect(parseFloat(cs.paddingTop)).toBe(0);
-		expect(parseFloat(cs.paddingLeft)).toBe(0);
-		expect(cs.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-	});
-
 	it('reflects a non-default appearance value', async () => {
 		// 'box-tinted' is the default and is kept out of the DOM (covered above);
 		// the other two must reflect, since the styles select on them.

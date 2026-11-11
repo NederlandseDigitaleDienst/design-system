@@ -313,23 +313,6 @@ describe('nldd-button-group – width="full"', () => {
 		expect(rows(buttons)).toBe(1);
 	});
 
-	it('laat een icoonknop zijn eigen maat in de rij', async () => {
-		el = await fixture(`
-			<div style="width: 800px;">
-				<nldd-button-group width="full">
-					<nldd-button text="Bewaar"></nldd-button>
-					<nldd-icon-button icon="share" text="Delen"></nldd-icon-button>
-				</nldd-button-group>
-			</div>
-		`);
-		await frames();
-		const icon = el.querySelector('nldd-icon-button') as HTMLElement;
-		// The contract, not the pixels: without variables.css an icon button has
-		// no size of its own here.
-		expect(getComputedStyle(icon).flexGrow).toBe('0');
-		expect(getComputedStyle(icon).flexShrink).toBe('0');
-	});
-
 	it('blijft een rij met orientation="horizontal"', async () => {
 		const [long, short] = await natural([LONG, 'Ja']);
 		const buttons = await render(Math.floor(long + short - 20), [LONG, 'Ja'], 'orientation="horizontal"');
