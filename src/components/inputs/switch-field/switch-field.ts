@@ -23,10 +23,11 @@ import { switchFieldStyles } from './switch-field.styles.js';
 import { switchFieldTemplate } from './switch-field.template.js';
 import type { NLDDSwitch } from '../switch/switch.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { FormAssociated, uncheckedValidity, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 @customElement('nldd-switch-field')
-export class NLDDSwitchField extends DescribedBy(LitElement) {
+export class NLDDSwitchField extends DescribedBy(FormAssociated(LitElement)) {
 	static override styles = switchFieldStyles;
 
 	/** Says this is the control an nldd-form-field is about, so the field can
@@ -42,7 +43,9 @@ export class NLDDSwitchField extends DescribedBy(LitElement) {
 	@property({ type: String })
 	value = 'on';
 
-	@property({ type: String })
+	/** Reflected: form association reads the host's name attribute, so setting
+	 *  the property alone must still register the field with the form. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
 	/** 'inherit' draws the control and its label in the surrounding text color. */
@@ -69,6 +72,30 @@ export class NLDDSwitchField extends DescribedBy(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	private _initialChecked = false;
+
+	override firstUpdated(): void {
+		this._initialChecked = this.checked;
+	}
+
+	override formValue(): FormValue {
+		return this.checked ? this.value : null;
+	}
+
+	/** The switch that carries `required` sits in a shadow root of its own,
+	 *  where the form cannot see it. */
+	override ownValidity(): OwnValidity | null {
+		return uncheckedValidity(this);
+	}
+
+	formResetCallback(): void {
+		this.checked = this._initialChecked;
+	}
+
+	formStateRestoreCallback(state: File | string | FormData | null): void {
+		this.checked = state !== null;
+	}
+
 	public _handleLabelClick(e: Event): void {
 		if (this.disabled) return;
 		if ((e.target as HTMLElement).closest?.('nldd-switch')) return;
@@ -78,6 +105,7 @@ export class NLDDSwitchField extends DescribedBy(LitElement) {
 
 	public _handleChange(e: Event): void {
 		this.checked = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+		this.commitFormValue();
 		this.dispatchEvent(new CustomEvent('change', {
 			detail: { checked: this.checked, value: this.value },
 			bubbles: true,

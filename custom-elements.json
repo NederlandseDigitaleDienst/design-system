@@ -9935,6 +9935,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "The checkbox that carries `required` sits in a shadow root of its own,\nwhere the form cannot see it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "formResetCallback",
               "return": {
                 "type": {
@@ -10078,20 +10092,6 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "ownValidity",
-              "return": {
-                "type": {
-                  "text": "OwnValidity | null"
-                }
-              },
-              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -21900,7 +21900,9 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "name"
+              "description": "Reflected: form association reads the host's name attribute, so setting\nthe property alone must still register the field with the form.",
+              "attribute": "name",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -21942,6 +21944,60 @@
               "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
               "attribute": "invalid",
               "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "The switch that carries `required` sits in a shadow root of its own,\nwhere the form cannot see it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -21988,6 +22044,141 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             }
           ],
           "events": [
@@ -22030,8 +22221,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "name",
-              "description": "Name for form submission"
+              "description": "Name for form submission",
+              "fieldName": "name"
             },
             {
               "name": "color",
@@ -22077,6 +22268,10 @@
             {
               "name": "DescribedBy",
               "module": "/src/utilities/described-by-mixin.js"
+            },
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
             }
           ],
           "superclass": {
@@ -48981,6 +49176,24 @@
       "path": "src/utilities/form-associated-mixin.ts",
       "declarations": [
         {
+          "kind": "function",
+          "name": "uncheckedValidity",
+          "return": {
+            "type": {
+              "text": "OwnValidity | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "field",
+              "type": {
+                "text": "{ required: boolean; checked: boolean; disabled: boolean }"
+              }
+            }
+          ],
+          "description": "What `required` asks of a field around a checkbox or switch: a native control\ninside its own shadow root is out of reach of the form, so the field answers\nitself. In the browser's own words, as a native checkbox says it."
+        },
+        {
           "kind": "mixin",
           "description": "Turns a Lit element into a form-associated custom element: it submits under\n`name`, follows a disabled fieldset, and can be read back with `FormData`.\n\nA component supplies the one thing that is its own — what it submits — by\noverriding `formValue()`. Everything around it lives here, including the\ntiming: the value is committed on every render AND has to be committed again\nfrom the handler that changed it, with `commitFormValue()`. A render is a\ntask later than the event, so a listener that serializes the form on `change`\n(htmx, or a plain `new FormData(form)`) runs before the render and would\notherwise read the value from before the change. That contract is checked for\nevery input at once in `form-value-timing.test.ts`.\n\nReset and state restore stay with the component: what \"the initial value\" is\ndiffers per input (checked, text, a number to clamp, two fields at once), so\na component implements `formResetCallback` / `formStateRestoreCallback`\nitself.",
           "name": "FormAssociated",
@@ -49125,6 +49338,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "uncheckedValidity",
+          "declaration": {
+            "name": "uncheckedValidity",
+            "module": "src/utilities/form-associated-mixin.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "FormAssociated",
