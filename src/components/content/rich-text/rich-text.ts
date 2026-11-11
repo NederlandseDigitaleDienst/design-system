@@ -142,8 +142,8 @@ export class NLDDRichText extends LitElement {
 		 * tables). Both trigger a re-evaluation of every table's overflow. */
 		this._resizeObserver = new ResizeObserver(() => this._syncTables());
 		this._resizeObserver.observe(this);
-		this._mutationObserver = new MutationObserver(() => {
-			this._syncTables();
+		this._mutationObserver = new MutationObserver((records) => {
+			if (records.some(r => r.type === 'childList')) this._syncTables();
 			this._syncInlineContent();
 		});
 		// Text edits matter only to the dev check on bare text; in production they

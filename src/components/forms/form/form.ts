@@ -242,10 +242,7 @@ export class NLDDForm extends HTMLElement {
 			.filter(Boolean);
 		if (renders.length === 0) return judge();
 		this._pending.add(control);
-		Promise.all(renders).then(() => {
-			this._pending.delete(control);
-			judge();
-		});
+		Promise.all(renders).then(judge).finally(() => this._pending.delete(control));
 	};
 
 	/**
@@ -259,8 +256,7 @@ export class NLDDForm extends HTMLElement {
 	private _syncGroup(control: Element): void {
 		for (let el = control.parentElement; el && el !== this; el = el.parentElement) {
 			if ((el.constructor as { isFormInput?: boolean }).isFormInput !== true) continue;
-			const options = Array.from(this._form?.elements ?? []).filter(c => el.contains(c));
-			el.toggleAttribute('invalid', options.some(c => c.hasAttribute('invalid')));
+			el.toggleAttribute('invalid', el.querySelector('[invalid]') !== null);
 			return;
 		}
 	}
