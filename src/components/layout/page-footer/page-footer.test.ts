@@ -11,18 +11,10 @@ describe('nldd-page-footer', () => {
 		if (el) cleanup(el);
 	});
 
-	it('exposes the contentinfo landmark on the host', async () => {
-		// VoiceOver/Safari doesn't traverse a shadow-root <footer> as a
-		// landmark, so the role goes on the host instead of the inner div.
+	it('carries no landmark of its own, so the footer of nldd-page is the only contentinfo', async () => {
 		el = await fixture('<nldd-page-footer></nldd-page-footer>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('role')).toBe('contentinfo');
-	});
-
-	it('respects a consumer-provided role attribute', async () => {
-		el = await fixture('<nldd-page-footer role="region"></nldd-page-footer>');
-		await waitForUpdate(el);
-		expect(el.getAttribute('role')).toBe('region');
+		expect(el.hasAttribute('role')).toBe(false);
 	});
 
 	it('hides all wrapper slots when no content is provided', async () => {

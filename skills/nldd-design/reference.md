@@ -2358,7 +2358,7 @@ A section that spans the full width without horizontal padding. Useful for backg
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `section-no-own-columns` (hint): Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.
@@ -2401,7 +2401,7 @@ The section that says what a page is for: it names the main goal of what you can
 - `hero-main-width-invalid`: `main-width` is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 640px.
 - `hero-overlap-needs-taller-panel`: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout="contained" to keep the panel on the image.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 
@@ -2534,7 +2534,7 @@ A section with two equal columns side by side. The columns stand side by side in
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
@@ -2572,7 +2572,7 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
@@ -2610,6 +2610,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `page-no-second-main`: A second page renders a main landmark, which a document may have only one of. Leave `landmarks` at "auto" on pages in a pane or an overlay, or set landmarks="region" on the ones that are not the document's page.
@@ -2642,12 +2643,12 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 
 ### `<nldd-page-footer>`
 
-The footer band at the bottom of a page. Hosts three optional rows in a fixed order: breadcrumbs (top), consumer-defined main content (middle), and a legal-bar (bottom). Dividers are drawn automatically between non-empty rows. Establishes its own container query (`page-footer-container`) so the responsive padding and gap react to the footer's own width, not the viewport. The host has `id="page-footer"` so a skip-link can target it directly. Use the sub-components `nldd-page-footer-legal-bar` and `nldd-page-footer-legal-bar-item` for the bottom row.
+The footer band at the bottom of a page. Hosts three optional rows in a fixed order: breadcrumbs (top), consumer-defined main content (middle), and a legal-bar (bottom). Dividers are drawn automatically between non-empty rows. Establishes its own container query (`page-footer-container`) so the responsive padding and gap react to the footer's own width, not the viewport. It goes in the `footer` slot of nldd-page, which makes it the contentinfo landmark, or drops it for a page that does not carry the landmarks of the document. The footer itself has no role, so it never nests a second one. The host has `id="page-footer"` so a skip-link can target it directly. Use the sub-components `nldd-page-footer-legal-bar` and `nldd-page-footer-legal-bar-item` for the bottom row.
 
 **Rules** (`nldd lint`)
 
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-footer-no-duplicate-id`: Another element already has id="page-footer". Set a unique id on this instance so skip links target the right one.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
@@ -2851,7 +2852,7 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 - `filter-token-needs-dismiss` (hint): Set control="dismiss": each token is its own way back.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `sidebar-section-needs-label` (hint): Set `sidebar-label`: it names the sidebar and titles the sheet it becomes.
@@ -2899,7 +2900,7 @@ A basic section with responsive padding and gap based on container size. Contain
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `section-no-own-columns` (hint): Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.
@@ -3004,7 +3005,7 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.

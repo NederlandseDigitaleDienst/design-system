@@ -572,8 +572,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "page-footer-goes-in-page",
-		"message": "nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.",
-		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-page-footer"
+		"message": "Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.",
+		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-page-footer, nldd-page > nldd-page-footer:not([slot=\"footer\"]), nldd-page > :not([slot=\"footer\"]) nldd-page-footer, body nldd-page-footer:not(nldd-page nldd-page-footer)"
 	},
 	{
 		"id": "page-footer-needs-slot",

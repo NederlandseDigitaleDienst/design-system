@@ -62,6 +62,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **`page-footer-goes-in-page` also warns about an `nldd-page-footer` outside the `footer` slot of `nldd-page`,** not only one inside a section. The footer has no landmark of its own any more; the page around it gives it one.
 - **`button-group-needs-width` names the way out that keeps the group as wide as its buttons: `orientation="horizontal"`.** It only said to give the group or its parent a width.
 - **A report or a proposal goes through a GitHub issue, from inside NLDD too.** The `nldd-design-contribute` skill and `CONTRIBUTING.md` no longer offer the Mattermost channel as a second route.
 - **The design guideline on a choice from a fixed set names numbers and makes the dropdown a last resort.** Up to 7 options are all in view, in a radio group, a toggle button group or, for 2 to 5 short ones in one row, a segmented control. Above 7, an `nldd-combo-box` with autocomplete. An `nldd-dropdown` is the last resort, as Luke Wroblewski argues, because it hides its options, takes an extra step to see them and is the hardest on touch and with assistive technology.
@@ -80,6 +81,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **`nldd-page-footer` in `nldd-page` is one contentinfo, not one inside another.** The footer set `role="contentinfo"` on itself, inside the footer of the page that already is the contentinfo. The page now carries the landmark alone, and drops it as it drops the others for a page beside another one. Measured in Safari: the page's own footer reaches VoiceOver, so nothing is lost.
 - **`modal-dialog-needs-two-actions` counts only the `nldd-button`s in the slot.** It counted what carried `slot="actions"`, so a wrapper with two buttons inside read as one action.
 - **A required `nldd-checkbox-field` or `nldd-switch-field` stops the form until it is checked, and `nldd-switch-field` submits its value.** The checkbox field let an unchecked required box through, so a required consent went out empty: the checkbox that carries `required` sits in a shadow root of its own, out of the form's reach. The switch field was not tied to the form at all, so it submitted nothing under its `name`, and a reset left it as it was. Both now answer for themselves, in the browser's own words for an unchecked box.
 - **A required `nldd-radio-button-group` in `nldd-form` shows its error.** The form marked each option `invalid`, while the field and its validation list read the group, so a submit did nothing and the screen said nothing. The group now carries the mark while any option has it. And the options lose their mark once one is chosen: the form listened only for `input`, which `nldd-radio-button-field` never fires, so they stayed marked after a choice.

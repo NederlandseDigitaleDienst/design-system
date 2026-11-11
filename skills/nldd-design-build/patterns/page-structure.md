@@ -880,7 +880,7 @@ Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagi
 
 - `language-item-needs-name`: Set an `accessible-label` such as "Taal: Nederlands (NL)": a screen reader otherwise spells out the letters.
 - `language-name-needs-lang`: Set `lang`, so a screen reader pronounces the name in that language.
-- `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `website-no-sticky-header`: A website lets its header scroll away: a fixed one takes room from the content.
