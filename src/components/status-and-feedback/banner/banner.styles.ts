@@ -28,6 +28,7 @@ export const bannerStyles = css`
 		--_banner-dismissible-padding-right: calc(var(--_banner-dismiss-inset) + var(--semantics-controls-md-min-size));
 		--_banner-main-gap: var(--primitives-space-8);
 		--_banner-actions-gap: var(--primitives-space-4);
+		--_banner-actions-padding-bottom: var(--primitives-space-4);
 
 		${inheritedTextReset}
 		display: block;
@@ -163,9 +164,12 @@ export const bannerStyles = css`
 		display: none;
 	}
 
+	/* A filled button on the padding edge reads closer than the round icon and
+	   the text at the top, so the actions add a little air below. */
 	.banner__actions {
 		display: flex;
 		margin-top: var(--_banner-actions-gap);
+		padding-bottom: var(--_banner-actions-padding-bottom);
 	}
 
 	.banner__actions[hidden] {
