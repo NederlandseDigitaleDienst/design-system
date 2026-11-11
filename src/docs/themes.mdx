@@ -25,6 +25,20 @@ Zet het attribuut op `<html>`, niet op `nldd-shell`. Een sheet, popover of dialo
 
 Een attribuut heeft alleen effect als het bijbehorende thema is geladen. Is dat niet zo, dan blijft lintblauw actief.
 
+## Dwing licht of donker af met `data-scheme` op `<html>`
+
+Zonder instelling volgt de pagina de voorkeur van het systeem of de browser. Met `data-scheme` op `<html>` leg je de weergave vast:
+
+```html
+<html lang="nl" data-scheme="dark">
+```
+
+1. **`light`**: altijd de lichte weergave.
+2. **`dark`**: altijd de donkere weergave.
+3. **Geen attribuut**: de voorkeur van het systeem.
+
+Een schakelaar in je app zet het attribuut of haalt het weg, en de pagina wisselt zonder te herladen. Het werkt met elk thema. Gebruik het attribuut en geen eigen `color-scheme` in je CSS: het systeem zet `color-scheme` zelf op basis van het attribuut, en alleen een wissel van het attribuut laat de componenten opnieuw tekenen die dat nodig hebben. Zet het op `<html>`, om dezelfde reden als het thema: een sheet, popover of dialoog hangt aan `<body>`.
+
 ## Elke rol volgt zijn eigen contrastregel
 
 Een thema kleurt niet alles op dezelfde manier. Voor elke rol kiest het systeem de kleurstap die het dichtst bij de themakleur ligt en aan de contrastregel voldoet. Dit zijn de 9 rollen:
