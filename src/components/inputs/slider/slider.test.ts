@@ -217,6 +217,17 @@ describe('nldd-slider', () => {
 		expect(bars.map((bar) => bar.classList.contains('is-selected'))).toEqual([false, true, true, false, false]);
 	});
 
+	it('gives the selected bars the highlight border of the fill, and the others one of their own', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture<NLDDSlider>('<nldd-slider histogram="4, 4" min="0" max="100" value="25"></nldd-slider>');
+		const [selected, other] = Array.from(el.shadowRoot!.querySelectorAll<HTMLElement>('.slider__histogram-bar'));
+		const fill = getComputedStyle(el.shadowRoot!.querySelector('.slider__fill')!).boxShadow;
+		expect(getComputedStyle(selected).boxShadow).toBe(fill);
+		expect(getComputedStyle(other).boxShadow).toContain('inset');
+		expect(getComputedStyle(other).boxShadow).not.toBe(fill);
+		unloadTokens();
+	});
+
 	it('presses its thumb on the full control height, drawn smaller and flush with the edges', async () => {
 		const unloadTokens = loadTokens();
 		el = await fixture<NLDDSlider>('<nldd-slider value="0" style="width: 400px"></nldd-slider>');
