@@ -26,9 +26,7 @@ export const blockquoteStyles = css`
 		--_blockquote-sm-custom-size: initial;
 		--_blockquote-md-custom-size: initial;
 		--_blockquote-lg-custom-size: initial;
-		--_blockquote-sm-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-sm-custom-size), var(--_blockquote-sm-size)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
-		--_blockquote-md-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-md-custom-size), var(--_blockquote-md-size)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
-		--_blockquote-lg-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-lg-custom-size), var(--_blockquote-lg-size)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		--_blockquote-sized-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-quote-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
 
 		@media (max-width: ${smMax}) {
 			--_blockquote-spacing: var(--semantics-blockquotes-sm-spacing);
@@ -56,29 +54,30 @@ export const blockquoteStyles = css`
 		--_blockquote-sm-size: var(--primitives-font-size-300);
 		--_blockquote-md-size: var(--primitives-font-size-500);
 		--_blockquote-lg-size: var(--primitives-font-size-700);
+		--_blockquote-quote-font: var(--_blockquote-sized-font);
 
 		@media (max-width: ${smMax}) {
-			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-sm-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+			--_blockquote-quote-size: var(--_blockquote-sm-size);
 		}
 
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-md-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+			--_blockquote-quote-size: var(--_blockquote-md-size);
 		}
 
 		@media (min-width: ${lgMin}) {
-			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-lg-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+			--_blockquote-quote-size: var(--_blockquote-lg-size);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-sm-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+			--_blockquote-quote-size: var(--_blockquote-sm-size);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-md-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+			--_blockquote-quote-size: var(--_blockquote-md-size);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_blockquote-quote-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-lg-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+			--_blockquote-quote-size: var(--_blockquote-lg-size);
 		}
 	}
 
@@ -86,31 +85,37 @@ export const blockquoteStyles = css`
 
 	:host([data-sm-custom-size]) {
 		@media (max-width: ${smMax}) {
-			--_blockquote-quote-font: var(--_blockquote-sm-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-sm-custom-size), var(--_blockquote-sm-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_blockquote-quote-font: var(--_blockquote-sm-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-sm-custom-size), var(--_blockquote-sm-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 	}
 
 	:host([data-md-custom-size]) {
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_blockquote-quote-font: var(--_blockquote-md-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-md-custom-size), var(--_blockquote-md-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_blockquote-quote-font: var(--_blockquote-md-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-md-custom-size), var(--_blockquote-md-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 	}
 
 	:host([data-lg-custom-size]) {
 		@media (min-width: ${lgMin}) {
-			--_blockquote-quote-font: var(--_blockquote-lg-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-lg-custom-size), var(--_blockquote-lg-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_blockquote-quote-font: var(--_blockquote-lg-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-lg-custom-size), var(--_blockquote-lg-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 	}
 
