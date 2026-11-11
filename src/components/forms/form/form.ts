@@ -215,8 +215,11 @@ export class NLDDForm extends HTMLElement {
 	private _handleInput = (e: Event) => {
 		const control = e.target as Element | null;
 		if (!control || !this._judged.has(control)) return;
+		// A checkbox fires both input and change for one click: judge it once.
+		if (this._pending.has(control)) return;
 		// A radio answers for every option with its name: picking one makes the
-		// others valid too, and they hear nothing of it.
+		// others valid too, and they hear nothing of it. Every control with that
+		// name is judged again, which only does work for a radio.
 		const name = control.getAttribute('name');
 		const peers = name
 			? Array.from(this._form?.elements ?? []).filter(el => el.getAttribute('name') === name)
@@ -235,8 +238,12 @@ export class NLDDForm extends HTMLElement {
 		const renders = peers
 			.map(el => (el as Element & { updateComplete?: Promise<unknown> }).updateComplete)
 			.filter(Boolean);
-		if (renders.length === 0) judge();
-		else Promise.all(renders).then(judge);
+		if (renders.length === 0) return judge();
+		this._pending.add(control);
+		Promise.all(renders).then(() => {
+			this._pending.delete(control);
+			judge();
+		});
 	};
 
 	/**
@@ -255,6 +262,9 @@ export class NLDDForm extends HTMLElement {
 			return;
 		}
 	}
+
+	/** Controls whose verdict waits for their next render. */
+	private _pending = new WeakSet<Element>();
 
 	/** Controls the platform has judged at least once. */
 	private _judged = new WeakSet<Element>();

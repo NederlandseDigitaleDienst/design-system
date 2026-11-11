@@ -90,8 +90,9 @@ const MANAGED_LABEL_ATTR = 'data-nldd-managed-label';
 
 /** Phrasing elements: as a direct child each becomes a grid item of its own. */
 const INLINE = new Set([
-	'A', 'ABBR', 'B', 'BR', 'CITE', 'CODE', 'DEL', 'EM', 'I', 'INS', 'KBD', 'MARK',
-	'Q', 'S', 'SAMP', 'SMALL', 'SPAN', 'STRONG', 'SUB', 'SUP', 'TIME', 'U', 'VAR',
+	'A', 'ABBR', 'B', 'BDI', 'BDO', 'BR', 'CITE', 'CODE', 'DATA', 'DEL', 'DFN', 'EM',
+	'I', 'INS', 'KBD', 'LABEL', 'MARK', 'Q', 'RUBY', 'S', 'SAMP', 'SMALL', 'SPAN',
+	'STRONG', 'SUB', 'SUP', 'TIME', 'U', 'VAR', 'WBR', 'NLDD-ICON',
 ]);
 
 /** A non-blank text node or an inline element among these nodes. */

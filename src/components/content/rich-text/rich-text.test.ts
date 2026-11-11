@@ -411,6 +411,8 @@ describe('nldd-rich-text inline content', () => {
 			'Een melding van de server.',
 			'<strong>Let op:</strong>',
 			'<div>U moet <a href="#">inloggen</a>.</div>',
+			'<label>Naam</label>',
+			'<nldd-icon name="info"></nldd-icon>',
 		]) {
 			el = await fixture(`<nldd-rich-text>${markup}</nldd-rich-text>`);
 			expect(inline(el), markup).toBe(true);
