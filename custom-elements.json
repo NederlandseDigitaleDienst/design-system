@@ -45607,7 +45607,7 @@
             },
             {
               "name": "actions",
-              "description": "nldd-button elements, wrapped in nldd-button-group (max 3)"
+              "description": "nldd-button elements (max 3), each with `slot=\"actions\"`. The dialog puts them in a button group of its own, which sets the gap, the order and the stacking, so no element goes around them. A component of your own that renders a set of them returns a fragment, which adds nothing to the DOM."
             }
           ]
         }
@@ -46051,7 +46051,7 @@
             },
             {
               "name": "actions",
-              "description": "nldd-button elements, forwarded to nldd-inline-dialog"
+              "description": "nldd-button elements, each with `slot=\"actions\"`, forwarded to nldd-inline-dialog. The dialog puts them in a button group of its own, which sets the gap, the order and the stacking, so no element goes around them. A component of your own that renders a set of them returns a fragment, which adds nothing to the DOM."
             },
             {
               "name": "notifications",

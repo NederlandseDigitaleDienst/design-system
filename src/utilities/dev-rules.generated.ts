@@ -3,6 +3,11 @@ import type { DevRule } from './dev-checks.js';
 
 export const devRules: DevRule[] = [
 	{
+		"id": "action-goes-on-button",
+		"message": "Put slot=\"actions\" on each nldd-button, not on an element around them.",
+		"context": ":is(nldd-modal-dialog, nldd-inline-dialog) > [slot=\"actions\"]:not(nldd-button)"
+	},
+	{
 		"id": "avatar-group-no-other-children",
 		"message": "nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.",
 		"context": "nldd-avatar-group",
@@ -511,9 +516,9 @@ export const devRules: DevRule[] = [
 	{
 		"id": "modal-dialog-needs-two-actions",
 		"message": "One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.",
-		"context": "nldd-modal-dialog:has(> [slot=\"actions\"])",
+		"context": "nldd-modal-dialog:has(> nldd-button[slot=\"actions\"]):not(:has(> [slot=\"actions\"]:not(nldd-button)))",
 		"count": {
-			"of": "[slot=\"actions\"]",
+			"of": "nldd-button[slot=\"actions\"]",
 			"min": 2
 		}
 	},

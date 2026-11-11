@@ -18,6 +18,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 **Rules** (`nldd lint`)
 
 - `action-exit-goes-away-from-primary` (hint): Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.
+- `action-goes-on-button`: Put slot="actions" on each nldd-button, not on an element around them.
 - `button-form-id-invalid`: The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.
 - `button-form-id-not-found`: Nothing in this root has the id in `form`, so this button submits nothing.
 - `button-needs-name`: nldd-button needs `text` or `accessible-label`, otherwise it has no accessible name.
@@ -36,6 +37,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
 - `link-no-vague-text` (hint): Make the destination or the subject the link text, such as "Lees meer over dakisolatie".
 - `login-link-needs-full-verb` (hint): A link to the login screen does not log in itself, so use the full verb: "Inloggen".
+- `modal-dialog-needs-two-actions`: One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.
 - `sheet-form-max-one-action` (hint): Keep one action under the form. The way out is `dismiss-text` on the title bar.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `title-end-max-one-action` (hint): Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.
@@ -3579,6 +3581,10 @@ An inline notification with a tinted background per variant. Use for persistent,
 
 An inline status component for empty state, confirmations and feedback. Fills the container and has no minimum width.
 
+**Rules** (`nldd lint`)
+
+- `action-goes-on-button`: Put slot="actions" on each nldd-button, not on an element around them.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -3597,7 +3603,7 @@ An inline status component for empty state, confirmations and feedback. Fills th
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Optional custom content between text and actions. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout="stack" and a gap. |
-| `actions` | nldd-button elements, wrapped in nldd-button-group (max 3) |
+| `actions` | nldd-button elements (max 3), each with `slot="actions"`. The dialog puts them in a button group of its own, which sets the gap, the order and the stacking, so no element goes around them. A component of your own that renders a set of them returns a fragment, which adds nothing to the DOM. |
 
 ### `<nldd-just-in-time-education>`
 
@@ -3633,6 +3639,7 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 
 **Rules** (`nldd lint`)
 
+- `action-goes-on-button`: Put slot="actions" on each nldd-button, not on an element around them.
 - `modal-dialog-destructive-goes-last`: Put the way out above the destructive action: reaching it should not mean passing the button to avoid.
 - `modal-dialog-destructive-needs-alert` (hint): Set variant="alert" on a dialog about a destructive action, which brings the icon and color that go with it.
 - `modal-dialog-exit-needs-primary`: Give the way out appearance="primary": autopilot should end at the safe choice, not at the irreversible one.
@@ -3658,7 +3665,7 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Optional custom content, forwarded to nldd-inline-dialog. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout="stack" and a gap. |
-| `actions` | nldd-button elements, forwarded to nldd-inline-dialog |
+| `actions` | nldd-button elements, each with `slot="actions"`, forwarded to nldd-inline-dialog. The dialog puts them in a button group of its own, which sets the gap, the order and the stacking, so no element goes around them. A component of your own that renders a set of them returns a fragment, which adds nothing to the DOM. |
 | `notifications` | Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone. |
 
 **Events**
