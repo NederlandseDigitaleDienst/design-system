@@ -290,7 +290,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "image-width-invalid",
-		"message": "`width` is not a positive number. Falling back to \"full\".",
+		"message": "`width` is not a positive number or a CSS length. Falling back to \"full\".",
 		"context": "nldd-image:state(invalid-width)"
 	},
 	{
@@ -618,6 +618,11 @@ export const devRules: DevRule[] = [
 			"accessibleLabel",
 			"accessibleLabeledBy"
 		]
+	},
+	{
+		"id": "rich-text-no-inline-content",
+		"message": "Bare text or an inline element is a direct child, and each one lands in a column of 0px. Wrap it in a block element such as `p` where the content is made, or put plain text in nldd-text.",
+		"context": "nldd-rich-text:state(inline-content)"
 	},
 	{
 		"id": "row-max-one-control",

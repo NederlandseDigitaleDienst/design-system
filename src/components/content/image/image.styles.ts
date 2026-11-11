@@ -27,13 +27,12 @@ export const imageStyles = css`
 		--_image-empty-icon-color: light-dark(var(--primitives-color-neutral-450), var(--primitives-color-neutral-550));
 		--_image-object-fit: cover;
 		--_image-object-position: center;
-		--_image-max-width: 100%;
 		--_image-media-height: var(--context-image-height, auto);
 
 		${inheritedTextReset}
 		box-sizing: border-box;
 		display: block;
-		max-width: var(--_image-max-width);
+		max-width: 100%;
 	}
 
 	:host([hidden]) {

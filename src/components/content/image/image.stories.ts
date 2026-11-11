@@ -70,8 +70,8 @@ export default {
 		},
 		width: {
 			control: 'select',
-			options: ['full', 160, 240, 320, 480, 640],
-			description: 'Display-breedte. `full` vult de parent, een numerieke waarde zet max-width + img-hint.',
+			options: ['full', 160, 240, 320, 480, 640, '20rem', '50%'],
+			description: 'Display-breedte, nooit breder dan de parent. `full` vult de parent, een getal is pixels en zet ook de img-hint, een andere CSS-lengte zet alleen de breedte.',
 			table: { defaultValue: { summary: 'full' } },
 		},
 		aspectRatio: {

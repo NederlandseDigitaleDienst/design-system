@@ -748,3 +748,28 @@ describe('nldd-segmented-control-item shortcut', () => {
 		expect(item.hasAttribute('aria-describedby')).toBe(false);
 	});
 });
+
+describe('nldd-segmented-control – width', () => {
+	let wrapper: HTMLElement;
+
+	afterEach(() => { if (wrapper) cleanup(wrapper); });
+
+	// A form field lays its control out in a flex column, which stretches an
+	// auto-width child to the full width of the field.
+	it('keeps width="fit-content" to its content in a form field', async () => {
+		await import('../../forms/form-field/form-field.js');
+		wrapper = await fixture<HTMLElement>(`
+			<nldd-form-field label="Jouw besturingssysteem" style="display: block; width: 720px">
+				<nldd-segmented-control value="macos" width="fit-content">
+					<nldd-segmented-control-item value="macos" text="macOS"></nldd-segmented-control-item>
+					<nldd-segmented-control-item value="linux" text="Linux"></nldd-segmented-control-item>
+					<nldd-segmented-control-item value="windows" text="Windows"></nldd-segmented-control-item>
+				</nldd-segmented-control>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(wrapper);
+		const control = wrapper.querySelector<NLDDSegmentedControl>('nldd-segmented-control')!;
+		await waitForUpdate(control);
+		expect(control.getBoundingClientRect().width).toBeLessThan(400);
+	});
+});
