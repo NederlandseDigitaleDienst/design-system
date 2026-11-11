@@ -17,11 +17,11 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **`nldd-text-editor` and `nldd-code-editor` are framed by default, like the other fields.** `embedded` gives the bare editor for a composition of your own. See Breaking.
 - **Small controls are 34px high instead of 32px.** See Changed.
-- **`nldd-title` takes its size from its level, and its sizes are `display-1` to `display-6`, also on `nldd-title-cell`.** A title without a level is body text. See Breaking.
-- **`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`, and any cell can be the grip with `reorder-handle`.** See Breaking.
-- **Every event has a plain name without `nldd-`, in kebab-case.** `nldd-reorder` is `reorder`, `tabchange` is `tab-change`. See Breaking.
+- **Typography.** `nldd-title` takes its size from its level, and its sizes are `display-1` to `display-6`, also on `nldd-title-cell`. A title without a level is body text. Its overline and supporting text grow and shrink with it, and a link or `strong` in its heading looks as it does in `nldd-text`. `nldd-blockquote` has a `size` with `lg` for a quote that stands out, keeps a line at about the same number of characters at every size, and marks the quote with a light gray line. See Breaking, Added and Changed.
+- **2 accessibility fixes:** one contentinfo landmark for a page with an `nldd-page-footer`, and a real heading for each level in the menu sheet of `nldd-top-navigation-bar`. See Changed and Fixed.
+- **11 other fixes,** among them a long `nldd-list` that no longer blocks the page, and a required checkbox, switch or radio group that holds the form until it is answered. See Fixed.
+- **6 breaking changes.** Three are about the sizes of `nldd-title` and `nldd-title-cell`, the others are the frame of the editors, the rename to `nldd-reorder-handle-cell` and plain event names. `nldd lint --fix` makes most of the renames for you. The event names you search for yourself. See Breaking.
 
 ### Breaking
 
