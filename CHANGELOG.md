@@ -51,6 +51,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **`nldd-list` and `nldd-list-item` load in any order, as the autoloader does.** With the list first, it read its rows before they were rows and ran into endless recursion; with the rows first, each row read the appearance of a list that was not defined yet. The list now brings `nldd-list-item` along, and a row waits for its list to push its state.
+- **An `nldd-top-title-bar` with `collapse-anchor` loads before its `nldd-page` without an error.** It listened to the scroll target of a page that was not defined yet. It now waits for the page.
 - **An `nldd-segmented-control` with `width="fit-content"` keeps to its content in an `nldd-form-field`.** The field lays out its control in a flex column, which stretched it to the full width of the field. It now holds on to its own width in any flex or grid parent.
 - **An `nldd-image` with a numeric `width` keeps that width in an `nldd-rich-text`.** The rich text caps each child at the column width, and that rule beat the cap of the image itself, so the image filled the column. The image now sets its width inline, still never wider than its parent.
 - **An `nldd-popover` that is a bottom sheet on a small screen slides down when it closes, in Safari too.** Safari cannot keep a closing popover in the top layer, so it vanished at once. The popover now slides down while it is still open and closes after. On sm it is a manual popover now, which closes itself on a tap on the backdrop, Escape, its anchor or `hide()`, so every way out slides. One thing goes with that: a close request from the system, such as the back gesture on Android, no longer closes the sheet. A `popover` you set yourself is left alone.

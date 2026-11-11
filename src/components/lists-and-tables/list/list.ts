@@ -5,6 +5,8 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { listStyles } from './list.styles.js';
 import { template } from './list.template.js';
 import type { NLDDListItem } from '../list-item/list-item.js';
+// The list reads its rows as they upgrade, so it brings their definition along.
+import '../list-item/list-item.js';
 import { nlddListTranslations } from './list.i18n.js';
 import type { NLDDListTranslations } from './list.i18n.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';

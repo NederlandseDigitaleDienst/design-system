@@ -411,8 +411,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		}
 	}
 
+	/** Null until the list is defined: loaded on its own, a row can upgrade
+	 *  first, and the list pushes its state to its rows once it is there. */
 	private get _parentList(): NLDDList | null {
-		return this.closest('nldd-list');
+		const list = this.closest<NLDDList>('nldd-list');
+		return list?.matches(':defined') ? list : null;
 	}
 
 	/**
@@ -727,7 +730,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * always tracks its current parent.
 	 */
 	private _syncWithList() {
-		const list = this.closest<NLDDList>('nldd-list');
+		const list = this._parentList;
 		if (!list) return;
 		this._applyAppearance(list.appearance);
 		this._applyParentType(list.type);
