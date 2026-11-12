@@ -39,6 +39,16 @@ const REPEATED = new Set(['v-for', '*ngFor']);
 /** A value a template language fills in: `{{ x }}`, `{% x %}`, `${x}`, `<%= x %>` or `{x}`. */
 const TEMPLATE_VALUE = /\{\{|\{%|\$\{|<%|^\{.*\}$/;
 
+/** A JSON object, such as a `translations` attribute, is written out and not filled in. */
+const isJsonObject = (value) => {
+	if (!/^\{\s*("|\})/.test(value)) return false;
+	try {
+		return JSON.parse(value) !== null;
+	} catch {
+		return false;
+	}
+};
+
 /** Jinja, Django, Handlebars and Angular control flow, written between the tags. */
 const TEMPLATE_TEXT = /\{%|\{\{|@(if|else|for|switch|defer)\b/;
 
@@ -72,7 +82,7 @@ function readAttribute(element, name, value) {
 	} else if (!PLAIN_ATTRIBUTE.test(name)) {
 		element.spread = true;
 		element.templated = true;
-	} else element.attrs.set(name, TEMPLATE_VALUE.test(value) ? BOUND : value);
+	} else element.attrs.set(name, TEMPLATE_VALUE.test(value) && !isJsonObject(value) ? BOUND : value);
 }
 
 function hasSlotName(attribs) {
@@ -480,6 +490,22 @@ function staticJsxValue(value) {
 	return BOUND;
 }
 
+/**
+ * `translations={{ 'components.x.y': '…' }}` as JSON, so its keys can be checked. Only
+ * the keys need to be static; a value that is filled in counts as an empty text.
+ */
+function staticJsxObject(value) {
+	const expression = value?.type === 'JSXExpressionContainer' ? value.expression : undefined;
+	if (expression?.type !== 'ObjectExpression') return BOUND;
+	const entries = [];
+	for (const property of expression.properties) {
+		if (property.type !== 'Property' || property.computed || property.key.type !== 'Literal') return BOUND;
+		const text = property.value.type === 'Literal' ? property.value.value : '';
+		entries.push([String(property.key.value), String(text)]);
+	}
+	return JSON.stringify(Object.fromEntries(entries));
+}
+
 /** Props React keeps to itself: they never reach the element. */
 const REACT_ONLY = new Set(['key', 'ref', 'dangerouslySetInnerHTML', 'suppressHydrationWarning', 'suppressContentEditableWarning']);
 
@@ -491,7 +517,7 @@ function readJsxAttributes(element, attributes, roots) {
 		}
 		const name = jsxName(attribute.name);
 		const isHandler = /^on[A-Z]/.test(name) || REACT_ONLY.has(name);
-		const value = staticJsxValue(attribute.value);
+		const value = name === 'translations' ? staticJsxObject(attribute.value) : staticJsxValue(attribute.value);
 		if (!isHandler && value !== undefined) element.attrs.set(name === 'className' ? 'class' : name, value);
 		// An element passed as a prop renders elsewhere, so it is a tree of its own.
 		const nested = [];

@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import '../components/index.js';
 import data from '../../lint/data.generated.json';
 import { devRules } from './dev-rules.generated.js';
-import { createRegistrationCheck, findRoots, findUndefined, findViolations, lacksFoucGuard } from './dev-checks.js';
+import { checkElementTranslationKeys, createRegistrationCheck, findRoots, findUndefined, findViolations, lacksFoucGuard } from './dev-checks.js';
 import { loadingTags } from './loading-tags.js';
 import foucCss from '../assets/styles/fouc.css?inline';
 
@@ -181,5 +181,25 @@ describe('FOUC guard', () => {
 		document.head.append(style);
 		mount('<nldd-button text="Bewaar"></nldd-button>');
 		expect(lacksFoucGuard(root)).toBe(false);
+	});
+});
+
+describe('translations on one element', () => {
+	afterEach(() => vi.restoreAllMocks());
+
+	it('warns once about a key the element does not read', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const known = ['components.split-button.show-options-action'];
+		checkElementTranslationKeys(['components.split-button.menu-action', ...known], known);
+		checkElementTranslationKeys(['components.split-button.menu-action'], known);
+		expect(warn).toHaveBeenCalledTimes(1);
+		expect(warn.mock.calls[0][0]).toContain('components.split-button.menu-action');
+		expect(warn.mock.calls[0][0]).not.toContain('show-options-action');
+	});
+
+	it('stays quiet when every key is known', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		checkElementTranslationKeys(['components.button.link-hint-download-lowercase-label'], ['components.button.link-hint-download-lowercase-label']);
+		expect(warn).not.toHaveBeenCalled();
 	});
 });

@@ -1715,3 +1715,41 @@ describe('nldd command, for CSS', () => {
 		assert.match(result.stdout, /in 1 file /);
 	});
 });
+
+describe('translation keys', () => {
+	const real = loadData();
+	const linter = createLinter(real);
+	const findingsIn = async (source, file) =>
+		(await linter.lintSource(source, file)).findings.filter(({ rule }) => rule === 'translation-key-not-found').map(({ message }) => message);
+	const button = (translations) => `<nldd-button text="Opslaan" translations='${JSON.stringify(translations)}'></nldd-button>`;
+
+	it('accepts the keys the element reads', async () => {
+		assert.deepEqual(await findingsIn(button({ 'components.button.link-hint-download-lowercase-label': 'downloads file' }), 'a.html'), []);
+	});
+
+	it('names a key the element does not have, and the component that has it', async () => {
+		assert.deepEqual(await findingsIn(button({ 'components.button.nope': 'x' }), 'a.html'), ['nldd-button has no translation key `components.button.nope`.']);
+		assert.deepEqual(await findingsIn(button({ 'components.split-button.show-options-action': 'x' }), 'a.html'), [
+			'`components.split-button.show-options-action` belongs to nldd-split-button, so nldd-button does not read it.',
+		]);
+	});
+
+	it('names the key that replaced a removed one', async () => {
+		const html = `<nldd-split-button text="Opslaan" translations='{"components.split-button.menu-action":"More options"}'></nldd-split-button>`;
+		assert.deepEqual(await findingsIn(html, 'a.html'), [
+			'`components.split-button.menu-action` was removed after 0.15.0. Use `components.split-button.show-options-action`.',
+		]);
+	});
+
+	it('reads an object literal in JSX, and leaves a filled-in object or key alone', async () => {
+		const jsx = (value) => `export const A = () => <nldd-button text="Opslaan" translations={${value}} />;`;
+		assert.deepEqual(await findingsIn(jsx("{ 'components.button.nope': label }"), 'a.tsx'), ['nldd-button has no translation key `components.button.nope`.']);
+		assert.deepEqual(await findingsIn(jsx('{ [key]: "x" }'), 'a.tsx'), []);
+		assert.deepEqual(await findingsIn(jsx('mine'), 'a.tsx'), []);
+	});
+
+	it('leaves a template value alone', async () => {
+		assert.deepEqual(await findingsIn('<nldd-button text="Opslaan" translations="{{ t }}"></nldd-button>', 'a.html'), []);
+		assert.deepEqual(await findingsIn('<nldd-button text="Opslaan" translations="{t}"></nldd-button>', 'a.svelte.html'), []);
+	});
+});

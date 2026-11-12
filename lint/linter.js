@@ -83,6 +83,35 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 	}
 }
 
+/**
+ * The keys in a `translations` attribute written as JSON. An element reads only its
+ * own keys, so a key another component has, or one that was renamed, does nothing.
+ */
+function checkTranslationKeys(node, { translations, removedKeys }, report) {
+	const value = node.attrs.get('translations');
+	const own = translations[node.name];
+	if (typeof value !== 'string' || !own) return;
+	let keys;
+	try {
+		const parsed = JSON.parse(value);
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return;
+		keys = Object.keys(parsed);
+	} catch {
+		return;
+	}
+	for (const key of keys) {
+		if (own.includes(key)) continue;
+		const removed = removedKeys[key];
+		const owner = Object.keys(translations).find((tag) => translations[tag].includes(key));
+		const message = removed
+			? `\`${key}\` was removed after ${removed.last}.${removed.use && own.includes(removed.use) ? ` Use \`${removed.use}\`.` : ''}`
+			: owner
+				? `\`${key}\` belongs to ${owner}, so ${node.name} does not read it.`
+				: `${node.name} has no translation key \`${key}\`.`;
+		report('translation-key-not-found', message, 'translations');
+	}
+}
+
 function checkSlot(node, tags, report) {
 	const slot = node.attrs.get('slot');
 	const parent = node.parent;
@@ -106,6 +135,7 @@ function builtInFindings(root, context) {
 			return;
 		}
 		checkAttributes(node, context, report);
+		checkTranslationKeys(node, context, report);
 		checkSlot(node, tags, report);
 	});
 	return findings;
@@ -176,6 +206,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		tags: data.tags,
 		icons: new Set(data.icons),
 		anyChildAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.childAttrs)),
+		translations: data.translations ?? {},
+		removedKeys: data.removedKeys ?? {},
 	};
 	const engine = createEngine({ classes: data.classes, tags: data.tags, systemCss: data.systemCss });
 	const isSystemBlock = (css) => isSystemCss(css, data.systemCss ?? {});

@@ -1,0 +1,3 @@
+{
+	"components.split-button.menu-action": {"last":"0.15.0","use":"components.split-button.show-options-action"}
+}

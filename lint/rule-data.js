@@ -81,6 +81,10 @@ export const BUILT_IN_RULES = {
 		severity: 'warn',
 		description: 'The design system has no token with this name, so the declaration that uses it does nothing.',
 	},
+	'translation-key-not-found': {
+		severity: 'warn',
+		description: 'The element has no translation key with this name, so the text stays Dutch.',
+	},
 	'local-variable-no-override': {
 		severity: 'warn',
 		description: 'A `--_` variable belongs to the inside of one component and can change in any release. Use the component\'s attributes, or open an issue for what is missing.',
