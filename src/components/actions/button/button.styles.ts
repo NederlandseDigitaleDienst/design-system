@@ -183,10 +183,9 @@ export const buttonStyles = css`
 	}
 
 	/* The on-color variants derive from currentColor (which stays
-	   unresolved inside the tokens). The filled label prefers the surface
-	   color from --context-background-color; that var() must resolve
-	   here on the host — inside a :root token it would freeze — with the
-	   tokens' white/black contrast flip as fallback. */
+	   unresolved inside the tokens). The filled label takes the surface
+	   color from --context-background-color, resolved here on the host:
+	   inside a :root token it would freeze. */
 
 	:host([appearance="inherit-tinted"]),
 	:host([expanded][appearance="inherit-tinted"]) {

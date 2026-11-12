@@ -152,7 +152,7 @@ export const iconButtonStyles = css`
 
 	/* The on-color variants derive from currentColor; see nldd-button for
 	   the full rationale. The filled label resolves the context var here on
-	   the host, with the tokens' white/black contrast flip as fallback. */
+	   the host. */
 
 	:host([appearance="inherit-tinted"]),
 	:host([expanded][appearance="inherit-tinted"]) {

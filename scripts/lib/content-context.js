@@ -5,24 +5,44 @@
  * color instead of the one around it.
  */
 
-const CONTENT_COLOR = /^\s*color:\s*var\((--_[\w-]*content-color)\)/;
+const CONTENT_COLOR = /(?<![\w-])color\s*:\s*var\(\s*(--_[\w-]*content-color)\s*\)/g;
+
+/** Comments and `${…}` interpolations blanked out, so offsets still point at the source. */
+const blank = (source) =>
+	source
+		.replace(/\/\*[\s\S]*?\*\//g, (text) => text.replace(/[^\n]/g, ' '))
+		.replace(/\$\{[^}]*\}/g, (text) => ' '.repeat(text.length));
 
 /**
- * Each `color: var(--_…-content-color)` whose rule does not set the context too.
- * A rule is read from its opening brace to its closing one, without nested rules.
+ * Each `color: var(--_…-content-color)` whose own rule does not set the context
+ * too. A nested rule (inside `@media`, or `&:hover`) is a rule of its own.
  * @returns {{ line: number, text: string }[]}
  */
 export function findContentColorWithoutContext(source) {
-	const lines = source.split('\n');
+	const plain = blank(source);
+	const blocks = [];
+	const open = [];
+	for (let at = 0; at < plain.length; at++) {
+		if (plain[at] === '{') open.push(at);
+		else if (plain[at] === '}' && open.length > 0) blocks.push({ start: open.pop(), end: at });
+	}
+	const ownText = (block) => {
+		const nested = blocks.filter((other) => other.start > block.start && other.end < block.end);
+		let text = plain.slice(block.start + 1, block.end);
+		for (const inner of nested) {
+			const from = inner.start - block.start - 1;
+			text = text.slice(0, from) + ' '.repeat(inner.end - inner.start + 1) + text.slice(from + inner.end - inner.start + 1);
+		}
+		return text;
+	};
 	const found = [];
-	lines.forEach((text, index) => {
-		if (!CONTENT_COLOR.test(text)) return;
-		let start = index;
-		while (start > 0 && !lines[start].includes('{')) start -= 1;
-		let end = index;
-		while (end < lines.length - 1 && !lines[end].includes('}')) end += 1;
-		const rule = lines.slice(start, end + 1).join('\n');
-		if (!rule.includes('--context-content-color')) found.push({ line: index + 1, text: text.trim() });
-	});
+	for (const match of plain.matchAll(CONTENT_COLOR)) {
+		const rule = blocks
+			.filter((block) => block.start < match.index && block.end > match.index)
+			.sort((a, b) => b.start - a.start)[0];
+		if (rule && ownText(rule).includes('--context-content-color')) continue;
+		const line = plain.slice(0, match.index).split('\n').length;
+		found.push({ line, text: source.split('\n')[line - 1].trim() });
+	}
 	return found;
 }
