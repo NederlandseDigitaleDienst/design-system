@@ -63,7 +63,7 @@ export const checkboxStyles = css`
 	}
 
 	:host([color="inherit"]) :is(.checkbox__check-icon, .checkbox__indeterminate-icon) {
-		color: var(--context-parent-background-color, var(--semantics-content-contrast-color));
+		color: var(--context-background-color);
 	}
 
 

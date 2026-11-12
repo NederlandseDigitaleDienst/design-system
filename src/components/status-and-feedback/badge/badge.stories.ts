@@ -184,8 +184,8 @@ export const Kleuren = {
 
 /**
  * `color="inherit"` vult met de kleur van de content eromheen: het
- * `--context-content-color`-kanaal dat een list-item, tabelrij of menu op z'n
- * content zet, en anders `currentColor`. Zo reist een badge mee met de regel
+ * `--context-content-color` die een vlak, een knop of een geselecteerde rij
+ * zet. Zo reist een badge mee met de regel
  * waar hij in staat, ook als die oplicht.
  *
  * `custom-color` is voor een kleur die het systeem niet kan kennen: de mantel

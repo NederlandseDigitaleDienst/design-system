@@ -29,7 +29,7 @@ nldd-rich-text {
 		[wide-end]     1fr
 		[full-end];
 	row-gap: var(--_rich-text-spacing);
-	color: var(--semantics-content-color);
+	color: var(--context-content-color);
 	font: var(--primitives-font-body-md-regular-snug);
 }
 
@@ -519,7 +519,7 @@ nldd-rich-text figure {
 /* # Figure Caption */
 
 nldd-rich-text figcaption {
-	color: var(--semantics-content-secondary-color);
+	color: var(--context-content-secondary-color);
 	font: var(--primitives-font-body-xs-regular-snug);
 	text-align: left;
 	text-wrap: pretty;

@@ -207,7 +207,7 @@ describe('nldd-progress-bar', () => {
 	   Segment width computation
 	   ============================================================ */
 
-	it('sets --context-progress-bar-segment-indicator-width on each segment', async () => {
+	it('sets --_progress-bar-segment-indicator-width on each segment', async () => {
 		el = await fixture(`
 			<nldd-progress-bar max="100">
 				<nldd-progress-bar-segment-indicator value="30"></nldd-progress-bar-segment-indicator>
@@ -216,8 +216,8 @@ describe('nldd-progress-bar', () => {
 		`);
 		await waitForUpdate(el);
 		const segments = el.querySelectorAll<HTMLElement>('nldd-progress-bar-segment-indicator');
-		expect(segments[0]!.style.getPropertyValue('--context-progress-bar-segment-indicator-width')).toBe('30%');
-		expect(segments[1]!.style.getPropertyValue('--context-progress-bar-segment-indicator-width')).toBe('20%');
+		expect(segments[0]!.style.getPropertyValue('--_progress-bar-segment-indicator-width')).toBe('30%');
+		expect(segments[1]!.style.getPropertyValue('--_progress-bar-segment-indicator-width')).toBe('20%');
 	});
 
 	it('hides segments with value <= 0', async () => {
@@ -243,9 +243,9 @@ describe('nldd-progress-bar', () => {
 		await waitForUpdate(el);
 		const segments = el.querySelectorAll<HTMLElement>('nldd-progress-bar-segment-indicator');
 		// 100 / 150 ≈ 66.67%
-		expect(segments[0]!.style.getPropertyValue('--context-progress-bar-segment-indicator-width')).toMatch(/^66\.6/);
+		expect(segments[0]!.style.getPropertyValue('--_progress-bar-segment-indicator-width')).toMatch(/^66\.6/);
 		// 50 / 150 ≈ 33.33%
-		expect(segments[1]!.style.getPropertyValue('--context-progress-bar-segment-indicator-width')).toMatch(/^33\.3/);
+		expect(segments[1]!.style.getPropertyValue('--_progress-bar-segment-indicator-width')).toMatch(/^33\.3/);
 		expect(el.matches(':state(exceeds-max)')).toBe(true);
 	});
 
@@ -259,7 +259,7 @@ describe('nldd-progress-bar', () => {
 		const segment = el.querySelector<NLDDProgressBarSegmentIndicator>('nldd-progress-bar-segment-indicator')!;
 		segment.value = 70;
 		await waitForUpdate(el);
-		expect((segment as unknown as HTMLElement).style.getPropertyValue('--context-progress-bar-segment-indicator-width')).toBe('70%');
+		expect((segment as unknown as HTMLElement).style.getPropertyValue('--_progress-bar-segment-indicator-width')).toBe('70%');
 	});
 
 
@@ -294,7 +294,7 @@ describe('nldd-progress-bar', () => {
 		const internal = el.shadowRoot!.querySelector<HTMLElement>('nldd-progress-bar-segment-indicator');
 		expect(internal).not.toBeNull();
 		expect(internal!.getAttribute('color')).toBe('success');
-		expect(internal!.style.getPropertyValue('--context-progress-bar-segment-indicator-width')).toBe('60%');
+		expect(internal!.style.getPropertyValue('--_progress-bar-segment-indicator-width')).toBe('60%');
 	});
 
 	it('does not render internal segment when slotted children exist', async () => {

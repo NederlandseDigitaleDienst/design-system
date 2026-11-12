@@ -12,11 +12,36 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **Rounder corners, and a button in a field follows the field's corner.** See Changed.
+- **`nldd lint` checks the tokens your CSS names.** A `var(--semantics-…)` that does not exist fails without a sound in the browser: the declaration is dropped. The linter now reports it, and for a token that was removed it says the last version that had it. See Added.
+- **`nldd lint --pure` works on a built site.** It recognizes the system's own CSS in a bundle, also minified, and reports only the app's. See Fixed.
+- **Text takes the color of the surface it sits on.** `nldd-text`, `nldd-title` and `nldd-rich-text` follow the hero panel, a tooltip and a selected row, and your own component can pass its colors the same way. See Added and Changed.
+
+### Breaking
+
+- **`--context-parent-background-color` is now `--context-background-color`.** It is the background of the nearest surface, not of the parent. `nldd lint` names the new name.
+- **What sits on a colored surface of your own takes its colors from the context, not from `color`.** The spinner, `color="inherit"` on `nldd-badge` and `nldd-avatar`, the mark of an `inherit` checkbox, radio button or switch, and the label of an `inherit-filled` button used to fall back to the text color or a computed contrast. They now read `--context-content-color` and `--context-background-color`, which default to the page colors. Set both on the element that paints the surface.
+
+### Added
+
+- **`token-not-found`** (warn): a `var(--primitives-…)`, `var(--semantics-…)`, `var(--components-…)` or `var(--context-…)` that is not in this version, in a stylesheet, a `<style>` block, a `style` attribute or a style object. A token the project declares itself counts as its own. `nldd lint` now reads `.css`, `.scss`, `.sass` and `.less` files that name a token, also without `--pure`.
+- **`local-variable-no-override`** (warn): an app that sets a `--_*` variable of a component, such as `--_button-gap`. Those belong to the inside of one component and can change in any release.
+- **`file-not-read`** (warn): a file with `nldd-*` markup the linter cannot read, such as an `.astro` file or a plain template string in a script. It used to report such a file as clean.
+- **Go templates and Lit in JavaScript.** `nldd lint` reads `.tmpl` and `.gohtml` as HTML, also in a project scan, and the `html` templates in a `.js` or `.mjs` file you name.
+- **Seven context variables for your own components.** `--context-background-color`, `--context-content-color` and the secondary, accent, success, warning and critical content colors tell what sits on a surface which colors to use. Read them with a fallback; set all seven on a surface your own component paints, so text and components on it follow. They default to the page colors on `:root`, so a `var()` needs no fallback.
+- **The tokens of each version in the package.** `lint/data.generated.json` lists every token and every removed token with the last version that had it, so `npx @nldd/design-system@<version> lint` tells you which of yours an upgrade removes.
 
 ### Changed
 
 - **Corner radius tokens.** The scale steps by 2px up to `lg`: `--primitives-corner-radius-xxs` is 4px, `xs` 6px, `sm` 8px, `md` 10px and `lg` 12px, then `xl` 16px and `xxl` 20px. `xxxl` stays 24px. Controls, tooltips, tags, cards, tables and editors get rounder corners with it, and an `lg` control now uses `lg` instead of sharing `md`.
 - **A control inside a field takes its corner from the field.** A button in `nldd-text-field`, `nldd-search-field`, `nldd-combo-box`, `nldd-date-field`, `nldd-file-field` or the search bar of `nldd-list`, the steppers of `nldd-number-field` and the tokens in `nldd-token-field` get the field's radius minus the space around them, so both corners share a center. An `sm` button in an `md` field has a 5px corner instead of the 8px it has on its own.
+
+- **`nldd-title` and `nldd-rich-text` follow the content color of their surface,** as `nldd-text` already did. In a selected row, on the accent panel of `nldd-hero` or in a tooltip they no longer need `color="inherit"`.
+- **A component that changes its text color passes it on.** Buttons, tags, segmented controls, tabs, pagination, the pickers and the other components with a colored state set `--context-content-color` next to their `color`, so a spinner, badge or text inside takes that color.
+- **Every surface starts text at the default colors again.** `nldd-card`, `nldd-box`, `nldd-sheet`, `nldd-popover`, `nldd-menu`, `nldd-modal-dialog`, `nldd-window`, the page sections, the split views, `nldd-shell` and `nldd-page` reset the content colors next to their background, so text in a card inside a selected row no longer takes the row's color.
+
+### Fixed
+
+- **`nldd lint --pure` reported the system's own CSS on a built site.** A bundler gives the stylesheet another name and minifies it, so every block of it counted as the app's own, and so did the `<link>` to it. The linter now knows the system's CSS by what each rule selects and sets, which survives bundling, and judges a linked stylesheet by what is in it.
 
 ## [0.22.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.21.1...v0.22.0) (2026-11-11)
 

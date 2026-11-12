@@ -684,15 +684,15 @@ export const MetPopover = {
  * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
  * bedoeld voor gekleurde vlakken (zoals de hero-main of filled-categories).
  * `inherit-filled` gebruikt de vlakkleur als icoonkleur wanneer het vlak
- * `--context-parent-background-color` cascadet; zonder die context valt het
- * terug op een wit/zwart-contrastflip, zie het derde vlak. Hover, active en
+ * `--context-background-color` zet; een eigen vlak, zoals het derde, zet
+ * hem zelf. Hover, active en
  * expanded veranderen de kleur niet, zodat het contrast blijft wat het vlak
  * eromheen geeft.
  */
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
 				<nldd-icon-button
 					appearance="inherit-filled"
 					icon="edit"
@@ -718,7 +718,7 @@ export const OpKleurvlak = {
 					expanded
 				></nldd-icon-button>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; --context-content-color: var(--semantics-categories-oranje-filled-content-color);">
 				<nldd-icon-button
 					appearance="inherit-filled"
 					icon="edit"
@@ -730,11 +730,11 @@ export const OpKleurvlak = {
 					text="Verwijder"
 				></nldd-icon-button>
 			</div>
-			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; --context-background-color: oklch(0.45 0.12 300); --context-content-color: oklch(1 0 0);">
 				<nldd-icon-button
 					appearance="inherit-filled"
 					icon="edit"
-					text="Zonder context (flip)"
+					text="Bewerk"
 				></nldd-icon-button>
 				<nldd-icon-button
 					appearance="inherit-tinted"

@@ -100,6 +100,7 @@ export const dropdownStyles = css`
 		flex-direction: row;
 		align-items: center;
 		justify-content: flex-end;
+		--context-content-color: var(--_dropdown-content-color);
 		color: var(--_dropdown-content-color);
 		transition:
 			background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default),
@@ -110,6 +111,7 @@ export const dropdownStyles = css`
 	.dropdown:hover {
 		@media (hover: hover) {
 			background-color: var(--_dropdown-is-hovered-background-color);
+			--context-content-color: var(--_dropdown-is-hovered-content-color);
 			color: var(--_dropdown-is-hovered-content-color);
 		}
 	}
@@ -122,6 +124,7 @@ export const dropdownStyles = css`
 
 	.dropdown:active {
 		background-color: var(--_dropdown-is-active-background-color);
+		--context-content-color: var(--_dropdown-is-active-content-color);
 		color: var(--_dropdown-is-active-content-color);
 		--_dropdown-highlight-border-color: var(--_dropdown-is-active-highlight-border-color);
 	}

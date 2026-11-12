@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 export const menuStyles = css`
 	:host {
@@ -70,6 +70,8 @@ export const menuStyles = css`
 	/* # Block */
 
 	.menu {
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
 		display: flex;
 		box-sizing: border-box;
 		border-radius: var(--semantics-overlays-corner-radius);

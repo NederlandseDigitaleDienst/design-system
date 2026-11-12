@@ -142,26 +142,27 @@ Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet ni
 
 ## CSS-variabelen
 
-Alle visuele waarden in de componenten komen uit CSS-variabelen en niets is hardcoded. Zo werkt licht en donker, en zo blijft de huisstijl erin zitten. Voor jou is het vooral iets om van af te blijven: de variabelen zijn de bedrading van het systeem, geen publieke API. Ze worden hernoemd, samengevoegd en verwijderd wanneer een component daarom vraagt, en de changelog beschrijft zo'n wijziging vanuit dat component, niet vanuit jouw stylesheet. Gebruik je ze toch, dan is dat op eigen risico.
+Alle visuele waarden in de componenten komen uit CSS-variabelen en niets is hardcoded. Zo werkt licht en donker, en zo blijft de huisstijl erin zitten.
 
-Stuur een component dus via zijn attributen. Ruimte stuur je met `nldd-container` en `nldd-spacer`, tekst met `nldd-title` en `nldd-rich-text`, en de kleuren komen uit de componenten zelf. Pak eerst een component, dan zit de huisstijl er al in en beweegt je app mee als het systeem verandert.
+Een `nldd-*`-component stuur je niet met die variabelen maar met zijn attributen en slots. Ruimte stuur je met `nldd-container` en `nldd-spacer`, tekst met `nldd-title` en `nldd-rich-text`, en de kleuren komen uit de componenten zelf. Wil je er een anders, meld het dan; zie `nldd-design-contribute`.
 
-Wat je in de devtools ziet staan, is gelaagd:
+Bouw je een eigen component (zie "Geen eigen vormgeving"), gebruik dan de tokens van het systeem. Het krijgt dan dezelfde kleuren, maten en afrondingen als de rest, kantelt mee tussen licht en donker en volgt een thema. Drie van de vijf lagen zijn daarvoor bedoeld:
 
-| Laag | Prefix | Wat het is |
-|------|--------|------------|
-| **Primitives** | `--primitives-*` | Basiswaarden: kleur, spacing, typografie. Alle andere lagen komen hierop uit. |
-| **Semantics** | `--semantics-*` | Betekenisvolle rollen: knoppen, controls, oppervlakken. |
-| **Context** | `--context-*` | Communicatie tussen componenten (bijv. achtergrondkleur die doorcascadeert). |
-| **Lokaal** | `--_{component}-*` | **Intern aan een component, zoals `--_button-background-color`. Raak deze niet aan.** |
+| Laag | Prefix | Voor jou |
+|------|--------|----------|
+| **Primitives** | `--primitives-*` | Basiswaarden: kleur, spacing, typografie, afronding. Gebruik ze. |
+| **Semantics** | `--semantics-*` | Rollen: knoppen, controls, oppervlakken. Gebruik ze, en kies deze als er een rol bij je element past: dan beweegt het mee als die rol verandert. |
+| **Components** | `--components-{component}-*` | Een waarde van één component die een thema zet. Alleen dat component leest hem. Niet gebruiken. |
+| **Context** | `--context-*` | Wat een oppervlak doorgeeft aan wat erop staat: `--context-background-color` en de tekstkleuren `--context-content-color`, `-secondary-color`, `-accent-color`, `-success-color`, `-warning-color` en `-critical-color`. Alleen deze zeven zijn voor jou; de rest is bedrading tussen componenten. Ze hebben een default, dus `var(--context-content-color)` werkt overal. Schildert je eigen component een achtergrond of verandert het de tekstkleur, zet ze dan op dat element: tekst en componenten erin nemen de kleur van de context over, niet die van `color`. |
+| **Lokaal** | `--_{component}-*` | Intern aan één component, zoals `--_button-background-color`. Niet gebruiken en niet zetten. |
 
-Er is geen componentlaag om een component mee bij te stellen. Wil je er een anders, meld het dan; zie `nldd-design-contribute`.
+Een token kan verdwijnen of een andere naam krijgen. De changelog noemt zo'n token onder `### Breaking`, en `nldd lint` meldt elke `var()` naar een token dat in jouw versie niet bestaat (`token-not-found`), met de opvolger erbij als die er is. Zet je een `--_*` van een component, dan meldt hij dat ook (`local-variable-no-override`). Draai hem bij elke upgrade over je stylesheets (zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md)).
 
-Eigen CSS hoort er niet te zijn (zie "Geen eigen vormgeving"). Staat er tijdelijk toch een omweg, in afwachting van een issue, dan is een `--primitives-*` daarin de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
+Bij kleuren gaat één ding het vaakst mis.
 
-**Zet geen `light-dark()` om een primitive heen.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Wikkel je die in nog een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond. Eén verwijzing volstaat.
+**Spiegel de stap niet.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Zet je die in een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond.
 
-`light-dark()` heb je alleen nodig voor kleuren die niet uit het palet komen, of wanneer je per schema bewust een ándere stap wilt (bijvoorbeeld 100 in licht en 150 in donker, voor iets meer contrast).
+Een andere stap per schema mag wel, en vaak wil je dat: de achtergrond in donker is niet precies de omgedraaide kleur van die in licht. De semantics doen het zelf ook, zoals `--semantics-surfaces-base-background-color` met `neutral-0` in licht en `neutral-100` in donker. Kies daarom eerst een semantics-token, dan zit die afwijking er al in. Past er geen rol bij, schrijf dan zelf een `light-dark()` met twee stappen die dicht bij elkaar liggen (bijvoorbeeld 100 in licht en 150 in donker), of gebruik hem voor een kleur die niet uit het palet komt.
 
 **Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `data-scheme="light"` (of `"dark"`) op `<html>`; zonder het attribuut volgt de pagina de voorkeur van het systeem. Een schakelaar in je app zet of haalt dat attribuut weg. Componenten die bij een wissel opnieuw moeten tekenen, letten zelf op het attribuut.
 

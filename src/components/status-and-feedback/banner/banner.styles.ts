@@ -33,6 +33,7 @@ export const bannerStyles = css`
 		${inheritedTextReset}
 		display: block;
 		width: 100%;
+		--context-content-color: var(--_banner-content-color);
 		color: var(--_banner-content-color);
 	}
 

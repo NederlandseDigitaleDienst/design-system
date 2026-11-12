@@ -1,4 +1,5 @@
 import { css, unsafeCSS } from 'lit';
+import { surfaceContent } from '../../../assets/styles/shadow-resets.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
@@ -16,7 +17,8 @@ export const popoverStyles = css`
 		--_popover-background-color: var(--semantics-surfaces-base-background-color);
 		--_popover-max-height: calc(100vh - var(--semantics-overlays-inset) * 2);
 		--_popover-default-width: var(--primitives-area-320);
-		--context-parent-background-color: var(--_popover-background-color);
+		--context-background-color: var(--_popover-background-color);
+		${surfaceContent}
 
 		margin: 0;
 		outline: none;

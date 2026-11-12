@@ -1577,7 +1577,7 @@ describe('nldd-list-item – context background', () => {
 		unloadTokens();
 	});
 
-	const probe = (id: string) => `<nldd-cell><span class="probe" id="${id}" style="display: block; background-color: var(--context-parent-background-color)"></span></nldd-cell>`;
+	const probe = (id: string) => `<nldd-cell><span class="probe" id="${id}" style="display: block; background-color: var(--context-background-color)"></span></nldd-cell>`;
 	const ring = (root: ParentNode, id: string) => getComputedStyle(root.querySelector(`#${id}`)!).backgroundColor;
 	const paint = (row: Element, selector = '.list-item__action') =>
 		getComputedStyle(row.shadowRoot!.querySelector(selector)!, '::before').backgroundColor;

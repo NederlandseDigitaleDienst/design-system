@@ -16,7 +16,7 @@ import { VERMEER } from '../../../docs/story-portraits.js';
  * `<nldd-avatar-group slot="avatars">` eromheen, die het overlappen en de ring
  * verzorgt. Zonder afbeelding valt een `nldd-avatar`
  * terug op de initialen uit `name`. Staat de identity op een gekleurde
- * ondergrond, geef die kleur dan door via `--context-parent-background-color`
+ * ondergrond, geef die kleur dan door via `--context-background-color`
  * zodat de ring
  * meekleurt. Zet `decorative` op de avatars wanneer de namen al in de tekst
  * staan.

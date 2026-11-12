@@ -15,8 +15,8 @@ export const titleCellStyles = css`
 		--_title-cell-max-width: none;
 		--_title-cell-min-height: 0;
 		--_title-cell-text-align: start;
-		--_title-cell-secondary-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
-		--_title-cell-color: var(--context-content-color, var(--semantics-content-color));
+		--_title-cell-secondary-color: var(--context-content-secondary-color);
+		--_title-cell-color: var(--context-content-color);
 		--_title-cell-font: var(--primitives-font-display-5-sm);
 
 		${inheritedTextReset}
@@ -133,27 +133,27 @@ export const titleCellStyles = css`
 	/* # Color */
 
 	:host([color="secondary"]) {
-		--_title-cell-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_title-cell-color: var(--context-content-secondary-color);
 	}
 
 	:host([color="accent"]) {
-		--_title-cell-secondary-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
-		--_title-cell-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
+		--_title-cell-secondary-color: var(--context-content-accent-color);
+		--_title-cell-color: var(--context-content-accent-color);
 	}
 
 	:host([color="success"]) {
-		--_title-cell-secondary-color: var(--context-content-success-color, var(--semantics-content-success-color));
-		--_title-cell-color: var(--context-content-success-color, var(--semantics-content-success-color));
+		--_title-cell-secondary-color: var(--context-content-success-color);
+		--_title-cell-color: var(--context-content-success-color);
 	}
 
 	:host([color="warning"]) {
-		--_title-cell-secondary-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
-		--_title-cell-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
+		--_title-cell-secondary-color: var(--context-content-warning-color);
+		--_title-cell-color: var(--context-content-warning-color);
 	}
 
 	:host([color="critical"]) {
-		--_title-cell-secondary-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
-		--_title-cell-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
+		--_title-cell-secondary-color: var(--context-content-critical-color);
+		--_title-cell-color: var(--context-content-critical-color);
 	}
 
 

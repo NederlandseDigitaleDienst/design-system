@@ -23,7 +23,7 @@ export const badgeStyles = css`
 		--_badge-icon-size: var(--primitives-space-14);
 		--_badge-icon-offset-correction: var(--primitives-space-1);
 		--_badge-ring-thickness: var(--semantics-surfaces-ring-thickness);
-		--_badge-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_badge-ring-color: var(--context-background-color);
 		--_badge-pulse-spread: var(--primitives-space-8);
 		--_badge-pulse-duration: 1.5s;
 		--_badge-corner-radius: var(--primitives-corner-radius-full);
@@ -50,7 +50,7 @@ export const badgeStyles = css`
 	   inherited color while the fill comes from the context channel. A row that
 	   sets the channel to white over dark text then paints white on white. */
 	:host([color="inherit"]) {
-		color: var(--context-content-color, currentColor);
+		color: var(--context-content-color);
 
 		--_badge-background-color: currentColor;
 		--_badge-border-color: transparent;
@@ -204,6 +204,7 @@ export const badgeStyles = css`
 	   on an element that also sets color would take that color instead of the
 	   one around it. Mirrors nldd-avatar. */
 	.badge__icon {
+		--context-content-color: var(--_badge-content-color);
 		color: var(--_badge-content-color);
 		display: inline-flex;
 		width: var(--_badge-icon-size);
@@ -223,6 +224,7 @@ export const badgeStyles = css`
 	}
 
 	.badge__text {
+		--context-content-color: var(--_badge-content-color);
 		color: var(--_badge-content-color);
 		display: inline-block;
 	}

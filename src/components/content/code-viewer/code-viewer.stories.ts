@@ -242,7 +242,7 @@ export const AppearanceSimple = {
 export const AppearanceBoxBase = {
 	name: 'Appearance box-base',
 	render: (args: Record<string, any>) => html`
-		<div style="padding: 24px; background-color: var(--semantics-surfaces-tinted-background-color); border-radius: var(--primitives-corner-radius-lg);">
+		<div style="padding: 24px; background-color: var(--semantics-surfaces-tinted-background-color); border-radius: var(--primitives-corner-radius-lg); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 			${Template(args)}
 		</div>
 	`,

@@ -14,10 +14,10 @@ export const textCellStyles = css`
 		--_text-cell-min-width: 0;
 		--_text-cell-max-width: none;
 		--_text-cell-min-height: 0;
-		--_text-cell-secondary-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_text-cell-secondary-color: var(--context-content-secondary-color);
 		--_text-cell-secondary-font: var(--primitives-font-body-xs-regular-tight);
 		--_text-cell-align: start;
-		--_text-cell-color: var(--context-content-color, var(--semantics-content-color));
+		--_text-cell-color: var(--context-content-color);
 		--_text-cell-font: var(--primitives-font-body-md-regular-tight);
 
 		${inheritedTextReset}
@@ -119,27 +119,27 @@ export const textCellStyles = css`
 	/* # Color */
 
 	:host([color="secondary"]) {
-		--_text-cell-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_text-cell-color: var(--context-content-secondary-color);
 	}
 
 	:host([color="accent"]) {
-		--_text-cell-secondary-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
-		--_text-cell-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
+		--_text-cell-secondary-color: var(--context-content-accent-color);
+		--_text-cell-color: var(--context-content-accent-color);
 	}
 
 	:host([color="success"]) {
-		--_text-cell-secondary-color: var(--context-content-success-color, var(--semantics-content-success-color));
-		--_text-cell-color: var(--context-content-success-color, var(--semantics-content-success-color));
+		--_text-cell-secondary-color: var(--context-content-success-color);
+		--_text-cell-color: var(--context-content-success-color);
 	}
 
 	:host([color="warning"]) {
-		--_text-cell-secondary-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
-		--_text-cell-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
+		--_text-cell-secondary-color: var(--context-content-warning-color);
+		--_text-cell-color: var(--context-content-warning-color);
 	}
 
 	:host([color="critical"]) {
-		--_text-cell-secondary-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
-		--_text-cell-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
+		--_text-cell-secondary-color: var(--context-content-critical-color);
+		--_text-cell-color: var(--context-content-critical-color);
 	}
 
 

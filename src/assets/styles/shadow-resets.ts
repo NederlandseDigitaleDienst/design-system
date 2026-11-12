@@ -58,3 +58,18 @@ export const inheritedTextReset = css`
 	word-spacing: normal !important;
 	text-transform: none !important;
 `;
+
+/**
+ * The content colors a surface passes on, set next to `--context-background-color`
+ * wherever a component paints a background of its own. Text inside reads them
+ * through the context channel, so a surface inside a highlighted row starts from
+ * the default colors again instead of keeping the row's.
+ */
+export const surfaceContent = css`
+	--context-content-color: var(--semantics-content-color);
+	--context-content-secondary-color: var(--semantics-content-secondary-color);
+	--context-content-accent-color: var(--semantics-content-accent-color);
+	--context-content-success-color: var(--semantics-content-success-color);
+	--context-content-warning-color: var(--semantics-content-warning-color);
+	--context-content-critical-color: var(--semantics-content-critical-color);
+`;

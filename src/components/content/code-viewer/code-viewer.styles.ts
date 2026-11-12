@@ -87,6 +87,7 @@ export const codeViewerStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
+		--context-content-color: var(--_code-viewer-content-color);
 		color: var(--_code-viewer-content-color);
 		font: var(--_code-viewer-font);
 	}
@@ -207,6 +208,7 @@ export const codeViewerStyles = css`
 	/* A diff row is three steps from the tinted surface (25 to 100, 75 to 200), so
 	   its text takes three steps more as well. Only on the row. */
 	:host([diff]) .cm-line:is(.cm-diff-added, .cm-diff-removed) {
+		--context-content-color: var(--_code-viewer-diff-row-content-color);
 		color: var(--_code-viewer-diff-row-content-color);
 		--semantics-code-syntax-comment-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
 		--semantics-code-syntax-punctuation-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-neutral-975));
@@ -262,6 +264,7 @@ export const codeViewerStyles = css`
 
 	.cm-diff-added-word,
 	.cm-diff-added-word * {
+		--context-content-color: var(--_code-viewer-diff-added-word-content-color);
 		color: var(--_code-viewer-diff-added-word-content-color);
 	}
 
@@ -272,6 +275,7 @@ export const codeViewerStyles = css`
 
 	.cm-diff-removed-word,
 	.cm-diff-removed-word * {
+		--context-content-color: var(--_code-viewer-diff-removed-word-content-color);
 		color: var(--_code-viewer-diff-removed-word-content-color);
 	}
 

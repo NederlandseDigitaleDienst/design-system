@@ -50,13 +50,13 @@ export const radioButtonStyles = css`
 		--_radio-button-is-active-border-color: currentColor;
 		--_radio-button-is-selected-border-color: currentColor;
 		--_radio-button-is-selected-background-color: currentColor;
-		--_radio-button-is-selected-inner-shape-border-color: var(--context-parent-background-color, var(--semantics-content-contrast-color));
+		--_radio-button-is-selected-inner-shape-border-color: var(--context-background-color);
 		--_radio-button-is-selected-is-hovered-border-color: currentColor;
 		--_radio-button-is-selected-is-hovered-background-color: currentColor;
-		--_radio-button-is-selected-is-hovered-inner-shape-border-color: var(--context-parent-background-color, var(--semantics-content-contrast-color));
+		--_radio-button-is-selected-is-hovered-inner-shape-border-color: var(--context-background-color);
 		--_radio-button-is-selected-is-active-border-color: currentColor;
 		--_radio-button-is-selected-is-active-background-color: currentColor;
-		--_radio-button-is-selected-is-active-inner-shape-border-color: var(--context-parent-background-color, var(--semantics-content-contrast-color));
+		--_radio-button-is-selected-is-active-inner-shape-border-color: var(--context-background-color);
 	}
 
 

@@ -1,4 +1,5 @@
 import { property } from 'lit/decorators.js';
+import { surfaceContent } from '../assets/styles/shadow-resets.js';
 import { css, LitElement, type PropertyValues } from 'lit';
 import { reflectNonDefault } from './reflect-non-default.js';
 
@@ -11,26 +12,29 @@ export type PageSectionPadding =
 
 /**
  * The surface a `background` paints, and passes on through
- * `--context-parent-background-color` so cards and nested sections read the
+ * `--context-background-color` so cards and nested sections read the
  * same surface. Every section puts this first in its `styles`.
  */
 export const pageSectionBackgroundStyles = css`
 	:host([background="base"]) {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
 	}
 
 	:host([background="tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
+		${surfaceContent}
 	}
 
 	:host([background="accent-tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-accent-tinted-background-color);
+		--context-background-color: var(--semantics-surfaces-accent-tinted-background-color);
+		${surfaceContent}
 	}
 
 	:host([background="base"]),
 	:host([background="tinted"]),
 	:host([background="accent-tinted"]) {
-		background-color: var(--context-parent-background-color);
+		background-color: var(--context-background-color);
 	}
 `;
 
@@ -62,7 +66,7 @@ const PADDING_KEYS = [
  * - **background**: `inherit` (the default — transparent, shows the ancestor's
  *   surface) | `base` (the base surface color) | `tinted` | `accent-tinted`
  *   (a tint of the theme's accent, with the contrast of `tinted`). Setting
- *   one of those also cascades `--context-parent-background-color` so
+ *   one of those also cascades `--context-background-color` so
  *   descendants (cards, nested sections) read the same surface.
  * - **block padding**: `padding-block` (both edges) with `padding-top`
  *   / `padding-bottom` per-edge overrides, each with responsive `sm-` /

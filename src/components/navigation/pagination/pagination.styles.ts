@@ -201,6 +201,7 @@ export const paginationStyles = css`
 		border-radius: var(--semantics-controls-md-corner-radius);
 		background-color: var(--_pagination-background-color);
 		align-items: center;
+		--context-content-color: var(--_pagination-content-color);
 		color: var(--_pagination-content-color);
 		transition:
 			background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default),
@@ -211,12 +212,14 @@ export const paginationStyles = css`
 	@media (hover: hover) {
 		.pagination__select-wrapper:hover {
 			background-color: var(--_pagination-is-hovered-background-color);
+			--context-content-color: var(--_pagination-is-hovered-content-color);
 			color: var(--_pagination-is-hovered-content-color);
 		}
 	}
 
 	.pagination__select-wrapper:active {
 		background-color: var(--_pagination-is-active-background-color);
+		--context-content-color: var(--_pagination-is-active-content-color);
 		color: var(--_pagination-is-active-content-color);
 	}
 

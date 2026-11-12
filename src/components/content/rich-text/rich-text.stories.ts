@@ -396,7 +396,7 @@ if (bijdrage > 0) {
 export const CodeblokOpTinted = {
 	name: 'Codeblok op tinted vlak',
 	render: (args: Record<string, any>) => html`
-		<div style="max-width: 420px; padding: 16px; border-radius: 12px; background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="max-width: 420px; padding: 16px; border-radius: 12px; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 			<nldd-rich-text
 				color=${args.color || nothing}
 				spacing=${args.spacing}
@@ -698,7 +698,7 @@ export const Breedtezones = {
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
 				<nldd-rich-text color="inherit">
 					<h3>Op een donker vlak</h3>
 					<p>Alle tekst erft de contentkleur van het vlak, inclusief <a href="#">links met hun onderstreping</a> en <strong>nadruk</strong>.</p>
@@ -711,7 +711,7 @@ export const OpKleurvlak = {
 					</figure>
 				</nldd-rich-text>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-oranje-filled-background-color); --context-content-color: var(--semantics-categories-oranje-filled-content-color);">
 				<nldd-rich-text color="inherit">
 					<h3>Op een middenton</h3>
 					<p>De filled-categories leveren puur zwart of wit als contentkleur, zodat ook middentonen <a href="#">voldoende contrast</a> houden.</p>

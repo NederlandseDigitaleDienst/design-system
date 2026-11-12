@@ -4,7 +4,7 @@
  * Shows several avatars as one group: they overlap, and each one gets a ring in
  * the surface color so they stay apart where they meet. The ring uses the same
  * mechanism as the badge, so on a colored surface you hand the color over
- * through `--context-parent-background-color`.
+ * through `--context-background-color`.
  *
  * Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to
  * do with a dead image, when to fall back to initials, and how to show its name

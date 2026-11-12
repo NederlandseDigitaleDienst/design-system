@@ -38,15 +38,12 @@ export const avatarStyles = css`
 		--_avatar-corner-radius: var(--primitives-corner-radius-md);
 	}
 
-	/* Fill tracks the shared content-color channel (set by list-item / table /
-	   menu), falling back to currentColor for buttons / standalone — mirrors
-	   nldd-activity-indicator. The fill (not the text) color must resolve here,
-	   so .avatar keeps its inherited color and the contrast text lives on the
-	   child elements. */
+	/* The fill (not the text) color must resolve here, so .avatar keeps its
+	   inherited color and the contrast text lives on the child elements. */
 	/* color on the host: the contrast token reads currentColor, so the flip has to
 	   be computed against the same value the fill uses. */
 	:host([color="inherit"]) {
-		color: var(--context-content-color, currentColor);
+		color: var(--context-content-color);
 
 		--_avatar-background-color: currentColor;
 		--_avatar-content-color: var(--semantics-content-contrast-color);
@@ -145,6 +142,7 @@ export const avatarStyles = css`
 		font-weight: var(--_avatar-initials-font-weight);
 		font-size: calc(var(--_avatar-initials-scale) * 100cqi);
 		line-height: 1;
+		--context-content-color: var(--_avatar-content-color);
 		color: var(--_avatar-content-color);
 		/* fit-initials shrinks wide initials via this factor (measured in JS);
 		   transform (not font-size) so scrollWidth stays the natural width. The
@@ -155,6 +153,7 @@ export const avatarStyles = css`
 
 	.avatar__icon {
 		width: calc(var(--_avatar-icon-scale) * 100cqi);
+		--context-content-color: var(--_avatar-content-color);
 		color: var(--_avatar-content-color);
 	}
 

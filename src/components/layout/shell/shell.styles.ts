@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 export const shellStyles = css`
 	:host {
@@ -9,8 +10,9 @@ export const shellStyles = css`
 	/* # Host */
 
 	:host {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_shell-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
+		--_shell-background-color: var(--context-background-color);
 
 		display: flex;
 		background-color: var(--_shell-background-color);
@@ -23,7 +25,8 @@ export const shellStyles = css`
 	}
 
 	:host([background="tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
+		${surfaceContent}
 		--_shell-background-color: var(--semantics-surfaces-tinted-background-color);
 	}
 

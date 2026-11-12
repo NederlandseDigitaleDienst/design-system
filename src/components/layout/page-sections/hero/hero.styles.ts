@@ -1,6 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
-import { inheritedTextReset, slottedReset } from '../../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, slottedReset, surfaceContent } from '../../../../assets/styles/shadow-resets.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -36,6 +36,7 @@ export const heroStyles = css`
 		--_hero-main-width: auto;
 		--_hero-main-background-color: var(--semantics-surfaces-accent-filled-background-color);
 		--_hero-main-content-color: var(--semantics-content-on-accent-filled-color);
+		--_hero-main-secondary-color: var(--semantics-content-on-accent-filled-secondary-color);
 		--_hero-main-padding: var(--primitives-space-16);
 		--_hero-main-inset: var(--primitives-space-0);
 		--_hero-sm-main-inset: var(--semantics-page-sections-sm-gap);
@@ -67,6 +68,10 @@ export const heroStyles = css`
 	:host([main-background="base"]) {
 		--_hero-main-background-color: var(--semantics-surfaces-base-background-color);
 		--_hero-main-content-color: var(--semantics-content-color);
+	}
+
+	:host([main-background="base"]) .hero__main {
+		${surfaceContent}
 	}
 
 
@@ -202,10 +207,13 @@ export const heroStyles = css`
 	/* # Main */
 
 	.hero__main {
-		/* Cascade the panel color so descendants that key off the parent
-		   background (inherit-filled buttons, badge rings) read this
-		   surface. */
-		--context-parent-background-color: var(--_hero-main-background-color);
+		--context-background-color: var(--_hero-main-background-color);
+		--context-content-color: var(--_hero-main-content-color);
+		--context-content-secondary-color: var(--_hero-main-secondary-color);
+		--context-content-accent-color: var(--_hero-main-content-color);
+		--context-content-success-color: var(--_hero-main-content-color);
+		--context-content-warning-color: var(--_hero-main-content-color);
+		--context-content-critical-color: var(--_hero-main-content-color);
 
 		box-sizing: border-box;
 		display: flex;

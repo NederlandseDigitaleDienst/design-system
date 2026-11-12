@@ -850,15 +850,14 @@ export const TekstInDeSlot = {
 /**
  * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
  * bedoeld voor gekleurde vlakken (zoals de hero-main of filled-categories).
- * `inherit-filled` gebruikt de vlakkleur als labelkleur wanneer het vlak
- * `--context-parent-background-color` cascadet (zoals de hero doet); zonder
- * die context valt het label terug op een wit/zwart-contrastflip — zie het
- * derde vlak.
+ * `inherit-filled` gebruikt de vlakkleur als labelkleur: het vlak zet
+ * `--context-background-color`, zoals de hero doet. Een eigen vlak, zoals
+ * het derde, zet hem zelf.
  */
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
 				<nldd-container
 					layout="wrap"
 					gap="8"
@@ -886,7 +885,7 @@ export const OpKleurvlak = {
 					></nldd-button>
 				</nldd-container>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-content-color: var(--semantics-categories-oranje-filled-content-color);">
 				<nldd-button-group>
 					<nldd-button
 						appearance="inherit-filled"
@@ -898,11 +897,11 @@ export const OpKleurvlak = {
 					></nldd-button>
 				</nldd-button-group>
 			</div>
-			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: oklch(0.45 0.12 300); --context-content-color: oklch(1 0 0);">
 				<nldd-button-group>
 					<nldd-button
 						appearance="inherit-filled"
-						text="Zonder context (flip)"
+						text="Eigen vlak"
 					></nldd-button>
 					<nldd-button
 						appearance="inherit-tinted"

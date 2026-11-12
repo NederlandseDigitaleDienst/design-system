@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 export const cardStyles = css`
 	:host {
@@ -55,7 +56,8 @@ export const cardStyles = css`
 	/* # Block */
 
 	.card {
-		--context-parent-background-color: var(--_card-background-color);
+		--context-background-color: var(--_card-background-color);
+		${surfaceContent}
 		display: flex;
 		position: relative;
 		border-radius: var(--_card-corner-radius);
@@ -73,14 +75,14 @@ export const cardStyles = css`
 	@media (hover: hover) {
 		.card:has(> .card__action:hover) {
 			--_card-border-color: var(--_card-is-hovered-border-color);
-			--context-parent-background-color: var(--_card-is-hovered-background-color);
+			--context-background-color: var(--_card-is-hovered-background-color);
 			background-color: var(--_card-is-hovered-background-color);
 		}
 	}
 
 	:host([data-action-pressed]) .card {
 		--_card-border-color: var(--_card-is-active-border-color);
-		--context-parent-background-color: var(--_card-is-active-background-color);
+		--context-background-color: var(--_card-is-active-background-color);
 		background-color: var(--_card-is-active-background-color);
 	}
 

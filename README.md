@@ -170,7 +170,7 @@ CSS variabelen zijn georganiseerd in vijf lagen:
 --semantics-controls-md-min-size: var(--primitives-space-44);
 
 /* Context — communicatie tussen componenten */
---context-parent-background-color: var(--semantics-surfaces-base-background-color);
+--context-background-color: var(--semantics-surfaces-base-background-color);
 
 /* Component — een waarde van één component die een thema zet. Een thema
    bereikt alleen :root, dus de waarde staat daar en niet in het component. */
@@ -178,7 +178,9 @@ CSS variabelen zijn georganiseerd in vijf lagen:
 
 /* Local — intern binnen een component, in zijn :host. Wijst naar semantics
    of primitives, en draagt de naam van het component. */
+/* nldd-lint-disable-next-line local-variable-no-override -- shows how a component names its own variable */
 --_box-background-color: var(--semantics-surfaces-tinted-background-color);
+/* nldd-lint-disable-next-line local-variable-no-override -- shows how a component names its own variable */
 --_button-group-sm-gap: var(--primitives-space-6);
 ```
 

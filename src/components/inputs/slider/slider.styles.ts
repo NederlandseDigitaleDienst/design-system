@@ -26,7 +26,7 @@ export const sliderStyles = css`
 		--_slider-thumb-border-width: var(--primitives-border-width-regular);
 		--_slider-thumb-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 		--_slider-thumb-ring-thickness: var(--semantics-surfaces-ring-thickness);
-		--_slider-thumb-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_slider-thumb-ring-color: var(--context-background-color);
 		--_slider-thumb-ring-extent: calc(var(--_slider-thumb-size) / 2);
 		--_slider-thumb-is-hovered-border-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-750));
 		--_slider-thumb-is-active-border-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
@@ -328,6 +328,7 @@ export const sliderStyles = css`
 		width: max-content;
 		padding-block: var(--_slider-tooltip-padding-block);
 		padding-inline: var(--_slider-tooltip-padding-inline);
+		--context-content-color: var(--_slider-tooltip-content-color);
 		color: var(--_slider-tooltip-content-color);
 		font: var(--_slider-tooltip-font);
 		white-space: nowrap;

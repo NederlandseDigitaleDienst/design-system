@@ -279,7 +279,7 @@ export const titleStyles = css`
 	.title__overline {
 		margin: 0;
 		max-width: var(--_title-secondary-text-max-width);
-		color: var(--semantics-content-secondary-color);
+		color: var(--context-content-secondary-color);
 		font: var(--_title-overline-font);
 		overflow-wrap: anywhere;
 		text-wrap: balance;
@@ -290,7 +290,7 @@ export const titleStyles = css`
 		${inheritedTextReset}
 		margin: 0 !important;
 		max-width: var(--_title-secondary-text-max-width) !important;
-		color: var(--semantics-content-secondary-color) !important;
+		color: var(--context-content-secondary-color) !important;
 		font: var(--_title-overline-font) !important;
 		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;
@@ -301,7 +301,7 @@ export const titleStyles = css`
 	.title__text {
 		margin: 0;
 		max-width: 40ch;
-		color: var(--semantics-content-color);
+		color: var(--context-content-color);
 		font: var(--_title-font);
 		overflow-wrap: anywhere;
 		text-wrap: balance;
@@ -317,7 +317,7 @@ export const titleStyles = css`
 		${inheritedTextReset}
 		margin: 0 !important;
 		max-width: 40ch !important;
-		color: var(--semantics-content-color) !important;
+		color: var(--context-content-color) !important;
 		font: var(--_title-font) !important;
 		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;
@@ -331,7 +331,7 @@ export const titleStyles = css`
 	.title__supporting-text {
 		margin: 0;
 		max-width: var(--_title-secondary-text-max-width);
-		color: var(--semantics-content-secondary-color);
+		color: var(--context-content-secondary-color);
 		font: var(--_title-supporting-text-font);
 		overflow-wrap: anywhere;
 		text-wrap: balance;
@@ -342,7 +342,7 @@ export const titleStyles = css`
 		${inheritedTextReset}
 		margin: 0 !important;
 		max-width: var(--_title-secondary-text-max-width) !important;
-		color: var(--semantics-content-secondary-color) !important;
+		color: var(--context-content-secondary-color) !important;
 		font: var(--_title-supporting-text-font) !important;
 		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;

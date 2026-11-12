@@ -215,6 +215,7 @@ export const segmentedControlItemStyles = css`
 		gap: var(--_segmented-control-item-gap);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_segmented-control-item-content-color);
 		color: var(--_segmented-control-item-content-color);
 		font: var(--_segmented-control-item-font);
 	}
@@ -226,12 +227,14 @@ export const segmentedControlItemStyles = css`
 	@media (hover: hover) {
 		:host(:not([selected])) .segmented-control__item:hover {
 			background-color: var(--_segmented-control-item-is-hovered-background-color);
+			--context-content-color: var(--_segmented-control-item-is-hovered-content-color);
 			color: var(--_segmented-control-item-is-hovered-content-color);
 		}
 	}
 
 	:host(:not([selected])) .segmented-control__item:active {
 		background-color: var(--_segmented-control-item-is-active-background-color);
+		--context-content-color: var(--_segmented-control-item-is-active-content-color);
 		color: var(--_segmented-control-item-is-active-content-color);
 	}
 
@@ -239,6 +242,7 @@ export const segmentedControlItemStyles = css`
 		--_segmented-control-item-highlight-border-color: var(--_segmented-control-item-is-selected-highlight-border-color);
 
 		background-color: var(--_segmented-control-item-is-selected-background-color);
+		--context-content-color: var(--_segmented-control-item-is-selected-content-color);
 		color: var(--_segmented-control-item-is-selected-content-color);
 	}
 
@@ -247,6 +251,7 @@ export const segmentedControlItemStyles = css`
 			--_segmented-control-item-highlight-border-color: var(--_segmented-control-item-is-selected-is-hovered-highlight-border-color);
 
 			background-color: var(--_segmented-control-item-is-selected-is-hovered-background-color);
+			--context-content-color: var(--_segmented-control-item-is-selected-is-hovered-content-color);
 			color: var(--_segmented-control-item-is-selected-is-hovered-content-color);
 		}
 	}
@@ -255,6 +260,7 @@ export const segmentedControlItemStyles = css`
 		--_segmented-control-item-highlight-border-color: var(--_segmented-control-item-is-selected-is-active-highlight-border-color);
 
 		background-color: var(--_segmented-control-item-is-selected-is-active-background-color);
+		--context-content-color: var(--_segmented-control-item-is-selected-is-active-content-color);
 		color: var(--_segmented-control-item-is-selected-is-active-content-color);
 	}
 

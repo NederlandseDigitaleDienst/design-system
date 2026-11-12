@@ -57,7 +57,7 @@ export const codeEditorStyles = css`
 	:host([embedded]) {
 		--_code-editor-corner-radius: 0;
 		--_code-editor-background-color: transparent;
-		--_code-editor-gutter-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_code-editor-gutter-background-color: var(--context-background-color);
 		--_code-editor-line-number-padding-left: var(--primitives-space-8);
 		--_code-editor-input-field-border-color: transparent;
 		--_code-editor-input-field-border-shadow: none;
@@ -81,6 +81,7 @@ export const codeEditorStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
+		--context-content-color: var(--_code-editor-content-color);
 		color: var(--_code-editor-content-color);
 		font: var(--_code-editor-font);
 	}

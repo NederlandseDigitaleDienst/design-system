@@ -88,7 +88,7 @@ export const Standaard = {
 
 /**
  * `background` tekent een oppervlak ("base", "tinted" of "accent-tinted") en cascadet
- * `--context-parent-background-color` naar afstammelingen, zodat kaarten en
+ * `--context-background-color` naar afstammelingen, zodat kaarten en
  * geneste secties erin weten op welk oppervlak ze staan.
  */
 /**

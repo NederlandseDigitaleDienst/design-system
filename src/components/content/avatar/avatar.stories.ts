@@ -70,7 +70,7 @@ export default {
 		color: {
 			control: 'select',
 			options: ['neutral', 'inherit'],
-			description: 'neutral (neutrale vulling) of inherit (currentColor-vulling, contrasttekst)',
+			description: 'neutral (neutrale vulling) of inherit (vulling in de tekstkleur van de context, contrasttekst)',
 			table: { defaultValue: { summary: 'neutral' } },
 		},
 		iconAligned: {
@@ -230,7 +230,7 @@ export const SchaaltMee = {
 };
 
 /**
- * `color="inherit"` vult de avatar met `currentColor` en zet de tekst in de
+ * `color="inherit"` vult de avatar met `--context-content-color` en zet de tekst in de
  * contrastkleur, zodat de avatar de omringende kleur overneemt (bijvoorbeeld
  * als vervanging van een account-icoon in een knop of naast tekst).
  */

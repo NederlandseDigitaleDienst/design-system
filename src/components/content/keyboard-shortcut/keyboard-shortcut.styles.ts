@@ -104,6 +104,7 @@ export const keyboardShortcutStyles = css`
 		padding: 0 var(--_keyboard-shortcut-inline-padding);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_keyboard-shortcut-content-color);
 		color: var(--_keyboard-shortcut-content-color);
 		font-family: var(--_keyboard-shortcut-font-family);
 		font-size: var(--_keyboard-shortcut-font-size);

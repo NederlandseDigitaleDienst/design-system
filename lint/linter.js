@@ -3,9 +3,12 @@
  * rules from src/rules/, then the suppressions written in the file.
  */
 
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, extname, join } from 'node:path';
+import { declarations, isSystemCss, TOKEN_PREFIX, tokenReferences, withoutComments } from './css.js';
 import { createEngine } from './engine.js';
 import { canFix, stuckTags } from './fix.js';
-import { applyWrappers, parseSource } from './frontends.js';
+import { applyWrappers, parseSource, parseStylesheet, readerOf } from './frontends.js';
 import { BUILT_IN_RULES, createCanonical, loadData, OPT_IN_GROUPS } from './rule-data.js';
 import { BOUND, walk } from './tree.js';
 
@@ -144,7 +147,29 @@ function createPositions(source) {
 }
 
 
-export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {} } = {}) {
+/** Files where `//` is no comment: in markup it starts a url, and a built page is one line. */
+const MARKUP_FILE = /\.(html?|j2|jinja2?|tmpl|gohtml|vue|md)$/;
+
+/**
+ * A stylesheet a page links to, on disk next to it: relative to the page, or from the
+ * root of the site for a path that starts with a slash, as in a built site.
+ */
+function linkedFile(href, filename) {
+	if (typeof href !== 'string' || !href || /^([a-z]+:|\/\/)/i.test(href)) return undefined;
+	const path = decodeURI(href.replace(/[?#].*$/, ''));
+	if (extname(path) !== '.css') return undefined;
+	if (!path.startsWith('/')) {
+		const file = join(dirname(filename), path);
+		return existsSync(file) ? file : undefined;
+	}
+	for (let directory = dirname(filename); ; directory = dirname(directory)) {
+		const file = join(directory, path);
+		if (existsSync(file)) return file;
+		if (dirname(directory) === directory) return undefined;
+	}
+}
+
+export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [] } = {}) {
 	const canonical = createCanonical(data);
 	const severities = Object.fromEntries(Object.entries(configured).map(([id, level]) => [canonical(id), level]));
 	const context = {
@@ -152,7 +177,96 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		icons: new Set(data.icons),
 		anyChildAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.childAttrs)),
 	};
-	const engine = createEngine({ classes: data.classes, tags: data.tags });
+	const engine = createEngine({ classes: data.classes, tags: data.tags, systemCss: data.systemCss });
+	const isSystemBlock = (css) => isSystemCss(css, data.systemCss ?? {});
+	const tokens = new Set([...(data.tokens ?? []), ...projectTokens]);
+	const removedTokens = data.removedTokens ?? {};
+	// Longest first, so --_button-group-gap belongs to button-group and not to button.
+	const components = Object.keys(data.tags)
+		.filter((tag) => tag.startsWith('nldd-'))
+		.map((tag) => tag.slice('nldd-'.length))
+		.sort((a, b) => b.length - a.length);
+
+	/** A stylesheet on disk is the system's when every block in it is. */
+	const linkedSheets = new Map();
+	function isSystemSheet(file) {
+		if (!linkedSheets.has(file)) {
+			const blocks = parseStylesheet(readFileSync(file, 'utf8')).flatMap((root) => root.children);
+			linkedSheets.set(file, blocks.every((block) => isSystemBlock(block.css)));
+		}
+		return linkedSheets.get(file);
+	}
+
+	/** A link to a stylesheet this page ships itself is judged by what is in that file, not by its name. */
+	function readLinkedStylesheets(roots, filename) {
+		for (const root of roots) {
+			walk(root, (node) => {
+				if (node.name !== 'link' || !/(^|\s)stylesheet(\s|$)/i.test(String(node.attrs.get('rel') ?? ''))) return;
+				const file = linkedFile(node.attrs.get('href'), filename);
+				if (file) node.system = isSystemSheet(file);
+			});
+		}
+	}
+
+	/** Where the system's own CSS sits in this file: a bundle or a page can hold it next to the app's. */
+	function systemRanges(roots) {
+		const ranges = [];
+		for (const root of roots) {
+			walk(root, (node) => {
+				if (node.name === 'style' && node.css !== undefined && isSystemBlock(node.css)) {
+					ranges.push([node.offset, node.offset + node.css.length]);
+				}
+			});
+		}
+		return (offset) => ranges.some(([start, end]) => offset >= start && offset < end);
+	}
+
+	/**
+	 * The system's tokens the app names, and the internal variables of a component it
+	 * sets. Read from the text, so a stylesheet, a style attribute and a style object
+	 * in a script all count. A token the file or the project declares itself is its own.
+	 */
+	function cssFindings(source, filename, roots) {
+		const lineComments = !MARKUP_FILE.test(filename);
+		const inSystemCss = systemRanges(roots);
+		const declared = declarations(source, lineComments).filter((each) => !inSystemCss(each.offset));
+		const ownTokens = new Set(declared.map(({ name }) => name).filter((name) => TOKEN_PREFIX.test(name)));
+		const findings = [];
+		const report = (rule, message, { name, offset }) =>
+			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, tag: name, offset, endOffset: offset + name.length });
+		for (const reference of tokenReferences(source, lineComments)) {
+			const { name, offset } = reference;
+			if (tokens.has(name) || ownTokens.has(name) || inSystemCss(offset)) continue;
+			const removed = removedTokens[name];
+			const instead = removed?.use ? ` Use \`${removed.use}\`.` : '';
+			const message = removed
+				? `\`${name}\` was removed after ${removed.last}.${instead}`
+				: `There is no token \`${name}\` in this version.`;
+			report('token-not-found', message, reference);
+		}
+		for (const declaration of declared) {
+			if (!declaration.name.startsWith('--_')) continue;
+			const component = components.find((name) => declaration.name.startsWith(`--_${name}-`));
+			if (!component) continue;
+			report('local-variable-no-override', `\`${declaration.name}\` is internal to nldd-${component}, so setting it is not supported.`, declaration);
+		}
+		return findings;
+	}
+
+	/**
+	 * Markup of ours in a file the linter cannot read: a type it has no parser for, or a
+	 * script without an `html` template, where `<nldd-` sits in a plain string. What a
+	 * markup parser skips on purpose, such as a comment or an inert template, is not this.
+	 */
+	function unreadMarkup(source, filename, roots) {
+		const reader = readerOf(filename);
+		if (reader === 'markup' || (reader === 'templates' && roots.length > 0)) return [];
+		const offset = withoutComments(source, !MARKUP_FILE.test(filename)).search(/<nldd-[a-z]/);
+		if (offset < 0) return [];
+		const rule = 'file-not-read';
+		return [{ rule, severity: BUILT_IN_RULES[rule].severity, message: BUILT_IN_RULES[rule].description, tag: '', offset }];
+	}
+
 	// An opt-in group runs only where a level was given for it, never by default.
 	const isOn = (rule) => (OPT_IN_GROUPS.includes(rule.group) ? Boolean(severities[rule.id]) : true) && severities[rule.id] !== 'off';
 	const rules = data.rules.filter((rule) => !rule.runtime && isOn(rule));
@@ -205,8 +319,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
 	async function lintSource(source, filename) {
 		const parsed = applyWrappers(await parseSource(source, filename), wrappers);
-		const isPlainHtml = /\.(html?|j2|jinja2?)$/.test(filename);
+		const isPlainHtml = /\.(html?|j2|jinja2?|tmpl|gohtml)$/.test(filename);
 		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
+		readLinkedStylesheets(roots, filename);
 		const { findings, counts } = lintRoots(roots, isPlainHtml);
 		const { suppressed, missingReason } = readSuppressions(source, canonical);
 		const position = createPositions(source);
@@ -226,7 +341,12 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				offset: node.offset,
 				endOffset: node.endOffset,
 				...position(node.offset),
-			}));
+			}))
+			.concat(
+				[...cssFindings(source, filename, roots), ...unreadMarkup(source, filename, parsed)]
+					.filter(({ rule }) => ranInSource(rule))
+					.map((finding) => ({ ...finding, ...position(finding.offset) })),
+			);
 		const stuck = stuckTags(source, all, /\.[jt]sx$/.test(filename));
 		for (const finding of all) {
 			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;

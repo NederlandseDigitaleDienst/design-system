@@ -342,7 +342,7 @@ describe('nldd-radio-button – color="inherit"', () => {
 	it('fills a checked radio with the surrounding text color, and rings the dot in the surface color', async () => {
 		const unloadTokens = loadTokens();
 		el = await fixture(`
-			<div style="color: rgb(255, 255, 255); --context-parent-background-color: rgb(24, 69, 118);">
+			<div style="color: rgb(255, 255, 255); --context-background-color: rgb(24, 69, 118);">
 				<nldd-radio-button color="inherit" checked decorative></nldd-radio-button>
 			</div>`);
 		const control = el.querySelector('nldd-radio-button') as HTMLElement;

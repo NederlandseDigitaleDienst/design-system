@@ -219,7 +219,7 @@ export const progressBarSegmentIndicatorStyles = css`
 	/* # Host */
 
 	:host {
-		--_progress-bar-segment-indicator-width: var(--context-progress-bar-segment-indicator-width, 0%);
+		--_progress-bar-segment-indicator-width: 0%;
 		--_progress-bar-segment-indicator-min-width: var(--primitives-space-2);
 		--_progress-bar-segment-indicator-background-color: var(--components-progress-bar-accent-background-color);
 		--_progress-bar-segment-indicator-border-color: var(--components-progress-bar-accent-highlight-border-color);

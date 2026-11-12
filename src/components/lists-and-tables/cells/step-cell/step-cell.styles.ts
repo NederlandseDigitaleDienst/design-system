@@ -15,7 +15,7 @@ export const stepCellStyles = css`
 		--_step-cell-future-fill-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
 		--_step-cell-marker-z-index: 1;
 		--_step-cell-ring-thickness: var(--semantics-surfaces-ring-thickness);
-		--_step-cell-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_step-cell-ring-color: var(--context-background-color);
 		--_step-cell-past-fill-color: var(--semantics-steps-is-past-background-color);
 		--_step-cell-marker-content-color: var(--semantics-steps-is-past-content-color);
 		--_step-cell-future-content-color: var(--semantics-content-secondary-color);
@@ -172,6 +172,7 @@ export const stepCellStyles = css`
 		border: var(--_step-cell-line-width) solid var(--_step-cell-track-color);
 		border-radius: var(--_step-cell-marker-corner-radius);
 		box-shadow: 0 0 0 var(--_step-cell-ring-thickness) var(--_step-cell-ring-color);
+		--context-content-color: var(--_step-cell-marker-content-color);
 		color: var(--_step-cell-marker-content-color);
 		font: var(--primitives-font-body-sm-medium-flat);
 	}
@@ -184,12 +185,14 @@ export const stepCellStyles = css`
 
 	:host([status="current"]) .step-cell__marker {
 		background-color: var(--_step-cell-current-fill-color);
+		--context-content-color: var(--_step-cell-current-content-color);
 		color: var(--_step-cell-current-content-color);
 	}
 
 	:host([status="future"]) .step-cell__marker {
 		border-color: var(--_step-cell-future-fill-color);
 		background-color: var(--_step-cell-future-fill-color);
+		--context-content-color: var(--_step-cell-future-content-color);
 		color: var(--_step-cell-future-content-color);
 	}
 

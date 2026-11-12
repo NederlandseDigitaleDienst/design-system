@@ -170,7 +170,7 @@ export const iconButtonStyles = css`
 	:host([appearance="inherit-filled"]),
 	:host([expanded][appearance="inherit-filled"]) {
 		--_icon-button-background-color: var(--semantics-buttons-inherit-filled-background-color);
-		--_icon-button-primary-content-color: var(--context-parent-background-color, var(--semantics-buttons-inherit-filled-content-color));
+		--_icon-button-primary-content-color: var(--context-background-color);
 		--_icon-button-highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
 		--_icon-button-is-hovered-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-hovered-primary-content-color: var(--_icon-button-primary-content-color);
@@ -189,6 +189,7 @@ export const iconButtonStyles = css`
 	}
 
 	:host([appearance="inherit-filled"]) .icon-button > * {
+		--context-content-color: var(--_icon-button-primary-content-color);
 		color: var(--_icon-button-primary-content-color);
 	}
 
@@ -322,6 +323,7 @@ export const iconButtonStyles = css`
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_icon-button-primary-content-color);
 		color: var(--_icon-button-primary-content-color);
 		font: inherit;
 		text-decoration: none;
@@ -357,6 +359,7 @@ export const iconButtonStyles = css`
 	@media (hover: hover) {
 		.icon-button:hover {
 			background-color: var(--_icon-button-is-hovered-background-color);
+			--context-content-color: var(--_icon-button-is-hovered-primary-content-color);
 			color: var(--_icon-button-is-hovered-primary-content-color);
 			--_icon-button-highlight-border-color: var(--_icon-button-is-hovered-highlight-border-color);
 		}
@@ -364,6 +367,7 @@ export const iconButtonStyles = css`
 
 	.icon-button:active {
 		background-color: var(--_icon-button-is-active-background-color);
+		--context-content-color: var(--_icon-button-is-active-primary-content-color);
 		color: var(--_icon-button-is-active-primary-content-color);
 		--_icon-button-highlight-border-color: var(--_icon-button-is-active-highlight-border-color);
 	}
@@ -429,6 +433,7 @@ export const iconButtonStyles = css`
 	.icon-button__activity-indicator {
 		position: absolute;
 		inset: 0;
+		--context-content-color: var(--_icon-button-primary-content-color);
 		color: var(--_icon-button-primary-content-color);
 	}
 `;

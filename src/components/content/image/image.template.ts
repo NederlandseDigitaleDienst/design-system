@@ -8,19 +8,17 @@ export function imageTemplate(component: NLDDImage) {
 	// aspect-ratio is applied to the media wrapper (not the img) so it
 	// reserves space in the layout *before* the image loads, avoiding CLS.
 	// Slotted img/picture also fills this wrapper.
-	// --context-lqip-base / --context-lqip-c1..c6 carry the seven quantised
-	// Oklab bytes from the parsed lqip attribute across the shadow boundary
-	// into the stylesheet. Each byte decodes back into an oklab() color at
-	// render time. Uses the --context-* prefix because the inline style and
-	// the consuming CSS live in different scopes.
+	// --_image-lqip-base / --_image-lqip-c1..c6 carry the seven quantised
+	// Oklab bytes from the parsed lqip attribute into the stylesheet. Each
+	// byte decodes back into an oklab() color at render time.
 	const parsedLqip = component._parsedLqip;
 	const hasLqip = parsedLqip !== null;
 	const mediaStyles: Record<string, string> = {};
 	if (component._cssAspectRatio) mediaStyles.aspectRatio = component._cssAspectRatio;
 	if (hasLqip) {
-		mediaStyles['--context-lqip-base'] = String(parsedLqip.base);
+		mediaStyles['--_image-lqip-base'] = String(parsedLqip.base);
 		parsedLqip.cells.forEach((cell, i) => {
-			mediaStyles[`--context-lqip-c${i + 1}`] = String(cell);
+			mediaStyles[`--_image-lqip-c${i + 1}`] = String(cell);
 		});
 	}
 

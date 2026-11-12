@@ -39,7 +39,7 @@ Centraliseer je Tailwind-thema in één blok en laat het naar `--primitives-*` w
 
 Dit werkt: CSS-variabelen zijn laat gebonden, de browser lost de keten op de gebruiksplek op. De hele app staat daarmee in huisstijlkleuren zonder dat er één component is omgezet, wat een goedkoop en zichtbaar eerste resultaat oplevert.
 
-Het blijft een steiger: de brug verdwijnt met Tailwind, en elke klasse die hij kleurt staat in de baseline van `nldd lint --pure`. Drie kanttekeningen, want dit wordt makkelijk oververkocht. Vooraf één: je wijst hiermee vanuit je eigen CSS naar variabelen van het systeem, en die zijn geen publieke API. Ze worden hernoemd en verwijderd wanneer een component daarom vraagt, dus houd de brug in één blok, zodat een release je op één plek raakt in plaats van overal.
+Het blijft een steiger: de brug verdwijnt met Tailwind, en elke klasse die hij kleurt staat in de baseline van `nldd lint --pure`. Drie kanttekeningen, want dit wordt makkelijk oververkocht. Vooraf één: houd de brug in één blok. Verdwijnt er een token, dan noemt de changelog hem onder `Breaking` en meldt `nldd lint` hem (`token-not-found`), en dan raakt dat je op één plek in plaats van overal.
 
 1. **Klassen die het rauwe palet gebruiken** (`bg-gray-50`, `text-red-600`) schuiven niet mee, en die zitten juist op de semantisch geladen plekken: foutmeldingen, waarschuwingen, badge-varianten. Herleid ook de grijs-, rood-, amber-, emerald- en blauwschalen om een deel terug te winnen.
 2. **Alpha-modifiers** (`ring-primary-500/20`) compileren naar `color-mix()` over een waarde die zelf al een `light-dark()`-paar is. Reken die visueel na in plaats van de hele aanpak weg te gooien als er één misgaat.

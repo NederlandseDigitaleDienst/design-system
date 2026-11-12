@@ -55,7 +55,7 @@ export const switchStyles = css`
 		--_switch-is-selected-background-color: currentColor;
 		--_switch-thumb-border-color: currentColor;
 		--_switch-thumb-background-color: currentColor;
-		--_switch-is-selected-thumb-background-color: var(--context-parent-background-color, var(--semantics-content-contrast-color));
+		--_switch-is-selected-thumb-background-color: var(--context-background-color);
 	}
 
 

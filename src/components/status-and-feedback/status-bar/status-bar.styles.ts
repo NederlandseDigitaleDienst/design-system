@@ -78,6 +78,7 @@ export const statusBarStyles = css`
 		gap: var(--_status-bar-gap);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_status-bar-content-color);
 		color: var(--_status-bar-content-color);
 		font: var(--_status-bar-font);
 		text-decoration: none;

@@ -93,7 +93,7 @@ export const descriptionCellStyles = css`
 		margin: 0 !important;
 		min-width: 0 !important;
 		align-self: stretch !important;
-		color: var(--context-content-secondary-color, var(--semantics-content-secondary-color)) !important;
+		color: var(--context-content-secondary-color) !important;
 		font: var(--primitives-font-body-sm-regular-flat) !important;
 		text-wrap: pretty !important;
 	}
@@ -110,7 +110,7 @@ export const descriptionCellStyles = css`
 		margin: 0 !important;
 		min-width: 0 !important;
 		align-self: stretch !important;
-		color: var(--context-content-color, var(--semantics-content-color)) !important;
+		color: var(--context-content-color) !important;
 		font: var(--primitives-font-body-md-regular-tight) !important;
 		text-wrap: pretty !important;
 	}

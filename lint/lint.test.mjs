@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { cssRules, isSystemCss } from './css.js';
 import { createEngine } from './engine.js';
 import { parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue } from './frontends.js';
 import { createCanonical, createLinter, loadData } from './linter.js';
@@ -1008,9 +1009,9 @@ describe('Lit in a .ts file', () => {
 		assert.deepEqual(await rulesIn(source), []);
 	});
 
-	it('is not fooled by strings, comments and plain templates', async () => {
+	it('is not fooled by strings, comments and plain templates, and says it did not read them', async () => {
 		const source = "const a = 'html`<nldd-tab-bar>`'; // html`<nldd-tab-bar>`\nconst b = `<nldd-tab-bar></nldd-tab-bar>`;";
-		assert.deepEqual(await rulesIn(source), []);
+		assert.deepEqual(await rulesIn(source), [['file-not-read', 1]]);
 	});
 });
 
@@ -1577,5 +1578,140 @@ describe('nldd command', () => {
 	it('ships a version', () => {
 		const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 		assert.equal(run(project(), '--version').stdout.trim(), version);
+	});
+});
+
+describe('CSS', () => {
+	const real = loadData();
+	const plain = createLinter(real);
+	const pure = createLinter(real, { severities: resolveSeverities(real, {}, { optIn: ['pure'] }) });
+	const findingsIn = async (source, file, linter = plain) =>
+		(await linter.lintSource(source, file)).findings.map(({ rule, message }) => [rule, message]);
+	const rulesIn = async (source, file, linter = plain) => (await findingsIn(source, file, linter)).map(([rule]) => rule);
+	const removed = Object.entries(real.removedTokens)[0];
+
+	it('reports a token that does not exist, and one that was removed with its last version', async () => {
+		assert.deepEqual(await findingsIn('.a { color: var(--semantics-made-up-color); }', 'a.css'), [
+			['token-not-found', 'There is no token `--semantics-made-up-color` in this version.'],
+		]);
+		assert.deepEqual(await findingsIn(`.a { color: var(${removed[0]}); }`, 'a.css'), [
+			['token-not-found', `\`${removed[0]}\` was removed after ${removed[1].last}.`],
+		]);
+	});
+
+	it('names what to use instead when the history knows it', async () => {
+		const data = { ...real, removedTokens: { '--semantics-old-color': { last: '0.1.0', use: '--semantics-content-color' } } };
+		assert.deepEqual(await findingsIn('.a { color: var(--semantics-old-color); }', 'a.css', createLinter(data)), [
+			['token-not-found', '`--semantics-old-color` was removed after 0.1.0. Use `--semantics-content-color`.'],
+		]);
+	});
+
+	it('accepts a real token, also with a fallback, and leaves a name built at runtime alone', async () => {
+		assert.deepEqual(await rulesIn('.a { color: var(--semantics-content-color, red); gap: var( --primitives-space-8 ); }', 'a.css'), []);
+		assert.deepEqual(await rulesIn('.a { color: var(--primitives-color-#{$name}); }', 'a.scss'), []);
+		assert.deepEqual(await rulesIn('const a = { color: `var(--primitives-color-${name})` };', 'a.tsx'), []);
+	});
+
+	it('reads a token wherever the file names it, in a style element, attribute or object', async () => {
+		assert.deepEqual(await rulesIn('<html><head><style>.a { color: var(--semantics-nope) }</style></head></html>', 'a.html'), ['token-not-found']);
+		assert.deepEqual(await rulesIn('<nldd-text style="color: var(--semantics-nope)">a</nldd-text>', 'a.html'), ['token-not-found']);
+		assert.deepEqual(await rulesIn('export const A = () => <div style={{ color: "var(--semantics-nope)" }} />;', 'a.tsx'), ['token-not-found']);
+	});
+
+	it('takes a token the file or the project declares as its own', async () => {
+		assert.deepEqual(await rulesIn(':root { --semantics-brand-color: red; }\n.a { color: var(--semantics-brand-color); }', 'a.css'), []);
+		const linter = createLinter(real, { projectTokens: ['--semantics-brand-color'] });
+		assert.deepEqual(await rulesIn('.a { color: var(--semantics-brand-color); }', 'a.css', linter), []);
+	});
+
+	it('skips a comment, also a line comment in Sass, but not a url in a page', async () => {
+		assert.deepEqual(await rulesIn('/* var(--semantics-nope) */\n// var(--semantics-nope)\n.a {}', 'a.scss'), []);
+		assert.deepEqual(await rulesIn('<a href=//example.com>a</a><nldd-text style="color: var(--semantics-nope)">a</nldd-text>', 'a.html'), ['token-not-found']);
+	});
+
+	it('reports an internal variable of a component that the app sets, and not one of its own', async () => {
+		assert.deepEqual(await findingsIn('nldd-button { --_button-gap: 0; }', 'a.css'), [
+			['local-variable-no-override', '`--_button-gap` is internal to nldd-button, so setting it is not supported.'],
+		]);
+		assert.deepEqual(await rulesIn('.card { --_card-list-gap: 0; --_gap: 0; }', 'a.css'), ['local-variable-no-override']);
+		assert.deepEqual(await rulesIn('.panel { --_panel-gap: 0; gap: var(--_panel-gap); }', 'a.css'), []);
+	});
+
+	it('leaves the CSS of the system alone, in a bundle or a page', async () => {
+		assert.deepEqual(await rulesIn('nldd-rich-text[spacing=flat]{--_rich-text-spacing:var(--primitives-space-0)}', 'index.css'), []);
+	});
+
+	it('honors a suppression', async () => {
+		const source = '.a {\n\t/* nldd-lint-disable-next-line token-not-found -- set by our own script */\n\tcolor: var(--semantics-nope);\n}';
+		assert.deepEqual(await rulesIn(source, 'a.css'), []);
+	});
+
+	it('flattens nesting the way a bundler does, and leaves out what a bundler adds', () => {
+		const source = 'a { color: red; &:hover { color: blue } @media (min-width: 40rem) { gap: 0 } } @supports (x: y) { b { -webkit-x: 1; z: 2 } }';
+		assert.deepEqual(
+			Object.fromEntries([...cssRules(source)].map(([key, names]) => [key, [...names]])),
+			{ '|a': ['color'], '|a:hover': ['color'], '@media(width>=40rem)|a': ['gap'], '|b': ['z'] },
+		);
+	});
+
+	it('knows the system by what each rule selects and sets, not by its values', () => {
+		const system = { '|nldd-x': ['color', 'gap'], '|@keyframes nldd-y': ['@keyframes'] };
+		assert.equal(isSystemCss('nldd-x{color:#000}', system), true);
+		assert.equal(isSystemCss('nldd-x { color: red; margin: 0 }', system), false);
+		assert.equal(isSystemCss('nldd-x {}', system), false);
+		assert.equal(isSystemCss('@keyframes nldd-y{to{opacity:1}}', system), true);
+		assert.equal(isSystemCss(':root{--lightningcss-light:initial}', system), true);
+	});
+
+	it('leaves a bundled system stylesheet alone in pure, and reports one with CSS of the app', async () => {
+		const pureRules = async (source, file) => (await rulesIn(source, file, pure)).filter((rule) => rule === 'stylesheet-no-own');
+		assert.deepEqual(await pureRules('nldd-rich-text[spacing=flat]{--_rich-text-spacing:var(--primitives-space-0)}@keyframes nldd-fouc-reveal{to{opacity:1}}', 'index.css'), []);
+		assert.deepEqual(await pureRules('nldd-rich-text[spacing=flat]{--_rich-text-spacing:var(--primitives-space-0)}.app{padding:4px}', 'index.css'), ['stylesheet-no-own']);
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'assets'));
+		writeFileSync(join(root, 'assets/system.css'), 'body:has(:not(:defined)){opacity:0}');
+		writeFileSync(join(root, 'assets/app.css'), '.app{padding:4px}');
+		mkdirSync(join(root, 'about'));
+		const page = '<html><head><link rel="stylesheet" href="/assets/system.css"><link rel="stylesheet" href="../assets/app.css"></head></html>';
+		const { findings } = await pure.lintSource(page, join(root, 'about/index.html'));
+		assert.deepEqual(findings.filter(({ rule }) => rule === 'stylesheet-no-own').map(({ column }) => column), [62]);
+	});
+});
+
+describe('markup the linter cannot read', () => {
+	const linter = createLinter(loadData());
+	const rulesIn = async (source, file) => (await linter.lintSource(source, file)).findings.map(({ rule }) => rule);
+
+	it('says so for a file type without a parser, and for a script without an html template', async () => {
+		assert.deepEqual(await rulesIn('---\n---\n<nldd-button text="a" foo="b"></nldd-button>', 'a.astro'), ['file-not-read']);
+		assert.deepEqual(await rulesIn('export const t = `<nldd-button text="a" foo="b"></nldd-button>`;', 'b.mjs'), ['file-not-read']);
+		assert.deepEqual(await rulesIn('// <nldd-button>\nexport const a = 1;', 'c.js'), []);
+	});
+
+	it('reads a Go template and Lit in a JavaScript file', async () => {
+		assert.deepEqual(await rulesIn('{{define "x"}}<nldd-button text="a" foo="b"></nldd-button>{{end}}', 'a.tmpl'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn('html`<nldd-button text="a" foo="b"></nldd-button>`;', 'a.js'), ['unknown-attribute']);
+	});
+
+	it('does not count what a markup parser skips on purpose', async () => {
+		assert.deepEqual(await rulesIn('<html><body><template><nldd-list-item></nldd-list-item></template></body></html>', 'a.html'), []);
+		assert.deepEqual(await rulesIn('{# <nldd-tab-bar></nldd-tab-bar> #}', 'a.html.j2'), []);
+	});
+});
+
+describe('nldd command, for CSS', () => {
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });
+
+	it('reads a stylesheet that names a token, and knows the tokens the project declares elsewhere', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'theme.css'), ':root { --semantics-brand-color: red; }\n');
+		writeFileSync(join(root, 'app.css'), '.a { color: var(--semantics-brand-color); background: var(--semantics-nope); }\n');
+		writeFileSync(join(root, 'plain.css'), '.b { color: red; }\n');
+		const result = run(root, 'lint');
+		assert.match(result.stdout, /app\.css:1:59 {2}warn {2}token-not-found/);
+		assert.doesNotMatch(result.stdout, /no token `--semantics-brand-color`/);
+		// The stylesheets that name no token are not read, and not counted.
+		assert.match(result.stdout, /in 1 file /);
 	});
 });

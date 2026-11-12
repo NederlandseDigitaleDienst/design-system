@@ -69,7 +69,7 @@ export const textStyles = css`
 		--_text-sm-custom-font: var(--primitives-font-weight-display-bold) max(var(--_text-sm-custom-size), var(--primitives-font-size-700)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
 		--_text-md-custom-font: var(--primitives-font-weight-display-bold) max(var(--_text-md-custom-size), var(--primitives-font-size-800)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
 		--_text-lg-custom-font: var(--primitives-font-weight-display-bold) max(var(--_text-lg-custom-size), var(--primitives-font-size-1000)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
-		--_text-color: var(--context-content-color, var(--semantics-content-color));
+		--_text-color: var(--context-content-color);
 		--_text-align: left;
 		--_text-link-color: var(--semantics-links-color);
 		--_text-link-is-hovered-color: var(--semantics-links-is-hovered-color);
@@ -331,7 +331,7 @@ export const textStyles = css`
 	/* # Color */
 
 	:host([color="secondary"]) {
-		--_text-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_text-color: var(--context-content-secondary-color);
 	}
 
 	:host([color="accent"]) {

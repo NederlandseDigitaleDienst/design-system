@@ -184,7 +184,7 @@ export const buttonStyles = css`
 
 	/* The on-color variants derive from currentColor (which stays
 	   unresolved inside the tokens). The filled label prefers the surface
-	   color from --context-parent-background-color; that var() must resolve
+	   color from --context-background-color; that var() must resolve
 	   here on the host — inside a :root token it would freeze — with the
 	   tokens' white/black contrast flip as fallback. */
 
@@ -207,7 +207,7 @@ export const buttonStyles = css`
 	:host([appearance="inherit-filled"]),
 	:host([expanded][appearance="inherit-filled"]) {
 		--_button-background-color: var(--semantics-buttons-inherit-filled-background-color);
-		--_button-primary-content-color: var(--context-parent-background-color, var(--semantics-buttons-inherit-filled-content-color));
+		--_button-primary-content-color: var(--context-background-color);
 		--_button-secondary-content-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
 		--_button-highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
 		--_button-is-hovered-background-color: var(--_button-background-color);
@@ -230,6 +230,7 @@ export const buttonStyles = css`
 	}
 
 	:host([appearance="inherit-filled"]) .button > * {
+		--context-content-color: var(--_button-primary-content-color);
 		color: var(--_button-primary-content-color);
 	}
 
@@ -394,6 +395,7 @@ export const buttonStyles = css`
 		gap: var(--_button-gap);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_button-primary-content-color);
 		color: var(--_button-primary-content-color);
 		font: var(--_button-font);
 		text-align: center;
@@ -413,6 +415,7 @@ export const buttonStyles = css`
 	.button:hover {
 		@media (hover: hover) {
 			background-color: var(--_button-is-hovered-background-color);
+			--context-content-color: var(--_button-is-hovered-primary-content-color);
 			color: var(--_button-is-hovered-primary-content-color);
 			--_button-highlight-border-color: var(--_button-is-hovered-highlight-border-color);
 		}
@@ -420,6 +423,7 @@ export const buttonStyles = css`
 
 	.button:active {
 		background-color: var(--_button-is-active-background-color);
+		--context-content-color: var(--_button-is-active-primary-content-color);
 		color: var(--_button-is-active-primary-content-color);
 		--_button-highlight-border-color: var(--_button-is-active-highlight-border-color);
 	}
@@ -475,10 +479,11 @@ export const buttonStyles = css`
 	   position:relative). It lives outside the <button>/<a> so the indicator's
 	   role="status" live region announces loading without joining the button's
 	   accessible name. The activity-indicator inside fills it and centers its
-	   circle, which inherits the content color via currentColor. */
+	   circle, which takes the content color from the context. */
 	.button__activity-indicator {
 		position: absolute;
 		inset: 0;
+		--context-content-color: var(--_button-primary-content-color);
 		color: var(--_button-primary-content-color);
 	}
 
@@ -514,6 +519,7 @@ export const buttonStyles = css`
 
 	.button__supporting-text {
 		min-width: 0;
+		--context-content-color: var(--_button-secondary-content-color);
 		color: var(--_button-secondary-content-color);
 		font: var(--_button-supporting-font);
 		text-wrap: pretty;
@@ -521,11 +527,13 @@ export const buttonStyles = css`
 
 	.button:hover .button__supporting-text {
 		@media (hover: hover) {
+			--context-content-color: var(--_button-is-hovered-secondary-content-color);
 			color: var(--_button-is-hovered-secondary-content-color);
 		}
 	}
 
 	.button:active .button__supporting-text {
+		--context-content-color: var(--_button-is-active-secondary-content-color);
 		color: var(--_button-is-active-secondary-content-color);
 	}
 
@@ -568,16 +576,19 @@ export const buttonStyles = css`
 	.button__shortcut {
 		display: flex;
 		flex-shrink: 0;
+		--context-content-color: var(--_button-secondary-content-color);
 		color: var(--_button-secondary-content-color);
 	}
 
 	.button:hover .button__shortcut {
 		@media (hover: hover) {
+			--context-content-color: var(--_button-is-hovered-secondary-content-color);
 			color: var(--_button-is-hovered-secondary-content-color);
 		}
 	}
 
 	.button:active .button__shortcut {
+		--context-content-color: var(--_button-is-active-secondary-content-color);
 		color: var(--_button-is-active-secondary-content-color);
 	}
 

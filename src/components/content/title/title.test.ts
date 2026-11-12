@@ -75,7 +75,7 @@ describe('nldd-title', () => {
 		// default path resolves against — otherwise both paths would inherit.
 		el = await fixture(`
 			<div>
-				<style>:root { --semantics-content-color: rgb(99, 99, 99); }</style>
+				<style>:root { --semantics-content-color: rgb(99, 99, 99); --context-content-color: var(--semantics-content-color); }</style>
 				<div style="color: rgb(10, 20, 30);">
 					<nldd-title color="inherit"><h2 id="inherit-title">A</h2></nldd-title>
 					<nldd-title><h2 id="default-title">B</h2></nldd-title>
@@ -154,7 +154,7 @@ describe('nldd-title – text and heading-level', () => {
 	it('gives text the same measure, wrapping and color handling as a slotted heading', async () => {
 		el = await fixture(`
 			<div>
-				<style>:root { --semantics-content-color: rgb(99, 99, 99); }</style>
+				<style>:root { --semantics-content-color: rgb(99, 99, 99); --context-content-color: var(--semantics-content-color); }</style>
 				<div style="color: rgb(10, 20, 30);">
 					<nldd-title id="inherit" color="inherit" text="A" heading-level="2"></nldd-title>
 					<nldd-title id="default" size="display-2" text="B" heading-level="2"></nldd-title>

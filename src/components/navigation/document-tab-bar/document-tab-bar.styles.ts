@@ -398,6 +398,7 @@ export const documentTabBarItemStyles = css`
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
 		font: var(--primitives-font-body-xs-regular-flat);
+		--context-content-color: var(--_document-tab-bar-item-secondary-content-color);
 		color: var(--_document-tab-bar-item-secondary-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -407,6 +408,7 @@ export const documentTabBarItemStyles = css`
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
 		font: var(--primitives-font-body-xs-regular-flat);
+		--context-content-color: var(--_document-tab-bar-item-secondary-content-color);
 		color: var(--_document-tab-bar-item-secondary-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;

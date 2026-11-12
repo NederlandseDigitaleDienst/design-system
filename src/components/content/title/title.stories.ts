@@ -222,7 +222,7 @@ export const EigenGrootte = {
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
 				<nldd-title
 					color="inherit"
 					size="display-2"
@@ -232,7 +232,7 @@ export const OpKleurvlak = {
 					heading-level="2"
 				></nldd-title>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-oranje-filled-background-color); --context-content-color: var(--semantics-categories-oranje-filled-content-color);">
 				<nldd-title
 					color="inherit"
 					size="display-2"

@@ -159,6 +159,7 @@ export const timePickerStyles = css`
 		height: var(--_time-picker-control-min-size);
 		gap: var(--_time-picker-list-gap);
 		align-items: center;
+		--context-content-color: var(--_time-picker-selection-content-color);
 		color: var(--_time-picker-selection-content-color);
 		font-variant-numeric: tabular-nums;
 		transform: translateY(-50%);

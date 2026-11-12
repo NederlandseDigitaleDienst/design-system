@@ -18,6 +18,7 @@ export const tooltipStyles = css`
 		--_tooltip-box-shadow: var(--semantics-tooltips-box-shadow);
 		--_tooltip-background-color: var(--semantics-tooltips-background-color);
 		--_tooltip-content-color: var(--semantics-tooltips-content-color);
+		--_tooltip-secondary-color: color-mix(in oklab, var(--_tooltip-content-color) var(--semantics-content-secondary-opacity), transparent);
 		--_tooltip-shortcut-gap: var(--primitives-space-8);
 		--_tooltip-hide-delay: 50; /* unitless ms, read by JavaScript */
 		--_tooltip-offset: 4; /* px, unitless — read by JS */
@@ -93,6 +94,13 @@ export const tooltipStyles = css`
 	/* ## Tooltip body */
 
 	.tooltip__body {
+		--context-background-color: var(--_tooltip-background-color);
+		--context-content-color: var(--_tooltip-content-color);
+		--context-content-secondary-color: var(--_tooltip-secondary-color);
+		--context-content-accent-color: var(--_tooltip-content-color);
+		--context-content-success-color: var(--_tooltip-content-color);
+		--context-content-warning-color: var(--_tooltip-content-color);
+		--context-content-critical-color: var(--_tooltip-content-color);
 		display: flex;
 		border-radius: var(--semantics-tooltips-corner-radius);
 		box-shadow: var(--_tooltip-box-shadow);

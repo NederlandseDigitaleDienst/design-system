@@ -11,7 +11,7 @@ export const activityIndicatorStyles = css`
 
 	:host {
 		--_activity-indicator-circle-size: var(--primitives-space-32);
-		--_activity-indicator-color: var(--context-content-color, currentColor);
+		--_activity-indicator-color: var(--context-content-color);
 		--_activity-indicator-track-opacity: 0.25;
 		--_activity-indicator-stroke-width: 2;
 		--_activity-indicator-rotation-duration: 0.8s;
@@ -154,7 +154,7 @@ export const activityIndicatorStyles = css`
 		   color, not element opacity, which would hide the blur), plus a blur so
 		   the content behind reads as inactive. backdrop-filter degrades
 		   gracefully where unsupported, leaving just the translucent fill. */
-		background-color: color-mix(in oklab, var(--context-parent-background-color, var(--semantics-surfaces-base-background-color)) calc((1 - var(--primitives-opacity-disabled)) * 100%), transparent);
+		background-color: color-mix(in oklab, var(--context-background-color) calc((1 - var(--primitives-opacity-disabled)) * 100%), transparent);
 		-webkit-backdrop-filter: blur(var(--_activity-indicator-backdrop-blur));
 		backdrop-filter: blur(var(--_activity-indicator-backdrop-blur));
 		pointer-events: none;
