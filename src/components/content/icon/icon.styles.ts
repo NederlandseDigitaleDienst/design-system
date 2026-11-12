@@ -24,10 +24,6 @@ export const iconStyles = css`
 		color: var(--_icon-color);
 	}
 
-	:host([hidden]) {
-		display: none;
-	}
-
 
 	/* # Size */
 
@@ -121,9 +117,13 @@ export const iconStyles = css`
 		aspect-ratio: 1;
 	}
 
-	:host([tile]:not([hidden])) {
+	:host([tile]) {
 		display: inline-grid;
 		place-items: center;
+	}
+
+	:host([hidden]) {
+		display: none;
 	}
 
 	:host([tile][size]:not([size="full"])) {
