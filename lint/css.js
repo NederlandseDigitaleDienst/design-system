@@ -1,11 +1,11 @@
 /**
  * What the linter reads in CSS: top-level blocks, the tokens a stylesheet names
- * or declares, and the rules that tell the system's own CSS apart from an app's,
+ * or declares, and the rules that tell the design system's own CSS apart from an app's,
  * also after a bundler has flattened and minified it.
  */
 
 /**
- * The prefixes of the tokens the system ships, in variables.css. A context variable
+ * The prefixes of the tokens the design system ships, in variables.css. A context variable
  * is one only where variables.css gives it a default.
  */
 export const TOKEN_PREFIX = /^--(primitives|semantics|components|context)-/;
@@ -163,8 +163,8 @@ export function cssRules(source) {
 }
 
 /**
- * Whether CSS is the system's own: every rule in it is one the system has, with no
- * property the system does not set there. Values do not count, since a bundler
+ * Whether CSS is the design system's own: every rule in it is one the design system has, with no
+ * property the design system does not set there. Values do not count, since a bundler
  * rewrites colors, urls and units; what a rule selects and sets survives.
  */
 export function isSystemCss(css, systemCss) {
@@ -173,14 +173,14 @@ export function isSystemCss(css, systemCss) {
 		rules.length > 0 &&
 		rules.every(([key, names]) => {
 			// A rule with only what a bundler adds, such as its light-dark() fallback, is not
-			// anyone's. An empty one is the app's: a minifier drops the system's empty rules.
+			// anyone's. An empty one is the app's: a minifier drops the design system's empty rules.
 			if (names.size === 0) return Boolean(names.added);
 			return Boolean(systemCss[key]) && [...names].every((name) => systemCss[key].includes(name));
 		})
 	);
 }
 
-/** The system's tokens a stylesheet names: `var(--semantics-…)`, without names built at runtime. */
+/** The design system's tokens a stylesheet names: `var(--semantics-…)`, without names built at runtime. */
 export function tokenReferences(source, lineComments = true) {
 	const plain = withoutComments(source, lineComments);
 	return [...plain.matchAll(/var\(\s*(--(?:primitives|semantics|components|context)-[\w-]*)(?=\s*[,)])/g)]
@@ -192,6 +192,29 @@ export function tokenReferences(source, lineComments = true) {
  * Custom properties a stylesheet declares, such as `--semantics-…: red`, `--_button-gap: 0`
  * or `@property --context-…`.
  */
+/**
+ * Where the rule, style attribute or style string around an offset starts and ends:
+ * the nearest unmatched brace, or the quote that opens it.
+ */
+export function enclosingBlock(plain, offset) {
+	const QUOTES = '"\'`';
+	let start = offset;
+	for (let depth = 0; start > 0; start--) {
+		const char = plain[start - 1];
+		if (char === '}') depth++;
+		else if (char === '{' && depth-- === 0) break;
+		else if (depth === 0 && QUOTES.includes(char)) break;
+	}
+	let end = offset;
+	for (let depth = 0; end < plain.length; end++) {
+		const char = plain[end];
+		if (char === '{') depth++;
+		else if (char === '}' && depth-- === 0) break;
+		else if (depth === 0 && QUOTES.includes(char)) break;
+	}
+	return { start, end };
+}
+
 export function declarations(source, lineComments = true) {
 	const plain = withoutComments(source, lineComments);
 	return [...plain.matchAll(/(?:^|[;{\s"'`])(--[\w-]+)\s*:(?!:)|@property\s+(--[\w-]+)/g)].map((match) => {

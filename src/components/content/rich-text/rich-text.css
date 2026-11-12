@@ -351,17 +351,17 @@ nldd-rich-text dd + dt + dd {
 
 nldd-rich-text a {
 	border-radius: var(--primitives-corner-radius-xxs);
-	color: var(--semantics-links-color);
+	color: var(--context-link-color);
 	text-decoration: underline;
 	text-underline-offset: var(--primitives-space-2);
 	cursor: pointer;
 
 	&:hover {
-		color: var(--semantics-links-is-hovered-color);
+		color: var(--context-link-is-hovered-color);
 	}
 
 	&:active {
-		color: var(--semantics-links-is-active-color);
+		color: var(--context-link-is-active-color);
 	}
 }
 

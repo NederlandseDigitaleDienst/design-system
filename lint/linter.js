@@ -5,7 +5,7 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
-import { declarations, isSystemCss, TOKEN_PREFIX, tokenReferences, withoutComments } from './css.js';
+import { declarations, enclosingBlock, isSystemCss, TOKEN_PREFIX, tokenReferences, withoutComments } from './css.js';
 import { createEngine } from './engine.js';
 import { canFix, stuckTags } from './fix.js';
 import { applyWrappers, parseSource, parseStylesheet, readerOf } from './frontends.js';
@@ -234,7 +234,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		.map((tag) => tag.slice('nldd-'.length))
 		.sort((a, b) => b.length - a.length);
 
-	/** A stylesheet on disk is the system's when every block in it is. */
+	/** A stylesheet on disk is the design system's when every block in it is. */
 	const linkedSheets = new Map();
 	function isSystemSheet(file) {
 		if (!linkedSheets.has(file)) {
@@ -255,7 +255,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		}
 	}
 
-	/** Where the system's own CSS sits in this file: a bundle or a page can hold it next to the app's. */
+	/** Where the design system's own CSS sits in this file: a bundle or a page can hold it next to the app's. */
 	function systemRanges(roots) {
 		const ranges = [];
 		for (const root of roots) {
@@ -268,8 +268,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		return (offset) => ranges.some(([start, end]) => offset >= start && offset < end);
 	}
 
+	const LINK_CONTEXT = ['--context-link-color', '--context-link-is-hovered-color', '--context-link-is-active-color'];
+
 	/**
-	 * The system's tokens the app names, and the internal variables of a component it
+	 * The design system's tokens the app names, and the internal variables of a component it
 	 * sets. Read from the text, so a stylesheet, a style attribute and a style object
 	 * in a script all count. A token the file or the project declares itself is its own.
 	 */
@@ -296,6 +298,18 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			const component = components.find((name) => declaration.name.startsWith(`--_${name}-`));
 			if (!component) continue;
 			report('local-variable-no-override', `\`${declaration.name}\` is internal to nldd-${component}, so setting it is not supported.`, declaration);
+		}
+		const plain = withoutComments(source, lineComments);
+		const linkBlocks = new Set();
+		for (const declaration of declared) {
+			if (!LINK_CONTEXT.includes(declaration.name)) continue;
+			const { start, end } = enclosingBlock(plain, declaration.offset);
+			if (linkBlocks.has(start)) continue;
+			linkBlocks.add(start);
+			const set = new Set(declared.filter(({ offset }) => offset >= start && offset < end).map(({ name }) => name));
+			const missing = LINK_CONTEXT.filter((name) => !set.has(name));
+			if (missing.length === 0) continue;
+			report('link-context-needs-states', `Set ${missing.map((name) => `\`${name}\``).join(' and ')} here too, or a link on this surface turns back to the default color.`, declaration);
 		}
 		return findings;
 	}

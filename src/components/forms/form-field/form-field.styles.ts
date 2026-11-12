@@ -208,19 +208,19 @@ export const formFieldHelpTextStyles = css`
 		${slottedReset}
 		${inheritedTextReset}
 		border-radius: var(--primitives-corner-radius-xxs) !important;
-		color: var(--semantics-links-color) !important;
+		color: var(--context-link-color) !important;
 		text-decoration: underline !important;
 		text-underline-offset: var(--primitives-space-2) !important;
 	}
 
 	@media (hover: hover) {
 		::slotted(a:hover) {
-			color: var(--semantics-links-is-hovered-color) !important;
+			color: var(--context-link-is-hovered-color) !important;
 		}
 	}
 
 	::slotted(a:active) {
-		color: var(--semantics-links-is-active-color) !important;
+		color: var(--context-link-is-active-color) !important;
 	}
 
 	::slotted(a:focus-visible) {

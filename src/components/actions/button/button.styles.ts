@@ -11,7 +11,8 @@ export const buttonStyles = css`
 
 	:host {
 		--_button-corner-radius: var(--semantics-controls-md-corner-radius);
-		--_button-nested-corner-radius: var(--context-control-corner-radius, var(--_button-corner-radius));
+		/* Unset outside a field, so border-radius falls back to the own corner. */
+		--_button-nested-corner-radius: var(--context-control-corner-radius);
 		/* A parent that stacks its buttons says so through the context variable;
 		   the button's own width attribute overrides it with an inline style. */
 		--_button-width: var(--context-button-width, auto);
@@ -380,7 +381,7 @@ export const buttonStyles = css`
 		position: relative;
 		margin: 0;
 		border: none;
-		border-radius: var(--_button-nested-corner-radius);
+		border-radius: var(--_button-nested-corner-radius, var(--_button-corner-radius));
 		background: none;
 		background-color: var(--_button-background-color);
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_button-highlight-border-color);

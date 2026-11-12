@@ -1293,7 +1293,7 @@
 	--semantics-controls-xs-corner-radius: var(--primitives-corner-radius-xs);
 	--semantics-controls-sm-corner-radius: var(--primitives-corner-radius-sm);
 	--semantics-controls-md-corner-radius: var(--primitives-corner-radius-md);
-	--semantics-controls-lg-corner-radius: var(--primitives-corner-radius-lg);
+	--semantics-controls-lg-corner-radius: var(--primitives-corner-radius-md);
 
 	--semantics-controls-is-selected-indicator-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
 	--semantics-controls-is-selected-indicator-highlight-border-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-700));
@@ -1539,7 +1539,6 @@
 	--semantics-buttons-inherit-tinted-divider-color: color-mix(in oklab, currentColor 35%, transparent);
 
 	--semantics-buttons-inherit-filled-background-color: currentColor;
-	--semantics-buttons-inherit-filled-content-color: var(--semantics-content-contrast-color);
 	--semantics-buttons-inherit-filled-content-secondary-color: currentColor;
 	--semantics-buttons-inherit-filled-highlight-border-color: currentColor;
 	--semantics-buttons-inherit-filled-divider-color: color-mix(in oklab, var(--semantics-content-contrast-color) 25%, transparent);
@@ -1636,6 +1635,7 @@
 
 	--semantics-tooltips-background-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-750));
 	--semantics-tooltips-content-color: var(--primitives-color-neutral-0);
+	--semantics-tooltips-content-secondary-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-200));
 	--semantics-tooltips-box-shadow: var(--primitives-box-shadows-level-2);
 	--semantics-tooltips-corner-radius: var(--primitives-corner-radius-xs);
 	--semantics-tooltips-padding-block: var(--primitives-space-4);
@@ -1754,6 +1754,9 @@
 	--context-content-success-color: var(--semantics-content-success-color);
 	--context-content-warning-color: var(--semantics-content-warning-color);
 	--context-content-critical-color: var(--semantics-content-critical-color);
+	--context-link-color: var(--semantics-links-color);
+	--context-link-is-hovered-color: var(--semantics-links-is-hovered-color);
+	--context-link-is-active-color: var(--semantics-links-is-active-color);
 
 
 	/* # Components

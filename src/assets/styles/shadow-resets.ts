@@ -60,12 +60,35 @@ export const inheritedTextReset = css`
 `;
 
 /**
+ * The link colors of a plain surface: the three link blues. Part of
+ * `surfaceContent`, and on its own where a variant turns a colored surface back
+ * into a plain one.
+ */
+export const defaultLinks = css`
+	--context-link-color: var(--semantics-links-color);
+	--context-link-is-hovered-color: var(--semantics-links-is-hovered-color);
+	--context-link-is-active-color: var(--semantics-links-is-active-color);
+`;
+
+/**
+ * Links that take the text color of a colored surface, in every state, where
+ * the link blue would not read. Set it in the same rule as
+ * `--context-content-color`: it reads that value.
+ */
+export const linksFollowContent = css`
+	--context-link-color: var(--context-content-color);
+	--context-link-is-hovered-color: var(--context-content-color);
+	--context-link-is-active-color: var(--context-content-color);
+`;
+
+/**
  * The content colors a surface passes on, set next to `--context-background-color`
  * wherever a component paints a background of its own. Text inside reads them
  * through the context channel, so a surface inside a highlighted row starts from
  * the default colors again instead of keeping the row's.
  */
 export const surfaceContent = css`
+	${defaultLinks}
 	--context-content-color: var(--semantics-content-color);
 	--context-content-secondary-color: var(--semantics-content-secondary-color);
 	--context-content-accent-color: var(--semantics-content-accent-color);

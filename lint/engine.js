@@ -72,7 +72,7 @@ function createFieldLabelCheck(isInput, allowMaybe) {
  * with `@accepts` in its JSDoc.
  *
  * What a file renders is judged in that file: that a parent elsewhere might put it
- * inside an nldd-rich-text does not make plain HTML written here the system's. A
+ * inside an nldd-rich-text does not make plain HTML written here the design system's. A
  * tree the file builds under a name (a helper component, a variable) is judged where
  * the file uses that name. Used nowhere here, or under a component of the app, it is
  * unknown.
@@ -155,7 +155,7 @@ export function createEngine({ classes = {}, tags = {}, systemCss = {} } = {}) {
 			for (let parent = node.parent; parent; parent = parent.parent) if (parent.name === name) return true;
 			return false;
 		},
-		// CSS the system ships: a block it recognizes, or a stylesheet with nothing else in it.
+		// CSS the design system ships: a block it recognizes, or a stylesheet with nothing else in it.
 		system: (node) => node.system ?? (node.css !== undefined && isSystemCss(node.css, systemCss)),
 		// No element and no text: an empty mount point such as <div id="app"></div>.
 		blank: (node) => node.children.length === 0 && !node.text,

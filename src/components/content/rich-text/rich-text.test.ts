@@ -436,3 +436,33 @@ describe('nldd-rich-text inline content', () => {
 		expect(inline(el)).toBe(false);
 	});
 });
+
+describe('nldd-rich-text links', () => {
+	let styles: HTMLStyleElement[] = [];
+	let el: HTMLElement;
+
+	beforeAll(() => {
+		styles = [colorsCss, variablesCss, richTextCss].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
+	});
+
+	afterAll(() => {
+		styles.forEach((s) => s.remove());
+	});
+
+	afterEach(() => cleanup(el));
+
+	it('takes the link color its surface passes on, and the default blue elsewhere', async () => {
+		el = await fixture(
+			'<div><nldd-rich-text><p><a href="#">Blauw</a></p></nldd-rich-text>' +
+			'<div style="--context-link-color: rgb(255, 255, 255)"><nldd-rich-text><p><a href="#">Wit</a></p></nldd-rich-text></div></div>'
+		);
+		const [plain, onSurface] = el.querySelectorAll('a');
+		expect(getComputedStyle(plain).color).not.toBe('rgb(255, 255, 255)');
+		expect(getComputedStyle(onSurface).color).toBe('rgb(255, 255, 255)');
+	});
+});

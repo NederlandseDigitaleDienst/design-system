@@ -5768,7 +5768,7 @@
         },
         {
           "kind": "class",
-          "description": "A customizable icon component that renders SVG icons from a predefined library. Icons are decorative by default: the host gets `aria-hidden=\"true\"` automatically. If you want the icon to be announced by assistive tech, set `aria-hidden=\"false\"` on the consumer side together with an `aria-label`. Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a menu item. `size=\"full\"` names that default explicitly. `size=\"inherit\"` makes it follow the surrounding text (1em), for an icon set inline in a sentence. Any spacer-aligned number (16–96) pins a fixed dimension. Reach for `inherit` rather than a global `nldd-icon { width: 1em }` rule in the consumer: such a rule wins over the component's own :host styling and so also shrinks the icons that a cell or button was already sizing correctly. Color: by default the icon inherits its parent's `color`. Set `color` to one of the functional semantics (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or a rijkskleur (`lintblauw`, `paars`, `groen`, …). For a color the system cannot know — the jacket of a cable, a color someone picked — set `custom-color` to any CSS color.",
+          "description": "A customizable icon component that renders SVG icons from a predefined library. Icons are decorative by default: the host gets `aria-hidden=\"true\"` automatically. If you want the icon to be announced by assistive tech, set `aria-hidden=\"false\"` on the consumer side together with an `aria-label`. Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a menu item. `size=\"full\"` names that default explicitly. `size=\"inherit\"` makes it follow the surrounding text (1em), for an icon set inline in a sentence. Any spacer-aligned number (16–96) pins a fixed dimension. Reach for `inherit` rather than a global `nldd-icon { width: 1em }` rule in the consumer: such a rule wins over the component's own :host styling and so also shrinks the icons that a cell or button was already sizing correctly. Color: by default the icon inherits its parent's `color`. Set `color` to one of the functional semantics (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or a rijkskleur (`lintblauw`, `paars`, `groen`, …). For a color the design system cannot know — the jacket of a cable, a color someone picked — set `custom-color` to any CSS color.",
           "name": "NLDDIcon",
           "members": [
             {
@@ -5861,7 +5861,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know. It wins over `color`.",
+              "description": "A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know. It wins over `color`.",
               "name": "custom-color",
               "default": "''",
               "fieldName": "customColor"
@@ -6869,7 +6869,7 @@
               "expandedType": {
                 "text": "'content' | 'inherit'"
               },
-              "description": "'content' (the default) takes the system's own content colors, each element its own. 'inherit' lets all text follow the color of the surface instead (for colored areas such as the filled categories). Links stay underlined as an affordance; secondary text (figcaption) gets the same color at a lowered opacity. Known v1 gaps: inline code, mark, tables and hr keep their own surfaces."
+              "description": "'content' (the default) follows the surface it sits on: text, captions and links take the colors its context passes on, each element its own, also in a highlighted row or on the accent panel of a hero. 'inherit' takes the CSS `color` instead, for an area of your own that sets `color` but not the context: links stay underlined in that color, and secondary text (figcaption) gets it at a lowered opacity. Known v1 gaps: inline code, mark, tables and hr keep their own surfaces."
             },
             {
               "name": "spacing",
@@ -7536,7 +7536,7 @@
               "expandedType": {
                 "text": "'content' | 'inherit'"
               },
-              "description": "'content' (the default) takes the system's own content colors. 'inherit' lets the title follow the text color of the surface instead (for colored areas such as the filled categories); overline and supporting-text get the same color at a lowered opacity."
+              "description": "'content' (the default) follows the text color its surface passes on, also in a highlighted row or on the accent panel of a hero. 'inherit' takes the CSS `color` instead, for an area of your own that sets `color` but not the context; overline and supporting-text get the same color at a lowered opacity."
             },
             {
               "name": "text",
@@ -37715,27 +37715,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "sidebarAsSheet",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "deprecated": "Use primary-sidebar-as-sheet. Kept as an alias for backwards compatibility.",
-              "attribute": "sidebar-as-sheet",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "sidebarAccessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "deprecated": "Use primary-sidebar-accessible-label. Kept as an alias for backwards compatibility.\nEmpty by default so it does not clobber the new property's default.",
-              "attribute": "sidebar-accessible-label"
-            },
-            {
               "kind": "method",
               "name": "showPrimarySidebarSheet",
               "return": {
@@ -37748,26 +37727,6 @@
             {
               "kind": "method",
               "name": "hidePrimarySidebarSheet"
-            },
-            {
-              "kind": "method",
-              "name": "showSidebarSheet",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "deprecated": "Use showPrimarySidebarSheet()."
-            },
-            {
-              "kind": "method",
-              "name": "hideSidebarSheet",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "deprecated": "Use hidePrimarySidebarSheet()."
             },
             {
               "kind": "method",
@@ -37837,26 +37796,6 @@
               "default": "false",
               "fieldName": "inspectorAutoHidden",
               "description": "Inspector hidden to free up space for other panes (read-only, set by the split view)"
-            },
-            {
-              "name": "sidebar-as-sheet",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "deprecated": "alias for primary-sidebar-as-sheet (kept for backwards compatibility)",
-              "fieldName": "sidebarAsSheet",
-              "description": "@deprecated alias for primary-sidebar-as-sheet (kept for backwards compatibility)"
-            },
-            {
-              "name": "sidebar-accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "deprecated": "alias for primary-sidebar-accessible-label (kept for backwards compatibility)",
-              "fieldName": "sidebarAccessibleLabel",
-              "description": "@deprecated alias for primary-sidebar-accessible-label (kept for backwards compatibility)"
             }
           ],
           "superclass": {
@@ -37881,10 +37820,6 @@
             {
               "name": "inspector",
               "description": "Right pane for details or properties"
-            },
-            {
-              "name": "sidebar",
-              "description": "@deprecated alias for the primary-sidebar slot (kept for backwards compatibility)"
             }
           ]
         }
@@ -45205,7 +45140,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it.",
+              "description": "A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it.",
               "fieldName": "customColor"
             },
             {

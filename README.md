@@ -45,8 +45,8 @@ De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/de
 | `nldd-design` | Opzoeken: welke componenten, attributen, slots, events en iconen er zijn, wat er per versie veranderde, en de ontwerprichtlijnen. |
 | `nldd-design-build` | Een applicatie bouwen: de visie erachter, de basispatronen en hoe je componenten samenstelt. |
 | `nldd-design-validate` | Controleren wat er gebouwd is, met `nldd lint`. |
-| `nldd-design-migrate` | Een bestaande frontend omzetten naar dit systeem. |
-| `nldd-design-upgrade` | Een applicatie die al op dit systeem draait naar een nieuwere versie brengen. |
+| `nldd-design-migrate` | Een bestaande frontend omzetten naar dit designsysteem. |
+| `nldd-design-upgrade` | Een applicatie die al op dit designsysteem draait naar een nieuwere versie brengen. |
 | `nldd-design-contribute` | Een wijziging voorstellen: een ontbrekend component, een patroon, of een bug. |
 
 De assistent kiest zelf welke hij nodig heeft. In Claude Code kun je er ook een aanroepen met `/nldd-design`, of met `/nldd-design-system:nldd-design` als een skill van je eigen project dezelfde naam draagt.

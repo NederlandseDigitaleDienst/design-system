@@ -1637,6 +1637,17 @@ describe('CSS', () => {
 		assert.deepEqual(await rulesIn('.panel { --_panel-gap: 0; gap: var(--_panel-gap); }', 'a.css'), []);
 	});
 
+	it('reports a surface that sets one link color without the other two', async () => {
+		assert.deepEqual(await findingsIn('.panel { --context-link-color: white; }', 'a.css'), [
+			['link-context-needs-states', 'Set `--context-link-is-hovered-color` and `--context-link-is-active-color` here too, or a link on this surface turns back to the default color.'],
+		]);
+		const all = '--context-link-color: white; --context-link-is-hovered-color: white; --context-link-is-active-color: white;';
+		assert.deepEqual(await rulesIn(`.panel { ${all} }`, 'a.css'), []);
+		assert.deepEqual(await rulesIn(`.a { ${all} }\n.b { --context-link-is-hovered-color: white; }`, 'a.css'), ['link-context-needs-states']);
+		assert.deepEqual(await rulesIn('<div style="--context-link-color: white"><nldd-link href="/">a</nldd-link></div>', 'a.html'), ['link-context-needs-states']);
+		assert.deepEqual(await rulesIn(`<div style="${all}"><nldd-link href="/">a</nldd-link></div>`, 'a.html'), []);
+	});
+
 	it('leaves the CSS of the system alone, in a bundle or a page', async () => {
 		assert.deepEqual(await rulesIn('nldd-rich-text[spacing=flat]{--_rich-text-spacing:var(--primitives-space-0)}', 'index.css'), []);
 	});

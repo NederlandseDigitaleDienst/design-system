@@ -64,16 +64,16 @@ export const breadcrumbsItemStyles = css`
 	}
 
 	.breadcrumbs__item-link {
-		color: var(--semantics-links-color);
+		color: var(--context-link-color);
 		text-decoration: underline;
 	}
 
 	.breadcrumbs__item-link:hover {
-		color: var(--semantics-links-is-hovered-color);
+		color: var(--context-link-is-hovered-color);
 	}
 
 	.breadcrumbs__item-link:active {
-		color: var(--semantics-links-is-active-color);
+		color: var(--context-link-is-active-color);
 	}
 
 	.breadcrumbs__item-link:focus-visible {

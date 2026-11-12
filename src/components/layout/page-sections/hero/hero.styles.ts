@@ -1,6 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
-import { inheritedTextReset, slottedReset, surfaceContent } from '../../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, linksFollowContent, slottedReset, surfaceContent } from '../../../../assets/styles/shadow-resets.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -210,6 +210,7 @@ export const heroStyles = css`
 		--context-background-color: var(--_hero-main-background-color);
 		--context-content-color: var(--_hero-main-content-color);
 		--context-content-secondary-color: var(--_hero-main-secondary-color);
+		${linksFollowContent}
 		--context-content-accent-color: var(--_hero-main-content-color);
 		--context-content-success-color: var(--_hero-main-content-color);
 		--context-content-warning-color: var(--_hero-main-content-color);

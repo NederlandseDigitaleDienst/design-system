@@ -79,7 +79,7 @@ export default {
 		color: {
 			control: 'select',
 			options: ['content', 'inherit'],
-			description: '`content` neemt de eigen tekstkleuren van het systeem. `inherit` laat de titel de tekstkleur van de ondergrond volgen (voor gekleurde vlakken).',
+			description: '`content` volgt de tekstkleur die het vlak doorgeeft, ook in een highlighted rij of op het accentpaneel van een hero. `inherit` neemt de CSS-`color`, voor een eigen vlak dat wel `color` zet maar de context niet.',
 			table: { defaultValue: { summary: 'content' } },
 		},
 		text: {

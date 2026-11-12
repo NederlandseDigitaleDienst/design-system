@@ -14,7 +14,7 @@ export default {
 		color: {
 			control: 'select',
 			options: ['content', 'inherit'],
-			description: '`content` neemt de eigen tekstkleuren van het systeem, elk element z\'n eigen. `inherit` laat alle tekst de kleur van de ondergrond volgen (voor gekleurde vlakken).',
+			description: '`content` volgt het vlak: tekst, bijschriften en links nemen de kleuren die het vlak doorgeeft, elk element z\'n eigen. `inherit` neemt de CSS-`color`, voor een eigen vlak dat wel `color` zet maar de context niet.',
 			table: { defaultValue: { summary: 'content' } },
 		},
 		spacing: {

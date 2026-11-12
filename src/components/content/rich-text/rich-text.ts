@@ -54,11 +54,12 @@
  *
  * @element nldd-rich-text
  *
- * @attr {string} color - 'content' (the default) takes the system's own content
- *   colors, each element its own. 'inherit' lets all text follow the color of
- *   the surface instead (for colored areas such as the filled categories).
- *   Links stay underlined as an affordance; secondary text (figcaption) gets
- *   the same color at a lowered opacity. Known v1 gaps: inline code, mark,
+ * @attr {string} color - 'content' (the default) follows the surface it sits on:
+ *   text, captions and links take the colors its context passes on, each element
+ *   its own, also in a highlighted row or on the accent panel of a hero.
+ *   'inherit' takes the CSS `color` instead, for an area of your own that sets
+ *   `color` but not the context: links stay underlined in that color, and
+ *   secondary text (figcaption) gets it at a lowered opacity. Known v1 gaps: inline code, mark,
  *   tables and hr keep their own surfaces.
  * @attr {string} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned

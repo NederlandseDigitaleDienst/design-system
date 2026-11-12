@@ -35,8 +35,8 @@ Werkt een van de zes niet, dan draai je een oude versie van de plugin. Werk de m
 |---|---|---|
 | een applicatie bouwen op `@nldd/design-system` | **`nldd-design-build`** | de visie, de basispatronen, bootstrap-voorbeelden voor HTML en Vue |
 | opzoeken welk component, attribuut, slot, event of icoon er is, of wat er in een versie veranderde | **`nldd-design`** | de componentreferentie, de changelog, de ontwerprichtlijnen |
-| een bestaande frontend omzetten naar dit systeem | **`nldd-design-migrate`** | wat er stil misgaat, per herkomst: Tailwind, een ander design system, server-gerenderd |
-| een applicatie die al op dit systeem draait naar een nieuwere versie brengen | **`nldd-design-upgrade`** | het upgradepad uit de changelog, en waarom het versienummer niets zegt |
+| een bestaande frontend omzetten naar dit designsysteem | **`nldd-design-migrate`** | wat er stil misgaat, per herkomst: Tailwind, een ander design system, server-gerenderd |
+| een applicatie die al op dit designsysteem draait naar een nieuwere versie brengen | **`nldd-design-upgrade`** | het upgradepad uit de changelog, en waarom het versienummer niets zegt |
 | iets voorstellen: een ontbrekend component, een patroon, een bug | **`nldd-design-contribute`** | hoe je een issue opbouwt, en waarom het probleem vóór de oplossing komt |
 | controleren of je code klopt | **`nldd-design-validate`** | `nldd lint`, wat de meldingen betekenen en hoe je hem in een project opneemt |
 

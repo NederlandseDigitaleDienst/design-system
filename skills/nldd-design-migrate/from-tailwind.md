@@ -57,12 +57,12 @@ Forceer verder de lichte weergave met `<html data-scheme="light">` zolang de mig
 
 ## Wat je niet overhoudt
 
-Na Tailwind blijven er utilities over waarvan het niet meteen duidelijk is waar ze heen moeten: `truncate` en `line-clamp`, `text-transform`, `object-fit`, scroll-snap, het hover-reveal-patroon. De verleiding is een klein eigen CSS-bestand. Dat bestand groeit, en elke regel erin beweegt niet mee met het systeem.
+Na Tailwind blijven er utilities over waarvan het niet meteen duidelijk is waar ze heen moeten: `truncate` en `line-clamp`, `text-transform`, `object-fit`, scroll-snap, het hover-reveal-patroon. De verleiding is een klein eigen CSS-bestand. Dat bestand groeit, en elke regel erin beweegt niet mee met het designsysteem.
 
-Loop elke utility daarom af als vraag aan het systeem. Vaak is er een attribuut of een component dat het al doet, zoals `object-fit` op `nldd-image`; zoek het op in de [componentreferentie](../nldd-design/reference.md). Is er niets, dan meld je het gat en zet je er tijdelijk een onderdrukking met de issuelink boven. Het doel blijft nul eigen regels.
+Loop elke utility daarom af als vraag aan het designsysteem. Vaak is er een attribuut of een component dat het al doet, zoals `object-fit` op `nldd-image`; zoek het op in de [componentreferentie](../nldd-design/reference.md). Is er niets, dan meld je het gat en zet je er tijdelijk een onderdrukking met de issuelink boven. Het doel blijft nul eigen regels.
 
 ## Iconen
 
-Kom je van `lucide-react` of een vergelijkbare set, dan heb je een mappingtabel nodig naar `nldd-icon`. Het gros mapt direct; een stuk of vijftien niet. Kies dan het icoon uit het pakket dat er het dichtst bij komt, en vraag een icoon dat echt ontbreekt aan via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Een eigen SVG-set is eigen vormgeving: hij volgt geen huisstijl en geen update van het systeem.
+Kom je van `lucide-react` of een vergelijkbare set, dan heb je een mappingtabel nodig naar `nldd-icon`. Het gros mapt direct; een stuk of vijftien niet. Kies dan het icoon uit het pakket dat er het dichtst bij komt, en vraag een icoon dat echt ontbreekt aan via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Een eigen SVG-set is eigen vormgeving: hij volgt geen huisstijl en geen update van het designsysteem.
 
 Let op de maatvoering: Tailwind deed dat met klassen (`h-4 w-4`), `nldd-icon` doet het in pixels en accepteert alleen spacer-uitgelijnde maten. Je codemod heeft dus een klasse-naar-maat-tabel nodig, en de twee kleinste schalen ronden omhoog.

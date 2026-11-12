@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { linksFollowContent } from '../../../assets/styles/shadow-resets.js';
 
 export const listItemStyles = css`
 	:host {
@@ -258,6 +259,7 @@ export const listItemStyles = css`
 		--context-background-color: var(--semantics-list-items-is-highlighted-background-color);
 		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
+		${linksFollowContent}
 	}
 
 	:host(:is([current], [data-current]):focus-within) {
@@ -295,6 +297,7 @@ export const listItemStyles = css`
 		--context-background-color: var(--semantics-list-items-is-highlighted-is-hovered-background-color);
 		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
+		${linksFollowContent}
 	}
 
 	/* JS-driven rather than :active, so a touch that turns into a scroll clears
@@ -327,6 +330,7 @@ export const listItemStyles = css`
 	:host(:is([current], [data-current]):not([disabled])) .list-item__action.is-pressed {
 		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
+		${linksFollowContent}
 	}
 
 	/* The same two selectors as the fill above, so the hover rule cannot win. */
@@ -341,6 +345,7 @@ export const listItemStyles = css`
 		--context-background-color: var(--semantics-list-items-is-highlighted-background-color);
 		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
+		${linksFollowContent}
 	}
 
 

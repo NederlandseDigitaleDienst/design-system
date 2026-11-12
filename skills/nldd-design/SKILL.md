@@ -13,7 +13,7 @@ Dit is de gedeelde naslag van het designsysteem. Hij hoort bij geen van beide we
 
 - [`reference.md`](reference.md): elk `nldd-*` element met zijn attributen, slots en events, plus de volledige icoonnamenlijst. Gegenereerd uit de JSDoc van de componenten, dus dit is wat het pakket werkelijk kan.
 - [`changelog.md`](changelog.md): wat er per versie veranderde, met de migratiestappen bij elke breaking change.
-- [`design-guidelines.md`](design-guidelines.md): de interface- en ontwerpvoorkeuren van het systeem. Canoniek voor ontwerpkeuzes, waar de andere skills over mechaniek gaan.
+- [`design-guidelines.md`](design-guidelines.md): de interface- en ontwerpvoorkeuren van het designsysteem. Canoniek voor ontwerpkeuzes, waar de andere skills over mechaniek gaan.
 
 ## Waar je verder moet zijn
 
@@ -23,7 +23,7 @@ Dit is de gedeelde naslag van het designsysteem. Hij hoort bij geen van beide we
 | een bestaande applicatie omzetten | `nldd-design-migrate`: wat er stil misgaat en hoe je het merkt |
 | een versie verhogen | `nldd-design-upgrade`: het upgradepad uit de changelog |
 | code controleren | `nldd-design-validate`: `nldd lint` en wat de meldingen betekenen |
-| iets voorstellen aan het systeem | `nldd-design-contribute`: hoe je een issue opbouwt |
+| iets voorstellen aan het designsysteem | `nldd-design-contribute`: hoe je een issue opbouwt |
 | het designsysteem zelf ontwikkelen | niet deze skills: die kennis zit als repo-locale skills in de repository, zie `nldd-design-contribute` |
 
 Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor (`/nldd-design-system:nldd-design`). Die tweede werkt altijd; de korte gaat naar een eigen skill van je project als die toevallig dezelfde naam draagt.
@@ -34,6 +34,6 @@ Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor (`/nldd
 
 **Lees de changelog per versie, niet alleen die van je doelversie.** Een hernoeming zonder terugvalgedrag en een verwijderd element kunnen in dezelfde release zitten. Dan krijg je twee faalvormen tegelijk, en geen van beide meldt zich.
 
-**De levende documentatie staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/),** met visuele voorbeelden en controls per component. De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee voor detailvragen; deze skills leren je hoe je het systeem goed gebruikt.
+**De levende documentatie staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/),** met visuele voorbeelden en controls per component. De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee voor detailvragen; deze skills leren je hoe je het designsysteem goed gebruikt.
 
 > Voor onderhouders: alle drie de bestanden hier zijn gegenereerd, uit respectievelijk de JSDoc van de componenten, de root-CHANGELOG en `src/docs/design-guidelines.mdx`. Draai `npm run generate:skill-docs` na een API-wijziging, release of wijziging in de ontwerprichtlijnen en commit het resultaat. Het zijn echte bestanden en geen symlinks: een plugin wordt naar een geïsoleerde cache gekopieerd waarbij symlinks buiten de plugin-map wegvallen.

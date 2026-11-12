@@ -21,21 +21,16 @@
  * @attr {string} inspector-accessible-label - Accessible name for the inspector sheet dialog (default: 'Details')
  * @attr {string} primary-sidebar-accessible-label - Accessible name for the primary sidebar sheet dialog (default: 'Navigatie')
  * @attr {boolean} inspector-auto-hidden - Inspector hidden to free up space for other panes (read-only, set by the split view)
- * @attr {boolean} sidebar-as-sheet - @deprecated alias for primary-sidebar-as-sheet (kept for backwards compatibility)
- * @attr {string} sidebar-accessible-label - @deprecated alias for primary-sidebar-accessible-label (kept for backwards compatibility)
  *
  * @slot primary-sidebar - Left pane for primary navigation
  * @slot secondary-sidebar - Second pane for secondary navigation (shown when slotted)
  * @slot main - Center pane for primary content
  * @slot inspector - Right pane for details or properties
- * @slot sidebar - @deprecated alias for the primary-sidebar slot (kept for backwards compatibility)
  *
  * @method showInspectorSheet() - Opens the inspector as a sheet (async); only has effect when inspector-auto-hidden or inspector-as-sheet is active
  * @method hideInspectorSheet() - Closes the inspector sheet
  * @method showPrimarySidebarSheet() - Opens the primary sidebar as a sheet (async); only has effect when primary-sidebar-as-sheet is active
  * @method hidePrimarySidebarSheet() - Closes the primary sidebar sheet
- * @method showSidebarSheet() - @deprecated alias for showPrimarySidebarSheet() (kept for backwards compatibility)
- * @method hideSidebarSheet() - @deprecated alias for hidePrimarySidebarSheet() (kept for backwards compatibility)
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
@@ -71,35 +66,6 @@ export class NLDDNavigationSplitView extends LitElement {
 	@property({ type: Boolean, reflect: true, attribute: 'inspector-auto-hidden' })
 	inspectorAutoHidden = false;
 
-	/**
-	 * @deprecated Use primary-sidebar-as-sheet. Kept as an alias for backwards compatibility.
-	 */
-	@property({ type: Boolean, reflect: true, attribute: 'sidebar-as-sheet' })
-	sidebarAsSheet = false;
-
-	/**
-	 * @deprecated Use primary-sidebar-accessible-label. Kept as an alias for backwards compatibility.
-	 * Empty by default so it does not clobber the new property's default.
-	 */
-	@property({ type: String, attribute: 'sidebar-accessible-label' })
-	sidebarAccessibleLabel = '';
-
-	/**
-	 * Effective sheet mode — true when either the new property or the deprecated alias is set.
-	 * Read by the template, so it stays accessible (underscore-prefixed = internal API).
-	 */
-	get _asSheet(): boolean {
-		return this.primarySidebarAsSheet || this.sidebarAsSheet;
-	}
-
-	/**
-	 * Effective primary sidebar sheet label — the deprecated alias wins when set, else the new property.
-	 * Read by the template, so it stays accessible (underscore-prefixed = internal API).
-	 */
-	get _resolvedPrimarySidebarLabel(): string {
-		return this.sidebarAccessibleLabel || this.primarySidebarAccessibleLabel;
-	}
-
 	// Internal visibility driven by layout algorithm — not part of public API
 	@state()
 	_showPrimarySidebar = false;
@@ -130,7 +96,7 @@ export class NLDDNavigationSplitView extends LitElement {
 	}
 
 	private get _hasPrimarySidebar(): boolean {
-		return this.querySelector(':scope > :is([slot="primary-sidebar"], [slot="sidebar"])') !== null;
+		return this.querySelector(':scope > [slot="primary-sidebar"]') !== null;
 	}
 
 	/** @internal */
@@ -153,11 +119,7 @@ export class NLDDNavigationSplitView extends LitElement {
 	}
 
 	_paneHasContent(slot: string): boolean {
-		// The primary-sidebar slot also matches the deprecated 'sidebar' alias
-		const selector = slot === 'primary-sidebar'
-			? ':scope > nldd-split-view-pane:is([slot="primary-sidebar"], [slot="sidebar"])'
-			: `:scope > nldd-split-view-pane[slot="${slot}"]`;
-		return this.querySelector(selector)?.hasAttribute('has-content') ?? false;
+		return this.querySelector(`:scope > nldd-split-view-pane[slot="${slot}"]`)?.hasAttribute('has-content') ?? false;
 	}
 
 	override connectedCallback() {
@@ -229,7 +191,7 @@ export class NLDDNavigationSplitView extends LitElement {
 	}
 
 	override updated(changed: Map<string, unknown>) {
-		if (changed.has('inspectorAsSheet') || changed.has('primarySidebarAsSheet') || changed.has('sidebarAsSheet')) {
+		if (changed.has('inspectorAsSheet') || changed.has('primarySidebarAsSheet')) {
 			this._scheduleLayout();
 		}
 		// Close inspector sheet immediately when inspector-auto-hidden clears and inspector-as-sheet is not set
@@ -243,8 +205,8 @@ export class NLDDNavigationSplitView extends LitElement {
 		const { primarySidebar: primarySidebarMin, secondarySidebar: secondarySidebarMin, main: mainMin, inspector: inspectorMin } = this._paneMinWidths;
 
 		// When primary-sidebar-as-sheet, sidebars never render inline — main always fills full width
-		let primarySidebar = this._asSheet ? false : this._hasPrimarySidebar;
-		let secondarySidebar = this._asSheet ? false : this._hasSecondarySidebar;
+		let primarySidebar = this.primarySidebarAsSheet ? false : this._hasPrimarySidebar;
+		let secondarySidebar = this.primarySidebarAsSheet ? false : this._hasSecondarySidebar;
 		let main = true;
 		let inspector = this._hasInspector;
 
@@ -322,14 +284,14 @@ export class NLDDNavigationSplitView extends LitElement {
 
 	private _updatePaneBackButtons() {
 		const panes = {
-			primarySidebar: this.querySelector(':scope > nldd-split-view-pane:is([slot="primary-sidebar"], [slot="sidebar"])'),
+			primarySidebar: this.querySelector(':scope > nldd-split-view-pane[slot="primary-sidebar"]'),
 			secondarySidebar: this.querySelector(':scope > nldd-split-view-pane[slot="secondary-sidebar"]'),
 			main: this.querySelector(':scope > nldd-split-view-pane[slot="main"]'),
 		};
 
 		// When primary-sidebar-as-sheet, main is always the only visible inline pane — no back buttons
 		// Secondary sidebar in the sheet can go back to the primary sidebar — keep its back button
-		if (this._asSheet) {
+		if (this.primarySidebarAsSheet) {
 			panes.secondarySidebar?.removeAttribute('hide-back');
 			panes.main?.setAttribute('hide-back', '');
 			return;
@@ -365,7 +327,7 @@ export class NLDDNavigationSplitView extends LitElement {
 
 	/** Opens the primary sidebar as a sheet. Awaitable — resolves once the dialog is open. */
 	async showPrimarySidebarSheet(): Promise<void> {
-		if (!this._asSheet) return;
+		if (!this.primarySidebarAsSheet) return;
 		await this.updateComplete;
 		this._primarySidebarSheet?.showModal();
 		this._managePrimarySidebarSheetFocus();
@@ -373,16 +335,6 @@ export class NLDDNavigationSplitView extends LitElement {
 
 	hidePrimarySidebarSheet() {
 		this._hideSheet(this._primarySidebarSheet);
-	}
-
-	/** @deprecated Use showPrimarySidebarSheet(). */
-	showSidebarSheet(): Promise<void> {
-		return this.showPrimarySidebarSheet();
-	}
-
-	/** @deprecated Use hidePrimarySidebarSheet(). */
-	hideSidebarSheet(): void {
-		this.hidePrimarySidebarSheet();
 	}
 
 	private _managePrimarySidebarSheetFocus() {
@@ -394,9 +346,8 @@ export class NLDDNavigationSplitView extends LitElement {
 			return;
 		}
 
-		// Otherwise gather assigned elements from both the primary-sidebar slot and its deprecated 'sidebar' alias
-		const slots = this.shadowRoot?.querySelectorAll<HTMLSlotElement>('slot[name="primary-sidebar"], slot[name="sidebar"]') ?? [];
-		const assigned = Array.from(slots).flatMap(slot => slot.assignedElements({ flatten: true }));
+		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="primary-sidebar"]');
+		const assigned = slot?.assignedElements({ flatten: true }) ?? [];
 		this._manageFocusForSlot(assigned, this._primarySidebarSheet);
 	}
 

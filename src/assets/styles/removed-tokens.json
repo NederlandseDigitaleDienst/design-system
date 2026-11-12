@@ -291,6 +291,7 @@
 	"--components-window-default-width": {"last":"0.8.95"},
 	"--context-parent-background-color": {"last":"0.22.0","use":"--context-background-color"},
 	"--semantics-blockquotes-max-width": {"last":"0.21.1"},
+	"--semantics-buttons-inherit-filled-content-color": {"last":"0.22.0","use":"--context-background-color"},
 	"--semantics-buttons-inherit-filled-is-active-background-color": {"last":"0.8.93"},
 	"--semantics-buttons-inherit-filled-is-active-content-color": {"last":"0.8.93"},
 	"--semantics-buttons-inherit-filled-is-active-content-secondary-color": {"last":"0.8.93"},

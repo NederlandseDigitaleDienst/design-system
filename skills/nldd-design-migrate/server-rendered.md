@@ -34,7 +34,7 @@ Dezelfde familie, breder: **een component doet eenmalig werk op een moment dat j
 
 Bouw de nieuwe UI in een eigen namespace: eigen route-prefix, eigen templatemap en eigen JS-ingang. Zet er een test op die faalt als er nieuwe tags in oude templates staan of omgekeerd. Zet daarna de basistemplate om zodat alles overerft, en haal de parallelle laag weg als aparte, geplande commit.
 
-De reden om te isoleren is duur geleerd: een eerdere poging deelde templates, CSS en JavaScript met de oude versie en deed monkey-patches tijdens het draaien. Drie bestanden moesten terug omdat ze voor het nieuwe systeem waren herschreven, waardoor een pagina van het oude systeem brak.
+De reden om te isoleren is duur geleerd: een eerdere poging deelde templates, CSS en JavaScript met de oude versie en deed monkey-patches tijdens het draaien. Drie bestanden moesten terug omdat ze voor het nieuwe designsysteem waren herschreven, waardoor een pagina van het oude systeem brak.
 
 **De parallelle laag is geen gratis vangnet: die verstopt bugs.** Bij het opruimen bleek die laag echte fouten te bevatten die de review pas toen zag, waaronder een 500 in een import en een ontbrekende permissiecontrole. Plan de sloop dus in, en controleer bij het verwijderen wat er meeverdwijnt: in datzelfde opruimen gingen twee decorators mee die teruggezet moesten worden.
 
@@ -83,6 +83,6 @@ Twee dingen om bij zo'n upgrade te doen:
 
 ## Eigen CSS op een component: alleen tijdelijk, met een issue
 
-Het doel is geen eigen CSS (zie de hoofdpagina). Moet er tijdelijk toch een regel staan, volg dan de regel voor een omweg uit [`SKILL.md`](SKILL.md#het-doel-alles-komt-uit-het-systeem). Bij server-rendering is het waarom meestal render-timing, de grens van een fragmentwissel of de shadow DOM.
+Het doel is geen eigen CSS (zie de hoofdpagina). Moet er tijdelijk toch een regel staan, volg dan de regel voor een omweg uit [`SKILL.md`](SKILL.md#het-doel-alles-komt-uit-het-designsysteem). Bij server-rendering is het waarom meestal render-timing, de grens van een fragmentwissel of de shadow DOM.
 
 Bij het opruimen is dat de scheidslijn: een regel met een open issue blijft tot dat issue is opgelost, de rest gaat nu weg.

@@ -1,6 +1,6 @@
 ---
 name: nldd-design-upgrade
-description: "Verhoog de versie van @nldd/design-system in een bestaande applicatie: lees het upgradepad uit de changelog, vind de breaking changes en pas ze toe. Triggers: 'upgraden naar een nieuwe versie', 'nldd bijwerken', 'nldd-versie verhogen', 'wat is er veranderd sinds versie x', 'npm update @nldd/design-system', een afhankelijkheid die een paar versies achterloopt. Voor een nieuwe app bouwen: nldd-design-build. Voor een frontend die nog niet op dit systeem zit: nldd-design-migrate."
+description: "Verhoog de versie van @nldd/design-system in een bestaande applicatie: lees het upgradepad uit de changelog, vind de breaking changes en pas ze toe. Triggers: 'upgraden naar een nieuwe versie', 'nldd bijwerken', 'nldd-versie verhogen', 'wat is er veranderd sinds versie x', 'npm update @nldd/design-system', een afhankelijkheid die een paar versies achterloopt. Voor een nieuwe app bouwen: nldd-design-build. Voor een frontend die nog niet op dit designsysteem zit: nldd-design-migrate."
 metadata:
   type: reference
 ---
@@ -10,7 +10,7 @@ metadata:
 Je gebruikt deze skill als een applicatie al op `@nldd/design-system` draait en naar een hogere versie moet. Dat is iets anders dan de twee buren:
 
 - Bouw je iets nieuws, dan is [`nldd-design-build`](../nldd-design-build/SKILL.md) de plek.
-- Zit de frontend nog niet op dit systeem (Tailwind, een ander design system, server-gerenderd), dan hoort het bij [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md).
+- Zit de frontend nog niet op dit designsysteem (Tailwind, een ander design system, server-gerenderd), dan hoort het bij [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md).
 
 Een upgrade zit daar precies tussenin: de componenten kloppen al, maar de API onder je code is bewogen. De vaardigheid is dezelfde als bij een migratie, alleen met een kleinere delta en één extra valkuil, hieronder.
 

@@ -539,8 +539,13 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "navigation-split-view-sidebar-renamed",
-		"message": "The sidebar attributes now start with `primary-`, because a split view can have two. Rename it here and on every other nldd-navigation-split-view.",
+		"message": "The sidebar attributes now start with `primary-`, because a split view can have two, and the old names do nothing. Rename it here and on every other nldd-navigation-split-view.",
 		"context": "nldd-navigation-split-view:is([sidebar-accessible-label], [sidebar-as-sheet])"
+	},
+	{
+		"id": "navigation-split-view-sidebar-slot-renamed",
+		"message": "The sidebar slot is now primary-sidebar, and what is in the old one is not shown. Rename it here and on every other nldd-navigation-split-view.",
+		"context": "nldd-navigation-split-view > [slot=\"sidebar\"]"
 	},
 	{
 		"id": "notification-max-two-actions",

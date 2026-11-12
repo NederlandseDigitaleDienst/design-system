@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, linksFollowContent } from '../../../assets/styles/shadow-resets.js';
 
 export const tooltipStyles = css`
 	:host {
@@ -18,7 +18,7 @@ export const tooltipStyles = css`
 		--_tooltip-box-shadow: var(--semantics-tooltips-box-shadow);
 		--_tooltip-background-color: var(--semantics-tooltips-background-color);
 		--_tooltip-content-color: var(--semantics-tooltips-content-color);
-		--_tooltip-secondary-color: color-mix(in oklab, var(--_tooltip-content-color) var(--semantics-content-secondary-opacity), transparent);
+		--_tooltip-secondary-color: var(--semantics-tooltips-content-secondary-color);
 		--_tooltip-shortcut-gap: var(--primitives-space-8);
 		--_tooltip-hide-delay: 50; /* unitless ms, read by JavaScript */
 		--_tooltip-offset: 4; /* px, unitless — read by JS */
@@ -97,6 +97,7 @@ export const tooltipStyles = css`
 		--context-background-color: var(--_tooltip-background-color);
 		--context-content-color: var(--_tooltip-content-color);
 		--context-content-secondary-color: var(--_tooltip-secondary-color);
+		${linksFollowContent}
 		--context-content-accent-color: var(--_tooltip-content-color);
 		--context-content-success-color: var(--_tooltip-content-color);
 		--context-content-warning-color: var(--_tooltip-content-color);

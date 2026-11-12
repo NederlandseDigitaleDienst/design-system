@@ -1,6 +1,6 @@
 ---
 name: nldd-design-contribute
-description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het designsysteem', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het designsysteem', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Melden gaat via een issue op GitHub, voor iedereen. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het designsysteem zelf check je die uit."
+description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het designsysteem', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het designsysteem', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Melden gaat via een issue op GitHub, voor iedereen. Voor bouwen met het designsysteem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het designsysteem zelf check je die uit."
 metadata:
   type: reference
 ---
@@ -33,7 +33,7 @@ Dit is wat het meeste heen en weer scheelt:
 - **Welk component** het betreft, en wat je verwachtte.
 - **Een klein stukje HTML** dat het laat zien. Dit scheelt het meeste tijd van alles in deze lijst.
 
-Controleer eerst of het in de [changelog](../nldd-design/changelog.md) al langskwam, en of het attribuut of slot dat je gebruikt echt bestaat in de [referentie](../nldd-design/reference.md). Dit systeem faalt stil: een verzonnen attribuut of icoonnaam rendert niets, zonder foutmelding, en dat lijkt op een bug in het component.
+Controleer eerst of het in de [changelog](../nldd-design/changelog.md) al langskwam, en of het attribuut of slot dat je gebruikt echt bestaat in de [referentie](../nldd-design/reference.md). Dit designsysteem faalt stil: een verzonnen attribuut of icoonnaam rendert niets, zonder foutmelding, en dat lijkt op een bug in het component.
 
 **Kwetsbaarheden gaan een andere route.** Die horen niet in een openbaar issue. Meld ze via het Nationaal Cyber Security Centrum, https://www.ncsc.nl/contact/kwetsbaarheid-melden, met "MinBZK/CIO-office github security response" erbij.
 
@@ -44,7 +44,7 @@ Een patroon is iets anders dan een component: het beschrijft hoe je bestaande co
 Begin daarom bij het probleem en het bewijs, niet bij de code:
 
 - **Welke taak** lost dit op, en waarom lukt dat niet met wat er al staat?
-- **Waar draait het?** Noem de producten of schermen waar deze compositie al in gebruik is. Een compositie die in meerdere producten van verschillende teams terugkomt is een patroon van het systeem; iets dat in één app staat is voorlopig een gewoonte van die app. Dat sluit niets uit, maar het bepaalt hoe hard het bewijs is.
+- **Waar draait het?** Noem de producten of schermen waar deze compositie al in gebruik is. Een compositie die in meerdere producten van verschillende teams terugkomt is een patroon van het designsysteem; iets dat in één app staat is voorlopig een gewoonte van die app. Dat sluit niets uit, maar het bepaalt hoe hard het bewijs is.
 - **Wat is de regel?** Een patroon zonder "waarom zo" is een stuk voorbeeldcode, en dat hoort in Storybook.
 
 Let op de grens met de ontwerprichtlijnen: compositie hoort in een patroon, een ontwerpkeuze hoort in de [ontwerprichtlijnen](../nldd-design/design-guidelines.md). Die wijzen sommige dingen expliciet af, wizards en megamenu's bijvoorbeeld, dus daar komt geen patroon voor, ook niet als een product ze heeft.
@@ -55,18 +55,18 @@ Eerlijk over hoe dit project werkt, zodat je weet wat je krijgt:
 
 - **De maintainer beslist**, en wat afvalt krijgt een reden in het issue.
 - **Ben je het oneens**, zeg dat in het issue. Komen jullie er niet uit, dan ligt de vraag bij het NLDD-team.
-- **Een afwijzing is geen oordeel over je probleem.** Een systeem dat elk verzoek inwilligt wordt onbruikbaar, dus "dit houd je dichter bij je eigen project" is een geldige uitkomst, en dan weet je waar je staat.
+- **Een afwijzing is geen oordeel over je probleem.** Een designsysteem dat elk verzoek inwilligt wordt onbruikbaar, dus "dit houd je dichter bij je eigen project" is een geldige uitkomst, en dan weet je waar je staat.
 - **Dichtbij houden is een keuze, geen troostprijs.** Een designsysteem is gelaagd: een core, daarboven soms een laag per organisatie, en daarnaast wat een project zelf bouwt. Hoe hoger in de boom, hoe duurzamer een component wordt, want meer teams geven er feedback op. Maar je hebt er ook minder invloed op, en het beweegt op een ander tempo dan het jouwe. Iets dat nog volop verandert houd je dus beter in je eigen project, tot het stil genoeg ligt om te delen.
 
 ## Als je zelf code schrijft
 
 Kan, maar maak eerst een issue aan en schrijf daarna de code. Anders bouw je misschien iets wat een bestaand component al kan, of iets dat op een ontwerpkeuze afketst die je niet kende.
 
-### Deze plugin helpt je niet bij het bouwen aan het systeem zelf
+### Deze plugin helpt je niet bij het bouwen aan het designsysteem zelf
 
-Belangrijk om te weten, want het is een makkelijke aanname: de skills in deze plugin zijn er voor wie het pakket **gebruikt**. Ze leren je niet hoe je een component in dit systeem schrijft. Vraag je Claude met alleen deze plugin om een nieuw component te bouwen, dan mist het model de conventies en levert het iets dat er van buiten goed uitziet en de interne regels overtreedt.
+Belangrijk om te weten, want het is een makkelijke aanname: de skills in deze plugin zijn er voor wie het pakket **gebruikt**. Ze leren je niet hoe je een component in dit designsysteem schrijft. Vraag je Claude met alleen deze plugin om een nieuw component te bouwen, dan mist het model de conventies en levert het iets dat er van buiten goed uitziet en de interne regels overtreedt.
 
-De kennis die je daarvoor nodig hebt zit in de **repository zelf**, als repo-locale skills onder `.claude/skills/`. Die reizen expres niet mee met de plugin: ze gaan over de binnenkant van dit systeem, veranderen met de codebase mee, en zouden bij een afnemer alleen in de weg zitten.
+De kennis die je daarvoor nodig hebt zit in de **repository zelf**, als repo-locale skills onder `.claude/skills/`. Die reizen expres niet mee met de plugin: ze gaan over de binnenkant van dit designsysteem, veranderen met de codebase mee, en zouden bij een afnemer alleen in de weg zitten.
 
 Je krijgt ze door de repository uit te checken en Claude Code daarin te starten; ze laden dan automatisch:
 

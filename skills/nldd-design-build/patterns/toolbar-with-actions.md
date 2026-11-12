@@ -130,7 +130,7 @@ Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `accessible-la
 
 ## Gezien in
 
-Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerdere producten los van elkaar tegengekomen: die is op een breed scherm onzichtbaar en valt pas op als iemand het venster smal maakt.
+Werkbalken staan in elke applicatie op dit designsysteem. De lege overloop is in meerdere producten los van elkaar tegengekomen: die is op een breed scherm onzichtbaar en valt pas op als iemand het venster smal maakt.
 
 ## Regels
 

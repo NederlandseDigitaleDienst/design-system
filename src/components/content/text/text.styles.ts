@@ -71,9 +71,9 @@ export const textStyles = css`
 		--_text-lg-custom-font: var(--primitives-font-weight-display-bold) max(var(--_text-lg-custom-size), var(--primitives-font-size-1000)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
 		--_text-color: var(--context-content-color);
 		--_text-align: left;
-		--_text-link-color: var(--semantics-links-color);
-		--_text-link-is-hovered-color: var(--semantics-links-is-hovered-color);
-		--_text-link-is-active-color: var(--semantics-links-is-active-color);
+		--_text-link-color: var(--context-link-color);
+		--_text-link-is-hovered-color: var(--context-link-is-hovered-color);
+		--_text-link-is-active-color: var(--context-link-is-active-color);
 		--_text-link-underline-offset: var(--primitives-space-2);
 		--_text-link-corner-radius: var(--primitives-corner-radius-xxs);
 		--_text-link-is-hovered-inherit-thickness: var(--primitives-border-width-regular);

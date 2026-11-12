@@ -403,7 +403,7 @@ Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `
 
 ## Gezien in
 
-Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.
+Deze compositie komt van de publieke pagina's op dit designsysteem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.
 
 ## Regels
 

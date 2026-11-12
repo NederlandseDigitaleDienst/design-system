@@ -188,7 +188,7 @@ export const Kleuren = {
  * zet. Zo reist een badge mee met de regel
  * waar hij in staat, ook als die oplicht.
  *
- * `custom-color` is voor een kleur die het systeem niet kan kennen: de mantel
+ * `custom-color` is voor een kleur die het designsysteem niet kan kennen: de mantel
  * van een kabel, een kleur die iemand zelf koos. Elke CSS-kleurwaarde mag, en
  * hij wint van `color`. De tekst erop wordt wit of zwart, gekozen op de
  * relatieve luminantie van de vulling.

@@ -134,7 +134,7 @@ Wat jij nog moet doen: een `text` op de titelbalk die zegt waar de sheet over ga
 
 ## Gezien in
 
-Deze compositie komt voor in vrijwel elke applicatie op dit systeem, in Vue, Angular en server-gerenderde templates.
+Deze compositie komt voor in vrijwel elke applicatie op dit designsysteem, in Vue, Angular en server-gerenderde templates.
 
 ## Regels
 

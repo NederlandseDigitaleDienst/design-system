@@ -1,9 +1,9 @@
 /* # Host */
 
 nldd-title {
-	--_title-link-color: var(--semantics-links-color);
-	--_title-link-is-hovered-color: var(--semantics-links-is-hovered-color);
-	--_title-link-is-active-color: var(--semantics-links-is-active-color);
+	--_title-link-color: var(--context-link-color);
+	--_title-link-is-hovered-color: var(--context-link-is-hovered-color);
+	--_title-link-is-active-color: var(--context-link-is-active-color);
 	--_title-link-underline-offset: var(--primitives-space-2);
 	--_title-link-corner-radius: var(--primitives-corner-radius-xxs);
 	--_title-link-is-hovered-inherit-thickness: var(--primitives-border-width-regular);

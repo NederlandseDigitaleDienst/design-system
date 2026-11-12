@@ -27,7 +27,7 @@ Een attribuut heeft alleen effect als het bijbehorende thema is geladen. Is dat 
 
 ## Dwing licht of donker af met `data-scheme` op `<html>`
 
-Zonder instelling volgt de pagina de voorkeur van het systeem of de browser. Met `data-scheme` op `<html>` leg je de weergave vast:
+Zonder instelling volgt de pagina de voorkeur van het besturingssysteem of de browser. Met `data-scheme` op `<html>` leg je de weergave vast:
 
 ```html
 <html lang="nl" data-scheme="dark">
@@ -35,13 +35,13 @@ Zonder instelling volgt de pagina de voorkeur van het systeem of de browser. Met
 
 1. **`light`**: altijd de lichte weergave.
 2. **`dark`**: altijd de donkere weergave.
-3. **Geen attribuut**: de voorkeur van het systeem.
+3. **Geen attribuut**: de voorkeur van het besturingssysteem.
 
-Een schakelaar in je app zet het attribuut of haalt het weg, en de pagina wisselt zonder te herladen. Het werkt met elk thema. Gebruik het attribuut en geen eigen `color-scheme` in je CSS: het systeem zet `color-scheme` zelf op basis van het attribuut, en alleen een wissel van het attribuut laat de componenten opnieuw tekenen die dat nodig hebben. Zet het op `<html>`, om dezelfde reden als het thema: een sheet, popover of dialoog hangt aan `<body>`.
+Een schakelaar in je app zet het attribuut of haalt het weg, en de pagina wisselt zonder te herladen. Het werkt met elk thema. Gebruik het attribuut en geen eigen `color-scheme` in je CSS: het designsysteem zet `color-scheme` zelf op basis van het attribuut, en alleen een wissel van het attribuut laat de componenten opnieuw tekenen die dat nodig hebben. Zet het op `<html>`, om dezelfde reden als het thema: een sheet, popover of dialoog hangt aan `<body>`.
 
 ## Elke rol volgt zijn eigen contrastregel
 
-Een thema kleurt niet alles op dezelfde manier. Voor elke rol kiest het systeem de kleurstap die het dichtst bij de themakleur ligt en aan de contrastregel voldoet. Dit zijn de 9 rollen:
+Een thema kleurt niet alles op dezelfde manier. Voor elke rol kiest het designsysteem de kleurstap die het dichtst bij de themakleur ligt en aan de contrastregel voldoet. Dit zijn de 9 rollen:
 
 1. **Knop** (`appearance="primary"`): de tekst heeft een contrast van minstens 4,5:1. De tekst is wit als dat kan, anders zwart. In de donkere weergave heeft ook het knopvlak minstens 3:1 contrast met de pagina.
 2. **Badge en statusbalk** (`color="accent"` en `variant="accent"`): volgen dezelfde regel als de knop, want je leest ze aan hun tekst. Een gele badge is daarom felgeel met zwarte tekst.
@@ -75,7 +75,7 @@ In de donkere weergave speelt dit probleem niet. Knoppen, selecties, accenttekst
 
 ## Rood en oranje lijken niet op een melding
 
-In het systeem staat rood voor een fout of een onomkeerbare actie. Oranje staat voor een waarschuwing. Een rood vinkje of een oranje banner kan daardoor op een melding lijken.
+In het designsysteem staat rood voor een fout of een onomkeerbare actie. Oranje staat voor een waarschuwing. Een rood vinkje of een oranje banner kan daardoor op een melding lijken.
 
 Onderdelen die je leest als merk, plaats of hoeveelheid, behouden bij rood, robijnrood en oranje wel de themakleur. Dat geldt voor de knop, hero, badge, statusbalk, het huidige tabblad, de voortgangsbalk en de tag.
 

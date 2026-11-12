@@ -37,10 +37,11 @@
  * @attr {string} sm-custom-size - A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than `display-1`. A var() works when the variable holds a length; one that is not defined leaves the title without its size, the floor included. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than `display-1` at the same breakpoint: a smaller value shows as `display-1`, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of `display-1`. An invalid value falls back to `size`
  * @attr {string} md-custom-size - The same, at md
  * @attr {string} lg-custom-size - The same, at lg
- * @attr {string} color - 'content' (the default) takes the system's own content
- *   colors. 'inherit' lets the title follow the text color of the surface
- *   instead (for colored areas such as the filled categories); overline and
- *   supporting-text get the same color at a lowered opacity.
+ * @attr {string} color - 'content' (the default) follows the text color its
+ *   surface passes on, also in a highlighted row or on the accent panel of a
+ *   hero. 'inherit' takes the CSS `color` instead, for an area of your own that
+ *   sets `color` but not the context; overline and supporting-text get the same
+ *   color at a lowered opacity.
  * @attr {string} text - Title text. Content in the default slot takes its place.
  * @attr {string} supporting-text - Text below the title. Content in the supporting-text slot takes its place.
  * @attr {string} overline - Text above the title. Content in the overline slot takes its place.

@@ -15,10 +15,12 @@ here; consult the commit history if you need that level of detail.
 - **`nldd lint` checks the tokens your CSS names.** A `var(--semantics-…)` that does not exist fails without a sound in the browser: the declaration is dropped. The linter now reports it, and for a token that was removed it says the last version that had it. See Added.
 - **`nldd lint --pure` works on a built site.** It recognizes the system's own CSS in a bundle, also minified, and reports only the app's. See Fixed.
 - **Text takes the color of the surface it sits on.** `nldd-text`, `nldd-title` and `nldd-rich-text` follow the hero panel, a tooltip and a selected row, and your own component can pass its colors the same way. See Added and Changed.
-- **2 accessibility fixes:** an `nldd-menu-item` that opens a new tab or another website says so, and `list` on `nldd-container` makes a row of tags or cards a list for a screen reader. See Added.
+- **3 accessibility fixes:** an `nldd-menu-item` that opens a new tab or another website says so, `list` on `nldd-container` makes a row of tags or cards a list for a screen reader, and the secondary text in `nldd-tooltip` has enough contrast. See Added and Fixed.
 
 ### Breaking
 
+- **The old `sidebar` names on `nldd-navigation-split-view` are gone.** Use `primary-sidebar-as-sheet`, `primary-sidebar-accessible-label`, `slot="primary-sidebar"`, `showPrimarySidebarSheet()` and `hidePrimarySidebarSheet()`. `nldd lint --fix` renames the attributes and the slot; the two methods you rename yourself.
+- **`--semantics-buttons-inherit-filled-content-color` is removed.** The label of an `inherit-filled` button takes `--context-background-color`, so the token had no effect. `nldd lint` names that variable where you read the old one.
 - **`box` on `nldd-icon` is now `tile`.** It draws the icon on a tile, the square that shares its corner with an organization `nldd-avatar`. `nldd lint --fix` renames it.
 - **`--context-parent-background-color` is now `--context-background-color`.** It is the background of the nearest surface, not of the parent. `nldd lint` names the new name.
 - **What sits on a colored surface of your own takes its colors from the context, not from `color`.** The spinner, `color="inherit"` on `nldd-badge` and `nldd-avatar`, the mark of an `inherit` checkbox, radio button or switch, and the label of an `inherit-filled` button used to fall back to the text color or a computed contrast. They now read `--context-content-color` and `--context-background-color`, which default to the page colors. Set both on the element that paints the surface. The defaults resolve on `:root`, so a subtree that redefines `--semantics-content-*`, such as a local theme, sets the context there too.
@@ -26,23 +28,26 @@ here; consult the commit history if you need that level of detail.
 ### Added
 
 - **`token-not-found`** (warn): a `var(--primitives-…)`, `var(--semantics-…)`, `var(--components-…)` or `var(--context-…)` that is not in this version, in a stylesheet, a `<style>` block, a `style` attribute or a style object. A token the project declares itself counts as its own. `nldd lint` now reads `.css`, `.scss`, `.sass` and `.less` files that name a token, also without `--pure`.
+- **`link-context-needs-states`** (warn): a CSS rule or `style` that sets one or two of the three link colors. A link on that surface turns back to the default blue on hover or press.
 - **`local-variable-no-override`** (warn): an app that sets a `--_*` variable of a component, such as `--_button-gap`. Those belong to the inside of one component and can change in any release.
 - **`translation-key-not-found`** (warn): a key in the `translations` of one element that the element does not read, in an attribute written as JSON or an object in JSX. It names the component that has the key, or for a renamed key the new name, such as `components.split-button.show-options-action` for `menu-action`. In a dev build the element warns about such a key in the console too, as `setTranslations()` already did for the whole package.
 - **`file-not-read`** (warn): a file with `nldd-*` markup the linter cannot read, such as an `.astro` file or a plain template string in a script. It used to report such a file as clean.
 - **Go templates and Lit in JavaScript.** `nldd lint` reads `.tmpl` and `.gohtml` as HTML, also in a project scan, and the `html` templates in a `.js` or `.mjs` file you name.
-- **Seven context variables for your own components.** `--context-background-color`, `--context-content-color` and the secondary, accent, success, warning and critical content colors tell what sits on a surface which colors to use. Set all seven on a surface your own component paints, so text and components on it follow. They default to the page colors on `:root`, so a `var()` needs no fallback.
+- **Ten context variables for your own components.** `--context-background-color`, `--context-content-color`, the secondary, accent, success, warning and critical content colors, and `--context-link-color` with its `-is-hovered-color` and `-is-active-color` tell what sits on a surface which colors to use. Set them on a surface your own component paints, so text, links and components on it follow. They default to the page colors on `:root`, so a `var()` needs no fallback.
 - **The tokens of each version in the package.** `lint/data.generated.json` lists every token and every removed token with the last version that had it, so `npx @nldd/design-system@<version> lint` tells you which of yours an upgrade removes.
 - **`target` and `rel` on `nldd-menu-item`.** An item with an `href` opens where `target` says, gets `noopener noreferrer` with `_blank`, and tells a screen reader "opent in nieuw tabblad" or "andere website", as `nldd-link` does.
 - **`line-numbers` on `nldd-code-viewer`.** A column with the number of each line, the same as in a diff. A screen reader skips it and a copy leaves it out.
 - **`sidebar-section-only` on anything inside `nldd-sidebar-section`.** `collapsed` shows an element only while the sidebar is a sheet, such as the button that opens it, and `expanded` only while it is a column. It works at any depth, also on an `nldd-toolbar-item`, so the content page and filtering patterns need no CSS of their own. `nldd lint` knows it as an attribute of whatever it sits on inside the section.
 - **`--semantics-tiles-corner-radius`**, the corner of a square with a symbol in it: a `tile` on `nldd-icon` and an organization `nldd-avatar`. It is 20%, a fifth of the size, so the shape stays the same at every size.
 - **`list` on `nldd-container`.** The container becomes a list for a screen reader and each child an item, so a row of tags or a group of cards says how many there are and can be skipped (WCAG 1.3.1).
+- **`--semantics-tooltips-content-secondary-color`**, the color of secondary text in a tooltip, such as a keyboard shortcut. A theme sets it like the secondary color of any other surface.
 
 ### Changed
 
-- **Corner radius tokens.** The scale steps by 2px up to `lg`: `--primitives-corner-radius-xxs` is 4px, `xs` 6px, `sm` 8px, `md` 10px and `lg` 12px, then `xl` 16px and `xxl` 20px. `xxxl` stays 24px. Controls, tooltips, tags, cards, tables and editors get rounder corners with it, and an `lg` control now uses `lg` instead of sharing `md`.
+- **Corner radius tokens.** The scale steps by 2px up to `lg`: `--primitives-corner-radius-xxs` is 4px, `xs` 6px, `sm` 8px, `md` 10px and `lg` 12px, then `xl` 16px and `xxl` 20px. `xxxl` stays 24px. Controls, tooltips, tags, cards, tables and editors get rounder corners with it.
 - **A control inside a field takes its corner from the field.** A button in `nldd-text-field`, `nldd-search-field`, `nldd-combo-box`, `nldd-date-field`, `nldd-file-field` or the search bar of `nldd-list`, the steppers of `nldd-number-field` and the tokens in `nldd-token-field` get the field's radius minus the space around them, so both corners share a center. An `sm` button in an `md` field has a 5px corner instead of the 8px it has on its own.
 - **`nldd-title` and `nldd-rich-text` follow the content color of their surface,** as `nldd-text` already did. In a selected row, on the accent panel of `nldd-hero` or in a tooltip they no longer need `color="inherit"`.
+- **A link takes the text color of a colored surface.** On the accent panel of `nldd-hero`, in a tooltip and in a highlighted row, a link in `nldd-rich-text`, `nldd-text` or `nldd-title`, `nldd-link`, `nldd-breadcrumbs` and the links of `nldd-form-field` are no longer blue on blue, in every state. They need no `color="inherit"` for it.
 - **A component that changes its text color passes it on.** Buttons, tags, segmented controls, tabs, pagination, the pickers and the other components with a colored state set `--context-content-color` next to their `color`, so a spinner, badge or text inside takes that color.
 - **Every surface starts text at the default colors again.** `nldd-card`, `nldd-box`, `nldd-sheet`, `nldd-popover`, `nldd-menu`, `nldd-modal-dialog`, `nldd-window`, the page sections, the split views, `nldd-shell` and `nldd-page` reset the content colors next to their background, so text in a card inside a selected row no longer takes the row's color.
 - **`nldd-text-editor` keeps a line indented four spaces as text.** In CommonMark it starts a code block, which in a field for prose is pasted or indented text. A fenced block is still code. Turn indented code off in your renderer too, such as `md.disable('code')` in markdown-it, so the page shows what the editor showed.
@@ -50,14 +55,12 @@ here; consult the commit history if you need that level of detail.
 - **`initials` on `nldd-avatar` takes 4 characters instead of 3,** for an organization acronym such as LVVN. Wide initials scale down to fit the shape. Four characters read well from 40px; below that, use a shorter form.
 - **The documentation of `current` on `nldd-list-item` says an audit fails its fill** on 1.4.1 and 1.4.11 where nothing else shows the place, such as a table of contents that follows the scroll.
 
-### Deprecated
-
-- **`--semantics-buttons-inherit-filled-content-color` no longer has an effect.** The label of an `inherit-filled` button takes `--context-background-color`, so overriding this token changes nothing. It goes away in a later release.
-
 ### Fixed
 
 - **A `tile` on `nldd-icon` sat on the line with the bottom of its glyph.** In running text it sank below the text, and a line with a tile was lower than the same line without one. It now sits on the line with its own bottom, as an icon without a tile does.
 - **`nldd-avatar` and a `tile` on `nldd-icon` stretched into a rectangle in a row with a taller neighbor.** A fixed `size` now sets the height as well as the width, so both stay square.
+- **The secondary text in `nldd-tooltip` has enough contrast.** It was the tooltip's white at 75%, about 4.3:1 on the light tooltip, below the 4.5:1 that small text needs. It now reads `--semantics-tooltips-content-secondary-color`, at 4.95:1 in light and 5.36:1 in dark.
+- **On a phone, the chosen time in `nldd-time-field` no longer flashes in the wrong color as the sheet slides in.** iOS Safari briefly drew the columns of `nldd-time-picker` over its selection, so the chosen hour and minute showed dark on the selection color. The selection now stays on top.
 - **`nldd lint --pure` reported the system's own CSS on a built site.** A bundler gives the stylesheet another name and minifies it, so every block of it counted as the app's own, and so did the `<link>` to it. The linter now knows the system's CSS by what each rule selects and sets, which survives bundling, and judges a linked stylesheet by what is in it.
 
 ## [0.22.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.21.1...v0.22.0) (2026-11-11)

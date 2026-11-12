@@ -89,6 +89,10 @@ export const BUILT_IN_RULES = {
 		severity: 'warn',
 		description: 'A `--_` variable belongs to the inside of one component and can change in any release. Use the component\'s attributes, or open an issue for what is missing.',
 	},
+	'link-context-needs-states': {
+		severity: 'warn',
+		description: 'A surface that gives links a color sets all three link colors, or a link on it turns back to the default blue on hover or press.',
+	},
 	'file-not-read': {
 		severity: 'warn',
 		description: 'This file has nldd-* markup the linter cannot read, so it was not checked.',

@@ -206,6 +206,24 @@ describe('nldd-button', () => {
 	});
 });
 
+describe('nldd-button – corner radius', () => {
+	let wrapper: HTMLElement;
+
+	afterEach(() => cleanup(wrapper));
+
+	const radius = (host: Element) => getComputedStyle(host.shadowRoot!.querySelector('button')!).borderRadius;
+
+	it('takes the corner a field passes on, and its own corner outside one', async () => {
+		wrapper = await fixture<HTMLElement>(
+			'<div><nldd-button size="sm" text="Zoek"></nldd-button><div style="--context-control-corner-radius: 5px"><nldd-button size="sm" text="Zoek"></nldd-button></div></div>'
+		);
+		const [own, nested] = wrapper.querySelectorAll('nldd-button');
+		await waitForUpdate(nested as HTMLElement);
+		expect(radius(own)).toBe('8px');
+		expect(radius(nested)).toBe('5px');
+	});
+});
+
 describe('nldd-button – icon attributes', () => {
 	let el: NLDDButton;
 

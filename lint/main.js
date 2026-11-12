@@ -14,7 +14,7 @@ const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
     --format text|json|github       default: text
     --fix                           apply the fixes that are certain: what only got another name
-    --pure                          also check that everything comes from the system: no class,
+    --pure                          also check that everything comes from the design system: no class,
                                     style, plain HTML or stylesheet of your own (the group pure).
                                     Reads every file, stylesheets included, so it takes longer
     --update-baseline               accept what is there now, report only new findings
