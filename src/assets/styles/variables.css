@@ -267,8 +267,8 @@
 	/* ## Corner radius */
 
 	--primitives-corner-radius-none: 0px;
-	--primitives-corner-radius-xxs: 3px;
-	--primitives-corner-radius-xs: 4px;
+	--primitives-corner-radius-xxs: 4px;
+	--primitives-corner-radius-xs: 6px;
 	--primitives-corner-radius-sm: 8px;
 	--primitives-corner-radius-md: 10px;
 	--primitives-corner-radius-lg: 12px;

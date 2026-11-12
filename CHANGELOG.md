@@ -15,7 +15,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **Corner radius tokens.** From `sm` up, the scale moves one step: `--primitives-corner-radius-sm` is 8px, `md` 10px, `lg` 12px, `xl` 16px and `xxl` 20px. `xxs`, `xs` and `xxxl` stay the same. Controls, cards, tables and editors get rounder corners with it, and an `lg` control now uses `lg` instead of sharing `md`.
+- **Corner radius tokens.** The scale steps by 2px up to `lg`: `--primitives-corner-radius-xxs` is 4px, `xs` 6px, `sm` 8px, `md` 10px and `lg` 12px, then `xl` 16px and `xxl` 20px. `xxxl` stays 24px. Controls, tooltips, tags, cards, tables and editors get rounder corners with it, and an `lg` control now uses `lg` instead of sharing `md`.
 - **A control inside a field takes its corner from the field.** A button in `nldd-text-field`, `nldd-search-field`, `nldd-combo-box`, `nldd-date-field`, `nldd-file-field` or the search bar of `nldd-list`, the steppers of `nldd-number-field` and the tokens in `nldd-token-field` get the field's radius minus the space around them, so both corners share a center. An `sm` button in an `md` field has a 5px corner instead of the 8px it has on its own.
 
 ## [0.22.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.21.1...v0.22.0) (2026-11-11)
