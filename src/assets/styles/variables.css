@@ -1642,6 +1642,10 @@
 	--semantics-tooltips-padding-inline: var(--primitives-space-8);
 	--semantics-tooltips-font: var(--primitives-font-body-xs-regular-tight);
 
+	/* ## Tiles */
+
+	--semantics-tiles-corner-radius: 20%;
+
 	/* ## Overlays */
 
 	--semantics-overlays-backdrop-color: light-dark(rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.40));

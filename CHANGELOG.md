@@ -19,6 +19,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Breaking
 
+- **`box` on `nldd-icon` is now `tile`.** It draws the icon on a tile, the square that shares its corner with an organization `nldd-avatar`. `nldd lint --fix` renames it.
 - **`--context-parent-background-color` is now `--context-background-color`.** It is the background of the nearest surface, not of the parent. `nldd lint` names the new name.
 - **What sits on a colored surface of your own takes its colors from the context, not from `color`.** The spinner, `color="inherit"` on `nldd-badge` and `nldd-avatar`, the mark of an `inherit` checkbox, radio button or switch, and the label of an `inherit-filled` button used to fall back to the text color or a computed contrast. They now read `--context-content-color` and `--context-background-color`, which default to the page colors. Set both on the element that paints the surface. The defaults resolve on `:root`, so a subtree that redefines `--semantics-content-*`, such as a local theme, sets the context there too.
 
@@ -34,6 +35,7 @@ here; consult the commit history if you need that level of detail.
 - **`target` and `rel` on `nldd-menu-item`.** An item with an `href` opens where `target` says, gets `noopener noreferrer` with `_blank`, and tells a screen reader "opent in nieuw tabblad" or "andere website", as `nldd-link` does.
 - **`line-numbers` on `nldd-code-viewer`.** A column with the number of each line, the same as in a diff. A screen reader skips it and a copy leaves it out.
 - **`sidebar-section-only` on anything inside `nldd-sidebar-section`.** `collapsed` shows an element only while the sidebar is a sheet, such as the button that opens it, and `expanded` only while it is a column. It works at any depth, also on an `nldd-toolbar-item`, so the content page and filtering patterns need no CSS of their own. `nldd lint` knows it as an attribute of whatever it sits on inside the section.
+- **`--semantics-tiles-corner-radius`**, the corner of a square with a symbol in it: a `tile` on `nldd-icon` and an organization `nldd-avatar`. It is 20%, a fifth of the size, so the shape stays the same at every size.
 - **`list` on `nldd-container`.** The container becomes a list for a screen reader and each child an item, so a row of tags or a group of cards says how many there are and can be skipped (WCAG 1.3.1).
 
 ### Changed
@@ -44,6 +46,8 @@ here; consult the commit history if you need that level of detail.
 - **A component that changes its text color passes it on.** Buttons, tags, segmented controls, tabs, pagination, the pickers and the other components with a colored state set `--context-content-color` next to their `color`, so a spinner, badge or text inside takes that color.
 - **Every surface starts text at the default colors again.** `nldd-card`, `nldd-box`, `nldd-sheet`, `nldd-popover`, `nldd-menu`, `nldd-modal-dialog`, `nldd-window`, the page sections, the split views, `nldd-shell` and `nldd-page` reset the content colors next to their background, so text in a card inside a selected row no longer takes the row's color.
 - **`nldd-text-editor` keeps a line indented four spaces as text.** In CommonMark it starts a code block, which in a field for prose is pasted or indented text. A fenced block is still code. Turn indented code off in your renderer too, such as `md.disable('code')` in markdown-it, so the page shows what the editor showed.
+- **The corner of an organization `nldd-avatar` is a fifth of its size,** like a `tile` on `nldd-icon`. It was a fixed 10px, almost round at 16px and almost square at 96px. Both read the new `--semantics-tiles-corner-radius`, so a theme sets them together.
+- **`initials` on `nldd-avatar` takes 4 characters instead of 3,** for an organization acronym such as LVVN. Wide initials scale down to fit the shape. Four characters read well from 40px; below that, use a shorter form.
 - **The documentation of `current` on `nldd-list-item` says an audit fails its fill** on 1.4.1 and 1.4.11 where nothing else shows the place, such as a table of contents that follows the scroll.
 
 ### Deprecated
@@ -52,6 +56,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A `tile` on `nldd-icon` sat on the line with the bottom of its glyph.** In running text it sank below the text, and a line with a tile was lower than the same line without one. It now sits on the line with its own bottom, as an icon without a tile does.
+- **`nldd-avatar` and a `tile` on `nldd-icon` stretched into a rectangle in a row with a taller neighbor.** A fixed `size` now sets the height as well as the width, so both stay square.
 - **`nldd lint --pure` reported the system's own CSS on a built site.** A bundler gives the stylesheet another name and minifies it, so every block of it counted as the app's own, and so did the `<link>` to it. The linter now knows the system's CSS by what each rule selects and sets, which survives bundling, and judges a linked stylesheet by what is in it.
 
 ## [0.22.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.21.1...v0.22.0) (2026-11-11)

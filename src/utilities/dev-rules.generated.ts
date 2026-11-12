@@ -264,6 +264,11 @@ export const devRules: DevRule[] = [
 		"context": ":is(nldd-cell, nldd-description-cell, nldd-icon-cell, nldd-reorder-handle-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-below=\"sm\"]"
 	},
 	{
+		"id": "icon-box-renamed",
+		"message": "The `box` attribute is now `tile`. Rename it here and on every other nldd-icon.",
+		"context": "nldd-icon[box]"
+	},
+	{
 		"id": "icon-button-needs-name",
 		"message": "nldd-icon-button needs `text` or `accessible-label`, otherwise it has no accessible name.",
 		"context": "nldd-icon-button",

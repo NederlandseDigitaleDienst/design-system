@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-// The tokens themselves, because `box` leans on two of them: the spacer that a
+// The tokens themselves, because `tile` leans on two of them: the spacer that a
 // fixed size resolves to, and the contrast color the glyph flips to.
 import '../../../assets/styles/variables.css';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
@@ -110,41 +110,64 @@ describe('nldd-icon – relative sizes', () => {
 		expect(Math.round(icon.getBoundingClientRect().width)).toBe(16);
 	});
 
-	// — box —————————————————————————————————————————————————————————————————
+	// — tile ————————————————————————————————————————————————————————————————
 
-	const box = 'div style="width: 40px; height: 40px; color: rgb(17, 17, 17)"';
+	const tile = 'div style="width: 40px; height: 40px; color: rgb(17, 17, 17)"';
 
-	it('box: the size measures the box and the glyph is four fifths of it', async () => {
-		const icon = await mount('box', box);
+	it('tile: the size measures the tile and the glyph is four fifths of it', async () => {
+		const icon = await mount('tile', tile);
 		expect(Math.round(icon.getBoundingClientRect().width)).toBe(40);
 		expect(Math.round(icon.getBoundingClientRect().height)).toBe(40);
 		const glyph = icon.shadowRoot!.querySelector('svg') as SVGElement;
 		expect(Math.round(glyph.getBoundingClientRect().width)).toBe(32);
 	});
 
-	it('box: stays square in a container that is not', async () => {
-		const icon = await mount('box', 'div style="width: 200px; height: 120px"');
+	it('tile: stays square in a container that is not', async () => {
+		const icon = await mount('tile', 'div style="width: 200px; height: 120px"');
 		const rect = icon.getBoundingClientRect();
 		expect(Math.round(rect.width)).toBe(200);
 		expect(Math.round(rect.height)).toBe(200);
 	});
 
-	it('box: the color paints the box, not the glyph', async () => {
-		const icon = await mount('box custom-color="rgb(17, 17, 17)"', box);
+	it('tile: stays square in a row with a taller neighbor', async () => {
+		const row = await fixture<HTMLElement>('<div style="display: flex"><span style="height: 48px"></span><nldd-icon name="house" size="24" tile></nldd-icon></div>');
+		const icon = row.querySelector('nldd-icon') as NLDDIcon;
+		await waitForUpdate(icon);
+		const { width, height } = icon.getBoundingClientRect();
+		expect(Math.round(width)).toBe(24);
+		expect(Math.round(height)).toBe(24);
+		cleanup(row);
+	});
+
+	it('tile: sits on the line with its bottom, as an icon without one does', async () => {
+		const line = await fixture<HTMLElement>(
+			'<div style="font: 16px/1.5 sans-serif"><span>Text <nldd-icon name="house" size="inherit"></nldd-icon> and <nldd-icon name="house" size="inherit" tile></nldd-icon></span></div>'
+		);
+		const [bare, tiled] = line.querySelectorAll('nldd-icon') as NodeListOf<NLDDIcon>;
+		await waitForUpdate(tiled);
+		const height = line.getBoundingClientRect().height;
+		expect(tiled.getBoundingClientRect().bottom).toBeCloseTo(bare.getBoundingClientRect().bottom, 0);
+		bare.remove();
+		expect(line.getBoundingClientRect().height).toBe(height);
+		cleanup(line);
+	});
+
+	it('tile: the color paints the tile, not the glyph', async () => {
+		const icon = await mount('tile custom-color="rgb(17, 17, 17)"', tile);
 		expect(getComputedStyle(icon).backgroundColor).toBe('rgb(17, 17, 17)');
 	});
 
-	it('box: the glyph takes whatever contrasts with the box', async () => {
-		const onDark = await mount('box custom-color="rgb(17, 17, 17)"', box);
+	it('tile: the glyph takes whatever contrasts with the tile', async () => {
+		const onDark = await mount('tile custom-color="rgb(17, 17, 17)"', tile);
 		expect(getComputedStyle(onDark.shadowRoot!.querySelector('svg')!).color).toBe('rgb(255, 255, 255)');
 		cleanup(el);
 
-		const onLight = await mount('box custom-color="rgb(238, 238, 238)"', box);
+		const onLight = await mount('tile custom-color="rgb(238, 238, 238)"', tile);
 		expect(getComputedStyle(onLight.shadowRoot!.querySelector('svg')!).color).toBe('rgb(0, 0, 0)');
 	});
 
-	it('without box the color is still the glyph\'s, and nothing is painted', async () => {
-		const icon = await mount('custom-color="rgb(17, 17, 17)"', box);
+	it('without tile the color is still the glyph\'s, and nothing is painted', async () => {
+		const icon = await mount('custom-color="rgb(17, 17, 17)"', tile);
 		expect(getComputedStyle(icon).backgroundColor).toBe('rgba(0, 0, 0, 0)');
 		expect(getComputedStyle(icon.shadowRoot!.querySelector('svg')!).color).toBe('rgb(17, 17, 17)');
 	});

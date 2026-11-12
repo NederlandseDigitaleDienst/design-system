@@ -486,7 +486,7 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 ### `<nldd-avatar>`
 
-Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role="img"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.
+Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role="img"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.
 
 **Rules** (`nldd lint`)
 
@@ -506,7 +506,7 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 | `color` | `string` | `neutral` (the default, a neutral fill) or `inherit` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance) |
 | `icon-aligned` | `boolean` | Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin) |
 | `name` | `string` | Name of the person or organization; supplies the derived initials and the accessible label |
-| `initials` | `string` | Explicit initials, at most 3 characters (overrides what is derived from `name`; also for organization acronyms) |
+| `initials` | `string` | Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form |
 | `src` | `string` | Image source; falls back to initials or icon when it fails to load |
 | `srcset` | `string` | Responsive source set for the image (the component sets `sizes` itself) |
 | `icon` | `string` | Overrides the type-dependent fallback icon |
@@ -607,6 +607,7 @@ A customizable icon component that renders SVG icons from a predefined library. 
 
 **Rules** (`nldd lint`)
 
+- `icon-box-renamed`: The `box` attribute is now `tile`. Rename it here and on every other nldd-icon.
 - `icon-name-renamed`: The `name` attribute is now `icon`. Rename it here and on every other nldd-icon.
 - `icon-not-found`: An icon set here does not exist. See the icon list in the reference.
 
@@ -618,7 +619,7 @@ A customizable icon component that renders SVG icons from a predefined library. 
 | `size` | `string` | `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). |
 | `color` | `string` | Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent. |
 | `custom-color` | `string` | A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know. It wins over `color`. |
-| `box` | `boolean` | Draw the icon on a filled square. `color` and `custom-color` then paint the box and the glyph takes the contrasting color, and `size` measures the box: the glyph is four fifths of it, the corner radius a fifth. |
+| `tile` | `boolean` | Draw the icon on a tile, a filled square. `color` and `custom-color` then paint the tile and the glyph takes the contrasting color, and `size` measures the tile: the glyph is four fifths of it. The corner is `--semantics-tiles-corner-radius`, a fifth of the tile, as on an organization `nldd-avatar`. |
 
 ### `<nldd-identity>`
 

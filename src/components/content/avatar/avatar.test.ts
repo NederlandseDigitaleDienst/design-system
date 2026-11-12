@@ -69,11 +69,13 @@ describe('nldd-avatar', () => {
 		expect(el.shadowRoot!.querySelector('.avatar__initials')!.textContent).toBe('KvK');
 	});
 
-	it('caps explicit initials at three characters', async () => {
-		el = await fixture('<nldd-avatar initials="ABCDE" decorative></nldd-avatar>');
+	it('shows an acronym of four characters, and caps longer initials there', async () => {
+		el = await fixture('<nldd-avatar type="organization" initials="LVVN" decorative></nldd-avatar>');
 		await waitForUpdate(el);
-		expect(el.resolvedInitials).toBe('ABC');
-		expect(el.shadowRoot!.querySelector('.avatar__initials')!.textContent).toBe('ABC');
+		expect(el.shadowRoot!.querySelector('.avatar__initials')!.textContent).toBe('LVVN');
+		el.initials = 'ABCDE';
+		await waitForUpdate(el);
+		expect(el.resolvedInitials).toBe('ABCD');
 	});
 
 	// The test fixture isn't laid out (zero-size shadow elements), so stub the
@@ -220,6 +222,14 @@ describe('nldd-avatar – full size', () => {
 
 	afterEach(() => {
 		if (el) cleanup(el);
+	});
+
+	it('stays square in a row with a taller neighbor', async () => {
+		el = await fixture<HTMLElement>('<div style="display: flex; --primitives-space-48: 48px; --primitives-space-40: 40px"><nldd-avatar size="48" decorative></nldd-avatar><nldd-avatar size="40" initials="LVVN" decorative></nldd-avatar></div>');
+		const avatar = el.querySelectorAll('nldd-avatar')[1] as HTMLElement;
+		await waitForUpdate(avatar);
+		const { width, height } = avatar.getBoundingClientRect();
+		expect(height).toBe(width);
 	});
 
 	it('size="full" names the container-filling default', async () => {

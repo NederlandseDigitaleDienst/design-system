@@ -101,29 +101,50 @@ export const iconStyles = css`
 	}
 
 
-	/* # Box
+	/* # Tile
 	 *
-	 * The colour question turns around: [color] and [custom-color] paint the
-	 * box, and the glyph takes whatever contrasts with it. That flip is the
-	 * reason this is a component option and not a box a consumer builds; the
+	 * The color question turns around: [color] and [custom-color] paint the
+	 * tile, and the glyph takes whatever contrasts with it. That flip is the
+	 * reason this is a component option and not a tile a consumer builds; the
 	 * pair is the part a consumer cannot check by eye.
 	 *
-	 * [size] measures the box, so the same size renders a smaller glyph with
-	 * [box] than without. Four fifths of the box, and a radius of a fifth,
-	 * both written as a ratio so a change lands everywhere at once. */
+	 * [size] measures the tile, so the same size renders a smaller glyph with
+	 * [tile] than without. Four fifths of the tile, and the corner every tile
+	 * shares with an organization avatar. */
 
-	:host([box]) {
+	:host([tile]) {
 		--_icon-glyph-scale: calc(4 / 5);
+		--_icon-corner-radius: var(--semantics-tiles-corner-radius);
 
-		border-radius: calc(var(--_icon-size) / 5);
+		border-radius: var(--_icon-corner-radius);
 		background-color: currentColor;
 		aspect-ratio: 1;
-		justify-content: center;
+	}
+
+	:host([tile]:not([hidden])) {
+		display: inline-grid;
+		place-items: center;
+	}
+
+	:host([tile][size]:not([size="full"])) {
+		height: var(--_icon-size);
+	}
+
+	/* A grid takes its baseline from its first item. This empty one fills the
+	   tile, so the tile sits on the line with its bottom, as a bare icon does. */
+	:host([tile])::before {
+		content: "";
+		place-self: stretch;
+	}
+
+	:host([tile])::before,
+	:host([tile]) svg {
+		grid-area: 1 / 1;
 	}
 
 	/* Resolved against the host's currentColor, which the rule above painted the
-	   box with, and only then assigned to the glyph. Same route as nldd-badge. */
-	:host([box]) svg {
+	   tile with, and only then assigned to the glyph. Same route as nldd-badge. */
+	:host([tile]) svg {
 		color: var(--semantics-content-contrast-color);
 	}
 `;

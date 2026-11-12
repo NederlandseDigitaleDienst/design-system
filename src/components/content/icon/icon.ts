@@ -55,7 +55,7 @@ export type IconColor =
  * @attr {string} size - `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96).
  * @attr {string} color - Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent.
  * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know. It wins over `color`.
- * @attr {boolean} box - Draw the icon on a filled square. `color` and `custom-color` then paint the box and the glyph takes the contrasting color, and `size` measures the box: the glyph is four fifths of it, the corner radius a fifth.
+ * @attr {boolean} tile - Draw the icon on a tile, a filled square. `color` and `custom-color` then paint the tile and the glyph takes the contrasting color, and `size` measures the tile: the glyph is four fifths of it. The corner is `--semantics-tiles-corner-radius`, a fifth of the tile, as on an organization `nldd-avatar`.
  *
  * @example
  * ```html
@@ -97,18 +97,18 @@ export class NLDDIcon extends LitElement {
 	customColor = '';
 
 	/**
-	 * Draw the icon on a filled square instead of on its own.
+	 * Draw the icon on a tile, a filled square, instead of on its own.
 	 *
-	 * It turns the colour question around: `color` and `custom-color` paint the
-	 * box, and the glyph takes whatever contrasts with it. That pair is the
-	 * reason this is an option here rather than a box a consumer builds around
+	 * It turns the color question around: `color` and `custom-color` paint the
+	 * tile, and the glyph takes whatever contrasts with it. That pair is the
+	 * reason this is an option here rather than a tile a consumer builds around
 	 * an icon, because a hand-picked pair is the part nobody can check by eye.
 	 *
-	 * `size` then measures the box, so the same size renders a smaller glyph
-	 * with `box` than without: four fifths of it, with a radius of a fifth.
+	 * `size` then measures the tile, so the same size renders a smaller glyph
+	 * with `tile` than without: four fifths of it.
 	 */
 	@property({ type: Boolean, reflect: true })
-	box = false;
+	tile = false;
 
 	@state()
 	private _iconSvg: string | null = null;

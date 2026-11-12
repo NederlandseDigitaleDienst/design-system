@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-icon[box]'
+removed: ['box']
+fix: { rename: { box: tile } }
+message: 'The `box` attribute is now `tile`. Rename it here and on every other nldd-icon.'
+examples:
+  passed: ['<nldd-icon icon="heart" size="40" tile color="accent"></nldd-icon>']
+  failed: ['<nldd-icon icon="heart" size="40" box color="accent"></nldd-icon>']

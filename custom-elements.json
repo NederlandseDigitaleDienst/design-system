@@ -4825,7 +4825,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role=\"img\"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.",
+          "description": "Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role=\"img\"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.",
           "name": "NLDDAvatar",
           "members": [
             {
@@ -5098,7 +5098,7 @@
               },
               "default": "''",
               "fieldName": "initials",
-              "description": "Explicit initials, at most 3 characters (overrides what is derived from `name`; also for organization acronyms)"
+              "description": "Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form"
             },
             {
               "name": "src",
@@ -5813,13 +5813,13 @@
             },
             {
               "kind": "field",
-              "name": "box",
+              "name": "tile",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Draw the icon on a filled square instead of on its own.\n\nIt turns the colour question around: `color` and `custom-color` paint the\nbox, and the glyph takes whatever contrasts with it. That pair is the\nreason this is an option here rather than a box a consumer builds around\nan icon, because a hand-picked pair is the part nobody can check by eye.\n\n`size` then measures the box, so the same size renders a smaller glyph\nwith `box` than without: four fifths of it, with a radius of a fifth.",
-              "attribute": "box",
+              "description": "Draw the icon on a tile, a filled square, instead of on its own.\n\nIt turns the color question around: `color` and `custom-color` paint the\ntile, and the glyph takes whatever contrasts with it. That pair is the\nreason this is an option here rather than a tile a consumer builds around\nan icon, because a hand-picked pair is the part nobody can check by eye.\n\n`size` then measures the tile, so the same size renders a smaller glyph\nwith `tile` than without: four fifths of it.",
+              "attribute": "tile",
               "reflects": true
             }
           ],
@@ -5870,10 +5870,10 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Draw the icon on a filled square. `color` and `custom-color` then paint the box and the glyph takes the contrasting color, and `size` measures the box: the glyph is four fifths of it, the corner radius a fifth.",
-              "name": "box",
+              "description": "Draw the icon on a tile, a filled square. `color` and `custom-color` then paint the tile and the glyph takes the contrasting color, and `size` measures the tile: the glyph is four fifths of it. The corner is `--semantics-tiles-corner-radius`, a fifth of the tile, as on an organization `nldd-avatar`.",
+              "name": "tile",
               "default": "false",
-              "fieldName": "box"
+              "fieldName": "tile"
             }
           ],
           "superclass": {

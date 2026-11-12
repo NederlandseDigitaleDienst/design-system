@@ -35,7 +35,7 @@ export const avatarStyles = css`
 	}
 
 	:host([type="organization"]) {
-		--_avatar-corner-radius: var(--primitives-corner-radius-md);
+		--_avatar-corner-radius: var(--semantics-tiles-corner-radius);
 	}
 
 	/* The fill (not the text) color must resolve here, so .avatar keeps its
@@ -72,6 +72,10 @@ export const avatarStyles = css`
 	:host([size="64"]) { --_avatar-size: var(--primitives-space-64); }
 	:host([size="80"]) { --_avatar-size: var(--primitives-space-80); }
 	:host([size="96"]) { --_avatar-size: var(--primitives-space-96); }
+
+	:host([size]:not([size="full"])) {
+		height: var(--_avatar-size);
+	}
 
 
 	/* # Avatar */

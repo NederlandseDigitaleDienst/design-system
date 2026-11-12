@@ -56,9 +56,9 @@ export default {
 			description: 'Functionele semantic of rijkskleur. `(inherit)` = erft `color` van parent.',
 			table: { defaultValue: { summary: '(inherit)' } },
 		},
-		box: {
+		tile: {
 			control: 'boolean',
-			description: 'Teken het icoon op een gevuld vlak. `color` en `custom-color` kleuren dan het vlak en het glyph krijgt de contrasterende kleur; `size` meet het vlak.',
+			description: 'Teken het icoon op een tegel, een gevuld vlak. `color` en `custom-color` kleuren dan het vlak en het glyph krijgt de contrasterende kleur; `size` meet het vlak.',
 			table: { defaultValue: { summary: false } },
 		},
 		customColor: {
@@ -71,16 +71,16 @@ export default {
 		icon: 'heart',
 		size: '24',
 		color: '(inherit)',
-		box: false,
+		tile: false,
 		customColor: '',
 	},
 };
 
-const Template = ({ icon, size, box, color, customColor }: Record<string, any>) => html`
+const Template = ({ icon, size, tile, color, customColor }: Record<string, any>) => html`
 	<nldd-icon
 		icon=${icon}
 		size=${size || nothing}
-		?box=${box}
+		?tile=${tile}
 		color=${color || nothing}
 		custom-color=${customColor || nothing}
 	></nldd-icon>
@@ -125,17 +125,17 @@ export const ErftVanDeOuder = {
  */
 export const MeeMetDeTekst = {
 	name: 'Mee met de tekst (size="inherit")',
-	render: () => {
+	render: ({ tile }: Record<string, any>) => {
 		const line = (size: string) => html`
 			<nldd-text
 				size=${size}
 				line-height="tight"
 			>
-				Aanvraag A-1043 is <nldd-icon icon="check-mark" size="inherit" color="success"></nldd-icon> goedgekeurd,
-				staat <nldd-icon icon="lock-closed" size="inherit"></nldd-icon> vast sinds
-				<nldd-icon icon="calendar-event" size="inherit"></nldd-icon> vorige week, en loopt af over
-				<nldd-icon icon="clock" size="inherit"></nldd-icon> 3 dagen.
-				<nldd-icon icon="info-circle" size="inherit" color="accent"></nldd-icon> Verlengen kan tot die tijd.
+				Aanvraag A-1043 is <nldd-icon icon="check-mark" size="inherit" ?tile=${tile} color="success"></nldd-icon> goedgekeurd,
+				staat <nldd-icon icon="lock-closed" size="inherit" ?tile=${tile}></nldd-icon> vast sinds
+				<nldd-icon icon="calendar-event" size="inherit" ?tile=${tile}></nldd-icon> vorige week, en loopt af over
+				<nldd-icon icon="clock" size="inherit" ?tile=${tile}></nldd-icon> 3 dagen.
+				<nldd-icon icon="info-circle" size="inherit" ?tile=${tile} color="accent"></nldd-icon> Verlengen kan tot die tijd.
 			</nldd-text>
 		`;
 		return html`
@@ -149,7 +149,8 @@ export const MeeMetDeTekst = {
 			</nldd-container>
 		`;
 	},
-	parameters: { controls: { disable: true } },
+	args: { tile: false },
+	parameters: { controls: { include: ['tile'] } },
 };
 
 export const Grootten = {
@@ -259,7 +260,7 @@ export const EigenKleur = {
 	},
 };
 
-export const MetBox = {
+export const OpEenTegel = {
 	render: () => html`
 		<nldd-container
 			layout="row"
@@ -268,31 +269,31 @@ export const MetBox = {
 			<nldd-icon
 				icon="terminal"
 				size="40"
-				box
+				tile
 				color="accent"
 			></nldd-icon>
 			<nldd-icon
 				icon="shield-check-mark"
 				size="40"
-				box
+				tile
 				color="success"
 			></nldd-icon>
 			<nldd-icon
 				icon="cloud"
 				size="40"
-				box
+				tile
 				color="critical"
 			></nldd-icon>
 			<nldd-icon
 				icon="puzzle-piece"
 				size="40"
-				box
+				tile
 				custom-color="#a90061"
 			></nldd-icon>
 			<nldd-icon
 				icon="tulip"
 				size="40"
-				box
+				tile
 				custom-color="#f5c400"
 			></nldd-icon>
 		</nldd-container>
@@ -300,7 +301,7 @@ export const MetBox = {
 		<div style="width: 120px; height: 200px; outline: 1px dashed #bbb;">
 			<nldd-icon
 				icon="heart"
-				box
+				tile
 				color="accent"
 			></nldd-icon>
 		</div>
@@ -309,7 +310,7 @@ export const MetBox = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `box` staat het icoon op een gevuld vlak. De kleurvraag draait daarmee om: `color` en `custom-color` kleuren het vlak, en het glyph krijgt de kleur die daarop leesbaar is, wit of zwart, gekozen op luminantie. Dat paar is precies wat je zelf niet wilt kiezen. `size` meet dan het vlak: het glyph is vier vijfde daarvan, de hoekradius een vijfde. De laatste twee tonen dat de flip ook werkt bij een kleur die het systeem niet kent. Onderaan een vlak zonder `size` in een container van 120×200: het volgt de breedte en blijft vierkant in plaats van uit te rekken naar de hoogte van de container. Net als een icoon zonder `box`, dat z\'n vorm ontleent aan de tekening erin.',
+				story: 'Met `tile` staat het icoon op een tegel, een gevuld vlak. De kleurvraag draait daarmee om: `color` en `custom-color` kleuren het vlak, en het glyph krijgt de kleur die daarop leesbaar is, wit of zwart, gekozen op luminantie. Dat paar is precies wat je zelf niet wilt kiezen. `size` meet dan het vlak: het glyph is vier vijfde daarvan, de hoekradius een vijfde. De laatste twee tonen dat de flip ook werkt bij een kleur die het systeem niet kent. Onderaan een vlak zonder `size` in een container van 120×200: het volgt de breedte en blijft vierkant in plaats van uit te rekken naar de hoogte van de container. Net als een icoon zonder `tile`, dat z\'n vorm ontleent aan de tekening erin.',
 			},
 		},
 	},

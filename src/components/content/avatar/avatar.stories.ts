@@ -357,7 +357,8 @@ export const Initialen = {
 /**
  * De initialen vullen de schijf zo groot mogelijk; brede initialen (WW, MMM)
  * worden automatisch teruggeschaald zodat ze binnen de schijf blijven, terwijl
- * smalle initialen (II) op volle grootte blijven.
+ * smalle initialen (II) op volle grootte blijven. Vier tekens, zoals het acroniem
+ * van een organisatie, lezen goed vanaf 40px.
  */
 export const BredeInitialen = {
 	render: () => html`
@@ -389,6 +390,18 @@ export const BredeInitialen = {
 				initials="WWW"
 				decorative
 				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				type="organization"
+				initials="LVVN"
+				decorative
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				type="organization"
+				initials="LVVN"
+				decorative
+				size="40"
 			></nldd-avatar>
 		</nldd-container>
 	`,
