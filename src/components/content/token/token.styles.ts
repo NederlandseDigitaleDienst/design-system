@@ -10,6 +10,7 @@ export const tokenStyles = css`
 	/* # Host */
 
 	:host {
+		--_token-corner-radius: var(--context-control-corner-radius, var(--semantics-controls-sm-corner-radius));
 		--_token-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
 		--_token-highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
 		--_token-focus-z-index: 1;
@@ -39,7 +40,7 @@ export const tokenStyles = css`
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
-		border-radius: var(--semantics-controls-sm-corner-radius);
+		border-radius: var(--_token-corner-radius);
 	}
 
 
@@ -50,7 +51,7 @@ export const tokenStyles = css`
 		display: inline-flex;
 		margin: 0;
 		border: none;
-		border-radius: var(--semantics-controls-sm-corner-radius);
+		border-radius: var(--_token-corner-radius);
 		background: none;
 		background-color: var(--_token-background-color);
 		position: relative;

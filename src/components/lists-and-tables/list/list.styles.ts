@@ -31,6 +31,7 @@ export const listStyles = css`
 		--_list-search-field-min-size: var(--semantics-controls-md-min-size);
 		--_list-search-field-icon-size: var(--primitives-space-24);
 		--_list-search-field-end-padding-right: calc((var(--_list-search-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_list-search-field-nested-corner-radius: calc(var(--semantics-controls-md-corner-radius) - var(--_list-search-field-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_list-search-field-button-focus-z-index: 1;
 		--_list-search-bar-gap: var(--primitives-space-8);
 		--_list-toolbar-gap: var(--primitives-space-8);
@@ -243,6 +244,10 @@ export const listStyles = css`
 		padding-right: var(--_list-search-field-end-padding-right);
 		flex-shrink: 0;
 		align-items: center;
+	}
+
+	.list__search-field-end :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_list-search-field-nested-corner-radius);
 	}
 
 	.list__search-field-clear:focus-within {

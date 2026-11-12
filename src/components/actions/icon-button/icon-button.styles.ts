@@ -11,6 +11,7 @@ export const iconButtonStyles = css`
 
 	:host {
 		--_icon-button-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_icon-button-nested-corner-radius: var(--context-control-corner-radius, var(--_icon-button-corner-radius));
 		--_icon-button-width: auto;
 		--_icon-button-min-size: var(--semantics-controls-md-min-size);
 		--_icon-button-block-padding: var(--semantics-buttons-md-is-icon-only-inline-padding);
@@ -309,7 +310,7 @@ export const iconButtonStyles = css`
 		display: inline-flex;
 		margin: 0;
 		border: none;
-		border-radius: var(--_icon-button-corner-radius);
+		border-radius: var(--_icon-button-nested-corner-radius);
 		background: none;
 		background-color: var(--_icon-button-background-color);
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_icon-button-highlight-border-color);

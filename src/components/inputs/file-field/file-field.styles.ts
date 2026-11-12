@@ -17,6 +17,7 @@ export const fileFieldStyles = css`
 		--_file-field-value-color: var(--semantics-content-color);
 		--_file-field-text-font: var(--semantics-input-fields-md-text-font);
 		--_file-field-clear-button-padding-right: calc((var(--_file-field-min-size) - var(--semantics-controls-sm-min-size)) / 2);
+		--_file-field-nested-corner-radius: calc(var(--_file-field-corner-radius) - var(--_file-field-clear-button-padding-right));
 		--_file-field-more-button-padding-right: var(--_file-field-clear-button-padding-right);
 		--_file-field-validation-icon-area-padding-right: var(--_file-field-inline-padding);
 		--_file-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
@@ -471,6 +472,10 @@ export const fileFieldStyles = css`
 		gap: var(--_file-field-button-group-gap);
 		padding-right: var(--_file-field-clear-button-padding-right);
 		align-items: center;
+	}
+
+	.file-field__edit-button-group :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_file-field-nested-corner-radius);
 	}
 
 	.file-field__edit-button-group:not(:last-child) {

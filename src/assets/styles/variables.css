@@ -269,11 +269,11 @@
 	--primitives-corner-radius-none: 0px;
 	--primitives-corner-radius-xxs: 3px;
 	--primitives-corner-radius-xs: 4px;
-	--primitives-corner-radius-sm: 6px;
-	--primitives-corner-radius-md: 8px;
-	--primitives-corner-radius-lg: 10px;
-	--primitives-corner-radius-xl: 12px;
-	--primitives-corner-radius-xxl: 16px;
+	--primitives-corner-radius-sm: 8px;
+	--primitives-corner-radius-md: 10px;
+	--primitives-corner-radius-lg: 12px;
+	--primitives-corner-radius-xl: 16px;
+	--primitives-corner-radius-xxl: 20px;
 	--primitives-corner-radius-xxxl: 24px;
 	--primitives-corner-radius-full: 9999px;
 
@@ -1293,7 +1293,7 @@
 	--semantics-controls-xs-corner-radius: var(--primitives-corner-radius-xs);
 	--semantics-controls-sm-corner-radius: var(--primitives-corner-radius-sm);
 	--semantics-controls-md-corner-radius: var(--primitives-corner-radius-md);
-	--semantics-controls-lg-corner-radius: var(--primitives-corner-radius-md);
+	--semantics-controls-lg-corner-radius: var(--primitives-corner-radius-lg);
 
 	--semantics-controls-is-selected-indicator-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
 	--semantics-controls-is-selected-indicator-highlight-border-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-700));
