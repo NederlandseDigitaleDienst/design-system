@@ -3433,7 +3433,7 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
 - `subpage-needs-breadcrumbs` (hint): Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.
 - `top-navigation-bar-max-three-items` (hint): Keep the bar to search, language and account: the pages together are the navigation.
-- `top-navigation-bar-no-menu-row` (hint): Let the pages be the navigation: put the entries in the home as cards and lists, and keep search and language in `utility`.
+- `top-navigation-bar-no-menu-row` (hint): Leave `global` empty and let the pages be the navigation: put the entries on the home page as `nldd-card` or `nldd-list`, and keep search and language in `utility`.
 - `top-navigation-bar-no-same-href`: `logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.
 - `top-navigation-bar-utility-needs-priority` (hint): Set content-priority="text", so "Zoeken" and "NL" stay readable on a narrow screen.
 - `website-no-sticky-header`: A website lets its header scroll away: a fixed one takes room from the content.
@@ -4226,7 +4226,7 @@ Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surfa
 
 ### `<nldd-text-cell>`
 
-A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment="center"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment="top"`. Each text region (overline, main text, supporting text) accepts either a string attribute or slotted DOM content. The slot is the source of truth: if the consumer provides slotted content, it replaces the attribute-based render for that region. Use slots when you need inline elements like `<nldd-tag>`, `<a>` or `<nldd-icon>` mixed with text. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path — slotted content is rendered as-is.
+A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment="center"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment="top"`. Each text region (overline, main text, supporting text) accepts either a string attribute or slotted DOM content. The slot is the source of truth: if the consumer provides slotted content, it replaces the attribute-based render for that region. Use slots when you need components mixed with text, such as `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`. The cell does not style plain HTML: for bold, write `**bold**` in the attribute, and for code put an `<nldd-text>` with a `<code>` in the slot. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.
 
 **Rules** (`nldd lint`)
 

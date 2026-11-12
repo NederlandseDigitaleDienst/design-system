@@ -27,7 +27,7 @@ here; consult the commit history if you need that level of detail.
 - **`local-variable-no-override`** (warn): an app that sets a `--_*` variable of a component, such as `--_button-gap`. Those belong to the inside of one component and can change in any release.
 - **`file-not-read`** (warn): a file with `nldd-*` markup the linter cannot read, such as an `.astro` file or a plain template string in a script. It used to report such a file as clean.
 - **Go templates and Lit in JavaScript.** `nldd lint` reads `.tmpl` and `.gohtml` as HTML, also in a project scan, and the `html` templates in a `.js` or `.mjs` file you name.
-- **Seven context variables for your own components.** `--context-background-color`, `--context-content-color` and the secondary, accent, success, warning and critical content colors tell what sits on a surface which colors to use. Read them with a fallback; set all seven on a surface your own component paints, so text and components on it follow. They default to the page colors on `:root`, so a `var()` needs no fallback.
+- **Seven context variables for your own components.** `--context-background-color`, `--context-content-color` and the secondary, accent, success, warning and critical content colors tell what sits on a surface which colors to use. Set all seven on a surface your own component paints, so text and components on it follow. They default to the page colors on `:root`, so a `var()` needs no fallback.
 - **The tokens of each version in the package.** `lint/data.generated.json` lists every token and every removed token with the last version that had it, so `npx @nldd/design-system@<version> lint` tells you which of yours an upgrade removes.
 
 ### Changed

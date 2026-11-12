@@ -76,7 +76,7 @@ function installedVersion(directory) {
 
 /**
  * The linter knows the API of its own version, so a project's own `nldd` is always
- * right. A newer one, through `npx @nldd/design-system@latest`, is how you see what
+ * right. A newer one, through `npx @nldd/design-system@<version>`, is how you see what
  * an upgrade will break: useful, as long as it is clear that is what you are looking at.
  */
 function noteOtherVersion(root) {

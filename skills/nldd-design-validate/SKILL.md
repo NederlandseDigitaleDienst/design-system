@@ -31,7 +31,7 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 | Vue, React, Angular, Django, Jinja, Go, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.html`, `.j2` en `.tmpl`. Een bestand met `nldd-*`-markup dat hij niet kan lezen, meldt hij als `file-not-read` |
 | Tokens die niet bestaan | `... lint`: leest ook `.css`, `.scss`, `.less` en `<style>`-blokken, en meldt een `var(--semantics-…)` die er niet is (`token-not-found`) of een `--_*`-variabele van een component die je zelf zet (`local-variable-no-override`) |
 | Een site die naar HTML bouwt (Astro, MkDocs, Hugo) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
-| Zien wat een upgrade breekt | `npx @nldd/design-system@latest lint` op je huidige code; `--fix` lost de hernoemingen op |
+| Zien wat een upgrade breekt | `npx @nldd/design-system@<doelversie> lint` op je huidige code; `--fix` lost de hernoemingen op |
 
 De linter vraagt Node 20.19 of nieuwer. Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @nldd/design-system@<versie> lint`. Zonder pin krijg je de nieuwste.
 
