@@ -219,11 +219,9 @@ export const buttonStyles = css`
 		--_button-is-active-highlight-border-color: var(--_button-highlight-border-color);
 	}
 
-	/* For inherit-filled the inner button keeps the inherited on-color:
-	   its currentColor background and the label's contrast flip resolve
-	   against it, and would otherwise self-reference the label. The label
-	   color moves to the content layer instead. The higher specificity of
-	   these rules deliberately pins the color through hover/active/expanded. */
+	/* inherit-filled paints its fill with currentColor, so the inner button
+	   keeps the inherited color and the label color goes to the content layer.
+	   The higher specificity pins it through hover, active and expanded. */
 	:host([appearance="inherit-filled"]) .button {
 		color: inherit;
 	}
