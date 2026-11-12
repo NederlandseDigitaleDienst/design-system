@@ -47,11 +47,25 @@ function readPropertyNames(roots, tags, isPlainHtml) {
 	return roots;
 }
 
-function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, report) {
+/** What the components around a node read off anything inside them, such as `sidebar-section-only`. */
+function fromAncestors(node, tags, anyDescendantAttrs) {
+	const attrs = {};
+	for (let ancestor = node.parent; ancestor; ancestor = ancestor.parent) {
+		// An ancestor in another file may be the one reading it.
+		if (ancestor.opaque) return { ...anyDescendantAttrs, ...attrs };
+		Object.assign(attrs, tags[ancestor.name]?.descendantAttrs);
+	}
+	return attrs;
+}
+
+function checkAttributes(node, { tags, icons, anyChildAttrs, anyDescendantAttrs, isPlainHtml }, report) {
 	if (node.templated) return;
 	const contract = tags[node.name];
 	// A parent in another file may be the one reading it, so any child attribute goes.
-	const fromParent = node.parent.opaque ? anyChildAttrs : (tags[node.parent.name]?.childAttrs ?? {});
+	const fromParent = {
+		...fromAncestors(node, tags, anyDescendantAttrs),
+		...(node.parent.opaque ? anyChildAttrs : (tags[node.parent.name]?.childAttrs ?? {})),
+	};
 	for (const [name, value] of node.attrs) {
 		const attribute = contract.attrs[name] ?? fromParent[name];
 		if (ICON_ATTRIBUTES.has(name) && attribute && typeof value === 'string' && value !== '') {
@@ -206,6 +220,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		tags: data.tags,
 		icons: new Set(data.icons),
 		anyChildAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.childAttrs)),
+		anyDescendantAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.descendantAttrs ?? {})),
 		translations: data.translations ?? {},
 		removedKeys: data.removedKeys ?? {},
 	};

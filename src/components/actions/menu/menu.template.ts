@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import type { NLDDMenuItem, NLDDMenu, NLDDMenuGroup } from './menu.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
+import { linkRel } from '../../../utilities/link-rel.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 
 export type MenuVariant = 'menu' | 'listbox' | 'navigation';
 
@@ -131,6 +133,8 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 	// the button branch. Mirrors the nav-bar sheet (top-navigation-bar.ts).
 	const safeHref = sanitizeUrl(this.href) ?? '';
 	const asLink = !!safeHref && this.type === 'button' && !hasSubmenu && !this.disabled;
+	const hintKey = asLink ? linkHintKey(safeHref, this.target) : null;
+	const linkHint = hintKey ? this._t(`components.menu-item.${hintKey}`) : '';
 
 	// The slot is always there, so it can report what lands in it; an icon in
 	// it wins over `icon`, which is its fallback.
@@ -210,10 +214,12 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 		${asLink ? html`
 			<a class="menu__item"
 				href=${safeHref}
+				target=${this.target || nothing}
+				rel=${linkRel(this.rel, this.target) || nothing}
 				role=${role}
 				aria-current=${this.selected ? 'page' : nothing}
 				@click=${this._handleClick}
-			>${content}</a>
+			>${content}${linkHint ? html`<span class="menu__link-hint">, ${linkHint}</span>` : nothing}</a>
 		` : html`
 			<button class="menu__item"
 				type="button"

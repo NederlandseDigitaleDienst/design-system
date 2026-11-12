@@ -108,11 +108,12 @@ export function nlddFileLevelJsdoc() {
 					// component forwards to its native form, or what a parent reads off
 					// its children. They are public API, so the manifest lists them too.
 					const declared = new Set((element.attributes ?? []).map((a) => a.name));
-					for (const { name, type, description, forChildren } of doc.attrs) {
+					for (const { name, type, description, forChildren, forDescendants } of doc.attrs) {
 						if (declared.has(name)) continue;
 						const attribute = { name, description };
 						if (type) attribute.type = { text: type };
 						if (forChildren) attribute.forChildren = true;
+						if (forDescendants) attribute.forDescendants = true;
 						if (description.startsWith('@deprecated')) attribute.deprecated = deprecationOf(description);
 						(element.attributes ??= []).push(attribute);
 					}

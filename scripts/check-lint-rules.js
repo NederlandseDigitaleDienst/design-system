@@ -30,7 +30,7 @@ const guidelineHeadings = new Set(
 	[...guidelines.matchAll(/^#+ (.+)$/gm)].map(([, heading]) => heading.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')),
 );
 
-const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => [...Object.keys(tag.attrs), ...Object.keys(tag.childAttrs)]));
+const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => [...Object.keys(tag.attrs), ...Object.keys(tag.childAttrs), ...Object.keys(tag.descendantAttrs ?? {})]));
 const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role', 'style', 'lang', 'aria-label', 'aria-labelledby']);
 
 function checkTokens(tokens, rule) {

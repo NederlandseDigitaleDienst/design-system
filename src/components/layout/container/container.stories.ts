@@ -326,6 +326,27 @@ export const LayoutWrap = {
 	name: 'Layout: wrap',
 };
 
+/**
+ * Met `list` is de container voor een screenreader een lijst, en elk kind een
+ * item: je hoort hoeveel het er zijn en kunt de rij overslaan. Voor een rij tags
+ * of een groep kaarten of tegels die bij elkaar horen. Er verandert niets aan
+ * het beeld.
+ */
+export const AlsLijst = {
+	render: () => html`
+		<nldd-container
+			list
+			layout="wrap"
+			gap="8"
+		>
+			<nldd-tag>Dakisolatie</nldd-tag>
+			<nldd-tag>Warmtepomp</nldd-tag>
+			<nldd-tag>In behandeling</nldd-tag>
+		</nldd-container>
+	`,
+	name: 'Als lijst',
+};
+
 export const LayoutGrid = {
 	render: () => html`
 		<nldd-container

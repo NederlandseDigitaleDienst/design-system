@@ -65,6 +65,7 @@
  * @childattr {number} md-order - Position of this child at md
  * @childattr {number} lg-order - Position of this child at lg
  * @attr {string} layout - 'stack' | 'row' | 'wrap' | 'grid' | 'columns' | 'lanes' (default: 'stack')
+ * @attr {boolean} list - Makes the children a list for assistive technology: `role="list"` on the container and `role="listitem"` on each child, so a screen reader says how many there are and lets you skip them (WCAG 1.3.1). For a row of tags or a group of cards or tiles that are alike. A child with a role of its own keeps it. Nothing changes visually.
  * @attr {number} column-count - Force N columns (1-8) for layout=grid/columns/lanes
  * @attr {number} sm-column-count - Column count when this container is sm-wide
  * @attr {number} md-column-count - Column count when this container is md-wide
@@ -316,9 +317,32 @@ export class NLDDContainer extends LitElement {
 		this._sizedByContent = fills && Boolean(parent?._isSizedByContent);
 	}
 
+	/** Turns the children into a list for assistive technology. */
+	@property({ type: Boolean, reflect: true })
+	list = false;
+
+	/** The children this container gave `listitem`, so it only takes back its own. */
+	private _listItems = new WeakSet<Element>();
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._syncSizedByContent();
+	}
+
+	/** The list role on the host, and `listitem` on each child without a role of its own. */
+	private _applyListRoles(): void {
+		if (this.list) this.setAttribute('role', 'list');
+		else if (this.getAttribute('role') === 'list') this.removeAttribute('role');
+		const slot = this.renderRoot?.querySelector('slot:not([name])') as HTMLSlotElement | null;
+		for (const child of slot?.assignedElements() ?? []) {
+			if (this.list && !child.hasAttribute('role')) {
+				child.setAttribute('role', 'listitem');
+				this._listItems.add(child);
+			} else if (!this.list && this._listItems.has(child)) {
+				child.removeAttribute('role');
+				this._listItems.delete(child);
+			}
+		}
 	}
 
 	override willUpdate(changed: PropertyValues): void {
@@ -326,6 +350,7 @@ export class NLDDContainer extends LitElement {
 	}
 
 	override updated(changed: PropertyValues): void {
+		if (changed.has('list')) this._applyListRoles();
 		this.writeCustomProperties();
 		this.writeDimensionProperties();
 		// Only the nearest containers: each passes a change on to its own.
@@ -447,6 +472,7 @@ export class NLDDContainer extends LitElement {
 
 	_onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
+		if (this.list) this._applyListRoles();
 		this._childObserver?.disconnect();
 		this._childObserver = new MutationObserver(muts => {
 			for (const m of muts) {

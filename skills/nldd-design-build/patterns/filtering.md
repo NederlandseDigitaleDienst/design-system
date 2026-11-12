@@ -27,26 +27,6 @@ nldd-page
 ```
 
 ```html
-<style>
-  /* The section owns the switch; this reveals the trigger only when there is
-     a sheet to open. :not([hidden]) keeps the toolbar's own overflow working. */
-  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
-  #filters-openen {
-    display: none;
-  }
-
-  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
-  nldd-sidebar-section[collapsed] #filters-openen:not([hidden]) {
-    display: inline-flex;
-  }
-
-  /* In the sheet the results lie behind it, so there is nothing to skip to. */
-  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
-  nldd-sidebar-section[collapsed] #filters-overslaan {
-    display: none;
-  }
-</style>
-
 <nldd-page>
   <nldd-sidebar-section
     sidebar-label="Filters"
@@ -66,6 +46,7 @@ nldd-page
     >
       <nldd-skip-link
         id="filters-overslaan"
+        sidebar-section-only="expanded"
         text="Sla filters over"
         href="#resultaten"
       ></nldd-skip-link>
@@ -180,6 +161,7 @@ nldd-page
       <nldd-toolbar-item
         id="filters-openen"
         slot="end"
+        sidebar-section-only="collapsed"
       >
         <nldd-button
           appearance="secondary"
@@ -332,9 +314,9 @@ Het voorbeeld is smal, dus de filters zitten hier achter de knop. Is de sectie b
 
 **De filteropties zijn een lijst, geen formulier.** Per groep een [`nldd-title`](../../nldd-design/reference.md#nldd-title) en een [`nldd-list`](../../nldd-design/reference.md#nldd-list), en de rij is zelf de checkbox: `checkbox` op de [`nldd-list-item`](../../nldd-design/reference.md#nldd-list-item), met daarin een [`nldd-checkbox`](../../nldd-design/reference.md#nldd-checkbox) die alleen `decorative` de staat toont. Zo is de hele rij het klikdoel in plaats van het vierkantje, past er een aantal achter de naam, en is er één tabstop per optie. Een filter dient ook niets in: er is geen "Opslaan", de lijst verandert terwijl je klikt, dus er valt geen formulier te versturen.
 
-**De knop naar de filters verschijnt alleen als er een sheet is.** De sectie meldt dat zelf met `collapsed`, en jij bepaalt waar de knop staat. In het voorbeeld staat hij rechts in de werkbalk, met een regel CSS ervoor: `nldd-sidebar-section[collapsed] #filters-openen { display: inline-flex }`. Zet er ook een `nldd-menu-item` in `slot="overflow"` bij, want in een smalle werkbalk verhuist de knop naar het overflow-menu. Dat menu toont een kopie maar meldt de keuze als `select` op het origineel, dus luister daarnaar en roep `show()` aan: een menukeuze betekent openen, niet omklappen. Laat je hem altijd staan, dan opent hij op een breed scherm niets.
+**De knop naar de filters verschijnt alleen als er een sheet is.** De sectie meldt dat zelf met `collapsed`, en jij bepaalt waar de knop staat. In het voorbeeld staat hij rechts in de werkbalk, met `sidebar-section-only="collapsed"` erop. Zet er ook een `nldd-menu-item` in `slot="overflow"` bij, want in een smalle werkbalk verhuist de knop naar het overflow-menu. Dat menu toont een kopie maar meldt de keuze als `select` op het origineel, dus luister daarnaar en roep `show()` aan: een menukeuze betekent openen, niet omklappen. Laat je hem altijd staan, dan opent hij op een breed scherm niets.
 
-**Een skip link boven de filters.** Een kolom filters is een rij controls waar iemand met een toetsenbord elke keer doorheen moet om bij de resultaten te komen. Zet er daarom een [`nldd-skip-link`](../../nldd-design/reference.md#nldd-skip-link) boven, met een `href` naar de lijst met resultaten. Hij staat los boven de filters en niet eromheen, zodat je hem kunt verbergen zolang de sectie `collapsed` is: in de sheet liggen de resultaten erachter, en daar is "Klaar" de weg terug.
+**Een skip link boven de filters.** Een kolom filters is een rij controls waar iemand met een toetsenbord elke keer doorheen moet om bij de resultaten te komen. Zet er daarom een [`nldd-skip-link`](../../nldd-design/reference.md#nldd-skip-link) boven, met een `href` naar de lijst met resultaten. Hij staat los boven de filters en niet eromheen, zodat je hem met `sidebar-section-only="expanded"` kunt verbergen zolang de sectie `collapsed` is: in de sheet liggen de resultaten erachter, en daar is "Klaar" de weg terug.
 
 **Het vinkje in de rij zet je zelf mee.** De rij houdt zijn eigen `checked` bij en meldt de wissel met `change`, maar de [`nldd-checkbox`](../../nldd-design/reference.md#nldd-checkbox) erin is een eigen element met een eigen staat, en `decorative` betekent alleen dat die niets aanneemt of aankondigt. Luister dus naar `change` op de rij en zet `checked` op dat vinkje. Doe je dat niet, dan klikt de rij wel aan en verandert er niets te zien.
 

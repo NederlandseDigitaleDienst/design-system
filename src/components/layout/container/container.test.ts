@@ -389,3 +389,43 @@ describe('nldd-container onder een universele reset', () => {
 		expect(offset).toBe(16);
 	});
 });
+
+describe('nldd-container list', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const roles = (container: Element) => [...container.children].map((child) => child.getAttribute('role'));
+
+	it('makes the container a list and each child an item', async () => {
+		el = await fixture('<nldd-container list layout="wrap"><nldd-tag text="Dakisolatie"></nldd-tag><nldd-tag text="Warmtepomp"></nldd-tag></nldd-container>');
+		await waitForUpdate(el);
+		expect(el.getAttribute('role')).toBe('list');
+		expect(roles(el)).toEqual(['listitem', 'listitem']);
+	});
+
+	it('gives a child added later the item role too, and leaves a role of its own', async () => {
+		el = await fixture('<nldd-container list><div role="separator"></div></nldd-container>');
+		el.append(document.createElement('div'));
+		await waitForUpdate(el);
+		expect(roles(el)).toEqual(['separator', 'listitem']);
+	});
+
+	it('takes the roles back when list goes off', async () => {
+		el = await fixture('<nldd-container list><div></div><div role="separator"></div></nldd-container>');
+		await waitForUpdate(el);
+		el.removeAttribute('list');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('role')).toBe(false);
+		expect(roles(el)).toEqual([null, 'separator']);
+	});
+
+	it('adds no roles without list', async () => {
+		el = await fixture('<nldd-container><div></div></nldd-container>');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('role')).toBe(false);
+		expect(roles(el)).toEqual([null]);
+	});
+});

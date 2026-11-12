@@ -21,6 +21,7 @@ here; consult the commit history if you need that level of detail.
 - **`nldd lint` checks the tokens your CSS names.** A `var(--semantics-…)` that does not exist fails without a sound in the browser: the declaration is dropped. The linter now reports it, and for a token that was removed it says the last version that had it. See Added.
 - **`nldd lint --pure` works on a built site.** It recognizes the system's own CSS in a bundle, also minified, and reports only the app's. See Fixed.
 - **Text takes the color of the surface it sits on.** `nldd-text`, `nldd-title` and `nldd-rich-text` follow the hero panel, a tooltip and a selected row, and your own component can pass its colors the same way. See Added and Changed.
+- **2 accessibility fixes:** an `nldd-menu-item` that opens a new tab or another website says so, and `list` on `nldd-container` makes a row of tags or cards a list for a screen reader. See Added.
 
 ### Breaking
 
@@ -36,6 +37,10 @@ here; consult the commit history if you need that level of detail.
 - **Go templates and Lit in JavaScript.** `nldd lint` reads `.tmpl` and `.gohtml` as HTML, also in a project scan, and the `html` templates in a `.js` or `.mjs` file you name.
 - **Seven context variables for your own components.** `--context-background-color`, `--context-content-color` and the secondary, accent, success, warning and critical content colors tell what sits on a surface which colors to use. Set all seven on a surface your own component paints, so text and components on it follow. They default to the page colors on `:root`, so a `var()` needs no fallback.
 - **The tokens of each version in the package.** `lint/data.generated.json` lists every token and every removed token with the last version that had it, so `npx @nldd/design-system@<version> lint` tells you which of yours an upgrade removes.
+- **`target` and `rel` on `nldd-menu-item`.** An item with an `href` opens where `target` says, gets `noopener noreferrer` with `_blank`, and tells a screen reader "opent in nieuw tabblad" or "andere website", as `nldd-link` does.
+- **`line-numbers` on `nldd-code-viewer`.** A column with the number of each line, the same as in a diff. A screen reader skips it and a copy leaves it out.
+- **`sidebar-section-only` on anything inside `nldd-sidebar-section`.** `collapsed` shows an element only while the sidebar is a sheet, such as the button that opens it, and `expanded` only while it is a column. It works at any depth, also on an `nldd-toolbar-item`, so the content page and filtering patterns need no CSS of their own. `nldd lint` knows it as an attribute of whatever it sits on inside the section.
+- **`list` on `nldd-container`.** The container becomes a list for a screen reader and each child an item, so a row of tags or a group of cards says how many there are and can be skipped (WCAG 1.3.1).
 
 ### Changed
 
@@ -44,6 +49,8 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-title` and `nldd-rich-text` follow the content color of their surface,** as `nldd-text` already did. In a selected row, on the accent panel of `nldd-hero` or in a tooltip they no longer need `color="inherit"`.
 - **A component that changes its text color passes it on.** Buttons, tags, segmented controls, tabs, pagination, the pickers and the other components with a colored state set `--context-content-color` next to their `color`, so a spinner, badge or text inside takes that color.
 - **Every surface starts text at the default colors again.** `nldd-card`, `nldd-box`, `nldd-sheet`, `nldd-popover`, `nldd-menu`, `nldd-modal-dialog`, `nldd-window`, the page sections, the split views, `nldd-shell` and `nldd-page` reset the content colors next to their background, so text in a card inside a selected row no longer takes the row's color.
+- **`nldd-text-editor` keeps a line indented four spaces as text.** In CommonMark it starts a code block, which in a field for prose is pasted or indented text. A fenced block is still code. Turn indented code off in your renderer too, such as `md.disable('code')` in markdown-it, so the page shows what the editor showed.
+- **The documentation of `current` on `nldd-list-item` says an audit fails its fill** on 1.4.1 and 1.4.11 where nothing else shows the place, such as a table of contents that follows the scroll.
 
 ### Deprecated
 

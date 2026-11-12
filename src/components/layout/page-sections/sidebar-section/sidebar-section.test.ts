@@ -395,3 +395,37 @@ describe('nldd-sidebar-section', () => {
 		});
 	});
 });
+
+describe('nldd-sidebar-section sidebar-section-only', () => {
+	let el: NLDDSidebarSection;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const shown = (selector: string) => getComputedStyle(el.querySelector(selector)!).display !== 'none';
+
+	it('shows an element at any depth only in the state it names', async () => {
+		el = await fixture<NLDDSidebarSection>(`<nldd-sidebar-section no-collapse>
+			<div><span><button id="open" sidebar-section-only="collapsed">Filters</button></span></div>
+			<p id="kop" slot="sidebar" sidebar-section-only="expanded">Filters</p>
+			<p id="altijd">Resultaten</p>
+		</nldd-sidebar-section>`);
+		el.removeAttribute('collapsed');
+		expect([shown('#open'), shown('#kop'), shown('#altijd')]).toEqual([false, true, true]);
+		el.setAttribute('collapsed', '');
+		expect([shown('#open'), shown('#kop'), shown('#altijd')]).toEqual([true, false, true]);
+	});
+
+	it('brings the rule into a shadow root it sits in', async () => {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const root = host.attachShadow({ mode: 'open' });
+		root.innerHTML = '<nldd-sidebar-section no-collapse><button sidebar-section-only="collapsed">Filters</button></nldd-sidebar-section>';
+		const section = root.querySelector('nldd-sidebar-section') as NLDDSidebarSection;
+		await section.updateComplete;
+		section.removeAttribute('collapsed');
+		expect(getComputedStyle(root.querySelector('button')!).display).toBe('none');
+		host.remove();
+	});
+});

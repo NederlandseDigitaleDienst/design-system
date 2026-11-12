@@ -1868,6 +1868,26 @@
             },
             {
               "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "attribute": "target",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "attribute": "rel",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "type",
               "type": {
                 "text": "MenuItemType"
@@ -1992,6 +2012,19 @@
                 }
               },
               "description": "Programmatically select this item."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -2063,6 +2096,37 @@
               "name": "href",
               "default": "''",
               "fieldName": "href"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Where an item with an `href` opens (e.g. '_blank'); adjusts rel automatically. With '_blank' the item adds a visually hidden \"opent in nieuw tabblad\" for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply.",
+              "name": "target",
+              "default": "undefined",
+              "fieldName": "target"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Link rel of an item with an `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set.",
+              "name": "rel",
+              "default": "undefined",
+              "fieldName": "rel"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "description": "Override translation keys (the new-tab and other-website announcements); unset keys fall back to Dutch.",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             },
             {
               "type": {
@@ -2157,6 +2221,12 @@
               },
               "default": "''",
               "fieldName": "shortcutLinux"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -5489,6 +5559,17 @@
             },
             {
               "kind": "field",
+              "name": "lineNumbers",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the number of each line, outside `diff`.",
+              "attribute": "line-numbers",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "noCopy",
               "type": {
                 "text": "boolean"
@@ -5586,6 +5667,15 @@
               "default": "false",
               "description": "The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked.",
               "fieldName": "diff"
+            },
+            {
+              "name": "line-numbers",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself.",
+              "fieldName": "lineNumbers"
             },
             {
               "name": "no-copy",
@@ -24360,7 +24450,7 @@
           "type": {
             "text": "Extension"
           },
-          "default": "[ // A code block that names its language is highlighted in it, as in the code // viewer; the grammar loads when the first such block appears. markdown({ extensions: GFM, codeLanguages: nestedLanguages }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
+          "default": "[ // A code block that names its language is highlighted in it, as in the code // viewer; the grammar loads when the first such block appears. // A line indented four spaces stays text: in a field for prose that is pasted // or indented text, not code. Code takes a fence, which nobody types by accident. markdown({ extensions: [GFM, { remove: ['IndentedCode'] }], codeLanguages: nestedLanguages }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
           "description": "Markdown language (with GFM) plus the hybrid inline-styling decorations."
         }
       ],
@@ -25438,7 +25528,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Framed like the other input fields by default. `embedded` drops the frame, fill, padding and focus ring, for an editor inside a composition (e.g. a message field) that owns its chrome and focus; the caret is then a prominent accent. Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the state-change event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax=\"hidden\"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads \"Taak, open\" or \"Taak, afgerond\" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a \"Kopieer\" button at the right edge that copies the code without its fences and says \"Gekopieerd\" or \"Kopiëren mislukt\", as the code viewer does. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.",
+          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Framed like the other input fields by default. `embedded` drops the frame, fill, padding and focus ring, for an editor inside a composition (e.g. a message field) that owns its chrome and focus; the caret is then a prominent accent. Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the state-change event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax=\"hidden\"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads \"Taak, open\" or \"Taak, afgerond\" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a \"Kopieer\" button at the right edge that copies the code without its fences and says \"Gekopieerd\" or \"Kopiëren mislukt\", as the code viewer does. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint. A line indented four spaces stays text, unlike CommonMark, where it starts a code block: in a field for prose that is pasted or indented text, and code takes a fence. Turn indented code off in the renderer too, so the page shows what the editor showed: `md.disable('code')` in markdown-it and markdown-it-py, for example.",
           "name": "NLDDTextEditor",
           "members": [
             {
@@ -31268,6 +31358,17 @@
               "default": "undefined",
               "attribute": "vertical-alignment",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "list",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Turns the children into a list for assistive technology.",
+              "attribute": "list",
+              "reflects": true
             }
           ],
           "attributes": [
@@ -31781,6 +31882,15 @@
                 "text": "'bottom' | 'center' | 'top'"
               },
               "description": "'top' | 'center' | 'bottom'"
+            },
+            {
+              "name": "list",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the children a list for assistive technology: `role=\"list\"` on the container and `role=\"listitem\"` on each child, so a screen reader says how many there are and lets you skip them (WCAG 1.3.1). For a row of tags or a group of cards or tiles that are alike. A child with a role of its own keeps it. Nothing changes visually.",
+              "fieldName": "list"
             },
             {
               "name": "order",
@@ -34841,7 +34951,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
+          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only=\"collapsed\"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
           "name": "NLDDSidebarSection",
           "members": [
             {
@@ -35425,6 +35535,14 @@
               "expandedType": {
                 "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
+            },
+            {
+              "name": "sidebar-section-only",
+              "description": "Set on anything inside the section, at any depth: shows that element only while the sidebar is a sheet (`collapsed`), such as the button that opens it, or only while it is a box beside the main (`expanded`), such as a heading the sheet's title bar repeats. Put it on an nldd-spacer next to such an element too, so the space goes with it.",
+              "type": {
+                "text": "'collapsed'|'expanded'"
+              },
+              "forDescendants": true
             }
           ],
           "mixins": [
@@ -41466,7 +41584,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.",
+              "description": "Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.",
               "fieldName": "current"
             },
             {

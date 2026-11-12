@@ -1753,3 +1753,27 @@ describe('translation keys', () => {
 		assert.deepEqual(await findingsIn('<nldd-button text="Opslaan" translations="{t}"></nldd-button>', 'a.svelte.html'), []);
 	});
 });
+
+describe('attributes a component reads at any depth', () => {
+	const linter = createLinter(loadData());
+	const unknown = async (source) =>
+		(await linter.lintSource(source, 'a.html')).findings.filter(({ rule }) => rule === 'unknown-attribute' || rule === 'invalid-value').map(({ rule, message }) => [rule, message]);
+	const page = (body) => `<!doctype html><html><head><title>A</title></head><body>${body}</body></html>`;
+
+	it('accepts sidebar-section-only anywhere inside the section', async () => {
+		assert.deepEqual(await unknown(page('<nldd-sidebar-section><nldd-toolbar><nldd-toolbar-item slot="end" sidebar-section-only="collapsed"></nldd-toolbar-item></nldd-toolbar></nldd-sidebar-section>')), []);
+	});
+
+	it('reports it outside a section, and a value it does not know', async () => {
+		assert.deepEqual(await unknown(page('<nldd-button text="Filters" sidebar-section-only="collapsed"></nldd-button>')), [
+			['unknown-attribute', 'nldd-button has no attribute `sidebar-section-only`.'],
+		]);
+		assert.deepEqual(await unknown(page('<nldd-sidebar-section><nldd-button text="Filters" sidebar-section-only="open"></nldd-button></nldd-sidebar-section>')), [
+			['invalid-value', '`sidebar-section-only="open"` is not valid on nldd-button: use collapsed, expanded.'],
+		]);
+	});
+
+	it('cannot tell in a fragment, whose section may be in another file', async () => {
+		assert.deepEqual(await linter.lintSource('<nldd-button text="Filters" sidebar-section-only="collapsed"></nldd-button>', 'a.html').then(({ findings }) => findings.filter(({ rule }) => rule === 'unknown-attribute')), []);
+	});
+});

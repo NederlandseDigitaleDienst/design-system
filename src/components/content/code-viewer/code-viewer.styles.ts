@@ -36,10 +36,10 @@ export const codeViewerStyles = css`
 		--_code-viewer-diff-removed-word-background-color: light-dark(var(--primitives-color-critical-250), var(--primitives-color-critical-450));
 		--_code-viewer-diff-removed-word-content-color: light-dark(var(--primitives-color-critical-1000), var(--primitives-color-critical-975));
 		--_code-viewer-diff-removed-sign-color: light-dark(var(--primitives-color-critical-750), var(--primitives-color-critical-800));
-		--_code-viewer-diff-gutter-color: var(--semantics-content-secondary-color);
+		--_code-viewer-gutter-color: var(--semantics-content-secondary-color);
 		--_code-viewer-diff-row-content-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-neutral-975));
 		--_code-viewer-diff-row-number-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
-		--_code-viewer-diff-gutter-inline-padding: var(--primitives-space-8);
+		--_code-viewer-gutter-inline-padding: var(--primitives-space-8);
 		--_code-viewer-gutter-border-width: var(--semantics-dividers-thickness);
 		--_code-viewer-gutter-border-color: var(--semantics-dividers-color);
 
@@ -159,6 +159,25 @@ export const codeViewerStyles = css`
 		tab-size: 2;
 	}
 
+	/* # Line numbers */
+
+	:host([line-numbers]:not([diff])) .code-viewer .cm-scroller .cm-content {
+		padding-left: 0;
+	}
+
+	:host([line-numbers]:not([diff])) .cm-line {
+		padding-left: var(--_code-viewer-gutter-inline-padding);
+	}
+
+	:host([line-numbers]:not([diff])) .cm-gutters {
+		color: var(--_code-viewer-gutter-color);
+	}
+
+	:host([line-numbers]:not([diff])) .cm-lineNumbers .cm-gutterElement {
+		padding-inline: var(--_code-viewer-inline-padding) var(--_code-viewer-gutter-inline-padding);
+		text-align: right;
+	}
+
 	/* # Diff */
 
 	:host([diff]) .code-viewer .cm-scroller .cm-content {
@@ -166,7 +185,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([diff]) .cm-line {
-		padding-inline: var(--_code-viewer-diff-gutter-inline-padding) var(--_code-viewer-inline-padding);
+		padding-inline: var(--_code-viewer-gutter-inline-padding) var(--_code-viewer-inline-padding);
 	}
 
 	:host([diff]:not([no-copy]):not([copy-unavailable])) .code-viewer .cm-scroller .cm-content {
@@ -188,11 +207,11 @@ export const codeViewerStyles = css`
 	}
 
 	:host([diff]) .cm-gutters {
-		color: var(--_code-viewer-diff-gutter-color);
+		color: var(--_code-viewer-gutter-color);
 	}
 
 	:host([diff]) .cm-diff-gutter .cm-gutterElement {
-		padding-inline: var(--_code-viewer-diff-gutter-inline-padding) 0;
+		padding-inline: var(--_code-viewer-gutter-inline-padding) 0;
 		text-align: right;
 	}
 
@@ -201,7 +220,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([diff]) .cm-diff-sign-gutter .cm-gutterElement {
-		padding-inline: var(--_code-viewer-diff-gutter-inline-padding);
+		padding-inline: var(--_code-viewer-gutter-inline-padding);
 		text-align: center;
 	}
 
@@ -280,8 +299,8 @@ export const codeViewerStyles = css`
 	}
 
 	.cm-diff-hunk {
-		padding-inline: var(--_code-viewer-diff-gutter-inline-padding) var(--_code-viewer-inline-padding);
-		color: var(--_code-viewer-diff-gutter-color);
+		padding-inline: var(--_code-viewer-gutter-inline-padding) var(--_code-viewer-inline-padding);
+		color: var(--_code-viewer-gutter-color);
 	}
 
 	.cm-diff-line-label,

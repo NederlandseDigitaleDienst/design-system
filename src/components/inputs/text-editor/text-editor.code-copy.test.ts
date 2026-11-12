@@ -70,3 +70,23 @@ describe('nldd-text-editor – kopieerknop op een codeblok', () => {
 		expect(button(el).textContent).toBe('Copy');
 	});
 });
+
+describe('nldd-text-editor – ingesprongen regels', () => {
+	let el: Editor;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const codeLines = () => el.shadowRoot!.querySelectorAll('.cm-md-codeblock').length;
+
+	it('laat een regel met vier spaties inspringing tekst, ook met verborgen syntax', async () => {
+		el = await editor('Gewone regel.\n\n    Ingesprongen regel met vier spaties.\n\nNog een regel.', 'syntax="hidden"');
+		expect(codeLines()).toBe(0);
+	});
+
+	it('toont een fenced blok nog steeds als code', async () => {
+		el = await editor('Tekst\n\n```\ncode\n```');
+		expect(codeLines()).toBeGreaterThan(0);
+	});
+});

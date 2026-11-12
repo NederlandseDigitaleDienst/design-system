@@ -338,6 +338,28 @@ describe('nldd-menu-item href (link items)', () => {
 		expect(a.querySelector('nldd-text-cell')?.getAttribute('text')).toBe('Profiel');
 	});
 
+	it('opens in a new tab with target, and says so to a screen reader', async () => {
+		el = await fixture('<nldd-menu><nldd-menu-item text="Handleiding" href="/handleiding" target="_blank" rel="help"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(el);
+		const a = action(el.querySelector('nldd-menu-item')!);
+		expect(a.getAttribute('target')).toBe('_blank');
+		expect(a.getAttribute('rel')).toBe('help noopener noreferrer');
+		expect(a.querySelector('.menu__link-hint')?.textContent).toBe(', opent in nieuw tabblad');
+	});
+
+	it('says an item goes to another website, and nothing for a link on the page itself', async () => {
+		el = await fixture(`<nldd-menu>
+			<nldd-menu-item text="Elders" href="https://example.org/"></nldd-menu-item>
+			<nldd-menu-item text="Hier" href="/hier"></nldd-menu-item>
+		</nldd-menu>`);
+		await waitForUpdate(el);
+		const [elders, hier] = [...el.querySelectorAll('nldd-menu-item')].map(action);
+		expect(elders.querySelector('.menu__link-hint')?.textContent).toBe(', andere website');
+		expect(hier.querySelector('.menu__link-hint')).toBeNull();
+		expect(hier.hasAttribute('target')).toBe(false);
+		expect(hier.hasAttribute('rel')).toBe(false);
+	});
+
 	it('sets aria-current="page" on a selected link item', async () => {
 		el = await fixture('<nldd-menu><nldd-menu-item text="Home" href="/" selected></nldd-menu-item></nldd-menu>');
 		await waitForUpdate(el);

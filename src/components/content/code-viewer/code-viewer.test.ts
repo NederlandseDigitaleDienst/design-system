@@ -713,3 +713,37 @@ describe('nldd-code-viewer diff', () => {
 		removeTokens();
 	});
 });
+
+describe('nldd-code-viewer line-numbers', () => {
+	let el: NLDDCodeViewer;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const numbers = () => [...el.shadowRoot!.querySelectorAll('.cm-lineNumbers .cm-gutterElement')].map((n) => n.textContent).filter(Boolean);
+
+	it('numbert elke regel, en houdt de nummers uit de code', async () => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer line-numbers>een\ntwee\ndrie</nldd-code-viewer>');
+		await el.updateComplete;
+		expect(numbers()).toEqual(expect.arrayContaining(['1', '2', '3']));
+		expect(el.shadowRoot!.querySelector('.cm-content')!.textContent).not.toMatch(/\d/);
+	});
+
+	it('toont geen nummers zonder het attribuut, en zet ze aan en uit', async () => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>een\ntwee</nldd-code-viewer>');
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('.cm-lineNumbers')).toBeNull();
+		el.lineNumbers = true;
+		await el.updateComplete;
+		expect(numbers()).toEqual(expect.arrayContaining(['1', '2']));
+	});
+
+	it('laat een diff zijn eigen kolommen houden', async () => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer diff line-numbers>@@ -1 +1 @@\n-oud\n+nieuw</nldd-code-viewer>');
+		await waitForUpdate(el);
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('.cm-lineNumbers')).toBeNull();
+		expect(el.shadowRoot!.querySelector('.cm-diff-new-gutter')).not.toBeNull();
+	});
+});

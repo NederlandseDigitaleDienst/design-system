@@ -3,6 +3,7 @@
 
 import { nlddButtonTranslations } from '../components/actions/button/button.i18n.js';
 import { nlddIconButtonTranslations } from '../components/actions/icon-button/icon-button.i18n.js';
+import { nlddMenuItemTranslations } from '../components/actions/menu/menu-item.i18n.js';
 import { nlddMenuTranslations } from '../components/actions/menu/menu.i18n.js';
 import { nlddSplitButtonTranslations } from '../components/actions/split-button/split-button.i18n.js';
 import { nlddToolbarTranslations } from '../components/actions/toolbar/toolbar.i18n.js';
@@ -60,6 +61,7 @@ import { nlddStepBarTranslations } from '../components/status-and-feedback/step-
 export const nl = {
 	...nlddButtonTranslations,
 	...nlddIconButtonTranslations,
+	...nlddMenuItemTranslations,
 	...nlddMenuTranslations,
 	...nlddSplitButtonTranslations,
 	...nlddToolbarTranslations,
