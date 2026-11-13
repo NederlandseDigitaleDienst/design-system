@@ -130,6 +130,7 @@ export const blockquoteStyles = css`
 		padding-bottom: 0;
 		flex-direction: column;
 		gap: calc(var(--_blockquote-spacing) / 2);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		text-wrap: pretty;
 	}

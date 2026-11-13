@@ -126,6 +126,7 @@ export const timeFieldStyles = css`
 		overflow: hidden;
 		padding: 0;
 		flex-grow: 1;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_time-field-text-font);
 		appearance: none;
@@ -136,6 +137,7 @@ export const timeFieldStyles = css`
 	}
 
 	.time-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -176,10 +178,12 @@ export const timeFieldStyles = css`
 	}
 
 	:host([valid]) .time-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .time-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 

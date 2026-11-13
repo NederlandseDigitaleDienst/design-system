@@ -197,6 +197,7 @@ export const documentTabBarStyles = css`
 	.document-tab-bar__drag-clone .document-tab-bar__item-text {
 		overflow: hidden;
 		font: var(--_document-tab-bar-tab-title-font);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -208,12 +209,14 @@ export const documentTabBarStyles = css`
 
 	.document-tab-bar__drag-clone.is-selected .document-tab-bar__item-text,
 	.document-tab-bar__drag-clone.is-selected .document-tab-bar__item-supporting-text {
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 
 	.document-tab-bar__drag-clone .document-tab-bar__item-supporting-text {
 		overflow: hidden;
 		font: var(--primitives-font-body-xs-regular-flat);
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -369,12 +372,14 @@ export const documentTabBarItemStyles = css`
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
 		font: var(--_document-tab-bar-item-tab-title-font);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
 	:host([selected]) .document-tab-bar__item-text {
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 
@@ -382,12 +387,14 @@ export const documentTabBarItemStyles = css`
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
 		font: var(--_document-tab-bar-item-tab-title-font);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
 	:host([selected]) .document-tab-bar__item-short-text {
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 
@@ -431,6 +438,7 @@ export const documentTabBarItemStyles = css`
 		padding: var(--primitives-space-4);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		transform: translateY(-50%);
 		appearance: none;
@@ -447,6 +455,7 @@ export const documentTabBarItemStyles = css`
 	}
 
 	:host([selected]) .document-tab-bar__item-dismiss-button {
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 

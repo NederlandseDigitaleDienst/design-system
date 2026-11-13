@@ -142,6 +142,7 @@ export const tokenFieldStyles = css`
 	}
 
 	.token-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -191,10 +192,12 @@ export const tokenFieldStyles = css`
 	}
 
 	:host([valid]) .token-field__validation-icon {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .token-field__validation-icon {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 `;

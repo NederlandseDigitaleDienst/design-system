@@ -28,7 +28,7 @@ function renderContent(component: NLDDButton) {
 					<nldd-keyboard-shortcut
 						size="inherit"
 						appearance="simple"
-						color="inherit"
+						color="content"
 						keys=${component.shortcut || nothing}
 						mac-keys=${component.shortcutMac || nothing}
 						windows-keys=${component.shortcutWindows || nothing}

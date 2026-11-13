@@ -1,11 +1,20 @@
 /**
- * A rule that sets the text color from a component's content color also passes it
- * on as `--context-content-color`. Text in the system enforces its color and reads
- * that context, so without it an `nldd-text` or a spinner inside takes the default
- * color instead of the one around it.
+ * A rule that sets the text color also passes it on as `--context-content-color`.
+ * Text, icons and spinners in the design system read that context, so without it
+ * they take the default color instead of the one around them.
+ *
+ * Not for a color that only follows what is inherited (`inherit`, `currentColor`,
+ * a mix with it, or the context itself), which needs nothing passed on, nor for the system colors
+ * of forced colors mode.
  */
 
-const CONTENT_COLOR = /(?<![\w-])color\s*:\s*var\(\s*(--_[\w-]*content-color)\s*\)/g;
+const COLOR = /(?<![\w(-])color\s*:\s*([^;{}]+)/g;
+
+/** The start of the comment with which a rule says it passes no context on, followed by its reason. */
+export const OPT_OUT = '/* No context:';
+
+const PASSES_THROUGH = /^(inherit|initial|unset|revert|revert-layer|transparent)\b|currentColor|^var\(\s*--context-content-color\s*\)/i;
+const SYSTEM_COLOR = /^(Canvas|CanvasText|LinkText|VisitedText|ActiveText|ButtonFace|ButtonText|ButtonBorder|Field|FieldText|Highlight|HighlightText|SelectedItem|SelectedItemText|Mark|MarkText|GrayText|AccentColor|AccentColorText)\b/;
 
 /** Comments and `${…}` interpolations blanked out, so offsets still point at the source. */
 const blank = (source) =>
@@ -14,8 +23,7 @@ const blank = (source) =>
 		.replace(/\$\{[^}]*\}/g, (text) => ' '.repeat(text.length));
 
 /**
- * Each `color: var(--_…-content-color)` whose own rule does not set the context
- * too. A nested rule (inside `@media`, or `&:hover`) is a rule of its own.
+ * Each `color` whose own rule does not set the context too. A nested rule (inside `@media`, or `&:hover`) is a rule of its own.
  * @returns {{ line: number, text: string }[]}
  */
 export function findContentColorWithoutContext(source) {
@@ -36,11 +44,15 @@ export function findContentColorWithoutContext(source) {
 		return text;
 	};
 	const found = [];
-	for (const match of plain.matchAll(CONTENT_COLOR)) {
+	for (const match of plain.matchAll(COLOR)) {
+		const value = match[1].trim();
+		if (PASSES_THROUGH.test(value) || SYSTEM_COLOR.test(value)) continue;
 		const rule = blocks
 			.filter((block) => block.start < match.index && block.end > match.index)
 			.sort((a, b) => b.start - a.start)[0];
 		if (rule && ownText(rule).includes('--context-content-color')) continue;
+		// A rule may say it passes nothing on, with a comment and its reason.
+		if (rule && source.slice(rule.start, rule.end).includes(OPT_OUT)) continue;
 		const line = plain.slice(0, match.index).split('\n').length;
 		found.push({ line, text: source.split('\n')[line - 1].trim() });
 	}

@@ -763,7 +763,7 @@ describe('nldd-icon-button – on a colored surface', () => {
 
 	// The label only has the contrast the colored surface gives it, so no state
 	// may move the background toward it.
-	for (const appearance of ['inherit-tinted', 'inherit-filled']) {
+	for (const appearance of ['content-tinted', 'content-filled']) {
 		it(`keeps one ${appearance} color through hover and expanded`, async () => {
 			el = await fixture<NLDDIconButton>(`<nldd-icon-button appearance="${appearance}" icon="ellipsis" text="Meer" expandable style="color: rgb(255, 255, 255)"></nldd-icon-button>`);
 			await waitForUpdate(el);

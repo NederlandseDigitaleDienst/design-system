@@ -28,9 +28,9 @@ export const keyboardShortcutStyles = css`
 		vertical-align: middle;
 	}
 
-	:host([color="inherit"]) {
-		--_keyboard-shortcut-content-color: currentColor;
-		--_keyboard-shortcut-separator-color: currentColor;
+	:host([color="content"]) {
+		--_keyboard-shortcut-content-color: var(--context-content-color);
+		--_keyboard-shortcut-separator-color: var(--context-content-color);
 		--_keyboard-shortcut-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
 		--_keyboard-shortcut-background-color: color-mix(in oklab, var(--semantics-content-contrast-color) 20%, transparent);
 	}
@@ -138,6 +138,7 @@ export const keyboardShortcutStyles = css`
 	}
 
 	.keyboard-shortcut__separator {
+		--context-content-color: var(--_keyboard-shortcut-separator-color);
 		color: var(--_keyboard-shortcut-separator-color);
 		font-family: var(--_keyboard-shortcut-font-family);
 		font-size: var(--_keyboard-shortcut-font-size);

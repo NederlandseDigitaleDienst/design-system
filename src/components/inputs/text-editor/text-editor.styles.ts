@@ -515,10 +515,12 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-link {
+		--context-content-color: var(--_text-editor-link-color);
 		color: var(--_text-editor-link-color);
 	}
 
 	.cm-md-url {
+		--context-content-color: var(--_text-editor-mark-color);
 		color: var(--_text-editor-mark-color);
 	}
 
@@ -532,6 +534,7 @@ export const textEditorStyles = css`
 	   and override the highlight-style URL tint (teal) on its token span so the
 	   whole address is the link color, not just the mark wrapper. */
 	.cm-md-autolink {
+		--context-content-color: var(--_text-editor-link-color);
 		color: var(--_text-editor-link-color);
 	}
 
@@ -553,6 +556,7 @@ export const textEditorStyles = css`
 		/* Markers: dimmed (secondary color, not opacity, so contrast holds) and
 	   monospace at the 16px marker size — tidy, and a fixed-width leading prefix. */
 	.cm-md-mark {
+		--context-content-color: var(--_text-editor-mark-color);
 		color: var(--_text-editor-mark-color);
 		font-family: var(--_text-editor-code-font-family);
 		font-size: var(--_text-editor-marker-font-size);
@@ -685,6 +689,7 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-code-language {
+		--context-content-color: var(--_text-editor-mark-color);
 		color: var(--_text-editor-mark-color);
 		font-family: var(--_text-editor-code-font-family);
 		font-size: var(--_text-editor-marker-font-size);
@@ -833,6 +838,7 @@ export const textEditorStyles = css`
 
 	:host .cm-completionDetail {
 		margin-left: auto;
+		--context-content-color: var(--_text-editor-popup-supporting-text-color);
 		color: var(--_text-editor-popup-supporting-text-color);
 		font-style: normal;
 	}
@@ -854,6 +860,7 @@ export const textEditorStyles = css`
 		min-width: var(--_text-editor-popup-min-width);
 		max-width: var(--_text-editor-popup-message-max-width);
 		padding: var(--_text-editor-popup-message-padding-block) var(--_text-editor-popup-message-padding-inline);
+		--context-content-color: var(--_text-editor-popup-message-color);
 		color: var(--_text-editor-popup-message-color);
 		font-family: var(--_text-editor-popup-font-family);
 		font-size: var(--_text-editor-popup-font-size);

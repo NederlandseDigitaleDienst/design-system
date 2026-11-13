@@ -416,6 +416,7 @@ export const menuGroupStyles = css`
 		padding-bottom: var(--primitives-space-1);
 		padding-left: var(--primitives-space-4);
 		font: var(--primitives-font-body-sm-regular-tight);
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		text-wrap: balance;
 	}

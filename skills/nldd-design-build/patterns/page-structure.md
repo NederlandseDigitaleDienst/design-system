@@ -388,7 +388,7 @@ Op de home, zonder terugknop:
 </nldd-shell>
 ```
 
-**Account.** Is iemand ingelogd, dan wordt het item een menu, en laat het zien dat je bent ingelogd en als wie. In de balk staat een korte, vaste tekst ("Mijn account"), met in het `icon`-slot van het item een [`nldd-avatar`](../../nldd-design/reference.md#nldd-avatar) met de initialen. Zet daar `icon-aligned` en `color="inherit"` op, dan lijnt hij uit met de iconen ernaast en heeft hij hun kleur. Met `content-priority="icon"` blijft op een smal scherm alleen de avatar over, en is de tekst de toegankelijke naam.
+**Account.** Is iemand ingelogd, dan wordt het item een menu, en laat het zien dat je bent ingelogd en als wie. In de balk staat een korte, vaste tekst ("Mijn account"), met in het `icon`-slot van het item een [`nldd-avatar`](../../nldd-design/reference.md#nldd-avatar) met de initialen. Zet daar `icon-aligned` en `color="content"` op, dan lijnt hij uit met de iconen ernaast en heeft hij hun kleur. Met `content-priority="icon"` blijft op een smal scherm alleen de avatar over, en is de tekst de toegankelijke naam.
 
 De naam staat voluit in het menu, in een [`nldd-identity`](../../nldd-design/reference.md#nldd-identity) in het `header`-slot, zodat een lange naam de balk niet vult. Het e-mailadres eronder zegt met welk account, voor wie er meer dan één heeft. Dezelfde avatar staat daar naast de naam; hij toont de initialen uit `name`, dus er is geen foto voor nodig. Zet op beide avatars `decorative`: de naam en de tekst van het item staan er al.
 
@@ -452,7 +452,7 @@ In het menu staat bovenaan de link naar het persoonlijke deel, want daar logt ie
           >
             <nldd-avatar
               slot="icon"
-              color="inherit"
+              color="content"
               name="Anouk de Vries"
               decorative
               icon-aligned
@@ -888,7 +888,7 @@ Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagi
 Hints: zo is het bedoeld. Die laten niets falen.
 
 - `avatar-in-menu-bar-needs-decorative`: Set `decorative`: the name and the text of the item are already there.
-- `avatar-in-menu-bar-needs-icon-aligned`: Set `icon-aligned` and color="inherit", so the avatar lines up with the icons next to it and takes their color.
+- `avatar-in-menu-bar-needs-icon-aligned`: Set `icon-aligned` and `color="content"`, so the avatar lines up with the icons next to it and takes their color.
 - `back-link-no-vague-text`: Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.
 - `breadcrumbs-goes-in-footer`: Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `login-link-needs-full-verb`: A link to the login screen does not log in itself, so use the full verb: "Inloggen".

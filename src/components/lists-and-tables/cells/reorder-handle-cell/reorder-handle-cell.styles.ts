@@ -66,6 +66,7 @@ export const reorderHandleCellStyles = css`
 
 	.reorder-handle-cell__control-grip {
 		display: block;
+		--context-content-color: var(--semantics-grab-handles-grip-color);
 		color: var(--semantics-grab-handles-grip-color);
 	}
 `;

@@ -100,6 +100,7 @@ export const textFieldStyles = css`
 		overflow: hidden;
 		padding: 0;
 		flex-grow: 1;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_text-field-font);
 		appearance: none;
@@ -110,6 +111,7 @@ export const textFieldStyles = css`
 	}
 
 	.text-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -150,10 +152,12 @@ export const textFieldStyles = css`
 	}
 
 	:host([valid]) .text-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .text-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 

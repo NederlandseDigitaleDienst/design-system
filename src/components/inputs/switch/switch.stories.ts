@@ -21,9 +21,9 @@ export default {
 	argTypes: {
 		color: {
 			control: 'select',
-			options: ['(auto)', 'inherit'],
+			options: ['(auto)', 'content'],
 			mapping: { '(auto)': '' },
-			description: 'Met inherit krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
+			description: 'Met content krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
 			table: { defaultValue: { summary: '(auto)' } },
 		},
 		size: {
@@ -87,8 +87,8 @@ export const Standaard = {
 	args: {},
 };
 
-export const KleurInherit = {
-	name: 'Kleur inherit',
+export const KleurContent = {
+	name: 'Kleur content',
 	render: () => html`
 		<nldd-container
 			layout="wrap"
@@ -97,11 +97,11 @@ export const KleurInherit = {
 			style="--context-background-color: var(--semantics-surfaces-accent-filled-background-color); background-color: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color); --context-content-color: var(--semantics-content-on-accent-filled-color);"
 		>
 			<nldd-switch
-				color="inherit"
+				color="content"
 				accessible-label="Uit"
 			></nldd-switch>
 			<nldd-switch
-				color="inherit"
+				color="content"
 				checked
 				accessible-label="Aan"
 			></nldd-switch>

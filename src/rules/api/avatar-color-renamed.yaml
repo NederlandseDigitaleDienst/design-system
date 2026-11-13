@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-avatar[color="inherit"]'
+fix: { value: { color: { inherit: content } } }
+message: '`color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-avatar.'
+examples:
+  passed: ['<nldd-avatar name="Team Beleid" color="content"></nldd-avatar>']
+  failed: ['<nldd-avatar name="Team Beleid" color="inherit"></nldd-avatar>']

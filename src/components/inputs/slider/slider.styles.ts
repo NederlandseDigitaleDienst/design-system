@@ -101,6 +101,7 @@ export const sliderStyles = css`
 		flex-shrink: 0;
 		width: var(--_slider-icon-size);
 		height: var(--_slider-icon-size);
+		--context-content-color: var(--_slider-icon-color);
 		color: var(--_slider-icon-color);
 	}
 

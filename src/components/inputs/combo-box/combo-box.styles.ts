@@ -102,12 +102,14 @@ export const comboBoxStyles = css`
 		flex-shrink: 1;
 		flex-basis: 0;
 		align-self: stretch;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_combo-box-text-font);
 		appearance: none;
 	}
 
 	.combo-box__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -162,10 +164,12 @@ export const comboBoxStyles = css`
 	}
 
 	:host([valid]) .combo-box__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .combo-box__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 

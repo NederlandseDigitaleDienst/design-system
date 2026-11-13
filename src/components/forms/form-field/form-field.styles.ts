@@ -110,6 +110,7 @@ export const formFieldStyles = css`
 		display: inline-flex;
 		gap: var(--primitives-space-4);
 		align-items: baseline;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-md-regular-flat);
 		text-wrap: pretty;
@@ -144,6 +145,7 @@ export const formFieldStyles = css`
 	/* # Optional indicator */
 
 	.form-field__optional {
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		font: var(--primitives-font-body-xs-regular-tight);
 	}
@@ -152,6 +154,7 @@ export const formFieldStyles = css`
 	/* # Supporting label */
 
 	.form-field__supporting-label {
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		font: var(--primitives-font-body-xs-regular-tight);
 		text-wrap: pretty;
@@ -197,6 +200,7 @@ export const formFieldHelpTextStyles = css`
 
 	.form-field__help-text {
 		margin: var(--primitives-space-4) 0 0;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 	}
@@ -208,6 +212,7 @@ export const formFieldHelpTextStyles = css`
 		${slottedReset}
 		${inheritedTextReset}
 		border-radius: var(--primitives-corner-radius-xxs) !important;
+		--context-content-color: var(--context-link-color) !important;
 		color: var(--context-link-color) !important;
 		text-decoration: underline !important;
 		text-underline-offset: var(--primitives-space-2) !important;
@@ -215,11 +220,13 @@ export const formFieldHelpTextStyles = css`
 
 	@media (hover: hover) {
 		::slotted(a:hover) {
+			--context-content-color: var(--context-link-is-hovered-color) !important;
 			color: var(--context-link-is-hovered-color) !important;
 		}
 	}
 
 	::slotted(a:active) {
+		--context-content-color: var(--context-link-is-active-color) !important;
 		color: var(--context-link-is-active-color) !important;
 	}
 

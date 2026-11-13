@@ -279,6 +279,7 @@ export const titleStyles = css`
 	.title__overline {
 		margin: 0;
 		max-width: var(--_title-secondary-text-max-width);
+		--context-content-color: var(--context-content-secondary-color);
 		color: var(--context-content-secondary-color);
 		font: var(--_title-overline-font);
 		overflow-wrap: anywhere;
@@ -290,6 +291,7 @@ export const titleStyles = css`
 		${inheritedTextReset}
 		margin: 0 !important;
 		max-width: var(--_title-secondary-text-max-width) !important;
+		--context-content-color: var(--context-content-secondary-color) !important;
 		color: var(--context-content-secondary-color) !important;
 		font: var(--_title-overline-font) !important;
 		overflow-wrap: anywhere !important;
@@ -331,6 +333,7 @@ export const titleStyles = css`
 	.title__supporting-text {
 		margin: 0;
 		max-width: var(--_title-secondary-text-max-width);
+		--context-content-color: var(--context-content-secondary-color);
 		color: var(--context-content-secondary-color);
 		font: var(--_title-supporting-text-font);
 		overflow-wrap: anywhere;
@@ -342,30 +345,11 @@ export const titleStyles = css`
 		${inheritedTextReset}
 		margin: 0 !important;
 		max-width: var(--_title-secondary-text-max-width) !important;
+		--context-content-color: var(--context-content-secondary-color) !important;
 		color: var(--context-content-secondary-color) !important;
 		font: var(--_title-supporting-text-font) !important;
 		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;
-	}
-
-	:host([color="inherit"]) .title__text {
-		color: inherit;
-	}
-
-	:host([color="inherit"]) .title__overline,
-	:host([color="inherit"]) .title__supporting-text {
-		color: color-mix(in oklab, currentColor var(--semantics-content-secondary-opacity), transparent);
-	}
-
-	/* !important matches the hardened slotted rules above. */
-
-	:host([color="inherit"]) ::slotted(:not([slot])) {
-		color: inherit !important;
-	}
-
-	:host([color="inherit"]) ::slotted([slot="overline"]),
-	:host([color="inherit"]) ::slotted([slot="supporting-text"]) {
-		color: color-mix(in oklab, currentColor var(--semantics-content-secondary-opacity), transparent) !important;
 	}
 
 	.title__end {

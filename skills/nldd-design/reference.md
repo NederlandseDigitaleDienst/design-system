@@ -19,6 +19,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 
 - `action-exit-goes-away-from-primary` (hint): Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.
 - `action-goes-on-button`: Put slot="actions" on each nldd-button, not on an element around them.
+- `button-appearance-renamed`: `inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.
 - `button-form-id-invalid`: The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.
 - `button-form-id-not-found`: Nothing in this root has the id in `form`, so this button submits nothing.
 - `button-needs-name`: nldd-button needs `text` or `accessible-label`, otherwise it has no accessible name.
@@ -49,7 +50,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `appearance` | `string` | Visual style, color included: 'primary' \| 'secondary' \| 'destructive' \| 'accent-filled' \| 'accent-transparent' \| 'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'critical-tinted' \| 'critical-transparent' \| 'inherit-filled' \| 'inherit-tinted'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable. |
+| `appearance` | `string` | Visual style, color included: 'primary' \| 'secondary' \| 'destructive' \| 'accent-filled' \| 'accent-transparent' \| 'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'critical-tinted' \| 'critical-transparent' \| 'content-filled' \| 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable. |
 | `size` | `string` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md'). 'lg' uses larger text and 24px start/end icons. |
 | `horizontal-alignment` | `string` | Horizontal alignment of the button content: 'left' \| 'center' \| 'right' (default: unset, centered). Most visible with width="full" or a fixed width. |
 | `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
@@ -102,6 +103,7 @@ A horizontal container for grouping buttons with a neutral background. Automatic
 
 **Rules** (`nldd lint`)
 
+- `button-appearance-renamed`: `inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.
 - `button-bar-no-toggle-button`: The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
@@ -110,7 +112,7 @@ A horizontal container for grouping buttons with a neutral background. Automatic
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Bar size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style). |
-| `appearance` | `string` | Visual style of the buttons (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface) |
+| `appearance` | `string` | Visual style of the buttons: 'primary' \| 'secondary' \| 'accent-filled' \| 'neutral-tinted' (default) \| 'neutral-base' \| 'content-filled' \| 'content-tinted'. The content appearances are for a colored surface. |
 | `disabled` | `boolean` | Disabled state |
 
 **Slots**
@@ -155,6 +157,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 
 **Rules** (`nldd lint`)
 
+- `button-appearance-renamed`: `inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.
 - `button-no-disabled` (hint): Leave the action available and say afterwards what is missing and how to fix it, in this view or the next.
 - `button-no-filler-start` (hint): Start with the verb or noun that carries the meaning: people scan the first words.
 - `button-no-vague-text` (hint): Name the action, such as "Bewaar" or "Verwijder account": this text only makes sense after reading what is around it.
@@ -172,7 +175,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `appearance` | `string` | Visual style, color included: 'accent-filled' \| 'accent-transparent' \| 'neutral-tinted' \| 'neutral-transparent' \| 'critical-tinted' \| 'critical-transparent' \| 'inherit-filled' \| 'inherit-tinted' \| 'primary' \| 'secondary' \| 'destructive'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces. |
+| `appearance` | `string` | Visual style, color included: 'primary' \| 'secondary' \| 'destructive' \| 'accent-filled' \| 'accent-transparent' \| 'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'critical-tinted' \| 'critical-transparent' \| 'content-filled' \| 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon. |
 | `size` | `string` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
 | `hide-lg-text` | `boolean` | In lg size, hides the text label and enlarges the icon by one step (28px) |
 | `no-highlight-border` | `boolean` | Removes the per-appearance highlight border (e.g. when a control group draws a single border instead). |
@@ -338,6 +341,7 @@ A split button combines a primary action with a chevron that opens its alternati
 
 **Rules** (`nldd lint`)
 
+- `button-appearance-renamed`: `inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.
 - `button-form-id-invalid`: The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.
 - `button-form-id-not-found`: Nothing in this root has the id in `form`, so this button submits nothing.
 - `split-button-max-one-popup`: nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.
@@ -350,7 +354,7 @@ A split button combines a primary action with a chevron that opens its alternati
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
-| `appearance` | `string` | Visual style: 'neutral-tinted' (default) \| 'neutral-base' \| 'accent-filled' \| 'primary' \| 'secondary' \| 'inherit-tinted' \| 'inherit-filled'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The inherit appearances are for a colored surface. There are no transparent appearances: the split button needs a surface of its own to show it is one control. |
+| `appearance` | `string` | Visual style: 'primary' \| 'secondary' \| 'accent-filled' \| 'neutral-tinted' (default) \| 'neutral-base' \| 'content-filled' \| 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control. |
 | `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `loading` | `boolean` | Loading state of the main action, as on nldd-button. The chevron stays available. |
 | `loading-text` | `string` | What the screen reader announces while `loading` is on, as on nldd-button. |
@@ -490,10 +494,11 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 
 **Rules** (`nldd lint`)
 
+- `avatar-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-avatar.
 - `avatar-group-no-other-children`: nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.
 - `avatar-group-no-small-target`: Avatars that are links or buttons overlap, so each keeps too small a target (WCAG 2.5.8). Use size 32 or larger.
 - `avatar-in-menu-bar-needs-decorative` (hint): Set `decorative`: the name and the text of the item are already there.
-- `avatar-in-menu-bar-needs-icon-aligned` (hint): Set `icon-aligned` and color="inherit", so the avatar lines up with the icons next to it and takes their color.
+- `avatar-in-menu-bar-needs-icon-aligned` (hint): Set `icon-aligned` and `color="content"`, so the avatar lines up with the icons next to it and takes their color.
 - `avatar-needs-name`: An avatar with `href` or `button` needs `accessible-label` or `name`, or the control has no accessible name.
 - `avatar-no-small-target`: A link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.
 
@@ -503,7 +508,7 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 | --- | --- | --- |
 | `type` | `string` | `person` (circle, person icon) or `organization` (rounded, building icon); default `person` |
 | `size` | `string` | `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along |
-| `color` | `string` | `neutral` (the default, a neutral fill) or `inherit` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance) |
+| `color` | `string` | `neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance) |
 | `icon-aligned` | `boolean` | Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin) |
 | `name` | `string` | Name of the person or organization; supplies the derived initials and the accessible label |
 | `initials` | `string` | Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form |
@@ -603,11 +608,12 @@ A read-only block of code/text built on a non-editable CodeMirror 6 view. Visual
 
 ### `<nldd-icon>`
 
-A customizable icon component that renders SVG icons from a predefined library. Icons are decorative by default: the host gets `aria-hidden="true"` automatically. If you want the icon to be announced by assistive tech, set `aria-hidden="false"` on the consumer side together with an `aria-label`. Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a menu item. `size="full"` names that default explicitly. `size="inherit"` makes it follow the surrounding text (1em), for an icon set inline in a sentence. Any spacer-aligned number (16–96) pins a fixed dimension. Reach for `inherit` rather than a global `nldd-icon { width: 1em }` rule in the consumer: such a rule wins over the component's own :host styling and so also shrinks the icons that a cell or button was already sizing correctly. Color: by default the icon inherits its parent's `color`. Set `color` to one of the functional semantics (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or a rijkskleur (`lintblauw`, `paars`, `groen`, …). For a color the design system cannot know — the jacket of a cable, a color someone picked — set `custom-color` to any CSS color.
+A customizable icon component that renders SVG icons from a predefined library. Icons are decorative by default: the host gets `aria-hidden="true"` automatically. If you want the icon to be announced by assistive tech, set `aria-hidden="false"` on the consumer side together with an `aria-label`. Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a menu item. `size="full"` names that default explicitly. `size="inherit"` makes it follow the surrounding text (1em), for an icon set inline in a sentence. Any spacer-aligned number (16–96) pins a fixed dimension. Reach for `inherit` rather than a global `nldd-icon { width: 1em }` rule in the consumer: such a rule wins over the component's own :host styling and so also shrinks the icons that a cell or button was already sizing correctly. Color: by default the icon takes `--context-content-color`, the text color that the surface, button, link or selected row around it passes on, as `nldd-text` does. A parent of your own that sets `color` sets that context too. Set `color` to one of the other functional semantics (`secondary`, `accent`, `critical`, `warning`, `success`), which follow the surface as well, or a rijkskleur (`lintblauw`, `paars`, `groen`, …). For a color the design system cannot know — the jacket of a cable, a color someone picked — set `custom-color` to any CSS color.
 
 **Rules** (`nldd lint`)
 
 - `icon-box-renamed`: The `box` attribute is now `tile`. Rename it here and on every other nldd-icon.
+- `icon-color-renamed`: `color="primary-content"` is now `color="content"`, the default, and `secondary-content` is now `secondary`, as on `nldd-text`. The old values do nothing. Rename them here and on every other nldd-icon.
 - `icon-name-renamed`: The `name` attribute is now `icon`. Rename it here and on every other nldd-icon.
 - `icon-not-found`: An icon set here does not exist. See the icon list in the reference.
 
@@ -617,7 +623,7 @@ A customizable icon component that renders SVG icons from a predefined library. 
 | --- | --- | --- |
 | `icon` | `string` | The name of the icon to display. The same attribute every other component that renders an icon takes. |
 | `size` | `string` | `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). |
-| `color` | `string` | Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent. |
+| `color` | `string` | Functional (`content`, the default, `secondary`, `accent`, `critical`, `warning`, `success`, the colors the surface passes on as `--context-content-*`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). |
 | `custom-color` | `string` | A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know. It wins over `color`. |
 | `tile` | `boolean` | Draw the icon on a tile, a filled square. `color` and `custom-color` then paint the tile and the glyph takes the contrasting color, and `size` measures the tile: the glyph is four fifths of it. The corner is `--semantics-tiles-corner-radius`, a fifth of the tile, as on an organization `nldd-avatar`. |
 
@@ -693,6 +699,7 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 
 **Rules** (`nldd lint`)
 
+- `keyboard-shortcut-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-keyboard-shortcut.
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
@@ -706,7 +713,7 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 | `size` | `string` | Size: 'sm' \| 'md' \| 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; in the box variant the keycaps then scale along in em. |
 | `appearance` | `string` | 'box' (default) shows each key as a keycap with a fill and a highlight edge. 'simple' shows the keys as plain text with separators: lighter, for inline use such as in a menu item. |
 | `always-visible` | `boolean` | Show on touch-only devices too, where shortcuts cannot be invoked. |
-| `color` | `string` | 'neutral' (default) uses the component colors of its own. 'inherit' lets the keys and separators follow the surrounding text color (currentColor), with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row. |
+| `color` | `string` | 'neutral' (default) uses the component colors of its own. 'content' lets the keys and separators follow the content color of the context, with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row. |
 | `debug-os` | `'mac'\|'windows'\|'linux'\|'other'` | Development aid: overrides the OS detection for this instance, so you can show several platform variants side by side in Storybook or documentation. Not meant for production use; leave it empty (default) so the real OS detection applies. |
 
 **Slots**
@@ -721,6 +728,7 @@ A container for rich text content that automatically applies responsive typograp
 
 **Rules** (`nldd lint`)
 
+- `rich-text-color-no-effect`: `color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
 - `rich-text-no-inline-content`: Bare text or an inline element is a direct child, and each one lands in a column of 0px. Wrap it in a block element such as `p` where the content is made, or put plain text in nldd-text.
 - `toc-heading-needs-id` (hint): Give every h2 an `id`, so the table of contents can jump to it.
 
@@ -728,7 +736,6 @@ A container for rich text content that automatically applies responsive typograp
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `color` | `string` | 'content' (the default) follows the surface it sits on: text, captions and links take the colors its context passes on, each element its own, also in a highlighted row or on the accent panel of a hero. 'inherit' takes the CSS `color` instead, for an area of your own that sets `color` but not the context: links stay underlined in that color, and secondary text (figcaption) gets it at a lowered opacity. Known v1 gaps: inline code, mark, tables and hr keep their own surfaces. |
 | `spacing` | `string` | Spacing between elements: 'flat' \| 'tight' \| 'snug' (default) \| 'loose' |
 | `centered` | `boolean` | Centers the main column inside the container; without it, content is left-aligned |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
@@ -785,7 +792,7 @@ One run of body text at a size from the type scale. It is what you reach for whe
 | `lg-custom-size` | `string` | The same, at lg |
 | `weight` | `string` | Font weight: 'regular' \| 'medium' \| 'bold' (default: 'regular'). With 'bold' a slotted `<strong>` no longer stands out: there is nothing bolder in the scale. |
 | `line-height` | `string` | Line height: 'flat' \| 'tight' \| 'snug' \| 'loose' (default: 'snug') |
-| `color` | `string` | Text color: 'content' (the default) \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical' \| 'inherit'. 'content' and 'secondary' follow the surrounding content channel; 'inherit' takes the color it inherits, for text on a painted surface. |
+| `color` | `string` | Text color: 'content' (the default) \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too. |
 | `horizontal-alignment` | `string` | Alignment of the text within the block: 'left' \| 'center' \| 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box. |
 
 **Slots**
@@ -807,6 +814,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `row-navigation-no-heading` (hint): Use the `text` of an nldd-text-cell: a row is not a heading.
 - `tag-goes-below-title` (hint): Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.
+- `title-color-no-effect`: `color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
 - `title-custom-size-invalid`: This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `title-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `heading-level` or `size` for headings up to `display-1`.
 - `title-end-max-one-action` (hint): Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.
@@ -825,7 +833,6 @@ A title bar with an optional overline, title, and supporting text on the left, a
 | `sm-custom-size` | `string` | A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than `display-1`. A var() works when the variable holds a length; one that is not defined leaves the title without its size, the floor included. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than `display-1` at the same breakpoint: a smaller value shows as `display-1`, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of `display-1`. An invalid value falls back to `size` |
 | `md-custom-size` | `string` | The same, at md |
 | `lg-custom-size` | `string` | The same, at lg |
-| `color` | `string` | 'content' (the default) follows the text color its surface passes on, also in a highlighted row or on the accent panel of a hero. 'inherit' takes the CSS `color` instead, for an area of your own that sets `color` but not the context; overline and supporting-text get the same color at a lowered opacity. |
 | `text` | `string` | Title text. Content in the default slot takes its place. |
 | `supporting-text` | `string` | Text below the title. Content in the supporting-text slot takes its place. |
 | `overline` | `string` | Text above the title. Content in the overline slot takes its place. |
@@ -1091,6 +1098,7 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 **Rules** (`nldd lint`)
 
+- `checkbox-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-checkbox.
 - `row-checkbox-needs-decorative` (hint): Set `decorative`: the row is the checkbox, and this one only shows its state.
 
 **Attributes**
@@ -1099,7 +1107,7 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
+| `color` | `'content'` | 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `decorative` | `boolean` | Renders the box without the input: no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row that is itself the checkbox; putting a real input in there would nest a control inside a control. |
 | `indeterminate` | `boolean` | Indeterminate state (takes precedence over checked visually) |
@@ -1121,6 +1129,7 @@ A checkbox with an inline label for use in forms. Form-associated: participates 
 
 **Rules** (`nldd lint`)
 
+- `checkbox-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-checkbox.
 - `filter-no-options-as-fields` (hint): Make the options rows of an nldd-list, with `checkbox` on the row: the whole row is the target and there is nothing to submit.
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
 - `login-remember-me-needs-checked` (hint): Set `checked`: staying signed in is the right default, and who does not want it turns it off.
@@ -1132,7 +1141,7 @@ A checkbox with an inline label for use in forms. Form-associated: participates 
 | `checked` | `boolean` | Checked state |
 | `indeterminate` | `boolean` | Indeterminate state |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
+| `color` | `'content'` | 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
 | `value` | `string` | Value for form submission |
 | `name` | `string` | Name for form submission |
 | `label` | `string` | Label text for the checkbox |
@@ -1510,13 +1519,17 @@ A password input field with visibility toggle and validation states.
 
 WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role="radiogroup" aria-labelledby="options-label"> <legend id="options-label">Kies een optie</legend> <nldd-radio-button name="options" value="1" accessible-label="Optie 1"></nldd-radio-button> <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button> </fieldset>
 
+**Rules** (`nldd lint`)
+
+- `radio-button-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-radio-button.
+
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
+| `color` | `'content'` | 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `decorative` | `boolean` | Renders the shape only: no role, no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row or an nldd-radio-button-field that is itself the radio; putting a second radio in there would nest a control inside a control. |
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. |
@@ -1539,6 +1552,7 @@ A radio button with an inline label. Use inside nldd-radio-button-group, which s
 **Rules** (`nldd lint`)
 
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
+- `radio-button-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-radio-button.
 
 **Attributes**
 
@@ -1546,7 +1560,7 @@ A radio button with an inline label. Use inside nldd-radio-button-group, which s
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
+| `color` | `'content'` | 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
 | `value` | `string` | Value for form submission |
 | `name` | `string` | Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group. |
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group. |
@@ -1827,6 +1841,7 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 
 **Rules** (`nldd lint`)
 
+- `switch-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-switch.
 - `switch-needs-name`: nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.
 
 **Attributes**
@@ -1835,7 +1850,7 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 | --- | --- | --- |
 | `checked` | `boolean` | Whether the switch is on/off |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
+| `color` | `'content'` | 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `size` | `string` | Switch size: 'xs' \| 'sm' (default: 'sm') |
 | `name` | `string` | Name for form submission; nothing is submitted when the switch is off |
@@ -1857,6 +1872,7 @@ A switch toggle with an inline label for use in forms.
 **Rules** (`nldd lint`)
 
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
+- `switch-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-switch.
 
 **Attributes**
 
@@ -1864,7 +1880,7 @@ A switch toggle with an inline label for use in forms.
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
+| `color` | `'content'` | 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
 | `value` | `string` | Value for form submission |
 | `name` | `string` | Name for form submission |
 | `label` | `string` | Label text for the switch |
@@ -2393,7 +2409,7 @@ A section that spans the full width without horizontal padding. Useful for backg
 
 ### `<nldd-hero>`
 
-The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width="full"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout="overlap"`), so the image keeps its height whatever the content. `layout="contained"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color, so components with `color="inherit"` (title, rich-text) are guaranteed to keep their contrast. `main-background="base"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.
+The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width="full"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout="overlap"`), so the image keeps its height whatever the content. `layout="contained"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color that it passes on, so the text, links and icons on it keep their contrast. `main-background="base"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.
 
 **Rules** (`nldd lint`)
 
@@ -2437,7 +2453,7 @@ The section that says what a page is for: it names the main goal of what you can
 | Slot | Description |
 | --- | --- |
 | `media` | Image or illustration (img or nldd-image); fills the area and is clipped. |
-| _(default)_ | Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance) |
+| _(default)_ | Content of the text panel (nldd-title and nldd-rich-text, for instance) |
 
 **Plain HTML it styles:** `<img>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
@@ -3270,7 +3286,7 @@ Interactive building block for use in a menu bar. Renders as an <a> (with href) 
 **Rules** (`nldd lint`)
 
 - `avatar-in-menu-bar-needs-decorative` (hint): Set `decorative`: the name and the text of the item are already there.
-- `avatar-in-menu-bar-needs-icon-aligned` (hint): Set `icon-aligned` and color="inherit", so the avatar lines up with the icons next to it and takes their color.
+- `avatar-in-menu-bar-needs-icon-aligned` (hint): Set `icon-aligned` and `color="content"`, so the avatar lines up with the icons next to it and takes their color.
 - `language-item-needs-name`: Set an `accessible-label` such as "Taal: Nederlands (NL)": a screen reader otherwise spells out the letters.
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
 - `login-link-needs-full-verb` (hint): A link to the login screen does not log in itself, so use the full verb: "Inloggen".
@@ -3536,6 +3552,7 @@ Shows the state of something, or how much of it there is: a status, a number of 
 
 **Rules** (`nldd lint`)
 
+- `badge-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-badge.
 - `status-dot-needs-decorative` (hint): Set `decorative` on the dot and put the word next to it in an nldd-text-cell: the word carries the meaning.
 
 **Attributes**
@@ -3543,7 +3560,7 @@ Shows the state of something, or how much of it there is: a status, a number of 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Size: 'sm' \| 'md' (default: 'md') |
-| `color` | `'critical'\|'accent'\|'neutral'\|'warning'\|'success'\|'inherit'` | The meaning of the badge, the same set as nldd-status-bar, or 'inherit' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development. |
+| `color` | `'critical'\|'accent'\|'neutral'\|'warning'\|'success'\|'content'` | The meaning of the badge, the same set as nldd-status-bar, or 'content' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development. |
 | `custom-color` | `string` | A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it. |
 | `pulse` | `boolean` | Grows a ring out of the badge and fades it, for something happening right now (a live connection, an outage). Respects `prefers-reduced-motion`. |
 | `text` | `string` | Text (takes precedence over number) |

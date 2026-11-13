@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-badge[color="inherit"]'
+fix: { value: { color: { inherit: content } } }
+message: '`color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-badge.'
+examples:
+  passed: ['<nldd-badge number="3" color="content"></nldd-badge>']
+  failed: ['<nldd-badge number="3" color="inherit"></nldd-badge>']

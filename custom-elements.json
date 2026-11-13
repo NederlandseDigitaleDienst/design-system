@@ -73,7 +73,7 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
-              "description": "Visual style of the buttons (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)"
+              "description": "Visual style of the buttons: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. The content appearances are for a colored surface."
             },
             {
               "name": "disabled",
@@ -640,9 +640,9 @@
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
               "expandedType": {
-                "text": "'accent-filled' | 'accent-transparent' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
+                "text": "'accent-filled' | 'accent-transparent' | 'content-filled' | 'content-tinted' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
               },
-              "description": "Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable."
+              "description": "Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable."
             },
             {
               "name": "size",
@@ -1334,9 +1334,9 @@
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
               "expandedType": {
-                "text": "'accent-filled' | 'accent-transparent' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
+                "text": "'accent-filled' | 'accent-transparent' | 'content-filled' | 'content-tinted' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
               },
-              "description": "Visual style, color included: 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted' | 'primary' | 'secondary' | 'destructive'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces."
+              "description": "Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon."
             },
             {
               "name": "size",
@@ -3530,9 +3530,9 @@
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
               "expandedType": {
-                "text": "'accent-filled' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'primary' | 'secondary'"
+                "text": "'accent-filled' | 'content-filled' | 'content-tinted' | 'neutral-base' | 'neutral-tinted' | 'primary' | 'secondary'"
               },
-              "description": "Visual style: 'neutral-tinted' (default) | 'neutral-base' | 'accent-filled' | 'primary' | 'secondary' | 'inherit-tinted' | 'inherit-filled'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The inherit appearances are for a colored surface. There are no transparent appearances: the split button needs a surface of its own to show it is one control."
+              "description": "Visual style: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control."
             },
             {
               "name": "disabled",
@@ -5069,9 +5069,9 @@
               "default": "'neutral'",
               "fieldName": "color",
               "expandedType": {
-                "text": "'inherit' | 'neutral'"
+                "text": "'content' | 'neutral'"
               },
-              "description": "`neutral` (the default, a neutral fill) or `inherit` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance)"
+              "description": "`neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance)"
             },
             {
               "name": "icon-aligned",
@@ -5768,7 +5768,7 @@
         },
         {
           "kind": "class",
-          "description": "A customizable icon component that renders SVG icons from a predefined library. Icons are decorative by default: the host gets `aria-hidden=\"true\"` automatically. If you want the icon to be announced by assistive tech, set `aria-hidden=\"false\"` on the consumer side together with an `aria-label`. Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a menu item. `size=\"full\"` names that default explicitly. `size=\"inherit\"` makes it follow the surrounding text (1em), for an icon set inline in a sentence. Any spacer-aligned number (16–96) pins a fixed dimension. Reach for `inherit` rather than a global `nldd-icon { width: 1em }` rule in the consumer: such a rule wins over the component's own :host styling and so also shrinks the icons that a cell or button was already sizing correctly. Color: by default the icon inherits its parent's `color`. Set `color` to one of the functional semantics (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or a rijkskleur (`lintblauw`, `paars`, `groen`, …). For a color the design system cannot know — the jacket of a cable, a color someone picked — set `custom-color` to any CSS color.",
+          "description": "A customizable icon component that renders SVG icons from a predefined library. Icons are decorative by default: the host gets `aria-hidden=\"true\"` automatically. If you want the icon to be announced by assistive tech, set `aria-hidden=\"false\"` on the consumer side together with an `aria-label`. Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a menu item. `size=\"full\"` names that default explicitly. `size=\"inherit\"` makes it follow the surrounding text (1em), for an icon set inline in a sentence. Any spacer-aligned number (16–96) pins a fixed dimension. Reach for `inherit` rather than a global `nldd-icon { width: 1em }` rule in the consumer: such a rule wins over the component's own :host styling and so also shrinks the icons that a cell or button was already sizing correctly. Color: by default the icon takes `--context-content-color`, the text color that the surface, button, link or selected row around it passes on, as `nldd-text` does. A parent of your own that sets `color` sets that context too. Set `color` to one of the other functional semantics (`secondary`, `accent`, `critical`, `warning`, `success`), which follow the surface as well, or a rijkskleur (`lintblauw`, `paars`, `groen`, …). For a color the design system cannot know — the jacket of a cable, a color someone picked — set `custom-color` to any CSS color.",
           "name": "NLDDIcon",
           "members": [
             {
@@ -5796,7 +5796,7 @@
               "type": {
                 "text": "IconColor"
               },
-              "default": "''",
+              "default": "'content'",
               "attribute": "color",
               "reflects": true
             },
@@ -5849,12 +5849,12 @@
               "type": {
                 "text": "IconColor"
               },
-              "description": "Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent.",
+              "description": "Functional (`content`, the default, `secondary`, `accent`, `critical`, `warning`, `success`, the colors the surface passes on as `--context-content-*`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`).",
               "name": "color",
-              "default": "''",
+              "default": "'content'",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'accent' | 'bruin' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'oranje' | 'paars' | 'primary-content' | 'robijnrood' | 'rood' | 'roze' | 'secondary-content' | 'success' | 'violet' | 'warning'"
+                "text": "'accent' | 'bruin' | 'content' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'secondary' | 'success' | 'violet' | 'warning'"
               }
             },
             {
@@ -6661,7 +6661,7 @@
                 "text": "Color"
               },
               "default": "'neutral'",
-              "description": "'neutral' (default) uses the component's own palette. 'inherit' makes the\nkeys and separators adopt the surrounding text color (currentColor), with a\ntranslucent contrast fill and highlight border — useful on filled panels or\nhighlighted rows.",
+              "description": "'neutral' (default) uses the component's own palette. 'content' makes the\nkeys and separators adopt the content color of the context, with a\ntranslucent contrast fill and highlight border — useful on filled panels or\nhighlighted rows.",
               "attribute": "color",
               "reflects": true
             },
@@ -6743,10 +6743,10 @@
                 "text": "Color"
               },
               "default": "'neutral'",
-              "description": "'neutral' (default) uses the component colors of its own. 'inherit' lets the keys and separators follow the surrounding text color (currentColor), with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row.",
+              "description": "'neutral' (default) uses the component colors of its own. 'content' lets the keys and separators follow the content color of the context, with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'inherit' | 'neutral'"
+                "text": "'content' | 'neutral'"
               }
             },
             {
@@ -6810,16 +6810,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "'content' | 'inherit'"
-              },
-              "default": "'content'",
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "spacing",
               "type": {
                 "text": "Spacing"
@@ -6859,18 +6849,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "color",
-              "type": {
-                "text": "'content' | 'inherit'"
-              },
-              "default": "'content'",
-              "fieldName": "color",
-              "expandedType": {
-                "text": "'content' | 'inherit'"
-              },
-              "description": "'content' (the default) follows the surface it sits on: text, captions and links take the colors its context passes on, each element its own, also in a highlighted row or on the accent panel of a hero. 'inherit' takes the CSS `color` instead, for an area of your own that sets `color` but not the context: links stay underlined in that color, and secondary text (figcaption) gets it at a lowered opacity. Known v1 gaps: inline code, mark, tables and hr keep their own surfaces."
-            },
             {
               "name": "spacing",
               "type": {
@@ -7327,9 +7305,9 @@
               "default": "'content'",
               "fieldName": "color",
               "expandedType": {
-                "text": "'accent' | 'content' | 'critical' | 'inherit' | 'secondary' | 'success' | 'warning'"
+                "text": "'accent' | 'content' | 'critical' | 'secondary' | 'success' | 'warning'"
               },
-              "description": "Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical' | 'inherit'. 'content' and 'secondary' follow the surrounding content channel; 'inherit' takes the color it inherits, for text on a painted surface."
+              "description": "Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too."
             },
             {
               "name": "horizontal-alignment",
@@ -7438,16 +7416,6 @@
             },
             {
               "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "TitleColor"
-              },
-              "default": "'content'",
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "text",
               "type": {
                 "text": "string"
@@ -7525,18 +7493,6 @@
               "default": "''",
               "fieldName": "lgCustomSize",
               "description": "The same, at lg"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "TitleColor"
-              },
-              "default": "'content'",
-              "fieldName": "color",
-              "expandedType": {
-                "text": "'content' | 'inherit'"
-              },
-              "description": "'content' (the default) follows the text color its surface passes on, also in a highlighted row or on the accent panel of a hero. 'inherit' takes the CSS `color` instead, for an area of your own that sets `color` but not the context; overline and supporting-text get the same color at a lowered opacity."
             },
             {
               "name": "text",
@@ -9972,10 +9928,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "description": "'content' draws the control and its label in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -10300,13 +10256,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "description": "'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -10467,10 +10423,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the surrounding text color.",
+              "description": "'content' draws the control in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -10823,13 +10779,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -17475,10 +17431,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "description": "'content' draws the control and its label in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -17785,13 +17741,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "description": "'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -18147,10 +18103,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the surrounding text color.",
+              "description": "'content' draws the control in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -18484,13 +18440,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -21998,10 +21954,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "description": "'content' draws the control and its label in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -22317,13 +22273,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "description": "'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -22465,10 +22421,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the surrounding text color.",
+              "description": "'content' draws the control in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -22815,13 +22771,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -33139,7 +33095,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast. `main-background=\"base\"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.",
+          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color that it passes on, so the text, links and icons on it keep their contrast. `main-background=\"base\"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.",
           "name": "NLDDHero",
           "members": [
             {
@@ -33829,7 +33785,7 @@
             },
             {
               "name": "",
-              "description": "Content of the text panel (nldd-title and nldd-rich-text with color=\"inherit\", for instance)"
+              "description": "Content of the text panel (nldd-title and nldd-rich-text, for instance)"
             }
           ]
         }
@@ -45130,9 +45086,9 @@
               "default": "'critical'",
               "fieldName": "color",
               "expandedType": {
-                "text": "'accent' | 'critical' | 'inherit' | 'neutral' | 'success' | 'warning'"
+                "text": "'accent' | 'content' | 'critical' | 'neutral' | 'success' | 'warning'"
               },
-              "description": "The meaning of the badge, the same set as nldd-status-bar, or 'inherit' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development."
+              "description": "The meaning of the badge, the same set as nldd-status-bar, or 'content' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development."
             },
             {
               "name": "custom-color",

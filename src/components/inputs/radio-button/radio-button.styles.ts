@@ -43,19 +43,19 @@ export const radioButtonStyles = css`
 
 	/* ## Colors */
 
-	:host([color="inherit"]) {
-		--_radio-button-border-color: currentColor;
+	:host([color="content"]) {
+		--_radio-button-border-color: var(--context-content-color);
 		--_radio-button-background-color: transparent;
-		--_radio-button-is-hovered-border-color: currentColor;
-		--_radio-button-is-active-border-color: currentColor;
-		--_radio-button-is-selected-border-color: currentColor;
-		--_radio-button-is-selected-background-color: currentColor;
+		--_radio-button-is-hovered-border-color: var(--context-content-color);
+		--_radio-button-is-active-border-color: var(--context-content-color);
+		--_radio-button-is-selected-border-color: var(--context-content-color);
+		--_radio-button-is-selected-background-color: var(--context-content-color);
 		--_radio-button-is-selected-inner-shape-border-color: var(--context-background-color);
-		--_radio-button-is-selected-is-hovered-border-color: currentColor;
-		--_radio-button-is-selected-is-hovered-background-color: currentColor;
+		--_radio-button-is-selected-is-hovered-border-color: var(--context-content-color);
+		--_radio-button-is-selected-is-hovered-background-color: var(--context-content-color);
 		--_radio-button-is-selected-is-hovered-inner-shape-border-color: var(--context-background-color);
-		--_radio-button-is-selected-is-active-border-color: currentColor;
-		--_radio-button-is-selected-is-active-background-color: currentColor;
+		--_radio-button-is-selected-is-active-border-color: var(--context-content-color);
+		--_radio-button-is-selected-is-active-background-color: var(--context-content-color);
 		--_radio-button-is-selected-is-active-inner-shape-border-color: var(--context-background-color);
 	}
 

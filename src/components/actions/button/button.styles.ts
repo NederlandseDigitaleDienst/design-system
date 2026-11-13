@@ -183,17 +183,16 @@ export const buttonStyles = css`
 		--_button-is-active-highlight-border-color: transparent;
 	}
 
-	/* The on-color variants derive from currentColor (which stays
-	   unresolved inside the tokens). The filled label takes the surface
-	   color from --context-background-color, resolved here on the host:
-	   inside a :root token it would freeze. */
+	/* The tokens derive from currentColor, which stays unresolved inside them;
+	   the host sets it from the context. The filled label reads
+	   --context-background-color here: inside a :root token it would freeze. */
 
-	:host([appearance="inherit-tinted"]),
-	:host([expanded][appearance="inherit-tinted"]) {
-		--_button-background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
-		--_button-primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-		--_button-secondary-content-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
-		--_button-highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
+	:host([appearance="content-tinted"]),
+	:host([expanded][appearance="content-tinted"]) {
+		--_button-background-color: var(--context-button-background-color, var(--semantics-buttons-content-tinted-background-color));
+		--_button-primary-content-color: var(--semantics-buttons-content-tinted-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-content-tinted-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-content-tinted-highlight-border-color);
 		--_button-is-hovered-background-color: var(--_button-background-color);
 		--_button-is-hovered-primary-content-color: var(--_button-primary-content-color);
 		--_button-is-hovered-secondary-content-color: var(--_button-secondary-content-color);
@@ -202,14 +201,16 @@ export const buttonStyles = css`
 		--_button-is-active-primary-content-color: var(--_button-primary-content-color);
 		--_button-is-active-secondary-content-color: var(--_button-secondary-content-color);
 		--_button-is-active-highlight-border-color: var(--_button-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
-	:host([appearance="inherit-filled"]),
-	:host([expanded][appearance="inherit-filled"]) {
-		--_button-background-color: var(--semantics-buttons-inherit-filled-background-color);
+	:host([appearance="content-filled"]),
+	:host([expanded][appearance="content-filled"]) {
+		--_button-background-color: var(--semantics-buttons-content-filled-background-color);
 		--_button-primary-content-color: var(--context-background-color);
-		--_button-secondary-content-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
-		--_button-highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
+		--_button-secondary-content-color: var(--semantics-buttons-content-filled-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-content-filled-highlight-border-color);
 		--_button-is-hovered-background-color: var(--_button-background-color);
 		--_button-is-hovered-primary-content-color: var(--_button-primary-content-color);
 		--_button-is-hovered-secondary-content-color: var(--_button-secondary-content-color);
@@ -218,16 +219,18 @@ export const buttonStyles = css`
 		--_button-is-active-primary-content-color: var(--_button-primary-content-color);
 		--_button-is-active-secondary-content-color: var(--_button-secondary-content-color);
 		--_button-is-active-highlight-border-color: var(--_button-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
-	/* inherit-filled paints its fill with currentColor, so the inner button
+	/* content-filled paints its fill with currentColor, so the inner button
 	   keeps the inherited color and the label color goes to the content layer.
 	   The higher specificity pins it through hover, active and expanded. */
-	:host([appearance="inherit-filled"]) .button {
+	:host([appearance="content-filled"]) .button {
 		color: inherit;
 	}
 
-	:host([appearance="inherit-filled"]) .button > * {
+	:host([appearance="content-filled"]) .button > * {
 		--context-content-color: var(--_button-primary-content-color);
 		color: var(--_button-primary-content-color);
 	}

@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-title[color]'
+removed: ['color']
+message: '`color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.'
+examples:
+  passed: ['<nldd-title></nldd-title>']
+  failed: ['<nldd-title color="inherit"></nldd-title>', '<nldd-title color="content"></nldd-title>']

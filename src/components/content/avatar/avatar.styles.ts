@@ -42,10 +42,10 @@ export const avatarStyles = css`
 	   inherited color and the contrast text lives on the child elements. */
 	/* color on the host: the contrast token reads currentColor, so the flip has to
 	   be computed against the same value the fill uses. */
-	:host([color="inherit"]) {
+	:host([color="content"]) {
 		color: var(--context-content-color);
 
-		--_avatar-background-color: currentColor;
+		--_avatar-background-color: var(--context-content-color);
 		--_avatar-content-color: var(--semantics-content-contrast-color);
 	}
 
@@ -83,9 +83,7 @@ export const avatarStyles = css`
 	/* container-type: inline-size lets the initials and icon scale (cqi) with the
 	   avatar's rendered width, so a fixed size and a filled (100%) size both work.
 	   inline-size (not size) leaves the block axis free, so aspect-ratio can drive
-	   the height without the box collapsing in flex/grid. color stays inherited
-	   here so --_avatar-background-color's currentColor (color="inherit") resolves to the
-	   surrounding color, not the content color. */
+	   the height without the box collapsing in flex/grid. */
 	.avatar {
 		container-type: inline-size;
 		display: flex;

@@ -136,6 +136,7 @@ export const activityIndicatorStyles = css`
 		width: max-content;
 		max-width: calc(100% - var(--primitives-space-32));
 		padding: var(--_activity-indicator-overlay-panel-padding);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		transform: translate(-50%, -50%);
 	}

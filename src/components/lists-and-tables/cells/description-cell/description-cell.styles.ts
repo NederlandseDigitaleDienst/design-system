@@ -93,6 +93,7 @@ export const descriptionCellStyles = css`
 		margin: 0 !important;
 		min-width: 0 !important;
 		align-self: stretch !important;
+		--context-content-color: var(--context-content-secondary-color) !important;
 		color: var(--context-content-secondary-color) !important;
 		font: var(--primitives-font-body-sm-regular-flat) !important;
 		text-wrap: pretty !important;

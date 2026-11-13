@@ -221,11 +221,13 @@ export const pageFooterLegalBarItemStyles = css`
 
 	.page-footer__legal-bar-item {
 		display: inline-flex;
+		--context-content-color: var(--_page-footer-legal-bar-item-color);
 		color: var(--_page-footer-legal-bar-item-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 	}
 
 	.page-footer__legal-bar-item-link {
+		--context-content-color: var(--_page-footer-legal-bar-item-color);
 		color: var(--_page-footer-legal-bar-item-color);
 		text-decoration: underline;
 	}

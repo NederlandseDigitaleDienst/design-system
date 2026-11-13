@@ -260,7 +260,7 @@ describe('nldd-checkbox no-tab', () => {
 	});
 });
 
-describe('nldd-checkbox – color="inherit"', () => {
+describe('nldd-checkbox – color="content"', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
@@ -269,8 +269,8 @@ describe('nldd-checkbox – color="inherit"', () => {
 
 	it('fills a checked box with the surrounding text color, and draws the mark in the surface color', async () => {
 		el = await fixture(`
-			<div style="color: rgb(255, 255, 255); --context-background-color: rgb(24, 69, 118);">
-				<nldd-checkbox color="inherit" checked accessible-label="Afgerond"></nldd-checkbox>
+			<div style="--context-content-color: rgb(255, 255, 255); --context-background-color: rgb(24, 69, 118);">
+				<nldd-checkbox color="content" checked accessible-label="Afgerond"></nldd-checkbox>
 			</div>`);
 		const checkbox = el.querySelector('nldd-checkbox') as NLDDCheckbox;
 		await waitForUpdate(checkbox);
@@ -286,8 +286,8 @@ describe('nldd-checkbox – color="inherit"', () => {
 		const unloadTokens = loadTokens();
 		try {
 			el = await fixture(`
-				<div style="color: rgb(24, 69, 118);">
-					<nldd-checkbox color="inherit" checked accessible-label="Afgerond"></nldd-checkbox>
+				<div style="--context-content-color: rgb(24, 69, 118);">
+					<nldd-checkbox color="content" checked accessible-label="Afgerond"></nldd-checkbox>
 				</div>`);
 			const checkbox = el.querySelector('nldd-checkbox') as NLDDCheckbox;
 			await waitForUpdate(checkbox);

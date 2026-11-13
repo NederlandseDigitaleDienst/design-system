@@ -10,17 +10,19 @@ export const iconStyles = css`
 	 *
 	 * Default size = fill the container. Setting [size] pins a fixed spacer
 	 * value; the keyword full names the default and inherit follows the
-	 * surrounding text. [color] picks a semantic color or a rijkskleur. */
+	 * surrounding text. By default the icon takes the context's content
+	 * color; [color] picks another semantic color or a rijkskleur. */
 
 	:host {
 		--_icon-size: 100%;
-		--_icon-color: inherit;
+		--_icon-color: var(--context-content-color);
 		--_icon-custom-color: inherit;
 		--_icon-glyph-scale: 1;
 
 		display: inline-flex;
 		width: var(--_icon-size);
 		align-items: center;
+		/* No context: nothing inside reads it, and the default reads it here. */
 		color: var(--_icon-color);
 	}
 
@@ -52,12 +54,11 @@ export const iconStyles = css`
 
 	/* # Color — functional */
 
-	:host([color="primary-content"])   { --_icon-color: var(--semantics-content-color); }
-	:host([color="secondary-content"]) { --_icon-color: var(--semantics-content-secondary-color); }
-	:host([color="accent"])            { --_icon-color: var(--semantics-content-accent-color); }
-	:host([color="critical"])          { --_icon-color: var(--semantics-content-critical-color); }
-	:host([color="warning"])           { --_icon-color: var(--semantics-content-warning-color); }
-	:host([color="success"])           { --_icon-color: var(--semantics-content-success-color); }
+	:host([color="secondary"])         { --_icon-color: var(--context-content-secondary-color); }
+	:host([color="accent"])            { --_icon-color: var(--context-content-accent-color); }
+	:host([color="critical"])          { --_icon-color: var(--context-content-critical-color); }
+	:host([color="warning"])           { --_icon-color: var(--context-content-warning-color); }
+	:host([color="success"])           { --_icon-color: var(--context-content-success-color); }
 
 
 	/* # Color — rijkskleuren */
@@ -145,6 +146,7 @@ export const iconStyles = css`
 	/* Resolved against the host's currentColor, which the rule above painted the
 	   tile with, and only then assigned to the glyph. Same route as nldd-badge. */
 	:host([tile]) svg {
+		--context-content-color: var(--semantics-content-contrast-color);
 		color: var(--semantics-content-contrast-color);
 	}
 `;

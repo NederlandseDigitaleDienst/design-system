@@ -81,6 +81,7 @@ export const progressBarStyles = css`
 		gap: var(--_progress-bar-caption-gap);
 		justify-content: space-between;
 		align-items: baseline;
+		--context-content-color: var(--_progress-bar-text-color);
 		color: var(--_progress-bar-text-color);
 	}
 
@@ -90,6 +91,7 @@ export const progressBarStyles = css`
 	}
 
 	.progress-bar__supporting-text {
+		--context-content-color: var(--_progress-bar-supporting-text-color);
 		color: var(--_progress-bar-supporting-text-color);
 		font: var(--_progress-bar-supporting-text-font);
 		font-variant-numeric: tabular-nums;

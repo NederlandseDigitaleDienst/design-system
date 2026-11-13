@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst Button Component (Lit + TypeScript)
  *
  * @element nldd-button
- * @attr {string} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable.
+ * @attr {string} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable.
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). 'lg' uses larger text and 24px start/end icons.
  * @attr {string} horizontal-alignment - Horizontal alignment of the button content: 'left' | 'center' | 'right' (default: unset, centered). Most visible with width="full" or a fixed width.
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.
@@ -71,8 +71,8 @@ type Appearance =
 	| 'neutral-transparent'
 	| 'critical-tinted'
 	| 'critical-transparent'
-	| 'inherit-filled'
-	| 'inherit-tinted';
+	| 'content-filled'
+	| 'content-tinted';
 type Size = 'xs' | 'sm' | 'md' | 'lg';
 type ButtonType = 'button' | 'submit' | 'reset';
 type PopupType = 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid';

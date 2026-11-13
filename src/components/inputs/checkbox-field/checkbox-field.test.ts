@@ -259,7 +259,7 @@ describe('nldd-checkbox-field – label click', () => {
 	});
 });
 
-describe('nldd-checkbox-field – color="inherit"', () => {
+describe('nldd-checkbox-field – color="content"', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
@@ -267,10 +267,10 @@ describe('nldd-checkbox-field – color="inherit"', () => {
 	});
 
 	it('passes the color to its checkbox and draws its label in the surrounding text color', async () => {
-		el = await fixture(`<div style="color: rgb(255, 255, 255);"><nldd-checkbox-field color="inherit" label="Afgerond"></nldd-checkbox-field></div>`);
+		el = await fixture(`<div style="--context-content-color: rgb(255, 255, 255);"><nldd-checkbox-field color="content" label="Afgerond"></nldd-checkbox-field></div>`);
 		const field = el.querySelector('nldd-checkbox-field') as HTMLElement;
 		await waitForUpdate(field);
-		expect(field.shadowRoot!.querySelector('nldd-checkbox')!.getAttribute('color')).toBe('inherit');
+		expect(field.shadowRoot!.querySelector('nldd-checkbox')!.getAttribute('color')).toBe('content');
 		expect(getComputedStyle(field.shadowRoot!.querySelector('.checkbox-field__label')!).color).toBe('rgb(255, 255, 255)');
 	});
 });

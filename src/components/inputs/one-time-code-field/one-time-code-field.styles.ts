@@ -141,6 +141,7 @@ export const oneTimeCodeFieldStyles = css`
 		flex-shrink: 1;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_one-time-code-field-box-font);
 	}
@@ -162,6 +163,7 @@ export const oneTimeCodeFieldStyles = css`
 	.one-time-code-field__separator {
 		display: flex;
 		align-items: center;
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		font: var(--_one-time-code-field-box-font);
 		white-space: pre;
@@ -258,6 +260,7 @@ export const oneTimeCodeFieldStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 
@@ -291,6 +294,7 @@ export const oneTimeCodeFieldStyles = css`
 		min-width: 0;
 		height: 100%;
 		flex-grow: 1;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_one-time-code-field-box-font);
 		letter-spacing: var(--_one-time-code-field-letter-spacing);

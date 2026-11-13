@@ -43,11 +43,6 @@ describe('nldd-rich-text', () => {
 		expect(el.getAttribute('spacing')).toBe('loose');
 	});
 
-	it('reflects the color attribute', async () => {
-		el = await fixture('<nldd-rich-text color="inherit"></nldd-rich-text>');
-		expect(el.getAttribute('color')).toBe('inherit');
-	});
-
 	it('defaults to no hyphens', async () => {
 		el = await fixture('<nldd-rich-text></nldd-rich-text>');
 		expect((el as unknown as { hyphens: boolean }).hyphens).toBe(false);
@@ -217,7 +212,7 @@ describe('nldd-rich-text headings', () => {
 	});
 });
 
-describe('nldd-rich-text color="inherit"', () => {
+describe('nldd-rich-text color', () => {
 	let styles: HTMLStyleElement[] = [];
 	let wrap: HTMLElement;
 
@@ -261,32 +256,21 @@ describe('nldd-rich-text color="inherit"', () => {
 		return wrap.querySelector('nldd-rich-text')!;
 	};
 
-	it('inherits the surface text color', async () => {
-		const rt = await place('color="inherit"', '<p>tekst</p>');
-		expect(getComputedStyle(rt).color).toBe(SURFACE_COLOR);
-	});
-
-	it('keeps the semantic content color without the attribute', async () => {
+	it('ignores the CSS color around it', async () => {
 		const rt = await place('', '<p>tekst</p>');
 		expect(getComputedStyle(rt).color).not.toBe(SURFACE_COLOR);
 	});
 
-	it('paints links with currentColor (the inherited surface color)', async () => {
+	it('takes the content color its context passes on', async () => {
+		const rt = await place('', '<p>tekst</p>');
+		wrap.style.setProperty('--context-content-color', SURFACE_COLOR);
+		expect(getComputedStyle(rt).color).toBe(SURFACE_COLOR);
+	});
+
+	it('ignores a color attribute', async () => {
 		const rt = await place('color="inherit"', '<a id="lnk" href="/x">link</a>');
-		expect(getComputedStyle(rt.querySelector('#lnk')!).color).toBe(SURFACE_COLOR);
-	});
-
-	it('keeps the semantic link color without the attribute', async () => {
-		const rt = await place('', '<a id="lnk" href="/x">link</a>');
+		expect(getComputedStyle(rt).color).not.toBe(SURFACE_COLOR);
 		expect(getComputedStyle(rt.querySelector('#lnk')!).color).not.toBe(SURFACE_COLOR);
-	});
-
-	it('tints figcaption to a translucent tier of the inherited color', async () => {
-		const rt = await place('color="inherit"', '<figure><figcaption id="cap">bijschrift</figcaption></figure>');
-		const body = getComputedStyle(rt).color;
-		const caption = getComputedStyle(rt.querySelector('#cap')!).color;
-		expect(body).toBe(SURFACE_COLOR);    // body text is the opaque inherited color
-		expect(caption).not.toBe(body);      // figcaption is mixed toward transparent, so not the opaque color
 	});
 });
 

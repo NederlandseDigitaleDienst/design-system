@@ -59,6 +59,7 @@ nldd-form-section .form-section__header[hidden] {
 
 nldd-form-section .form-section__title {
 	display: block;
+	--context-content-color: var(--semantics-content-color);
 	color: var(--semantics-content-color);
 	font: var(--semantics-forms-section-title-font);
 	text-wrap: balance;
@@ -69,6 +70,7 @@ nldd-form-section .form-section__title {
 
 nldd-form-section .form-section__supporting-text {
 	display: block;
+	--context-content-color: var(--semantics-content-secondary-color);
 	color: var(--semantics-content-secondary-color);
 	font: var(--semantics-forms-section-supporting-text-font);
 	text-wrap: pretty;

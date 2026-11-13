@@ -8,6 +8,11 @@ export const devRules: DevRule[] = [
 		"context": ":is(nldd-modal-dialog, nldd-inline-dialog) > [slot=\"actions\"]:not(nldd-button)"
 	},
 	{
+		"id": "avatar-color-renamed",
+		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-avatar.",
+		"context": "nldd-avatar[color=\"inherit\"]"
+	},
+	{
 		"id": "avatar-group-no-other-children",
 		"message": "nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.",
 		"context": "nldd-avatar-group",
@@ -35,6 +40,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-avatar:is([href]:not([href=\"\"]), [button]):is([size=\"16\"], [size=\"20\"])"
 	},
 	{
+		"id": "badge-color-renamed",
+		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-badge.",
+		"context": "nldd-badge[color=\"inherit\"]"
+	},
+	{
 		"id": "bar-split-view-child-needs-slot",
 		"message": "Every child of nldd-bar-split-view needs a `slot`, or it does not render.",
 		"context": "nldd-bar-split-view",
@@ -49,6 +59,11 @@ export const devRules: DevRule[] = [
 		"id": "blockquote-custom-size-no-effect",
 		"message": "This custom size is smaller than the quote's own size at this breakpoint and shows at that size.",
 		"context": "nldd-blockquote:state(custom-size-below-floor)"
+	},
+	{
+		"id": "button-appearance-renamed",
+		"message": "`inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.",
+		"context": ":is(nldd-button, nldd-icon-button, nldd-split-button, nldd-button-bar):is([appearance=\"inherit-filled\"], [appearance=\"inherit-tinted\"])"
 	},
 	{
 		"id": "button-bar-no-toggle-button",
@@ -112,6 +127,11 @@ export const devRules: DevRule[] = [
 		"properties": [
 			"accessibleLabel"
 		]
+	},
+	{
+		"id": "checkbox-color-renamed",
+		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-checkbox.",
+		"context": "nldd-checkbox[color=\"inherit\"], nldd-checkbox-field[color=\"inherit\"]"
 	},
 	{
 		"id": "code-viewer-diff-lines-invalid",
@@ -279,6 +299,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "icon-color-renamed",
+		"message": "`color=\"primary-content\"` is now `color=\"content\"`, the default, and `secondary-content` is now `secondary`, as on `nldd-text`. The old values do nothing. Rename them here and on every other nldd-icon.",
+		"context": "nldd-icon[color=\"primary-content\"], nldd-icon[color=\"secondary-content\"]"
+	},
+	{
 		"id": "icon-name-renamed",
 		"message": "The `name` attribute is now `icon`. Rename it here and on every other nldd-icon.",
 		"context": "nldd-icon[name]"
@@ -327,6 +352,11 @@ export const devRules: DevRule[] = [
 		"id": "kanban-tag-renamed",
 		"message": "This board is now `nldd-kanban`. Rename the tag, its import and its class, here and on every page.",
 		"context": "nldd-task-board, nldd-column-board"
+	},
+	{
+		"id": "keyboard-shortcut-color-renamed",
+		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-keyboard-shortcut.",
+		"context": "nldd-keyboard-shortcut[color=\"inherit\"]"
 	},
 	{
 		"id": "language-item-needs-name",
@@ -630,6 +660,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-progress-bar:state(exceeds-max)"
 	},
 	{
+		"id": "radio-button-color-renamed",
+		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-radio-button.",
+		"context": "nldd-radio-button[color=\"inherit\"], nldd-radio-button-field[color=\"inherit\"]"
+	},
+	{
 		"id": "radio-button-group-needs-name",
 		"message": "nldd-radio-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-radio-button-group",
@@ -643,6 +678,11 @@ export const devRules: DevRule[] = [
 		"id": "reorder-handle-cell-tag-renamed",
 		"message": "`nldd-drag-handle-cell` is now `nldd-reorder-handle-cell`. Rename the tag, its import and its class, here and on every page.",
 		"context": "nldd-drag-handle-cell"
+	},
+	{
+		"id": "rich-text-color-no-effect",
+		"message": "`color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.",
+		"context": "nldd-rich-text[color]"
 	},
 	{
 		"id": "rich-text-no-inline-content",
@@ -841,6 +881,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "switch-color-renamed",
+		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-switch.",
+		"context": "nldd-switch[color=\"inherit\"], nldd-switch-field[color=\"inherit\"]"
+	},
+	{
 		"id": "switch-needs-name",
 		"message": "nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.",
 		"context": "nldd-switch",
@@ -940,6 +985,11 @@ export const devRules: DevRule[] = [
 		"id": "title-cell-size-renamed",
 		"message": "The sizes of a title cell are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title-cell.",
 		"context": "nldd-title-cell[size=\"1\"], nldd-title-cell[size=\"2\"], nldd-title-cell[size=\"3\"], nldd-title-cell[size=\"4\"], nldd-title-cell[size=\"5\"], nldd-title-cell[size=\"6\"]"
+	},
+	{
+		"id": "title-color-no-effect",
+		"message": "`color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.",
+		"context": "nldd-title[color]"
 	},
 	{
 		"id": "title-custom-size-invalid",
@@ -1080,8 +1130,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-button-appearance",
-		"message": "`appearance` on nldd-button takes: accent-filled, accent-transparent, critical-tinted, critical-transparent, destructive, inherit-filled, inherit-tinted, neutral-base, neutral-tinted, neutral-transparent, primary, secondary.",
-		"context": "nldd-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"accent-transparent\"], [appearance=\"critical-tinted\"], [appearance=\"critical-transparent\"], [appearance=\"destructive\"], [appearance=\"inherit-filled\"], [appearance=\"inherit-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"neutral-transparent\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"message": "`appearance` on nldd-button takes: accent-filled, accent-transparent, content-filled, content-tinted, critical-tinted, critical-transparent, destructive, neutral-base, neutral-tinted, neutral-transparent, primary, secondary.",
+		"context": "nldd-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"accent-transparent\"], [appearance=\"content-filled\"], [appearance=\"content-tinted\"], [appearance=\"critical-tinted\"], [appearance=\"critical-transparent\"], [appearance=\"destructive\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"neutral-transparent\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-button-size",
@@ -1105,8 +1155,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-icon-button-appearance",
-		"message": "`appearance` on nldd-icon-button takes: accent-filled, accent-transparent, critical-tinted, critical-transparent, destructive, inherit-filled, inherit-tinted, neutral-base, neutral-tinted, neutral-transparent, primary, secondary.",
-		"context": "nldd-icon-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"accent-transparent\"], [appearance=\"critical-tinted\"], [appearance=\"critical-transparent\"], [appearance=\"destructive\"], [appearance=\"inherit-filled\"], [appearance=\"inherit-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"neutral-transparent\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"message": "`appearance` on nldd-icon-button takes: accent-filled, accent-transparent, content-filled, content-tinted, critical-tinted, critical-transparent, destructive, neutral-base, neutral-tinted, neutral-transparent, primary, secondary.",
+		"context": "nldd-icon-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"accent-transparent\"], [appearance=\"content-filled\"], [appearance=\"content-tinted\"], [appearance=\"critical-tinted\"], [appearance=\"critical-transparent\"], [appearance=\"destructive\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"neutral-transparent\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-icon-button-size",
@@ -1150,8 +1200,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-split-button-appearance",
-		"message": "`appearance` on nldd-split-button takes: accent-filled, inherit-filled, inherit-tinted, neutral-base, neutral-tinted, primary, secondary.",
-		"context": "nldd-split-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"inherit-filled\"], [appearance=\"inherit-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"message": "`appearance` on nldd-split-button takes: accent-filled, content-filled, content-tinted, neutral-base, neutral-tinted, primary, secondary.",
+		"context": "nldd-split-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"content-filled\"], [appearance=\"content-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-split-button-type",
@@ -1180,8 +1230,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-avatar-color",
-		"message": "`color` on nldd-avatar takes: inherit, neutral.",
-		"context": "nldd-avatar[color]:not([color=\"inherit\"], [color=\"neutral\"])"
+		"message": "`color` on nldd-avatar takes: content, neutral.",
+		"context": "nldd-avatar[color]:not([color=\"content\"], [color=\"neutral\"])"
 	},
 	{
 		"id": "invalid-value-avatar-tooltip-timing",
@@ -1205,8 +1255,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-icon-color",
-		"message": "`color` on nldd-icon takes: accent, bruin, critical, donkerblauw, donkerbruin, donkergeel, donkergroen, geel, groen, hemelblauw, lichtblauw, lintblauw, mintgroen, mosgroen, oranje, paars, primary-content, robijnrood, rood, roze, secondary-content, success, violet, warning.",
-		"context": "nldd-icon[color]:not([color=\"\"], [color=\"accent\"], [color=\"bruin\"], [color=\"critical\"], [color=\"donkerblauw\"], [color=\"donkerbruin\"], [color=\"donkergeel\"], [color=\"donkergroen\"], [color=\"geel\"], [color=\"groen\"], [color=\"hemelblauw\"], [color=\"lichtblauw\"], [color=\"lintblauw\"], [color=\"mintgroen\"], [color=\"mosgroen\"], [color=\"oranje\"], [color=\"paars\"], [color=\"primary-content\"], [color=\"robijnrood\"], [color=\"rood\"], [color=\"roze\"], [color=\"secondary-content\"], [color=\"success\"], [color=\"violet\"], [color=\"warning\"])"
+		"message": "`color` on nldd-icon takes: accent, bruin, content, critical, donkerblauw, donkerbruin, donkergeel, donkergroen, geel, groen, hemelblauw, lichtblauw, lintblauw, mintgroen, mosgroen, oranje, paars, robijnrood, rood, roze, secondary, success, violet, warning.",
+		"context": "nldd-icon[color]:not([color=\"accent\"], [color=\"bruin\"], [color=\"content\"], [color=\"critical\"], [color=\"donkerblauw\"], [color=\"donkerbruin\"], [color=\"donkergeel\"], [color=\"donkergroen\"], [color=\"geel\"], [color=\"groen\"], [color=\"hemelblauw\"], [color=\"lichtblauw\"], [color=\"lintblauw\"], [color=\"mintgroen\"], [color=\"mosgroen\"], [color=\"oranje\"], [color=\"paars\"], [color=\"robijnrood\"], [color=\"rood\"], [color=\"roze\"], [color=\"secondary\"], [color=\"success\"], [color=\"violet\"], [color=\"warning\"])"
 	},
 	{
 		"id": "invalid-value-image-loading",
@@ -1250,13 +1300,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-keyboard-shortcut-color",
-		"message": "`color` on nldd-keyboard-shortcut takes: inherit, neutral.",
-		"context": "nldd-keyboard-shortcut[color]:not([color=\"inherit\"], [color=\"neutral\"])"
-	},
-	{
-		"id": "invalid-value-rich-text-color",
-		"message": "`color` on nldd-rich-text takes: content, inherit.",
-		"context": "nldd-rich-text[color]:not([color=\"content\"], [color=\"inherit\"])"
+		"message": "`color` on nldd-keyboard-shortcut takes: content, neutral.",
+		"context": "nldd-keyboard-shortcut[color]:not([color=\"content\"], [color=\"neutral\"])"
 	},
 	{
 		"id": "invalid-value-rich-text-spacing",
@@ -1295,8 +1340,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-text-color",
-		"message": "`color` on nldd-text takes: accent, content, critical, inherit, secondary, success, warning.",
-		"context": "nldd-text[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"inherit\"], [color=\"secondary\"], [color=\"success\"], [color=\"warning\"])"
+		"message": "`color` on nldd-text takes: accent, content, critical, secondary, success, warning.",
+		"context": "nldd-text[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"secondary\"], [color=\"success\"], [color=\"warning\"])"
 	},
 	{
 		"id": "invalid-value-text-horizontal-alignment",
@@ -1307,11 +1352,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-title-size",
 		"message": "`size` on nldd-title takes: display-1, display-2, display-3, display-4, display-5, display-6.",
 		"context": "nldd-title[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
-		"id": "invalid-value-title-color",
-		"message": "`color` on nldd-title takes: content, inherit.",
-		"context": "nldd-title[color]:not([color=\"content\"], [color=\"inherit\"])"
 	},
 	{
 		"id": "invalid-value-token-control",
@@ -1340,13 +1380,13 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-checkbox-field-color",
-		"message": "`color` on nldd-checkbox-field takes: inherit.",
-		"context": "nldd-checkbox-field[color]:not([color=\"\"], [color=\"inherit\"])"
+		"message": "`color` on nldd-checkbox-field takes: content.",
+		"context": "nldd-checkbox-field[color]:not([color=\"\"], [color=\"content\"])"
 	},
 	{
 		"id": "invalid-value-checkbox-color",
-		"message": "`color` on nldd-checkbox takes: inherit.",
-		"context": "nldd-checkbox[color]:not([color=\"\"], [color=\"inherit\"])"
+		"message": "`color` on nldd-checkbox takes: content.",
+		"context": "nldd-checkbox[color]:not([color=\"\"], [color=\"content\"])"
 	},
 	{
 		"id": "invalid-value-code-editor-resize",
@@ -1420,13 +1460,13 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-radio-button-field-color",
-		"message": "`color` on nldd-radio-button-field takes: inherit.",
-		"context": "nldd-radio-button-field[color]:not([color=\"\"], [color=\"inherit\"])"
+		"message": "`color` on nldd-radio-button-field takes: content.",
+		"context": "nldd-radio-button-field[color]:not([color=\"\"], [color=\"content\"])"
 	},
 	{
 		"id": "invalid-value-radio-button-color",
-		"message": "`color` on nldd-radio-button takes: inherit.",
-		"context": "nldd-radio-button[color]:not([color=\"\"], [color=\"inherit\"])"
+		"message": "`color` on nldd-radio-button takes: content.",
+		"context": "nldd-radio-button[color]:not([color=\"\"], [color=\"content\"])"
 	},
 	{
 		"id": "invalid-value-search-field-size",
@@ -1510,8 +1550,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-switch-field-color",
-		"message": "`color` on nldd-switch-field takes: inherit.",
-		"context": "nldd-switch-field[color]:not([color=\"\"], [color=\"inherit\"])"
+		"message": "`color` on nldd-switch-field takes: content.",
+		"context": "nldd-switch-field[color]:not([color=\"\"], [color=\"content\"])"
 	},
 	{
 		"id": "invalid-value-switch-size",
@@ -1520,8 +1560,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-switch-color",
-		"message": "`color` on nldd-switch takes: inherit.",
-		"context": "nldd-switch[color]:not([color=\"\"], [color=\"inherit\"])"
+		"message": "`color` on nldd-switch takes: content.",
+		"context": "nldd-switch[color]:not([color=\"\"], [color=\"content\"])"
 	},
 	{
 		"id": "invalid-value-text-editor-resize",
@@ -2615,8 +2655,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-badge-color",
-		"message": "`color` on nldd-badge takes: accent, critical, inherit, neutral, success, warning.",
-		"context": "nldd-badge[color]:not([color=\"accent\"], [color=\"critical\"], [color=\"inherit\"], [color=\"neutral\"], [color=\"success\"], [color=\"warning\"])"
+		"message": "`color` on nldd-badge takes: accent, content, critical, neutral, success, warning.",
+		"context": "nldd-badge[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"neutral\"], [color=\"success\"], [color=\"warning\"])"
 	},
 	{
 		"id": "invalid-value-banner-variant",

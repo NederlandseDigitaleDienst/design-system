@@ -130,6 +130,7 @@ export const toolbarStyles = css`
 	.toolbar__overflow-button-label {
 		display: none;
 		margin-top: var(--_toolbar-label-margin-top);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-xs-regular-flat);
 		white-space: nowrap;
@@ -211,6 +212,7 @@ export const toolbarItemStyles = css`
 	.toolbar__item-label {
 		display: none;
 		margin-top: var(--_toolbar-item-label-margin-top);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-xs-regular-flat);
 		white-space: nowrap;
@@ -357,6 +359,7 @@ export const toolbarTitleStyles = css`
 		margin: 0;
 		max-width: 100%;
 		overflow: hidden;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_toolbar-title-font);
 		text-overflow: ellipsis;
@@ -372,6 +375,7 @@ export const toolbarTitleStyles = css`
 		margin: 0;
 		max-width: 100%;
 		overflow: hidden;
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		font: var(--_toolbar-title-supporting-text-font);
 		text-overflow: ellipsis;

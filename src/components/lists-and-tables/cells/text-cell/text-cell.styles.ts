@@ -150,6 +150,7 @@ export const textCellStyles = css`
 		min-width: 0;
 		align-self: stretch;
 		text-align: var(--_text-cell-align);
+		--context-content-color: var(--_text-cell-secondary-color);
 		color: var(--_text-cell-secondary-color);
 		font: var(--_text-cell-secondary-font);
 		overflow-wrap: anywhere;
@@ -161,6 +162,7 @@ export const textCellStyles = css`
 		min-width: 0;
 		align-self: stretch;
 		text-align: var(--_text-cell-align);
+		--context-content-color: var(--_text-cell-color);
 		color: var(--_text-cell-color);
 		font: var(--_text-cell-font);
 		overflow-wrap: anywhere;
@@ -178,6 +180,7 @@ export const textCellStyles = css`
 		min-width: 0;
 		align-self: stretch;
 		text-align: var(--_text-cell-align);
+		--context-content-color: var(--_text-cell-secondary-color);
 		color: var(--_text-cell-secondary-color);
 		font: var(--_text-cell-secondary-font);
 		overflow-wrap: anywhere;

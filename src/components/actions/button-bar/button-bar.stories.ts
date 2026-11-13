@@ -12,7 +12,7 @@ export default {
 	argTypes: {
 		appearance: {
 			control: 'select',
-			options: ['neutral-tinted', 'neutral-base', 'secondary', 'accent-filled', 'primary', 'inherit-filled', 'inherit-tinted'],
+			options: ['primary', 'secondary', 'accent-filled', 'neutral-tinted', 'neutral-base', 'content-filled', 'content-tinted'],
 			description: 'Visuele stijl van de knoppen, inclusief kleur',
 			table: { defaultValue: { summary: 'neutral-tinted' } },
 		},
@@ -86,8 +86,8 @@ export const Appearances = {
 };
 
 /**
- * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
- * bedoeld voor gekleurde vlakken. Bij `inherit-tinted` tekent de balk het
+ * De content-appearances nemen hun kleuren van `--context-content-color` en zijn
+ * bedoeld voor gekleurde vlakken. Bij `content-tinted` tekent de balk het
  * doorschijnende vlak één keer; de knoppen erin laten het weg, zodat
  * het niet dubbel over elkaar valt.
  * Hover, active en expanded veranderen de kleur niet, zodat het contrast met
@@ -96,7 +96,7 @@ export const Appearances = {
 export const OpKleurvlak = {
 	render: () => html`
 		<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
-			<nldd-button-bar appearance="inherit-filled">
+			<nldd-button-bar appearance="content-filled">
 				<nldd-button text="Bewerk"></nldd-button>
 				<nldd-button-bar-divider></nldd-button-bar-divider>
 				<nldd-icon-button
@@ -104,7 +104,7 @@ export const OpKleurvlak = {
 					text="Verwijder"
 				></nldd-icon-button>
 			</nldd-button-bar>
-			<nldd-button-bar appearance="inherit-tinted">
+			<nldd-button-bar appearance="content-tinted">
 				<nldd-button text="Bewerk"></nldd-button>
 				<nldd-button-bar-divider></nldd-button-bar-divider>
 				<nldd-icon-button
@@ -113,7 +113,7 @@ export const OpKleurvlak = {
 				></nldd-icon-button>
 			</nldd-button-bar>
 			<nldd-button
-				appearance="inherit-tinted"
+				appearance="content-tinted"
 				text="Losse knop"
 			></nldd-button>
 		</div>

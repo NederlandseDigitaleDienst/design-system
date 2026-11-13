@@ -17,8 +17,29 @@ test('the context of another rule does not count', () => {
 	assert.equal(findContentColorWithoutContext(css).length, 1);
 });
 
-test('a color that is not a content color passes', () => {
-	assert.deepEqual(findContentColorWithoutContext('.a {\n\tcolor: var(--_a-icon-color);\n\tcolor: inherit;\n}'), []);
+test('any color needs the context, not only a content color', () => {
+	assert.equal(findContentColorWithoutContext('.a {\n\tcolor: var(--semantics-tabs-is-current-content-color);\n}').length, 1);
+	assert.equal(findContentColorWithoutContext('.a {\n\tcolor: var(--_a-icon-color);\n}').length, 1);
+});
+
+test('a color that only passes on what is inherited needs no context', () => {
+	for (const value of ['inherit', 'currentColor', 'transparent', 'unset', 'color-mix(in oklab, currentColor 75%, transparent)']) {
+		assert.deepEqual(findContentColorWithoutContext(`.a { color: ${value}; }`), [], value);
+	}
+});
+
+test('a system color of forced colors mode needs no context', () => {
+	assert.deepEqual(findContentColorWithoutContext('.a { color: CanvasText; }'), []);
+	assert.deepEqual(findContentColorWithoutContext('.a { color: LinkText; }'), []);
+});
+
+test('a condition in @supports is not a declaration', () => {
+	assert.deepEqual(findContentColorWithoutContext('@supports (color: rgb(from red r g b)) {\n\t.a { display: block; }\n}'), []);
+});
+
+test('a rule can say it passes nothing on, with a reason', () => {
+	assert.deepEqual(findContentColorWithoutContext(':host {\n\t/* No context: nothing inside reads it. */\n\tcolor: var(--_a-color);\n}'), []);
+	assert.equal(findContentColorWithoutContext(':host {\n\t/* Some other comment. */\n\tcolor: var(--_a-color);\n}').length, 1);
 });
 
 test('a rule on one line counts', () => {

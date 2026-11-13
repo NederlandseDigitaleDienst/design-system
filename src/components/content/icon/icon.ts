@@ -18,9 +18,8 @@ export const ICONS: string[] = [
 export type IconSize = 'full' | 'inherit' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
 
 export type IconColor =
-	| ''
 	/* Functional */
-	| 'primary-content' | 'secondary-content' | 'accent' | 'critical' | 'warning' | 'success'
+	| 'content' | 'secondary' | 'accent' | 'critical' | 'warning' | 'success'
 	/* Descriptief — rijkskleuren */
 	| 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw'
 	| 'paars' | 'violet' | 'robijnrood' | 'roze'
@@ -43,17 +42,19 @@ export type IconColor =
  * the consumer: such a rule wins over the component's own :host styling and so
  * also shrinks the icons that a cell or button was already sizing correctly.
  *
- * Color: by default the icon inherits its parent's `color`. Set `color` to one
- * of the functional semantics (`primary-content`, `secondary-content`,
- * `accent`, `critical`, `warning`, `success`) or a rijkskleur (`lintblauw`,
- * `paars`, `groen`, …). For a color the design system cannot know — the jacket
+ * Color: by default the icon takes `--context-content-color`, the text color
+ * that the surface, button, link or selected row around it passes on, as
+ * `nldd-text` does. A parent of your own that sets `color` sets that context
+ * too. Set `color` to one of the other functional semantics (`secondary`, `accent`, `critical`, `warning`, `success`), which
+ * follow the surface as well, or a rijkskleur (`lintblauw`, `paars`, `groen`,
+ * …). For a color the design system cannot know — the jacket
  * of a cable, a color someone picked — set `custom-color` to any CSS color.
  *
  * @element nldd-icon
  *
  * @attr {string} icon - The name of the icon to display. The same attribute every other component that renders an icon takes.
  * @attr {string} size - `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96).
- * @attr {string} color - Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent.
+ * @attr {string} color - Functional (`content`, the default, `secondary`, `accent`, `critical`, `warning`, `success`, the colors the surface passes on as `--context-content-*`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`).
  * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know. It wins over `color`.
  * @attr {boolean} tile - Draw the icon on a tile, a filled square. `color` and `custom-color` then paint the tile and the glyph takes the contrasting color, and `size` measures the tile: the glyph is four fifths of it. The corner is `--semantics-tiles-corner-radius`, a fifth of the tile, as on an organization `nldd-avatar`.
  *
@@ -87,8 +88,8 @@ export class NLDDIcon extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<IconSize>('full') })
 	size: IconSize = 'full';
 
-	@property({ reflect: true, converter: reflectNonDefault<IconColor>('') })
-	color: IconColor = '';
+	@property({ reflect: true, converter: reflectNonDefault<IconColor>('content') })
+	color: IconColor = 'content';
 
 	/** Handed to the styles as a custom property rather than read from the
 	 *  attribute in CSS: `attr()` with a type is not available everywhere yet,

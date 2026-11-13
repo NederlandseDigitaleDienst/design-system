@@ -151,44 +151,47 @@ export const iconButtonStyles = css`
 		--_icon-button-is-active-highlight-border-color: transparent;
 	}
 
-	/* The on-color variants derive from currentColor; see nldd-button for
-	   the full rationale. The filled label resolves the context var here on
-	   the host. */
+	/* As on nldd-button: the tokens derive from currentColor, which the host
+	   sets from the context, and the filled icon reads the surface here. */
 
-	:host([appearance="inherit-tinted"]),
-	:host([expanded][appearance="inherit-tinted"]) {
-		--_icon-button-background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
-		--_icon-button-primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-		--_icon-button-highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
+	:host([appearance="content-tinted"]),
+	:host([expanded][appearance="content-tinted"]) {
+		--_icon-button-background-color: var(--context-button-background-color, var(--semantics-buttons-content-tinted-background-color));
+		--_icon-button-primary-content-color: var(--semantics-buttons-content-tinted-content-color);
+		--_icon-button-highlight-border-color: var(--semantics-buttons-content-tinted-highlight-border-color);
 		--_icon-button-is-hovered-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-hovered-primary-content-color: var(--_icon-button-primary-content-color);
 		--_icon-button-is-hovered-highlight-border-color: var(--_icon-button-highlight-border-color);
 		--_icon-button-is-active-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-active-primary-content-color: var(--_icon-button-primary-content-color);
 		--_icon-button-is-active-highlight-border-color: var(--_icon-button-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
-	:host([appearance="inherit-filled"]),
-	:host([expanded][appearance="inherit-filled"]) {
-		--_icon-button-background-color: var(--semantics-buttons-inherit-filled-background-color);
+	:host([appearance="content-filled"]),
+	:host([expanded][appearance="content-filled"]) {
+		--_icon-button-background-color: var(--semantics-buttons-content-filled-background-color);
 		--_icon-button-primary-content-color: var(--context-background-color);
-		--_icon-button-highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
+		--_icon-button-highlight-border-color: var(--semantics-buttons-content-filled-highlight-border-color);
 		--_icon-button-is-hovered-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-hovered-primary-content-color: var(--_icon-button-primary-content-color);
 		--_icon-button-is-hovered-highlight-border-color: var(--_icon-button-highlight-border-color);
 		--_icon-button-is-active-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-active-primary-content-color: var(--_icon-button-primary-content-color);
 		--_icon-button-is-active-highlight-border-color: var(--_icon-button-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
-	/* inherit-filled paints its fill with currentColor, so the inner button
+	/* content-filled paints its fill with currentColor, so the inner button
 	   keeps the inherited color and the icon color goes to the content layer,
 	   as in nldd-button. */
-	:host([appearance="inherit-filled"]) .icon-button {
+	:host([appearance="content-filled"]) .icon-button {
 		color: inherit;
 	}
 
-	:host([appearance="inherit-filled"]) .icon-button > * {
+	:host([appearance="content-filled"]) .icon-button > * {
 		--context-content-color: var(--_icon-button-primary-content-color);
 		color: var(--_icon-button-primary-content-color);
 	}

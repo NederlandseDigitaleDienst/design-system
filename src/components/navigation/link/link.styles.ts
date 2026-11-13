@@ -45,6 +45,7 @@ export const linkStyles = css`
 	.link {
 		border-radius: var(--primitives-corner-radius-xs);
 		background: none;
+		--context-content-color: var(--context-link-color);
 		color: var(--context-link-color);
 		text-decoration: none;
 		transition: color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
@@ -92,11 +93,13 @@ export const linkStyles = css`
 
 	@media (hover: hover) {
 		.link:hover {
+			--context-content-color: var(--context-link-is-hovered-color);
 			color: var(--context-link-is-hovered-color);
 		}
 	}
 
 	.link:active {
+		--context-content-color: var(--context-link-is-active-color);
 		color: var(--context-link-is-active-color);
 	}
 

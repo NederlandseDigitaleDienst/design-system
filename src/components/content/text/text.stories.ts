@@ -80,9 +80,9 @@ export default {
 		},
 		color: {
 			control: 'select',
-			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical', 'inherit'],
+			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical'],
 			description:
-				'Tekstkleur. "content" en "secondary" volgen het contentkanaal van de omgeving (een lijstrij, een menu, een tabel). "inherit" neemt de kleur die hij erft, voor tekst op een gekleurd vlak.',
+				'Tekstkleur. Elke kleur volgt het vlak eromheen (een lijstrij, een menu, een hero) via de context die dat vlak doorgeeft.',
 			table: { defaultValue: { summary: 'content' } },
 		},
 		horizontalAlignment: {

@@ -214,6 +214,7 @@ export const listStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 	}
 
@@ -229,12 +230,14 @@ export const listStyles = css`
 		flex-shrink: 1;
 		flex-basis: 0;
 		align-self: stretch;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--semantics-input-fields-md-text-font);
 		appearance: none;
 	}
 
 	.list__search-field-input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 

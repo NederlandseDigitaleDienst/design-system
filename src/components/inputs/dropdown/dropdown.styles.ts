@@ -190,10 +190,12 @@ export const dropdownStyles = css`
 	}
 
 	:host([valid]) .dropdown__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .dropdown__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 

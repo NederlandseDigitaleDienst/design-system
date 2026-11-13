@@ -34,7 +34,7 @@ export default {
 	argTypes: {
 		appearance: {
 			control: 'select',
-			options: ['neutral-tinted', 'neutral-base', 'secondary', 'accent-filled', 'primary', 'inherit-filled', 'inherit-tinted'],
+			options: ['primary', 'secondary', 'accent-filled', 'neutral-tinted', 'neutral-base', 'content-filled', 'content-tinted'],
 			description: 'Visuele stijl, inclusief kleur',
 			table: {
 				defaultValue: { summary: 'neutral-tinted' },
@@ -206,8 +206,8 @@ export const Appearances = {
 };
 
 /**
- * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
- * bedoeld voor gekleurde vlakken. Bij `inherit-tinted` tekent de split-button het
+ * De content-appearances nemen hun kleuren van `--context-content-color` en zijn
+ * bedoeld voor gekleurde vlakken. Bij `content-tinted` tekent de split-button het
  * doorschijnende vlak één keer; de knoppen erin laten het weg, zodat
  * het niet dubbel over elkaar valt.
  * Hover, active en expanded veranderen de kleur niet, zodat het contrast met
@@ -216,9 +216,9 @@ export const Appearances = {
 export const OpKleurvlak = {
 	render: () => html`
 	<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
-		<nldd-split-button text="Bewaar" appearance="inherit-filled">${menu}</nldd-split-button>
-		<nldd-split-button text="Bewaar" appearance="inherit-tinted">${menu}</nldd-split-button>
-		<nldd-button appearance="inherit-tinted" text="Losse knop"></nldd-button>
+		<nldd-split-button text="Bewaar" appearance="content-filled">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" appearance="content-tinted">${menu}</nldd-split-button>
+		<nldd-button appearance="content-tinted" text="Losse knop"></nldd-button>
 	</div>
 `,
 	parameters: {

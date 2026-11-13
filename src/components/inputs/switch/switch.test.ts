@@ -348,7 +348,7 @@ describe('nldd-switch no-tab', () => {
 	});
 });
 
-describe('nldd-switch – color="inherit"', () => {
+describe('nldd-switch – color="content"', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
@@ -357,8 +357,8 @@ describe('nldd-switch – color="inherit"', () => {
 
 	it('fills a checked track with the surrounding text color, and the thumb with the surface color', async () => {
 		el = await fixture(`
-			<div style="color: rgb(255, 255, 255); --context-background-color: rgb(24, 69, 118);">
-				<nldd-switch color="inherit" checked accessible-label="Meldingen"></nldd-switch>
+			<div style="--context-content-color: rgb(255, 255, 255); --context-background-color: rgb(24, 69, 118);">
+				<nldd-switch color="content" checked accessible-label="Meldingen"></nldd-switch>
 			</div>`);
 		const control = el.querySelector('nldd-switch') as HTMLElement;
 		await waitForUpdate(control);

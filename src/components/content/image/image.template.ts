@@ -71,7 +71,7 @@ export function imageTemplate(component: NLDDImage) {
 			<nldd-icon
 				icon="broken-image"
 				size="32"
-				color="secondary-content"
+				color="secondary"
 			></nldd-icon>
 			${component.decorative ? nothing : html`<span class="image__error-text">${component.alt}</span>`}
 		</div>

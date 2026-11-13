@@ -51,18 +51,19 @@ describe('nldd-icon', () => {
 		expect(getComputedStyle(el).color).toBe('rgb(0, 128, 0)');
 	});
 
-	it('defaults size and color to empty (inherit)', async () => {
+	it('defaults size to full and color to content, without reflecting them', async () => {
 		el = await fixture<NLDDIcon>('<nldd-icon></nldd-icon>');
 		await waitForUpdate(el);
 		expect(el.size).toBe('full');
-		expect(el.color).toBe('');
+		expect(el.color).toBe('content');
+		expect(el.hasAttribute('color')).toBe(false);
 	});
 
-	it('inherits parent color, and the SVG fill resolves to it through currentColor', async () => {
-		const wrapper = await fixture<HTMLElement>('<div style="color: rgb(255, 0, 0);"><nldd-icon></nldd-icon></div>');
+	it('takes the content color of its context, and the SVG fill resolves to it through currentColor', async () => {
+		const wrapper = await fixture<HTMLElement>('<div style="--context-content-color: rgb(255, 0, 0); color: rgb(0, 0, 255);"><nldd-icon></nldd-icon></div>');
 		const icon = wrapper.querySelector('nldd-icon') as NLDDIcon;
 		await waitForUpdate(icon);
-		// Host inherits the parent color.
+		// The context, not the CSS color of the parent.
 		expect(getComputedStyle(icon).color).toBe('rgb(255, 0, 0)');
 		// And the SVG paint actually uses it: the icon SVG paints with
 		// fill="currentColor", which must resolve through the shadow boundary
@@ -70,6 +71,20 @@ describe('nldd-icon', () => {
 		const painted = icon.shadowRoot!.querySelector('svg [fill="currentColor"], svg path');
 		expect(painted).not.toBeNull();
 		expect(getComputedStyle(painted as Element).fill).toBe('rgb(255, 0, 0)');
+		cleanup(wrapper);
+	});
+
+	it('a functional color follows the surface it sits on', async () => {
+		const wrapper = await fixture<HTMLElement>(`
+			<div style="--context-content-color: rgb(1, 2, 3); --context-content-secondary-color: rgb(4, 5, 6); --context-content-critical-color: rgb(7, 8, 9);">
+				<nldd-icon color="content"></nldd-icon>
+				<nldd-icon color="secondary"></nldd-icon>
+				<nldd-icon color="critical"></nldd-icon>
+			</div>
+		`);
+		const icons = [...wrapper.querySelectorAll('nldd-icon')];
+		await Promise.all(icons.map((icon) => waitForUpdate(icon)));
+		expect(icons.map((icon) => getComputedStyle(icon).color)).toEqual(['rgb(1, 2, 3)', 'rgb(4, 5, 6)', 'rgb(7, 8, 9)']);
 		cleanup(wrapper);
 	});
 });

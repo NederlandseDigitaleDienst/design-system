@@ -193,7 +193,7 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 				<nldd-keyboard-shortcut
 					size="inherit"
 					appearance="simple"
-					color="inherit"
+					color="content"
 					keys=${this.shortcut || nothing}
 					mac-keys=${this.shortcutMac || nothing}
 					windows-keys=${this.shortcutWindows || nothing}

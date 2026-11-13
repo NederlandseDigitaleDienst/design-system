@@ -100,12 +100,14 @@ export const passwordFieldStyles = css`
 		overflow: hidden;
 		padding: 0;
 		flex-grow: 1;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_password-field-text-font);
 		appearance: none;
 	}
 
 	.password-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 		font: var(--_password-field-text-font);
 	}
@@ -155,10 +157,12 @@ export const passwordFieldStyles = css`
 	}
 
 	:host([valid]) .password-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .password-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 

@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-icon[color="primary-content"], nldd-icon[color="secondary-content"]'
+fix: { value: { color: { primary-content: content, secondary-content: secondary } } }
+message: '`color="primary-content"` is now `color="content"`, the default, and `secondary-content` is now `secondary`, as on `nldd-text`. The old values do nothing. Rename them here and on every other nldd-icon.'
+examples:
+  passed: ['<nldd-icon icon="heart" color="secondary"></nldd-icon>']
+  failed: ['<nldd-icon icon="heart" color="primary-content"></nldd-icon>', '<nldd-icon icon="heart" color="secondary-content"></nldd-icon>']

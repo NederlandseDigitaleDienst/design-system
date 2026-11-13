@@ -10,7 +10,7 @@ const allIconNames = ICONS;
 const FIXED_SIZES = ['16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'];
 const SIZE_OPTIONS = ['full', 'inherit', ...FIXED_SIZES];
 
-const FUNCTIONAL_COLORS = ['primary-content', 'secondary-content', 'accent', 'critical', 'warning', 'success'] as const;
+const FUNCTIONAL_COLORS = ['content', 'secondary', 'accent', 'critical', 'warning', 'success'] as const;
 const RIJKSKLEUREN = [
 	'lintblauw', 'donkerblauw', 'hemelblauw', 'lichtblauw',
 	'paars', 'violet', 'robijnrood', 'roze',
@@ -18,7 +18,7 @@ const RIJKSKLEUREN = [
 	'donkerbruin', 'bruin', 'donkergroen', 'groen', 'mosgroen', 'mintgroen',
 ] as const;
 
-const COLOR_OPTIONS = ['(inherit)', ...FUNCTIONAL_COLORS, ...RIJKSKLEUREN];
+const COLOR_OPTIONS = [...FUNCTIONAL_COLORS, ...RIJKSKLEUREN];
 
 export default {
 	title: 'Components/Content/Icon',
@@ -32,7 +32,7 @@ export default {
 		status: { type: 'stable' },
 		docs: {
 			description: {
-				component: 'A flexible icon component. By default fills its parent and inherits color. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the design system cannot know, set `custom-color` to any CSS color value. Every icon name and alias is listed under [Docs/Iconen](?path=/docs/docs-iconen--docs).',
+				component: 'A flexible icon component. By default it fills its parent and takes the content color of its context. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the design system cannot know, set `custom-color` to any CSS color value. Every icon name and alias is listed under [Docs/Iconen](?path=/docs/docs-iconen--docs).',
 			},
 		},
 	},
@@ -52,9 +52,8 @@ export default {
 		color: {
 			control: 'select',
 			options: COLOR_OPTIONS,
-			mapping: { '(inherit)': '' },
-			description: 'Functionele semantic of rijkskleur. `(inherit)` = erft `color` van parent.',
-			table: { defaultValue: { summary: '(inherit)' } },
+			description: 'Functionele kleur of rijkskleur. `content` neemt de contentkleur van de context, de andere functionele kleuren ook de bijbehorende kleur van het vlak.',
+			table: { defaultValue: { summary: 'content' } },
 		},
 		tile: {
 			control: 'boolean',
@@ -70,7 +69,7 @@ export default {
 	args: {
 		icon: 'heart',
 		size: '24',
-		color: '(inherit)',
+		color: 'content',
 		tile: false,
 		customColor: '',
 	},
@@ -81,7 +80,7 @@ const Template = ({ icon, size, tile, color, customColor }: Record<string, any>)
 		icon=${icon}
 		size=${size || nothing}
 		?tile=${tile}
-		color=${color || nothing}
+		color=${color === 'content' ? nothing : color}
 		custom-color=${customColor || nothing}
 	></nldd-icon>
 `;
@@ -90,9 +89,9 @@ export const Standaard = {
 	render: Template,
 };
 
-export const ErftVanDeOuder = {
+export const VolgtDeContext = {
 	render: () => html`
-		<div style="width: 64px; height: 64px; color: #d52b1e;">
+		<div style="width: 64px; height: 64px; --context-content-color: #d52b1e;">
 			<nldd-icon icon="heart"></nldd-icon>
 		</div>
 	`,
@@ -100,7 +99,7 @@ export const ErftVanDeOuder = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zonder `size` of `color` vult het icoon de parent en erft de kleur. Hier zit het in een 64×64 container met inline `color: #d52b1e`.',
+				story: 'Zonder `size` of `color` vult het icoon de parent en neemt het de contentkleur van zijn context. Een vlak van jezelf dat `color` zet, zet `--context-content-color` ernaast; hier zet een 64×64 container alleen `--context-content-color: #d52b1e`.',
 			},
 		},
 	},

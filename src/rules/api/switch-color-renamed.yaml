@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-switch[color="inherit"], nldd-switch-field[color="inherit"]'
+fix: { value: { color: { inherit: content } } }
+message: '`color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-switch.'
+examples:
+  passed: ['<nldd-switch-field label="Meldingen" color="content"></nldd-switch-field>']
+  failed: ['<nldd-switch-field label="Meldingen" color="inherit"></nldd-switch-field>']

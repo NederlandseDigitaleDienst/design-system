@@ -24,7 +24,7 @@ import '../../content/text/text.js';
  * ```
  */
 const SEMANTIC_COLORS = ['critical', 'accent', 'neutral', 'warning', 'success'];
-const COLORS = [...SEMANTIC_COLORS, 'inherit'];
+const COLORS = [...SEMANTIC_COLORS, 'content'];
 
 export default {
 	title: 'Components/Status & Feedback/Badge',
@@ -63,7 +63,7 @@ export default {
 		color: {
 			control: 'select',
 			options: COLORS,
-			description: 'Kleurvariant. `inherit` vult met de contentkleur eromheen.',
+			description: 'Kleurvariant. `content` vult met de contentkleur eromheen.',
 			table: {
 				defaultValue: { summary: 'critical' },
 			},
@@ -183,7 +183,7 @@ export const Kleuren = {
 };
 
 /**
- * `color="inherit"` vult met de kleur van de content eromheen: het
+ * `color="content"` vult met de kleur van de content eromheen: het
  * `--context-content-color` die een vlak, een knop of een geselecteerde rij
  * zet. Zo reist een badge mee met de regel
  * waar hij in staat, ook als die oplicht.
@@ -199,18 +199,18 @@ export const Kleuren = {
  * al, dan doet die het rekenwerk.
  */
 export const EigenKleur = {
-	name: 'Inherit en custom-color',
+	name: 'Content en custom-color',
 	render: () => html`
 		<nldd-container
 			layout="wrap"
 			gap="24"
 		>
-			<span style="color: #a90061; display: inline-flex; gap: 8px; align-items: center;">
+			<span style="--context-content-color: #a90061; color: #a90061; display: inline-flex; gap: 8px; align-items: center;">
 				<nldd-badge
-					color="inherit"
+					color="content"
 					number="3"
 				></nldd-badge>
-				<nldd-text color="inherit">
+				<nldd-text>
 					Erft de kleur van deze zin
 				</nldd-text>
 			</span>

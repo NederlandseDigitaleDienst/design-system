@@ -22,9 +22,9 @@ export default {
 	argTypes: {
 		color: {
 			control: 'select',
-			options: ['(auto)', 'inherit'],
+			options: ['(auto)', 'content'],
 			mapping: { '(auto)': '' },
-			description: 'Met inherit krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
+			description: 'Met content krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
 			table: { defaultValue: { summary: '(auto)' } },
 		},
 		label: {
@@ -85,8 +85,8 @@ export const Standaard = {
 	args: {},
 };
 
-export const KleurInherit = {
-	name: 'Kleur inherit',
+export const KleurContent = {
+	name: 'Kleur content',
 	render: () => html`
 		<nldd-container
 			layout="wrap"
@@ -95,13 +95,13 @@ export const KleurInherit = {
 			style="--context-background-color: var(--semantics-surfaces-accent-filled-background-color); background-color: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color); --context-content-color: var(--semantics-content-on-accent-filled-color);"
 		>
 			<nldd-radio-button-field
-				color="inherit"
+				color="content"
 				name="demo-kleur"
 				value="post"
 				label="Per post"
 			></nldd-radio-button-field>
 			<nldd-radio-button-field
-				color="inherit"
+				color="content"
 				name="demo-kleur"
 				value="mail"
 				label="Per e-mail"

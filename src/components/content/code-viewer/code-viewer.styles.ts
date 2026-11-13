@@ -170,6 +170,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([line-numbers]:not([diff])) .cm-gutters {
+		--context-content-color: var(--_code-viewer-gutter-color);
 		color: var(--_code-viewer-gutter-color);
 	}
 
@@ -207,6 +208,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([diff]) .cm-gutters {
+		--context-content-color: var(--_code-viewer-gutter-color);
 		color: var(--_code-viewer-gutter-color);
 	}
 
@@ -257,6 +259,7 @@ export const codeViewerStyles = css`
 	}
 
 	:is(.cm-diff-old-gutter, .cm-diff-new-gutter) .cm-gutterElement:is(.cm-diff-added, .cm-diff-removed) {
+		--context-content-color: var(--_code-viewer-diff-row-number-color);
 		color: var(--_code-viewer-diff-row-number-color);
 	}
 
@@ -268,11 +271,13 @@ export const codeViewerStyles = css`
 
 	.cm-diff-sign-gutter .cm-diff-added {
 		background-image: linear-gradient(var(--_code-viewer-diff-added-word-background-color), var(--_code-viewer-diff-added-word-background-color));
+		--context-content-color: var(--_code-viewer-diff-added-sign-color);
 		color: var(--_code-viewer-diff-added-sign-color);
 	}
 
 	.cm-diff-sign-gutter .cm-diff-removed {
 		background-image: linear-gradient(var(--_code-viewer-diff-removed-word-background-color), var(--_code-viewer-diff-removed-word-background-color));
+		--context-content-color: var(--_code-viewer-diff-removed-sign-color);
 		color: var(--_code-viewer-diff-removed-sign-color);
 	}
 
@@ -300,6 +305,7 @@ export const codeViewerStyles = css`
 
 	.cm-diff-hunk {
 		padding-inline: var(--_code-viewer-gutter-inline-padding) var(--_code-viewer-inline-padding);
+		--context-content-color: var(--_code-viewer-gutter-color);
 		color: var(--_code-viewer-gutter-color);
 	}
 

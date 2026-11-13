@@ -390,6 +390,7 @@ export const imageStyles = css`
 		display: block;
 		width: var(--_image-empty-icon-size);
 		height: var(--_image-empty-icon-size);
+		--context-content-color: var(--_image-empty-icon-color);
 		color: var(--_image-empty-icon-color);
 	}
 
@@ -412,6 +413,7 @@ export const imageStyles = css`
 		justify-content: center;
 		gap: var(--_image-error-gap);
 		padding: var(--_image-error-padding);
+		--context-content-color: var(--_image-error-text-color);
 		color: var(--_image-error-text-color);
 		font: var(--_image-error-font);
 		text-align: center;
@@ -429,12 +431,14 @@ export const imageStyles = css`
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--_image-caption-row-gap);
+		--context-content-color: var(--_image-caption-color);
 		color: var(--_image-caption-color);
 		font: var(--_image-caption-font);
 		text-wrap: pretty;
 	}
 
 	.image__credit {
+		--context-content-color: var(--_image-credit-color);
 		color: var(--_image-credit-color);
 		font: var(--_image-credit-font);
 	}

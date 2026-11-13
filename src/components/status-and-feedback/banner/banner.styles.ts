@@ -114,6 +114,7 @@ export const bannerStyles = css`
 		grid-row: 1;
 		width: var(--_banner-icon-size);
 		align-items: flex-start;
+		--context-content-color: var(--_banner-icon-color);
 		color: var(--_banner-icon-color);
 	}
 

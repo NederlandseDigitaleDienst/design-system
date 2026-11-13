@@ -42,27 +42,28 @@ export const checkboxStyles = css`
 
 	/* ## Colors */
 
-	:host([color="inherit"]) {
-		--_checkbox-border-color: currentColor;
+	:host([color="content"]) {
+		--_checkbox-border-color: var(--context-content-color);
 		--_checkbox-background-color: transparent;
-		--_checkbox-is-hovered-border-color: currentColor;
-		--_checkbox-is-active-border-color: currentColor;
-		--_checkbox-is-selected-border-color: currentColor;
-		--_checkbox-is-selected-background-color: currentColor;
-		--_checkbox-is-selected-icon-color: currentColor;
-		--_checkbox-is-selected-is-hovered-border-color: currentColor;
-		--_checkbox-is-selected-is-hovered-background-color: currentColor;
-		--_checkbox-is-selected-is-hovered-icon-color: currentColor;
-		--_checkbox-is-selected-is-active-border-color: currentColor;
-		--_checkbox-is-selected-is-active-background-color: currentColor;
-		--_checkbox-is-selected-is-active-icon-color: currentColor;
+		--_checkbox-is-hovered-border-color: var(--context-content-color);
+		--_checkbox-is-active-border-color: var(--context-content-color);
+		--_checkbox-is-selected-border-color: var(--context-content-color);
+		--_checkbox-is-selected-background-color: var(--context-content-color);
+		--_checkbox-is-selected-icon-color: var(--context-content-color);
+		--_checkbox-is-selected-is-hovered-border-color: var(--context-content-color);
+		--_checkbox-is-selected-is-hovered-background-color: var(--context-content-color);
+		--_checkbox-is-selected-is-hovered-icon-color: var(--context-content-color);
+		--_checkbox-is-selected-is-active-border-color: var(--context-content-color);
+		--_checkbox-is-selected-is-active-background-color: var(--context-content-color);
+		--_checkbox-is-selected-is-active-icon-color: var(--context-content-color);
 	}
 
-	:host([color="inherit"]) .checkbox__box {
+	:host([color="content"]) .checkbox__box {
 		color: inherit;
 	}
 
-	:host([color="inherit"]) :is(.checkbox__check-icon, .checkbox__indeterminate-icon) {
+	:host([color="content"]) :is(.checkbox__check-icon, .checkbox__indeterminate-icon) {
+		--context-content-color: var(--context-background-color);
 		color: var(--context-background-color);
 	}
 
@@ -94,6 +95,7 @@ export const checkboxStyles = css`
 	.checkbox__input:indeterminate ~ .checkbox__box {
 		border-color: var(--_checkbox-is-selected-border-color);
 		background-color: var(--_checkbox-is-selected-background-color);
+		--context-content-color: var(--_checkbox-is-selected-icon-color);
 		color: var(--_checkbox-is-selected-icon-color);
 	}
 
@@ -106,6 +108,7 @@ export const checkboxStyles = css`
 		.checkbox__input:indeterminate:hover:not(:disabled) ~ .checkbox__box {
 			border-color: var(--_checkbox-is-selected-is-hovered-border-color);
 			background-color: var(--_checkbox-is-selected-is-hovered-background-color);
+			--context-content-color: var(--_checkbox-is-selected-is-hovered-icon-color);
 			color: var(--_checkbox-is-selected-is-hovered-icon-color);
 		}
 	}
@@ -118,6 +121,7 @@ export const checkboxStyles = css`
 	.checkbox__input:indeterminate:active:not(:disabled) ~ .checkbox__box {
 		border-color: var(--_checkbox-is-selected-is-active-border-color);
 		background-color: var(--_checkbox-is-selected-is-active-background-color);
+		--context-content-color: var(--_checkbox-is-selected-is-active-icon-color);
 		color: var(--_checkbox-is-selected-is-active-icon-color);
 	}
 
@@ -160,6 +164,7 @@ export const checkboxStyles = css`
 	:host([decorative][indeterminate]) .checkbox__box {
 		border-color: var(--_checkbox-is-selected-border-color);
 		background-color: var(--_checkbox-is-selected-background-color);
+		--context-content-color: var(--_checkbox-is-selected-icon-color);
 		color: var(--_checkbox-is-selected-icon-color);
 	}
 

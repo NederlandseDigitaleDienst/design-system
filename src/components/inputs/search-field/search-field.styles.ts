@@ -96,6 +96,7 @@ export const searchFieldStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 	}
 
@@ -112,6 +113,7 @@ export const searchFieldStyles = css`
 		flex-shrink: 1;
 		flex-basis: 0;
 		align-self: stretch;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_search-field-text-font);
 		appearance: none;
@@ -134,6 +136,7 @@ export const searchFieldStyles = css`
 	}
 
 	.search-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 

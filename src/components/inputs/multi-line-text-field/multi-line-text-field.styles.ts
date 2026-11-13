@@ -98,6 +98,7 @@ export const multiLineTextFieldStyles = css`
 		min-height: calc(var(--_multi-line-text-field-min-height) - var(--semantics-input-fields-border-width) * 2 + (var(--_multi-line-text-field-rows) - 1) * 1lh);
 		padding-block: calc((var(--_multi-line-text-field-min-height) - var(--semantics-input-fields-border-width) * 2 - 1lh) / 2);
 		padding-inline: var(--_multi-line-text-field-inline-padding);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_multi-line-text-field-text-font);
 		appearance: none;
@@ -125,6 +126,7 @@ export const multiLineTextFieldStyles = css`
 	}
 
 	.multi-line-text-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -149,10 +151,12 @@ export const multiLineTextFieldStyles = css`
 	}
 
 	:host([valid]) .multi-line-text-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .multi-line-text-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 

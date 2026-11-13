@@ -1532,16 +1532,16 @@
 	   --context-background-color, read in the component (a var() here would
 	   freeze against :root). */
 
-	--semantics-buttons-inherit-tinted-background-color: color-mix(in oklab, var(--semantics-content-contrast-color) 20%, transparent);
-	--semantics-buttons-inherit-tinted-content-color: currentColor;
-	--semantics-buttons-inherit-tinted-content-secondary-color: var(--semantics-buttons-inherit-tinted-content-color);
-	--semantics-buttons-inherit-tinted-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
-	--semantics-buttons-inherit-tinted-divider-color: color-mix(in oklab, currentColor 35%, transparent);
+	--semantics-buttons-content-tinted-background-color: color-mix(in oklab, var(--semantics-content-contrast-color) 20%, transparent);
+	--semantics-buttons-content-tinted-content-color: currentColor;
+	--semantics-buttons-content-tinted-content-secondary-color: var(--semantics-buttons-content-tinted-content-color);
+	--semantics-buttons-content-tinted-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
+	--semantics-buttons-content-tinted-divider-color: color-mix(in oklab, currentColor 35%, transparent);
 
-	--semantics-buttons-inherit-filled-background-color: currentColor;
-	--semantics-buttons-inherit-filled-content-secondary-color: currentColor;
-	--semantics-buttons-inherit-filled-highlight-border-color: currentColor;
-	--semantics-buttons-inherit-filled-divider-color: color-mix(in oklab, var(--semantics-content-contrast-color) 25%, transparent);
+	--semantics-buttons-content-filled-background-color: currentColor;
+	--semantics-buttons-content-filled-content-secondary-color: currentColor;
+	--semantics-buttons-content-filled-highlight-border-color: currentColor;
+	--semantics-buttons-content-filled-divider-color: color-mix(in oklab, var(--semantics-content-contrast-color) 25%, transparent);
 
 	/* ## Button groups */
 

@@ -108,6 +108,7 @@ export const numberFieldStyles = css`
 		align-self: stretch;
 		flex-grow: 1;
 		text-align: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_number-field-text-font);
 		appearance: none;

@@ -28,7 +28,7 @@
  *
  * @attr {string} type - `person` (circle, person icon) or `organization` (rounded, building icon); default `person`
  * @attr {string} size - `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along
- * @attr {string} color - `neutral` (the default, a neutral fill) or `inherit` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance)
+ * @attr {string} color - `neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance)
  * @attr {boolean} icon-aligned - Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin)
  * @attr {string} name - Name of the person or organization; supplies the derived initials and the accessible label
  * @attr {string} initials - Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form
@@ -60,7 +60,7 @@
  * ></nldd-avatar>
  * <nldd-avatar
  * 	name="Bart van de Biezen"
- * 	color="inherit"
+ * 	color="content"
  * ></nldd-avatar>
  * <nldd-avatar
  * 	name="Bart van de Biezen"
@@ -85,7 +85,7 @@ import '../icon/icon.js';
 
 export type AvatarType = 'person' | 'organization';
 
-export type AvatarColor = 'neutral' | 'inherit';
+export type AvatarColor = 'neutral' | 'content';
 
 /** Fraction of the shape width the initials may occupy before they are scaled to
  *  fit. Leaves margin inside the circle so wide glyphs stay clear of the edge

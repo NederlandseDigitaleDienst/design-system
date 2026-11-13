@@ -164,6 +164,7 @@ export const titleCellStyles = css`
 		min-width: 0;
 		align-self: stretch;
 		text-align: var(--_title-cell-text-align);
+		--context-content-color: var(--_title-cell-secondary-color);
 		color: var(--_title-cell-secondary-color);
 		font: var(--primitives-font-body-xs-regular-tight);
 		overflow-wrap: anywhere;
@@ -178,6 +179,7 @@ export const titleCellStyles = css`
 		min-width: 0;
 		align-self: stretch;
 		text-align: var(--_title-cell-text-align);
+		--context-content-color: var(--_title-cell-color);
 		color: var(--_title-cell-color);
 		font: var(--_title-cell-font);
 		overflow-wrap: break-word;
@@ -195,6 +197,7 @@ export const titleCellStyles = css`
 		min-width: 0;
 		align-self: stretch;
 		text-align: var(--_title-cell-text-align);
+		--context-content-color: var(--_title-cell-secondary-color);
 		color: var(--_title-cell-secondary-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 		overflow-wrap: anywhere;

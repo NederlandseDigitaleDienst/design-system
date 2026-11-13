@@ -170,7 +170,7 @@ describe('nldd-switch-field – label click', () => {
 	});
 });
 
-describe('nldd-switch-field – color="inherit"', () => {
+describe('nldd-switch-field – color="content"', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
@@ -178,10 +178,10 @@ describe('nldd-switch-field – color="inherit"', () => {
 	});
 
 	it('passes the color to its switch and draws its label in the surrounding text color', async () => {
-		el = await fixture(`<div style="color: rgb(255, 255, 255);"><nldd-switch-field color="inherit" label="Meldingen"></nldd-switch-field></div>`);
+		el = await fixture(`<div style="--context-content-color: rgb(255, 255, 255);"><nldd-switch-field color="content" label="Meldingen"></nldd-switch-field></div>`);
 		const field = el.querySelector('nldd-switch-field') as HTMLElement;
 		await waitForUpdate(field);
-		expect(field.shadowRoot!.querySelector('nldd-switch')!.getAttribute('color')).toBe('inherit');
+		expect(field.shadowRoot!.querySelector('nldd-switch')!.getAttribute('color')).toBe('content');
 		expect(getComputedStyle(field.shadowRoot!.querySelector('.switch-field__label')!).color).toBe('rgb(255, 255, 255)');
 	});
 	it('submits its value to the surrounding form when checked', async () => {

@@ -319,13 +319,13 @@ function validate() {
     }
   }
 
-  // A content color without its context; see lib/content-context.js.
-  for (const filePath of componentFiles.filter((file) => file.endsWith('.styles.ts'))) {
+  // A text color without its context; see lib/content-context.js.
+  for (const filePath of componentFiles.filter((file) => file.endsWith('.styles.ts') || file.endsWith('.css'))) {
     for (const { line, text } of findContentColorWithoutContext(fs.readFileSync(filePath, 'utf8'))) {
       errors.push({
         file: `${path.relative(ROOT_DIR, filePath)}:${line}`,
         variable: text,
-        message: 'Set --context-content-color in the same rule, so text and spinners inside take this color',
+        message: 'Set --context-content-color in the same rule, so text, icons and spinners inside take this color',
       });
     }
   }

@@ -381,6 +381,7 @@ export const topNavigationBarStyles = css`
 		min-width: var(--semantics-controls-xs-min-size);
 		min-height: var(--semantics-controls-xs-min-size);
 		font: var(--_top-navigation-bar-title-sm-font);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		white-space: nowrap;
 

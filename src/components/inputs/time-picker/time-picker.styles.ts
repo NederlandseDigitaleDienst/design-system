@@ -103,6 +103,7 @@ export const timePickerStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_time-picker-list-item-font);
 		font-variant-numeric: tabular-nums;

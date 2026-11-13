@@ -217,6 +217,7 @@ export const progressCircleStyles = css`
 	}
 
 	.progress-circle__text {
+		--context-content-color: var(--_progress-circle-text-color);
 		color: var(--_progress-circle-text-color);
 		font: var(--_progress-circle-text-font);
 		text-align: center;
@@ -224,6 +225,7 @@ export const progressCircleStyles = css`
 	}
 
 	.progress-circle__supporting-text {
+		--context-content-color: var(--_progress-circle-supporting-text-color);
 		color: var(--_progress-circle-supporting-text-color);
 		font: var(--_progress-circle-supporting-text-font);
 		text-align: center;

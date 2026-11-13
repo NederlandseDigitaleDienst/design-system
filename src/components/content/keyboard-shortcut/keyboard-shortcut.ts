@@ -26,8 +26,8 @@
  *   highlight edge. 'simple' shows the keys as plain text with separators: lighter, for
  *   inline use such as in a menu item.
  * @attr {boolean} always-visible - Show on touch-only devices too, where shortcuts cannot be invoked.
- * @attr {string} color - 'neutral' (default) uses the component colors of its own. 'inherit'
- *   lets the keys and separators follow the surrounding text color (currentColor), with a
+ * @attr {string} color - 'neutral' (default) uses the component colors of its own. 'content'
+ *   lets the keys and separators follow the content color of the context, with a
  *   translucent contrast fill and highlight edge. Useful on a filled surface color or a
  *   highlighted row.
  * @attr {'mac'|'windows'|'linux'|'other'} debug-os - Development aid: overrides the OS
@@ -48,7 +48,7 @@ import { detectOS, type OS } from '../../../utilities/os.js';
 import { resolveKeys, parseKeys } from '../../../utilities/shortcut.js';
 
 type Size = 'sm' | 'md' | 'inherit';
-type Color = 'neutral' | 'inherit';
+type Color = 'neutral' | 'content';
 type Appearance = 'box' | 'simple';
 
 @customElement('nldd-keyboard-shortcut')
@@ -79,8 +79,8 @@ export class NLDDKeyboardShortcut extends LitElement {
 	appearance: Appearance = 'box';
 
 	/**
-	 * 'neutral' (default) uses the component's own palette. 'inherit' makes the
-	 * keys and separators adopt the surrounding text color (currentColor), with a
+	 * 'neutral' (default) uses the component's own palette. 'content' makes the
+	 * keys and separators adopt the content color of the context, with a
 	 * translucent contrast fill and highlight border — useful on filled panels or
 	 * highlighted rows.
 	 */

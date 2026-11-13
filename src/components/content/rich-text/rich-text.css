@@ -53,39 +53,6 @@ nldd-rich-text[hidden] {
 	display: none;
 }
 
-/* # Color inherit
-   color="inherit" makes all text follow the surface's text color (e.g. a
-   filled-categories panel that sets a pure white/black content color).
-   Links keep the underline as their affordance and signal hover with a
-   thicker line instead of a color shift; figcaption takes the same color
-   at the system-wide secondary opacity tier. Known v1 gaps: inline code,
-   mark, tables and hr keep their own surfaces. */
-
-nldd-rich-text[color="inherit"] {
-	color: inherit;
-}
-
-nldd-rich-text[color="inherit"] a {
-	color: currentColor;
-	/* Pin the underline to the inherited color in every state. The hover rule
-	   below only changes thickness, so without this an underline could keep the
-	   default link blue and leak it against a colored surface. */
-	text-decoration-color: currentColor;
-}
-
-nldd-rich-text[color="inherit"] a:hover {
-	color: currentColor;
-	text-decoration-thickness: var(--primitives-border-width-regular);
-}
-
-nldd-rich-text[color="inherit"] a:active {
-	color: currentColor;
-}
-
-nldd-rich-text[color="inherit"] figcaption {
-	color: color-mix(in oklab, currentColor var(--semantics-content-secondary-opacity), transparent);
-}
-
 /* # Child placement
    A child belongs to the text unless it is listed: it reads at the main
    measure, so a new component lands there too, and so does code. Media,
@@ -351,16 +318,19 @@ nldd-rich-text dd + dt + dd {
 
 nldd-rich-text a {
 	border-radius: var(--primitives-corner-radius-xxs);
+	--context-content-color: var(--context-link-color);
 	color: var(--context-link-color);
 	text-decoration: underline;
 	text-underline-offset: var(--primitives-space-2);
 	cursor: pointer;
 
 	&:hover {
+		--context-content-color: var(--context-link-is-hovered-color);
 		color: var(--context-link-is-hovered-color);
 	}
 
 	&:active {
+		--context-content-color: var(--context-link-is-active-color);
 		color: var(--context-link-is-active-color);
 	}
 }
@@ -372,6 +342,7 @@ nldd-rich-text [data-mention] {
 	--_rich-text-mention-icon-size: 0.95em;
 	--_rich-text-mention-inline-padding: 0.3em;
 
+	--context-content-color: var(--semantics-mentions-content-color);
 	color: var(--semantics-mentions-content-color);
 	font-weight: var(--primitives-font-weight-body-bold);
 	white-space: nowrap;
@@ -400,6 +371,7 @@ nldd-rich-text a[data-mention] {
 	border-radius: var(--primitives-corner-radius-sm);
 	box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--semantics-mentions-highlight-border-color);
 	background-color: var(--semantics-mentions-background-color);
+	--context-content-color: var(--semantics-mentions-content-color);
 	color: var(--semantics-mentions-content-color);
 	text-decoration: none;
 	cursor: default;
@@ -408,11 +380,13 @@ nldd-rich-text a[data-mention] {
 
 	&:hover {
 		background-color: var(--semantics-mentions-is-hovered-background-color);
+		--context-content-color: var(--semantics-mentions-content-color);
 		color: var(--semantics-mentions-content-color);
 	}
 
 	&:active {
 		background-color: var(--semantics-mentions-is-active-background-color);
+		--context-content-color: var(--semantics-mentions-content-color);
 		color: var(--semantics-mentions-content-color);
 	}
 
@@ -502,6 +476,7 @@ nldd-rich-text mark {
 	padding: var(--primitives-space-1) var(--primitives-space-2);
 	border-radius: var(--semantics-controls-xs-corner-radius);
 	background-color: var(--semantics-content-mark-background-color);
+	--context-content-color: var(--semantics-content-mark-color);
 	color: var(--semantics-content-mark-color);
 }
 
@@ -519,6 +494,7 @@ nldd-rich-text figure {
 /* # Figure Caption */
 
 nldd-rich-text figcaption {
+	--context-content-color: var(--context-content-secondary-color);
 	color: var(--context-content-secondary-color);
 	font: var(--primitives-font-body-xs-regular-snug);
 	text-align: left;

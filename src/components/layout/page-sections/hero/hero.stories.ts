@@ -20,9 +20,8 @@ const MEDIA = 'sample-images/butterfly-1200.jpg';
  * afbeelding bovenaan en het paneel eronder, ingesprongen en een stukje over
  * de afbeelding. Zonder media vult de main het volledige vlak.
  * `main-background` is standaard `accent`; met `base` krijgt het vlak zonder
- * media een rand zodat de vorm zichtbaar blijft op de base-surface. Zet
- * binnenin `color="inherit"` op title en rich-text voor gegarandeerd contrast
- * op het accentvlak.
+ * media een rand zodat de vorm zichtbaar blijft op de base-surface. Title,
+ * rich-text en links erin nemen de kleuren van het accentvlak over.
  */
 export default {
 	title: 'Components/Layout/Page Sections/Hero',
@@ -141,23 +140,22 @@ const Template = (args: Record<string, any>) => html`
 		media-alt=${args.mediaAlt || nothing}
 	>
 		<nldd-title
-			color="inherit"
 			size="display-2"
 			text="Regels die voor je werken"
 			heading-level="1"
 		></nldd-title>
 		<nldd-spacer size="8"></nldd-spacer>
-		<nldd-rich-text color="inherit">
+		<nldd-rich-text>
 			<p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar.</p>
 		</nldd-rich-text>
 		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-button-group>
 			<nldd-button
-				appearance="inherit-filled"
+				appearance="content-filled"
 				text="Bekijk de regels"
 			></nldd-button>
 			<nldd-button
-				appearance="inherit-tinted"
+				appearance="content-tinted"
 				text="Over de Digitale Dienst"
 			></nldd-button>
 		</nldd-button-group>
@@ -170,7 +168,6 @@ export const Standaard = {
 
 const cornerContent = (text: string) => html`
 	<nldd-title
-		color="inherit"
 		size="display-4"
 		text=${text}
 		heading-level="2"
@@ -244,7 +241,6 @@ export const AfgerondeHoekZonderMedia = {
 							corner
 						>
 							<nldd-title
-								color="inherit"
 								size="display-1"
 								text="Mijn Dienst"
 								heading-level="2"
@@ -254,12 +250,11 @@ export const AfgerondeHoekZonderMedia = {
 							corner
 						>
 							<nldd-title
-								color="inherit"
 								size="display-1"
 								text="Mijn Dienst"
 								heading-level="2"
 							></nldd-title>
-							<nldd-rich-text color="inherit">
+							<nldd-rich-text>
 								<p>Vraag subsidie aan voor dakisolatie of een warmtepomp, en volg je aanvraag tot hij is afgerond.</p>
 							</nldd-rich-text>
 						</nldd-hero>
@@ -319,7 +314,6 @@ export const AllePosities = {
 						alt=""
 					>
 					<nldd-title
-						color="inherit"
 						size="display-4"
 						text='main-position="${position}"'
 						heading-level="2"
@@ -345,8 +339,8 @@ export const Overlap = {
 	render: (args: Record<string, any>) => html`
 		<nldd-container gap="48">
 			${[
-				['Veel tekst', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p><p>Elke regel krijgt een vorm die mensen en systemen allebei kunnen lezen, zodat de uitvoering volgt wat er bedoeld is. Wie wil weten waarom een besluit zo uitvalt, kan het nalezen.</p></nldd-rich-text><nldd-spacer size="16"></nldd-spacer><nldd-button appearance="inherit-filled" text="Bekijk de regels"></nldd-button>`],
-				['Gemiddeld', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
+				['Veel tekst', html`<nldd-rich-text><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p><p>Elke regel krijgt een vorm die mensen en systemen allebei kunnen lezen, zodat de uitvoering volgt wat er bedoeld is. Wie wil weten waarom een besluit zo uitvalt, kan het nalezen.</p></nldd-rich-text><nldd-spacer size="16"></nldd-spacer><nldd-button appearance="content-filled" text="Bekijk de regels"></nldd-button>`],
+				['Gemiddeld', html`<nldd-rich-text><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
 				['Weinig tekst', null],
 			].map(([title, body]) => html`
 				<nldd-hero
@@ -360,7 +354,6 @@ export const Overlap = {
 						alt=""
 					>
 					<nldd-title
-						color="inherit"
 						text=${title}
 						heading-level="2"
 					></nldd-title>
@@ -398,7 +391,6 @@ export const VolleStrook = {
 					alt=""
 				>
 				<nldd-title
-					color="inherit"
 					size="display-3"
 					text="Volle onderstrook"
 					supporting-text='main-position="bottom-left"'
@@ -416,7 +408,6 @@ export const VolleStrook = {
 					alt=""
 				>
 				<nldd-title
-					color="inherit"
 					size="display-3"
 					text="Volle bovenstrook"
 					supporting-text='main-position="top-left"'
@@ -438,7 +429,6 @@ export const ZonderMedia = {
 		<nldd-container gap="24">
 			<nldd-hero>
 				<nldd-title
-					color="inherit"
 					size="display-2"
 					text="Kleurvlak zonder fotografie"
 					supporting-text="De main beslaat de volledige hero"
@@ -458,7 +448,7 @@ export const ZonderMedia = {
 };
 
 /**
- * Rijkere invulling: rich-text met `color="inherit"` en een knop in het
+ * Rijkere invulling: rich-text en een knop in het
  * paneel, op een middenton-vlakkleur met pure zwarte contentkleur.
  */
 export const MetRichText = {
@@ -472,18 +462,17 @@ export const MetRichText = {
 				alt=""
 			>
 			<nldd-title
-				color="inherit"
 				size="display-2"
 				text="Regels die voor je werken"
 				heading-level="1"
 			></nldd-title>
 			<nldd-spacer size="16"></nldd-spacer>
-			<nldd-rich-text color="inherit">
+			<nldd-rich-text>
 				<p>De tekst volgt de contentkleur van de vulling, en <a href="#">links</a> erven die ook.</p>
 			</nldd-rich-text>
 			<nldd-spacer size="24"></nldd-spacer>
 			<nldd-button
-				appearance="inherit-filled"
+				appearance="content-filled"
 				text="Bekijk de regels"
 			></nldd-button>
 		</nldd-hero>

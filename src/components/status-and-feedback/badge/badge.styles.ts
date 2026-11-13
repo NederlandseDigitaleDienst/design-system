@@ -49,10 +49,10 @@ export const badgeStyles = css`
 	   token reads currentColor, so without this the flip is computed against the
 	   inherited color while the fill comes from the context channel. A row that
 	   sets the channel to white over dark text then paints white on white. */
-	:host([color="inherit"]) {
+	:host([color="content"]) {
 		color: var(--context-content-color);
 
-		--_badge-background-color: currentColor;
+		--_badge-background-color: var(--context-content-color);
 		--_badge-border-color: transparent;
 		--_badge-content-color: var(--semantics-content-contrast-color);
 	}
@@ -89,6 +89,7 @@ export const badgeStyles = css`
 	   currentColor, so the text lands on black or white without a second formula
 	   to keep in step. After every [color] rule, so it wins over one. */
 	:host([custom-color]) {
+		--context-content-color: var(--_badge-custom-color);
 		color: var(--_badge-custom-color);
 
 		--_badge-background-color: var(--_badge-custom-color);

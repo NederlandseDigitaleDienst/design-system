@@ -53,6 +53,7 @@ export const datePickerStyles = css`
 		   width attribute (--_date-picker-width) overrides the intrinsic seven-cell width;
 		   the percentage-based inside stretches along. */
 		width: var(--_date-picker-width, calc(var(--_date-picker-day-size) * 7));
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		-webkit-tap-highlight-color: transparent;
 	}
