@@ -15,6 +15,22 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A popover that opens on interest instead of on a click.** Put an `nldd-popover` in the new `interest` slot of `nldd-button` or `nldd-icon-button`, and it opens when the pointer rests on the button, when the button gets keyboard focus, and on a long press on touch. The button keeps its own click, so a reaction badge can toggle the reaction and still show who reacted. See Added.
+
+### Added
+
+- **`interest` slot on `nldd-button` and `nldd-icon-button`.** The popover in it describes the button: focus stays where it is, its content is read as the button's description, Escape closes it wherever focus is, and the pointer can move onto it without closing it. On `nldd-icon-button` it takes the place of the button's own tooltip, which comes back when the popover goes. It holds information only: what a hover opens cannot be reached with the keyboard, so use the `popup` slot for content you act on. It does not open over a menu the button opened.
+
+### Changed
+
+- **`popover-needs-name` no longer asks for `accessible-label` on a popover in the `interest` slot.** There its content is the description of the button, and a label would be read in its place.
+
+### Fixed
+
+- **`hide()` on `nldd-popover` right after `show()` did nothing.** It now closes the popover, also before the browser has reported that it opened.
+
 ## [0.23.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.22.0...v0.23.0) (2026-11-13)
 
 ### Highlights

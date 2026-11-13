@@ -38,6 +38,7 @@
  * @slot start-icon - Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`.
  * @slot end-icon - Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay.
+ * @slot interest - A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a reaction badge that toggles a reaction and shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read.
  *
  * @fires click - When button is clicked (not fired when disabled)
  */
@@ -51,6 +52,7 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { nlddButtonTranslations } from './button.i18n.js';
 import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
+import { InterestController } from '../../../utilities/interest-controller.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
@@ -238,6 +240,10 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	 * binds its handlers. */
 	_popup = new PopupAnchorController(this);
 
+	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
+	 * and a long press. Not private: the template module binds its handler. */
+	_interest = new InterestController(this);
+
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
@@ -327,6 +333,11 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	/** The button or link it renders, not the host around it. */
 	override describedTarget(): Element | null {
 		return this.shadowRoot?.querySelector('button, a') ?? null;
+	}
+
+	/** The popover in the `interest` slot describes the button. */
+	override ownDescriptions(): readonly Element[] {
+		return this._interest.overlay ? [this._interest.overlay] : [];
 	}
 
 	override render() {

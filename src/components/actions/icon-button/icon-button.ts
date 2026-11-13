@@ -32,6 +32,7 @@
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay.
+ * @slot interest - A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the button's own tooltip, so let it say what the button does where the icon does not. The button keeps its own click. Focus stays on the button, the popover's content is read as the button's description (after `accessible-label`, which stays its name), and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here.
  *
  * @example
  * ```html
@@ -54,6 +55,8 @@ import { template } from './icon-button.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddIconButtonTranslations } from './icon-button.i18n.js';
 import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
+import { InterestController } from '../../../utilities/interest-controller.js';
+import { applyDescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
@@ -237,6 +240,11 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	 * binds its handlers. */
 	_popup = new PopupAnchorController(this);
 
+	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
+	 * and a long press, in place of the tooltip. Not private: the template
+	 * module reads it. */
+	_interest = new InterestController(this);
+
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
@@ -247,6 +255,9 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 
 	override updated(changedProperties: Map<string, unknown>): void {
 		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
+		// By element: the button sits in this shadow root, the popover outside it.
+		const overlay = this._interest.overlay;
+		applyDescribedBy(this.shadowRoot?.querySelector('.icon-button'), overlay ? [overlay] : [], true);
 		if (changedProperties.has('width')) {
 			const w = this.width;
 			// 'full' switches host to block + 100% via CSS attribute selector.

@@ -605,6 +605,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "The popover in the `interest` slot describes the button.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "describedByElements",
               "type": {
@@ -966,6 +980,10 @@
             {
               "name": "popup",
               "description": "A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay."
+            },
+            {
+              "name": "interest",
+              "description": "A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a reaction badge that toggles a reaction and shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read."
             }
           ]
         }
@@ -1614,6 +1632,10 @@
             {
               "name": "popup",
               "description": "A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay."
+            },
+            {
+              "name": "interest",
+              "description": "A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the button's own tooltip, so let it say what the button does where the icon does not. The button keeps its own click. Focus stays on the button, the popover's content is read as the button's description (after `accessible-label`, which stays its name), and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here."
             }
           ]
         }
@@ -10066,6 +10088,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -10557,6 +10593,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -10937,6 +10987,20 @@
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
               }
             },
             {
@@ -11853,6 +11917,20 @@
                 }
               },
               "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -12797,6 +12875,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -13331,6 +13423,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "translations",
               "type": {
@@ -13654,6 +13760,20 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -14465,6 +14585,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -15055,6 +15189,20 @@
                 }
               },
               "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -15700,6 +15848,20 @@
                 }
               },
               "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -16353,6 +16515,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -16997,6 +17173,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -17531,6 +17721,20 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -18209,6 +18413,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -18807,6 +19025,20 @@
                 }
               },
               "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -20356,6 +20588,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -20907,6 +21153,20 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -22092,6 +22352,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -22558,6 +22832,20 @@
                 }
               },
               "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -25953,6 +26241,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -27039,6 +27341,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -28039,6 +28355,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -28606,6 +28936,20 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -29323,6 +29667,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -29970,6 +30328,20 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -36776,7 +37148,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it, and slides down as it goes. It is a manual popover there and closes itself, so a close request from the system, such as the back gesture on Android, leaves it open; a `popover` you set yourself is kept. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
+          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. In the `interest` slot of an nldd-button the popover describes that button instead: it opens when the pointer rests on the button, when the button gets keyboard focus, and on a long press on touch, and the button keeps its own click. Focus stays on the button, the button gets no expanded state, and the popover's content is read as its description, so it needs no `accessible-label` there and holds information only, no link or button. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it, and slides down as it goes. It is a manual popover there and closes itself, so a close request from the system, such as the back gesture on Android, leaves it open; a `popover` you set yourself is kept. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
           "name": "NLDDPopover",
           "members": [
             {
@@ -48214,6 +48586,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "formAssociated",
               "type": {
@@ -48827,6 +49213,16 @@
                 }
               },
               "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated."
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`."
             }
           ],
           "parameters": [
@@ -49495,6 +49891,353 @@
           "declaration": {
             "name": "isTouchMode",
             "module": "src/utilities/input-modality.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/interest-controller.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "InterestController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_host",
+              "type": {
+                "text": "ReactiveControllerHost & HTMLElement"
+              },
+              "privacy": "private",
+              "default": "host"
+            },
+            {
+              "kind": "field",
+              "name": "_overlay",
+              "type": {
+                "text": "NLDDPopover | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_hovered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_focused",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_pressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_dismissed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Escape closed it: hover and focus do not bring it back until both leave."
+            },
+            {
+              "kind": "field",
+              "name": "_swallowClick",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "A long press opened it: the click that ends the press is not an activation."
+            },
+            {
+              "kind": "field",
+              "name": "_showTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_hideTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pressTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pressStart",
+              "type": {
+                "text": "{ x: number; y: number } | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "NLDDPopover | null"
+              },
+              "description": "The slotted popover, or null when none is slotted.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handleSlotChange",
+              "description": "Bind to the interest slot's `slotchange`."
+            },
+            {
+              "kind": "method",
+              "name": "setOverlay",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "overlay",
+                  "type": {
+                    "text": "NLDDPopover | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_wanted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_isOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_otherOverlayOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "description": "Another overlay of this control is open (the menu in its popup slot):\nthat one has the user's attention.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_update",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_scheduleHide",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_close",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_reset",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_clearTimer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "'_showTimer' | '_hideTimer' | '_pressTimer'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_listenWhileOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "on",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onOverlayClose",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onPointerEnter",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onPointerLeave",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onFocusOut",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onPointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onPointerMove",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_cancelPress",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onContextMenu",
+              "privacy": "private",
+              "description": "Android opens the context menu on a long press, and iOS a link preview."
+            },
+            {
+              "kind": "field",
+              "name": "_onClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onDocumentKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onDocumentPointerdown",
+              "privacy": "private"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "InterestController",
+          "declaration": {
+            "name": "InterestController",
+            "module": "src/utilities/interest-controller.ts"
           }
         }
       ]

@@ -643,7 +643,7 @@ export const devRules: DevRule[] = [
 	{
 		"id": "popover-needs-name",
 		"message": "nldd-popover needs `accessible-label`, or a screen reader announces it without a name.",
-		"context": "nldd-popover",
+		"context": "nldd-popover:not([slot=\"interest\"])",
 		"assert": "[accessible-label]:not([accessible-label=\"\"])",
 		"properties": [
 			"accessibleLabel"
