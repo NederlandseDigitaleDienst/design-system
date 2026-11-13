@@ -27,6 +27,9 @@ export const listStyles = css`
 		--_list-background-color: transparent;
 		--_list-highlight-border-color: transparent;
 		--_list-box-padding: var(--primitives-space-4);
+		--_list-box-corner-radius: var(--primitives-corner-radius-lg);
+		--context-list-item-corner-radius: var(--semantics-list-items-indicator-corner-radius);
+		--context-list-item-inline-inset: var(--semantics-list-items-indicator-inline-inset);
 		--_list-gap: var(--primitives-space-8);
 		--_list-search-field-min-size: var(--semantics-controls-md-min-size);
 		--_list-search-field-icon-size: var(--primitives-space-24);
@@ -60,6 +63,8 @@ export const listStyles = css`
 	}
 
 	:host([appearance^="box"]) {
+		--context-list-item-corner-radius: calc(var(--_list-box-corner-radius) - var(--_list-box-padding));
+		--context-list-item-inline-inset: max(var(--semantics-list-items-indicator-inline-inset), var(--context-list-item-corner-radius));
 		--_list-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_list-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 	}
@@ -112,7 +117,7 @@ export const listStyles = css`
 	   system, instead of being cut off by the frame. */
 	:host([appearance^="box"]) .list__main {
 		position: relative;
-		border-radius: var(--semantics-surfaces-corner-radius);
+		border-radius: var(--_list-box-corner-radius);
 		background-color: var(--_list-background-color);
 		box-shadow: inset 0 0 0 1px var(--_list-highlight-border-color);
 	}
@@ -139,7 +144,7 @@ export const listStyles = css`
 	}
 
 	:host([appearance^="box"]) .list__items {
-		padding-inline: calc(var(--semantics-list-items-indicator-inline-inset) + var(--_list-box-padding));
+		padding-inline: calc(var(--context-list-item-inline-inset) + var(--_list-box-padding));
 		padding-block: var(--_list-box-padding);
 	}
 
@@ -150,7 +155,26 @@ export const listStyles = css`
 	}
 
 	:host([type="listbox"]:not([appearance^="box"])) .list__items {
-		padding-inline: var(--semantics-list-items-indicator-inline-inset);
+		padding-inline: var(--context-list-item-inline-inset);
+	}
+
+	/* A scrolling listbox clips its rows to the frame's corner and draws the
+	   border on top, so a row scrolling past neither pokes out nor covers it. */
+	:host([type="listbox"][appearance^="box"]) .list__main {
+		box-shadow: none;
+	}
+
+	:host([type="listbox"][appearance^="box"]) .list__main::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		box-shadow: inset 0 0 0 1px var(--_list-highlight-border-color);
+		pointer-events: none;
+	}
+
+	:host([type="listbox"][appearance^="box"]) .list__items {
+		border-radius: inherit;
 	}
 
 	.list__empty {
@@ -263,7 +287,7 @@ export const listStyles = css`
 
 	::slotted(.nldd-list-drag-placeholder) {
 		box-sizing: border-box;
-		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		border-radius: var(--context-list-item-corner-radius);
 		background-color: var(--_list-drag-placeholder-background-color);
 		pointer-events: none;
 	}
@@ -275,7 +299,7 @@ export const listStyles = css`
 		left: var(--_list-drag-clone-left);
 		opacity: var(--_list-drag-clone-opacity);
 		z-index: var(--_list-drag-clone-z-index);
-		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		border-radius: var(--context-list-item-corner-radius);
 		background: var(--semantics-surfaces-base-background-color);
 		pointer-events: none;
 		width: var(--_list-drag-clone-width);

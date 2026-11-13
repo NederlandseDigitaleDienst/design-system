@@ -56,6 +56,8 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **Corner radius tokens.** The scale steps by 2px up to `lg`: `--primitives-corner-radius-xxs` is 4px, `xs` 6px, `sm` 8px, `md` 10px and `lg` 12px, then `xl` 16px and `xxl` 20px. `xxxl` stays 24px. Controls, tooltips, tags, cards, tables and editors get rounder corners with it.
+- **Surfaces are rounder: 16px instead of 12px.** `--semantics-surfaces-corner-radius` points to `xl`, so `nldd-card`, `nldd-box`, `nldd-banner`, `nldd-sidebar-section`, the kanban columns, `nldd-code-viewer`, code blocks and `nldd-text-editor` sit clearly rounder than the controls in them. A framed `nldd-list` keeps 12px, as a control within a surface.
+- **The rows of a framed `nldd-list` follow its corner.** A row takes the frame's corner minus the 4px around it, and its text and divider start where that corner ends, so frame and row share a center at any radius.
 - **A control inside a field takes its corner from the field.** A button in `nldd-text-field`, `nldd-search-field`, `nldd-combo-box`, `nldd-date-field`, `nldd-file-field` or the search bar of `nldd-list`, the steppers of `nldd-number-field` and the tokens in `nldd-token-field` get the field's radius minus the space around them, so both corners share a center. An `sm` button in an `md` field has a 5px corner instead of the 8px it has on its own.
 - **The functional colors of `nldd-icon` follow the surface.** `content`, `secondary`, `accent`, `critical`, `warning` and `success` read the `--context-content-*` a surface sets, as `nldd-text` does. On the accent hero, in a tooltip or in a selected row such an icon took the page's color, while the text beside it took the surface's.
 - **A link takes the text color of a colored surface.** On the accent panel of `nldd-hero`, in a tooltip and in a highlighted row, a link in `nldd-rich-text`, `nldd-text` or `nldd-title`, `nldd-link`, `nldd-breadcrumbs` and the links of `nldd-form-field` are no longer blue on blue, in every state.
@@ -69,6 +71,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A scrolling `nldd-list type="listbox"` stays inside its frame.** A row scrolling past the top no longer pokes out of the rounded corner or covers the border.
 - **A `tile` on `nldd-icon` sat on the line with the bottom of its glyph.** In running text it sank below the text, and a line with a tile was lower than the same line without one. It now sits on the line with its own bottom, as an icon without a tile does.
 - **`nldd-avatar` and a `tile` on `nldd-icon` stretched into a rectangle in a row with a taller neighbor.** A fixed `size` now sets the height as well as the width, so both stay square.
 - **The secondary text in `nldd-tooltip` has enough contrast.** It was the tooltip's white at 75%, about 4.3:1 on the light tooltip, below the 4.5:1 that small text needs. It now reads `--semantics-tooltips-content-secondary-color`, at 4.95:1 in light and 5.36:1 in dark.

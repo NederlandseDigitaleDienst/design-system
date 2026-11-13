@@ -10,6 +10,8 @@ export const listItemStyles = css`
 
 	:host {
 		--_list-item-background-color: transparent;
+		--_list-item-corner-radius: var(--context-list-item-corner-radius, var(--semantics-list-items-indicator-corner-radius));
+		--_list-item-inline-inset: var(--context-list-item-inline-inset, var(--semantics-list-items-indicator-inline-inset));
 		--_list-item-content-z-index: 0;
 		--_list-item-focus-z-index: 1;
 		--_list-item-indicator-z-index: calc(var(--_list-item-content-z-index) - 1);
@@ -40,11 +42,11 @@ export const listItemStyles = css`
 		/* !important: shields the widening from consumer universal resets, which
 		   beat normal :host declarations per CSS Scoping. A negative margin
 		   cannot move inward — an inner element cannot reach outside the host. */
-		margin-inline: calc(-1 * var(--semantics-list-items-indicator-inline-inset)) !important;
+		margin-inline: calc(-1 * var(--_list-item-inline-inset)) !important;
 	}
 
 	:host(.is-interactive) .list-item {
-		padding-inline: var(--semantics-list-items-indicator-inline-inset);
+		padding-inline: var(--_list-item-inline-inset);
 	}
 
 	:host(.is-interactive) .list-item:has(> .list-item__action) {
@@ -130,7 +132,7 @@ export const listItemStyles = css`
 		background: none;
 		width: 100%;
 		padding: 0;
-		padding-inline: var(--semantics-list-items-indicator-inline-inset);
+		padding-inline: var(--_list-item-inline-inset);
 		flex-direction: row;
 		align-items: stretch;
 		text-align: start;
@@ -171,9 +173,9 @@ export const listItemStyles = css`
 		display: block;
 		position: absolute;
 		inset-block: 0;
-		inset-inline: calc(-1 * var(--semantics-list-items-indicator-inline-inset));
+		inset-inline: calc(-1 * var(--_list-item-inline-inset));
 		z-index: var(--_list-item-indicator-z-index);
-		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		border-radius: var(--_list-item-corner-radius);
 		background-color: var(--_list-item-background-color);
 		pointer-events: none;
 	}
@@ -358,7 +360,7 @@ export const listItemStyles = css`
 		display: block;
 		position: absolute;
 		inset: 0;
-		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		border-radius: var(--_list-item-corner-radius);
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
@@ -388,7 +390,7 @@ export const listItemStyles = css`
 	}
 
 	:host(.is-interactive) .list-item__children {
-		padding-inline: var(--semantics-list-items-indicator-inline-inset);
+		padding-inline: var(--_list-item-inline-inset);
 	}
 
 	.list-item__children[hidden] {
@@ -419,8 +421,8 @@ export const listItemStyles = css`
 
 	:host(.is-interactive) .list-item__divider {
 		inset-inline:
-			var(--_list-item-divider-inset-start, var(--semantics-list-items-indicator-inline-inset))
-			var(--_list-item-divider-inset-end, var(--semantics-list-items-indicator-inline-inset));
+			var(--_list-item-divider-inset-start, var(--_list-item-inline-inset))
+			var(--_list-item-divider-inset-end, var(--_list-item-inline-inset));
 	}
 
 	:host(.is-boxed.is-last) .list-item {

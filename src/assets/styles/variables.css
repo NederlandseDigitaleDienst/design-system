@@ -947,7 +947,7 @@
 	/* ## Surfaces */
 
 	--semantics-surfaces-highlight-border-width: var(--semantics-dividers-thickness);
-	--semantics-surfaces-corner-radius: var(--primitives-corner-radius-lg);
+	--semantics-surfaces-corner-radius: var(--primitives-corner-radius-xl);
 	--semantics-surfaces-ring-thickness: var(--primitives-border-width-regular);
 	--semantics-surfaces-base-background-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-neutral-100));
 	--semantics-surfaces-base-highlight-border-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-200));

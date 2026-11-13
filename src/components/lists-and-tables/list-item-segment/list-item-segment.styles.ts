@@ -7,6 +7,8 @@ export const listItemSegmentStyles = css`
 
 	:host {
 		--_list-item-segment-background-color: transparent;
+		--_list-item-segment-corner-radius: var(--context-list-item-corner-radius, var(--semantics-list-items-indicator-corner-radius));
+		--_list-item-segment-inline-inset: var(--context-list-item-inline-inset, var(--semantics-list-items-indicator-inline-inset));
 		--_list-item-segment-min-size: var(--context-list-item-size, var(--semantics-controls-md-min-size));
 		--_list-item-segment-expanded-rotation: 90deg;
 		--_list-item-segment-fill-z-index: -1;
@@ -68,7 +70,7 @@ export const listItemSegmentStyles = css`
 		width: 100%;
 		min-width: 0;
 		padding: 0;
-		padding-inline: var(--semantics-list-items-indicator-inline-inset);
+		padding-inline: var(--_list-item-segment-inline-inset);
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
@@ -96,7 +98,7 @@ export const listItemSegmentStyles = css`
 		z-index: var(--_list-item-segment-fill-z-index);
 		inset-block: 0;
 		inset-inline: 0;
-		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		border-radius: var(--_list-item-segment-corner-radius);
 		background-color: var(--_list-item-segment-background-color);
 		pointer-events: none;
 	}
@@ -166,7 +168,7 @@ export const listItemSegmentStyles = css`
 		display: block;
 		position: absolute;
 		inset: 0;
-		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		border-radius: var(--_list-item-segment-corner-radius);
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
