@@ -147,6 +147,9 @@ export const listStyles = css`
 		max-height: var(--_list-max-height);
 		overflow-x: hidden;
 		overflow-y: auto;
+	}
+
+	:host([type="listbox"]:not([appearance^="box"])) .list__items {
 		padding-inline: var(--semantics-list-items-indicator-inline-inset);
 	}
 

@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit';
+import { html } from 'lit';
 import './rich-text.js';
 import '../../status-and-feedback/banner/banner.js';
 import '../../layout/container/container.js';
