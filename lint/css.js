@@ -167,7 +167,7 @@ export function cssRules(source) {
  * property the design system does not set there. Values do not count, since a bundler
  * rewrites colors, urls and units; what a rule selects and sets survives.
  */
-export function isSystemCss(css, systemCss) {
+export function isDesignSystemCss(css, designSystemCss) {
 	const rules = [...cssRules(css)];
 	return (
 		rules.length > 0 &&
@@ -175,7 +175,7 @@ export function isSystemCss(css, systemCss) {
 			// A rule with only what a bundler adds, such as its light-dark() fallback, is not
 			// anyone's. An empty one is the app's: a minifier drops the design system's empty rules.
 			if (names.size === 0) return Boolean(names.added);
-			return Boolean(systemCss[key]) && [...names].every((name) => systemCss[key].includes(name));
+			return Boolean(designSystemCss[key]) && [...names].every((name) => designSystemCss[key].includes(name));
 		})
 	);
 }

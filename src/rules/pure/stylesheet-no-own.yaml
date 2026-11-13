@@ -1,5 +1,5 @@
 severity: error
-context: 'style:not(:within(svg)):not(:system), link[rel~="stylesheet"]:not(:system):not([href*="@nldd/design-system"]):not([href*="/nldd/css/"])'
+context: 'style:not(:within(svg)):not(:design-system), link[rel~="stylesheet"]:not(:design-system):not([href*="@nldd/design-system"]):not([href*="/nldd/css/"])'
 message: 'A stylesheet of the app''s own: the look comes from the components and their attributes.'
 examples:
   passed: ['<html><head><link rel="stylesheet" href="/node_modules/@nldd/design-system/dist/css/global.css"><link rel="stylesheet" href="/static/nldd/css/global.css"></head></html>', '<html><head><style>body:has(:not(:defined)){opacity:0}</style></head></html>']

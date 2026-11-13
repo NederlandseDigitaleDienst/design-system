@@ -5,7 +5,7 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
-import { declarations, enclosingBlock, isSystemCss, TOKEN_PREFIX, tokenReferences, withoutComments } from './css.js';
+import { declarations, enclosingBlock, isDesignSystemCss, TOKEN_PREFIX, tokenReferences, withoutComments } from './css.js';
 import { createEngine } from './engine.js';
 import { canFix, stuckTags } from './fix.js';
 import { applyWrappers, parseSource, parseStylesheet, readerOf } from './frontends.js';
@@ -224,8 +224,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		translations: data.translations ?? {},
 		removedKeys: data.removedKeys ?? {},
 	};
-	const engine = createEngine({ classes: data.classes, tags: data.tags, systemCss: data.systemCss });
-	const isSystemBlock = (css) => isSystemCss(css, data.systemCss ?? {});
+	const engine = createEngine({ classes: data.classes, tags: data.tags, designSystemCss: data.designSystemCss });
+	const isDesignSystemBlock = (css) => isDesignSystemCss(css, data.designSystemCss ?? {});
 	const tokens = new Set([...(data.tokens ?? []), ...projectTokens]);
 	const removedTokens = data.removedTokens ?? {};
 	// Longest first, so --_button-group-gap belongs to button-group and not to button.
@@ -236,10 +236,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 
 	/** A stylesheet on disk is the design system's when every block in it is. */
 	const linkedSheets = new Map();
-	function isSystemSheet(file) {
+	function isDesignSystemSheet(file) {
 		if (!linkedSheets.has(file)) {
 			const blocks = parseStylesheet(readFileSync(file, 'utf8')).flatMap((root) => root.children);
-			linkedSheets.set(file, blocks.every((block) => isSystemBlock(block.css)));
+			linkedSheets.set(file, blocks.every((block) => isDesignSystemBlock(block.css)));
 		}
 		return linkedSheets.get(file);
 	}
@@ -250,17 +250,17 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			walk(root, (node) => {
 				if (node.name !== 'link' || !/(^|\s)stylesheet(\s|$)/i.test(String(node.attrs.get('rel') ?? ''))) return;
 				const file = linkedFile(node.attrs.get('href'), filename);
-				if (file) node.system = isSystemSheet(file);
+				if (file) node.designSystem = isDesignSystemSheet(file);
 			});
 		}
 	}
 
 	/** Where the design system's own CSS sits in this file: a bundle or a page can hold it next to the app's. */
-	function systemRanges(roots) {
+	function designSystemRanges(roots) {
 		const ranges = [];
 		for (const root of roots) {
 			walk(root, (node) => {
-				if (node.name === 'style' && node.css !== undefined && isSystemBlock(node.css)) {
+				if (node.name === 'style' && node.css !== undefined && isDesignSystemBlock(node.css)) {
 					ranges.push([node.offset, node.offset + node.css.length]);
 				}
 			});
@@ -277,15 +277,15 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	 */
 	function cssFindings(source, filename, roots) {
 		const lineComments = !MARKUP_FILE.test(filename);
-		const inSystemCss = systemRanges(roots);
-		const declared = declarations(source, lineComments).filter((each) => !inSystemCss(each.offset));
+		const inDesignSystemCss = designSystemRanges(roots);
+		const declared = declarations(source, lineComments).filter((each) => !inDesignSystemCss(each.offset));
 		const ownTokens = new Set(declared.map(({ name }) => name).filter((name) => TOKEN_PREFIX.test(name)));
 		const findings = [];
 		const report = (rule, message, { name, offset }) =>
 			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, tag: name, offset, endOffset: offset + name.length });
 		for (const reference of tokenReferences(source, lineComments)) {
 			const { name, offset } = reference;
-			if (tokens.has(name) || ownTokens.has(name) || inSystemCss(offset)) continue;
+			if (tokens.has(name) || ownTokens.has(name) || inDesignSystemCss(offset)) continue;
 			const removed = removedTokens[name];
 			const instead = removed?.use ? ` Use \`${removed.use}\`.` : '';
 			const message = removed

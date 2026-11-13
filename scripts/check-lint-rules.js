@@ -239,7 +239,7 @@ function checkNoWarnings() {
  * silently skips the rule, and :accepted judges a file by itself, which only an
  * opt-in group may do.
  */
-const SOURCE_ONLY_PSEUDOS = ['accepted', 'written', 'blank', 'within', 'system'];
+const SOURCE_ONLY_PSEUDOS = ['accepted', 'written', 'blank', 'within', 'design-system'];
 
 function checkSourceOnlyPseudos(rule) {
 	if (OPT_IN_GROUPS.includes(rule.group)) return;

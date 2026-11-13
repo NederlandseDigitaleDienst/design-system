@@ -83,11 +83,11 @@ const stylesheets = shippedCss.map((file) => readFileSync(file, 'utf8'));
 const contextDefaults = new Set(declarations(readFileSync(resolve(repoRoot, 'src/assets/styles/variables.css'), 'utf8')).map(({ name }) => name).filter((name) => name.startsWith('--context-')));
 const isToken = (name) => TOKEN_PREFIX.test(name) && (!name.startsWith('--context-') || contextDefaults.has(name));
 const tokens = [...new Set(stylesheets.flatMap((css) => declarations(css).map(({ name }) => name)).filter(isToken))].sort();
-const systemRules = new Map();
+const designSystemRules = new Map();
 for (const css of stylesheets) {
-	for (const [key, names] of cssRules(css)) systemRules.set(key, new Set([...(systemRules.get(key) ?? []), ...names]));
+	for (const [key, names] of cssRules(css)) designSystemRules.set(key, new Set([...(designSystemRules.get(key) ?? []), ...names]));
 }
-const systemCss = Object.fromEntries([...systemRules.keys()].sort().map((key) => [key, [...systemRules.get(key)].sort()]));
+const designSystemCss = Object.fromEntries([...designSystemRules.keys()].sort().map((key) => [key, [...designSystemRules.get(key)].sort()]));
 
 const removedPath = resolve(repoRoot, 'src/assets/styles/removed-tokens.json');
 const removedTokens = read('src/assets/styles/removed-tokens.json');
@@ -109,7 +109,7 @@ const keyLines = Object.keys(removedKeys).sort().map((key) => `\t${JSON.stringif
 writeFileSync(keysPath, `{\n${keyLines.join(',\n')}\n}\n`);
 
 const sorted = (object) => Object.fromEntries(Object.keys(object).sort().map((name) => [name, object[name]]));
-const data = { tags, classes, icons, rules, tokens, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), systemCss };
+const data = { tags, classes, icons, rules, tokens, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), designSystemCss };
 
 writeFileSync(resolve(repoRoot, 'lint/data.generated.json'), `${JSON.stringify(data)}\n`);
 writeFileSync(
@@ -120,4 +120,4 @@ import type { DevRule } from './dev-checks.js';
 export const devRules: DevRule[] = ${JSON.stringify(buildDevRules(rules, classes, tags), null, '\t')};
 `,
 );
-console.log(`lint data: ${Object.keys(data.tags).length} tags, ${data.rules.length} rules, ${tokens.length} tokens, ${systemRules.size} rules of system CSS`);
+console.log(`lint data: ${Object.keys(data.tags).length} tags, ${data.rules.length} rules, ${tokens.length} tokens, ${designSystemRules.size} rules of design system CSS`);

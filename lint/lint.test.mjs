@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { cssRules, isSystemCss } from './css.js';
+import { cssRules, isDesignSystemCss } from './css.js';
 import { createEngine } from './engine.js';
 import { parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue } from './frontends.js';
 import { createCanonical, createLinter, loadData } from './linter.js';
@@ -1667,11 +1667,11 @@ describe('CSS', () => {
 
 	it('knows the system by what each rule selects and sets, not by its values', () => {
 		const system = { '|nldd-x': ['color', 'gap'], '|@keyframes nldd-y': ['@keyframes'] };
-		assert.equal(isSystemCss('nldd-x{color:#000}', system), true);
-		assert.equal(isSystemCss('nldd-x { color: red; margin: 0 }', system), false);
-		assert.equal(isSystemCss('nldd-x {}', system), false);
-		assert.equal(isSystemCss('@keyframes nldd-y{to{opacity:1}}', system), true);
-		assert.equal(isSystemCss(':root{--lightningcss-light:initial}', system), true);
+		assert.equal(isDesignSystemCss('nldd-x{color:#000}', system), true);
+		assert.equal(isDesignSystemCss('nldd-x { color: red; margin: 0 }', system), false);
+		assert.equal(isDesignSystemCss('nldd-x {}', system), false);
+		assert.equal(isDesignSystemCss('@keyframes nldd-y{to{opacity:1}}', system), true);
+		assert.equal(isDesignSystemCss(':root{--lightningcss-light:initial}', system), true);
 	});
 
 	it('leaves a bundled system stylesheet alone in pure, and reports one with CSS of the app', async () => {

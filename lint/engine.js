@@ -11,7 +11,7 @@
 
 import { compile } from 'css-select';
 import { parse } from 'css-what';
-import { isSystemCss } from './css.js';
+import { isDesignSystemCss } from './css.js';
 import { BOUND, adapter, walk } from './tree.js';
 
 /** In W+ a sibling behind a condition might not show, as with `v-if`, `v-else` and tabs on `v-show`. */
@@ -142,7 +142,7 @@ function forWorld(tokens, classes, widen) {
 	});
 }
 
-export function createEngine({ classes = {}, tags = {}, systemCss = {} } = {}) {
+export function createEngine({ classes = {}, tags = {}, designSystemCss = {} } = {}) {
 	const shared = classPseudos(classes);
 	const pseudos = {
 		...shared,
@@ -156,7 +156,7 @@ export function createEngine({ classes = {}, tags = {}, systemCss = {} } = {}) {
 			return false;
 		},
 		// CSS the design system ships: a block it recognizes, or a stylesheet with nothing else in it.
-		system: (node) => node.system ?? (node.css !== undefined && isSystemCss(node.css, systemCss)),
+		'design-system': (node) => node.designSystem ?? (node.css !== undefined && isDesignSystemCss(node.css, designSystemCss)),
 		// No element and no text: an empty mount point such as <div id="app"></div>.
 		blank: (node) => node.children.length === 0 && !node.text,
 		// Only exists on a running page, so in source it is never true.
