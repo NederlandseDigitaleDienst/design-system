@@ -287,6 +287,12 @@ export const menuItemStyles = css`
 	   it is visually identical to the button variant. The text color is owned
 	   by the inner nldd-text-cell. The control cursor token (default, like the
 	   other controls) replaces the UA link pointer and stays overridable. */
+	a.menu__item {
+		color: inherit;
+		text-decoration: none;
+		cursor: var(--semantics-controls-link-cursor);
+	}
+
 	.menu__link-hint {
 		position: absolute;
 		margin: -1px;
@@ -297,12 +303,6 @@ export const menuItemStyles = css`
 		padding: 0;
 		white-space: nowrap;
 		clip-path: inset(50%);
-	}
-
-	a.menu__item {
-		color: inherit;
-		text-decoration: none;
-		cursor: var(--semantics-controls-link-cursor);
 	}
 
 	.menu__item:focus-visible {

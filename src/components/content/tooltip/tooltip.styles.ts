@@ -19,6 +19,10 @@ export const tooltipStyles = css`
 		--_tooltip-background-color: var(--semantics-tooltips-background-color);
 		--_tooltip-content-color: var(--semantics-tooltips-content-color);
 		--_tooltip-secondary-color: var(--semantics-tooltips-content-secondary-color);
+		--_tooltip-corner-radius: var(--semantics-tooltips-corner-radius);
+		--_tooltip-padding-block: var(--semantics-tooltips-padding-block);
+		--_tooltip-padding-inline: var(--semantics-tooltips-padding-inline);
+		--_tooltip-font: var(--semantics-tooltips-font);
 		--_tooltip-shortcut-gap: var(--primitives-space-8);
 		--_tooltip-hide-delay: 50; /* unitless ms, read by JavaScript */
 		--_tooltip-offset: 4; /* px, unitless — read by JS */
@@ -103,18 +107,18 @@ export const tooltipStyles = css`
 		--context-content-warning-color: var(--_tooltip-content-color);
 		--context-content-critical-color: var(--_tooltip-content-color);
 		display: flex;
-		border-radius: var(--semantics-tooltips-corner-radius);
+		border-radius: var(--_tooltip-corner-radius);
 		box-shadow: var(--_tooltip-box-shadow);
 		background-color: var(--_tooltip-background-color);
 		width: max-content;
 		max-width: var(--_tooltip-max-width);
-		padding-block: var(--semantics-tooltips-padding-block);
-		padding-inline: var(--semantics-tooltips-padding-inline);
+		padding-block: var(--_tooltip-padding-block);
+		padding-inline: var(--_tooltip-padding-inline);
 		flex-wrap: wrap;
 		column-gap: var(--_tooltip-shortcut-gap);
 		align-items: baseline;
 		color: var(--_tooltip-content-color);
-		font: var(--semantics-tooltips-font);
+		font: var(--_tooltip-font);
 		overflow-wrap: break-word;
 	}
 
