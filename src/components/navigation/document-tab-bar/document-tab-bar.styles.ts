@@ -21,7 +21,9 @@ export const documentTabBarStyles = css`
 		--_document-tab-bar-held-item-width: auto;
 		--_document-tab-bar-release-duration: var(--primitives-transition-duration-medium);
 		--_document-tab-bar-release-easing: var(--primitives-transition-easing-default);
-		--_document-tab-bar-overflow-button-reserve: 52px; /* Used for overflowButtonReserve. Overflow button width + spacing */
+		--_document-tab-bar-gap: var(--primitives-space-4);
+		--_document-tab-bar-end-gap: var(--primitives-space-8);
+		--_document-tab-bar-overflow-button-reserve: 48px; /* Used for overflowButtonReserve. Overflow button width + spacing */
 		--_document-tab-bar-dismiss-button-is-hovered-background-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-250));
 		--_document-tab-bar-dismiss-button-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
 		--_document-tab-bar-dismiss-button-is-selected-is-hovered-background-color: var(--semantics-tabs-is-current-is-hovered-background-color);
@@ -49,7 +51,7 @@ export const documentTabBarStyles = css`
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--primitives-space-8);
+		gap: var(--_document-tab-bar-gap);
 	}
 
 	.document-tab-bar__items {
@@ -57,7 +59,7 @@ export const documentTabBarStyles = css`
 		min-width: 0;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--primitives-space-8);
+		gap: var(--_document-tab-bar-gap);
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
@@ -105,9 +107,10 @@ export const documentTabBarStyles = css`
 
 	.document-tab-bar__end {
 		display: flex;
+		margin-inline-start: calc(var(--_document-tab-bar-end-gap) - var(--_document-tab-bar-gap));
 		flex-direction: row;
 		align-items: center;
-		gap: var(--primitives-space-8);
+		gap: var(--_document-tab-bar-end-gap);
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
