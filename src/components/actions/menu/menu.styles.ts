@@ -288,11 +288,13 @@ export const menuItemStyles = css`
 	   by the inner nldd-text-cell. The control cursor token (default, like the
 	   other controls) replaces the UA link pointer and stays overridable. */
 	a.menu__item {
+		position: relative;
 		color: inherit;
 		text-decoration: none;
 		cursor: var(--semantics-controls-link-cursor);
 	}
 
+	/* Visually hidden: part of the link's accessible name, never shown. */
 	.menu__link-hint {
 		position: absolute;
 		margin: -1px;
