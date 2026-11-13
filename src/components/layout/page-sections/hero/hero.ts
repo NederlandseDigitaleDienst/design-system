@@ -37,9 +37,8 @@
  * below the image. A hero given `height` says so in development.
  *
  * The panel takes the accent color of the theme, closest to its reference
- * color in both modes, with a pure white or black content color, so components
- * with `color="inherit"` (title, rich-text) are guaranteed to keep their
- * contrast. `main-background="base"` gives it the base surface instead. A
+ * color in both modes, with a pure white or black content color that it
+ * passes on, so the text, links and icons on it keep their contrast. `main-background="base"` gives it the base surface instead. A
  * Rijkshuisstijl color per hero is gone: the theme picks the color for the
  * whole site, and a hero given one says so in development.
  *
@@ -69,7 +68,7 @@
  * @accepts img
  *   Takes precedence over the media-src attributes. Set `alt=""` when the image is decorative;
  *   otherwise give a describing alt text.
- * @slot - Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance)
+ * @slot - Content of the text panel (nldd-title and nldd-rich-text, for instance)
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';

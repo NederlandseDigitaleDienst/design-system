@@ -1,12 +1,11 @@
 /* # Host */
 
 nldd-title {
-	--_title-link-color: var(--semantics-links-color);
-	--_title-link-is-hovered-color: var(--semantics-links-is-hovered-color);
-	--_title-link-is-active-color: var(--semantics-links-is-active-color);
+	--_title-link-color: var(--context-link-color);
+	--_title-link-is-hovered-color: var(--context-link-is-hovered-color);
+	--_title-link-is-active-color: var(--context-link-is-active-color);
 	--_title-link-underline-offset: var(--primitives-space-2);
 	--_title-link-corner-radius: var(--primitives-corner-radius-xxs);
-	--_title-link-is-hovered-inherit-thickness: var(--primitives-border-width-regular);
 	--_title-code-padding: var(--primitives-space-2) var(--primitives-space-4);
 	--_title-code-corner-radius: var(--semantics-controls-xs-corner-radius);
 	--_title-code-border-width: var(--semantics-surfaces-highlight-border-width);
@@ -33,16 +32,19 @@ nldd-title > :is(h1, h2, h3, h4, h5, h6) :is(em, i) {
 
 nldd-title > :is(h1, h2, h3, h4, h5, h6) a {
 	border-radius: var(--_title-link-corner-radius);
+	--context-content-color: var(--_title-link-color);
 	color: var(--_title-link-color);
 	text-decoration: underline;
 	text-underline-offset: var(--_title-link-underline-offset);
 }
 
 nldd-title > :is(h1, h2, h3, h4, h5, h6) a:hover {
+	--context-content-color: var(--_title-link-is-hovered-color);
 	color: var(--_title-link-is-hovered-color);
 }
 
 nldd-title > :is(h1, h2, h3, h4, h5, h6) a:active {
+	--context-content-color: var(--_title-link-is-active-color);
 	color: var(--_title-link-is-active-color);
 }
 
@@ -54,17 +56,6 @@ nldd-title > :is(h1, h2, h3, h4, h5, h6) a:focus-visible {
 
 nldd-title > :is(h1, h2, h3, h4, h5, h6) a:focus:not(:focus-visible) {
 	outline: none;
-}
-
-nldd-title[color="inherit"] > :is(h1, h2, h3, h4, h5, h6) a,
-nldd-title[color="inherit"] > :is(h1, h2, h3, h4, h5, h6) a:active {
-	color: currentColor;
-	text-decoration-color: currentColor;
-}
-
-nldd-title[color="inherit"] > :is(h1, h2, h3, h4, h5, h6) a:hover {
-	color: currentColor;
-	text-decoration-thickness: var(--_title-link-is-hovered-inherit-thickness);
 }
 
 nldd-title > :is(h1, h2, h3, h4, h5, h6) code {
@@ -84,5 +75,6 @@ nldd-title > :is(h1, h2, h3, h4, h5, h6) mark {
 	border-radius: var(--_title-mark-corner-radius);
 	background-color: var(--_title-mark-background-color);
 	padding: var(--_title-mark-padding);
+	--context-content-color: var(--_title-mark-color);
 	color: var(--_title-mark-color);
 }

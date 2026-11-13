@@ -27,6 +27,13 @@ export const imageStyles = css`
 		--_image-empty-icon-color: light-dark(var(--primitives-color-neutral-450), var(--primitives-color-neutral-550));
 		--_image-object-fit: cover;
 		--_image-object-position: center;
+		--_image-lqip-base: 0;
+		--_image-lqip-c1: 0;
+		--_image-lqip-c2: 0;
+		--_image-lqip-c3: 0;
+		--_image-lqip-c4: 0;
+		--_image-lqip-c5: 0;
+		--_image-lqip-c6: 0;
 		--_image-media-height: var(--context-image-height, auto);
 
 		${inheritedTextReset}
@@ -149,8 +156,7 @@ export const imageStyles = css`
 	   (https://leanrada.com/notes/css-only-lqip/) with one quantized
 	   color per cell instead of grayscale-only cells. The component
 	   parses lqip="base,c1,c2,c3,c4,c5,c6" and forwards each byte as an
-	   inline --context-lqip-* variable (crosses the shadow boundary;
-	   hence the --context-* prefix, not --_).
+	   inline --_image-lqip-* variable on the media wrapper.
 	   Each byte packs 2 bits L + 3 bits a + 3 bits b — the same format
 	   Lean uses for his single base color, applied 7 times. The base
 	   shows through cell-gradient transparent edges; the six cells carry
@@ -173,27 +179,27 @@ export const imageStyles = css`
 	@supports (left: mod(1px, 1px)) and (background: oklab(0 0 0)) and (color: rgb(from red r g b)) {
 
 	.image__media--lqip {
-		--_image-lqip-base-ll: mod(round(down, var(--context-lqip-base) / 64), 4);
-		--_image-lqip-base-aaa: mod(round(down, var(--context-lqip-base) / 8), 8);
-		--_image-lqip-base-bbb: mod(var(--context-lqip-base), 8);
-		--_image-lqip-c1-ll: mod(round(down, var(--context-lqip-c1) / 64), 4);
-		--_image-lqip-c1-aaa: mod(round(down, var(--context-lqip-c1) / 8), 8);
-		--_image-lqip-c1-bbb: mod(var(--context-lqip-c1), 8);
-		--_image-lqip-c2-ll: mod(round(down, var(--context-lqip-c2) / 64), 4);
-		--_image-lqip-c2-aaa: mod(round(down, var(--context-lqip-c2) / 8), 8);
-		--_image-lqip-c2-bbb: mod(var(--context-lqip-c2), 8);
-		--_image-lqip-c3-ll: mod(round(down, var(--context-lqip-c3) / 64), 4);
-		--_image-lqip-c3-aaa: mod(round(down, var(--context-lqip-c3) / 8), 8);
-		--_image-lqip-c3-bbb: mod(var(--context-lqip-c3), 8);
-		--_image-lqip-c4-ll: mod(round(down, var(--context-lqip-c4) / 64), 4);
-		--_image-lqip-c4-aaa: mod(round(down, var(--context-lqip-c4) / 8), 8);
-		--_image-lqip-c4-bbb: mod(var(--context-lqip-c4), 8);
-		--_image-lqip-c5-ll: mod(round(down, var(--context-lqip-c5) / 64), 4);
-		--_image-lqip-c5-aaa: mod(round(down, var(--context-lqip-c5) / 8), 8);
-		--_image-lqip-c5-bbb: mod(var(--context-lqip-c5), 8);
-		--_image-lqip-c6-ll: mod(round(down, var(--context-lqip-c6) / 64), 4);
-		--_image-lqip-c6-aaa: mod(round(down, var(--context-lqip-c6) / 8), 8);
-		--_image-lqip-c6-bbb: mod(var(--context-lqip-c6), 8);
+		--_image-lqip-base-ll: mod(round(down, var(--_image-lqip-base) / 64), 4);
+		--_image-lqip-base-aaa: mod(round(down, var(--_image-lqip-base) / 8), 8);
+		--_image-lqip-base-bbb: mod(var(--_image-lqip-base), 8);
+		--_image-lqip-c1-ll: mod(round(down, var(--_image-lqip-c1) / 64), 4);
+		--_image-lqip-c1-aaa: mod(round(down, var(--_image-lqip-c1) / 8), 8);
+		--_image-lqip-c1-bbb: mod(var(--_image-lqip-c1), 8);
+		--_image-lqip-c2-ll: mod(round(down, var(--_image-lqip-c2) / 64), 4);
+		--_image-lqip-c2-aaa: mod(round(down, var(--_image-lqip-c2) / 8), 8);
+		--_image-lqip-c2-bbb: mod(var(--_image-lqip-c2), 8);
+		--_image-lqip-c3-ll: mod(round(down, var(--_image-lqip-c3) / 64), 4);
+		--_image-lqip-c3-aaa: mod(round(down, var(--_image-lqip-c3) / 8), 8);
+		--_image-lqip-c3-bbb: mod(var(--_image-lqip-c3), 8);
+		--_image-lqip-c4-ll: mod(round(down, var(--_image-lqip-c4) / 64), 4);
+		--_image-lqip-c4-aaa: mod(round(down, var(--_image-lqip-c4) / 8), 8);
+		--_image-lqip-c4-bbb: mod(var(--_image-lqip-c4), 8);
+		--_image-lqip-c5-ll: mod(round(down, var(--_image-lqip-c5) / 64), 4);
+		--_image-lqip-c5-aaa: mod(round(down, var(--_image-lqip-c5) / 8), 8);
+		--_image-lqip-c5-bbb: mod(var(--_image-lqip-c5), 8);
+		--_image-lqip-c6-ll: mod(round(down, var(--_image-lqip-c6) / 64), 4);
+		--_image-lqip-c6-aaa: mod(round(down, var(--_image-lqip-c6) / 8), 8);
+		--_image-lqip-c6-bbb: mod(var(--_image-lqip-c6), 8);
 
 		--_image-lqip-base-clr: oklab(
 			calc(var(--_image-lqip-base-ll) / 3 * 0.6 + 0.2)
@@ -384,6 +390,7 @@ export const imageStyles = css`
 		display: block;
 		width: var(--_image-empty-icon-size);
 		height: var(--_image-empty-icon-size);
+		--context-content-color: var(--_image-empty-icon-color);
 		color: var(--_image-empty-icon-color);
 	}
 
@@ -406,6 +413,7 @@ export const imageStyles = css`
 		justify-content: center;
 		gap: var(--_image-error-gap);
 		padding: var(--_image-error-padding);
+		--context-content-color: var(--_image-error-text-color);
 		color: var(--_image-error-text-color);
 		font: var(--_image-error-font);
 		text-align: center;
@@ -423,12 +431,14 @@ export const imageStyles = css`
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--_image-caption-row-gap);
+		--context-content-color: var(--_image-caption-color);
 		color: var(--_image-caption-color);
 		font: var(--_image-caption-font);
 		text-wrap: pretty;
 	}
 
 	.image__credit {
+		--context-content-color: var(--_image-credit-color);
 		color: var(--_image-credit-color);
 		font: var(--_image-credit-font);
 	}

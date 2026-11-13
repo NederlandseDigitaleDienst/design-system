@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-radio-button[color="inherit"], nldd-radio-button-field[color="inherit"]'
+fix: { value: { color: { inherit: content } } }
+message: '`color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-radio-button.'
+examples:
+  passed: ['<nldd-radio-button-field label="Dakisolatie" color="content"></nldd-radio-button-field>']
+  failed: ['<nldd-radio-button-field label="Dakisolatie" color="inherit"></nldd-radio-button-field>']

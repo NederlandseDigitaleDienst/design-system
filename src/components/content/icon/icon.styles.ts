@@ -10,22 +10,20 @@ export const iconStyles = css`
 	 *
 	 * Default size = fill the container. Setting [size] pins a fixed spacer
 	 * value; the keyword full names the default and inherit follows the
-	 * surrounding text. [color] picks a semantic color or a rijkskleur. */
+	 * surrounding text. By default the icon takes the context's content
+	 * color; [color] picks another semantic color or a rijkskleur. */
 
 	:host {
 		--_icon-size: 100%;
-		--_icon-color: inherit;
+		--_icon-color: var(--context-content-color);
 		--_icon-custom-color: inherit;
 		--_icon-glyph-scale: 1;
 
 		display: inline-flex;
 		width: var(--_icon-size);
 		align-items: center;
+		/* No context: nothing inside reads it, and the default reads it here. */
 		color: var(--_icon-color);
-	}
-
-	:host([hidden]) {
-		display: none;
 	}
 
 
@@ -56,12 +54,11 @@ export const iconStyles = css`
 
 	/* # Color — functional */
 
-	:host([color="primary-content"])   { --_icon-color: var(--semantics-content-color); }
-	:host([color="secondary-content"]) { --_icon-color: var(--semantics-content-secondary-color); }
-	:host([color="accent"])            { --_icon-color: var(--semantics-content-accent-color); }
-	:host([color="critical"])          { --_icon-color: var(--semantics-content-critical-color); }
-	:host([color="warning"])           { --_icon-color: var(--semantics-content-warning-color); }
-	:host([color="success"])           { --_icon-color: var(--semantics-content-success-color); }
+	:host([color="secondary"])         { --_icon-color: var(--context-content-secondary-color); }
+	:host([color="accent"])            { --_icon-color: var(--context-content-accent-color); }
+	:host([color="critical"])          { --_icon-color: var(--context-content-critical-color); }
+	:host([color="warning"])           { --_icon-color: var(--context-content-warning-color); }
+	:host([color="success"])           { --_icon-color: var(--context-content-success-color); }
 
 
 	/* # Color — rijkskleuren */
@@ -101,29 +98,55 @@ export const iconStyles = css`
 	}
 
 
-	/* # Box
+	/* # Tile
 	 *
-	 * The colour question turns around: [color] and [custom-color] paint the
-	 * box, and the glyph takes whatever contrasts with it. That flip is the
-	 * reason this is a component option and not a box a consumer builds; the
+	 * The color question turns around: [color] and [custom-color] paint the
+	 * tile, and the glyph takes whatever contrasts with it. That flip is the
+	 * reason this is a component option and not a tile a consumer builds; the
 	 * pair is the part a consumer cannot check by eye.
 	 *
-	 * [size] measures the box, so the same size renders a smaller glyph with
-	 * [box] than without. Four fifths of the box, and a radius of a fifth,
-	 * both written as a ratio so a change lands everywhere at once. */
+	 * [size] measures the tile, so the same size renders a smaller glyph with
+	 * [tile] than without. Four fifths of the tile, and the corner every tile
+	 * shares with an organization avatar. */
 
-	:host([box]) {
+	:host([tile]) {
 		--_icon-glyph-scale: calc(4 / 5);
+		--_icon-corner-radius: var(--semantics-tiles-corner-radius);
 
-		border-radius: calc(var(--_icon-size) / 5);
+		border-radius: var(--_icon-corner-radius);
 		background-color: currentColor;
 		aspect-ratio: 1;
-		justify-content: center;
+	}
+
+	:host([tile]) {
+		display: inline-grid;
+		place-items: center;
+	}
+
+	:host([hidden]) {
+		display: none;
+	}
+
+	:host([tile][size]:not([size="full"])) {
+		height: var(--_icon-size);
+	}
+
+	/* A grid takes its baseline from its first item. This empty one fills the
+	   tile, so the tile sits on the line with its bottom, as a bare icon does. */
+	:host([tile])::before {
+		content: "";
+		place-self: stretch;
+	}
+
+	:host([tile])::before,
+	:host([tile]) svg {
+		grid-area: 1 / 1;
 	}
 
 	/* Resolved against the host's currentColor, which the rule above painted the
-	   box with, and only then assigned to the glyph. Same route as nldd-badge. */
-	:host([box]) svg {
+	   tile with, and only then assigned to the glyph. Same route as nldd-badge. */
+	:host([tile]) svg {
+		--context-content-color: var(--semantics-content-contrast-color);
 		color: var(--semantics-content-contrast-color);
 	}
 `;

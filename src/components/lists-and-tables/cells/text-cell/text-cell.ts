@@ -14,9 +14,11 @@
  * Each text region (overline, main text, supporting text) accepts either a
  * string attribute or slotted DOM content. The slot is the source of truth: if
  * the consumer provides slotted content, it replaces the attribute-based render
- * for that region. Use slots when you need inline elements like `<nldd-tag>`,
- * `<a>` or `<nldd-icon>` mixed with text. Note that `query` highlighting and
- * `**bold**` parsing only apply to the attribute path — slotted content is
+ * for that region. Use slots when you need components mixed with text, such as
+ * `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`. The cell does not style plain
+ * HTML: for bold, write `**bold**` in the attribute, and for code put an
+ * `<nldd-text>` with a `<code>` in the slot. Note that `query` highlighting and
+ * `**bold**` parsing only apply to the attribute path; slotted content is
  * rendered as-is.
  *
  * @element nldd-text-cell

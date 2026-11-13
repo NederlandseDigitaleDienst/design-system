@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { surfaceContent } from '../../../../assets/styles/shadow-resets.js';
 
 export const stackedSplitViewStyles = css`
 	:host {
@@ -9,7 +10,7 @@ export const stackedSplitViewStyles = css`
 	/* # Host */
 
 	:host {
-		--_stacked-split-view-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_stacked-split-view-background-color: var(--context-background-color);
 		/* Pane min-height — read by JS via getComputedStyle in firstUpdated */
 		--_stacked-split-view-pane-min-height: var(--primitives-area-200);
 
@@ -31,13 +32,15 @@ export const stackedSplitViewStyles = css`
 	}
 
 	:host([background="base"]) {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_stacked-split-view-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
+		--_stacked-split-view-background-color: var(--context-background-color);
 	}
 
 	:host([background="tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_stacked-split-view-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
+		${surfaceContent}
+		--_stacked-split-view-background-color: var(--context-background-color);
 	}
 
 

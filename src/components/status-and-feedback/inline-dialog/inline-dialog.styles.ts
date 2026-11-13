@@ -96,12 +96,14 @@ export const inlineDialogStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_inline-dialog-icon-color);
 		color: var(--_inline-dialog-icon-color);
 	}
 
 	.inline-dialog__text {
 		margin: 0;
 		text-align: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_inline-dialog-text-font);
 		text-wrap: balance;
@@ -115,6 +117,7 @@ export const inlineDialogStyles = css`
 	.inline-dialog__supporting-text {
 		margin: 0;
 		text-align: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_inline-dialog-supporting-text-font);
 		text-wrap: balance;

@@ -191,6 +191,7 @@ export const tagStyles = css`
 		padding: 0 var(--_tag-inline-padding);
 		gap: var(--_tag-gap);
 		align-items: center;
+		--context-content-color: var(--_tag-content-color);
 		color: var(--_tag-content-color);
 		font: var(--_tag-font);
 		white-space: nowrap;

@@ -53,6 +53,7 @@ export const menuBarItemStyles = css`
 		align-items: center;
 		justify-content: center;
 		text-align: center;
+		--context-content-color: var(--_menu-bar-item-content-color);
 		color: var(--_menu-bar-item-content-color);
 		font: var(--_menu-bar-item-font);
 		text-decoration: none;

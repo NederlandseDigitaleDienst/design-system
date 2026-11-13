@@ -178,17 +178,18 @@ describe('nldd-keyboard-shortcut color', () => {
 	});
 
 	it('reflects the color attribute', async () => {
-		el = await fixture('<nldd-keyboard-shortcut color="inherit" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
+		el = await fixture('<nldd-keyboard-shortcut color="content" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('color')).toBe('inherit');
+		expect(el.getAttribute('color')).toBe('content');
 	});
 
-	it('color="inherit" points the key + separator colors at currentColor', async () => {
-		el = await fixture('<nldd-keyboard-shortcut color="inherit" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
+	it('color="content" takes the key + separator colors from the context', async () => {
+		el = await fixture('<nldd-keyboard-shortcut color="content" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
 		const cs = getComputedStyle(el);
-		expect(cs.getPropertyValue('--_keyboard-shortcut-content-color').trim()).toBe('currentColor');
-		expect(cs.getPropertyValue('--_keyboard-shortcut-separator-color').trim()).toBe('currentColor');
+		const context = cs.getPropertyValue('--context-content-color').trim();
+		expect(cs.getPropertyValue('--_keyboard-shortcut-content-color').trim()).toBe(context);
+		expect(cs.getPropertyValue('--_keyboard-shortcut-separator-color').trim()).toBe(context);
 	});
 
 	it('defaults to color="neutral" with its own color tokens', async () => {

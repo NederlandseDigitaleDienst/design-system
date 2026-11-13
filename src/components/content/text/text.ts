@@ -38,7 +38,7 @@
  * @attr {string} lg-custom-size - The same, at lg
  * @attr {string} weight - Font weight: 'regular' | 'medium' | 'bold' (default: 'regular'). With 'bold' a slotted `<strong>` no longer stands out: there is nothing bolder in the scale.
  * @attr {string} line-height - Line height: 'flat' | 'tight' | 'snug' | 'loose' (default: 'snug')
- * @attr {string} color - Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical' | 'inherit'. 'content' and 'secondary' follow the surrounding content channel; 'inherit' takes the color it inherits, for text on a painted surface.
+ * @attr {string} color - Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too.
  * @attr {string} horizontal-alignment - Alignment of the text within the block: 'left' | 'center' | 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box.
  *
  * @slot - The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone.
@@ -56,7 +56,7 @@ import { template } from './text.template.js';
 type Size = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'display-6' | 'display-5' | 'display-4' | 'display-3' | 'display-2' | 'display-1';
 type Weight = 'regular' | 'medium' | 'bold';
 type LineHeight = 'flat' | 'tight' | 'snug' | 'loose';
-type Color = 'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical' | 'inherit';
+type Color = 'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical';
 type HorizontalAlignment = 'left' | 'center' | 'right';
 
 @customElement('nldd-text')

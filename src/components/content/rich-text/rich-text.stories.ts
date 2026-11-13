@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit';
+import { html } from 'lit';
 import './rich-text.js';
 import '../../status-and-feedback/banner/banner.js';
 import '../../layout/container/container.js';
@@ -9,14 +9,8 @@ export default {
 	title: 'Components/Content/Rich Text',
 	component: 'nldd-rich-text',
 	tags: ['autodocs'],
-	args: { color: 'content', spacing: 'snug', centered: false, hyphens: false },
+	args: { spacing: 'snug', centered: false, hyphens: false },
 	argTypes: {
-		color: {
-			control: 'select',
-			options: ['content', 'inherit'],
-			description: '`content` neemt de eigen tekstkleuren van het systeem, elk element z\'n eigen. `inherit` laat alle tekst de kleur van de ondergrond volgen (voor gekleurde vlakken).',
-			table: { defaultValue: { summary: 'content' } },
-		},
 		spacing: {
 			control: 'select',
 			options: ['flat', 'tight', 'snug', 'loose'],
@@ -39,7 +33,6 @@ export default {
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 			?hyphens=${args.hyphens}
@@ -58,7 +51,6 @@ export const Standaard = {
 export const Koppen = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -75,7 +67,6 @@ export const Koppen = {
 export const Alinea = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 			?hyphens=${args.hyphens}
@@ -150,7 +141,6 @@ export const Afbreken = {
 export const Lijsten = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -231,7 +221,7 @@ export const Definitielijst = {
 					</nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
+						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
 				</nldd-container>
 				<nldd-container>
@@ -244,7 +234,7 @@ export const Definitielijst = {
 					</nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
+						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
 				</nldd-container>
 				<nldd-container>
@@ -257,7 +247,7 @@ export const Definitielijst = {
 					</nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
+						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
 				</nldd-container>
 			</nldd-container>
@@ -268,7 +258,6 @@ export const Definitielijst = {
 export const InlineElementen = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -285,7 +274,6 @@ export const InlineElementen = {
 export const Vermeldingen = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -298,7 +286,6 @@ export const Vermeldingen = {
 export const Citaat = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -315,7 +302,6 @@ export const Citaat = {
 export const Figuur = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -336,7 +322,6 @@ export const Figuur = {
 export const Tabel = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -372,7 +357,6 @@ export const Codeblok = {
 	render: (args: Record<string, any>) => html`
 		<nldd-container max-width="560px">
 			<nldd-rich-text
-				color=${args.color || nothing}
 				spacing=${args.spacing}
 				?centered=${args.centered}
 			>
@@ -396,9 +380,8 @@ if (bijdrage > 0) {
 export const CodeblokOpTinted = {
 	name: 'Codeblok op tinted vlak',
 	render: (args: Record<string, any>) => html`
-		<div style="max-width: 420px; padding: 16px; border-radius: 12px; background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="max-width: 420px; padding: 16px; border-radius: 12px; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 			<nldd-rich-text
-				color=${args.color || nothing}
 				spacing=${args.spacing}
 				?centered=${args.centered}
 			>
@@ -413,7 +396,6 @@ const b = 2;</code></pre>
 export const Scheidingslijn = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -508,7 +490,6 @@ export const Witruimte = {
 export const VolledigArtikel = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -579,7 +560,6 @@ export const AlleGrootten = {
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text
-						color=${args.color || nothing}
 						spacing=${args.spacing}
 						?centered=${args.centered}
 					>
@@ -603,7 +583,6 @@ export const AlleGrootten = {
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text
-						color=${args.color || nothing}
 						spacing=${args.spacing}
 						?centered=${args.centered}
 					>
@@ -627,7 +606,6 @@ export const AlleGrootten = {
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text
-						color=${args.color || nothing}
 						spacing=${args.spacing}
 						?centered=${args.centered}
 					>
@@ -657,7 +635,6 @@ export const AlleGrootten = {
 export const Breedtezones = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
-			color=${args.color || nothing}
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
@@ -688,18 +665,16 @@ export const Breedtezones = {
 };
 
 /**
- * Met `color="inherit"` volgt alle tekst de kleur van de ondergrond — voor
- * gekleurde vlakken zoals de filled-categories. Links blijven onderstreept
- * als affordance (hover toont een dikkere lijn in plaats van een
- * kleurverschuiving); figcaption krijgt dezelfde kleur op verlaagde
- * dekking. Bekende v1-gaten: inline code, mark, tabellen en hr behouden
- * hun eigen surfaces.
+ * Rich-text volgt de kleuren die het vlak doorgeeft. Een eigen gekleurd vlak
+ * zet daarvoor de context: de tekstkleur, de secundaire kleur voor een
+ * figcaption, en de drie linkkleuren. Inline code, mark, tabellen en hr
+ * houden hun eigen vlak.
  */
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-rich-text color="inherit">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color); --context-content-secondary-color: var(--semantics-categories-donkerblauw-filled-content-secondary-color); --context-link-color: var(--semantics-categories-donkerblauw-filled-content-color); --context-link-is-hovered-color: var(--semantics-categories-donkerblauw-filled-content-color); --context-link-is-active-color: var(--semantics-categories-donkerblauw-filled-content-color);">
+				<nldd-rich-text>
 					<h3>Op een donker vlak</h3>
 					<p>Alle tekst erft de contentkleur van het vlak, inclusief <a href="#">links met hun onderstreping</a> en <strong>nadruk</strong>.</p>
 					<figure>
@@ -711,8 +686,8 @@ export const OpKleurvlak = {
 					</figure>
 				</nldd-rich-text>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-rich-text color="inherit">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-oranje-filled-background-color); --context-content-color: var(--semantics-categories-oranje-filled-content-color); --context-content-secondary-color: var(--semantics-categories-oranje-filled-content-secondary-color); --context-link-color: var(--semantics-categories-oranje-filled-content-color); --context-link-is-hovered-color: var(--semantics-categories-oranje-filled-content-color); --context-link-is-active-color: var(--semantics-categories-oranje-filled-content-color);">
+				<nldd-rich-text>
 					<h3>Op een middenton</h3>
 					<p>De filled-categories leveren puur zwart of wit als contentkleur, zodat ook middentonen <a href="#">voldoende contrast</a> houden.</p>
 				</nldd-rich-text>

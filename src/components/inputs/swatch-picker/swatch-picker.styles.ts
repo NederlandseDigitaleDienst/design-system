@@ -169,6 +169,7 @@ export const swatchPickerItemStyles = css`
 		height: var(--_swatch-picker-item-indicator-size);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_swatch-picker-item-indicator-content-color);
 		color: var(--_swatch-picker-item-indicator-content-color);
 		transform: translate(-50%, -50%);
 	}

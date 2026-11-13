@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 export const windowStyles = css`
 	:host {
@@ -29,7 +29,8 @@ export const windowStyles = css`
 	/* # Block */
 
 	.window {
-		--context-parent-background-color: var(--_window-background-color);
+		--context-background-color: var(--_window-background-color);
+		${surfaceContent}
 		display: flex;
 		position: fixed;
 		margin: auto;

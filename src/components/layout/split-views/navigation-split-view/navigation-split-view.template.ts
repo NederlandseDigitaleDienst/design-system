@@ -20,7 +20,6 @@ export function navigationSplitViewTemplate(component: NLDDNavigationSplitView):
 			${showPrimary ? html`
 				<div class="navigation-split-view__primary-sidebar-pane">
 					<slot name="primary-sidebar"></slot>
-					<slot name="sidebar"></slot>
 				</div>
 			` : nothing}
 			${dividerAfterPrimary ? html`<nldd-split-view-divider orientation="vertical"></nldd-split-view-divider>` : nothing}
@@ -52,9 +51,9 @@ export function navigationSplitViewTemplate(component: NLDDNavigationSplitView):
 					</div>
 				</dialog>
 			` : nothing}
-			${component._asSheet ? html`
+			${component.primarySidebarAsSheet ? html`
 				<dialog class="navigation-split-view__primary-sidebar-sheet"
-					aria-label=${component._resolvedPrimarySidebarLabel}
+					aria-label=${component.primarySidebarAccessibleLabel}
 					aria-modal="true"
 					@click=${component._handlePrimarySidebarSheetClick}
 					@cancel=${component._handlePrimarySidebarSheetCancel}
@@ -64,7 +63,6 @@ export function navigationSplitViewTemplate(component: NLDDNavigationSplitView):
 							<slot name="secondary-sidebar"></slot>
 						` : html`
 							<slot name="primary-sidebar"></slot>
-							<slot name="sidebar"></slot>
 						`}
 					</div>
 				</dialog>

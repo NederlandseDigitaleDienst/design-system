@@ -185,6 +185,7 @@ export const textEditorStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
+		--context-content-color: var(--_text-editor-content-color);
 		color: var(--_text-editor-content-color);
 		font: var(--_text-editor-font);
 	}
@@ -455,6 +456,7 @@ export const textEditorStyles = css`
 		   the normal token inset around the name. */
 		padding-inline: max(0em, (max(1.2em, 1lh) - var(--_text-editor-mention-icon-size)) / 2) var(--_text-editor-token-inline-padding);
 		box-shadow: inset 0 0 0 var(--_text-editor-token-highlight-border-width) var(--_text-editor-mention-token-highlight-border-color);
+		--context-content-color: var(--_text-editor-mention-token-content-color);
 		color: var(--_text-editor-mention-token-content-color);
 		background-color: var(--_text-editor-mention-token-background-color);
 		border-radius: var(--_text-editor-token-corner-radius);
@@ -500,6 +502,7 @@ export const textEditorStyles = css`
 
 	.cm-md-mention-token[data-selected] {
 		box-shadow: none;
+		--context-content-color: var(--_text-editor-mention-token-is-selected-content-color);
 		color: var(--_text-editor-mention-token-is-selected-content-color);
 		background-color: var(--_text-editor-mention-token-is-selected-background-color);
 	}
@@ -507,14 +510,17 @@ export const textEditorStyles = css`
 	/* A native selection over a mention keeps its text light on the filled accent.
 	   :host bumps specificity so it wins over .cm-content ::selection wherever it sits. */
 	:host .cm-md-mention-token ::selection {
+		--context-content-color: var(--_text-editor-mention-token-is-selected-content-color);
 		color: var(--_text-editor-mention-token-is-selected-content-color);
 	}
 
 	.cm-md-link {
+		--context-content-color: var(--_text-editor-link-color);
 		color: var(--_text-editor-link-color);
 	}
 
 	.cm-md-url {
+		--context-content-color: var(--_text-editor-mark-color);
 		color: var(--_text-editor-mark-color);
 	}
 
@@ -528,6 +534,7 @@ export const textEditorStyles = css`
 	   and override the highlight-style URL tint (teal) on its token span so the
 	   whole address is the link color, not just the mark wrapper. */
 	.cm-md-autolink {
+		--context-content-color: var(--_text-editor-link-color);
 		color: var(--_text-editor-link-color);
 	}
 
@@ -536,6 +543,7 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-quote {
+		--context-content-color: var(--_text-editor-content-color);
 		color: var(--_text-editor-content-color);
 		font-style: italic;
 		font-size: var(--_text-editor-quote-font-size);
@@ -548,6 +556,7 @@ export const textEditorStyles = css`
 		/* Markers: dimmed (secondary color, not opacity, so contrast holds) and
 	   monospace at the 16px marker size — tidy, and a fixed-width leading prefix. */
 	.cm-md-mark {
+		--context-content-color: var(--_text-editor-mark-color);
 		color: var(--_text-editor-mark-color);
 		font-family: var(--_text-editor-code-font-family);
 		font-size: var(--_text-editor-marker-font-size);
@@ -591,6 +600,7 @@ export const textEditorStyles = css`
 		vertical-align: middle;
 		justify-content: flex-start;
 		align-items: center;
+		--context-content-color: var(--_text-editor-content-color);
 		color: var(--_text-editor-content-color);
 	}
 
@@ -644,15 +654,18 @@ export const textEditorStyles = css`
 		border-radius: var(--_text-editor-token-corner-radius);
 		background: none;
 		padding: 0;
+		--context-content-color: var(--_text-editor-code-copy-content-color);
 		color: var(--_text-editor-code-copy-content-color);
 		font: var(--_text-editor-code-copy-font);
 	}
 
 	.cm-md-code-copy:hover {
+		--context-content-color: var(--_text-editor-code-copy-is-hovered-content-color);
 		color: var(--_text-editor-code-copy-is-hovered-content-color);
 	}
 
 	.cm-md-code-copy:active {
+		--context-content-color: var(--_text-editor-code-copy-is-active-content-color);
 		color: var(--_text-editor-code-copy-is-active-content-color);
 	}
 
@@ -676,6 +689,7 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-code-language {
+		--context-content-color: var(--_text-editor-mark-color);
 		color: var(--_text-editor-mark-color);
 		font-family: var(--_text-editor-code-font-family);
 		font-size: var(--_text-editor-marker-font-size);
@@ -684,6 +698,7 @@ export const textEditorStyles = css`
 	.cm-md-ordinal,
 	.cm-md-ordinal .cm-md-mark,
 	.cm-md-mark .cm-md-ordinal {
+		--context-content-color: var(--_text-editor-content-color);
 		color: var(--_text-editor-content-color);
 	}
 
@@ -766,6 +781,7 @@ export const textEditorStyles = css`
 		padding: var(--_text-editor-popup-row-padding-block) var(--_text-editor-popup-row-padding-inline);
 		align-items: center;
 		gap: var(--_text-editor-popup-row-gap);
+		--context-content-color: var(--_text-editor-popup-row-content-color);
 		color: var(--_text-editor-popup-row-content-color);
 		cursor: default;
 	}
@@ -806,6 +822,7 @@ export const textEditorStyles = css`
 
 	:host .cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected] {
 		background-color: var(--_text-editor-popup-row-is-highlighted-background-color);
+		--context-content-color: var(--_text-editor-popup-row-is-highlighted-content-color);
 		color: var(--_text-editor-popup-row-is-highlighted-content-color);
 	}
 
@@ -814,12 +831,14 @@ export const textEditorStyles = css`
 	@media (hover: hover) {
 		:host .cm-tooltip.cm-tooltip-autocomplete > ul > li:not([aria-selected]):hover {
 			background-color: var(--_text-editor-popup-row-is-hovered-background-color);
+			--context-content-color: var(--_text-editor-popup-row-is-hovered-content-color);
 			color: var(--_text-editor-popup-row-is-hovered-content-color);
 		}
 	}
 
 	:host .cm-completionDetail {
 		margin-left: auto;
+		--context-content-color: var(--_text-editor-popup-supporting-text-color);
 		color: var(--_text-editor-popup-supporting-text-color);
 		font-style: normal;
 	}
@@ -841,6 +860,7 @@ export const textEditorStyles = css`
 		min-width: var(--_text-editor-popup-min-width);
 		max-width: var(--_text-editor-popup-message-max-width);
 		padding: var(--_text-editor-popup-message-padding-block) var(--_text-editor-popup-message-padding-inline);
+		--context-content-color: var(--_text-editor-popup-message-color);
 		color: var(--_text-editor-popup-message-color);
 		font-family: var(--_text-editor-popup-font-family);
 		font-size: var(--_text-editor-popup-font-size);
@@ -885,14 +905,17 @@ export const textEditorStyles = css`
 	.cm-annotation.is-selected,
 	.cm-annotation .is-selected {
 		background-color: var(--_text-editor-annotation-token-is-selected-background-color);
+		--context-content-color: var(--_text-editor-annotation-token-is-selected-content-color);
 		color: var(--_text-editor-annotation-token-is-selected-content-color);
 	}
 
 	.cm-content ::selection {
+		--context-content-color: var(--_text-editor-selection-content-color);
 		color: var(--_text-editor-selection-content-color);
 	}
 
 	.cm-annotation ::selection {
+		--context-content-color: var(--_text-editor-annotation-token-is-selected-content-color);
 		color: var(--_text-editor-annotation-token-is-selected-content-color);
 	}
 
@@ -910,6 +933,7 @@ export const textEditorStyles = css`
 		border-radius: var(--primitives-corner-radius-full);
 		background-color: var(--_text-editor-annotation-token-badge-background-color);
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-annotation-token-badge-highlight-border-color);
+		--context-content-color: var(--_text-editor-annotation-token-badge-content-color);
 		color: var(--_text-editor-annotation-token-badge-content-color);
 		/* vertical-align: middle lands the nub ~1px below the text's em-box center, and
 		   the optical middle of the ink sits higher again, so it reads low; nudge up onto
@@ -990,6 +1014,7 @@ export const textEditorStyles = css`
 		padding: 0 var(--primitives-space-4);
 		border-radius: var(--_text-editor-token-corner-radius);
 		background-color: var(--_text-editor-drag-ghost-background-color);
+		--context-content-color: var(--_text-editor-content-color);
 		color: var(--_text-editor-content-color);
 		font: var(--_text-editor-font);
 		white-space: nowrap;
@@ -1010,6 +1035,7 @@ export const textEditorStyles = css`
 		border-radius: var(--primitives-corner-radius-full);
 		background-color: var(--_text-editor-link-badge-background-color);
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-link-badge-highlight-border-color);
+		--context-content-color: var(--_text-editor-link-badge-content-color);
 		color: var(--_text-editor-link-badge-content-color);
 		/* Match the annotation nub's optical centering next to the ink. */
 		vertical-align: middle;

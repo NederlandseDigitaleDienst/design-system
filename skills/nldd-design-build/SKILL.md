@@ -16,13 +16,13 @@ Twee plekken horen bij deze skill:
 
 De naslag staat apart, in `nldd-design`, want die geldt ook als je niets nieuws bouwt: de [componentreferentie](../nldd-design/reference.md) met elk `nldd-*` element en de icoonnamen, de [changelog](../nldd-design/changelog.md) en de [ontwerprichtlijnen](../nldd-design/design-guidelines.md).
 
-De levende documentatie met visuele voorbeelden staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/). De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee als bron van waarheid voor detailvragen; deze skill leert je hoe je het systeem *goed* gebruikt.
+De levende documentatie met visuele voorbeelden staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/). De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee als bron van waarheid voor detailvragen; deze skill leert je hoe je het designsysteem *goed* gebruikt.
 
-Zet je een **bestaande** applicatie om naar dit systeem in plaats van een nieuwe te bouwen, gebruik dan de `nldd-design-migrate` skill. Die gaat over wat er bij zo'n omzetting stil misgaat en hoe je dat merkt.
+Zet je een **bestaande** applicatie om naar dit designsysteem in plaats van een nieuwe te bouwen, gebruik dan de `nldd-design-migrate` skill. Die gaat over wat er bij zo'n omzetting stil misgaat en hoe je dat merkt.
 
 ## De visie: standaarden als gedrag, niet als kennis
 
-Het uitgangspunt van dit systeem is dat een ontwikkelaar de Rijkshuisstijl, de toegankelijkheidseisen en het interactiegedrag van een overheidsinterface niet uit het hoofd hoeft te kennen. Die regels zitten ingebakken in de componenten. Wie een `nldd-button` plaatst, krijgt het juiste focusgedrag, de juiste kleurcontrasten, de juiste ARIA en het juiste toetsenbordgedrag mee, zonder er iets voor te doen. Toegankelijkheid en huisstijl worden zo gedrag in plaats van kennis die in iemands hoofd moet zitten.
+Het uitgangspunt van dit designsysteem is dat een ontwikkelaar de Rijkshuisstijl, de toegankelijkheidseisen en het interactiegedrag van een overheidsinterface niet uit het hoofd hoeft te kennen. Die regels zitten ingebakken in de componenten. Wie een `nldd-button` plaatst, krijgt het juiste focusgedrag, de juiste kleurcontrasten, de juiste ARIA en het juiste toetsenbordgedrag mee, zonder er iets voor te doen. Toegankelijkheid en huisstijl worden zo gedrag in plaats van kennis die in iemands hoofd moet zitten.
 
 Dat heeft één belangrijke consequentie voor jou: **als je tegen een component vecht, gebruik je het verkeerd.** De componenten dragen opzettelijk meningen. Werk ermee mee.
 
@@ -34,9 +34,9 @@ Wat je vormgeeft is daarmee geen keuze van deze skill. Wanneer een sticky header
 
 Zet geen eigen stijl op een `nldd-*`-component: geen `class` of `style` erop, geen selector die erop mikt, en geen `div` of `span` eromheen die iets opmaakt. Stuur een component via zijn attributen en slots. Kale HTML mag alleen waar een component hem zelf opmaakt; de [referentie](../nldd-design/reference.md) zegt per component welke, onder "Plain HTML it styles". Eigen CSS moet je bij elke release zelf nalopen: een hernoemde variabele of een toegankelijkheidsfix in een component bereikt hem niet. Zet in je project `"rules": { "pure": "error" }` in `.nldd-lint.json`, dan bewaakt `nldd lint` het (zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md)).
 
-Mis je een component, dan mag je er zelf een bouwen. Geef het een eigen naam, zonder `nldd-`, zodat niemand het voor een component van het systeem aanziet. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in een melding via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md): dan kan er besloten worden of het een officieel NLDD-component wordt. Staan de stijlen ervan in een eigen map, zet die dan in `exclude` van `.nldd-lint.json`, zodat `pure` ze niet meetelt.
+Mis je een component, dan mag je er zelf een bouwen. Geef het een eigen naam, zonder `nldd-`, zodat niemand het voor een component van het designsysteem aanziet. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in een melding via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md): dan kan er besloten worden of het een officieel NLDD-component wordt. Staan de stijlen ervan in een eigen map, zet die dan in `exclude` van `.nldd-lint.json`, zodat `pure` ze niet meetelt.
 
-Kan een `nldd-*`-component iets niet wat het hoort te kunnen, dan is dat een gat in het systeem. Wat een omweg daarvoor tot die tijd bij zich draagt, en hoe je het met een check afdwingt, staat in [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md#het-doel-alles-komt-uit-het-systeem).
+Kan een `nldd-*`-component iets niet wat het hoort te kunnen, dan is dat een gat in het designsysteem. Wat een omweg daarvoor tot die tijd bij zich draagt, en hoe je het met een check afdwingt, staat in [`nldd-design-migrate`](../nldd-design-migrate/SKILL.md#het-doel-alles-komt-uit-het-designsysteem).
 
 ### Componeer, herstijl niet
 
@@ -138,32 +138,33 @@ import '@nldd/design-system/themes/geel.css';   // of '@nldd/design-system/theme
 <html lang="nl" data-nldd-theme="geel">
 ```
 
-Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het systeem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-thema-s--docs).
+Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het designsysteem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-thema-s--docs).
 
 ## CSS-variabelen
 
-Alle visuele waarden in de componenten komen uit CSS-variabelen en niets is hardcoded. Zo werkt licht en donker, en zo blijft de huisstijl erin zitten. Voor jou is het vooral iets om van af te blijven: de variabelen zijn de bedrading van het systeem, geen publieke API. Ze worden hernoemd, samengevoegd en verwijderd wanneer een component daarom vraagt, en de changelog beschrijft zo'n wijziging vanuit dat component, niet vanuit jouw stylesheet. Gebruik je ze toch, dan is dat op eigen risico.
+Alle visuele waarden in de componenten komen uit CSS-variabelen en niets is hardcoded. Zo werkt licht en donker, en zo blijft de huisstijl erin zitten.
 
-Stuur een component dus via zijn attributen. Ruimte stuur je met `nldd-container` en `nldd-spacer`, tekst met `nldd-title` en `nldd-rich-text`, en de kleuren komen uit de componenten zelf. Pak eerst een component, dan zit de huisstijl er al in en beweegt je app mee als het systeem verandert.
+Een `nldd-*`-component stuur je niet met die variabelen maar met zijn attributen en slots. Ruimte stuur je met `nldd-container` en `nldd-spacer`, tekst met `nldd-title` en `nldd-rich-text`, en de kleuren komen uit de componenten zelf. Wil je er een anders, meld het dan; zie `nldd-design-contribute`.
 
-Wat je in de devtools ziet staan, is gelaagd:
+Bouw je een eigen component (zie "Geen eigen vormgeving"), gebruik dan de tokens van het designsysteem. Het krijgt dan dezelfde kleuren, maten en afrondingen als de rest, kantelt mee tussen licht en donker en volgt een thema. Drie van de vijf lagen zijn daarvoor bedoeld:
 
-| Laag | Prefix | Wat het is |
-|------|--------|------------|
-| **Primitives** | `--primitives-*` | Basiswaarden: kleur, spacing, typografie. Alle andere lagen komen hierop uit. |
-| **Semantics** | `--semantics-*` | Betekenisvolle rollen: knoppen, controls, oppervlakken. |
-| **Context** | `--context-*` | Communicatie tussen componenten (bijv. achtergrondkleur die doorcascadeert). |
-| **Lokaal** | `--_{component}-*` | **Intern aan een component, zoals `--_button-background-color`. Raak deze niet aan.** |
+| Laag | Prefix | Voor jou |
+|------|--------|----------|
+| **Primitives** | `--primitives-*` | Basiswaarden: kleur, spacing, typografie, afronding. Gebruik ze. |
+| **Semantics** | `--semantics-*` | Rollen: knoppen, controls, oppervlakken. Gebruik ze, en kies deze als er een rol bij je element past: dan beweegt het mee als die rol verandert. |
+| **Components** | `--components-{component}-*` | Een waarde van één component die een thema zet. Alleen dat component leest hem. Niet gebruiken. |
+| **Context** | `--context-*` | Wat een oppervlak doorgeeft aan wat erop staat: `--context-background-color` en de tekstkleuren `--context-content-color`, `-secondary-color`, `-accent-color`, `-success-color`, `-warning-color` en `-critical-color`, en de linkkleuren `--context-link-color`, `-is-hovered-color` en `-is-active-color`. Alleen deze tien zijn voor jou; de rest is bedrading tussen componenten. Ze hebben een default, dus `var(--context-content-color)` werkt overal. Schildert je eigen component een achtergrond of verandert het de tekstkleur, zet ze dan op dat element: tekst en componenten erin nemen de kleur van de context over, niet die van `color`. Leest het linkblauw niet op je vlak, zet dan alle drie de linkkleuren, meestal op je tekstkleur; met maar één springt een link bij hover terug naar het blauw. |
+| **Lokaal** | `--_{component}-*` | Intern aan één component, zoals `--_button-background-color`. Niet gebruiken en niet zetten. |
 
-Er is geen componentlaag om een component mee bij te stellen. Wil je er een anders, meld het dan; zie `nldd-design-contribute`.
+Een token kan verdwijnen of een andere naam krijgen. De changelog noemt zo'n token onder `### Breaking`, en `nldd lint` meldt elke `var()` naar een token dat in jouw versie niet bestaat (`token-not-found`), met de opvolger erbij als die er is. Zet je een `--_*` van een component, dan meldt hij dat ook (`local-variable-no-override`). Draai hem bij elke upgrade over je stylesheets (zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md)).
 
-Eigen CSS hoort er niet te zijn (zie "Geen eigen vormgeving"). Staat er tijdelijk toch een omweg, in afwachting van een issue, dan is een `--primitives-*` daarin de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
+Bij kleuren gaat één ding het vaakst mis.
 
-**Zet geen `light-dark()` om een primitive heen.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Wikkel je die in nog een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond. Eén verwijzing volstaat.
+**Spiegel de stap niet.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Zet je die in een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond.
 
-`light-dark()` heb je alleen nodig voor kleuren die niet uit het palet komen, of wanneer je per schema bewust een ándere stap wilt (bijvoorbeeld 100 in licht en 150 in donker, voor iets meer contrast).
+Een andere stap per schema mag wel, en vaak wil je dat: de achtergrond in donker is niet precies de omgedraaide kleur van die in licht. De semantics doen het zelf ook, zoals `--semantics-surfaces-base-background-color` met `neutral-0` in licht en `neutral-100` in donker. Kies daarom eerst een semantics-token, dan zit die afwijking er al in. Past er geen rol bij, schrijf dan zelf een `light-dark()` met twee stappen die dicht bij elkaar liggen (bijvoorbeeld 100 in licht en 150 in donker), of gebruik hem voor een kleur die niet uit het palet komt.
 
-**Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `data-scheme="light"` (of `"dark"`) op `<html>`; zonder het attribuut volgt de pagina de voorkeur van het systeem. Een schakelaar in je app zet of haalt dat attribuut weg. Componenten die bij een wissel opnieuw moeten tekenen, letten zelf op het attribuut.
+**Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `data-scheme="light"` (of `"dark"`) op `<html>`; zonder het attribuut volgt de pagina de voorkeur van het besturingssysteem. Een schakelaar in je app zet of haalt dat attribuut weg. Componenten die bij een wissel opnieuw moeten tekenen, letten zelf op het attribuut.
 
 ## Gebruikspatronen
 
@@ -228,7 +229,7 @@ De grenzen zijn: `sm` ≤ 640px, `md` 641–1007px, `lg` ≥ 1008px. Het pakket 
 
 ## Toegankelijkheid: wat je gratis krijgt, wat jij nog moet doen
 
-De componenten leveren correcte ARIA, focusvolgorde, een zichtbare blauwe focusring, `forced-colors`-ondersteuning en `prefers-reduced-motion` af. De wettelijke lat is WCAG 2.1 AA (EN 301 549, verplicht onder het Besluit digitale toegankelijkheid overheid). Wat het systeem voor je regelt:
+De componenten leveren correcte ARIA, focusvolgorde, een zichtbare blauwe focusring, `forced-colors`-ondersteuning en `prefers-reduced-motion` af. De wettelijke lat is WCAG 2.1 AA (EN 301 549, verplicht onder het Besluit digitale toegankelijkheid overheid). Wat het designsysteem voor je regelt:
 
 - Form fields koppelen label en input automatisch (geen handmatige `for`/`id`).
 - Knoppen met een popup zetten zelf `aria-haspopup`; **jij houdt `expanded` bij** als de popup opent en sluit.
@@ -246,7 +247,7 @@ Draai `npx @nldd/design-system lint` voordat je klaar bent: hij vindt onbekende 
 
 ## Upgraden naar een nieuwe versie
 
-Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan [`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md). Kort waarom het een eigen skill is: dit project brengt alles uit als patch, ook een breaking change, dus het versienummer zegt niet of een sprong veilig is. De changelog wel.
+Draait je applicatie al op dit designsysteem en moet de versie omhoog, gebruik dan [`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md). Kort waarom het een eigen skill is: dit project brengt alles uit als patch, ook een breaking change, dus het versienummer zegt niet of een sprong veilig is. De changelog wel.
 
 ## Bron van waarheid
 
@@ -255,7 +256,7 @@ Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan [`n
 3. **[`reference.md`](../nldd-design/reference.md)**: offline snelreferentie van alle elementen.
 4. **[`patterns/`](patterns/)**: hoe je die elementen samenstelt, met het waarom erbij. De referentie zegt wat een component kan; een patroon zegt hoe je er een taak mee afhandelt.
 5. **[`changelog.md`](../nldd-design/changelog.md)**: de release notes per versie. Raadpleeg dit als een attribuut, slot of gedrag pas vanaf een bepaalde versie bestaat, of om te zien wat er sinds jouw versie is veranderd.
-6. **[`design-guidelines.md`](../nldd-design/design-guidelines.md)**: de interface- en ontwerpvoorkeuren van het systeem (invoer en formulieren, navigatie, feedback en state, copywriting, visuele hiërarchie, strategie). Dit is de canonieke bron voor *ontwerp*keuzes; raadpleeg het bij vormgeven, microcopy schrijven of een UI reviewen. Deze SKILL.md beschrijft de component-*mechaniek*, de guidelines beschrijven de keuzes erachter.
+6. **[`design-guidelines.md`](../nldd-design/design-guidelines.md)**: de interface- en ontwerpvoorkeuren van het designsysteem (invoer en formulieren, navigatie, feedback en state, copywriting, visuele hiërarchie, strategie). Dit is de canonieke bron voor *ontwerp*keuzes; raadpleeg het bij vormgeven, microcopy schrijven of een UI reviewen. Deze SKILL.md beschrijft de component-*mechaniek*, de guidelines beschrijven de keuzes erachter.
 
 **Iconen.** `icon="…"`, op `nldd-icon` en op elk component dat een icoon rendert, accepteert namen uit een vaste set. De volledige lijst (iconen plus aliassen) staat onder "Iconen" in [`reference.md`](../nldd-design/reference.md); verzin geen naam, kies er een uit die set.
 

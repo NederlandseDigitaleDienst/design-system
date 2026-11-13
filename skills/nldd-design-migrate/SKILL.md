@@ -1,6 +1,6 @@
 ---
 name: nldd-design-migrate
-description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, een statische sitegenerator (MkDocs), of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit systeem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het designsysteem zelf: die kennis zit in de repository, niet in deze plugin, zie nldd-design-contribute."
+description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, een statische sitegenerator (MkDocs), of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit designsysteem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het designsysteem zelf: die kennis zit in de repository, niet in deze plugin, zie nldd-design-contribute."
 metadata:
   type: reference
 ---
@@ -13,7 +13,7 @@ Alles hieronder geldt ongeacht waar je vandaan komt. Is je codebase specifiek, l
 
 - [`from-tailwind.md`](from-tailwind.md): de compilervalstrik, de tokenbrug, botsende globale regels, iconen.
 - [`from-react.md`](from-react.md): events die React niet ziet, helpers die na elke render opnieuw koppelen, en booleans die in React 18 altijd aan staan.
-- [`from-another-design-system.md`](from-another-design-system.md): je draaide al op een componentbibliotheek (NL Design System, ROOS van RVO, of een eigen systeem). Verzonnen tokennamen, de donkere weergave als controle, en twee systemen naast elkaar.
+- [`from-another-design-system.md`](from-another-design-system.md): je draaide al op een componentbibliotheek (NL Design System, ROOS van RVO, of een eigen designsysteem). Verzonnen tokennamen, de donkere weergave als controle, en twee systemen naast elkaar.
 - [`server-rendered.md`](server-rendered.md): HTML op de server met fragmentwissels (htmx, Turbo, Unpoly, LiveView). Wat een swap anders doet dan een paginalading, de nieuwe stack ernaast zetten, en wat vendoren van de bundel je oplevert en kost.
 - [`static-site-generator.md`](static-site-generator.md): een site die uit Markdown wordt gebouwd (MkDocs, Hugo, Eleventy). De HTML omzetten in een build-hook, de bundel zonder bundler, en wat er zonder JavaScript overblijft.
 
@@ -21,19 +21,19 @@ De naslag die je bij een omzetting het hardst nodig hebt, staat in de skill `nld
 
 Wat je in de componentdocumentatie kunt opzoeken staat hier niet in; wat hier staat heeft in echte migraties tijd gekost.
 
-## Het doel: alles komt uit het systeem
+## Het doel: alles komt uit het designsysteem
 
 Een migratie is af als de app geen eigen vormgeving meer heeft. Geen stylesheet van jezelf, geen `class` of `className`, geen `style`, geen `div` of `span` die iets opmaakt, geen hexkleur, geen eigen iconenset. Wat er staat, zijn `nldd-*`-componenten met attributen en slots, en waar je er een mist een component van jezelf. Dat is de definitie van klaar, en `nldd lint --pure` bewaakt hem vanaf de eerste dag.
 
 Elke regel eigen CSS is een plek die je bij elke release zelf moet nalopen: een hernoemde variabele, een nieuw thema of een toegankelijkheidsfix in een component bereikt hem niet.
 
-Kan het systeem iets niet wat je nodig hebt, dan is dat een gat in het systeem. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Zet geen eigen stijl op een `nldd-*`-component om het te laten doen wat het niet kan.
+Kan het designsysteem iets niet wat je nodig hebt, dan is dat een gat in het designsysteem. Meld het via [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md). Zet geen eigen stijl op een `nldd-*`-component om het te laten doen wat het niet kan.
 
 Mist er een heel component, dan mag je het zelf bouwen, met een eigen naam zonder `nldd-`. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in je melding, dan kan er besloten worden of het een officieel NLDD-component wordt. Een eigen component valt buiten de zuiverheidscheck: zet de map met zijn stijlen in `exclude` van `.nldd-lint.json`. Zie [Geen eigen vormgeving](../nldd-design-build/SKILL.md#geen-eigen-vormgeving).
 
 Voor een omweg op of om een `nldd-*`-component geldt: tot het gat is opgelost mag hij er staan, met een onderdrukking van de regel uit `pure` die drie dingen als reden draagt: de issuelink, de versie waarop je het vaststelde, en één zin waarom het component het zelf niet kan. Lukt die zin niet, dan is het smaak en hoort de omweg weg. De rest van deze skill verwijst naar deze regel.
 
-## Het uitgangspunt: dit systeem faalt stil
+## Het uitgangspunt: dit designsysteem faalt stil
 
 Bijna elke fout die je kunt maken rendert niets, of iets dat er bijna goed uitziet. Zonder typefout en zonder falende test. Een deel schreeuwt wel: veel componenten waarschuwen in de console over een verkeerd samengestelde rij, een ontbrekend label of een icoonnaam die niet bestaat. Die waarschuwingen zitten alleen in een dev-build, dus draai je migratie in dev en houd de console open. Wat er niet in zit, is precies wat hieronder staat.
 
@@ -59,7 +59,7 @@ Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die
 1. **Zuiverheidscheck.** Zet de groep `pure` van `nldd lint` aan in `.nldd-lint.json` (`"rules": { "pure": "error" }`) en accepteer wat er nu staat met `npx @nldd/design-system lint --update-baseline`. Hij meldt elke `class` of `className`, elke `style`, kale HTML die opmaakt (`div`, `p`, `h2`, `button`, `img` en verwanten) en elk eigen stylesheet, ook een CSS-bestand en een `<style>`-blok in Vue. Kale HTML die een component zelf opmaakt, zoals de `<select>` in `nldd-dropdown` of de tekst in `nldd-rich-text`, laat hij staan; welke per component staat in de [referentie](../nldd-design/reference.md) onder "Plain HTML it styles". De baseline telt per bestand en faalt zodra een telling stijgt. Draai `--tighten-baseline` in de commit waarin een bestand schoner wordt: dat verlaagt de telling en voegt nooit iets toe, en de samenvatting zegt het als de baseline ruimer is dan nodig. `--update-baseline` accepteert ook wat nieuw is, dus dat hoort niet meer in een gewone commit. Wat bewust blijft tot een issue is opgelost, krijgt een onderdrukking volgens de regel voor een omweg hierboven (`nldd-lint-disable-next-line style-no-own -- <issue>`), niet een plek in de baseline. Klaar is een lege baseline. Een iconenbibliotheek of meldingenbibliotheek ziet de linter niet, want die zijn componenten van de app: controleer je afhankelijkheden daar zelf op.
 2. **Registratiecheck.** Met de autoloader valt deze weg, en in een dev-build meldt de console elke `nldd-*`-tag die na een paar seconden nog niet geregistreerd is. Schrijf je de imports zelf uit, vergelijk dan elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
 3. **Markupcheck.** Draai `npx @nldd/design-system lint`, zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md). Hij controleert elementen, attributen, slots en icoonnamen. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
-4. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
+4. **Tokencheck.** `nldd lint` meldt elke `var(--primitives-*|--semantics-*|--components-*)` die niet bestaat (`token-not-found`), ook in een CSS-bestand en een `<style>`-blok, en bij een verdwenen token de laatste versie die hem had. **Vlag zelf letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar in de browser, al ziet de linter hem wel.
 5. **Klassencheck.** Elke klasse die de app nog rendert moet een regel achter zich hebben, én elke regel in je oude CSS moet een gebruiker hebben. Beide richtingen.
 6. **Gedragscheck.** De vijf hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
 
@@ -133,7 +133,7 @@ En sluit nooit een heel bestand uit van de check. Een uitsluiting op bestandsnaa
 
 Inventariseer vóór je Tailwind of je globale CSS weghaalt welke regels iets *doen*. De gevaarlijke zijn de regels achter een instelling van de gebruiker die via een data-attribuut op `<html>` werkt: `[data-contrast="high"] a { text-decoration: underline }`, of `[data-show-actions] .row-actions { opacity: 1 }` voor wie acties altijd in beeld wil. Haal je het bestand weg, dan blijft de schakelaar in de instellingen staan, schrijft hij zijn attribuut nog steeds, en verandert er niets. De gedragsmeting hierboven ziet het niet, want elke link en elke knop is er nog.
 
-Zoek dus in de CSS die weggaat op selectors met `[data-`, `:root[` en `html[`, en op `@media (prefers-*)`. Elke treffer krijgt een eigen plek in het nieuwe systeem of wordt bewust geschrapt, samen met de instelling die erbij hoort. Een instelling die niets meer doet hoort niet in de interface te blijven staan.
+Zoek dus in de CSS die weggaat op selectors met `[data-`, `:root[` en `html[`, en op `@media (prefers-*)`. Elke treffer krijgt een eigen plek in het nieuwe designsysteem of wordt bewust geschrapt, samen met de instelling die erbij hoort. Een instelling die niets meer doet hoort niet in de interface te blijven staan.
 
 Kom je van Tailwind, lees dan [`from-tailwind.md`](from-tailwind.md): daar zit een extra valstrik, omdat de compiler regels verzint voor klassen die nergens bestaan.
 
@@ -191,7 +191,7 @@ Tel ook het aantal tab-stops per pagina, voor en na. Zakt een pagina van 150 naa
 
 ## Toegankelijkheid is waar deze migratie je te schande zet
 
-De hele rechtvaardiging voor dit systeem is WCAG 2.1 AA en EN 301 549. Een toegankelijkheids*regressie* is daarmee de pijnlijkste uitkomst, en die maak je makkelijk:
+De hele rechtvaardiging voor dit designsysteem is WCAG 2.1 AA en EN 301 549. Een toegankelijkheids*regressie* is daarmee de pijnlijkste uitkomst, en die maak je makkelijk:
 
 - **Een kaart met een pointer-cursor is geen knop.** Een `hoverable`-prop die alleen `cursor: pointer` zet geeft muisgebruikers een affordance en toetsenbordgebruikers niets: geen tab-stop, geen rol, niets aangekondigd. Gebruik het echte `button`-attribuut van het component plus een `accessible-label`. Let op: de activatie gebeurt dan op een knop in de shadow root en komt binnen als *composed* click, die React's `onClick` niet levert. Bind die listener zelf.
 - **Een kaart met `href` haalt zijn naam niet uit zijn inhoud.** De link is een leeg anker dat over de kaart ligt, dus een `nldd-title` erin benoemt hem niet. Zonder `accessible-label` meldt axe `link-name` (serious), één keer per kaart. Het component waarschuwt hiervoor in de console, maar alleen in een dev-build; laad je `nldd.min.js`, dan zie je niets (vastgesteld op 0.8.93).
@@ -201,7 +201,7 @@ De hele rechtvaardiging voor dit systeem is WCAG 2.1 AA en EN 301 549. Een toega
 - **Dubbele `<h1>`**: de titelbalk van de app-shell rendert meestal de h1 van de pagina. Een detailpagina die er zelf een toevoegt levert twee concurrerende koppen van niveau 1.
 - **Selectie die alleen in kleur zit** faalt 1.4.1. Gebruik de eigen `current`/`checked` van het component, plus een tweede kanaal zoals een icoon.
 
-Een kop is een `nldd-title` met `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Is de titel meer dan tekst, zoals een link, zet dan je eigen `<h2>` met de `<a>` erin in het standaardslot van `nldd-title`: de titel maakt die kop op, en de link hoort erbij. Een kale kop daarbuiten heeft een CSS-reset nodig, en dat is eigen opmaak.
+Een kop is een `nldd-title` met `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Is de titel meer dan tekst, zoals een link, zet dan je eigen `<h2>` met de `<a>` erin in het standaardslot van `nldd-title`: de titel maakt die kop op, en de link hoort erbij. Een kale kop daarbuiten heeft een CSS-reset nodig, en dat is opmaak van je app.
 
 ## Omzetten is geen ontwerpen
 
@@ -233,7 +233,7 @@ Drie gewoonten die steeds tijd scheelden of kostten:
 2. **Lees `custom-elements.json` voordat je aanneemt dat een attribuut bestaat.** Het is de bron van waarheid voor slots en attributen, en het documenteert gedrag dat je anders per ongeluk ontdekt (dat `disclosure` zijn `aria-expanded` van de ouderrij overneemt, dat `button` genegeerd wordt als `href` gezet is). De manifest volgt de documentatie van het component en kan achterlopen op wat het rendert: in 0.8.93 ontbraken de slots `global` en `utility` van `nldd-top-navigation-bar`. Keurt je markupcheck iets af dat in Storybook gewoon zo staat, dan beslist het template in `dist/components/`, en is het gat een melding waard.
 3. **Lees de dev-waarschuwingen van de componenten.** Die vertellen precies wat je verkeerd doet, in een `console.warn` die je in een testrun nooit ziet. Grep de dist-bestanden op `console.warn` als iets zich niet gedraagt.
 
-## Ligt het aan het systeem, meld het dan
+## Ligt het aan het designsysteem, meld het dan
 
 Vecht je met een component, dan is dat meestal verkeerd gebruik. Maar soms ligt het aan het designsysteem, en dan is een workaround de duurste oplossing die je kunt kiezen.
 
@@ -248,7 +248,7 @@ Twee gewoonten die dat voorkomen:
 - **Zet bij elke workaround wat de regel voor een omweg bovenaan vraagt:** de issuelink, de versie en waarom het component het zelf niet kan.
 - **Loop bij elke upgrade je eigen omwegen langs.** De changelog vertelt wat er verandert, niet welke van jouw reparaties overbodig zijn geworden. Dat moet je zelf nagaan, en het is de enige manier waarop een fossiel weer verdwijnt.
 
-Houd je een lijst bij van wat het systeem niet kan, noteer dan per punt de versie waartegen je mat. Zonder dat wordt het een lijst die mensen blijven citeren nadat die niet meer waar is.
+Houd je een lijst bij van wat het designsysteem niet kan, noteer dan per punt de versie waartegen je mat. Zonder dat wordt het een lijst die mensen blijven citeren nadat die niet meer waar is.
 
 ## Subagents inzetten
 

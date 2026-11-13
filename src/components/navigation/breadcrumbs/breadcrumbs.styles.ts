@@ -9,6 +9,7 @@ const separatorStyles = css`
 		position: relative;
 		top: var(--_breadcrumbs-item-separator-vertical-offset);
 		margin-inline: var(--primitives-space-2);
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		width: var(--primitives-space-16);
 		height: var(--primitives-space-16);
@@ -59,21 +60,25 @@ export const breadcrumbsItemStyles = css`
 	.breadcrumbs__item {
 		display: inline-flex;
 		align-items: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-md-regular-tight);
 	}
 
 	.breadcrumbs__item-link {
-		color: var(--semantics-links-color);
+		--context-content-color: var(--context-link-color);
+		color: var(--context-link-color);
 		text-decoration: underline;
 	}
 
 	.breadcrumbs__item-link:hover {
-		color: var(--semantics-links-is-hovered-color);
+		--context-content-color: var(--context-link-is-hovered-color);
+		color: var(--context-link-is-hovered-color);
 	}
 
 	.breadcrumbs__item-link:active {
-		color: var(--semantics-links-is-active-color);
+		--context-content-color: var(--context-link-is-active-color);
+		color: var(--context-link-is-active-color);
 	}
 
 	.breadcrumbs__item-link:focus-visible {

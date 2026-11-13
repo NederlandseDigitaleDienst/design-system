@@ -21,7 +21,9 @@ export const documentTabBarStyles = css`
 		--_document-tab-bar-held-item-width: auto;
 		--_document-tab-bar-release-duration: var(--primitives-transition-duration-medium);
 		--_document-tab-bar-release-easing: var(--primitives-transition-easing-default);
-		--_document-tab-bar-overflow-button-reserve: 52px; /* Used for overflowButtonReserve. Overflow button width + spacing */
+		--_document-tab-bar-gap: var(--primitives-space-4);
+		--_document-tab-bar-end-gap: var(--primitives-space-8);
+		--_document-tab-bar-overflow-button-reserve: 48px; /* Used for overflowButtonReserve. Overflow button width + spacing */
 		--_document-tab-bar-dismiss-button-is-hovered-background-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-250));
 		--_document-tab-bar-dismiss-button-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
 		--_document-tab-bar-dismiss-button-is-selected-is-hovered-background-color: var(--semantics-tabs-is-current-is-hovered-background-color);
@@ -49,7 +51,7 @@ export const documentTabBarStyles = css`
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--primitives-space-8);
+		gap: var(--_document-tab-bar-gap);
 	}
 
 	.document-tab-bar__items {
@@ -57,7 +59,7 @@ export const documentTabBarStyles = css`
 		min-width: 0;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--primitives-space-8);
+		gap: var(--_document-tab-bar-gap);
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
@@ -105,9 +107,10 @@ export const documentTabBarStyles = css`
 
 	.document-tab-bar__end {
 		display: flex;
+		margin-inline-start: calc(var(--_document-tab-bar-end-gap) - var(--_document-tab-bar-gap));
 		flex-direction: row;
 		align-items: center;
-		gap: var(--primitives-space-8);
+		gap: var(--_document-tab-bar-end-gap);
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
@@ -197,6 +200,7 @@ export const documentTabBarStyles = css`
 	.document-tab-bar__drag-clone .document-tab-bar__item-text {
 		overflow: hidden;
 		font: var(--_document-tab-bar-tab-title-font);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -208,12 +212,14 @@ export const documentTabBarStyles = css`
 
 	.document-tab-bar__drag-clone.is-selected .document-tab-bar__item-text,
 	.document-tab-bar__drag-clone.is-selected .document-tab-bar__item-supporting-text {
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 
 	.document-tab-bar__drag-clone .document-tab-bar__item-supporting-text {
 		overflow: hidden;
 		font: var(--primitives-font-body-xs-regular-flat);
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -369,12 +375,14 @@ export const documentTabBarItemStyles = css`
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
 		font: var(--_document-tab-bar-item-tab-title-font);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
 	:host([selected]) .document-tab-bar__item-text {
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 
@@ -382,12 +390,14 @@ export const documentTabBarItemStyles = css`
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
 		font: var(--_document-tab-bar-item-tab-title-font);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
 	:host([selected]) .document-tab-bar__item-short-text {
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 
@@ -398,6 +408,7 @@ export const documentTabBarItemStyles = css`
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
 		font: var(--primitives-font-body-xs-regular-flat);
+		--context-content-color: var(--_document-tab-bar-item-secondary-content-color);
 		color: var(--_document-tab-bar-item-secondary-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -407,6 +418,7 @@ export const documentTabBarItemStyles = css`
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
 		font: var(--primitives-font-body-xs-regular-flat);
+		--context-content-color: var(--_document-tab-bar-item-secondary-content-color);
 		color: var(--_document-tab-bar-item-secondary-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -429,6 +441,7 @@ export const documentTabBarItemStyles = css`
 		padding: var(--primitives-space-4);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		transform: translateY(-50%);
 		appearance: none;
@@ -445,6 +458,7 @@ export const documentTabBarItemStyles = css`
 	}
 
 	:host([selected]) .document-tab-bar__item-dismiss-button {
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 

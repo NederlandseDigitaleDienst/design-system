@@ -107,24 +107,28 @@ export const paginationStyles = css`
 		.pagination__page-button.is-current:hover {
 			--_pagination-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
 			background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
+			--context-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
 			color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
 		}
 	}
 
 	.pagination__page-button:active:not(.is-current) {
 		background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
 		color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
 	}
 
 	.pagination__page-button.is-current {
 		--_pagination-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
 		background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
 		color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
 	}
 
 	.pagination__page-button.is-current:active {
 		--_pagination-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
 		background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
 		color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
 	}
 
@@ -201,6 +205,7 @@ export const paginationStyles = css`
 		border-radius: var(--semantics-controls-md-corner-radius);
 		background-color: var(--_pagination-background-color);
 		align-items: center;
+		--context-content-color: var(--_pagination-content-color);
 		color: var(--_pagination-content-color);
 		transition:
 			background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default),
@@ -211,12 +216,14 @@ export const paginationStyles = css`
 	@media (hover: hover) {
 		.pagination__select-wrapper:hover {
 			background-color: var(--_pagination-is-hovered-background-color);
+			--context-content-color: var(--_pagination-is-hovered-content-color);
 			color: var(--_pagination-is-hovered-content-color);
 		}
 	}
 
 	.pagination__select-wrapper:active {
 		background-color: var(--_pagination-is-active-background-color);
+		--context-content-color: var(--_pagination-is-active-content-color);
 		color: var(--_pagination-is-active-content-color);
 	}
 

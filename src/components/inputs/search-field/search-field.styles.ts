@@ -17,6 +17,7 @@ export const searchFieldStyles = css`
 		--_search-field-icon-size: var(--primitives-space-24);
 		--_search-field-text-font: var(--semantics-input-fields-md-text-font);
 		--_search-field-end-padding-right: calc((var(--_search-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_search-field-nested-control-corner-radius: calc(var(--_search-field-corner-radius) - var(--_search-field-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_search-field-end-gap: var(--primitives-space-6);
 		--_search-field-shortcut-size: var(--primitives-space-20);
 		--_search-field-shortcut-padding-right: calc((var(--_search-field-min-size) - var(--_search-field-shortcut-size)) / 2 - var(--semantics-input-fields-border-width));
@@ -95,6 +96,7 @@ export const searchFieldStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 	}
 
@@ -111,6 +113,7 @@ export const searchFieldStyles = css`
 		flex-shrink: 1;
 		flex-basis: 0;
 		align-self: stretch;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_search-field-text-font);
 		appearance: none;
@@ -133,6 +136,7 @@ export const searchFieldStyles = css`
 	}
 
 	.search-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -174,6 +178,10 @@ export const searchFieldStyles = css`
 		flex-shrink: 0;
 		gap: var(--_search-field-end-gap);
 		align-items: center;
+	}
+
+	.search-field__end :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_search-field-nested-control-corner-radius);
 	}
 
 	.search-field__clear-button:focus-within,

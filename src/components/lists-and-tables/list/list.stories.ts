@@ -202,7 +202,7 @@ export const Appearances = {
 				<nldd-list-item><nldd-text-cell text="Box — item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
 
-			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px;">
+			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px; --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 				<nldd-list appearance="box-base">
 					<nldd-list-item><nldd-text-cell text='appearance="box-base" — item 1'></nldd-text-cell></nldd-list-item>
 					<nldd-list-item><nldd-text-cell text="op een al getinte pagina — item 2"></nldd-text-cell></nldd-list-item>

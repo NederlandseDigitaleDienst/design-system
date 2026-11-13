@@ -45,8 +45,8 @@ De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/de
 | `nldd-design` | Opzoeken: welke componenten, attributen, slots, events en iconen er zijn, wat er per versie veranderde, en de ontwerprichtlijnen. |
 | `nldd-design-build` | Een applicatie bouwen: de visie erachter, de basispatronen en hoe je componenten samenstelt. |
 | `nldd-design-validate` | Controleren wat er gebouwd is, met `nldd lint`. |
-| `nldd-design-migrate` | Een bestaande frontend omzetten naar dit systeem. |
-| `nldd-design-upgrade` | Een applicatie die al op dit systeem draait naar een nieuwere versie brengen. |
+| `nldd-design-migrate` | Een bestaande frontend omzetten naar dit designsysteem. |
+| `nldd-design-upgrade` | Een applicatie die al op dit designsysteem draait naar een nieuwere versie brengen. |
 | `nldd-design-contribute` | Een wijziging voorstellen: een ontbrekend component, een patroon, of een bug. |
 
 De assistent kiest zelf welke hij nodig heeft. In Claude Code kun je er ook een aanroepen met `/nldd-design`, of met `/nldd-design-system:nldd-design` als een skill van je eigen project dezelfde naam draagt.
@@ -170,7 +170,7 @@ CSS variabelen zijn georganiseerd in vijf lagen:
 --semantics-controls-md-min-size: var(--primitives-space-44);
 
 /* Context — communicatie tussen componenten */
---context-parent-background-color: var(--semantics-surfaces-base-background-color);
+--context-background-color: var(--semantics-surfaces-base-background-color);
 
 /* Component — een waarde van één component die een thema zet. Een thema
    bereikt alleen :root, dus de waarde staat daar en niet in het component. */
@@ -178,7 +178,9 @@ CSS variabelen zijn georganiseerd in vijf lagen:
 
 /* Local — intern binnen een component, in zijn :host. Wijst naar semantics
    of primitives, en draagt de naam van het component. */
+/* nldd-lint-disable-next-line local-variable-no-override -- shows how a component names its own variable */
 --_box-background-color: var(--semantics-surfaces-tinted-background-color);
+/* nldd-lint-disable-next-line local-variable-no-override -- shows how a component names its own variable */
 --_button-group-sm-gap: var(--primitives-space-6);
 ```
 

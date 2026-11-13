@@ -80,7 +80,7 @@ const Template = ({
 	dismissable: boolean;
 	active: boolean;
 }) => html`
-	<div style="display: flex; justify-content: center; padding-block: 48px; background: var(--semantics-surfaces-tinted-background-color);">
+	<div style="display: flex; justify-content: center; padding-block: 48px; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 		<nldd-just-in-time-education
 			text=${text || nothing}
 			supporting-text=${supportingText || nothing}

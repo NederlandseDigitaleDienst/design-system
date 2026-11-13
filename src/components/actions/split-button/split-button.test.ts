@@ -283,8 +283,8 @@ describe('nldd-split-button – on a colored surface', () => {
 		if (el) cleanup(el);
 	});
 
-	it('draws the inherit-tinted surface once: the split-button has it, its action button is clear', async () => {
-		el = await fixture('<nldd-split-button text="Opslaan" appearance="inherit-tinted" style="color: rgb(255, 255, 255)"></nldd-split-button>');
+	it('draws the content-tinted surface once: the split-button has it, its action button is clear', async () => {
+		el = await fixture('<nldd-split-button text="Opslaan" appearance="content-tinted" style="color: rgb(255, 255, 255)"></nldd-split-button>');
 		await waitForUpdate(el);
 
 		const root = el.shadowRoot!;
@@ -294,8 +294,8 @@ describe('nldd-split-button – on a colored surface', () => {
 		expect(getComputedStyle(action.shadowRoot!.querySelector('.button')!).backgroundColor).toBe('rgba(0, 0, 0, 0)');
 	});
 
-	it('gives the inherit-filled split-button a surface of its own', async () => {
-		el = await fixture('<nldd-split-button text="Opslaan" appearance="inherit-filled" style="color: rgb(255, 255, 255)"></nldd-split-button>');
+	it('gives the content-filled split-button a surface of its own', async () => {
+		el = await fixture('<nldd-split-button text="Opslaan" appearance="content-filled" style="color: rgb(255, 255, 255)"></nldd-split-button>');
 		await waitForUpdate(el);
 
 		expect(getComputedStyle(el.shadowRoot!.querySelector('.split-button')!).backgroundColor).toBe('rgb(255, 255, 255)');

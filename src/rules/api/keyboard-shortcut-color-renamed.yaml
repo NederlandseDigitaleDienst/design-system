@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-keyboard-shortcut[color="inherit"]'
+fix: { value: { color: { inherit: content } } }
+message: '`color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-keyboard-shortcut.'
+examples:
+  passed: ['<nldd-keyboard-shortcut keys="Cmd+K" color="content"></nldd-keyboard-shortcut>']
+  failed: ['<nldd-keyboard-shortcut keys="Cmd+K" color="inherit"></nldd-keyboard-shortcut>']

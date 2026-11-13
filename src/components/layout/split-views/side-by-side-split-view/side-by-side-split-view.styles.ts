@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { surfaceContent } from '../../../../assets/styles/shadow-resets.js';
 
 export const sideBySideSplitViewStyles = css`
 	:host {
@@ -9,7 +10,7 @@ export const sideBySideSplitViewStyles = css`
 	/* # Host */
 
 	:host {
-		--_side-by-side-split-view-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_side-by-side-split-view-background-color: var(--context-background-color);
 		/* Pane min-width — read by JS via getComputedStyle in firstUpdated */
 		--_side-by-side-split-view-pane-min-width: var(--primitives-area-320);
 
@@ -32,13 +33,15 @@ export const sideBySideSplitViewStyles = css`
 	}
 
 	:host([background="base"]) {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_side-by-side-split-view-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
+		--_side-by-side-split-view-background-color: var(--context-background-color);
 	}
 
 	:host([background="tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_side-by-side-split-view-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
+		${surfaceContent}
+		--_side-by-side-split-view-background-color: var(--context-background-color);
 	}
 
 

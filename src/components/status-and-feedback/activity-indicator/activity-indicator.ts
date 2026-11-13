@@ -20,12 +20,10 @@
  * 24 and 28, body-md from 32. Keep the label short; a longer explanation
  * belongs in the area as regular text.
  *
- * The default indicator is a simple icon-sized circle that follows the shared
- * `--context-content-color` channel (set by list-item / table / menu on their
- * content), falling back to `currentColor` wherever that channel is unset
- * (buttons, rich-text, standalone) — so a spinner inside a cell tracks the
- * row's state-aware content color, while embedders relying on currentColor are
- * unaffected. An optional label sits below (hidden unless `show-text` is set).
+ * The default indicator is a simple icon-sized circle in the
+ * `--context-content-color` that the surface, button or row around it sets, so
+ * a spinner in a selected row or a filled button takes that row's or button's
+ * color. An optional label sits below (hidden unless `show-text` is set).
  * The indicator is always indeterminate; when you know the progress, show
  * `nldd-progress-bar` or `nldd-progress-circle` instead.
  *

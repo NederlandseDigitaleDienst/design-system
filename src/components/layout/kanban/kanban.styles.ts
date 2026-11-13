@@ -161,6 +161,7 @@ export const kanbanColumnStyles = css`
 	.kanban-column__title {
 		min-width: 0;
 		flex-grow: 1;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_kanban-column-title-font);
 		text-wrap: balance;
@@ -168,6 +169,7 @@ export const kanbanColumnStyles = css`
 
 	.kanban-column__count {
 		flex-shrink: 0;
+		--context-content-color: var(--_kanban-column-count-color);
 		color: var(--_kanban-column-count-color);
 		font: var(--_kanban-column-count-font);
 	}

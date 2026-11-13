@@ -7,7 +7,8 @@ import '../../content/rich-text/rich-text.js';
 /**
  * Een layout placeholder die de beschikbare ruimte vult en een indeterminate
  * activity indicator centreert. Standaard is dat een eenvoudige, icoon-grote
- * cirkel in `currentColor` (dus de cirkel erft de tekstkleur van de context).
+ * cirkel in `--context-content-color`, de tekstkleur die het vlak, de knop of
+ * de rij eromheen zet.
  *
  * Standaard verschijnt de indicator pas na 1000ms (`timing="delay"`) zodat
  * korte laad-acties niet onnodig flashen. `timing="instant"` toont hem direct
@@ -135,17 +136,17 @@ export const Grootten = {
 	},
 };
 
-export const ErftCurrentColor = {
-	name: 'Erft currentColor',
+export const VolgtDeContext = {
+	name: 'Volgt de context',
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center; height: 120px;">
-			<span style="color: var(--semantics-content-accent-color); display: inline-flex;">
+			<span style="--context-content-color: var(--semantics-content-accent-color); display: inline-flex;">
 				<nldd-activity-indicator
 					size="32"
 					timing="instant"
 				></nldd-activity-indicator>
 			</span>
-			<span style="color: var(--semantics-content-critical-color); display: inline-flex;">
+			<span style="--context-content-color: var(--semantics-content-critical-color); display: inline-flex;">
 				<nldd-activity-indicator
 					size="32"
 					timing="instant"
@@ -179,8 +180,7 @@ export const VertraagdTonen = {
 // leest het als "de inhoud van deze kaart laadt".
 /**
  * In overlay-modus dimt én blurt de indicator de geneste content standaard met
- * een frosted laag in `--context-parent-background-color` (fallback: de base
- * surface) op `1 − disabled-opacity`. De content blijft zichtbaar maar leest als
+ * een frosted laag in `--context-background-color` op `1 − disabled-opacity`. De content blijft zichtbaar maar leest als
  * inactief tijdens het laden. Zet `no-backdrop` om alleen het paneel te tonen.
  */
 export const Backdrop = {

@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 export const pageStyles = css`
 	:host {
@@ -9,7 +10,7 @@ export const pageStyles = css`
 	/* # Host */
 
 	:host {
-		--_page-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_page-background-color: var(--context-background-color);
 		/* The insets this page arrived with, parked before it adds its own:
 		   republishing --context-inset-top on the element it reads from would be
 		   a cycle. */
@@ -43,13 +44,15 @@ export const pageStyles = css`
 	}
 
 	:host([background="base"]) {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_page-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
+		--_page-background-color: var(--context-background-color);
 	}
 
 	:host([background="tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_page-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
+		${surfaceContent}
+		--_page-background-color: var(--context-background-color);
 	}
 
 	/* Overflow hidden prevents content from escaping the scroll wrapper.

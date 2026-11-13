@@ -73,7 +73,7 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
-              "description": "Visual style of the buttons (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)"
+              "description": "Visual style of the buttons: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. The content appearances are for a colored surface."
             },
             {
               "name": "disabled",
@@ -640,9 +640,9 @@
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
               "expandedType": {
-                "text": "'accent-filled' | 'accent-transparent' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
+                "text": "'accent-filled' | 'accent-transparent' | 'content-filled' | 'content-tinted' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
               },
-              "description": "Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-parent-background-color) as the label color, with a white/black contrast flip as a fallback."
+              "description": "Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable."
             },
             {
               "name": "size",
@@ -1334,9 +1334,9 @@
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
               "expandedType": {
-                "text": "'accent-filled' | 'accent-transparent' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
+                "text": "'accent-filled' | 'accent-transparent' | 'content-filled' | 'content-tinted' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
               },
-              "description": "Visual style, color included: 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted' | 'primary' | 'secondary' | 'destructive'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces."
+              "description": "Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon."
             },
             {
               "name": "size",
@@ -1868,6 +1868,26 @@
             },
             {
               "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "attribute": "target",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "attribute": "rel",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "type",
               "type": {
                 "text": "MenuItemType"
@@ -1992,6 +2012,19 @@
                 }
               },
               "description": "Programmatically select this item."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -2063,6 +2096,37 @@
               "name": "href",
               "default": "''",
               "fieldName": "href"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Where an item with an `href` opens (e.g. '_blank'); adjusts rel automatically. With '_blank' the item adds a visually hidden \"opent in nieuw tabblad\" for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply.",
+              "name": "target",
+              "default": "undefined",
+              "fieldName": "target"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Link rel of an item with an `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set.",
+              "name": "rel",
+              "default": "undefined",
+              "fieldName": "rel"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "description": "Override translation keys (the new-tab and other-website announcements); unset keys fall back to Dutch.",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             },
             {
               "type": {
@@ -2157,6 +2221,12 @@
               },
               "default": "''",
               "fieldName": "shortcutLinux"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -3460,9 +3530,9 @@
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
               "expandedType": {
-                "text": "'accent-filled' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'primary' | 'secondary'"
+                "text": "'accent-filled' | 'content-filled' | 'content-tinted' | 'neutral-base' | 'neutral-tinted' | 'primary' | 'secondary'"
               },
-              "description": "Visual style: 'neutral-tinted' (default) | 'neutral-base' | 'accent-filled' | 'primary' | 'secondary' | 'inherit-tinted' | 'inherit-filled'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The inherit appearances are for a colored surface. There are no transparent appearances: the split button needs a surface of its own to show it is one control."
+              "description": "Visual style: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control."
             },
             {
               "name": "disabled",
@@ -4623,7 +4693,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shows several avatars as one group: they overlap, and each one gets a ring in the surface color so they stay apart where they meet. The ring uses the same mechanism as the badge, so on a colored surface you hand the color over through `--context-parent-background-color`. Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to do with a dead image, when to fall back to initials, and how to show its name as a tooltip; a loose image would have to reproduce all of that and cannot do the last one. Set `decorative` when the names already stand beside the group as text; otherwise give every avatar a name, because the group itself describes nobody. The size applies to the whole group: it is imposed on the avatars, a slotted `img` included. That keeps the row on one line whatever a consumer hands over. Avatars that are links or buttons need size 32 or larger: they overlap, so each keeps only part of its width as a target (WCAG 2.5.8). On sm the list behind the button is a bottom sheet with a title bar, which names the group (its `accessible-label`) and closes it. The row never overflows its container. Where there is no room for every avatar, the group shows as many as fit and puts the rest behind the \"+N\" button, as `max` does; `max` is then the most it shows, not a fixed count.",
+          "description": "Shows several avatars as one group: they overlap, and each one gets a ring in the surface color so they stay apart where they meet. The ring uses the same mechanism as the badge, so on a colored surface you hand the color over through `--context-background-color`. Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to do with a dead image, when to fall back to initials, and how to show its name as a tooltip; a loose image would have to reproduce all of that and cannot do the last one. Set `decorative` when the names already stand beside the group as text; otherwise give every avatar a name, because the group itself describes nobody. The size applies to the whole group: it is imposed on the avatars, a slotted `img` included. That keeps the row on one line whatever a consumer hands over. Avatars that are links or buttons need size 32 or larger: they overlap, so each keeps only part of its width as a target (WCAG 2.5.8). On sm the list behind the button is a bottom sheet with a title bar, which names the group (its `accessible-label`) and closes it. The row never overflows its container. Where there is no room for every avatar, the group shows as many as fit and puts the rest behind the \"+N\" button, as `max` does; `max` is then the most it shows, not a fixed count.",
           "name": "NLDDAvatarGroup",
           "members": [
             {
@@ -4755,7 +4825,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role=\"img\"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.",
+          "description": "Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role=\"img\"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.",
           "name": "NLDDAvatar",
           "members": [
             {
@@ -4999,9 +5069,9 @@
               "default": "'neutral'",
               "fieldName": "color",
               "expandedType": {
-                "text": "'inherit' | 'neutral'"
+                "text": "'content' | 'neutral'"
               },
-              "description": "`neutral` (the default, a neutral fill) or `inherit` (fill in the content color: the `--context-content-color` channel, or `currentColor` when that is unset; text in the contrast color, so the avatar can replace an icon in a button for instance)"
+              "description": "`neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance)"
             },
             {
               "name": "icon-aligned",
@@ -5028,7 +5098,7 @@
               },
               "default": "''",
               "fieldName": "initials",
-              "description": "Explicit initials, at most 3 characters (overrides what is derived from `name`; also for organization acronyms)"
+              "description": "Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form"
             },
             {
               "name": "src",
@@ -5489,6 +5559,17 @@
             },
             {
               "kind": "field",
+              "name": "lineNumbers",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the number of each line, outside `diff`.",
+              "attribute": "line-numbers",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "noCopy",
               "type": {
                 "text": "boolean"
@@ -5588,6 +5669,15 @@
               "fieldName": "diff"
             },
             {
+              "name": "line-numbers",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself.",
+              "fieldName": "lineNumbers"
+            },
+            {
               "name": "no-copy",
               "type": {
                 "text": "boolean"
@@ -5678,7 +5768,7 @@
         },
         {
           "kind": "class",
-          "description": "A customizable icon component that renders SVG icons from a predefined library. Icons are decorative by default: the host gets `aria-hidden=\"true\"` automatically. If you want the icon to be announced by assistive tech, set `aria-hidden=\"false\"` on the consumer side together with an `aria-label`. Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a menu item. `size=\"full\"` names that default explicitly. `size=\"inherit\"` makes it follow the surrounding text (1em), for an icon set inline in a sentence. Any spacer-aligned number (16–96) pins a fixed dimension. Reach for `inherit` rather than a global `nldd-icon { width: 1em }` rule in the consumer: such a rule wins over the component's own :host styling and so also shrinks the icons that a cell or button was already sizing correctly. Color: by default the icon inherits its parent's `color`. Set `color` to one of the functional semantics (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or a rijkskleur (`lintblauw`, `paars`, `groen`, …). For a color the system cannot know — the jacket of a cable, a color someone picked — set `custom-color` to any CSS color.",
+          "description": "A customizable icon component that renders SVG icons from a predefined library. Icons are decorative by default: the host gets `aria-hidden=\"true\"` automatically. If you want the icon to be announced by assistive tech, set `aria-hidden=\"false\"` on the consumer side together with an `aria-label`. Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a menu item. `size=\"full\"` names that default explicitly. `size=\"inherit\"` makes it follow the surrounding text (1em), for an icon set inline in a sentence. Any spacer-aligned number (16–96) pins a fixed dimension. Reach for `inherit` rather than a global `nldd-icon { width: 1em }` rule in the consumer: such a rule wins over the component's own :host styling and so also shrinks the icons that a cell or button was already sizing correctly. Color: by default the icon takes `--context-content-color`, the text color that the surface, button, link or selected row around it passes on, as `nldd-text` does. A parent of your own that sets `color` sets that context too. Set `color` to one of the other functional semantics (`secondary`, `accent`, `critical`, `warning`, `success`), which follow the surface as well, or a rijkskleur (`lintblauw`, `paars`, `groen`, …). For a color the design system cannot know — the jacket of a cable, a color someone picked — set `custom-color` to any CSS color.",
           "name": "NLDDIcon",
           "members": [
             {
@@ -5706,7 +5796,7 @@
               "type": {
                 "text": "IconColor"
               },
-              "default": "''",
+              "default": "'content'",
               "attribute": "color",
               "reflects": true
             },
@@ -5723,13 +5813,13 @@
             },
             {
               "kind": "field",
-              "name": "box",
+              "name": "tile",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Draw the icon on a filled square instead of on its own.\n\nIt turns the colour question around: `color` and `custom-color` paint the\nbox, and the glyph takes whatever contrasts with it. That pair is the\nreason this is an option here rather than a box a consumer builds around\nan icon, because a hand-picked pair is the part nobody can check by eye.\n\n`size` then measures the box, so the same size renders a smaller glyph\nwith `box` than without: four fifths of it, with a radius of a fifth.",
-              "attribute": "box",
+              "description": "Draw the icon on a tile, a filled square, instead of on its own.\n\nIt turns the color question around: `color` and `custom-color` paint the\ntile, and the glyph takes whatever contrasts with it. That pair is the\nreason this is an option here rather than a tile a consumer builds around\nan icon, because a hand-picked pair is the part nobody can check by eye.\n\n`size` then measures the tile, so the same size renders a smaller glyph\nwith `tile` than without: four fifths of it.",
+              "attribute": "tile",
               "reflects": true
             }
           ],
@@ -5759,19 +5849,19 @@
               "type": {
                 "text": "IconColor"
               },
-              "description": "Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent.",
+              "description": "Functional (`content`, the default, `secondary`, `accent`, `critical`, `warning`, `success`, the colors the surface passes on as `--context-content-*`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`).",
               "name": "color",
-              "default": "''",
+              "default": "'content'",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'accent' | 'bruin' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'oranje' | 'paars' | 'primary-content' | 'robijnrood' | 'rood' | 'roze' | 'secondary-content' | 'success' | 'violet' | 'warning'"
+                "text": "'accent' | 'bruin' | 'content' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'secondary' | 'success' | 'violet' | 'warning'"
               }
             },
             {
               "type": {
                 "text": "string"
               },
-              "description": "A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know. It wins over `color`.",
+              "description": "A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know. It wins over `color`.",
               "name": "custom-color",
               "default": "''",
               "fieldName": "customColor"
@@ -5780,10 +5870,10 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Draw the icon on a filled square. `color` and `custom-color` then paint the box and the glyph takes the contrasting color, and `size` measures the box: the glyph is four fifths of it, the corner radius a fifth.",
-              "name": "box",
+              "description": "Draw the icon on a tile, a filled square. `color` and `custom-color` then paint the tile and the glyph takes the contrasting color, and `size` measures the tile: the glyph is four fifths of it. The corner is `--semantics-tiles-corner-radius`, a fifth of the tile, as on an organization `nldd-avatar`.",
+              "name": "tile",
               "default": "false",
-              "fieldName": "box"
+              "fieldName": "tile"
             }
           ],
           "superclass": {
@@ -6571,7 +6661,7 @@
                 "text": "Color"
               },
               "default": "'neutral'",
-              "description": "'neutral' (default) uses the component's own palette. 'inherit' makes the\nkeys and separators adopt the surrounding text color (currentColor), with a\ntranslucent contrast fill and highlight border — useful on filled panels or\nhighlighted rows.",
+              "description": "'neutral' (default) uses the component's own palette. 'content' makes the\nkeys and separators adopt the content color of the context, with a\ntranslucent contrast fill and highlight border — useful on filled panels or\nhighlighted rows.",
               "attribute": "color",
               "reflects": true
             },
@@ -6653,10 +6743,10 @@
                 "text": "Color"
               },
               "default": "'neutral'",
-              "description": "'neutral' (default) uses the component colors of its own. 'inherit' lets the keys and separators follow the surrounding text color (currentColor), with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row.",
+              "description": "'neutral' (default) uses the component colors of its own. 'content' lets the keys and separators follow the content color of the context, with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'inherit' | 'neutral'"
+                "text": "'content' | 'neutral'"
               }
             },
             {
@@ -6720,16 +6810,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "'content' | 'inherit'"
-              },
-              "default": "'content'",
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "spacing",
               "type": {
                 "text": "Spacing"
@@ -6769,18 +6849,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "color",
-              "type": {
-                "text": "'content' | 'inherit'"
-              },
-              "default": "'content'",
-              "fieldName": "color",
-              "expandedType": {
-                "text": "'content' | 'inherit'"
-              },
-              "description": "'content' (the default) takes the system's own content colors, each element its own. 'inherit' lets all text follow the color of the surface instead (for colored areas such as the filled categories). Links stay underlined as an affordance; secondary text (figcaption) gets the same color at a lowered opacity. Known v1 gaps: inline code, mark, tables and hr keep their own surfaces."
-            },
             {
               "name": "spacing",
               "type": {
@@ -7237,9 +7305,9 @@
               "default": "'content'",
               "fieldName": "color",
               "expandedType": {
-                "text": "'accent' | 'content' | 'critical' | 'inherit' | 'secondary' | 'success' | 'warning'"
+                "text": "'accent' | 'content' | 'critical' | 'secondary' | 'success' | 'warning'"
               },
-              "description": "Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical' | 'inherit'. 'content' and 'secondary' follow the surrounding content channel; 'inherit' takes the color it inherits, for text on a painted surface."
+              "description": "Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too."
             },
             {
               "name": "horizontal-alignment",
@@ -7348,16 +7416,6 @@
             },
             {
               "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "TitleColor"
-              },
-              "default": "'content'",
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "text",
               "type": {
                 "text": "string"
@@ -7435,18 +7493,6 @@
               "default": "''",
               "fieldName": "lgCustomSize",
               "description": "The same, at lg"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "TitleColor"
-              },
-              "default": "'content'",
-              "fieldName": "color",
-              "expandedType": {
-                "text": "'content' | 'inherit'"
-              },
-              "description": "'content' (the default) takes the system's own content colors. 'inherit' lets the title follow the text color of the surface instead (for colored areas such as the filled categories); overline and supporting-text get the same color at a lowered opacity."
             },
             {
               "name": "text",
@@ -9882,10 +9928,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "description": "'content' draws the control and its label in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -10210,13 +10256,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "description": "'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -10377,10 +10423,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the surrounding text color.",
+              "description": "'content' draws the control in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -10733,13 +10779,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -17385,10 +17431,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "description": "'content' draws the control and its label in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -17695,13 +17741,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "description": "'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -18057,10 +18103,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the surrounding text color.",
+              "description": "'content' draws the control in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -18394,13 +18440,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -21908,10 +21954,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "description": "'content' draws the control and its label in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -22227,13 +22273,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "description": "'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -22375,10 +22421,10 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the surrounding text color.",
+              "description": "'content' draws the control in the surrounding text color.",
               "attribute": "color",
               "reflects": true
             },
@@ -22725,13 +22771,13 @@
             {
               "name": "color",
               "type": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color",
               "expandedType": {
-                "text": "'' | 'inherit'"
+                "text": "'' | 'content'"
               }
             },
             {
@@ -24360,7 +24406,7 @@
           "type": {
             "text": "Extension"
           },
-          "default": "[ // A code block that names its language is highlighted in it, as in the code // viewer; the grammar loads when the first such block appears. markdown({ extensions: GFM, codeLanguages: nestedLanguages }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
+          "default": "[ // A code block that names its language is highlighted in it, as in the code // viewer; the grammar loads when the first such block appears. // A line indented four spaces stays text: in a field for prose that is pasted // or indented text, not code. Code takes a fence, which nobody types by accident. markdown({ extensions: [GFM, { remove: ['IndentedCode'] }], codeLanguages: nestedLanguages }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
           "description": "Markdown language (with GFM) plus the hybrid inline-styling decorations."
         }
       ],
@@ -25438,7 +25484,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Framed like the other input fields by default. `embedded` drops the frame, fill, padding and focus ring, for an editor inside a composition (e.g. a message field) that owns its chrome and focus; the caret is then a prominent accent. Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the state-change event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax=\"hidden\"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads \"Taak, open\" or \"Taak, afgerond\" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a \"Kopieer\" button at the right edge that copies the code without its fences and says \"Gekopieerd\" or \"Kopiëren mislukt\", as the code viewer does. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.",
+          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Framed like the other input fields by default. `embedded` drops the frame, fill, padding and focus ring, for an editor inside a composition (e.g. a message field) that owns its chrome and focus; the caret is then a prominent accent. Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the state-change event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax=\"hidden\"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads \"Taak, open\" or \"Taak, afgerond\" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a \"Kopieer\" button at the right edge that copies the code without its fences and says \"Gekopieerd\" or \"Kopiëren mislukt\", as the code viewer does. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint. A line indented four spaces stays text, unlike CommonMark, where it starts a code block: in a field for prose that is pasted or indented text, and code takes a fence. Turn indented code off in the renderer too, so the page shows what the editor showed: `md.disable('code')` in markdown-it and markdown-it-py, for example.",
           "name": "NLDDTextEditor",
           "members": [
             {
@@ -31268,6 +31314,17 @@
               "default": "undefined",
               "attribute": "vertical-alignment",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "list",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Turns the children into a list for assistive technology.",
+              "attribute": "list",
+              "reflects": true
             }
           ],
           "attributes": [
@@ -31781,6 +31838,15 @@
                 "text": "'bottom' | 'center' | 'top'"
               },
               "description": "'top' | 'center' | 'bottom'"
+            },
+            {
+              "name": "list",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the children a list for assistive technology: `role=\"list\"` on the container and `role=\"listitem\"` on each child, so a screen reader says how many there are and lets you skip them (WCAG 1.3.1). For a row of tags or a group of cards or tiles that are alike. A child with a role of its own keeps it. Nothing changes visually.",
+              "fieldName": "list"
             },
             {
               "name": "order",
@@ -33029,7 +33095,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast. `main-background=\"base\"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.",
+          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color that it passes on, so the text, links and icons on it keep their contrast. `main-background=\"base\"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.",
           "name": "NLDDHero",
           "members": [
             {
@@ -33719,7 +33785,7 @@
             },
             {
               "name": "",
-              "description": "Content of the text panel (nldd-title and nldd-rich-text with color=\"inherit\", for instance)"
+              "description": "Content of the text panel (nldd-title and nldd-rich-text, for instance)"
             }
           ]
         }
@@ -34841,7 +34907,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
+          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only=\"collapsed\"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
           "name": "NLDDSidebarSection",
           "members": [
             {
@@ -35425,6 +35491,14 @@
               "expandedType": {
                 "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
+            },
+            {
+              "name": "sidebar-section-only",
+              "description": "Set on anything inside the section, at any depth: shows that element only while the sidebar is a sheet (`collapsed`), such as the button that opens it, or only while it is a box beside the main (`expanded`), such as a heading the sheet's title bar repeats. Put it on an nldd-spacer next to such an element too, so the space goes with it.",
+              "type": {
+                "text": "'collapsed'|'expanded'"
+              },
+              "forDescendants": true
             }
           ],
           "mixins": [
@@ -37214,7 +37288,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The required root shell of a Nederlandse Digitale Dienst application. Always contains a split view or an nldd-page as direct content. The document font comes from the package stylesheet (`@nldd/design-system/styles`), not from this component: it gives `body` the body font and content color as soon as a shell is on the page, inside `@layer reset` so any rule of your own wins. Import only the tokens (`/styles/tokens`) and text you write in the light DOM keeps the browser default. Set background=\"tinted\" to give the whole application a tinted background. All descendants read --context-parent-background-color via --_shell-background-color automatically. Individual components can override locally with their own background attribute. The same background color is forced on `document.body` so that browser- chrome surfaces (iOS overscroll bounce, status bar, page-margin areas) blend with the app instead of revealing the user-agent's default white. Cleared when the shell disconnects. The app scrolls the DOCUMENT (root mode) or lets each `nldd-page` scroll inside its pane (nested mode). The mode is derived from the outermost horizontal split view: one column means the document scrolls, several columns mean the panes do. An app without such a split view is a single column at every width and therefore scrolls the document too — nested scrolling would cost it the rubber-band and the collapsing browser toolbar on iOS for nothing. Set `--context-scroll-mode` on the `nldd-shell` itself to override the derived mode; an inherited value loses from it. In nested scroll mode `overscroll-behavior: none` is set on `document.documentElement` and `document.body` while the shell is connected. Combined with `overscroll-behavior: contain` on `nldd-page`'s scroll target, this prevents iOS rubber-band on the viewport when scroll gestures land outside an `nldd-page` (e.g. on a top-bar). In root scroll mode the document itself is the scroller, so this is lifted to let the native rubber-band happen. Cleared on last disconnect.",
+          "description": "The required root shell of a Nederlandse Digitale Dienst application. Always contains a split view or an nldd-page as direct content. The document font comes from the package stylesheet (`@nldd/design-system/styles`), not from this component: it gives `body` the body font and content color as soon as a shell is on the page, inside `@layer reset` so any rule of your own wins. Import only the tokens (`/styles/tokens`) and text you write in the light DOM keeps the browser default. Set background=\"tinted\" to give the whole application a tinted background. All descendants read --context-background-color via --_shell-background-color automatically. Individual components can override locally with their own background attribute. The same background color is forced on `document.body` so that browser- chrome surfaces (iOS overscroll bounce, status bar, page-margin areas) blend with the app instead of revealing the user-agent's default white. Cleared when the shell disconnects. The app scrolls the DOCUMENT (root mode) or lets each `nldd-page` scroll inside its pane (nested mode). The mode is derived from the outermost horizontal split view: one column means the document scrolls, several columns mean the panes do. An app without such a split view is a single column at every width and therefore scrolls the document too — nested scrolling would cost it the rubber-band and the collapsing browser toolbar on iOS for nothing. Set `--context-scroll-mode` on the `nldd-shell` itself to override the derived mode; an inherited value loses from it. In nested scroll mode `overscroll-behavior: none` is set on `document.documentElement` and `document.body` while the shell is connected. Combined with `overscroll-behavior: contain` on `nldd-page`'s scroll target, this prevents iOS rubber-band on the viewport when scroll gestures land outside an `nldd-page` (e.g. on a top-bar). In root scroll mode the document itself is the scroller, so this is lifted to let the native rubber-band happen. Cleared on last disconnect.",
           "name": "NLDDShell",
           "members": [
             {
@@ -37424,7 +37498,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A vertical split view with a main area and an unlimited number of bar panels. Each child determines its order per breakpoint via sm-order, md-order, and lg-order. Children without order attributes are sorted by DOM order. All bars are in normal flow at every breakpoint and stack vertically. A divider is drawn only where the main pane meets an adjacent bar — directly above and/or below main — at every breakpoint (including sm). Two stacked bars on the same side never get a divider between them, so a toolbar and a tab-bar read as one visual unit. Consumers never manage dividers themselves. Give each bar a unique slot name (e.g. slot=\"toolbar\", slot=\"status-bar\"). Use slot=\"bar-1\", slot=\"bar-2\" if no meaningful name applies. The main panel always uses slot=\"main\". Sets --context-parent-background-color, which cascades to all descendants.",
+          "description": "A vertical split view with a main area and an unlimited number of bar panels. Each child determines its order per breakpoint via sm-order, md-order, and lg-order. Children without order attributes are sorted by DOM order. All bars are in normal flow at every breakpoint and stack vertically. A divider is drawn only where the main pane meets an adjacent bar — directly above and/or below main — at every breakpoint (including sm). Two stacked bars on the same side never get a divider between them, so a toolbar and a tab-bar read as one visual unit. Consumers never manage dividers themselves. Give each bar a unique slot name (e.g. slot=\"toolbar\", slot=\"status-bar\"). Use slot=\"bar-1\", slot=\"bar-2\" if no meaningful name applies. The main panel always uses slot=\"main\". Sets --context-background-color, which cascades to all descendants.",
           "name": "NLDDBarSplitView",
           "members": [
             {
@@ -37597,27 +37671,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "sidebarAsSheet",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "deprecated": "Use primary-sidebar-as-sheet. Kept as an alias for backwards compatibility.",
-              "attribute": "sidebar-as-sheet",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "sidebarAccessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "deprecated": "Use primary-sidebar-accessible-label. Kept as an alias for backwards compatibility.\nEmpty by default so it does not clobber the new property's default.",
-              "attribute": "sidebar-accessible-label"
-            },
-            {
               "kind": "method",
               "name": "showPrimarySidebarSheet",
               "return": {
@@ -37630,26 +37683,6 @@
             {
               "kind": "method",
               "name": "hidePrimarySidebarSheet"
-            },
-            {
-              "kind": "method",
-              "name": "showSidebarSheet",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "deprecated": "Use showPrimarySidebarSheet()."
-            },
-            {
-              "kind": "method",
-              "name": "hideSidebarSheet",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "deprecated": "Use hidePrimarySidebarSheet()."
             },
             {
               "kind": "method",
@@ -37719,26 +37752,6 @@
               "default": "false",
               "fieldName": "inspectorAutoHidden",
               "description": "Inspector hidden to free up space for other panes (read-only, set by the split view)"
-            },
-            {
-              "name": "sidebar-as-sheet",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "deprecated": "alias for primary-sidebar-as-sheet (kept for backwards compatibility)",
-              "fieldName": "sidebarAsSheet",
-              "description": "@deprecated alias for primary-sidebar-as-sheet (kept for backwards compatibility)"
-            },
-            {
-              "name": "sidebar-accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "deprecated": "alias for primary-sidebar-accessible-label (kept for backwards compatibility)",
-              "fieldName": "sidebarAccessibleLabel",
-              "description": "@deprecated alias for primary-sidebar-accessible-label (kept for backwards compatibility)"
             }
           ],
           "superclass": {
@@ -37763,10 +37776,6 @@
             {
               "name": "inspector",
               "description": "Right pane for details or properties"
-            },
-            {
-              "name": "sidebar",
-              "description": "@deprecated alias for the primary-sidebar slot (kept for backwards compatibility)"
             }
           ]
         }
@@ -37978,7 +37987,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A simple pane container for use inside split views. The split view automatically sets context: whether a back button should be shown. The consumer sets `has-content` to indicate the pane has content. The consumer sets `back-text` on the `nldd-top-title-bar` inside the pane. The split view sets `hide-back` when the back button is not applicable. The pane automatically hides the back button via CSS when `hide-back` is active. The pane sets `--context-parent-background-color` which cascades down to all descendants. Set `background=\"tinted\"` on a pane to give it a tinted background independently of sibling panes. Descendants such as `nldd-page` read `--context-parent-background-color` automatically. A pane stretches its slotted content to fill it (`::slotted(*) { flex-grow: 1 }`), so slot only layout content here. Overlays (`nldd-sheet`, popovers, dialogs, menus) belong at the document root — teleport/portal them to `document.body`. Do not leave an overlay as a light-DOM sibling of a split view: it gets slotted into the main pane and becomes an extra flex-grow child that steals pane height, so in document-scroll (root) mode a short page's sticky footer floats mid-screen instead of docking.",
+          "description": "A simple pane container for use inside split views. The split view automatically sets context: whether a back button should be shown. The consumer sets `has-content` to indicate the pane has content. The consumer sets `back-text` on the `nldd-top-title-bar` inside the pane. The split view sets `hide-back` when the back button is not applicable. The pane automatically hides the back button via CSS when `hide-back` is active. The pane sets `--context-background-color` which cascades down to all descendants. Set `background=\"tinted\"` on a pane to give it a tinted background independently of sibling panes. Descendants such as `nldd-page` read `--context-background-color` automatically. A pane stretches its slotted content to fill it (`::slotted(*) { flex-grow: 1 }`), so slot only layout content here. Overlays (`nldd-sheet`, popovers, dialogs, menus) belong at the document root — teleport/portal them to `document.body`. Do not leave an overlay as a light-DOM sibling of a split view: it gets slotted into the main pane and becomes an extra flex-grow child that steals pane height, so in document-scroll (root) mode a short page's sticky footer floats mid-screen instead of docking.",
           "name": "NLDDSplitViewPane",
           "members": [
             {
@@ -39794,7 +39803,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, main text, supporting text) accepts either a string attribute or slotted DOM content. The slot is the source of truth: if the consumer provides slotted content, it replaces the attribute-based render for that region. Use slots when you need inline elements like `<nldd-tag>`, `<a>` or `<nldd-icon>` mixed with text. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path — slotted content is rendered as-is.",
+          "description": "A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, main text, supporting text) accepts either a string attribute or slotted DOM content. The slot is the source of truth: if the consumer provides slotted content, it replaces the attribute-based render for that region. Use slots when you need components mixed with text, such as `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`. The cell does not style plain HTML: for bold, write `**bold**` in the attribute, and for code put an `<nldd-text>` with a `<code>` in the slot. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.",
           "name": "NLDDTextCell",
           "members": [
             {
@@ -41466,7 +41475,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.",
+              "description": "Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.",
               "fieldName": "current"
             },
             {
@@ -44753,7 +44762,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Layout placeholder that fills its parent and centers an indeterminate activity indicator. By default the indicator is held back for 1000ms so brief loading states don't flash; once the delay passes it fades in. Set `timing=\"instant\"` to skip the delay (the fade-in still plays) — this is what embedding components such as `nldd-button` use for their loading state. Sizing: fills its parent where the parent lets it (a flex column such as `nldd-container`, a grid, or a fixed height) and centers itself there. Where the parent has no height of its own, give it one: a `min-height` matching the content you expect, such as `<nldd-container min-height=\"240px\">`. As a safety net the host already takes the indicator's size (circle, plus the label with `show-text`) during the delay, so nothing shifts when it fades in; once `complete` is set it gives that space up. Label size follows `size`, not the surrounding text, so the circle and its label keep the same proportion everywhere: body-xs at 16 and 20, body-sm at 24 and 28, body-md from 32. Keep the label short; a longer explanation belongs in the area as regular text. The default indicator is a simple icon-sized circle that follows the shared `--context-content-color` channel (set by list-item / table / menu on their content), falling back to `currentColor` wherever that channel is unset (buttons, rich-text, standalone) — so a spinner inside a cell tracks the row's state-aware content color, while embedders relying on currentColor are unaffected. An optional label sits below (hidden unless `show-text` is set). The indicator is always indeterminate; when you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` instead. Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled icon glyph has), so a standalone spinner lines up with an icon or an `icon-aligned` `nldd-avatar` on the same grid — no extra option needed (unlike `nldd-avatar`, which fills edge-to-edge and opts in via `icon-aligned`). Overlay mode: put content in the default slot and the indicator wraps it — it becomes a `position: relative` container, renders the spinner over a dimming backdrop (opt out with `no-backdrop`), and makes the content `inert` so its controls can't be focused or clicked. Toggle loading with `complete` (`?complete=${!isLoading}`). With no slotted content it stays the standalone placeholder described above. Reconnect behavior: every `connectedCallback` resets the timer and hides the indicator again. If a consumer toggles the element via a conditional render (remove + re-insert) the indicator disappears and re-fades after another delay. Keep the element mounted and toggle visibility / `hidden` instead if you want the timer to run only once. Accessibility: while connected and not `complete` the host is a polite live region (`role=\"status\"`). The label (`text`, or the translated \"Laden\" fallback) always renders as the region's content — visually hidden when `show-text` is off (the default) — so assistive tech announces the loading state when the indicator appears. Set `complete` (or unmount) to clear it.",
+          "description": "Layout placeholder that fills its parent and centers an indeterminate activity indicator. By default the indicator is held back for 1000ms so brief loading states don't flash; once the delay passes it fades in. Set `timing=\"instant\"` to skip the delay (the fade-in still plays) — this is what embedding components such as `nldd-button` use for their loading state. Sizing: fills its parent where the parent lets it (a flex column such as `nldd-container`, a grid, or a fixed height) and centers itself there. Where the parent has no height of its own, give it one: a `min-height` matching the content you expect, such as `<nldd-container min-height=\"240px\">`. As a safety net the host already takes the indicator's size (circle, plus the label with `show-text`) during the delay, so nothing shifts when it fades in; once `complete` is set it gives that space up. Label size follows `size`, not the surrounding text, so the circle and its label keep the same proportion everywhere: body-xs at 16 and 20, body-sm at 24 and 28, body-md from 32. Keep the label short; a longer explanation belongs in the area as regular text. The default indicator is a simple icon-sized circle in the `--context-content-color` that the surface, button or row around it sets, so a spinner in a selected row or a filled button takes that row's or button's color. An optional label sits below (hidden unless `show-text` is set). The indicator is always indeterminate; when you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` instead. Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled icon glyph has), so a standalone spinner lines up with an icon or an `icon-aligned` `nldd-avatar` on the same grid — no extra option needed (unlike `nldd-avatar`, which fills edge-to-edge and opts in via `icon-aligned`). Overlay mode: put content in the default slot and the indicator wraps it — it becomes a `position: relative` container, renders the spinner over a dimming backdrop (opt out with `no-backdrop`), and makes the content `inert` so its controls can't be focused or clicked. Toggle loading with `complete` (`?complete=${!isLoading}`). With no slotted content it stays the standalone placeholder described above. Reconnect behavior: every `connectedCallback` resets the timer and hides the indicator again. If a consumer toggles the element via a conditional render (remove + re-insert) the indicator disappears and re-fades after another delay. Keep the element mounted and toggle visibility / `hidden` instead if you want the timer to run only once. Accessibility: while connected and not `complete` the host is a polite live region (`role=\"status\"`). The label (`text`, or the translated \"Laden\" fallback) always renders as the region's content — visually hidden when `show-text` is off (the default) — so assistive tech announces the loading state when the indicator appears. Set `complete` (or unmount) to clear it.",
           "name": "NLDDActivityIndicator",
           "members": [
             {
@@ -45077,9 +45086,9 @@
               "default": "'critical'",
               "fieldName": "color",
               "expandedType": {
-                "text": "'accent' | 'critical' | 'inherit' | 'neutral' | 'success' | 'warning'"
+                "text": "'accent' | 'content' | 'critical' | 'neutral' | 'success' | 'warning'"
               },
-              "description": "The meaning of the badge, the same set as nldd-status-bar, or 'inherit' to fill in the content color around it: the `--context-content-color` channel a list item, table row or menu sets, falling back to `currentColor`. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development."
+              "description": "The meaning of the badge, the same set as nldd-status-bar, or 'content' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development."
             },
             {
               "name": "custom-color",
@@ -45087,7 +45096,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it.",
+              "description": "A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it.",
               "fieldName": "customColor"
             },
             {
@@ -49971,12 +49980,12 @@
         {
           "kind": "variable",
           "name": "pageSectionBackgroundStyles",
-          "default": "css` :host([background=\"base\"]) { --context-parent-background-color: var(--semantics-surfaces-base-background-color); } :host([background=\"tinted\"]) { --context-parent-background-color: var(--semantics-surfaces-tinted-background-color); } :host([background=\"accent-tinted\"]) { --context-parent-background-color: var(--semantics-surfaces-accent-tinted-background-color); } :host([background=\"base\"]), :host([background=\"tinted\"]), :host([background=\"accent-tinted\"]) { background-color: var(--context-parent-background-color); } `",
-          "description": "The surface a `background` paints, and passes on through\n`--context-parent-background-color` so cards and nested sections read the\nsame surface. Every section puts this first in its `styles`."
+          "default": "css` :host([background=\"base\"]) { --context-background-color: var(--semantics-surfaces-base-background-color); ${surfaceContent} } :host([background=\"tinted\"]) { --context-background-color: var(--semantics-surfaces-tinted-background-color); ${surfaceContent} } :host([background=\"accent-tinted\"]) { --context-background-color: var(--semantics-surfaces-accent-tinted-background-color); ${surfaceContent} } :host([background=\"base\"]), :host([background=\"tinted\"]), :host([background=\"accent-tinted\"]) { background-color: var(--context-background-color); } `",
+          "description": "The surface a `background` paints, and passes on through\n`--context-background-color` so cards and nested sections read the\nsame surface. Every section puts this first in its `styles`."
         },
         {
           "kind": "mixin",
-          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities. Padding and height are written as custom\nproperties on the host, which inherit through the shadow boundary into the\nsection's block element and slotted content; the background comes from\n`pageSectionBackgroundStyles`:\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted` | `accent-tinted`\n  (a tint of the theme's accent, with the contrast of `tinted`). Setting\n  one of those also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
+          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities. Padding and height are written as custom\nproperties on the host, which inherit through the shadow boundary into the\nsection's block element and slotted content; the background comes from\n`pageSectionBackgroundStyles`:\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted` | `accent-tinted`\n  (a tint of the theme's accent, with the contrast of `tinted`). Setting\n  one of those also cascades `--context-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
           "name": "PageSectionMixin",
           "members": [
             {

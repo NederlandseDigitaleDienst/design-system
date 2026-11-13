@@ -54,12 +54,6 @@
  *
  * @element nldd-rich-text
  *
- * @attr {string} color - 'content' (the default) takes the system's own content
- *   colors, each element its own. 'inherit' lets all text follow the color of
- *   the surface instead (for colored areas such as the filled categories).
- *   Links stay underlined as an affordance; secondary text (figcaption) gets
- *   the same color at a lowered opacity. Known v1 gaps: inline code, mark,
- *   tables and hr keep their own surfaces.
  * @attr {string} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
@@ -106,8 +100,6 @@ function hasInlineContent(nodes: NodeListOf<ChildNode>): boolean {
 
 @customElement('nldd-rich-text')
 export class NLDDRichText extends LitElement {
-	@property({ reflect: true, converter: reflectNonDefault<'content' | 'inherit'>('content') })
-	color: 'content' | 'inherit' = 'content';
 
 	@property({ reflect: true, converter: reflectNonDefault<Spacing>('snug') })
 	spacing: Spacing = 'snug';

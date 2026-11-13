@@ -81,6 +81,7 @@ export const progressBarStyles = css`
 		gap: var(--_progress-bar-caption-gap);
 		justify-content: space-between;
 		align-items: baseline;
+		--context-content-color: var(--_progress-bar-text-color);
 		color: var(--_progress-bar-text-color);
 	}
 
@@ -90,6 +91,7 @@ export const progressBarStyles = css`
 	}
 
 	.progress-bar__supporting-text {
+		--context-content-color: var(--_progress-bar-supporting-text-color);
 		color: var(--_progress-bar-supporting-text-color);
 		font: var(--_progress-bar-supporting-text-font);
 		font-variant-numeric: tabular-nums;
@@ -219,7 +221,7 @@ export const progressBarSegmentIndicatorStyles = css`
 	/* # Host */
 
 	:host {
-		--_progress-bar-segment-indicator-width: var(--context-progress-bar-segment-indicator-width, 0%);
+		--_progress-bar-segment-indicator-width: 0%;
 		--_progress-bar-segment-indicator-min-width: var(--primitives-space-2);
 		--_progress-bar-segment-indicator-background-color: var(--components-progress-bar-accent-background-color);
 		--_progress-bar-segment-indicator-border-color: var(--components-progress-bar-accent-highlight-border-color);

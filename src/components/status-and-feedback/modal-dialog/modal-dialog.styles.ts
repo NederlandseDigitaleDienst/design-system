@@ -1,6 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 
@@ -43,7 +43,8 @@ export const modalDialogStyles = css`
 		--context-scroll-mode: nested;
 		--context-inset-top: 0px;
 		--context-inset-bottom: 0px;
-		--context-parent-background-color: var(--_modal-dialog-background-color);
+		--context-background-color: var(--_modal-dialog-background-color);
+		${surfaceContent}
 
 		box-sizing: border-box;
 		outline: none;

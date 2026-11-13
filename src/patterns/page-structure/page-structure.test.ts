@@ -113,7 +113,7 @@ describe('patroon: paginaopbouw, de header', () => {
 		const badge = account.querySelector(':scope > nldd-avatar[slot="icon"]')!;
 		expect(badge.hasAttribute('decorative')).toBe(true);
 		expect(badge.hasAttribute('icon-aligned')).toBe(true);
-		expect(badge.getAttribute('color')).toBe('inherit');
+		expect(badge.getAttribute('color')).toBe('content');
 		expect(account.getAttribute('content-priority')).toBe('icon');
 		const menu = account.querySelector(':scope > nldd-menu')!;
 		const identity = menu.querySelector(':scope > [slot="header"] nldd-identity')!;

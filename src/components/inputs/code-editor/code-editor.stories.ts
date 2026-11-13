@@ -220,7 +220,7 @@ export const InEenContainer = {
 		<nldd-container
 			padding="24"
 			@pointerdown=${forwardClickToEditor}
-			style="background: var(--semantics-surfaces-tinted-background-color); border-radius: var(--primitives-corner-radius-lg);"
+			style="background: var(--semantics-surfaces-tinted-background-color); border-radius: var(--primitives-corner-radius-lg); --context-background-color: var(--semantics-surfaces-tinted-background-color);"
 		>
 			<nldd-code-editor
 				embedded

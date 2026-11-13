@@ -47,7 +47,6 @@ export default {
 		smCustomSize: '',
 		mdCustomSize: '',
 		lgCustomSize: '',
-		color: 'content',
 		text: 'Paginatitel',
 		supportingText: '',
 		overline: '',
@@ -76,12 +75,6 @@ export default {
 			control: 'text',
 			description: 'Eigen grootte bij lg',
 		},
-		color: {
-			control: 'select',
-			options: ['content', 'inherit'],
-			description: '`content` neemt de eigen tekstkleuren van het systeem. `inherit` laat de titel de tekstkleur van de ondergrond volgen (voor gekleurde vlakken).',
-			table: { defaultValue: { summary: 'content' } },
-		},
 		text: {
 			control: 'text',
 			description: 'Tekst van de titel. Inhoud in de standaardslot neemt de plaats in.',
@@ -106,13 +99,12 @@ export default {
 	},
 };
 
-export const Standaard = ({ size, smCustomSize, mdCustomSize, lgCustomSize, color, text, supportingText, overline, headingLevel }: Record<string, any>) => html`
+export const Standaard = ({ size, smCustomSize, mdCustomSize, lgCustomSize, text, supportingText, overline, headingLevel }: Record<string, any>) => html`
 	<nldd-title
 		size=${size || nothing}
 		sm-custom-size=${smCustomSize || nothing}
 		md-custom-size=${mdCustomSize || nothing}
 		lg-custom-size=${lgCustomSize || nothing}
-		color=${color || nothing}
 		text=${text || nothing}
 		supporting-text=${supportingText || nothing}
 		overline=${overline || nothing}
@@ -214,17 +206,15 @@ export const EigenGrootte = {
 };
 
 /**
- * Met `color="inherit"` volgt de titel de tekstkleur van de ondergrond —
- * voor gekleurde vlakken zoals de filled-categories, die een puur witte of
- * zwarte contentkleur meeleveren. De overline en supporting-text krijgen dezelfde
- * kleur op de systeembrede secundaire dekking.
+ * Een titel volgt de kleuren die het vlak doorgeeft. Een eigen gekleurd vlak
+ * zet daarvoor de context: de tekstkleur, de secundaire kleur voor overline en
+ * supporting-text, en de drie linkkleuren.
  */
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color); --context-content-secondary-color: var(--semantics-categories-donkerblauw-filled-content-secondary-color); --context-link-color: var(--semantics-categories-donkerblauw-filled-content-color); --context-link-is-hovered-color: var(--semantics-categories-donkerblauw-filled-content-color); --context-link-is-active-color: var(--semantics-categories-donkerblauw-filled-content-color);">
 				<nldd-title
-					color="inherit"
 					size="display-2"
 					text="Titel volgt de contentkleur"
 					supporting-text="Ondersteunende tekst op verlaagde dekking"
@@ -232,9 +222,8 @@ export const OpKleurvlak = {
 					heading-level="2"
 				></nldd-title>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-oranje-filled-background-color); --context-content-color: var(--semantics-categories-oranje-filled-content-color); --context-content-secondary-color: var(--semantics-categories-oranje-filled-content-secondary-color); --context-link-color: var(--semantics-categories-oranje-filled-content-color); --context-link-is-hovered-color: var(--semantics-categories-oranje-filled-content-color); --context-link-is-active-color: var(--semantics-categories-oranje-filled-content-color);">
 				<nldd-title
-					color="inherit"
 					size="display-2"
 					text="Zwarte content op oranje"
 					supporting-text="Ondersteunende tekst op verlaagde dekking"

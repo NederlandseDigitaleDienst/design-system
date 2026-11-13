@@ -18,6 +18,7 @@ export const textFieldStyles = css`
 		--_text-field-font: var(--semantics-input-fields-md-text-font);
 		--_text-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 		--_text-field-end-padding-right: calc((var(--_text-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_text-field-nested-control-corner-radius: calc(var(--_text-field-corner-radius) - var(--_text-field-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_text-field-button-focus-z-index: 1;
 
 		${inheritedTextReset}
@@ -99,6 +100,7 @@ export const textFieldStyles = css`
 		overflow: hidden;
 		padding: 0;
 		flex-grow: 1;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_text-field-font);
 		appearance: none;
@@ -109,6 +111,7 @@ export const textFieldStyles = css`
 	}
 
 	.text-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -149,10 +152,12 @@ export const textFieldStyles = css`
 	}
 
 	:host([valid]) .text-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .text-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 
@@ -167,6 +172,10 @@ export const textFieldStyles = css`
 		padding-right: var(--_text-field-end-padding-right);
 		flex-shrink: 0;
 		align-items: center;
+	}
+
+	.text-field__button slot::slotted(*) {
+		--context-control-corner-radius: var(--_text-field-nested-control-corner-radius);
 	}
 
 	.text-field__end[hidden] {

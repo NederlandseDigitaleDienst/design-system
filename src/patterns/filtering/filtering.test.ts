@@ -53,13 +53,11 @@ describe('patroon: filteren', () => {
 		const section = root.querySelector('nldd-sidebar-section')!;
 		const trigger = root.querySelector('#filters-openen')! as HTMLElement;
 		// De sectie zet `collapsed` zelf vanuit een ResizeObserver; hier sturen we
-		// het attribuut met de hand om beide kanten van de CSS-regel te meten.
+		// het attribuut met de hand om beide kanten van sidebar-section-only te meten.
 		section.removeAttribute('collapsed');
 		expect(getComputedStyle(trigger).display).toBe('none');
 		section.setAttribute('collapsed', '');
-		// De werkbalk zet zelf `hidden` op een item dat in het overflow-menu past,
-		// en daar houdt de regel rekening mee: zonder :not([hidden]) zou de knop
-		// juist naast de overflow-knop blijven staan.
+		// De werkbalk zet zelf `hidden` op een item dat in het overflow-menu past.
 		trigger.removeAttribute('hidden');
 		// Niet op 'inline-flex' toetsen: in een flex-rij blokificeert dat naar 'flex'.
 		expect(getComputedStyle(trigger).display).not.toBe('none');

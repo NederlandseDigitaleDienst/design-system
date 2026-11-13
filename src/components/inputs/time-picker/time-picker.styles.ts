@@ -103,6 +103,7 @@ export const timePickerStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_time-picker-list-item-font);
 		font-variant-numeric: tabular-nums;
@@ -159,9 +160,13 @@ export const timePickerStyles = css`
 		height: var(--_time-picker-control-min-size);
 		gap: var(--_time-picker-list-gap);
 		align-items: center;
+		--context-content-color: var(--_time-picker-selection-content-color);
 		color: var(--_time-picker-selection-content-color);
 		font-variant-numeric: tabular-nums;
 		transform: translateY(-50%);
+		/* iOS Safari puts the masked lists on their own layer while the sheet slides
+		   in, above this one despite the z-index. A layer of its own keeps it on top. */
+		will-change: transform;
 	}
 
 	.time-picker__value {

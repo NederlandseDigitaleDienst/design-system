@@ -1,4 +1,5 @@
 import { css, unsafeCSS } from 'lit';
+import { surfaceContent } from '../../../assets/styles/shadow-resets.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
@@ -79,7 +80,8 @@ export const sheetStyles = css`
 		--context-scroll-mode: nested;
 		--context-inset-top: 0px;
 		--context-inset-bottom: 0px;
-		--context-parent-background-color: var(--_sheet-background-color);
+		--context-background-color: var(--_sheet-background-color);
+		${surfaceContent}
 
 		display: flex;
 		position: fixed;

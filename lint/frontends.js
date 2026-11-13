@@ -8,6 +8,7 @@
  */
 
 import { parseDocument } from 'htmlparser2';
+import { cssBlocks } from './css.js';
 import {
 	BOUND,
 	appendChild,
@@ -37,6 +38,16 @@ const REPEATED = new Set(['v-for', '*ngFor']);
 
 /** A value a template language fills in: `{{ x }}`, `{% x %}`, `${x}`, `<%= x %>` or `{x}`. */
 const TEMPLATE_VALUE = /\{\{|\{%|\$\{|<%|^\{.*\}$/;
+
+/** A JSON object, such as a `translations` attribute, is written out and not filled in. */
+const isJsonObject = (value) => {
+	if (!/^\{\s*("|\})/.test(value)) return false;
+	try {
+		return JSON.parse(value) !== null;
+	} catch {
+		return false;
+	}
+};
 
 /** Jinja, Django, Handlebars and Angular control flow, written between the tags. */
 const TEMPLATE_TEXT = /\{%|\{\{|@(if|else|for|switch|defer)\b/;
@@ -71,7 +82,7 @@ function readAttribute(element, name, value) {
 	} else if (!PLAIN_ATTRIBUTE.test(name)) {
 		element.spread = true;
 		element.templated = true;
-	} else element.attrs.set(name, TEMPLATE_VALUE.test(value) ? BOUND : value);
+	} else element.attrs.set(name, TEMPLATE_VALUE.test(value) && !isJsonObject(value) ? BOUND : value);
 }
 
 function hasSlotName(attribs) {
@@ -90,7 +101,7 @@ function readHtmlChildren(children, parent, given) {
 		if (node.type === 'text' && node.data.trim()) parent.text = true;
 		// htmlparser2 gives <style> a type of its own. The group pure reads every block in it.
 		if (node.type === 'style') {
-			for (const offset of styleBlockOffsets(node)) appendChild(parent, createNode('style', offset));
+			for (const block of styleBlocks(node)) appendChild(parent, styleNode(block));
 			continue;
 		}
 		if (node.type !== 'tag') continue;
@@ -219,59 +230,42 @@ export function parseVue(source) {
 		roots.push(root);
 	}
 	// A style block is the component's own stylesheet, so it stands as the element it is.
-	const blocks = documentNode.children.filter((each) => each.name === 'style').flatMap(styleBlockOffsets);
+	const blocks = documentNode.children.filter((each) => each.name === 'style').flatMap(styleBlocks);
 	if (blocks.length > 0) roots.push(stylesheetRoot(blocks));
 	return roots;
 }
 
-/** Where each block of a <style> element starts in the file. */
-function styleBlockOffsets(node) {
+/** Each block of a <style> element, at its place in the file. */
+function styleBlocks(node) {
 	const text = node.children?.find((child) => child.type === 'text');
-	return text ? cssBlockOffsets(text.data).map((offset) => (text.startIndex ?? 0) + offset) : [];
+	const start = text?.startIndex ?? 0;
+	return text ? ownCssBlocks(text.data).map((block) => ({ ...block, offset: start + block.offset })) : [];
+}
+
+/** A block of CSS stands as a <style> element that carries its text, so the linter can tell whose it is. */
+function styleNode({ offset, css }) {
+	const node = createNode('style', offset);
+	node.css = css;
+	return node;
 }
 
 /** One <style> element per block, so a suppression or a baseline count covers one block and not the whole sheet. */
-function stylesheetRoot(offsets) {
+function stylesheetRoot(blocks) {
 	const root = createRoot();
-	for (const offset of offsets) appendChild(root, createNode('style', offset));
+	for (const block of blocks) appendChild(root, styleNode(block));
 	return root;
 }
 
 /**
- * The stylesheet with comments and imports of the design system blanked out, so
- * what is left is the app's own and every offset still points at the source.
+ * The stylesheet with imports of the design system blanked out, so what is left is
+ * the app's own and every offset still points at the source.
  */
 const ownCss = (source) =>
-	source
-		.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '))
-		.replace(/^\s*\/\/.*$/gm, (comment) => ' '.repeat(comment.length))
-		.replace(/@(import|use|forward)\s+(url\()?['"]?[^'";)]*(@nldd\/design-system|\/nldd\/css\/)[^;]*;/g, (line) => ' '.repeat(line.length));
+	source.replace(/@(import|use|forward)\s+(url\()?['"]?[^'";)]*(@nldd\/design-system|\/nldd\/css\/)[^;]*;/g, (line) => ' '.repeat(line.length));
 
-/**
- * Where each top-level block of the app's own CSS starts: a rule with its braces,
- * or a statement up to its semicolon.
- */
-function cssBlockOffsets(source, indented = false) {
-	// Strings and url() can hold a brace or a semicolon, so their contents are blanked first.
-	const own = ownCss(source).replace(/(["'])(?:\\.|(?!\1).)*\1|url\([^)]*\)/g, (text) => text[0] + ' '.repeat(text.length - 1));
-	// Sass without braces: a block is a line that starts at the margin.
-	if (indented) return [...own.matchAll(/^\S/gm)].map((match) => match.index);
-	const offsets = [];
-	let depth = 0;
-	let inBlock = false;
-	for (let at = 0; at < own.length; at++) {
-		const char = own[at];
-		if (!inBlock && depth === 0 && /\S/.test(char)) {
-			offsets.push(at);
-			inBlock = true;
-		}
-		if (char === '{') depth += 1;
-		else if (char === '}') {
-			depth = Math.max(0, depth - 1);
-			if (depth === 0) inBlock = false;
-		} else if (char === ';' && depth === 0) inBlock = false;
-	}
-	return offsets;
+/** The top-level blocks of the app's own CSS, each with where it starts and its text. */
+function ownCssBlocks(source, indented = false) {
+	return cssBlocks(ownCss(source), indented).map(({ start, end }) => ({ offset: start, css: source.slice(start, end) }));
 }
 
 /**
@@ -281,8 +275,8 @@ function cssBlockOffsets(source, indented = false) {
  * a block suppresses that block.
  */
 export function parseStylesheet(source, filename = '') {
-	const offsets = cssBlockOffsets(source, filename.endsWith('.sass'));
-	return offsets.length === 0 ? [] : [stylesheetRoot(offsets)];
+	const blocks = ownCssBlocks(source, filename.endsWith('.sass'));
+	return blocks.length === 0 ? [] : [stylesheetRoot(blocks)];
 }
 
 /** Every code block and inline tag in a Markdown file is a tree of its own. */
@@ -496,6 +490,22 @@ function staticJsxValue(value) {
 	return BOUND;
 }
 
+/**
+ * `translations={{ 'components.x.y': '…' }}` as JSON, so its keys can be checked. Only
+ * the keys need to be static; a value that is filled in counts as an empty text.
+ */
+function staticJsxObject(value) {
+	const expression = value?.type === 'JSXExpressionContainer' ? value.expression : undefined;
+	if (expression?.type !== 'ObjectExpression') return BOUND;
+	const entries = [];
+	for (const property of expression.properties) {
+		if (property.type !== 'Property' || property.computed || property.key.type !== 'Literal') return BOUND;
+		const text = property.value.type === 'Literal' ? property.value.value : '';
+		entries.push([String(property.key.value), String(text)]);
+	}
+	return JSON.stringify(Object.fromEntries(entries));
+}
+
 /** Props React keeps to itself: they never reach the element. */
 const REACT_ONLY = new Set(['key', 'ref', 'dangerouslySetInnerHTML', 'suppressHydrationWarning', 'suppressContentEditableWarning']);
 
@@ -507,7 +517,7 @@ function readJsxAttributes(element, attributes, roots) {
 		}
 		const name = jsxName(attribute.name);
 		const isHandler = /^on[A-Z]/.test(name) || REACT_ONLY.has(name);
-		const value = staticJsxValue(attribute.value);
+		const value = name === 'translations' ? staticJsxObject(attribute.value) : staticJsxValue(attribute.value);
 		if (!isHandler && value !== undefined) element.attrs.set(name === 'className' ? 'class' : name, value);
 		// An element passed as a prop renders elsewhere, so it is a tree of its own.
 		const nested = [];
@@ -670,6 +680,8 @@ const PARSERS = {
 	'.html': parseHtml,
 	'.htm': parseHtml,
 	'.j2': parseHtml,
+	'.tmpl': parseHtml,
+	'.gohtml': parseHtml,
 	'.jinja': parseHtml,
 	'.jinja2': parseHtml,
 	'.vue': parseVue,
@@ -677,11 +689,24 @@ const PARSERS = {
 	'.jsx': parseJsx,
 	'.tsx': parseJsx,
 	'.ts': parseLit,
+	'.js': parseLit,
+	'.mjs': parseLit,
 	'.css': parseStylesheet,
 	'.scss': parseStylesheet,
 	'.sass': parseStylesheet,
 	'.less': parseStylesheet,
 };
+
+/**
+ * How much of a file the linter reads: all its markup, only the `html` templates in
+ * a script, or nothing, for a file type it has no parser for.
+ * @returns {'markup' | 'templates' | 'none'}
+ */
+export function readerOf(filename) {
+	const parser = PARSERS[filename.slice(filename.lastIndexOf('.'))];
+	if (!parser) return 'none';
+	return parser === parseLit ? 'templates' : 'markup';
+}
 
 /** @returns {Promise<import('./tree.js').TreeNode[]>} */
 export async function parseSource(source, filename) {

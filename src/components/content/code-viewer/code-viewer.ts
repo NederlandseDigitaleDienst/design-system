@@ -47,6 +47,7 @@
  * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.
  * @attr {boolean} diff - The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked.
+ * @attr {boolean} line-numbers - Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself.
  * @attr {boolean} no-copy - Hide the copy-to-clipboard button (shown by default).
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
  * @attr {string} max-height - Tallest the block may get, as a CSS length (e.g. '400px', '50vh'). Beyond it the content scrolls vertically. Unset means no cap.
@@ -58,7 +59,7 @@
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
-import { EditorView } from '@codemirror/view';
+import { EditorView, lineNumbers } from '@codemirror/view';
 import { Compartment, EditorState, type Extension } from '@codemirror/state';
 import { NLDDCodeMirrorElement } from '../../../utilities/codemirror/codemirror-element.js';
 import { nlddCodeMirrorTheme } from '../../../utilities/codemirror/theme.js';
@@ -107,6 +108,10 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	@property({ type: Boolean, reflect: true })
 	diff = false;
 
+	/** Show the number of each line, outside `diff`. */
+	@property({ type: Boolean, reflect: true, attribute: 'line-numbers' })
+	lineNumbers = false;
+
 	/** Hide the copy-to-clipboard button (shown by default). */
 	@property({ type: Boolean, reflect: true, attribute: 'no-copy' })
 	noCopy = false;
@@ -137,6 +142,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	private _wrapCompartment = new Compartment();
 	private _diffCompartment = new Compartment();
 	private _wordCompartment = new Compartment();
+	private _lineNumbersCompartment = new Compartment();
 	private _languagePending: Promise<void> = Promise.resolve();
 	private _wordsPending: Promise<void> = Promise.resolve();
 	/** The parsed diff on screen, or null without `diff`. */
@@ -181,6 +187,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			this._languageCompartment.of([]),
 			this._diffCompartment.of(this._parsedDiff ? this._diffExtension(this._parsedDiff) : []),
 			this._wordCompartment.of([]),
+			this._lineNumbersCompartment.of(this._lineNumbersExtension()),
 		];
 	}
 
@@ -306,6 +313,9 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		if (this._isScrollable) this.view.scrollDOM.setAttribute('aria-label', this._t('components.code-viewer.region-label'));
 		if (changed.has('language')) this._applyLanguage();
 		if (changed.has('diff') && changed.get('diff') !== undefined) this._applyContent();
+		if ((changed.has('lineNumbers') && changed.get('lineNumbers') !== undefined) || (changed.has('diff') && changed.get('diff') !== undefined)) {
+			this.reconfigure(this._lineNumbersCompartment, this._lineNumbersExtension());
+		}
 		// The line labels follow a language switch of the texts.
 		if (changed.has('translations') && changed.get('translations') !== undefined && this._parsedDiff) {
 			this.reconfigure(this._diffCompartment, this._diffExtension(this._parsedDiff));
@@ -351,6 +361,11 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		this._applyWords();
 		this._updateScrollable();
 		this.requestUpdate();
+	}
+
+	/** A diff numbers its lines itself, old and new. */
+	private _lineNumbersExtension() {
+		return this.lineNumbers && !this.diff ? lineNumbers() : [];
 	}
 
 	private _diffExtension(parsed: ParsedDiff) {

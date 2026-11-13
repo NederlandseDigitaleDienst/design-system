@@ -96,6 +96,7 @@ export const identityStyles = css`
 
 	.identity__text {
 		margin: 0;
+		--context-content-color: var(--_identity-text-color);
 		color: var(--_identity-text-color);
 		font: var(--_identity-text-font);
 		text-wrap: pretty;
@@ -107,6 +108,7 @@ export const identityStyles = css`
 
 	.identity__supporting-text {
 		margin: 0;
+		--context-content-color: var(--_identity-supporting-text-color);
 		color: var(--_identity-supporting-text-color);
 		font: var(--_identity-supporting-text-font);
 		text-wrap: pretty;

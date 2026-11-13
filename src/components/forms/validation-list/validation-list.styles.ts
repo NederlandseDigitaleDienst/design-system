@@ -41,6 +41,7 @@ export const validationItemStyles = css`
 		--_validation-item-font: var(--primitives-font-body-sm-regular-tight);
 
 		display: none;
+		--context-content-color: var(--_validation-item-content-color);
 		color: var(--_validation-item-content-color);
 		font: var(--_validation-item-font);
 		text-wrap: pretty;

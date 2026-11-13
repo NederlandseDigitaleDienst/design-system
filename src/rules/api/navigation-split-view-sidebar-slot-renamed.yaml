@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-navigation-split-view > [slot="sidebar"]'
+fix: { value: { slot: { sidebar: primary-sidebar } } }
+message: 'The sidebar slot is now primary-sidebar, and what is in the old one is not shown. Rename it here and on every other nldd-navigation-split-view.'
+examples:
+  passed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="primary-sidebar"></nldd-split-view-pane></nldd-navigation-split-view>']
+  failed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="sidebar"></nldd-split-view-pane></nldd-navigation-split-view>']

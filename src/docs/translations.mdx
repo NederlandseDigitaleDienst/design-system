@@ -57,4 +57,4 @@ Een component kijkt in deze volgorde, en de eerste die iets heeft wint:
 3. **`setTranslations()`**, voor het hele pakket.
 4. **De Nederlandse standaardtekst.**
 
-Typ je een key die geen component kent, bijvoorbeeld na een hernoeming in een nieuwe versie, dan waarschuwt `setTranslations()` daarvoor in de console tijdens het ontwikkelen. Anders zou je vertaling stil niets doen.
+Typ je een key die geen component kent, bijvoorbeeld na een hernoeming in een nieuwe versie, dan waarschuwt `setTranslations()` daarvoor in de console tijdens het ontwikkelen. Anders zou je vertaling stil niets doen. Voor de `translations` op één element geldt hetzelfde, en daar telt alleen een key van dat component: een key van een ander component leest het niet. `nldd lint` vindt zo'n key al in de markup, in een `translations`-attribuut met JSON of een object in JSX, en noemt bij een hernoemde key de nieuwe naam.

@@ -36,10 +36,10 @@ export const codeViewerStyles = css`
 		--_code-viewer-diff-removed-word-background-color: light-dark(var(--primitives-color-critical-250), var(--primitives-color-critical-450));
 		--_code-viewer-diff-removed-word-content-color: light-dark(var(--primitives-color-critical-1000), var(--primitives-color-critical-975));
 		--_code-viewer-diff-removed-sign-color: light-dark(var(--primitives-color-critical-750), var(--primitives-color-critical-800));
-		--_code-viewer-diff-gutter-color: var(--semantics-content-secondary-color);
+		--_code-viewer-gutter-color: var(--semantics-content-secondary-color);
 		--_code-viewer-diff-row-content-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-neutral-975));
 		--_code-viewer-diff-row-number-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
-		--_code-viewer-diff-gutter-inline-padding: var(--primitives-space-8);
+		--_code-viewer-gutter-inline-padding: var(--primitives-space-8);
 		--_code-viewer-gutter-border-width: var(--semantics-dividers-thickness);
 		--_code-viewer-gutter-border-color: var(--semantics-dividers-color);
 
@@ -87,6 +87,7 @@ export const codeViewerStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
+		--context-content-color: var(--_code-viewer-content-color);
 		color: var(--_code-viewer-content-color);
 		font: var(--_code-viewer-font);
 	}
@@ -158,6 +159,26 @@ export const codeViewerStyles = css`
 		tab-size: 2;
 	}
 
+	/* # Line numbers */
+
+	:host([line-numbers]:not([diff])) .code-viewer .cm-scroller .cm-content {
+		padding-left: 0;
+	}
+
+	:host([line-numbers]:not([diff])) .cm-line {
+		padding-left: var(--_code-viewer-gutter-inline-padding);
+	}
+
+	:host([line-numbers]:not([diff])) .cm-gutters {
+		--context-content-color: var(--_code-viewer-gutter-color);
+		color: var(--_code-viewer-gutter-color);
+	}
+
+	:host([line-numbers]:not([diff])) .cm-lineNumbers .cm-gutterElement {
+		padding-inline: var(--_code-viewer-inline-padding) var(--_code-viewer-gutter-inline-padding);
+		text-align: right;
+	}
+
 	/* # Diff */
 
 	:host([diff]) .code-viewer .cm-scroller .cm-content {
@@ -165,7 +186,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([diff]) .cm-line {
-		padding-inline: var(--_code-viewer-diff-gutter-inline-padding) var(--_code-viewer-inline-padding);
+		padding-inline: var(--_code-viewer-gutter-inline-padding) var(--_code-viewer-inline-padding);
 	}
 
 	:host([diff]:not([no-copy]):not([copy-unavailable])) .code-viewer .cm-scroller .cm-content {
@@ -187,11 +208,12 @@ export const codeViewerStyles = css`
 	}
 
 	:host([diff]) .cm-gutters {
-		color: var(--_code-viewer-diff-gutter-color);
+		--context-content-color: var(--_code-viewer-gutter-color);
+		color: var(--_code-viewer-gutter-color);
 	}
 
 	:host([diff]) .cm-diff-gutter .cm-gutterElement {
-		padding-inline: var(--_code-viewer-diff-gutter-inline-padding) 0;
+		padding-inline: var(--_code-viewer-gutter-inline-padding) 0;
 		text-align: right;
 	}
 
@@ -200,13 +222,14 @@ export const codeViewerStyles = css`
 	}
 
 	:host([diff]) .cm-diff-sign-gutter .cm-gutterElement {
-		padding-inline: var(--_code-viewer-diff-gutter-inline-padding);
+		padding-inline: var(--_code-viewer-gutter-inline-padding);
 		text-align: center;
 	}
 
 	/* A diff row is three steps from the tinted surface (25 to 100, 75 to 200), so
 	   its text takes three steps more as well. Only on the row. */
 	:host([diff]) .cm-line:is(.cm-diff-added, .cm-diff-removed) {
+		--context-content-color: var(--_code-viewer-diff-row-content-color);
 		color: var(--_code-viewer-diff-row-content-color);
 		--semantics-code-syntax-comment-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
 		--semantics-code-syntax-punctuation-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-neutral-975));
@@ -236,6 +259,7 @@ export const codeViewerStyles = css`
 	}
 
 	:is(.cm-diff-old-gutter, .cm-diff-new-gutter) .cm-gutterElement:is(.cm-diff-added, .cm-diff-removed) {
+		--context-content-color: var(--_code-viewer-diff-row-number-color);
 		color: var(--_code-viewer-diff-row-number-color);
 	}
 
@@ -247,11 +271,13 @@ export const codeViewerStyles = css`
 
 	.cm-diff-sign-gutter .cm-diff-added {
 		background-image: linear-gradient(var(--_code-viewer-diff-added-word-background-color), var(--_code-viewer-diff-added-word-background-color));
+		--context-content-color: var(--_code-viewer-diff-added-sign-color);
 		color: var(--_code-viewer-diff-added-sign-color);
 	}
 
 	.cm-diff-sign-gutter .cm-diff-removed {
 		background-image: linear-gradient(var(--_code-viewer-diff-removed-word-background-color), var(--_code-viewer-diff-removed-word-background-color));
+		--context-content-color: var(--_code-viewer-diff-removed-sign-color);
 		color: var(--_code-viewer-diff-removed-sign-color);
 	}
 
@@ -262,6 +288,7 @@ export const codeViewerStyles = css`
 
 	.cm-diff-added-word,
 	.cm-diff-added-word * {
+		--context-content-color: var(--_code-viewer-diff-added-word-content-color);
 		color: var(--_code-viewer-diff-added-word-content-color);
 	}
 
@@ -272,12 +299,14 @@ export const codeViewerStyles = css`
 
 	.cm-diff-removed-word,
 	.cm-diff-removed-word * {
+		--context-content-color: var(--_code-viewer-diff-removed-word-content-color);
 		color: var(--_code-viewer-diff-removed-word-content-color);
 	}
 
 	.cm-diff-hunk {
-		padding-inline: var(--_code-viewer-diff-gutter-inline-padding) var(--_code-viewer-inline-padding);
-		color: var(--_code-viewer-diff-gutter-color);
+		padding-inline: var(--_code-viewer-gutter-inline-padding) var(--_code-viewer-inline-padding);
+		--context-content-color: var(--_code-viewer-gutter-color);
+		color: var(--_code-viewer-gutter-color);
 	}
 
 	.cm-diff-line-label,

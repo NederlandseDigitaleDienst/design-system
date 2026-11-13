@@ -22,7 +22,7 @@ Twee uitzonderingen:
 
 ## Wat je kunt verwachten
 
-Er is één maintainer, en die onderhoudt dit systeem naast ander werk. Er staat dus geen reactietermijn tegenover je vraag, en het antwoord kan zijn dat iets voorlopig niet wordt opgepakt. Wat afvalt krijgt een reden in het issue, zodat je weet waar je aan toe bent en niet blijft wachten. Wie wat beslist staat in [`PROJECT_GOVERNANCE.md`](./PROJECT_GOVERNANCE.md).
+Er is één maintainer, en die onderhoudt dit designsysteem naast ander werk. Er staat dus geen reactietermijn tegenover je vraag, en het antwoord kan zijn dat iets voorlopig niet wordt opgepakt. Wat afvalt krijgt een reden in het issue, zodat je weet waar je aan toe bent en niet blijft wachten. Wie wat beslist staat in [`PROJECT_GOVERNANCE.md`](./PROJECT_GOVERNANCE.md).
 
 Ondersteund is de laatst gepubliceerde versie op npm. Fixes komen in een nieuwe release en worden niet teruggezet naar oudere versies.
 

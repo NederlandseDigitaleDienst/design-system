@@ -14,7 +14,9 @@
  * Without `size` the avatar scales with its container, like `nldd-icon`; a
  * fixed size (the same spacer-aligned scale, 16 through 96) is the exception.
  * The initials and the icon scale along. Wide initials (WW, MMM) are scaled
- * down automatically so they stay inside the shape.
+ * down automatically so they stay inside the shape. Four characters fit an
+ * organization acronym such as LVVN or JenV; they read well from 40px, so below
+ * that pick a shorter form.
  *
  * Accessibility: the host element carries the meaning. With a `name` (and
  * without `decorative`) it gets `role="img"` with the name as its label. When
@@ -26,10 +28,10 @@
  *
  * @attr {string} type - `person` (circle, person icon) or `organization` (rounded, building icon); default `person`
  * @attr {string} size - `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along
- * @attr {string} color - `neutral` (the default, a neutral fill) or `inherit` (fill in the content color: the `--context-content-color` channel, or `currentColor` when that is unset; text in the contrast color, so the avatar can replace an icon in a button for instance)
+ * @attr {string} color - `neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance)
  * @attr {boolean} icon-aligned - Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin)
  * @attr {string} name - Name of the person or organization; supplies the derived initials and the accessible label
- * @attr {string} initials - Explicit initials, at most 3 characters (overrides what is derived from `name`; also for organization acronyms)
+ * @attr {string} initials - Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form
  * @attr {string} src - Image source; falls back to initials or icon when it fails to load
  * @attr {string} srcset - Responsive source set for the image (the component sets `sizes` itself)
  * @attr {string} icon - Overrides the type-dependent fallback icon
@@ -58,7 +60,7 @@
  * ></nldd-avatar>
  * <nldd-avatar
  * 	name="Bart van de Biezen"
- * 	color="inherit"
+ * 	color="content"
  * ></nldd-avatar>
  * <nldd-avatar
  * 	name="Bart van de Biezen"
@@ -83,7 +85,7 @@ import '../icon/icon.js';
 
 export type AvatarType = 'person' | 'organization';
 
-export type AvatarColor = 'neutral' | 'inherit';
+export type AvatarColor = 'neutral' | 'content';
 
 /** Fraction of the shape width the initials may occupy before they are scaled to
  *  fit. Leaves margin inside the circle so wide glyphs stay clear of the edge
@@ -175,7 +177,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	/** Initials shown when there is no image: an explicit `initials` wins,
 	 *  otherwise the first letter of the first and last word of `name`. */
 	get resolvedInitials(): string {
-		if (this.initials) return this.initials.slice(0, 3);
+		if (this.initials) return this.initials.slice(0, 4);
 		const words = this.name.trim().split(/\s+/).filter(Boolean);
 		if (words.length === 0) return '';
 		const first = words[0].charAt(0);

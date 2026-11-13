@@ -11,6 +11,7 @@
 
 import { compile } from 'css-select';
 import { parse } from 'css-what';
+import { isDesignSystemCss } from './css.js';
 import { BOUND, adapter, walk } from './tree.js';
 
 /** In W+ a sibling behind a condition might not show, as with `v-if`, `v-else` and tabs on `v-show`. */
@@ -71,7 +72,7 @@ function createFieldLabelCheck(isInput, allowMaybe) {
  * with `@accepts` in its JSDoc.
  *
  * What a file renders is judged in that file: that a parent elsewhere might put it
- * inside an nldd-rich-text does not make plain HTML written here the system's. A
+ * inside an nldd-rich-text does not make plain HTML written here the design system's. A
  * tree the file builds under a name (a helper component, a variable) is judged where
  * the file uses that name. Used nowhere here, or under a component of the app, it is
  * unknown.
@@ -141,7 +142,7 @@ function forWorld(tokens, classes, widen) {
 	});
 }
 
-export function createEngine({ classes = {}, tags = {} } = {}) {
+export function createEngine({ classes = {}, tags = {}, designSystemCss = {} } = {}) {
 	const shared = classPseudos(classes);
 	const pseudos = {
 		...shared,
@@ -154,6 +155,8 @@ export function createEngine({ classes = {}, tags = {} } = {}) {
 			for (let parent = node.parent; parent; parent = parent.parent) if (parent.name === name) return true;
 			return false;
 		},
+		// CSS the design system ships: a block it recognizes, or a stylesheet with nothing else in it.
+		'design-system': (node) => node.designSystem ?? (node.css !== undefined && isDesignSystemCss(node.css, designSystemCss)),
 		// No element and no text: an empty mount point such as <div id="app"></div>.
 		blank: (node) => node.children.length === 0 && !node.text,
 		// Only exists on a running page, so in source it is never true.

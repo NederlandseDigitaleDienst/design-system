@@ -1,6 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -16,7 +16,8 @@ export const pageFooterStyles = css`
 		--_page-footer-ribbon-color: var(--semantics-brand-ribbon-color);
 		--_page-footer-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-50));
 		--_page-footer-divider-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-150));
-		--context-parent-background-color: var(--_page-footer-background-color);
+		--context-background-color: var(--_page-footer-background-color);
+		${surfaceContent}
 
 		container-type: inline-size;
 		display: block;
@@ -220,11 +221,13 @@ export const pageFooterLegalBarItemStyles = css`
 
 	.page-footer__legal-bar-item {
 		display: inline-flex;
+		--context-content-color: var(--_page-footer-legal-bar-item-color);
 		color: var(--_page-footer-legal-bar-item-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 	}
 
 	.page-footer__legal-bar-item-link {
+		--context-content-color: var(--_page-footer-legal-bar-item-color);
 		color: var(--_page-footer-legal-bar-item-color);
 		text-decoration: underline;
 	}

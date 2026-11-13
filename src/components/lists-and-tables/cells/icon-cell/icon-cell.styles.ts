@@ -10,7 +10,7 @@ export const iconCellStyles = css`
 
 	:host {
 		--_icon-cell-size: var(--primitives-space-24);
-		--_icon-cell-content-color: var(--context-content-color, var(--semantics-content-color));
+		--_icon-cell-content-color: var(--context-content-color);
 
 		display: flex;
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
@@ -40,23 +40,23 @@ export const iconCellStyles = css`
 	/* ## Color */
 
 	:host([color="secondary"]) {
-		--_icon-cell-content-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_icon-cell-content-color: var(--context-content-secondary-color);
 	}
 
 	:host([color="accent"]) {
-		--_icon-cell-content-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
+		--_icon-cell-content-color: var(--context-content-accent-color);
 	}
 
 	:host([color="success"]) {
-		--_icon-cell-content-color: var(--context-content-success-color, var(--semantics-content-success-color));
+		--_icon-cell-content-color: var(--context-content-success-color);
 	}
 
 	:host([color="warning"]) {
-		--_icon-cell-content-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
+		--_icon-cell-content-color: var(--context-content-warning-color);
 	}
 
 	:host([color="critical"]) {
-		--_icon-cell-content-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
+		--_icon-cell-content-color: var(--context-content-critical-color);
 	}
 
 

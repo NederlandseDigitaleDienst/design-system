@@ -4,6 +4,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { parseArgs } from 'node:util';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
+import { declarations, TOKEN_PREFIX } from './css.js';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, OPT_IN_GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
@@ -13,7 +14,7 @@ const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
     --format text|json|github       default: text
     --fix                           apply the fixes that are certain: what only got another name
-    --pure                          also check that everything comes from the system: no class,
+    --pure                          also check that everything comes from the design system: no class,
                                     style, plain HTML or stylesheet of your own (the group pure).
                                     Reads every file, stylesheets included, so it takes longer
     --update-baseline               accept what is there now, report only new findings
@@ -75,7 +76,7 @@ function installedVersion(directory) {
 
 /**
  * The linter knows the API of its own version, so a project's own `nldd` is always
- * right. A newer one, through `npx @nldd/design-system@latest`, is how you see what
+ * right. A newer one, through `npx @nldd/design-system@<version>`, is how you see what
  * an upgrade will break: useful, as long as it is clear that is what you are looking at.
  */
 function noteOtherVersion(root) {
@@ -166,7 +167,7 @@ async function runLint(data, paths, options) {
 	// An app that is to be pure has to be read in full: a file without a single component
 	// is the least pure of all, and a stylesheet is one too.
 	const pure = data.rules.some((rule) => OPT_IN_GROUPS.includes(rule.group) && severities[rule.id] !== 'off');
-	const extensions = pure ? [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS] : DEFAULT_EXTENSIONS;
+	const extensions = [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS];
 
 	const inputs = options.stdin
 		? [{ filename: resolve(root, options.filename ?? 'stdin.html'), source: readFileSync(0, 'utf8') }]
@@ -178,14 +179,26 @@ async function runLint(data, paths, options) {
 	// Most files in an app use no component at all, and those need no parser either.
 	// Tightening has to see every file the baseline names, also one without a component left.
 	const inBaseline = options['tighten-baseline'] ? new Set(Object.keys(readBaseline(root, canonical))) : new Set();
-	const relevant = pure ? inputs : inputs.filter(({ filename, source }) => /nldd-|Nldd/.test(source) || config.wrappers || inBaseline.has(relative(root, filename)));
+	// A stylesheet counts for the tokens it names and the variables it sets, and only then.
+	const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));
+	const namesTokens = (source) => /var\(\s*--(primitives|semantics|components|context)-|--_[a-z]/.test(source);
+	const relevant = pure
+		? inputs
+		: inputs.filter(({ filename, source }) =>
+				isStylesheet(filename)
+					? namesTokens(source) || inBaseline.has(relative(root, filename))
+					: /nldd-|Nldd/.test(source) || namesTokens(source) || config.wrappers || inBaseline.has(relative(root, filename)),
+			);
+	const counted = pure ? inputs.length : inputs.filter(({ filename }) => !isStylesheet(filename)).length + relevant.filter(({ filename }) => isStylesheet(filename)).length;
+	// What the project declares itself, in any file read, is its own token and not a typo.
+	const projectTokens = [...new Set(inputs.flatMap(({ source }) => (/--(primitives|semantics|components|context)-/.test(source) ? declarations(source).map(({ name }) => name) : [])).filter((name) => TOKEN_PREFIX.test(name)))];
 	const results = [];
 	let fixed = 0;
 	let fixedFiles = 0;
 	const renamedTags = new Map();
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
-		const linter = createLinter(data, { wrappers: config.wrappers, severities });
+		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens });
 		for (const { filename, source } of relevant) {
 			const canWrite = options.fix && isUtf8(filename);
 			if (options.fix && !canWrite) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
@@ -203,7 +216,7 @@ async function runLint(data, paths, options) {
 			results.push({ filename, source: change.source, findings: change.findings });
 		}
 	}
-	if (options.fix) console.error(`Fixed ${fixed} in ${fixedFiles} of ${inputs.length} files.`);
+	if (options.fix) console.error(`Fixed ${fixed} in ${fixedFiles} of ${counted} files.`);
 	if (renamedTags.size > 0) {
 		const references = fixReferences(renamedTags, paths, root, config.exclude);
 		if (references.fixed > 0) console.error(`Renamed ${references.fixed} imports, classes and selectors of old tags in ${references.files} files.`);
@@ -238,7 +251,7 @@ async function runLint(data, paths, options) {
 
 	const context = {
 		root,
-		files: inputs.length,
+		files: counted,
 		ms: Math.round(performance.now() - started),
 		skipped,
 		loose: looseInBaseline(results, baseline, root, ran),

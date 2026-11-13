@@ -17,6 +17,7 @@ export const fileFieldStyles = css`
 		--_file-field-value-color: var(--semantics-content-color);
 		--_file-field-text-font: var(--semantics-input-fields-md-text-font);
 		--_file-field-clear-button-padding-right: calc((var(--_file-field-min-size) - var(--semantics-controls-sm-min-size)) / 2);
+		--_file-field-nested-control-corner-radius: calc(var(--_file-field-corner-radius) - var(--_file-field-clear-button-padding-right));
 		--_file-field-more-button-padding-right: var(--_file-field-clear-button-padding-right);
 		--_file-field-validation-icon-area-padding-right: var(--_file-field-inline-padding);
 		--_file-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
@@ -280,6 +281,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__choose-text {
+		--context-content-color: var(--_file-field-choose-text-color);
 		color: var(--_file-field-choose-text-color);
 		font: var(--_file-field-choose-text-font);
 	}
@@ -290,10 +292,12 @@ export const fileFieldStyles = css`
 		margin-left: var(--_file-field-inline-padding);
 		width: var(--_file-field-file-icon-size);
 		height: var(--_file-field-file-icon-size);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 	}
 
 	.file-field__upload-icon {
+		--context-content-color: var(--_file-field-accepted-types-color);
 		color: var(--_file-field-accepted-types-color);
 	}
 
@@ -350,6 +354,7 @@ export const fileFieldStyles = css`
 		padding-right: var(--_file-field-inline-padding);
 		padding-left: var(--_file-field-inline-padding);
 		flex-grow: 1;
+		--context-content-color: var(--_file-field-value-color);
 		color: var(--_file-field-value-color);
 		font: var(--_file-field-text-font);
 	}
@@ -370,10 +375,12 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__drop-text {
+		--context-content-color: var(--_file-field-choose-text-color);
 		color: var(--_file-field-choose-text-color);
 	}
 
 	.file-field__rejected-text {
+		--context-content-color: var(--_file-field-rejected-color);
 		color: var(--_file-field-rejected-color);
 	}
 
@@ -385,10 +392,12 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__drop-hint-text {
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 	}
 
 	.file-field__drop-area .file-field__drop-hint-text {
+		--context-content-color: var(--_file-field-drop-area-drop-hint-text-color);
 		color: var(--_file-field-drop-area-drop-hint-text-color);
 	}
 
@@ -473,6 +482,10 @@ export const fileFieldStyles = css`
 		align-items: center;
 	}
 
+	.file-field__edit-button-group :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_file-field-nested-control-corner-radius);
+	}
+
 	.file-field__edit-button-group:not(:last-child) {
 		padding-right: var(--primitives-space-0);
 	}
@@ -487,10 +500,12 @@ export const fileFieldStyles = css`
 	}
 
 	:host([valid]) .file-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .file-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 
@@ -535,11 +550,13 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field.is-drag-over :is(.file-field__upload-icon, .file-field__accepted-types) {
+		--context-content-color: var(--_file-field-choose-text-color);
 		color: var(--_file-field-choose-text-color);
 	}
 
 	.file-field.is-drag-rejected :is(.file-field__upload-icon, .file-field__accepted-types),
 	.file-field.is-refused .file-field__upload-icon {
+		--context-content-color: var(--_file-field-rejected-color);
 		color: var(--_file-field-rejected-color);
 	}
 
@@ -561,6 +578,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field--area .file-field__accepted-types {
+		--context-content-color: var(--_file-field-accepted-types-color);
 		color: var(--_file-field-accepted-types-color);
 		font: var(--_file-field-accepted-types-font);
 	}

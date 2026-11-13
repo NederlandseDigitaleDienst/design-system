@@ -70,14 +70,14 @@ describe('nldd-title', () => {
 		expect(el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="end"]')!.assignedElements().length).toBeGreaterThan(0);
 	});
 
-	it('color="inherit" follows the surrounding text color, the default does not', async () => {
+	it('follows the context, not the CSS color around it', async () => {
 		// The vitest page does not load variables.css, so define the token the
 		// default path resolves against — otherwise both paths would inherit.
 		el = await fixture(`
 			<div>
-				<style>:root { --semantics-content-color: rgb(99, 99, 99); }</style>
+				<style>:root { --semantics-content-color: rgb(99, 99, 99); --context-content-color: var(--semantics-content-color); }</style>
 				<div style="color: rgb(10, 20, 30);">
-					<nldd-title color="inherit"><h2 id="inherit-title">A</h2></nldd-title>
+					<nldd-title style="--context-content-color: rgb(1, 2, 3);"><h2 id="context-title">A</h2></nldd-title>
 					<nldd-title><h2 id="default-title">B</h2></nldd-title>
 				</div>
 			</div>
@@ -85,7 +85,7 @@ describe('nldd-title', () => {
 		const titles = el.querySelectorAll('nldd-title');
 		await waitForUpdate(titles[0] as HTMLElement);
 		await waitForUpdate(titles[1] as HTMLElement);
-		expect(getComputedStyle(el.querySelector('#inherit-title')!).color).toBe('rgb(10, 20, 30)');
+		expect(getComputedStyle(el.querySelector('#context-title')!).color).toBe('rgb(1, 2, 3)');
 		expect(getComputedStyle(el.querySelector('#default-title')!).color).toBe('rgb(99, 99, 99)');
 	});
 
@@ -154,20 +154,20 @@ describe('nldd-title – text and heading-level', () => {
 	it('gives text the same measure, wrapping and color handling as a slotted heading', async () => {
 		el = await fixture(`
 			<div>
-				<style>:root { --semantics-content-color: rgb(99, 99, 99); }</style>
+				<style>:root { --semantics-content-color: rgb(99, 99, 99); --context-content-color: var(--semantics-content-color); }</style>
 				<div style="color: rgb(10, 20, 30);">
-					<nldd-title id="inherit" color="inherit" text="A" heading-level="2"></nldd-title>
+					<nldd-title id="context" style="--context-content-color: rgb(1, 2, 3);" text="A" heading-level="2"></nldd-title>
 					<nldd-title id="default" size="display-2" text="B" heading-level="2"></nldd-title>
 				</div>
 			</div>
 		`);
-		const inherit = el.querySelector('#inherit') as HTMLElement;
+		const context = el.querySelector('#context') as HTMLElement;
 		const standard = el.querySelector('#default') as HTMLElement;
-		await waitForUpdate(inherit);
+		await waitForUpdate(context);
 		await waitForUpdate(standard);
-		const inheritText = getComputedStyle(inherit.shadowRoot!.querySelector('.title__text')!);
+		const contextText = getComputedStyle(context.shadowRoot!.querySelector('.title__text')!);
 		const standardText = getComputedStyle(standard.shadowRoot!.querySelector('.title__text')!);
-		expect(inheritText.color).toBe('rgb(10, 20, 30)');
+		expect(contextText.color).toBe('rgb(1, 2, 3)');
 		expect(standardText.color).toBe('rgb(99, 99, 99)');
 		expect(standardText.marginTop).toBe('0px');
 		expect(standardText.textWrap).toBe('balance');

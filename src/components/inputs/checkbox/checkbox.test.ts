@@ -260,7 +260,7 @@ describe('nldd-checkbox no-tab', () => {
 	});
 });
 
-describe('nldd-checkbox – color="inherit"', () => {
+describe('nldd-checkbox – color="content"', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
@@ -269,8 +269,8 @@ describe('nldd-checkbox – color="inherit"', () => {
 
 	it('fills a checked box with the surrounding text color, and draws the mark in the surface color', async () => {
 		el = await fixture(`
-			<div style="color: rgb(255, 255, 255); --context-parent-background-color: rgb(24, 69, 118);">
-				<nldd-checkbox color="inherit" checked accessible-label="Afgerond"></nldd-checkbox>
+			<div style="--context-content-color: rgb(255, 255, 255); --context-background-color: rgb(24, 69, 118);">
+				<nldd-checkbox color="content" checked accessible-label="Afgerond"></nldd-checkbox>
 			</div>`);
 		const checkbox = el.querySelector('nldd-checkbox') as NLDDCheckbox;
 		await waitForUpdate(checkbox);
@@ -280,32 +280,26 @@ describe('nldd-checkbox – color="inherit"', () => {
 		expect(getComputedStyle(icon).color).toBe('rgb(24, 69, 118)');
 	});
 
-	// Without a surface color the mark is white or black, whichever reads on
-	// the text color the box is filled with.
-	it.each([
-		['white', 'rgb(255, 255, 255)', [0, 0, 0]],
-		['dark blue', 'rgb(24, 69, 118)', [255, 255, 255]],
-	])('draws the mark in black or white on %s text when no surface color is set', async (_name, text, mark) => {
+	// Without a surface of its own the mark takes the page background, the
+	// default of --context-background-color.
+	it('draws the mark in the page background when no surface sets one', async () => {
 		const unloadTokens = loadTokens();
 		try {
 			el = await fixture(`
-				<div style="color: ${text};">
-					<nldd-checkbox color="inherit" checked accessible-label="Afgerond"></nldd-checkbox>
+				<div style="--context-content-color: rgb(24, 69, 118);">
+					<nldd-checkbox color="content" checked accessible-label="Afgerond"></nldd-checkbox>
 				</div>`);
 			const checkbox = el.querySelector('nldd-checkbox') as NLDDCheckbox;
 			await waitForUpdate(checkbox);
 			const icon = checkbox.shadowRoot!.querySelector('.checkbox__check-icon') as Element;
-			expect(toRgb(getComputedStyle(icon).color)).toEqual(mark);
+			const page = getComputedStyle(document.body).getPropertyValue('--semantics-surfaces-base-background-color');
+			const probe = document.createElement('div');
+			probe.style.color = page;
+			document.body.append(probe);
+			expect(getComputedStyle(icon).color).toBe(getComputedStyle(probe).color);
+			probe.remove();
 		} finally {
 			unloadTokens();
 		}
 	});
 });
-
-// The computed color can come back as color(xyz …); a canvas reads it as RGB.
-function toRgb(color: string): number[] {
-	const context = document.createElement('canvas').getContext('2d')!;
-	context.fillStyle = color;
-	context.fillRect(0, 0, 1, 1);
-	return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
-}

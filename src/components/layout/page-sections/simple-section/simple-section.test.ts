@@ -66,7 +66,7 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 		await waitForUpdate(el);
 		expect(el.style.backgroundColor).toBe('');
 		expect(
-			el.style.getPropertyValue('--context-parent-background-color'),
+			el.style.getPropertyValue('--context-background-color'),
 		).toBe('');
 	});
 
@@ -84,7 +84,7 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 	it('paints and cascades the base surface', async () => {
 		const section = await surface('base', '--semantics-surfaces-base-background-color');
 		expect(getComputedStyle(section).backgroundColor).toBe('rgb(1, 2, 3)');
-		expect(getComputedStyle(section.querySelector('p')!).getPropertyValue('--context-parent-background-color')).toBe('rgb(1, 2, 3)');
+		expect(getComputedStyle(section.querySelector('p')!).getPropertyValue('--context-background-color')).toBe('rgb(1, 2, 3)');
 		expect(section.hasAttribute('style')).toBe(false);
 	});
 
@@ -96,7 +96,7 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 	it('paints the accent-tinted surface and cascades it', async () => {
 		const section = await surface('accent-tinted', '--semantics-surfaces-accent-tinted-background-color');
 		expect(getComputedStyle(section).backgroundColor).toBe('rgb(1, 2, 3)');
-		expect(getComputedStyle(section.querySelector('p')!).getPropertyValue('--context-parent-background-color')).toBe('rgb(1, 2, 3)');
+		expect(getComputedStyle(section.querySelector('p')!).getPropertyValue('--context-background-color')).toBe('rgb(1, 2, 3)');
 	});
 
 	it('paints nothing for inherit', async () => {

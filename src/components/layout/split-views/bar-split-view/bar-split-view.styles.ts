@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { surfaceContent } from '../../../../assets/styles/shadow-resets.js';
 
 export const barSplitViewStyles = css`
 	:host {
@@ -9,7 +10,7 @@ export const barSplitViewStyles = css`
 	/* # Host */
 
 	:host {
-		--_bar-split-view-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_bar-split-view-background-color: var(--context-background-color);
 
 		display: flex;
 		background-color: var(--_bar-split-view-background-color);
@@ -23,13 +24,15 @@ export const barSplitViewStyles = css`
 	}
 
 	:host([background="base"]) {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_bar-split-view-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
+		--_bar-split-view-background-color: var(--context-background-color);
 	}
 
 	:host([background="tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_bar-split-view-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
+		${surfaceContent}
+		--_bar-split-view-background-color: var(--context-background-color);
 	}
 
 	/* Root-scroll mode: the document scrolls (ScrollModeController /

@@ -94,17 +94,16 @@ nldd-shell                            de buitenste schil
     >
       <nldd-image slot="media"></nldd-image>
       <nldd-title
-        color="inherit"
         text="Regel je aanvraag online"
         heading-level="1"
       ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
-      <nldd-rich-text color="inherit">
+      <nldd-rich-text>
         <p>Dien een aanvraag in, volg de behandeling en vind je documenten terug, zonder dat je hoeft te weten bij welke afdeling het ligt.</p>
       </nldd-rich-text>
       <nldd-spacer size="24"></nldd-spacer>
       <nldd-button
-        appearance="inherit-filled"
+        appearance="content-filled"
         text="Aanvraag starten"
         href="#aanpak"
       ></nldd-button>
@@ -403,11 +402,11 @@ Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `
 
 ## Gezien in
 
-Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.
+Deze compositie komt van de publieke pagina's op dit designsysteem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.
 
 ## Regels
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
 - `hero-goes-first`: Make nldd-hero the first section, which says what the site is for.
-- `top-navigation-bar-no-menu-row`: Let the pages be the navigation: put the entries in the home as cards and lists, and keep search and language in `utility`.
+- `top-navigation-bar-no-menu-row`: Leave `global` empty and let the pages be the navigation: put the entries on the home page as `nldd-card` or `nldd-list`, and keep search and language in `utility`.

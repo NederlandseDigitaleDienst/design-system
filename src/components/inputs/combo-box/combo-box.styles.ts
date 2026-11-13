@@ -17,6 +17,7 @@ export const comboBoxStyles = css`
 		--_combo-box-inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
 		--_combo-box-text-font: var(--semantics-input-fields-md-text-font);
 		--_combo-box-end-padding-right: calc((var(--_combo-box-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_combo-box-nested-control-corner-radius: calc(var(--_combo-box-corner-radius) - var(--_combo-box-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_combo-box-button-focus-z-index: 1;
 		--_combo-box-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 
@@ -101,12 +102,14 @@ export const comboBoxStyles = css`
 		flex-shrink: 1;
 		flex-basis: 0;
 		align-self: stretch;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_combo-box-text-font);
 		appearance: none;
 	}
 
 	.combo-box__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -143,6 +146,10 @@ export const comboBoxStyles = css`
 		align-items: center;
 	}
 
+	.combo-box__end :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_combo-box-nested-control-corner-radius);
+	}
+
 	.combo-box__clear-button:focus-within {
 		position: relative;
 		z-index: var(--_combo-box-button-focus-z-index);
@@ -157,10 +164,12 @@ export const comboBoxStyles = css`
 	}
 
 	:host([valid]) .combo-box__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .combo-box__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 

@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 export const menuStyles = css`
 	:host {
@@ -70,6 +70,8 @@ export const menuStyles = css`
 	/* # Block */
 
 	.menu {
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
 		display: flex;
 		box-sizing: border-box;
 		border-radius: var(--semantics-overlays-corner-radius);
@@ -286,9 +288,23 @@ export const menuItemStyles = css`
 	   by the inner nldd-text-cell. The control cursor token (default, like the
 	   other controls) replaces the UA link pointer and stays overridable. */
 	a.menu__item {
+		position: relative;
 		color: inherit;
 		text-decoration: none;
 		cursor: var(--semantics-controls-link-cursor);
+	}
+
+	/* Visually hidden: part of the link's accessible name, never shown. */
+	.menu__link-hint {
+		position: absolute;
+		margin: -1px;
+		border: 0;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		padding: 0;
+		white-space: nowrap;
+		clip-path: inset(50%);
 	}
 
 	.menu__item:focus-visible {
@@ -400,6 +416,7 @@ export const menuGroupStyles = css`
 		padding-bottom: var(--primitives-space-1);
 		padding-left: var(--primitives-space-4);
 		font: var(--primitives-font-body-sm-regular-tight);
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		text-wrap: balance;
 	}

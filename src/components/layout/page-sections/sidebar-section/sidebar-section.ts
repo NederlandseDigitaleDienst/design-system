@@ -13,8 +13,7 @@
  *   md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed`
  *   attribute. The consumer owns the trigger: place
  *   any chrome (a button, a chosen-filters bar, …) wherever you want, show it only
- *   while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by
- *   reading `collapsed` / listening to `collapse-change`), and call `show()` /
+ *   while collapsed with `sidebar-section-only="collapsed"` on it, and call `show()` /
  *   `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events.
  *   The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a
  *   "Sluit" button — overridable via the `sheet-top-title-bar` slot.
@@ -44,6 +43,7 @@
  * Inherits block `padding` and `height` from PageSectionMixin.
  *
  * @element nldd-sidebar-section
+ * @descendantattr {'collapsed'|'expanded'} sidebar-section-only - Set on anything inside the section, at any depth: shows that element only while the sidebar is a sheet (`collapsed`), such as the button that opens it, or only while it is a box beside the main (`expanded`), such as a heading the sheet's title bar repeats. Put it on an nldd-spacer next to such an element too, so the space goes with it.
  *
  * @attr {string} [width] - Body max-width: 'full' removes the constraint; any CSS length overrides the default.
  * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
@@ -83,6 +83,24 @@ import '../../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDSheet } from '../../sheet/sheet.js';
 import { translate } from '../../../../utilities/translations.js';
 import { focusTemporarily, hashTarget, samePageHash } from '../../../../utilities/focus-target.js';
+
+/**
+ * `sidebar-section-only` sits on elements in the light DOM, at any depth, which the
+ * section's own styles cannot reach. So the rule goes into the tree the section is
+ * in, once, and needs no stylesheet from the app.
+ */
+const onlyRule = typeof CSSStyleSheet === 'undefined' ? null : new CSSStyleSheet();
+onlyRule?.replaceSync(`
+	nldd-sidebar-section:not([collapsed]) [sidebar-section-only="collapsed"],
+	nldd-sidebar-section[collapsed] [sidebar-section-only="expanded"] {
+		display: none;
+	}
+`);
+
+function adoptOnlyRule(root: Node): void {
+	if (!onlyRule || !(root instanceof Document || root instanceof ShadowRoot)) return;
+	if (!root.adoptedStyleSheets.includes(onlyRule)) root.adoptedStyleSheets = [...root.adoptedStyleSheets, onlyRule];
+}
 
 @customElement('nldd-sidebar-section')
 export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
@@ -132,6 +150,7 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
+		adoptOnlyRule(this.getRootNode());
 		// Collapse on the section's OWN width, not the viewport, so it adapts to
 		// whatever space it's placed in (a narrow column, a split-view pane, …).
 		this._ro = new ResizeObserver(this._onResize);

@@ -52,6 +52,12 @@
  * `span` when there is no page for the person), without the `@`. A link reads
  * as the same token there; a span keeps the color and the icon without the tint.
  *
+ * A line indented four spaces stays text, unlike CommonMark, where it starts a
+ * code block: in a field for prose that is pasted or indented text, and code
+ * takes a fence. Turn indented code off in the renderer too, so the page shows
+ * what the editor showed: `md.disable('code')` in markdown-it and
+ * markdown-it-py, for example.
+ *
  * @element nldd-text-editor
  *
  * @attr {string} value - Editor content (markdown)

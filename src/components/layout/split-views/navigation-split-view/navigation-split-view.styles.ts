@@ -1,4 +1,5 @@
 import { css, unsafeCSS } from 'lit';
+import { surfaceContent } from '../../../../assets/styles/shadow-resets.js';
 import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
@@ -15,7 +16,7 @@ export const navigationSplitViewStyles = css`
 	/* # Host */
 
 	:host {
-		--_navigation-split-view-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_navigation-split-view-background-color: var(--context-background-color);
 		/* Pane min-widths — read by JS via getComputedStyle in firstUpdated */
 		--_navigation-split-view-primary-sidebar-min-width: var(--primitives-area-320);
 		--_navigation-split-view-secondary-sidebar-min-width: var(--primitives-area-320);
@@ -33,13 +34,15 @@ export const navigationSplitViewStyles = css`
 	}
 
 	:host([background="base"]) {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_navigation-split-view-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
+		--_navigation-split-view-background-color: var(--context-background-color);
 	}
 
 	:host([background="tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_navigation-split-view-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
+		${surfaceContent}
+		--_navigation-split-view-background-color: var(--context-background-color);
 	}
 
 	/* Root-scroll mode: flow instead of clipping (see ScrollModeController /

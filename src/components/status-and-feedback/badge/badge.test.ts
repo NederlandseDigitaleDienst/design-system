@@ -178,7 +178,7 @@ function picked(color: string): 'black' | 'white' | 'iets anders' {
 	return 'iets anders';
 }
 
-describe('nldd-badge color="inherit"', () => {
+describe('nldd-badge color="content"', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
@@ -193,7 +193,7 @@ describe('nldd-badge color="inherit"', () => {
 		// not load, so the fixture carries the same formula.
 		el = await fixture(`
 			<div style="color: rgb(0, 0, 0); --context-content-color: rgb(255, 255, 255); --semantics-content-contrast-color: color(from currentColor xyz clamp(0, (0.1791 / y - 1) * infinity, 1) clamp(0, (0.1791 / y - 1) * infinity, 1) clamp(0, (0.1791 / y - 1) * infinity, 1) / 1);">
-				<nldd-badge color="inherit" text="3"></nldd-badge>
+				<nldd-badge color="content" text="3"></nldd-badge>
 			</div>
 		`);
 		const badge = el.querySelector('nldd-badge')!;
@@ -220,18 +220,6 @@ describe('nldd-badge color="inherit"', () => {
 		// The formula answers in whatever color space it is written in, so read the
 		// channels rather than the notation.
 		expect(picked(getComputedStyle(text).color)).toBe('white');
-	});
-
-	it('falls back to the inherited color where no channel is set', async () => {
-		el = await fixture(`
-			<div style="color: rgb(0, 0, 0);">
-				<nldd-badge color="inherit" text="3"></nldd-badge>
-			</div>
-		`);
-		const badge = el.querySelector('nldd-badge')!;
-		await waitForUpdate(badge);
-		const shape = badge.shadowRoot!.querySelector('.badge')!;
-		expect(getComputedStyle(shape).backgroundColor).toBe('rgb(0, 0, 0)');
 	});
 });
 

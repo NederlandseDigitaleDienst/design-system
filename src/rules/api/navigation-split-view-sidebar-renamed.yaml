@@ -2,7 +2,7 @@ severity: warn
 context: 'nldd-navigation-split-view:is([sidebar-accessible-label], [sidebar-as-sheet])'
 removed: ['sidebar-accessible-label', 'sidebar-as-sheet']
 fix: { rename: { sidebar-accessible-label: primary-sidebar-accessible-label, sidebar-as-sheet: primary-sidebar-as-sheet } }
-message: 'The sidebar attributes now start with `primary-`, because a split view can have two. Rename it here and on every other nldd-navigation-split-view.'
+message: 'The sidebar attributes now start with `primary-`, because a split view can have two, and the old names do nothing. Rename it here and on every other nldd-navigation-split-view.'
 examples:
   passed: ['<nldd-navigation-split-view primary-sidebar-accessible-label="Aanvragen"></nldd-navigation-split-view>']
   failed: ['<nldd-navigation-split-view sidebar-accessible-label="Aanvragen"></nldd-navigation-split-view>', '<nldd-navigation-split-view sidebar-as-sheet></nldd-navigation-split-view>']

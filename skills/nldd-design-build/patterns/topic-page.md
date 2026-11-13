@@ -96,17 +96,16 @@ nldd-shell                            de buitenste schil
     >
       <nldd-image slot="media"></nldd-image>
       <nldd-title
-        color="inherit"
         text="Isoleren"
         heading-level="1"
       ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
-      <nldd-rich-text color="inherit">
+      <nldd-rich-text>
         <p>Een goed geïsoleerd huis houdt de warmte binnen en is in de zomer koeler. Voor dakisolatie kun je een aanvraag doen; hieronder staat wat je daarvoor moet weten.</p>
       </nldd-rich-text>
       <nldd-spacer size="24"></nldd-spacer>
       <nldd-button
-        appearance="inherit-filled"
+        appearance="content-filled"
         text="Aanvraag starten"
         href="#aanvraag-starten"
       ></nldd-button>

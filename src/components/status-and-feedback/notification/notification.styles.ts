@@ -112,6 +112,7 @@ export const notificationStyles = css`
 		display: flex;
 		align-self: flex-start;
 		flex-shrink: 0;
+		--context-content-color: var(--_notification-icon-color);
 		color: var(--_notification-icon-color);
 		width: var(--_notification-icon-size);
 		height: var(--_notification-icon-size);
@@ -130,6 +131,7 @@ export const notificationStyles = css`
 	.notification__text {
 		margin: 0;
 		overflow-wrap: break-word;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_notification-text-font);
 		text-wrap: pretty;
@@ -138,6 +140,7 @@ export const notificationStyles = css`
 	.notification__supporting-text {
 		margin: 0;
 		overflow-wrap: break-word;
+		--context-content-color: var(--_notification-supporting-text-color);
 		color: var(--_notification-supporting-text-color);
 		font: var(--_notification-supporting-text-font);
 		text-wrap: pretty;

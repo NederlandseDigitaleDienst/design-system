@@ -1,4 +1,5 @@
 import { css, unsafeCSS } from 'lit';
+import { surfaceContent } from '../../../../assets/styles/shadow-resets.js';
 import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
 
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -12,7 +13,7 @@ export const splitViewPaneStyles = css`
 	/* # Host */
 
 	:host {
-		--_split-view-pane-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_split-view-pane-background-color: var(--context-background-color);
 
 		display: flex;
 		width: 100%;
@@ -28,13 +29,15 @@ export const splitViewPaneStyles = css`
 	}
 
 	:host([background="base"]) {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_split-view-pane-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
+		--_split-view-pane-background-color: var(--context-background-color);
 	}
 
 	:host([background="tinted"]) {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_split-view-pane-background-color: var(--context-parent-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
+		${surfaceContent}
+		--_split-view-pane-background-color: var(--context-background-color);
 	}
 
 	:host([hide-back]) {

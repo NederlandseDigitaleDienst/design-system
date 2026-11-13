@@ -49,6 +49,9 @@ export function getTranslations(): Readonly<Translations> {
 	return store.translations;
 }
 
+/** The `translations` objects already checked in DEV, so a render does not check twice. */
+const checked = new WeakSet<object>();
+
 /**
  * Looks a key up through the three layers and fills in `{placeholders}`. Every
  * component's `_t()` goes through here, so none of them skips the package-wide
@@ -61,6 +64,13 @@ export function translate<T extends Translations>(
 	vars?: Record<string, string | number>,
 ): string {
 	const name = key as string;
+	if (import.meta.env?.DEV && import.meta.env?.MODE !== 'test' && own && !checked.has(own)) {
+		checked.add(own);
+		const keys = Object.keys(own);
+		if (keys.length > 0) {
+			void import('./dev-checks.js').then(({ checkElementTranslationKeys }) => checkElementTranslationKeys(keys, Object.keys(defaults)));
+		}
+	}
 	let text = own?.[key] ?? store.translations[name] ?? defaults[key] ?? name;
 	if (vars) {
 		for (const [k, v] of Object.entries(vars)) {

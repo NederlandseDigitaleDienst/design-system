@@ -32,8 +32,9 @@ export const switchFieldStyles = css`
 
 	/* ## Colors */
 
-	:host([color="inherit"]) .switch-field__label {
-		color: inherit;
+	:host([color="content"]) .switch-field__label {
+		--context-content-color: inherit;
+		color: var(--context-content-color);
 	}
 
 
@@ -51,6 +52,7 @@ export const switchFieldStyles = css`
 		cursor: default;
 		padding-top: calc((var(--semantics-controls-md-min-size) - 1em * var(--primitives-line-height-snug)) / 2);
 		flex-grow: 1;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-md-regular-snug);
 		text-wrap: pretty;

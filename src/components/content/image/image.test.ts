@@ -219,18 +219,18 @@ describe('nldd-image', () => {
 		expect(img.getAttribute('sizes')).toBe('100vw');
 	});
 
-	it('forwards a valid lqip CSV as 7 inline --context-lqip-* CSS variables', async () => {
+	it('forwards a valid lqip CSV as 7 inline --_image-lqip-* CSS variables', async () => {
 		// Skip src so the image never errors out and removes the lqip class.
 		el = await fixture<NLDDImage>('<nldd-image alt="Foo" lqip="98,154,162,99,99,99,100"></nldd-image>');
 		await waitForUpdate(el);
 		const media = el.shadowRoot!.querySelector<HTMLElement>('.image__media')!;
-		expect(media.style.getPropertyValue('--context-lqip-base')).toBe('98');
-		expect(media.style.getPropertyValue('--context-lqip-c1')).toBe('154');
-		expect(media.style.getPropertyValue('--context-lqip-c2')).toBe('162');
-		expect(media.style.getPropertyValue('--context-lqip-c3')).toBe('99');
-		expect(media.style.getPropertyValue('--context-lqip-c4')).toBe('99');
-		expect(media.style.getPropertyValue('--context-lqip-c5')).toBe('99');
-		expect(media.style.getPropertyValue('--context-lqip-c6')).toBe('100');
+		expect(media.style.getPropertyValue('--_image-lqip-base')).toBe('98');
+		expect(media.style.getPropertyValue('--_image-lqip-c1')).toBe('154');
+		expect(media.style.getPropertyValue('--_image-lqip-c2')).toBe('162');
+		expect(media.style.getPropertyValue('--_image-lqip-c3')).toBe('99');
+		expect(media.style.getPropertyValue('--_image-lqip-c4')).toBe('99');
+		expect(media.style.getPropertyValue('--_image-lqip-c5')).toBe('99');
+		expect(media.style.getPropertyValue('--_image-lqip-c6')).toBe('100');
 		expect(media.classList.contains('image__media--lqip')).toBe(true);
 	});
 
@@ -242,7 +242,7 @@ describe('nldd-image', () => {
 			el = await fixture<NLDDImage>(`<nldd-image alt="Foo" lqip="${bad}"></nldd-image>`);
 			await waitForUpdate(el);
 			const media = el.shadowRoot!.querySelector<HTMLElement>('.image__media')!;
-			expect(media.style.getPropertyValue('--context-lqip-base')).toBe('');
+			expect(media.style.getPropertyValue('--_image-lqip-base')).toBe('');
 			expect(media.classList.contains('image__media--lqip')).toBe(false);
 			cleanup(el);
 		}

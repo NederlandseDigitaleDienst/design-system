@@ -186,6 +186,7 @@ export const toggleButtonStyles = css`
 		gap: var(--_toggle-button-gap);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_toggle-button-content-color);
 		color: var(--_toggle-button-content-color);
 		font: var(--_toggle-button-font);
 		white-space: nowrap;
@@ -203,6 +204,7 @@ export const toggleButtonStyles = css`
 		.toggle-button:has(.toggle-button__input:hover) {
 			--_toggle-button-highlight-border-color: var(--_toggle-button-is-hovered-highlight-border-color);
 			background-color: var(--_toggle-button-is-hovered-background-color);
+			--context-content-color: var(--_toggle-button-is-hovered-content-color);
 			color: var(--_toggle-button-is-hovered-content-color);
 		}
 	}
@@ -211,12 +213,14 @@ export const toggleButtonStyles = css`
 	.toggle-button:has(.toggle-button__input:active) {
 		--_toggle-button-highlight-border-color: var(--_toggle-button-is-active-highlight-border-color);
 		background-color: var(--_toggle-button-is-active-background-color);
+		--context-content-color: var(--_toggle-button-is-active-content-color);
 		color: var(--_toggle-button-is-active-content-color);
 	}
 
 	:host([selected]) .toggle-button {
 		--_toggle-button-highlight-border-color: var(--_toggle-button-is-selected-highlight-border-color);
 		background-color: var(--_toggle-button-is-selected-background-color);
+		--context-content-color: var(--_toggle-button-is-selected-content-color);
 		color: var(--_toggle-button-is-selected-content-color);
 	}
 
@@ -225,6 +229,7 @@ export const toggleButtonStyles = css`
 		:host([selected]) .toggle-button:has(.toggle-button__input:hover) {
 			--_toggle-button-highlight-border-color: var(--_toggle-button-is-selected-is-hovered-highlight-border-color);
 			background-color: var(--_toggle-button-is-selected-is-hovered-background-color);
+			--context-content-color: var(--_toggle-button-is-selected-is-hovered-content-color);
 			color: var(--_toggle-button-is-selected-is-hovered-content-color);
 		}
 	}
@@ -233,6 +238,7 @@ export const toggleButtonStyles = css`
 	:host([selected]) .toggle-button:has(.toggle-button__input:active) {
 		--_toggle-button-highlight-border-color: var(--_toggle-button-is-selected-is-active-highlight-border-color);
 		background-color: var(--_toggle-button-is-selected-is-active-background-color);
+		--context-content-color: var(--_toggle-button-is-selected-is-active-content-color);
 		color: var(--_toggle-button-is-selected-is-active-content-color);
 	}
 

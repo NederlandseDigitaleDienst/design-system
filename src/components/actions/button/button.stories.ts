@@ -47,8 +47,8 @@ export default {
 				'neutral-transparent',
 				'critical-tinted',
 				'critical-transparent',
-				'inherit-filled',
-				'inherit-tinted',
+				'content-filled',
+				'content-tinted',
 			],
 			description: 'Visuele stijl, inclusief kleur',
 			table: {
@@ -848,65 +848,64 @@ export const TekstInDeSlot = {
 };
 
 /**
- * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
+ * De content-appearances nemen hun kleuren van `--context-content-color` en zijn
  * bedoeld voor gekleurde vlakken (zoals de hero-main of filled-categories).
- * `inherit-filled` gebruikt de vlakkleur als labelkleur wanneer het vlak
- * `--context-parent-background-color` cascadet (zoals de hero doet); zonder
- * die context valt het label terug op een wit/zwart-contrastflip — zie het
- * derde vlak.
+ * `content-filled` gebruikt de vlakkleur als labelkleur: het vlak zet
+ * `--context-background-color`, zoals de hero doet. Een eigen vlak, zoals
+ * het derde, zet hem zelf.
  */
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
 				<nldd-container
 					layout="wrap"
 					gap="8"
 				>
 					<nldd-button
-						appearance="inherit-filled"
-						text="Inherit filled"
+						appearance="content-filled"
+						text="Content filled"
 						supporting-text="Met ondertekst"
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-tinted"
-						text="Inherit tinted"
+						appearance="content-tinted"
+						text="Content tinted"
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-filled"
+						appearance="content-filled"
 						text="Open"
 						expandable
 						expanded
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-tinted"
+						appearance="content-tinted"
 						text="Open"
 						expandable
 						expanded
 					></nldd-button>
 				</nldd-container>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-content-color: var(--semantics-categories-oranje-filled-content-color);">
 				<nldd-button-group>
 					<nldd-button
-						appearance="inherit-filled"
-						text="Inherit filled"
+						appearance="content-filled"
+						text="Content filled"
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-tinted"
-						text="Inherit tinted"
+						appearance="content-tinted"
+						text="Content tinted"
 					></nldd-button>
 				</nldd-button-group>
 			</div>
-			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: oklch(0.45 0.12 300); --context-content-color: oklch(1 0 0);">
 				<nldd-button-group>
 					<nldd-button
-						appearance="inherit-filled"
-						text="Zonder context (flip)"
+						appearance="content-filled"
+						text="Eigen vlak"
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-tinted"
-						text="Inherit tinted"
+						appearance="content-tinted"
+						text="Content tinted"
 					></nldd-button>
 				</nldd-button-group>
 			</div>

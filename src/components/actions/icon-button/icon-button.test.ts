@@ -27,6 +27,24 @@ describe('nldd-icon-button', () => {
    Icon & text attributes
    ============================================================ */
 
+describe('nldd-icon-button – corner radius', () => {
+	let wrapper: HTMLElement;
+
+	afterEach(() => cleanup(wrapper));
+
+	const radius = (host: Element) => getComputedStyle(host.shadowRoot!.querySelector('button')!).borderRadius;
+
+	it('takes the corner a field passes on, and its own corner outside one', async () => {
+		wrapper = await fixture<HTMLElement>(
+			'<div><nldd-icon-button size="sm" icon="search" text="Zoek"></nldd-icon-button><div style="--context-control-corner-radius: 5px"><nldd-icon-button size="sm" icon="search" text="Zoek"></nldd-icon-button></div></div>'
+		);
+		const [own, nested] = wrapper.querySelectorAll('nldd-icon-button');
+		await waitForUpdate(nested as HTMLElement);
+		expect(radius(own)).toBe('8px');
+		expect(radius(nested)).toBe('5px');
+	});
+});
+
 describe('nldd-icon-button – icon & text attributes', () => {
 	let el: NLDDIconButton;
 
@@ -745,7 +763,7 @@ describe('nldd-icon-button – on a colored surface', () => {
 
 	// The label only has the contrast the colored surface gives it, so no state
 	// may move the background toward it.
-	for (const appearance of ['inherit-tinted', 'inherit-filled']) {
+	for (const appearance of ['content-tinted', 'content-filled']) {
 		it(`keeps one ${appearance} color through hover and expanded`, async () => {
 			el = await fixture<NLDDIconButton>(`<nldd-icon-button appearance="${appearance}" icon="ellipsis" text="Meer" expandable style="color: rgb(255, 255, 255)"></nldd-icon-button>`);
 			await waitForUpdate(el);
