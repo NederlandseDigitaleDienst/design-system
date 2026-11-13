@@ -17,7 +17,7 @@ export const comboBoxStyles = css`
 		--_combo-box-inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
 		--_combo-box-text-font: var(--semantics-input-fields-md-text-font);
 		--_combo-box-end-padding-right: calc((var(--_combo-box-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
-		--_combo-box-nested-corner-radius: calc(var(--_combo-box-corner-radius) - var(--_combo-box-end-padding-right) - var(--semantics-input-fields-border-width));
+		--_combo-box-nested-control-corner-radius: calc(var(--_combo-box-corner-radius) - var(--_combo-box-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_combo-box-button-focus-z-index: 1;
 		--_combo-box-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 
@@ -145,7 +145,7 @@ export const comboBoxStyles = css`
 	}
 
 	.combo-box__end :is(nldd-button, nldd-icon-button, nldd-token) {
-		--context-control-corner-radius: var(--_combo-box-nested-corner-radius);
+		--context-control-corner-radius: var(--_combo-box-nested-control-corner-radius);
 	}
 
 	.combo-box__clear-button:focus-within {

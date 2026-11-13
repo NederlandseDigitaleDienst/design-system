@@ -18,7 +18,7 @@ export const textFieldStyles = css`
 		--_text-field-font: var(--semantics-input-fields-md-text-font);
 		--_text-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 		--_text-field-end-padding-right: calc((var(--_text-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
-		--_text-field-nested-corner-radius: calc(var(--_text-field-corner-radius) - var(--_text-field-end-padding-right) - var(--semantics-input-fields-border-width));
+		--_text-field-nested-control-corner-radius: calc(var(--_text-field-corner-radius) - var(--_text-field-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_text-field-button-focus-z-index: 1;
 
 		${inheritedTextReset}
@@ -171,7 +171,7 @@ export const textFieldStyles = css`
 	}
 
 	.text-field__button slot::slotted(*) {
-		--context-control-corner-radius: var(--_text-field-nested-corner-radius);
+		--context-control-corner-radius: var(--_text-field-nested-control-corner-radius);
 	}
 
 	.text-field__end[hidden] {

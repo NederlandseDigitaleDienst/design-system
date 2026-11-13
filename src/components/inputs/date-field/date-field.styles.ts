@@ -40,7 +40,7 @@ export const dateFieldStyles = css`
 		   from the height difference between field and button instead of a fixed
 		   value. */
 		--_date-field-end-padding-right: calc((var(--_date-field-min-size) - var(--_date-field-picker-button-size)) / 2 - var(--semantics-input-fields-border-width));
-		--_date-field-nested-corner-radius: calc(var(--_date-field-corner-radius) - var(--_date-field-end-padding-right) - var(--semantics-input-fields-border-width));
+		--_date-field-nested-control-corner-radius: calc(var(--_date-field-corner-radius) - var(--_date-field-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_date-field-picker-button-size: var(--semantics-controls-sm-min-size);
 		--_date-field-validation-icon-area-width: calc(var(--_date-field-min-size) - var(--semantics-input-fields-border-width) * 2);
 		--_date-field-trailing-width: calc(var(--_date-field-validation-icon-area-width) + var(--_date-field-picker-button-size) + var(--_date-field-end-padding-right));
@@ -251,7 +251,7 @@ export const dateFieldStyles = css`
 	}
 
 	.date-field__picker-button :is(nldd-button, nldd-icon-button, nldd-token) {
-		--context-control-corner-radius: var(--_date-field-nested-corner-radius);
+		--context-control-corner-radius: var(--_date-field-nested-control-corner-radius);
 	}
 
 
