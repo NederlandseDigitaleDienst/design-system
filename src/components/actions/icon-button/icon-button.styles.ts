@@ -181,10 +181,9 @@ export const iconButtonStyles = css`
 		--_icon-button-is-active-highlight-border-color: var(--_icon-button-highlight-border-color);
 	}
 
-	/* For inherit-filled the inner button keeps the inherited on-color:
-	   its currentColor background and the label's contrast flip resolve
-	   against it, and would otherwise self-reference the label. The label
-	   color moves to the content layer instead; see nldd-button. */
+	/* inherit-filled paints its fill with currentColor, so the inner button
+	   keeps the inherited color and the icon color goes to the content layer,
+	   as in nldd-button. */
 	:host([appearance="inherit-filled"]) .icon-button {
 		color: inherit;
 	}
