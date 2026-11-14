@@ -216,7 +216,7 @@ export const dateFieldStyles = css`
 		top: 0;
 		right: 0;
 		bottom: 0;
-		border-radius: var(--_date-field-corner-radius);
+		border-radius: 0 calc(var(--_date-field-corner-radius) - var(--semantics-input-fields-border-width)) calc(var(--_date-field-corner-radius) - var(--semantics-input-fields-border-width)) 0;
 		background: linear-gradient(90deg, color-mix(in oklch, var(--_date-field-background-color) 0%, transparent) 0%, var(--_date-field-background-color) 100%);
 		pointer-events: none;
 		width: var(--primitives-space-8);
