@@ -775,19 +775,24 @@ A compact property that has been assigned to something: a category, a type, a ro
 
 ### `<nldd-term>`
 
-A term in running text with an explanation behind it, such as a legal term from a glossary. The term stays part of the sentence, marked with a dotted underline, and opens its definition in a popover on a click, a tap, Enter or Space. On sm the popover is a bottom sheet. The term is the control: it carries the button role and its expanded state, so a term injected into content needs no ARIA of your own. Focus moves into the popover when it opens, so its content is read, and returns to the term when it closes. A short definition goes in `definition`, as text: <p>De <nldd-term definition="Degene die het doel van en de middelen voor de verwerking vaststelt.">verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> A definition with more paragraphs, a link or a source is an nldd-popover of your own, outside the sentence, that `popovertarget` points at. Every term for the same concept can point at the same popover: it opens against the term you clicked. Markup in the term itself would break: a `<p>` inside a `<p>` closes the paragraph, and the definition would fall out of the term. <p>De <nldd-term popovertarget="verwerkingsverantwoordelijke"> verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> <nldd-popover id="verwerkingsverantwoordelijke" accessible-label="Verwerkingsverantwoordelijke">…</nldd-popover>
+A term in running text with an explanation behind it, such as a legal term from a glossary. The term stays part of the sentence, marked with a dotted underline, and opens its definition in a popover on a click, a tap, Enter or Space. On sm the popover is a bottom sheet. The term is the control: it carries the button role and its expanded state, so a term injected into content needs no ARIA of your own. Focus moves into the popover when it opens, so its content is read, and returns to the term when it closes. Mark only the first occurrence of a concept in a question or section. The underline is the only sign that the term is a control, so it cannot get lighter or go away. A text that marks every occurrence gets busy. A short definition goes in `definition`, as text: <p>De <nldd-term definition="Degene die het doel van en de middelen voor de verwerking vaststelt." source="Artikel 4 AVG" source-href="…">verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> A `source` shows under the definition, as a link with `source-href`. A definition with more paragraphs or links is an nldd-popover of your own, outside the sentence, that `popovertarget` points at. Every term for the same concept can point at the same popover: it opens against the term you clicked. Markup in the term itself would break: a `<p>` inside a `<p>` closes the paragraph, and the definition would fall out of the term. Give a source in that popover the shape the term gives it: after an `nldd-spacer size="8"`, an nldd-text with `size="sm"` and `color="secondary"`, with "Bron:" and an nldd-link. <p>De <nldd-term popovertarget="verwerkingsverantwoordelijke"> verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> <nldd-popover id="verwerkingsverantwoordelijke" accessible-label="Verwerkingsverantwoordelijke">…</nldd-popover>
 
 **Rules** (`nldd lint`)
 
 - `term-max-one-definition`: nldd-term has both `definition` and `popovertarget`, and shows only the popover. Remove one.
 - `term-needs-definition`: nldd-term has no definition, so it opens nothing. Set `definition`, or `popovertarget` to the id of an nldd-popover.
 - `term-popovertarget-not-found`: No nldd-popover with the id in `popovertarget` in the tree of this nldd-term.
+- `term-source-href-no-effect`: nldd-term has `source-href` without `source`, so there is no link to show. Add `source`.
+- `term-source-no-effect`: nldd-term has `source` next to `popovertarget`, and shows only the popover. Put the source in the popover.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `definition` | `string` | The definition, as plain text. The term shows it in a popover of its own, named after the term. Ignored when `popovertarget` is set. |
+| `source` | `string` | Where the definition comes from, such as a glossary or an article of law, as plain text. Shown under the definition in the term's own popover. Ignored when `popovertarget` is set. |
+| `source-href` | `string` | Link for `source`. Without `source` it has no effect. |
+| `translations` | `object` | Override translation keys (the label before the source). |
 | `popovertarget` | `string` | ID of an nldd-popover with the definition, looked up in the tree of this term. Positioned against the term when it opens, so it needs no `anchor`, and it can be shared by every term for the same concept. Wins over `definition`. |
 
 **Slots**

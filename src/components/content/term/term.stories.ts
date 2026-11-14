@@ -20,11 +20,22 @@ export default {
 	},
 	args: {
 		definition: 'Degene die het doel van en de middelen voor de verwerking van persoonsgegevens vaststelt.',
+		source: 'Begrippenkader',
+		sourceHref: '#begrippenkader',
 	},
 	argTypes: {
 		definition: {
 			control: 'text',
 			description: 'De definitie als platte tekst. De term toont hem in een eigen popover.',
+		},
+		source: {
+			control: 'text',
+			description: 'Waar de definitie vandaan komt, als platte tekst. Staat onder de definitie, achter "Bron:". Geen effect met `popovertarget`.',
+		},
+		sourceHref: {
+			name: 'source-href',
+			control: 'text',
+			description: 'Link voor `source`. Zonder `source` geen effect.',
 		},
 		popovertarget: {
 			control: false,
@@ -35,11 +46,15 @@ export default {
 
 const Template = ({
 	definition,
+	source,
+	sourceHref,
 }: Record<string, unknown>) => html`
 	<nldd-text>
 		De
 		<nldd-term
 			definition=${definition || nothing}
+			source=${source || nothing}
+			source-href=${sourceHref || nothing}
 		>
 			verwerkingsverantwoordelijke
 		</nldd-term>

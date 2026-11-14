@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-term[source-href]'
+assert: '[source]'
+message: 'nldd-term has `source-href` without `source`, so there is no link to show. Add `source`.'
+examples:
+  passed: ['<nldd-term definition="Degene die het doel vaststelt." source="Artikel 4 AVG" source-href="https://example.org">verwerkingsverantwoordelijke</nldd-term>']
+  failed: ['<nldd-term definition="Degene die het doel vaststelt." source-href="https://example.org">verwerkingsverantwoordelijke</nldd-term>']

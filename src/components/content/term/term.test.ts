@@ -52,6 +52,23 @@ describe('nldd-term with definition', () => {
 		expect(popover.textContent).toContain('Degene die het doel vaststelt.');
 	});
 
+	it('shows a source under the definition, as a link with source-href', async () => {
+		await setup('<nldd-term definition="Degene die het doel vaststelt." source="Artikel 4 AVG" source-href="https://example.org">verwerkingsverantwoordelijke</nldd-term>');
+		const link = popover.querySelector('nldd-link');
+		expect(link?.getAttribute('href')).toBe('https://example.org');
+		expect(link?.textContent).toBe('Artikel 4 AVG');
+		expect(popover.textContent).toContain('Bron:');
+	});
+
+	it('shows a source without a link, and none without source', async () => {
+		await setup('<nldd-term definition="Degene die het doel vaststelt." source="Begrippenkader">verwerkingsverantwoordelijke</nldd-term>');
+		expect(popover.querySelector('nldd-link')).toBe(null);
+		expect(popover.textContent).toContain('Begrippenkader');
+		cleanup(el);
+		await setup();
+		expect(popover.textContent).not.toContain('Bron:');
+	});
+
 	it('opens on a click', async () => {
 		await setup();
 		trigger.click();

@@ -966,6 +966,25 @@ export const devRules: DevRule[] = [
 		"context": "nldd-term:state(no-popover-target)"
 	},
 	{
+		"id": "term-source-href-no-effect",
+		"message": "nldd-term has `source-href` without `source`, so there is no link to show. Add `source`.",
+		"context": "nldd-term[source-href]:not([source-href=\"\"])",
+		"assert": "[source]:not([source=\"\"])",
+		"properties": [
+			"source"
+		]
+	},
+	{
+		"id": "term-source-no-effect",
+		"message": "nldd-term has `source` next to `popovertarget`, and shows only the popover. Put the source in the popover.",
+		"context": "nldd-term[popovertarget]:not([popovertarget=\"\"])",
+		"assert": ":not([source]:not([source=\"\"])):not([source-href]:not([source-href=\"\"]))",
+		"properties": [
+			"source",
+			"sourceHref"
+		]
+	},
+	{
 		"id": "text-custom-size-invalid",
 		"message": "This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as \"96px\" or \"6rem\", not a keyword.",
 		"context": "nldd-text:state(invalid-custom-size)"

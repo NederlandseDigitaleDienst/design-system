@@ -12,6 +12,7 @@ import { nlddAvatarTranslations } from '../components/content/avatar/avatar.i18n
 import { nlddCodeViewerTranslations } from '../components/content/code-viewer/code-viewer.i18n.js';
 import { nlddImageTranslations } from '../components/content/image/image.i18n.js';
 import { nlddRichTextTranslations } from '../components/content/rich-text/rich-text.i18n.js';
+import { nlddTermTranslations } from '../components/content/term/term.i18n.js';
 import { nlddTokenTranslations } from '../components/content/token/token.i18n.js';
 import { nlddValidationListTranslations } from '../components/forms/validation-list/validation-list.i18n.js';
 import { nlddComboBoxTranslations } from '../components/inputs/combo-box/combo-box.i18n.js';
@@ -70,6 +71,7 @@ export const nl = {
 	...nlddCodeViewerTranslations,
 	...nlddImageTranslations,
 	...nlddRichTextTranslations,
+	...nlddTermTranslations,
 	...nlddTokenTranslations,
 	...nlddValidationListTranslations,
 	...nlddComboBoxTranslations,

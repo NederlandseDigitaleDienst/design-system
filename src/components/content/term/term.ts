@@ -11,17 +11,27 @@
  * the popover when it opens, so its content is read, and returns to the term
  * when it closes.
  *
+ * Mark only the first occurrence of a concept in a question or section. The
+ * underline is the only sign that the term is a control, so it cannot get
+ * lighter or go away. A text that marks every occurrence gets busy.
+ *
  * A short definition goes in `definition`, as text:
  *
  *     <p>De <nldd-term definition="Degene die het doel van en de middelen
- *         voor de verwerking vaststelt.">verwerkingsverantwoordelijke</nldd-term>
+ *         voor de verwerking vaststelt." source="Artikel 4 AVG"
+ *         source-href="…">verwerkingsverantwoordelijke</nldd-term>
  *         bepaalt of een DPIA nodig is.</p>
  *
- * A definition with more paragraphs, a link or a source is an nldd-popover of
- * your own, outside the sentence, that `popovertarget` points at. Every term
- * for the same concept can point at the same popover: it opens against the
- * term you clicked. Markup in the term itself would break: a `<p>` inside a
- * `<p>` closes the paragraph, and the definition would fall out of the term.
+ * A `source` shows under the definition, as a link with `source-href`.
+ *
+ * A definition with more paragraphs or links is an nldd-popover of your own,
+ * outside the sentence, that `popovertarget` points at. Every term for the
+ * same concept can point at the same popover: it opens against the term you
+ * clicked. Markup in the term itself would break: a `<p>` inside a `<p>`
+ * closes the paragraph, and the definition would fall out of the term. Give a
+ * source in that popover the shape the term gives it: after an
+ * `nldd-spacer size="8"`, an nldd-text with `size="sm"` and
+ * `color="secondary"`, with "Bron:" and an nldd-link.
  *
  *     <p>De <nldd-term popovertarget="verwerkingsverantwoordelijke">
  *         verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p>
@@ -30,6 +40,9 @@
  *
  * @element nldd-term
  * @attr {string} definition - The definition, as plain text. The term shows it in a popover of its own, named after the term. Ignored when `popovertarget` is set.
+ * @attr {string} source - Where the definition comes from, such as a glossary or an article of law, as plain text. Shown under the definition in the term's own popover. Ignored when `popovertarget` is set.
+ * @attr {string} source-href - Link for `source`. Without `source` it has no effect.
+ * @attr {object} translations - Override translation keys (the label before the source).
  * @attr {string} popovertarget - ID of an nldd-popover with the definition, looked up in the tree of this term. Positioned against the term when it opens, so it needs no `anchor`, and it can be shared by every term for the same concept. Wins over `definition`.
  *
  * @slot - The term, as plain text. Whitespace around it is dropped, so the underline ends where the word does. It also names the popover that `definition` opens.
@@ -42,10 +55,15 @@ import { popoverTargetOf } from '../../../utilities/popover-target.js';
 import { setState } from '../../../utilities/element-state.js';
 import { termStyles } from './term.styles.js';
 import { termTemplate } from './term.template.js';
+import { nlddTermTranslations } from './term.i18n.js';
+import type { NLDDTermTranslations } from './term.i18n.js';
+import { translate } from '../../../utilities/translations.js';
 import type { NLDDPopover } from '../../layout/popover/popover.js';
 import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
 import '../text/text.js';
+import '../../navigation/link/link.js';
+import '../../layout/spacer/spacer.js';
 
 @customElement('nldd-term')
 export class NLDDTerm extends LitElement {
@@ -53,6 +71,16 @@ export class NLDDTerm extends LitElement {
 
 	@property({ type: String, reflect: true })
 	definition = '';
+
+	@property({ type: String, reflect: true })
+	source = '';
+
+	@property({ type: String, reflect: true, attribute: 'source-href' })
+	sourceHref = '';
+
+	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<NLDDTermTranslations> = {};
 
 	@property({ type: String, reflect: true })
 	popovertarget = '';
@@ -179,6 +207,10 @@ export class NLDDTerm extends LitElement {
 		if (event.key !== ' ') return;
 		event.preventDefault();
 		this._triggerEl?.click();
+	}
+
+	public _t(key: keyof NLDDTermTranslations): string {
+		return translate(this.translations, nlddTermTranslations, key);
 	}
 
 	override focus(options?: FocusOptions): void {

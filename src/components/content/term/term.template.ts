@@ -4,6 +4,20 @@ import type { NLDDTerm } from './term.js';
 export function termTemplate(component: NLDDTerm): TemplateResult {
 	// Its own popover only for text: one that popovertarget names is the
 	// consumer's, outside the sentence.
+	const source = component.source
+		? html`
+			<nldd-spacer size="8"></nldd-spacer>
+			<nldd-text
+				size="sm"
+				color="secondary"
+			>
+				${component._t('components.term.source-label')}
+				${component.sourceHref
+					? html`<nldd-link href=${component.sourceHref}>${component.source}</nldd-link>`
+					: component.source}
+			</nldd-text>
+		`
+		: nothing;
 	const ownPopover = component.definition && !component.popovertarget
 		? html`
 			<nldd-popover
@@ -15,6 +29,7 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 					<nldd-text>
 						${component.definition}
 					</nldd-text>
+					${source}
 				</nldd-container>
 			</nldd-popover>
 		`
