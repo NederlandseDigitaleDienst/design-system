@@ -24,6 +24,7 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **`popover-needs-name` no longer asks for `accessible-label` on a popover in the `interest` slot.** There its content is the description of the button, and a label would be read in its place.
+- **The wheels of `nldd-time-picker` fade over every row above and below the selection,** so they read as a wheel. The fade follows `rows`.
 
 ### Fixed
 
