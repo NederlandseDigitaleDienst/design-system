@@ -47,6 +47,7 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 			@click=${(event: MouseEvent) => component._handleClick(event)}
 			@keydown=${(event: KeyboardEvent) => component._handleKeydown(event)}
 			@keyup=${(event: KeyboardEvent) => component._handleKeyup(event)}
+			@blur=${() => component._handleBlur()}
 		>${component._termDisplay}</span>
 		<slot
 			hidden

@@ -88,6 +88,15 @@ describe('nldd-term with definition', () => {
 		expect(popover.anchorElement).toBe(trigger);
 	});
 
+	it('does not act on the keyup of a Space pressed elsewhere', async () => {
+		await setup();
+		const clicked = vi.fn();
+		trigger.addEventListener('click', clicked);
+		// As when Space on a button in the popover closes it and focus returns here.
+		trigger.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', bubbles: true, cancelable: true }));
+		expect(clicked).not.toHaveBeenCalled();
+	});
+
 	it('does not act on a held Enter', async () => {
 		await setup();
 		const clicked = vi.fn();

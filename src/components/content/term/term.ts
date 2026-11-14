@@ -215,14 +215,25 @@ export class NLDDTerm extends LitElement {
 			this._triggerEl?.click();
 		} else if (event.key === ' ') {
 			event.preventDefault();
+			this._spaceDown = true;
 		}
 	}
 
+	/** Only a Space that went down on the term: the keyup of one pressed in
+	 *  the popover lands here when the popover hands focus back. */
 	_handleKeyup(event: KeyboardEvent): void {
 		if (event.key !== ' ') return;
 		event.preventDefault();
+		if (!this._spaceDown) return;
+		this._spaceDown = false;
 		this._triggerEl?.click();
 	}
+
+	_handleBlur(): void {
+		this._spaceDown = false;
+	}
+
+	private _spaceDown = false;
 
 	public _t(key: keyof NLDDTermTranslations): string {
 		return translate(this.translations, nlddTermTranslations, key);
