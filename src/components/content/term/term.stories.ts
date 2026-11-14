@@ -26,6 +26,10 @@ export default {
 			control: 'text',
 			description: 'De definitie als platte tekst. De term toont hem in een eigen popover.',
 		},
+		popovertarget: {
+			control: false,
+			description: 'Id van een `nldd-popover` elders op de pagina met de definitie. De term zet hem naast zich neer, dus de popover heeft geen `anchor` nodig, en elke term voor hetzelfde begrip kan hem delen. Wint van `definition`.',
+		},
 	},
 };
 
