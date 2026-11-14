@@ -848,20 +848,6 @@ export class NLDDMenu extends LitElement {
 	};
 
 	/**
-	 * Collapse the entire menu chain at once — root + every open submenu —
-	 * with no "back one level" re-show. Used when the action is final:
-	 * selecting an item, clicking the anchor, clicking/tapping outside, or
-	 * a viewport resize.
-	 *
-	 * Driven by the root's `_openChain` registry of levels, so it never
-	 * depends on `_activeSubmenu` /
-	 * `_parentMenu` threading being intact at collapse time — real
-	 * interaction can leave those stale, which was the source of the
-	 * recurring "anchor click doesn't close after the 2nd navigation"
-	 * bug. Idempotent: every chain level's `select` listener may call it,
-	 * but the first run empties the registry so the rest are no-ops.
-	 */
-	/**
 	 * As a native menu on macOS, the chosen item blinks once and the menu
 	 * closes after it, so you see what you picked. `select` has already gone
 	 * out: the action does not wait for the blink. Every menu in the chain
@@ -891,6 +877,20 @@ export class NLDDMenu extends LitElement {
 		setTimeout(close, 400);
 	};
 
+	/**
+	 * Collapse the entire menu chain at once — root + every open submenu —
+	 * with no "back one level" re-show. Used when the action is final:
+	 * selecting an item, clicking the anchor, clicking/tapping outside, or
+	 * a viewport resize.
+	 *
+	 * Driven by the root's `_openChain` registry of levels, so it never
+	 * depends on `_activeSubmenu` /
+	 * `_parentMenu` threading being intact at collapse time — real
+	 * interaction can leave those stale, which was the source of the
+	 * recurring "anchor click doesn't close after the 2nd navigation"
+	 * bug. Idempotent: every chain level's `select` listener may call it,
+	 * but the first run empties the registry so the rest are no-ops.
+	 */
 	private _collapseChain = (): void => {
 		const root = this._chainRoot ?? this;
 		// Snapshot + clear first so the re-entrant cleanup splices are
