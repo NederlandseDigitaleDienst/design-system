@@ -685,22 +685,25 @@
 							vertical-alignment="center"
 						>
 							<nldd-tag
-								text="In behandeling"
-								color="accent"
+								text="Dakisolatie"
+								color="groen"
 							></nldd-tag>
 							<nldd-tag
-								text="Afgerond"
-								color="success"
+								text="Warmtepomp"
+								color="hemelblauw"
 							></nldd-tag>
 							<nldd-tag
-								text="Wacht op jou"
-								color="warning"
+								text="Subsidie"
+								color="paars"
 							></nldd-tag>
 							<nldd-tag
-								text="Afgewezen"
-								color="critical"
+								text="Team Uitvoering"
+								color="oranje"
 							></nldd-tag>
-							<nldd-tag text="Concept"></nldd-tag>
+							<nldd-tag
+								text="Team Beleid"
+								color="donkergeel"
+							></nldd-tag>
 						</nldd-container>
 					</nldd-container>
 				</nldd-card>
@@ -713,9 +716,17 @@
 							<nldd-list-item href="#a-1042">
 								<nldd-title-cell
 									text="Aanvraag A-1042"
-									supporting-text="Dakisolatie, in behandeling"
+									supporting-text="Dakisolatie"
 								></nldd-title-cell>
 								<nldd-spacer-cell size="12"></nldd-spacer-cell>
+								<nldd-cell>
+									<nldd-badge
+										text="In behandeling"
+										color="warning"
+										size="sm"
+									></nldd-badge>
+								</nldd-cell>
+								<nldd-spacer-cell size="8"></nldd-spacer-cell>
 								<nldd-cell>
 									<nldd-badge
 										number="2"
@@ -733,9 +744,17 @@
 							<nldd-list-item href="#a-1043">
 								<nldd-title-cell
 									text="Aanvraag A-1043"
-									supporting-text="Warmtepomp, afgerond"
+									supporting-text="Warmtepomp"
 								></nldd-title-cell>
 								<nldd-spacer-cell size="12"></nldd-spacer-cell>
+								<nldd-cell>
+									<nldd-badge
+										text="Afgerond"
+										color="success"
+										size="sm"
+									></nldd-badge>
+								</nldd-cell>
+								<nldd-spacer-cell size="8"></nldd-spacer-cell>
 								<nldd-icon-cell
 									size="20"
 									color="secondary"
