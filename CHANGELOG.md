@@ -24,6 +24,7 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **`popover-needs-name` no longer asks for `accessible-label` on a popover in the `interest` slot.** There its content is the description of the button, and a label would be read in its place.
+- **The bottom sheet of `nldd-date-field` and `nldd-time-field` closes with "Klaar" instead of "Annuleer".** A picked date is already in the field, and the time wheels keep what they show, as a native wheel does: you turn back to change your mind. On sm the time sheet has "Klaar" in its title bar only, and no button below the wheels. Escape still puts the old time back. The translation keys `components.date-field.cancel-action` and `components.time-field.cancel-action` are gone; `nldd lint` names `components.date-field.confirm-action` and `components.time-field.confirm-action` where you override the old ones.
 - **The wheels of `nldd-time-picker` fade over every row above and below the selection,** so they read as a wheel. The fade follows `rows`.
 
 ### Fixed

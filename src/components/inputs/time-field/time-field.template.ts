@@ -72,8 +72,8 @@ function renderPicker(component: NLDDTimeField): TemplateResult | typeof nothing
 			>
 				<nldd-top-title-bar
 					text=${component._pickerLabel}
-					dismiss-text=${component._t('components.time-field.cancel-action')}
-					@dismiss=${component._handlePickerDismiss}
+					dismiss-text=${component._t('components.time-field.confirm-action')}
+					@dismiss=${component._handlePickerConfirm}
 				></nldd-top-title-bar>
 				<nldd-container
 					padding="16"
@@ -95,14 +95,16 @@ function renderPicker(component: NLDDTimeField): TemplateResult | typeof nothing
 							step=${component.step}
 						></nldd-time-picker>
 					`}
-					<nldd-spacer size="16"></nldd-spacer>
-					<nldd-button
-						appearance="neutral-tinted"
-						size=${component._pickerButtonSize}
-						width="full"
-						text=${component._t('components.time-field.confirm-action')}
-						@click=${component._handlePickerConfirm}
-					></nldd-button>
+					<div class="time-field__picker-confirm">
+						<nldd-spacer size="16"></nldd-spacer>
+						<nldd-button
+							appearance="neutral-tinted"
+							size=${component._pickerButtonSize}
+							width="full"
+							text=${component._t('components.time-field.confirm-action')}
+							@click=${component._handlePickerConfirm}
+						></nldd-button>
+					</div>
 				</nldd-container>
 			</nldd-popover>
 		</div>

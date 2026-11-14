@@ -30,11 +30,14 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **`popover-needs-name` no longer asks for `accessible-label` on a popover in the `interest` slot.** There its content is the description of the button, and a label would be read in its place.
+- **The bottom sheet of `nldd-date-field` and `nldd-time-field` closes with "Klaar" instead of "Annuleer".** A picked date is already in the field, and the time wheels keep what they show, as a native wheel does: you turn back to change your mind. On sm the time sheet has "Klaar" in its title bar only, and no button below the wheels. Escape still puts the old time back. The translation keys `components.date-field.cancel-action` and `components.time-field.cancel-action` are gone; `nldd lint` names `components.date-field.confirm-action` and `components.time-field.confirm-action` where you override the old ones.
+- **The wheels of `nldd-time-picker` fade over every row above and below the selection,** so they read as a wheel. The fade follows `rows`.
 
 ### Fixed
 
 - **`hide()` on `nldd-popover` right after `show()` did nothing.** It now closes the popover, also before the browser has reported that it opened.
 - **"Gekopieerd" on the copy button of `nldd-code-viewer` disappeared after 2 seconds,** also with the pointer or the focus still on the button (WCAG 1.4.13). It now stays until the pointer leaves the button, focus moves on, or Escape, like a failed copy already did.
+- **The clock button in `nldd-time-field` had a rounder corner than the field around it.** It now follows the field's corner, as the calendar button in `nldd-date-field` already did.
 
 ## [0.23.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.22.0...v0.23.0) (2026-11-13)
 

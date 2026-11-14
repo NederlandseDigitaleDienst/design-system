@@ -17,8 +17,10 @@
  *
  * What you do in the picker is a preview until you leave it. The field shows
  * the time right away but commits it on close. "Klaar" and Enter keep the
- * choice, and so does a click outside once you have picked something. Cancel
- * and Escape put the old time back. On an empty field the wheels open at `min`,
+ * choice, and so does a click outside once you have picked something. Escape
+ * puts the old time back. On sm, where the picker is a bottom sheet, "Klaar"
+ * sits in its title bar and the sheet offers no cancel: as with a native wheel,
+ * you turn back to change your mind. On an empty field the wheels open at `min`,
  * or otherwise at the current time rounded to `step`, which does not fill in
  * the field yet.
  *
@@ -403,10 +405,9 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	 * What happened while scrolling is a proposal, not an answer: the field shows
 	 * it already, but only records it once you leave the picker in a way that
 	 * keeps the choice. "Klaar" always does, a click beside it only when something
-	 * has been chosen. Annuleer and Escape put the old value back.
+	 * has been chosen. Escape puts the old value back.
 	 *
-	 * That way a picker opened by accident costs you nothing, and "Annuleer" is
-	 * not a button that merely closes.
+	 * That way a picker opened by accident costs you nothing.
 	 */
 	private _settlePicker(): void {
 		document.removeEventListener('keydown', this._handlePickerEscape, true);
@@ -481,14 +482,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		this._popover?.hide();
 	}
 
-	public _handlePickerDismiss(e: Event): void {
-		e.stopPropagation();
-		this._pickerState = 'cancelled';
-		// Same as after a choice: focus back on the button. Without this, Annuleer,
-		// Escape and a click beside it leave focus on the input.
-		this._focusTriggerOnClose = true;
-		this._popover?.hide();
-	}
 
 	override formValue(): FormValue {
 		return this.value;

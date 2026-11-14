@@ -454,7 +454,7 @@ describe('nldd-time-field – picker', () => {
 		const trigger = el.shadowRoot!.querySelector<HTMLElement>('.time-field__picker-button nldd-icon-button')!;
 		document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch' }));
 		const focus = vi.spyOn(trigger, 'focus');
-		el._handlePickerDismiss(new Event('dismiss'));
+		el._handlePickerConfirm(new Event('click'));
 		el._handlePopoverToggle(Object.assign(new Event('toggle'), { newState: 'closed' }));
 		await Promise.resolve();
 		expect(focus).toHaveBeenCalledWith({ focusVisible: false });
@@ -535,18 +535,17 @@ describe('nldd-time-field – picker', () => {
 		expect(el.value).toBe('14:30');
 	});
 
-	it('zet de oude waarde terug bij annuleren', async () => {
+	it('houdt de gekozen tijd met Klaar in de titelbalk', async () => {
 		el = await fixture<NLDDTimeField>('<nldd-time-field value="09:30"></nldd-time-field>');
 		await waitForUpdate(el);
 		await openPicker(el);
 		scrollPickerTo(el, '14:30');
 		await waitForUpdate(el);
-		el.shadowRoot!.querySelector('nldd-top-title-bar')!.dispatchEvent(
-			new CustomEvent('dismiss', { bubbles: true, composed: true }),
-		);
+		const bar = el.shadowRoot!.querySelector('nldd-top-title-bar')!;
+		expect(bar.getAttribute('dismiss-text')).toBe('Klaar');
+		bar.dispatchEvent(new CustomEvent('dismiss', { bubbles: true, composed: true }));
 		await new Promise((r) => setTimeout(r, 200));
-		expect(el.value).toBe('09:30');
-		expect(el.shadowRoot!.querySelector<HTMLInputElement>('.time-field__input')!.value).toBe('09:30');
+		expect(el.value).toBe('14:30');
 	});
 
 	// The browser closes on Escape by itself and a lone synthetic key cannot
@@ -564,15 +563,14 @@ describe('nldd-time-field – picker', () => {
 		expect(el.value).toBe('09:30');
 	});
 
-	it('laat een leeg veld leeg na annuleren', async () => {
+	it('laat een leeg veld leeg na Escape', async () => {
 		el = await fixture<NLDDTimeField>('<nldd-time-field min="08:00"></nldd-time-field>');
 		await waitForUpdate(el);
 		await openPicker(el);
 		scrollPickerTo(el, '14:30');
 		await waitForUpdate(el);
-		el.shadowRoot!.querySelector('nldd-top-title-bar')!.dispatchEvent(
-			new CustomEvent('dismiss', { bubbles: true, composed: true }),
-		);
+		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		el.shadowRoot!.querySelector<NLDDPopover>('nldd-popover')!.hide();
 		await new Promise((r) => setTimeout(r, 200));
 		expect(el.value).toBe('');
 		expect(el.shadowRoot!.querySelector<HTMLInputElement>('.time-field__input')!.value).toBe('');

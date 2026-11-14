@@ -5,8 +5,9 @@ export const nlddDateFieldTranslations = {
 	// not sit in an nldd-form-field: without it the input is an unnamed control.
 	'components.date-field.default-label': 'Datum',
 	'components.date-field.default-range-label': 'Periode',
-	// Closes the sheet without choosing, so imperative like other direct actions.
-	'components.date-field.cancel-action': 'Annuleer',
+	// Closes the sheet. A picked date is already in the field, so there is
+	// nothing to cancel.
+	'components.date-field.confirm-action': 'Klaar',
 	// Prepositions introducing the two inputs of a range, not the endpoints
 	// themselves. The field label comes before them ("Periode, van"). The short
 	// form is the one visible between the two dates.

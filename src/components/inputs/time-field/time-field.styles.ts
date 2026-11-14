@@ -2,6 +2,7 @@ import { css, unsafeCSS } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
+const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 
 export const timeFieldStyles = css`
@@ -206,6 +207,12 @@ export const timeFieldStyles = css`
 		--context-control-corner-radius: var(--_time-field-nested-control-corner-radius);
 	}
 
+
+	@media (max-width: ${smMax}) {
+		.time-field__picker-confirm {
+			display: none;
+		}
+	}
 
 	@media (min-width: ${mdMin}) {
 		.time-field__picker-button nldd-top-title-bar {
