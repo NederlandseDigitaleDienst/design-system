@@ -33325,9 +33325,9 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "expandedType": {
-                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+                "text": "'base' | 'inherit' | 'tinted'"
               },
-              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -34141,7 +34141,7 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "expandedType": {
-                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+                "text": "'base' | 'inherit' | 'tinted'"
               },
               "description": "Surface behind the hero (section API)"
             },
@@ -34647,9 +34647,9 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "expandedType": {
-                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+                "text": "'base' | 'inherit' | 'tinted'"
               },
-              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -35166,9 +35166,9 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "expandedType": {
-                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+                "text": "'base' | 'inherit' | 'tinted'"
               },
-              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -35442,7 +35442,7 @@
           "type": {
             "text": "object"
           },
-          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted', 'accent-tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\", \"tinted\" en \"accent-tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, grow: { control: 'boolean', description: 'Neemt de hoogte die de pagina over heeft, zodat de footer onderaan staat. Zonder `grow` groeit de laatste sectie van een `nldd-page`.', table: { defaultValue: { summary: false } }, }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
+          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\" en \"tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, grow: { control: 'boolean', description: 'Neemt de hoogte die de pagina over heeft, zodat de footer onderaan staat. Zonder `grow` groeit de laatste sectie van een `nldd-page`.', table: { defaultValue: { summary: false } }, }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
         },
         {
           "kind": "variable",
@@ -35873,7 +35873,7 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "expandedType": {
-                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+                "text": "'base' | 'inherit' | 'tinted'"
               }
             },
             {
@@ -36417,9 +36417,9 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "expandedType": {
-                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+                "text": "'base' | 'inherit' | 'tinted'"
               },
-              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -36928,9 +36928,9 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "expandedType": {
-                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+                "text": "'base' | 'inherit' | 'tinted'"
               },
-              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -51009,12 +51009,12 @@
         {
           "kind": "variable",
           "name": "pageSectionBackgroundStyles",
-          "default": "css` :host([background=\"base\"]) { --context-background-color: var(--semantics-surfaces-base-background-color); ${surfaceContent} } :host([background=\"tinted\"]) { --context-background-color: var(--semantics-surfaces-tinted-background-color); ${surfaceContent} } :host([background=\"accent-tinted\"]) { --context-background-color: var(--semantics-surfaces-accent-tinted-background-color); ${surfaceContent} } :host([background=\"base\"]), :host([background=\"tinted\"]), :host([background=\"accent-tinted\"]) { background-color: var(--context-background-color); } `",
+          "default": "css` :host([background=\"base\"]) { --context-background-color: var(--semantics-surfaces-base-background-color); ${surfaceContent} } :host([background=\"tinted\"]) { --context-background-color: var(--semantics-surfaces-tinted-background-color); ${surfaceContent} } :host([background=\"base\"]), :host([background=\"tinted\"]) { background-color: var(--context-background-color); } `",
           "description": "The surface a `background` paints, and passes on through\n`--context-background-color` so cards and nested sections read the\nsame surface. Every section puts this first in its `styles`."
         },
         {
           "kind": "mixin",
-          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities. Padding and height are written as custom\nproperties on the host, which inherit through the shadow boundary into the\nsection's block element and slotted content; the background comes from\n`pageSectionBackgroundStyles`:\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted` | `accent-tinted`\n  (a tint of the theme's accent, with the contrast of `tinted`). Setting\n  one of those also cascades `--context-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
+          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities. Padding and height are written as custom\nproperties on the host, which inherit through the shadow boundary into the\nsection's block element and slotted content; the background comes from\n`pageSectionBackgroundStyles`:\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted`. Setting\n  one of those also cascades `--context-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
           "name": "PageSectionMixin",
           "members": [
             {

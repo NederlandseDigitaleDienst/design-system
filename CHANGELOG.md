@@ -14,6 +14,10 @@ here; consult the commit history if you need that level of detail.
 - **A popover that opens on interest instead of on a click.** Put an `nldd-popover` in the new `interest` slot of `nldd-button` or `nldd-icon-button`, or point at one with the new `interestfor` on those and on `nldd-link`, and it opens when the pointer rests on the control, when the control gets keyboard focus, and on a long press on touch. The control keeps its own click, so a reaction badge can toggle the reaction and still show who reacted, and a link can preview where it goes. See Added.
 - **`nldd-term` explains a term in running text.** The term stays in the sentence with a dotted underline and opens its definition in a popover. A term injected into content needs no ARIA of its own. See Added.
 
+### Breaking
+
+- **`background="accent-tinted"` is gone from the page sections and `nldd-hero`.** A whole section in the accent tint drew too much attention and did not read well. Use `tinted`, or put the content that belongs to the service in an `nldd-card` or `nldd-box` with `background="accent-tinted"`, which keep it. `nldd lint` reports the old value.
+
 ### Added
 
 - **`nldd-term`** — a term in running text with its definition behind it, such as a legal term from a glossary. A click, a tap, Enter or Space opens the definition in a popover, a bottom sheet on sm, and focus moves into it and back to the term when it closes. The term is the control, with its expanded state, and wraps with the sentence. A short definition goes in `definition`, as text, with an optional `source` and `source-href` under it, such as a glossary or an article of law. A longer one, with paragraphs or links, is an `nldd-popover` of your own that `popovertarget` points at, and every term for the same concept can share it. Mark only the first occurrence of a concept in a question or section: the underline is the only sign of the control, so it does not get lighter.

@@ -44,7 +44,7 @@
  *
  * @element nldd-hero
  *
- * @attr {'inherit'|'base'|'tinted'|'accent-tinted'} background - Surface behind the hero (section API)
+ * @attr {'inherit'|'base'|'tinted'} background - Surface behind the hero (section API)
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)
  * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)

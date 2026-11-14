@@ -93,12 +93,6 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 		expect(getComputedStyle(section).backgroundColor).toBe('rgb(1, 2, 3)');
 	});
 
-	it('paints the accent-tinted surface and cascades it', async () => {
-		const section = await surface('accent-tinted', '--semantics-surfaces-accent-tinted-background-color');
-		expect(getComputedStyle(section).backgroundColor).toBe('rgb(1, 2, 3)');
-		expect(getComputedStyle(section.querySelector('p')!).getPropertyValue('--context-background-color')).toBe('rgb(1, 2, 3)');
-	});
-
 	it('paints nothing for inherit', async () => {
 		el = await fixture('<nldd-simple-section></nldd-simple-section>');
 		await waitForUpdate(el);

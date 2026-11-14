@@ -2426,7 +2426,7 @@ A section that spans the full width without horizontal padding. Useful for backg
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2467,7 +2467,7 @@ The section that says what a page is for: it names the main goal of what you can
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface behind the hero (section API) |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface behind the hero (section API) |
 | `width` | `string` | Body max-width; 'full' removes the bound (section API) |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block padding override, also per edge and responsive (section API) |
@@ -2599,7 +2599,7 @@ A section with two equal columns side by side. The columns stand side by side in
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2637,7 +2637,7 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2968,7 +2968,7 @@ A basic section with responsive padding and gap based on container size. Contain
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -3072,7 +3072,7 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |

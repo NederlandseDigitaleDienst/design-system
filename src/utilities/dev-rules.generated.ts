@@ -1910,8 +1910,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-full-bleed-section-background",
-		"message": "`background` on nldd-full-bleed-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-full-bleed-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-full-bleed-section takes: base, inherit, tinted.",
+		"context": "nldd-full-bleed-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-full-bleed-section-padding-block",
@@ -1990,8 +1990,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-hero-background",
-		"message": "`background` on nldd-hero takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-hero[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-hero takes: base, inherit, tinted.",
+		"context": "nldd-hero[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-hero-padding-block",
@@ -2060,8 +2060,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-one-half-one-half-section-background",
-		"message": "`background` on nldd-one-half-one-half-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-one-half-one-half-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-one-half-one-half-section takes: base, inherit, tinted.",
+		"context": "nldd-one-half-one-half-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-one-half-one-half-section-padding-block",
@@ -2130,8 +2130,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-one-third-two-thirds-section-background",
-		"message": "`background` on nldd-one-third-two-thirds-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-one-third-two-thirds-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-one-third-two-thirds-section takes: base, inherit, tinted.",
+		"context": "nldd-one-third-two-thirds-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-one-third-two-thirds-section-padding-block",
@@ -2195,8 +2195,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-sidebar-section-background",
-		"message": "`background` on nldd-sidebar-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-sidebar-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-sidebar-section takes: base, inherit, tinted.",
+		"context": "nldd-sidebar-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-sidebar-section-padding-block",
@@ -2270,8 +2270,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-simple-section-background",
-		"message": "`background` on nldd-simple-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-simple-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-simple-section takes: base, inherit, tinted.",
+		"context": "nldd-simple-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-simple-section-padding-block",
@@ -2340,8 +2340,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-two-thirds-one-third-section-background",
-		"message": "`background` on nldd-two-thirds-one-third-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-two-thirds-one-third-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-two-thirds-one-third-section takes: base, inherit, tinted.",
+		"context": "nldd-two-thirds-one-third-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-two-thirds-one-third-section-padding-block",
