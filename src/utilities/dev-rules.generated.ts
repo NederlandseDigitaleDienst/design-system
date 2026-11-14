@@ -958,9 +958,7 @@ export const devRules: DevRule[] = [
 		"message": "nldd-term has both `definition` and `popovertarget`, and shows only the popover. Remove one.",
 		"context": "nldd-term[popovertarget]:not([popovertarget=\"\"])",
 		"assert": ":not([definition]:not([definition=\"\"]))",
-		"properties": [
-			"definition"
-		]
+		"properties": []
 	},
 	{
 		"id": "term-needs-definition",
@@ -991,10 +989,7 @@ export const devRules: DevRule[] = [
 		"message": "nldd-term has `source` next to `popovertarget`, and shows only the popover. Put the source in the popover.",
 		"context": "nldd-term[popovertarget]:not([popovertarget=\"\"])",
 		"assert": ":not([source]:not([source=\"\"])):not([source-href]:not([source-href=\"\"]))",
-		"properties": [
-			"source",
-			"sourceHref"
-		]
+		"properties": []
 	},
 	{
 		"id": "text-custom-size-invalid",
