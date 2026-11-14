@@ -5,6 +5,7 @@ import '../rich-text/rich-text.js';
 import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
 import '../../navigation/link/link.js';
+import '../../layout/spacer/spacer.js';
 
 export default {
 	title: 'Components/Content/Term',
@@ -61,12 +62,12 @@ export const MetPopovertarget = {
 		>
 			<nldd-container
 				padding="16"
-				gap="8"
 			>
 				<nldd-rich-text>
 					<p>Een beoordeling vooraf van de risico's van een verwerking voor de mensen van wie de gegevens zijn.</p>
 					<p>Verplicht als een verwerking waarschijnlijk een hoog risico oplevert.</p>
 				</nldd-rich-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-text
 					size="sm"
 					color="secondary"
