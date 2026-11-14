@@ -4,6 +4,7 @@ import type { SyntaxNode } from '@lezer/common';
 import { EMPHASIS_MARKERS, heldEmphasisField, holdEmphasis, repairChangesFor } from './text-editor.emphasis.js';
 import { enclosingNamed, inCodeBlock, isRuleLine } from './text-editor.syntax.js';
 import { isMentionLink } from './text-editor.mention.js';
+import { caretToEndBeforeFirstFocus } from './text-editor.focus-selection.js';
 
 /* Markdown editing operations for the headless command API. Each works on the
  * main selection and leaves focus on the editor, so a
@@ -76,6 +77,7 @@ export function toggleInlineWrap(view: EditorView, marker: string, nodeName: str
 	// itself — otherwise the command API and the Mod-b/i/e/k keymap would mutate a
 	// read-only (or disabled) editor.
 	if (view.state.readOnly) return;
+	caretToEndBeforeFirstFocus(view);
 	const { state } = view;
 	const len = marker.length;
 	const held = state.field(heldEmphasisField, false);

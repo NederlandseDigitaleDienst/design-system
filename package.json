@@ -67,6 +67,10 @@
       "types": "./dist/components/content/code-viewer/code-viewer.d.ts",
       "default": "./dist/components/content/code-viewer/code-viewer.js"
     },
+    "./term": {
+      "types": "./dist/components/content/term/term.d.ts",
+      "default": "./dist/components/content/term/term.js"
+    },
     "./icon": {
       "types": "./dist/components/content/icon/icon.d.ts",
       "default": "./dist/components/content/icon/icon.js"

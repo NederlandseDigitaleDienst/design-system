@@ -115,6 +115,7 @@ export const loaders: Record<string, () => Promise<unknown>> = {
 	'nldd-table': () => import('../components/lists-and-tables/table/table.js'),
 	'nldd-table-row': () => import('../components/lists-and-tables/table/table.js'),
 	'nldd-tag': () => import('../components/content/tag/tag.js'),
+	'nldd-term': () => import('../components/content/term/term.js'),
 	'nldd-text': () => import('../components/content/text/text.js'),
 	'nldd-text-cell': () => import('../components/lists-and-tables/cells/text-cell/text-cell.js'),
 	'nldd-text-editor': () => import('../components/inputs/text-editor/text-editor.js'),

@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { scrollFade } from '../../../assets/styles/scroll-fade.js';
 import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 export const menuStyles = css`
@@ -83,9 +84,6 @@ export const menuStyles = css`
 		flex-direction: column;
 		max-height: min(var(--_menu-max-height), calc(var(--_menu-max-items) * var(--_menu-item-size) + var(--_menu-padding) * 2));
 		outline: none;
-		overflow-x: hidden;
-		overflow-y: auto;
-		scroll-padding-block: var(--_menu-padding);
 	}
 
 	.menu:focus-visible:not(.is-pointer-focus) {
@@ -96,6 +94,16 @@ export const menuStyles = css`
 
 
 	/* # Elements */
+
+	.menu__scroller {
+		display: flex;
+		border-radius: inherit;
+		min-height: 0;
+		flex-direction: column;
+		overflow-x: hidden;
+		overflow-y: auto;
+		scroll-padding-block: var(--_menu-padding);
+	}
 
 	.menu__main {
 		display: flex;
@@ -196,6 +204,8 @@ export const menuStyles = css`
 		white-space: nowrap;
 		clip-path: inset(50%);
 	}
+
+	${scrollFade('.menu__scroller')}
 `;
 
 export const menuItemStyles = css`
@@ -208,6 +218,9 @@ export const menuItemStyles = css`
 	:host {
 		--_menu-item-is-expanded-content-color: var(--primitives-color-neutral-1000);
 		--_menu-item-is-destructive-content-color: var(--semantics-content-critical-color);
+		--_menu-item-resting-content-color: var(--context-content-color);
+		--_menu-item-resting-content-secondary-color: var(--context-content-secondary-color);
+		--_menu-item-confirm-duration: var(--primitives-transition-duration-fast);
 
 		${inheritedTextReset}
 		display: block;
@@ -321,9 +334,33 @@ export const menuItemStyles = css`
 	}
 
 
+	/* ## Confirmed
+	 *
+	 * The chosen item blinks once before the menu closes, as on macOS: the
+	 * highlight goes off for a third of the duration and comes back. */
+
+	:host([confirming]) .menu__item {
+		animation: menu-item-confirm var(--_menu-item-confirm-duration) step-end;
+	}
+
+	@keyframes menu-item-confirm {
+		0% {
+			--_menu-item-background-color: transparent;
+			--context-content-color: var(--_menu-item-resting-content-color);
+			--context-content-secondary-color: var(--_menu-item-resting-content-secondary-color);
+		}
+		33.333% {
+			--_menu-item-background-color: var(--_menu-item-is-highlighted-background-color);
+			--context-content-color: var(--_menu-item-is-highlighted-content-color);
+			--context-content-secondary-color: var(--_menu-item-is-highlighted-content-color);
+		}
+	}
+
+
 	@media (prefers-reduced-motion: reduce) {
 		.menu__item {
 			transition: none;
+			animation: none;
 		}
 	}
 

@@ -17,6 +17,18 @@ import { EditorState, type Extension } from '@codemirror/state';
  *  same window CodeMirror uses for the collapsed form. */
 const FOCUS_WINDOW_MS = 200;
 
+/** Editors whose caret someone placed: by focus, or by setting a selection.
+ *  Before that it sits at position 0, where nobody put it. */
+const placedViews = new WeakSet<EditorView>();
+
+/** A command on an editor whose caret nobody placed works at the end of the
+ *  text, where the next word would go, not at the start where the caret
+ *  happens to sit. */
+export function caretToEndBeforeFirstFocus(view: EditorView): void {
+	if (placedViews.has(view) || view.hasFocus) return;
+	view.dispatch({ selection: { anchor: view.state.doc.length } });
+}
+
 export function focusSelectionGuard(): Extension {
 	let focusAt = 0;
 	let inputAt = 0;
@@ -26,8 +38,12 @@ export function focusSelectionGuard(): Extension {
 	};
 
 	return [
+		EditorView.updateListener.of((update) => {
+			if (update.transactions.some((tr) => tr.selection)) placedViews.add(update.view);
+		}),
 		EditorView.domEventHandlers({
-			focus: () => {
+			focus: (_event, view) => {
+				placedViews.add(view);
 				focusAt = Date.now();
 				return false;
 			},

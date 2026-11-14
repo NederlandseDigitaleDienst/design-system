@@ -1,0 +1,7 @@
+severity: warn
+context: ':is(nldd-button, nldd-icon-button)[interestfor]'
+assert: ':not(:has(> nldd-popover[slot="interest"]))'
+message: 'This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.'
+examples:
+  passed: ['<nldd-button text="2" interestfor="wie-reageerde"></nldd-button>']
+  failed: ['<nldd-button text="2" interestfor="wie-reageerde"><nldd-popover slot="interest"><nldd-text>Sam, Noor</nldd-text></nldd-popover></nldd-button>']

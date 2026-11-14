@@ -329,6 +329,18 @@ export const devRules: DevRule[] = [
 		"context": "nldd-image:state(invalid-width)"
 	},
 	{
+		"id": "interestfor-no-effect",
+		"message": "This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.",
+		"context": ":is(nldd-button, nldd-icon-button)[interestfor]:not([interestfor=\"\"])",
+		"assert": ":not(:has(> nldd-popover[slot=\"interest\"]))",
+		"properties": []
+	},
+	{
+		"id": "interestfor-not-found",
+		"message": "`interestfor` names no nldd-popover in this tree, so nothing opens on interest.",
+		"context": ":is(nldd-button, nldd-icon-button, nldd-link):state(no-interest-target)"
+	},
+	{
 		"id": "kanban-column-needs-name",
 		"message": "nldd-kanban-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
 		"context": "nldd-kanban-column",
@@ -643,7 +655,7 @@ export const devRules: DevRule[] = [
 	{
 		"id": "popover-needs-name",
 		"message": "nldd-popover needs `accessible-label`, or a screen reader announces it without a name.",
-		"context": "nldd-popover",
+		"context": "nldd-popover:not([slot=\"interest\"])",
 		"assert": "[accessible-label]:not([accessible-label=\"\"])",
 		"properties": [
 			"accessibleLabel"
@@ -940,6 +952,44 @@ export const devRules: DevRule[] = [
 		"id": "tag-icon-only-needs-name",
 		"message": "An icon-only tag without an `accessible-label` has no accessible name. Add `accessible-label` so screen readers can announce it.",
 		"context": "nldd-tag:state(unnamed)"
+	},
+	{
+		"id": "term-max-one-definition",
+		"message": "nldd-term has both `definition` and `popovertarget`, and shows only the popover. Remove one.",
+		"context": "nldd-term[popovertarget]:not([popovertarget=\"\"])",
+		"assert": ":not([definition]:not([definition=\"\"]))",
+		"properties": []
+	},
+	{
+		"id": "term-needs-definition",
+		"message": "nldd-term has no definition, so it opens nothing. Set `definition`, or `popovertarget` to the id of an nldd-popover.",
+		"context": "nldd-term",
+		"assert": "[definition]:not([definition=\"\"]), [popovertarget]:not([popovertarget=\"\"])",
+		"properties": [
+			"definition",
+			"popovertarget"
+		]
+	},
+	{
+		"id": "term-popovertarget-not-found",
+		"message": "No nldd-popover with the id in `popovertarget` in the tree of this nldd-term.",
+		"context": "nldd-term:state(no-popover-target)"
+	},
+	{
+		"id": "term-source-href-no-effect",
+		"message": "nldd-term has `source-href` without `source`, so there is no link to show. Add `source`.",
+		"context": "nldd-term[source-href]:not([source-href=\"\"])",
+		"assert": "[source]:not([source=\"\"])",
+		"properties": [
+			"source"
+		]
+	},
+	{
+		"id": "term-source-no-effect",
+		"message": "nldd-term has `source` next to `popovertarget`, and shows only the popover. Put the source in the popover.",
+		"context": "nldd-term[popovertarget]:not([popovertarget=\"\"])",
+		"assert": ":not([source]:not([source=\"\"])):not([source-href]:not([source-href=\"\"]))",
+		"properties": []
 	},
 	{
 		"id": "text-custom-size-invalid",
@@ -1855,8 +1905,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-full-bleed-section-background",
-		"message": "`background` on nldd-full-bleed-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-full-bleed-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-full-bleed-section takes: base, inherit, tinted.",
+		"context": "nldd-full-bleed-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-full-bleed-section-padding-block",
@@ -1935,8 +1985,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-hero-background",
-		"message": "`background` on nldd-hero takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-hero[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-hero takes: base, inherit, tinted.",
+		"context": "nldd-hero[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-hero-padding-block",
@@ -2005,8 +2055,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-one-half-one-half-section-background",
-		"message": "`background` on nldd-one-half-one-half-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-one-half-one-half-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-one-half-one-half-section takes: base, inherit, tinted.",
+		"context": "nldd-one-half-one-half-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-one-half-one-half-section-padding-block",
@@ -2075,8 +2125,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-one-third-two-thirds-section-background",
-		"message": "`background` on nldd-one-third-two-thirds-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-one-third-two-thirds-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-one-third-two-thirds-section takes: base, inherit, tinted.",
+		"context": "nldd-one-third-two-thirds-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-one-third-two-thirds-section-padding-block",
@@ -2140,8 +2190,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-sidebar-section-background",
-		"message": "`background` on nldd-sidebar-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-sidebar-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-sidebar-section takes: base, inherit, tinted.",
+		"context": "nldd-sidebar-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-sidebar-section-padding-block",
@@ -2215,8 +2265,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-simple-section-background",
-		"message": "`background` on nldd-simple-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-simple-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-simple-section takes: base, inherit, tinted.",
+		"context": "nldd-simple-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-simple-section-padding-block",
@@ -2285,8 +2335,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-two-thirds-one-third-section-background",
-		"message": "`background` on nldd-two-thirds-one-third-section takes: accent-tinted, base, inherit, tinted.",
-		"context": "nldd-two-thirds-one-third-section[background]:not([background=\"accent-tinted\"], [background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
+		"message": "`background` on nldd-two-thirds-one-third-section takes: base, inherit, tinted.",
+		"context": "nldd-two-thirds-one-third-section[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-two-thirds-one-third-section-padding-block",

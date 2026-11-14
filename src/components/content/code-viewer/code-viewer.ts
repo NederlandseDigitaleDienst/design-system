@@ -78,7 +78,8 @@ import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 
-const COPY_FEEDBACK_DURATION_MS = 2000;
+/** Time to cross from the button onto the tooltip without losing it. */
+const COPY_LEAVE_DELAY_MS = 300;
 
 /* navigator.clipboard is undefined off a secure context (not https/localhost),
  * so the copy button would be a permanent dead button that only ever flashes
@@ -491,9 +492,9 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	}
 
 	public async _onCopyClick(event?: Event): Promise<void> {
-		// Safari and Firefox on Mac do not focus a button on click. A failure
-		// clears on focusout, so without focus a pointer user could never
-		// dismiss it by moving on.
+		// Safari and Firefox on Mac do not focus a button on click. The outcome
+		// clears on focusout, so without focus it could stay after the reader
+		// moved on.
 		(event?.currentTarget as HTMLElement | null)?.focus?.();
 		try {
 			if (!isClipboardAvailable()) throw new Error('Clipboard API unavailable');
@@ -503,18 +504,31 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			this._copyState = 'failure';
 		}
 		clearTimeout(this._copyResetTimer);
-		// A failure stays until the reader moves on (blur, Escape or another
-		// try): it is the outcome someone needs to read back, and a timer took
-		// it away before a screen magnifier user had found it.
-		if (this._copyState === 'failure') return;
-		this._copyResetTimer = setTimeout(() => {
-			this._copyState = 'idle';
-		}, COPY_FEEDBACK_DURATION_MS);
+		this._copyResetTimer = undefined;
 	}
 
-	/** Leaving the button clears a failure, which no timer does. */
+	/* The outcome stays while the pointer or the focus is on the button
+	 * (WCAG 1.4.13): a timer took it away before a screen magnifier user had
+	 * found it. Leaving the button, or Escape, clears it. */
 	public _onCopyBlur(): void {
-		if (this._copyState === 'failure') this._copyState = 'idle';
+		if (this._copyState !== 'idle') this._copyState = 'idle';
+	}
+
+	public _onCopyPointerLeave(): void {
+		if (this._copyState === 'idle') return;
+		// With focus on the button the outcome stays: a tap and a click both
+		// focus it, and on touch the pointer leaves right after the tap.
+		if (this.shadowRoot?.querySelector('nldd-icon-button')?.matches(':focus-within')) return;
+		clearTimeout(this._copyResetTimer);
+		this._copyResetTimer = setTimeout(() => {
+			this._copyResetTimer = undefined;
+			this._copyState = 'idle';
+		}, COPY_LEAVE_DELAY_MS);
+	}
+
+	public _onCopyPointerEnter(): void {
+		clearTimeout(this._copyResetTimer);
+		this._copyResetTimer = undefined;
 	}
 
 	/** Escape on the open feedback tooltip dismisses it early (WCAG 1.4.13). */

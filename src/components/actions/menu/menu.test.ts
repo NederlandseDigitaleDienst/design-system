@@ -1413,6 +1413,8 @@ describe('nldd-menu drill-in chain', () => {
 
 		// Selecting the deepest item should collapse all levels at once.
 		l3Item.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true }));
+		// The chosen item blinks before the chain closes.
+		await new Promise((resolve) => setTimeout(resolve, 450));
 		await waitForUpdate(root);
 
 		expect(l3Menu.matches(':popover-open')).toBe(false);
@@ -1469,6 +1471,8 @@ describe('nldd-menu drill-in chain', () => {
 		await waitForUpdate(root);
 
 		l3Item.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true }));
+		// The chosen item blinks before the chain closes.
+		await new Promise((resolve) => setTimeout(resolve, 450));
 		await waitForUpdate(root);
 
 		// After select-chain-close, every level should have shed its
@@ -3613,5 +3617,70 @@ describe('nldd-menu-item type="submit"', () => {
 		await Promise.all(items.map((item) => item.updateComplete));
 		const checkCell = (item: Element) => item.shadowRoot!.querySelector('nldd-icon-cell[horizontal-alignment="center"]');
 		expect(items.map(checkCell)).toEqual([null, null]);
+	});
+});
+
+describe('nldd-menu confirms a choice', () => {
+	let root: HTMLElement;
+
+	afterEach(() => {
+		if (root) cleanup(root);
+	});
+
+	it('blinks the chosen item and closes after it, with select right away', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item><nldd-menu-item text="Warmtepomp"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const [first, second] = Array.from(root.querySelectorAll('nldd-menu-item'));
+		let selected = 0;
+		root.addEventListener('select', () => selected++);
+		first.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(selected).toBe(1);
+		expect(first.hasAttribute('confirming')).toBe(true);
+		expect(root.matches(':popover-open')).toBe(true);
+		// A second click during the blink is not a second choice.
+		second.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(selected).toBe(1);
+		await new Promise((resolve) => setTimeout(resolve, 450));
+		expect(root.matches(':popover-open')).toBe(false);
+		expect(first.hasAttribute('confirming')).toBe(false);
+	});
+
+	it('keeps the highlight on the chosen item while it blinks', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item><nldd-menu-item text="Warmtepomp"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const [first, second] = Array.from(root.querySelectorAll('nldd-menu-item'));
+		first.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		(root as HTMLElement & { moveHighlight(direction: 'next' | 'prev'): void }).moveHighlight('next');
+		second.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', bubbles: true, composed: true }));
+		second.dispatchEvent(new MouseEvent('mouseenter'));
+		expect(first.hasAttribute('highlighted')).toBe(true);
+		expect(second.hasAttribute('highlighted')).toBe(false);
+		await new Promise((resolve) => setTimeout(resolve, 450));
+	});
+
+	it('does not blink in a listbox', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu variant="listbox"><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(item.hasAttribute('confirming')).toBe(false);
+	});
+
+	it('stops the blink when the menu leaves the page', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(item.hasAttribute('confirming')).toBe(true);
+		root.remove();
+		expect(item.hasAttribute('confirming')).toBe(false);
 	});
 });

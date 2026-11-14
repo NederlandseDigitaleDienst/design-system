@@ -266,11 +266,12 @@ export class NLDDMenuItem extends withTranslations(LitElement, nlddMenuItemTrans
 			}));
 			return;
 		}
+		// One choice per menu: a click during the blink is not a second one.
+		if (this.closest('nldd-menu')?.querySelector('nldd-menu-item[confirming]')) return;
 		this.dispatchEvent(new CustomEvent('select', {
 			bubbles: true,
 			composed: true,
 		}));
-		(this.closest('nldd-menu') as HTMLElement)?.hidePopover?.();
 		// The button is in this item's shadow root, so it has no form owner of
 		// its own: submit the form here, with validation and a cancelable event.
 		if (this.type === 'submit') ownerForm(this)?.requestSubmit();

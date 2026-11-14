@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-term[popovertarget]'
+assert: ':not([source]):not([source-href])'
+message: 'nldd-term has `source` next to `popovertarget`, and shows only the popover. Put the source in the popover.'
+examples:
+  passed: ['<nldd-term popovertarget="vv">verwerkingsverantwoordelijke</nldd-term>']
+  failed: ['<nldd-term popovertarget="vv" source="Artikel 4 AVG">verwerkingsverantwoordelijke</nldd-term>']

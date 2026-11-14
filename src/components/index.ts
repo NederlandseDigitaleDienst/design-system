@@ -27,6 +27,7 @@ export { NLDDBlockquote } from './content/blockquote/blockquote.js';
 export { NLDDAvatarGroup } from './content/avatar-group/avatar-group.js';
 export { NLDDIdentity } from './content/identity/identity.js';
 export { NLDDCodeViewer } from './content/code-viewer/code-viewer.js';
+export { NLDDTerm } from './content/term/term.js';
 export { NLDDIcon } from './content/icon/icon.js';
 export { NLDDImage } from './content/image/image.js';
 export { NLDDKeyboardShortcut } from './content/keyboard-shortcut/keyboard-shortcut.js';

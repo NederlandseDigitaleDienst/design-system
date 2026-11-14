@@ -74,7 +74,7 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.date-field.to-pick-date-action': 'Skohe un fecha',
 	'components.date-field.default-label': 'Fecha',
 	'components.date-field.default-range-label': 'Periodo',
-	'components.date-field.cancel-action': 'Kanselá',
+	'components.date-field.confirm-action': 'Kla',
 	'components.date-field.range-from-lowercase-label': 'di',
 	'components.date-field.range-to-lowercase-label': 'te ku',
 	'components.date-field.range-to-short-lowercase-label': 't/k',
@@ -222,7 +222,6 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.text-editor.task-done-label': 'Tarea, kla',
 	'components.time-field.default-label': 'Ora',
 	'components.time-field.to-pick-time-action': 'Skohe un ora',
-	'components.time-field.cancel-action': 'Kanselá',
 	'components.time-field.confirm-action': 'Kla',
 	'components.time-field.bad-input-error-text': 'Un ora manera hh:mm',
 	'components.time-field.range-underflow-error-text': 'Un ora for di {time}',
@@ -292,6 +291,7 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.pagination.go-to-page-action': 'Bai na página {page}',
 	'components.pagination.go-to-page-label': 'Bai na página',
 	'components.skip-link.action': 'Salta',
+	'components.skip-link.to-main-content-action': 'Bai na e kontenido prinsipal',
 	'components.top-navigation-bar.global-menu-bar-label': 'Navegashon prinsipal',
 	'components.top-navigation-bar.back-action': 'Bai bèk',
 	'components.top-navigation-bar.menu-action': 'Menu',
@@ -318,6 +318,7 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.step-bar.status-current-label': 'Paso aktual',
 	'components.step-bar.status-future-label': 'Ainda pa hasi',
 	'components.step-bar.compact-text': 'Paso {current} di {total}',
+	'components.term.source-capitalize': 'Fuente',
 };
 
 export default papCW;

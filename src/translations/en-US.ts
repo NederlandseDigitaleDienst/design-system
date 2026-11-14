@@ -69,7 +69,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.date-field.to-pick-date-action': 'Choose date',
 	'components.date-field.default-label': 'Date',
 	'components.date-field.default-range-label': 'Date range',
-	'components.date-field.cancel-action': 'Cancel',
+	'components.date-field.confirm-action': 'Done',
 	'components.date-field.range-from-lowercase-label': 'from',
 	'components.date-field.range-to-lowercase-label': 'through',
 	'components.date-field.range-to-short-lowercase-label': 'to',
@@ -224,7 +224,6 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.text-editor.task-done-label': 'Task, done',
 	'components.time-field.default-label': 'Time',
 	'components.time-field.to-pick-time-action': 'Choose time',
-	'components.time-field.cancel-action': 'Cancel',
 	'components.time-field.confirm-action': 'Done',
 	'components.time-field.bad-input-error-text': 'A time as hh:mm',
 	'components.time-field.range-underflow-error-text': 'A time from {time}',
@@ -287,6 +286,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.pagination.go-to-page-action': 'Go to page {page}',
 	'components.pagination.go-to-page-label': 'Go to page',
 	'components.skip-link.action': 'Skip',
+	'components.skip-link.to-main-content-action': 'Go to main content',
 	'components.top-navigation-bar.global-menu-bar-label': 'Main navigation',
 	'components.top-navigation-bar.back-action': 'Back',
 	'components.top-navigation-bar.menu-action': 'Menu',
@@ -313,6 +313,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.step-bar.status-current-label': 'Current step',
 	'components.step-bar.status-future-label': 'To do',
 	'components.step-bar.compact-text': 'Step {current} of {total}',
+	'components.term.source-capitalize': 'Source',
 };
 
 export default enUS;

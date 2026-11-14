@@ -5,7 +5,7 @@ import { reflectNonDefault } from './reflect-non-default.js';
 
 type Constructor<T = LitElement> = new (...args: any[]) => T;
 
-export type PageSectionBackground = 'inherit' | 'base' | 'tinted' | 'accent-tinted';
+export type PageSectionBackground = 'inherit' | 'base' | 'tinted';
 export type PageSectionPadding =
 	| '0' | '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24'
 	| '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
@@ -26,14 +26,8 @@ export const pageSectionBackgroundStyles = css`
 		${surfaceContent}
 	}
 
-	:host([background="accent-tinted"]) {
-		--context-background-color: var(--semantics-surfaces-accent-tinted-background-color);
-		${surfaceContent}
-	}
-
 	:host([background="base"]),
-	:host([background="tinted"]),
-	:host([background="accent-tinted"]) {
+	:host([background="tinted"]) {
 		background-color: var(--context-background-color);
 	}
 `;
@@ -64,8 +58,7 @@ const PADDING_KEYS = [
  * `pageSectionBackgroundStyles`:
  *
  * - **background**: `inherit` (the default — transparent, shows the ancestor's
- *   surface) | `base` (the base surface color) | `tinted` | `accent-tinted`
- *   (a tint of the theme's accent, with the contrast of `tinted`). Setting
+ *   surface) | `base` (the base surface color) | `tinted`. Setting
  *   one of those also cascades `--context-background-color` so
  *   descendants (cards, nested sections) read the same surface.
  * - **block padding**: `padding-block` (both edges) with `padding-top`

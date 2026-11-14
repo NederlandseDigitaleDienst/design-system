@@ -6,7 +6,7 @@ Dit bestand is de bron voor onderhouders en gaat verder dan wat een afnemer nodi
 
 ## Een probleem melden of iets voorstellen
 
-Open een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues). Zet er bij een bug in welke versie van `@nldd/design-system` je gebruikt, welk component het betreft en wat je verwachtte. Een klein stukje HTML dat het laat zien scheelt het meeste heen en weer.
+Open een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues). Zet er bij een bug in welke versie van `@nldd/design-system` je gebruikt, welk component het betreft en wat je verwachtte. Een klein stukje HTML dat het laat zien scheelt het meeste heen en weer. Gaat het om hoe iets eruitziet, voeg dan een screenshot toe.
 
 Mis je een component of een variant, beschrijf dan het probleem in je interface en niet alleen de oplossing die je in gedachten hebt. Vaak blijkt een bestaand component het al te kunnen, en anders helpt die context bij het ontwerp.
 

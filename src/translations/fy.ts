@@ -72,7 +72,7 @@ export const fy: Record<TranslationKey, string> = {
 	'components.date-field.to-pick-date-action': 'Datum kieze',
 	'components.date-field.default-label': 'Datum',
 	'components.date-field.default-range-label': 'Perioade',
-	'components.date-field.cancel-action': 'Annulearje',
+	'components.date-field.confirm-action': 'Klear',
 	'components.date-field.range-from-lowercase-label': 'fan',
 	'components.date-field.range-to-lowercase-label': 'oant en mei',
 	'components.date-field.range-to-short-lowercase-label': 'o/m',
@@ -220,7 +220,6 @@ export const fy: Record<TranslationKey, string> = {
 	'components.text-editor.task-done-label': 'Taak, ôfrûne',
 	'components.time-field.default-label': 'Tiid',
 	'components.time-field.to-pick-time-action': 'Tiid kieze',
-	'components.time-field.cancel-action': 'Annulearje',
 	'components.time-field.confirm-action': 'Klear',
 	'components.time-field.bad-input-error-text': 'In tiid as oo:mm',
 	'components.time-field.range-underflow-error-text': 'In tiid fan {time} ôf',
@@ -290,6 +289,7 @@ export const fy: Record<TranslationKey, string> = {
 	'components.pagination.go-to-page-action': 'Gean nei side {page}',
 	'components.pagination.go-to-page-label': 'Gean nei side',
 	'components.skip-link.action': 'Oerslaan',
+	'components.skip-link.to-main-content-action': 'Gean nei de haadynhâld',
 	'components.top-navigation-bar.global-menu-bar-label': 'Haadnavigaasje',
 	'components.top-navigation-bar.back-action': 'Werom',
 	'components.top-navigation-bar.menu-action': 'Menu',
@@ -316,6 +316,7 @@ export const fy: Record<TranslationKey, string> = {
 	'components.step-bar.status-current-label': 'Hjoeddeistige stap',
 	'components.step-bar.status-future-label': 'Noch te dwaan',
 	'components.step-bar.compact-text': 'Stap {current} fan {total}',
+	'components.term.source-capitalize': 'Boarne',
 };
 
 export default fy;

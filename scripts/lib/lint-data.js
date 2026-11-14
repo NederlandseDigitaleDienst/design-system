@@ -174,9 +174,28 @@ function valueRules(tags) {
 
 const toProperty = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 
-/** `[accessible-label]` in an assert also holds for the property `accessibleLabel`. */
+/**
+ * `[accessible-label]` in an assert also holds for the property `accessibleLabel`.
+ * Not inside a `:not()`: there the attribute is what may not be there, and a
+ * property that is set does not excuse it.
+ */
 function propertiesIn(assert) {
-	return [...new Set([...assert.matchAll(/\[([a-z-]+)\](?!:not)|\[([a-z-]+)\]:not/g)].map((match) => toProperty(match[1] ?? match[2])))];
+	const names = [];
+	const negated = [];
+	for (let i = 0; i < assert.length; i++) {
+		if (assert.startsWith(':not(', i)) {
+			negated.push(true);
+			i += 4;
+		} else if (assert[i] === '(') {
+			negated.push(false);
+		} else if (assert[i] === ')') {
+			negated.pop();
+		} else if (assert[i] === '[' && negated.filter(Boolean).length % 2 === 0) {
+			const match = /^\[([a-z-]+)\]/.exec(assert.slice(i));
+			if (match) names.push(toProperty(match[1]));
+		}
+	}
+	return [...new Set(names)];
 }
 
 /** The rules the browser runs: plain CSS, so class pseudos become lists of tags. */

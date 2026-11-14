@@ -1,4 +1,5 @@
 import { css, unsafeCSS } from 'lit';
+import { scrollFade } from '../../../assets/styles/scroll-fade.js';
 import { surfaceContent } from '../../../assets/styles/shadow-resets.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
@@ -25,7 +26,7 @@ export const popoverStyles = css`
 		border: none;
 		box-shadow: var(--semantics-overlays-box-shadow);
 		background-color: var(--_popover-background-color);
-		overflow: auto;
+		overflow: hidden;
 		padding: 0;
 		isolation: isolate;
 		/* Selectable again under a trigger that switches selection off for itself
@@ -67,6 +68,17 @@ export const popoverStyles = css`
 
 	:host([hidden]) {
 		display: none;
+	}
+
+	/* # Elements */
+
+	.popover__scroller {
+		display: flex;
+		border-radius: inherit;
+		min-height: 0;
+		flex-direction: column;
+		flex-grow: 1;
+		overflow: auto;
 	}
 
 	::slotted(nldd-page) {
@@ -131,4 +143,6 @@ export const popoverStyles = css`
 			transition: none;
 		}
 	}
+
+	${scrollFade('.popover__scroller')}
 `;

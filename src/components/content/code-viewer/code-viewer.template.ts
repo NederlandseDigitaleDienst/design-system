@@ -32,6 +32,8 @@ export function codeViewerTemplate(component: NLDDCodeViewer): TemplateResult {
 					placement="left"
 					?open=${copyState !== 'idle'}
 					@dismiss=${component._onCopyDismiss}
+					@pointerenter=${component._onCopyPointerEnter}
+					@pointerleave=${component._onCopyPointerLeave}
 				>
 					<nldd-icon-button
 						icon=${copyState === 'success' ? 'check-mark' : 'copy'}

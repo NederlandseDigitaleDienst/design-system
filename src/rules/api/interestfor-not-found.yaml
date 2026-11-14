@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: ':is(nldd-button, nldd-icon-button, nldd-link):state(no-interest-target)'
+message: '`interestfor` names no nldd-popover in this tree, so nothing opens on interest.'

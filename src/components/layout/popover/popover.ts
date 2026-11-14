@@ -24,6 +24,10 @@
  * For a custom focus target inside the popover, put `autofocus` on the child you
  * want. Without it the popover host itself takes focus.
  *
+ * Content taller than the room the window leaves scrolls in the popover, with
+ * a fade at the edge where more content waits: at the bottom while you can
+ * scroll down, at the top once you have scrolled.
+ *
  * On md and up the popover closes with Escape or a click outside it, and that
  * click goes on to what it lands on, as with any native popover: the page has
  * no backdrop and stays in use, so a click on another control does what it
@@ -31,6 +35,15 @@
  * a stray click must not close it (a form, a few steps, work you would lose),
  * is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education
  * is the exception, a manual popover that stays until it is dismissed.
+ *
+ * In the `interest` slot of an nldd-button or nldd-icon-button, or named by
+ * `interestfor` on those or on an nldd-link, the popover describes that control
+ * instead: it opens when the pointer rests on the control, when the control
+ * gets keyboard focus, and on a long press on touch, and the control keeps its
+ * own click. Focus stays on the control, the control gets no expanded state,
+ * and the popover's content is read as its description. It holds information
+ * only, no link or button. In the slot it needs no `accessible-label`; one that
+ * `interestfor` names keeps its label, which is left out while it describes.
  *
  * On sm the popover is a bottom sheet with a dimmed backdrop, which closes with
  * Escape or a tap outside it, and slides down as it goes. It is a manual popover
@@ -139,6 +152,29 @@ export class NLDDPopover extends LitElement {
 	private _isOpen = false;
 	/** True when this popover picks its own popover mode: the consumer set none. */
 	private _managesMode = false;
+	/** True when this popover set its own role: the consumer set none. */
+	private _managesRole = false;
+	private _interestMode = false;
+
+	/**
+	 * Set by the control this popover opens on interest for, from its
+	 * `interest` slot or `interestfor` (see InterestController). The popover
+	 * then describes that control: it opens on hover, focus or a long press,
+	 * leaves focus where it is, and puts no disclosure state on the control.
+	 * Not an attribute of its own: it follows from the control.
+	 * @internal
+	 */
+	get _interest(): boolean {
+		return this._interestMode;
+	}
+
+	set _interest(value: boolean) {
+		if (value === this._interestMode) return;
+		this._interestMode = value;
+		if (this._managesRole) this.setAttribute('role', value ? 'tooltip' : 'dialog');
+		this._syncLabel();
+		this._syncMode();
+	}
 	/** Set while the sm bottom sheet slides down before it really closes. */
 	private _closing = false;
 	private _closingTimer: ReturnType<typeof setTimeout> | null = null;
@@ -166,7 +202,10 @@ export class NLDDPopover extends LitElement {
 			this.setAttribute('popover', '');
 		}
 		if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '-1');
-		if (!this.hasAttribute('role')) this.setAttribute('role', 'dialog');
+		if (!this.hasAttribute('role')) {
+			this._managesRole = true;
+			this.setAttribute('role', this._interestMode ? 'tooltip' : 'dialog');
+		}
 		this.addEventListener('beforetoggle', this._handleBeforeToggle);
 		this.addEventListener('toggle', this._handleToggle);
 		this.addEventListener('keydown', this._handleKeydown);
@@ -247,7 +286,7 @@ export class NLDDPopover extends LitElement {
 			}
 		}
 		if (changed.has('accessibleLabel') || changed.has('translations')) {
-			this.setAttribute('aria-label', this._resolvedAccessibleLabel);
+			this._syncLabel();
 		}
 		// Anchor change at runtime: strip aria-* from the old trigger and put it on
 		// the new one. Without this the old trigger keeps stale aria-expanded and
@@ -280,6 +319,13 @@ export class NLDDPopover extends LitElement {
 		return this.accessibleLabel || this._t('components.popover.accessible-label');
 	}
 
+	/** As a description its content is what is read, and a label would take
+	 *  its place: the control would be described as "Popover". */
+	private _syncLabel(): void {
+		if (this._interestMode) this.removeAttribute('aria-label');
+		else this.setAttribute('aria-label', this._resolvedAccessibleLabel);
+	}
+
 	// — Public API ————————————————————————————————————————————————————————————
 
 	show(): void {
@@ -305,7 +351,9 @@ export class NLDDPopover extends LitElement {
 	};
 
 	hide(): void {
-		if (!this._isOpen || this._closing) return;
+		// Asked of the popover itself: _isOpen follows the toggle event, which
+		// arrives a task later, so a hide right after a show would do nothing.
+		if (!this.matches(':popover-open') || this._closing) return;
 		const animate = (this._smQuery?.matches ?? false)
 			&& !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		if (!animate) {
@@ -473,6 +521,9 @@ export class NLDDPopover extends LitElement {
 	}
 
 	private _updateAnchorAria(open: boolean): void {
+		// A description is no disclosure: the control gets no expanded state and
+		// no haspopup. InterestController links the two instead.
+		if (this._interestMode) return;
 		const anchorEl = this._getAnchorEl();
 		// Anchor changed (e.g. anchorElement property switched, or anchor
 		// attribute updated): strip aria-expanded and any aria-controls from the
@@ -544,8 +595,13 @@ export class NLDDPopover extends LitElement {
 	 * mode of an open popover closes it.
 	 */
 	private _syncMode(): void {
+		// Changing the attribute of an open popover closes it, so an open one
+		// keeps its mode and catches up when it closes. InterestController sets
+		// _interest before it opens the popover, so in practice it never waits.
 		if (!this._managesMode || this.matches(':popover-open')) return;
-		this.setAttribute('popover', this._smQuery?.matches ? 'manual' : '');
+		// Interest opens it, so a hover must not close a menu that is open, as
+		// an auto popover would. InterestController closes it instead.
+		this.setAttribute('popover', this._smQuery?.matches || this._interestMode ? 'manual' : '');
 	}
 
 	private get _isManual(): boolean {
@@ -673,7 +729,7 @@ export class NLDDPopover extends LitElement {
 	private _handleBeforeToggle = (event: Event): void => {
 		if ((event as ToggleEvent).newState !== 'open') return;
 		this.removeAttribute('positioned');
-		this._focusReturn.remember(this._getAnchorEl());
+		if (!this._interestMode) this._focusReturn.remember(this._getAnchorEl());
 	};
 
 	private _handleToggle = async (event: Event): Promise<void> => {
@@ -690,7 +746,7 @@ export class NLDDPopover extends LitElement {
 			// Stop scroll/resize tracking, no longer needed once closed.
 			this._cleanupAutoUpdate?.();
 			this._cleanupAutoUpdate = null;
-			this._focusReturn.restore(this);
+			if (!this._interestMode) this._focusReturn.restore(this);
 			this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
 			return;
 		}
@@ -708,7 +764,9 @@ export class NLDDPopover extends LitElement {
 			this._cleanupAutoUpdate = autoUpdate(anchorEl, this, () => this.reposition());
 		}
 		await this.updateComplete;
-		this._manageFocus();
+		// Opened by interest, focus stays on the control: someone typing in a
+		// field while the pointer passes over it keeps typing.
+		if (!this._interestMode) this._manageFocus();
 		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
 	};
 

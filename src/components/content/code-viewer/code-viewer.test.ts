@@ -242,7 +242,7 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
-	it('a failure outlasts the feedback duration and clears on blur', async () => {
+	it('a failure stays and clears on blur', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) }, configurable: true });
 		vi.useFakeTimers();
@@ -252,7 +252,7 @@ describe('nldd-code-viewer', () => {
 			await litEl.updateComplete;
 			await (el as unknown as NLDDCodeViewer)._onCopyClick();
 			await litEl.updateComplete;
-			await vi.advanceTimersByTimeAsync(2100);
+			await vi.advanceTimersByTimeAsync(5000);
 			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('failure');
 
@@ -266,7 +266,7 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
-	it('resets to idle after the feedback duration', async () => {
+	it('a success stays while the pointer is on the button, and clears after it leaves', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
 		vi.useFakeTimers();
@@ -276,8 +276,22 @@ describe('nldd-code-viewer', () => {
 			await litEl.updateComplete;
 			await (el as unknown as NLDDCodeViewer)._onCopyClick();
 			await litEl.updateComplete;
+			await vi.advanceTimersByTimeAsync(5000);
+			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
-			await vi.advanceTimersByTimeAsync(2100);
+			const tooltip = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-tooltip')!;
+			expect(tooltip.hasAttribute('open')).toBe(true);
+
+			// Crossing onto the tooltip keeps it.
+			tooltip.dispatchEvent(new PointerEvent('pointerleave'));
+			await vi.advanceTimersByTimeAsync(100);
+			tooltip.dispatchEvent(new PointerEvent('pointerenter'));
+			await vi.advanceTimersByTimeAsync(1000);
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
+
+			tooltip.dispatchEvent(new PointerEvent('pointerleave'));
+			await vi.advanceTimersByTimeAsync(400);
 			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
 		} finally {
@@ -286,7 +300,49 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
-	it('tooltip dismiss (Escape) resets copy state to idle and cancels the timer', async () => {
+	it('a success stays after the pointer leaves while the button has focus', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const litEl = el as HTMLElement & { updateComplete: Promise<boolean> };
+			await litEl.updateComplete;
+			const button = el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-button')!;
+			// As on touch: the tap focuses the button, and the pointer leaves right after.
+			await (el as unknown as NLDDCodeViewer)._onCopyClick({ currentTarget: button } as unknown as Event);
+			await litEl.updateComplete;
+			const tooltip = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-tooltip')!;
+			tooltip.dispatchEvent(new PointerEvent('pointerleave'));
+			await new Promise((resolve) => setTimeout(resolve, 400));
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
+			button.blur();
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
+		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
+	it('a success clears on blur', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const litEl = el as HTMLElement & { updateComplete: Promise<boolean> };
+			await litEl.updateComplete;
+			await (el as unknown as NLDDCodeViewer)._onCopyClick();
+			await litEl.updateComplete;
+			const iconBtn = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-icon-button')!;
+			iconBtn.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true }));
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
+		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
+	it('tooltip dismiss (Escape) resets copy state to idle', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
 		vi.useFakeTimers();

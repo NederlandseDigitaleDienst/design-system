@@ -10,6 +10,8 @@ export interface DescribedElement {
 	describedByElements: readonly Element[];
 	/** The element the description belongs to. Override where it differs. */
 	describedTarget(): Element | null;
+	/** Elements the component itself adds to the description. */
+	ownDescriptions(): readonly Element[];
 }
 
 /**
@@ -95,7 +97,7 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 					// element. Handing it on there would hand it to itself, and a
 					// component that does that renders forever.
 					const onSelf = target === this;
-					applyDescribedBy(target, this.describedByElements, onSelf);
+					applyDescribedBy(target, [...this.describedByElements, ...this.ownDescriptions()], onSelf);
 					// Optional: nldd-button carries this mixin for its description and
 					// has no validity of its own.
 					const invalid = (this as { invalid?: boolean }).invalid;
@@ -115,6 +117,16 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 		 */
 		describedTarget(): Element | null {
 			return this.shadowRoot?.querySelector('input, textarea, select') ?? null;
+		}
+
+		/**
+		 * Elements the component itself adds to the description, after those of
+		 * nldd-form-field: the popover in the `interest` slot of nldd-button.
+		 * Request an update when this changes. Public for the same reason as
+		 * `describedTarget()`.
+		 */
+		ownDescriptions(): readonly Element[] {
+			return [];
 		}
 	}
 	// Annotated rather than inferred: an inferred mixin return type writes the

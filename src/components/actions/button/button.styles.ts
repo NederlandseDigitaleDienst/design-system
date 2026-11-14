@@ -55,6 +55,12 @@ export const buttonStyles = css`
 		-webkit-tap-highlight-color: transparent;
 	}
 
+	/* iOS opens a link preview on a long press, which is ours here. */
+	:host(:has(> [slot="interest"])) .button,
+	:host([interestfor]) .button {
+		-webkit-touch-callout: none;
+	}
+
 	:host([size="xs"]) {
 		--_button-corner-radius: var(--semantics-controls-xs-corner-radius);
 		--_button-min-size: var(--semantics-controls-xs-min-size);

@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-term[popovertarget]'
+assert: ':not([definition])'
+message: 'nldd-term has both `definition` and `popovertarget`, and shows only the popover. Remove one.'
+examples:
+  passed: ['<nldd-term popovertarget="vv">verwerkingsverantwoordelijke</nldd-term>']
+  failed: ['<nldd-term popovertarget="vv" definition="Degene die het doel vaststelt.">verwerkingsverantwoordelijke</nldd-term>']

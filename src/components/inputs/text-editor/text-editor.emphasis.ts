@@ -246,6 +246,13 @@ const repairOnRelease = ViewPlugin.fromClass(class {
 		const held = this.pending;
 		this.pending = null;
 		if (!held || this.destroyed || this.view.state.readOnly) return;
+		// Bold with nothing typed in it: the caret left an empty pair, which no
+		// renderer makes anything of. Not on blur, where a toolbar click is
+		// about to add a second format to the first.
+		if (this.view.state.sliceDoc(held.from, held.to) === held.marker + held.marker) {
+			this.view.dispatch({ changes: { from: held.from, to: held.to }, userEvent: 'input.emphasis' });
+			return;
+		}
 		const spec = repairSpec(this.view.state, held, false);
 		if (spec) this.view.dispatch(spec);
 	}

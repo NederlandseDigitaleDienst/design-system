@@ -59,7 +59,7 @@ function sourceFiles(directory) {
 }
 
 /** Things a rule can be about that are no single component. */
-const CONCEPTS = ['action', 'class', 'html', 'style', 'stylesheet', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'slot', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'variant', 'website'];
+const CONCEPTS = ['action', 'class', 'html', 'interestfor', 'style', 'stylesheet', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'slot', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'variant', 'website'];
 const FORM = /-(needs|no|max|goes)-/;
 const API_ENDING = /-(renamed|invalid|no-effect|not-found)$/;
 

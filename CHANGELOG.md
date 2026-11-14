@@ -9,6 +9,44 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A popover that opens on interest instead of on a click.** Put an `nldd-popover` in the new `interest` slot of `nldd-button` or `nldd-icon-button`, or point at one with the new `interestfor` on those and on `nldd-link`, and it opens when the pointer rests on the control, when the control gets keyboard focus, and on a long press on touch. The control keeps its own click, so a reaction badge can toggle the reaction and still show who reacted, and a link can preview where it goes. See Added.
+- **`nldd-term` explains a term in running text.** The term stays in the sentence with a dotted underline and opens its definition in a popover. A term injected into content needs no ARIA of its own. See Added.
+
+### Breaking
+
+- **`background="accent-tinted"` is gone from the page sections and `nldd-hero`.** A whole section in the accent tint drew too much attention and did not read well. Use `tinted`, or put the content that belongs to the service in an `nldd-card` or `nldd-box` with `background="accent-tinted"`, which keep it. `nldd lint` reports the old value.
+- **The translation keys `components.date-field.cancel-action` and `components.time-field.cancel-action` are gone,** now that the bottom sheet closes with "Klaar". An override of them no longer shows anywhere. `nldd lint` names `components.date-field.confirm-action` and `components.time-field.confirm-action` in their place.
+
+### Added
+
+- **`nldd-term`** — a term in running text with its definition behind it, such as a legal term from a glossary. A click, a tap, Enter or Space opens the definition in a popover, a bottom sheet on sm, and focus moves into it and back to the term when it closes. The term is the control, with its expanded state, and wraps with the sentence. A short definition goes in `definition`, as text, with an optional `source` and `source-href` under it, such as a glossary or an article of law. A longer one, with paragraphs or links, is an `nldd-popover` of your own that `popovertarget` points at, and every term for the same concept can share it. Mark only the first occurrence of a concept in a question or section: the underline is the only sign of the control, so it does not get lighter.
+- **`term-needs-definition`, `term-max-one-definition`** (warn): an `nldd-term` without `definition` or `popovertarget` opens nothing, and one with both shows only the popover. **`term-source-no-effect`** and **`term-source-href-no-effect`** (warn) report a `source` next to `popovertarget` and a `source-href` without `source`. In a dev build, **`term-popovertarget-not-found`** (warn) reports a `popovertarget` that finds no `nldd-popover`.
+- **`interest` slot on `nldd-button` and `nldd-icon-button`, and `interestfor` on those and on `nldd-link`.** `interestfor` takes the id of a popover elsewhere, as `popovertarget` does for a click: for a link in a `<p>`, where a popover of your own markup would break the paragraph, or for one popover that several controls share. A slotted popover wins. The popover describes the control: focus stays where it is, its content is read as the control's description, Escape closes it wherever focus is, and the pointer can move onto it without closing it. On `nldd-icon-button` it takes the place of the button's own tooltip, which comes back when the popover goes. It holds information only: what a hover opens cannot be reached with the keyboard, so use the `popup` slot for content you act on. It does not open over a menu the button opened.
+- **`interestfor-no-effect`** (warn) reports a button with both `interestfor` and a popover in its `interest` slot. In a dev build, **`interestfor-not-found`** (warn) reports an `interestfor` that finds no `nldd-popover`.
+- **`skip-link-needs-text`** (hint): a skip link outside the header of a page only says "Sla over". Name what it skips with `text`.
+
+### Changed
+
+- **`popover-needs-name` no longer asks for `accessible-label` on a popover in the `interest` slot.** There its content is the description of the button, and a label would be read in its place.
+- **The bottom sheet of `nldd-date-field` and `nldd-time-field` closes with "Klaar" instead of "Annuleer".** A picked date is already in the field, and the time wheels keep what they show, as a native wheel does: you turn back to change your mind. On sm the time sheet has "Klaar" in its title bar only, and no button below the wheels. Escape still puts the old time back. The old translation keys are gone, see Breaking.
+- **The wheels of `nldd-time-picker` fade over every row above and below the selection,** so they read as a wheel. The fade follows `rows`.
+- **The time wheels of `nldd-time-field` get fewer rows when the window is short.** They show 7, and down to 3 when the picker would otherwise run off the window, so it never scrolls. They grow back when the window does.
+- **A chosen `nldd-menu-item` blinks once before the menu closes,** as on macOS, so you see what you picked. `select` still fires at once. Not with `prefers-reduced-motion`, and not in a `variant="listbox"` menu, such as the one in `nldd-combo-box` and `nldd-token-field`, where the field shows the choice itself.
+- **`nldd-menu` and `nldd-popover` fade at the edge where they scroll,** at the bottom while there is more below and at the top once you have scrolled. The content itself fades, so it works on any background, also a tinted box or an image in a popover. The popover now scrolls in an element inside it, and the popover itself no longer does. In a browser without scroll-driven animations there is no fade.
+- **`nldd-skip-link` says "Ga naar de hoofdinhoud" around the header of a page,** in `slot="header"` of `nldd-page` or around an `nldd-top-navigation-bar`, where it knows what follows. Elsewhere its default stays "Sla over". `text` still wins. The new key is `components.skip-link.to-main-content-action`.
+
+### Fixed
+
+- **A long `nldd-tag` ran out of its container.** Its text now wraps onto more lines, and the tag gets taller.
+- **Bold, italic or strikethrough with nothing selected left `****` in the value of `nldd-text-editor`** when you typed nothing after it. The empty pair now goes away when the caret moves on.
+- **A format command on an `nldd-text-editor` that never had focus worked at the start of the text.** It now works at the end, where you expect to go on typing.
+- **The fade at the end of `nldd-date-field` and `nldd-time-field` stuck out past the rounded corner** of a field without a picker button. It now follows the field's corner radius.
+- **`hide()` on `nldd-popover` right after `show()` did nothing.** It now closes the popover, also before the browser has reported that it opened.
+- **"Gekopieerd" on the copy button of `nldd-code-viewer` disappeared after 2 seconds,** also with the pointer or the focus still on the button (WCAG 1.4.13). It now stays until the pointer leaves the button, focus moves on, or Escape, like a failed copy already did.
+- **The clock button in `nldd-time-field` had a rounder corner than the field around it.** It now follows the field's corner, as the calendar button in `nldd-date-field` already did.
+
 ## [0.23.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.22.0...v0.23.0) (2026-11-13)
 
 ### Highlights

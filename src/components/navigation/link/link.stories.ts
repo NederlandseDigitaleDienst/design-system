@@ -5,6 +5,7 @@ import '../../layout/container/container.js';
 import '../../content/text/text.js';
 import '../../content/title/title.js';
 import '../../layout/spacer/spacer.js';
+import '../../layout/popover/popover.js';
 
 /**
  * De Link component werkt in twee modi:
@@ -99,6 +100,10 @@ export default {
 			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
 			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
+		},
+		interestfor: {
+			control: false,
+			description: 'Id van een `nldd-popover` elders op de pagina die laat zien waar de link heen gaat. Hij opent als je de aanwijzer op de link laat rusten, bij focus en bij lang drukken op touch. Een klik volgt de link gewoon. Zet de popover buiten de alinea: een `<p>` erin zou die sluiten.',
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -336,5 +341,41 @@ export const ToestandDisabled = {
 	`,
 	parameters: {
 		controls: { disable: true },
+	},
+};
+
+export const MetVoorproefjeOpInteresse = {
+	render: () => html`
+		<nldd-text>
+			De stand van zaken staat bij
+			<nldd-link
+				href="#aanvraag-a-1042"
+				interestfor="voorproefje-a-1042"
+			>Aanvraag A-1042</nldd-link>.
+		</nldd-text>
+		<nldd-popover
+			id="voorproefje-a-1042"
+			accessible-label="Aanvraag A-1042"
+			width="240px"
+		>
+			<nldd-container padding="12">
+				<nldd-text>Aanvraag A-1042</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-text
+					size="sm"
+					color="secondary"
+				>
+					Dakisolatie, in behandeling
+				</nldd-text>
+			</nldd-container>
+		</nldd-popover>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Een popover waar <code>interestfor</code> naar wijst, laat zien waar de link heen gaat. Hij opent als je de aanwijzer op de link laat rusten, als de link focus krijgt en bij lang drukken op touch. Een klik of een tik volgt de link gewoon. De popover staat buiten de alinea, zodat zijn inhoud die niet kan breken. Alleen informatie: zet er geen link of knop in.',
+			},
+		},
 	},
 };

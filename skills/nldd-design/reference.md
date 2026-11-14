@@ -34,6 +34,8 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 - `filter-no-clear-all` (hint): Let each nldd-token remove its own filter instead: one misclick here costs the whole selection, with no way back.
 - `form-action-goes-in-form-actions` (hint): Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.
 - `icon-not-found`: An icon set here does not exist. See the icon list in the reference.
+- `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
+- `interestfor-not-found`: `interestfor` names no nldd-popover in this tree, so nothing opens on interest.
 - `link-file-needs-format` (hint): Name the format and the size in the link text, such as "Jaarverslag (pdf, 2 MB)".
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
 - `link-no-vague-text` (hint): Make the destination or the subject the link text, such as "Lees meer over dakisolatie".
@@ -81,6 +83,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
+| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 
 **Slots**
 
@@ -90,6 +93,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `start-icon` | Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`. |
 | `end-icon` | Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`. |
 | `popup` | A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay. |
+| `interest` | A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a reaction badge that toggles a reaction and shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read. |
 
 **Events**
 
@@ -164,6 +168,8 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 - `card-clickable-no-control` (hint): Drop this control: the whole card already is one link and one tab stop.
 - `download-target-no-effect`: `target` does nothing with `download`, which saves the file instead of opening it. Remove one of the two.
 - `icon-button-needs-name`: nldd-icon-button needs `text` or `accessible-label`, otherwise it has no accessible name.
+- `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
+- `interestfor-not-found`: `interestfor` names no nldd-popover in this tree, so nothing opens on interest.
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
 - `row-action-goes-in-segment` (hint): Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
@@ -202,6 +208,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
 | `popovertarget` | `string` | ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
+| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 
 **Slots**
 
@@ -209,6 +216,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | --- | --- |
 | `icon` | Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set. |
 | `popup` | A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay. |
+| `interest` | A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the button's own tooltip, so let it say what the button does where the icon does not. The button keeps its own click. Focus stays on the button, the popover's content is read as the button's description (after `accessible-label`, which stays its name), and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here. |
 
 **Events**
 
@@ -218,7 +226,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 
 ### `<nldd-menu>`
 
-A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
+A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` the menu closes at once. A menu that scrolls fades at the edge where more items wait. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
 
 **Rules** (`nldd lint`)
 
@@ -770,6 +778,34 @@ A compact property that has been assigned to something: a category, a type, a ro
 | --- | --- |
 | _(default)_ | Tag text. Wins over `text`. |
 | `icon` | Custom icon before the text. Wins over `icon`. |
+
+### `<nldd-term>`
+
+A term in running text with an explanation behind it, such as a legal term from a glossary. The term stays part of the sentence, marked with a dotted underline, and opens its definition in a popover on a click, a tap, Enter or Space. On sm the popover is a bottom sheet. The term is the control: it carries the button role and its expanded state, so a term injected into content needs no ARIA of your own. Focus moves into the popover when it opens, so its content is read, and returns to the term when it closes. Mark only the first occurrence of a concept in a question or section. The underline is the only sign that the term is a control, so it cannot get lighter or go away. A text that marks every occurrence gets busy. A short definition goes in `definition`, as text: <p>De <nldd-term definition="Degene die het doel van en de middelen voor de verwerking vaststelt." source="Artikel 4 AVG" source-href="…">verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> A `source` shows under the definition, as a link with `source-href`. A definition with more paragraphs or links is an nldd-popover of your own, outside the sentence, that `popovertarget` points at. Every term for the same concept can point at the same popover: it opens against the term you clicked. Markup in the term itself would break: a `<p>` inside a `<p>` closes the paragraph, and the definition would fall out of the term. Give a source in that popover the shape the term gives it: after an `nldd-spacer size="8"`, an nldd-text with `size="sm"` and `color="secondary"`, with "Bron:" and an nldd-link. <p>De <nldd-term popovertarget="verwerkingsverantwoordelijke"> verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> <nldd-popover id="verwerkingsverantwoordelijke" accessible-label="Verwerkingsverantwoordelijke">…</nldd-popover>
+
+**Rules** (`nldd lint`)
+
+- `term-max-one-definition`: nldd-term has both `definition` and `popovertarget`, and shows only the popover. Remove one.
+- `term-needs-definition`: nldd-term has no definition, so it opens nothing. Set `definition`, or `popovertarget` to the id of an nldd-popover.
+- `term-popovertarget-not-found`: No nldd-popover with the id in `popovertarget` in the tree of this nldd-term.
+- `term-source-href-no-effect`: nldd-term has `source-href` without `source`, so there is no link to show. Add `source`.
+- `term-source-no-effect`: nldd-term has `source` next to `popovertarget`, and shows only the popover. Put the source in the popover.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `definition` | `string` | The definition, as plain text. The term shows it in a popover of its own, named after the term. Ignored when `popovertarget` is set. |
+| `source` | `string` | Where the definition comes from, such as a glossary or an article of law, as plain text. Shown under the definition in the term's own popover. Ignored when `popovertarget` is set. |
+| `source-href` | `string` | Link for `source`. Without `source` it has no effect. |
+| `translations` | `object` | Override translation keys (the label before the source). |
+| `popovertarget` | `string` | ID of an nldd-popover with the definition, looked up in the tree of this term. Positioned against the term when it opens, so it needs no `anchor`, and it can be shared by every term for the same concept. Wins over `definition`. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The term, as plain text. Whitespace around it is dropped, so the underline ends where the word does. It also names the popover that `definition` opens. |
 
 ### `<nldd-text>`
 
@@ -1987,7 +2023,7 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 ### `<nldd-time-field>`
 
-A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid time or nothing, so an empty field and one with text that is no time both read as ''. `validity` tells them apart: `badInput` for text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside `min` / `max`. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. "Klaar" and Enter keep the choice, and so does a click outside once you have picked something. Cancel and Escape put the old time back. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.
+A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid time or nothing, so an empty field and one with text that is no time both read as ''. `validity` tells them apart: `badInput` for text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside `min` / `max`. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. "Klaar" and Enter keep the choice, and so does a click outside once you have picked something. Escape puts the old time back. On sm, where the picker is a bottom sheet, "Klaar" sits in its title bar and the sheet offers no cancel: as with a native wheel, you turn back to change your mind. The built-in wheels show 7 rows, and fewer, down to 3, when the picker would otherwise run off the window; they grow back when the window does. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.
 
 **Attributes**
 
@@ -2390,7 +2426,7 @@ A section that spans the full width without horizontal padding. Useful for backg
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2431,7 +2467,7 @@ The section that says what a page is for: it names the main goal of what you can
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface behind the hero (section API) |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface behind the hero (section API) |
 | `width` | `string` | Body max-width; 'full' removes the bound (section API) |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block padding override, also per edge and responsive (section API) |
@@ -2563,7 +2599,7 @@ A section with two equal columns side by side. The columns stand side by side in
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2601,7 +2637,7 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2737,10 +2773,11 @@ A single entry in an `nldd-page-footer-legal-bar`. Renders as a link when `href`
 
 ### `<nldd-popover>`
 
-A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover="auto") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget="info-popover">Info</nldd-button> <nldd-popover id="info-popover" accessible-label="Info"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it, and slides down as it goes. It is a manual popover there and closes itself, so a close request from the system, such as the back gesture on Android, leaves it open; a `popover` you set yourself is kept. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.
+A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover="auto") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget="info-popover">Info</nldd-button> <nldd-popover id="info-popover" accessible-label="Info"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. Content taller than the room the window leaves scrolls in the popover, with a fade at the edge where more content waits: at the bottom while you can scroll down, at the top once you have scrolled. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. In the `interest` slot of an nldd-button or nldd-icon-button, or named by `interestfor` on those or on an nldd-link, the popover describes that control instead: it opens when the pointer rests on the control, when the control gets keyboard focus, and on a long press on touch, and the control keeps its own click. Focus stays on the control, the control gets no expanded state, and the popover's content is read as its description. It holds information only, no link or button. In the slot it needs no `accessible-label`; one that `interestfor` names keeps its label, which is left out while it describes. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it, and slides down as it goes. It is a manual popover there and closes itself, so a close request from the system, such as the back gesture on Android, leaves it open; a `popover` you set yourself is kept. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.
 
 **Rules** (`nldd lint`)
 
+- `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `popover-anchor-not-found`: Anchor element not found. Set `anchor` or `anchorElement` before calling show().
 - `popover-needs-name`: nldd-popover needs `accessible-label`, or a screen reader announces it without a name.
@@ -2931,7 +2968,7 @@ A basic section with responsive padding and gap based on container size. Contain
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -3035,7 +3072,7 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -3204,6 +3241,7 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 - `card-no-loose-link` (hint): Set `href` and `accessible-label` on the card and drop this link: then each choice is one link and one tab stop.
 - `download-target-no-effect`: `target` does nothing with `download`, which saves the file instead of opening it. Remove one of the two.
 - `filter-no-clear-all` (hint): Let each nldd-token remove its own filter instead: one misclick here costs the whole selection, with no way back.
+- `interestfor-not-found`: `interestfor` names no nldd-popover in this tree, so nothing opens on interest.
 - `link-file-needs-format` (hint): Name the format and the size in the link text, such as "Jaarverslag (pdf, 2 MB)".
 - `link-needs-href`: Give it an `href`, or use nldd-button when it performs an action: what looks like a link has to be one.
 - `link-no-underscore-in-url` (hint): Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.
@@ -3223,6 +3261,7 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 | `text` | `string` | Link text. Content in the default slot wins. |
 | `start-icon` | `string` | Icon before the text |
 | `end-icon` | `string` | Icon after the text |
+| `interestfor` | `string` | ID of an nldd-popover that previews where the link goes, looked up in the tree of this link. It opens on interest instead of on a click: when the pointer rests on the link, when it gets keyboard focus, and on a long press on touch. A click or a tap still follows the link. Focus stays on the link, the popover's content is read as the link's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: put no link or button in it. Keep the popover outside the paragraph: a link stands in a `<p>`, and a `<p>` of your own inside it would close that paragraph. One popover can serve several links. Keep `accessible-label` on it: it is left out while the popover describes a link. |
 | `accessible-label` | `string` | Accessible label for screen readers |
 | `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
@@ -3350,7 +3389,7 @@ A pagination control for navigating between pages of content.
 
 ### `<nldd-skip-link>`
 
-Accessibility pattern that lets keyboard users skip past content. Wraps content in a default slot. Not only for the header of a page. Any block with many stops that someone on a keyboard often wants to get past can have one: a set of filters, a long toolbar, a table of contents. Keep it to blocks like that; a skip link before every section is one more stop on the way, not one less. Without href it moves focus to the first rendered element after the skip link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a `<script>` or anything hidden, is passed over. Make sure a rendered element follows the component, otherwise the skip link has no effect. With an `href` that points at an id on the same page, the link scrolls to that element and moves focus to it too. The target needs no `tabindex` of its own. An href to another page is left to the browser. The component cannot know what it skips, so its default text only says "Sla over". Name it with `text`: "Sla navigatie over", "Sla filters over".
+Accessibility pattern that lets keyboard users skip past content. Wraps content in a default slot. Not only for the header of a page. Any block with many stops that someone on a keyboard often wants to get past can have one: a set of filters, a long toolbar, a table of contents. Keep it to blocks like that; a skip link before every section is one more stop on the way, not one less. Without href it moves focus to the first rendered element after the skip link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a `<script>` or anything hidden, is passed over. Make sure a rendered element follows the component, otherwise the skip link has no effect. With an `href` that points at an id on the same page, the link scrolls to that element and moves focus to it too. The target needs no `tabindex` of its own. An href to another page is left to the browser. Around the header of a page, in `slot="header"` of nldd-page or around an nldd-top-navigation-bar, it knows what follows, and its default text is "Ga naar de hoofdinhoud". Anywhere else it cannot know what it skips, and the default only says "Sla over". Name it there with `text`: "Sla filters over", "Sla inhoudsopgave over".
 
 **Rules** (`nldd lint`)
 
@@ -3358,13 +3397,14 @@ Accessibility pattern that lets keyboard users skip past content. Wraps content 
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
 - `skip-link-needs-target`: No rendered element follows the skip link, so it has nothing to move focus to. Put the content it skips to right after it, or point `href` at the id of the target.
+- `skip-link-needs-text` (hint): Name what the skip link skips with `text`, such as "Sla filters over". Its default only says "Sla over".
 - `skip-link-target-needs-focusable`: The target did not take focus, so the skip link did nothing. It is probably hidden or inert.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `text` | `string` | Text of the skip link. Name what is skipped. Falls back to the i18n default. |
+| `text` | `string` | Text of the skip link. Name what is skipped. Falls back to "Ga naar de hoofdinhoud" around the header of a page, and to "Sla over" elsewhere. |
 | `href` | `string` | Optional external target id. Without href it jumps to the first rendered element after the skip link. |
 
 **Slots**
@@ -3452,6 +3492,7 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
+- `skip-link-needs-text` (hint): Name what the skip link skips with `text`, such as "Sla filters over". Its default only says "Sla over".
 - `subpage-needs-breadcrumbs` (hint): Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.
 - `top-navigation-bar-max-three-items` (hint): Keep the bar to search, language and account: the pages together are the navigation.
 - `top-navigation-bar-no-menu-row` (hint): Leave `global` empty and let the pages be the navigation: put the entries on the home page as `nldd-card` or `nldd-list`, and keep search and language in `utility`.

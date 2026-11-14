@@ -23,6 +23,6 @@ export function template(component: NLDDSkipLink) {
 				</button>
 			`}
 		</div>
-		<slot></slot>
+		<slot @slotchange=${component._handleSlotChange}></slot>
 	`;
 }

@@ -1,7 +1,9 @@
 severity: error
-context: 'nldd-popover'
+context: 'nldd-popover:not([slot="interest"])'
 assert: '[accessible-label]'
 message: 'nldd-popover needs `accessible-label`, or a screen reader announces it without a name.'
 examples:
-  passed: ['<nldd-popover accessible-label="Filters"></nldd-popover>']
+  passed:
+    - '<nldd-popover accessible-label="Filters"></nldd-popover>'
+    - '<nldd-button text="2"><nldd-popover slot="interest">Sam, Noor</nldd-popover></nldd-button>'
   failed: ['<nldd-popover></nldd-popover>']

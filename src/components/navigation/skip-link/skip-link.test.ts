@@ -31,6 +31,30 @@ describe('nldd-skip-link', () => {
 		expect(button!.textContent!.trim()).toBe('Ga naar inhoud');
 	});
 
+	it('zegt "Ga naar de hoofdinhoud" om de header van een pagina', async () => {
+		const page = await fixture('<nldd-page><nldd-skip-link slot="header"></nldd-skip-link></nldd-page>');
+		el = page;
+		const link = page.querySelector('nldd-skip-link')!;
+		await waitForUpdate(link);
+		expect(link.shadowRoot!.querySelector('.skip-link__control')!.textContent!.trim()).toBe('Ga naar de hoofdinhoud');
+	});
+
+	it('zegt "Ga naar de hoofdinhoud" om een navigatiebalk, ook als die later komt', async () => {
+		el = await fixture('<nldd-skip-link></nldd-skip-link>');
+		await waitForUpdate(el);
+		el.append(document.createElement('nldd-top-navigation-bar'));
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.skip-link__control')!.textContent!.trim()).toBe('Ga naar de hoofdinhoud');
+	});
+
+	it('houdt text voor om de header', async () => {
+		const page = await fixture('<nldd-page><nldd-skip-link slot="header" text="Sla menu over"></nldd-skip-link></nldd-page>');
+		el = page;
+		const link = page.querySelector('nldd-skip-link')!;
+		await waitForUpdate(link);
+		expect(link.shadowRoot!.querySelector('.skip-link__control')!.textContent!.trim()).toBe('Sla menu over');
+	});
+
 	it('rendert een button element zonder href', async () => {
 		el = await fixture('<nldd-skip-link></nldd-skip-link>');
 		await waitForUpdate(el);
