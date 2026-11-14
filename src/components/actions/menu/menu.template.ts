@@ -44,65 +44,67 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 			@touchend=${this._pointer.touchEnd}
 			@touchcancel=${this._pointer.touchEnd}
 		>
-			${isRoot ? html`
-				<div class="menu__header"
-					?hidden=${!this._hasHeader}
-				>
-					<slot
-						name="header"
-						@slotchange=${this._onHeaderSlotChange}
-					></slot>
-				</div>
-			` : nothing}
-			<div class="menu__main">
-				${showBack ? html`
-					<button class="menu__back-button"
-						type="button"
-						aria-label=${this._resolvedBackLabel}
-						@click=${this._handleBack}
-						@mouseenter=${this._handleBackMouseenter}
+			<div class="menu__scroller">
+				${isRoot ? html`
+					<div class="menu__header"
+						?hidden=${!this._hasHeader}
 					>
-						<nldd-icon-cell
-							size="20"
-							icon="chevron-left"
-						></nldd-icon-cell>
-						<nldd-spacer-cell size="6"></nldd-spacer-cell>
-						<nldd-text-cell text=${this._parentItem!.text}></nldd-text-cell>
-					</button>
-					<!-- Pure visual divider; role="none" keeps strict ARIA validators
-					     quiet (a focusable role="separator" inside a menu would need
-					     aria-valuenow et al.; this one is decorative). -->
-					<div class="menu__back-button-divider"
-						role="none"
-					></div>
+						<slot
+							name="header"
+							@slotchange=${this._onHeaderSlotChange}
+						></slot>
+					</div>
 				` : nothing}
-				<div class="menu__list"
-					role=${menuRole}
-					aria-label=${this._listLabel || nothing}
-				>
-					<slot @slotchange=${this._claimItems}></slot>
+				<div class="menu__main">
+					${showBack ? html`
+						<button class="menu__back-button"
+							type="button"
+							aria-label=${this._resolvedBackLabel}
+							@click=${this._handleBack}
+							@mouseenter=${this._handleBackMouseenter}
+						>
+							<nldd-icon-cell
+								size="20"
+								icon="chevron-left"
+							></nldd-icon-cell>
+							<nldd-spacer-cell size="6"></nldd-spacer-cell>
+							<nldd-text-cell text=${this._parentItem!.text}></nldd-text-cell>
+						</button>
+						<!-- Pure visual divider; role="none" keeps strict ARIA validators
+						     quiet (a focusable role="separator" inside a menu would need
+						     aria-valuenow et al.; this one is decorative). -->
+						<div class="menu__back-button-divider"
+							role="none"
+						></div>
+					` : nothing}
+					<div class="menu__list"
+						role=${menuRole}
+						aria-label=${this._listLabel || nothing}
+					>
+						<slot @slotchange=${this._claimItems}></slot>
+					</div>
+					${isEmpty ? html`
+						<div class="menu__empty">
+							<slot name="empty">
+								<nldd-inline-dialog
+									text=${this._resolvedEmptyText}
+									supporting-text=${this.emptySupportingText || nothing}
+								></nldd-inline-dialog>
+							</slot>
+						</div>
+					` : nothing}
 				</div>
-				${isEmpty ? html`
-					<div class="menu__empty">
-						<slot name="empty">
-							<nldd-inline-dialog
-								text=${this._resolvedEmptyText}
-								supporting-text=${this.emptySupportingText || nothing}
-							></nldd-inline-dialog>
-						</slot>
+				${isRoot ? html`
+					<div class="menu__footer"
+						?hidden=${!this._hasFooter}
+					>
+						<slot
+							name="footer"
+							@slotchange=${this._onFooterSlotChange}
+						></slot>
 					</div>
 				` : nothing}
 			</div>
-			${isRoot ? html`
-				<div class="menu__footer"
-					?hidden=${!this._hasFooter}
-				>
-					<slot
-						name="footer"
-						@slotchange=${this._onFooterSlotChange}
-					></slot>
-				</div>
-			` : nothing}
 		</div>
 		<!-- Drill-in view-change announcer (WCAG 4.1.3). Sibling of .menu so
 		     it sits outside role="menu"'s required-children set. Updated via

@@ -84,9 +84,6 @@ export const menuStyles = css`
 		flex-direction: column;
 		max-height: min(var(--_menu-max-height), calc(var(--_menu-max-items) * var(--_menu-item-size) + var(--_menu-padding) * 2));
 		outline: none;
-		overflow-x: hidden;
-		overflow-y: auto;
-		scroll-padding-block: var(--_menu-padding);
 	}
 
 	.menu:focus-visible:not(.is-pointer-focus) {
@@ -97,6 +94,16 @@ export const menuStyles = css`
 
 
 	/* # Elements */
+
+	.menu__scroller {
+		display: flex;
+		border-radius: inherit;
+		min-height: 0;
+		flex-direction: column;
+		overflow-x: hidden;
+		overflow-y: auto;
+		scroll-padding-block: var(--_menu-padding);
+	}
 
 	.menu__main {
 		display: flex;
@@ -198,7 +205,7 @@ export const menuStyles = css`
 		clip-path: inset(50%);
 	}
 
-	${scrollFade('.menu')}
+	${scrollFade('.menu__scroller')}
 `;
 
 export const menuItemStyles = css`

@@ -431,7 +431,11 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		if (!Number.isFinite(room)) return;
 		const rowHeight = picker.shadowRoot?.querySelector('.time-picker__list-item')?.getBoundingClientRect().height ?? 0;
 		if (!rowHeight) return;
-		const rows = Math.min(7, Math.max(3, this._pickerRows + Math.floor((room - popover.scrollHeight) / rowHeight)));
+		// The popover scrolls inside itself: its content is taller than it by
+		// what the inner scroller holds back.
+		const scroller = popover.shadowRoot?.querySelector('.popover__scroller');
+		const contentHeight = popover.offsetHeight + (scroller ? scroller.scrollHeight - scroller.clientHeight : 0);
+		const rows = Math.min(7, Math.max(3, this._pickerRows + Math.floor((room - contentHeight) / rowHeight)));
 		if (rows === this._pickerRows) return;
 		this._pickerRows = rows;
 		await this.updateComplete;

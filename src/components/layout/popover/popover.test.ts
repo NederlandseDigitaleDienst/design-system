@@ -8,6 +8,7 @@ import '../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDPopover } from './popover.js';
 import { isKeyboardMode } from '../../../utilities/input-modality.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
+import { loadTokens } from '../../../test-tokens.js';
 
 // Closing a bottom sheet slides it down first; these tests are about what
 // happens once it is closed. The slide itself is tested in popover.test.ts.
@@ -1212,5 +1213,36 @@ describe('nldd-popover schuift als bottom sheet eerst omlaag', () => {
 		} finally {
 			vi.useRealTimers();
 		}
+	});
+});
+
+describe('nldd-popover vervaagt waar hij scrollt', () => {
+	let el: NLDDPopover;
+	let unloadTokens: () => void;
+	beforeAll(() => { unloadTokens = loadTokens(); });
+	afterAll(() => { unloadTokens(); });
+
+	afterEach(() => {
+		if (el?.matches(':popover-open')) el.hidePopover();
+		if (el) cleanup(el);
+	});
+
+	it('scrollt binnen zichzelf en maskeert de rand waar meer inhoud wacht', async () => {
+		el = await fixture<NLDDPopover>('<nldd-popover accessible-label="Test" style="max-height: 200px; height: 200px"><div style="height: 600px; flex-shrink: 0"></div></nldd-popover>');
+		el.showPopover();
+		await waitForUpdate(el);
+		const scroller = el.shadowRoot!.querySelector<HTMLElement>('.popover__scroller')!;
+		const fade = () => {
+			const style = getComputedStyle(scroller);
+			return [style.getPropertyValue('--_scroll-fade-start'), style.getPropertyValue('--_scroll-fade-end')];
+		};
+		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		// The surface does not scroll: a mask on it would fade its shadow too.
+		expect(el.scrollHeight).toBe(el.clientHeight);
+		expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight);
+		expect(fade()).toEqual(['0px', '24px']);
+		scroller.scrollTop = scroller.scrollHeight;
+		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		expect(fade()).toEqual(['24px', '0px']);
 	});
 });
