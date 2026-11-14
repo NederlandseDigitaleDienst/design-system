@@ -3662,6 +3662,16 @@ describe('nldd-menu confirms a choice', () => {
 		await new Promise((resolve) => setTimeout(resolve, 450));
 	});
 
+	it('does not blink in a listbox', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu variant="listbox"><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(item.hasAttribute('confirming')).toBe(false);
+	});
+
 	it('stops the blink when the menu leaves the page', async () => {
 		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
 		await waitForUpdate(root);

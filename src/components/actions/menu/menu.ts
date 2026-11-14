@@ -852,13 +852,14 @@ export class NLDDMenu extends LitElement {
 	 * closes after it, so you see what you picked. `select` has already gone
 	 * out: the action does not wait for the blink. Every menu in the chain
 	 * hears the event; the first one runs the blink and the rest leave it.
-	 * Without motion, or in a menu that is not open, it closes at once.
+	 * Without motion, in a menu that is not open, or in a listbox, it closes at once.
 	 */
 	private _handleSelect = (event: Event): void => {
 		const item = event.target as HTMLElement;
 		if (this._blinkTimer || item.hasAttribute('confirming')) return;
 		const button = item.localName === 'nldd-menu-item' ? item.shadowRoot?.querySelector('.menu__item') : null;
-		if (!button || !this._isOpen || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		// A listbox belongs to a field, which shows the choice itself and closes it.
+		if (!button || !this._isOpen || this.variant === 'listbox' || matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			this._collapseChain();
 			return;
 		}
@@ -876,9 +877,11 @@ export class NLDDMenu extends LitElement {
 			if (this.isConnected) this._collapseChain();
 		};
 		button.addEventListener('animationend', close);
-		// No animationend when the animation never runs, as in a hidden tab.
+		// No animationend when the animation never runs, as in a hidden tab, so
+		// a fallback a little after the blink's own length in menu.styles.ts.
 		// Also the mark that a blink runs: the highlight stays on the chosen item.
-		this._blinkTimer = window.setTimeout(close, 400);
+		const blink = (parseFloat(getComputedStyle(button).animationDuration) || 0) * 1000;
+		this._blinkTimer = window.setTimeout(close, blink + 250);
 		this._finishBlink = close;
 	};
 
