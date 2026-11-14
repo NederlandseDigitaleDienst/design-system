@@ -158,7 +158,8 @@ export class InterestController implements ReactiveController {
 	// — Open and close ————————————————————————————————————————————————————————
 
 	private get _wanted(): boolean {
-		return !this._dismissed && (this._hovered || this._focused || this._pressed);
+		// Disabled can come in while the hover delay runs.
+		return !this._disabled && !this._dismissed && (this._hovered || this._focused || this._pressed);
 	}
 
 	/** Open for this control: a shared popover may be open for another. */

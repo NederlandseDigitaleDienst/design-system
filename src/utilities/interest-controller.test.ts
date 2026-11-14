@@ -128,6 +128,21 @@ describe('nldd-button interest slot', () => {
 		pointer('pointerenter', button, 'mouse');
 		expect(popover.matches(':popover-open')).toBe(false);
 		expect(button.shadowRoot!.activeElement).toBe(inner);
+		// The next press is the dialog's.
+		document.addEventListener('keydown', outer);
+		inner.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+		document.removeEventListener('keydown', outer);
+		expect(outer).toHaveBeenCalledTimes(1);
+	});
+
+	it('does not open for a button that is disabled while the hover delay runs', async () => {
+		await setup();
+		vi.useFakeTimers();
+		pointer('pointerenter', button, 'mouse');
+		vi.advanceTimersByTime(300);
+		button.disabled = true;
+		vi.advanceTimersByTime(300);
+		expect(popover.matches(':popover-open')).toBe(false);
 	});
 
 	it('lets the button keep its click, and closes on it', async () => {

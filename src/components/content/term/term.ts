@@ -104,6 +104,8 @@ export class NLDDTerm extends LitElement {
 	 *  the browser closes it on that pointerdown, before the click, and the
 	 *  click must not open it again. */
 	private _wasOpenOnPointerdown = false;
+	/** Whether Space went down on the term, so its keyup may click. */
+	private _spaceDown = false;
 	/** The shared popover this term listens to, to keep its expanded state. */
 	private _sharedOverlay: NLDDPopover | null = null;
 
@@ -233,7 +235,6 @@ export class NLDDTerm extends LitElement {
 		this._spaceDown = false;
 	}
 
-	private _spaceDown = false;
 
 	public _t(key: keyof NLDDTermTranslations): string {
 		return translate(this.translations, nlddTermTranslations, key);
