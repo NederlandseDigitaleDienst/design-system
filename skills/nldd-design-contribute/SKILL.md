@@ -22,7 +22,7 @@ Twee redenen. Vaak kan een bestaand component het al, en dan is het antwoord een
 Concreet, voor een ontbrekend component of variant:
 
 - **Welke taak** van je gebruiker lukt nu niet, en wat heb je geprobeerd?
-- **Wat bouw je nu in plaats daarvan?** Een omweg is het sterkste bewijs dat er iets mist. Laat de omweg zien, ook als die niet mooi is.
+- **Wat bouw je nu in plaats daarvan?** Een omweg is het sterkste bewijs dat er iets mist. Laat de omweg zien, ook als die niet mooi is, met een screenshot erbij.
 - **Waar draait het?** Het product of scherm waar dit speelt.
 
 ## Wat je bij een bug meegeeft
@@ -32,6 +32,7 @@ Dit is wat het meeste heen en weer scheelt:
 - **De versie** van `@nldd/design-system` waarin je het zag. Niet de versie in je `package.json` maar wat je echt draait: `npm ls @nldd/design-system`. Een `^0.8.44` met een oud lockfile draait iets anders dan je denkt, en de helft van de gemelde bugs blijkt al gerepareerd te zijn.
 - **Welk component** het betreft, en wat je verwachtte.
 - **Een klein stukje HTML** dat het laat zien. Dit scheelt het meeste tijd van alles in deze lijst.
+- **Een screenshot** als het gaat om hoe iets eruitziet. Met `gh issue create` kun je geen afbeelding meesturen: vraag de gebruiker dan om hem na het aanmaken aan het issue toe te voegen, en zeg welk scherm erop moet.
 
 Controleer eerst of het in de [changelog](../nldd-design/changelog.md) al langskwam, en of het attribuut of slot dat je gebruikt echt bestaat in de [referentie](../nldd-design/reference.md). Dit designsysteem faalt stil: een verzonnen attribuut of icoonnaam rendert niets, zonder foutmelding, en dat lijkt op een bug in het component.
 
