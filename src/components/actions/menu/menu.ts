@@ -856,7 +856,7 @@ export class NLDDMenu extends LitElement {
 	 */
 	private _handleSelect = (event: Event): void => {
 		const item = event.target as HTMLElement;
-		if (item.hasAttribute('confirming')) return;
+		if (this._blinkTimer || item.hasAttribute('confirming')) return;
 		const button = item.localName === 'nldd-menu-item' ? item.shadowRoot?.querySelector('.menu__item') : null;
 		if (!button || !this._isOpen || matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			this._collapseChain();

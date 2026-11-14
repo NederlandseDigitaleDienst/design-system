@@ -38,7 +38,7 @@ describe('nldd-term with definition', () => {
 	it('shows the term without the whitespace around it', async () => {
 		await setup();
 		// The underline would run into a space left in the span.
-		expect(trigger.textContent).toBe('verwerkings­verantwoordelijke');
+		expect(trigger.textContent).toBe('verwerkings\u00ADverantwoordelijke');
 	});
 
 	it('is a button that names its popover', async () => {

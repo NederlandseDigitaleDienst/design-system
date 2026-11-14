@@ -300,6 +300,30 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
+	it('a success stays after the pointer leaves while the button has focus', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const litEl = el as HTMLElement & { updateComplete: Promise<boolean> };
+			await litEl.updateComplete;
+			const button = el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-button')!;
+			// As on touch: the tap focuses the button, and the pointer leaves right after.
+			await (el as unknown as NLDDCodeViewer)._onCopyClick({ currentTarget: button } as unknown as Event);
+			await litEl.updateComplete;
+			const tooltip = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-tooltip')!;
+			tooltip.dispatchEvent(new PointerEvent('pointerleave'));
+			await new Promise((resolve) => setTimeout(resolve, 400));
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
+			button.blur();
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
+		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
 	it('a success clears on blur', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });

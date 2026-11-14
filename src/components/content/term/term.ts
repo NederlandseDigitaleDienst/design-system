@@ -167,7 +167,7 @@ export class NLDDTerm extends LitElement {
 			.trim();
 		this._termDisplay = text;
 		// A soft hyphen breaks a long word in the sentence, not in the name.
-		this._termText = text.replace(/­/g, '');
+		this._termText = text.replace(/\u00AD/g, '');
 	}
 
 	_handlePointerdown(): void {

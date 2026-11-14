@@ -516,6 +516,9 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 
 	public _onCopyPointerLeave(): void {
 		if (this._copyState === 'idle') return;
+		// With focus on the button the outcome stays: a tap and a click both
+		// focus it, and on touch the pointer leaves right after the tap.
+		if (this.shadowRoot?.querySelector('nldd-icon-button')?.matches(':focus-within')) return;
 		clearTimeout(this._copyResetTimer);
 		this._copyResetTimer = setTimeout(() => {
 			this._copyResetTimer = undefined;
