@@ -291,6 +291,7 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.pagination.go-to-page-action': 'Bai na página {page}',
 	'components.pagination.go-to-page-label': 'Bai na página',
 	'components.skip-link.action': 'Salta',
+	'components.skip-link.to-main-content-action': 'Bai na e kontenido prinsipal',
 	'components.top-navigation-bar.global-menu-bar-label': 'Navegashon prinsipal',
 	'components.top-navigation-bar.back-action': 'Bai bèk',
 	'components.top-navigation-bar.menu-action': 'Menu',

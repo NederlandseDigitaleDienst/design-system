@@ -19,11 +19,14 @@
  * that element and moves focus to it too. The target needs no `tabindex` of
  * its own. An href to another page is left to the browser.
  *
- * The component cannot know what it skips, so its default text only says
- * "Sla over". Name it with `text`: "Sla navigatie over", "Sla filters over".
+ * Around the header of a page, in `slot="header"` of nldd-page or around an
+ * nldd-top-navigation-bar, it knows what follows, and its default text is
+ * "Ga naar de hoofdinhoud". Anywhere else it cannot know what it skips, and
+ * the default only says "Sla over". Name it there with `text`: "Sla filters
+ * over", "Sla inhoudsopgave over".
  *
  * @element nldd-skip-link
- * @attr {string} text - Text of the skip link. Name what is skipped. Falls back to the i18n default.
+ * @attr {string} text - Text of the skip link. Name what is skipped. Falls back to "Ga naar de hoofdinhoud" around the header of a page, and to "Sla over" elsewhere.
  * @attr {string} href - Optional external target id. Without href it jumps to the first rendered element after the skip link.
  *
  * @slot - Content that can be skipped
@@ -51,8 +54,20 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	href = '';
 
 	get _text(): string {
-		return this.text || this._t('components.skip-link.action');
+		if (this.text) return this.text;
+		return this._t(this._skipsHeader() ? 'components.skip-link.to-main-content-action' : 'components.skip-link.action');
 	}
+
+	/** Around the header of a page: the main content is what follows. */
+	private _skipsHeader(): boolean {
+		return (this.slot === 'header' && this.parentElement?.localName === 'nldd-page')
+			|| Boolean(this.querySelector(':scope > nldd-top-navigation-bar'));
+	}
+
+	/** The header bar can arrive after the first render. */
+	_handleSlotChange = (): void => {
+		this.requestUpdate();
+	};
 
 	_handleClick = (): void => {
 		const next = this._target();

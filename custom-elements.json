@@ -24634,6 +24634,24 @@
       "declarations": [
         {
           "kind": "function",
+          "name": "caretToEndBeforeFirstFocus",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "view",
+              "type": {
+                "text": "EditorView"
+              }
+            }
+          ],
+          "description": "A command on an editor whose caret nobody placed works at the end of the\ntext, where the next word would go, not at the start where the caret\nhappens to sit."
+        },
+        {
+          "kind": "function",
           "name": "focusSelectionGuard",
           "return": {
             "type": {
@@ -24643,6 +24661,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "caretToEndBeforeFirstFocus",
+          "declaration": {
+            "name": "caretToEndBeforeFirstFocus",
+            "module": "src/components/inputs/text-editor/text-editor.focus-selection.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "focusSelectionGuard",
@@ -44217,7 +44243,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Accessibility pattern that lets keyboard users skip past content. Wraps content in a default slot. Not only for the header of a page. Any block with many stops that someone on a keyboard often wants to get past can have one: a set of filters, a long toolbar, a table of contents. Keep it to blocks like that; a skip link before every section is one more stop on the way, not one less. Without href it moves focus to the first rendered element after the skip link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a `<script>` or anything hidden, is passed over. Make sure a rendered element follows the component, otherwise the skip link has no effect. With an `href` that points at an id on the same page, the link scrolls to that element and moves focus to it too. The target needs no `tabindex` of its own. An href to another page is left to the browser. The component cannot know what it skips, so its default text only says \"Sla over\". Name it with `text`: \"Sla navigatie over\", \"Sla filters over\".",
+          "description": "Accessibility pattern that lets keyboard users skip past content. Wraps content in a default slot. Not only for the header of a page. Any block with many stops that someone on a keyboard often wants to get past can have one: a set of filters, a long toolbar, a table of contents. Keep it to blocks like that; a skip link before every section is one more stop on the way, not one less. Without href it moves focus to the first rendered element after the skip link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a `<script>` or anything hidden, is passed over. Make sure a rendered element follows the component, otherwise the skip link has no effect. With an `href` that points at an id on the same page, the link scrolls to that element and moves focus to it too. The target needs no `tabindex` of its own. An href to another page is left to the browser. Around the header of a page, in `slot=\"header\"` of nldd-page or around an nldd-top-navigation-bar, it knows what follows, and its default text is \"Ga naar de hoofdinhoud\". Anywhere else it cannot know what it skips, and the default only says \"Sla over\". Name it there with `text`: \"Sla filters over\", \"Sla inhoudsopgave over\".",
           "name": "NLDDSkipLink",
           "members": [
             {
@@ -44261,7 +44287,7 @@
               },
               "default": "''",
               "fieldName": "text",
-              "description": "Text of the skip link. Name what is skipped. Falls back to the i18n default."
+              "description": "Text of the skip link. Name what is skipped. Falls back to \"Ga naar de hoofdinhoud\" around the header of a page, and to \"Sla over\" elsewhere."
             },
             {
               "name": "href",

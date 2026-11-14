@@ -3389,7 +3389,7 @@ A pagination control for navigating between pages of content.
 
 ### `<nldd-skip-link>`
 
-Accessibility pattern that lets keyboard users skip past content. Wraps content in a default slot. Not only for the header of a page. Any block with many stops that someone on a keyboard often wants to get past can have one: a set of filters, a long toolbar, a table of contents. Keep it to blocks like that; a skip link before every section is one more stop on the way, not one less. Without href it moves focus to the first rendered element after the skip link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a `<script>` or anything hidden, is passed over. Make sure a rendered element follows the component, otherwise the skip link has no effect. With an `href` that points at an id on the same page, the link scrolls to that element and moves focus to it too. The target needs no `tabindex` of its own. An href to another page is left to the browser. The component cannot know what it skips, so its default text only says "Sla over". Name it with `text`: "Sla navigatie over", "Sla filters over".
+Accessibility pattern that lets keyboard users skip past content. Wraps content in a default slot. Not only for the header of a page. Any block with many stops that someone on a keyboard often wants to get past can have one: a set of filters, a long toolbar, a table of contents. Keep it to blocks like that; a skip link before every section is one more stop on the way, not one less. Without href it moves focus to the first rendered element after the skip link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a `<script>` or anything hidden, is passed over. Make sure a rendered element follows the component, otherwise the skip link has no effect. With an `href` that points at an id on the same page, the link scrolls to that element and moves focus to it too. The target needs no `tabindex` of its own. An href to another page is left to the browser. Around the header of a page, in `slot="header"` of nldd-page or around an nldd-top-navigation-bar, it knows what follows, and its default text is "Ga naar de hoofdinhoud". Anywhere else it cannot know what it skips, and the default only says "Sla over". Name it there with `text`: "Sla filters over", "Sla inhoudsopgave over".
 
 **Rules** (`nldd lint`)
 
@@ -3397,13 +3397,14 @@ Accessibility pattern that lets keyboard users skip past content. Wraps content 
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
 - `skip-link-needs-target`: No rendered element follows the skip link, so it has nothing to move focus to. Put the content it skips to right after it, or point `href` at the id of the target.
+- `skip-link-needs-text` (hint): Name what the skip link skips with `text`, such as "Sla filters over". Its default only says "Sla over".
 - `skip-link-target-needs-focusable`: The target did not take focus, so the skip link did nothing. It is probably hidden or inert.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `text` | `string` | Text of the skip link. Name what is skipped. Falls back to the i18n default. |
+| `text` | `string` | Text of the skip link. Name what is skipped. Falls back to "Ga naar de hoofdinhoud" around the header of a page, and to "Sla over" elsewhere. |
 | `href` | `string` | Optional external target id. Without href it jumps to the first rendered element after the skip link. |
 
 **Slots**
@@ -3491,6 +3492,7 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
+- `skip-link-needs-text` (hint): Name what the skip link skips with `text`, such as "Sla filters over". Its default only says "Sla over".
 - `subpage-needs-breadcrumbs` (hint): Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.
 - `top-navigation-bar-max-three-items` (hint): Keep the bar to search, language and account: the pages together are the navigation.
 - `top-navigation-bar-no-menu-row` (hint): Leave `global` empty and let the pages be the navigation: put the entries on the home page as `nldd-card` or `nldd-list`, and keep search and language in `utility`.

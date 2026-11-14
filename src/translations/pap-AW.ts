@@ -291,6 +291,7 @@ export const papAW: Record<TranslationKey, string> = {
 	'components.pagination.go-to-page-action': 'Bay na pagina {page}',
 	'components.pagination.go-to-page-label': 'Bay na pagina',
 	'components.skip-link.action': 'Salta',
+	'components.skip-link.to-main-content-action': 'Bai na e contenido principal',
 	'components.top-navigation-bar.global-menu-bar-label': 'Navegacion principal',
 	'components.top-navigation-bar.back-action': 'Atras',
 	'components.top-navigation-bar.menu-action': 'Menu',

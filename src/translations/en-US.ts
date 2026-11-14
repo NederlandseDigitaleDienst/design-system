@@ -286,6 +286,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.pagination.go-to-page-action': 'Go to page {page}',
 	'components.pagination.go-to-page-label': 'Go to page',
 	'components.skip-link.action': 'Skip',
+	'components.skip-link.to-main-content-action': 'Go to main content',
 	'components.top-navigation-bar.global-menu-bar-label': 'Main navigation',
 	'components.top-navigation-bar.back-action': 'Back',
 	'components.top-navigation-bar.menu-action': 'Menu',

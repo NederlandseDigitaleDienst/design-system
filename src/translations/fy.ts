@@ -289,6 +289,7 @@ export const fy: Record<TranslationKey, string> = {
 	'components.pagination.go-to-page-action': 'Gean nei side {page}',
 	'components.pagination.go-to-page-label': 'Gean nei side',
 	'components.skip-link.action': 'Oerslaan',
+	'components.skip-link.to-main-content-action': 'Gean nei de haadynhâld',
 	'components.top-navigation-bar.global-menu-bar-label': 'Haadnavigaasje',
 	'components.top-navigation-bar.back-action': 'Werom',
 	'components.top-navigation-bar.menu-action': 'Menu',

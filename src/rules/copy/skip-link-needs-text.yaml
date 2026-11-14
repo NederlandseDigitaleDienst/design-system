@@ -1,0 +1,8 @@
+severity: hint
+context: 'nldd-skip-link:not([slot="header"]):not(:has(> nldd-top-navigation-bar))'
+assert: '[text]'
+message: 'Name what the skip link skips with `text`, such as "Sla filters over". Its default only says "Sla over".'
+see: ontwerprichtlijnen/copywriting
+examples:
+  passed: ['<nldd-skip-link text="Sla filters over"><nldd-button text="Filter"></nldd-button></nldd-skip-link>', '<nldd-page><nldd-skip-link slot="header"><nldd-top-navigation-bar website-title="Mijn Dienst"></nldd-top-navigation-bar></nldd-skip-link></nldd-page>']
+  failed: ['<nldd-skip-link><nldd-button text="Filter"></nldd-button></nldd-skip-link>']
