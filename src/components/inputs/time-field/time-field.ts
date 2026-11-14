@@ -80,6 +80,10 @@ import {
 
 export { parseTime, roundToStep } from './time-field.times.js';
 
+/** Rows of the built-in wheels: a full wheel, and the fewest that still read as one. */
+const MAX_PICKER_ROWS = 7;
+const MIN_PICKER_ROWS = 3;
+
 @customElement('nldd-time-field')
 export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
@@ -179,7 +183,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Rows of the built-in picker: a full wheel of 7, fewer when the popover
 	 *  runs into the edge of the window. Set again on every open. */
 	@state()
-	public _pickerRows = 7;
+	public _pickerRows = MAX_PICKER_ROWS;
 
 	private _handlePointerChange = (): void => {
 		this._finePointer = NLDDTimeField._getFinePointerQuery().matches;
@@ -397,7 +401,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		this._valueBeforePicker = this.value;
 		this._pickerState = 'untouched';
 		this._pickerSeed = this.value || startingPoint(this._rules, new Date());
-		this._pickerRows = 7;
+		this._pickerRows = MAX_PICKER_ROWS;
 		document.addEventListener('keydown', this._handlePickerEscape, true);
 		window.addEventListener('resize', this._handleWindowResize);
 		// Only now does the picker have dimensions: while the popover was closed it
@@ -427,6 +431,8 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 		if (!this._pickerOpen) return;
 		const room = parseFloat(getComputedStyle(popover).maxHeight);
+		// Before the popover has set its limit there is no room to read yet; the
+		// wheels then keep the rows they have, and the popover scrolls if they do not fit.
 		if (!Number.isFinite(room)) return;
 		const rowHeight = picker.shadowRoot?.querySelector('.time-picker__list-item')?.getBoundingClientRect().height ?? 0;
 		if (!rowHeight) return;
@@ -434,7 +440,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		// what the inner scroller holds back.
 		const scroller = popover.shadowRoot?.querySelector('.popover__scroller');
 		const contentHeight = popover.offsetHeight + (scroller ? scroller.scrollHeight - scroller.clientHeight : 0);
-		const rows = Math.min(7, Math.max(3, this._pickerRows + Math.floor((room - contentHeight) / rowHeight)));
+		const rows = Math.min(MAX_PICKER_ROWS, Math.max(MIN_PICKER_ROWS, this._pickerRows + Math.floor((room - contentHeight) / rowHeight)));
 		if (rows === this._pickerRows) return;
 		this._pickerRows = rows;
 		await this.updateComplete;

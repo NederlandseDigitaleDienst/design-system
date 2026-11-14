@@ -1,7 +1,8 @@
 import { css, unsafeCSS } from 'lit';
 
 // Registered once for the document, so the mask stops can animate; a
-// registration in a shadow root's stylesheet would not count.
+// registration in a shadow root's stylesheet would not count. The names carry
+// the helper's name, not a component's: every component with the fade shares them.
 for (const name of ['--_scroll-fade-start', '--_scroll-fade-end']) {
 	try {
 		CSS.registerProperty({ name, syntax: '<length>', inherits: false, initialValue: '0px' });

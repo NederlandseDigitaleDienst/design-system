@@ -3646,4 +3646,31 @@ describe('nldd-menu confirms a choice', () => {
 		expect(root.matches(':popover-open')).toBe(false);
 		expect(first.hasAttribute('confirming')).toBe(false);
 	});
+
+	it('keeps the highlight on the chosen item while it blinks', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item><nldd-menu-item text="Warmtepomp"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const [first, second] = Array.from(root.querySelectorAll('nldd-menu-item'));
+		first.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		(root as HTMLElement & { moveHighlight(direction: 'next' | 'prev'): void }).moveHighlight('next');
+		second.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', bubbles: true, composed: true }));
+		second.dispatchEvent(new MouseEvent('mouseenter'));
+		expect(first.hasAttribute('highlighted')).toBe(true);
+		expect(second.hasAttribute('highlighted')).toBe(false);
+		await new Promise((resolve) => setTimeout(resolve, 450));
+	});
+
+	it('stops the blink when the menu leaves the page', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(item.hasAttribute('confirming')).toBe(true);
+		root.remove();
+		expect(item.hasAttribute('confirming')).toBe(false);
+	});
 });

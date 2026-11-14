@@ -333,8 +333,11 @@ export class InterestController implements ReactiveController {
 		// A click inside the popover is no activation of the control, though the
 		// popover is its child in the DOM.
 		if (event.composedPath().includes(this._overlay)) return;
-		if (this._swallowClick) {
-			this._swallowClick = false;
+		// Only the click the long press ends in: a press that ended without one
+		// must not take the next keyboard activation with it.
+		const swallow = this._swallowClick && event.detail > 0;
+		this._swallowClick = false;
+		if (swallow) {
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			return;

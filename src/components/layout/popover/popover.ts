@@ -162,6 +162,7 @@ export class NLDDPopover extends LitElement {
 	 * then describes that control: it opens on hover, focus or a long press,
 	 * leaves focus where it is, and puts no disclosure state on the control.
 	 * Not an attribute of its own: it follows from the control.
+	 * @internal
 	 */
 	get _interest(): boolean {
 		return this._interestMode;

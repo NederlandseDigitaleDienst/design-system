@@ -165,12 +165,26 @@ describe('nldd-button interest slot', () => {
 		vi.advanceTimersByTime(500);
 		expect(popover.matches(':popover-open')).toBe(true);
 		pointer('pointerup', inner, 'touch', 10, 10);
-		inner.click();
+		// A finger lifting makes a click with a count of 1.
+		inner.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, cancelable: true, detail: 1 }));
 		expect(clicked).not.toHaveBeenCalled();
 		expect(popover.matches(':popover-open')).toBe(true);
 		// A tap elsewhere closes it.
 		pointer('pointerdown', document.body, 'touch');
 		expect(popover.matches(':popover-open')).toBe(false);
+	});
+
+	it('leaves a keyboard click to the button after a long press that ended without one', async () => {
+		await setup();
+		const clicked = vi.fn();
+		button.addEventListener('click', clicked);
+		vi.useFakeTimers();
+		pointer('pointerdown', inner, 'touch', 10, 10);
+		vi.advanceTimersByTime(500);
+		pointer('pointercancel', inner, 'touch', 10, 10);
+		vi.useRealTimers();
+		inner.click();
+		expect(clicked).toHaveBeenCalledTimes(1);
 	});
 
 	it('leaves a short tap to the button', async () => {
@@ -316,14 +330,14 @@ describe('nldd-link interestfor', () => {
 		pointer('pointerdown', anchor, 'touch', 10, 10);
 		vi.advanceTimersByTime(200);
 		pointer('pointerup', anchor, 'touch', 10, 10);
-		const tap = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true });
+		const tap = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true, detail: 1 });
 		anchor.dispatchEvent(tap);
 		expect(tap.defaultPrevented).toBe(false);
 		pointer('pointerdown', anchor, 'touch', 10, 10);
 		vi.advanceTimersByTime(500);
 		expect(popover.matches(':popover-open')).toBe(true);
 		pointer('pointerup', anchor, 'touch', 10, 10);
-		const release = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true });
+		const release = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true, detail: 1 });
 		anchor.dispatchEvent(release);
 		expect(release.defaultPrevented).toBe(true);
 		// A tap on the popover itself keeps it.
@@ -369,6 +383,22 @@ describe('nldd-button interestfor', () => {
 		await new Promise((resolve) => setTimeout(resolve, 0));
 		expect(popover.matches(':popover-open')).toBe(true);
 		expect(popover.anchorElement).toBe(second);
+	});
+
+	it('keeps a role the popover was given, and describes the button without its label', async () => {
+		wrapper = await fixture('<div><nldd-button text="2" interestfor="own-role"></nldd-button>'
+			+ '<nldd-popover id="own-role" role="note" accessible-label="Wie reageerde"><nldd-text>Sam, Noor</nldd-text></nldd-popover></div>');
+		const button = wrapper.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(button);
+		popover = wrapper.querySelector('nldd-popover')!;
+		await waitForUpdate(popover);
+		_resetInputModalityForTesting();
+		button.shadowRoot!.querySelector('button')!.focus();
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(true);
+		expect(popover.getAttribute('role')).toBe('note');
+		// Its content is the description of the button, read in place of a label.
+		expect(popover.hasAttribute('aria-label')).toBe(false);
 	});
 
 	it('opens a slotted popover over the one interestfor names', async () => {

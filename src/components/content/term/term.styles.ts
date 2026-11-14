@@ -10,6 +10,7 @@ export const termStyles = css`
 		--_term-corner-radius: var(--primitives-corner-radius-xs);
 		--_term-underline-color: var(--context-content-secondary-color);
 		--_term-is-hovered-underline-color: var(--context-content-color);
+		--_term-underline-offset: 0.15em;
 
 		${inheritedTextReset}
 		display: inline;
@@ -29,7 +30,7 @@ export const termStyles = css`
 		color: inherit;
 		text-decoration: underline dotted;
 		text-decoration-color: var(--_term-underline-color);
-		text-underline-offset: 0.15em;
+		text-underline-offset: var(--_term-underline-offset);
 		-webkit-tap-highlight-color: transparent;
 	}
 

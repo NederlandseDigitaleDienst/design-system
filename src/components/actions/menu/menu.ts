@@ -862,20 +862,28 @@ export class NLDDMenu extends LitElement {
 			this._collapseChain();
 			return;
 		}
-		item.setAttribute('highlighted', '');
+		this._setHighlight(item as NLDDMenuItem);
 		item.setAttribute('confirming', '');
 		let done = false;
 		const close = (): void => {
 			if (done) return;
 			done = true;
+			clearTimeout(this._blinkTimer);
+			this._blinkTimer = 0;
+			this._finishBlink = null;
 			button.removeEventListener('animationend', close);
 			item.removeAttribute('confirming');
-			this._collapseChain();
+			if (this.isConnected) this._collapseChain();
 		};
 		button.addEventListener('animationend', close);
 		// No animationend when the animation never runs, as in a hidden tab.
-		setTimeout(close, 400);
+		// Also the mark that a blink runs: the highlight stays on the chosen item.
+		this._blinkTimer = window.setTimeout(close, 400);
+		this._finishBlink = close;
 	};
+
+	private _blinkTimer = 0;
+	private _finishBlink: (() => void) | null = null;
 
 	/**
 	 * Collapse the entire menu chain at once — root + every open submenu —
@@ -1030,6 +1038,8 @@ export class NLDDMenu extends LitElement {
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
+		this._finishBlink?.();
+		this._finishBlink = null;
 		clearTimeout(this._announceResultsTimer);
 		this._announceResultsTimer = 0;
 		// Close any open child submenu before tearing down — the submenu is a
@@ -1089,6 +1099,7 @@ export class NLDDMenu extends LitElement {
 	}
 
 	private _clearHighlight(): void {
+		if (this._blinkTimer) return;
 		// Same scope rule as _getVisibleItems — only clear highlights on items
 		// that belong directly to this menu. Light-DOM querySelectorAll would
 		// otherwise also clear items inside nested submenus, silently
@@ -1099,6 +1110,7 @@ export class NLDDMenu extends LitElement {
 	}
 
 	private _setHighlight(target: NLDDMenuItem | null): void {
+		if (this._blinkTimer) return;
 		this._clearHighlight();
 		const resolved = target ?? this._getVisibleItems()[0] ?? null;
 		resolved?.setAttribute('highlighted', '');
@@ -1274,6 +1286,7 @@ export class NLDDMenu extends LitElement {
 	 * Move both focus and highlight to the next, previous, or first visible item.
 	 */
 	public focusItem(direction: 'next' | 'prev' | 'first'): void {
+		if (this._blinkTimer) return;
 		const items = this._getVisibleItems();
 		if (items.length === 0) return;
 
@@ -1302,6 +1315,7 @@ export class NLDDMenu extends LitElement {
 	 * Useful when keyboard navigation should keep focus on the input.
 	 */
 	public moveHighlight(direction: 'next' | 'prev'): void {
+		if (this._blinkTimer) return;
 		const items = this._getVisibleItems();
 		if (items.length === 0) return;
 
