@@ -50,7 +50,7 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 		>${component._termDisplay}</span>
 		<slot
 			hidden
-			@slotchange=${(event: Event) => component._handleSlotChange(event)}
+			@slotchange=${() => component._handleSlotChange()}
 		></slot>
 		${ownPopover}
 	`;

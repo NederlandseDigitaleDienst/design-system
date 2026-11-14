@@ -107,13 +107,21 @@ export class NLDDTerm extends LitElement {
 	/** The shared popover this term listens to, to keep its expanded state. */
 	private _sharedOverlay: NLDDPopover | null = null;
 
+	/** A framework can patch the term's text in place, which fires no slotchange. */
+	private _textObserver = new MutationObserver(() => this._readTerm());
+
 	override connectedCallback(): void {
 		super.connectedCallback();
-		if (this.hasUpdated) this._listenToSharedOverlay();
+		this._textObserver.observe(this, { characterData: true, childList: true, subtree: true });
+		if (this.hasUpdated) {
+			this._listenToSharedOverlay();
+			this._readTerm();
+		}
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
+		this._textObserver.disconnect();
 		this._setSharedOverlay(null);
 	}
 
@@ -158,8 +166,13 @@ export class NLDDTerm extends LitElement {
 		if (trigger && !trigger.hasAttribute('aria-expanded')) trigger.setAttribute('aria-expanded', 'false');
 	};
 
-	_handleSlotChange(event: Event): void {
-		const slot = event.target as HTMLSlotElement;
+	_handleSlotChange(): void {
+		this._readTerm();
+	}
+
+	private _readTerm(): void {
+		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])');
+		if (!slot) return;
 		const text = slot.assignedNodes({ flatten: true })
 			.map((node) => node.textContent ?? '')
 			.join('')

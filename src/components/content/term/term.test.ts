@@ -41,6 +41,16 @@ describe('nldd-term with definition', () => {
 		expect(trigger.textContent).toBe('verwerkings\u00ADverantwoordelijke');
 	});
 
+	it('follows its text when it changes in place', async () => {
+		await setup('<nldd-term definition="Degene die het doel vaststelt.">verwerker</nldd-term>');
+		// As a framework patches a text node, without a slotchange.
+		el.firstChild!.textContent = 'verwerkingsverantwoordelijke';
+		await waitForUpdate(el);
+		expect(trigger.textContent).toBe('verwerkingsverantwoordelijke');
+		await waitForUpdate(popover);
+		expect(popover.getAttribute('aria-label')).toBe('verwerkingsverantwoordelijke');
+	});
+
 	it('is a button that names its popover', async () => {
 		await setup();
 		expect(trigger.getAttribute('role')).toBe('button');
