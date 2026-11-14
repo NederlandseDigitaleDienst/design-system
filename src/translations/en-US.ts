@@ -313,7 +313,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.step-bar.status-current-label': 'Current step',
 	'components.step-bar.status-future-label': 'To do',
 	'components.step-bar.compact-text': 'Step {current} of {total}',
-	'components.term.source-label': 'Source:',
+	'components.term.source-capitalize': 'Source',
 };
 
 export default enUS;

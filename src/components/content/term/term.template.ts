@@ -11,7 +11,7 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 				size="sm"
 				color="secondary"
 			>
-				${component._t('components.term.source-label')}
+				${component._t('components.term.source-capitalize')}:
 				${component.sourceHref
 					? html`<nldd-link href=${component.sourceHref}>${component.source}</nldd-link>`
 					: component.source}
