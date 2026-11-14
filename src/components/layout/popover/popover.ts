@@ -595,6 +595,9 @@ export class NLDDPopover extends LitElement {
 	 * mode of an open popover closes it.
 	 */
 	private _syncMode(): void {
+		// Changing the attribute of an open popover closes it, so an open one
+		// keeps its mode and catches up when it closes. InterestController sets
+		// _interest before it opens the popover, so in practice it never waits.
 		if (!this._managesMode || this.matches(':popover-open')) return;
 		// Interest opens it, so a hover must not close a menu that is open, as
 		// an auto popover would. InterestController closes it instead.

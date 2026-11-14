@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, reduceMotion } from '../../../test-utils.js';
 import './term.js';
 import type { NLDDTerm } from './term.js';
@@ -76,6 +76,14 @@ describe('nldd-term with definition', () => {
 		expect(popover.matches(':popover-open')).toBe(true);
 		expect(trigger.getAttribute('aria-expanded')).toBe('true');
 		expect(popover.anchorElement).toBe(trigger);
+	});
+
+	it('does not act on a held Enter', async () => {
+		await setup();
+		const clicked = vi.fn();
+		trigger.addEventListener('click', clicked);
+		trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', repeat: true, bubbles: true, cancelable: true }));
+		expect(clicked).not.toHaveBeenCalled();
 	});
 
 	it('opens on Enter and on Space', async () => {

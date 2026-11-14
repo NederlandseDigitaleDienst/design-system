@@ -197,6 +197,8 @@ export class NLDDTerm extends LitElement {
 	_handleKeydown(event: KeyboardEvent): void {
 		if (event.key === 'Enter') {
 			event.preventDefault();
+			// Once per press, as a native button: a held key repeats keydown.
+			if (event.repeat) return;
 			this._triggerEl?.click();
 		} else if (event.key === ' ') {
 			event.preventDefault();
