@@ -51,6 +51,9 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 | React `onChange` op een geslot native control | De handler draait nooit |
 | `disabled={busy}` in React 18, zonder de JSX-typen van het pakket | De knop staat altijd uit, ook als `busy` false is |
 | Breedteloze container om een kind dat zijn ouder meet | Nul pixels, hoogte blijft |
+| Een waarde met markup, zoals een titel met een link, in een tekstattribuut als `text` | De tekst staat er, de link is weg |
+| Een link in een shadow root, in een app die zelf routeert | Elke klik laadt de hele pagina opnieuw |
+| Een titel via `text` op een site die op de server rendert | Zonder JavaScript staat er geen kop in de HTML |
 
 ## Bouw de checks vóór je iets omzet
 
@@ -64,6 +67,10 @@ Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die
 6. **Gedragscheck.** De vijf hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
 
 De token- en klassencheck zijn steigers. Ze bewaken de CSS die er tijdens de omzetting nog staat, en verdwijnen samen met het laatste stylesheet. De groep `pure` blijft aan, want hij houdt de app daarna puur. Zet hem in de config en niet alleen als `--pure` in CI: dan doet een lokale `--update-baseline` hetzelfde als CI.
+
+Reken `pure` niet als vangnet voor fouten. Hij leest broncode per bestand, dus geen Markdown, MDX of `.js`, en niet wat een ander bestand om een component heen zet: een `<p>` die bij het renderen in een `nldd-rich-text` belandt, meldt hij toch. In één migratie vond hij geen van de fouten die bezoekers geraakt zouden hebben; die kwamen uit de gedragspoort, de waarschuwingen van de build en de browser. Wat hij wel doet: de omvang laten zien, in de laatste veegronde resten en dode code aanwijzen (dertig iconen die alleen nog in een datalijst stonden), en daarna verhinderen dat eigen opmaak terugkomt. Dat laatste werkt alleen als je per scherm commit en in elke commit `--tighten-baseline` draait. Eén grote commit met aan het eind `--update-baseline` keurt alles goed wat er op dat moment staat.
+
+Bewaar ook de waarschuwingen van de build van vóór de omzetting. Vervang je een component van je framework door een eigen versie, dan verdwijnt wat het ongemerkt deed. Een eigen kopcomponent in Docusaurus meldde zijn ankers niet meer aan bij de linkcontrole, die daarop elf kapotte ankers meldde die er niet waren. Een waarschuwing die na de omzetting nieuw is, wijst meestal naar zo'n vervangen component.
 
 Hang de eerste vijf in pre-commit **en** in CI. Zorg dat je lokale hook hetzelfde commando draait als CI: een hook op `tsc --noEmit` terwijl CI `tsc -b` draait laat kapotte commits er stelselmatig door.
 
@@ -87,7 +94,9 @@ Twee ontwerpkeuzes maken het verschil tussen een poort die werkt en een die niem
 
 **Faal alleen op wat verdwijnt.** Iets erbij is nieuw werk; iets dat weg is, is bijna altijd een ongeluk. Die asymmetrie is wat de poort bruikbaar houdt tijdens een migratie, waarin pagina's per definitie veranderen.
 
-**Negeer alles wat vormgeving is.** Tagnamen, klassen, teksten en stylesheets tellen niet mee: dat is precies wat mag veranderen. Normaliseer daarnaast wat per verzoek of per omgeving verschilt (CSRF-waarden, cache-brekers, UUID's in paden, het basispad waaronder de site draait) en laat id's vallen die op `-label`, `-help` of `-error` eindigen: die maakt `nldd-form-field` zelf bij om een veld aan zijn label te knopen. Ze zijn interne bedrading, geen gedrag. Zonder die twee filters piept de poort altijd, en een poort die altijd piept houdt niemand in de gaten.
+**Negeer alles wat vormgeving is.** Tagnamen, klassen, teksten en stylesheets tellen niet mee: dat is precies wat mag veranderen. Normaliseer daarnaast wat per verzoek of per omgeving verschilt (CSRF-waarden, cache-brekers, UUID's in paden, het basispad waaronder de site draait) en laat id's vallen die op `-label`, `-help` of `-error` eindigen: die maakt `nldd-form-field` zelf bij om een veld aan zijn label te knopen. Ze zijn interne bedrading, geen gedrag. Haal ook de slash aan het eind van externe URL's weg (`github.com/org/` in de oude kop en `github.com/org` in de nieuwe footer zijn dezelfde bestemming), en wat binnen een inline-SVG verwijst: `clipPath`-id's en `#`-verwijzingen naar een symbool. Zonder die filters piept de poort altijd, en een poort die altijd piept houdt niemand in de gaten.
+
+De eerste vergelijking na een grote omzetting is lang: in één site 10.216 verloren items over 625 pagina's. Lees hem niet regel voor regel. Tel per bestemming op hoeveel pagina's hij wegviel en begin bovenaan, want een link die op elke pagina verdwijnt kwam uit de kop of de footer. Deel de rest in als bewust (een zijbalk met de hele boom, ankers die naar een kop op dezelfde pagina wijzen) of als ongeluk. De ongelukken in die site waren een navigatielink die op elke pagina stond, de profielen van blogauteurs, en links in de titel van een admonition die in een `text`-attribuut terechtkwamen. Geen van drieën gaf een foutmelding.
 
 Het basispad is de variant die je pas in CI ziet. Absolute links bevatten het pad van de omgeving, en een preview van een pull request draait onder een ander pad dan productie: de poort is lokaal groen en faalt op elke preview.
 
@@ -189,6 +198,14 @@ function zichtbareKoppen(root, out = []) {
 
 Tel ook het aantal tab-stops per pagina, voor en na. Zakt een pagina van 150 naar 6, dan heb je bedieningselementen in versiering veranderd.
 
+## Zonder JavaScript staat er geen kop
+
+Een component tekent zijn shadow root pas in de browser. De HTML die de server verstuurt bevat alleen de lege tag, dus alles wat via een attribuut binnenkomt ontbreekt daar: de tekst van een titel met `text`, de links van `nldd-link` en van een kaart met `href`, de kop en de footer. Dat geldt voor elke site die op de server rendert, zoals Docusaurus, Next en Astro, en niet alleen voor een statische generator. Een omgezette documentatiesite had op geen enkele pagina nog een `<h1>` in zijn HTML.
+
+De sweep hierboven ziet dit niet, want die meet in een browser waar het script al gedraaid heeft en zoekt ook in shadow roots. Tel de koppen daarom in de build of in de serverrespons, met een grep op `<h1`.
+
+Zet een paginatitel in het slot van `nldd-title`, als eigen kop: het slot gaat voor het attribuut, en de kop staat er dan ook zonder script. De voorbeelden in de patronen gebruiken `text`, en dat is genoeg voor een applicatie maar niet voor een site die zonder script leesbaar moet blijven. Beslis vóór je begint of de site zonder JavaScript moet werken; [`static-site-generator.md`](static-site-generator.md) zegt wat er dan overblijft.
+
 ## Toegankelijkheid is waar deze migratie je te schande zet
 
 De hele rechtvaardiging voor dit designsysteem is WCAG 2.1 AA en EN 301 549. Een toegankelijkheids*regressie* is daarmee de pijnlijkste uitkomst, en die maak je makkelijk:
@@ -275,15 +292,15 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 ## Een volgorde die werkte
 
 1. Installeren, stylesheet importeren, en componenten registreren met de autoloader of per subpad.
-2. De checks bouwen, met de groep `pure` en zijn baseline voorop. Van elk bewijzen dat die faalt.
+2. De checks bouwen, met de groep `pure` en zijn baseline voorop. Van elk bewijzen dat die faalt. De waarschuwingen van de build bewaren, om later naast die van de omgezette build te leggen.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
 4. De event-, value- en overlay-helpers schrijven, en in een React-app de JSX-typen van het pakket importeren (`@nldd/design-system/react`).
-5. Per scherm de vormgeving direct vervangen door componenten, en de CSS van dat scherm in dezelfde commit weghalen. Zet inline stijlen niet eerst om naar klassen: dat verplaatst eigen CSS in plaats van hem weg te halen. Bewaar ook geen opruimronde voor het eind. Een migratie die dat deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten. Wat geen component kan, wordt een issue en een uitzondering in de code met de issuelink.
+5. Per scherm de vormgeving direct vervangen door componenten, en de CSS van dat scherm in dezelfde commit weghalen, met `--tighten-baseline` erbij. Zet inline stijlen niet eerst om naar klassen: dat verplaatst eigen CSS in plaats van hem weg te halen. Bewaar ook geen opruimronde voor het eind. Een migratie die dat deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten. Wat geen component kan, wordt een issue en een uitzondering in de code met de issuelink.
 6. Inventariseren welke globale regels gedrag dragen. Daarna het oude CSS-framework **vroeg** weghalen en repareren wat dat blootlegt.
 7. De app-shell omzetten (layout, navigatie, header), achter een vlag als de navigatie voor iedereen verandert.
 8. Je eigen primitives herimplementeren (Button, Input, Select, Card) met behoud van hun API. Dat converteert de nette aanroepplekken in één klap.
 9. Schermen omzetten, goedkoopste eerst, zodat het idioom zich zet waar een fout weinig kost.
-10. Browser-sweep per pagina: nulbreedte, tab-stops, koppen, computed styles op alles wat op een tabel lijkt, plus het gedragsoppervlak tegen stap 3.
+10. Browser-sweep per pagina: nulbreedte, tab-stops, koppen, computed styles op alles wat op een tabel lijkt, plus het gedragsoppervlak tegen stap 3. Daarnaast de `<h1>` in de HTML van de server tellen, en de waarschuwingen van de build naast die van stap 2 leggen.
 11. Een ronde op visuele hiërarchie, met een reviewer die niets heeft omgezet.
 12. Je eigen workarounds langslopen: welke zijn overbodig geworden.
 13. De commentronde.

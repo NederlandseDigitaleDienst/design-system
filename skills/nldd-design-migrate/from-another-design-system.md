@@ -55,6 +55,12 @@ Gooi die vergelijking niet zomaar weg als de oude pagina eruit gaat. Dan meet di
 
 **Dubbele bestanden per scherm.** Draai je met een schakelaar, dan krijgt elk scherm twee sjablonen. Reken erop dat die uit de pas lopen en dat een wijziging twee keer moet. Dat is de prijs van de vergelijkbaarheid hierboven, en die is het waard zolang je de sloop plant.
 
+## Content die het oude systeem zelf importeert
+
+In een site met MDX, Astro of een andere vorm waarin auteurs componenten gebruiken, staat het oude systeem ook in de content: `import { Card } from '@oud/components-react'` bovenaan een artikel. Zet die artikelen niet een voor een om. Wijs de pakketnaam in je bundler (een `resolve.alias` in webpack of Vite) naar één bestand van jezelf, dat dezelfde namen exporteert en ze met `nldd-*`-componenten bouwt. Alleen de componenten en props die de content echt gebruikt hoeven erin. In één site zette dat veertig artikelen om zonder dat er één veranderde, en het oude pakket hoeft niet meer geïnstalleerd te zijn.
+
+Let bij zo'n laag op props die markup kunnen bevatten. Een titel met een link erin hoort in een slot of in de inhoud van het component, niet in een tekstattribuut: daar valt de link stil weg.
+
 ## Volgorde bij het opruimen
 
 Eerst de aanroepers, dan de sjablonen, dan de omgeving, dan de afhankelijkheid. Andersom sloop je de grond onder je voeten weg en weet je bij de eerste rode test niet meer of het aan de sloop ligt of aan iets anders.
