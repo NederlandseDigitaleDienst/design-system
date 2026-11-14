@@ -24,6 +24,10 @@
  * For a custom focus target inside the popover, put `autofocus` on the child you
  * want. Without it the popover host itself takes focus.
  *
+ * Content taller than the room the window leaves scrolls in the popover, with
+ * a fade at the edge where more content waits: at the bottom while you can
+ * scroll down, at the top once you have scrolled.
+ *
  * On md and up the popover closes with Escape or a click outside it, and that
  * click goes on to what it lands on, as with any native popover: the page has
  * no backdrop and stays in use, so a click on another control does what it

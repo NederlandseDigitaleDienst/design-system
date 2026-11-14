@@ -72,6 +72,11 @@ const HOVER_OPEN_MAX_MS = 150;
  * Supports filtering, keyboard navigation, and highlight management.
  * Use nldd-menu-item and nldd-menu-divider as children.
  *
+ * A chosen item blinks once before the menu closes, as a native menu on
+ * macOS does, so you see what you picked. `select` fires at once: the action
+ * does not wait for the blink. With `prefers-reduced-motion` the menu closes
+ * at once. A menu that scrolls fades at the edge where more items wait.
+ *
  * Note: Only type="button" items are supported when used inside nldd-combo-box-field.
  * Radio and checkbox types may be used in standalone menus.
  *
@@ -856,6 +861,36 @@ export class NLDDMenu extends LitElement {
 	 * bug. Idempotent: every chain level's `select` listener may call it,
 	 * but the first run empties the registry so the rest are no-ops.
 	 */
+	/**
+	 * As a native menu on macOS, the chosen item blinks once and the menu
+	 * closes after it, so you see what you picked. `select` has already gone
+	 * out: the action does not wait for the blink. Every menu in the chain
+	 * hears the event; the first one runs the blink and the rest leave it.
+	 * Without motion, or in a menu that is not open, it closes at once.
+	 */
+	private _handleSelect = (event: Event): void => {
+		const item = event.target as HTMLElement;
+		if (item.hasAttribute('confirming')) return;
+		const button = item.localName === 'nldd-menu-item' ? item.shadowRoot?.querySelector('.menu__item') : null;
+		if (!button || !this._isOpen || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			this._collapseChain();
+			return;
+		}
+		item.setAttribute('highlighted', '');
+		item.setAttribute('confirming', '');
+		let done = false;
+		const close = (): void => {
+			if (done) return;
+			done = true;
+			button.removeEventListener('animationend', close);
+			item.removeAttribute('confirming');
+			this._collapseChain();
+		};
+		button.addEventListener('animationend', close);
+		// No animationend when the animation never runs, as in a hidden tab.
+		setTimeout(close, 400);
+	};
+
 	private _collapseChain = (): void => {
 		const root = this._chainRoot ?? this;
 		// Snapshot + clear first so the re-entrant cleanup splices are
@@ -967,7 +1002,7 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('mouseleave', this._handleMouseleave);
 		this.addEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.addEventListener('submenu-open', this._handleSubmenuOpen);
-		this.addEventListener('select', this._collapseChain);
+		this.addEventListener('select', this._handleSelect);
 		document.addEventListener('click', this._handleDocumentClick);
 	}
 
@@ -1019,7 +1054,7 @@ export class NLDDMenu extends LitElement {
 		this.removeEventListener('mouseleave', this._handleMouseleave);
 		this.removeEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.removeEventListener('submenu-open', this._handleSubmenuOpen);
-		this.removeEventListener('select', this._collapseChain);
+		this.removeEventListener('select', this._handleSelect);
 		document.removeEventListener('click', this._handleDocumentClick);
 		// Defensive: the pointerdown + resize listeners are added on open
 		// and removed on close, but if the menu is torn down mid-open we'd

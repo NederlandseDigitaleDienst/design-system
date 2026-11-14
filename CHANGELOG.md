@@ -31,6 +31,8 @@ here; consult the commit history if you need that level of detail.
 - **The bottom sheet of `nldd-date-field` and `nldd-time-field` closes with "Klaar" instead of "Annuleer".** A picked date is already in the field, and the time wheels keep what they show, as a native wheel does: you turn back to change your mind. On sm the time sheet has "Klaar" in its title bar only, and no button below the wheels. Escape still puts the old time back. The translation keys `components.date-field.cancel-action` and `components.time-field.cancel-action` are gone; `nldd lint` names `components.date-field.confirm-action` and `components.time-field.confirm-action` where you override the old ones.
 - **The wheels of `nldd-time-picker` fade over every row above and below the selection,** so they read as a wheel. The fade follows `rows`.
 - **The time wheels of `nldd-time-field` get fewer rows when the window is short.** They show 7, and down to 3 when the picker would otherwise run off the window, so it never scrolls. They grow back when the window does.
+- **A chosen `nldd-menu-item` blinks once before the menu closes,** as on macOS, so you see what you picked. `select` still fires at once. Not with `prefers-reduced-motion`.
+- **`nldd-menu` and `nldd-popover` fade at the edge where they scroll,** at the bottom while there is more below and at the top once you have scrolled. In a browser without scroll-driven animations there is no fade.
 
 ### Fixed
 

@@ -1,4 +1,5 @@
 import { css, unsafeCSS } from 'lit';
+import { scrollFade } from '../../../assets/styles/scroll-fade.js';
 import { surfaceContent } from '../../../assets/styles/shadow-resets.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
@@ -131,4 +132,6 @@ export const popoverStyles = css`
 			transition: none;
 		}
 	}
+
+	${scrollFade(':host')}
 `;
