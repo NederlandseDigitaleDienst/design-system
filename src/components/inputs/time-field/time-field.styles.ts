@@ -18,6 +18,7 @@ export const timeFieldStyles = css`
 		--_time-field-validation-icon-area-width: calc(var(--_time-field-validation-icon-size) + var(--primitives-space-8));
 		--_time-field-picker-button-size: var(--semantics-controls-sm-min-size);
 		--_time-field-end-padding-right: calc((var(--_time-field-min-size) - var(--_time-field-picker-button-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_time-field-nested-control-corner-radius: calc(var(--_time-field-corner-radius) - var(--_time-field-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_time-field-trailing-width: calc(var(--_time-field-validation-icon-area-width) + var(--_time-field-picker-button-size) + var(--_time-field-end-padding-right));
 		--_time-field-fixed-width: calc(var(--_time-field-edge-width) + var(--_time-field-trailing-width));
 		--_time-field-width: calc(var(--_time-field-fixed-width) + var(--_time-field-text-width));
@@ -199,6 +200,10 @@ export const timeFieldStyles = css`
 		flex-shrink: 0;
 		padding-right: var(--_time-field-end-padding-right);
 		align-items: center;
+	}
+
+	.time-field__picker-button :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_time-field-nested-control-corner-radius);
 	}
 
 

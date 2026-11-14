@@ -29,6 +29,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`hide()` on `nldd-popover` right after `show()` did nothing.** It now closes the popover, also before the browser has reported that it opened.
 - **"Gekopieerd" on the copy button of `nldd-code-viewer` disappeared after 2 seconds,** also with the pointer or the focus still on the button (WCAG 1.4.13). It now stays until the pointer leaves the button, focus moves on, or Escape, like a failed copy already did.
+- **The clock button in `nldd-time-field` had a rounder corner than the field around it.** It now follows the field's corner, as the calendar button in `nldd-date-field` already did.
 
 ## [0.23.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.22.0...v0.23.0) (2026-11-13)
 
