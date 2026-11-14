@@ -89,6 +89,7 @@ function renderPicker(component: NLDDTimeField): TemplateResult | typeof nothing
 						<nldd-time-picker
 							autofocus
 							width="full"
+							rows=${component._pickerRows}
 							value=${component._pickerValue || nothing}
 							min=${component.min || nothing}
 							max=${component.max || nothing}

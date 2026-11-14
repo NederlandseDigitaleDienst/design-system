@@ -1,5 +1,6 @@
-import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll, vi, onTestFinished } from 'vitest';
 import { fixture, cleanup, waitForUpdate, reduceMotion } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import { parseTime, roundToStep, type NLDDTimeField } from './time-field.js';
 import type { NLDDPopover } from '../../layout/popover/popover.js';
 import './time-field.js';
@@ -465,6 +466,32 @@ describe('nldd-time-field – picker', () => {
 
 	// An empty picker would show two columns on 00. The starting point puts the
 	// wheels on a time without filling in the field yet.
+	// The popover would scroll against the edge of the window: the wheel gets
+	// fewer rows instead, always odd, never under 3.
+	it('geeft het wiel zoveel rijen als passen, en meer als er weer ruimte is', async () => {
+		const removeTokens = loadTokens();
+		onTestFinished(removeTokens);
+		el = await fixture<NLDDTimeField>('<nldd-time-field value="09:30"></nldd-time-field>');
+		await waitForUpdate(el);
+		const popover = el.shadowRoot!.querySelector<NLDDPopover>('nldd-popover')!;
+		await openPicker(el);
+		await waitForUpdate(el);
+		const picker = el.shadowRoot!.querySelector('nldd-time-picker')!;
+		const fit = (el as unknown as { _fitPickerRows(p: Element): Promise<void> })._fitPickerRows.bind(el);
+		const rowHeight = picker.shadowRoot!.querySelector('.time-picker__list-item')!.getBoundingClientRect().height;
+		const full = popover.scrollHeight;
+		popover.style.setProperty('max-height', `${full - rowHeight * 2}px`);
+		await fit(picker);
+		expect(picker.rows).toBe(5);
+		popover.style.setProperty('max-height', `${full - rowHeight * 3.5}px`);
+		await fit(picker);
+		expect(picker.rows).toBe(3);
+		// The room comes back, and so do the rows.
+		popover.style.setProperty('max-height', `${full + 100}px`);
+		await fit(picker);
+		expect(picker.rows).toBe(7);
+	});
+
 	it('opent de picker op een beginpunt als het veld leeg is', async () => {
 		el = await fixture<NLDDTimeField>('<nldd-time-field min="08:00"></nldd-time-field>');
 		await waitForUpdate(el);

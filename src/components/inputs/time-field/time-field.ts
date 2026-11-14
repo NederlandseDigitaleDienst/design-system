@@ -20,7 +20,9 @@
  * choice, and so does a click outside once you have picked something. Escape
  * puts the old time back. On sm, where the picker is a bottom sheet, "Klaar"
  * sits in its title bar and the sheet offers no cancel: as with a native wheel,
- * you turn back to change your mind. On an empty field the wheels open at `min`,
+ * you turn back to change your mind. The built-in wheels show 7 rows, and
+ * fewer, down to 3, when the picker would otherwise run off the window; they
+ * grow back when the window does. On an empty field the wheels open at `min`,
  * or otherwise at the current time rounded to `step`, which does not fill in
  * the field yet.
  *
@@ -174,9 +176,15 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	@state()
 	private _finePointer = false;
 
+	/** Rows of the built-in picker: a full wheel of 7, fewer when the popover
+	 *  runs into the edge of the window. Set again on every open. */
+	@state()
+	public _pickerRows = 7;
+
 	private _handlePointerChange = (): void => {
 		this._finePointer = NLDDTimeField._getFinePointerQuery().matches;
 	};
+
 
 	/** Size of the buttons in the popover: a finger needs the full control size,
 	 *  a mouse does not. Same split as the rows of the picker. */
@@ -198,6 +206,8 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		// arrives, leaving a listener on document that holds on to a detached field
 		// and keeps swallowing Escape for the rest of the session.
 		document.removeEventListener('keydown', this._handlePickerEscape, true);
+		window.removeEventListener('resize', this._handleWindowResize);
+		cancelAnimationFrame(this._fitFrame);
 		super.disconnectedCallback();
 	}
 
@@ -388,7 +398,9 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		this._valueBeforePicker = this.value;
 		this._pickerState = 'untouched';
 		this._pickerSeed = this.value || startingPoint(this._rules, new Date());
+		this._pickerRows = 7;
 		document.addEventListener('keydown', this._handlePickerEscape, true);
+		window.addEventListener('resize', this._handleWindowResize);
 		// Only now does the picker have dimensions: while the popover was closed it
 		// could not scroll the chosen value into view and the column sat at the top.
 		// Wait for both renders, because the picker is only handed its starting
@@ -398,8 +410,44 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 			if (!picker) return;
 			await picker.updateComplete;
 			picker.scrollSelectedIntoView();
+			if (!this._slottedPicker) await this._fitPickerRows(picker);
 		});
 	}
+
+	/**
+	 * A wheel of 7 rows, unless the popover then runs into the edge of the
+	 * window and would scroll. Then as many rows as fit, down to 3, so the
+	 * whole picker stays in view. Measured again when the window resizes, and
+	 * back up to 7 when the room returns. A slotted picker keeps the rows it
+	 * was given.
+	 */
+	private async _fitPickerRows(picker: NLDDTimePicker): Promise<void> {
+		const popover = this._popover;
+		if (!popover) return;
+		// The popover places itself and sets its height limit a frame later.
+		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		if (!this._pickerOpen) return;
+		const room = parseFloat(getComputedStyle(popover).maxHeight);
+		if (!Number.isFinite(room)) return;
+		const rowHeight = picker.shadowRoot?.querySelector('.time-picker__list-item')?.getBoundingClientRect().height ?? 0;
+		if (!rowHeight) return;
+		const rows = Math.min(7, Math.max(3, this._pickerRows + Math.floor((room - popover.scrollHeight) / rowHeight)));
+		if (rows === this._pickerRows) return;
+		this._pickerRows = rows;
+		await this.updateComplete;
+		await picker.updateComplete;
+		picker.scrollSelectedIntoView();
+	}
+
+	private _fitFrame = 0;
+
+	private _handleWindowResize = (): void => {
+		cancelAnimationFrame(this._fitFrame);
+		this._fitFrame = requestAnimationFrame(() => {
+			const picker = this.shadowRoot?.querySelector('nldd-time-picker');
+			if (picker && !this._slottedPicker) void this._fitPickerRows(picker);
+		});
+	};
 
 	/**
 	 * What happened while scrolling is a proposal, not an answer: the field shows
@@ -411,6 +459,8 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	private _settlePicker(): void {
 		document.removeEventListener('keydown', this._handlePickerEscape, true);
+		window.removeEventListener('resize', this._handleWindowResize);
+		cancelAnimationFrame(this._fitFrame);
 		if (this._pickerState === 'untouched' || this._pickerState === 'cancelled') {
 			if (this.value === this._valueBeforePicker) return;
 			this.value = this._valueBeforePicker;
