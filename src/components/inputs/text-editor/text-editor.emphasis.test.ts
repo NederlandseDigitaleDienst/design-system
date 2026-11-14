@@ -267,3 +267,41 @@ describe('nldd-text-editor emphasis: the toggle at the end of a run', () => {
 		cleanup(el);
 	});
 });
+
+// #414: bold without a selection left `****` in the value when nothing was typed,
+// and on an editor that never had focus it landed at the start.
+describe('nldd-text-editor emphasis: an empty pair', () => {
+	it('takes away an empty pair once the caret leaves it', async () => {
+		const el = await withValue('Ontwikkeling en onderhoud');
+		el.view.contentDOM.focus();
+		select(el, 12);
+		el.toggleBold();
+		expect(el.value).toBe('Ontwikkeling**** en onderhoud');
+		select(el, 0);
+		await Promise.resolve();
+		await waitForUpdate(el);
+		expect(el.value).toBe('Ontwikkeling en onderhoud');
+		cleanup(el);
+	});
+
+	it('keeps the pair once something is typed in it', async () => {
+		const el = await withValue('Ontwikkeling en onderhoud');
+		el.view.contentDOM.focus();
+		select(el, 12);
+		el.toggleBold();
+		type(el, ' x');
+		select(el, 0);
+		await Promise.resolve();
+		await waitForUpdate(el);
+		expect(el.value).toContain('**x**');
+		cleanup(el);
+	});
+
+	it('works at the end of the text on an editor that never had focus', async () => {
+		const el = await withValue('Ontwikkeling en onderhoud');
+		el.toggleBold();
+		expect(el.value).toBe('Ontwikkeling en onderhoud****');
+		expect(el.view.state.selection.main.head).toBe('Ontwikkeling en onderhoud**'.length);
+		cleanup(el);
+	});
+});
