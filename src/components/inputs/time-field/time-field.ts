@@ -185,7 +185,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		this._finePointer = NLDDTimeField._getFinePointerQuery().matches;
 	};
 
-
 	/** Size of the buttons in the popover: a finger needs the full control size,
 	 *  a mouse does not. Same split as the rows of the picker. */
 	public get _pickerButtonSize(): 'sm' | 'md' {
@@ -535,7 +534,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		this._focusTriggerOnClose = true;
 		this._popover?.hide();
 	}
-
 
 	override formValue(): FormValue {
 		return this.value;

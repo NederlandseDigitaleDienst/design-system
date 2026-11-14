@@ -17,6 +17,7 @@ here; consult the commit history if you need that level of detail.
 ### Breaking
 
 - **`background="accent-tinted"` is gone from the page sections and `nldd-hero`.** A whole section in the accent tint drew too much attention and did not read well. Use `tinted`, or put the content that belongs to the service in an `nldd-card` or `nldd-box` with `background="accent-tinted"`, which keep it. `nldd lint` reports the old value.
+- **The translation keys `components.date-field.cancel-action` and `components.time-field.cancel-action` are gone,** now that the bottom sheet closes with "Klaar". An override of them no longer shows anywhere. `nldd lint` names `components.date-field.confirm-action` and `components.time-field.confirm-action` in their place.
 
 ### Added
 
@@ -29,7 +30,7 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **`popover-needs-name` no longer asks for `accessible-label` on a popover in the `interest` slot.** There its content is the description of the button, and a label would be read in its place.
-- **The bottom sheet of `nldd-date-field` and `nldd-time-field` closes with "Klaar" instead of "Annuleer".** A picked date is already in the field, and the time wheels keep what they show, as a native wheel does: you turn back to change your mind. On sm the time sheet has "Klaar" in its title bar only, and no button below the wheels. Escape still puts the old time back. The translation keys `components.date-field.cancel-action` and `components.time-field.cancel-action` are gone; `nldd lint` names `components.date-field.confirm-action` and `components.time-field.confirm-action` where you override the old ones.
+- **The bottom sheet of `nldd-date-field` and `nldd-time-field` closes with "Klaar" instead of "Annuleer".** A picked date is already in the field, and the time wheels keep what they show, as a native wheel does: you turn back to change your mind. On sm the time sheet has "Klaar" in its title bar only, and no button below the wheels. Escape still puts the old time back. The old translation keys are gone, see Breaking.
 - **The wheels of `nldd-time-picker` fade over every row above and below the selection,** so they read as a wheel. The fade follows `rows`.
 - **The time wheels of `nldd-time-field` get fewer rows when the window is short.** They show 7, and down to 3 when the picker would otherwise run off the window, so it never scrolls. They grow back when the window does.
 - **A chosen `nldd-menu-item` blinks once before the menu closes,** as on macOS, so you see what you picked. `select` still fires at once. Not with `prefers-reduced-motion`.

@@ -141,6 +141,21 @@ describe('nldd-button interest slot', () => {
 		expect(popover.matches(':popover-open')).toBe(false);
 	});
 
+	it('stays closed after a keyboard click until focus leaves and comes back', async () => {
+		await setup();
+		inner.focus();
+		expect(popover.matches(':popover-open')).toBe(true);
+		// Enter or Space on a focused button clicks it, with focus staying put.
+		inner.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, cancelable: true, detail: 0 }));
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(false);
+		expect(button.shadowRoot!.activeElement).toBe(inner);
+		inner.blur();
+		inner.focus();
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(true);
+	});
+
 	it('opens on a long press and does not count it as a click', async () => {
 		await setup();
 		const clicked = vi.fn();
