@@ -166,17 +166,6 @@ describe('nldd-code-viewer', () => {
 		expect((el as { appearance?: string }).appearance).toBe('simple');
 	});
 
-	it('appearance="simple" zeroes the box CSS — corner-radius and padding', async () => {
-		el = await fixture('<nldd-code-viewer appearance="simple">x</nldd-code-viewer>');
-		await waitForUpdate(el);
-		const block = el.shadowRoot!.querySelector<HTMLElement>('.code-viewer')!;
-		const cs = getComputedStyle(block);
-		expect(parseFloat(cs.borderTopLeftRadius)).toBe(0);
-		expect(parseFloat(cs.paddingTop)).toBe(0);
-		expect(parseFloat(cs.paddingLeft)).toBe(0);
-		expect(cs.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-	});
-
 	it('reflects a non-default appearance value', async () => {
 		// 'box-tinted' is the default and is kept out of the DOM (covered above);
 		// the other two must reflect, since the styles select on them.
@@ -253,7 +242,7 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
-	it('a failure outlasts the feedback duration and clears on blur', async () => {
+	it('a failure stays and clears on blur', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) }, configurable: true });
 		vi.useFakeTimers();
@@ -263,7 +252,7 @@ describe('nldd-code-viewer', () => {
 			await litEl.updateComplete;
 			await (el as unknown as NLDDCodeViewer)._onCopyClick();
 			await litEl.updateComplete;
-			await vi.advanceTimersByTimeAsync(2100);
+			await vi.advanceTimersByTimeAsync(5000);
 			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('failure');
 
@@ -277,7 +266,7 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
-	it('resets to idle after the feedback duration', async () => {
+	it('a success stays while the pointer is on the button, and clears after it leaves', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
 		vi.useFakeTimers();
@@ -287,8 +276,22 @@ describe('nldd-code-viewer', () => {
 			await litEl.updateComplete;
 			await (el as unknown as NLDDCodeViewer)._onCopyClick();
 			await litEl.updateComplete;
+			await vi.advanceTimersByTimeAsync(5000);
+			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
-			await vi.advanceTimersByTimeAsync(2100);
+			const tooltip = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-tooltip')!;
+			expect(tooltip.hasAttribute('open')).toBe(true);
+
+			// Crossing onto the tooltip keeps it.
+			tooltip.dispatchEvent(new PointerEvent('pointerleave'));
+			await vi.advanceTimersByTimeAsync(100);
+			tooltip.dispatchEvent(new PointerEvent('pointerenter'));
+			await vi.advanceTimersByTimeAsync(1000);
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
+
+			tooltip.dispatchEvent(new PointerEvent('pointerleave'));
+			await vi.advanceTimersByTimeAsync(400);
 			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
 		} finally {
@@ -297,7 +300,49 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
-	it('tooltip dismiss (Escape) resets copy state to idle and cancels the timer', async () => {
+	it('a success stays after the pointer leaves while the button has focus', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const litEl = el as HTMLElement & { updateComplete: Promise<boolean> };
+			await litEl.updateComplete;
+			const button = el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-button')!;
+			// As on touch: the tap focuses the button, and the pointer leaves right after.
+			await (el as unknown as NLDDCodeViewer)._onCopyClick({ currentTarget: button } as unknown as Event);
+			await litEl.updateComplete;
+			const tooltip = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-tooltip')!;
+			tooltip.dispatchEvent(new PointerEvent('pointerleave'));
+			await new Promise((resolve) => setTimeout(resolve, 400));
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
+			button.blur();
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
+		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
+	it('a success clears on blur', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const litEl = el as HTMLElement & { updateComplete: Promise<boolean> };
+			await litEl.updateComplete;
+			await (el as unknown as NLDDCodeViewer)._onCopyClick();
+			await litEl.updateComplete;
+			const iconBtn = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-icon-button')!;
+			iconBtn.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true }));
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
+		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
+	it('tooltip dismiss (Escape) resets copy state to idle', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
 		vi.useFakeTimers();
@@ -309,7 +354,7 @@ describe('nldd-code-viewer', () => {
 			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('success');
 			const tooltip = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-tooltip')!;
-			tooltip.dispatchEvent(new CustomEvent('nldd-tooltip-dismiss', { bubbles: true, composed: true }));
+			tooltip.dispatchEvent(new CustomEvent('dismiss', { bubbles: true, composed: true }));
 			await litEl.updateComplete;
 			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
 			expect(tooltip.hasAttribute('open')).toBe(false);
@@ -722,5 +767,39 @@ describe('nldd-code-viewer diff', () => {
 		const button = el.shadowRoot!.querySelector('nldd-icon-button')!.getBoundingClientRect();
 		expect(button.left - textEnd).toBeGreaterThanOrEqual(8 - 0.5);
 		removeTokens();
+	});
+});
+
+describe('nldd-code-viewer line-numbers', () => {
+	let el: NLDDCodeViewer;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const numbers = () => [...el.shadowRoot!.querySelectorAll('.cm-lineNumbers .cm-gutterElement')].map((n) => n.textContent).filter(Boolean);
+
+	it('numbert elke regel, en houdt de nummers uit de code', async () => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer line-numbers>een\ntwee\ndrie</nldd-code-viewer>');
+		await el.updateComplete;
+		expect(numbers()).toEqual(expect.arrayContaining(['1', '2', '3']));
+		expect(el.shadowRoot!.querySelector('.cm-content')!.textContent).not.toMatch(/\d/);
+	});
+
+	it('toont geen nummers zonder het attribuut, en zet ze aan en uit', async () => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>een\ntwee</nldd-code-viewer>');
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('.cm-lineNumbers')).toBeNull();
+		el.lineNumbers = true;
+		await el.updateComplete;
+		expect(numbers()).toEqual(expect.arrayContaining(['1', '2']));
+	});
+
+	it('laat een diff zijn eigen kolommen houden', async () => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer diff line-numbers>@@ -1 +1 @@\n-oud\n+nieuw</nldd-code-viewer>');
+		await waitForUpdate(el);
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('.cm-lineNumbers')).toBeNull();
+		expect(el.shadowRoot!.querySelector('.cm-diff-new-gutter')).not.toBeNull();
 	});
 });

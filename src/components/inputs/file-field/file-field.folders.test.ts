@@ -380,6 +380,8 @@ describe('nldd-file-field – directory', () => {
 		item('Map kiezen…').shadowRoot!.querySelector('button')!.click();
 		await settle();
 		expect(folder).toHaveBeenCalledOnce();
+		// The chosen item blinks before the menu closes.
+		await new Promise((resolve) => setTimeout(resolve, 450));
 		expect(menu()!.matches(':popover-open')).toBe(false);
 
 		button.click();

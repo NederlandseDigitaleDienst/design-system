@@ -19,6 +19,7 @@ export const tokenFieldStyles = css`
 		--_token-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 		--_token-field-validation-icon-area-size: calc(var(--_token-field-min-size) - var(--semantics-input-fields-border-width) * 2);
 		--_token-field-gap: calc((var(--semantics-controls-md-min-size) - var(--semantics-controls-sm-min-size) - 2 * var(--semantics-input-fields-border-width)) / 2);
+		--_token-field-nested-control-corner-radius: calc(var(--_token-field-corner-radius) - var(--_token-field-gap) - var(--semantics-input-fields-border-width));
 		--_token-field-input-min-width: var(--primitives-area-200);
 
 		${inheritedTextReset}
@@ -61,6 +62,10 @@ export const tokenFieldStyles = css`
 		min-height: var(--_token-field-min-size);
 		padding-block: var(--_token-field-gap);
 		padding-inline: var(--_token-field-gap);
+	}
+
+	.token-field :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_token-field-nested-control-corner-radius);
 	}
 
 	/* The role="list" wrapper carries token grouping for assistive tech without
@@ -128,7 +133,7 @@ export const tokenFieldStyles = css`
 		font: var(--_token-field-text-font);
 		height: var(--semantics-controls-sm-min-size);
 		/* Rounds the autofill mask (below) like a token. */
-		border-radius: var(--semantics-controls-sm-corner-radius);
+		border-radius: var(--_token-field-nested-control-corner-radius);
 		padding: 0;
 		/* The frame already adds the leading gap, so subtract it to land on the
 		   standard inline-padding. */
@@ -137,6 +142,7 @@ export const tokenFieldStyles = css`
 	}
 
 	.token-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -186,10 +192,12 @@ export const tokenFieldStyles = css`
 	}
 
 	:host([valid]) .token-field__validation-icon {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .token-field__validation-icon {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 `;

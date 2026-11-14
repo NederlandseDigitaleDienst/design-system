@@ -164,7 +164,7 @@ export interface MentionInsertedDetail {
 	to: number;
 }
 
-/** What the `nldd-text-editor-typeahead` event carries: which list, which
+/** What the `typeahead` event carries: which list, which
  *  candidate, and where the inserted text sits (clean offsets, like
  *  `getSelection()`). */
 export interface TypeaheadChosenDetail {

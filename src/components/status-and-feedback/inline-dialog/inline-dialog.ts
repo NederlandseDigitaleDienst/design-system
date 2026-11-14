@@ -16,7 +16,7 @@
  * @attr {'left'|'center'} horizontal-alignment - Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 360px wide, even where two would fit side by side. Left-aligned, they sit in a row, each as wide as its label.
  *
  * @slot - Optional custom content between text and actions. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout="stack" and a gap.
- * @slot actions - nldd-button elements, wrapped in nldd-button-group (max 3)
+ * @slot actions - nldd-button elements (max 3), each with `slot="actions"`. The dialog puts them in a button group of its own, which sets the gap, the order and the stacking, so no element goes around them. A component of your own that renders a set of them returns a fragment, which adds nothing to the DOM.
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';

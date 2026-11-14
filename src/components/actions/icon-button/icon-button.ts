@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst Icon Button Component (Lit + TypeScript)
  *
  * @element nldd-icon-button
- * @attr {string} appearance - Visual style, color included: 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted' | 'primary' | 'secondary' | 'destructive'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces.
+ * @attr {string} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon.
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {boolean} hide-lg-text - In lg size, hides the text label and enlarges the icon by one step (28px)
  * @attr {boolean} no-highlight-border - Removes the per-appearance highlight border (e.g. when a control group draws a single border instead).
@@ -32,6 +32,8 @@
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay.
+ * @attr {string} interestfor - ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button.
+ * @slot interest - A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the button's own tooltip, so let it say what the button does where the icon does not. The button keeps its own click. Focus stays on the button, the popover's content is read as the button's description (after `accessible-label`, which stays its name), and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here.
  *
  * @example
  * ```html
@@ -54,6 +56,8 @@ import { template } from './icon-button.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddIconButtonTranslations } from './icon-button.i18n.js';
 import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
+import { InterestController } from '../../../utilities/interest-controller.js';
+import { applyDescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
@@ -73,8 +77,8 @@ export type Appearance =
 	| 'neutral-transparent'
 	| 'critical-tinted'
 	| 'critical-transparent'
-	| 'inherit-filled'
-	| 'inherit-tinted';
+	| 'content-filled'
+	| 'content-tinted';
 export type ButtonType = 'button' | 'submit' | 'reset';
 export type PopupType = 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid';
 
@@ -150,6 +154,9 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 
 	@property({ type: String })
 	popovertarget: string | undefined = undefined;
+
+	@property({ type: String, reflect: true })
+	interestfor: string | undefined = undefined;
 
 	/**
 	 * Direct element reference to the popover this button invokes — IDL-only
@@ -237,6 +244,11 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	 * binds its handlers. */
 	_popup = new PopupAnchorController(this);
 
+	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
+	 * and a long press, in place of the tooltip. Not private: the template
+	 * module reads it. */
+	_interest = new InterestController(this);
+
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
@@ -247,6 +259,10 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 
 	override updated(changedProperties: Map<string, unknown>): void {
 		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
+		if (changedProperties.has('interestfor')) this._interest.refresh();
+		// By element: the button sits in this shadow root, the popover outside it.
+		const overlay = this._interest.overlay;
+		applyDescribedBy(this.shadowRoot?.querySelector('.icon-button'), overlay ? [overlay] : [], true);
 		if (changedProperties.has('width')) {
 			const w = this.width;
 			// 'full' switches host to block + 100% via CSS attribute selector.

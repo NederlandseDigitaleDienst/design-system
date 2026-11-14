@@ -21,7 +21,7 @@ De naam bestaat nergens, dus de browser neemt de terugval. In de lichte weergave
 
 De echte namen zijn beschrijvend en Nederlands waar het om kleur gaat: `--semantics-surfaces-base-background-color`, `--semantics-surfaces-tinted-background-color`, `--primitives-color-groen-500`, `-oranje-`, `-lintblauw-`. Zoek ze op in [`reference.md`](../nldd-design/reference.md) en in `node_modules/@nldd/design-system/dist/css/`, en grep het pakket voordat je een naam opschrijft.
 
-Hetzelfde geldt voor icoonnamen en voor attributen: een `variant`- of `appearance`-waarde uit je vorige systeem is hier meestal geen bestaande waarde, en een onbekende waarde valt in de browser stil terug op de standaard. `nldd lint` meldt hem wel, zie de markupcheck in de hoofdskill.
+Hetzelfde geldt voor icoonnamen en voor attributen: een `variant`- of `appearance`-waarde uit je vorige designsysteem is hier meestal geen bestaande waarde, en een onbekende waarde valt in de browser stil terug op de standaard. `nldd lint` meldt hem wel, zie de markupcheck in de hoofdskill.
 
 ## De donkere weergave legt bloot wat je hebt gemist
 
@@ -31,7 +31,7 @@ Twee vormen die je zoekt: een vaste hexwaarde, en de terugval hierboven. De twee
 
 ## Twee systemen naast elkaar: kies bewust
 
-Een systeem vervangen dat er al zit, is wat anders dan CSS opruimen. Je hebt twee werkbare vormen, en de keuze bepaalt de rest van het project:
+Een designsysteem vervangen dat er al zit, is wat anders dan CSS opruimen. Je hebt twee werkbare vormen, en de keuze bepaalt de rest van het project:
 
 **Alles in één keer**, per pagina of per overervingsketen, met de oude weg ernaast tot je klaar bent. Dan kun je per route schakelen en de twee vergelijken, wat de sterkste meetmethode oplevert die er is (zie hieronder). Prijs: zolang beide bestaan is elke wijziging twee keer werk, en lopen ze uit de pas. In één project gebeurde dat binnen enkele weken drie keer.
 
@@ -49,7 +49,7 @@ Gooi die vergelijking niet zomaar weg als de oude pagina eruit gaat. Dan meet di
 
 ## Wat je meeneemt zonder het te merken
 
-**Eigen CSS op componenten.** In je vorige systeem was dat misschien normaal. Hier hoort het er aan het eind niet te zijn: stuur via attributen en slots. Kan het component het niet, dan is dat een melding via `nldd-design-contribute`, en krijgt de omweg tot die tijd een onderdrukking van `nldd lint --pure` met wat de regel voor een omweg in [`SKILL.md`](SKILL.md#het-doel-alles-komt-uit-het-systeem) vraagt.
+**Eigen CSS op componenten.** In je vorige designsysteem was dat misschien normaal. Hier hoort het er aan het eind niet te zijn: stuur via attributen en slots. Kan het component het niet, dan is dat een melding via `nldd-design-contribute`, en krijgt de omweg tot die tijd een onderdrukking van `nldd lint --pure` met wat de regel voor een omweg in [`SKILL.md`](SKILL.md#het-doel-alles-komt-uit-het-designsysteem) vraagt.
 
 **Sjablonen zonder aanroeper.** Bij een omzetting ontstaan wezen: een bestand dat niemand meer rendert. Bij het opruimen haal je die weg zonder het te merken, wat prima is, maar controleer of er niets omheen hangt.
 

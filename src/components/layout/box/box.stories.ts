@@ -114,7 +114,7 @@ export const Vlakken = {
 
 		</nldd-container>
 	</nldd-box>
-			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px;">
+			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px; --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 				<nldd-box background="base">
 		<nldd-container padding="16">
 						<nldd-text>background="base" — base-colored box op een al getinte parent. Highlight ring is +2 stappen voor extra contrast.</nldd-text>

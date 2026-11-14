@@ -14,6 +14,12 @@
  * Any other wrapper becomes a single grid item, and the paragraphs inside it
  * lose their spacing.
  *
+ * The content is HTML made of block elements, so whoever produces it, a
+ * server, a CMS or a markdown renderer, wraps text in a `p`. Bare text or an
+ * inline element such as `strong` or `a` as a direct child lands in a column
+ * of 0px, one word per line. Plain text, where a component has no attribute
+ * for it, goes in nldd-text.
+ *
  * ## Headings
  * The headings keep one size on every width, the one they have on a phone. A
  * heading in running text sits in a column as wide as a line of reading, on
@@ -48,12 +54,6 @@
  *
  * @element nldd-rich-text
  *
- * @attr {string} color - 'content' (the default) takes the system's own content
- *   colors, each element its own. 'inherit' lets all text follow the color of
- *   the surface instead (for colored areas such as the filled categories).
- *   Links stay underlined as an affordance; secondary text (figcaption) gets
- *   the same color at a lowered opacity. Known v1 gaps: inline code, mark,
- *   tables and hr keep their own surfaces.
  * @attr {string} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
@@ -76,15 +76,30 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { nlddRichTextTranslations } from './rich-text.i18n.js';
 import type { NLDDRichTextTranslations } from './rich-text.i18n.js';
 import { translate } from '../../../utilities/translations.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Spacing = 'flat' | 'tight' | 'snug' | 'loose';
 
 const MANAGED_LABEL_ATTR = 'data-nldd-managed-label';
 
+/** Phrasing elements: as a direct child each becomes a grid item of its own. */
+const INLINE = new Set([
+	'A', 'ABBR', 'B', 'BDI', 'BDO', 'BR', 'CITE', 'CODE', 'DATA', 'DEL', 'DFN', 'EM',
+	'I', 'INS', 'KBD', 'LABEL', 'MARK', 'Q', 'RUBY', 'S', 'SAMP', 'SMALL', 'SPAN',
+	'STRONG', 'SUB', 'SUP', 'TIME', 'U', 'VAR', 'WBR', 'NLDD-ICON',
+]);
+
+/** A non-blank text node or an inline element among these nodes. */
+function hasInlineContent(nodes: NodeListOf<ChildNode>): boolean {
+	for (const node of nodes) {
+		if (node.nodeType === Node.TEXT_NODE && node.textContent!.trim()) return true;
+		if (node.nodeType === Node.ELEMENT_NODE && INLINE.has((node as Element).tagName)) return true;
+	}
+	return false;
+}
+
 @customElement('nldd-rich-text')
 export class NLDDRichText extends LitElement {
-	@property({ reflect: true, converter: reflectNonDefault<'content' | 'inherit'>('content') })
-	color: 'content' | 'inherit' = 'content';
 
 	@property({ reflect: true, converter: reflectNonDefault<Spacing>('snug') })
 	spacing: Spacing = 'snug';
@@ -119,9 +134,15 @@ export class NLDDRichText extends LitElement {
 		 * tables). Both trigger a re-evaluation of every table's overflow. */
 		this._resizeObserver = new ResizeObserver(() => this._syncTables());
 		this._resizeObserver.observe(this);
-		this._mutationObserver = new MutationObserver(() => this._syncTables());
-		this._mutationObserver.observe(this, { childList: true, subtree: true });
+		this._mutationObserver = new MutationObserver((records) => {
+			if (records.some(r => r.type === 'childList')) this._syncTables();
+			this._syncInlineContent();
+		});
+		// Text edits matter only to the dev check on bare text; in production they
+		// would wake the observer on every keystroke in an editable child for nothing.
+		this._mutationObserver.observe(this, { childList: true, subtree: true, characterData: !!import.meta.env?.DEV });
 		this._syncTables();
+		this._syncInlineContent();
 	}
 
 	override disconnectedCallback(): void {
@@ -137,6 +158,14 @@ export class NLDDRichText extends LitElement {
 		for (const table of this.querySelectorAll(`table[${MANAGED_LABEL_ATTR}]`)) {
 			table.setAttribute('aria-label', this._t('components.rich-text.table-scroll-label'));
 		}
+	}
+
+	/** Dev only, for nldd lint: bare text or an inline element as a direct
+	 *  child, also inside the wrapper div that passes its children through. */
+	private _syncInlineContent(): void {
+		if (!import.meta.env?.DEV) return;
+		const wrapper = this.querySelector(':scope > div:only-child:not([class], [style], [role], [data-rich-text-width])');
+		setState(this, 'inline-content', hasInlineContent(this.childNodes) || (!!wrapper && hasInlineContent(wrapper.childNodes)));
 	}
 
 	private _syncTables(): void {

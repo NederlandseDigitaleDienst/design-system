@@ -19,12 +19,14 @@ export const blockquoteStyles = css`
 		--_blockquote-spacing: var(--semantics-blockquotes-md-spacing);
 		--_blockquote-quote-font: var(--semantics-blockquotes-md-quote-font);
 		--_blockquote-attribution-font: var(--semantics-blockquotes-md-attribution-font);
+		--_blockquote-quote-max-width: 30em;
+		--_blockquote-sm-size: var(--primitives-font-size-200);
+		--_blockquote-md-size: var(--primitives-font-size-300);
+		--_blockquote-lg-size: var(--primitives-font-size-300);
 		--_blockquote-sm-custom-size: initial;
 		--_blockquote-md-custom-size: initial;
 		--_blockquote-lg-custom-size: initial;
-		--_blockquote-sm-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-sm-custom-size), var(--primitives-font-size-200)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
-		--_blockquote-md-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-md-custom-size), var(--primitives-font-size-300)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
-		--_blockquote-lg-custom-font: italic var(--primitives-font-weight-body-regular) max(var(--_blockquote-lg-custom-size), var(--primitives-font-size-300)) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
+		--_blockquote-sized-font: italic var(--primitives-font-weight-body-regular) var(--_blockquote-quote-size) / var(--primitives-line-height-snug) var(--primitives-font-family-body);
 
 		@media (max-width: ${smMax}) {
 			--_blockquote-spacing: var(--semantics-blockquotes-sm-spacing);
@@ -40,42 +42,80 @@ export const blockquoteStyles = css`
 
 		${inheritedTextReset}
 		display: block;
-		max-width: var(--semantics-blockquotes-max-width);
 	}
 
 	:host([hidden]) {
 		display: none;
 	}
 
+	/* ## Size */
+
+	:host([size="lg"]) {
+		--_blockquote-sm-size: var(--primitives-font-size-300);
+		--_blockquote-md-size: var(--primitives-font-size-500);
+		--_blockquote-lg-size: var(--primitives-font-size-700);
+		--_blockquote-quote-font: var(--_blockquote-sized-font);
+
+		@media (max-width: ${smMax}) {
+			--_blockquote-quote-size: var(--_blockquote-sm-size);
+		}
+
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_blockquote-quote-size: var(--_blockquote-md-size);
+		}
+
+		@media (min-width: ${lgMin}) {
+			--_blockquote-quote-size: var(--_blockquote-lg-size);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_blockquote-quote-size: var(--_blockquote-sm-size);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_blockquote-quote-size: var(--_blockquote-md-size);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_blockquote-quote-size: var(--_blockquote-lg-size);
+		}
+	}
+
 	/* ## Custom size */
 
 	:host([data-sm-custom-size]) {
 		@media (max-width: ${smMax}) {
-			--_blockquote-quote-font: var(--_blockquote-sm-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-sm-custom-size), var(--_blockquote-sm-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_blockquote-quote-font: var(--_blockquote-sm-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-sm-custom-size), var(--_blockquote-sm-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 	}
 
 	:host([data-md-custom-size]) {
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_blockquote-quote-font: var(--_blockquote-md-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-md-custom-size), var(--_blockquote-md-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_blockquote-quote-font: var(--_blockquote-md-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-md-custom-size), var(--_blockquote-md-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 	}
 
 	:host([data-lg-custom-size]) {
 		@media (min-width: ${lgMin}) {
-			--_blockquote-quote-font: var(--_blockquote-lg-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-lg-custom-size), var(--_blockquote-lg-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_blockquote-quote-font: var(--_blockquote-lg-custom-font);
+			--_blockquote-quote-size: max(var(--_blockquote-lg-custom-size), var(--_blockquote-lg-size));
+			--_blockquote-quote-font: var(--_blockquote-sized-font);
 		}
 	}
 
@@ -90,6 +130,7 @@ export const blockquoteStyles = css`
 		padding-bottom: 0;
 		flex-direction: column;
 		gap: calc(var(--_blockquote-spacing) / 2);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		text-wrap: pretty;
 	}
@@ -99,6 +140,7 @@ export const blockquoteStyles = css`
 
 	.blockquote__quote {
 		display: flex;
+		max-width: var(--_blockquote-quote-max-width);
 		flex-direction: column;
 		gap: calc(1lh / 2);
 		font: var(--_blockquote-quote-font);

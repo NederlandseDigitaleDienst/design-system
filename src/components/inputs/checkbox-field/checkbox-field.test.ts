@@ -237,6 +237,18 @@ describe('nldd-checkbox-field – label click', () => {
 		expect(new FormData(form).get('roles')).toBe('admin');
 	});
 
+	it('keeps a required form from submitting until it is checked', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-checkbox-field name="akkoord" label="Akkoord" required></nldd-checkbox-field></form>');
+		el = form as unknown as NLDDCheckboxField;
+		const field = form.querySelector<NLDDCheckboxField>('nldd-checkbox-field')!;
+		await waitForUpdate(field);
+		expect(form.checkValidity()).toBe(false);
+		expect(field.internals.validity.valueMissing).toBe(true);
+		field.shadowRoot!.querySelector<HTMLElement>('.checkbox-field__label')!.click();
+		await waitForUpdate(field);
+		expect(form.checkValidity()).toBe(true);
+	});
+
 	it('focus() delegates through to the inner checkbox input', async () => {
 		el = await fixture<NLDDCheckboxField>('<nldd-checkbox-field label="Optie"></nldd-checkbox-field>');
 		await waitForUpdate(el);
@@ -247,7 +259,7 @@ describe('nldd-checkbox-field – label click', () => {
 	});
 });
 
-describe('nldd-checkbox-field – color="inherit"', () => {
+describe('nldd-checkbox-field – color="content"', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
@@ -255,10 +267,10 @@ describe('nldd-checkbox-field – color="inherit"', () => {
 	});
 
 	it('passes the color to its checkbox and draws its label in the surrounding text color', async () => {
-		el = await fixture(`<div style="color: rgb(255, 255, 255);"><nldd-checkbox-field color="inherit" label="Afgerond"></nldd-checkbox-field></div>`);
+		el = await fixture(`<div style="--context-content-color: rgb(255, 255, 255);"><nldd-checkbox-field color="content" label="Afgerond"></nldd-checkbox-field></div>`);
 		const field = el.querySelector('nldd-checkbox-field') as HTMLElement;
 		await waitForUpdate(field);
-		expect(field.shadowRoot!.querySelector('nldd-checkbox')!.getAttribute('color')).toBe('inherit');
+		expect(field.shadowRoot!.querySelector('nldd-checkbox')!.getAttribute('color')).toBe('content');
 		expect(getComputedStyle(field.shadowRoot!.querySelector('.checkbox-field__label')!).color).toBe('rgb(255, 255, 255)');
 	});
 });

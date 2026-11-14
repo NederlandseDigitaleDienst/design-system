@@ -30,6 +30,7 @@
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
@@ -49,7 +50,7 @@ type VerticalAlignment = 'top' | 'center' | 'bottom';
 const CSS_WIDE_KEYWORDS = new Set(['inherit', 'initial', 'unset', 'revert', 'revert-layer']);
 
 @customElement('nldd-step-cell')
-export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container') {
+export class NLDDStepCell extends ReorderHandleMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = stepCellStyles;
 
 	/**

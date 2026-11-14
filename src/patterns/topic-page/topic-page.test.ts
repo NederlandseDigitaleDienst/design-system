@@ -52,11 +52,11 @@ describe('patroon: onderwerppagina', () => {
 	it('opent met een hero met de h1, een korte uitleg en de hoofdtaak als enige knop', () => {
 		const first = root.querySelector('nldd-page > :not([slot])')!;
 		expect(first.tagName).toBe('NLDD-HERO');
-		expect(first.querySelector(':scope > nldd-title[heading-level="1"][color="inherit"]')).not.toBeNull();
-		expect(first.querySelector(':scope > nldd-rich-text[color="inherit"]')).not.toBeNull();
+		expect(first.querySelector(':scope > nldd-title[heading-level="1"]')).not.toBeNull();
+		expect(first.querySelector(':scope > nldd-rich-text')).not.toBeNull();
 		const buttons = [...first.querySelectorAll('nldd-button')];
 		expect(buttons.length).toBe(1);
-		expect(buttons[0].getAttribute('appearance')).toBe('inherit-filled');
+		expect(buttons[0].getAttribute('appearance')).toBe('content-filled');
 		expect(buttons[0].getAttribute('href')).toBeTruthy();
 		expect(root.querySelectorAll('nldd-button').length).toBe(1);
 	});

@@ -2,7 +2,7 @@ import { html, svg } from 'lit';
 
 const gripMd = svg`
 	<svg
-		aria-hidden="true" class="drag-handle-cell__control-grip"
+		aria-hidden="true" class="reorder-handle-cell__control-grip"
 		width="10"
 		height="22"
 		viewBox="0 0 10 22"
@@ -61,7 +61,7 @@ const gripMd = svg`
 
 const gripSm = svg`
 	<svg
-		aria-hidden="true" class="drag-handle-cell__control-grip"
+		aria-hidden="true" class="reorder-handle-cell__control-grip"
 		width="10"
 		height="16"
 		viewBox="0 0 10 16"
@@ -108,7 +108,7 @@ const gripSm = svg`
 
 export function template(size: 'sm' | 'md', label: string) {
 	return html`
-		<button class="drag-handle-cell__control"
+		<button class="reorder-handle-cell__control"
 			type="button"
 			aria-label=${label}
 		>

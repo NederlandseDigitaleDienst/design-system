@@ -58,7 +58,7 @@ export default {
 		background: {
 			control: { type: 'select' },
 			options: ['inherit', 'base', 'tinted'],
-			description: 'Achtergrondkleur — cascade van --context-parent-background-color naar alle afstammelingen inclusief nldd-page en de fade-overlays',
+			description: 'Achtergrondkleur — cascade van --context-background-color naar alle afstammelingen inclusief nldd-page en de fade-overlays',
 			table: { defaultValue: { summary: 'inherit' } },
 		},
 	},

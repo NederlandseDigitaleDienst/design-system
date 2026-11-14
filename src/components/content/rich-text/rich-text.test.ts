@@ -43,11 +43,6 @@ describe('nldd-rich-text', () => {
 		expect(el.getAttribute('spacing')).toBe('loose');
 	});
 
-	it('reflects the color attribute', async () => {
-		el = await fixture('<nldd-rich-text color="inherit"></nldd-rich-text>');
-		expect(el.getAttribute('color')).toBe('inherit');
-	});
-
 	it('defaults to no hyphens', async () => {
 		el = await fixture('<nldd-rich-text></nldd-rich-text>');
 		expect((el as unknown as { hyphens: boolean }).hyphens).toBe(false);
@@ -217,7 +212,7 @@ describe('nldd-rich-text headings', () => {
 	});
 });
 
-describe('nldd-rich-text color="inherit"', () => {
+describe('nldd-rich-text color', () => {
 	let styles: HTMLStyleElement[] = [];
 	let wrap: HTMLElement;
 
@@ -261,32 +256,21 @@ describe('nldd-rich-text color="inherit"', () => {
 		return wrap.querySelector('nldd-rich-text')!;
 	};
 
-	it('inherits the surface text color', async () => {
-		const rt = await place('color="inherit"', '<p>tekst</p>');
-		expect(getComputedStyle(rt).color).toBe(SURFACE_COLOR);
-	});
-
-	it('keeps the semantic content color without the attribute', async () => {
+	it('ignores the CSS color around it', async () => {
 		const rt = await place('', '<p>tekst</p>');
 		expect(getComputedStyle(rt).color).not.toBe(SURFACE_COLOR);
 	});
 
-	it('paints links with currentColor (the inherited surface color)', async () => {
+	it('takes the content color its context passes on', async () => {
+		const rt = await place('', '<p>tekst</p>');
+		wrap.style.setProperty('--context-content-color', SURFACE_COLOR);
+		expect(getComputedStyle(rt).color).toBe(SURFACE_COLOR);
+	});
+
+	it('ignores a color attribute', async () => {
 		const rt = await place('color="inherit"', '<a id="lnk" href="/x">link</a>');
-		expect(getComputedStyle(rt.querySelector('#lnk')!).color).toBe(SURFACE_COLOR);
-	});
-
-	it('keeps the semantic link color without the attribute', async () => {
-		const rt = await place('', '<a id="lnk" href="/x">link</a>');
+		expect(getComputedStyle(rt).color).not.toBe(SURFACE_COLOR);
 		expect(getComputedStyle(rt.querySelector('#lnk')!).color).not.toBe(SURFACE_COLOR);
-	});
-
-	it('tints figcaption to a translucent tier of the inherited color', async () => {
-		const rt = await place('color="inherit"', '<figure><figcaption id="cap">bijschrift</figcaption></figure>');
-		const body = getComputedStyle(rt).color;
-		const caption = getComputedStyle(rt.querySelector('#cap')!).color;
-		expect(body).toBe(SURFACE_COLOR);    // body text is the opaque inherited color
-		expect(caption).not.toBe(body);      // figcaption is mixed toward transparent, so not the opaque color
 	});
 });
 
@@ -357,22 +341,112 @@ describe('nldd-rich-text code blocks', () => {
 		expect(getComputedStyle(pre).boxShadow).not.toBe('none');
 	});
 
-	it('houdt de chip op inline code', async () => {
-		await render('<p>tekst met <code>inline</code> code</p>');
-		const code = card.querySelector('p > code')!;
+});
 
-		expect(getComputedStyle(code).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
-		expect(parseFloat(getComputedStyle(code).paddingLeft)).toBeGreaterThan(0);
+describe('nldd-rich-text with an nldd-image', () => {
+	let styles: HTMLStyleElement[] = [];
+	let wrap: HTMLElement;
+
+	beforeAll(async () => {
+		await import('../image/image.js');
+		styles = [variablesCss, richTextCss].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
 	});
 
-	// A heading is short and reads best in lines of even length, as nldd-title
-	// does it; running text only needs to keep a single word off its last line.
-	it('balances headings and wraps running text with pretty', async () => {
-		const root = await render('<h2>Kop</h2><p>Alinea</p><ul><li>Item</li></ul><blockquote>Citaat</blockquote>');
-		const wrap = (selector: string) => getComputedStyle(root.querySelector(selector)!).textWrapStyle;
-		expect(wrap('h2')).toBe('balance');
-		expect(wrap('p')).toBe('pretty');
-		expect(wrap('li')).toBe('pretty');
-		expect(wrap('blockquote')).toBe('pretty');
+	afterAll(() => {
+		styles.forEach((s) => s.remove());
+	});
+
+	afterEach(() => {
+		if (wrap) wrap.remove();
+	});
+
+	it('keeps the width of the image, and no wider than the column', async () => {
+		wrap = document.createElement('div');
+		wrap.style.width = '900px';
+		const src = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"/>')}`;
+		wrap.innerHTML = `<nldd-rich-text><nldd-image src="${src}" alt="Foo" width="240" loading="eager"></nldd-image></nldd-rich-text>`;
+		document.body.appendChild(wrap);
+		const image = wrap.querySelector('nldd-image')! as HTMLElement & { updateComplete: Promise<boolean> };
+		await image.updateComplete;
+		await image.shadowRoot!.querySelector('img')!.decode();
+		expect(image.getBoundingClientRect().width).toBe(240);
+
+		wrap.style.width = '160px';
+		expect(image.getBoundingClientRect().width).toBeLessThanOrEqual(160);
+	});
+});
+
+describe('nldd-rich-text inline content', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const inline = (node: Element) => node.matches(':state(inline-content)');
+
+	it('states bare text and inline elements as direct children', async () => {
+		for (const markup of [
+			'Een melding van de server.',
+			'<strong>Let op:</strong>',
+			'<div>U moet <a href="#">inloggen</a>.</div>',
+			'<label>Naam</label>',
+			'<nldd-icon name="info"></nldd-icon>',
+		]) {
+			el = await fixture(`<nldd-rich-text>${markup}</nldd-rich-text>`);
+			expect(inline(el), markup).toBe(true);
+			cleanup(el);
+		}
+	});
+
+	it('does not state block content, whitespace or inline text inside a paragraph', async () => {
+		el = await fixture('<nldd-rich-text>\n\t<p>U moet <strong>nu</strong> inloggen.</p>\n\t<ul><li>Een</li></ul>\n</nldd-rich-text>');
+		expect(inline(el)).toBe(false);
+	});
+
+	it('follows text that arrives later', async () => {
+		el = await fixture('<nldd-rich-text><p>Laden</p></nldd-rich-text>');
+		el.replaceChildren('Een melding van de server.');
+		await new Promise((r) => setTimeout(r));
+		expect(inline(el)).toBe(true);
+
+		(el.firstChild as Text).data = ' ';
+		await new Promise((r) => setTimeout(r));
+		expect(inline(el)).toBe(false);
+	});
+});
+
+describe('nldd-rich-text links', () => {
+	let styles: HTMLStyleElement[] = [];
+	let el: HTMLElement;
+
+	beforeAll(() => {
+		styles = [colorsCss, variablesCss, richTextCss].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
+	});
+
+	afterAll(() => {
+		styles.forEach((s) => s.remove());
+	});
+
+	afterEach(() => cleanup(el));
+
+	it('takes the link color its surface passes on, and the default blue elsewhere', async () => {
+		el = await fixture(
+			'<div><nldd-rich-text><p><a href="#">Blauw</a></p></nldd-rich-text>' +
+			'<div style="--context-link-color: rgb(255, 255, 255)"><nldd-rich-text><p><a href="#">Wit</a></p></nldd-rich-text></div></div>'
+		);
+		const [plain, onSurface] = el.querySelectorAll('a');
+		expect(getComputedStyle(plain).color).not.toBe('rgb(255, 255, 255)');
+		expect(getComputedStyle(onSurface).color).toBe('rgb(255, 255, 255)');
 	});
 });

@@ -26,7 +26,7 @@ export const sliderStyles = css`
 		--_slider-thumb-border-width: var(--primitives-border-width-regular);
 		--_slider-thumb-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 		--_slider-thumb-ring-thickness: var(--semantics-surfaces-ring-thickness);
-		--_slider-thumb-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_slider-thumb-ring-color: var(--context-background-color);
 		--_slider-thumb-ring-extent: calc(var(--_slider-thumb-size) / 2);
 		--_slider-thumb-is-hovered-border-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-750));
 		--_slider-thumb-is-active-border-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
@@ -35,6 +35,8 @@ export const sliderStyles = css`
 		--_slider-histogram-gap: var(--primitives-space-1);
 		--_slider-histogram-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
 		--_slider-histogram-selected-color: var(--_slider-fill-color);
+		--_slider-histogram-border-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-350));
+		--_slider-histogram-selected-border-color: var(--_slider-fill-highlight-border-color);
 		--_slider-histogram-bar-corner-radius: var(--primitives-space-2);
 		--_slider-histogram-bar-height: 0;
 		--_slider-tooltip-offset: var(--primitives-space-8);
@@ -99,6 +101,7 @@ export const sliderStyles = css`
 		flex-shrink: 0;
 		width: var(--_slider-icon-size);
 		height: var(--_slider-icon-size);
+		--context-content-color: var(--_slider-icon-color);
 		color: var(--_slider-icon-color);
 	}
 
@@ -162,6 +165,7 @@ export const sliderStyles = css`
 	.slider__histogram-bar {
 		border-start-start-radius: var(--_slider-histogram-bar-corner-radius);
 		border-start-end-radius: var(--_slider-histogram-bar-corner-radius);
+		box-shadow: inset 0 0 0 var(--_slider-track-border-width) var(--_slider-histogram-border-color);
 		background-color: var(--_slider-histogram-color);
 		height: calc(var(--_slider-histogram-bar-height) * var(--_slider-histogram-height));
 		flex-grow: 1;
@@ -170,6 +174,7 @@ export const sliderStyles = css`
 	}
 
 	.slider__histogram-bar.is-selected {
+		box-shadow: inset 0 0 0 var(--_slider-track-border-width) var(--_slider-histogram-selected-border-color);
 		background-color: var(--_slider-histogram-selected-color);
 	}
 
@@ -324,6 +329,7 @@ export const sliderStyles = css`
 		width: max-content;
 		padding-block: var(--_slider-tooltip-padding-block);
 		padding-inline: var(--_slider-tooltip-padding-inline);
+		--context-content-color: var(--_slider-tooltip-content-color);
 		color: var(--_slider-tooltip-content-color);
 		font: var(--_slider-tooltip-font);
 		white-space: nowrap;

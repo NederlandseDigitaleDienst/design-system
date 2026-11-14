@@ -27,6 +27,7 @@ export { NLDDBlockquote } from './content/blockquote/blockquote.js';
 export { NLDDAvatarGroup } from './content/avatar-group/avatar-group.js';
 export { NLDDIdentity } from './content/identity/identity.js';
 export { NLDDCodeViewer } from './content/code-viewer/code-viewer.js';
+export { NLDDTerm } from './content/term/term.js';
 export { NLDDIcon } from './content/icon/icon.js';
 export { NLDDImage } from './content/image/image.js';
 export { NLDDKeyboardShortcut } from './content/keyboard-shortcut/keyboard-shortcut.js';
@@ -132,7 +133,7 @@ export { NLDDTitleCell } from './lists-and-tables/cells/title-cell/title-cell.js
 export { NLDDTextCell } from './lists-and-tables/cells/text-cell/text-cell.js';
 export { NLDDDescriptionCell } from './lists-and-tables/cells/description-cell/description-cell.js';
 
-export { NLDDDragHandleCell } from './lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js';
+export { NLDDReorderHandleCell } from './lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js';
 export { NLDDStepCell } from './lists-and-tables/cells/step-cell/step-cell.js';
 
 

@@ -77,6 +77,26 @@ export const BUILT_IN_RULES = {
 		severity: 'warn',
 		description: 'This still works, but will go away in a later version.',
 	},
+	'token-not-found': {
+		severity: 'warn',
+		description: 'The design system has no token with this name, so the declaration that uses it does nothing.',
+	},
+	'translation-key-not-found': {
+		severity: 'warn',
+		description: 'The element has no translation key with this name, so the text stays Dutch.',
+	},
+	'local-variable-no-override': {
+		severity: 'warn',
+		description: 'A `--_` variable belongs to the inside of one component and can change in any release. Use the component\'s attributes, or open an issue for what is missing.',
+	},
+	'link-context-needs-states': {
+		severity: 'warn',
+		description: 'A surface that gives links a color sets all three link colors, or a link on it turns back to the default blue on hover or press.',
+	},
+	'file-not-read': {
+		severity: 'warn',
+		description: 'This file has nldd-* markup the linter cannot read, so it was not checked.',
+	},
 	'suppression-needs-reason': {
 		severity: 'warn',
 		description: 'Say why after `--`, so the next reader knows why this rule is off here.',

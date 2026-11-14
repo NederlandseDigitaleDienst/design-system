@@ -40,6 +40,7 @@ export const dateFieldStyles = css`
 		   from the height difference between field and button instead of a fixed
 		   value. */
 		--_date-field-end-padding-right: calc((var(--_date-field-min-size) - var(--_date-field-picker-button-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_date-field-nested-control-corner-radius: calc(var(--_date-field-corner-radius) - var(--_date-field-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_date-field-picker-button-size: var(--semantics-controls-sm-min-size);
 		--_date-field-validation-icon-area-width: calc(var(--_date-field-min-size) - var(--semantics-input-fields-border-width) * 2);
 		--_date-field-trailing-width: calc(var(--_date-field-validation-icon-area-width) + var(--_date-field-picker-button-size) + var(--_date-field-end-padding-right));
@@ -153,6 +154,7 @@ export const dateFieldStyles = css`
 		overflow: hidden;
 		padding: 0;
 		flex-grow: 1;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_date-field-text-font);
 		appearance: none;
@@ -163,6 +165,7 @@ export const dateFieldStyles = css`
 	}
 
 	.date-field__input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -196,6 +199,7 @@ export const dateFieldStyles = css`
 	.date-field__separator {
 		flex-shrink: 0;
 		padding-right: var(--_date-field-separator-padding-right);
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 	}
 
@@ -212,7 +216,7 @@ export const dateFieldStyles = css`
 		top: 0;
 		right: 0;
 		bottom: 0;
-		border-radius: var(--_date-field-corner-radius);
+		border-radius: 0 calc(var(--_date-field-corner-radius) - var(--semantics-input-fields-border-width)) calc(var(--_date-field-corner-radius) - var(--semantics-input-fields-border-width)) 0;
 		background: linear-gradient(90deg, color-mix(in oklch, var(--_date-field-background-color) 0%, transparent) 0%, var(--_date-field-background-color) 100%);
 		pointer-events: none;
 		width: var(--primitives-space-8);
@@ -228,10 +232,12 @@ export const dateFieldStyles = css`
 	}
 
 	:host([valid]) .date-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-valid-icon-color);
 		color: var(--semantics-input-fields-is-valid-icon-color);
 	}
 
 	:host([invalid]) .date-field__validation-icon-area {
+		--context-content-color: var(--semantics-input-fields-is-invalid-icon-color);
 		color: var(--semantics-input-fields-is-invalid-icon-color);
 	}
 
@@ -247,6 +253,10 @@ export const dateFieldStyles = css`
 		padding-right: var(--_date-field-end-padding-right);
 		display: flex;
 		align-items: center;
+	}
+
+	.date-field__picker-button :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_date-field-nested-control-corner-radius);
 	}
 
 

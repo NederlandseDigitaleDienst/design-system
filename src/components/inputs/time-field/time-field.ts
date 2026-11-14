@@ -17,8 +17,12 @@
  *
  * What you do in the picker is a preview until you leave it. The field shows
  * the time right away but commits it on close. "Klaar" and Enter keep the
- * choice, and so does a click outside once you have picked something. Cancel
- * and Escape put the old time back. On an empty field the wheels open at `min`,
+ * choice, and so does a click outside once you have picked something. Escape
+ * puts the old time back. On sm, where the picker is a bottom sheet, "Klaar"
+ * sits in its title bar and the sheet offers no cancel: as with a native wheel,
+ * you turn back to change your mind. The built-in wheels show 7 rows, and
+ * fewer, down to 3, when the picker would otherwise run off the window; they
+ * grow back when the window does. On an empty field the wheels open at `min`,
  * or otherwise at the current time rounded to `step`, which does not fill in
  * the field yet.
  *
@@ -75,6 +79,10 @@ import {
 } from './time-field.times.js';
 
 export { parseTime, roundToStep } from './time-field.times.js';
+
+/** Rows of the built-in wheels: a full wheel, and the fewest that still read as one. */
+const MAX_PICKER_ROWS = 7;
+const MIN_PICKER_ROWS = 3;
 
 @customElement('nldd-time-field')
 export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
@@ -172,6 +180,11 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	@state()
 	private _finePointer = false;
 
+	/** Rows of the built-in picker: a full wheel of 7, fewer when the popover
+	 *  runs into the edge of the window. Set again on every open. */
+	@state()
+	public _pickerRows = MAX_PICKER_ROWS;
+
 	private _handlePointerChange = (): void => {
 		this._finePointer = NLDDTimeField._getFinePointerQuery().matches;
 	};
@@ -196,6 +209,8 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		// arrives, leaving a listener on document that holds on to a detached field
 		// and keeps swallowing Escape for the rest of the session.
 		document.removeEventListener('keydown', this._handlePickerEscape, true);
+		window.removeEventListener('resize', this._handleWindowResize);
+		cancelAnimationFrame(this._fitFrame);
 		super.disconnectedCallback();
 	}
 
@@ -386,7 +401,9 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		this._valueBeforePicker = this.value;
 		this._pickerState = 'untouched';
 		this._pickerSeed = this.value || startingPoint(this._rules, new Date());
+		this._pickerRows = MAX_PICKER_ROWS;
 		document.addEventListener('keydown', this._handlePickerEscape, true);
+		window.addEventListener('resize', this._handleWindowResize);
 		// Only now does the picker have dimensions: while the popover was closed it
 		// could not scroll the chosen value into view and the column sat at the top.
 		// Wait for both renders, because the picker is only handed its starting
@@ -396,20 +413,63 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 			if (!picker) return;
 			await picker.updateComplete;
 			picker.scrollSelectedIntoView();
+			if (!this._slottedPicker) await this._fitPickerRows(picker);
 		});
 	}
+
+	/**
+	 * A wheel of 7 rows, unless the popover then runs into the edge of the
+	 * window and would scroll. Then as many rows as fit, down to 3, so the
+	 * whole picker stays in view. Measured again when the window resizes, and
+	 * back up to 7 when the room returns. A slotted picker keeps the rows it
+	 * was given.
+	 */
+	private async _fitPickerRows(picker: NLDDTimePicker): Promise<void> {
+		const popover = this._popover;
+		if (!popover) return;
+		// The popover places itself and sets its height limit a frame later.
+		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		if (!this._pickerOpen) return;
+		const room = parseFloat(getComputedStyle(popover).maxHeight);
+		// Before the popover has set its limit there is no room to read yet; the
+		// wheels then keep the rows they have, and the popover scrolls if they do not fit.
+		if (!Number.isFinite(room)) return;
+		const rowHeight = picker.shadowRoot?.querySelector('.time-picker__list-item')?.getBoundingClientRect().height ?? 0;
+		if (!rowHeight) return;
+		// The popover scrolls inside itself: its content is taller than it by
+		// what the inner scroller holds back.
+		const scroller = popover.shadowRoot?.querySelector('.popover__scroller');
+		const contentHeight = popover.offsetHeight + (scroller ? scroller.scrollHeight - scroller.clientHeight : 0);
+		const rows = Math.min(MAX_PICKER_ROWS, Math.max(MIN_PICKER_ROWS, this._pickerRows + Math.floor((room - contentHeight) / rowHeight)));
+		if (rows === this._pickerRows) return;
+		this._pickerRows = rows;
+		await this.updateComplete;
+		await picker.updateComplete;
+		picker.scrollSelectedIntoView();
+	}
+
+	private _fitFrame = 0;
+
+	private _handleWindowResize = (): void => {
+		cancelAnimationFrame(this._fitFrame);
+		this._fitFrame = requestAnimationFrame(() => {
+			const picker = this.shadowRoot?.querySelector('nldd-time-picker');
+			if (picker && !this._slottedPicker) void this._fitPickerRows(picker);
+		});
+	};
 
 	/**
 	 * What happened while scrolling is a proposal, not an answer: the field shows
 	 * it already, but only records it once you leave the picker in a way that
 	 * keeps the choice. "Klaar" always does, a click beside it only when something
-	 * has been chosen. Annuleer and Escape put the old value back.
+	 * has been chosen. Escape puts the old value back.
 	 *
-	 * That way a picker opened by accident costs you nothing, and "Annuleer" is
-	 * not a button that merely closes.
+	 * That way a picker opened by accident costs you nothing.
 	 */
 	private _settlePicker(): void {
 		document.removeEventListener('keydown', this._handlePickerEscape, true);
+		window.removeEventListener('resize', this._handleWindowResize);
+		cancelAnimationFrame(this._fitFrame);
 		if (this._pickerState === 'untouched' || this._pickerState === 'cancelled') {
 			if (this.value === this._valueBeforePicker) return;
 			this.value = this._valueBeforePicker;
@@ -477,15 +537,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	private _closePicker(): void {
-		this._focusTriggerOnClose = true;
-		this._popover?.hide();
-	}
-
-	public _handlePickerDismiss(e: Event): void {
-		e.stopPropagation();
-		this._pickerState = 'cancelled';
-		// Same as after a choice: focus back on the button. Without this, Annuleer,
-		// Escape and a click beside it leave focus on the input.
 		this._focusTriggerOnClose = true;
 		this._popover?.hide();
 	}

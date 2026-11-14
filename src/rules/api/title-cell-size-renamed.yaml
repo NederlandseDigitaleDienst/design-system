@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-title-cell[size="1"], nldd-title-cell[size="2"], nldd-title-cell[size="3"], nldd-title-cell[size="4"], nldd-title-cell[size="5"], nldd-title-cell[size="6"]'
+fix: { value: { size: { '1': display-1, '2': display-2, '3': display-3, '4': display-4, '5': display-5, '6': display-6 } } }
+message: 'The sizes of a title cell are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title-cell.'
+examples:
+  passed: ['<nldd-list accessible-label="Aanvragen"><nldd-list-item><nldd-title-cell text="Aanvraag A-1042" size="display-4"></nldd-title-cell></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list accessible-label="Aanvragen"><nldd-list-item><nldd-title-cell text="Aanvraag A-1042" size="4"></nldd-title-cell></nldd-list-item></nldd-list>']

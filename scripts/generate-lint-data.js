@@ -1,15 +1,23 @@
 /**
- * Writes lint/data.generated.json from custom-elements.json, the icon set and
- * src/rules/, plus the same rules as plain CSS for the browser. Both are committed
- * and CI checks them for drift, like the manifest.
+ * Writes lint/data.generated.json from custom-elements.json, the icon set,
+ * src/rules/ and the stylesheets the package ships, plus the same rules as plain
+ * CSS for the browser. Both are committed and CI checks them for drift, like the
+ * manifest.
+ *
+ * A token that was in the previous data and is gone now is added to
+ * src/assets/styles/removed-tokens.json, with the last version that had it. That
+ * file is the history the linter names a removed token from, and the changelog
+ * check reads it. A translation key that disappears goes the same way, into
+ * src/translations/removed-keys.json.
  *
  * Usage: node scripts/generate-lint-data.js
  */
 
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { aliases } from '../src/components/content/icon/icon-aliases.js';
+import { cssRules, declarations, TOKEN_PREFIX } from '../lint/css.js';
 import { booleanAttributes, buildClasses, buildContract, buildDevRules, loadRules, normalizeSelectors, seeUrl } from './lib/lint-data.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -34,7 +42,74 @@ const rules = loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.j
 	return { ...normalizeSelectors(rule, booleans), ...(url && { url }) };
 });
 const tags = buildContract(manifest);
-const data = { tags, classes, icons, rules };
+
+/**
+ * The translation keys each element reads from its own `translations`: the defaults
+ * it passes to translate() or withTranslations(), read from the .i18n.ts they come from.
+ */
+function translationKeys() {
+	const keys = {};
+	for (const module of manifest.modules ?? []) {
+		const file = existsSync(resolve(repoRoot, module.path)) ? readFileSync(resolve(repoRoot, module.path), 'utf8') : '';
+		for (const { tagName, name: className } of module.declarations ?? []) {
+			if (!tagName) continue;
+			// A file can hold more than one element: read the class, with the imports above it.
+			const start = file.search(new RegExp(`class ${className}\\b`));
+			const next = file.slice(start + 1).search(/\nexport class /);
+			const source = file.slice(0, file.search(/\n(export )?(abstract )?class /) + 1) + file.slice(start, next < 0 ? undefined : start + 1 + next);
+			const name = source.match(/translate\(\s*this\.translations,\s*(nldd\w+Translations)/)?.[1] ?? source.match(/withTranslations(?:<[^>]*>)?\([^)]*?(nldd\w+Translations),?\s*\)/)?.[1];
+			if (!name) continue;
+			const from = source.match(new RegExp(`import \\{[^}]*\\b${name}\\b[^}]*\\} from '([^']+)'`))?.[1];
+			if (!from) throw new Error(`No import of ${name} in ${module.path}`);
+			const i18n = readFileSync(resolve(repoRoot, dirname(module.path), from.replace(/\.js$/, '.ts')), 'utf8');
+			const body = i18n.slice(i18n.indexOf(`export const ${name}`)).match(/=\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+			keys[tagName] = [...body.matchAll(/^\s*'([^']+)'\s*:/gm)].map((match) => match[1]).sort();
+		}
+	}
+	return Object.fromEntries(Object.keys(keys).sort().map((tag) => [tag, keys[tag]]));
+}
+const translations = translationKeys();
+
+/** The stylesheets build:styles copies to dist/css, so the list has one source. */
+const pkg = read('package.json');
+const shippedCss = [...pkg.scripts['build:styles'].matchAll(/src\/[^\s]+?\.css/g)].flatMap(([path]) => {
+	if (!path.includes('*')) return [resolve(repoRoot, path)];
+	const directory = resolve(repoRoot, dirname(path));
+	const pattern = new RegExp(`^${basename(path).replace(/\./g, '\\.').replace('*', '.*')}$`);
+	return readdirSync(directory).filter((file) => pattern.test(file)).sort().map((file) => resolve(directory, file));
+});
+const stylesheets = shippedCss.map((file) => readFileSync(file, 'utf8'));
+// A context variable is API only where variables.css gives it a default; the rest is wiring between components.
+const contextDefaults = new Set(declarations(readFileSync(resolve(repoRoot, 'src/assets/styles/variables.css'), 'utf8')).map(({ name }) => name).filter((name) => name.startsWith('--context-')));
+const isToken = (name) => TOKEN_PREFIX.test(name) && (!name.startsWith('--context-') || contextDefaults.has(name));
+const tokens = [...new Set(stylesheets.flatMap((css) => declarations(css).map(({ name }) => name)).filter(isToken))].sort();
+const designSystemRules = new Map();
+for (const css of stylesheets) {
+	for (const [key, names] of cssRules(css)) designSystemRules.set(key, new Set([...(designSystemRules.get(key) ?? []), ...names]));
+}
+const designSystemCss = Object.fromEntries([...designSystemRules.keys()].sort().map((key) => [key, [...designSystemRules.get(key)].sort()]));
+
+const removedPath = resolve(repoRoot, 'src/assets/styles/removed-tokens.json');
+const removedTokens = read('src/assets/styles/removed-tokens.json');
+const previousData = resolve(repoRoot, 'lint/data.generated.json');
+const previousTokens = existsSync(previousData) ? (JSON.parse(readFileSync(previousData, 'utf8')).tokens ?? []) : [];
+const current = new Set(tokens);
+for (const name of previousTokens) if (!current.has(name) && !removedTokens[name]) removedTokens[name] = { last: pkg.version };
+for (const name of tokens) delete removedTokens[name];
+const removedLines = Object.keys(removedTokens).sort().map((name) => `\t${JSON.stringify(name)}: ${JSON.stringify(removedTokens[name])}`);
+writeFileSync(removedPath, `{\n${removedLines.join(',\n')}\n}\n`);
+
+const keysPath = resolve(repoRoot, 'src/translations/removed-keys.json');
+const removedKeys = existsSync(keysPath) ? read('src/translations/removed-keys.json') : {};
+const previousKeys = existsSync(previousData) ? Object.values(JSON.parse(readFileSync(previousData, 'utf8')).translations ?? {}).flat() : [];
+const currentKeys = new Set(Object.values(translations).flat());
+for (const key of previousKeys) if (!currentKeys.has(key) && !removedKeys[key]) removedKeys[key] = { last: pkg.version };
+for (const key of currentKeys) delete removedKeys[key];
+const keyLines = Object.keys(removedKeys).sort().map((key) => `\t${JSON.stringify(key)}: ${JSON.stringify(removedKeys[key])}`);
+writeFileSync(keysPath, `{\n${keyLines.join(',\n')}\n}\n`);
+
+const sorted = (object) => Object.fromEntries(Object.keys(object).sort().map((name) => [name, object[name]]));
+const data = { tags, classes, icons, rules, tokens, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), designSystemCss };
 
 writeFileSync(resolve(repoRoot, 'lint/data.generated.json'), `${JSON.stringify(data)}\n`);
 writeFileSync(
@@ -45,4 +120,4 @@ import type { DevRule } from './dev-checks.js';
 export const devRules: DevRule[] = ${JSON.stringify(buildDevRules(rules, classes, tags), null, '\t')};
 `,
 );
-console.log(`lint data: ${Object.keys(data.tags).length} tags, ${data.rules.length} rules`);
+console.log(`lint data: ${Object.keys(data.tags).length} tags, ${data.rules.length} rules, ${tokens.length} tokens, ${designSystemRules.size} rules of design system CSS`);

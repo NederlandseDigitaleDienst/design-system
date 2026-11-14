@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-checkbox[color="inherit"], nldd-checkbox-field[color="inherit"]'
+fix: { value: { color: { inherit: content } } }
+message: '`color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-checkbox.'
+examples:
+  passed: ['<nldd-checkbox-field label="Afgerond" color="content"></nldd-checkbox-field>']
+  failed: ['<nldd-checkbox-field label="Afgerond" color="inherit"></nldd-checkbox-field>']

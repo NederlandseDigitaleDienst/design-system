@@ -438,12 +438,12 @@ describe('nldd-tab-bar – item selection', () => {
 		expect(items[2].hasAttribute('current')).toBe(true);
 	});
 
-	it('dispatches tabchange event with item detail', async () => {
+	it('dispatches tab-change event with item detail', async () => {
 		el = await fixture<NLDDTabBar>(threeTabBar());
 		await waitForUpdate(el);
 
 		let detail: any;
-		el.addEventListener('tabchange', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+		el.addEventListener('tab-change', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
 
 		clickInner(getItems(el)[0]);
 		await waitForUpdate(el);
@@ -747,7 +747,7 @@ describe('nldd-tab-bar – disabled', () => {
 		}
 	});
 
-	it('does not change selection or fire tabchange when a disabled tab is clicked', async () => {
+	it('does not change selection or fire tab-change when a disabled tab is clicked', async () => {
 		el = await fixture<NLDDTabBar>(`
 			<nldd-tab-bar disabled>
 				<nldd-tab-bar-item current text="A"></nldd-tab-bar-item>
@@ -757,7 +757,7 @@ describe('nldd-tab-bar – disabled', () => {
 		await waitForUpdate(el);
 
 		let fired = false;
-		el.addEventListener('tabchange', () => { fired = true; });
+		el.addEventListener('tab-change', () => { fired = true; });
 
 		const items = getItems(el);
 		clickInner(items[1]);
@@ -1032,12 +1032,12 @@ describe('nldd-tab-bar – overloop', () => {
 		expect([...host.querySelectorAll('nldd-tab-bar-item')]).toEqual(items);
 	});
 
-	it('maakt een tab uit het menu de huidige en vuurt tabchange', async () => {
+	it('maakt een tab uit het menu de huidige en vuurt tab-change', async () => {
 		const { bar, items } = await make(320);
 		const picked = menuItems(bar)[0];
 		const index = items.findIndex(item => item.getAttribute('text') === picked.getAttribute('text'));
 		let changed: Element | null = null;
-		bar.addEventListener('tabchange', (e) => { changed = (e as CustomEvent).detail.item; });
+		bar.addEventListener('tab-change', (e) => { changed = (e as CustomEvent).detail.item; });
 
 		picked.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true }));
 		expect(changed).toBe(items[index]);

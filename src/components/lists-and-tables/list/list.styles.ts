@@ -27,10 +27,14 @@ export const listStyles = css`
 		--_list-background-color: transparent;
 		--_list-highlight-border-color: transparent;
 		--_list-box-padding: var(--primitives-space-4);
+		--_list-box-corner-radius: var(--primitives-corner-radius-lg);
+		--context-list-item-corner-radius: var(--semantics-list-items-indicator-corner-radius);
+		--context-list-item-inline-inset: var(--semantics-list-items-indicator-inline-inset);
 		--_list-gap: var(--primitives-space-8);
 		--_list-search-field-min-size: var(--semantics-controls-md-min-size);
 		--_list-search-field-icon-size: var(--primitives-space-24);
 		--_list-search-field-end-padding-right: calc((var(--_list-search-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_list-search-field-nested-control-corner-radius: calc(var(--semantics-controls-md-corner-radius) - var(--_list-search-field-end-padding-right) - var(--semantics-input-fields-border-width));
 		--_list-search-field-button-focus-z-index: 1;
 		--_list-search-bar-gap: var(--primitives-space-8);
 		--_list-toolbar-gap: var(--primitives-space-8);
@@ -59,6 +63,8 @@ export const listStyles = css`
 	}
 
 	:host([appearance^="box"]) {
+		--context-list-item-corner-radius: calc(var(--_list-box-corner-radius) - var(--_list-box-padding));
+		--context-list-item-inline-inset: max(var(--semantics-list-items-indicator-inline-inset), var(--context-list-item-corner-radius));
 		--_list-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_list-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 	}
@@ -111,7 +117,7 @@ export const listStyles = css`
 	   system, instead of being cut off by the frame. */
 	:host([appearance^="box"]) .list__main {
 		position: relative;
-		border-radius: var(--semantics-surfaces-corner-radius);
+		border-radius: var(--_list-box-corner-radius);
 		background-color: var(--_list-background-color);
 		box-shadow: inset 0 0 0 1px var(--_list-highlight-border-color);
 	}
@@ -138,7 +144,7 @@ export const listStyles = css`
 	}
 
 	:host([appearance^="box"]) .list__items {
-		padding-inline: calc(var(--semantics-list-items-indicator-inline-inset) + var(--_list-box-padding));
+		padding-inline: calc(var(--context-list-item-inline-inset) + var(--_list-box-padding));
 		padding-block: var(--_list-box-padding);
 	}
 
@@ -146,7 +152,29 @@ export const listStyles = css`
 		max-height: var(--_list-max-height);
 		overflow-x: hidden;
 		overflow-y: auto;
-		padding-inline: var(--semantics-list-items-indicator-inline-inset);
+	}
+
+	:host([type="listbox"]:not([appearance^="box"])) .list__items {
+		padding-inline: var(--context-list-item-inline-inset);
+	}
+
+	/* A scrolling listbox clips its rows to the frame's corner and draws the
+	   border on top, so a row scrolling past neither pokes out nor covers it. */
+	:host([type="listbox"][appearance^="box"]) .list__main {
+		box-shadow: none;
+	}
+
+	:host([type="listbox"][appearance^="box"]) .list__main::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		box-shadow: inset 0 0 0 1px var(--_list-highlight-border-color);
+		pointer-events: none;
+	}
+
+	:host([type="listbox"][appearance^="box"]) .list__items {
+		border-radius: inherit;
 	}
 
 	.list__empty {
@@ -213,6 +241,7 @@ export const listStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 	}
 
@@ -228,12 +257,14 @@ export const listStyles = css`
 		flex-shrink: 1;
 		flex-basis: 0;
 		align-self: stretch;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--semantics-input-fields-md-text-font);
 		appearance: none;
 	}
 
 	.list__search-field-input::placeholder {
+		--context-content-color: var(--semantics-input-fields-placeholder-color);
 		color: var(--semantics-input-fields-placeholder-color);
 	}
 
@@ -245,6 +276,10 @@ export const listStyles = css`
 		align-items: center;
 	}
 
+	.list__search-field-end :is(nldd-button, nldd-icon-button, nldd-token) {
+		--context-control-corner-radius: var(--_list-search-field-nested-control-corner-radius);
+	}
+
 	.list__search-field-clear:focus-within {
 		position: relative;
 		z-index: var(--_list-search-field-button-focus-z-index);
@@ -252,7 +287,7 @@ export const listStyles = css`
 
 	::slotted(.nldd-list-drag-placeholder) {
 		box-sizing: border-box;
-		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		border-radius: var(--context-list-item-corner-radius);
 		background-color: var(--_list-drag-placeholder-background-color);
 		pointer-events: none;
 	}
@@ -264,7 +299,7 @@ export const listStyles = css`
 		left: var(--_list-drag-clone-left);
 		opacity: var(--_list-drag-clone-opacity);
 		z-index: var(--_list-drag-clone-z-index);
-		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		border-radius: var(--context-list-item-corner-radius);
 		background: var(--semantics-surfaces-base-background-color);
 		pointer-events: none;
 		width: var(--_list-drag-clone-width);

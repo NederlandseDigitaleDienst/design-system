@@ -49,13 +49,13 @@ export const switchStyles = css`
 
 	/* ## Colors */
 
-	:host([color="inherit"]) {
-		--_switch-border-color: currentColor;
+	:host([color="content"]) {
+		--_switch-border-color: var(--context-content-color);
 		--_switch-background-color: transparent;
-		--_switch-is-selected-background-color: currentColor;
-		--_switch-thumb-border-color: currentColor;
-		--_switch-thumb-background-color: currentColor;
-		--_switch-is-selected-thumb-background-color: var(--context-parent-background-color, var(--semantics-content-contrast-color));
+		--_switch-is-selected-background-color: var(--context-content-color);
+		--_switch-thumb-border-color: var(--context-content-color);
+		--_switch-thumb-background-color: var(--context-content-color);
+		--_switch-is-selected-thumb-background-color: var(--context-background-color);
 	}
 
 
@@ -128,6 +128,7 @@ export const switchStyles = css`
 		height: calc(100% + var(--_switch-thumb-border-width) * 2);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_switch-is-selected-background-color);
 		color: var(--_switch-is-selected-background-color);
 		transform: translate(-50%, -50%);
 		transition: opacity var(--_switch-transition-duration) ease;

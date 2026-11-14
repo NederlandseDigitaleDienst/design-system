@@ -26,9 +26,9 @@ export default {
 	argTypes: {
 		color: {
 			control: 'select',
-			options: ['(auto)', 'inherit'],
+			options: ['(auto)', 'content'],
 			mapping: { '(auto)': '' },
-			description: 'Met inherit krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
+			description: 'Met content krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
 			table: { defaultValue: { summary: '(auto)' } },
 		},
 		name: {
@@ -111,21 +111,21 @@ export const Standaard = {
 	args: {},
 };
 
-export const KleurInherit = {
-	name: 'Kleur inherit',
+export const KleurContent = {
+	name: 'Kleur content',
 	render: () => html`
 		<nldd-container
 			layout="wrap"
 			gap="32"
 			padding="24"
-			style="--context-parent-background-color: var(--semantics-surfaces-accent-filled-background-color); background-color: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color);"
+			style="--context-background-color: var(--semantics-surfaces-accent-filled-background-color); background-color: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color); --context-content-color: var(--semantics-content-on-accent-filled-color);"
 		>
 			<nldd-checkbox
-				color="inherit"
+				color="content"
 				accessible-label="Niet aangevinkt"
 			></nldd-checkbox>
 			<nldd-checkbox
-				color="inherit"
+				color="content"
 				checked
 				accessible-label="Aangevinkt"
 			></nldd-checkbox>

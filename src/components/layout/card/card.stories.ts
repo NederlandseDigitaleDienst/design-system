@@ -95,7 +95,7 @@ export const Standaard = (args: Record<string, any>) => html`
 			padding-inline="16"
 		>
 			<nldd-title
-				size="4"
+				size="display-4"
 				text="Aanvraag A-1042"
 				heading-level="3"
 			></nldd-title>
@@ -140,7 +140,7 @@ export const MetHeader = () => html`
 			padding-inline="16"
 		>
 			<nldd-title
-				size="4"
+				size="display-4"
 				text="Dossier D-319"
 				heading-level="3"
 			></nldd-title>
@@ -161,7 +161,7 @@ export const VasteHoogte = () => html`
 			padding-inline="16"
 		>
 			<nldd-title
-				size="4"
+				size="display-4"
 				text="Aanvraag A-1043"
 				heading-level="3"
 			></nldd-title>
@@ -225,7 +225,7 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 			padding-inline="16"
 		>
 			<nldd-title
-				size="4"
+				size="display-4"
 				text="Dossier D-318"
 				heading-level="3"
 			></nldd-title>
@@ -278,7 +278,7 @@ export const KaartAlsKnop = () => html`
 				padding-inline="16"
 			>
 				<nldd-title
-					size="4"
+					size="display-4"
 					text="Dossier D-318"
 					heading-level="3"
 				></nldd-title>
@@ -302,7 +302,7 @@ export const KaartAlsKnop = () => html`
 				padding-inline="16"
 			>
 				<nldd-title
-					size="4"
+					size="display-4"
 					text="Dossier D-319"
 					heading-level="3"
 				></nldd-title>

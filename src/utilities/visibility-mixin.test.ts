@@ -16,7 +16,7 @@ const modules = import.meta.glob([
 
 // The elements that actually take hide-below/hide-above. The reactive property
 // lives on the prototype, so its presence is what says a class applied the
-// mixin; a cell that does not (drag-handle-cell) drops out by itself.
+// mixin; a cell that does not (reorder-handle-cell) drops out by itself.
 const visibilityTags = Object.values(modules)
 	.flatMap((module) => Object.values(module))
 	.filter((value): value is CustomElementConstructor => typeof value === 'function')
@@ -33,7 +33,7 @@ describe('VisibilityMixin across every cell that applies it', () => {
 
 	it('finds the cells that use the mixin', () => {
 		expect(visibilityTags).toContain('nldd-text-cell');
-		expect(visibilityTags).not.toContain('nldd-drag-handle-cell');
+		expect(visibilityTags).not.toContain('nldd-reorder-handle-cell');
 		expect(visibilityTags.length).toBeGreaterThan(1);
 	});
 

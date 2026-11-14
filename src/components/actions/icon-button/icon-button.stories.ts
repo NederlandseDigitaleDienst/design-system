@@ -45,8 +45,8 @@ export default {
 				'neutral-transparent',
 				'critical-tinted',
 				'critical-transparent',
-				'inherit-filled',
-				'inherit-tinted',
+				'content-filled',
+				'content-tinted',
 			],
 			description: 'Visuele stijl, inclusief kleur',
 			table: {
@@ -99,6 +99,10 @@ export default {
 		popovertarget: {
 			control: false,
 			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat deze knop opent. De knop zet het ook naast zich neer, dus het overlay heeft geen `anchor` nodig. Een overlay in de `popup`-slot wint.',
+		},
+		interestfor: {
+			control: false,
+			description: 'Id van een `nldd-popover` elders op de pagina die deze knop beschrijft en opent bij interesse, zoals de `interest`-slot: als je de aanwijzer op de knop laat rusten, bij focus en bij lang drukken op touch. Voor een popover die meer knoppen delen, of een knop in een `<p>`. Een popover in de `interest`-slot wint.',
 		},
 		text: {
 			control: 'text',
@@ -200,6 +204,7 @@ export default {
 		expanded: false,
 		popupType: '',
 		popovertarget: '',
+		interestfor: '',
 		text: 'Annuleer',
 		icon: 'dismiss',
 		shortcut: '',
@@ -659,7 +664,7 @@ export const MetPopover = {
 					gap="8"
 				>
 					<nldd-title
-						size="6"
+						size="display-6"
 						text="Dakisolatie"
 						heading-level="2"
 					></nldd-title>
@@ -681,63 +686,63 @@ export const MetPopover = {
 };
 
 /**
- * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
+ * De content-appearances nemen hun kleuren van `--context-content-color` en zijn
  * bedoeld voor gekleurde vlakken (zoals de hero-main of filled-categories).
- * `inherit-filled` gebruikt de vlakkleur als icoonkleur wanneer het vlak
- * `--context-parent-background-color` cascadet; zonder die context valt het
- * terug op een wit/zwart-contrastflip, zie het derde vlak. Hover, active en
+ * `content-filled` gebruikt de vlakkleur als icoonkleur wanneer het vlak
+ * `--context-background-color` zet; een eigen vlak, zoals het derde, zet
+ * hem zelf. Hover, active en
  * expanded veranderen de kleur niet, zodat het contrast blijft wat het vlak
  * eromheen geeft.
  */
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
 				<nldd-icon-button
-					appearance="inherit-filled"
+					appearance="content-filled"
 					icon="edit"
 					text="Bewerk"
 				></nldd-icon-button>
 				<nldd-icon-button
-					appearance="inherit-tinted"
+					appearance="content-tinted"
 					icon="trash"
 					text="Verwijder"
 				></nldd-icon-button>
 				<nldd-icon-button
-					appearance="inherit-filled"
+					appearance="content-filled"
 					icon="global-settings"
 					text="Instellingen"
 					expandable
 					expanded
 				></nldd-icon-button>
 				<nldd-icon-button
-					appearance="inherit-tinted"
+					appearance="content-tinted"
 					icon="global-settings"
 					text="Instellingen"
 					expandable
 					expanded
 				></nldd-icon-button>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; --context-content-color: var(--semantics-categories-oranje-filled-content-color);">
 				<nldd-icon-button
-					appearance="inherit-filled"
+					appearance="content-filled"
 					icon="edit"
 					text="Bewerk"
 				></nldd-icon-button>
 				<nldd-icon-button
-					appearance="inherit-tinted"
+					appearance="content-tinted"
 					icon="trash"
 					text="Verwijder"
 				></nldd-icon-button>
 			</div>
-			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; --context-background-color: oklch(0.45 0.12 300); --context-content-color: oklch(1 0 0);">
 				<nldd-icon-button
-					appearance="inherit-filled"
+					appearance="content-filled"
 					icon="edit"
-					text="Zonder context (flip)"
+					text="Bewerk"
 				></nldd-icon-button>
 				<nldd-icon-button
-					appearance="inherit-tinted"
+					appearance="content-tinted"
 					icon="trash"
 					text="Verwijder"
 				></nldd-icon-button>

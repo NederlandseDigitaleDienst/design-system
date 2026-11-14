@@ -239,7 +239,7 @@ export const TitelMetMedia = {
 						slot="media"
 						icon="file-text"
 						size="24"
-						color="secondary-content"
+						color="secondary"
 					></nldd-icon>
 				</nldd-toolbar-title>
 				<nldd-toolbar-item

@@ -262,6 +262,7 @@ export const justInTimeEducationStyles = css`
 
 	.just-in-time-education__text {
 		margin: 0;
+		--context-content-color: var(--_just-in-time-education-text-color);
 		color: var(--_just-in-time-education-text-color);
 		font: var(--_just-in-time-education-text-font);
 		font-style: italic;
@@ -270,6 +271,7 @@ export const justInTimeEducationStyles = css`
 
 	.just-in-time-education__supporting-text {
 		margin: 0;
+		--context-content-color: var(--_just-in-time-education-supporting-text-color);
 		color: var(--_just-in-time-education-supporting-text-color);
 		font: var(--_just-in-time-education-supporting-text-font);
 		font-style: italic;
@@ -290,6 +292,7 @@ export const justInTimeEducationStyles = css`
 		position: absolute;
 		pointer-events: none;
 		overflow: visible;
+		--context-content-color: var(--_just-in-time-education-arrow-color);
 		color: var(--_just-in-time-education-arrow-color);
 		transform: translate3d(0, 0, 0);
 	}

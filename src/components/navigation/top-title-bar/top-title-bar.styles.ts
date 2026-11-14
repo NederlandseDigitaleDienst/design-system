@@ -116,6 +116,7 @@ export const topTitleBarStyles = css`
 	.top-title-bar__title {
 		margin: 0;
 		overflow: hidden;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-lg-semi-bold-flat);
 		text-overflow: ellipsis;
@@ -135,6 +136,7 @@ export const topTitleBarStyles = css`
 	.top-title-bar__supporting-text {
 		margin: 0;
 		overflow: hidden;
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		font: var(--primitives-font-body-xxs-regular-flat);
 		text-overflow: ellipsis;

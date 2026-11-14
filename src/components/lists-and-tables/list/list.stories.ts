@@ -5,7 +5,7 @@ import '../cells/title-cell/title-cell.js';
 import '../cells/text-cell/text-cell.js';
 import '../cells/spacer-cell/spacer-cell.js';
 import '../cells/icon-cell/icon-cell.js';
-import '../cells/drag-handle-cell/drag-handle-cell.js';
+import '../cells/reorder-handle-cell/reorder-handle-cell.js';
 import '../../content/icon/icon.js';
 import '../../content/title/title.js';
 import '../../content/rich-text/rich-text.js';
@@ -202,7 +202,7 @@ export const Appearances = {
 				<nldd-list-item><nldd-text-cell text="Box — item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
 
-			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px;">
+			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px; --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 				<nldd-list appearance="box-base">
 					<nldd-list-item><nldd-text-cell text='appearance="box-base" — item 1'></nldd-text-cell></nldd-list-item>
 					<nldd-list-item><nldd-text-cell text="op een al getinte pagina — item 2"></nldd-text-cell></nldd-list-item>
@@ -515,7 +515,7 @@ export const ListboxEenvoudig = {
 // — Reorderable ———————————————————————————————————————————————————————————————
 
 export const Herschikbaar = {
-	// Imperative render is intentional: the nldd-reorder handler needs to mutate
+	// Imperative render is intentional: the reorder handler needs to mutate
 	// the DOM in-place to demonstrate actual reordering. A standard Storybook
 	// render function cannot do this because Lit templates are stateless.
 	render: () => {
@@ -539,16 +539,13 @@ export const Herschikbaar = {
 			<nldd-list
 				appearance="box-tinted"
 				reorderable
-				@nldd-reorder=${onReorder}
+				@reorder=${onReorder}
 			>
 				${labels.map((label) => html`
 					<nldd-list-item>
-						<nldd-drag-handle-cell
-							size="sm"
-							reorderable-only
-						></nldd-drag-handle-cell>
+						<nldd-reorder-handle-cell size="sm"></nldd-reorder-handle-cell>
 						<nldd-spacer-cell
-							reorderable-only
+							reorder-handle
 							size="8"
 						></nldd-spacer-cell>
 						<nldd-text-cell text="${label}"></nldd-text-cell>
@@ -562,7 +559,7 @@ export const Herschikbaar = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zet `reorderable` op een lijst van type default om drag-and-keyboard reorder te activeren. De lijst dispatcht `nldd-reorder` met `{ fromIndex, toIndex }` — de consumer is verantwoordelijk voor het muteren van de DOM (of het datamodel).',
+				story: 'Zet `reorderable` op een lijst van type default om drag-and-keyboard reorder te activeren. De lijst dispatcht `reorder` met `{ fromIndex, toIndex }` — de consumer is verantwoordelijk voor het muteren van de DOM (of het datamodel).',
 			},
 		},
 	},

@@ -53,6 +53,7 @@ export const datePickerStyles = css`
 		   width attribute (--_date-picker-width) overrides the intrinsic seven-cell width;
 		   the percentage-based inside stretches along. */
 		width: var(--_date-picker-width, calc(var(--_date-picker-day-size) * 7));
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		-webkit-tap-highlight-color: transparent;
 	}
@@ -165,6 +166,7 @@ export const datePickerStyles = css`
 		border-block-end: var(--_date-picker-divider-thickness) solid var(--_date-picker-divider-color);
 		padding: 0 0 var(--primitives-space-4);
 		width: var(--_date-picker-day-size);
+		--context-content-color: var(--_date-picker-weekday-header-content-color);
 		color: var(--_date-picker-weekday-header-content-color);
 		font: var(--_date-picker-weekday-header-font);
 	}
@@ -191,6 +193,7 @@ export const datePickerStyles = css`
 		width: var(--_date-picker-week-number-column-width);
 		padding-right: var(--primitives-space-8);
 		text-align: right;
+		--context-content-color: var(--_date-picker-week-number-content-color);
 		color: var(--_date-picker-week-number-content-color);
 		font: var(--_date-picker-week-number-font);
 	}
@@ -305,14 +308,17 @@ export const datePickerStyles = css`
 	/* These four all set the color at equal specificity, so the order is what
 	   decides: outside the month is the weakest, chosen the strongest. */
 	.date-picker__day.is-outside-month {
+		--context-content-color: var(--_date-picker-day-is-outside-month-content-color);
 		color: var(--_date-picker-day-is-outside-month-content-color);
 	}
 
 	.date-picker__day.is-in-range {
+		--context-content-color: var(--_date-picker-day-is-in-range-content-color);
 		color: var(--_date-picker-day-is-in-range-content-color);
 	}
 
 	.date-picker__day.is-selected {
+		--context-content-color: var(--_date-picker-day-is-selected-content-color);
 		color: var(--_date-picker-day-is-selected-content-color);
 	}
 
@@ -322,6 +328,7 @@ export const datePickerStyles = css`
 
 	@media (hover: hover) {
 		.date-picker__day.is-selected:hover {
+			--context-content-color: var(--_date-picker-day-is-selected-is-hovered-content-color);
 			color: var(--_date-picker-day-is-selected-is-hovered-content-color);
 		}
 
@@ -331,6 +338,7 @@ export const datePickerStyles = css`
 	}
 
 	.date-picker__day.is-unavailable {
+		--context-content-color: var(--_date-picker-day-is-unavailable-content-color);
 		color: var(--_date-picker-day-is-unavailable-content-color);
 		text-decoration: line-through;
 	}

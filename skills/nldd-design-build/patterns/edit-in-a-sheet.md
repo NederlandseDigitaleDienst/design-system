@@ -29,7 +29,7 @@ nldd-sheet                     open, placement, width; in de document-root
   <nldd-simple-section>
     <nldd-title
       slot="header"
-      size="2"
+      size="display-2"
       text="Aanvragen"
       heading-level="1"
     ></nldd-title>
@@ -81,7 +81,7 @@ nldd-sheet                     open, placement, width; in de document-root
       <nldd-title
         id="aanvraag-titel"
         slot="header"
-        size="2"
+        size="display-2"
         text="Aanvraag A-1042 bewerken"
         heading-level="1"
       ></nldd-title>
@@ -134,7 +134,7 @@ Wat jij nog moet doen: een `text` op de titelbalk die zegt waar de sheet over ga
 
 ## Gezien in
 
-Deze compositie komt voor in vrijwel elke applicatie op dit systeem, in Vue, Angular en server-gerenderde templates.
+Deze compositie komt voor in vrijwel elke applicatie op dit designsysteem, in Vue, Angular en server-gerenderde templates.
 
 ## Regels
 

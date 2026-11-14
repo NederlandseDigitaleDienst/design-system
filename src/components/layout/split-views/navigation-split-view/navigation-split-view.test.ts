@@ -53,24 +53,6 @@ describe('nldd-navigation-split-view', () => {
    Primary sidebar — deprecated 'sidebar' slot alias
    ============================================================ */
 
-describe('nldd-navigation-split-view – primary sidebar alias', () => {
-	let el: NLDDNavigationSplitView;
-
-	afterEach(() => { cleanup(el); vi.restoreAllMocks(); });
-
-	it('treats the deprecated slot="sidebar" alias as a primary sidebar', async () => {
-		el = await fixture<NLDDNavigationSplitView>(`
-			<nldd-navigation-split-view>
-				<nldd-split-view-pane slot="sidebar" has-content></nldd-split-view-pane>
-				<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
-			</nldd-navigation-split-view>
-		`);
-		await setWidth(el, 1280);
-		expect(el.shadowRoot!.querySelector('.navigation-split-view__primary-sidebar-pane')).not.toBeNull();
-	});
-});
-
-
 /* ============================================================
    Inspector sheet
    ============================================================ */
@@ -208,7 +190,7 @@ describe('nldd-navigation-split-view – sheet height at sm', () => {
 
 	it('opens the sidebar sheet at its content height, not zero', async () => {
 		el = await fixtureSheet('primary-sidebar-as-sheet', 'primary-sidebar');
-		await el.showSidebarSheet();
+		await el.showPrimarySidebarSheet();
 		const sheet = el.shadowRoot!.querySelector('.navigation-split-view__primary-sidebar-sheet')!;
 		expect(sheet.getBoundingClientRect().height).toBeGreaterThanOrEqual(200);
 	});
@@ -231,7 +213,7 @@ describe('nldd-navigation-split-view – sheet height at sm', () => {
 			</nldd-navigation-split-view>
 		`);
 		await waitForUpdate(el);
-		await el.showSidebarSheet();
+		await el.showPrimarySidebarSheet();
 		const sheet = el.shadowRoot!.querySelector('.navigation-split-view__primary-sidebar-sheet')!;
 		expect(sheet.getBoundingClientRect().height).toBeLessThan(800);
 	});

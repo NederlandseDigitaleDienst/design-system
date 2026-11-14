@@ -20,6 +20,7 @@ export const timePickerStyles = css`
 		--_time-picker-list-width: calc(var(--_time-picker-control-min-size) * 1.5);
 		--_time-picker-rows: 7;
 		--_time-picker-list-height: calc(var(--_time-picker-control-min-size) * var(--_time-picker-rows));
+		--_time-picker-list-edge-height: calc((var(--_time-picker-list-height) - var(--_time-picker-control-min-size)) / 2);
 		--_time-picker-list-gap: var(--primitives-space-4);
 		/* initial keeps it guaranteed-invalid, so width lands on auto as long as
 		   the attribute sets nothing. */
@@ -35,6 +36,8 @@ export const timePickerStyles = css`
 		width: var(--_time-picker-width);
 		max-width: 100%;
 		font: var(--_time-picker-list-item-font);
+		-webkit-user-select: none;
+		user-select: none;
 	}
 
 	:host([hidden]) {
@@ -69,7 +72,7 @@ export const timePickerStyles = css`
 		/* Not mandatory: then the browser always has to land on a snap point, and a
 		   short list can refuse to scroll. */
 		scroll-snap-type: y proximity;
-		mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+		mask-image: linear-gradient(to bottom, transparent 0, black var(--_time-picker-list-edge-height), black calc(100% - var(--_time-picker-list-edge-height)), transparent 100%);
 	}
 
 	/* Snapping would pull each frame of the glide to the nearest value. */
@@ -90,7 +93,7 @@ export const timePickerStyles = css`
 		content: '';
 		display: block;
 		flex-shrink: 0;
-		height: calc((var(--_time-picker-list-height) - var(--_time-picker-control-min-size)) / 2);
+		height: var(--_time-picker-list-edge-height);
 	}
 
 	.time-picker__list-item {
@@ -101,11 +104,11 @@ export const timePickerStyles = css`
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_time-picker-list-item-font);
 		font-variant-numeric: tabular-nums;
 		cursor: default;
-		user-select: none;
 		scroll-snap-align: center;
 	}
 
@@ -158,9 +161,13 @@ export const timePickerStyles = css`
 		height: var(--_time-picker-control-min-size);
 		gap: var(--_time-picker-list-gap);
 		align-items: center;
+		--context-content-color: var(--_time-picker-selection-content-color);
 		color: var(--_time-picker-selection-content-color);
 		font-variant-numeric: tabular-nums;
 		transform: translateY(-50%);
+		/* iOS Safari puts the masked lists on their own layer while the sheet slides
+		   in, above this one despite the z-index. A layer of its own keeps it on top. */
+		will-change: transform;
 	}
 
 	.time-picker__value {

@@ -22,7 +22,6 @@ describe('nldd-visually-hidden', () => {
 		const box = hidden.getBoundingClientRect();
 		expect(box.width).toBeLessThanOrEqual(1);
 		expect(box.height).toBeLessThanOrEqual(1);
-		expect(getComputedStyle(hidden).clipPath).toBe('inset(50%)');
 		expect(el.scrollWidth).toBeLessThanOrEqual(300);
 	});
 

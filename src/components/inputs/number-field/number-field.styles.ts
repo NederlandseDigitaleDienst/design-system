@@ -14,6 +14,7 @@ export const numberFieldStyles = css`
 		--_number-field-corner-radius: var(--semantics-controls-md-corner-radius);
 		--_number-field-min-size: var(--semantics-controls-md-min-size);
 		--_number-field-spin-button-padding: calc((var(--_number-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_number-field-nested-control-corner-radius: calc(var(--_number-field-corner-radius) - var(--_number-field-spin-button-padding) - var(--semantics-input-fields-border-width));
 		--_number-field-text-font: var(--semantics-input-fields-md-text-font);
 		--_number-field-inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
 
@@ -84,6 +85,10 @@ export const numberFieldStyles = css`
 		align-items: center;
 	}
 
+	:is(.number-field__decrement-button, .number-field__increment-button) nldd-icon-button {
+		--context-control-corner-radius: var(--_number-field-nested-control-corner-radius);
+	}
+
 	.number-field__decrement-button {
 		padding-left: var(--_number-field-spin-button-padding);
 	}
@@ -103,6 +108,7 @@ export const numberFieldStyles = css`
 		align-self: stretch;
 		flex-grow: 1;
 		text-align: center;
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_number-field-text-font);
 		appearance: none;

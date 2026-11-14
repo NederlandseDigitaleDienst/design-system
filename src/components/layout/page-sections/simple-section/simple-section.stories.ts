@@ -87,41 +87,10 @@ export const Standaard = {
 };
 
 /**
- * `background` tekent een oppervlak ("base", "tinted" of "accent-tinted") en cascadet
- * `--context-parent-background-color` naar afstammelingen, zodat kaarten en
+ * `background` tekent een oppervlak ("base" of "tinted") en cascadet
+ * `--context-background-color` naar afstammelingen, zodat kaarten en
  * geneste secties erin weten op welk oppervlak ze staan.
  */
-/**
- * `accent-tinted` is een tint van het accent van het thema, met het contrast
- * van `tinted`. Alles wat op een getint oppervlak werkt, werkt hier ook.
- */
-export const Accentoppervlak = {
-	render: () => html`
-		<nldd-simple-section background="accent-tinted">
-			<nldd-title slot="header" text="Aanvraag A-1042" heading-level="2"></nldd-title>
-			<nldd-rich-text>
-				<p>Je aanvraag voor dakisolatie is in behandeling. <a href="#">Bekijk je aanvraag</a>.</p>
-			</nldd-rich-text>
-			<nldd-spacer size="16"></nldd-spacer>
-			<nldd-segmented-control value="lijst" appearance="neutral-base">
-				<nldd-segmented-control-item value="lijst" text="Lijst"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="kaart" text="Kaart"></nldd-segmented-control-item>
-			</nldd-segmented-control>
-			<nldd-spacer size="16"></nldd-spacer>
-			<nldd-checkbox-field label="Stuur me een bericht bij een wijziging" checked></nldd-checkbox-field>
-			<nldd-spacer size="16"></nldd-spacer>
-			<nldd-card>
-				<nldd-container padding="16">
-					<nldd-title text="Dossier D-318" heading-level="3"></nldd-title>
-					<nldd-text>Team Uitvoering</nldd-text>
-				</nldd-container>
-			</nldd-card>
-			<nldd-spacer size="16"></nldd-spacer>
-			<nldd-button appearance="primary" text="Aanvraag starten"></nldd-button>
-		</nldd-simple-section>
-	`,
-};
-
 export const Oppervlak = {
 	render: () => html`
 		<nldd-simple-section background="tinted">

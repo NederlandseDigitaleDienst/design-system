@@ -36,3 +36,15 @@ body,
 		padding-inline: 16px !important;
 	}
 }
+
+/* Storybook keeps inline code on one line and lets a code block overflow, so a
+   long token name in the changelog widened the whole page. */
+.sbdocs-content :not(pre) > code {
+	display: inline;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.sbdocs-content pre {
+	overflow-x: auto;
+}

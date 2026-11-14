@@ -25,6 +25,7 @@
  * @attr {string} text - Link text. Content in the default slot wins.
  * @attr {string} start-icon - Icon before the text
  * @attr {string} end-icon - Icon after the text
+ * @attr {string} interestfor - ID of an nldd-popover that previews where the link goes, looked up in the tree of this link. It opens on interest instead of on a click: when the pointer rests on the link, when it gets keyboard focus, and on a long press on touch. A click or a tap still follows the link. Focus stays on the link, the popover's content is read as the link's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: put no link or button in it. Keep the popover outside the paragraph: a link stands in a `<p>`, and a `<p>` of your own inside it would close that paragraph. One popover can serve several links. Keep `accessible-label` on it: it is left out while the popover describes a link.
  * @attr {string} accessible-label - Accessible label for screen readers
  * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
@@ -35,7 +36,7 @@
  * @slot end-icon - Custom icon after the text. Wins over `end-icon`.
  */
 
-import { LitElement } from 'lit';
+import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { SlotContent } from '../../../utilities/slot-content.js';
@@ -44,6 +45,8 @@ import { linkStyles } from './link.styles.js';
 import { template } from './link.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddLinkTranslations } from './link.i18n.js';
+import { InterestController } from '../../../utilities/interest-controller.js';
+import { applyDescribedBy } from '../../../utilities/described-by-mixin.js';
 import './../../content/icon/icon.js';
 
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'inherit';
@@ -93,6 +96,13 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
 	noTab = false;
 
+	@property({ type: String, reflect: true })
+	interestfor: string | undefined = undefined;
+
+	/** Wiring for the popover `interestfor` names: opens it on hover, focus
+	 *  and long press. */
+	_interest = new InterestController(this);
+
 	/** Whether the start-icon / end-icon slots hold an icon, so the space that
 	 *  separates it from the label is only rendered next to an icon. */
 	@state() _hasStartSlot = false;
@@ -110,6 +120,14 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 			e.preventDefault();
 			e.stopPropagation();
 		}
+	}
+
+	override updated(changed: PropertyValues): void {
+		super.updated(changed);
+		if (changed.has('interestfor')) this._interest.refresh();
+		// By element: the link sits in this shadow root, the popover outside it.
+		const overlay = this._interest.overlay;
+		applyDescribedBy(this.shadowRoot?.querySelector('.link'), overlay ? [overlay] : [], true);
 	}
 
 	override render() {

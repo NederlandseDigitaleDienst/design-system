@@ -11,7 +11,7 @@
  * @attr {boolean} checked - Checked state
  * @attr {boolean} indeterminate - Indeterminate state
  * @attr {boolean} disabled - Disabled state
- * @attr {'inherit'} color - 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
+ * @attr {'content'} color - 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
  * @attr {string} value - Value for form submission
  * @attr {string} name - Name for form submission
  * @attr {string} label - Label text for the checkbox
@@ -23,7 +23,7 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
+import { FormAssociated, uncheckedValidity, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { checkboxFieldStyles } from './checkbox-field.styles.js';
 import { checkboxFieldTemplate } from './checkbox-field.template.js';
 import type { NLDDCheckbox } from '../checkbox/checkbox.js';
@@ -60,9 +60,9 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
-	/** 'inherit' draws the control and its label in the surrounding text color. */
+	/** 'content' draws the control and its label in the surrounding text color. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
-	color: '' | 'inherit' = '';
+	color: '' | 'content' = '';
 
 	@property({ type: String })
 	label = '';
@@ -91,6 +91,12 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;
+	}
+
+	/** The checkbox that carries `required` sits in a shadow root of its own,
+	 *  where the form cannot see it. */
+	override ownValidity(): OwnValidity | null {
+		return uncheckedValidity(this);
 	}
 
 	formResetCallback(): void {

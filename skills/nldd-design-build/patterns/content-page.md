@@ -38,21 +38,6 @@ nldd-shell                            de buitenste schil
 Met een inhoudsopgave:
 
 ```html
-<style>
-  /* The section owns the switch; this shows the button, and the space above
-     it, only when there is a sheet to open. */
-  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
-  nldd-sidebar-section:not([collapsed]) :is(#inhoud-openen, nldd-spacer:has(+ #inhoud-openen)) {
-    display: none;
-  }
-
-  /* The sheet has its own title bar with the same name. */
-  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
-  nldd-sidebar-section[collapsed] :is(#inhoud-kop, #inhoud-kop + nldd-spacer) {
-    display: none;
-  }
-</style>
-
 <nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
@@ -113,17 +98,18 @@ Met een inhoudsopgave:
     >
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag indienen"
         heading-level="1"
       ></nldd-title>
       <nldd-spacer
         slot="header"
+        sidebar-section-only="collapsed"
         size="16"
       ></nldd-spacer>
       <nldd-button
         slot="header"
         id="inhoud-openen"
+        sidebar-section-only="collapsed"
         appearance="secondary"
         start-icon="bullet-list"
         text="Op deze pagina"
@@ -137,11 +123,15 @@ Met een inhoudsopgave:
       >
         <nldd-title
           id="inhoud-kop"
-          size="5"
+          sidebar-section-only="expanded"
+          size="display-5"
           text="Op deze pagina"
           heading-level="2"
         ></nldd-title>
-        <nldd-spacer size="8"></nldd-spacer>
+        <nldd-spacer
+          sidebar-section-only="expanded"
+          size="8"
+        ></nldd-spacer>
         <nldd-list
           type="navigation"
           appearance="simple"
@@ -191,7 +181,7 @@ Met een inhoudsopgave:
       <nldd-card background="tinted">
         <nldd-container padding="16">
           <nldd-title
-            size="4"
+            size="display-4"
             text="Aanvragen kost tien minuten"
             heading-level="2"
           ></nldd-title>
@@ -212,7 +202,7 @@ Met een inhoudsopgave:
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="3"
+        size="display-3"
         text="Hier kun je verder"
         heading-level="2"
       ></nldd-title>
@@ -226,7 +216,7 @@ Met een inhoudsopgave:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Behandeling volgen"
               heading-level="3"
             ></nldd-title>
@@ -242,7 +232,7 @@ Met een inhoudsopgave:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Bezwaar maken"
               heading-level="3"
             ></nldd-title>
@@ -258,7 +248,7 @@ Met een inhoudsopgave:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Isoleren"
               heading-level="3"
             ></nldd-title>
@@ -377,7 +367,6 @@ Zonder inhoudsopgave, voor een korte pagina:
     <nldd-two-thirds-one-third-section grow>
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
@@ -394,7 +383,7 @@ Zonder inhoudsopgave, voor een korte pagina:
       >
         <nldd-container padding="16">
           <nldd-title
-            size="4"
+            size="display-4"
             text="Aanvraag nu intrekken"
             heading-level="2"
           ></nldd-title>
@@ -415,7 +404,7 @@ Zonder inhoudsopgave, voor een korte pagina:
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="3"
+        size="display-3"
         text="Hier kun je verder"
         heading-level="2"
       ></nldd-title>
@@ -429,7 +418,7 @@ Zonder inhoudsopgave, voor een korte pagina:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Aanvraag wijzigen"
               heading-level="3"
             ></nldd-title>
@@ -445,7 +434,7 @@ Zonder inhoudsopgave, voor een korte pagina:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Bezwaar maken"
               heading-level="3"
             ></nldd-title>
@@ -461,7 +450,7 @@ Zonder inhoudsopgave, voor een korte pagina:
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Isoleren"
               heading-level="3"
             ></nldd-title>
@@ -542,7 +531,7 @@ De inhoudsopgave vraagt wat code van jezelf. De markup staat in het voorbeeld hi
 
 **Geef elke `h2` een `id`.** Dan kan de inhoudsopgave ernaar springen.
 
-**Op smal is de inhoudsopgave een knop onder de titel.** Is de sectie te smal voor twee kolommen, dan verhuist de sidebar naar een sheet, en zou hij anders boven de tekst de inhoud omlaag duwen. De knop staat los onder de titel in het `header`-slot en verschijnt alleen als de sectie `collapsed` is, met een regel CSS die hem en de spacer erboven verbergt zolang de sectie geen sheet heeft: `nldd-sidebar-section:not([collapsed]) :is(#inhoud-openen, nldd-spacer:has(+ #inhoud-openen)) { display: none }`. Een klik roept `show()` aan. Geef de knop `popup-type="dialog"` en zet `expanded` op de `open`- en `close`-events van de sectie, dan weet een schermlezer of de sheet open is. De sheet heeft een eigen titelbalk met de `sidebar-label`, dus verberg de titel in de kolom zolang de sectie `collapsed` is.
+**Op smal is de inhoudsopgave een knop onder de titel.** Is de sectie te smal voor twee kolommen, dan verhuist de sidebar naar een sheet, en zou hij anders boven de tekst de inhoud omlaag duwen. De knop staat onder de titel in het `header`-slot en verschijnt alleen als de sectie `collapsed` is: zet `sidebar-section-only="collapsed"` op de knop en op de spacer erboven, zodat de ruimte met de knop verdwijnt. Een klik roept `show()` aan. Geef de knop `popup-type="dialog"` en zet `expanded` op de `open`- en `close`-events van de sectie, dan weet een schermlezer of de sheet open is. De sheet heeft een eigen titelbalk met de `sidebar-label`, dus geef de titel in de kolom en de spacer eronder `sidebar-section-only="expanded"`.
 
 **Een keuze in de sheet sluit eerst de sheet, en springt dan pas.** Dat doet de sectie zelf. Een link in de sheet naar een kop op de pagina sluit de sheet, scrolt de kop in beeld en geeft hem de focus. Liet de sectie de link gewoon zijn werk doen, dan scrolde de pagina onder een sheet die nog openstaat, en zette de sheet bij het sluiten de focus terug op de knop, boven aan de pagina en buiten beeld. Je hoeft er dus niets voor te schrijven; een `id` op elke kop is genoeg.
 

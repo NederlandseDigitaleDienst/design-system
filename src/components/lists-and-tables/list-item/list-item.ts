@@ -165,7 +165,7 @@ const NESTED_CONTROLS = [
  *
  * @element nldd-list-item
  *
- * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
+ * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-reorder-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
  * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
@@ -179,12 +179,11 @@ const NESTED_CONTROLS = [
  * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
  * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
  * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
- * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
+ * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
  * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
  * Divider markers, set on a CELL in the row rather than on the row itself:
- * @childattr {boolean} reorderable-only - Show this cell only while the row is `reorderable`
  * @childattr {boolean} divider-start - The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.
  * @childattr {boolean} divider-end - The divider stops after this cell. With several markers the line runs from the first start to the last end.
  *
@@ -193,6 +192,50 @@ const NESTED_CONTROLS = [
  *
  * @fires change - On a `checkbox` row after it toggles, and on a `radio` row when it becomes checked; detail: { checked: boolean }
  */
+type DividerInsets = { degenerate: boolean; start: number | null; end: number | null };
+
+/** Rows whose divider markers changed place without changing size, measured
+ *  together in the next frame. */
+const dividerQueue = new Set<NLDDListItem>();
+let dividerFrame = 0;
+/** Which row a watched element belongs to: the row itself or one of its markers. */
+const markerOwner = new WeakMap<Element, NLDDListItem>();
+let markerObserver: ResizeObserver | null = null;
+
+/**
+ * Measures every row first and writes every inset after, so a list of thousands
+ * of rows costs one layout instead of one per row: a write dirties the layout,
+ * and the next read would force it again.
+ */
+function measureDividers(rows: Iterable<NLDDListItem>): void {
+	const all = [...rows].filter(row => row.isConnected);
+	const insets = all.map(row => row._readDividerInsets());
+	all.forEach((row, i) => row._writeDividerInsets(insets[i]));
+}
+
+function queueDivider(row: NLDDListItem): void {
+	dividerQueue.add(row);
+	dividerFrame ||= requestAnimationFrame(() => {
+		dividerFrame = 0;
+		const rows = [...dividerQueue];
+		dividerQueue.clear();
+		measureDividers(rows);
+	});
+}
+
+/** One observer for every row. Its first report after `observe()` comes once
+ *  the page is laid out and before it paints, for all new rows at once. */
+function dividerObserver(): ResizeObserver {
+	return markerObserver ??= new ResizeObserver(entries => {
+		const rows = new Set<NLDDListItem>();
+		for (const entry of entries) {
+			const row = markerOwner.get(entry.target);
+			if (row) rows.add(row);
+		}
+		measureDividers(rows);
+	});
+}
+
 @customElement('nldd-list-item')
 export class NLDDListItem extends withTranslations(LitElement, nlddListItemTranslations) {
 	static override styles = [listItemStyles];
@@ -341,11 +384,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 *  every cell of every row again. */
 	private _rovingControlsCache: RovingControl[] | null = null;
 
-	/** Watches the row and its divider-marker cells for size changes; marker
+	/** The row and its divider markers, watched for size changes: marker
 	 *  insets are measured, so any reflow can move them. */
-	private _dividerMarkerObserver: ResizeObserver | null = null;
-
 	private _observedMarkerTargets: Element[] = [];
+	private _dividerStarts: Element[] = [];
+	private _dividerEnds: Element[] = [];
 
 	override connectedCallback() {
 		super.connectedCallback();
@@ -391,8 +434,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		this._clearPressed();
 		this._lightDomObserver?.disconnect();
 		this._lightDomObserver = null;
-		this._dividerMarkerObserver?.disconnect();
-		this._dividerMarkerObserver = null;
+		this._watchMarkers([]);
+		dividerQueue.delete(this);
 	}
 
 	private _onLightDomChange(): void {
@@ -411,8 +454,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		}
 	}
 
+	/** Null until the list is defined: loaded on its own, a row can upgrade
+	 *  first, and the list pushes its state to its rows once it is there. */
 	private get _parentList(): NLDDList | null {
-		return this.closest('nldd-list');
+		const list = this.closest<NLDDList>('nldd-list');
+		return list?.matches(':defined') ? list : null;
 	}
 
 	/**
@@ -538,17 +584,17 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// schedule a second update from inside the first.
 		queueMicrotask(() => this._updateChildren());
 		this._relayExpanded();
-		// First measurement after the first render: the marker offsets need
-		// laid-out boxes.
+		// The shadow DOM is there now, so the markers can be found. The observer
+		// measures them once the page is laid out, together with every other row.
 		this._measureDividerMarkers();
 	}
 
 	/**
 	 * Cells whose `size` means the sm/md scale. NOT every cell: `size` on
 	 * nldd-icon-cell and nldd-spacer-cell is a pixel value and on nldd-title-cell
-	 * a 1-6 heading scale, so pushing 'sm' there would corrupt them.
+	 * the display scale, so pushing 'sm' there would corrupt them.
 	 */
-	private static readonly SIZED_CELLS = 'nldd-text-cell, nldd-drag-handle-cell';
+	private static readonly SIZED_CELLS = 'nldd-text-cell, nldd-reorder-handle-cell';
 
 	/** Remembers the size a cell was authored with, so a later push can restore it. */
 	private _ownCellSize = new WeakMap<Element, string | null>();
@@ -727,7 +773,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * always tracks its current parent.
 	 */
 	private _syncWithList() {
-		const list = this.closest<NLDDList>('nldd-list');
+		const list = this._parentList;
 		if (!list) return;
 		this._applyAppearance(list.appearance);
 		this._applyParentType(list.type);
@@ -829,36 +875,51 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// without cells.
 		const drawsDivider = this._parentList?.getAttribute('dividers') !== 'never';
 		const explicitStarts = drawsDivider ? this._ownDescendants('[divider-start]') : [];
-		const starts = !drawsDivider ? [] : explicitStarts.length ? explicitStarts : this._implicitDividerStart();
-		const ends = drawsDivider ? this._ownDescendants('[divider-end]') : [];
+		this._dividerStarts = !drawsDivider ? [] : explicitStarts.length ? explicitStarts : this._implicitDividerStart();
+		this._dividerEnds = drawsDivider ? this._ownDescendants('[divider-end]') : [];
 
-		// Re-target the resize observer ONLY when the marker set changed: every
-		// observe() fires an initial notification, so retargeting on each
-		// measurement would loop the observer on itself.
-		const targets = starts.length || ends.length ? [this as Element, ...starts, ...ends] : [];
-		const sameTargets = targets.length === this._observedMarkerTargets.length
-			&& targets.every((target, i) => target === this._observedMarkerTargets[i]);
-		if (!sameTargets) {
-			this._dividerMarkerObserver?.disconnect();
-			this._observedMarkerTargets = targets;
-			if (targets.length) {
-				this._dividerMarkerObserver ??= new ResizeObserver(() => this._measureDividerMarkers());
-				targets.forEach(target => this._dividerMarkerObserver!.observe(target));
-			} else {
-				this._dividerMarkerObserver = null;
-			}
-		}
+		const targets = this._dividerStarts.length || this._dividerEnds.length
+			? [this as Element, ...this._dividerStarts, ...this._dividerEnds]
+			: [];
 		if (targets.length === 0) {
-			setState(this, 'degenerate-divider', false);
-			this.style.removeProperty('--_list-item-divider-inset-start');
-			this.style.removeProperty('--_list-item-divider-inset-end');
+			this._watchMarkers([]);
+			this._writeDividerInsets({ degenerate: false, start: null, end: null });
 			return;
 		}
+		// New targets get a first report from the observer, which measures them.
+		// The same targets in a new place report nothing, so they wait a frame.
+		if (!this._watchMarkers(targets)) queueDivider(this);
+	}
 
+	/** Watches these elements for this row, and only these. Returns whether the
+	 *  set changed: every observe() fires a first report, so retargeting on each
+	 *  measurement would loop the observer on itself. */
+	private _watchMarkers(targets: Element[]): boolean {
+		const same = targets.length === this._observedMarkerTargets.length
+			&& targets.every((target, i) => target === this._observedMarkerTargets[i]);
+		if (same) return false;
+		for (const target of this._observedMarkerTargets) {
+			markerObserver?.unobserve(target);
+			if (markerOwner.get(target) === this) markerOwner.delete(target);
+		}
+		this._observedMarkerTargets = targets;
+		for (const target of targets) {
+			markerOwner.set(target, this);
+			dividerObserver().observe(target);
+		}
+		return true;
+	}
+
+	/** @internal Reads where the markers are, without writing anything. Null
+	 *  when the row is not laid out yet. */
+	_readDividerInsets(): DividerInsets | null {
+		const starts = this._dividerStarts;
+		const ends = this._dividerEnds;
+		if (!starts.length && !ends.length) return { degenerate: false, start: null, end: null };
 		const block = this.shadowRoot?.querySelector('.list-item');
-		if (!block) return;
+		if (!block) return null;
 		const blockRect = block.getBoundingClientRect();
-		if (blockRect.width === 0) return;
+		if (blockRect.width === 0) return null;
 		const rtl = getComputedStyle(this).direction === 'rtl';
 		const startInsetOf = (rect: DOMRect) =>
 			rtl ? blockRect.right - rect.right : rect.left - blockRect.left;
@@ -868,7 +929,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// A marker that is not rendered (a cell hidden per breakpoint with
 		// hide-below, say) has an empty rect, and an empty rect measures as inset
 		// 0: the divider would start at the row's edge and bleed out of it. Skip
-		// them here rather than in `targets` — the observer keeps watching them,
+		// them here rather than in the targets: the observer keeps watching them,
 		// so the divider re-measures the moment such a cell comes back.
 		const rendered = (el: Element) => el.getClientRects().length > 0;
 		const visibleStarts = starts.filter(rendered);
@@ -876,25 +937,26 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 
 		// Union: smallest start inset (= first marker) and smallest end inset
 		// (= last marker) win.
-		const insetStart = visibleStarts.length
+		const start = visibleStarts.length
 			? Math.min(...visibleStarts.map(el => startInsetOf(el.getBoundingClientRect())))
 			: null;
-		const insetEnd = visibleEnds.length
+		const end = visibleEnds.length
 			? Math.min(...visibleEnds.map(el => endInsetOf(el.getBoundingClientRect())))
 			: null;
 
 		// A start past the last end: authoring error, fall back to full width.
-		const degenerate = insetStart !== null && insetEnd !== null
-			&& blockRect.width - insetStart - insetEnd <= 0;
-		setState(this, 'degenerate-divider', degenerate);
-		if (degenerate) {
-			this.style.removeProperty('--_list-item-divider-inset-start');
-			this.style.removeProperty('--_list-item-divider-inset-end');
-			return;
-		}
-		if (insetStart !== null) this.style.setProperty('--_list-item-divider-inset-start', `${insetStart}px`);
+		const degenerate = start !== null && end !== null && blockRect.width - start - end <= 0;
+		return { degenerate, start, end };
+	}
+
+	/** @internal Writes what `_readDividerInsets` found. */
+	_writeDividerInsets(insets: DividerInsets | null): void {
+		if (!insets) return;
+		setState(this, 'degenerate-divider', insets.degenerate);
+		const { start, end } = insets.degenerate ? { start: null, end: null } : insets;
+		if (start !== null) this.style.setProperty('--_list-item-divider-inset-start', `${start}px`);
 		else this.style.removeProperty('--_list-item-divider-inset-start');
-		if (insetEnd !== null) this.style.setProperty('--_list-item-divider-inset-end', `${insetEnd}px`);
+		if (end !== null) this.style.setProperty('--_list-item-divider-inset-end', `${end}px`);
 		else this.style.removeProperty('--_list-item-divider-inset-end');
 	}
 

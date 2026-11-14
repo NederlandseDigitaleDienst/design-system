@@ -268,6 +268,8 @@ describe('nldd-menu-bar', () => {
 			.find(mi => mi.getAttribute('text') === 'Mijn gegevens') as HTMLElement;
 		expect(clone).toBeTruthy();
 		(clone.shadowRoot!.querySelector('button') as HTMLButtonElement).click();
+		// The chosen item blinks before the menu closes.
+		await new Promise((resolve) => setTimeout(resolve, 450));
 		await waitForUpdate(el);
 
 		// Delegation reaches the original (select bubbles to the consumer)…

@@ -20,6 +20,9 @@
  *   variables.css, and named after a component in the folder that reads them,
  *   so the layer cannot grow back into overrides shared between components.
  *
+ * It fails on a rule that sets the text color from a content color without
+ * passing it on as --context-content-color; see lib/content-context.js.
+ *
  * It also fails on a px length in an @container or @media condition, or in a
  * matchMedia() string: with page zoom, Safari measures a container in zoomed
  * pixels. What the check catches and what it misses is in lib/query-px.js.
@@ -28,6 +31,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { findContentColorWithoutContext } from './lib/content-context.js';
 import { findQueryPx } from './lib/query-px.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -81,7 +85,7 @@ function findComponentFiles(dir) {
       if (entry.isDirectory()) {
         walk(fullPath);
       } else if (
-        (entry.name.endsWith('.ts') || entry.name.endsWith('.js')) &&
+        (entry.name.endsWith('.ts') || entry.name.endsWith('.js') || entry.name.endsWith('.css')) &&
         !entry.name.endsWith('.stories.js') &&
         !entry.name.endsWith('.stories.ts') &&
         !entry.name.endsWith('.test.ts') &&
@@ -311,6 +315,17 @@ function validate() {
         file: `${path.relative(ROOT_DIR, filePath)}:${line}`,
         variable: text,
         message: `"${text}" has a px length. Write the condition in rem (40rem, not 640px): with page zoom, Safari measures a container in zoomed pixels`,
+      });
+    }
+  }
+
+  // A text color without its context; see lib/content-context.js.
+  for (const filePath of componentFiles.filter((file) => file.endsWith('.styles.ts') || file.endsWith('.css'))) {
+    for (const { line, text } of findContentColorWithoutContext(fs.readFileSync(filePath, 'utf8'))) {
+      errors.push({
+        file: `${path.relative(ROOT_DIR, filePath)}:${line}`,
+        variable: text,
+        message: 'Set --context-content-color in the same rule, so text, icons and spinners inside take this color',
       });
     }
   }

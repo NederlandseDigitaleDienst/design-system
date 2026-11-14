@@ -1,12 +1,20 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import '../../actions/button/button.js';
 import '../../actions/icon-button/icon-button.js';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, reduceMotion } from '../../../test-utils.js';
 import './popover.js';
 import '../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDPopover } from './popover.js';
 import { isKeyboardMode } from '../../../utilities/input-modality.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
+import { loadTokens } from '../../../test-tokens.js';
+
+// Closing a bottom sheet slides it down first; these tests are about what
+// happens once it is closed. The slide itself is tested in popover.test.ts.
+let restoreMotion: () => Promise<void>;
+beforeAll(async () => { restoreMotion = await reduceMotion(); });
+afterAll(async () => { await restoreMotion(); });
 
 describe('nldd-popover', () => {
 	let el: HTMLElement;
@@ -24,7 +32,9 @@ describe('nldd-popover', () => {
 	it('zet popover, role en tabindex attributen op de host', async () => {
 		el = await fixture('<nldd-popover accessible-label="Test"></nldd-popover>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('popover')).toBe('');
+		// Manual on sm, where the bottom sheet closes itself; auto from md.
+		const sm = window.matchMedia(`(max-width: ${queryBreakpoints.smMax})`).matches;
+		expect(el.getAttribute('popover')).toBe(sm ? 'manual' : '');
 		expect(el.getAttribute('role')).toBe('dialog');
 		// aria-modal is not set explicitly: the default for role="dialog" is false
 		// and spelling it out adds nothing.
@@ -1121,5 +1131,118 @@ describe('nldd-popover onder een knop', () => {
 			await settle();
 			expect(popover.matches(':popover-open')).toBe(true);
 		});
+	});
+});
+
+describe('nldd-popover schuift als bottom sheet eerst omlaag', () => {
+	let el: HTMLElement;
+
+	beforeAll(async () => { await restoreMotion(); });
+	afterAll(async () => { restoreMotion = await reduceMotion(); });
+	afterEach(() => { if (el) cleanup(el); });
+
+	const open = async (): Promise<NLDDPopover> => {
+		el = await fixture(`
+			<div>
+				<button id="trigger-slide">Trigger</button>
+				<nldd-popover anchor="trigger-slide" accessible-label="Test"></nldd-popover>
+			</div>
+		`);
+		const popover = el.querySelector('nldd-popover') as NLDDPopover;
+		popover.show();
+		await waitForUpdate(popover);
+		return popover;
+	};
+
+	it('stays open while it slides down, and closes once it is down', async () => {
+		const popover = await open();
+		const closed = vi.fn();
+		popover.addEventListener('close', closed);
+		popover.hide();
+		expect(popover.matches(':popover-open')).toBe(true);
+		expect(popover.hasAttribute('data-closing')).toBe(true);
+		popover.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'transform' }));
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(false);
+		expect(popover.hasAttribute('data-closing')).toBe(false);
+		expect(closed).toHaveBeenCalledTimes(1);
+	});
+
+	it('stays open when it is opened again while sliding down', async () => {
+		const popover = await open();
+		popover.hide();
+		popover.show();
+		expect(popover.hasAttribute('data-closing')).toBe(false);
+		popover.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'transform' }));
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(true);
+	});
+
+	it('slides down on a tap on the backdrop too, because it closes itself on sm', async () => {
+		const popover = await open();
+		expect(popover.getAttribute('popover')).toBe('manual');
+		document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+		expect(popover.matches(':popover-open')).toBe(true);
+		expect(popover.hasAttribute('data-closing')).toBe(true);
+	});
+
+	it('slides down when its popovertarget anchor is clicked', async () => {
+		el = await fixture(`
+			<div>
+				<button id="trigger-target" popovertarget="popover-target">Trigger</button>
+				<nldd-popover id="popover-target" anchor="trigger-target" accessible-label="Test"></nldd-popover>
+			</div>
+		`);
+		const popover = el.querySelector('nldd-popover') as NLDDPopover;
+		const trigger = el.querySelector('button')!;
+		trigger.click();
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(true);
+		trigger.click();
+		expect(popover.matches(':popover-open')).toBe(true);
+		expect(popover.hasAttribute('data-closing')).toBe(true);
+	});
+
+	it('closes even when the transition never ends', async () => {
+		const popover = await open();
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+		try {
+			popover.hide();
+			vi.advanceTimersByTime(700);
+			expect(popover.matches(':popover-open')).toBe(false);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+});
+
+describe('nldd-popover vervaagt waar hij scrollt', () => {
+	let el: NLDDPopover;
+	let unloadTokens: () => void;
+	beforeAll(() => { unloadTokens = loadTokens(); });
+	afterAll(() => { unloadTokens(); });
+
+	afterEach(() => {
+		if (el?.matches(':popover-open')) el.hidePopover();
+		if (el) cleanup(el);
+	});
+
+	it('scrollt binnen zichzelf en maskeert de rand waar meer inhoud wacht', async () => {
+		el = await fixture<NLDDPopover>('<nldd-popover accessible-label="Test" style="max-height: 200px; height: 200px"><div style="height: 600px; flex-shrink: 0"></div></nldd-popover>');
+		el.showPopover();
+		await waitForUpdate(el);
+		const scroller = el.shadowRoot!.querySelector<HTMLElement>('.popover__scroller')!;
+		const fade = () => {
+			const style = getComputedStyle(scroller);
+			return [style.getPropertyValue('--_scroll-fade-start'), style.getPropertyValue('--_scroll-fade-end')];
+		};
+		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		// The surface does not scroll: a mask on it would fade its shadow too.
+		expect(el.scrollHeight).toBe(el.clientHeight);
+		expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight);
+		expect(fade()).toEqual(['0px', '24px']);
+		scroller.scrollTop = scroller.scrollHeight;
+		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		expect(fade()).toEqual(['24px', '0px']);
 	});
 });

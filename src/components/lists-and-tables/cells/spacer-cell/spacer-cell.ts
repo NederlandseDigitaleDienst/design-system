@@ -8,6 +8,7 @@
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { spacerCellStyles } from './spacer-cell.styles.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
@@ -16,7 +17,7 @@ import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js'
 type Size = '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96' | 'flexible';
 
 @customElement('nldd-spacer-cell')
-export class NLDDSpacerCell extends VisibilityMixin(LitElement, 'cells-container') {
+export class NLDDSpacerCell extends ReorderHandleMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = spacerCellStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('16') })

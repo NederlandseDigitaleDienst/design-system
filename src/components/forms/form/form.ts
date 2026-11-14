@@ -154,6 +154,7 @@ export class NLDDForm extends HTMLElement {
 		this._judged.add(control);
 
 		control.toggleAttribute('invalid', true);
+		this._syncGroup(control);
 
 		// The browser fires invalid on every failing control in tree order, so
 		// the first event of a round is the field to land on. Cancelling that
@@ -188,7 +189,10 @@ export class NLDDForm extends HTMLElement {
 	private _handleReset = () => {
 		queueMicrotask(() => {
 			this._judged = new WeakSet<Element>();
-			for (const el of this._form?.elements ?? []) el.removeAttribute('invalid');
+			for (const el of this._form?.elements ?? []) {
+				el.removeAttribute('invalid');
+				this._syncGroup(el);
+			}
 			for (const list of this.querySelectorAll('nldd-validation-list')) {
 				list.removeAttribute('judging');
 			}
@@ -209,11 +213,55 @@ export class NLDDForm extends HTMLElement {
 	 * value nobody has asked for yet.
 	 */
 	private _handleInput = (e: Event) => {
-		const control = e.target as (Element & { internals?: ElementInternals; validity?: ValidityState }) | null;
+		const control = e.target as Element | null;
 		if (!control || !this._judged.has(control)) return;
-		const validity = control.internals?.validity ?? control.validity;
-		if (validity) control.toggleAttribute('invalid', !validity.valid);
+		// An nldd-checkbox fires both input and change for one click: judge it once
+		// while its render is pending. A control without one is judged on the spot,
+		// where twice is only the same answer again.
+		if (this._pending.has(control)) return;
+		// A radio answers for every option with its name: picking one makes the
+		// others valid too, and they hear nothing of it. Every control with that
+		// name is judged again, which only does work for a radio.
+		const name = control.getAttribute('name');
+		const named = name ? this._form?.elements.namedItem(name) : null;
+		const peers = named instanceof RadioNodeList ? Array.from(named) as Element[] : [control];
+		const judge = () => {
+			for (const el of peers) {
+				if (!this._judged.has(el)) continue;
+				const { internals, validity } = el as Element & { internals?: ElementInternals; validity?: ValidityState };
+				const state = internals?.validity ?? validity;
+				if (state) el.toggleAttribute('invalid', !state.valid);
+			}
+			this._syncGroup(control);
+		};
+		// A component writes its validity on its next render, after this event,
+		// and the other radios learn of the choice from their group only then.
+		const renders = peers
+			.map(el => (el as Element & { updateComplete?: Promise<unknown> }).updateComplete)
+			.filter(Boolean);
+		if (renders.length === 0) return judge();
+		this._pending.add(control);
+		Promise.all(renders).then(judge).finally(() => this._pending.delete(control));
 	};
+
+	/**
+	 * Carries the mark up to the group the options sit in.
+	 *
+	 * The browser judges each radio, but the control an nldd-form-field is
+	 * about, and its validation list reads, is the group around them: the
+	 * question, not one answer. So the group is invalid while any of its options
+	 * is, and a group that stays quiet leaves a submit that does nothing.
+	 */
+	private _syncGroup(control: Element): void {
+		for (let el = control.parentElement; el && el !== this; el = el.parentElement) {
+			if ((el.constructor as { isFormInput?: boolean }).isFormInput !== true) continue;
+			el.toggleAttribute('invalid', el.querySelector('[invalid]') !== null);
+			return;
+		}
+	}
+
+	/** Controls whose verdict waits for their next render. */
+	private _pending = new WeakSet<Element>();
 
 	/** Controls the platform has judged at least once. */
 	private _judged = new WeakSet<Element>();
@@ -286,6 +334,8 @@ export class NLDDForm extends HTMLElement {
 
 		this.addEventListener('invalid', this._handleInvalid, true);
 		this.addEventListener('input', this._handleInput);
+		// nldd-radio-button-field says it changed with `change` only.
+		this.addEventListener('change', this._handleInput);
 		this.addEventListener('reset', this._handleReset);
 
 		// Propagate label-alignment to current children (initial + after reconnect)
@@ -297,6 +347,7 @@ export class NLDDForm extends HTMLElement {
 		this._observer = null;
 		this.removeEventListener('invalid', this._handleInvalid, true);
 		this.removeEventListener('input', this._handleInput);
+		this.removeEventListener('change', this._handleInput);
 		this.removeEventListener('reset', this._handleReset);
 	}
 

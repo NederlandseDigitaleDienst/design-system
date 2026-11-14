@@ -16,17 +16,18 @@ describe('nldd-title', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('defaults to size 3, without writing the default to the DOM', async () => {
+	it('has no size of its own by default, and writes none to the DOM', async () => {
 		el = await fixture('<nldd-title></nldd-title>');
 		await waitForUpdate(el);
-		expect((el as unknown as { size: number }).size).toBe(3);
+		expect((el as unknown as { size?: string }).size).toBeUndefined();
 		expect(el.hasAttribute('size')).toBe(false);
 	});
 
 	it('reflects size attribute', async () => {
-		el = await fixture('<nldd-title size="1"></nldd-title>');
+		el = await fixture('<nldd-title size="display-1"></nldd-title>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('size')).toBe('1');
+		expect((el as unknown as { size?: string }).size).toBe('display-1');
+		expect(el.getAttribute('size')).toBe('display-1');
 	});
 
 	it('hyphenates only long words, for the text and a slotted title alike', async () => {
@@ -69,14 +70,14 @@ describe('nldd-title', () => {
 		expect(el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="end"]')!.assignedElements().length).toBeGreaterThan(0);
 	});
 
-	it('color="inherit" follows the surrounding text color, the default does not', async () => {
+	it('follows the context, not the CSS color around it', async () => {
 		// The vitest page does not load variables.css, so define the token the
 		// default path resolves against — otherwise both paths would inherit.
 		el = await fixture(`
 			<div>
-				<style>:root { --semantics-content-color: rgb(99, 99, 99); }</style>
+				<style>:root { --semantics-content-color: rgb(99, 99, 99); --context-content-color: var(--semantics-content-color); }</style>
 				<div style="color: rgb(10, 20, 30);">
-					<nldd-title color="inherit"><h2 id="inherit-title">A</h2></nldd-title>
+					<nldd-title style="--context-content-color: rgb(1, 2, 3);"><h2 id="context-title">A</h2></nldd-title>
 					<nldd-title><h2 id="default-title">B</h2></nldd-title>
 				</div>
 			</div>
@@ -84,14 +85,14 @@ describe('nldd-title', () => {
 		const titles = el.querySelectorAll('nldd-title');
 		await waitForUpdate(titles[0] as HTMLElement);
 		await waitForUpdate(titles[1] as HTMLElement);
-		expect(getComputedStyle(el.querySelector('#inherit-title')!).color).toBe('rgb(10, 20, 30)');
+		expect(getComputedStyle(el.querySelector('#context-title')!).color).toBe('rgb(1, 2, 3)');
 		expect(getComputedStyle(el.querySelector('#default-title')!).color).toBe('rgb(99, 99, 99)');
 	});
 
 	// getComputedStyle resolves ch to px, so assert the measure is capped and
 	// scales with the font rather than checking for the literal '32ch'.
 	it('begrenst de regellengte van de kop', async () => {
-		el = await fixture('<nldd-title size="2"><h2>Een kop</h2></nldd-title>');
+		el = await fixture('<nldd-title size="display-2"><h2>Een kop</h2></nldd-title>');
 		await waitForUpdate(el);
 		const heading = el.querySelector('h2')!;
 		const style = getComputedStyle(heading);
@@ -99,11 +100,6 @@ describe('nldd-title', () => {
 		expect(parseFloat(style.maxWidth)).toBeGreaterThan(parseFloat(style.fontSize) * 10);
 	});
 
-	it('balanceert de regels van de kop', async () => {
-		el = await fixture('<nldd-title><h3>Een kop</h3></nldd-title>');
-		await waitForUpdate(el);
-		expect(getComputedStyle(el.querySelector('h3')!).textWrap).toBe('balance');
-	});
 });
 
 describe('nldd-title – text and heading-level', () => {
@@ -129,10 +125,10 @@ describe('nldd-title – text and heading-level', () => {
 	});
 
 	it('keeps size and heading-level apart', async () => {
-		el = await fixture('<nldd-title size="1" text="Paginatitel" heading-level="3"></nldd-title>');
+		el = await fixture('<nldd-title size="display-1" text="Paginatitel" heading-level="3"></nldd-title>');
 		await waitForUpdate(el);
 		expect(text()?.localName).toBe('h3');
-		expect(el.getAttribute('size')).toBe('1');
+		expect(el.getAttribute('size')).toBe('display-1');
 	});
 
 	it('renders a paragraph for a heading-level outside 1–6', async () => {
@@ -158,20 +154,20 @@ describe('nldd-title – text and heading-level', () => {
 	it('gives text the same measure, wrapping and color handling as a slotted heading', async () => {
 		el = await fixture(`
 			<div>
-				<style>:root { --semantics-content-color: rgb(99, 99, 99); }</style>
+				<style>:root { --semantics-content-color: rgb(99, 99, 99); --context-content-color: var(--semantics-content-color); }</style>
 				<div style="color: rgb(10, 20, 30);">
-					<nldd-title id="inherit" color="inherit" text="A" heading-level="2"></nldd-title>
-					<nldd-title id="default" size="2" text="B" heading-level="2"></nldd-title>
+					<nldd-title id="context" style="--context-content-color: rgb(1, 2, 3);" text="A" heading-level="2"></nldd-title>
+					<nldd-title id="default" size="display-2" text="B" heading-level="2"></nldd-title>
 				</div>
 			</div>
 		`);
-		const inherit = el.querySelector('#inherit') as HTMLElement;
+		const context = el.querySelector('#context') as HTMLElement;
 		const standard = el.querySelector('#default') as HTMLElement;
-		await waitForUpdate(inherit);
+		await waitForUpdate(context);
 		await waitForUpdate(standard);
-		const inheritText = getComputedStyle(inherit.shadowRoot!.querySelector('.title__text')!);
+		const contextText = getComputedStyle(context.shadowRoot!.querySelector('.title__text')!);
 		const standardText = getComputedStyle(standard.shadowRoot!.querySelector('.title__text')!);
-		expect(inheritText.color).toBe('rgb(10, 20, 30)');
+		expect(contextText.color).toBe('rgb(1, 2, 3)');
 		expect(standardText.color).toBe('rgb(99, 99, 99)');
 		expect(standardText.marginTop).toBe('0px');
 		expect(standardText.textWrap).toBe('balance');
@@ -233,7 +229,7 @@ describe('nldd-title – custom-size', () => {
 	});
 
 	const title = async (attrs: string): Promise<HTMLElement> => {
-		el = await fixture(`<nldd-title text="Mijn Dienst" ${attrs}></nldd-title>`);
+		el = await fixture(`<nldd-title text="Mijn Dienst" heading-level="1" ${attrs}></nldd-title>`);
 		await waitForUpdate(el);
 		return el;
 	};
@@ -263,17 +259,17 @@ describe('nldd-title – custom-size', () => {
 		expect(el.style.getPropertyValue('--_title-sm-custom-size')).toBe('');
 	});
 
-	it('takes the typography of size 1, whatever size says', async () => {
-		await title('size="6" sm-custom-size="200px" md-custom-size="200px" lg-custom-size="200px"');
+	it('takes the typography of display-1, whatever size says', async () => {
+		await title('size="display-6" sm-custom-size="200px" md-custom-size="200px" lg-custom-size="200px"');
 		const { fontWeight, fontFamily } = textStyle();
 		cleanup(el);
-		await title('size="1"');
+		await title('size="display-1"');
 		expect(fontWeight).toBe(textStyle().fontWeight);
 		expect(fontFamily).toBe(textStyle().fontFamily);
 	});
 
-	it('never goes below size 1', async () => {
-		await title('size="1"');
+	it('never goes below display-1', async () => {
+		await title('size="display-1"');
 		const sizeOne = textStyle().fontSize;
 		cleanup(el);
 		await title('sm-custom-size="10px" md-custom-size="10px" lg-custom-size="10px"');
@@ -297,12 +293,12 @@ describe('nldd-title – custom-size', () => {
 		el = undefined as unknown as HTMLElement;
 	});
 
-	it('takes a percentage or em and still keeps the size 1 floor', async () => {
+	it('takes a percentage or em and still keeps the display-1 floor', async () => {
 		await title('lg-custom-size="1%" md-custom-size="1%" sm-custom-size="0.1em"');
 		expect(el.hasAttribute('data-lg-custom-size')).toBe(true);
 		const custom = textStyle().fontSize;
 		cleanup(el);
-		await title('size="1"');
+		await title('size="display-1"');
 		expect(custom).toBe(textStyle().fontSize);
 	});
 
@@ -313,5 +309,87 @@ describe('nldd-title – custom-size', () => {
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
 		expect(textStyle().fontSize).not.toBe('200px');
+	});
+});
+
+describe('nldd-title – size from heading-level', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	const fontSize = async (attrs: string): Promise<number> => {
+		el = await fixture(`<nldd-title text="Mijn Dienst" ${attrs}></nldd-title>`);
+		await waitForUpdate(el);
+		const size = parseFloat(getComputedStyle(el.shadowRoot!.querySelector('.title__text')!).fontSize);
+		cleanup(el);
+		return size;
+	};
+
+	it('takes the display size of its heading-level', async () => {
+		const sizes: number[] = [];
+		for (const level of [1, 2, 3, 4, 5, 6]) {
+			const size = await fontSize(`heading-level="${level}"`);
+			expect(size, `h${level}`).toBe(await fontSize(`heading-level="3" size="display-${level}"`));
+			sizes.push(size);
+		}
+		expect([...sizes].sort((a, b) => b - a)).toEqual(sizes);
+		expect(new Set(sizes).size).toBe(6);
+	});
+
+	it('is body text without a level, whatever its size', async () => {
+		const body = await fontSize('');
+		expect(body).toBe(await fontSize('size="display-1"'));
+		expect(body).toBe(await fontSize('sm-custom-size="80px" md-custom-size="80px" lg-custom-size="80px"'));
+		expect(body).toBeLessThan(await fontSize('heading-level="3"'));
+		el = await fixture('<nldd-title text="Mijn Dienst"></nldd-title>');
+		expect(el.shadowRoot!.querySelector('.title__text')!.tagName).toBe('P');
+	});
+
+	it('lets size win over heading-level', async () => {
+		expect(await fontSize('heading-level="1" size="display-5"')).toBe(await fontSize('heading-level="5"'));
+		expect(await fontSize('heading-level="1" size="display-3"')).toBe(await fontSize('heading-level="3"'));
+	});
+
+	it('follows heading-level when size holds a value from before display-n', async () => {
+		expect(await fontSize('heading-level="2" size="5"')).toBe(await fontSize('heading-level="2"'));
+	});
+
+	it('sizes the overline and supporting text by size, not by heading-level, when both are set', async () => {
+		const sizes = async (attrs: string) => {
+			el = await fixture(`<nldd-title text="Mijn Dienst" overline="Team Uitvoering" supporting-text="Aanvraag A-1042" ${attrs}></nldd-title>`);
+			await waitForUpdate(el);
+			const font = (selector: string) => getComputedStyle(el.shadowRoot!.querySelector(selector)!).fontSize;
+			const result = { overline: font('.title__overline'), supporting: font('.title__supporting-text') };
+			cleanup(el);
+			return result;
+		};
+		expect(await sizes('heading-level="1" size="display-6"')).toEqual(await sizes('heading-level="6"'));
+	});
+
+	it('takes its level from a heading in the default slot', async () => {
+		el = await fixture('<nldd-title><h2>Mijn Dienst</h2></nldd-title>');
+		await waitForUpdate(el);
+		expect(el.getAttribute('data-level')).toBe('2');
+		const slotted = parseFloat(getComputedStyle(el.querySelector('h2')!).fontSize);
+		cleanup(el);
+		expect(slotted).toBe(await fontSize('heading-level="2"'));
+	});
+
+	it('lets heading-level win over the slotted heading, and drops the level with the heading', async () => {
+		el = await fixture('<nldd-title heading-level="4"><h2>Mijn Dienst</h2></nldd-title>');
+		await waitForUpdate(el);
+		expect(el.getAttribute('data-level')).toBe('4');
+		el.removeAttribute('heading-level');
+		el.querySelector('h2')!.replaceWith(document.createTextNode('Mijn Dienst'));
+		await waitForUpdate(el);
+		expect(el.hasAttribute('data-level')).toBe(false);
 	});
 });

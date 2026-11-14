@@ -9,6 +9,8 @@ import { ownerForm } from '../../../utilities/owner-form.js';
 import { setState } from '../../../utilities/element-state.js';
 import '../../../utilities/custom-element.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
+import { nlddMenuItemTranslations } from './menu-item.i18n.js';
 
 export type MenuItemType = 'button' | 'submit' | 'checkbox' | 'radio';
 
@@ -32,6 +34,9 @@ export function syncListItemRole(host: HTMLElement, variant: MenuVariant | null)
  * @attr {string} shortcut - Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {string} href - Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled.
+ * @attr {string} target - Where an item with an `href` opens (e.g. '_blank'); adjusts rel automatically. With '_blank' the item adds a visually hidden "opent in nieuw tabblad" for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply.
+ * @attr {string} rel - Link rel of an item with an `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set.
+ * @attr {object} translations - Override translation keys (the new-tab and other-website announcements); unset keys fall back to Dutch.
  * @attr {string} type - Item type: 'button' | 'submit' | 'checkbox' | 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.
  * @attr {string} form - Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root.
  * @attr {boolean} selected - Selected state for checkbox and radio types.
@@ -45,7 +50,7 @@ export function syncListItemRole(host: HTMLElement, variant: MenuVariant | null)
  *
  * @fires select - Fired when the item is clicked and not disabled.
  */
-export class NLDDMenuItem extends LitElement {
+export class NLDDMenuItem extends withTranslations(LitElement, nlddMenuItemTranslations) {
 	static override styles = menuItemStyles;
 
 	@property({ type: Boolean, reflect: true })
@@ -74,6 +79,12 @@ export class NLDDMenuItem extends LitElement {
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
+
+	@property({ reflect: true })
+	target: string | undefined = undefined;
+
+	@property({ reflect: true })
+	rel: string | undefined = undefined;
 
 	@property({ reflect: true, converter: reflectNonDefault<MenuItemType>('button') })
 	type: MenuItemType = 'button';
@@ -255,11 +266,12 @@ export class NLDDMenuItem extends LitElement {
 			}));
 			return;
 		}
+		// One choice per menu: a click during the blink is not a second one.
+		if (this.closest('nldd-menu')?.querySelector('nldd-menu-item[confirming]')) return;
 		this.dispatchEvent(new CustomEvent('select', {
 			bubbles: true,
 			composed: true,
 		}));
-		(this.closest('nldd-menu') as HTMLElement)?.hidePopover?.();
 		// The button is in this item's shadow root, so it has no form owner of
 		// its own: submit the form here, with validation and a cancelable event.
 		if (this.type === 'submit') ownerForm(this)?.requestSubmit();

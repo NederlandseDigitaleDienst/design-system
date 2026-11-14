@@ -28,7 +28,7 @@ Tekst met ~~doorhaling~~ (GFM).`;
 
 /* Shared toolbar demo. The editor is headless: this builds a real toolbar from
  * DS components and wires it both ways — the controls drive the editor's command
- * API, and the editor's nldd-text-editor-state event drives the controls. Used
+ * API, and the editor's state-change event drives the controls. Used
  * by the WithToolbar and Mixed stories (pass the editor template in). */
 const editorOf = (el: Element): any => el.closest('.demo-editor')?.querySelector('nldd-text-editor');
 const reconcile = (el: Element, keys: string[], values: string[]) => {
@@ -252,7 +252,7 @@ const onToolbarState = (event: CustomEvent) => {
 function toolbarEditor(editor: unknown) {
 	return html`
 		<div class="demo-editor"
-			@nldd-text-editor-state=${onToolbarState}
+			@state-change=${onToolbarState}
 			@select=${onOverflowSelect}
 		>
 			<nldd-toolbar size="md">
@@ -707,7 +707,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		appearance: 'simple',
+		embedded: false,
 		syntax: 'visible',
 		value: SAMPLE,
 		placeholder: '',
@@ -722,11 +722,10 @@ export default {
 		accessibleLabel: 'Tekst',
 	},
 	argTypes: {
-		appearance: {
-			control: 'select',
-			options: ['simple', 'input-field'],
-			description: 'Visuele stijl. "simple" is kaal zonder focusring; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
-			table: { defaultValue: { summary: 'simple' } },
+		embedded: {
+			control: 'boolean',
+			description: 'Zonder kader, vulling, padding en focusring, voor een editor in een eigen compositie die die zelf levert',
+			table: { defaultValue: { summary: false } },
 		},
 		syntax: {
 			control: 'select',
@@ -794,7 +793,7 @@ export default {
 };
 
 const Template = ({
-	appearance,
+	embedded,
 	syntax,
 	value,
 	placeholder,
@@ -809,7 +808,7 @@ const Template = ({
 	accessibleLabel,
 }: Record<string, any>) => html`
 	<nldd-text-editor
-		appearance=${appearance as string}
+		?embedded=${embedded}
 		syntax=${syntax as string}
 		.value=${value || ''}
 		placeholder=${placeholder || nothing}
@@ -829,11 +828,10 @@ export const Standaard = {
 	render: Template,
 };
 
-export const AppearanceInputField = {
-	name: 'Appearance input-field',
+export const Embedded = {
 	render: () => html`
 		<nldd-text-editor
-			appearance="input-field"
+			embedded
 			rows="10"
 			.value=${SAMPLE}
 			accessible-label="Tekst"
@@ -842,7 +840,7 @@ export const AppearanceInputField = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'De `input-field`-appearance: kader, vulling, padding, hoeken en focusring — een op zichzelf staand veld. De default is `simple` (kaal), bedoeld om in een eigen compositie te plaatsen die de chrome en focusbehandeling levert.',
+				story: 'Embedded heeft geen kader, vulling, padding of focusring. Bij focus toont een prominente accent-caret waar je staat. Bedoeld om in een eigen compositie te plaatsen die zelf de chrome en focusbehandeling levert, zoals de werkbalk-voorbeelden hieronder.',
 			},
 		},
 	},
@@ -901,7 +899,7 @@ export const Vermeldingen = {
 				accessible-label="Tekst"
 				.value=${sample}
 				.mentionSource=${source}
-				@nldd-text-editor-mention=${(event: CustomEvent) => action('nldd-text-editor-mention')(event.detail)}
+				@mention=${(event: CustomEvent) => action('mention')(event.detail)}
 			></nldd-text-editor>
 		`;
 	},
@@ -909,7 +907,7 @@ export const Vermeldingen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Typ `@` voor een typeahead. De editor kent zelf geen gebruikers: de consumer levert kandidaten via de `mentionSource`-property (aangeroepen met de tekst na `@`). Een keuze voegt een markdown-token `[@Naam](user:id)` in (als token gerenderd, degradeert tot een gewone link) en vuurt `nldd-text-editor-mention` met id + range. Vindt de bron niemand, dan zegt de lijst dat ("Niets gevonden"): typ `@xyz`. Een eigen tekst geef je met `mentionEmptyText`.',
+				story: 'Typ `@` voor een typeahead. De editor kent zelf geen gebruikers: de consumer levert kandidaten via de `mentionSource`-property (aangeroepen met de tekst na `@`). Een keuze voegt een markdown-token `[@Naam](user:id)` in (als token gerenderd, degradeert tot een gewone link) en vuurt `mention` met id + range. Vindt de bron niemand, dan zegt de lijst dat ("Niets gevonden"): typ `@xyz`. Een eigen tekst geef je met `mentionEmptyText`.',
 			},
 		},
 	},
@@ -1029,8 +1027,8 @@ export const Typeaheads = {
 					.value=${sample}
 					.mentionSource=${filter(people)}
 					.typeaheads=${typeaheads}
-					@nldd-text-editor-mention=${(event: CustomEvent) => action('nldd-text-editor-mention')(event.detail)}
-					@nldd-text-editor-typeahead=${(event: CustomEvent) => action('nldd-text-editor-typeahead')(event.detail)}
+					@mention=${(event: CustomEvent) => action('mention')(event.detail)}
+					@typeahead=${(event: CustomEvent) => action('typeahead')(event.detail)}
 				></nldd-text-editor>
 				<nldd-button
 					appearance="secondary"
@@ -1044,7 +1042,7 @@ export const Typeaheads = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Naast de ingebouwde `@`-mention geef je eigen lijsten op via de `typeaheads`-property: een trigger-teken, een `source` met kandidaten voor wat er na de trigger is getypt, en optioneel een `insert` die bepaalt wat een keuze schrijft. Standaard is dat de trigger, de `text` en een spatie: met `text: "smile:"` dus `:smile: `, de shortcode die Mattermost en Slack zelf renderen. Deze editor doet dat niet, dus hier schrijft `:` de emoji zelf. Meerdere lijsten op één trigger worden samengevoegd. Een kandidaat kan een `avatar` meekrijgen (persoon of organisatie, initialen of een afbeelding; de rij wordt dan tweeregelig met `supportingText` eronder), een `icon` (op de maat van een menu-item) of een `symbol` (een teken of emoji, de emoji zelf als beeld). Een keuze uit een eigen lijst vuurt `nldd-text-editor-typeahead` met de trigger, de kandidaat en de positie. Vindt een lijst niets, dan zegt hij "Typ om te zoeken" of "Niets gevonden"; met `emptyText` geeft een lijst een eigen tekst, zoals het kanaal hier (typ `#xyz`). De knop laat `insertAtCursor(tekst)` zien: tekst op de caret, in plaats van een selectie.',
+				story: 'Naast de ingebouwde `@`-mention geef je eigen lijsten op via de `typeaheads`-property: een trigger-teken, een `source` met kandidaten voor wat er na de trigger is getypt, en optioneel een `insert` die bepaalt wat een keuze schrijft. Standaard is dat de trigger, de `text` en een spatie: met `text: "smile:"` dus `:smile: `, de shortcode die Mattermost en Slack zelf renderen. Deze editor doet dat niet, dus hier schrijft `:` de emoji zelf. Meerdere lijsten op één trigger worden samengevoegd. Een kandidaat kan een `avatar` meekrijgen (persoon of organisatie, initialen of een afbeelding; de rij wordt dan tweeregelig met `supportingText` eronder), een `icon` (op de maat van een menu-item) of een `symbol` (een teken of emoji, de emoji zelf als beeld). Een keuze uit een eigen lijst vuurt `typeahead` met de trigger, de kandidaat en de positie. Vindt een lijst niets, dan zegt hij "Typ om te zoeken" of "Niets gevonden"; met `emptyText` geeft een lijst een eigen tekst, zoals het kanaal hier (typ `#xyz`). De knop laat `insertAtCursor(tekst)` zien: tekst op de caret, in plaats van een selectie.',
 			},
 		},
 	},
@@ -1132,7 +1130,7 @@ export const AnnotatiesMaken = {
 			annotations.push({ id: `note-${counter}`, start: sel.start, end: sel.end, quote: sel.quote });
 			sync();
 		});
-		editor.addEventListener('nldd-text-editor-annotation-click', (e) => {
+		editor.addEventListener('annotation-click', (e) => {
 			status.textContent = `Geklikt op: ${(e as CustomEvent<{ ids: string[] }>).detail.ids.join(', ')}`;
 		});
 
@@ -1144,7 +1142,7 @@ export const AnnotatiesMaken = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'De volledige authoring-loop zoals een consumer (bijv. regelrecht) hem bouwt: een "reactie"-knop in de eigen toolbar leest `getSelection()` (clean offsets + quote) en voegt een annotatie toe. De knop blijft bruikbaar: zonder selectie zegt hij wat er ontbreekt, in plaats van uitgeschakeld te staan zonder reden. Een klik op de telbadge vuurt `nldd-text-editor-annotation-click` met de id(s). Annotaties bewegen mee met edits; `getAnnotations()` geeft de mee-geschoven posities terug om op te slaan.',
+				story: 'De volledige authoring-loop zoals een consumer (bijv. regelrecht) hem bouwt: een "reactie"-knop in de eigen toolbar leest `getSelection()` (clean offsets + quote) en voegt een annotatie toe. De knop blijft bruikbaar: zonder selectie zegt hij wat er ontbreekt, in plaats van uitgeschakeld te staan zonder reden. Een klik op de telbadge vuurt `annotation-click` met de id(s). Annotaties bewegen mee met edits; `getAnnotations()` geeft de mee-geschoven posities terug om op te slaan.',
 			},
 		},
 	},
@@ -1198,14 +1196,14 @@ export const Gemengd = {
 		];
 		return toolbarEditor(html`
 			<nldd-text-editor
-				appearance="simple"
+				embedded
 				rows="15"
 				annotatable
 				accessible-label="Tekst"
 				.value=${sample}
 				.mentionSource=${source}
 				.annotations=${annotations}
-				@nldd-text-editor-mention=${(event: CustomEvent) => action('nldd-text-editor-mention')(event.detail)}
+				@mention=${(event: CustomEvent) => action('mention')(event.detail)}
 			></nldd-text-editor>
 		`);
 	},
@@ -1213,7 +1211,7 @@ export const Gemengd = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Alles samen: een echte toolbar (DS-componenten, headless gekoppeld) boven een `simple`-editor met annotaties en @-mentions, door verschillende soorten content heen (koppen, vet, inline code, een lijst, een blockquote en links). De annotatie-overlay en de mention-tokens bestaan naast elkaar zonder elkaar in de weg te zitten; de tekst blijft schone markdown.',
+				story: 'Alles samen: een echte toolbar (DS-componenten, headless gekoppeld) boven een `embedded` editor met annotaties en @-mentions, door verschillende soorten content heen (koppen, vet, inline code, een lijst, een blockquote en links). De annotatie-overlay en de mention-tokens bestaan naast elkaar zonder elkaar in de weg te zitten; de tekst blijft schone markdown.',
 			},
 		},
 	},
@@ -1222,13 +1220,13 @@ export const Gemengd = {
 export const MetWerkbalk = {
 	render: () =>
 		toolbarEditor(
-			html`<nldd-text-editor appearance="simple" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
+			html`<nldd-text-editor embedded rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
 		),
 	parameters: {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'De editor is headless. Deze toolbar is opgebouwd uit DS-componenten — `nldd-toolbar` met icon-`nldd-segmented-control`s (nadruk vet/cursief, code, citaat, en een exclusieve lijst-keuze geen/opsomming/genummerd) en een uitklapbare `nldd-button` met een `nldd-menu` voor de tekststijl (Paragraaf/Kop 1/…). Tweerichtings gekoppeld: de controls sturen de editor (`runCommand`, `setList`, `setHeading`) en het `nldd-text-editor-state`-event zet hun actieve staat. Sneltoetsen Cmd/Ctrl+B/I/E/K werken ook.',
+				story: 'De editor is headless. Deze toolbar is opgebouwd uit DS-componenten — `nldd-toolbar` met icon-`nldd-segmented-control`s (nadruk vet/cursief, code, citaat, en een exclusieve lijst-keuze geen/opsomming/genummerd) en een uitklapbare `nldd-button` met een `nldd-menu` voor de tekststijl (Paragraaf/Kop 1/…). Tweerichtings gekoppeld: de controls sturen de editor (`runCommand`, `setList`, `setHeading`) en het `state-change`-event zet hun actieve staat. Sneltoetsen Cmd/Ctrl+B/I/E/K werken ook.',
 			},
 		},
 	},
@@ -1265,7 +1263,7 @@ const HIDDEN_SYNTAX_SAMPLE = [
 export const VerborgenOpmaak = {
 	render: () => toolbarEditor(html`
 		<nldd-text-editor
-			appearance="simple"
+			embedded
 			syntax="hidden"
 			rows="15"
 			accessible-label="Tekst"

@@ -1,0 +1,80 @@
+/* # Host */
+
+nldd-title {
+	--_title-link-color: var(--context-link-color);
+	--_title-link-is-hovered-color: var(--context-link-is-hovered-color);
+	--_title-link-is-active-color: var(--context-link-is-active-color);
+	--_title-link-underline-offset: var(--primitives-space-2);
+	--_title-link-corner-radius: var(--primitives-corner-radius-xxs);
+	--_title-code-padding: var(--primitives-space-2) var(--primitives-space-4);
+	--_title-code-corner-radius: var(--semantics-controls-xs-corner-radius);
+	--_title-code-border-width: var(--semantics-surfaces-highlight-border-width);
+	--_title-code-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+	--_title-code-background-color: var(--semantics-surfaces-tinted-background-color);
+	--_title-code-font-family: var(--primitives-font-family-monospace);
+	--_title-code-font-size: var(--semantics-code-inline-font-size);
+	--_title-mark-padding: var(--primitives-space-1) var(--primitives-space-2);
+	--_title-mark-corner-radius: var(--semantics-controls-xs-corner-radius);
+	--_title-mark-background-color: var(--semantics-content-mark-background-color);
+	--_title-mark-color: var(--semantics-content-mark-color);
+}
+
+
+/* # Inline elements */
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) :is(strong, b) {
+	font-weight: inherit;
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) :is(em, i) {
+	font-style: italic;
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) a {
+	border-radius: var(--_title-link-corner-radius);
+	--context-content-color: var(--_title-link-color);
+	color: var(--_title-link-color);
+	text-decoration: underline;
+	text-underline-offset: var(--_title-link-underline-offset);
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) a:hover {
+	--context-content-color: var(--_title-link-is-hovered-color);
+	color: var(--_title-link-is-hovered-color);
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) a:active {
+	--context-content-color: var(--_title-link-is-active-color);
+	color: var(--_title-link-is-active-color);
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) a:focus-visible {
+	outline: var(--semantics-focus-ring-outline);
+	outline-offset: var(--semantics-focus-ring-outline-offset);
+	box-shadow: var(--semantics-focus-ring-box-shadow);
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) a:focus:not(:focus-visible) {
+	outline: none;
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) code {
+	border-radius: var(--_title-code-corner-radius);
+	box-shadow: inset 0 0 0 var(--_title-code-border-width) var(--_title-code-border-color);
+	background-color: var(--_title-code-background-color);
+	padding: var(--_title-code-padding);
+	font-family: var(--_title-code-font-family);
+	font-size: var(--_title-code-font-size);
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) q {
+	font-style: italic;
+}
+
+nldd-title > :is(h1, h2, h3, h4, h5, h6) mark {
+	border-radius: var(--_title-mark-corner-radius);
+	background-color: var(--_title-mark-background-color);
+	padding: var(--_title-mark-padding);
+	--context-content-color: var(--_title-mark-color);
+	color: var(--_title-mark-color);
+}

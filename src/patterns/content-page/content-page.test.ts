@@ -111,6 +111,7 @@ describe('patroon: contentpagina', () => {
 		it('toont de knop onder de titel alleen zolang er een sheet is', () => {
 			const button = story.querySelector('#inhoud-openen')!;
 			expect(getComputedStyle(button).display).not.toBe('none');
+			expect(getComputedStyle(story.querySelector('#inhoud-kop')!).display).toBe('none');
 			expect(button.getAttribute('slot')).toBe('header');
 			expect(button.parentElement!.tagName).toBe('NLDD-SIDEBAR-SECTION');
 		});

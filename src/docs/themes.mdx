@@ -25,13 +25,27 @@ Zet het attribuut op `<html>`, niet op `nldd-shell`. Een sheet, popover of dialo
 
 Een attribuut heeft alleen effect als het bijbehorende thema is geladen. Is dat niet zo, dan blijft lintblauw actief.
 
+## Dwing licht of donker af met `data-scheme` op `<html>`
+
+Zonder instelling volgt de pagina de voorkeur van het besturingssysteem of de browser. Met `data-scheme` op `<html>` leg je de weergave vast:
+
+```html
+<html lang="nl" data-scheme="dark">
+```
+
+1. **`light`**: altijd de lichte weergave.
+2. **`dark`**: altijd de donkere weergave.
+3. **Geen attribuut**: de voorkeur van het besturingssysteem.
+
+Een schakelaar in je app zet het attribuut of haalt het weg, en de pagina wisselt zonder te herladen. Het werkt met elk thema. Gebruik het attribuut en geen eigen `color-scheme` in je CSS: het designsysteem zet `color-scheme` zelf op basis van het attribuut, en alleen een wissel van het attribuut laat de componenten opnieuw tekenen die dat nodig hebben. Zet het op `<html>`, om dezelfde reden als het thema: een sheet, popover of dialoog hangt aan `<body>`.
+
 ## Elke rol volgt zijn eigen contrastregel
 
-Een thema kleurt niet alles op dezelfde manier. Voor elke rol kiest het systeem de kleurstap die het dichtst bij de themakleur ligt en aan de contrastregel voldoet. Dit zijn de 9 rollen:
+Een thema kleurt niet alles op dezelfde manier. Voor elke rol kiest het designsysteem de kleurstap die het dichtst bij de themakleur ligt en aan de contrastregel voldoet. Dit zijn de 9 rollen:
 
 1. **Knop** (`appearance="primary"`): de tekst heeft een contrast van minstens 4,5:1. De tekst is wit als dat kan, anders zwart. In de donkere weergave heeft ook het knopvlak minstens 3:1 contrast met de pagina.
 2. **Badge en statusbalk** (`color="accent"` en `variant="accent"`): volgen dezelfde regel als de knop, want je leest ze aan hun tekst. Een gele badge is daarom felgeel met zwarte tekst.
-3. **Vlak**: het accentvlak van de hero ligt in beide weergaven zo dicht mogelijk bij de themakleur. Witte of zwarte tekst erop heeft minstens 4,5:1 contrast. Je kunt secties, `nldd-box` en `nldd-card` de achtergrond `background="accent-tinted"` geven. Die krijgt een tint van de themakleur, met hetzelfde contrast als `tinted`.
+3. **Vlak**: het accentvlak van de hero ligt in beide weergaven zo dicht mogelijk bij de themakleur. Witte of zwarte tekst erop heeft minstens 4,5:1 contrast. Je kunt `nldd-box` en `nldd-card` de achtergrond `background="accent-tinted"` geven. Die krijgt een tint van de themakleur, met hetzelfde contrast als `tinted`.
 4. **Selectie** (checkbox, radio, switch, segment, toggle en het huidige tabblad): gebruikt de knopkleur als die minstens 3:1 contrast heeft met de pagina. Is de knopkleur te licht, dan is de selectie bijna zwart. Bij rood en robijnrood is de selectie altijd neutraal: bijna zwart in de lichte weergave en lichtgrijs in de donkere. Bij oranje alleen in de lichte weergave.
 5. **Markering** (het item waar je staat in een menu, mentionlijst of andere lijst): heeft minstens 3:1 contrast met de achtergrond. De tekst erop heeft minstens 4,5:1 contrast. De kleur begint bij die van de selectie, maar een thema kan de markering een eigen kleur geven. Bij mintgroen is de markering in de lichte weergave een donkere tint van de themakleur in plaats van bijna zwart.
 6. **Accenttekst** (`color="accent"` op tekst en in de menubalk): heeft minstens 4,5:1 contrast.
@@ -43,7 +57,7 @@ Bij hover en active schuift de kleur één stap verder, weg van de tekstkleur. E
 
 Bij een knop is de tekst het belangrijkste herkenningspunt. Daarom kan de knopkleur dicht bij de themakleur blijven, ook als het vlak weinig contrast met de pagina heeft. Een geselecteerd vlak moet zelf goed zichtbaar zijn. Een gele knop blijft in de lichte weergave dus geel, terwijl een aangevinkte checkbox bijna zwart is.
 
-Op een geselecteerde rij neemt een aangevinkte control de tekstkleur van die rij over. Op de grijze achtergrond kan de themakleur namelijk minder dan 3:1 contrast hebben. Op het accentvlak van de hero kun je `color="inherit"` instellen op een checkbox, radio of switch. De control neemt dan de tekstkleur van het vlak over en gebruikt de kleur van het vlak voor het vinkje.
+Op een geselecteerde rij neemt een aangevinkte control de tekstkleur van die rij over. Op de grijze achtergrond kan de themakleur namelijk minder dan 3:1 contrast hebben. Op het accentvlak van de hero kun je `color="content"` instellen op een checkbox, radio of switch. De control neemt dan de tekstkleur van het vlak over en gebruikt de kleur van het vlak voor het vinkje.
 
 ## In de donkere weergave wordt het accent vaak lichter
 
@@ -61,7 +75,7 @@ In de donkere weergave speelt dit probleem niet. Knoppen, selecties, accenttekst
 
 ## Rood en oranje lijken niet op een melding
 
-In het systeem staat rood voor een fout of een onomkeerbare actie. Oranje staat voor een waarschuwing. Een rood vinkje of een oranje banner kan daardoor op een melding lijken.
+In het designsysteem staat rood voor een fout of een onomkeerbare actie. Oranje staat voor een waarschuwing. Een rood vinkje of een oranje banner kan daardoor op een melding lijken.
 
 Onderdelen die je leest als merk, plaats of hoeveelheid, behouden bij rood, robijnrood en oranje wel de themakleur. Dat geldt voor de knop, hero, badge, statusbalk, het huidige tabblad, de voortgangsbalk en de tag.
 

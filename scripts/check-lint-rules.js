@@ -30,7 +30,7 @@ const guidelineHeadings = new Set(
 	[...guidelines.matchAll(/^#+ (.+)$/gm)].map(([, heading]) => heading.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')),
 );
 
-const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => [...Object.keys(tag.attrs), ...Object.keys(tag.childAttrs)]));
+const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => [...Object.keys(tag.attrs), ...Object.keys(tag.childAttrs), ...Object.keys(tag.descendantAttrs ?? {})]));
 const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role', 'style', 'lang', 'aria-label', 'aria-labelledby']);
 
 function checkTokens(tokens, rule) {
@@ -59,7 +59,7 @@ function sourceFiles(directory) {
 }
 
 /** Things a rule can be about that are no single component. */
-const CONCEPTS = ['action', 'class', 'html', 'style', 'stylesheet', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'slot', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'variant', 'website'];
+const CONCEPTS = ['action', 'class', 'html', 'interestfor', 'style', 'stylesheet', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'slot', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'variant', 'website'];
 const FORM = /-(needs|no|max|goes)-/;
 const API_ENDING = /-(renamed|invalid|no-effect|not-found)$/;
 
@@ -87,6 +87,10 @@ function checkFix({ id, fix, removed = [] }) {
 	}
 	for (const name of fix?.remove ?? []) {
 		if (!removed.includes(name)) problems.push(`${id}: the fix removes ${name}, which is not in removed.`);
+	}
+	for (const [from, to] of Object.entries(fix?.flag ?? {})) {
+		if (!removed.includes(from)) problems.push(`${id}: the fix turns ${from} into a flag, and ${from} is not in removed.`);
+		if (!allAttributes.has(to)) problems.push(`${id}: the fix turns ${from} into ${to}, which no component has.`);
 	}
 	if (fix?.tag && !data.tags[fix.tag]) problems.push(`${id}: the fix renames to ${fix.tag}, which does not exist.`);
 	if (fix?.tag && removed.length === 0) problems.push(`${id}: the fix renames a tag, and removed does not name it.`);
@@ -235,7 +239,7 @@ function checkNoWarnings() {
  * silently skips the rule, and :accepted judges a file by itself, which only an
  * opt-in group may do.
  */
-const SOURCE_ONLY_PSEUDOS = ['accepted', 'written', 'blank', 'within'];
+const SOURCE_ONLY_PSEUDOS = ['accepted', 'written', 'blank', 'within', 'design-system'];
 
 function checkSourceOnlyPseudos(rule) {
 	if (OPT_IN_GROUPS.includes(rule.group)) return;

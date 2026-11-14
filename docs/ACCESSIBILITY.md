@@ -14,7 +14,7 @@ Of een pagina voldoet, bepaal je per pagina. De componenten zijn daarvoor een vo
 - **Toetsenbord.** Alles wat je kunt aanklikken, kun je ook met het toetsenbord bedienen. Een groep zoals een lijst, een menu of een tabbalk is één tabstop, en binnen de groep ga je verder met de pijltjestoetsen.
 - **Focus.** De focusring komt uit één token en is op elk oppervlak zichtbaar. Een sheet en een modal dialog houden de focus bij zich zolang ze open zijn en geven hem daarna terug aan waar je vandaan kwam.
 - **Formaat.** Een control is standaard 44 pixels hoog. De kleinere formaten zijn 32 en 24 pixels, dus geen enkele control is kleiner dan de 24 pixels die WCAG 2.2 als minimum voor een aanraakdoel vraagt.
-- **Contrast op een vlak.** Een vlak geeft zijn inhoudskleur door aan wat erin staat, dus tekst op een gekleurd of getint vlak houdt zijn contrast. Zet daarvoor `background` op het component en `color="inherit"` op de tekst erin.
+- **Contrast op een vlak.** Een vlak geeft zijn inhoudskleur door aan wat erin staat, dus tekst op een gekleurd of getint vlak houdt zijn contrast. Zet daarvoor `background` op het component; de tekst erin volgt vanzelf.
 - **Beweging en contrastmodus.** Componenten met een animatie volgen `prefers-reduced-motion`. In de contrastmodus van het besturingssysteem (`forced-colors`) blijven randen, toestanden en de focusring zichtbaar.
 - **Meldingen.** Een [`nldd-status-bar`](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/components-status-feedback-status-bar--docs) en een [`nldd-notification`](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/components-status-feedback-notification--docs) melden zichzelf aan een schermlezer.
 - **Standaardteksten.** Ingebouwde teksten, zoals de naam van een sluitknop, zijn Nederlands en zet je in één keer om naar een andere taal. Zie [Vertalingen](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-vertalingen--docs).
@@ -23,7 +23,7 @@ Of een pagina voldoet, bepaal je per pagina. De componenten zijn daarvoor een vo
 ## Wat jij nog moet doen
 
 - **Geef een naam aan wat geen zichtbare tekst heeft.** Een knop met alleen een icoon, een kaart die een link is en een lijst krijgen een `accessible-label`.
-- **Houd de koppen op orde.** Eén `h1` per pagina, en geen niveau overslaan. `size` op een titel is hoe hij eruitziet, `heading-level` wat hij is.
+- **Houd de koppen op orde.** Eén `h1` per pagina, en geen niveau overslaan. `heading-level` op een titel is wat hij is en bepaalt zijn standaardgrootte. Moet hij kleiner, geef hem dan een `size` en geen lager niveau.
 - **Beschrijf afbeeldingen.** Een afbeelding die iets zegt krijgt een `alt`; een afbeelding die alleen sfeer is krijgt `decorative`.
 - **Zet de taal.** Een `lang` op de pagina, en op elk stuk tekst in een andere taal.
 - **Koppel een label aan elk veld.** Zet een invoerveld in een `nldd-form-field`, dan zitten het label, de hulptekst en de foutmelding eraan vast.

@@ -80,9 +80,9 @@ export default {
 		},
 		color: {
 			control: 'select',
-			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical', 'inherit'],
+			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical'],
 			description:
-				'Tekstkleur. "content" en "secondary" volgen het contentkanaal van de omgeving (een lijstrij, een menu, een tabel). "inherit" neemt de kleur die hij erft, voor tekst op een gekleurd vlak.',
+				'Tekstkleur. Elke kleur volgt het vlak eromheen (een lijstrij, een menu, een hero) via de context die dat vlak doorgeeft.',
 			table: { defaultValue: { summary: 'content' } },
 		},
 		horizontalAlignment: {
@@ -150,14 +150,12 @@ export const Grootten = {
 export const DisplayMaten = {
 	name: 'Display-maten',
 	render: () => html`
-	<div style="display: block; container-type: inline-size; container-name: layout-container;">
-		<nldd-text size="display-6">display-6</nldd-text>
-		<nldd-text size="display-5">display-5</nldd-text>
-		<nldd-text size="display-4">display-4</nldd-text>
-		<nldd-text size="display-3">display-3</nldd-text>
-		<nldd-text size="display-2">display-2</nldd-text>
-		<nldd-text size="display-1">display-1</nldd-text>
-	</div>
+	<nldd-text size="display-6">display-6</nldd-text>
+	<nldd-text size="display-5">display-5</nldd-text>
+	<nldd-text size="display-4">display-4</nldd-text>
+	<nldd-text size="display-3">display-3</nldd-text>
+	<nldd-text size="display-2">display-2</nldd-text>
+	<nldd-text size="display-1">display-1</nldd-text>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -172,10 +170,8 @@ export const DisplayMaten = {
 export const EigenGrootte = {
 	name: 'Eigen grootte',
 	render: () => html`
-	<div style="display: block; container-type: inline-size; container-name: layout-container;">
-		<nldd-text size="display-1" sm-custom-size="64px" md-custom-size="96px" lg-custom-size="128px">245</nldd-text>
-		<nldd-text size="lg" color="secondary">regels voor toegankelijkheid en gebruiksgemak</nldd-text>
-	</div>
+	<nldd-text size="display-1" sm-custom-size="64px" md-custom-size="96px" lg-custom-size="128px">245</nldd-text>
+	<nldd-text size="lg" color="secondary">regels voor toegankelijkheid en gebruiksgemak</nldd-text>
 `,
 	parameters: { controls: { disable: true } },
 };

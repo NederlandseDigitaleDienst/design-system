@@ -17,7 +17,7 @@ export const avatarGroupStyles = css`
 		--_avatar-group-width: calc(var(--_avatar-group-discs) * (var(--_avatar-group-size) - var(--_avatar-group-overlap-size)) + var(--_avatar-group-overlap-size));
 		--_avatar-group-min-width: calc(2 * (var(--_avatar-group-size) - var(--_avatar-group-overlap-size)) + var(--_avatar-group-overlap-size));
 		--_avatar-group-ring-thickness: var(--semantics-surfaces-ring-thickness);
-		--_avatar-group-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_avatar-group-ring-color: var(--context-background-color);
 		--_avatar-group-corner-radius: var(--primitives-corner-radius-full);
 		--_avatar-group-overflow-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-150));
 		--_avatar-group-overflow-hover-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
@@ -90,6 +90,7 @@ export const avatarGroupStyles = css`
 		padding: 0;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_avatar-group-overflow-content-color);
 		color: var(--_avatar-group-overflow-content-color);
 		font: var(--_avatar-group-overflow-font);
 		/* The offset makes the count relatively larger on a small disc and smaller on a large one. */

@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-rich-text:state(inline-content)'
+message: 'Bare text or an inline element is a direct child, and each one lands in a column of 0px. Wrap it in a block element such as `p` where the content is made, or put plain text in nldd-text.'

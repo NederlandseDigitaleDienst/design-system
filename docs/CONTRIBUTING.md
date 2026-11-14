@@ -1,12 +1,12 @@
 # Bijdragen aan het NLDD Designsysteem
 
-Werk je binnen NLDD, dan is het designsysteem-kanaal op Mattermost de kortste weg: daar leest de maintainer mee en hoeft er geen issue bij. Kom je van buiten, dan begint het bij een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues). Wie beslist en waarom staat in [`PROJECT_GOVERNANCE.md`](./PROJECT_GOVERNANCE.md).
+Een melding of voorstel begint bij een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues) op GitHub, of je nu binnen of buiten NLDD werkt. Wie beslist en waarom staat in [`PROJECT_GOVERNANCE.md`](./PROJECT_GOVERNANCE.md).
 
-Dit bestand is de bron voor onderhouders en gaat verder dan wat een afnemer nodig heeft. Gebruik je het systeem en wil je iets voorstellen, dan staat die kant samengevat in de `nldd-design-contribute` skill, die met de plugin meereist.
+Dit bestand is de bron voor onderhouders en gaat verder dan wat een afnemer nodig heeft. Gebruik je het designsysteem en wil je iets voorstellen, dan staat die kant samengevat in de `nldd-design-contribute` skill, die met de plugin meereist.
 
 ## Een probleem melden of iets voorstellen
 
-Open een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues). Zet er bij een bug in welke versie van `@nldd/design-system` je gebruikt, welk component het betreft en wat je verwachtte. Een klein stukje HTML dat het laat zien scheelt het meeste heen en weer.
+Open een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues). Zet er bij een bug in welke versie van `@nldd/design-system` je gebruikt, welk component het betreft en wat je verwachtte. Een klein stukje HTML dat het laat zien scheelt het meeste heen en weer. Gaat het om hoe iets eruitziet, voeg dan een screenshot toe.
 
 Mis je een component of een variant, beschrijf dan het probleem in je interface en niet alleen de oplossing die je in gedachten hebt. Vaak blijkt een bestaand component het al te kunnen, en anders helpt die context bij het ontwerp.
 
@@ -19,7 +19,7 @@ Een patroon is geen component: het beschrijft hoe je bestaande componenten samen
 Stel je er een voor, begin dan bij het probleem en het bewijs, niet bij de code:
 
 - **Welke taak** van de gebruiker lost dit op, en waarom lukt dat nu niet met wat er al staat?
-- **Waar draait het?** Noem de producten of schermen waar deze compositie nu al in gebruik is. Een patroon dat in meerdere producten van verschillende teams terugkomt is een patroon van het systeem; iets dat in één app staat is voorlopig een gewoonte van die app. Dat laatste sluit niets uit, maar het bepaalt wel hoe hard het bewijs is.
+- **Waar draait het?** Noem de producten of schermen waar deze compositie nu al in gebruik is. Een patroon dat in meerdere producten van verschillende teams terugkomt is een patroon van het designsysteem; iets dat in één app staat is voorlopig een gewoonte van die app. Dat laatste sluit niets uit, maar het bepaalt wel hoe hard het bewijs is.
 - **Wat is de regel?** Een patroon zonder "waarom zo" is een stuk voorbeeldcode, en dat kan in Storybook.
 
 Code mag later. Draait het patroon eenmaal, dan moet elke `nldd-*`-tag in de documentatie bestaan: `npm run validate:skill-markup` controleert dat in CI, tegen de echte component-API. Een regel die bij het patroon hoort voeg je toe met `/rule`.

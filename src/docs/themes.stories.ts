@@ -26,7 +26,7 @@ const EDITOR_VALUE = [
 const section = (title: string, content: unknown) => html`
 	<nldd-container gap="12">
 		<nldd-title
-			size="5"
+			size="display-5"
 			text=${title}
 			heading-level="2"
 		></nldd-title>
@@ -250,12 +250,12 @@ const overview = (scheme: 'light' | 'dark') => html`
 			<nldd-container layout="grid" gap="16">
 				<nldd-card href="#" accessible-label="Aanvraag A-1042">
 					<nldd-container padding="16">
-						<nldd-title size="5" text="Aanvraag A-1042" heading-level="3"></nldd-title>
+						<nldd-title size="display-5" text="Aanvraag A-1042" heading-level="3"></nldd-title>
 					</nldd-container>
 				</nldd-card>
 				<nldd-card background="accent-tinted" accessible-label="Dossier D-318">
 					<nldd-container padding="16">
-						<nldd-title size="5" text="Dossier D-318" heading-level="3"></nldd-title>
+						<nldd-title size="display-5" text="Dossier D-318" heading-level="3"></nldd-title>
 					</nldd-container>
 				</nldd-card>
 			</nldd-container>
@@ -280,7 +280,6 @@ const overview = (scheme: 'light' | 'dark') => html`
 		${section('Tekst', html`
 			<nldd-container gap="12" max-width="480px">
 				<nldd-text-editor
-					appearance="input-field"
 					accessible-label="Notitie"
 					.value=${EDITOR_VALUE}
 				></nldd-text-editor>

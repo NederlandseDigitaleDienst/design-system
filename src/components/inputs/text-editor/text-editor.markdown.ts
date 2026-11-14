@@ -275,7 +275,9 @@ const hangingIndentField = StateField.define<DecorationSet>({
 export const markdownEditing: Extension = [
 	// A code block that names its language is highlighted in it, as in the code
 	// viewer; the grammar loads when the first such block appears.
-	markdown({ extensions: GFM, codeLanguages: nestedLanguages }),
+	// A line indented four spaces stays text: in a field for prose that is pasted
+	// or indented text, not code. Code takes a fence, which nobody types by accident.
+	markdown({ extensions: [GFM, { remove: ['IndentedCode'] }], codeLanguages: nestedLanguages }),
 	markDecorationPlugin,
 	heldEmphasis,
 	hangingIndentField,

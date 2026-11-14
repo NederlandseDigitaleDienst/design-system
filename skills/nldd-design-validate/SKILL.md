@@ -18,19 +18,20 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 1. Draai `npx @nldd/design-system lint --fix`: dat lost op wat alleen een andere naam kreeg (tags, attributen, waarden, slots), in elk framework. Los daarna elke bevinding op. Je krijgt `rule`, `message`, de plek en vaak een goed voorbeeld.
 2. Is dat niet genoeg: `npx @nldd/design-system explain <rule>`.
 3. Draai opnieuw tot er geen `error` of `warn` meer staat.
-4. Lees elke `hint`. Die laat niets falen, maar zegt hoe dit bij dit systeem bedoeld is: volg het patroon of de richtlijn waar `see` naar wijst, tenzij je een reden hebt.
+4. Lees elke `hint`. Die laat niets falen, maar zegt hoe dit bij dit designsysteem bedoeld is: volg het patroon of de richtlijn waar `see` naar wijst, tenzij je een reden hebt.
 
 | Wil je | Gebruik |
 |---|---|
 | Regels voor een component, vóór je het gebruikt | `npx @nldd/design-system rules --for nldd-toolbar` |
 | Eén soort regels | `... lint --select a11y` of `--ignore copy`; groepen: `api`, `a11y`, `copy`, `structure`, `pattern`, `pure` |
-| Controleren dat alles uit het systeem komt | `... lint --pure`: ook geen eigen `class`, `style`, kale HTML of stylesheet. Voor een project: `"rules": { "pure": "error" }` in `.nldd-lint.json`. Op broncode, niet op `dist`: in een bundel is de CSS van het systeem niet meer van de eigen te onderscheiden. Een melding over kale HTML? Kijk in de [referentie](../nldd-design/reference.md) bij het component eromheen onder "Plain HTML it styles": staat het element daar niet, dan is het eigen opmaak. Lit-templates in `.ts` leest de linter niet, met of zonder `pure`. Wat een geëxporteerd component teruggeeft, beoordeelt hij in dat bestand: geeft het een `<p>` terug die een ander bestand in `nldd-rich-text` zet, dan krijg je een melding. Zet de `nldd-rich-text` dan in het component zelf |
+| Controleren dat alles uit het designsysteem komt | `... lint --pure`: ook geen `class`, `style`, kale HTML of stylesheet van je app. Voor een project: `"rules": { "pure": "error" }` in `.nldd-lint.json`. Op broncode en op `dist`: de CSS van het designsysteem herkent hij ook gebundeld en geminificeerd, dus alleen de CSS van je app telt. Een melding over kale HTML? Kijk in de [referentie](../nldd-design/reference.md) bij het component eromheen onder "Plain HTML it styles": staat het element daar niet, dan is het opmaak van je app. Lit-templates in `.ts` en `.js` leest de linter alleen in een bestand dat je noemt (`... lint src/app.ts`). Wat een geëxporteerd component teruggeeft, beoordeelt hij in dat bestand: geeft het een `<p>` terug die een ander bestand in `nldd-rich-text` zet, dan krijg je een melding. Zet de `nldd-rich-text` dan in het component zelf |
 | Een baseline die alleen kleiner wordt | `... lint --tighten-baseline`: verlaagt wat geaccepteerd is tot wat er nog staat, en voegt nooit iets toe. Een hernoemd bestand neemt zijn regels mee als er precies hetzelfde in staat; anders `... lint --update-baseline <pad>` |
 | Beginnen in een project met honderden meldingen | `... lint --statistics`: telling per regel, grootste eerst |
 | Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
-| Vue, React, Angular, Django, Jinja, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.html` en `.j2` |
+| Vue, React, Angular, Django, Jinja, Go, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.html`, `.j2` en `.tmpl`. Een bestand met `nldd-*`-markup dat hij niet kan lezen, meldt hij als `file-not-read` |
+| Tokens die niet bestaan | `... lint`: leest ook `.css`, `.scss`, `.less` en `<style>`-blokken, en meldt een `var(--semantics-…)` die er niet is (`token-not-found`) of een `--_*`-variabele van een component die je zelf zet (`local-variable-no-override`) |
 | Een site die naar HTML bouwt (Astro, MkDocs, Hugo) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
-| Zien wat een upgrade breekt | `npx @nldd/design-system@latest lint` op je huidige code; `--fix` lost de hernoemingen op |
+| Zien wat een upgrade breekt | `npx @nldd/design-system@<doelversie> lint` op je huidige code; `--fix` lost de hernoemingen op |
 
 De linter vraagt Node 20.19 of nieuwer. Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @nldd/design-system@<versie> lint`. Zonder pin krijg je de nieuwste.
 

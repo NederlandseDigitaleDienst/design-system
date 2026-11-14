@@ -21,6 +21,7 @@
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { descriptionCellStyles } from './description-cell.styles.js';
@@ -31,7 +32,7 @@ import { RowHeaderMixin } from '../../../../utilities/row-header-mixin.js';
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 
 @customElement('nldd-description-cell')
-export class NLDDDescriptionCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
+export class NLDDDescriptionCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container'))) {
 	static override styles = [descriptionCellStyles];
 
 	/** 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). */

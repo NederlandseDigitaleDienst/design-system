@@ -31,7 +31,7 @@
  *
  * @element nldd-split-button
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {string} appearance - Visual style: 'neutral-tinted' (default) | 'neutral-base' | 'accent-filled' | 'primary' | 'secondary' | 'inherit-tinted' | 'inherit-filled'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The inherit appearances are for a colored surface. There are no transparent appearances: the split button needs a surface of its own to show it is one control.
+ * @attr {string} appearance - Visual style: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control.
  * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {boolean} loading - Loading state of the main action, as on nldd-button. The chevron stays available.
  * @attr {string} loading-text - What the screen reader announces while `loading` is on, as on nldd-button.
@@ -74,13 +74,13 @@ import '../../actions/menu/menu.js';
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
 
 export type SplitButtonAppearance =
-	| 'neutral-tinted'
-	| 'neutral-base'
-	| 'accent-filled'
 	| 'primary'
 	| 'secondary'
-	| 'inherit-tinted'
-	| 'inherit-filled';
+	| 'accent-filled'
+	| 'neutral-tinted'
+	| 'neutral-base'
+	| 'content-filled'
+	| 'content-tinted';
 
 @customElement('nldd-split-button')
 export class NLDDSplitButton extends LitElement {

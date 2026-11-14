@@ -6,6 +6,8 @@ import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
 import '../../content/rich-text/rich-text.js';
 import '../../content/title/title.js';
+import '../../content/avatar/avatar.js';
+import '../../content/text/text.js';
 import { ICONS } from './../../content/icon/icon.js';
 
 /**
@@ -47,8 +49,8 @@ export default {
 				'neutral-transparent',
 				'critical-tinted',
 				'critical-transparent',
-				'inherit-filled',
-				'inherit-tinted',
+				'content-filled',
+				'content-tinted',
 			],
 			description: 'Visuele stijl, inclusief kleur',
 			table: {
@@ -107,6 +109,10 @@ export default {
 		popovertarget: {
 			control: false,
 			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat deze knop opent. De knop zet het ook naast zich neer, dus het overlay heeft geen `anchor` nodig. Een overlay in de `popup`-slot wint.',
+		},
+		interestfor: {
+			control: false,
+			description: 'Id van een `nldd-popover` elders op de pagina die deze knop beschrijft en opent bij interesse, zoals de `interest`-slot: als je de aanwijzer op de knop laat rusten, bij focus en bij lang drukken op touch. Voor een popover die meer knoppen delen, of een knop in een `<p>`. Een popover in de `interest`-slot wint.',
 		},
 		text: {
 			control: 'text',
@@ -223,6 +229,7 @@ export default {
 		expanded: false,
 		popupType: '',
 		popovertarget: '',
+		interestfor: '',
 		text: 'Bewaar',
 		supportingText: '',
 		singleLine: false,
@@ -698,7 +705,7 @@ export const MetPopover = {
 					gap="8"
 				>
 					<nldd-title
-						size="6"
+						size="display-6"
 						text="Dakisolatie"
 						heading-level="2"
 					></nldd-title>
@@ -718,6 +725,59 @@ export const MetPopover = {
 		docs: {
 			description: {
 				story: 'Genest popover via de <code>popup</code>-slot: zelfde auto-wiring als een menu, maar met vrije content die klikbaar blijft.',
+			},
+		},
+	},
+};
+
+export const MetUitlegOpInteresse = {
+	render: () => html`
+		<nldd-button
+			appearance="neutral-tinted"
+			size="sm"
+			start-icon="hand-thumbs-up"
+			text="2"
+			accessible-label="Duim omhoog, 2 reacties"
+		>
+			<nldd-popover
+				slot="interest"
+				width="240px"
+			>
+				<nldd-container
+					padding="12"
+					gap="8"
+				>
+					<nldd-container
+						layout="row"
+						gap="8"
+						vertical-alignment="center"
+					>
+						<nldd-avatar
+							name="Sam de Vries"
+							size="24"
+						></nldd-avatar>
+						<nldd-text>Sam de Vries</nldd-text>
+					</nldd-container>
+					<nldd-container
+						layout="row"
+						gap="8"
+						vertical-alignment="center"
+					>
+						<nldd-avatar
+							name="Noor Bakker"
+							size="24"
+						></nldd-avatar>
+						<nldd-text>Noor Bakker</nldd-text>
+					</nldd-container>
+				</nldd-container>
+			</nldd-popover>
+		</nldd-button>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Een popover in de <code>interest</code>-slot opent als je de aanwijzer op de knop laat rusten, als de knop focus krijgt en bij lang drukken op touch. De knop houdt zijn eigen klik (hier: de reactie aan of uit zetten), de focus blijft op de knop en de inhoud wordt voorgelezen als beschrijving van de knop. Alleen informatie: zet er geen link of knop in.',
 			},
 		},
 	},
@@ -848,65 +908,64 @@ export const TekstInDeSlot = {
 };
 
 /**
- * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
+ * De content-appearances nemen hun kleuren van `--context-content-color` en zijn
  * bedoeld voor gekleurde vlakken (zoals de hero-main of filled-categories).
- * `inherit-filled` gebruikt de vlakkleur als labelkleur wanneer het vlak
- * `--context-parent-background-color` cascadet (zoals de hero doet); zonder
- * die context valt het label terug op een wit/zwart-contrastflip — zie het
- * derde vlak.
+ * `content-filled` gebruikt de vlakkleur als labelkleur: het vlak zet
+ * `--context-background-color`, zoals de hero doet. Een eigen vlak, zoals
+ * het derde, zet hem zelf.
  */
 export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-content-color: var(--semantics-categories-donkerblauw-filled-content-color);">
 				<nldd-container
 					layout="wrap"
 					gap="8"
 				>
 					<nldd-button
-						appearance="inherit-filled"
-						text="Inherit filled"
+						appearance="content-filled"
+						text="Content filled"
 						supporting-text="Met ondertekst"
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-tinted"
-						text="Inherit tinted"
+						appearance="content-tinted"
+						text="Content tinted"
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-filled"
+						appearance="content-filled"
 						text="Open"
 						expandable
 						expanded
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-tinted"
+						appearance="content-tinted"
 						text="Open"
 						expandable
 						expanded
 					></nldd-button>
 				</nldd-container>
 			</div>
-			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-content-color: var(--semantics-categories-oranje-filled-content-color);">
 				<nldd-button-group>
 					<nldd-button
-						appearance="inherit-filled"
-						text="Inherit filled"
+						appearance="content-filled"
+						text="Content filled"
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-tinted"
-						text="Inherit tinted"
+						appearance="content-tinted"
+						text="Content tinted"
 					></nldd-button>
 				</nldd-button-group>
 			</div>
-			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
+			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: oklch(0.45 0.12 300); --context-content-color: oklch(1 0 0);">
 				<nldd-button-group>
 					<nldd-button
-						appearance="inherit-filled"
-						text="Zonder context (flip)"
+						appearance="content-filled"
+						text="Eigen vlak"
 					></nldd-button>
 					<nldd-button
-						appearance="inherit-tinted"
-						text="Inherit tinted"
+						appearance="content-tinted"
+						text="Content tinted"
 					></nldd-button>
 				</nldd-button-group>
 			</div>

@@ -36,7 +36,7 @@ nldd-shell                            de buitenste schil
 
 **Een vlak maak je met `background`, niet met eigen CSS.** Elke sectie kent het, en het cascadeert het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling.
 
-**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [`nldd-title`](?path=/docs/components-content-title--docs) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en direct onder de paginatitel een `h2`, en laat de grootte los daarvan. De koppen in een rich text tellen gewoon mee.
+**Eén `h1` per pagina, en geen niveau overslaan.** `heading-level` op een [`nldd-title`](?path=/docs/components-content-title--docs) is wat die is, en daarmee ook hoe groot die standaard is. Moet een kop kleiner, geef hem dan een `size` en geen lager niveau. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en direct onder de paginatitel een `h2`, en zet een vaste `size` als het blok overal even groot moet zijn. De koppen in een rich text tellen gewoon mee.
 
 ## De header
 
@@ -58,7 +58,7 @@ Op de home, zonder terugknop:
 
 <Canvas of={Stories.HeaderLogin} />
 
-**Account.** Is iemand ingelogd, dan wordt het item een menu, en laat het zien dat je bent ingelogd en als wie. In de balk staat een korte, vaste tekst ("Mijn account"), met in het `icon`-slot van het item een [`nldd-avatar`](?path=/docs/components-content-avatar--docs) met de initialen. Zet daar `icon-aligned` en `color="inherit"` op, dan lijnt hij uit met de iconen ernaast en heeft hij hun kleur. Met `content-priority="icon"` blijft op een smal scherm alleen de avatar over, en is de tekst de toegankelijke naam.
+**Account.** Is iemand ingelogd, dan wordt het item een menu, en laat het zien dat je bent ingelogd en als wie. In de balk staat een korte, vaste tekst ("Mijn account"), met in het `icon`-slot van het item een [`nldd-avatar`](?path=/docs/components-content-avatar--docs) met de initialen. Zet daar `icon-aligned` en `color="content"` op, dan lijnt hij uit met de iconen ernaast en heeft hij hun kleur. Met `content-priority="icon"` blijft op een smal scherm alleen de avatar over, en is de tekst de toegankelijke naam.
 
 De naam staat voluit in het menu, in een [`nldd-identity`](?path=/docs/components-content-identity--docs) in het `header`-slot, zodat een lange naam de balk niet vult. Het e-mailadres eronder zegt met welk account, voor wie er meer dan één heeft. Dezelfde avatar staat daar naast de naam; hij toont de initialen uit `name`, dus er is geen foto voor nodig. Zet op beide avatars `decorative`: de naam en de tekst van het item staan er al.
 

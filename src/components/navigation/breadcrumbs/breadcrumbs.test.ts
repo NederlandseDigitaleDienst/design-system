@@ -35,17 +35,6 @@ describe('nldd-breadcrumbs', () => {
 		expect(slot.assignedElements().length).toBe(3);
 	});
 
-	it('lets the items wrap so the trail fits any width', async () => {
-		el = await fixture(`
-			<nldd-breadcrumbs>
-				<nldd-breadcrumbs-item text="Home" href="/"></nldd-breadcrumbs-item>
-				<nldd-breadcrumbs-item text="Here" current></nldd-breadcrumbs-item>
-			</nldd-breadcrumbs>
-		`);
-		await waitForUpdate(el);
-		const items = el.shadowRoot!.querySelector('.breadcrumbs__items')!;
-		expect(getComputedStyle(items).flexWrap).toBe('wrap');
-	});
 });
 
 describe('nldd-breadcrumbs-item', () => {

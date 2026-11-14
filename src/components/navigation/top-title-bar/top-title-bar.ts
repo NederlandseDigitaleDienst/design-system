@@ -105,6 +105,7 @@ export class NLDDTopTitleBar extends LitElement {
 	private _anchorLayoutObserver: ResizeObserver | null = null;
 	private _anchorAppearObserver: MutationObserver | null = null;
 	private _boundOnScroll = this._onScroll.bind(this);
+	private _pageWait = 0;
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -209,6 +210,16 @@ export class NLDDTopTitleBar extends LitElement {
 			return;
 		}
 
+		// Loaded on its own, the bar can upgrade before its nldd-page, which has
+		// no scroll target yet. Wire up once the page is defined.
+		if (this._pageElement && !this._pageElement.matches(':defined')) {
+			const wait = ++this._pageWait;
+			customElements.whenDefined('nldd-page').then(() => {
+				if (wait === this._pageWait && this.isConnected) this._connectAnchor();
+			});
+			return;
+		}
+
 		this._wireScrollTarget();
 
 		// The page's scroll target flips when it switches scroll mode (nested
@@ -283,6 +294,7 @@ export class NLDDTopTitleBar extends LitElement {
 	}
 
 	private _teardownAnchor(): void {
+		this._pageWait++;
 		this._gaveHeadingLevel = false;
 		setState(this, 'anchor-not-heading', false);
 		this._activeScrollTarget?.removeEventListener('scroll', this._boundOnScroll);

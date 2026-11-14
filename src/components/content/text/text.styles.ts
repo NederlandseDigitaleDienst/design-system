@@ -69,14 +69,13 @@ export const textStyles = css`
 		--_text-sm-custom-font: var(--primitives-font-weight-display-bold) max(var(--_text-sm-custom-size), var(--primitives-font-size-700)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
 		--_text-md-custom-font: var(--primitives-font-weight-display-bold) max(var(--_text-md-custom-size), var(--primitives-font-size-800)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
 		--_text-lg-custom-font: var(--primitives-font-weight-display-bold) max(var(--_text-lg-custom-size), var(--primitives-font-size-1000)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
-		--_text-color: var(--context-content-color, var(--semantics-content-color));
+		--_text-color: var(--context-content-color);
 		--_text-align: left;
-		--_text-link-color: var(--semantics-links-color);
-		--_text-link-is-hovered-color: var(--semantics-links-is-hovered-color);
-		--_text-link-is-active-color: var(--semantics-links-is-active-color);
+		--_text-link-color: var(--context-link-color);
+		--_text-link-is-hovered-color: var(--context-link-is-hovered-color);
+		--_text-link-is-active-color: var(--context-link-is-active-color);
 		--_text-link-underline-offset: var(--primitives-space-2);
 		--_text-link-corner-radius: var(--primitives-corner-radius-xxs);
-		--_text-link-is-hovered-inherit-thickness: var(--primitives-border-width-regular);
 		--_text-mention-color: var(--semantics-mentions-content-color);
 		--_text-mention-icon-size: 0.95em;
 		--_text-mention-inline-padding: 0.3em;
@@ -191,6 +190,7 @@ export const textStyles = css`
 
 	::slotted(a) {
 		border-radius: var(--_text-link-corner-radius);
+		--context-content-color: var(--_text-link-color);
 		color: var(--_text-link-color);
 		text-decoration: underline;
 		text-underline-offset: var(--_text-link-underline-offset);
@@ -198,10 +198,12 @@ export const textStyles = css`
 	}
 
 	::slotted(a:hover) {
+		--context-content-color: var(--_text-link-is-hovered-color);
 		color: var(--_text-link-is-hovered-color);
 	}
 
 	::slotted(a:active) {
+		--context-content-color: var(--_text-link-is-active-color);
 		color: var(--_text-link-is-active-color);
 	}
 
@@ -215,21 +217,8 @@ export const textStyles = css`
 		outline: none;
 	}
 
-	:host([color="inherit"]) ::slotted(a) {
-		color: currentColor;
-		text-decoration-color: currentColor;
-	}
-
-	:host([color="inherit"]) ::slotted(a:hover) {
-		color: currentColor;
-		text-decoration-thickness: var(--_text-link-is-hovered-inherit-thickness);
-	}
-
-	:host([color="inherit"]) ::slotted(a:active) {
-		color: currentColor;
-	}
-
 	::slotted([data-mention]) {
+		--context-content-color: var(--_text-mention-color);
 		color: var(--_text-mention-color);
 		font-weight: var(--primitives-font-weight-body-bold);
 		white-space: nowrap;
@@ -257,6 +246,7 @@ export const textStyles = css`
 		border-radius: var(--_text-mention-corner-radius);
 		box-shadow: inset 0 0 0 var(--_text-mention-border-width) var(--_text-mention-border-color);
 		background-color: var(--_text-mention-background-color);
+		--context-content-color: var(--_text-mention-color);
 		color: var(--_text-mention-color);
 		text-decoration: none;
 		cursor: default;
@@ -266,15 +256,13 @@ export const textStyles = css`
 
 	::slotted(a[data-mention]:hover) {
 		background-color: var(--_text-mention-is-hovered-background-color);
+		--context-content-color: var(--_text-mention-color);
 		color: var(--_text-mention-color);
 	}
 
 	::slotted(a[data-mention]:active) {
 		background-color: var(--_text-mention-is-active-background-color);
-		color: var(--_text-mention-color);
-	}
-
-	:host([color="inherit"]) ::slotted(a[data-mention]) {
+		--context-content-color: var(--_text-mention-color);
 		color: var(--_text-mention-color);
 	}
 
@@ -309,6 +297,7 @@ export const textStyles = css`
 		border-radius: var(--_text-mark-corner-radius);
 		background-color: var(--_text-mark-background-color);
 		padding: var(--_text-mark-padding);
+		--context-content-color: var(--_text-mark-color);
 		color: var(--_text-mark-color);
 	}
 
@@ -331,27 +320,23 @@ export const textStyles = css`
 	/* # Color */
 
 	:host([color="secondary"]) {
-		--_text-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_text-color: var(--context-content-secondary-color);
 	}
 
 	:host([color="accent"]) {
-		--_text-color: var(--semantics-content-accent-color);
+		--_text-color: var(--context-content-accent-color);
 	}
 
 	:host([color="success"]) {
-		--_text-color: var(--semantics-content-success-color);
+		--_text-color: var(--context-content-success-color);
 	}
 
 	:host([color="warning"]) {
-		--_text-color: var(--semantics-content-warning-color);
+		--_text-color: var(--context-content-warning-color);
 	}
 
 	:host([color="critical"]) {
-		--_text-color: var(--semantics-content-critical-color);
-	}
-
-	:host([color="inherit"]) {
-		--_text-color: inherit;
+		--_text-color: var(--context-content-critical-color);
 	}
 
 

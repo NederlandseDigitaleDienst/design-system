@@ -1,4 +1,6 @@
 import { css, unsafeCSS } from 'lit';
+import { scrollFade } from '../../../assets/styles/scroll-fade.js';
+import { surfaceContent } from '../../../assets/styles/shadow-resets.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
@@ -16,14 +18,15 @@ export const popoverStyles = css`
 		--_popover-background-color: var(--semantics-surfaces-base-background-color);
 		--_popover-max-height: calc(100vh - var(--semantics-overlays-inset) * 2);
 		--_popover-default-width: var(--primitives-area-320);
-		--context-parent-background-color: var(--_popover-background-color);
+		--context-background-color: var(--_popover-background-color);
+		${surfaceContent}
 
 		margin: 0;
 		outline: none;
 		border: none;
 		box-shadow: var(--semantics-overlays-box-shadow);
 		background-color: var(--_popover-background-color);
-		overflow: auto;
+		overflow: hidden;
 		padding: 0;
 		isolation: isolate;
 		/* Selectable again under a trigger that switches selection off for itself
@@ -67,6 +70,17 @@ export const popoverStyles = css`
 		display: none;
 	}
 
+	/* # Elements */
+
+	.popover__scroller {
+		display: flex;
+		border-radius: inherit;
+		min-height: 0;
+		flex-direction: column;
+		flex-grow: 1;
+		overflow: auto;
+	}
+
 	::slotted(nldd-page) {
 		min-height: 0;
 		flex-shrink: 1;
@@ -103,6 +117,12 @@ export const popoverStyles = css`
 		}
 	}
 
+	:host(:popover-open[data-closing]) {
+		@media (max-width: ${smMax}) {
+			transform: translateY(100%);
+		}
+	}
+
 	:host::backdrop {
 		@media (max-width: ${smMax}) {
 			background-color: var(--semantics-overlays-backdrop-color);
@@ -123,4 +143,6 @@ export const popoverStyles = css`
 			transition: none;
 		}
 	}
+
+	${scrollFade('.popover__scroller')}
 `;

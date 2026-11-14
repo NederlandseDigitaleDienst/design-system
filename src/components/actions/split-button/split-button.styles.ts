@@ -57,17 +57,21 @@ export const splitButtonStyles = css`
 
 	/* ## On-color */
 
-	:host([appearance="inherit-tinted"]) {
-		--_split-button-background-color: var(--semantics-buttons-inherit-tinted-background-color);
-		--_split-button-divider-color: var(--semantics-buttons-inherit-tinted-divider-color);
-		--_split-button-highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
+	:host([appearance="content-tinted"]) {
+		--_split-button-background-color: var(--semantics-buttons-content-tinted-background-color);
+		--_split-button-divider-color: var(--semantics-buttons-content-tinted-divider-color);
+		--_split-button-highlight-border-color: var(--semantics-buttons-content-tinted-highlight-border-color);
 		--context-button-background-color: transparent;
+
+		color: var(--context-content-color);
 	}
 
-	:host([appearance="inherit-filled"]) {
-		--_split-button-background-color: var(--semantics-buttons-inherit-filled-background-color);
-		--_split-button-divider-color: var(--semantics-buttons-inherit-filled-divider-color);
-		--_split-button-highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
+	:host([appearance="content-filled"]) {
+		--_split-button-background-color: var(--semantics-buttons-content-filled-background-color);
+		--_split-button-divider-color: var(--semantics-buttons-content-filled-divider-color);
+		--_split-button-highlight-border-color: var(--semantics-buttons-content-filled-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
 	:host([width="full"]) {

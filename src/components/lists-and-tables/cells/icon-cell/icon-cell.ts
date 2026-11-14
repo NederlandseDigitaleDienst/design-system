@@ -18,6 +18,7 @@
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { iconCellStyles } from './icon-cell.styles.js';
@@ -31,7 +32,7 @@ type Size = '16' | '20' | '24' | '32';
 type Color = 'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical';
 
 @customElement('nldd-icon-cell')
-export class NLDDIconCell extends VisibilityMixin(LitElement, 'cells-container') {
+export class NLDDIconCell extends ReorderHandleMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = iconCellStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('24') })

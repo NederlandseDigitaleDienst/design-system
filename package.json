@@ -1,6 +1,6 @@
 {
   "name": "@nldd/design-system",
-  "version": "0.21.1",
+  "version": "0.24.0",
   "description": "Designsysteem voor de Nederlandse Digitale Dienst",
   "type": "module",
   "main": "dist/components/index.js",
@@ -66,6 +66,10 @@
     "./code-viewer": {
       "types": "./dist/components/content/code-viewer/code-viewer.d.ts",
       "default": "./dist/components/content/code-viewer/code-viewer.js"
+    },
+    "./term": {
+      "types": "./dist/components/content/term/term.d.ts",
+      "default": "./dist/components/content/term/term.js"
     },
     "./icon": {
       "types": "./dist/components/content/icon/icon.d.ts",
@@ -387,9 +391,9 @@
       "types": "./dist/components/lists-and-tables/cells/description-cell/description-cell.d.ts",
       "default": "./dist/components/lists-and-tables/cells/description-cell/description-cell.js"
     },
-    "./drag-handle-cell": {
-      "types": "./dist/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.d.ts",
-      "default": "./dist/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js"
+    "./reorder-handle-cell": {
+      "types": "./dist/components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.d.ts",
+      "default": "./dist/components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js"
     },
     "./step-cell": {
       "types": "./dist/components/lists-and-tables/cells/step-cell/step-cell.d.ts",
@@ -572,7 +576,7 @@
   },
   "scripts": {
     "build": "npm run build:styles && npm run build:assets && npm run validate:styles && npm run validate:host-styles && npm run build:components",
-    "build:styles": "rm -rf dist/css dist/fonts && mkdir -p dist/css dist/fonts && cp src/assets/styles/variables.css src/assets/styles/colors.generated.css src/assets/styles/rijksoverheid-fonts.css src/assets/styles/inter-font.css src/assets/styles/jetbrains-mono-font.css src/assets/styles/document-reset.css src/assets/styles/fouc.css dist/css/ && cp src/assets/styles/themes.css dist/css/ && mkdir -p dist/css/themes && cp src/assets/styles/themes/*.css dist/css/themes/ && cp src/components/content/rich-text/rich-text.css src/components/forms/form/form.css src/components/forms/form-section/form-section.css dist/css/ && printf '@import \"./rijksoverheid-fonts.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n@import \"./document-reset.css\";\\n@import \"./rich-text.css\";\\n@import \"./form-section.css\";\\n@import \"./form.css\";\\n@import \"./fouc.css\";\\n' > dist/css/global.css && printf '@import \"./inter-font.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n@import \"./document-reset.css\";\\n@import \"./rich-text.css\";\\n@import \"./form-section.css\";\\n@import \"./form.css\";\\n@import \"./fouc.css\";\\n' > dist/css/global-open-font.css && printf '@import \"./rijksoverheid-fonts.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n' > dist/css/tokens.css && cp src/assets/fonts/*.woff2 dist/fonts/",
+    "build:styles": "rm -rf dist/css dist/fonts && mkdir -p dist/css dist/fonts && cp src/assets/styles/variables.css src/assets/styles/colors.generated.css src/assets/styles/rijksoverheid-fonts.css src/assets/styles/inter-font.css src/assets/styles/jetbrains-mono-font.css src/assets/styles/document-reset.css src/assets/styles/fouc.css dist/css/ && cp src/assets/styles/themes.css dist/css/ && mkdir -p dist/css/themes && cp src/assets/styles/themes/*.css dist/css/themes/ && cp src/components/content/rich-text/rich-text.css src/components/content/title/title.css src/components/forms/form/form.css src/components/forms/form-section/form-section.css dist/css/ && printf '@import \"./rijksoverheid-fonts.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n@import \"./document-reset.css\";\\n@import \"./rich-text.css\";\\n@import \"./title.css\";\\n@import \"./form-section.css\";\\n@import \"./form.css\";\\n@import \"./fouc.css\";\\n' > dist/css/global.css && printf '@import \"./inter-font.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n@import \"./document-reset.css\";\\n@import \"./rich-text.css\";\\n@import \"./title.css\";\\n@import \"./form-section.css\";\\n@import \"./form.css\";\\n@import \"./fouc.css\";\\n' > dist/css/global-open-font.css && printf '@import \"./rijksoverheid-fonts.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n' > dist/css/tokens.css && cp src/assets/fonts/*.woff2 dist/fonts/",
     "build:assets": "mkdir -p dist/favicon && cp src/assets/favicon/favicon.svg src/assets/favicon/touch-icon.png dist/ && for theme in src/assets/favicon/*/; do cp -R \"${theme%/}\" dist/favicon/; done",
     "generate:colors": "node scripts/generate-colors.js && npm run generate:themes",
     "generate:themes": "node scripts/generate-themes.js",
@@ -663,7 +667,7 @@
     "svgo": "^4.1.0",
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.58.0",
-    "vite": "8.3.5",
+    "vite": "8.3.6",
     "vitest": "5.1.0",
     "vue": "^3.5.40",
     "vue-tsc": "^3.3.7",

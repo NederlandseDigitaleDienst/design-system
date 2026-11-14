@@ -56,7 +56,7 @@ export function syncToolbarOverflow(): void {
 		if (toolbarItem && ownToolbar(toolbarItem)) mirror(control, toolbarItem);
 	});
 
-	document.addEventListener('tabchange', (event) => {
+	document.addEventListener('tab-change', (event) => {
 		const bar = event.target as Element & { navigation: boolean };
 		const toolbarItem = bar?.closest?.('nldd-toolbar-item');
 		if (!toolbarItem || !ownToolbar(toolbarItem)) return;

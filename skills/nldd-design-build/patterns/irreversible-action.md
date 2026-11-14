@@ -30,7 +30,7 @@ nldd-modal-dialog            open, variant="alert", text, supporting-text
       gap="8"
     >
       <nldd-title
-        size="5"
+        size="display-5"
         text="Dossier verwijderen"
         heading-level="2"
       ></nldd-title>

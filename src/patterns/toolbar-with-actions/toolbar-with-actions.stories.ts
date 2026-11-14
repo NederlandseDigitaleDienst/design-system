@@ -15,7 +15,7 @@ export const MetTabbalk = patternStory(tabs, (root) => {
 		tabItems.forEach((tab) => { tab.current = tab.text === text; });
 		menuItems.forEach((item) => { item.selected = item.text === text; });
 	};
-	root.querySelector('nldd-tab-bar')!.addEventListener('tabchange', (e) => {
+	root.querySelector('nldd-tab-bar')!.addEventListener('tab-change', (e) => {
 		show((e as CustomEvent<{ item: HTMLElement & { text: string } }>).detail.item.text);
 	});
 	menuItems.forEach((item) => item.addEventListener('select', () => show(item.text)));

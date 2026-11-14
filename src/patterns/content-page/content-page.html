@@ -1,18 +1,3 @@
-<style>
-  /* The section owns the switch; this shows the button, and the space above
-     it, only when there is a sheet to open. */
-  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
-  nldd-sidebar-section:not([collapsed]) :is(#inhoud-openen, nldd-spacer:has(+ #inhoud-openen)) {
-    display: none;
-  }
-
-  /* The sheet has its own title bar with the same name. */
-  /* nldd-lint-disable-next-line stylesheet-no-own -- nldd-sidebar-section kan een knop nog niet alleen in de ingeklapte stand tonen */
-  nldd-sidebar-section[collapsed] :is(#inhoud-kop, #inhoud-kop + nldd-spacer) {
-    display: none;
-  }
-</style>
-
 <nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
@@ -73,17 +58,18 @@
     >
       <nldd-title
         slot="header"
-        size="1"
         text="Aanvraag indienen"
         heading-level="1"
       ></nldd-title>
       <nldd-spacer
         slot="header"
+        sidebar-section-only="collapsed"
         size="16"
       ></nldd-spacer>
       <nldd-button
         slot="header"
         id="inhoud-openen"
+        sidebar-section-only="collapsed"
         appearance="secondary"
         start-icon="bullet-list"
         text="Op deze pagina"
@@ -97,11 +83,15 @@
       >
         <nldd-title
           id="inhoud-kop"
-          size="5"
+          sidebar-section-only="expanded"
+          size="display-5"
           text="Op deze pagina"
           heading-level="2"
         ></nldd-title>
-        <nldd-spacer size="8"></nldd-spacer>
+        <nldd-spacer
+          sidebar-section-only="expanded"
+          size="8"
+        ></nldd-spacer>
         <nldd-list
           type="navigation"
           appearance="simple"
@@ -151,7 +141,7 @@
       <nldd-card background="tinted">
         <nldd-container padding="16">
           <nldd-title
-            size="4"
+            size="display-4"
             text="Aanvragen kost tien minuten"
             heading-level="2"
           ></nldd-title>
@@ -172,7 +162,7 @@
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="3"
+        size="display-3"
         text="Hier kun je verder"
         heading-level="2"
       ></nldd-title>
@@ -186,7 +176,7 @@
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Behandeling volgen"
               heading-level="3"
             ></nldd-title>
@@ -202,7 +192,7 @@
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Bezwaar maken"
               heading-level="3"
             ></nldd-title>
@@ -218,7 +208,7 @@
         >
           <nldd-container padding="16">
             <nldd-title
-              size="5"
+              size="display-5"
               text="Isoleren"
               heading-level="3"
             ></nldd-title>

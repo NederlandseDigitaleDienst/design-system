@@ -229,15 +229,19 @@ describe('nldd-tooltip – show/hide', () => {
 		el = await fixture<NLDDTooltip>('<nldd-tooltip text="Test" open><button>Trigger</button></nldd-tooltip>');
 		await waitForUpdate(el);
 		let dismissed = false;
-		el.addEventListener('nldd-tooltip-dismiss', () => { dismissed = true; });
+		el.addEventListener('dismiss', () => { dismissed = true; });
 
 		const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
 		document.body.dispatchEvent(event);
 		expect(dismissed).toBe(false);
 		expect(event.defaultPrevented).toBe(false);
 
+		let reachedParent = false;
+		el.parentElement!.addEventListener('dismiss', () => { reachedParent = true; });
 		el.querySelector('button')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
 		expect(dismissed).toBe(true);
+		// A banner or notification around it fires a dismiss of its own.
+		expect(reachedParent).toBe(false);
 	});
 
 	it('toont niet bij lege text', async () => {

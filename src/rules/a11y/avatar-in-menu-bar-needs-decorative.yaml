@@ -3,5 +3,5 @@ context: 'nldd-menu-bar-item nldd-avatar:not([decorative])'
 message: 'Set `decorative`: the name and the text of the item are already there.'
 see: patronen/page-structure
 examples:
-  passed: ['<nldd-menu-bar-item text="Mijn account"><nldd-avatar slot="icon" name="Team Beleid" decorative icon-aligned color="inherit"></nldd-avatar></nldd-menu-bar-item>']
+  passed: ['<nldd-menu-bar-item text="Mijn account"><nldd-avatar slot="icon" name="Team Beleid" decorative icon-aligned color="content"></nldd-avatar></nldd-menu-bar-item>']
   failed: ['<nldd-menu-bar-item text="Mijn account"><nldd-avatar slot="icon" name="Team Beleid"></nldd-avatar></nldd-menu-bar-item>']

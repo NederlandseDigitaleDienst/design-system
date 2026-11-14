@@ -11,6 +11,8 @@ export const buttonStyles = css`
 
 	:host {
 		--_button-corner-radius: var(--semantics-controls-md-corner-radius);
+		/* Unset outside a field, so border-radius falls back to the own corner. */
+		--_button-nested-corner-radius: var(--context-control-corner-radius);
 		/* A parent that stacks its buttons says so through the context variable;
 		   the button's own width attribute overrides it with an inline style. */
 		--_button-width: var(--context-button-width, auto);
@@ -51,6 +53,12 @@ export const buttonStyles = css`
 		-webkit-user-select: none;
 		user-select: none;
 		-webkit-tap-highlight-color: transparent;
+	}
+
+	/* iOS opens a link preview on a long press, which is ours here. */
+	:host(:has(> [slot="interest"])) .button,
+	:host([interestfor]) .button {
+		-webkit-touch-callout: none;
 	}
 
 	:host([size="xs"]) {
@@ -181,18 +189,16 @@ export const buttonStyles = css`
 		--_button-is-active-highlight-border-color: transparent;
 	}
 
-	/* The on-color variants derive from currentColor (which stays
-	   unresolved inside the tokens). The filled label prefers the surface
-	   color from --context-parent-background-color; that var() must resolve
-	   here on the host — inside a :root token it would freeze — with the
-	   tokens' white/black contrast flip as fallback. */
+	/* The tokens derive from currentColor, which stays unresolved inside them;
+	   the host sets it from the context. The filled label reads
+	   --context-background-color here: inside a :root token it would freeze. */
 
-	:host([appearance="inherit-tinted"]),
-	:host([expanded][appearance="inherit-tinted"]) {
-		--_button-background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
-		--_button-primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-		--_button-secondary-content-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
-		--_button-highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
+	:host([appearance="content-tinted"]),
+	:host([expanded][appearance="content-tinted"]) {
+		--_button-background-color: var(--context-button-background-color, var(--semantics-buttons-content-tinted-background-color));
+		--_button-primary-content-color: var(--semantics-buttons-content-tinted-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-content-tinted-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-content-tinted-highlight-border-color);
 		--_button-is-hovered-background-color: var(--_button-background-color);
 		--_button-is-hovered-primary-content-color: var(--_button-primary-content-color);
 		--_button-is-hovered-secondary-content-color: var(--_button-secondary-content-color);
@@ -201,14 +207,16 @@ export const buttonStyles = css`
 		--_button-is-active-primary-content-color: var(--_button-primary-content-color);
 		--_button-is-active-secondary-content-color: var(--_button-secondary-content-color);
 		--_button-is-active-highlight-border-color: var(--_button-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
-	:host([appearance="inherit-filled"]),
-	:host([expanded][appearance="inherit-filled"]) {
-		--_button-background-color: var(--semantics-buttons-inherit-filled-background-color);
-		--_button-primary-content-color: var(--context-parent-background-color, var(--semantics-buttons-inherit-filled-content-color));
-		--_button-secondary-content-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
-		--_button-highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
+	:host([appearance="content-filled"]),
+	:host([expanded][appearance="content-filled"]) {
+		--_button-background-color: var(--semantics-buttons-content-filled-background-color);
+		--_button-primary-content-color: var(--context-background-color);
+		--_button-secondary-content-color: var(--semantics-buttons-content-filled-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-content-filled-highlight-border-color);
 		--_button-is-hovered-background-color: var(--_button-background-color);
 		--_button-is-hovered-primary-content-color: var(--_button-primary-content-color);
 		--_button-is-hovered-secondary-content-color: var(--_button-secondary-content-color);
@@ -217,18 +225,19 @@ export const buttonStyles = css`
 		--_button-is-active-primary-content-color: var(--_button-primary-content-color);
 		--_button-is-active-secondary-content-color: var(--_button-secondary-content-color);
 		--_button-is-active-highlight-border-color: var(--_button-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
-	/* For inherit-filled the inner button keeps the inherited on-color:
-	   its currentColor background and the label's contrast flip resolve
-	   against it, and would otherwise self-reference the label. The label
-	   color moves to the content layer instead. The higher specificity of
-	   these rules deliberately pins the color through hover/active/expanded. */
-	:host([appearance="inherit-filled"]) .button {
+	/* content-filled paints its fill with currentColor, so the inner button
+	   keeps the inherited color and the label color goes to the content layer.
+	   The higher specificity pins it through hover, active and expanded. */
+	:host([appearance="content-filled"]) .button {
 		color: inherit;
 	}
 
-	:host([appearance="inherit-filled"]) .button > * {
+	:host([appearance="content-filled"]) .button > * {
+		--context-content-color: var(--_button-primary-content-color);
 		color: var(--_button-primary-content-color);
 	}
 
@@ -381,7 +390,7 @@ export const buttonStyles = css`
 		position: relative;
 		margin: 0;
 		border: none;
-		border-radius: var(--_button-corner-radius);
+		border-radius: var(--_button-nested-corner-radius, var(--_button-corner-radius));
 		background: none;
 		background-color: var(--_button-background-color);
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_button-highlight-border-color);
@@ -393,6 +402,7 @@ export const buttonStyles = css`
 		gap: var(--_button-gap);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_button-primary-content-color);
 		color: var(--_button-primary-content-color);
 		font: var(--_button-font);
 		text-align: center;
@@ -412,6 +422,7 @@ export const buttonStyles = css`
 	.button:hover {
 		@media (hover: hover) {
 			background-color: var(--_button-is-hovered-background-color);
+			--context-content-color: var(--_button-is-hovered-primary-content-color);
 			color: var(--_button-is-hovered-primary-content-color);
 			--_button-highlight-border-color: var(--_button-is-hovered-highlight-border-color);
 		}
@@ -419,6 +430,7 @@ export const buttonStyles = css`
 
 	.button:active {
 		background-color: var(--_button-is-active-background-color);
+		--context-content-color: var(--_button-is-active-primary-content-color);
 		color: var(--_button-is-active-primary-content-color);
 		--_button-highlight-border-color: var(--_button-is-active-highlight-border-color);
 	}
@@ -474,10 +486,11 @@ export const buttonStyles = css`
 	   position:relative). It lives outside the <button>/<a> so the indicator's
 	   role="status" live region announces loading without joining the button's
 	   accessible name. The activity-indicator inside fills it and centers its
-	   circle, which inherits the content color via currentColor. */
+	   circle, which takes the content color from the context. */
 	.button__activity-indicator {
 		position: absolute;
 		inset: 0;
+		--context-content-color: var(--_button-primary-content-color);
 		color: var(--_button-primary-content-color);
 	}
 
@@ -513,6 +526,7 @@ export const buttonStyles = css`
 
 	.button__supporting-text {
 		min-width: 0;
+		--context-content-color: var(--_button-secondary-content-color);
 		color: var(--_button-secondary-content-color);
 		font: var(--_button-supporting-font);
 		text-wrap: pretty;
@@ -520,11 +534,13 @@ export const buttonStyles = css`
 
 	.button:hover .button__supporting-text {
 		@media (hover: hover) {
+			--context-content-color: var(--_button-is-hovered-secondary-content-color);
 			color: var(--_button-is-hovered-secondary-content-color);
 		}
 	}
 
 	.button:active .button__supporting-text {
+		--context-content-color: var(--_button-is-active-secondary-content-color);
 		color: var(--_button-is-active-secondary-content-color);
 	}
 
@@ -567,16 +583,19 @@ export const buttonStyles = css`
 	.button__shortcut {
 		display: flex;
 		flex-shrink: 0;
+		--context-content-color: var(--_button-secondary-content-color);
 		color: var(--_button-secondary-content-color);
 	}
 
 	.button:hover .button__shortcut {
 		@media (hover: hover) {
+			--context-content-color: var(--_button-is-hovered-secondary-content-color);
 			color: var(--_button-is-hovered-secondary-content-color);
 		}
 	}
 
 	.button:active .button__shortcut {
+		--context-content-color: var(--_button-is-active-secondary-content-color);
 		color: var(--_button-is-active-secondary-content-color);
 	}
 

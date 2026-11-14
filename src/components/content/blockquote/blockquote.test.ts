@@ -111,6 +111,30 @@ describe('nldd-blockquote – custom-size', () => {
 		expect(el.matches(':state(custom-size-below-floor)')).toBe(true);
 	});
 
+	it('grows the quote at size lg, and leaves the attribution as it is', async () => {
+		await blockquote('');
+		const md = { quote: parseFloat(style('.blockquote__quote').fontSize), attribution: style('.blockquote__attribution').fontSize };
+		cleanup(el);
+		await blockquote('size="lg"');
+		expect(parseFloat(style('.blockquote__quote').fontSize)).toBeGreaterThan(md.quote);
+		expect(style('.blockquote__quote').fontStyle).toBe('italic');
+		expect(style('.blockquote__attribution').fontSize).toBe(md.attribution);
+	});
+
+	it('never goes below the size from size', async () => {
+		await blockquote('size="lg"');
+		const own = style('.blockquote__quote').fontSize;
+		cleanup(el);
+		await blockquote('size="lg" sm-custom-size="4px" md-custom-size="4px" lg-custom-size="4px"');
+		expect(style('.blockquote__quote').fontSize).toBe(own);
+		expect(el.matches(':state(custom-size-below-floor)')).toBe(true);
+	});
+
+	it('does not reflect the default size', async () => {
+		await blockquote('');
+		expect(el.hasAttribute('size')).toBe(false);
+	});
+
 	it('keeps its own size for a value that is not a length', async () => {
 		await blockquote('lg-custom-size="huge"');
 		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);

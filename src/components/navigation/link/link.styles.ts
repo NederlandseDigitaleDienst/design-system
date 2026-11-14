@@ -45,7 +45,8 @@ export const linkStyles = css`
 	.link {
 		border-radius: var(--primitives-corner-radius-xs);
 		background: none;
-		color: var(--semantics-links-color);
+		--context-content-color: var(--context-link-color);
+		color: var(--context-link-color);
 		text-decoration: none;
 		transition: color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
 		appearance: none;
@@ -55,6 +56,11 @@ export const linkStyles = css`
 		.link {
 			transition: none;
 		}
+	}
+
+	/* iOS opens a link preview on a long press, which is ours here. */
+	:host([interestfor]) .link {
+		-webkit-touch-callout: none;
 	}
 
 	:host(:not([size])) .link,
@@ -92,12 +98,14 @@ export const linkStyles = css`
 
 	@media (hover: hover) {
 		.link:hover {
-			color: var(--semantics-links-is-hovered-color);
+			--context-content-color: var(--context-link-is-hovered-color);
+			color: var(--context-link-is-hovered-color);
 		}
 	}
 
 	.link:active {
-		color: var(--semantics-links-is-active-color);
+		--context-content-color: var(--context-link-is-active-color);
+		color: var(--context-link-is-active-color);
 	}
 
 	.link:focus-visible {

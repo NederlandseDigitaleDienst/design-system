@@ -38,7 +38,7 @@ export const sidebarSectionStyles = css`
 		--_sidebar-section-sticky-top: calc(var(--context-inset-top, 0px) + var(--primitives-space-24));
 		--_sidebar-section-sticky-bottom: calc(var(--context-inset-bottom, 0px) + var(--primitives-space-24));
 		--_sidebar-section-width: var(--primitives-area-320);
-		--_sidebar-section-sidebar-box-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_sidebar-section-sidebar-box-background-color: var(--context-background-color);
 		--_sidebar-section-sidebar-box-border-color: var(--semantics-dividers-color);
 
 		display: flex;

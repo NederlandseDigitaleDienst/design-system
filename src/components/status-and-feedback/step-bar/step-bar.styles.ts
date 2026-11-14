@@ -56,7 +56,7 @@ export const stepBarStyles = css`
 		--_step-bar-marker-z-index: 1;
 		--_step-bar-marker-corner-radius: var(--primitives-corner-radius-full);
 		--_step-bar-ring-thickness: var(--semantics-surfaces-ring-thickness);
-		--_step-bar-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_step-bar-ring-color: var(--context-background-color);
 		--_step-bar-marker-content-color: var(--semantics-content-secondary-color);
 		--_step-bar-past-fill-color: var(--semantics-steps-is-past-background-color);
 		--_step-bar-progress-content-color: var(--semantics-steps-is-past-content-color);
@@ -93,6 +93,7 @@ export const stepBarStyles = css`
 		gap: var(--_step-bar-compact-text-gap);
 		justify-content: space-between;
 		align-items: baseline;
+		--context-content-color: var(--_step-bar-compact-text-color);
 		color: var(--_step-bar-compact-text-color);
 		font: var(--primitives-font-body-md-regular-flat);
 	}
@@ -102,6 +103,7 @@ export const stepBarStyles = css`
 	}
 
 	.step-bar__compact-count {
+		--context-content-color: var(--_step-bar-compact-count-color);
 		color: var(--_step-bar-compact-count-color);
 		font-variant-numeric: tabular-nums;
 		white-space: nowrap;
@@ -211,6 +213,7 @@ export const stepBarItemStyles = css`
 		   the marker gets breathing room without shortening the track. */
 		box-shadow: 0 0 0 var(--_step-bar-ring-thickness) var(--_step-bar-ring-color);
 		background-color: var(--_step-bar-track-color);
+		--context-content-color: var(--_step-bar-marker-content-color);
 		color: var(--_step-bar-marker-content-color);
 		font: var(--primitives-font-body-sm-medium-flat);
 
@@ -221,12 +224,14 @@ export const stepBarItemStyles = css`
 
 	.step-bar__item.is-past .step-bar__item-marker {
 		background-color: var(--_step-bar-past-fill-color);
+		--context-content-color: var(--_step-bar-progress-content-color);
 		color: var(--_step-bar-progress-content-color);
 	}
 
 	.step-bar__item.is-current .step-bar__item-marker {
 		border: var(--_step-bar-track-thickness) solid var(--_step-bar-progress-color);
 		background-color: var(--_step-bar-current-fill-color);
+		--context-content-color: var(--_step-bar-current-content-color);
 		color: var(--_step-bar-current-content-color);
 	}
 
@@ -236,6 +241,7 @@ export const stepBarItemStyles = css`
 	}
 
 	.step-bar__item-title {
+		--context-content-color: var(--_step-bar-title-color);
 		color: var(--_step-bar-title-color);
 		font: var(--primitives-font-body-sm-regular-flat);
 		overflow-wrap: anywhere;
@@ -244,6 +250,7 @@ export const stepBarItemStyles = css`
 	}
 
 	.step-bar__item.is-current .step-bar__item-title {
+		--context-content-color: var(--_step-bar-current-title-color);
 		color: var(--_step-bar-current-title-color);
 	}
 

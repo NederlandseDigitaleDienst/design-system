@@ -132,7 +132,7 @@ export const Appearances = {
 		gap="16"
 		horizontal-alignment="left"
 	>
-		<div style="padding: 16px; border-radius: var(--primitives-corner-radius-md); background: var(--semantics-surfaces-base-background-color);">
+		<div style="padding: 16px; border-radius: var(--primitives-corner-radius-md); background: var(--semantics-surfaces-base-background-color); --context-background-color: var(--semantics-surfaces-base-background-color);">
 			<nldd-segmented-control
 				appearance="neutral-tinted"
 				value="lijst"
@@ -148,7 +148,7 @@ export const Appearances = {
 				></nldd-segmented-control-item>
 			</nldd-segmented-control>
 		</div>
-		<div style="padding: 16px; border-radius: var(--primitives-corner-radius-md); background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="padding: 16px; border-radius: var(--primitives-corner-radius-md); background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 			<nldd-segmented-control
 				appearance="neutral-base"
 				value="lijst"

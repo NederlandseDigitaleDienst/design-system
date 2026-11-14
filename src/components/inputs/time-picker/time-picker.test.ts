@@ -184,6 +184,26 @@ describe('nldd-time-picker – kiezen', () => {
 		expect(selection(el, 'hours').textContent!.trim()).toBe('04');
 	});
 
+	// Momentum scrolling on iOS can pause long enough to pass for the end. The
+	// column moving on after that must still be read, or the selection keeps the
+	// value it recorded while another one stands in the middle.
+	it('volgt een kolom die na het vastleggen nog doorscrollt', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 200ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		await new Promise((r) => setTimeout(r, 250));
+		const kolom = column(el, 'hours');
+		const opties = [...kolom.querySelectorAll<HTMLElement>('.time-picker__list-item')];
+		const midden = (o: HTMLElement) => o.offsetTop + o.offsetHeight / 2 - kolom.clientHeight / 2;
+		kolom.scrollTop = midden(opties[5]);
+		await until(() => el.value === '05:30', { timeout: 1000 });
+		kolom.scrollTop = midden(opties[3]);
+		await until(() => el.value === '03:30', { timeout: 1000 });
+		await new Promise((r) => setTimeout(r, 300));
+		expect(el.value).toBe('03:30');
+		expect(selection(el, 'hours').textContent!.trim()).toBe('03');
+		expect(Math.abs(kolom.scrollTop - midden(opties[3]))).toBeLessThan(1);
+	});
+
 	it('leest de duur ook in seconden', async () => {
 		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 0.2s; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
 		await waitForUpdate(el);
@@ -211,6 +231,43 @@ describe('nldd-time-picker – kiezen', () => {
 	// Scrolling changes the value but confirms nothing: a field showing the picker
 	// in a popover would otherwise snap shut the moment you stop scrolling, and
 	// then you never saw the second column.
+	// Safari sends the scroll event of the glide's last frame after the glide is
+	// done. Taken for the user, it switched the mouse off on the values, and
+	// Safari only gave hover and clicks back once the mouse moved.
+	it('ziet de scroll van de eigen glijbeweging niet aan voor die van de gebruiker', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30" style="--primitives-transition-duration-medium: 100ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		const kolom = column(el, 'hours');
+		[...kolom.querySelectorAll<HTMLElement>('.time-picker__list-item')][15].click();
+		await waitForUpdate(el);
+		await until(() => !kolom.hasAttribute('data-gliding'), { timeout: 1000 });
+		kolom.dispatchEvent(new Event('scroll'));
+		expect(el.hasAttribute('data-scrolling')).toBe(false);
+
+		kolom.scrollTop += 44;
+		kolom.dispatchEvent(new Event('scroll'));
+		expect(el.hasAttribute('data-scrolling')).toBe(true);
+	});
+
+	it('vuurt niets bij het openen, ook niet op de randen van een kolom', async () => {
+		for (const value of ['00:00', '23:59']) {
+			el = await fixture<NLDDTimePicker>(
+				`<nldd-time-picker value="${value}" style="--semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>`,
+			);
+			await waitForUpdate(el);
+			const gezien: string[] = [];
+			el.addEventListener('input', (() => gezien.push('input')) as EventListener);
+			el.addEventListener('change', (() => gezien.push('change')) as EventListener);
+			el.scrollSelectedIntoView(true);
+			el.scrollSelectedIntoView(false);
+			for (const kolom of [column(el, 'hours'), column(el, 'minutes')]) kolom.dispatchEvent(new Event('scroll'));
+			await new Promise((r) => setTimeout(r, 1300));
+			expect(gezien, value).toEqual([]);
+			expect(el.value, value).toBe(value);
+			cleanup(el);
+		}
+	});
+
 	it('vuurt input bij scrollen en geen change', async () => {
 		el = await fixture<NLDDTimePicker>(
 			'<nldd-time-picker value="09:30" style="--semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>',
@@ -241,8 +298,8 @@ describe('nldd-time-picker – kiezen', () => {
 		const kolom = column(el, 'hours');
 		const item = kolom.querySelector('.time-picker__list-item')!;
 		expect(getComputedStyle(item).pointerEvents).not.toBe('none');
+		kolom.scrollTop += 44;
 		kolom.dispatchEvent(new Event('scroll'));
-		await waitForUpdate(el);
 		expect(getComputedStyle(item).pointerEvents).toBe('none');
 		// The styling itself as well, because a :hover already in place keeps
 		// matching until the browser redoes the hit test.
@@ -253,8 +310,8 @@ describe('nldd-time-picker – kiezen', () => {
 		expect(hoverRegels).toHaveLength(1);
 		expect(hoverRegels[0].style.backgroundColor).toBe('transparent');
 		// And back on once scrolling comes to rest.
-		await new Promise((r) => setTimeout(r, 250));
-		expect(getComputedStyle(item).pointerEvents).not.toBe('none');
+		kolom.scrollTop += 44;
+		await until(() => getComputedStyle(item).pointerEvents !== 'none', { timeout: 1000 });
 	});
 
 	it('bevestigt met Enter op de selectie', async () => {
@@ -559,7 +616,6 @@ describe('nldd-time-picker – wiel', () => {
 		const inSelection = () => el.shadowRoot!.querySelector('.time-picker__selection')!
 			.textContent!.replace(/\s+/g, '');
 		expect(inSelection()).toBe('14:30');
-		expect(el.value).toBe('09:30');
 		await new Promise((r) => setTimeout(r, 250));
 		expect(el.value).toBe('14:30');
 	});

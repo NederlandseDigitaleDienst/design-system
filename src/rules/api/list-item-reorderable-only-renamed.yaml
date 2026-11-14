@@ -1,0 +1,8 @@
+severity: error
+context: '[reorderable-only]'
+removed: ['reorderable-only']
+fix: { rename: { reorderable-only: reorder-handle } }
+message: 'The `reorderable-only` attribute is now `reorder-handle`. Rename it here and on every other cell; nldd-reorder-handle-cell carries it by itself.'
+examples:
+  passed: ['<nldd-list-item><nldd-cell reorder-handle></nldd-cell></nldd-list-item>']
+  failed: ['<nldd-list-item><nldd-cell reorderable-only></nldd-cell></nldd-list-item>']

@@ -1,5 +1,6 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { scrollFade } from '../../../assets/styles/scroll-fade.js';
+import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 export const menuStyles = css`
 	:host {
@@ -70,6 +71,8 @@ export const menuStyles = css`
 	/* # Block */
 
 	.menu {
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		${surfaceContent}
 		display: flex;
 		box-sizing: border-box;
 		border-radius: var(--semantics-overlays-corner-radius);
@@ -81,9 +84,6 @@ export const menuStyles = css`
 		flex-direction: column;
 		max-height: min(var(--_menu-max-height), calc(var(--_menu-max-items) * var(--_menu-item-size) + var(--_menu-padding) * 2));
 		outline: none;
-		overflow-x: hidden;
-		overflow-y: auto;
-		scroll-padding-block: var(--_menu-padding);
 	}
 
 	.menu:focus-visible:not(.is-pointer-focus) {
@@ -94,6 +94,16 @@ export const menuStyles = css`
 
 
 	/* # Elements */
+
+	.menu__scroller {
+		display: flex;
+		border-radius: inherit;
+		min-height: 0;
+		flex-direction: column;
+		overflow-x: hidden;
+		overflow-y: auto;
+		scroll-padding-block: var(--_menu-padding);
+	}
 
 	.menu__main {
 		display: flex;
@@ -194,6 +204,8 @@ export const menuStyles = css`
 		white-space: nowrap;
 		clip-path: inset(50%);
 	}
+
+	${scrollFade('.menu__scroller')}
 `;
 
 export const menuItemStyles = css`
@@ -206,6 +218,9 @@ export const menuItemStyles = css`
 	:host {
 		--_menu-item-is-expanded-content-color: var(--primitives-color-neutral-1000);
 		--_menu-item-is-destructive-content-color: var(--semantics-content-critical-color);
+		--_menu-item-resting-content-color: var(--context-content-color);
+		--_menu-item-resting-content-secondary-color: var(--context-content-secondary-color);
+		--_menu-item-confirm-duration: var(--primitives-transition-duration-fast);
 
 		${inheritedTextReset}
 		display: block;
@@ -286,9 +301,23 @@ export const menuItemStyles = css`
 	   by the inner nldd-text-cell. The control cursor token (default, like the
 	   other controls) replaces the UA link pointer and stays overridable. */
 	a.menu__item {
+		position: relative;
 		color: inherit;
 		text-decoration: none;
 		cursor: var(--semantics-controls-link-cursor);
+	}
+
+	/* Visually hidden: part of the link's accessible name, never shown. */
+	.menu__link-hint {
+		position: absolute;
+		margin: -1px;
+		border: 0;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		padding: 0;
+		white-space: nowrap;
+		clip-path: inset(50%);
 	}
 
 	.menu__item:focus-visible {
@@ -305,9 +334,33 @@ export const menuItemStyles = css`
 	}
 
 
+	/* ## Confirmed
+	 *
+	 * The chosen item blinks once before the menu closes, as on macOS: the
+	 * highlight goes off for a third of the duration and comes back. */
+
+	:host([confirming]) .menu__item {
+		animation: menu-item-confirm var(--_menu-item-confirm-duration) step-end;
+	}
+
+	@keyframes menu-item-confirm {
+		0% {
+			--_menu-item-background-color: transparent;
+			--context-content-color: var(--_menu-item-resting-content-color);
+			--context-content-secondary-color: var(--_menu-item-resting-content-secondary-color);
+		}
+		33.333% {
+			--_menu-item-background-color: var(--_menu-item-is-highlighted-background-color);
+			--context-content-color: var(--_menu-item-is-highlighted-content-color);
+			--context-content-secondary-color: var(--_menu-item-is-highlighted-content-color);
+		}
+	}
+
+
 	@media (prefers-reduced-motion: reduce) {
 		.menu__item {
 			transition: none;
+			animation: none;
 		}
 	}
 
@@ -400,6 +453,7 @@ export const menuGroupStyles = css`
 		padding-bottom: var(--primitives-space-1);
 		padding-left: var(--primitives-space-4);
 		font: var(--primitives-font-body-sm-regular-tight);
+		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		text-wrap: balance;
 	}

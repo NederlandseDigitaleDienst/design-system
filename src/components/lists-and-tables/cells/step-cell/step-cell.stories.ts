@@ -751,7 +751,7 @@ const titledRow = (title: string, body: string, position: string, status = 'past
 	></nldd-step-cell>
 	<nldd-spacer-cell size="16"></nldd-spacer-cell>
 	<nldd-cell width="full" vertical-alignment="top">
-		<nldd-title size="4" text=${title} heading-level="3"></nldd-title>
+		<nldd-title size="display-4" text=${title} heading-level="3"></nldd-title>
 		<nldd-spacer size="4"></nldd-spacer>
 		<nldd-text>${body}</nldd-text>
 	</nldd-cell>

@@ -105,6 +105,20 @@ export async function checkTranslationKeys(keys: string[]): Promise<void> {
 	if (unknown.length > 0) console.warn(`[nldd] setTranslations: no component knows ${unknown.join(', ')}.`);
 }
 
+/** Each unknown key once, also when a framework hands the element a new object every render. */
+const reportedElementKeys = new Set<string>();
+
+/**
+ * The keys in an element's own `translations` that it does not read: a key of another
+ * component, or one that was renamed. Like setTranslations(), it has no fact to state.
+ */
+export function checkElementTranslationKeys(keys: string[], known: string[]): void {
+	const unknown = keys.filter((key) => !known.includes(key) && !reportedElementKeys.has(key));
+	if (unknown.length === 0) return;
+	for (const key of unknown) reportedElementKeys.add(key);
+	console.warn(`[nldd] translations: the element has no key ${unknown.join(', ')}, so that text stays Dutch.`);
+}
+
 /** The keyframes of fouc.css, which only that stylesheet puts on the body. */
 const FOUC_GUARD = 'nldd-fouc-reveal';
 

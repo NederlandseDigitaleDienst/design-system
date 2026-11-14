@@ -261,6 +261,7 @@ export const topNavigationBarStyles = css`
 		min-height: var(--_top-navigation-bar-logo-height);
 		grid-column: 3;
 		flex-direction: column;
+		--context-content-color: var(--_top-navigation-bar-wordmark-content-color);
 		color: var(--_top-navigation-bar-wordmark-content-color);
 
 		/* The distance the text keeps from the top edge once it outgrows the
@@ -380,6 +381,7 @@ export const topNavigationBarStyles = css`
 		min-width: var(--semantics-controls-xs-min-size);
 		min-height: var(--semantics-controls-xs-min-size);
 		font: var(--_top-navigation-bar-title-sm-font);
+		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		white-space: nowrap;
 

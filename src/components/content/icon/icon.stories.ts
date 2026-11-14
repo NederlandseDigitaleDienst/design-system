@@ -10,7 +10,7 @@ const allIconNames = ICONS;
 const FIXED_SIZES = ['16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'];
 const SIZE_OPTIONS = ['full', 'inherit', ...FIXED_SIZES];
 
-const FUNCTIONAL_COLORS = ['primary-content', 'secondary-content', 'accent', 'critical', 'warning', 'success'] as const;
+const FUNCTIONAL_COLORS = ['content', 'secondary', 'accent', 'critical', 'warning', 'success'] as const;
 const RIJKSKLEUREN = [
 	'lintblauw', 'donkerblauw', 'hemelblauw', 'lichtblauw',
 	'paars', 'violet', 'robijnrood', 'roze',
@@ -18,7 +18,7 @@ const RIJKSKLEUREN = [
 	'donkerbruin', 'bruin', 'donkergroen', 'groen', 'mosgroen', 'mintgroen',
 ] as const;
 
-const COLOR_OPTIONS = ['(inherit)', ...FUNCTIONAL_COLORS, ...RIJKSKLEUREN];
+const COLOR_OPTIONS = [...FUNCTIONAL_COLORS, ...RIJKSKLEUREN];
 
 export default {
 	title: 'Components/Content/Icon',
@@ -32,7 +32,7 @@ export default {
 		status: { type: 'stable' },
 		docs: {
 			description: {
-				component: 'A flexible icon component. By default fills its parent and inherits color. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the system cannot know, set `custom-color` to any CSS color value. Every icon name and alias is listed under [Docs/Iconen](?path=/docs/docs-iconen--docs).',
+				component: 'A flexible icon component. By default it fills its parent and takes the content color of its context. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the design system cannot know, set `custom-color` to any CSS color value. Every icon name and alias is listed under [Docs/Iconen](?path=/docs/docs-iconen--docs).',
 			},
 		},
 	},
@@ -52,13 +52,12 @@ export default {
 		color: {
 			control: 'select',
 			options: COLOR_OPTIONS,
-			mapping: { '(inherit)': '' },
-			description: 'Functionele semantic of rijkskleur. `(inherit)` = erft `color` van parent.',
-			table: { defaultValue: { summary: '(inherit)' } },
+			description: 'Functionele kleur of rijkskleur. `content` neemt de contentkleur van de context, de andere functionele kleuren ook de bijbehorende kleur van het vlak.',
+			table: { defaultValue: { summary: 'content' } },
 		},
-		box: {
+		tile: {
 			control: 'boolean',
-			description: 'Teken het icoon op een gevuld vlak. `color` en `custom-color` kleuren dan het vlak en het glyph krijgt de contrasterende kleur; `size` meet het vlak.',
+			description: 'Teken het icoon op een tegel, een gevuld vlak. `color` en `custom-color` kleuren dan het vlak en het glyph krijgt de contrasterende kleur; `size` meet het vlak.',
 			table: { defaultValue: { summary: false } },
 		},
 		customColor: {
@@ -70,18 +69,18 @@ export default {
 	args: {
 		icon: 'heart',
 		size: '24',
-		color: '(inherit)',
-		box: false,
+		color: 'content',
+		tile: false,
 		customColor: '',
 	},
 };
 
-const Template = ({ icon, size, box, color, customColor }: Record<string, any>) => html`
+const Template = ({ icon, size, tile, color, customColor }: Record<string, any>) => html`
 	<nldd-icon
 		icon=${icon}
 		size=${size || nothing}
-		?box=${box}
-		color=${color || nothing}
+		?tile=${tile}
+		color=${color === 'content' ? nothing : color}
 		custom-color=${customColor || nothing}
 	></nldd-icon>
 `;
@@ -90,9 +89,9 @@ export const Standaard = {
 	render: Template,
 };
 
-export const ErftVanDeOuder = {
+export const VolgtDeContext = {
 	render: () => html`
-		<div style="width: 64px; height: 64px; color: #d52b1e;">
+		<div style="width: 64px; height: 64px; --context-content-color: #d52b1e;">
 			<nldd-icon icon="heart"></nldd-icon>
 		</div>
 	`,
@@ -100,7 +99,7 @@ export const ErftVanDeOuder = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zonder `size` of `color` vult het icoon de parent en erft de kleur. Hier zit het in een 64×64 container met inline `color: #d52b1e`.',
+				story: 'Zonder `size` of `color` vult het icoon de parent en neemt het de contentkleur van zijn context. Een vlak van jezelf dat `color` zet, zet `--context-content-color` ernaast; hier zet een 64×64 container alleen `--context-content-color: #d52b1e`.',
 			},
 		},
 	},
@@ -125,17 +124,17 @@ export const ErftVanDeOuder = {
  */
 export const MeeMetDeTekst = {
 	name: 'Mee met de tekst (size="inherit")',
-	render: () => {
+	render: ({ tile }: Record<string, any>) => {
 		const line = (size: string) => html`
 			<nldd-text
 				size=${size}
 				line-height="tight"
 			>
-				Aanvraag A-1043 is <nldd-icon icon="check-mark" size="inherit" color="success"></nldd-icon> goedgekeurd,
-				staat <nldd-icon icon="lock-closed" size="inherit"></nldd-icon> vast sinds
-				<nldd-icon icon="calendar-event" size="inherit"></nldd-icon> vorige week, en loopt af over
-				<nldd-icon icon="clock" size="inherit"></nldd-icon> 3 dagen.
-				<nldd-icon icon="info-circle" size="inherit" color="accent"></nldd-icon> Verlengen kan tot die tijd.
+				Aanvraag A-1043 is <nldd-icon icon="check-mark" size="inherit" ?tile=${tile} color="success"></nldd-icon> goedgekeurd,
+				staat <nldd-icon icon="lock-closed" size="inherit" ?tile=${tile}></nldd-icon> vast sinds
+				<nldd-icon icon="calendar-event" size="inherit" ?tile=${tile}></nldd-icon> vorige week, en loopt af over
+				<nldd-icon icon="clock" size="inherit" ?tile=${tile}></nldd-icon> 3 dagen.
+				<nldd-icon icon="info-circle" size="inherit" ?tile=${tile} color="accent"></nldd-icon> Verlengen kan tot die tijd.
 			</nldd-text>
 		`;
 		return html`
@@ -149,7 +148,8 @@ export const MeeMetDeTekst = {
 			</nldd-container>
 		`;
 	},
-	parameters: { controls: { disable: true } },
+	args: { tile: false },
+	parameters: { controls: { include: ['tile'] } },
 };
 
 export const Grootten = {
@@ -259,7 +259,7 @@ export const EigenKleur = {
 	},
 };
 
-export const MetBox = {
+export const OpEenTegel = {
 	render: () => html`
 		<nldd-container
 			layout="row"
@@ -268,31 +268,31 @@ export const MetBox = {
 			<nldd-icon
 				icon="terminal"
 				size="40"
-				box
+				tile
 				color="accent"
 			></nldd-icon>
 			<nldd-icon
 				icon="shield-check-mark"
 				size="40"
-				box
+				tile
 				color="success"
 			></nldd-icon>
 			<nldd-icon
 				icon="cloud"
 				size="40"
-				box
+				tile
 				color="critical"
 			></nldd-icon>
 			<nldd-icon
 				icon="puzzle-piece"
 				size="40"
-				box
+				tile
 				custom-color="#a90061"
 			></nldd-icon>
 			<nldd-icon
 				icon="tulip"
 				size="40"
-				box
+				tile
 				custom-color="#f5c400"
 			></nldd-icon>
 		</nldd-container>
@@ -300,7 +300,7 @@ export const MetBox = {
 		<div style="width: 120px; height: 200px; outline: 1px dashed #bbb;">
 			<nldd-icon
 				icon="heart"
-				box
+				tile
 				color="accent"
 			></nldd-icon>
 		</div>
@@ -309,7 +309,7 @@ export const MetBox = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `box` staat het icoon op een gevuld vlak. De kleurvraag draait daarmee om: `color` en `custom-color` kleuren het vlak, en het glyph krijgt de kleur die daarop leesbaar is, wit of zwart, gekozen op luminantie. Dat paar is precies wat je zelf niet wilt kiezen. `size` meet dan het vlak: het glyph is vier vijfde daarvan, de hoekradius een vijfde. De laatste twee tonen dat de flip ook werkt bij een kleur die het systeem niet kent. Onderaan een vlak zonder `size` in een container van 120×200: het volgt de breedte en blijft vierkant in plaats van uit te rekken naar de hoogte van de container. Net als een icoon zonder `box`, dat z\'n vorm ontleent aan de tekening erin.',
+				story: 'Met `tile` staat het icoon op een tegel, een gevuld vlak. De kleurvraag draait daarmee om: `color` en `custom-color` kleuren het vlak, en het glyph krijgt de kleur die daarop leesbaar is, wit of zwart, gekozen op luminantie. Dat paar is precies wat je zelf niet wilt kiezen. `size` meet dan het vlak: het glyph is vier vijfde daarvan, de hoekradius een vijfde. De laatste twee tonen dat de flip ook werkt bij een kleur die het designsysteem niet kent. Onderaan een vlak zonder `size` in een container van 120×200: het volgt de breedte en blijft vierkant in plaats van uit te rekken naar de hoogte van de container. Net als een icoon zonder `tile`, dat z\'n vorm ontleent aan de tekening erin.',
 			},
 		},
 	},

@@ -175,7 +175,7 @@ export const MetAvatar = {
 			>
 				<nldd-avatar
 					slot="icon"
-					color="inherit"
+					color="content"
 					name="Anouk de Vries"
 					decorative
 					icon-aligned
@@ -193,7 +193,7 @@ export const MetAvatar = {
 			>
 				<nldd-avatar
 					slot="icon"
-					color="inherit"
+					color="content"
 					name="Anouk de Vries"
 					decorative
 					icon-aligned

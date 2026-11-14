@@ -72,6 +72,11 @@ const HOVER_OPEN_MAX_MS = 150;
  * Supports filtering, keyboard navigation, and highlight management.
  * Use nldd-menu-item and nldd-menu-divider as children.
  *
+ * A chosen item blinks once before the menu closes, as a native menu on
+ * macOS does, so you see what you picked. `select` fires at once: the action
+ * does not wait for the blink. With `prefers-reduced-motion` the menu closes
+ * at once. A menu that scrolls fades at the edge where more items wait.
+ *
  * Note: Only type="button" items are supported when used inside nldd-combo-box-field.
  * Radio and checkbox types may be used in standalone menus.
  *
@@ -843,6 +848,47 @@ export class NLDDMenu extends LitElement {
 	};
 
 	/**
+	 * As a native menu on macOS, the chosen item blinks once and the menu
+	 * closes after it, so you see what you picked. `select` has already gone
+	 * out: the action does not wait for the blink. Every menu in the chain
+	 * hears the event; the first one runs the blink and the rest leave it.
+	 * Without motion, in a menu that is not open, or in a listbox, it closes at once.
+	 */
+	private _handleSelect = (event: Event): void => {
+		const item = event.target as HTMLElement;
+		if (this._blinkTimer || item.hasAttribute('confirming')) return;
+		const button = item.localName === 'nldd-menu-item' ? item.shadowRoot?.querySelector('.menu__item') : null;
+		// A listbox belongs to a field, which shows the choice itself and closes it.
+		if (!button || !this._isOpen || this.variant === 'listbox' || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			this._collapseChain();
+			return;
+		}
+		this._setHighlight(item as NLDDMenuItem);
+		item.setAttribute('confirming', '');
+		let done = false;
+		const close = (): void => {
+			if (done) return;
+			done = true;
+			clearTimeout(this._blinkTimer);
+			this._blinkTimer = 0;
+			this._finishBlink = null;
+			button.removeEventListener('animationend', close);
+			item.removeAttribute('confirming');
+			if (this.isConnected) this._collapseChain();
+		};
+		button.addEventListener('animationend', close);
+		// No animationend when the animation never runs, as in a hidden tab, so
+		// a fallback a little after the blink's own length in menu.styles.ts.
+		// Also the mark that a blink runs: the highlight stays on the chosen item.
+		const blink = (parseFloat(getComputedStyle(button).animationDuration) || 0) * 1000;
+		this._blinkTimer = window.setTimeout(close, blink + 250);
+		this._finishBlink = close;
+	};
+
+	private _blinkTimer = 0;
+	private _finishBlink: (() => void) | null = null;
+
+	/**
 	 * Collapse the entire menu chain at once — root + every open submenu —
 	 * with no "back one level" re-show. Used when the action is final:
 	 * selecting an item, clicking the anchor, clicking/tapping outside, or
@@ -967,7 +1013,7 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('mouseleave', this._handleMouseleave);
 		this.addEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.addEventListener('submenu-open', this._handleSubmenuOpen);
-		this.addEventListener('select', this._collapseChain);
+		this.addEventListener('select', this._handleSelect);
 		document.addEventListener('click', this._handleDocumentClick);
 	}
 
@@ -995,6 +1041,8 @@ export class NLDDMenu extends LitElement {
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
+		this._finishBlink?.();
+		this._finishBlink = null;
 		clearTimeout(this._announceResultsTimer);
 		this._announceResultsTimer = 0;
 		// Close any open child submenu before tearing down — the submenu is a
@@ -1019,7 +1067,7 @@ export class NLDDMenu extends LitElement {
 		this.removeEventListener('mouseleave', this._handleMouseleave);
 		this.removeEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.removeEventListener('submenu-open', this._handleSubmenuOpen);
-		this.removeEventListener('select', this._collapseChain);
+		this.removeEventListener('select', this._handleSelect);
 		document.removeEventListener('click', this._handleDocumentClick);
 		// Defensive: the pointerdown + resize listeners are added on open
 		// and removed on close, but if the menu is torn down mid-open we'd
@@ -1054,6 +1102,7 @@ export class NLDDMenu extends LitElement {
 	}
 
 	private _clearHighlight(): void {
+		if (this._blinkTimer) return;
 		// Same scope rule as _getVisibleItems — only clear highlights on items
 		// that belong directly to this menu. Light-DOM querySelectorAll would
 		// otherwise also clear items inside nested submenus, silently
@@ -1064,6 +1113,7 @@ export class NLDDMenu extends LitElement {
 	}
 
 	private _setHighlight(target: NLDDMenuItem | null): void {
+		if (this._blinkTimer) return;
 		this._clearHighlight();
 		const resolved = target ?? this._getVisibleItems()[0] ?? null;
 		resolved?.setAttribute('highlighted', '');
@@ -1239,6 +1289,7 @@ export class NLDDMenu extends LitElement {
 	 * Move both focus and highlight to the next, previous, or first visible item.
 	 */
 	public focusItem(direction: 'next' | 'prev' | 'first'): void {
+		if (this._blinkTimer) return;
 		const items = this._getVisibleItems();
 		if (items.length === 0) return;
 
@@ -1267,6 +1318,7 @@ export class NLDDMenu extends LitElement {
 	 * Useful when keyboard navigation should keep focus on the input.
 	 */
 	public moveHighlight(direction: 'next' | 'prev'): void {
+		if (this._blinkTimer) return;
 		const items = this._getVisibleItems();
 		if (items.length === 0) return;
 

@@ -11,6 +11,8 @@ export const iconButtonStyles = css`
 
 	:host {
 		--_icon-button-corner-radius: var(--semantics-controls-md-corner-radius);
+		/* Unset outside a field, so border-radius falls back to the own corner. */
+		--_icon-button-nested-corner-radius: var(--context-control-corner-radius);
 		--_icon-button-width: auto;
 		--_icon-button-min-size: var(--semantics-controls-md-min-size);
 		--_icon-button-block-padding: var(--semantics-buttons-md-is-icon-only-inline-padding);
@@ -40,6 +42,12 @@ export const iconButtonStyles = css`
 		-webkit-user-select: none;
 		user-select: none;
 		-webkit-tap-highlight-color: transparent;
+	}
+
+	/* iOS opens a link preview on a long press, which is ours here. */
+	:host(:has(> [slot="interest"])) .icon-button,
+	:host([interestfor]) .icon-button {
+		-webkit-touch-callout: none;
 	}
 
 	:host([size="xs"]) {
@@ -149,45 +157,48 @@ export const iconButtonStyles = css`
 		--_icon-button-is-active-highlight-border-color: transparent;
 	}
 
-	/* The on-color variants derive from currentColor; see nldd-button for
-	   the full rationale. The filled label resolves the context var here on
-	   the host, with the tokens' white/black contrast flip as fallback. */
+	/* As on nldd-button: the tokens derive from currentColor, which the host
+	   sets from the context, and the filled icon reads the surface here. */
 
-	:host([appearance="inherit-tinted"]),
-	:host([expanded][appearance="inherit-tinted"]) {
-		--_icon-button-background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
-		--_icon-button-primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-		--_icon-button-highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
+	:host([appearance="content-tinted"]),
+	:host([expanded][appearance="content-tinted"]) {
+		--_icon-button-background-color: var(--context-button-background-color, var(--semantics-buttons-content-tinted-background-color));
+		--_icon-button-primary-content-color: var(--semantics-buttons-content-tinted-content-color);
+		--_icon-button-highlight-border-color: var(--semantics-buttons-content-tinted-highlight-border-color);
 		--_icon-button-is-hovered-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-hovered-primary-content-color: var(--_icon-button-primary-content-color);
 		--_icon-button-is-hovered-highlight-border-color: var(--_icon-button-highlight-border-color);
 		--_icon-button-is-active-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-active-primary-content-color: var(--_icon-button-primary-content-color);
 		--_icon-button-is-active-highlight-border-color: var(--_icon-button-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
-	:host([appearance="inherit-filled"]),
-	:host([expanded][appearance="inherit-filled"]) {
-		--_icon-button-background-color: var(--semantics-buttons-inherit-filled-background-color);
-		--_icon-button-primary-content-color: var(--context-parent-background-color, var(--semantics-buttons-inherit-filled-content-color));
-		--_icon-button-highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
+	:host([appearance="content-filled"]),
+	:host([expanded][appearance="content-filled"]) {
+		--_icon-button-background-color: var(--semantics-buttons-content-filled-background-color);
+		--_icon-button-primary-content-color: var(--context-background-color);
+		--_icon-button-highlight-border-color: var(--semantics-buttons-content-filled-highlight-border-color);
 		--_icon-button-is-hovered-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-hovered-primary-content-color: var(--_icon-button-primary-content-color);
 		--_icon-button-is-hovered-highlight-border-color: var(--_icon-button-highlight-border-color);
 		--_icon-button-is-active-background-color: var(--_icon-button-background-color);
 		--_icon-button-is-active-primary-content-color: var(--_icon-button-primary-content-color);
 		--_icon-button-is-active-highlight-border-color: var(--_icon-button-highlight-border-color);
+
+		color: var(--context-content-color);
 	}
 
-	/* For inherit-filled the inner button keeps the inherited on-color:
-	   its currentColor background and the label's contrast flip resolve
-	   against it, and would otherwise self-reference the label. The label
-	   color moves to the content layer instead; see nldd-button. */
-	:host([appearance="inherit-filled"]) .icon-button {
+	/* content-filled paints its fill with currentColor, so the inner button
+	   keeps the inherited color and the icon color goes to the content layer,
+	   as in nldd-button. */
+	:host([appearance="content-filled"]) .icon-button {
 		color: inherit;
 	}
 
-	:host([appearance="inherit-filled"]) .icon-button > * {
+	:host([appearance="content-filled"]) .icon-button > * {
+		--context-content-color: var(--_icon-button-primary-content-color);
 		color: var(--_icon-button-primary-content-color);
 	}
 
@@ -309,7 +320,7 @@ export const iconButtonStyles = css`
 		display: inline-flex;
 		margin: 0;
 		border: none;
-		border-radius: var(--_icon-button-corner-radius);
+		border-radius: var(--_icon-button-nested-corner-radius, var(--_icon-button-corner-radius));
 		background: none;
 		background-color: var(--_icon-button-background-color);
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_icon-button-highlight-border-color);
@@ -321,6 +332,7 @@ export const iconButtonStyles = css`
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--_icon-button-primary-content-color);
 		color: var(--_icon-button-primary-content-color);
 		font: inherit;
 		text-decoration: none;
@@ -356,6 +368,7 @@ export const iconButtonStyles = css`
 	@media (hover: hover) {
 		.icon-button:hover {
 			background-color: var(--_icon-button-is-hovered-background-color);
+			--context-content-color: var(--_icon-button-is-hovered-primary-content-color);
 			color: var(--_icon-button-is-hovered-primary-content-color);
 			--_icon-button-highlight-border-color: var(--_icon-button-is-hovered-highlight-border-color);
 		}
@@ -363,6 +376,7 @@ export const iconButtonStyles = css`
 
 	.icon-button:active {
 		background-color: var(--_icon-button-is-active-background-color);
+		--context-content-color: var(--_icon-button-is-active-primary-content-color);
 		color: var(--_icon-button-is-active-primary-content-color);
 		--_icon-button-highlight-border-color: var(--_icon-button-is-active-highlight-border-color);
 	}
@@ -428,6 +442,7 @@ export const iconButtonStyles = css`
 	.icon-button__activity-indicator {
 		position: absolute;
 		inset: 0;
+		--context-content-color: var(--_icon-button-primary-content-color);
 		color: var(--_icon-button-primary-content-color);
 	}
 `;

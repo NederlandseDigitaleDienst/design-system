@@ -756,6 +756,40 @@ describe('nldd-list-item – divider markers', () => {
 		expect(item.style.getPropertyValue('--_list-item-divider-inset-end')).toBe('');
 	});
 
+	// Each read after a write forces a layout of the whole page, so a list of
+	// thousands of rows that measured row by row blocked the page for minutes.
+	it('measures the dividers of a long list in passes, every read of a pass before its writes', async () => {
+		const proto = customElements.get('nldd-list-item')!.prototype as NLDDListItem;
+		const calls: string[] = [];
+		const originalRead = proto._readDividerInsets;
+		const originalWrite = proto._writeDividerInsets;
+		proto._readDividerInsets = function (this: NLDDListItem) {
+			calls.push('read');
+			return originalRead.call(this);
+		};
+		proto._writeDividerInsets = function (this: NLDDListItem, insets) {
+			calls.push('write');
+			return originalWrite.call(this, insets);
+		};
+		try {
+			const rows = Array.from({ length: 200 }, (_, i) => `<nldd-list-item><nldd-text-cell text="Artikel ${i}"></nldd-text-cell></nldd-list-item>`).join('');
+			el = await fixture(`<div style="width: 400px"><nldd-list accessible-label="Artikelen">${rows}</nldd-list></div>`);
+			await waitForUpdate(el);
+			await settle();
+			const reads = calls.filter((call) => call === 'read').length;
+			// A read right after a write is one forced layout. Row by row that was
+			// one per row; in passes it is one per pass.
+			const forcedLayouts = calls.filter((call, i) => call === 'read' && calls[i - 1] === 'write').length;
+			expect(reads).toBeGreaterThanOrEqual(200);
+			expect(forcedLayouts).toBeLessThanOrEqual(3);
+			const items = [...el.querySelectorAll('nldd-list-item')] as HTMLElement[];
+			expect(items.every((item) => item.style.getPropertyValue('--_list-item-divider-inset-start') !== '')).toBe(true);
+		} finally {
+			proto._readDividerInsets = originalRead;
+			proto._writeDividerInsets = originalWrite;
+		}
+	});
+
 	it('measures nothing in a list without dividers, and again once they return', async () => {
 		el = await fixture(`
 			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
@@ -1543,7 +1577,7 @@ describe('nldd-list-item – context background', () => {
 		unloadTokens();
 	});
 
-	const probe = (id: string) => `<nldd-cell><span class="probe" id="${id}" style="display: block; background-color: var(--context-parent-background-color)"></span></nldd-cell>`;
+	const probe = (id: string) => `<nldd-cell><span class="probe" id="${id}" style="display: block; background-color: var(--context-background-color)"></span></nldd-cell>`;
 	const ring = (root: ParentNode, id: string) => getComputedStyle(root.querySelector(`#${id}`)!).backgroundColor;
 	const paint = (row: Element, selector = '.list-item__action') =>
 		getComputedStyle(row.shadowRoot!.querySelector(selector)!, '::before').backgroundColor;

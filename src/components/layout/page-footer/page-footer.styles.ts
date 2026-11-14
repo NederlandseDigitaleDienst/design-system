@@ -1,6 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -16,7 +16,8 @@ export const pageFooterStyles = css`
 		--_page-footer-ribbon-color: var(--semantics-brand-ribbon-color);
 		--_page-footer-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-50));
 		--_page-footer-divider-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-150));
-		--context-parent-background-color: var(--_page-footer-background-color);
+		--context-background-color: var(--_page-footer-background-color);
+		${surfaceContent}
 
 		container-type: inline-size;
 		display: block;
@@ -38,11 +39,13 @@ export const pageFooterStyles = css`
 
 	.page-footer {
 		--_page-footer-ribbon-height: calc(var(--_page-footer-ribbon-width) / 2);
+		--_page-footer-ribbon-room: var(--primitives-space-16);
 
 		box-sizing: border-box;
 		display: flex;
 		position: relative;
 		width: 100%;
+		padding-bottom: var(--_page-footer-ribbon-room);
 		flex-direction: column;
 		align-items: center;
 
@@ -67,12 +70,13 @@ export const pageFooterStyles = css`
 	   transparent host) so a preceding tinted page section doesn't butt right up
 	   against the ribbon. */
 	:host([empty]) .page-footer {
-		min-height: var(--_page-footer-ribbon-height);
+		--_page-footer-ribbon-room: var(--_page-footer-ribbon-height);
 		margin-top: var(--_page-footer-ribbon-height);
 	}
 
 	:host([no-ribbon]) .page-footer {
 		--_page-footer-ribbon-height: 0px;
+		--_page-footer-ribbon-room: 0px;
 	}
 
 	:host(:not([no-ribbon])) .page-footer::after {
@@ -132,24 +136,6 @@ export const pageFooterStyles = css`
 	.page-footer__main,
 	.page-footer__legal-bar {
 		padding-block: var(--_page-footer-section-padding-block);
-	}
-
-	.page-footer__body > div:not([hidden]):not(:has(~ div:not([hidden]))) {
-		padding-bottom: calc(var(--primitives-space-16) + var(--_page-footer-ribbon-height));
-	}
-
-	:host([no-ribbon]:not([single-slot])) .page-footer__body > div:not([hidden]):not(:has(~ div:not([hidden]))) {
-		padding-bottom: var(--_page-footer-section-padding-block);
-	}
-
-	:host([single-slot]) .page-footer__body > div:not([hidden]) {
-		padding-top: calc(var(--primitives-space-16) + var(--_page-footer-ribbon-height));
-	}
-
-	:host([single-slot]:not([no-ribbon])) .page-footer__body > div:not([hidden]) {
-		@container (max-width: ${smMax}) {
-			padding-block: var(--primitives-space-32);
-		}
 	}
 
 	.page-footer__breadcrumbs[hidden],
@@ -235,11 +221,13 @@ export const pageFooterLegalBarItemStyles = css`
 
 	.page-footer__legal-bar-item {
 		display: inline-flex;
+		--context-content-color: var(--_page-footer-legal-bar-item-color);
 		color: var(--_page-footer-legal-bar-item-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 	}
 
 	.page-footer__legal-bar-item-link {
+		--context-content-color: var(--_page-footer-legal-bar-item-color);
 		color: var(--_page-footer-legal-bar-item-color);
 		text-decoration: underline;
 	}

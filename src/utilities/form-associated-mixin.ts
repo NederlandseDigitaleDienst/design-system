@@ -16,6 +16,24 @@ export interface OwnValidity {
 	message: string;
 }
 
+let uncheckedMessage = '';
+
+/**
+ * What `required` asks of a field around a checkbox or switch: a native control
+ * inside its own shadow root is out of reach of the form, so the field answers
+ * itself. In the browser's own words, as a native checkbox says it.
+ */
+export function uncheckedValidity(field: { required: boolean; checked: boolean; disabled: boolean }): OwnValidity | null {
+	if (!field.required || field.checked || field.disabled) return null;
+	if (!uncheckedMessage) {
+		const input = document.createElement('input');
+		input.type = 'checkbox';
+		input.required = true;
+		uncheckedMessage = input.validationMessage || 'Check this box.';
+	}
+	return { flags: { valueMissing: true }, message: uncheckedMessage };
+}
+
 /** What ElementInternals accepts as a form value. */
 export type FormValue = string | File | FormData | null;
 

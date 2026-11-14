@@ -300,9 +300,9 @@ describe('nldd-button-bar – on a colored surface', () => {
 	const surface = (bar: HTMLElement) => getComputedStyle(bar.shadowRoot!.querySelector('.button-bar')!).backgroundColor;
 	const resting = (button: Element) => getComputedStyle(button.shadowRoot!.querySelector('.button, .icon-button')!).backgroundColor;
 
-	it('draws the inherit-tinted surface once: the bar has it, its buttons are clear', async () => {
+	it('draws the content-tinted surface once: the bar has it, its buttons are clear', async () => {
 		el = await fixture<NLDDButtonBar>(`
-			<nldd-button-bar appearance="inherit-tinted" style="color: rgb(255, 255, 255)">
+			<nldd-button-bar appearance="content-tinted" style="color: rgb(255, 255, 255)">
 				<nldd-button text="Bewerk"></nldd-button>
 				<nldd-icon-button icon="trash" text="Verwijder"></nldd-icon-button>
 			</nldd-button-bar>
@@ -315,9 +315,9 @@ describe('nldd-button-bar – on a colored surface', () => {
 		}
 	});
 
-	it('keeps an expanded button in an inherit-tinted bar clear as well: inherit has no state colors', async () => {
+	it('keeps an expanded button in an content-tinted bar clear as well: inherit has no state colors', async () => {
 		el = await fixture<NLDDButtonBar>(`
-			<nldd-button-bar appearance="inherit-tinted" style="color: rgb(255, 255, 255)">
+			<nldd-button-bar appearance="content-tinted" style="color: rgb(255, 255, 255)">
 				<nldd-button text="Open" expandable expanded></nldd-button>
 			</nldd-button-bar>
 		`);
@@ -326,9 +326,9 @@ describe('nldd-button-bar – on a colored surface', () => {
 		expect(resting(el.querySelector('nldd-button')!)).toBe('rgba(0, 0, 0, 0)');
 	});
 
-	it('gives the inherit-filled bar a surface of its own', async () => {
+	it('gives the content-filled bar a surface of its own', async () => {
 		el = await fixture<NLDDButtonBar>(`
-			<nldd-button-bar appearance="inherit-filled" style="color: rgb(255, 255, 255)">
+			<nldd-button-bar appearance="content-filled" style="color: rgb(255, 255, 255)">
 				<nldd-button text="Bewerk"></nldd-button>
 			</nldd-button-bar>
 		`);

@@ -3,9 +3,12 @@
  * rules from src/rules/, then the suppressions written in the file.
  */
 
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, extname, join } from 'node:path';
+import { declarations, enclosingBlock, isDesignSystemCss, TOKEN_PREFIX, tokenReferences, withoutComments } from './css.js';
 import { createEngine } from './engine.js';
 import { canFix, stuckTags } from './fix.js';
-import { applyWrappers, parseSource } from './frontends.js';
+import { applyWrappers, parseSource, parseStylesheet, readerOf } from './frontends.js';
 import { BUILT_IN_RULES, createCanonical, loadData, OPT_IN_GROUPS } from './rule-data.js';
 import { BOUND, walk } from './tree.js';
 
@@ -44,11 +47,25 @@ function readPropertyNames(roots, tags, isPlainHtml) {
 	return roots;
 }
 
-function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, report) {
+/** What the components around a node read off anything inside them, such as `sidebar-section-only`. */
+function fromAncestors(node, tags, anyDescendantAttrs) {
+	const attrs = {};
+	for (let ancestor = node.parent; ancestor; ancestor = ancestor.parent) {
+		// An ancestor in another file may be the one reading it.
+		if (ancestor.opaque) return { ...anyDescendantAttrs, ...attrs };
+		Object.assign(attrs, tags[ancestor.name]?.descendantAttrs);
+	}
+	return attrs;
+}
+
+function checkAttributes(node, { tags, icons, anyChildAttrs, anyDescendantAttrs, isPlainHtml }, report) {
 	if (node.templated) return;
 	const contract = tags[node.name];
 	// A parent in another file may be the one reading it, so any child attribute goes.
-	const fromParent = node.parent.opaque ? anyChildAttrs : (tags[node.parent.name]?.childAttrs ?? {});
+	const fromParent = {
+		...fromAncestors(node, tags, anyDescendantAttrs),
+		...(node.parent.opaque ? anyChildAttrs : (tags[node.parent.name]?.childAttrs ?? {})),
+	};
 	for (const [name, value] of node.attrs) {
 		const attribute = contract.attrs[name] ?? fromParent[name];
 		if (ICON_ATTRIBUTES.has(name) && attribute && typeof value === 'string' && value !== '') {
@@ -80,6 +97,35 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 	}
 }
 
+/**
+ * The keys in a `translations` attribute written as JSON. An element reads only its
+ * own keys, so a key another component has, or one that was renamed, does nothing.
+ */
+function checkTranslationKeys(node, { translations, removedKeys }, report) {
+	const value = node.attrs.get('translations');
+	const own = translations[node.name];
+	if (typeof value !== 'string' || !own) return;
+	let keys;
+	try {
+		const parsed = JSON.parse(value);
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return;
+		keys = Object.keys(parsed);
+	} catch {
+		return;
+	}
+	for (const key of keys) {
+		if (own.includes(key)) continue;
+		const removed = removedKeys[key];
+		const owner = Object.keys(translations).find((tag) => translations[tag].includes(key));
+		const message = removed
+			? `\`${key}\` was removed after ${removed.last}.${removed.use && own.includes(removed.use) ? ` Use \`${removed.use}\`.` : ''}`
+			: owner
+				? `\`${key}\` belongs to ${owner}, so ${node.name} does not read it.`
+				: `${node.name} has no translation key \`${key}\`.`;
+		report('translation-key-not-found', message, 'translations');
+	}
+}
+
 function checkSlot(node, tags, report) {
 	const slot = node.attrs.get('slot');
 	const parent = node.parent;
@@ -103,6 +149,7 @@ function builtInFindings(root, context) {
 			return;
 		}
 		checkAttributes(node, context, report);
+		checkTranslationKeys(node, context, report);
 		checkSlot(node, tags, report);
 	});
 	return findings;
@@ -144,15 +191,143 @@ function createPositions(source) {
 }
 
 
-export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {} } = {}) {
+/** Files where `//` is no comment: in markup it starts a url, and a built page is one line. */
+const MARKUP_FILE = /\.(html?|j2|jinja2?|tmpl|gohtml|vue|md)$/;
+
+/**
+ * A stylesheet a page links to, on disk next to it: relative to the page, or from the
+ * root of the site for a path that starts with a slash, as in a built site.
+ */
+function linkedFile(href, filename) {
+	if (typeof href !== 'string' || !href || /^([a-z]+:|\/\/)/i.test(href)) return undefined;
+	const path = decodeURI(href.replace(/[?#].*$/, ''));
+	if (extname(path) !== '.css') return undefined;
+	if (!path.startsWith('/')) {
+		const file = join(dirname(filename), path);
+		return existsSync(file) ? file : undefined;
+	}
+	for (let directory = dirname(filename); ; directory = dirname(directory)) {
+		const file = join(directory, path);
+		if (existsSync(file)) return file;
+		if (dirname(directory) === directory) return undefined;
+	}
+}
+
+export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [] } = {}) {
 	const canonical = createCanonical(data);
 	const severities = Object.fromEntries(Object.entries(configured).map(([id, level]) => [canonical(id), level]));
 	const context = {
 		tags: data.tags,
 		icons: new Set(data.icons),
 		anyChildAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.childAttrs)),
+		anyDescendantAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.descendantAttrs ?? {})),
+		translations: data.translations ?? {},
+		removedKeys: data.removedKeys ?? {},
 	};
-	const engine = createEngine({ classes: data.classes, tags: data.tags });
+	const engine = createEngine({ classes: data.classes, tags: data.tags, designSystemCss: data.designSystemCss });
+	const isDesignSystemBlock = (css) => isDesignSystemCss(css, data.designSystemCss ?? {});
+	const tokens = new Set([...(data.tokens ?? []), ...projectTokens]);
+	const removedTokens = data.removedTokens ?? {};
+	// Longest first, so --_button-group-gap belongs to button-group and not to button.
+	const components = Object.keys(data.tags)
+		.filter((tag) => tag.startsWith('nldd-'))
+		.map((tag) => tag.slice('nldd-'.length))
+		.sort((a, b) => b.length - a.length);
+
+	/** A stylesheet on disk is the design system's when every block in it is. */
+	const linkedSheets = new Map();
+	function isDesignSystemSheet(file) {
+		if (!linkedSheets.has(file)) {
+			const blocks = parseStylesheet(readFileSync(file, 'utf8')).flatMap((root) => root.children);
+			linkedSheets.set(file, blocks.every((block) => isDesignSystemBlock(block.css)));
+		}
+		return linkedSheets.get(file);
+	}
+
+	/** A link to a stylesheet this page ships itself is judged by what is in that file, not by its name. */
+	function readLinkedStylesheets(roots, filename) {
+		for (const root of roots) {
+			walk(root, (node) => {
+				if (node.name !== 'link' || !/(^|\s)stylesheet(\s|$)/i.test(String(node.attrs.get('rel') ?? ''))) return;
+				const file = linkedFile(node.attrs.get('href'), filename);
+				if (file) node.designSystem = isDesignSystemSheet(file);
+			});
+		}
+	}
+
+	/** Where the design system's own CSS sits in this file: a bundle or a page can hold it next to the app's. */
+	function designSystemRanges(roots) {
+		const ranges = [];
+		for (const root of roots) {
+			walk(root, (node) => {
+				if (node.name === 'style' && node.css !== undefined && isDesignSystemBlock(node.css)) {
+					ranges.push([node.offset, node.offset + node.css.length]);
+				}
+			});
+		}
+		return (offset) => ranges.some(([start, end]) => offset >= start && offset < end);
+	}
+
+	const LINK_CONTEXT = ['--context-link-color', '--context-link-is-hovered-color', '--context-link-is-active-color'];
+
+	/**
+	 * The design system's tokens the app names, and the internal variables of a component it
+	 * sets. Read from the text, so a stylesheet, a style attribute and a style object
+	 * in a script all count. A token the file or the project declares itself is its own.
+	 */
+	function cssFindings(source, filename, roots) {
+		const lineComments = !MARKUP_FILE.test(filename);
+		const inDesignSystemCss = designSystemRanges(roots);
+		const declared = declarations(source, lineComments).filter((each) => !inDesignSystemCss(each.offset));
+		const ownTokens = new Set(declared.map(({ name }) => name).filter((name) => TOKEN_PREFIX.test(name)));
+		const findings = [];
+		const report = (rule, message, { name, offset }) =>
+			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, tag: name, offset, endOffset: offset + name.length });
+		for (const reference of tokenReferences(source, lineComments)) {
+			const { name, offset } = reference;
+			if (tokens.has(name) || ownTokens.has(name) || inDesignSystemCss(offset)) continue;
+			const removed = removedTokens[name];
+			const instead = removed?.use ? ` Use \`${removed.use}\`.` : '';
+			const message = removed
+				? `\`${name}\` was removed after ${removed.last}.${instead}`
+				: `There is no token \`${name}\` in this version.`;
+			report('token-not-found', message, reference);
+		}
+		for (const declaration of declared) {
+			if (!declaration.name.startsWith('--_')) continue;
+			const component = components.find((name) => declaration.name.startsWith(`--_${name}-`));
+			if (!component) continue;
+			report('local-variable-no-override', `\`${declaration.name}\` is internal to nldd-${component}, so setting it is not supported.`, declaration);
+		}
+		const plain = withoutComments(source, lineComments);
+		const linkBlocks = new Set();
+		for (const declaration of declared) {
+			if (!LINK_CONTEXT.includes(declaration.name)) continue;
+			const { start, end } = enclosingBlock(plain, declaration.offset);
+			if (linkBlocks.has(start)) continue;
+			linkBlocks.add(start);
+			const set = new Set(declared.filter(({ offset }) => offset >= start && offset < end).map(({ name }) => name));
+			const missing = LINK_CONTEXT.filter((name) => !set.has(name));
+			if (missing.length === 0) continue;
+			report('link-context-needs-states', `Set ${missing.map((name) => `\`${name}\``).join(' and ')} here too, or a link on this surface turns back to the default color.`, declaration);
+		}
+		return findings;
+	}
+
+	/**
+	 * Markup of ours in a file the linter cannot read: a type it has no parser for, or a
+	 * script without an `html` template, where `<nldd-` sits in a plain string. What a
+	 * markup parser skips on purpose, such as a comment or an inert template, is not this.
+	 */
+	function unreadMarkup(source, filename, roots) {
+		const reader = readerOf(filename);
+		if (reader === 'markup' || (reader === 'templates' && roots.length > 0)) return [];
+		const offset = withoutComments(source, !MARKUP_FILE.test(filename)).search(/<nldd-[a-z]/);
+		if (offset < 0) return [];
+		const rule = 'file-not-read';
+		return [{ rule, severity: BUILT_IN_RULES[rule].severity, message: BUILT_IN_RULES[rule].description, tag: '', offset }];
+	}
+
 	// An opt-in group runs only where a level was given for it, never by default.
 	const isOn = (rule) => (OPT_IN_GROUPS.includes(rule.group) ? Boolean(severities[rule.id]) : true) && severities[rule.id] !== 'off';
 	const rules = data.rules.filter((rule) => !rule.runtime && isOn(rule));
@@ -173,6 +348,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		return !node.wrapped && !maybeInput;
 	}
 
+	/** A rule whose context picks a value of a name that is gone: its fix is only right for that value. */
+	const testsRemovedValue = (rule) =>
+		rule.removed?.some((name) => new RegExp(`\\[${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[~|^$*]?=`).test(rule.context));
+
 	function lintRoots(roots, isPlainHtml) {
 		const findings = [];
 		const counts = { failed: 0, passed: 0, cantTell: 0 };
@@ -190,7 +369,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 						message: rule.message,
 						node,
 						covers: [...(rule.removed ?? []), ...Object.keys(rule.fix?.value ?? {})],
-						fix: isOurs(node, rule, isPlainHtml) ? rule.fix : undefined,
+						fix: isOurs(node, rule, isPlainHtml) && !(outcome === 'cantTell' && testsRemovedValue(rule)) ? rule.fix : undefined,
 					});
 				}
 			}
@@ -201,8 +380,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
 	async function lintSource(source, filename) {
 		const parsed = applyWrappers(await parseSource(source, filename), wrappers);
-		const isPlainHtml = /\.(html?|j2|jinja2?)$/.test(filename);
+		const isPlainHtml = /\.(html?|j2|jinja2?|tmpl|gohtml)$/.test(filename);
 		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
+		readLinkedStylesheets(roots, filename);
 		const { findings, counts } = lintRoots(roots, isPlainHtml);
 		const { suppressed, missingReason } = readSuppressions(source, canonical);
 		const position = createPositions(source);
@@ -222,7 +402,12 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				offset: node.offset,
 				endOffset: node.endOffset,
 				...position(node.offset),
-			}));
+			}))
+			.concat(
+				[...cssFindings(source, filename, roots), ...unreadMarkup(source, filename, parsed)]
+					.filter(({ rule }) => ranInSource(rule))
+					.map((finding) => ({ ...finding, ...position(finding.offset) })),
+			);
 		const stuck = stuckTags(source, all, /\.[jt]sx$/.test(filename));
 		for (const finding of all) {
 			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;

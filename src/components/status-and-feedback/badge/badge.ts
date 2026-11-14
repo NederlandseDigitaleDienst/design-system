@@ -15,8 +15,8 @@
  *
  * @element nldd-badge
  * @attr {string} size - Size: 'sm' | 'md' (default: 'md')
- * @attr {'critical'|'accent'|'neutral'|'warning'|'success'|'inherit'} color - The meaning of the badge, the same set as nldd-status-bar, or 'inherit' to fill in the content color around it: the `--context-content-color` channel a list item, table row or menu sets, falling back to `currentColor`. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development.
- * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it.
+ * @attr {'critical'|'accent'|'neutral'|'warning'|'success'|'content'} color - The meaning of the badge, the same set as nldd-status-bar, or 'content' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development.
+ * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it.
  * @attr {boolean} pulse - Grows a ring out of the badge and fades it, for something happening right now (a live connection, an outage). Respects `prefers-reduced-motion`.
  * @attr {string} text - Text (takes precedence over number)
  * @attr {number} number - Numeric value. Shortened when it is over max
@@ -36,8 +36,8 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddBadgeTranslations } from './badge.i18n.js';
 import './../../content/icon/icon.js';
 
-type Color = 'critical' | 'accent' | 'neutral' | 'warning' | 'success' | 'inherit';
-const COLORS: ReadonlySet<string> = new Set<Color>(['critical', 'accent', 'neutral', 'warning', 'success', 'inherit']);
+type Color = 'critical' | 'accent' | 'neutral' | 'warning' | 'success' | 'content';
+const COLORS: ReadonlySet<string> = new Set<Color>(['critical', 'accent', 'neutral', 'warning', 'success', 'content']);
 type Size = 'sm' | 'md';
 
 @customElement('nldd-badge')

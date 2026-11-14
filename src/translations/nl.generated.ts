@@ -3,6 +3,7 @@
 
 import { nlddButtonTranslations } from '../components/actions/button/button.i18n.js';
 import { nlddIconButtonTranslations } from '../components/actions/icon-button/icon-button.i18n.js';
+import { nlddMenuItemTranslations } from '../components/actions/menu/menu-item.i18n.js';
 import { nlddMenuTranslations } from '../components/actions/menu/menu.i18n.js';
 import { nlddSplitButtonTranslations } from '../components/actions/split-button/split-button.i18n.js';
 import { nlddToolbarTranslations } from '../components/actions/toolbar/toolbar.i18n.js';
@@ -11,6 +12,7 @@ import { nlddAvatarTranslations } from '../components/content/avatar/avatar.i18n
 import { nlddCodeViewerTranslations } from '../components/content/code-viewer/code-viewer.i18n.js';
 import { nlddImageTranslations } from '../components/content/image/image.i18n.js';
 import { nlddRichTextTranslations } from '../components/content/rich-text/rich-text.i18n.js';
+import { nlddTermTranslations } from '../components/content/term/term.i18n.js';
 import { nlddTokenTranslations } from '../components/content/token/token.i18n.js';
 import { nlddValidationListTranslations } from '../components/forms/validation-list/validation-list.i18n.js';
 import { nlddComboBoxTranslations } from '../components/inputs/combo-box/combo-box.i18n.js';
@@ -34,7 +36,7 @@ import { nlddPageFooterTranslations } from '../components/layout/page-footer/pag
 import { nlddSidebarSectionTranslations } from '../components/layout/page-sections/sidebar-section/sidebar-section.i18n.js';
 import { nlddPopoverTranslations } from '../components/layout/popover/popover.i18n.js';
 import { nlddWindowTranslations } from '../components/layout/window/window.i18n.js';
-import { nlddDragHandleCellTranslations } from '../components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.i18n.js';
+import { nlddReorderHandleCellTranslations } from '../components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.i18n.js';
 import { nlddListItemSegmentTranslations } from '../components/lists-and-tables/list-item-segment/list-item-segment.i18n.js';
 import { nlddListItemTranslations } from '../components/lists-and-tables/list-item/list-item.i18n.js';
 import { nlddListTranslations } from '../components/lists-and-tables/list/list.i18n.js';
@@ -60,6 +62,7 @@ import { nlddStepBarTranslations } from '../components/status-and-feedback/step-
 export const nl = {
 	...nlddButtonTranslations,
 	...nlddIconButtonTranslations,
+	...nlddMenuItemTranslations,
 	...nlddMenuTranslations,
 	...nlddSplitButtonTranslations,
 	...nlddToolbarTranslations,
@@ -68,6 +71,7 @@ export const nl = {
 	...nlddCodeViewerTranslations,
 	...nlddImageTranslations,
 	...nlddRichTextTranslations,
+	...nlddTermTranslations,
 	...nlddTokenTranslations,
 	...nlddValidationListTranslations,
 	...nlddComboBoxTranslations,
@@ -91,7 +95,7 @@ export const nl = {
 	...nlddSidebarSectionTranslations,
 	...nlddPopoverTranslations,
 	...nlddWindowTranslations,
-	...nlddDragHandleCellTranslations,
+	...nlddReorderHandleCellTranslations,
 	...nlddListItemSegmentTranslations,
 	...nlddListItemTranslations,
 	...nlddListTranslations,

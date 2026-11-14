@@ -54,8 +54,8 @@ export default {
 		},
 		color: {
 			control: 'select',
-			options: ['neutral', 'inherit'],
-			description: "'neutral' (default) gebruikt de eigen kleuren; 'inherit' volgt de omringende tekstkleur (currentColor) met een doorschijnende contrast-vulling",
+			options: ['neutral', 'content'],
+			description: "'neutral' (default) gebruikt de eigen kleuren; 'content' volgt de tekstkleur van de context met een doorschijnende contrast-vulling",
 			table: {
 				defaultValue: { summary: 'neutral' },
 			},
@@ -200,22 +200,22 @@ export const Appearances = {
 	},
 };
 
-export const KleurInherit = {
+export const KleurContent = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 8px; background: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color);">
+		<div style="display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 8px; background: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color); --context-background-color: var(--semantics-surfaces-accent-filled-background-color); --context-content-color: var(--semantics-content-on-accent-filled-color);">
 			<nldd-keyboard-shortcut
-				color="inherit"
+				color="content"
 				keys="Cmd+K"
 			></nldd-keyboard-shortcut>
 			<nldd-keyboard-shortcut
-				color="inherit"
+				color="content"
 				keys="Ctrl+Shift+P"
 			></nldd-keyboard-shortcut>
 		</div>
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: '`color="inherit"` laat de toetsen en scheidingstekens de omringende tekstkleur volgen (currentColor) — hier wit op een donkerblauw vlak. De toetsen worden een omtrek in die kleur.' } },
+		docs: { description: { story: '`color="content"` laat de toetsen en scheidingstekens de tekstkleur van de context volgen, hier wit op een donkerblauw vlak. De toetsen worden een omtrek in die kleur.' } },
 	},
 };
 

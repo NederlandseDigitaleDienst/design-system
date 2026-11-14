@@ -94,18 +94,16 @@ nldd-shell                            de buitenste schil
     >
       <nldd-image slot="media"></nldd-image>
       <nldd-title
-        color="inherit"
-        size="1"
         text="Regel je aanvraag online"
         heading-level="1"
       ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
-      <nldd-rich-text color="inherit">
+      <nldd-rich-text>
         <p>Dien een aanvraag in, volg de behandeling en vind je documenten terug, zonder dat je hoeft te weten bij welke afdeling het ligt.</p>
       </nldd-rich-text>
       <nldd-spacer size="24"></nldd-spacer>
       <nldd-button
-        appearance="inherit-filled"
+        appearance="content-filled"
         text="Aanvraag starten"
         href="#aanpak"
       ></nldd-button>
@@ -114,7 +112,6 @@ nldd-shell                            de buitenste schil
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
-        size="2"
         text="Alles rond je aanvraag regel je hier"
         heading-level="2"
       ></nldd-title>
@@ -132,7 +129,7 @@ nldd-shell                            de buitenste schil
         <nldd-card>
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Aanvraag"
               heading-level="3"
             ></nldd-title>
@@ -156,7 +153,7 @@ nldd-shell                            de buitenste schil
         <nldd-card>
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Behandeling"
               heading-level="3"
             ></nldd-title>
@@ -180,7 +177,7 @@ nldd-shell                            de buitenste schil
         <nldd-card>
           <nldd-container padding="16">
             <nldd-title
-              size="4"
+              size="display-4"
               text="Brieven en besluiten"
               heading-level="3"
             ></nldd-title>
@@ -211,7 +208,6 @@ nldd-shell                            de buitenste schil
       ></nldd-image>
       <nldd-title
         slot="right"
-        size="2"
         text="Je dossier houdt alles bij elkaar"
         heading-level="2"
       ></nldd-title>
@@ -239,7 +235,6 @@ nldd-shell                            de buitenste schil
     <nldd-two-thirds-one-third-section background="tinted">
       <nldd-title
         slot="left"
-        size="2"
         text="Een aanvraag gaat langs drie vaste stappen"
         heading-level="2"
       ></nldd-title>
@@ -254,7 +249,7 @@ nldd-shell                            de buitenste schil
       <nldd-card slot="right">
         <nldd-container padding="16">
           <nldd-title
-            size="4"
+            size="display-4"
             text="De behandelaar helpt je verder"
             heading-level="3"
           ></nldd-title>
@@ -275,7 +270,6 @@ nldd-shell                            de buitenste schil
     <nldd-one-third-two-thirds-section>
       <nldd-title
         slot="left"
-        size="2"
         text="Hiervoor kun je een aanvraag doen"
         heading-level="2"
       ></nldd-title>
@@ -344,7 +338,6 @@ nldd-shell                            de buitenste schil
 
     <nldd-simple-section background="tinted">
       <nldd-title
-        size="2"
         text="Aanvragen kost tien minuten"
         supporting-text="Houd je DigiD bij de hand."
         heading-level="2"
@@ -409,11 +402,11 @@ Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `
 
 ## Gezien in
 
-Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.
+Deze compositie komt van de publieke pagina's op dit designsysteem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.
 
 ## Regels
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
 - `hero-goes-first`: Make nldd-hero the first section, which says what the site is for.
-- `top-navigation-bar-no-menu-row`: Let the pages be the navigation: put the entries in the home as cards and lists, and keep search and language in `utility`.
+- `top-navigation-bar-no-menu-row`: Leave `global` empty and let the pages be the navigation: put the entries on the home page as `nldd-card` or `nldd-list`, and keep search and language in `utility`.

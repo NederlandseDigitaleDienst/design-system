@@ -10,9 +10,9 @@
  * The pane automatically hides the back button via CSS when `hide-back` is active.
  *
  * ## Background color
- * The pane sets `--context-parent-background-color` which cascades down to all descendants.
+ * The pane sets `--context-background-color` which cascades down to all descendants.
  * Set `background="tinted"` on a pane to give it a tinted background independently of sibling panes.
- * Descendants such as `nldd-page` read `--context-parent-background-color` automatically.
+ * Descendants such as `nldd-page` read `--context-background-color` automatically.
  *
  * ## Slotted content
  * A pane stretches its slotted content to fill it (`::slotted(*) { flex-grow: 1 }`),

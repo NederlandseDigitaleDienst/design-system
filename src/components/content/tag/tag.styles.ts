@@ -14,6 +14,7 @@ export const tagStyles = css`
 		--_tag-background-color: var(--semantics-categories-neutral-tinted-background-color);
 		--_tag-min-height: var(--primitives-space-24);
 		--_tag-inline-padding: var(--primitives-space-6);
+		--_tag-block-padding: var(--primitives-space-3);
 		--_tag-gap: var(--primitives-space-3);
 		--_tag-content-color: var(--semantics-categories-neutral-tinted-content-color);
 		--_tag-border-color: var(--semantics-categories-neutral-tinted-highlight-border-color);
@@ -24,6 +25,7 @@ export const tagStyles = css`
 
 		${inheritedTextReset}
 		display: inline-flex;
+		max-width: 100%;
 		vertical-align: middle;
 	}
 
@@ -31,6 +33,7 @@ export const tagStyles = css`
 		--_tag-corner-radius: var(--primitives-corner-radius-xxs);
 		--_tag-min-height: var(--primitives-space-20);
 		--_tag-inline-padding: var(--primitives-space-4);
+		--_tag-block-padding: var(--primitives-space-2);
 		--_tag-gap: var(--primitives-space-2);
 		--_tag-font: var(--primitives-font-body-xs-medium-flat);
 		--_tag-icon-size: var(--primitives-space-14);
@@ -187,13 +190,15 @@ export const tagStyles = css`
 		   the tag's size or shifts the text. */
 		box-shadow: inset 0 0 0 var(--_tag-border-width) var(--_tag-border-color);
 		background-color: var(--_tag-background-color);
+		max-width: 100%;
 		min-height: var(--_tag-min-height);
-		padding: 0 var(--_tag-inline-padding);
+		padding: var(--_tag-block-padding) var(--_tag-inline-padding);
 		gap: var(--_tag-gap);
 		align-items: center;
+		--context-content-color: var(--_tag-content-color);
 		color: var(--_tag-content-color);
 		font: var(--_tag-font);
-		white-space: nowrap;
+		overflow-wrap: break-word;
 	}
 
 	@media (forced-colors: active) {

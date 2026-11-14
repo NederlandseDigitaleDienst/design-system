@@ -69,8 +69,8 @@ export default {
 		},
 		color: {
 			control: 'select',
-			options: ['neutral', 'inherit'],
-			description: 'neutral (neutrale vulling) of inherit (currentColor-vulling, contrasttekst)',
+			options: ['neutral', 'content'],
+			description: 'neutral (neutrale vulling) of content (vulling in de tekstkleur van de context, contrasttekst)',
 			table: { defaultValue: { summary: 'neutral' } },
 		},
 		iconAligned: {
@@ -230,33 +230,33 @@ export const SchaaltMee = {
 };
 
 /**
- * `color="inherit"` vult de avatar met `currentColor` en zet de tekst in de
+ * `color="content"` vult de avatar met `--context-content-color` en zet de tekst in de
  * contrastkleur, zodat de avatar de omringende kleur overneemt (bijvoorbeeld
  * als vervanging van een account-icoon in een knop of naast tekst).
  */
-export const KleurInherit = {
+export const KleurContent = {
 	render: () => html`
 		<nldd-container
 			layout="row"
 			gap="20"
 		>
-			<span style="display: inline-flex; align-items: center; gap: 8px; color: var(--semantics-content-color);">
+			<span style="display: inline-flex; align-items: center; gap: 8px; --context-content-color: var(--semantics-content-color); color: var(--semantics-content-color);">
 				<nldd-avatar
 					name="Bart van de Biezen"
-					color="inherit"
+					color="content"
 					size="24"
 				></nldd-avatar>
-				<nldd-text color="inherit">
+				<nldd-text>
 					Bart van de Biezen
 				</nldd-text>
 			</span>
-			<span style="display: inline-flex; align-items: center; gap: 8px; color: var(--semantics-content-accent-color);">
+			<span style="display: inline-flex; align-items: center; gap: 8px; --context-content-color: var(--semantics-content-accent-color); color: var(--semantics-content-accent-color);">
 				<nldd-avatar
 					name="Anna Ismaili"
-					color="inherit"
+					color="content"
 					size="24"
 				></nldd-avatar>
-				<nldd-text color="inherit">
+				<nldd-text>
 					Anna Ismaili
 				</nldd-text>
 			</span>
@@ -357,7 +357,8 @@ export const Initialen = {
 /**
  * De initialen vullen de schijf zo groot mogelijk; brede initialen (WW, MMM)
  * worden automatisch teruggeschaald zodat ze binnen de schijf blijven, terwijl
- * smalle initialen (II) op volle grootte blijven.
+ * smalle initialen (II) op volle grootte blijven. Vier tekens, zoals het acroniem
+ * van een organisatie, lezen goed vanaf 40px.
  */
 export const BredeInitialen = {
 	render: () => html`
@@ -389,6 +390,18 @@ export const BredeInitialen = {
 				initials="WWW"
 				decorative
 				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				type="organization"
+				initials="LVVN"
+				decorative
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				type="organization"
+				initials="LVVN"
+				decorative
+				size="40"
 			></nldd-avatar>
 		</nldd-container>
 	`,

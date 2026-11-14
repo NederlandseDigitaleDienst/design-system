@@ -17,7 +17,7 @@
  * The main panel always uses slot="main".
  *
  * ## Background color
- * Sets --context-parent-background-color, which cascades to all descendants.
+ * Sets --context-background-color, which cascades to all descendants.
  *
  * @element nldd-bar-split-view
  *

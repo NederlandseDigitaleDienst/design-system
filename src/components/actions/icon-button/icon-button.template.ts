@@ -128,7 +128,9 @@ export function template(this: NLDDIconButton) {
 	// The indicator is a sibling of the control (and of the tooltip wrapper),
 	// overlaid via the host's position:relative — keeping its live region out
 	// of any interactive ancestor.
-	const control = (tooltipText || hasShortcut(this)) && this.tooltipTiming !== 'never'
+	// A popover in the interest slot opens on the same hover and focus, and
+	// takes the tooltip's place.
+	const control = (tooltipText || hasShortcut(this)) && this.tooltipTiming !== 'never' && !this._interest.overlay
 		? html`
 			<nldd-tooltip
 				text=${tooltipText || nothing}
@@ -146,7 +148,7 @@ export function template(this: NLDDIconButton) {
 	// A single slotted nldd-menu / nldd-popover that this button invokes. Named
 	// slot so it never lands in the icon slot; it renders nothing in flow (a
 	// popover is display:none until shown in the top layer). See _handleClick.
-	const popupSlot = html`<slot name="popup" @slotchange=${this._popup.handleSlotChange}></slot>`;
+	const popupSlot = html`<slot name="popup" @slotchange=${this._popup.handleSlotChange}></slot><slot name="interest" @slotchange=${this._interest.handleSlotChange}></slot>`;
 
 	return html`${control}${loadingIndicator}${popupSlot}`;
 }

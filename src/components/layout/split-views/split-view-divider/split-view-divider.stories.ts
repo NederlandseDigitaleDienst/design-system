@@ -47,13 +47,13 @@ export default {
 
 export const Verticaal = ({ orientation, hasDragHandle }: Record<string, any>) => html`
 	<div style="display: flex; flex-direction: row; height: 200px;">
-		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 		</div>
 		<nldd-split-view-divider
 			orientation=${orientation}
 			?has-drag-handle=${hasDragHandle}
 		></nldd-split-view-divider>
-		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 		</div>
 	</div>
 `;
@@ -61,10 +61,10 @@ export const Verticaal = ({ orientation, hasDragHandle }: Record<string, any>) =
 export const Horizontaal = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; width: 400px;">
-		<div style="height: 100px; background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="height: 100px; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 		</div>
 		<nldd-split-view-divider orientation="horizontal"></nldd-split-view-divider>
-		<div style="height: 100px; background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="height: 100px; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 		</div>
 	</div>
 `,
@@ -74,13 +74,13 @@ export const Horizontaal = {
 export const MetSleepHandvat = {
 	render: () => html`
 	<div style="display: flex; flex-direction: row; height: 200px;">
-		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 		</div>
 		<nldd-split-view-divider
 			orientation="vertical"
 			has-drag-handle
 		></nldd-split-view-divider>
-		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color);">
+		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 		</div>
 	</div>
 `,

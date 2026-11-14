@@ -52,7 +52,6 @@ export const Standaard = {
 
 			<nldd-container>
 				<nldd-title
-					size="2"
 					text="Over deze website"
 					heading-level="2"
 				></nldd-title>
@@ -121,7 +120,7 @@ export const MetKolommen = {
 			>
 			<nldd-container>
 				<nldd-title
-					size="5"
+					size="display-5"
 					text="Aanvragen"
 					heading-level="2"
 				></nldd-title>
@@ -146,7 +145,7 @@ export const MetKolommen = {
 			</nldd-container>
 			<nldd-container>
 				<nldd-title
-					size="5"
+					size="display-5"
 					text="Onderwerpen"
 					heading-level="2"
 				></nldd-title>
@@ -171,7 +170,7 @@ export const MetKolommen = {
 			</nldd-container>
 			<nldd-container>
 				<nldd-title
-					size="5"
+					size="display-5"
 					text="Over Mijn Dienst"
 					heading-level="2"
 				></nldd-title>
@@ -192,7 +191,7 @@ export const MetKolommen = {
 			</nldd-container>
 			<nldd-container>
 				<nldd-title
-					size="5"
+					size="display-5"
 					text="Meedoen"
 					heading-level="2"
 				></nldd-title>
@@ -318,7 +317,6 @@ export const Smal = {
 				</nldd-breadcrumbs>
 				<nldd-container>
 					<nldd-title
-						size="2"
 						text="Over deze website"
 						heading-level="2"
 					></nldd-title>

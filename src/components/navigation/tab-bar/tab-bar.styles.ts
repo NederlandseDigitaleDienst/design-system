@@ -239,6 +239,7 @@ export const tabBarItemStyles = css`
 		gap: var(--_tab-bar-item-gap);
 		align-items: center;
 		justify-content: center;
+		--context-content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		font: var(--_tab-bar-item-font);
 		text-decoration: none;
@@ -260,12 +261,14 @@ export const tabBarItemStyles = css`
 	@media (hover: hover) {
 		.tab-bar__item:hover {
 			background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
+			--context-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
 			color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
 		}
 	}
 
 	.tab-bar__item:active {
 		background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
+		--context-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
 		color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
 	}
 
@@ -273,6 +276,7 @@ export const tabBarItemStyles = css`
 		--_tab-bar-item-highlight-border-color: var(--semantics-tabs-is-current-highlight-border-color);
 
 		background-color: var(--semantics-tabs-is-current-background-color);
+		--context-content-color: var(--semantics-tabs-is-current-content-color);
 		color: var(--semantics-tabs-is-current-content-color);
 	}
 
@@ -281,6 +285,7 @@ export const tabBarItemStyles = css`
 			--_tab-bar-item-highlight-border-color: var(--semantics-tabs-is-current-is-hovered-highlight-border-color);
 
 			background-color: var(--semantics-tabs-is-current-is-hovered-background-color);
+			--context-content-color: var(--semantics-tabs-is-current-is-hovered-content-color);
 			color: var(--semantics-tabs-is-current-is-hovered-content-color);
 		}
 	}
@@ -289,6 +294,7 @@ export const tabBarItemStyles = css`
 		--_tab-bar-item-highlight-border-color: var(--semantics-tabs-is-current-is-active-highlight-border-color);
 
 		background-color: var(--semantics-tabs-is-current-is-active-background-color);
+		--context-content-color: var(--semantics-tabs-is-current-is-active-content-color);
 		color: var(--semantics-tabs-is-current-is-active-content-color);
 	}
 

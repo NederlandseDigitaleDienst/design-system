@@ -4,7 +4,7 @@ Dit document beschrijft wie beslist over dit project, hoe je daar invloed op heb
 
 ## Rollen
 
-Er is één maintainer: **Bart van de Biezen**. Die beoordeelt issues en pull requests, bepaalt wat er in een release komt en is het aanspreekpunt voor vragen over het systeem.
+Er is één maintainer: **Bart van de Biezen**. Die beoordeelt issues en pull requests, bepaalt wat er in een release komt en is het aanspreekpunt voor vragen over het designsysteem.
 
 Iedereen die een issue opent, een pull request indient of meedenkt in een discussie is bijdrager. Daar hoort geen aanstelling bij en geen minimum aan inzet.
 
@@ -26,7 +26,7 @@ Vertrekt de maintainer, dan wijst het NLDD-team een opvolger aan. Het project ha
 
 ## Planning
 
-De prioriteiten komen uit de behoefte van de teams die het systeem gebruiken. Die backlog is nu niet openbaar, dus er staat geen roadmap in deze repository.
+De prioriteiten komen uit de behoefte van de teams die het designsysteem gebruiken. Die backlog is nu niet openbaar, dus er staat geen roadmap in deze repository.
 
 Wat wel openbaar is: de [issues](https://github.com/NederlandseDigitaleDienst/design-system/issues), de [`CHANGELOG.md`](../CHANGELOG.md) en de releases. Daarmee zie je wat er speelt en wat er is gewijzigd, ook zonder inzage in de planning erachter.
 

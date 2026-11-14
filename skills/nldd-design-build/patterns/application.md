@@ -303,7 +303,7 @@ nldd-sheet                                    het detail van een rij, in de docu
               <nldd-title
                 id="zijbalk-titel"
                 slot="header"
-                size="4"
+                size="display-4"
                 text="Dossiers"
                 heading-level="2"
               ></nldd-title>
@@ -346,7 +346,7 @@ nldd-sheet                                    het detail van een rij, in de docu
               <nldd-title
                 id="dossiers-titel"
                 slot="header"
-                size="2"
+                size="display-2"
                 text="Alle dossiers"
                 heading-level="1"
               ></nldd-title>
@@ -587,7 +587,7 @@ Wat jij nog moet doen: `landmarks="page"` op dat ene paneel, een `accessible-lab
 
 ## Gezien in
 
-Elke applicatie op dit systeem begint zo. De twee dingen die het vaakst ontbreken zijn `landmarks="page"`, waardoor een scherm twee keer `main` aanbiedt of geen enkele keer, en het kopniveau van de titelbalk in het tweede paneel.
+Elke applicatie op dit designsysteem begint zo. De twee dingen die het vaakst ontbreken zijn `landmarks="page"`, waardoor een scherm twee keer `main` aanbiedt of geen enkele keer, en het kopniveau van de titelbalk in het tweede paneel.
 
 ## Regels
 

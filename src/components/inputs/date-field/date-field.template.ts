@@ -75,7 +75,7 @@ function renderPicker(component: NLDDDateField): TemplateResult | typeof nothing
 			>
 				<nldd-top-title-bar
 					text=${component._pickerLabel}
-					dismiss-text=${component._t('components.date-field.cancel-action')}
+					dismiss-text=${component._t('components.date-field.confirm-action')}
 					@dismiss=${component._handlePickerDismiss}
 				></nldd-top-title-bar>
 				<nldd-container

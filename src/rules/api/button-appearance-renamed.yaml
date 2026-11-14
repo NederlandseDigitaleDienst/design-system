@@ -1,0 +1,7 @@
+severity: warn
+context: ':is(nldd-button, nldd-icon-button, nldd-split-button, nldd-button-bar):is([appearance="inherit-filled"], [appearance="inherit-tinted"])'
+fix: { value: { appearance: { inherit-filled: content-filled, inherit-tinted: content-tinted } } }
+message: '`inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.'
+examples:
+  passed: ['<nldd-button text="Bekijk de regels" appearance="content-filled"></nldd-button>']
+  failed: ['<nldd-button text="Bekijk de regels" appearance="inherit-filled"></nldd-button>', '<nldd-icon-button icon="share" accessible-label="Deel" appearance="inherit-tinted"></nldd-icon-button>', '<nldd-button-bar appearance="inherit-tinted"></nldd-button-bar>']

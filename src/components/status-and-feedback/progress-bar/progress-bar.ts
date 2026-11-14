@@ -405,7 +405,7 @@ export class NLDDProgressBar extends LitElement {
 			}
 			seg.hidden = false;
 			const pct = denominator > 0 ? (v / denominator) * 100 : 0;
-			seg.style.setProperty('--context-progress-bar-segment-indicator-width', `${pct}%`);
+			seg.style.setProperty('--_progress-bar-segment-indicator-width', `${pct}%`);
 			// Progress variant: each segment a capsule. Distribution variant:
 			// segments are rectangular, only the track's outer corners are
 			// rounded (via overflow:hidden + border-radius on the track).

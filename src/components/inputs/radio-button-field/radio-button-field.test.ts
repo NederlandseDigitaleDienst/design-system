@@ -246,7 +246,7 @@ describe('nldd-radio-button-field grouped by name', () => {
 	});
 });
 
-describe('nldd-radio-button-field – color="inherit"', () => {
+describe('nldd-radio-button-field – color="content"', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
@@ -254,10 +254,10 @@ describe('nldd-radio-button-field – color="inherit"', () => {
 	});
 
 	it('passes the color to its radio-button and draws its label in the surrounding text color', async () => {
-		el = await fixture(`<div style="color: rgb(255, 255, 255);"><nldd-radio-button-field color="inherit" label="Team Uitvoering"></nldd-radio-button-field></div>`);
+		el = await fixture(`<div style="--context-content-color: rgb(255, 255, 255);"><nldd-radio-button-field color="content" label="Team Uitvoering"></nldd-radio-button-field></div>`);
 		const field = el.querySelector('nldd-radio-button-field') as HTMLElement;
 		await waitForUpdate(field);
-		expect(field.shadowRoot!.querySelector('nldd-radio-button')!.getAttribute('color')).toBe('inherit');
+		expect(field.shadowRoot!.querySelector('nldd-radio-button')!.getAttribute('color')).toBe('content');
 		expect(getComputedStyle(field.shadowRoot!.querySelector('.radio-button-field__label')!).color).toBe('rgb(255, 255, 255)');
 	});
 });

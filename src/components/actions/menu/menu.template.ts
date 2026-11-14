@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import type { NLDDMenuItem, NLDDMenu, NLDDMenuGroup } from './menu.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
+import { linkRel } from '../../../utilities/link-rel.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 
 export type MenuVariant = 'menu' | 'listbox' | 'navigation';
 
@@ -42,65 +44,67 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 			@touchend=${this._pointer.touchEnd}
 			@touchcancel=${this._pointer.touchEnd}
 		>
-			${isRoot ? html`
-				<div class="menu__header"
-					?hidden=${!this._hasHeader}
-				>
-					<slot
-						name="header"
-						@slotchange=${this._onHeaderSlotChange}
-					></slot>
-				</div>
-			` : nothing}
-			<div class="menu__main">
-				${showBack ? html`
-					<button class="menu__back-button"
-						type="button"
-						aria-label=${this._resolvedBackLabel}
-						@click=${this._handleBack}
-						@mouseenter=${this._handleBackMouseenter}
+			<div class="menu__scroller">
+				${isRoot ? html`
+					<div class="menu__header"
+						?hidden=${!this._hasHeader}
 					>
-						<nldd-icon-cell
-							size="20"
-							icon="chevron-left"
-						></nldd-icon-cell>
-						<nldd-spacer-cell size="6"></nldd-spacer-cell>
-						<nldd-text-cell text=${this._parentItem!.text}></nldd-text-cell>
-					</button>
-					<!-- Pure visual divider; role="none" keeps strict ARIA validators
-					     quiet (a focusable role="separator" inside a menu would need
-					     aria-valuenow et al.; this one is decorative). -->
-					<div class="menu__back-button-divider"
-						role="none"
-					></div>
+						<slot
+							name="header"
+							@slotchange=${this._onHeaderSlotChange}
+						></slot>
+					</div>
 				` : nothing}
-				<div class="menu__list"
-					role=${menuRole}
-					aria-label=${this._listLabel || nothing}
-				>
-					<slot @slotchange=${this._claimItems}></slot>
+				<div class="menu__main">
+					${showBack ? html`
+						<button class="menu__back-button"
+							type="button"
+							aria-label=${this._resolvedBackLabel}
+							@click=${this._handleBack}
+							@mouseenter=${this._handleBackMouseenter}
+						>
+							<nldd-icon-cell
+								size="20"
+								icon="chevron-left"
+							></nldd-icon-cell>
+							<nldd-spacer-cell size="6"></nldd-spacer-cell>
+							<nldd-text-cell text=${this._parentItem!.text}></nldd-text-cell>
+						</button>
+						<!-- Pure visual divider; role="none" keeps strict ARIA validators
+						     quiet (a focusable role="separator" inside a menu would need
+						     aria-valuenow et al.; this one is decorative). -->
+						<div class="menu__back-button-divider"
+							role="none"
+						></div>
+					` : nothing}
+					<div class="menu__list"
+						role=${menuRole}
+						aria-label=${this._listLabel || nothing}
+					>
+						<slot @slotchange=${this._claimItems}></slot>
+					</div>
+					${isEmpty ? html`
+						<div class="menu__empty">
+							<slot name="empty">
+								<nldd-inline-dialog
+									text=${this._resolvedEmptyText}
+									supporting-text=${this.emptySupportingText || nothing}
+								></nldd-inline-dialog>
+							</slot>
+						</div>
+					` : nothing}
 				</div>
-				${isEmpty ? html`
-					<div class="menu__empty">
-						<slot name="empty">
-							<nldd-inline-dialog
-								text=${this._resolvedEmptyText}
-								supporting-text=${this.emptySupportingText || nothing}
-							></nldd-inline-dialog>
-						</slot>
+				${isRoot ? html`
+					<div class="menu__footer"
+						?hidden=${!this._hasFooter}
+					>
+						<slot
+							name="footer"
+							@slotchange=${this._onFooterSlotChange}
+						></slot>
 					</div>
 				` : nothing}
 			</div>
-			${isRoot ? html`
-				<div class="menu__footer"
-					?hidden=${!this._hasFooter}
-				>
-					<slot
-						name="footer"
-						@slotchange=${this._onFooterSlotChange}
-					></slot>
-				</div>
-			` : nothing}
 		</div>
 		<!-- Drill-in view-change announcer (WCAG 4.1.3). Sibling of .menu so
 		     it sits outside role="menu"'s required-children set. Updated via
@@ -131,6 +135,8 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 	// the button branch. Mirrors the nav-bar sheet (top-navigation-bar.ts).
 	const safeHref = sanitizeUrl(this.href) ?? '';
 	const asLink = !!safeHref && this.type === 'button' && !hasSubmenu && !this.disabled;
+	const hintKey = asLink ? linkHintKey(safeHref, this.target) : null;
+	const linkHint = hintKey ? this._t(`components.menu-item.${hintKey}`) : '';
 
 	// The slot is always there, so it can report what lands in it; an icon in
 	// it wins over `icon`, which is its fallback.
@@ -189,7 +195,7 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 				<nldd-keyboard-shortcut
 					size="inherit"
 					appearance="simple"
-					color="inherit"
+					color="content"
 					keys=${this.shortcut || nothing}
 					mac-keys=${this.shortcutMac || nothing}
 					windows-keys=${this.shortcutWindows || nothing}
@@ -210,10 +216,12 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 		${asLink ? html`
 			<a class="menu__item"
 				href=${safeHref}
+				target=${this.target || nothing}
+				rel=${linkRel(this.rel, this.target) || nothing}
 				role=${role}
 				aria-current=${this.selected ? 'page' : nothing}
 				@click=${this._handleClick}
-			>${content}</a>
+			>${content}${linkHint ? html`<span class="menu__link-hint">, ${linkHint}</span>` : nothing}</a>
 		` : html`
 			<button class="menu__item"
 				type="button"

@@ -220,7 +220,7 @@ export const MetTitelAnker = {
 		<nldd-simple-section>
 			<nldd-title
 				id="page-title-bar"
-				size="2"
+				size="display-2"
 				text="Aanvraag A-1042"
 				supporting-text="Scroll omlaag om te zien hoe de compacte stand wordt geactiveerd."
 				heading-level="1"
@@ -256,7 +256,7 @@ export const MetTitelAnkerZonderActies = {
 		<nldd-simple-section>
 			<nldd-title
 				id="page-title-bar-2"
-				size="2"
+				size="display-2"
 				text="Aanvraag A-1042"
 				supporting-text="Zonder terugknop of sluitknop."
 				heading-level="1"

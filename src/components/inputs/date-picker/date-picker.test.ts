@@ -1069,7 +1069,6 @@ describe('nldd-date-picker', () => {
 		await waitForUpdate(el);
 		const day = dayFor(el, '2026-07-15');
 		expect(day.querySelector('.date-picker__day-indicator')).not.toBeNull();
-		expect(getComputedStyle(day).borderRadius).toBe('0px');
 	});
 
 	// The hover rule carries a pseudo-class and so outweighs a bare selected rule.

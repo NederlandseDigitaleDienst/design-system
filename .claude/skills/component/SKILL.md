@@ -49,7 +49,7 @@ De enige uitzondering is een waarde van één component die een thema moet kunne
 - **Primitives:** `--primitives-{property}-{variant}-{scale}` bijv. `--primitives-color-accent-750`
 - **Semantics:** `--semantics-{group}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` bijv. `--semantics-buttons-neutral-tinted-is-hovered-background-color`
 - **Component:** `--components-{component}-{variant}-{state}-{property}` Alleen voor een waarde die een thema zet, en alleen gelezen door het component in de naam. bijv. `--components-badge-accent-background-color`. `npm run validate:styles` keurt het af als een ander component hem leest.
-- **Context:** `--context-{context}-{property}` Gedeelde variabelen voor communicatie tussen componenten. Niet gedefinieerd in variables.css. bijv. `--context-parent-background-color`
+- **Context:** `--context-{context}-{property}` Gedeelde variabelen voor communicatie tussen componenten. bijv. `--context-background-color`. Schildert je component een eigen achtergrond, zet dan `--context-background-color` en `${surfaceContent}` (uit `shadow-resets.ts`) op het element dat hem schildert, niet op `:host` als daar ook een anker of trigger in hangt. Zet je `color`, zet dan in dezelfde regel `--context-content-color` met dezelfde waarde; `validate:styles` controleert dat voor elke kleur behalve `inherit`, `currentColor` en de systeemkleuren. Een regel die bewust niets doorgeeft, krijgt `/* No context: <reden> */`. Lees de tekstkleur met `var(--context-content-color)`, niet met `currentColor`. De tien context-variabelen met een default op `:root` in variables.css zijn API en hebben geen fallback nodig. Is je vlak gekleurd en leest het linkblauw er niet op, zet dan ook `${linksFollowContent}` in de regel met `--context-content-color`.
 - **Lokaal:** `--_{component}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` Interne variabelen binnen een component. Definieer defaults in `:host`. bijv. `--_button-background-color`. Een subcomponent gebruikt zijn eigen naam (`--_menu-item-…` in `nldd-menu-item`). Een custom property erft door shadow boundaries heen, ook naar de interne elementen van een ander component dat in jouw component geslot wordt; zonder componentnaam kwam de `--_background-color` van `nldd-tooltip` zo op de knop van een `nldd-icon-button` terecht. Leest of overschrijft een subcomponent een variabele van zijn ouder, gebruik dan de naam van de ouder (`--_step-bar-ring-color` in `nldd-step-bar-item`). Het `{element}`-segment is de **volledige BEM-elementnaam**, niet afgekort: `--_button-disclosure-icon-margin-right`, niet `--_button-disclosure-margin-right`. Laat het element-segment weg voor het root-block. Gebruik één generieke naam als de var door meerdere elementen gedeeld wordt (bijv. `--_button-icon-size` voor `__start-icon` én `__end-icon`). `npm run validate:styles` keurt een lokale variabele af waarvan het voorvoegsel niet van een component in dezelfde map is.
 
 Primitives zijn basiswaarden. Een lokale variabele in `:host` mag naar een primitive wijzen, verderop in de stijlen gebruik je alleen lokale variabelen. Semantics geven context voor een groep componenten.
@@ -131,9 +131,9 @@ declare global {
 **JSDoc-opmaak:**
 
 - Proza (de beschrijving bovenaan) wrapt op ~80 tekens.
-- Leest een component een attribuut van zijn kinderen (`only` op een pane), documenteer het dan met `@childattr` bij dat component. Het is dan alleen op een kind ervan geldig.
+- Leest een component een attribuut van zijn kinderen (`only` op een pane), documenteer het dan met `@childattr` bij dat component. Het is dan alleen op een kind ervan geldig. Leest het een attribuut op elke diepte (`sidebar-section-only`), dan is het `@descendantattr`, met de naam van het component als voorvoegsel.
 - Maakt een component kale HTML op die je erin zet (een `<select>`, inline tekst), noem die elementen dan met `@accepts` (`@accepts select, option`, of `*`). Anders meldt `nldd lint --pure` ze als eigen opmaak van de app.
-- Een tagregel (`@attr`, `@childattr`, `@prop`, `@fires`, `@slot`, `@method`) blijft op één regel, hoe lang die ook wordt. Dat leest slechter in de bron, maar wel goed in de gegenereerde tabel — en geen enkele generator hoeft vervolgregels te begrijpen.
+- Een tagregel (`@attr`, `@childattr`, `@descendantattr`, `@prop`, `@fires`, `@slot`, `@method`) blijft op één regel, hoe lang die ook wordt. Dat leest slechter in de bron, maar wel goed in de gegenereerde tabel — en geen enkele generator hoeft vervolgregels te begrijpen.
 - Moet er toch gebroken worden, spring dan één niveau in. Niet uitlijnen op de kolom van de beschrijving: dan houd je nog maar een handvol tekens per regel over en lijkt de tekst afgekapt.
 - Eén spatie tussen `@attr`, het type, de naam en het streepje. Niet uitlijnen in kolommen: dan dwingt één langere attribuutnaam je het hele blok opnieuw te padden, wat een diff vol witruimte oplevert zonder dat de gegenereerde docs veranderen.
 
@@ -704,7 +704,6 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 
 <!-- GOED — geen class, meerdere attributen: de tag staat alleen op de eerste regel -->
 <nldd-title
-	size="1"
 	text="Subsidieaanvraag"
 	heading-level="1"
 ></nldd-title>
@@ -729,7 +728,7 @@ ${component.hasBadge ? html`<span class="dialog__badge">${component.badge}</span
 <nldd-icon class="checkbox__icon" icon="check-mark-small"></nldd-icon>
 
 <!-- FOUT — eerste attribuut op de tag-regel zonder class -->
-<nldd-title size="1"
+<nldd-title size="display-1"
 	text="Subsidieaanvraag"
 ></nldd-title>
 
