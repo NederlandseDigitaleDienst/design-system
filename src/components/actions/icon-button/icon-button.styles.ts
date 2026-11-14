@@ -45,7 +45,8 @@ export const iconButtonStyles = css`
 	}
 
 	/* iOS opens a link preview on a long press, which is ours here. */
-	:host(:has(> [slot="interest"])) .icon-button {
+	:host(:has(> [slot="interest"])) .icon-button,
+	:host([interestfor]) .icon-button {
 		-webkit-touch-callout: none;
 	}
 

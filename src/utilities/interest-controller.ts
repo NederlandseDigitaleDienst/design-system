@@ -1,28 +1,37 @@
 /**
- * Opens a slotted `nldd-popover` on interest in a control instead of on its
+ * Opens an `nldd-popover` on interest in a control instead of on its
  * activation: when the pointer rests on it, when it gets keyboard focus, or on
  * a long press on touch. The control keeps its own click, which is the point:
  * a reaction badge that toggles a reaction can still show who reacted.
  *
- * The counterpart of PopupAnchorController, as the `interest` slot is the
- * counterpart of `popup`, and `interestfor` of `popovertarget` on the platform.
+ * The popover is slotted into the control, or stands elsewhere and is named
+ * by `interestfor`, as `popovertarget` names one that opens on a click. A
+ * slotted one wins. One popover can serve several controls: it moves to the
+ * control it opens for.
  *
  * The popover becomes a description of the control, like a tooltip with rich
  * content: focus stays where it is, and what it shows is read with the
  * control. What a hover opens cannot be reached with the keyboard, so its
  * content is information only, never a link or a button.
  *
- * The overlay is a child of the host, so the DOM counts the popover as part of
- * the host for pointerenter and pointerleave. Moving from the control onto the
- * popover therefore keeps it open with nothing more than the hide delay to
- * cross the gap between them.
+ * Moving from the control onto the popover keeps it open, with the hide delay
+ * to cross the gap between them. A slotted popover is part of the host for
+ * pointerenter and pointerleave; one elsewhere is listened to as well.
  */
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type { NLDDPopover } from '../components/layout/popover/popover.js';
 import { isTouchMode } from './input-modality.js';
+import { popoverTargetOf } from './popover-target.js';
+import { setState } from './element-state.js';
 
-/** Same rhythm as nldd-tooltip: a pointer passing over does not open it. */
-const SHOW_DELAY_MS = 700;
+/** The nldd-popover `interestfor` names, looked up in the tree of the host. */
+export function interestTargetOf(host: Element, id: string | undefined): NLDDPopover | null {
+	const target = popoverTargetOf(host, id, null);
+	return target?.matches('nldd-popover') ? target as NLDDPopover : null;
+}
+
+/** As a page preview on Wikipedia: a pointer passing over does not open it. */
+const SHOW_DELAY_MS = 500;
 /** Long enough to cross the gap between the control and the popover. */
 const HIDE_DELAY_MS = 300;
 /** As a long press on iOS and Android. */
@@ -33,6 +42,7 @@ const LONG_PRESS_SLOP_PX = 10;
 export class InterestController implements ReactiveController {
 	private _host: ReactiveControllerHost & HTMLElement;
 	private _overlay: NLDDPopover | null = null;
+	private _slotted: NLDDPopover | null = null;
 
 	private _hovered = false;
 	private _focused = false;
@@ -52,7 +62,7 @@ export class InterestController implements ReactiveController {
 		host.addController(this);
 	}
 
-	/** The slotted popover, or null when none is slotted. */
+	/** The popover this control opens on interest, or null. */
 	get overlay(): NLDDPopover | null {
 		return this._overlay;
 	}
@@ -70,6 +80,7 @@ export class InterestController implements ReactiveController {
 		host.addEventListener('contextmenu', this._onContextMenu);
 		// Capture: the click has to be stopped before the control acts on it.
 		host.addEventListener('click', this._onClick, true);
+		this.refresh();
 	}
 
 	hostDisconnected(): void {
@@ -86,34 +97,59 @@ export class InterestController implements ReactiveController {
 		host.removeEventListener('click', this._onClick, true);
 		this._reset();
 		this._listenWhileOpen(false);
+		this._setOverlay(null);
 	}
 
 	/** Bind to the interest slot's `slotchange`. */
 	handleSlotChange = (event: Event): void => {
 		const slot = event.target as HTMLSlotElement;
-		const overlay = (slot.assignedElements({ flatten: true }).find((el) => el.matches('nldd-popover')) as NLDDPopover | undefined) ?? null;
-		this.setOverlay(overlay);
+		this._slotted = (slot.assignedElements({ flatten: true }).find((el) => el.matches('nldd-popover')) as NLDDPopover | undefined) ?? null;
+		this.refresh();
 	};
 
-	setOverlay(overlay: NLDDPopover | null): void {
+	/** Look the popover up again: call when `interestfor` changes. It is also
+	 *  looked up before each use, since one rendered after the control is not
+	 *  there on its first render. */
+	refresh(): void {
+		const id = (this._host as HTMLElement & { interestfor?: string }).interestfor;
+		const named = interestTargetOf(this._host, id);
+		setState(this._host, 'no-interest-target', Boolean(id) && !named);
+		this._setOverlay(this._slotted ?? named);
+	}
+
+	private _setOverlay(overlay: NLDDPopover | null): void {
 		if (overlay === this._overlay) return;
 		const previous = this._overlay;
 		if (previous) {
 			previous.removeEventListener('close', this._onOverlayClose);
-			previous._interest = false;
-			if (previous.anchorElement === this._host) previous.anchorElement = null;
+			previous.removeEventListener('pointerenter', this._onPointerEnter);
+			previous.removeEventListener('pointerleave', this._onPointerLeave);
+			if (previous.anchorElement === this._host) {
+				previous._interest = false;
+				previous.anchorElement = null;
+			}
 		}
 		this._reset();
 		this._overlay = overlay;
 		if (overlay) {
-			// Before the anchor: the popover reads it when it sets up the anchor.
-			overlay._interest = true;
-			overlay.anchorElement = this._host;
+			if (!overlay.anchorElement) this._anchor();
 			overlay.addEventListener('close', this._onOverlayClose);
+			if (!this._host.contains(overlay)) {
+				overlay.addEventListener('pointerenter', this._onPointerEnter);
+				overlay.addEventListener('pointerleave', this._onPointerLeave);
+			}
 		}
 		// The host describes its control with the popover: by element, since
 		// the control sits in a shadow root where an id would not find it.
 		this._host.requestUpdate();
+	}
+
+	private _anchor(): void {
+		const overlay = this._overlay;
+		if (!overlay || overlay.anchorElement === this._host) return;
+		// Before the anchor: the popover reads it when it sets up the anchor.
+		overlay._interest = true;
+		overlay.anchorElement = this._host;
 	}
 
 	// — Open and close ————————————————————————————————————————————————————————
@@ -122,8 +158,9 @@ export class InterestController implements ReactiveController {
 		return !this._dismissed && (this._hovered || this._focused || this._pressed);
 	}
 
+	/** Open for this control: a shared popover may be open for another. */
 	private get _isOpen(): boolean {
-		return this._overlay?.matches(':popover-open') ?? false;
+		return Boolean(this._overlay?.matches(':popover-open') && this._overlay.anchorElement === this._host);
 	}
 
 	private get _disabled(): boolean {
@@ -140,8 +177,11 @@ export class InterestController implements ReactiveController {
 	private _update(): void {
 		this._clearTimer('_hideTimer');
 		if (this._wanted) {
-			if (this._isOpen || this._otherOverlayOpen) return;
-			this._overlay?.show();
+			const overlay = this._overlay;
+			if (!overlay || this._isOpen || this._otherOverlayOpen) return;
+			if (overlay.matches(':popover-open')) overlay.hidePopover();
+			this._anchor();
+			overlay.show();
 			this._listenWhileOpen(true);
 		} else if (this._isOpen) {
 			this._overlay?.hide();
@@ -190,6 +230,9 @@ export class InterestController implements ReactiveController {
 	}
 
 	private _onOverlayClose = (): void => {
+		// A shared popover that moved here closed for the control it left, a
+		// task later, when it is already open again for this one.
+		if (this._isOpen) return;
 		this._listenWhileOpen(false);
 		// Closed another way (the backdrop of the bottom sheet): start over.
 		this._hovered = false;
@@ -200,7 +243,10 @@ export class InterestController implements ReactiveController {
 	// — Hover ———————————————————————————————————————————————————————————————
 
 	private _onPointerEnter = (event: PointerEvent): void => {
+		if (event.currentTarget === this._host) this.refresh();
 		if (!this._overlay || event.pointerType === 'touch' || this._disabled) return;
+		// Onto a shared popover that shows for another control.
+		if (event.currentTarget !== this._host && !this._isOpen) return;
 		this._clearTimer('_hideTimer');
 		if (this._hovered) return;
 		// Back from the gap onto the popover, or onto the control while it shows.
@@ -218,6 +264,7 @@ export class InterestController implements ReactiveController {
 
 	private _onPointerLeave = (event: PointerEvent): void => {
 		if (event.pointerType === 'touch') return;
+		if (event.currentTarget !== this._host && !this._isOpen) return;
 		this._clearTimer('_showTimer');
 		this._dismissed = this._dismissed && this._focused;
 		if (!this._hovered) return;
@@ -228,6 +275,7 @@ export class InterestController implements ReactiveController {
 	// — Focus ———————————————————————————————————————————————————————————————
 
 	private _onFocusIn = (): void => {
+		this.refresh();
 		// A tap focuses a button on some platforms; that is no keyboard intent.
 		if (!this._overlay || this._focused || isTouchMode() || this._disabled) return;
 		this._focused = true;
@@ -245,6 +293,7 @@ export class InterestController implements ReactiveController {
 	// — Long press ————————————————————————————————————————————————————————————
 
 	private _onPointerDown = (event: PointerEvent): void => {
+		this.refresh();
 		if (!this._overlay || event.pointerType !== 'touch' || this._disabled) return;
 		if (this._overlay.contains(event.target as Node)) return;
 		this._swallowClick = false;
@@ -310,7 +359,8 @@ export class InterestController implements ReactiveController {
 
 	private _onDocumentPointerdown = (event: PointerEvent): void => {
 		if (!this._isOpen) return;
-		if (event.composedPath().includes(this._host)) return;
+		const path = event.composedPath();
+		if (path.includes(this._host) || (this._overlay && path.includes(this._overlay))) return;
 		this._close();
 	};
 }

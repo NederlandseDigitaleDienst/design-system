@@ -329,6 +329,18 @@ export const devRules: DevRule[] = [
 		"context": "nldd-image:state(invalid-width)"
 	},
 	{
+		"id": "interestfor-no-effect",
+		"message": "This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.",
+		"context": ":is(nldd-button, nldd-icon-button)[interestfor]:not([interestfor=\"\"])",
+		"assert": ":not(:has(> nldd-popover[slot=\"interest\"]))",
+		"properties": []
+	},
+	{
+		"id": "interestfor-not-found",
+		"message": "`interestfor` names no nldd-popover in this tree, so nothing opens on interest.",
+		"context": ":is(nldd-button, nldd-icon-button, nldd-link):state(no-interest-target)"
+	},
+	{
 		"id": "kanban-column-needs-name",
 		"message": "nldd-kanban-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
 		"context": "nldd-kanban-column",

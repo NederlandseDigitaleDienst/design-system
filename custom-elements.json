@@ -370,6 +370,16 @@
             },
             {
               "kind": "field",
+              "name": "interestfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "attribute": "interestfor",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "popoverTargetElement",
               "type": {
                 "text": "Element | null"
@@ -758,6 +768,15 @@
               "default": "undefined",
               "fieldName": "popovertarget",
               "description": "ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`."
+            },
+            {
+              "name": "interestfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "interestfor",
+              "description": "ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button."
             },
             {
               "name": "loading",
@@ -1171,6 +1190,16 @@
             },
             {
               "kind": "field",
+              "name": "interestfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "attribute": "interestfor",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "popoverTargetElement",
               "type": {
                 "text": "Element | null"
@@ -1480,6 +1509,15 @@
               "default": "undefined",
               "fieldName": "popovertarget",
               "description": "ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`."
+            },
+            {
+              "name": "interestfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "interestfor",
+              "description": "ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button."
             },
             {
               "name": "text",
@@ -37314,7 +37352,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. In the `interest` slot of an nldd-button the popover describes that button instead: it opens when the pointer rests on the button, when the button gets keyboard focus, and on a long press on touch, and the button keeps its own click. Focus stays on the button, the button gets no expanded state, and the popover's content is read as its description, so it needs no `accessible-label` there and holds information only, no link or button. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it, and slides down as it goes. It is a manual popover there and closes itself, so a close request from the system, such as the back gesture on Android, leaves it open; a `popover` you set yourself is kept. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
+          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. In the `interest` slot of an nldd-button or nldd-icon-button, or named by `interestfor` on those or on an nldd-link, the popover describes that control instead: it opens when the pointer rests on the control, when the control gets keyboard focus, and on a long press on touch, and the control keeps its own click. Focus stays on the control, the control gets no expanded state, and the popover's content is read as its description. It holds information only, no link or button. In the slot it needs no `accessible-label`; one that `interestfor` names keeps its label, which is left out while it describes. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it, and slides down as it goes. It is a manual popover there and closes itself, so a close request from the system, such as the back gesture on Android, leaves it open; a `popover` you set yourself is kept. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
           "name": "NLDDPopover",
           "members": [
             {
@@ -43333,6 +43371,16 @@
             },
             {
               "kind": "field",
+              "name": "interestfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "attribute": "interestfor",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "translations",
               "type": {
                 "text": "Partial<T>"
@@ -43447,6 +43495,15 @@
               "default": "false",
               "description": "Takes the control out of the tab order (tabindex=\"-1\"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.",
               "fieldName": "noTab"
+            },
+            {
+              "name": "interestfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "interestfor",
+              "description": "ID of an nldd-popover that previews where the link goes, looked up in the tree of this link. It opens on interest instead of on a click: when the pointer rests on the link, when it gets keyboard focus, and on a long press on touch. A click or a tap still follows the link. Focus stays on the link, the popover's content is read as the link's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: put no link or button in it. Keep the popover outside the paragraph: a link stands in a `<p>`, and a `<p>` of your own inside it would close that paragraph. One popover can serve several links. Keep `accessible-label` on it: it is left out while the popover describes a link."
             },
             {
               "name": "translations",
@@ -50066,6 +50123,30 @@
       "path": "src/utilities/interest-controller.ts",
       "declarations": [
         {
+          "kind": "function",
+          "name": "interestTargetOf",
+          "return": {
+            "type": {
+              "text": "NLDDPopover | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string | undefined"
+              }
+            }
+          ],
+          "description": "The nldd-popover `interestfor` names, looked up in the tree of the host."
+        },
+        {
           "kind": "class",
           "description": "",
           "name": "InterestController",
@@ -50082,6 +50163,15 @@
             {
               "kind": "field",
               "name": "_overlay",
+              "type": {
+                "text": "NLDDPopover | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_slotted",
               "type": {
                 "text": "NLDDPopover | null"
               },
@@ -50177,7 +50267,7 @@
               "type": {
                 "text": "NLDDPopover | null"
               },
-              "description": "The slotted popover, or null when none is slotted.",
+              "description": "The popover this control opens on interest, or null.",
               "readonly": true
             },
             {
@@ -50205,7 +50295,18 @@
             },
             {
               "kind": "method",
-              "name": "setOverlay",
+              "name": "refresh",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Look the popover up again: call when `interestfor` changes. It is also\nlooked up before each use, since one rendered after the control is not\nthere on its first render."
+            },
+            {
+              "kind": "method",
+              "name": "_setOverlay",
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -50219,6 +50320,16 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "_anchor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
@@ -50236,6 +50347,7 @@
                 "text": "boolean"
               },
               "privacy": "private",
+              "description": "Open for this control: a shared popover may be open for another.",
               "readonly": true
             },
             {
@@ -50398,6 +50510,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "interestTargetOf",
+          "declaration": {
+            "name": "interestTargetOf",
+            "module": "src/utilities/interest-controller.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "InterestController",

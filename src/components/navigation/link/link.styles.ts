@@ -58,6 +58,11 @@ export const linkStyles = css`
 		}
 	}
 
+	/* iOS opens a link preview on a long press, which is ours here. */
+	:host([interestfor]) .link {
+		-webkit-touch-callout: none;
+	}
+
 	:host(:not([size])) .link,
 	:host([size="inherit"]) .link {
 		display: inline;

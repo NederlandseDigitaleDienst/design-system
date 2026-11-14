@@ -56,7 +56,8 @@ export const buttonStyles = css`
 	}
 
 	/* iOS opens a link preview on a long press, which is ours here. */
-	:host(:has(> [slot="interest"])) .button {
+	:host(:has(> [slot="interest"])) .button,
+	:host([interestfor]) .button {
 		-webkit-touch-callout: none;
 	}
 

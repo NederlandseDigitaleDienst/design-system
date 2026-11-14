@@ -100,6 +100,10 @@ export default {
 			control: false,
 			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat deze knop opent. De knop zet het ook naast zich neer, dus het overlay heeft geen `anchor` nodig. Een overlay in de `popup`-slot wint.',
 		},
+		interestfor: {
+			control: false,
+			description: 'Id van een `nldd-popover` elders op de pagina die deze knop beschrijft en opent bij interesse, zoals de `interest`-slot: als je de aanwijzer op de knop laat rusten, bij focus en bij lang drukken op touch. Voor een popover die meer knoppen delen, of een knop in een `<p>`. Een popover in de `interest`-slot wint.',
+		},
 		text: {
 			control: 'text',
 			description: 'Tekst die als aria-label en title tooltip wordt gebruikt, en zichtbaar is als label onder het icoon in lg formaat',
@@ -200,6 +204,7 @@ export default {
 		expanded: false,
 		popupType: '',
 		popovertarget: '',
+		interestfor: '',
 		text: 'Annuleer',
 		icon: 'dismiss',
 		shortcut: '',

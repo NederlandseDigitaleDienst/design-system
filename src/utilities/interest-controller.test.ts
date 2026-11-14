@@ -1,8 +1,11 @@
 import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, reduceMotion } from '../test-utils.js';
+import { _resetInputModalityForTesting } from './input-modality.js';
 import '../components/actions/button/button.js';
 import '../components/actions/icon-button/icon-button.js';
 import '../components/actions/menu/menu.js';
+import '../components/navigation/link/link.js';
+import '../components/content/text/text.js';
 import '../components/layout/popover/popover.js';
 import type { NLDDButton } from '../components/actions/button/button.js';
 import type { NLDDPopover } from '../components/layout/popover/popover.js';
@@ -64,7 +67,7 @@ describe('nldd-button interest slot', () => {
 		field.focus();
 		vi.useFakeTimers();
 		pointer('pointerenter', button, 'mouse');
-		vi.advanceTimersByTime(600);
+		vi.advanceTimersByTime(400);
 		expect(popover.matches(':popover-open')).toBe(false);
 		vi.advanceTimersByTime(200);
 		expect(popover.matches(':popover-open')).toBe(true);
@@ -77,7 +80,7 @@ describe('nldd-button interest slot', () => {
 		await setup();
 		vi.useFakeTimers();
 		pointer('pointerenter', button, 'mouse');
-		vi.advanceTimersByTime(700);
+		vi.advanceTimersByTime(500);
 		expect(popover.matches(':popover-open')).toBe(true);
 		// Across the gap and onto the popover, a child of the button.
 		pointer('pointerleave', button, 'mouse');
@@ -240,7 +243,126 @@ describe('nldd-icon-button interest slot', () => {
 		const popover = el.querySelector('nldd-popover')!;
 		vi.useFakeTimers();
 		pointer('pointerenter', el, 'mouse');
-		vi.advanceTimersByTime(700);
+		vi.advanceTimersByTime(500);
 		expect(popover.matches(':popover-open')).toBe(true);
+	});
+});
+
+describe('nldd-link interestfor', () => {
+	let wrapper: HTMLElement;
+	let link: HTMLElement;
+	let popover: NLDDPopover;
+	let anchor: HTMLAnchorElement;
+
+	async function setup(): Promise<void> {
+		wrapper = await fixture('<div><p>Zie <nldd-link href="#interest-test" interestfor="preview">Aanvraag A-1042</nldd-link>.</p>'
+			+ '<nldd-popover id="preview" accessible-label="Aanvraag A-1042"><nldd-text>Dakisolatie</nldd-text></nldd-popover></div>');
+		link = wrapper.querySelector('nldd-link')!;
+		await waitForUpdate(link);
+		popover = wrapper.querySelector('nldd-popover')!;
+		await waitForUpdate(popover);
+		anchor = link.shadowRoot!.querySelector('a')!;
+	}
+
+	afterEach(() => {
+		vi.useRealTimers();
+		if (popover?.matches(':popover-open')) popover.hidePopover();
+		if (wrapper) cleanup(wrapper);
+	});
+
+	it('makes the popover it names a description of the link', async () => {
+		await setup();
+		expect(popover.anchorElement).toBe(link);
+		expect(anchor.ariaDescribedByElements).toEqual([popover]);
+		// The label names it where it stands; here its content is what is read.
+		expect(popover.hasAttribute('aria-label')).toBe(false);
+	});
+
+	it('opens after the hover delay, and stays while the pointer is on it', async () => {
+		await setup();
+		vi.useFakeTimers();
+		pointer('pointerenter', link, 'mouse');
+		vi.advanceTimersByTime(500);
+		expect(popover.matches(':popover-open')).toBe(true);
+		// Across the gap onto the popover, which is not a child of the link.
+		pointer('pointerleave', link, 'mouse');
+		vi.advanceTimersByTime(200);
+		pointer('pointerenter', popover, 'mouse');
+		vi.advanceTimersByTime(1000);
+		expect(popover.matches(':popover-open')).toBe(true);
+		pointer('pointerleave', popover, 'mouse');
+		vi.advanceTimersByTime(300);
+		expect(popover.matches(':popover-open')).toBe(false);
+	});
+
+	it('follows the link on a tap, and not after a long press', async () => {
+		await setup();
+		vi.useFakeTimers();
+		pointer('pointerdown', anchor, 'touch', 10, 10);
+		vi.advanceTimersByTime(200);
+		pointer('pointerup', anchor, 'touch', 10, 10);
+		const tap = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true });
+		anchor.dispatchEvent(tap);
+		expect(tap.defaultPrevented).toBe(false);
+		pointer('pointerdown', anchor, 'touch', 10, 10);
+		vi.advanceTimersByTime(500);
+		expect(popover.matches(':popover-open')).toBe(true);
+		pointer('pointerup', anchor, 'touch', 10, 10);
+		const release = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true });
+		anchor.dispatchEvent(release);
+		expect(release.defaultPrevented).toBe(true);
+		// A tap on the popover itself keeps it.
+		pointer('pointerdown', popover, 'touch');
+		expect(popover.matches(':popover-open')).toBe(true);
+	});
+
+	it('says so when the popover is not there', async () => {
+		wrapper = await fixture('<div><nldd-link href="#" interestfor="nergens">Aanvraag A-1042</nldd-link></div>');
+		link = wrapper.querySelector('nldd-link')!;
+		await waitForUpdate(link);
+		expect(link.matches(':state(no-interest-target)')).toBe(true);
+	});
+});
+
+describe('nldd-button interestfor', () => {
+	let wrapper: HTMLElement;
+	let popover: NLDDPopover;
+
+	afterEach(() => {
+		vi.useRealTimers();
+		if (popover?.matches(':popover-open')) popover.hidePopover();
+		if (wrapper) cleanup(wrapper);
+	});
+
+	it('moves a shared popover to the button it opens for', async () => {
+		wrapper = await fixture('<div><nldd-button text="2" interestfor="shared"></nldd-button><nldd-button text="3" interestfor="shared"></nldd-button>'
+			+ '<nldd-popover id="shared" accessible-label="Wie reageerde"><nldd-text>Sam, Noor</nldd-text></nldd-popover></div>');
+		const [first, second] = Array.from(wrapper.querySelectorAll<NLDDButton>('nldd-button'));
+		await waitForUpdate(first);
+		await waitForUpdate(second);
+		popover = wrapper.querySelector('nldd-popover')!;
+		await waitForUpdate(popover);
+		// The touch presses of earlier tests left the page in touch mode.
+		_resetInputModalityForTesting();
+		first.shadowRoot!.querySelector('button')!.focus();
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(true);
+		expect(popover.anchorElement).toBe(first);
+		second.shadowRoot!.querySelector('button')!.focus();
+		await waitForUpdate(popover);
+		// The close of the first arrives a task later.
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		expect(popover.matches(':popover-open')).toBe(true);
+		expect(popover.anchorElement).toBe(second);
+	});
+
+	it('opens a slotted popover over the one interestfor names', async () => {
+		wrapper = await fixture('<div><nldd-button text="2" interestfor="elsewhere"><nldd-popover slot="interest"><nldd-text>Sam</nldd-text></nldd-popover></nldd-button>'
+			+ '<nldd-popover id="elsewhere" accessible-label="Elders"><nldd-text>Noor</nldd-text></nldd-popover></div>');
+		const button = wrapper.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(button);
+		popover = button.querySelector('nldd-popover')!;
+		expect(button._interest.overlay).toBe(popover);
+		expect(wrapper.querySelector<NLDDPopover>('#elsewhere')!.anchorElement).toBe(null);
 	});
 });

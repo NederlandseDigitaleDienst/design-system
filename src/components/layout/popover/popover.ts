@@ -32,12 +32,14 @@
  * is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education
  * is the exception, a manual popover that stays until it is dismissed.
  *
- * In the `interest` slot of an nldd-button the popover describes that button
- * instead: it opens when the pointer rests on the button, when the button gets
- * keyboard focus, and on a long press on touch, and the button keeps its own
- * click. Focus stays on the button, the button gets no expanded state, and the
- * popover's content is read as its description, so it needs no
- * `accessible-label` there and holds information only, no link or button.
+ * In the `interest` slot of an nldd-button or nldd-icon-button, or named by
+ * `interestfor` on those or on an nldd-link, the popover describes that control
+ * instead: it opens when the pointer rests on the control, when the control
+ * gets keyboard focus, and on a long press on touch, and the control keeps its
+ * own click. Focus stays on the control, the control gets no expanded state,
+ * and the popover's content is read as its description. It holds information
+ * only, no link or button. In the slot it needs no `accessible-label`; one that
+ * `interestfor` names keeps its label, which is left out while it describes.
  *
  * On sm the popover is a bottom sheet with a dimmed backdrop, which closes with
  * Escape or a tap outside it, and slides down as it goes. It is a manual popover
@@ -151,11 +153,11 @@ export class NLDDPopover extends LitElement {
 	private _interestMode = false;
 
 	/**
-	 * Set by the control whose `interest` slot holds this popover (see
-	 * InterestController). The popover then describes that control: it opens
-	 * on hover, focus or a long press, leaves focus where it is, and puts no
-	 * disclosure state on the control. Not an attribute: it follows from the
-	 * slot, never from markup.
+	 * Set by the control this popover opens on interest for, from its
+	 * `interest` slot or `interestfor` (see InterestController). The popover
+	 * then describes that control: it opens on hover, focus or a long press,
+	 * leaves focus where it is, and puts no disclosure state on the control.
+	 * Not an attribute of its own: it follows from the control.
 	 */
 	get _interest(): boolean {
 		return this._interestMode;
