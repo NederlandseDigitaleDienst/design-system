@@ -24,6 +24,7 @@ here; consult the commit history if you need that level of detail.
 - **`term-needs-definition`, `term-max-one-definition`** (warn): an `nldd-term` without `definition` or `popovertarget` opens nothing, and one with both shows only the popover. **`term-source-no-effect`** and **`term-source-href-no-effect`** (warn) report a `source` next to `popovertarget` and a `source-href` without `source`. In a dev build, **`term-popovertarget-not-found`** (warn) reports a `popovertarget` that finds no `nldd-popover`.
 - **`interest` slot on `nldd-button` and `nldd-icon-button`, and `interestfor` on those and on `nldd-link`.** `interestfor` takes the id of a popover elsewhere, as `popovertarget` does for a click: for a link in a `<p>`, where a popover of your own markup would break the paragraph, or for one popover that several controls share. A slotted popover wins. The popover describes the control: focus stays where it is, its content is read as the control's description, Escape closes it wherever focus is, and the pointer can move onto it without closing it. On `nldd-icon-button` it takes the place of the button's own tooltip, which comes back when the popover goes. It holds information only: what a hover opens cannot be reached with the keyboard, so use the `popup` slot for content you act on. It does not open over a menu the button opened.
 - **`interestfor-no-effect`** (warn) reports a button with both `interestfor` and a popover in its `interest` slot. In a dev build, **`interestfor-not-found`** (warn) reports an `interestfor` that finds no `nldd-popover`.
+- **`skip-link-needs-text`** (hint): a skip link outside the header of a page only says "Sla over". Name what it skips with `text`.
 
 ### Changed
 
@@ -33,9 +34,14 @@ here; consult the commit history if you need that level of detail.
 - **The time wheels of `nldd-time-field` get fewer rows when the window is short.** They show 7, and down to 3 when the picker would otherwise run off the window, so it never scrolls. They grow back when the window does.
 - **A chosen `nldd-menu-item` blinks once before the menu closes,** as on macOS, so you see what you picked. `select` still fires at once. Not with `prefers-reduced-motion`.
 - **`nldd-menu` and `nldd-popover` fade at the edge where they scroll,** at the bottom while there is more below and at the top once you have scrolled. In a browser without scroll-driven animations there is no fade.
+- **`nldd-skip-link` says "Ga naar de hoofdinhoud" around the header of a page,** in `slot="header"` of `nldd-page` or around an `nldd-top-navigation-bar`, where it knows what follows. Elsewhere its default stays "Sla over". `text` still wins. The new key is `components.skip-link.to-main-content-action`.
 
 ### Fixed
 
+- **A long `nldd-tag` ran out of its container.** Its text now wraps onto more lines, and the tag gets taller.
+- **Bold, italic or strikethrough with nothing selected left `****` in the value of `nldd-text-editor`** when you typed nothing after it. The empty pair now goes away when the caret moves on.
+- **A format command on an `nldd-text-editor` that never had focus worked at the start of the text.** It now works at the end, where you expect to go on typing.
+- **The fade at the end of `nldd-date-field` and `nldd-time-field` stuck out past the rounded corner** of a field without a picker button. It now follows the field's corner radius.
 - **`hide()` on `nldd-popover` right after `show()` did nothing.** It now closes the popover, also before the browser has reported that it opened.
 - **"Gekopieerd" on the copy button of `nldd-code-viewer` disappeared after 2 seconds,** also with the pointer or the focus still on the button (WCAG 1.4.13). It now stays until the pointer leaves the button, focus moves on, or Escape, like a failed copy already did.
 - **The clock button in `nldd-time-field` had a rounder corner than the field around it.** It now follows the field's corner, as the calendar button in `nldd-date-field` already did.
