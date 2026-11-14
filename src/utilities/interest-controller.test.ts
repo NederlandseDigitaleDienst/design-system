@@ -401,6 +401,24 @@ describe('nldd-button interestfor', () => {
 		expect(popover.hasAttribute('aria-label')).toBe(false);
 	});
 
+	it('closes a shared popover when the button it shows for leaves the page', async () => {
+		wrapper = await fixture('<div><nldd-button text="2" interestfor="leaving"></nldd-button>'
+			+ '<nldd-popover id="leaving" accessible-label="Wie reageerde"><nldd-text>Sam, Noor</nldd-text></nldd-popover></div>');
+		const button = wrapper.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(button);
+		popover = wrapper.querySelector('nldd-popover')!;
+		await waitForUpdate(popover);
+		// The pointer rests on it: no focus that leaves with the button.
+		vi.useFakeTimers();
+		pointer('pointerenter', button, 'mouse');
+		vi.advanceTimersByTime(600);
+		vi.useRealTimers();
+		expect(popover.matches(':popover-open')).toBe(true);
+		button.remove();
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(false);
+	});
+
 	it('opens a slotted popover over the one interestfor names', async () => {
 		wrapper = await fixture('<div><nldd-button text="2" interestfor="elsewhere"><nldd-popover slot="interest"><nldd-text>Sam</nldd-text></nldd-popover></nldd-button>'
 			+ '<nldd-popover id="elsewhere" accessible-label="Elders"><nldd-text>Noor</nldd-text></nldd-popover></div>');

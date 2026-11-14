@@ -95,6 +95,9 @@ export class InterestController implements ReactiveController {
 		host.removeEventListener('pointercancel', this._cancelPress);
 		host.removeEventListener('contextmenu', this._onContextMenu);
 		host.removeEventListener('click', this._onClick, true);
+		// A shared popover outlives the control, as when a framework re-renders
+		// a list under the pointer; it must not stay open without its anchor.
+		if (this._isOpen) this._overlay?.hide();
 		this._reset();
 		this._listenWhileOpen(false);
 		this._setOverlay(null);
