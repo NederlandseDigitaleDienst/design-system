@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.24.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.23.0...v0.24.0) (2026-11-14)
+
 ### Highlights
 
 - **A popover that opens on interest instead of on a click.** Put an `nldd-popover` in the new `interest` slot of `nldd-button` or `nldd-icon-button`, or point at one with the new `interestfor` on those and on `nldd-link`, and it opens when the pointer rests on the control, when the control gets keyboard focus, and on a long press on touch. The control keeps its own click, so a reaction badge can toggle the reaction and still show who reacted, and a link can preview where it goes. See Added.
