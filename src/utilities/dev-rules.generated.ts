@@ -942,6 +942,30 @@ export const devRules: DevRule[] = [
 		"context": "nldd-tag:state(unnamed)"
 	},
 	{
+		"id": "term-max-one-definition",
+		"message": "nldd-term has both `definition` and `popovertarget`, and shows only the popover. Remove one.",
+		"context": "nldd-term[popovertarget]:not([popovertarget=\"\"])",
+		"assert": ":not([definition]:not([definition=\"\"]))",
+		"properties": [
+			"definition"
+		]
+	},
+	{
+		"id": "term-needs-definition",
+		"message": "nldd-term has no definition, so it opens nothing. Set `definition`, or `popovertarget` to the id of an nldd-popover.",
+		"context": "nldd-term",
+		"assert": "[definition]:not([definition=\"\"]), [popovertarget]:not([popovertarget=\"\"])",
+		"properties": [
+			"definition",
+			"popovertarget"
+		]
+	},
+	{
+		"id": "term-popovertarget-not-found",
+		"message": "No nldd-popover with the id in `popovertarget` in the tree of this nldd-term.",
+		"context": "nldd-term:state(no-popover-target)"
+	},
+	{
 		"id": "text-custom-size-invalid",
 		"message": "This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as \"96px\" or \"6rem\", not a keyword.",
 		"context": "nldd-text:state(invalid-custom-size)"

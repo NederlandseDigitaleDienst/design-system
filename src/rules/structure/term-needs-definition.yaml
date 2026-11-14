@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-term'
+assert: '[definition], [popovertarget]'
+message: 'nldd-term has no definition, so it opens nothing. Set `definition`, or `popovertarget` to the id of an nldd-popover.'
+examples:
+  passed:
+    - '<nldd-term definition="Degene die het doel vaststelt.">verwerkingsverantwoordelijke</nldd-term>'
+    - '<nldd-term popovertarget="vv">verwerkingsverantwoordelijke</nldd-term>'
+  failed: ['<nldd-term>verwerkingsverantwoordelijke</nldd-term>']

@@ -18,9 +18,12 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **A popover that opens on interest instead of on a click.** Put an `nldd-popover` in the new `interest` slot of `nldd-button` or `nldd-icon-button`, and it opens when the pointer rests on the button, when the button gets keyboard focus, and on a long press on touch. The button keeps its own click, so a reaction badge can toggle the reaction and still show who reacted. See Added.
+- **`nldd-term` explains a term in running text.** The term stays in the sentence with a dotted underline and opens its definition in a popover. A term injected into content needs no ARIA of its own. See Added.
 
 ### Added
 
+- **`nldd-term`** — a term in running text with its definition behind it, such as a legal term from a glossary. A click, a tap, Enter or Space opens the definition in a popover, a bottom sheet on sm, and focus moves into it and back to the term when it closes. The term is the control, with its expanded state, and wraps with the sentence. A short definition goes in `definition`, as text. A longer one, with paragraphs, a source or a link, is an `nldd-popover` of your own that `popovertarget` points at, and every term for the same concept can share it.
+- **`term-needs-definition`, `term-max-one-definition`** (warn): an `nldd-term` without `definition` or `popovertarget` opens nothing, and one with both shows only the popover. In a dev build, **`term-popovertarget-not-found`** (warn) reports a `popovertarget` that finds no `nldd-popover`.
 - **`interest` slot on `nldd-button` and `nldd-icon-button`.** The popover in it describes the button: focus stays where it is, its content is read as the button's description, Escape closes it wherever focus is, and the pointer can move onto it without closing it. On `nldd-icon-button` it takes the place of the button's own tooltip, which comes back when the popover goes. It holds information only: what a hover opens cannot be reached with the keyboard, so use the `popup` slot for content you act on. It does not open over a menu the button opened.
 
 ### Changed

@@ -773,6 +773,29 @@ A compact property that has been assigned to something: a category, a type, a ro
 | _(default)_ | Tag text. Wins over `text`. |
 | `icon` | Custom icon before the text. Wins over `icon`. |
 
+### `<nldd-term>`
+
+A term in running text with an explanation behind it, such as a legal term from a glossary. The term stays part of the sentence, marked with a dotted underline, and opens its definition in a popover on a click, a tap, Enter or Space. On sm the popover is a bottom sheet. The term is the control: it carries the button role and its expanded state, so a term injected into content needs no ARIA of your own. Focus moves into the popover when it opens, so its content is read, and returns to the term when it closes. A short definition goes in `definition`, as text: <p>De <nldd-term definition="Degene die het doel van en de middelen voor de verwerking vaststelt.">verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> A definition with more paragraphs, a link or a source is an nldd-popover of your own, outside the sentence, that `popovertarget` points at. Every term for the same concept can point at the same popover: it opens against the term you clicked. Markup in the term itself would break: a `<p>` inside a `<p>` closes the paragraph, and the definition would fall out of the term. <p>De <nldd-term popovertarget="verwerkingsverantwoordelijke"> verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> <nldd-popover id="verwerkingsverantwoordelijke" accessible-label="Verwerkingsverantwoordelijke">…</nldd-popover>
+
+**Rules** (`nldd lint`)
+
+- `term-max-one-definition`: nldd-term has both `definition` and `popovertarget`, and shows only the popover. Remove one.
+- `term-needs-definition`: nldd-term has no definition, so it opens nothing. Set `definition`, or `popovertarget` to the id of an nldd-popover.
+- `term-popovertarget-not-found`: No nldd-popover with the id in `popovertarget` in the tree of this nldd-term.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `definition` | `string` | The definition, as plain text. The term shows it in a popover of its own, named after the term. Ignored when `popovertarget` is set. |
+| `popovertarget` | `string` | ID of an nldd-popover with the definition, looked up in the tree of this term. Positioned against the term when it opens, so it needs no `anchor`, and it can be shared by every term for the same concept. Wins over `definition`. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The term, as plain text. Whitespace around it is dropped, so the underline ends where the word does. It also names the popover that `definition` opens. |
+
 ### `<nldd-text>`
 
 One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography — it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.
