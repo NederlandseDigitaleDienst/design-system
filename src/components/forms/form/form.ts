@@ -1,4 +1,4 @@
-import '../../../utilities/custom-element.js';
+import { PlainElement } from '../../../utilities/custom-element.js';
 /**
  * Nederlandse Digitale Dienst Form Component
  *
@@ -109,7 +109,7 @@ const FORWARDED_ATTRIBUTES = [
 
 const DESCENDANT_SELECTOR = 'nldd-form-field, nldd-form-actions';
 
-export class NLDDForm extends HTMLElement {
+export class NLDDForm extends PlainElement {
 	static get observedAttributes() {
 		return [...FORWARDED_ATTRIBUTES, 'label-alignment'];
 	}

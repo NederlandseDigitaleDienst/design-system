@@ -21,7 +21,7 @@
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { customElement } from '../../../utilities/custom-element.js';
+import { customElement, PlainElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { buttonBarStyles } from './button-bar.styles.js';
 import { template } from './button-bar.template.js';
@@ -33,7 +33,7 @@ import { template } from './button-bar.template.js';
  * @element nldd-button-bar-divider
  */
 if (!customElements.get('nldd-button-bar-divider')) {
-	customElements.define('nldd-button-bar-divider', class extends HTMLElement {});
+	customElements.define('nldd-button-bar-divider', class extends PlainElement {});
 }
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';

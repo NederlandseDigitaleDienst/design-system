@@ -72,6 +72,10 @@ jobs:
       # second copy, and its customElements.define would throw.
       - name: Verify the main entry shares the modules of the subpaths
         run: grep -qF "from './actions/button/button.js'" dist/components/index.js
+      # A framework that renders on the server imports the package in Node, where
+      # matchMedia and HTMLElement do not exist.
+      - name: Verify every export imports on a server
+        run: node scripts/check-server-import.js
       # The linter is what consumers run, from the tarball: lint/ has to be in it
       # and its dependencies have to resolve outside this repository.
       - name: Smoke test the packed linter

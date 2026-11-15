@@ -9,6 +9,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Fixed
+
+- **The package imports on a server.** A framework that renders pages on the server (Next, Docusaurus, Astro, Remix) loads its modules in Node, and 38 of the 132 entry points stopped the build there: the main entry and every component with a tooltip, through a `matchMedia` call, and `nldd-form`, `nldd-form-section` and `nldd-button-bar`, which extend `HTMLElement` without Lit. A plain `import '@nldd/design-system'` or a subpath import now works in shared code, without a check for `window` around it. The components still render in the browser: without JavaScript, what they draw in their shadow root is not in the HTML.
+
 ## [0.24.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.23.0...v0.24.0) (2026-11-14)
 
 ### Highlights

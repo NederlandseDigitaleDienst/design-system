@@ -69,7 +69,7 @@ type Placement = 'top' | 'bottom' | 'left' | 'right';
 type Timing = 'instant' | 'delay' | 'never';
 
 let tooltipCounter = 0;
-const coarsePointerQuery = matchMedia('(pointer: coarse)');
+const coarsePointerQuery = typeof matchMedia === 'function' ? matchMedia('(pointer: coarse)') : null;
 
 // Defaults mirror the values in tooltip.styles.ts. Used as fallback when the
 // CSS variable is unset or non-numeric — most often in SSR / early-load
@@ -288,7 +288,7 @@ export class NLDDTooltip extends LitElement {
 		// without a property change; refresh the description with it.
 		this._syncAriaDescribedBy();
 		if (!this._hasContent) return;
-		if (coarsePointerQuery.matches) return;
+		if (coarsePointerQuery?.matches) return;
 		if (this._hideTimeout) {
 			clearTimeout(this._hideTimeout);
 			this._hideTimeout = null;
@@ -472,7 +472,7 @@ export class NLDDTooltip extends LitElement {
 		// center of the trigger, whatever the trigger's size. Unset, nothing changes.
 		const gap = parseInt(styles.getPropertyValue('--_tooltip-offset'), 10);
 		const fingertip = parseFloat(styles.getPropertyValue('--context-tooltip-fingertip-size'));
-		const distance: OffsetOptions = coarsePointerQuery.matches && Number.isFinite(fingertip)
+		const distance: OffsetOptions = coarsePointerQuery?.matches && Number.isFinite(fingertip)
 			? ({ placement, rects }) => {
 				const across = /^(top|bottom)/.test(placement) ? rects.reference.height : rects.reference.width;
 				return Math.max(gap, (fingertip - across) / 2);

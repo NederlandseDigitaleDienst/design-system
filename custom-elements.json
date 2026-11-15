@@ -11,7 +11,8 @@
           "description": "A vertical rule between groups of buttons in an `nldd-button-bar`. Purely presentational: no attributes, no slots — place it between buttons.",
           "name": "anonymous_0",
           "superclass": {
-            "name": "HTMLElement"
+            "name": "PlainElement",
+            "module": "/src/utilities/custom-element.js"
           },
           "tagName": "nldd-button-bar-divider",
           "customElement": true,
@@ -8590,7 +8591,8 @@
             }
           ],
           "superclass": {
-            "name": "HTMLElement"
+            "name": "PlainElement",
+            "module": "/src/utilities/custom-element.js"
           },
           "tagName": "nldd-form-section",
           "customElement": true
@@ -8690,7 +8692,8 @@
             }
           ],
           "superclass": {
-            "name": "HTMLElement"
+            "name": "PlainElement",
+            "module": "/src/utilities/custom-element.js"
           },
           "tagName": "nldd-form",
           "customElement": true,
