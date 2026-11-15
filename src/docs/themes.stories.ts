@@ -184,9 +184,11 @@ const overview = (scheme: 'light' | 'dark') => html`
 				<nldd-step-bar-item text="Bevestigen"></nldd-step-bar-item>
 			</nldd-step-bar>
 			<nldd-text>
-				<nldd-link href="#" text="Bekijk de aanvraag"></nldd-link>
-				of ga naar
-				<nldd-link href="https://www.rijksoverheid.nl" text="Rijksoverheid"></nldd-link>
+				<p>
+					<nldd-link href="#" text="Bekijk de aanvraag"></nldd-link>
+					of ga naar
+					<nldd-link href="https://www.rijksoverheid.nl" text="Rijksoverheid"></nldd-link>
+				</p>
 			</nldd-text>
 		`)}
 

@@ -97,8 +97,18 @@ function readHtmlChildren(children, parent, given) {
 	// A Lit hole between the tags can render anything, or nothing.
 	const hole = given.lit && children.find((node) => node.type === 'text' && node.data.includes('${'));
 	if (hole) appendUnknown(parent, hole.startIndex ?? 0);
+	// In Markdown, text in an element can be a paragraph the renderer writes around it.
+	const paragraphs = given.markdown && parent.name !== '#root' ? given.markdown(children) : null;
 	for (const node of children) {
-		if (node.type === 'text' && node.data.trim()) parent.text = true;
+		if (node.type === 'text' && node.data.trim()) {
+			const paragraph = paragraphs?.(node.data);
+			if (paragraph?.loose !== false) parent.text = true;
+			if (paragraph?.at >= 0) {
+				const p = createNode('p', (node.startIndex ?? 0) + paragraph.at);
+				p.text = true;
+				appendChild(parent, p);
+			}
+		}
 		// htmlparser2 gives <style> a type of its own. The group pure reads every block in it.
 		if (node.type === 'style') {
 			for (const block of styleBlocks(node)) appendChild(parent, styleNode(block));
@@ -124,17 +134,23 @@ function readHtmlChildren(children, parent, given) {
 				repeated: inherited.repeated || Object.keys(attribs).some((key) => REPEATED.has(key)),
 				inert: inherited.inert,
 				lit: inherited.lit,
+				markdown: inherited.markdown,
+				jsx: inherited.jsx,
 			});
 			continue;
 		}
 		const element = createNode(name, node.startIndex ?? 0);
 		element.endOffset = node.endIndex ?? undefined;
-		for (const [key, value] of Object.entries(attribs)) readAttribute(element, key, value);
+		for (const [key, value] of Object.entries(attribs)) {
+			// MDX writes JSX: a handler or a prop for React is no attribute.
+			if (inherited.jsx && (/^on[A-Z]/.test(key) || REACT_ONLY.has(key))) continue;
+			readAttribute(element, inherited.jsx && key === 'className' ? 'class' : key, value);
+		}
 		element.conditional ||= inherited.conditional;
 		element.repeated ||= inherited.repeated;
 		element.opaque = isOpaqueTag(name) || name === 'template';
 		appendChild(parent, element);
-		readHtmlChildren(node.children, element, { inert: inherited.inert, lit: inherited.lit });
+		readHtmlChildren(node.children, element, { inert: inherited.inert, lit: inherited.lit, markdown: inherited.markdown, jsx: inherited.jsx });
 	}
 }
 
@@ -279,24 +295,115 @@ export function parseStylesheet(source, filename = '') {
 	return blocks.length === 0 ? [] : [stylesheetRoot(blocks)];
 }
 
-/** Every code block and inline tag in a Markdown file is a tree of its own. */
-export function parseMarkdown(source) {
+/**
+ * Where a string in a script ends, from its opening quote. A template literal can
+ * span lines, the others cannot.
+ */
+function endOfString(source, start) {
+	let at = start + 1;
+	while (at < source.length && source[at] !== source[start] && (source[start] === '`' || source[at] !== '\n')) {
+		at += source[at] === '\\' ? 2 : 1;
+	}
+	return at;
+}
+
+/** Where a `{…}` expression ends, from its opening brace, past strings and nested braces. */
+function endOfExpression(source, start) {
+	let depth = 0;
+	for (let at = start; at < source.length; at += 1) {
+		const char = source[at];
+		if (char === '"' || char === "'" || char === '`') at = endOfString(source, at);
+		else if (char === '{') depth += 1;
+		else if (char === '}' && --depth === 0) return at;
+	}
+	return source.length - 1;
+}
+
+/**
+ * MDX as HTML of the same length. An expression in a value reads as bound, a
+ * spread as `v-bind`, an expression between the tags as a component of the app, and a
+ * comment as nothing. ESM goes, so `import` and `export` are not prose.
+ */
+function mdxAsHtml(mdx) {
+	const source = mdx.replace(/^(?:import|export)\s.*(?:\n.*\S.*)*/gm, blank);
+	const out = source.split('');
+	let inTag = false;
+	for (let at = 0; at < out.length; at += 1) {
+		const char = out[at];
+		if (inTag && (char === '"' || char === "'")) at = endOfString(source, at);
+		else if (char === '<' && /[a-zA-Z/]/.test(source[at + 1] ?? '')) inTag = true;
+		else if (char === '>') inTag = false;
+		else if (char === '{') {
+			const end = endOfExpression(source, at);
+			const length = end - at + 1;
+			let fill;
+			// An empty `{}` is no expression MDX accepts; it reads as an empty value.
+			if (inTag && out[at - 1] === '=') fill = length >= 3 ? `\${${'x'.repeat(length - 3)}}` : '""';
+			else if (inTag) fill = length >= 6 ? 'v-bind'.padEnd(length) : `{${'x'.repeat(Math.max(length - 2, 0))}}`.slice(0, length);
+			else if (length >= 4 && !/^\{\s*\/\*/.test(source.slice(at, end))) fill = `<X${' '.repeat(length - 4)}/>`;
+			else fill = blank(source.slice(at, end + 1));
+			out.splice(at, length, ...fill);
+			at = end;
+		}
+	}
+	return out.join('');
+}
+
+/**
+ * Which text in an element Markdown writes a paragraph around. Raw HTML in Markdown
+ * runs to the first blank line, and what follows is Markdown again. In MDX, an
+ * element whose content starts on a line of its own holds Markdown, so its text is
+ * a paragraph; on the same line as the tag it is just text.
+ */
+const markdownParagraphs = (mdx) => (children) => {
+	if (mdx) {
+		const flow = children[0]?.type === 'text' && /^[ \t]*\n/.test(children[0].data);
+		return (data) => (flow ? { loose: false, at: data.search(/\S/) } : { loose: true, at: -1 });
+	}
+	return (data) => {
+		const paragraph = /\n[ \t]*\n\s*\S/.exec(data);
+		return { loose: data.slice(0, paragraph?.index).trim() !== '', at: paragraph ? paragraph.index + paragraph[0].length - 1 : -1 };
+	};
+};
+
+/** A tag in a mention that the source does not close is only its start tag. */
+function markMentions(node, source) {
+	for (const child of node.children) {
+		const written = source.slice(child.offset, (child.endOffset ?? 0) + 1);
+		if (child.name.startsWith('nldd-') && !new RegExp(`</${child.name}\\s*>$`).test(written)) {
+			child.mention = true;
+			child.endOffset = undefined;
+		}
+		markMentions(child, source);
+	}
+}
+
+/**
+ * A Markdown or MDX file: every code block is a tree of its own, an inline tag a
+ * mention, and the markup in the prose one tree, which is what the page renders.
+ */
+export function parseMarkdown(source, filename = '') {
+	const mdx = filename.endsWith('.mdx');
 	const roots = [];
-	const read = (text, offset) => {
+	const read = (text, offset, given = {}) => {
 		const root = createRoot();
 		const padded = ' '.repeat(offset) + quietIfTemplated(text);
-		readHtmlChildren(parseMarkup(padded, { selfClosing: true }).children, root, {});
+		readHtmlChildren(parseMarkup(padded, { selfClosing: true }).children, root, given);
 		roots.push(root);
 	};
-	const fences = /^( *)```[^\n]*\n([\s\S]*?)^ *```/gm;
+	const fences = /^( *)(```|~~~)[^\n]*\n([\s\S]*?)^ *\2/gm;
 	for (const match of source.matchAll(fences)) {
-		if (match[2].includes('<nldd-')) read(match[2], match.index + match[0].indexOf('\n') + 1);
+		if (match[3].includes('<nldd-')) read(match[3], match.index + match[0].indexOf('\n') + 1);
 	}
-	const prose = source.replace(fences, (block) => ' '.repeat(block.length));
+	let prose = source.replace(fences, blank).replace(/^---\n[\s\S]*?\n---(?=\n)/, blank);
 	// A bare `<nldd-button>` in a sentence names the tag and says nothing about its attributes.
 	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) {
 		read(match[1].replace(/^<([a-z-]+)\s*\/?>$/, '<$1 v-bind="x"><Mention /></$1>'), match.index + 1);
+		markMentions(roots.at(-1), source);
 	}
+	prose = prose.replace(/`[^`\n]*`/g, blank).replace(/<[a-z][a-z+.-]*:[^\s>]*>/gi, blank);
+	if (mdx) prose = mdxAsHtml(prose);
+	if (prose.includes('<nldd-')) read(prose, 0, { markdown: markdownParagraphs(mdx), jsx: mdx });
 	return roots;
 }
 
@@ -367,6 +474,25 @@ export function parseLit(source) {
 		readHtmlChildren(parseMarkup(padded, { selfClosing: false }).children, root, { lit: true });
 		return [root];
 	});
+}
+
+/**
+ * A script holds `html` templates, or JSX, as a React app writes in a `.js` file.
+ * JSX is read only where no template holds our markup and the file parses as
+ * JSX: anything else stays unread, and says so.
+ */
+export async function parseScript(source, filename) {
+	const templates = parseLit(source);
+	if (templates.length > 0 || !/<(nldd-|Nldd)/.test(source)) return templates;
+	await loadOxc(filename);
+	try {
+		const roots = await parseJsx(source, filename);
+		if (roots.syntaxError) return [];
+		roots.jsx = true;
+		return roots;
+	} catch {
+		return [];
+	}
 }
 
 function jsxName(node) {
@@ -611,11 +737,18 @@ function jsxTree(node, roots, detached = true) {
 
 let oxcParser;
 
-export async function parseJsx(source, filename) {
+/** The JSX parser, an optional dependency: without it a file with JSX cannot be read, and the run says why. */
+async function loadOxc(filename) {
 	oxcParser ??= await import('oxc-parser').catch(() => {
 		throw new Error(`Reading ${filename} needs the optional dependency oxc-parser, which needs Node 20.19 or newer.`);
 	});
-	const { program, errors } = oxcParser.parseSync(filename, source);
+}
+
+export async function parseJsx(source, filename) {
+	await loadOxc(filename);
+	// A .js file takes JSX only when asked: React apps write it there too.
+	const options = /\.[cm]?js$/.test(filename) ? { lang: 'jsx' } : {};
+	const { program, errors } = oxcParser.parseSync(filename, source, options);
 	const found = [];
 	collectJsx(program, found, {}, exportedNamesOf(program));
 	const bindings = bindingCounts(program);
@@ -686,11 +819,12 @@ const PARSERS = {
 	'.jinja2': parseHtml,
 	'.vue': parseVue,
 	'.md': parseMarkdown,
+	'.mdx': parseMarkdown,
 	'.jsx': parseJsx,
 	'.tsx': parseJsx,
 	'.ts': parseLit,
-	'.js': parseLit,
-	'.mjs': parseLit,
+	'.js': parseScript,
+	'.mjs': parseScript,
 	'.css': parseStylesheet,
 	'.scss': parseStylesheet,
 	'.sass': parseStylesheet,
@@ -705,7 +839,7 @@ const PARSERS = {
 export function readerOf(filename) {
 	const parser = PARSERS[filename.slice(filename.lastIndexOf('.'))];
 	if (!parser) return 'none';
-	return parser === parseLit ? 'templates' : 'markup';
+	return parser === parseLit || parser === parseScript ? 'templates' : 'markup';
 }
 
 /** @returns {Promise<import('./tree.js').TreeNode[]>} */

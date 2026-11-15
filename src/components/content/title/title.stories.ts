@@ -246,8 +246,9 @@ export const OpKleurvlak = {
 export const MetEigenInhoud = {
 	render: () => html`
 	<nldd-container gap="24">
-		<nldd-title supporting-text="Dakisolatie, in behandeling">
+		<nldd-title>
 			<h1><a href="#aanvraag-a-1042">Aanvraag A-1042</a></h1>
+			<p slot="supporting-text">Dakisolatie, in behandeling</p>
 		</nldd-title>
 		<nldd-title>
 			<h2>Dossier <code>D-318</code> van <em>team Uitvoering</em></h2>

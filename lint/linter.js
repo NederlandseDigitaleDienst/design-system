@@ -401,6 +401,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				tag: node.name,
 				offset: node.offset,
 				endOffset: node.endOffset,
+				mention: node.mention,
 				...position(node.offset),
 			}))
 			.concat(
@@ -408,13 +409,13 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 					.filter(({ rule }) => ranInSource(rule))
 					.map((finding) => ({ ...finding, ...position(finding.offset) })),
 			);
-		const stuck = stuckTags(source, all, /\.[jt]sx$/.test(filename));
+		const stuck = stuckTags(source, all, /\.[jt]sx$/.test(filename) || Boolean(parsed.jsx));
 		for (const finding of all) {
 			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;
 		}
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
-		const unneeded = /\.md$/.test(filename) || parsed.length === 0 || parsed.syntaxError
+		const unneeded = /\.mdx?$/.test(filename) || parsed.length === 0 || parsed.syntaxError
 			? []
 			: [...suppressed].flatMap(([line, ids]) =>
 					[...ids]

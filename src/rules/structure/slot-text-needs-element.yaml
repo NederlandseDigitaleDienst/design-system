@@ -1,0 +1,4 @@
+severity: error
+runtime: true
+context: ':is(nldd-title, nldd-title-cell, nldd-text-cell):state(loose-text)'
+message: 'Text straight in a slot is what the attribute is for. Put it in `text`, or in a `<p>` or heading in the slot.'

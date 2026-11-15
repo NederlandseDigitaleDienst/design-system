@@ -108,9 +108,7 @@ nldd-page
         dividers="never"
         accessible-label="Team"
       >
-        <nldd-list-item
-          checkbox
-        >
+        <nldd-list-item checkbox>
           <nldd-cell>
             <nldd-checkbox decorative></nldd-checkbox>
           </nldd-cell>
@@ -124,9 +122,7 @@ nldd-page
             text="9"
           ></nldd-text-cell>
         </nldd-list-item>
-        <nldd-list-item
-          checkbox
-        >
+        <nldd-list-item checkbox>
           <nldd-cell>
             <nldd-checkbox decorative></nldd-checkbox>
           </nldd-cell>
@@ -199,7 +195,9 @@ nldd-page
       size="sm"
       color="secondary"
       aria-live="polite"
-    >2 dossiers</nldd-text>
+    >
+      <p>2 dossiers</p>
+    </nldd-text>
 
     <nldd-spacer size="4"></nldd-spacer>
 
@@ -223,12 +221,14 @@ nldd-page
           hide-above="sm"
           supporting-text="Team Uitvoering"
         >
-          Dossier D-318
-          <nldd-badge
-            size="sm"
-            color="neutral"
-            text="In behandeling"
-          ></nldd-badge>
+          <p>
+            Dossier D-318
+            <nldd-badge
+              size="sm"
+              color="neutral"
+              text="In behandeling"
+            ></nldd-badge>
+          </p>
         </nldd-text-cell>
         <nldd-spacer-cell
           size="8"
@@ -266,12 +266,14 @@ nldd-page
           hide-above="sm"
           supporting-text="Team Beleid"
         >
-          Dossier D-319
-          <nldd-badge
-            size="sm"
-            color="success"
-            text="Afgerond"
-          ></nldd-badge>
+          <p>
+            Dossier D-319
+            <nldd-badge
+              size="sm"
+              color="success"
+              text="Afgerond"
+            ></nldd-badge>
+          </p>
         </nldd-text-cell>
         <nldd-spacer-cell
           size="8"

@@ -93,11 +93,12 @@ const card = (title: string, text: string, tag?: string) => html`
 			padding="12"
 			gap="4"
 		>
-			<nldd-text weight="bold">${title}</nldd-text>
+			<nldd-text weight="bold" text="${title}"></nldd-text>
 			<nldd-text
 				size="sm"
 				color="secondary"
-			>${text}</nldd-text>
+				text="${text}"
+			></nldd-text>
 			${tag ? html`<nldd-tag text=${tag}></nldd-tag>` : ''}
 		</nldd-container>
 	</nldd-card>
@@ -307,11 +308,12 @@ export const ZonderSlepen = {
 					vertical-alignment="center"
 				>
 					<nldd-container gap="4">
-						<nldd-text weight="bold">${title}</nldd-text>
+						<nldd-text weight="bold" text="${title}"></nldd-text>
 						<nldd-text
 							size="sm"
 							color="secondary"
-						>${text}</nldd-text>
+							text="${text}"
+						></nldd-text>
 					</nldd-container>
 					<nldd-spacer size="flexible"></nldd-spacer>
 					<nldd-icon-button

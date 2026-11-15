@@ -239,9 +239,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
  */
 export const GenestdeSplitView = {
 	render: () => html`
-	<nldd-navigation-split-view
-		style="height: 600px;"
-	>
+	<nldd-navigation-split-view style="height: 600px;">
 		<nldd-split-view-pane slot="primary-sidebar">
 			<nldd-page
 				sticky-header

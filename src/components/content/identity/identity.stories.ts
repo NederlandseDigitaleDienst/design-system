@@ -149,11 +149,8 @@ export const MetTimeEnLink = {
 				name="Jan Jansen"
 				decorative
 			></nldd-avatar>
-			<span slot="text">Door <nldd-link href="#auteur" text="Jan Jansen"></nldd-link></span>
-			<time
-				slot="supporting-text"
-				datetime="2026-07-13"
-			>13 juli 2026</time>
+			<p slot="text">Door <nldd-link href="#auteur" text="Jan Jansen"></nldd-link></p>
+			<p slot="supporting-text"><time datetime="2026-07-13">13 juli 2026</time></p>
 		</nldd-identity>
 	`,
 	parameters: { controls: { disable: true } },

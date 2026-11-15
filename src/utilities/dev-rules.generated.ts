@@ -389,10 +389,26 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "link-needs-href",
-		"message": "Give it an `href`, or use nldd-button when it performs an action: what looks like a link has to be one.",
+		"id": "link-anchor-attributes-no-effect",
+		"message": "nldd-link holds an `<a>` of its own, so `href`, `target`, `rel`, `download`, `text`, `start-icon` and `end-icon` on nldd-link do nothing. Put them on the `<a>`, and an icon in it as nldd-icon.",
+		"context": "nldd-link:has(> a:not([slot]))",
+		"assert": ":not([href]:not([href=\"\"])):not([target]:not([target=\"\"])):not([rel]:not([rel=\"\"])):not([download]:not([download=\"\"])):not([text]:not([text=\"\"])):not([start-icon]:not([start-icon=\"\"])):not([end-icon]:not([end-icon=\"\"]))",
+		"properties": []
+	},
+	{
+		"id": "link-max-one-anchor",
+		"message": "nldd-link holds more than one `<a>`. Give each link an nldd-link of its own.",
 		"context": "nldd-link",
-		"assert": "[href]:not([href=\"\"])",
+		"count": {
+			"of": "a:not([slot])",
+			"max": 1
+		}
+	},
+	{
+		"id": "link-needs-href",
+		"message": "Give it an `href`, or the `<a>` in it one, or use nldd-button when it performs an action: what looks like a link has to be one.",
+		"context": "nldd-link",
+		"assert": "[href]:not([href=\"\"]), :has(> a:not([slot])[href]:not([href=\"\"]))",
 		"properties": [
 			"href"
 		]
@@ -783,6 +799,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-button[text]:not([text=\"\"]):has(> [slot=\"text\"]), nldd-button[start-icon]:not([start-icon=\"\"]):has(> [slot=\"start-icon\"]), nldd-button[end-icon]:not([end-icon=\"\"]):has(> [slot=\"end-icon\"]), nldd-icon-button[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-menu-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-toggle-button[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-segmented-control-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-tag[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-link[start-icon]:not([start-icon=\"\"]):has(> [slot=\"start-icon\"]), nldd-link[end-icon]:not([end-icon=\"\"]):has(> [slot=\"end-icon\"]), nldd-tab-bar-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-menu-bar-item[icon]:not([icon=\"\"]):has(> [slot=\"icon\"]), nldd-tag[text]:not([text=\"\"]):has(> :not([slot])), nldd-link[text]:not([text=\"\"]):has(> :not([slot])), nldd-icon-cell[icon]:not([icon=\"\"]):has(> :not([slot])), nldd-token[text]:not([text=\"\"]):has(> :not([slot])), nldd-breadcrumbs-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-page-footer-legal-bar-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-step-bar-item[text]:not([text=\"\"]):has(> :not([slot])), nldd-text-cell[text]:not([text=\"\"]):has(> :not([slot])), nldd-title-cell[text]:not([text=\"\"]):has(> :not([slot]))"
 	},
 	{
+		"id": "slot-needs-element",
+		"message": "A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.",
+		"context": ":is(nldd-title, nldd-title-cell):has(> :not([slot]):not(h1, h2, h3, h4, h5, h6, p)), nldd-text-cell:has(> :not([slot]):not(p)), :is(nldd-title, nldd-title-cell, nldd-text-cell):has(> :is([slot=\"overline\"], [slot=\"supporting-text\"]):not(p)), nldd-identity:has(> :is([slot=\"text\"], [slot=\"supporting-text\"]):not(p))"
+	},
+	{
+		"id": "slot-text-needs-element",
+		"message": "Text straight in a slot is what the attribute is for. Put it in `text`, or in a `<p>` or heading in the slot.",
+		"context": ":is(nldd-title, nldd-title-cell, nldd-text-cell):state(loose-text)"
+	},
+	{
 		"id": "split-button-max-one-popup",
 		"message": "nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.",
 		"context": "nldd-split-button",
@@ -1025,6 +1051,15 @@ export const devRules: DevRule[] = [
 		"id": "text-line-height-no-effect",
 		"message": "`line-height` belongs to the body sizes; a display size has its own line height. Remove it.",
 		"context": "nldd-text[size^=\"display-\"][line-height]:not([line-height=\"\"])"
+	},
+	{
+		"id": "text-needs-element",
+		"message": "nldd-text takes its text in a `<p>` of its own, or a `<span>` where it is no paragraph, or plain text in `text`.",
+		"context": "nldd-text",
+		"assert": "[text]:not([text=\"\"]), :has(> :is(p, span))",
+		"properties": [
+			"text"
+		]
 	},
 	{
 		"id": "text-weight-no-effect",

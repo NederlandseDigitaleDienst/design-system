@@ -91,14 +91,11 @@ nldd-shell                            de buitenste schil
       </nldd-top-navigation-bar>
     </nldd-skip-link>
 
-    <nldd-hero
-      main-background="accent"
-    >
+    <nldd-hero main-background="accent">
       <nldd-image slot="media"></nldd-image>
-      <nldd-title
-        text="Isoleren"
-        heading-level="1"
-      ></nldd-title>
+      <nldd-title>
+        <h1>Isoleren</h1>
+      </nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-rich-text>
         <p>Een goed geïsoleerd huis houdt de warmte binnen en is in de zomer koeler. Voor dakisolatie kun je een aanvraag doen; hieronder staat wat je daarvoor moet weten.</p>
@@ -112,11 +109,9 @@ nldd-shell                            de buitenste schil
     </nldd-hero>
 
     <nldd-one-half-one-half-section vertical-alignment="center">
-      <nldd-title
-        slot="left"
-        text="Isoleren houdt de warmte binnen"
-        heading-level="2"
-      ></nldd-title>
+      <nldd-title slot="left">
+        <h2>Isoleren houdt de warmte binnen</h2>
+      </nldd-title>
       <nldd-spacer
         slot="left"
         size="16"
@@ -143,11 +138,9 @@ nldd-shell                            de buitenste schil
     </nldd-one-half-one-half-section>
 
     <nldd-simple-section background="tinted">
-      <nldd-title
-        slot="header"
-        text="Voor dakisolatie doe je een aanvraag"
-        heading-level="2"
-      ></nldd-title>
+      <nldd-title slot="header">
+        <h2>Voor dakisolatie doe je een aanvraag</h2>
+      </nldd-title>
       <nldd-spacer
         slot="header"
         size="16"
@@ -164,11 +157,9 @@ nldd-shell                            de buitenste schil
           accessible-label="Aanvraag indienen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Aanvraag indienen"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Aanvraag indienen</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Wat je nodig hebt en hoe het indienen gaat.</p>
@@ -180,11 +171,9 @@ nldd-shell                            de buitenste schil
           accessible-label="Behandeling volgen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Behandeling volgen"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Behandeling volgen</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Bij welke stap je aanvraag ligt, en wie er aan werkt.</p>
@@ -196,11 +185,9 @@ nldd-shell                            de buitenste schil
           accessible-label="Bezwaar maken"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Bezwaar maken"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Bezwaar maken</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Wat je doet als je het niet eens bent met een besluit.</p>
@@ -211,11 +198,9 @@ nldd-shell                            de buitenste schil
     </nldd-simple-section>
 
     <nldd-one-third-two-thirds-section>
-      <nldd-title
-        slot="left"
-        text="Soorten isolatie"
-        heading-level="2"
-      ></nldd-title>
+      <nldd-title slot="left">
+        <h2>Soorten isolatie</h2>
+      </nldd-title>
       <nldd-spacer
         slot="left"
         size="16"
@@ -283,9 +268,9 @@ nldd-shell                            de buitenste schil
       <nldd-title
         slot="header"
         size="display-3"
-        text="Verwante onderwerpen"
-        heading-level="2"
-      ></nldd-title>
+      >
+        <h2>Verwante onderwerpen</h2>
+      </nldd-title>
       <nldd-collection
         layout="grid"
         item-min-width="280px"
@@ -295,11 +280,9 @@ nldd-shell                            de buitenste schil
           accessible-label="Warmtepomp"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Warmtepomp"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Warmtepomp</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Van luchtwarmtepomp tot hybride, en wat je huis ervoor nodig heeft.</p>
@@ -311,11 +294,9 @@ nldd-shell                            de buitenste schil
           accessible-label="Energie besparen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Energie besparen"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Energie besparen</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Kleine stappen die je meteen kunt zetten.</p>
@@ -327,11 +308,9 @@ nldd-shell                            de buitenste schil
           accessible-label="Zonnepanelen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Zonnepanelen"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Zonnepanelen</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Wat je moet weten voor je begint.</p>
@@ -399,7 +378,7 @@ Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbo
 
 Wat je gratis krijgt: wat bij de [paginaopbouw](page-structure.md) staat, en een knop met `href` die een echte link is.
 
-Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, en een knoptekst die de taak noemt, want hij staat los van de kaarten en moet zonder de tekst eromheen te begrijpen zijn.
+Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, de kop van het juiste niveau in het slot van elke titel, en een knoptekst die de taak noemt, want hij staat los van de kaarten en moet zonder de tekst eromheen te begrijpen zijn.
 
 ## Regels
 

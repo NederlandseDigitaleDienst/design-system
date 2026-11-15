@@ -198,11 +198,11 @@ describe('nldd-title-cell', () => {
 		expect(slot.assignedNodes().length).toBeGreaterThan(0);
 	});
 
-	it('slot works with heading-level (h2 contains slot)', async () => {
-		el = await fixture('<nldd-title-cell heading-level="2"><span>Heading content</span></nldd-title-cell>');
+	it('leaves the heading to a slotted one, whatever heading-level says', async () => {
+		el = await fixture('<nldd-title-cell heading-level="2"><h3>Heading content</h3></nldd-title-cell>');
 		await waitForUpdate(el);
 		const title = el.shadowRoot!.querySelector('.title-cell__title') as HTMLElement;
-		expect(title.tagName.toLowerCase()).toBe('h2');
+		expect(title.tagName.toLowerCase()).toBe('div');
 		expect(title.querySelector('slot')).not.toBeNull();
 	});
 
@@ -212,11 +212,11 @@ describe('nldd-title-cell', () => {
 		const p = el.shadowRoot!.querySelector('.title-cell__title') as HTMLElement;
 		expect(p.hasAttribute('hidden')).toBe(true);
 
-		const span = document.createElement('span');
-		span.textContent = 'Late slot';
-		el.appendChild(span);
+		const late = document.createElement('p');
+		late.textContent = 'Late slot';
+		el.appendChild(late);
 		await waitForUpdate(el);
-		expect(p.hasAttribute('hidden')).toBe(false);
+		expect(el.shadowRoot!.querySelector('.title-cell__title')!.hasAttribute('hidden')).toBe(false);
 	});
 
 	it('renders a <p> by default (no heading-level)', async () => {
@@ -338,5 +338,98 @@ describe('nldd-title-cell', () => {
 		// Slotted content lives in light DOM, untouched by renderQueryMark.
 		expect(span!.querySelector('b')).toBeNull();
 		expect(span!.textContent).toBe('Aardappelen');
+	});
+});
+
+describe('nldd-title-cell with an element of its own in a slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws a plain box around a slotted heading and <p>, so they do not nest', async () => {
+		el = await fixture('<nldd-title-cell><h3>Aanvraag A-1042</h3><p slot="supporting-text">Dakisolatie</p></nldd-title-cell>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.title-cell__title')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.title-cell__supporting-text')!.localName).toBe('div');
+		const heading = el.querySelector('h3')!;
+		expect(getComputedStyle(heading).marginBlockStart).toBe('0px');
+		const box = el.shadowRoot!.querySelector('.title-cell__title')!;
+		expect(getComputedStyle(heading).fontSize).toBe(getComputedStyle(box).fontSize);
+		expect(el.matches(':state(loose-text)')).toBe(false);
+	});
+
+	it('draws no heading around loose text in the slot, and says so', async () => {
+		el = await fixture('<nldd-title-cell heading-level="3">Aanvraag A-1042</nldd-title-cell>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.title-cell__title')!.localName).toBe('div');
+		expect(el.matches(':state(loose-text)')).toBe(true);
+	});
+
+	it('draws its heading for the attribute', async () => {
+		el = await fixture('<nldd-title-cell heading-level="3" text="Aanvraag A-1042"></nldd-title-cell>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.title-cell__title')!.localName).toBe('h3');
+		expect(el.matches(':state(loose-text)')).toBe(false);
+	});
+});
+
+describe('nldd-title-cell that swaps its box for a filled slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('settles after the swap: the slots stay, and slotchange stops', async () => {
+		el = await fixture('<nldd-title-cell><h3>Aanvraag A-1042</h3><p slot="supporting-text">Dakisolatie</p></nldd-title-cell>');
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		const slots = [...el.shadowRoot!.querySelectorAll('slot')];
+		let changes = 0;
+		el.shadowRoot!.addEventListener('slotchange', () => changes++, true);
+		(el as HTMLElement & { requestUpdate(): void }).requestUpdate();
+		await waitForUpdate(el);
+		expect([...el.shadowRoot!.querySelectorAll('slot')]).toEqual(slots);
+		expect(changes).toBe(0);
+	});
+});
+
+describe('nldd-title-cell whose slot fills and empties', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('swaps its box both ways and ends with the right one', async () => {
+		el = await fixture('<nldd-title-cell text="Dakisolatie" heading-level="3"></nldd-title-cell>');
+		await waitForUpdate(el);
+		const title = () => el.shadowRoot!.querySelector('.title-cell__title')!;
+		expect(title().localName).toBe('h3');
+		const heading = document.createElement('h3');
+		heading.textContent = 'Aanvraag A-1042';
+		el.append(heading);
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(title().localName).toBe('div');
+		expect(title().textContent!.trim()).toBe('');
+		heading.remove();
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(title().localName).toBe('h3');
+		expect(title().textContent!.trim()).toBe('Dakisolatie');
+		expect(el.shadowRoot!.querySelectorAll('slot:not([name])').length).toBe(1);
+	});
+});
+
+describe('nldd-title-cell on its first render', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws the box for slotted text at once, so no swap follows', async () => {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = '<nldd-title-cell text="Dakisolatie" overline="Aanvraag"><p>Aanvraag A-1042</p></nldd-title-cell>';
+		document.body.append(wrapper);
+		el = wrapper.firstElementChild as HTMLElement;
+		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		expect(el.shadowRoot!.querySelector('.title-cell__title')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.title-cell__overline')!.localName).toBe('p');
 	});
 });

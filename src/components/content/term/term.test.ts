@@ -59,7 +59,7 @@ describe('nldd-term with definition', () => {
 		expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
 		// The soft hyphen breaks the word in the sentence, not in the name.
 		expect(popover.getAttribute('aria-label')).toBe('verwerkingsverantwoordelijke');
-		expect(popover.textContent).toContain('Degene die het doel vaststelt.');
+		expect(popover.querySelector('nldd-text')!.getAttribute('text')).toBe('Degene die het doel vaststelt.');
 	});
 
 	it('shows a source under the definition, as a link with source-href', async () => {

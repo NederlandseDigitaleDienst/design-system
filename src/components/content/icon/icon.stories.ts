@@ -130,11 +130,13 @@ export const MeeMetDeTekst = {
 				size=${size}
 				line-height="tight"
 			>
-				Aanvraag A-1043 is <nldd-icon icon="check-mark" size="inherit" ?tile=${tile} color="success"></nldd-icon> goedgekeurd,
-				staat <nldd-icon icon="lock-closed" size="inherit" ?tile=${tile}></nldd-icon> vast sinds
-				<nldd-icon icon="calendar-event" size="inherit" ?tile=${tile}></nldd-icon> vorige week, en loopt af over
-				<nldd-icon icon="clock" size="inherit" ?tile=${tile}></nldd-icon> 3 dagen.
-				<nldd-icon icon="info-circle" size="inherit" ?tile=${tile} color="accent"></nldd-icon> Verlengen kan tot die tijd.
+				<p>
+					Aanvraag A-1043 is <nldd-icon icon="check-mark" size="inherit" ?tile=${tile} color="success"></nldd-icon> goedgekeurd,
+					staat <nldd-icon icon="lock-closed" size="inherit" ?tile=${tile}></nldd-icon> vast sinds
+					<nldd-icon icon="calendar-event" size="inherit" ?tile=${tile}></nldd-icon> vorige week, en loopt af over
+					<nldd-icon icon="clock" size="inherit" ?tile=${tile}></nldd-icon> 3 dagen.
+					<nldd-icon icon="info-circle" size="inherit" ?tile=${tile} color="accent"></nldd-icon> Verlengen kan tot die tijd.
+				</p>
 			</nldd-text>
 		`;
 		return html`
@@ -170,9 +172,8 @@ export const Grootten = {
 						size="sm"
 						line-height="tight"
 						horizontal-alignment="center"
-					>
-						${size}px
-					</nldd-text>
+						text="${size}px"
+					></nldd-text>
 				</div>
 			`)}
 		</nldd-container>
@@ -198,9 +199,8 @@ export const FunctioneleKleuren = {
 						size="sm"
 						line-height="tight"
 						horizontal-alignment="center"
-					>
-						${color}
-					</nldd-text>
+						text="${color}"
+					></nldd-text>
 				</div>
 			`)}
 		</nldd-container>
@@ -223,9 +223,8 @@ export const Rijkskleuren = {
 						size="sm"
 						line-height="tight"
 						horizontal-alignment="center"
-					>
-						${color}
-					</nldd-text>
+						text="${color}"
+					></nldd-text>
 				</div>
 			`)}
 		</div>

@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { waitForUpdate } from '../../test-utils.js';
 import markup from './home-page.html?raw';
-import { expectHeaderIntro, expectImageAndText, expectLegalBar, expectSoundHeadings, expectTextAndLinkList, expectTopBar } from '../page-checks.js';
+import { titleText, expectHeaderIntro, expectImageAndText, expectLegalBar, expectSoundHeadings, expectTextAndLinkList, expectTopBar } from '../page-checks.js';
 import '../../components/index.js';
 
 describe('patroon: home', () => {
@@ -61,7 +61,7 @@ describe('patroon: home', () => {
 			const button = footer.querySelector('nldd-button')!;
 			expect(button.getAttribute('appearance')).toBe('neutral-tinted');
 			expect(button.getAttribute('href')).toBeTruthy();
-			expect(button.getAttribute('text')).not.toBe(card.querySelector('nldd-title')!.getAttribute('text'));
+			expect(button.getAttribute('text')).not.toBe(titleText(card.querySelector('nldd-title')!));
 		}
 	});
 

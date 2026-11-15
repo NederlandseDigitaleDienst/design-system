@@ -6,9 +6,12 @@ import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;
 	handleSlotChange: (e: Event) => void;
+	handleDefaultSlotChange: (e: Event) => void;
 }
 
 export function template(this: NLDDLink, helpers: TemplateHelpers) {
+	// The <a> of the app is the link: drawing one around it would nest two.
+	if (this._anchor) return html`<span class="link__anchor"><slot @slotchange=${helpers.handleDefaultSlotChange}></slot></span>`;
 	const resolvedRel = linkRel(this.rel, this.target);
 	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
 	// Suppressed when disabled (the <a> carries no href, so it doesn't navigate).
@@ -37,7 +40,7 @@ export function template(this: NLDDLink, helpers: TemplateHelpers) {
 	const endIcon = html`<slot name="end-icon" @slotchange=${helpers.handleSlotChange}>${this.endIcon
 		? html`<span class="link__end-icon"><nldd-icon icon=${this.endIcon}></nldd-icon></span>`
 		: nothing}</slot>`;
-	const label = html`<span class="link__label">${this._textSlot.has ? nothing : this.text}<slot @slotchange=${this._textSlot.onChange}></slot></span>`;
+	const label = html`<span class="link__label">${this._textSlot.has ? nothing : this.text}<slot @slotchange=${helpers.handleDefaultSlotChange}></slot></span>`;
 	return html`<a class="link"
 			href=${this.disabled ? nothing : (this.href || nothing)}
 			role=${this.disabled ? 'link' : nothing}

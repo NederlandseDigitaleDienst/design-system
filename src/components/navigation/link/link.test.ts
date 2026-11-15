@@ -3,6 +3,9 @@ import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDLink } from './link.js';
 import './link.js';
+import '../../layout/popover/popover.js';
+import '../../../assets/styles/variables.css';
+import './link.css';
 
 describe('nldd-link', () => {
 	let el: HTMLElement;
@@ -249,5 +252,175 @@ describe('<nldd-link> with download', () => {
 		el = await fixture('<nldd-link href="/verslag.pdf" target="_blank" download="verslag.pdf" text="Verslag"></nldd-link>');
 		await waitForUpdate(el);
 		expect(el.matches(':state(download-with-target)')).toBe(true);
+	});
+});
+
+describe('<nldd-link> with an <a> of its own', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const own = (link: HTMLElement) => link.querySelector(':scope > a')!;
+
+	it('draws no link of its own, so the two never nest', async () => {
+		el = await fixture('<nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('a')).toBeNull();
+		expect(own(el).assignedSlot).not.toBeNull();
+	});
+
+	it('looks like a link through the global stylesheet', async () => {
+		el = await fixture('<nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const style = getComputedStyle(own(el));
+		expect(style.textDecorationLine).toBe('underline');
+		// A flex item of the host, so the browser makes inline-flex flex.
+		expect(style.display).toMatch(/flex$/);
+		const reference = document.createElement('span');
+		reference.style.color = 'var(--context-link-color)';
+		document.body.append(reference);
+		expect(style.color).toBe(getComputedStyle(reference).color);
+		reference.remove();
+	});
+
+	it('says on the <a> that it goes to another website, and follows a change of href', async () => {
+		el = await fixture('<nldd-link><a href="https://example.org/">Voorbeeld</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		expect(a.getAttribute('aria-description')).toBe('andere website');
+		a.setAttribute('href', '/patronen');
+		await waitForUpdate(el);
+		expect(a.hasAttribute('aria-description')).toBe(false);
+	});
+
+	it('adds noopener noreferrer to the rel of an <a> that opens a new tab, and takes back only that', async () => {
+		el = await fixture('<nldd-link><a href="/patronen" target="_blank" rel="external">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		expect(a.getAttribute('rel')).toBe('external noopener noreferrer');
+		a.removeAttribute('target');
+		await waitForUpdate(el);
+		expect(a.getAttribute('rel')).toBe('external');
+	});
+
+	it('disables the <a>: marked, and a click goes nowhere and reaches no handler of the app', async () => {
+		el = await fixture('<nldd-link disabled><a href="/patronen">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el) as HTMLAnchorElement;
+		expect(a.getAttribute('aria-disabled')).toBe('true');
+		let reached = false;
+		a.addEventListener('click', () => { reached = true; });
+		const click = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+		a.dispatchEvent(click);
+		expect(click.defaultPrevented).toBe(true);
+		expect(reached).toBe(false);
+		(el as HTMLElement & { disabled: boolean }).disabled = false;
+		await waitForUpdate(el);
+		expect(a.hasAttribute('aria-disabled')).toBe(false);
+		const next = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+		a.addEventListener('click', (e) => e.preventDefault());
+		a.dispatchEvent(next);
+		expect(reached).toBe(true);
+	});
+
+	it('stops a middle click on a disabled <a>, which would open it in a new tab', async () => {
+		el = await fixture('<nldd-link disabled><a href="/patronen">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const auxclick = new MouseEvent('auxclick', { button: 1, bubbles: true, cancelable: true, composed: true });
+		own(el).dispatchEvent(auxclick);
+		expect(auxclick.defaultPrevented).toBe(true);
+	});
+
+	it('keeps the rel the app sets after the first render, and adds to it only what a new tab needs', async () => {
+		el = await fixture('<nldd-link><a href="https://example.org/" target="_blank">Voorbeeld</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		expect(a.getAttribute('rel')).toBe('noopener noreferrer');
+		a.setAttribute('rel', 'nofollow');
+		await waitForUpdate(el);
+		expect(a.getAttribute('rel')).toBe('nofollow noopener noreferrer');
+		a.removeAttribute('target');
+		await waitForUpdate(el);
+		expect(a.getAttribute('rel')).toBe('nofollow');
+	});
+
+	it('keeps a disabled <a> without an href reachable by keyboard', async () => {
+		el = await fixture('<nldd-link disabled><a>Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		expect(a.getAttribute('tabindex')).toBe('0');
+		expect(a.getAttribute('role')).toBe('link');
+	});
+
+	it('says a download downloads the file', async () => {
+		el = await fixture('<nldd-link><a href="/verslag.pdf" download>Verslag</a></nldd-link>');
+		await waitForUpdate(el);
+		expect(own(el).getAttribute('aria-description')).toBe('downloadt bestand');
+	});
+
+	it('puts accessible-label and no-tab on the <a>, and leaves what the app set alone', async () => {
+		el = await fixture('<nldd-link accessible-label="Alle patronen" no-tab><a href="/patronen">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		expect(a.getAttribute('aria-label')).toBe('Alle patronen');
+		expect(a.getAttribute('tabindex')).toBe('-1');
+		(el as NLDDLink).noTab = false;
+		await waitForUpdate(el);
+		expect(a.hasAttribute('tabindex')).toBe(false);
+
+		cleanup(el);
+		el = await fixture('<nldd-link accessible-label="Alle patronen"><a href="/patronen" aria-label="Patronen bekijken">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		expect(own(el).getAttribute('aria-label')).toBe('Patronen bekijken');
+	});
+
+	it('leaves an attribute alone that the app changed after the link set it', async () => {
+		el = await fixture('<nldd-link accessible-label="Alle patronen"><a href="/patronen">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		a.setAttribute('aria-label', 'Patronen bekijken');
+		(el as NLDDLink).accessibleLabel = 'Alle voorbeelden';
+		await waitForUpdate(el);
+		expect(a.getAttribute('aria-label')).toBe('Patronen bekijken');
+		(el as NLDDLink).accessibleLabel = '';
+		await waitForUpdate(el);
+		expect(a.getAttribute('aria-label')).toBe('Patronen bekijken');
+	});
+
+	it('takes back what it set when it leaves the page, and sets it again when it comes back', async () => {
+		el = await fixture('<div><nldd-link no-tab><a href="https://example.org/">Voorbeeld</a></nldd-link></div>');
+		const link = el.querySelector('nldd-link')!;
+		await waitForUpdate(link);
+		const a = own(link);
+		expect(a.getAttribute('tabindex')).toBe('-1');
+		link.remove();
+		expect(a.hasAttribute('tabindex')).toBe(false);
+		expect(a.hasAttribute('aria-description')).toBe(false);
+		el.append(link);
+		await waitForUpdate(link);
+		expect(a.getAttribute('tabindex')).toBe('-1');
+		expect(a.hasAttribute('aria-description')).toBe(true);
+	});
+
+	it('lets the popover of interestfor describe the <a>', async () => {
+		el = await fixture('<div><nldd-link interestfor="uitleg"><a href="/patronen">Patronen</a></nldd-link><nldd-popover id="uitleg">Hoe je componenten samenstelt</nldd-popover></div>');
+		const link = el.querySelector('nldd-link')!;
+		await waitForUpdate(link);
+		const described = (own(link) as HTMLAnchorElement & { ariaDescribedByElements: Element[] | null }).ariaDescribedByElements;
+		expect(described).toEqual([el.querySelector('nldd-popover')]);
+	});
+
+	it('draws its own link again, and takes back what it set, when the <a> goes', async () => {
+		el = await fixture('<nldd-link href="/componenten" text="Componenten" no-tab><a href="https://example.org/">Voorbeeld</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		expect(a.getAttribute('tabindex')).toBe('-1');
+		a.remove();
+		await waitForUpdate(el);
+		expect(a.hasAttribute('tabindex')).toBe(false);
+		expect(a.hasAttribute('aria-description')).toBe(false);
+		expect(el.shadowRoot!.querySelector('a')!.getAttribute('href')).toBe('/componenten');
 	});
 });

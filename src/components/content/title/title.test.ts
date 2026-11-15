@@ -56,6 +56,14 @@ describe('nldd-title', () => {
 		expect(el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="overline"]')!.assignedElements().length).toBeGreaterThan(0);
 	});
 
+	it('lays out a <p> of the app in the supporting-text slot as the attribute does', async () => {
+		el = await fixture('<nldd-title><h2>Aanvragen</h2><p slot="supporting-text">Ondertitel</p></nldd-title>');
+		await waitForUpdate(el);
+		const p = el.querySelector('p')!;
+		expect(getComputedStyle(p).marginBlockStart).toBe('0px');
+		expect(getComputedStyle(p).marginBlockEnd).toBe('0px');
+	});
+
 	it('renders slotted supporting-text content', async () => {
 		el = await fixture('<nldd-title><p slot="supporting-text">Ondertitel</p></nldd-title>');
 		await waitForUpdate(el);
@@ -391,5 +399,21 @@ describe('nldd-title – size from heading-level', () => {
 		el.querySelector('h2')!.replaceWith(document.createTextNode('Mijn Dienst'));
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-level')).toBe(false);
+	});
+});
+
+describe('nldd-title on its first render', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('knows the level of a slotted heading at once', async () => {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = '<nldd-title overline="Aanvraag"><h1>Mijn Dienst</h1><p slot="overline">Aanvraag A-1042</p></nldd-title>';
+		document.body.append(wrapper);
+		el = wrapper.firstElementChild as HTMLElement;
+		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		expect(el.getAttribute('data-level')).toBe('1');
+		expect(el.shadowRoot!.querySelector('.title__overline')).toBeNull();
 	});
 });

@@ -36,12 +36,14 @@ nldd-list                      accessible-label, appearance, type
       hide-above="sm"
       supporting-text="Team Uitvoering"
     >
-      Dossier D-318
-      <nldd-badge
-        size="sm"
-        color="neutral"
-        text="In behandeling"
-      ></nldd-badge>
+      <p>
+        Dossier D-318
+        <nldd-badge
+          size="sm"
+          color="neutral"
+          text="In behandeling"
+        ></nldd-badge>
+      </p>
     </nldd-text-cell>
     <nldd-spacer-cell
       size="8"
@@ -82,12 +84,14 @@ nldd-list                      accessible-label, appearance, type
       hide-above="sm"
       supporting-text="Team Beleid"
     >
-      Dossier D-319
-      <nldd-badge
-        size="sm"
-        color="success"
-        text="Afgerond"
-      ></nldd-badge>
+      <p>
+        Dossier D-319
+        <nldd-badge
+          size="sm"
+          color="success"
+          text="Afgerond"
+        ></nldd-badge>
+      </p>
     </nldd-text-cell>
     <nldd-spacer-cell
       size="8"

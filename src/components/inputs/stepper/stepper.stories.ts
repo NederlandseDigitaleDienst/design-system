@@ -74,7 +74,7 @@ const Template = ({ size, value, min, max, step, invalid, disabled }: Record<str
 		gap="16"
 		vertical-alignment="center"
 	>
-		<nldd-text style="min-width: 2ch;">${value}</nldd-text>
+		<nldd-text style="min-width: 2ch;" text="${value}"></nldd-text>
 		<nldd-stepper
 			value=${value}
 			min=${min}
@@ -104,9 +104,7 @@ export const AlleToestanden = {
 			gap="16"
 			vertical-alignment="center"
 		>
-			<nldd-text style="min-width: 2ch;">
-				5
-			</nldd-text>
+			<nldd-text style="min-width: 2ch;" text="5"></nldd-text>
 			<nldd-stepper
 				value="5" min="0" max="10" size="xs"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
@@ -117,9 +115,7 @@ export const AlleToestanden = {
 			gap="16"
 			vertical-alignment="center"
 		>
-			<nldd-text style="min-width: 2ch;">
-				5
-			</nldd-text>
+			<nldd-text style="min-width: 2ch;" text="5"></nldd-text>
 			<nldd-stepper
 				value="5" min="0" max="10" size="sm"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
@@ -130,9 +126,7 @@ export const AlleToestanden = {
 			gap="16"
 			vertical-alignment="center"
 		>
-			<nldd-text style="min-width: 2ch;">
-				5
-			</nldd-text>
+			<nldd-text style="min-width: 2ch;" text="5"></nldd-text>
 			<nldd-stepper
 				value="5" min="0" max="10" size="md"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
@@ -143,9 +137,7 @@ export const AlleToestanden = {
 			gap="16"
 			vertical-alignment="center"
 		>
-			<nldd-text style="min-width: 2ch;">
-				0
-			</nldd-text>
+			<nldd-text style="min-width: 2ch;" text="0"></nldd-text>
 			<nldd-stepper
 				value="0" min="0" max="10" size="md"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
@@ -156,9 +148,7 @@ export const AlleToestanden = {
 			gap="16"
 			vertical-alignment="center"
 		>
-			<nldd-text style="min-width: 2ch;">
-				10
-			</nldd-text>
+			<nldd-text style="min-width: 2ch;" text="10"></nldd-text>
 			<nldd-stepper
 				value="10" min="0" max="10" size="md"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
@@ -169,9 +159,7 @@ export const AlleToestanden = {
 			gap="16"
 			vertical-alignment="center"
 		>
-			<nldd-text style="min-width: 2ch;">
-				5
-			</nldd-text>
+			<nldd-text style="min-width: 2ch;" text="5"></nldd-text>
 			<nldd-stepper
 				value="5"
 				min="0"

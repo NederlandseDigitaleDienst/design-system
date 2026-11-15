@@ -242,9 +242,7 @@ export const MetHistogramEnVelden = {
 			else slider.startValue = value;
 		};
 		return html`
-			<nldd-container
-				gap="16"
-			>
+			<nldd-container gap="16">
 				<nldd-container
 					layout="row"
 					gap="12"
@@ -311,9 +309,7 @@ export const MetIconen = {
 /** De drie maten onder elkaar, zo hoog als de andere controls van die maat. */
 export const Grootten = {
 	render: () => html`
-		<nldd-container
-			gap="40"
-		>
+		<nldd-container gap="40">
 			<nldd-slider
 				accessible-label="Volume md"
 				start-icon="no-volume"

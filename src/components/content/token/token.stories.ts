@@ -220,9 +220,7 @@ export const FilterVoorbeeld = {
 
 	return html`
 		<nldd-container>
-			<nldd-text>
-				Actieve tokens — klik op × om een waarde te verwijderen:
-			</nldd-text>
+			<nldd-text text="Actieve tokens — klik op × om een waarde te verwijderen:"></nldd-text>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-container
 				layout="wrap"

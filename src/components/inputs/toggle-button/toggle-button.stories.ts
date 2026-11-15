@@ -198,9 +198,8 @@ export const AlleTypes = {
 			<nldd-text
 				size="sm"
 				color="secondary"
-			>
-				type="button" (standaard) — aria-pressed, geen formulierparticipatie
-			</nldd-text>
+				text="type=&quot;button&quot; (standaard) — aria-pressed, geen formulierparticipatie"
+			></nldd-text>
 			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
 				layout="row"
@@ -223,9 +222,8 @@ export const AlleTypes = {
 			<nldd-text
 				size="sm"
 				color="secondary"
-			>
-				type="checkbox" — native checkbox input, meerdere tegelijk selecteerbaar
-			</nldd-text>
+				text="type=&quot;checkbox&quot; — native checkbox input, meerdere tegelijk selecteerbaar"
+			></nldd-text>
 			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
 				layout="row"
@@ -259,9 +257,8 @@ export const AlleTypes = {
 			<nldd-text
 				size="sm"
 				color="secondary"
-			>
-				type="radio" — native radio input, wederzijdse uitsluiting via name-groep
-			</nldd-text>
+				text="type=&quot;radio&quot; — native radio input, wederzijdse uitsluiting via name-groep"
+			></nldd-text>
 			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
 				layout="row"
@@ -662,7 +659,7 @@ export const TypeButton = {
 	render: () => html`
 	<nldd-container>
 		<nldd-text>
-			<code>type="button"</code> is de standaard. Gebruikt <code>aria-pressed</code> voor de geselecteerde toestand en neemt niet deel aan formulierverwerking.
+			<p><code>type="button"</code> is de standaard. Gebruikt <code>aria-pressed</code> voor de geselecteerde toestand en neemt niet deel aan formulierverwerking.</p>
 		</nldd-text>
 		<nldd-spacer size="12"></nldd-spacer>
 		<nldd-container
@@ -714,7 +711,7 @@ export const TypeCheckbox = {
 	render: () => html`
 	<nldd-container>
 		<nldd-text>
-			<code>type="checkbox"</code> voor filter-chips en multi-select acties met formulierparticipatie.
+			<p><code>type="checkbox"</code> voor filter-chips en multi-select acties met formulierparticipatie.</p>
 		</nldd-text>
 		<nldd-spacer size="12"></nldd-spacer>
 		<nldd-container
@@ -774,7 +771,7 @@ export const TypeRadio = {
 	render: () => html`
 	<nldd-container>
 		<nldd-text>
-			<code>type="radio"</code> voor single-select keuzes. Gebruik <code>nldd-toggle-button-group</code> voor beheer via JavaScript.
+			<p><code>type="radio"</code> voor single-select keuzes. Gebruik <code>nldd-toggle-button-group</code> voor beheer via JavaScript.</p>
 		</nldd-text>
 		<nldd-spacer size="12"></nldd-spacer>
 		<nldd-container

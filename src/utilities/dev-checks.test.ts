@@ -2,7 +2,11 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import '../components/index.js';
 import data from '../../lint/data.generated.json';
 import { devRules } from './dev-rules.generated.js';
-import { checkElementTranslationKeys, createRegistrationCheck, findRoots, findUndefined, findViolations, lacksFoucGuard } from './dev-checks.js';
+import { checkElementTranslationKeys, createGlobalSheetCheck, createRegistrationCheck, findMissingSheets, findRoots, findUndefined, findViolations, lacksFoucGuard } from './dev-checks.js';
+import textCss from '../components/content/text/text.css?inline';
+import titleCss from '../components/content/title/title.css?inline';
+import linkCss from '../components/navigation/link/link.css?inline';
+import variablesCss from '../assets/styles/variables.css?inline';
 import { loadingTags } from './loading-tags.js';
 import foucCss from '../assets/styles/fouc.css?inline';
 
@@ -181,6 +185,56 @@ describe('FOUC guard', () => {
 		document.head.append(style);
 		mount('<nldd-button text="Bewaar"></nldd-button>');
 		expect(lacksFoucGuard(root)).toBe(false);
+	});
+});
+
+describe('global stylesheets', () => {
+	let root: HTMLElement | undefined;
+	const styles: HTMLStyleElement[] = [];
+
+	afterEach(() => {
+		root?.remove();
+		for (const style of styles.splice(0)) style.remove();
+		vi.restoreAllMocks();
+	});
+
+	const mount = (markup: string) => {
+		root = document.createElement('div');
+		root.innerHTML = markup;
+		document.body.append(root);
+		load(variablesCss);
+	};
+	const load = (...sheets: string[]) => {
+		for (const css of sheets) {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.append(style);
+			styles.push(style);
+		}
+	};
+	const page = '<nldd-text><p>Aanvraag <a href="/a">A-1042</a></p></nldd-text><nldd-title><h2>Dossier D-318</h2></nldd-title><nldd-link><a href="/d">Dossier D-319</a></nldd-link>';
+
+	it('finds each sheet that an element needs and the page does not load', () => {
+		mount(page);
+		expect(findMissingSheets()).toEqual(['text', 'title', 'link']);
+		load(textCss, titleCss, linkCss);
+		expect(findMissingSheets()).toEqual([]);
+	});
+
+	it('needs no sheet for text in an attribute', () => {
+		mount('<nldd-text text="Dakisolatie"></nldd-text><nldd-title text="Dossier D-318"></nldd-title><nldd-link href="/d" text="Dossier D-319"></nldd-link>');
+		expect(findMissingSheets()).toEqual([]);
+	});
+
+	it('warns once per sheet, and names the entry point', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		mount(page);
+		load(titleCss, linkCss);
+		const check = createGlobalSheetCheck();
+		check();
+		check();
+		expect(warn).toHaveBeenCalledTimes(1);
+		expect(warn.mock.calls[0][0]).toContain("'@nldd/design-system/styles/text'");
 	});
 });
 

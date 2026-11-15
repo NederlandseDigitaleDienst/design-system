@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, slottedBlockReset } from '../../../../assets/styles/shadow-resets.js';
 
 export const titleCellStyles = css`
 	:host {
@@ -202,5 +202,9 @@ export const titleCellStyles = css`
 		font: var(--primitives-font-body-sm-regular-tight);
 		overflow-wrap: anywhere;
 		text-wrap: pretty;
+	}
+
+	::slotted(:is(p, h1, h2, h3, h4, h5, h6)) {
+		${slottedBlockReset}
 	}
 `;

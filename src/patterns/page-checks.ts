@@ -1,12 +1,25 @@
 import { expect } from 'vitest';
 
+const HEADING = ':is(h1, h2, h3, h4, h5, h6)';
+
+/** The heading an nldd-title brings in its slot, which a page has in its HTML before any script. */
+export function slottedHeading(title: Element): HTMLHeadingElement | null {
+	return title.querySelector(`:scope > ${HEADING}`);
+}
+
+/** The text of a title, from the heading in its slot or else from `text`. */
+export function titleText(title: Element): string | null {
+	return slottedHeading(title)?.textContent ?? title.getAttribute('text');
+}
+
 /**
- * The heading levels a page renders, in document order: the ones nldd-title
- * draws in its shadow root and the plain ones inside an nldd-rich-text.
+ * The heading levels a page renders, in document order: the ones in the slot of
+ * an nldd-title, the ones it draws in its shadow root from `text`, and the plain
+ * ones inside an nldd-rich-text.
  */
 export function headingLevels(root: HTMLElement): number[] {
-	return [...root.querySelectorAll('nldd-title, nldd-rich-text :is(h1, h2, h3, h4, h5, h6)')]
-		.map((el) => /^H[1-6]$/.test(el.tagName) ? el : el.shadowRoot!.querySelector('h1, h2, h3, h4, h5, h6'))
+	return [...root.querySelectorAll(`nldd-title, nldd-rich-text ${HEADING}`)]
+		.map((el) => /^H[1-6]$/.test(el.tagName) ? el : slottedHeading(el) ?? el.shadowRoot!.querySelector(HEADING))
 		.filter((heading): heading is HTMLHeadingElement => heading !== null)
 		.map((heading) => Number(heading.tagName.slice(1)));
 }
@@ -26,7 +39,7 @@ export function expectNamedLinkCards(root: HTMLElement) {
 	const cards = [...root.querySelectorAll('nldd-card[href]:not([href=""])')];
 	expect(cards.length).toBeGreaterThan(0);
 	for (const card of cards) {
-		const title = card.querySelector('nldd-title')?.getAttribute('text');
+		const title = titleText(card.querySelector('nldd-title')!);
 		expect(card.getAttribute('accessible-label')).toBe(title);
 		expect(card.shadowRoot!.querySelector('a')!.getAttribute('aria-label')).toBe(title);
 	}
@@ -106,7 +119,7 @@ export function expectTextAndLinkList(section: Element) {
 	expect(section.querySelector(':scope > nldd-rich-text[slot="left"]')).not.toBeNull();
 	const list = section.querySelector(':scope > nldd-list[slot="right"]')!;
 	expect(list.getAttribute('type')).toBe('navigation');
-	expect(list.getAttribute('accessible-label')).toBe(title.getAttribute('text'));
+	expect(list.getAttribute('accessible-label')).toBe(titleText(title));
 	const rows = [...list.querySelectorAll(':scope > nldd-list-item')];
 	expect(rows.length).toBeGreaterThan(1);
 	for (const row of rows) {

@@ -140,7 +140,7 @@ export const TypeButton = {
 	render: () => html`
 	<nldd-container>
 		<nldd-text>
-			Met <code>type="button"</code> beheert elke knop zijn eigen <code>aria-pressed</code> toestand onafhankelijk. Ideaal voor teksteditor-toolbars.
+			<p>Met <code>type="button"</code> beheert elke knop zijn eigen <code>aria-pressed</code> toestand onafhankelijk. Ideaal voor teksteditor-toolbars.</p>
 		</nldd-text>
 		<nldd-spacer size="8"></nldd-spacer>
 		<nldd-toggle-button-group
@@ -191,7 +191,7 @@ export const TypeCheckbox = {
 	render: () => html`
 	<nldd-container>
 		<nldd-text>
-			Met <code>type="checkbox"</code> kunnen meerdere opties tegelijk geselecteerd zijn.
+			<p>Met <code>type="checkbox"</code> kunnen meerdere opties tegelijk geselecteerd zijn.</p>
 		</nldd-text>
 		<nldd-spacer size="8"></nldd-spacer>
 		<nldd-toggle-button-group
@@ -239,8 +239,10 @@ export const TypeRadio = {
 	render: () => html`
 	<nldd-container>
 		<nldd-text>
-			Met <code>type="radio"</code> kan slechts één optie tegelijk geselecteerd zijn.
-			Navigeer met de pijltoetsen.
+			<p>
+				Met <code>type="radio"</code> kan slechts één optie tegelijk geselecteerd zijn.
+				Navigeer met de pijltoetsen.
+			</p>
 		</nldd-text>
 		<nldd-spacer size="8"></nldd-spacer>
 		<nldd-toggle-button-group

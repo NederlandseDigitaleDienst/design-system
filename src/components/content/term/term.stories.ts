@@ -50,15 +50,17 @@ const Template = ({
 	sourceHref,
 }: Record<string, unknown>) => html`
 	<nldd-text>
-		De
-		<nldd-term
-			definition=${definition || nothing}
-			source=${source || nothing}
-			source-href=${sourceHref || nothing}
-		>
-			verwerkingsverantwoordelijke
-		</nldd-term>
-		bepaalt of een DPIA nodig is.
+		<p>
+			De
+			<nldd-term
+				definition=${definition || nothing}
+				source=${source || nothing}
+				source-href=${sourceHref || nothing}
+			>
+				verwerkingsverantwoordelijke
+			</nldd-term>
+			bepaalt of een DPIA nodig is.
+		</p>
 	</nldd-text>
 `;
 
@@ -69,19 +71,19 @@ export const Standaard = {
 export const MetPopovertarget = {
 	render: () => html`
 		<nldd-text>
-			Een
-			<nldd-term popovertarget="term-dpia">data protection impact assessment</nldd-term>
-			brengt in kaart wat een verwerking betekent voor de mensen om wie het gaat. Een term van meer woorden loopt mee over de regel, net als de rest van de zin. Vraag daarom een
-			<nldd-term popovertarget="term-dpia">DPIA</nldd-term>
-			aan voordat de verwerking begint.
+			<p>
+				Een
+				<nldd-term popovertarget="term-dpia">data protection impact assessment</nldd-term>
+				brengt in kaart wat een verwerking betekent voor de mensen om wie het gaat. Een term van meer woorden loopt mee over de regel, net als de rest van de zin. Vraag daarom een
+				<nldd-term popovertarget="term-dpia">DPIA</nldd-term>
+				aan voordat de verwerking begint.
+			</p>
 		</nldd-text>
 		<nldd-popover
 			id="term-dpia"
 			accessible-label="Data protection impact assessment"
 		>
-			<nldd-container
-				padding="16"
-			>
+			<nldd-container padding="16">
 				<nldd-rich-text>
 					<p>Een beoordeling vooraf van de risico's van een verwerking voor de mensen van wie de gegevens zijn.</p>
 					<p>Verplicht als een verwerking waarschijnlijk een hoog risico oplevert.</p>
@@ -91,8 +93,10 @@ export const MetPopovertarget = {
 					size="sm"
 					color="secondary"
 				>
-					Bron:
-					<nldd-link href="#begrippenkader">Begrippenkader</nldd-link>
+					<p>
+						Bron:
+						<nldd-link href="#begrippenkader">Begrippenkader</nldd-link>
+					</p>
 				</nldd-text>
 			</nldd-container>
 		</nldd-popover>

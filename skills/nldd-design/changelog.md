@@ -15,6 +15,37 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A slot for text takes a `<p>` or heading of your own** in `nldd-title`, `nldd-title-cell`, `nldd-text-cell` and `nldd-identity`, so the page has its paragraphs and headings in the HTML. Text straight in such a slot no longer gets a paragraph. See Breaking.
+- **`nldd-text` takes its text in a `<p>` or `<span>` of your own**, or plain text in `text`. `nldd lint --fix` wraps it in a `<p>`. See Breaking.
+- **An `<a>` of your own in `nldd-link`.** The link is then in the HTML before any script runs, for search engines, link previews and reader mode, and the `<Link>` of React Router or Next goes in it, so a click no longer reloads the page. See Added.
+
+### Breaking
+
+- **A slot for text takes the element that carries it.** In `nldd-title`, `nldd-title-cell`, `nldd-text-cell` and `nldd-identity` a slot takes a `<p>` of your own, or a heading in the default slot of `nldd-title` and `nldd-title-cell`, with links, tags or `<time>` inside it. The paragraph or heading is then in the HTML before any script runs. The component draws a plain box around what is in a slot, and no longer a `<p>` or heading of its own: text or an inline element straight in a slot loses its paragraph, and `heading-level` on `nldd-title-cell` only applies to `text`. Put plain text in the attribute, or wrap it in a `<p>` or heading. Two new rules report it as an error: `slot-needs-element` for an inline element, and `slot-text-needs-element` in the browser for plain text.
+- **`nldd-text` takes its text in a `<p>` or `<span>` of your own, or plain text in `text`.** The slot takes a `<p>`, or a `<span>` where the text is no paragraph, such as a number in a stat, with the inline elements inside it. What is in the slot is in the HTML the server sends; `text` draws a `<p>` in the browser, which is enough in an application. Text straight in `nldd-text` is no longer valid: the new rule `text-needs-element` reports it as an error, and `nldd lint --fix` wraps it in a `<p>`, so it stays in the HTML. The look of links, mentions, `<code>`, `<mark>` and `<q>` now comes from the global stylesheet: `text.css`, part of `global.css`. A page that loads only the component styles, or puts `nldd-text` in a shadow root of its own, needs `text.css` for that look: `@nldd/design-system/styles/text`.
+- **`nldd lint` reads `.js` files, also in a folder.** JSX in a `.js` file, as a React app with Create React App or Docusaurus writes it, is now checked like a `.jsx` file, where it reported `file-not-read`. A folder scan skipped `.js` altogether, so it now also checks Lit templates there, and reports `file-not-read` for markup in a plain string. Both can bring new findings. A minified bundle (`.min.js`, or a file with a line of 2,000 characters or more) is left out: check a build through its HTML.
+- **`nldd lint` reads MDX, and the prose of Markdown.** An `.mdx` file reported `file-not-read`; now the linter checks the components in its prose as well as in its code blocks, when you name the file. An expression in a value counts as bound, a spread as a spread, and `onClick`, `className` and `key` are read as JSX. In a `.md` file it now also checks the markup in the prose, not only the code blocks. A folder scan leaves both out, so a README or a docs site does not turn red unasked. Text that Markdown turns into a paragraph counts as one, so `text-needs-element` does not fire on it. Both can bring new findings. `--fix` works there too, and renames a tag in a mention such as `` `<nldd-app-view>` ``.
+
+### Added
+
+- **An `<a>` in the default slot of `nldd-link`** takes the place of the link the component draws, and gets its look from the global stylesheet: `link.css`, part of `global.css`. Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, its text, and an icon as an `nldd-icon` inside it. `size`, `accessible-label`, `interestfor`, `no-tab` and `disabled` keep working, `target="_blank"` on the `<a>` gets `noopener noreferrer` added to its `rel`, and the hint about another website, a new tab or a download goes on the `<a>` as `aria-description`. The component leaves an attribute you set on the `<a>` yourself alone.
+- **A new kind of fix for `nldd lint --fix`.** A rule can wrap the text of an element in an element of its own (`wrap`). It only applies when the content is certain: text with a template expression or a comment is left alone, with its finding.
+- **`link-anchor-attributes-no-effect`** (warn) reports `href`, `target`, `rel`, `download`, `text`, `start-icon` or `end-icon` on an `nldd-link` that holds an `<a>`, and **`link-max-one-anchor`** (warn) one with more than one `<a>`. `link-needs-href` accepts the `href` on the `<a>`.
+- **`@nldd/design-system/styles/text`, `/styles/title`, `/styles/link` and `/styles/rich-text`** export the global stylesheets of the components that style plain HTML in light DOM, one by one. `global.css` includes all four; until now a site that picks its stylesheets could not import them.
+- **A warning in development when a global stylesheet is missing.** The links, code and other inline elements in a `<p>` of `nldd-text`, in a heading of `nldd-title` and in an `<a>` of `nldd-link` get their look from `text.css`, `title.css` and `link.css`. A page that does not load one of them now gets a console warning, once per stylesheet, with the entry point to import. Like the other checks in the browser, it runs only with a bundler that sets `import.meta.env.DEV`.
+
+### Changed
+
+- **The page patterns put their headings in the slot of `nldd-title`.** A title from `text` is drawn in the browser, so a search engine that does not render the page, a link preview or reader mode saw no headings at all. A heading in the slot is in the HTML the server sends. The home, content, topic, navigation and page structure patterns now do this, and the JSDoc of `nldd-title` says when the slot matters: on a page of a website. In an application `text` with `heading-level` stays enough.
+- **A tapped menu item lights up and holds before the menu closes**, instead of blinking. A tap has no hover to blink from, so the blink came out of nothing and read as a flicker. A mouse or keyboard keeps the blink.
+
+### Fixed
+
+- **`nldd-title` accepts a `<p>`** in its `overline` and `supporting-text` slots, as the attributes draw it, and in its default slot for a title that is no heading. `pure` reported it, so the slot lost the paragraph the attribute has. A link, `<strong>` or `<code>` in such a `<p>` gets the same look as in the heading.
+- **The package imports on a server.** A framework that renders pages on the server (Next, Docusaurus, Astro, Remix) loads its modules in Node, and 38 of the 132 entry points stopped the build there: the main entry and every component with a tooltip, through a `matchMedia` call, and `nldd-form`, `nldd-form-section` and `nldd-button-bar-divider` (in the `button-bar` entry point), which extend `HTMLElement` without Lit. A plain `import '@nldd/design-system'` or a subpath import now works in shared code, without a check for `window` around it. The components still render in the browser: without JavaScript, what they draw in their shadow root is not in the HTML.
+
 ## [0.24.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.23.0...v0.24.0) (2026-11-14)
 
 ### Highlights

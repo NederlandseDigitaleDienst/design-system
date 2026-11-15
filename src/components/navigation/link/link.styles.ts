@@ -127,6 +127,10 @@ export const linkStyles = css`
 
 	/* # Elements */
 
+	.link__anchor {
+		display: contents;
+	}
+
 	.link__label {
 		text-decoration: underline;
 		text-underline-offset: 0.15em;

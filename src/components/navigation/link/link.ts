@@ -16,6 +16,36 @@
  * For links in CMS or markdown output, where the `<a>` arrives as HTML,
  * `<nldd-rich-text>` with a raw `<a>` remains the route to take.
  *
+ * ### An `<a>` of your own
+ *
+ * Put an `<a>` in the default slot and the component draws no link of its own:
+ * it gives yours its look instead. A page then has the link in its HTML before
+ * any script runs, for a search engine that does not render the page, a link
+ * preview or reader mode, and a router gets the click: put the `<Link>` of
+ * React Router or Next in it, which renders an `<a>` and navigates itself.
+ * Without that, every click on a link in a shadow root loads the whole page.
+ *
+ *     <nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link>
+ *
+ * Everything about the link goes on the `<a>`: `href`, `target`, `rel`,
+ * `download`, and its text. Those attributes, `text`, `start-icon` and
+ * `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an
+ * nldd-icon, so it is part of what you click and inside the focus ring.
+ * `size`, `accessible-label`, `interestfor`, `no-tab` and `disabled` keep
+ * working: the component sets `aria-label`, the description, `tabindex` and
+ * `aria-disabled` on your `<a>`, and leaves an attribute you set yourself
+ * alone. With `target="_blank"` it adds `noopener noreferrer` to the `rel` of
+ * the `<a>`, as it does to its own. A disabled link ignores a click before your
+ * router sees it. The hint about
+ * another website, a new tab or a download goes on it as `aria-description`, so
+ * a screen reader reads it after the name. Not as hidden text in the `<a>`: a
+ * framework that renders the `<a>` owns its children, and an extra one breaks
+ * hydration. One `<a>` per link.
+ *
+ * The look of the `<a>` comes from the global stylesheet, `dist/css/link.css`
+ * or `global.css`, which includes it, so the link looks right before the
+ * component loads, and without script.
+ *
  * @element nldd-link
  * @attr {string} href - Link target
  * @attr {string} target - Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
@@ -31,7 +61,8 @@
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {object} translations - Override translation keys (e.g. the "opent in nieuw tabblad" announcement); unset keys fall back to Dutch.
  *
- * @slot - Link text. Wins over `text`.
+ * @slot - Link text. Wins over `text`. Or an `<a>` of your own, which takes the place of the link the component draws.
+ * @accepts a
  * @slot start-icon - Custom icon before the text. Wins over `start-icon`.
  * @slot end-icon - Custom icon after the text. Wins over `end-icon`.
  */
@@ -47,6 +78,8 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddLinkTranslations } from './link.i18n.js';
 import { InterestController } from '../../../utilities/interest-controller.js';
 import { applyDescribedBy } from '../../../utilities/described-by-mixin.js';
+import { downloadLinkHintKey } from '../../../utilities/link-hint.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 import './../../content/icon/icon.js';
 
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'inherit';
@@ -103,6 +136,17 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 	 *  and long press. */
 	_interest = new InterestController(this);
 
+	/** @internal The `<a>` of the app in the default slot, which takes the place
+	 *  of the link this component draws. */
+	@state() _anchor: HTMLAnchorElement | null = null;
+
+	/** Re-renders when the app changes what the hint on its `<a>` depends on. */
+	private _anchorObserver: MutationObserver | null = null;
+
+	/** The attributes this component set on the `<a>`, and the value it set:
+	 *  only those are its to change or take away. */
+	private _applied = new Map<string, string>();
+
 	/** Whether the start-icon / end-icon slots hold an icon, so the space that
 	 *  separates it from the label is only rendered next to an icon. */
 	@state() _hasStartSlot = false;
@@ -113,6 +157,101 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 		const filled = slot.assignedNodes().length > 0;
 		if (slot.name === 'start-icon') this._hasStartSlot = filled;
 		else this._hasEndSlot = filled;
+	}
+
+	private _handleDefaultSlotChange = (e: Event): void => {
+		this._textSlot.onChange(e);
+		this._findAnchor();
+	};
+
+	/** Finds the `<a>` of the app among the children that go in the default slot. */
+	private _findAnchor(): void {
+		const anchors = [...this.children].filter((child): child is HTMLAnchorElement => child.localName === 'a' && !child.hasAttribute('slot'));
+		const anchor = anchors[0] ?? null;
+		if (anchor === this._anchor) return;
+		if (this._anchor) this._release(this._anchor);
+		this._anchor = anchor;
+		this._observeAnchor();
+	}
+
+	private _observeAnchor(): void {
+		this._anchorObserver?.disconnect();
+		if (!this._anchor) return;
+		this._anchorObserver ??= new MutationObserver(() => this.requestUpdate());
+		this._anchorObserver.observe(this._anchor, { attributes: true, attributeFilter: ['href', 'target', 'download', 'rel'] });
+	}
+
+	/** Sets an attribute on the `<a>`, unless the app set it itself. */
+	private _applyToAnchor(anchor: HTMLAnchorElement, name: string, value: string | null): void {
+		const ours = this._applied.has(name) && anchor.getAttribute(name) === this._applied.get(name);
+		if (value === null) {
+			if (ours) anchor.removeAttribute(name);
+			this._applied.delete(name);
+			return;
+		}
+		if (anchor.hasAttribute(name) && !ours) return;
+		anchor.setAttribute(name, value);
+		this._applied.set(name, value);
+	}
+
+	/** The tokens this component added to the `rel` of the `<a>`. */
+	private _relAdded: string[] = [];
+
+	/** Adds `noopener noreferrer` to the `rel` of an `<a>` that opens a new tab,
+	 *  and takes back only what it added when that changes. */
+	private _applyRel(anchor: HTMLAnchorElement, target: string | null): void {
+		const current = anchor.getAttribute('rel') ?? '';
+		const own = current.split(/\s+/).filter((token) => token && !this._relAdded.includes(token));
+		const wanted = linkRel(own.join(' '), target);
+		this._relAdded = wanted.split(/\s+/).filter((token) => token && !own.includes(token));
+		if (wanted === current) return;
+		if (wanted) anchor.setAttribute('rel', wanted);
+		else anchor.removeAttribute('rel');
+	}
+
+	/** Takes back what this component set on an `<a>` that is no longer its. */
+	private _release(anchor: HTMLAnchorElement): void {
+		for (const name of [...this._applied.keys()]) this._applyToAnchor(anchor, name, null);
+		this._applyRel(anchor, null);
+		applyDescribedBy(anchor, [], true);
+	}
+
+	private _updateAnchor(anchor: HTMLAnchorElement): void {
+		const key = downloadLinkHintKey(anchor.getAttribute('href'), anchor.getAttribute('target'), anchor.getAttribute('download'));
+		this._applyToAnchor(anchor, 'aria-description', key ? this._t(`components.link.${key}`) : null);
+		this._applyToAnchor(anchor, 'aria-label', this.accessibleLabel || null);
+		// Without an href an <a> is not focusable; a disabled link stays reachable.
+		const unreachable = this.disabled && !anchor.hasAttribute('href');
+		this._applyToAnchor(anchor, 'tabindex', this.noTab ? '-1' : (unreachable ? '0' : null));
+		this._applyToAnchor(anchor, 'role', unreachable ? 'link' : null);
+		this._applyToAnchor(anchor, 'aria-disabled', this.disabled ? 'true' : null);
+		this._applyRel(anchor, anchor.getAttribute('target'));
+	}
+
+	/** Stops a click on a disabled <a> of the app before its own handlers, a
+	 *  router's among them, see it: those run after the capture on the host.
+	 *  A middle click too, which would open the link in a new tab. */
+	private _blockDisabledAnchor = (e: MouseEvent): void => {
+		if (!this.disabled || !this._anchor || !e.composedPath().includes(this._anchor)) return;
+		e.preventDefault();
+		e.stopPropagation();
+	};
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this.addEventListener('click', this._blockDisabledAnchor, true);
+		this.addEventListener('auxclick', this._blockDisabledAnchor, true);
+		this._findAnchor();
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this.removeEventListener('click', this._blockDisabledAnchor, true);
+		this.removeEventListener('auxclick', this._blockDisabledAnchor, true);
+		this._anchorObserver?.disconnect();
+		// The <a> can outlive this link; connectedCallback finds it again on a move.
+		if (this._anchor) this._release(this._anchor);
+		this._anchor = null;
 	}
 
 	private _handleClick(e: MouseEvent): void {
@@ -126,14 +265,17 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 		super.updated(changed);
 		if (changed.has('interestfor')) this._interest.refresh();
 		// By element: the link sits in this shadow root, the popover outside it.
+		// An <a> of the app sits next to the popover, in the same tree.
 		const overlay = this._interest.overlay;
-		applyDescribedBy(this.shadowRoot?.querySelector('.link'), overlay ? [overlay] : [], true);
+		if (this._anchor) this._updateAnchor(this._anchor);
+		applyDescribedBy(this._anchor ?? this.shadowRoot?.querySelector('.link'), overlay ? [overlay] : [], true);
 	}
 
 	override render() {
 		return template.call(this, {
 			handleClick: this._handleClick.bind(this),
 			handleSlotChange: this._handleSlotChange.bind(this),
+			handleDefaultSlotChange: this._handleDefaultSlotChange,
 		});
 	}
 }

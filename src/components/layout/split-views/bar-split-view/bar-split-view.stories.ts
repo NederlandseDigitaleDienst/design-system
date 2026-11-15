@@ -352,9 +352,7 @@ export const ResponsieveBalken = {
 				padding-block="12"
 				sm-padding-bottom="0"
 			>
-				<nldd-toolbar
-					size="lg"
-				>
+				<nldd-toolbar size="lg">
 					<nldd-toolbar-item
 						priority="1"
 						slot="start"

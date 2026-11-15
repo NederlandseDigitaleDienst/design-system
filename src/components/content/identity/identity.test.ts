@@ -189,3 +189,49 @@ describe('nldd-identity', () => {
 		expect(el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="avatars"]')!.assignedElements().length).toBe(1);
 	});
 });
+
+describe('nldd-identity with a <p> of its own in a slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws a plain box around the <p>, so the two do not nest', async () => {
+		el = await fixture('<nldd-identity><p slot="text">Door Jan Jansen</p><p slot="supporting-text"><time datetime="2026-07-13">13 juli</time></p></nldd-identity>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.identity__text')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.identity__supporting-text')!.localName).toBe('div');
+		expect(getComputedStyle(el.querySelector('p')!).marginBlockStart).toBe('0px');
+	});
+});
+
+describe('nldd-identity that swaps its box for a filled slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws the box for its slotted text in the first render, so no swap follows', async () => {
+		el = document.createElement('nldd-identity');
+		el.innerHTML = '<p slot="text">Door Jan Jansen</p><nldd-avatar slot="avatars"></nldd-avatar><nldd-avatar slot="avatars"></nldd-avatar>';
+		const wrapper = document.createElement('div');
+		wrapper.append(el);
+		document.body.append(wrapper);
+		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		expect(el.shadowRoot!.querySelector('.identity__text')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.identity__supporting-text')?.localName ?? 'p').toBe('p');
+		expect((el as HTMLElement & { _avatarCount: number })._avatarCount).toBe(2);
+	});
+
+	it('settles after the swap: the slots stay, and slotchange stops', async () => {
+		el = await fixture('<nldd-identity><p slot="text">Door Jan Jansen</p><p slot="supporting-text">Team Uitvoering</p></nldd-identity>');
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.identity__text')!.localName).toBe('div');
+		const slots = [...el.shadowRoot!.querySelectorAll('slot')];
+		let changes = 0;
+		el.shadowRoot!.addEventListener('slotchange', () => changes++, true);
+		(el as HTMLElement & { requestUpdate(): void }).requestUpdate();
+		await waitForUpdate(el);
+		expect([...el.shadowRoot!.querySelectorAll('slot')]).toEqual(slots);
+		expect(changes).toBe(0);
+	});
+});

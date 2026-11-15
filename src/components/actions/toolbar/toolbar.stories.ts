@@ -50,9 +50,7 @@ const resizable = (content: TemplateResult) => html`
 		${content}
 	</div>
 	<nldd-spacer size="8"></nldd-spacer>
-	<nldd-text size="xs">
-		↔ Sleep de hoek rechtsonder om de breedte aan te passen
-	</nldd-text>
+	<nldd-text size="xs" text="↔ Sleep de hoek rechtsonder om de breedte aan te passen"></nldd-text>
 `;
 
 export const Standaard = {
@@ -402,9 +400,7 @@ export const Grootten = {
 	render: () => html`
 		<nldd-container gap="16">
 			<nldd-container>
-				<nldd-text size="xs">
-					md (default)
-				</nldd-text>
+				<nldd-text size="xs" text="md (default)"></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="md">
@@ -449,9 +445,7 @@ export const Grootten = {
 				`}
 			</nldd-container>
 			<nldd-container>
-				<nldd-text size="xs">
-					sm
-				</nldd-text>
+				<nldd-text size="xs" text="sm"></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="sm">
@@ -504,9 +498,7 @@ export const LabelsAanUit = {
 	render: () => html`
 		<nldd-container gap="16">
 			<nldd-container>
-				<nldd-text size="xs">
-					Zonder labels
-				</nldd-text>
+				<nldd-text size="xs" text="Zonder labels"></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="md">
@@ -560,9 +552,7 @@ export const LabelsAanUit = {
 				`}
 			</nldd-container>
 			<nldd-container>
-				<nldd-text size="xs">
-					Met labels
-				</nldd-text>
+				<nldd-text size="xs" text="Met labels"></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar

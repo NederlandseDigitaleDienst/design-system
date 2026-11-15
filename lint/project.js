@@ -6,12 +6,12 @@ import { extname, join, relative, resolve } from 'node:path';
 
 export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
-export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.tmpl', '.gohtml', '.vue', '.jsx', '.tsx'];
+export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.tmpl', '.gohtml', '.vue', '.jsx', '.tsx', '.js'];
 
 /** An app's own stylesheets: read for the tokens they name, and in full when the group pure is on. */
 export const STYLESHEET_EXTENSIONS = ['.css', '.scss', '.sass', '.less'];
 
-/** Where a tag name stands outside markup: the linter does not read these, a renamed tag does. */
+/** Where a tag name stands outside markup: a renamed tag reads these, also a `.js` the linter reads as markup. */
 export const REFERENCE_EXTENSIONS = ['.js', '.mjs', '.cjs', '.ts', '.css', '.scss', '.less'];
 
 function walkDirectory(directory, found, extensions) {

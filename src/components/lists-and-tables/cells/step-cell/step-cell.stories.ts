@@ -402,7 +402,7 @@ export const KaartOnderEenStap = {
 			<nldd-cell width="full">
 				<nldd-box background="base">
 					<nldd-container padding="16">
-						<nldd-text>Alles uit het magazijn meenemen voordat je de vloer op gaat.</nldd-text>
+						<nldd-text text="Alles uit het magazijn meenemen voordat je de vloer op gaat."></nldd-text>
 					</nldd-container>
 				</nldd-box>
 			</nldd-cell>
@@ -753,7 +753,7 @@ const titledRow = (title: string, body: string, position: string, status = 'past
 	<nldd-cell width="full" vertical-alignment="top">
 		<nldd-title size="display-4" text=${title} heading-level="3"></nldd-title>
 		<nldd-spacer size="4"></nldd-spacer>
-		<nldd-text>${body}</nldd-text>
+		<nldd-text text="${body}"></nldd-text>
 	</nldd-cell>
 	</nldd-list-item>
 `;

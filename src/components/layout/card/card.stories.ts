@@ -322,7 +322,7 @@ export const Vlakken = {
 			${(['base', 'tinted', 'accent-tinted'] as const).map((background) => html`
 				<nldd-card background=${background} style="max-width: 360px;">
 					<nldd-container padding="16">
-						<nldd-text>background="${background}"${background === 'base' ? ' (default)' : ''}${background === 'accent-tinted' ? ' — een tint van de themakleur, met hetzelfde contrast als tinted' : ''}</nldd-text>
+						<nldd-text><p>background="${background}"${background === 'base' ? ' (default)' : ''}${background === 'accent-tinted' ? ' — een tint van de themakleur, met hetzelfde contrast als tinted' : ''}</p></nldd-text>
 					</nldd-container>
 				</nldd-card>
 			`)}

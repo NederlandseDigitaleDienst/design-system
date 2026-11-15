@@ -3662,6 +3662,83 @@ describe('nldd-menu confirms a choice', () => {
 		await new Promise((resolve) => setTimeout(resolve, 450));
 	});
 
+	it('holds the highlight after a tap, where there is no hover to blink from', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+		const removeTokens = loadTokens();
+		button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+		button.click();
+		expect(item.getAttribute('confirming')).toBe('touch');
+		expect(getComputedStyle(button).animationName).toBe('menu-item-confirm-hold');
+		removeTokens();
+		await new Promise((resolve) => setTimeout(resolve, 650));
+		expect(root.matches(':popover-open')).toBe(false);
+		expect(item.hasAttribute('confirming')).toBe(false);
+	});
+
+	it('blinks for a select without a press, also after a tap', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+		button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+		button.click();
+		await new Promise((resolve) => setTimeout(resolve, 650));
+		root.showPopover();
+		await waitForUpdate(root);
+		button.click();
+		expect(item.getAttribute('confirming')).toBe('');
+		await new Promise((resolve) => setTimeout(resolve, 450));
+	});
+
+	it('blinks for a select after a touch that scrolled instead', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+		button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+		button.dispatchEvent(new PointerEvent('pointercancel', { pointerType: 'touch', bubbles: true, composed: true }));
+		button.click();
+		expect(item.getAttribute('confirming')).toBe('');
+		await new Promise((resolve) => setTimeout(resolve, 450));
+	});
+
+	it('blinks for a select after a tap that chose nothing', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item><nldd-menu-divider></nldd-menu-divider></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		const divider = root.querySelector('nldd-menu-divider')!;
+		divider.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+		divider.click();
+		item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(item.getAttribute('confirming')).toBe('');
+		await new Promise((resolve) => setTimeout(resolve, 450));
+	});
+
+	it('blinks again after a key press that follows a tap', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+		button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+		button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift', bubbles: true, composed: true }));
+		button.click();
+		expect(item.getAttribute('confirming')).toBe('');
+		await new Promise((resolve) => setTimeout(resolve, 450));
+	});
+
 	it('does not blink in a listbox', async () => {
 		root = await fixture<HTMLElement>('<nldd-menu variant="listbox"><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
 		await waitForUpdate(root);

@@ -1,4 +1,4 @@
-import '../../../utilities/custom-element.js';
+import { PlainElement } from '../../../utilities/custom-element.js';
 /**
  * Nederlandse Digitale Dienst Form Section Component
  *
@@ -72,7 +72,7 @@ const TITLE_CLASS = 'form-section__title';
 const SUPPORTING_TEXT_CLASS = 'form-section__supporting-text';
 const MAIN_CLASS = 'form-section__main';
 
-export class NLDDFormSection extends HTMLElement {
+export class NLDDFormSection extends PlainElement {
 	static get observedAttributes(): string[] {
 		return ['text', 'supporting-text'];
 	}

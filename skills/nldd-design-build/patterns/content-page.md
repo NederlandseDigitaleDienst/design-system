@@ -96,11 +96,9 @@ Met een inhoudsopgave:
       sidebar-label="Op deze pagina"
       grow
     >
-      <nldd-title
-        slot="header"
-        text="Aanvraag indienen"
-        heading-level="1"
-      ></nldd-title>
+      <nldd-title slot="header">
+        <h1>Aanvraag indienen</h1>
+      </nldd-title>
       <nldd-spacer
         slot="header"
         sidebar-section-only="collapsed"
@@ -125,9 +123,9 @@ Met een inhoudsopgave:
           id="inhoud-kop"
           sidebar-section-only="expanded"
           size="display-5"
-          text="Op deze pagina"
-          heading-level="2"
-        ></nldd-title>
+        >
+          <h2>Op deze pagina</h2>
+        </nldd-title>
         <nldd-spacer
           sidebar-section-only="expanded"
           size="8"
@@ -143,19 +141,25 @@ Met een inhoudsopgave:
             current
             current-type="location"
           >
-            <nldd-text-cell text="Je hebt je DigiD, het adres en een offerte nodig"></nldd-text-cell>
+            <nldd-text-cell>
+              <p>Je hebt je DigiD, het adres en een offerte nodig</p>
+            </nldd-text-cell>
           </nldd-list-item>
           <nldd-list-item
             href="#zo-gaat-het"
             current-type="location"
           >
-            <nldd-text-cell text="Indienen gaat in drie stappen"></nldd-text-cell>
+            <nldd-text-cell>
+              <p>Indienen gaat in drie stappen</p>
+            </nldd-text-cell>
           </nldd-list-item>
           <nldd-list-item
             href="#na-het-indienen"
             current-type="location"
           >
-            <nldd-text-cell text="Je aanvraag krijgt een nummer en een behandelaar"></nldd-text-cell>
+            <nldd-text-cell>
+              <p>Je aanvraag krijgt een nummer en een behandelaar</p>
+            </nldd-text-cell>
           </nldd-list-item>
         </nldd-list>
       </nldd-container>
@@ -180,11 +184,9 @@ Met een inhoudsopgave:
       <nldd-spacer size="32"></nldd-spacer>
       <nldd-card background="tinted">
         <nldd-container padding="16">
-          <nldd-title
-            size="display-4"
-            text="Aanvragen kost tien minuten"
-            heading-level="2"
-          ></nldd-title>
+          <nldd-title size="display-4">
+            <h2>Aanvragen kost tien minuten</h2>
+          </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-rich-text>
             <p>Houd je DigiD bij de hand.</p>
@@ -203,9 +205,9 @@ Met een inhoudsopgave:
       <nldd-title
         slot="header"
         size="display-3"
-        text="Hier kun je verder"
-        heading-level="2"
-      ></nldd-title>
+      >
+        <h2>Hier kun je verder</h2>
+      </nldd-title>
       <nldd-collection
         layout="grid"
         item-min-width="280px"
@@ -215,11 +217,9 @@ Met een inhoudsopgave:
           accessible-label="Behandeling volgen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Behandeling volgen"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Behandeling volgen</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Elke stap staat op je aanvraag, met wie er aan werkt.</p>
@@ -231,11 +231,9 @@ Met een inhoudsopgave:
           accessible-label="Bezwaar maken"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Bezwaar maken"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Bezwaar maken</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Ben je het niet eens met een besluit, dan zie je hier hoe je dat laat weten.</p>
@@ -247,11 +245,9 @@ Met een inhoudsopgave:
           accessible-label="Isoleren"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Isoleren"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Isoleren</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Alles over isoleren bij elkaar, ook wat niet over de aanvraag gaat.</p>
@@ -365,11 +361,9 @@ Zonder inhoudsopgave, voor een korte pagina:
     </nldd-skip-link>
 
     <nldd-two-thirds-one-third-section grow>
-      <nldd-title
-        slot="header"
-        text="Aanvraag intrekken"
-        heading-level="1"
-      ></nldd-title>
+      <nldd-title slot="header">
+        <h1>Aanvraag intrekken</h1>
+      </nldd-title>
       <nldd-rich-text slot="left">
         <p>Zolang een aanvraag nog in behandeling is, kun je hem intrekken. Je hoeft daar geen reden voor te geven.</p>
         <h2 id="zo-trek-je-hem-in">Intrekken doe je in je dossier</h2>
@@ -382,11 +376,9 @@ Zonder inhoudsopgave, voor een korte pagina:
         background="tinted"
       >
         <nldd-container padding="16">
-          <nldd-title
-            size="display-4"
-            text="Aanvraag nu intrekken"
-            heading-level="2"
-          ></nldd-title>
+          <nldd-title size="display-4">
+            <h2>Aanvraag nu intrekken</h2>
+          </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-rich-text>
             <p>Je hebt je DigiD nodig.</p>
@@ -405,9 +397,9 @@ Zonder inhoudsopgave, voor een korte pagina:
       <nldd-title
         slot="header"
         size="display-3"
-        text="Hier kun je verder"
-        heading-level="2"
-      ></nldd-title>
+      >
+        <h2>Hier kun je verder</h2>
+      </nldd-title>
       <nldd-collection
         layout="grid"
         item-min-width="280px"
@@ -417,11 +409,9 @@ Zonder inhoudsopgave, voor een korte pagina:
           accessible-label="Aanvraag wijzigen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Aanvraag wijzigen"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Aanvraag wijzigen</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Soms is aanvullen genoeg, en hoef je niet opnieuw te beginnen.</p>
@@ -433,11 +423,9 @@ Zonder inhoudsopgave, voor een korte pagina:
           accessible-label="Bezwaar maken"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Bezwaar maken"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Bezwaar maken</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Ben je het niet eens met een besluit, dan zie je hier hoe je dat laat weten.</p>
@@ -449,11 +437,9 @@ Zonder inhoudsopgave, voor een korte pagina:
           accessible-label="Isoleren"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-              text="Isoleren"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-5">
+              <h3>Isoleren</h3>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Alles over isoleren bij elkaar, ook wat niet over de aanvraag gaat.</p>
@@ -541,7 +527,7 @@ De inhoudsopgave vraagt wat code van jezelf. De markup staat in het voorbeeld hi
 
 Wat je gratis krijgt: wat bij de [paginaopbouw](page-structure.md) staat, de breedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, en de inhoudsopgave als eigen navigatie met `aria-current="location"` op de rij die je leest.
 
-Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, een `accessible-label` op de lijst van de inhoudsopgave, een `id` op elke kop waar die naar springt, en een `accessible-label` op een kaart die een link is. De link ligt als een leeg vlak over de kaart en leest de tekst erin niet voor, dus zonder label heeft hij geen naam. Neem de titel van de kaart.
+Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, de kop van het juiste niveau in het slot van elke titel, een `accessible-label` op de lijst van de inhoudsopgave, een `id` op elke kop waar die naar springt, en een `accessible-label` op een kaart die een link is. De link ligt als een leeg vlak over de kaart en leest de tekst erin niet voor, dus zonder label heeft hij geen naam. Neem de titel van de kaart.
 
 ## Regels
 

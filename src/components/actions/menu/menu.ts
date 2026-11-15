@@ -73,9 +73,11 @@ const HOVER_OPEN_MAX_MS = 150;
  * Use nldd-menu-item and nldd-menu-divider as children.
  *
  * A chosen item blinks once before the menu closes, as a native menu on
- * macOS does, so you see what you picked. `select` fires at once: the action
- * does not wait for the blink. With `prefers-reduced-motion` the menu closes
- * at once. A menu that scrolls fades at the edge where more items wait.
+ * macOS does, so you see what you picked. After a tap there is no hover to
+ * blink from, so the item lights up and holds a moment instead. `select`
+ * fires at once: the action does not wait for the blink. With
+ * `prefers-reduced-motion` the menu closes at once. A menu that scrolls
+ * fades at the edge where more items wait.
  *
  * Note: Only type="button" items are supported when used inside nldd-combo-box-field.
  * Radio and checkbox types may be used in standalone menus.
@@ -856,6 +858,9 @@ export class NLDDMenu extends LitElement {
 	 */
 	private _handleSelect = (event: Event): void => {
 		const item = event.target as HTMLElement;
+		// A select without a press first, from a screen reader or a script, is no tap.
+		const pressedByTouch = this._pressedByTouch;
+		this._pressedByTouch = false;
 		if (this._blinkTimer || item.hasAttribute('confirming')) return;
 		const button = item.localName === 'nldd-menu-item' ? item.shadowRoot?.querySelector('.menu__item') : null;
 		// A listbox belongs to a field, which shows the choice itself and closes it.
@@ -864,7 +869,7 @@ export class NLDDMenu extends LitElement {
 			return;
 		}
 		this._setHighlight(item as NLDDMenuItem);
-		item.setAttribute('confirming', '');
+		item.setAttribute('confirming', pressedByTouch ? 'touch' : '');
 		let done = false;
 		const close = (): void => {
 			if (done) return;
@@ -886,6 +891,18 @@ export class NLDDMenu extends LitElement {
 	};
 
 	private _blinkTimer = 0;
+	/** Whether the last press in this menu was a touch, so a tap gets no blink. */
+	private _pressedByTouch = false;
+	private _notePress = (event: Event): void => {
+		this._pressedByTouch = event.type === 'pointerdown' && (event as PointerEvent).pointerType === 'touch';
+	};
+	/** A press ends with its click, which reaches the menu after the item has
+	 *  selected, or with a touch that scrolls instead, or when the menu closes.
+	 *  A key press counts as a press of its own, so it clears the touch too.
+	 *  A disabled item fires no click, so a tap on one lasts until then. */
+	private _forgetPress = (): void => {
+		this._pressedByTouch = false;
+	};
 	private _finishBlink: (() => void) | null = null;
 
 	/**
@@ -1014,6 +1031,10 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.addEventListener('submenu-open', this._handleSubmenuOpen);
 		this.addEventListener('select', this._handleSelect);
+		this.addEventListener('pointerdown', this._notePress, true);
+		this.addEventListener('keydown', this._notePress, true);
+		this.addEventListener('pointercancel', this._forgetPress, true);
+		this.addEventListener('click', this._forgetPress);
 		document.addEventListener('click', this._handleDocumentClick);
 	}
 
@@ -1068,6 +1089,10 @@ export class NLDDMenu extends LitElement {
 		this.removeEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.removeEventListener('submenu-open', this._handleSubmenuOpen);
 		this.removeEventListener('select', this._handleSelect);
+		this.removeEventListener('pointerdown', this._notePress, true);
+		this.removeEventListener('keydown', this._notePress, true);
+		this.removeEventListener('pointercancel', this._forgetPress, true);
+		this.removeEventListener('click', this._forgetPress);
 		document.removeEventListener('click', this._handleDocumentClick);
 		// Defensive: the pointerdown + resize listeners are added on open
 		// and removed on close, but if the menu is torn down mid-open we'd
@@ -1666,6 +1691,7 @@ export class NLDDMenu extends LitElement {
 	private _handleToggle = async (event: Event): Promise<void> => {
 		const toggleEvent = event as ToggleEvent;
 		this._isOpen = toggleEvent.newState === 'open';
+		if (!this._isOpen) this._forgetPress();
 
 		// Sync the anchor's "is-expanded" state so an anchor button (or any
 		// element exposing an `expanded` property) shows the active visual

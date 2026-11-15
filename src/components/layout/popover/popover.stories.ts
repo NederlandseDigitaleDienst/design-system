@@ -202,7 +202,7 @@ export const Plaatsingen = {
 				placement="bottom-start"
 				accessible-label="Onder, begin"
 			>
-				<nldd-container padding="16"><nldd-text>placement="bottom-start"</nldd-text></nldd-container>
+				<nldd-container padding="16"><nldd-text text="placement=&quot;bottom-start&quot;"></nldd-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
@@ -214,7 +214,7 @@ export const Plaatsingen = {
 				placement="top-start"
 				accessible-label="Boven, begin"
 			>
-				<nldd-container padding="16"><nldd-text>placement="top-start"</nldd-text></nldd-container>
+				<nldd-container padding="16"><nldd-text text="placement=&quot;top-start&quot;"></nldd-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
@@ -226,7 +226,7 @@ export const Plaatsingen = {
 				placement="right"
 				accessible-label="Rechts"
 			>
-				<nldd-container padding="16"><nldd-text>placement="right"</nldd-text></nldd-container>
+				<nldd-container padding="16"><nldd-text text="placement=&quot;right&quot;"></nldd-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
@@ -238,7 +238,7 @@ export const Plaatsingen = {
 				placement="left"
 				accessible-label="Links"
 			>
-				<nldd-container padding="16"><nldd-text>placement="left"</nldd-text></nldd-container>
+				<nldd-container padding="16"><nldd-text text="placement=&quot;left&quot;"></nldd-text></nldd-container>
 			</nldd-popover>
 		</div>
 	`,

@@ -1,0 +1,93 @@
+/* # Host */
+
+nldd-link {
+	--_link-color: var(--context-link-color);
+	--_link-is-hovered-color: var(--context-link-is-hovered-color);
+	--_link-is-active-color: var(--context-link-is-active-color);
+	--_link-corner-radius: var(--primitives-corner-radius-xs);
+	--_link-underline-offset: 0.15em;
+	--_link-icon-size: 1em;
+	--_link-icon-offset: 0.2em;
+}
+
+
+/* # An <a> of the app */
+
+nldd-link > a {
+	border-radius: var(--_link-corner-radius);
+	--context-content-color: var(--_link-color);
+	color: var(--_link-color);
+	text-decoration: underline;
+	text-underline-offset: var(--_link-underline-offset);
+	transition: color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
+	-webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	nldd-link > a {
+		transition: none;
+	}
+}
+
+nldd-link[size="xs"] > a,
+nldd-link[size="sm"] > a,
+nldd-link[size="md"] > a,
+nldd-link[size="lg"] > a {
+	display: inline-flex;
+	align-items: center;
+}
+
+nldd-link[size="xs"] > a {
+	gap: var(--primitives-space-4);
+	font: var(--primitives-font-body-xs-regular-flat);
+}
+
+nldd-link[size="sm"] > a {
+	gap: var(--primitives-space-4);
+	font: var(--primitives-font-body-sm-regular-flat);
+}
+
+nldd-link[size="md"] > a {
+	gap: var(--primitives-space-6);
+	font: var(--primitives-font-body-md-regular-flat);
+}
+
+nldd-link[size="lg"] > a {
+	gap: var(--primitives-space-6);
+	font: var(--primitives-font-body-lg-regular-flat);
+}
+
+@media (hover: hover) {
+	nldd-link > a:hover {
+		--context-content-color: var(--_link-is-hovered-color);
+		color: var(--_link-is-hovered-color);
+	}
+}
+
+nldd-link > a:active {
+	--context-content-color: var(--_link-is-active-color);
+	color: var(--_link-is-active-color);
+}
+
+nldd-link > a:focus-visible {
+	outline: var(--semantics-focus-ring-outline);
+	outline-offset: var(--semantics-focus-ring-outline-offset);
+	box-shadow: var(--semantics-focus-ring-box-shadow);
+}
+
+@media (forced-colors: active) {
+	nldd-link > a:focus-visible {
+		outline: 2px solid CanvasText;
+	}
+}
+
+nldd-link > a:focus:not(:focus-visible) {
+	outline: none;
+}
+
+nldd-link > a > nldd-icon {
+	width: var(--_link-icon-size);
+	height: var(--_link-icon-size);
+	flex-shrink: 0;
+	vertical-align: calc(var(--_link-icon-offset) * -1);
+}

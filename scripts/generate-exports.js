@@ -109,6 +109,12 @@ const exports = {
 	// Opt-in FOUC guard — hides the page until custom elements upgrade. Kept out
 	// of ./styles because hiding the body is opinionated; import it explicitly.
 	'./styles/fouc': './dist/css/fouc.css',
+	// The global sheets of the components that style plain HTML in light DOM,
+	// all part of ./styles, for a site that picks stylesheets one by one.
+	'./styles/text': './dist/css/text.css',
+	'./styles/title': './dist/css/title.css',
+	'./styles/link': './dist/css/link.css',
+	'./styles/rich-text': './dist/css/rich-text.css',
 	// The themes: one stylesheet per accent color, or all of them for a site that
 	// switches at runtime. Each one only applies under data-nldd-theme on <html>.
 	'./themes': './dist/css/themes.css',

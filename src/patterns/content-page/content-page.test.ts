@@ -36,7 +36,7 @@ describe('patroon: contentpagina', () => {
 	it('opent zonder hero, met de titel als kop', () => {
 		expect(root.querySelector('nldd-hero')).toBeNull();
 		const first = root.querySelector('nldd-page > :not([slot])')!;
-		expect(first.querySelector(':scope > nldd-title[slot="header"][heading-level="1"]')).not.toBeNull();
+		expect(first.querySelector(':scope > nldd-title[slot="header"]:has(> h1)')).not.toBeNull();
 	});
 
 	it('zet een inhoudsopgave in de sidebar die naar elke kop in de tekst springt', () => {
@@ -46,7 +46,7 @@ describe('patroon: contentpagina', () => {
 		const headings = [...section.querySelectorAll(':scope > nldd-rich-text h2')];
 		const links = [...toc.querySelectorAll('nldd-list-item')];
 		expect(links.map((item) => item.getAttribute('href'))).toEqual(headings.map((h) => `#${h.id}`));
-		expect(links.map((item) => item.querySelector('nldd-text-cell')!.getAttribute('text'))).toEqual(headings.map((h) => h.textContent));
+		expect(links.map((item) => item.querySelector('nldd-text-cell > p')!.textContent)).toEqual(headings.map((h) => h.textContent));
 		expect(links.every((item) => item.getAttribute('current-type') === 'location')).toBe(true);
 		expect(links.filter((item) => item.hasAttribute('current')).length).toBe(1);
 		expect(links[0].shadowRoot!.querySelector('a')!.getAttribute('aria-current')).toBe('location');
@@ -165,7 +165,7 @@ describe('patroon: contentpagina', () => {
 			const section = page.querySelector('nldd-page > :not([slot])')!;
 			expect(section.tagName).toBe('NLDD-TWO-THIRDS-ONE-THIRD-SECTION');
 			expect(section.hasAttribute('grow')).toBe(true);
-			expect(section.querySelector(':scope > nldd-title[slot="header"][heading-level="1"]')).not.toBeNull();
+			expect(section.querySelector(':scope > nldd-title[slot="header"]:has(> h1)')).not.toBeNull();
 			expect(section.querySelector(':scope > nldd-rich-text[slot="left"]')).not.toBeNull();
 			expect(section.querySelector(':scope > nldd-card[slot="right"] nldd-button[appearance="primary"]')).not.toBeNull();
 			expect(page.querySelectorAll('nldd-button[appearance="primary"]').length).toBe(1);

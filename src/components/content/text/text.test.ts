@@ -7,6 +7,14 @@ import './text.js';
 import '../title/title.js';
 import '../rich-text/rich-text.js';
 import richTextCss from '../rich-text/rich-text.css?raw';
+import textCss from './text.css?raw';
+
+const withTextCss = (): (() => void) => {
+	const style = document.createElement('style');
+	style.textContent = textCss;
+	document.head.append(style);
+	return () => style.remove();
+};
 
 describe('nldd-text', () => {
 	let el: HTMLElement;
@@ -16,7 +24,7 @@ describe('nldd-text', () => {
 	});
 
 	it('rendert zonder fouten', async () => {
-		el = await fixture('<nldd-text>Tekst</nldd-text>');
+		el = await fixture('<nldd-text text="Tekst"></nldd-text>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot).not.toBeNull();
 	});
@@ -24,8 +32,9 @@ describe('nldd-text', () => {
 	// The defaults are the ones the tokens already call default, so writing them
 	// out would put attributes on every element that say nothing.
 	it('reflecteert de standaardwaarden niet als attribuut', async () => {
-		el = await fixture('<nldd-text>Tekst</nldd-text>');
+		el = await fixture('<nldd-text text="Tekst"></nldd-text>');
 		await waitForUpdate(el);
+		expect(el.hasAttribute('text')).toBe(true);
 		expect(el.hasAttribute('size')).toBe(false);
 		expect(el.hasAttribute('weight')).toBe(false);
 		expect(el.hasAttribute('line-height')).toBe(false);
@@ -35,7 +44,7 @@ describe('nldd-text', () => {
 
 	it('reflecteert wat je wel zet', async () => {
 		el = await fixture(
-			'<nldd-text size="lg" weight="bold" line-height="loose" color="secondary" horizontal-alignment="center">Tekst</nldd-text>',
+			'<nldd-text size="lg" weight="bold" line-height="loose" color="secondary" horizontal-alignment="center" text="Tekst"></nldd-text>',
 		);
 		await waitForUpdate(el);
 		const text = el as HTMLElement & {
@@ -52,15 +61,33 @@ describe('nldd-text', () => {
 		expect(text.horizontalAlignment).toBe('center');
 	});
 
-	it('zet de tekst in de default slot', async () => {
-		el = await fixture('<nldd-text>Toegewezen aan Yara</nldd-text>');
+	it('draws `text` as a paragraph', async () => {
+		el = await fixture('<nldd-text text="Toegewezen aan Yara"></nldd-text>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot?.querySelector('slot')).not.toBeNull();
-		expect(el.textContent?.trim()).toBe('Toegewezen aan Yara');
+		const p = el.shadowRoot!.querySelector('p.text')!;
+		expect(p.textContent).toBe('Toegewezen aan Yara');
+		expect(getComputedStyle(p).marginBlockStart).toBe('0px');
+	});
+
+	it('lets a paragraph in the slot win over `text`', async () => {
+		el = await fixture('<nldd-text text="Attribuut"><p>Toegewezen aan <strong>Yara</strong></p></nldd-text>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('p.text')).toBeNull();
+		const p = el.querySelector('p')!;
+		expect(getComputedStyle(p).marginBlockStart).toBe('0px');
+		expect(getComputedStyle(p).fontSize).toBe(getComputedStyle(el).fontSize);
+	});
+
+	it('draws `text` again when the slot empties', async () => {
+		el = await fixture('<nldd-text text="Attribuut"><span>100</span></nldd-text>');
+		await waitForUpdate(el);
+		el.querySelector('span')!.remove();
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('p.text')?.textContent).toBe('Attribuut');
 	});
 
 	it('a line stops at the measure, the same characters at every size', async () => {
-		el = await fixture('<div style="width: 2000px"><nldd-text>Een regel</nldd-text><nldd-text size="sm">Een regel</nldd-text></div>');
+		el = await fixture('<div style="width: 2000px"><nldd-text text="Een regel"></nldd-text><nldd-text size="sm" text="Een regel"></nldd-text></div>');
 		await waitForUpdate(el);
 		const [md, sm] = Array.from(el.querySelectorAll('nldd-text'));
 		// 40em against the size each one sets, so the px differ and the em do not.
@@ -69,8 +96,9 @@ describe('nldd-text', () => {
 	});
 
 
-	it('styles inline elements like nldd-rich-text', async () => {
-		el = await fixture('<nldd-text>Zet <code>no-picker</code>, lees <a href="#x">de voorwaarden</a> en let op <mark>dit</mark> en <em>dat</em>.</nldd-text>');
+	it('styles inline elements like nldd-rich-text, with text.css', async () => {
+		const remove = withTextCss();
+		el = await fixture('<nldd-text><p>Zet <code>no-picker</code>, lees <a href="#x">de voorwaarden</a> en let op <mark>dit</mark> en <em>dat</em>.</p></nldd-text>');
 		await waitForUpdate(el);
 		const code = getComputedStyle(el.querySelector('code')!);
 		expect(code.fontFamily).toMatch(/mono/i);
@@ -78,6 +106,7 @@ describe('nldd-text', () => {
 		expect(getComputedStyle(el.querySelector('mark')!).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
 		expect(getComputedStyle(el.querySelector('a')!).textDecorationLine).toBe('underline');
 		expect(getComputedStyle(el.querySelector('em')!).fontStyle).toBe('italic');
+		remove();
 	});
 });
 
@@ -98,6 +127,7 @@ describe('nldd-text – inline elements match nldd-rich-text', () => {
 	const pseudoProperties = ['content', 'width', 'height', 'mask-image', 'background-color'];
 
 	let style: HTMLStyleElement;
+	let removeTextCss: () => void;
 	let rich: HTMLElement;
 	let text: HTMLElement;
 
@@ -105,14 +135,16 @@ describe('nldd-text – inline elements match nldd-rich-text', () => {
 		style = document.createElement('style');
 		style.textContent = richTextCss;
 		document.head.append(style);
+		removeTextCss = withTextCss();
 		rich = await fixture(`<nldd-rich-text><p>${line}</p></nldd-rich-text>`);
-		text = await fixture(`<nldd-text>${line}</nldd-text>`);
+		text = await fixture(`<nldd-text><p>${line}</p></nldd-text>`);
 	});
 
 	afterAll(() => {
 		cleanup(rich);
 		cleanup(text);
 		style.remove();
+		removeTextCss();
 	});
 
 	it.each(elements)('%s', (selector) => {
@@ -145,7 +177,7 @@ describe('nldd-text – display sizes and custom size', () => {
 	});
 
 	const text = async (attrs: string): Promise<HTMLElement> => {
-		el = await fixture(`<nldd-text ${attrs}>240</nldd-text>`);
+		el = await fixture(`<nldd-text ${attrs} text="240"></nldd-text>`);
 		await waitForUpdate(el);
 		return el;
 	};

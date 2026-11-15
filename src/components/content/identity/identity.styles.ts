@@ -1,6 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { slottedReset, inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { slottedReset, inheritedTextReset, slottedBlockReset } from '../../../assets/styles/shadow-resets.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 
@@ -116,5 +116,9 @@ export const identityStyles = css`
 
 	.identity__supporting-text[hidden] {
 		display: none;
+	}
+
+	::slotted(p) {
+		${slottedBlockReset}
 	}
 `;

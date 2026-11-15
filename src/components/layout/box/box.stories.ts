@@ -110,21 +110,21 @@ export const Vlakken = {
 		<nldd-container gap="24">
 			<nldd-box background="tinted">
 		<nldd-container padding="16">
-					<nldd-text>background="tinted" (default) — getint vlak op een plain pagina</nldd-text>
+					<nldd-text text="background=&quot;tinted&quot; (default) — getint vlak op een plain pagina"></nldd-text>
 
 		</nldd-container>
 	</nldd-box>
 			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px; --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 				<nldd-box background="base">
 		<nldd-container padding="16">
-						<nldd-text>background="base" — base-colored box op een al getinte parent. Highlight ring is +2 stappen voor extra contrast.</nldd-text>
+						<nldd-text text="background=&quot;base&quot; — base-colored box op een al getinte parent. Highlight ring is +2 stappen voor extra contrast."></nldd-text>
 
 		</nldd-container>
 	</nldd-box>
 			</div>
 			<nldd-box background="accent-tinted">
 				<nldd-container padding="16">
-					<nldd-text>background="accent-tinted" — een tint van de themakleur, met hetzelfde contrast als tinted</nldd-text>
+					<nldd-text text="background=&quot;accent-tinted&quot; — een tint van de themakleur, met hetzelfde contrast als tinted"></nldd-text>
 				</nldd-container>
 			</nldd-box>
 		</nldd-container>

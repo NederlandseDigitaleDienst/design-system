@@ -9,6 +9,14 @@
  * — it only names what the scale already has. The three axes are the same three
  * the tokens carry: size, weight and line height.
  *
+ * Plain text goes in `text`, and the component draws a `<p>` for it. Text with
+ * a link, a `<strong>` or a tag goes in the slot, in a `<p>` of your own, or a
+ * `<span>` where the text is no paragraph, such as a label or a number. What
+ * is in the slot is in the HTML before any script runs; `text` is drawn in the
+ * browser. On a page of a website that has to read without script, use the
+ * slot. The element in the slot takes the text style of the component: a font,
+ * margin or other style the page sets on it does not apply.
+ *
  * Not for headings, which is `nldd-title`, and not for a block of prose with its
  * own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one
  * run of text and nothing around it.
@@ -41,12 +49,14 @@
  * @attr {string} color - Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too.
  * @attr {string} horizontal-alignment - Alignment of the text within the block: 'left' | 'center' | 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box.
  *
- * @slot - The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone.
- * @accepts strong, b, em, i, a, code, mark, q, span
+ * @attr {string} text - The text, when it is plain text. The component draws it as a `<p>`. Content in the slot wins.
+ * @slot - Text that is more than plain text, in a `<p>` of your own, or a `<span>` for text that is no paragraph (a label, a number). Inline elements in it look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). Components such as `nldd-tag` are left alone. That styling comes from a global stylesheet, `dist/css/text.css` or `global.css`, which includes it: a shadow root cannot reach inside a slotted element.
+ * @accepts p, span, strong, b, em, i, a, code, mark, q
  */
 
 import { LitElement, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
+import { SlotContent } from '../../../utilities/slot-content.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { applyCustomFontSizes, checkCustomFontSizeFloor, DISPLAY_1_FONT_SIZE, type Breakpoint } from '../../../utilities/custom-font-size.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
@@ -63,8 +73,14 @@ type HorizontalAlignment = 'left' | 'center' | 'right';
 export class NLDDText extends LitElement {
 	static override styles = textStyles;
 
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
+
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
+
+	/** @internal Whether the slot holds something, which wins over `text`. */
+	_textSlot = new SlotContent(this);
 
 	@property({ reflect: true, attribute: 'sm-custom-size', converter: reflectNonDefault<string>('') })
 	smCustomSize = '';
@@ -113,7 +129,7 @@ export class NLDDText extends LitElement {
 	}
 
 	override render() {
-		return template();
+		return template.call(this);
 	}
 }
 

@@ -730,7 +730,7 @@ export const MetHeaderEnFooter = {
 					<nldd-text
 						size="sm"
 						line-height="tight"
-					>Je bent ingelogd als beheerder. <a href="#">Wissel van account</a>.</nldd-text>
+					><p>Je bent ingelogd als beheerder. <a href="#">Wissel van account</a>.</p></nldd-text>
 				</nldd-container>
 			</nldd-menu>
 		</nldd-button>

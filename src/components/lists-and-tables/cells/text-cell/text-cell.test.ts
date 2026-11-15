@@ -346,11 +346,11 @@ describe('nldd-text-cell', () => {
 		const p = el.shadowRoot!.querySelector('.text-cell__text') as HTMLElement;
 		expect(p.hasAttribute('hidden')).toBe(true);
 
-		const span = document.createElement('span');
-		span.textContent = 'Late slot';
-		el.appendChild(span);
+		const late = document.createElement('p');
+		late.textContent = 'Late slot';
+		el.appendChild(late);
 		await waitForUpdate(el);
-		expect(p.hasAttribute('hidden')).toBe(false);
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.hasAttribute('hidden')).toBe(false);
 	});
 
 	it('renders **bold** markers as <b> elements', async () => {
@@ -475,5 +475,60 @@ describe('nldd-text-cell fit-content in een krappe rij', () => {
 		const cel = el.querySelector('nldd-text-cell')!;
 		expect(Math.round(cel.getBoundingClientRect().width)).toBeLessThanOrEqual(60);
 		cleanup(el);
+	});
+});
+
+describe('nldd-text-cell with a <p> of its own in a slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws a plain box around the <p>, and no <p> around loose text', async () => {
+		el = await fixture('<nldd-text-cell><p>Dossier D-318</p><p slot="overline">Team Uitvoering</p></nldd-text-cell>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.text-cell__overline')!.localName).toBe('div');
+		expect(getComputedStyle(el.querySelector('p')!).marginBlockEnd).toBe('0px');
+		expect(el.matches(':state(loose-text)')).toBe(false);
+		el.querySelector(':scope > p:not([slot])')!.replaceWith('Dossier D-318');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.localName).toBe('div');
+		expect(el.matches(':state(loose-text)')).toBe(true);
+	});
+});
+
+describe('nldd-text-cell that swaps its box for a filled slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('settles after the swap: the slots stay, and slotchange stops', async () => {
+		el = await fixture('<nldd-text-cell overline="Dossier D-318"><p>Aanvraag A-1042</p><p slot="supporting-text">Dakisolatie</p></nldd-text-cell>');
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.localName).toBe('div');
+		const slots = [...el.shadowRoot!.querySelectorAll('slot')];
+		let changes = 0;
+		el.shadowRoot!.addEventListener('slotchange', () => changes++, true);
+		(el as HTMLElement & { requestUpdate(): void }).requestUpdate();
+		await waitForUpdate(el);
+		expect([...el.shadowRoot!.querySelectorAll('slot')]).toEqual(slots);
+		expect(changes).toBe(0);
+	});
+});
+
+describe('nldd-text-cell on its first render', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws the box for slotted text at once, so no swap follows', async () => {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = '<nldd-text-cell text="Dakisolatie" overline="Aanvraag"><p>Aanvraag A-1042</p></nldd-text-cell>';
+		document.body.append(wrapper);
+		el = wrapper.firstElementChild as HTMLElement;
+		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.text-cell__overline')!.localName).toBe('p');
 	});
 });

@@ -102,7 +102,7 @@ export const Kwartieren = () => html`
 
 export const Kantooruren = () => html`
 	<nldd-text>
-		Buiten <code>min</code> en <code>max</code> staat geen enkele waarde in de kolommen, dus een ongeldige tijd is niet te kiezen.
+		<p>Buiten <code>min</code> en <code>max</code> staat geen enkele waarde in de kolommen, dus een ongeldige tijd is niet te kiezen.</p>
 	</nldd-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-picker
@@ -116,7 +116,7 @@ export const Kantooruren = () => html`
 
 export const StapVanafMin = () => html`
 	<nldd-text>
-		De stap telt vanaf <code>min</code>, dus de minuten lopen 07, 22, 37, 52.
+		<p>De stap telt vanaf <code>min</code>, dus de minuten lopen 07, 22, 37, 52.</p>
 	</nldd-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-picker
@@ -129,7 +129,7 @@ export const StapVanafMin = () => html`
 
 export const MinderRijen = () => html`
 	<nldd-text>
-		Met <code>rows</code> bepaalt de consument hoe hoog de kolommen zijn, in rijen. De gekozen waarde staat altijd in het midden, dus een oneven aantal toont hele rijen en een even aantal kapt boven en onder een halve rij af.
+		<p>Met <code>rows</code> bepaalt de consument hoe hoog de kolommen zijn, in rijen. De gekozen waarde staat altijd in het midden, dus een oneven aantal toont hele rijen en een even aantal kapt boven en onder een halve rij af.</p>
 	</nldd-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-container
@@ -139,7 +139,7 @@ export const MinderRijen = () => html`
 	>
 		<nldd-container width="fit-content">
 			<nldd-text>
-				<code>rows="5"</code>, hele rijen
+				<p><code>rows="5"</code>, hele rijen</p>
 			</nldd-text>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-time-picker
@@ -151,7 +151,7 @@ export const MinderRijen = () => html`
 		</nldd-container>
 		<nldd-container width="fit-content">
 			<nldd-text>
-				<code>rows="6"</code>, halve rij aan de randen
+				<p><code>rows="6"</code>, halve rij aan de randen</p>
 			</nldd-text>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-time-picker
@@ -163,7 +163,7 @@ export const MinderRijen = () => html`
 		</nldd-container>
 		<nldd-container width="fit-content">
 			<nldd-text>
-				<code>rows="7"</code> (standaard)
+				<p><code>rows="7"</code> (standaard)</p>
 			</nldd-text>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-time-picker

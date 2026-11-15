@@ -5,10 +5,14 @@
  * a name line and supporting text (a role or a date, for instance). Every part
  * is optional.
  *
- * The name line and the supporting text come in as an attribute or as a slot.
- * Use the slots for richer content, such as a `<time datetime="…">` for a
- * machine-readable date or a link to the author's profile. Slotted content
- * replaces the matching attribute: the attribute is the slot's fallback.
+ * The name line and the supporting text come in as an attribute, which the
+ * component draws as a `<p>`, or as a `<p>` of your own in the slot. Use the
+ * slot for richer content and put it in that `<p>`: a `<time datetime="…">`
+ * for a machine-readable date, or a link to the author's profile. Slotted
+ * content replaces the matching attribute. Each of the two chooses for itself,
+ * so a `<p>` with a link in `text` can go with plain `supporting-text`.
+ * The element in a slot takes the text style of the identity: a font, margin or
+ * other style the page sets on it does not apply.
  *
  * One avatar you slot as it is, and identity gives it its size. For more than
  * one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the
@@ -34,12 +38,13 @@
  * @attr {string} avatar-alt - Alt text for the avatar-src image; empty means decorative
  *
  * @slot avatars - One avatar (`nldd-avatar` or `img`), or an `nldd-avatar-group` for more
- * @accepts img
- * @slot text - Name line as rich content (a link to the author's profile, for instance)
- * @slot supporting-text - Supporting text as rich content (a time element, for instance)
+ * @accepts img, p
+ * @slot text - A `<p>` of your own for a name line that is more than text (with a link to the author's profile, for instance)
+ * @slot supporting-text - A `<p>` of your own for supporting text that is more than text (with a time element, for instance)
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { slottedNodes } from '../../../utilities/slot-content.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { identityStyles } from './identity.styles.js';
@@ -85,19 +90,30 @@ export class NLDDIdentity extends LitElement {
 	/** Tracks slot content so the text / supporting-text attribute fallbacks
 	 *  only render when their slot is empty. Bound per slot in the template via
 	 *  @slotchange, so Lit owns the listener lifecycle (it survives a
-	 *  move-and-reinsert) — no manual connect/disconnect bookkeeping. slotchange
-	 *  also fires for the initial assignment, so the first render is covered. */
+	 *  move-and-reinsert). */
 	_onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
-		const count = slot.assignedElements().length;
-		if (slot.name === 'avatars') {
-			this._avatarCount = slot.assignedElements()
-				.reduce((total, el) => total + (el.localName === 'nldd-avatar-group' ? el.children.length : 1), 0);
-			this._hasSlottedAvatars = count > 0;
-		}
-		else if (slot.name === 'text') this._hasSlottedText = count > 0;
-		else if (slot.name === 'supporting-text') this._hasSlottedSupportingText = count > 0;
+		this._readSlot(slot.name, slot.assignedElements());
 	};
+
+	/** Reads the children as the host connects, so the first render already
+	 *  draws the box that fits them instead of swapping it on slotchange. */
+	override connectedCallback(): void {
+		super.connectedCallback();
+		for (const name of ['avatars', 'text', 'supporting-text']) {
+			this._readSlot(name, slottedNodes(this, name).filter((node): node is Element => node instanceof Element));
+		}
+	}
+
+	private _readSlot(name: string, assigned: Element[]): void {
+		if (name === 'avatars') {
+			this._avatarCount = assigned
+				.reduce((total, el) => total + (el.localName === 'nldd-avatar-group' ? el.children.length : 1), 0);
+			this._hasSlottedAvatars = assigned.length > 0;
+		}
+		else if (name === 'text') this._hasSlottedText = assigned.length > 0;
+		else if (name === 'supporting-text') this._hasSlottedSupportingText = assigned.length > 0;
+	}
 
 	override render() {
 		return identityTemplate(this);

@@ -40,9 +40,7 @@ nldd-shell                            de buitenste schil
 <nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
-      <nldd-top-navigation-bar
-        website-title="Mijn Dienst"
-      >
+      <nldd-top-navigation-bar website-title="Mijn Dienst">
         <nldd-menu-bar slot="utility">
           <nldd-menu-bar-item
             text="Zoeken"
@@ -89,14 +87,11 @@ nldd-shell                            de buitenste schil
       </nldd-top-navigation-bar>
     </nldd-skip-link>
 
-    <nldd-hero
-      main-background="accent"
-    >
+    <nldd-hero main-background="accent">
       <nldd-image slot="media"></nldd-image>
-      <nldd-title
-        text="Regel je aanvraag online"
-        heading-level="1"
-      ></nldd-title>
+      <nldd-title>
+        <h1>Regel je aanvraag online</h1>
+      </nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-rich-text>
         <p>Dien een aanvraag in, volg de behandeling en vind je documenten terug, zonder dat je hoeft te weten bij welke afdeling het ligt.</p>
@@ -110,11 +105,9 @@ nldd-shell                            de buitenste schil
     </nldd-hero>
 
     <nldd-simple-section background="tinted">
-      <nldd-title
-        slot="header"
-        text="Alles rond je aanvraag regel je hier"
-        heading-level="2"
-      ></nldd-title>
+      <nldd-title slot="header">
+        <h2>Alles rond je aanvraag regel je hier</h2>
+      </nldd-title>
       <nldd-spacer
         slot="header"
         size="16"
@@ -128,11 +121,9 @@ nldd-shell                            de buitenste schil
       >
         <nldd-card>
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-              text="Aanvraag"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-4">
+              <h3>Aanvraag</h3>
+            </nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
               <p>Je vult in wat er nodig is en ziet meteen welke gegevens ontbreken.</p>
@@ -152,11 +143,9 @@ nldd-shell                            de buitenste schil
         </nldd-card>
         <nldd-card>
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-              text="Behandeling"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-4">
+              <h3>Behandeling</h3>
+            </nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
               <p>Elke stap in de behandeling staat op je aanvraag, met wie er aan werkt.</p>
@@ -176,11 +165,9 @@ nldd-shell                            de buitenste schil
         </nldd-card>
         <nldd-card>
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-              text="Brieven en besluiten"
-              heading-level="3"
-            ></nldd-title>
+            <nldd-title size="display-4">
+              <h3>Brieven en besluiten</h3>
+            </nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
               <p>Alles wat je hebt ingestuurd of ontvangen staat bij het dossier.</p>
@@ -206,11 +193,9 @@ nldd-shell                            de buitenste schil
         slot="left"
         aspect-ratio="3/2"
       ></nldd-image>
-      <nldd-title
-        slot="right"
-        text="Je dossier houdt alles bij elkaar"
-        heading-level="2"
-      ></nldd-title>
+      <nldd-title slot="right">
+        <h2>Je dossier houdt alles bij elkaar</h2>
+      </nldd-title>
       <nldd-spacer
         slot="right"
         size="16"
@@ -233,11 +218,9 @@ nldd-shell                            de buitenste schil
     </nldd-one-half-one-half-section>
 
     <nldd-two-thirds-one-third-section background="tinted">
-      <nldd-title
-        slot="left"
-        text="Een aanvraag gaat langs drie vaste stappen"
-        heading-level="2"
-      ></nldd-title>
+      <nldd-title slot="left">
+        <h2>Een aanvraag gaat langs drie vaste stappen</h2>
+      </nldd-title>
       <nldd-spacer
         slot="left"
         size="16"
@@ -248,11 +231,9 @@ nldd-shell                            de buitenste schil
       </nldd-rich-text>
       <nldd-card slot="right">
         <nldd-container padding="16">
-          <nldd-title
-            size="display-4"
-            text="De behandelaar helpt je verder"
-            heading-level="3"
-          ></nldd-title>
+          <nldd-title size="display-4">
+            <h3>De behandelaar helpt je verder</h3>
+          </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-rich-text>
             <p>De behandelaar van je aanvraag kan je vertellen wat er nodig is.</p>
@@ -268,11 +249,9 @@ nldd-shell                            de buitenste schil
     </nldd-two-thirds-one-third-section>
 
     <nldd-one-third-two-thirds-section>
-      <nldd-title
-        slot="left"
-        text="Hiervoor kun je een aanvraag doen"
-        heading-level="2"
-      ></nldd-title>
+      <nldd-title slot="left">
+        <h2>Hiervoor kun je een aanvraag doen</h2>
+      </nldd-title>
       <nldd-spacer
         slot="left"
         size="16"
@@ -337,11 +316,10 @@ nldd-shell                            de buitenste schil
     </nldd-one-third-two-thirds-section>
 
     <nldd-simple-section background="tinted">
-      <nldd-title
-        text="Aanvragen kost tien minuten"
-        supporting-text="Houd je DigiD bij de hand."
-        heading-level="2"
-      ></nldd-title>
+      <nldd-title>
+        <h2>Aanvragen kost tien minuten</h2>
+        <p slot="supporting-text">Houd je DigiD bij de hand.</p>
+      </nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-button
         appearance="primary"
@@ -398,7 +376,7 @@ Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbo
 
 Wat je gratis krijgt: elke knop is een echte link met de actie als naam, en de kop van de hero houdt zijn contrast op de vulling.
 
-Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, en een knoptekst die zonder de kaart eromheen te begrijpen is, want wie met een schermlezer door de links springt, hoort alleen die.
+Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, de kop van het juiste niveau in het slot van elke titel, en een knoptekst die zonder de kaart eromheen te begrijpen is, want wie met een schermlezer door de links springt, hoort alleen die.
 
 ## Gezien in
 
