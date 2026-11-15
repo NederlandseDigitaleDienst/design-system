@@ -141,19 +141,25 @@ Met een inhoudsopgave:
             current
             current-type="location"
           >
-            <nldd-text-cell text="Je hebt je DigiD, het adres en een offerte nodig"></nldd-text-cell>
+            <nldd-text-cell>
+              <p>Je hebt je DigiD, het adres en een offerte nodig</p>
+            </nldd-text-cell>
           </nldd-list-item>
           <nldd-list-item
             href="#zo-gaat-het"
             current-type="location"
           >
-            <nldd-text-cell text="Indienen gaat in drie stappen"></nldd-text-cell>
+            <nldd-text-cell>
+              <p>Indienen gaat in drie stappen</p>
+            </nldd-text-cell>
           </nldd-list-item>
           <nldd-list-item
             href="#na-het-indienen"
             current-type="location"
           >
-            <nldd-text-cell text="Je aanvraag krijgt een nummer en een behandelaar"></nldd-text-cell>
+            <nldd-text-cell>
+              <p>Je aanvraag krijgt een nummer en een behandelaar</p>
+            </nldd-text-cell>
           </nldd-list-item>
         </nldd-list>
       </nldd-container>

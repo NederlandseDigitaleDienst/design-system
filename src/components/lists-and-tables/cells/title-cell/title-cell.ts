@@ -19,6 +19,8 @@
  * wins over the attribute, and `heading-level` only applies to the attribute.
  * Each region chooses for itself, so an attribute and a slot stand side by
  * side: plain text in `supporting-text`, a heading with a tag in the default slot.
+ * The element in a slot takes the text style of the cell: a font, margin or
+ * other style the page sets on it does not apply.
  * Note that `query` highlighting and `**bold**` parsing only apply to the
  * attribute path; slotted content is rendered as-is.
  *

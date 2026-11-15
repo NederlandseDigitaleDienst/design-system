@@ -1,9 +1,8 @@
 severity: error
 context: 'nldd-text'
 assert: '[text], :has(> :is(p, span))'
-message: 'nldd-text takes plain text in `text`, and text with inline elements in a `<p>` of its own, or a `<span>` where it is no paragraph.'
+message: 'nldd-text takes its text in a `<p>` of its own, or a `<span>` where it is no paragraph, or plain text in `text`.'
 fix:
-  attribute: text
   wrap: p
 examples:
   passed:

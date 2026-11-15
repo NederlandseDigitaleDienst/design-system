@@ -372,3 +372,22 @@ describe('nldd-title-cell with an element of its own in a slot', () => {
 		expect(el.matches(':state(loose-text)')).toBe(false);
 	});
 });
+
+describe('nldd-title-cell that swaps its box for a filled slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('settles after the swap: the slots stay, and slotchange stops', async () => {
+		el = await fixture('<nldd-title-cell><h3>Aanvraag A-1042</h3><p slot="supporting-text">Dakisolatie</p></nldd-title-cell>');
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		const slots = [...el.shadowRoot!.querySelectorAll('slot')];
+		let changes = 0;
+		el.shadowRoot!.addEventListener('slotchange', () => changes++, true);
+		(el as HTMLElement & { requestUpdate(): void }).requestUpdate();
+		await waitForUpdate(el);
+		expect([...el.shadowRoot!.querySelectorAll('slot')]).toEqual(slots);
+		expect(changes).toBe(0);
+	});
+});

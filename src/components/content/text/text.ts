@@ -14,7 +14,8 @@
  * `<span>` where the text is no paragraph, such as a label or a number. What
  * is in the slot is in the HTML before any script runs; `text` is drawn in the
  * browser. On a page of a website that has to read without script, use the
- * slot.
+ * slot. The element in the slot takes the text style of the component: a font,
+ * margin or other style the page sets on it does not apply.
  *
  * Not for headings, which is `nldd-title`, and not for a block of prose with its
  * own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one

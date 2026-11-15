@@ -21,6 +21,8 @@
  * slot. The cell does not style plain HTML: for bold, write `**bold**` in the
  * attribute, and for code put an `<nldd-text>` in the `<p>`, with the `<code>`
  * in a `<span>` of its own.
+ * The element in a slot takes the text style of the cell: a font, margin or
+ * other style the page sets on it does not apply.
  * Note that `query` highlighting and `**bold**` parsing only apply to the
  * attribute path; slotted content is rendered as-is.
  *

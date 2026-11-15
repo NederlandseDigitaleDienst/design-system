@@ -63,11 +63,10 @@ const root = document.documentElement;
  * The number in the HTML is what a reader without script gets.
  */
 for (const el of document.querySelectorAll<HTMLElement>('[data-icon-count]')) {
-	// A title holds the text in the heading in its slot, an nldd-text in `text`.
+	// The text is in the element in its slot: a heading of a title, a span of a text.
 	const text = el.dataset.iconCount!.replace('{n}', String(iconRegistry.size));
-	const heading = el.querySelector(':scope > :is(h1, h2, h3, h4, h5, h6)');
-	if (heading) heading.textContent = text;
-	else el.setAttribute('text', text);
+	const holder = el.querySelector(':scope > :is(h1, h2, h3, h4, h5, h6, p, span)');
+	if (holder) holder.textContent = text;
 }
 
 /**

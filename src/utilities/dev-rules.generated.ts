@@ -1054,7 +1054,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "text-needs-element",
-		"message": "nldd-text takes plain text in `text`, and text with inline elements in a `<p>` of its own, or a `<span>` where it is no paragraph.",
+		"message": "nldd-text takes its text in a `<p>` of its own, or a `<span>` where it is no paragraph, or plain text in `text`.",
 		"context": "nldd-text",
 		"assert": "[text]:not([text=\"\"]), :has(> :is(p, span))",
 		"properties": [

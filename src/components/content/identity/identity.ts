@@ -11,6 +11,8 @@
  * for a machine-readable date, or a link to the author's profile. Slotted
  * content replaces the matching attribute. Each of the two chooses for itself,
  * so a `<p>` with a link in `text` can go with plain `supporting-text`.
+ * The element in a slot takes the text style of the identity: a font, margin or
+ * other style the page sets on it does not apply.
  *
  * One avatar you slot as it is, and identity gives it its size. For more than
  * one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the

@@ -203,3 +203,23 @@ describe('nldd-identity with a <p> of its own in a slot', () => {
 		expect(getComputedStyle(el.querySelector('p')!).marginBlockStart).toBe('0px');
 	});
 });
+
+describe('nldd-identity that swaps its box for a filled slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('settles after the swap: the slots stay, and slotchange stops', async () => {
+		el = await fixture('<nldd-identity><p slot="text">Door Jan Jansen</p><p slot="supporting-text">Team Uitvoering</p></nldd-identity>');
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.identity__text')!.localName).toBe('div');
+		const slots = [...el.shadowRoot!.querySelectorAll('slot')];
+		let changes = 0;
+		el.shadowRoot!.addEventListener('slotchange', () => changes++, true);
+		(el as HTMLElement & { requestUpdate(): void }).requestUpdate();
+		await waitForUpdate(el);
+		expect([...el.shadowRoot!.querySelectorAll('slot')]).toEqual(slots);
+		expect(changes).toBe(0);
+	});
+});

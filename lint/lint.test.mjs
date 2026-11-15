@@ -555,14 +555,9 @@ describe('--fix', () => {
 		assert.equal(text, '<nldd-button text=" variant=x" appearance="primary"></nldd-button><div variant="a"></div><nldd-progress-bar variant="b"></nldd-progress-bar>');
 	});
 
-	it('moves plain text into an attribute, on the line of its own when the tag has them', () => {
-		assert.equal(fixed('a.html', '<nldd-text>Dakisolatie, in behandeling</nldd-text>').text, '<nldd-text text="Dakisolatie, in behandeling"></nldd-text>');
-		assert.equal(fixed('a.html', '<nldd-text size="sm">Een &amp; "twee"</nldd-text>').text, '<nldd-text size="sm" text="Een &amp; &quot;twee&quot;"></nldd-text>');
-		assert.equal(fixed('a.html', '<nldd-text\n\tsize="sm"\n>Dakisolatie</nldd-text>').text, '<nldd-text\n\tsize="sm"\n\ttext="Dakisolatie"\n></nldd-text>');
-		assert.equal(fixed('a.tsx', 'export const A = () => <nldd-text>Dakisolatie</nldd-text>;').text, 'export const A = () => <nldd-text text="Dakisolatie"></nldd-text>;');
-	});
-
-	it('wraps text with inline elements, and leaves a block or a template alone', () => {
+	it('wraps text in a <p>, with inline elements or without, and leaves a block or a template alone', () => {
+		assert.equal(fixed('a.html', '<nldd-text>Dakisolatie, in behandeling</nldd-text>').text, '<nldd-text><p>Dakisolatie, in behandeling</p></nldd-text>');
+		assert.equal(fixed('a.tsx', 'export const A = () => <nldd-text>Dakisolatie</nldd-text>;').text, 'export const A = () => <nldd-text><p>Dakisolatie</p></nldd-text>;');
 		assert.equal(fixed('a.html', '<nldd-text>Aanvraag <strong>A-1042</strong> is in behandeling.</nldd-text>').text, '<nldd-text><p>Aanvraag <strong>A-1042</strong> is in behandeling.</p></nldd-text>');
 		assert.equal(fixed('a.html', '<nldd-text>\n\tAanvraag <strong>A-1042</strong>\n</nldd-text>').text, '<nldd-text>\n\t<p>Aanvraag <strong>A-1042</strong></p>\n</nldd-text>');
 		for (const source of ['<nldd-text>a <div>b</div></nldd-text>', '<nldd-text>{{ a }}</nldd-text>', '<nldd-text><!-- x --> y</nldd-text>']) {
@@ -586,12 +581,15 @@ describe('--fix', () => {
 		assert.match(stdout, /0 errors, 0 warnings in 0 files/);
 	});
 
-	it('reads MDX in a folder, and renames a tag in the prose and in a mention', () => {
+	it('reads MDX and Markdown only when named, and renames a tag in the prose and in a mention', () => {
 		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
-		writeFileSync(join(root, 'a.mdx'), '# Kop\n\n<nldd-app-view>\n<nldd-text>los</nldd-text>\n</nldd-app-view>\n\nZie `<nldd-app-view>`.\n');
+		const page = '# Kop\n\n<nldd-app-view>\n<nldd-text>los</nldd-text>\n</nldd-app-view>\n\nZie `<nldd-app-view>`.\n';
+		writeFileSync(join(root, 'a.mdx'), page);
 		writeFileSync(join(root, 'CHANGELOG.md'), 'Zie `<nldd-app-view>`.\n');
 		run(root, 'lint', '--fix', '.');
-		assert.equal(readFileSync(join(root, 'a.mdx'), 'utf8'), '# Kop\n\n<nldd-shell>\n<nldd-text text="los"></nldd-text>\n</nldd-shell>\n\nZie `<nldd-shell>`.\n');
+		assert.equal(readFileSync(join(root, 'a.mdx'), 'utf8'), page);
+		run(root, 'lint', '--fix', 'a.mdx');
+		assert.equal(readFileSync(join(root, 'a.mdx'), 'utf8'), '# Kop\n\n<nldd-shell>\n<nldd-text><p>los</p></nldd-text>\n</nldd-shell>\n\nZie `<nldd-shell>`.\n');
 		assert.equal(readFileSync(join(root, 'CHANGELOG.md'), 'utf8'), 'Zie `<nldd-app-view>`.\n');
 	});
 
