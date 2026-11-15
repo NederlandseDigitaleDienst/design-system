@@ -680,7 +680,7 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 ### Templates (`.template.ts`)
 - Elk attribuut op een **eigen regel**, met twee uitzonderingen:
   - `class` staat altijd op **dezelfde regel** als het element
-  - Een element met **één enkel attribuut** mag op één regel
+  - Een element met **één enkel attribuut** (zonder `class`) staat op één regel: `<nldd-title slot="header">`, niet over drie regels
 - **Nooit een class op een child component** — wrap het in een container die positie en size bepaalt; het child vult die container (bijv. `--_icon-size: 100%`). De container heet naar de functie van het child: een wrapper om een knop is `__…-button` (`toolbar__overflow-button`, niet `toolbar__overflow`)
 - Geen lege regels in templates
 - **Element-content op een eigen ingesprongen regel** — ook een enkele `${...}`-interpolatie; de open- en sluittag staan dan op hun eigen regel. Zo blijven regels kort en tonen diffs alleen de gewijzigde inhoud, niet de hele tag-regel. Geldt voor losstaande elementen in de template-body. Een kort inline `html`-fragment binnen een expressie of ternary mag op één regel blijven (zie het voorbeeld hieronder); dat opsplitsen levert juist lelijke fragmenten op.
@@ -726,6 +726,11 @@ ${component.hasBadge ? html`<span class="dialog__badge">${component.badge}</span
 
 <!-- FOUT — class op child component -->
 <nldd-icon class="checkbox__icon" icon="check-mark-small"></nldd-icon>
+
+<!-- FOUT — één attribuut zonder class over drie regels -->
+<nldd-title
+	slot="header"
+>
 
 <!-- FOUT — eerste attribuut op de tag-regel zonder class -->
 <nldd-title size="display-1"
