@@ -229,7 +229,8 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 	}
 
 	/** Stops a click on a disabled <a> of the app before its own handlers, a
-	 *  router's among them, see it: those run after the capture on the host. */
+	 *  router's among them, see it: those run after the capture on the host.
+	 *  A middle click too, which would open the link in a new tab. */
 	private _blockDisabledAnchor = (e: MouseEvent): void => {
 		if (!this.disabled || !this._anchor || !e.composedPath().includes(this._anchor)) return;
 		e.preventDefault();
@@ -239,6 +240,7 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.addEventListener('click', this._blockDisabledAnchor, true);
+		this.addEventListener('auxclick', this._blockDisabledAnchor, true);
 		this._findAnchor();
 		this._observeAnchor();
 	}
@@ -246,6 +248,7 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this.removeEventListener('click', this._blockDisabledAnchor, true);
+		this.removeEventListener('auxclick', this._blockDisabledAnchor, true);
 		this._anchorObserver?.disconnect();
 		// The <a> can outlive this link; connectedCallback finds it again on a move.
 		if (this._anchor) this._release(this._anchor);

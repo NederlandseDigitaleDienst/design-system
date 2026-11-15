@@ -40,9 +40,7 @@ nldd-shell                            de buitenste schil
 <nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
-      <nldd-top-navigation-bar
-        website-title="Mijn Dienst"
-      >
+      <nldd-top-navigation-bar website-title="Mijn Dienst">
         <nldd-menu-bar slot="utility">
           <nldd-menu-bar-item
             text="Zoeken"
@@ -89,9 +87,7 @@ nldd-shell                            de buitenste schil
       </nldd-top-navigation-bar>
     </nldd-skip-link>
 
-    <nldd-hero
-      main-background="accent"
-    >
+    <nldd-hero main-background="accent">
       <nldd-image slot="media"></nldd-image>
       <nldd-title>
         <h1>Regel je aanvraag online</h1>
@@ -109,9 +105,7 @@ nldd-shell                            de buitenste schil
     </nldd-hero>
 
     <nldd-simple-section background="tinted">
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h2>Alles rond je aanvraag regel je hier</h2>
       </nldd-title>
       <nldd-spacer
@@ -127,9 +121,7 @@ nldd-shell                            de buitenste schil
       >
         <nldd-card>
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h3>Aanvraag</h3>
             </nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -151,9 +143,7 @@ nldd-shell                            de buitenste schil
         </nldd-card>
         <nldd-card>
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h3>Behandeling</h3>
             </nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -175,9 +165,7 @@ nldd-shell                            de buitenste schil
         </nldd-card>
         <nldd-card>
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h3>Brieven en besluiten</h3>
             </nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -205,9 +193,7 @@ nldd-shell                            de buitenste schil
         slot="left"
         aspect-ratio="3/2"
       ></nldd-image>
-      <nldd-title
-        slot="right"
-      >
+      <nldd-title slot="right">
         <h2>Je dossier houdt alles bij elkaar</h2>
       </nldd-title>
       <nldd-spacer
@@ -232,9 +218,7 @@ nldd-shell                            de buitenste schil
     </nldd-one-half-one-half-section>
 
     <nldd-two-thirds-one-third-section background="tinted">
-      <nldd-title
-        slot="left"
-      >
+      <nldd-title slot="left">
         <h2>Een aanvraag gaat langs drie vaste stappen</h2>
       </nldd-title>
       <nldd-spacer
@@ -247,9 +231,7 @@ nldd-shell                            de buitenste schil
       </nldd-rich-text>
       <nldd-card slot="right">
         <nldd-container padding="16">
-          <nldd-title
-            size="display-4"
-          >
+          <nldd-title size="display-4">
             <h3>De behandelaar helpt je verder</h3>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -267,9 +249,7 @@ nldd-shell                            de buitenste schil
     </nldd-two-thirds-one-third-section>
 
     <nldd-one-third-two-thirds-section>
-      <nldd-title
-        slot="left"
-      >
+      <nldd-title slot="left">
         <h2>Hiervoor kun je een aanvraag doen</h2>
       </nldd-title>
       <nldd-spacer

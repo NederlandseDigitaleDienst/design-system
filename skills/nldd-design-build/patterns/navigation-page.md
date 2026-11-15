@@ -85,9 +85,7 @@ Met een lijst:
     </nldd-skip-link>
 
     <nldd-one-third-two-thirds-section>
-      <nldd-title
-        slot="left"
-      >
+      <nldd-title slot="left">
         <h1>Aanvragen</h1>
       </nldd-title>
       <nldd-spacer
@@ -277,9 +275,7 @@ Met kaarten:
     </nldd-skip-link>
 
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvragen</h1>
       </nldd-title>
       <nldd-spacer
@@ -298,9 +294,7 @@ Met kaarten:
           accessible-label="Aanvraag indienen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h2>Aanvraag indienen</h2>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -314,9 +308,7 @@ Met kaarten:
           accessible-label="Behandeling volgen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h2>Behandeling volgen</h2>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -330,9 +322,7 @@ Met kaarten:
           accessible-label="Aanvraag wijzigen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h2>Aanvraag wijzigen</h2>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -346,9 +336,7 @@ Met kaarten:
           accessible-label="Aanvraag intrekken"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h2>Aanvraag intrekken</h2>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -362,9 +350,7 @@ Met kaarten:
           accessible-label="Besluit begrijpen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h2>Besluit begrijpen</h2>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -378,9 +364,7 @@ Met kaarten:
           accessible-label="Bezwaar maken"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-4"
-            >
+            <nldd-title size="display-4">
               <h2>Bezwaar maken</h2>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>

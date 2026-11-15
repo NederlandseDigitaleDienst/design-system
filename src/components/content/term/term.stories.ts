@@ -83,9 +83,7 @@ export const MetPopovertarget = {
 			id="term-dpia"
 			accessible-label="Data protection impact assessment"
 		>
-			<nldd-container
-				padding="16"
-			>
+			<nldd-container padding="16">
 				<nldd-rich-text>
 					<p>Een beoordeling vooraf van de risico's van een verwerking voor de mensen van wie de gegevens zijn.</p>
 					<p>Verplicht als een verwerking waarschijnlijk een hoog risico oplevert.</p>

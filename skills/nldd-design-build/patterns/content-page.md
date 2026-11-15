@@ -96,9 +96,7 @@ Met een inhoudsopgave:
       sidebar-label="Op deze pagina"
       grow
     >
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvraag indienen</h1>
       </nldd-title>
       <nldd-spacer
@@ -180,9 +178,7 @@ Met een inhoudsopgave:
       <nldd-spacer size="32"></nldd-spacer>
       <nldd-card background="tinted">
         <nldd-container padding="16">
-          <nldd-title
-            size="display-4"
-          >
+          <nldd-title size="display-4">
             <h2>Aanvragen kost tien minuten</h2>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -215,9 +211,7 @@ Met een inhoudsopgave:
           accessible-label="Behandeling volgen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Behandeling volgen</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -231,9 +225,7 @@ Met een inhoudsopgave:
           accessible-label="Bezwaar maken"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Bezwaar maken</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -247,9 +239,7 @@ Met een inhoudsopgave:
           accessible-label="Isoleren"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Isoleren</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -365,9 +355,7 @@ Zonder inhoudsopgave, voor een korte pagina:
     </nldd-skip-link>
 
     <nldd-two-thirds-one-third-section grow>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvraag intrekken</h1>
       </nldd-title>
       <nldd-rich-text slot="left">
@@ -382,9 +370,7 @@ Zonder inhoudsopgave, voor een korte pagina:
         background="tinted"
       >
         <nldd-container padding="16">
-          <nldd-title
-            size="display-4"
-          >
+          <nldd-title size="display-4">
             <h2>Aanvraag nu intrekken</h2>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -417,9 +403,7 @@ Zonder inhoudsopgave, voor een korte pagina:
           accessible-label="Aanvraag wijzigen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Aanvraag wijzigen</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -433,9 +417,7 @@ Zonder inhoudsopgave, voor een korte pagina:
           accessible-label="Bezwaar maken"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Bezwaar maken</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -449,9 +431,7 @@ Zonder inhoudsopgave, voor een korte pagina:
           accessible-label="Isoleren"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Isoleren</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>

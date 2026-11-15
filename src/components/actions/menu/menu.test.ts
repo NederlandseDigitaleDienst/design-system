@@ -3697,6 +3697,20 @@ describe('nldd-menu confirms a choice', () => {
 		await new Promise((resolve) => setTimeout(resolve, 450));
 	});
 
+	it('blinks for a select after a touch that scrolled instead', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+		button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+		button.dispatchEvent(new PointerEvent('pointercancel', { pointerType: 'touch', bubbles: true, composed: true }));
+		button.click();
+		expect(item.getAttribute('confirming')).toBe('');
+		await new Promise((resolve) => setTimeout(resolve, 450));
+	});
+
 	it('blinks again after a key press that follows a tap', async () => {
 		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
 		await waitForUpdate(root);

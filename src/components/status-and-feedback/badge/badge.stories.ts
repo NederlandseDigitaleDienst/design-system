@@ -439,9 +439,7 @@ export const OpEenIcoon = {
 			</span>
 			<span style="position: relative; display: inline-flex; width: var(--primitives-space-32); height: var(--primitives-space-32);">
 				<nldd-icon icon="envelope"></nldd-icon>
-				<nldd-badge
-					style="position: absolute; top: 0; right: 0;"
-				></nldd-badge>
+				<nldd-badge style="position: absolute; top: 0; right: 0;"></nldd-badge>
 			</span>
 			<span style="position: relative; display: inline-flex; width: var(--primitives-space-32); height: var(--primitives-space-32);">
 				<nldd-icon icon="envelope"></nldd-icon>

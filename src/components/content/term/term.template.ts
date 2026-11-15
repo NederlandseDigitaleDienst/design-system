@@ -25,9 +25,7 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 			<nldd-popover
 				accessible-label=${component._termText || nothing}
 			>
-				<nldd-container
-					padding="16"
-				>
+				<nldd-container padding="16">
 					<nldd-text text="${component.definition}"></nldd-text>
 					${source}
 				</nldd-container>

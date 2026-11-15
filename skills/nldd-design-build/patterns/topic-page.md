@@ -91,9 +91,7 @@ nldd-shell                            de buitenste schil
       </nldd-top-navigation-bar>
     </nldd-skip-link>
 
-    <nldd-hero
-      main-background="accent"
-    >
+    <nldd-hero main-background="accent">
       <nldd-image slot="media"></nldd-image>
       <nldd-title>
         <h1>Isoleren</h1>
@@ -111,9 +109,7 @@ nldd-shell                            de buitenste schil
     </nldd-hero>
 
     <nldd-one-half-one-half-section vertical-alignment="center">
-      <nldd-title
-        slot="left"
-      >
+      <nldd-title slot="left">
         <h2>Isoleren houdt de warmte binnen</h2>
       </nldd-title>
       <nldd-spacer
@@ -142,9 +138,7 @@ nldd-shell                            de buitenste schil
     </nldd-one-half-one-half-section>
 
     <nldd-simple-section background="tinted">
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h2>Voor dakisolatie doe je een aanvraag</h2>
       </nldd-title>
       <nldd-spacer
@@ -163,9 +157,7 @@ nldd-shell                            de buitenste schil
           accessible-label="Aanvraag indienen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Aanvraag indienen</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -179,9 +171,7 @@ nldd-shell                            de buitenste schil
           accessible-label="Behandeling volgen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Behandeling volgen</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -195,9 +185,7 @@ nldd-shell                            de buitenste schil
           accessible-label="Bezwaar maken"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Bezwaar maken</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -210,9 +198,7 @@ nldd-shell                            de buitenste schil
     </nldd-simple-section>
 
     <nldd-one-third-two-thirds-section>
-      <nldd-title
-        slot="left"
-      >
+      <nldd-title slot="left">
         <h2>Soorten isolatie</h2>
       </nldd-title>
       <nldd-spacer
@@ -294,9 +280,7 @@ nldd-shell                            de buitenste schil
           accessible-label="Warmtepomp"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Warmtepomp</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -310,9 +294,7 @@ nldd-shell                            de buitenste schil
           accessible-label="Energie besparen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Energie besparen</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -326,9 +308,7 @@ nldd-shell                            de buitenste schil
           accessible-label="Zonnepanelen"
         >
           <nldd-container padding="16">
-            <nldd-title
-              size="display-5"
-            >
+            <nldd-title size="display-5">
               <h3>Zonnepanelen</h3>
             </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>

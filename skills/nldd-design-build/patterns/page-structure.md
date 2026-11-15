@@ -82,9 +82,7 @@ nldd-shell                            de buitenste schil
     </nldd-skip-link>
 
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvraag intrekken</h1>
       </nldd-title>
       <nldd-rich-text>
@@ -227,9 +225,7 @@ Op een onderliggende pagina:
     </nldd-skip-link>
 
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvraag intrekken</h1>
       </nldd-title>
       <nldd-rich-text>
@@ -246,9 +242,7 @@ Op de home, zonder terugknop:
 <nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
-      <nldd-top-navigation-bar
-        website-title="Mijn Dienst"
-      >
+      <nldd-top-navigation-bar website-title="Mijn Dienst">
         <nldd-menu-bar slot="utility">
           <nldd-menu-bar-item
             text="Zoeken"
@@ -296,9 +290,7 @@ Op de home, zonder terugknop:
     </nldd-skip-link>
 
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Regel je aanvraag online</h1>
       </nldd-title>
       <nldd-rich-text>
@@ -377,9 +369,7 @@ Op de home, zonder terugknop:
     </nldd-skip-link>
 
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvraag intrekken</h1>
       </nldd-title>
       <nldd-rich-text>
@@ -497,9 +487,7 @@ In het menu staat bovenaan de link naar het persoonlijke deel, want daar logt ie
     </nldd-skip-link>
 
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvraag intrekken</h1>
       </nldd-title>
       <nldd-rich-text>
@@ -577,9 +565,7 @@ In het menu staat bovenaan de link naar het persoonlijke deel, want daar logt ie
     </nldd-skip-link>
 
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvraag intrekken</h1>
       </nldd-title>
       <nldd-rich-text>
@@ -600,9 +586,7 @@ Op een onderliggende pagina:
 <nldd-shell>
   <nldd-page>
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Aanvraag intrekken</h1>
       </nldd-title>
       <nldd-rich-text>
@@ -633,9 +617,7 @@ Op een onderliggende pagina:
         gap="24"
       >
         <nldd-container>
-          <nldd-title
-            size="display-5"
-          >
+          <nldd-title size="display-5">
             <h2>Aanvragen</h2>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -658,9 +640,7 @@ Op een onderliggende pagina:
           </nldd-link-group>
         </nldd-container>
         <nldd-container>
-          <nldd-title
-            size="display-5"
-          >
+          <nldd-title size="display-5">
             <h2>Onderwerpen</h2>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -683,9 +663,7 @@ Op een onderliggende pagina:
           </nldd-link-group>
         </nldd-container>
         <nldd-container>
-          <nldd-title
-            size="display-5"
-          >
+          <nldd-title size="display-5">
             <h2>Mijn Dienst</h2>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -741,9 +719,7 @@ Op de home, zonder kruimelpad:
 <nldd-shell>
   <nldd-page>
     <nldd-simple-section>
-      <nldd-title
-        slot="header"
-      >
+      <nldd-title slot="header">
         <h1>Regel je aanvraag online</h1>
       </nldd-title>
       <nldd-rich-text>
@@ -760,9 +736,7 @@ Op de home, zonder kruimelpad:
         gap="24"
       >
         <nldd-container>
-          <nldd-title
-            size="display-5"
-          >
+          <nldd-title size="display-5">
             <h2>Aanvragen</h2>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -785,9 +759,7 @@ Op de home, zonder kruimelpad:
           </nldd-link-group>
         </nldd-container>
         <nldd-container>
-          <nldd-title
-            size="display-5"
-          >
+          <nldd-title size="display-5">
             <h2>Onderwerpen</h2>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -810,9 +782,7 @@ Op de home, zonder kruimelpad:
           </nldd-link-group>
         </nldd-container>
         <nldd-container>
-          <nldd-title
-            size="display-5"
-          >
+          <nldd-title size="display-5">
             <h2>Mijn Dienst</h2>
           </nldd-title>
           <nldd-spacer size="8"></nldd-spacer>

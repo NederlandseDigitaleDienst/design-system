@@ -108,9 +108,7 @@ nldd-page
         dividers="never"
         accessible-label="Team"
       >
-        <nldd-list-item
-          checkbox
-        >
+        <nldd-list-item checkbox>
           <nldd-cell>
             <nldd-checkbox decorative></nldd-checkbox>
           </nldd-cell>
@@ -124,9 +122,7 @@ nldd-page
             text="9"
           ></nldd-text-cell>
         </nldd-list-item>
-        <nldd-list-item
-          checkbox
-        >
+        <nldd-list-item checkbox>
           <nldd-cell>
             <nldd-checkbox decorative></nldd-checkbox>
           </nldd-cell>

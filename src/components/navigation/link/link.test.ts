@@ -325,6 +325,27 @@ describe('<nldd-link> with an <a> of its own', () => {
 		expect(reached).toBe(true);
 	});
 
+	it('stops a middle click on a disabled <a>, which would open it in a new tab', async () => {
+		el = await fixture('<nldd-link disabled><a href="/patronen">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const auxclick = new MouseEvent('auxclick', { button: 1, bubbles: true, cancelable: true, composed: true });
+		own(el).dispatchEvent(auxclick);
+		expect(auxclick.defaultPrevented).toBe(true);
+	});
+
+	it('keeps the rel the app sets after the first render, and adds to it only what a new tab needs', async () => {
+		el = await fixture('<nldd-link><a href="https://example.org/" target="_blank">Voorbeeld</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		expect(a.getAttribute('rel')).toBe('noopener noreferrer');
+		a.setAttribute('rel', 'nofollow');
+		await waitForUpdate(el);
+		expect(a.getAttribute('rel')).toBe('nofollow noopener noreferrer');
+		a.removeAttribute('target');
+		await waitForUpdate(el);
+		expect(a.getAttribute('rel')).toBe('nofollow');
+	});
+
 	it('keeps a disabled <a> without an href reachable by keyboard', async () => {
 		el = await fixture('<nldd-link disabled><a>Patronen</a></nldd-link>');
 		await waitForUpdate(el);

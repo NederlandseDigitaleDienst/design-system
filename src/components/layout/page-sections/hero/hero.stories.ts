@@ -214,9 +214,7 @@ export const MetAfgerondeHoek = {
 					${cornerContent(`main-width="${width}"`)}
 				</nldd-hero>
 			`)}
-			<nldd-hero
-				corner
-			>
+			<nldd-hero corner>
 				${cornerContent('Zonder media')}
 			</nldd-hero>
 		</nldd-container>
@@ -237,18 +235,14 @@ export const AfgerondeHoekZonderMedia = {
 			${[375, 800, 1200].map((width) => html`
 				<div style="width: min(${width}px, 100%)">
 					<nldd-container gap="24">
-						<nldd-hero
-							corner
-						>
+						<nldd-hero corner>
 							<nldd-title
 								size="display-1"
 								text="Mijn Dienst"
 								heading-level="2"
 							></nldd-title>
 						</nldd-hero>
-						<nldd-hero
-							corner
-						>
+						<nldd-hero corner>
 							<nldd-title
 								size="display-1"
 								text="Mijn Dienst"
@@ -453,9 +447,7 @@ export const ZonderMedia = {
  */
 export const MetRichText = {
 	render: () => html`
-		<nldd-hero
-			main-position="bottom-left"
-		>
+		<nldd-hero main-position="bottom-left">
 			<img
 				slot="media"
 				src=${MEDIA}
