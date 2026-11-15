@@ -44,6 +44,7 @@
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { slottedNodes } from '../../../utilities/slot-content.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { identityStyles } from './identity.styles.js';
@@ -100,7 +101,7 @@ export class NLDDIdentity extends LitElement {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		for (const name of ['avatars', 'text', 'supporting-text']) {
-			this._readSlot(name, [...this.children].filter((child) => child.getAttribute('slot') === name));
+			this._readSlot(name, slottedNodes(this, name).filter((node): node is Element => node instanceof Element));
 		}
 	}
 

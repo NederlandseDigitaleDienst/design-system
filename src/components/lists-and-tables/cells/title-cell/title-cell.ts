@@ -61,8 +61,8 @@
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { holdsLooseText } from '../../../../utilities/slotted-block.js';
-import { setState } from '../../../../utilities/element-state.js';
+import { LooseText } from '../../../../utilities/slotted-block.js';
+import { holdsContent, slottedNodes } from '../../../../utilities/slot-content.js';
 import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
@@ -133,8 +133,7 @@ export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityM
 	@state() _hasDefaultSlotted = false;
 	/** @internal */
 	@state() _hasSupportingTextSlotted = false;
-	/** The slots that hold text of their own, outside any element. */
-	private _looseSlots = new Set<string>();
+	private _looseText = new LooseText(this);
 
 	override updated(changed: Map<string, unknown>) {
 		super.updated(changed);
@@ -176,23 +175,23 @@ export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityM
 	_onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
 		// assignedNodes() (not flatten): only what the consumer slotted counts.
-		const hasContent = slot.assignedNodes().some((node) =>
-			node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim() !== ''));
-		if (holdsLooseText(slot)) this._looseSlots.add(slot.name);
-		else this._looseSlots.delete(slot.name);
-		setState(this, 'loose-text', this._looseSlots.size > 0);
-		switch (slot.name) {
-			case 'overline':
-				this._hasOverlineSlotted = hasContent;
-				break;
-			case 'supporting-text':
-				this._hasSupportingTextSlotted = hasContent;
-				break;
-			default:
-				this._hasDefaultSlotted = hasContent;
-				break;
-		}
+		this._readSlot(slot.name, slot.assignedNodes());
 	};
+
+	/** Reads the children as the cell connects, so the first render already
+	 *  draws the box that fits them instead of swapping it on slotchange. */
+	override connectedCallback(): void {
+		super.connectedCallback();
+		for (const name of ['overline', '', 'supporting-text']) this._readSlot(name, slottedNodes(this, name));
+	}
+
+	private _readSlot(name: string, nodes: readonly Node[]): void {
+		this._looseText.read(name, nodes);
+		const hasContent = holdsContent(nodes);
+		if (name === 'overline') this._hasOverlineSlotted = hasContent;
+		else if (name === 'supporting-text') this._hasSupportingTextSlotted = hasContent;
+		else this._hasDefaultSlotted = hasContent;
+	}
 
 	override render() {
 		return template.call(this);

@@ -417,3 +417,19 @@ describe('nldd-title-cell whose slot fills and empties', () => {
 		expect(el.shadowRoot!.querySelectorAll('slot:not([name])').length).toBe(1);
 	});
 });
+
+describe('nldd-title-cell on its first render', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws the box for slotted text at once, so no swap follows', async () => {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = '<nldd-title-cell text="Dakisolatie" overline="Aanvraag"><p>Aanvraag A-1042</p></nldd-title-cell>';
+		document.body.append(wrapper);
+		el = wrapper.firstElementChild as HTMLElement;
+		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		expect(el.shadowRoot!.querySelector('.title-cell__title')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.title-cell__overline')!.localName).toBe('p');
+	});
+});

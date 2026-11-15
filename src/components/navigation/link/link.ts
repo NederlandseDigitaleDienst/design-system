@@ -242,7 +242,6 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 		this.addEventListener('click', this._blockDisabledAnchor, true);
 		this.addEventListener('auxclick', this._blockDisabledAnchor, true);
 		this._findAnchor();
-		this._observeAnchor();
 	}
 
 	override disconnectedCallback(): void {

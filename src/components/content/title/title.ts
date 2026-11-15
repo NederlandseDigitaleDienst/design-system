@@ -59,8 +59,8 @@
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { holdsLooseText } from '../../../utilities/slotted-block.js';
-import { setState } from '../../../utilities/element-state.js';
+import { LooseText } from '../../../utilities/slotted-block.js';
+import { holdsContent, slottedNodes } from '../../../utilities/slot-content.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { titleStyles } from './title.styles.js';
@@ -106,27 +106,35 @@ export class NLDDTitle extends LitElement {
 	@state() _hasSupportingTextSlotted = false;
 	/** @internal The level of a heading in the default slot. */
 	@state() _slottedLevel: HeadingLevel | null = null;
-	/** The slots that hold text of their own, outside any element. */
-	private _looseSlots = new Set<string>();
+	private _looseText = new LooseText(this);
 
 	/** @internal */
 	_onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
+		this._readSlot(slot.name, slot.assignedNodes());
+	};
+
+	/** Reads the children as the title connects, so the first render already
+	 *  knows the level of a slotted heading and leaves out the attribute a slot
+	 *  replaces. */
+	override connectedCallback(): void {
+		super.connectedCallback();
+		for (const name of ['overline', '', 'supporting-text']) this._readSlot(name, slottedNodes(this, name));
+	}
+
+	private _readSlot(name: string, nodes: readonly Node[]): void {
+		this._looseText.read(name, nodes);
 		// Whitespace between the tags is not content: without this check the text
 		// would vanish behind a slot that only holds a newline.
-		const hasContent = slot.assignedNodes().some((node) =>
-			node.nodeType === Node.ELEMENT_NODE || (node.textContent ?? '').trim().length > 0);
-		if (holdsLooseText(slot)) this._looseSlots.add(slot.name);
-		else this._looseSlots.delete(slot.name);
-		setState(this, 'loose-text', this._looseSlots.size > 0);
-		if (slot.name === 'overline') this._hasOverlineSlotted = hasContent;
-		else if (slot.name === 'supporting-text') this._hasSupportingTextSlotted = hasContent;
+		const hasContent = holdsContent(nodes);
+		if (name === 'overline') this._hasOverlineSlotted = hasContent;
+		else if (name === 'supporting-text') this._hasSupportingTextSlotted = hasContent;
 		else {
 			this._hasDefaultSlotted = hasContent;
-			const heading = slot.assignedElements().find((el) => /^H[1-6]$/.test(el.tagName));
+			const heading = nodes.find((node): node is Element => node instanceof Element && /^H[1-6]$/.test(node.tagName));
 			this._slottedLevel = heading ? Number(heading.tagName[1]) as HeadingLevel : null;
 		}
-	};
+	}
 
 	/** The valid custom size per breakpoint, worked out before the first paint. */
 	private _customSizes: Partial<Record<Breakpoint, string>> = {};

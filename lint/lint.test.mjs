@@ -581,6 +581,14 @@ describe('--fix', () => {
 		assert.match(stdout, /0 errors, 0 warnings in 0 files/);
 	});
 
+	it('reads a script of the app with one long line, such as an inline SVG', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		const lines = Array.from({ length: 20 }, (_, index) => `const a${index} = ${index};`).join('\n');
+		writeFileSync(join(root, 'logo.js'), `${lines}\nconst d = '${'M0 0'.repeat(800)}';\nexport const Logo = () => <nldd-button foo="b"></nldd-button>;\n`);
+		const { stdout } = run(root, 'lint', '.');
+		assert.match(stdout, /foo/);
+	});
+
 	it('reads MDX and Markdown only when named, and renames a tag in the prose and in a mention', () => {
 		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
 		const page = '# Kop\n\n<nldd-app-view>\n<nldd-text>los</nldd-text>\n</nldd-app-view>\n\nZie `<nldd-app-view>`.\n';
@@ -1210,6 +1218,10 @@ describe('found in the sixth review', () => {
 	it('takes text on the line of its tag in MDX for text, and on a line of its own for a paragraph', async () => {
 		assert.deepEqual(await rulesIn('<nldd-text>Dossier D-318</nldd-text>', 'a.mdx'), ['text-needs-element']);
 		assert.deepEqual(await rulesIn('<nldd-text>\nDossier D-318\n</nldd-text>', 'a.mdx'), []);
+	});
+
+	it('reads an empty expression in MDX, which a file being written can hold, without crashing', async () => {
+		assert.deepEqual(await rulesIn('<nldd-button text={} foo="b"></nldd-button>', 'a.mdx'), ['unknown-attribute', 'button-needs-name']);
 	});
 
 	it('still checks what MDX writes in a tag next to a spread, and honors a suppression in a comment', async () => {

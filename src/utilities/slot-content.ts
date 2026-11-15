@@ -10,8 +10,24 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
  * renders the attribute beside the slot, and hides it when this says so.
  */
 export function hasSlotContent(slot: HTMLSlotElement): boolean {
-	return slot.assignedNodes().some((node) => node.nodeType === Node.ELEMENT_NODE
+	return holdsContent(slot.assignedNodes());
+}
+
+/** Whether these nodes hold something to show, by the rule of {@link hasSlotContent}. */
+export function holdsContent(nodes: readonly Node[]): boolean {
+	return nodes.some((node) => node.nodeType === Node.ELEMENT_NODE
 		|| (node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim().length > 0));
+}
+
+/**
+ * The children of a host that go to a slot, read from the host itself: before
+ * the first render there is no slot to ask. `''` is the default slot, which also
+ * takes the text between the tags.
+ */
+export function slottedNodes(host: Element, name = ''): Node[] {
+	return [...host.childNodes].filter((node) => node.nodeType === Node.ELEMENT_NODE
+		? ((node as Element).getAttribute('slot') ?? '') === name
+		: node.nodeType === Node.TEXT_NODE && name === '');
 }
 
 /**
@@ -36,8 +52,7 @@ export class SlotContent implements ReactiveController {
 	}
 
 	hostConnected(): void {
-		this.has = [...this._host.childNodes].some((node) => (node.nodeType === Node.ELEMENT_NODE && !(node as Element).hasAttribute('slot'))
-			|| (node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim().length > 0));
+		this.has = holdsContent(slottedNodes(this._host));
 	}
 
 	onChange = (e: Event): void => {

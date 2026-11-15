@@ -162,8 +162,11 @@ export function findMissingSheets(roots: ParentNode[] = findRoots()): string[] {
 	}).map(({ sheet }) => sheet);
 }
 
-/** Like the FOUC guard, a stylesheet belongs to the page, so this reports itself, once per sheet. */
-/** @internal Exported for tests. */
+/**
+ * Like the FOUC guard, a stylesheet belongs to the page, so this reports itself,
+ * once per sheet.
+ * @internal Exported for tests.
+ */
 export function createGlobalSheetCheck() {
 	const reported = new Set<string>();
 	return () => {

@@ -401,3 +401,19 @@ describe('nldd-title – size from heading-level', () => {
 		expect(el.hasAttribute('data-level')).toBe(false);
 	});
 });
+
+describe('nldd-title on its first render', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('knows the level of a slotted heading at once', async () => {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = '<nldd-title overline="Aanvraag"><h1>Mijn Dienst</h1><p slot="overline">Aanvraag A-1042</p></nldd-title>';
+		document.body.append(wrapper);
+		el = wrapper.firstElementChild as HTMLElement;
+		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		expect(el.getAttribute('data-level')).toBe('1');
+		expect(el.shadowRoot!.querySelector('.title__overline')).toBeNull();
+	});
+});

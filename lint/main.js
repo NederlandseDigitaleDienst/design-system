@@ -118,11 +118,17 @@ function fixReferences(renamedTags, paths, root, exclude) {
 
 /**
  * A script a bundler wrote: the linter reads a build through its HTML, and a bundle
- * carries the styles of the components as if they were the app's.
+ * carries the styles of the components as if they were the app's. Minified code
+ * has few lines for its size; one long line, such as an inline SVG, does not make
+ * a file of the app a bundle.
  */
 function isBundle(filename, source) {
-	return /\.[cm]?js$/.test(filename) && (/\.min\.[cm]?js$/.test(filename) || /^.{2000}/m.test(source));
+	if (!/\.[cm]?js$/.test(filename)) return false;
+	return /\.min\.[cm]?js$/.test(filename) || source.length / source.split('\n').length > MINIFIED_LINE_LENGTH;
 }
+
+/** The average line length above which a script counts as minified. */
+const MINIFIED_LINE_LENGTH = 500;
 
 const MAX_FIX_PASSES = 10;
 

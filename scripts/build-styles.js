@@ -7,7 +7,7 @@
  * `generate-lint-data.js` reads `shippedStylesheets()` to know which CSS is the
  * design system's own.
  */
-import { copyFileSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readdirSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
@@ -70,4 +70,5 @@ function build() {
 	for (const file of readdirSync(fontFiles).filter((name) => name.endsWith('.woff2'))) copyFileSync(resolve(fontFiles, file), resolve(fonts, file));
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === import.meta.filename) build();
+// Node gives this module by its real path, and argv by the path it was called with.
+if (process.argv[1] && realpathSync(process.argv[1]) === import.meta.filename) build();

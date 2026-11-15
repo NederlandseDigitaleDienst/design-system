@@ -337,7 +337,8 @@ function mdxAsHtml(mdx) {
 			const end = endOfExpression(source, at);
 			const length = end - at + 1;
 			let fill;
-			if (inTag && out[at - 1] === '=') fill = `\${${'x'.repeat(length - 3)}}`;
+			// An empty `{}` is no expression MDX accepts; it reads as an empty value.
+			if (inTag && out[at - 1] === '=') fill = length >= 3 ? `\${${'x'.repeat(length - 3)}}` : '""';
 			else if (inTag) fill = length >= 6 ? 'v-bind'.padEnd(length) : `{${'x'.repeat(Math.max(length - 2, 0))}}`.slice(0, length);
 			else if (length >= 4 && !/^\{\s*\/\*/.test(source.slice(at, end))) fill = `<X${' '.repeat(length - 4)}/>`;
 			else fill = blank(source.slice(at, end + 1));
@@ -483,6 +484,7 @@ export function parseLit(source) {
 export async function parseScript(source, filename) {
 	const templates = parseLit(source);
 	if (templates.length > 0 || !/<(nldd-|Nldd)/.test(source)) return templates;
+	await loadOxc(filename);
 	try {
 		const roots = await parseJsx(source, filename);
 		if (roots.syntaxError) return [];
@@ -735,10 +737,15 @@ function jsxTree(node, roots, detached = true) {
 
 let oxcParser;
 
-export async function parseJsx(source, filename) {
+/** The JSX parser, an optional dependency: without it a file with JSX cannot be read, and the run says why. */
+async function loadOxc(filename) {
 	oxcParser ??= await import('oxc-parser').catch(() => {
 		throw new Error(`Reading ${filename} needs the optional dependency oxc-parser, which needs Node 20.19 or newer.`);
 	});
+}
+
+export async function parseJsx(source, filename) {
+	await loadOxc(filename);
 	// A .js file takes JSX only when asked: React apps write it there too.
 	const options = /\.[cm]?js$/.test(filename) ? { lang: 'jsx' } : {};
 	const { program, errors } = oxcParser.parseSync(filename, source, options);

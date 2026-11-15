@@ -52838,6 +52838,46 @@
           "description": "Whether a slot holds something to show: an element, or text that is more\nthan whitespace.\n\nA default slot also gets the whitespace and line breaks between the tags of\nthe markup around it, and that whitespace switches off the slot's fallback\ncontent. A component that lets its slot win over an attribute therefore\nrenders the attribute beside the slot, and hides it when this says so."
         },
         {
+          "kind": "function",
+          "name": "holdsContent",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "nodes",
+              "type": {
+                "text": "readonly Node[]"
+              }
+            }
+          ],
+          "description": "Whether these nodes hold something to show, by the rule of hasSlotContent."
+        },
+        {
+          "kind": "function",
+          "name": "slottedNodes",
+          "return": {
+            "type": {
+              "text": "Node[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "name",
+              "default": "''"
+            }
+          ],
+          "description": "The children of a host that go to a slot, read from the host itself: before\nthe first render there is no slot to ask. `''` is the default slot, which also\ntakes the text between the tags."
+        },
+        {
           "kind": "class",
           "description": "Tracks whether the default slot holds something, for a component whose slot\nwins over an attribute. Pass `onChange` to the slot's `@slotchange` and render\nthe attribute only while `has` is false:\n\n```ts\nprivate _textSlot = new SlotContent(this);\n// in the template\nhtml`${this._textSlot.has ? nothing : this.text}<slot",
           "name": "SlotContent",
@@ -52877,6 +52917,22 @@
         },
         {
           "kind": "js",
+          "name": "holdsContent",
+          "declaration": {
+            "name": "holdsContent",
+            "module": "src/utilities/slot-content.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "slottedNodes",
+          "declaration": {
+            "name": "slottedNodes",
+            "module": "src/utilities/slot-content.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "SlotContent",
           "declaration": {
             "name": "SlotContent",
@@ -52899,13 +52955,50 @@
           },
           "parameters": [
             {
-              "name": "slot",
+              "name": "nodes",
               "type": {
-                "text": "HTMLSlotElement"
+                "text": "readonly Node[]"
               }
             }
           ],
-          "description": "Whether a slot holds text of its own, outside any element."
+          "description": "Whether these slotted nodes hold text of their own, outside any element."
+        },
+        {
+          "kind": "class",
+          "description": "Keeps the `loose-text` state of a host: set while any of its slots holds loose text.",
+          "name": "LooseText",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_slots",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()"
+            },
+            {
+              "kind": "method",
+              "name": "read",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "nodes",
+                  "type": {
+                    "text": "readonly Node[]"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "exports": [
@@ -52914,6 +53007,14 @@
           "name": "holdsLooseText",
           "declaration": {
             "name": "holdsLooseText",
+            "module": "src/utilities/slotted-block.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LooseText",
+          "declaration": {
+            "name": "LooseText",
             "module": "src/utilities/slotted-block.ts"
           }
         }

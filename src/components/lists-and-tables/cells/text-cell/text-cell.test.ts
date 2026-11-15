@@ -516,3 +516,19 @@ describe('nldd-text-cell that swaps its box for a filled slot', () => {
 		expect(changes).toBe(0);
 	});
 });
+
+describe('nldd-text-cell on its first render', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws the box for slotted text at once, so no swap follows', async () => {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = '<nldd-text-cell text="Dakisolatie" overline="Aanvraag"><p>Aanvraag A-1042</p></nldd-text-cell>';
+		document.body.append(wrapper);
+		el = wrapper.firstElementChild as HTMLElement;
+		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.text-cell__overline')!.localName).toBe('p');
+	});
+});
