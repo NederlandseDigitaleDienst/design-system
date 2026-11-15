@@ -58,9 +58,13 @@ import '../src/components/status-and-feedback/step-bar/step-bar.ts';
 
 const root = document.documentElement;
 
-/** The icon count in the page comes from the registry, so it never falls behind. */
+/**
+ * The icon count in the page comes from the registry, so it never falls behind.
+ * The number in the HTML is what a reader without script gets.
+ */
 for (const title of document.querySelectorAll<HTMLElement>('[data-icon-count]')) {
-	title.setAttribute('text', title.dataset.iconCount!.replace('{n}', String(iconRegistry.size)));
+	const heading = title.querySelector(':scope > :is(h1, h2, h3, h4, h5, h6)');
+	if (heading) heading.textContent = title.dataset.iconCount!.replace('{n}', String(iconRegistry.size));
 }
 
 /**
@@ -75,7 +79,8 @@ themePicker?.addEventListener('change', (event) => {
 	if (value === 'lintblauw') root.removeAttribute('data-nldd-theme');
 	else root.setAttribute('data-nldd-theme', value);
 	const name = themePicker.querySelector(`nldd-swatch-picker-item[value="${value}"]`)?.getAttribute('text');
-	if (name) document.querySelector('#thema-titel')?.setAttribute('text', `Thema: ${name}`);
+	const heading = document.querySelector('#thema-titel > h3');
+	if (name && heading) heading.textContent = `Thema: ${name}`;
 });
 
 /** Light, dark or the system setting, for the whole page. */
