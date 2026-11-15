@@ -29,6 +29,7 @@ for (const [subpath, target] of Object.entries(exports)) {
 		else failures.push(`${subpath}: no "import" or "default" condition to import`);
 		continue;
 	}
+	// The components have an entry each; a wildcard here is files for the browser, such as ./cdn/*.
 	const reason = !file?.endsWith('.js') ? 'not a script' : file.includes('*') ? 'a wildcard' : BROWSER_ONLY.has(subpath) ? 'browser only' : null;
 	if (reason) {
 		skipped[reason]++;

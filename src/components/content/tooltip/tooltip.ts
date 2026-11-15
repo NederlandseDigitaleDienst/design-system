@@ -69,6 +69,7 @@ type Placement = 'top' | 'bottom' | 'left' | 'right';
 type Timing = 'instant' | 'delay' | 'never';
 
 let tooltipCounter = 0;
+// On a server there is no matchMedia; a tooltip only shows in a browser anyway.
 const coarsePointerQuery = typeof matchMedia === 'function' ? matchMedia('(pointer: coarse)') : null;
 
 // Defaults mirror the values in tooltip.styles.ts. Used as fallback when the

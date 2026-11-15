@@ -143,6 +143,39 @@ export function checkFoucGuard(): void {
 }
 
 /**
+ * What a component holds in light DOM gets its look from a global stylesheet,
+ * because `::slotted` reaches no deeper than a child. Each sheet sets a variable
+ * on the host that the component's own styles do not, so its absence shows. The
+ * value refers to a token, so it reads empty without the tokens too.
+ */
+const GLOBAL_SHEETS = [
+	{ sheet: 'text', selector: 'nldd-text:has(> :is(p, span))', variable: '--_text-link-color' },
+	{ sheet: 'title', selector: 'nldd-title:has(> :is(h1, h2, h3, h4, h5, h6, p))', variable: '--_title-link-color' },
+	{ sheet: 'link', selector: 'nldd-link:has(> a)', variable: '--_link-color' },
+];
+
+/** The global stylesheets that an element on the page needs and that did not load. */
+export function findMissingSheets(roots: ParentNode[] = findRoots()): string[] {
+	return GLOBAL_SHEETS.filter(({ selector, variable }) => {
+		const element = roots.map((root) => root.querySelector(selector)).find((found) => found !== null) ?? null;
+		return element !== null && getComputedStyle(element).getPropertyValue(variable) === '';
+	}).map(({ sheet }) => sheet);
+}
+
+/** Like the FOUC guard, a stylesheet belongs to the page, so this reports itself, once per sheet. */
+/** @internal Exported for tests. */
+export function createGlobalSheetCheck() {
+	const reported = new Set<string>();
+	return () => {
+		for (const sheet of findMissingSheets()) {
+			if (reported.has(sheet)) continue;
+			reported.add(sheet);
+			console.warn(`[nldd] ${sheet}.css: the links, code and other inline elements in nldd-${sheet} have no look of their own, because this page does not load that stylesheet. Import '@nldd/design-system/styles', which includes it, or '@nldd/design-system/styles/${sheet}' on its own.`);
+		}
+	};
+}
+
+/**
  * How long an nldd-* element may stay undefined before it counts as never
  * registered. Long enough for a module that loads on demand, the autoloader's
  * included, over a slow connection.
@@ -186,6 +219,7 @@ export function startDevChecks(): void {
 	started = true;
 	const report = createReporter();
 	const checkRegistrations = createRegistrationCheck();
+	const checkGlobalSheets = createGlobalSheetCheck();
 	const stateRules = devRules.filter((rule) => rule.context.includes(':state('));
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	const schedule = () => {
@@ -193,6 +227,7 @@ export function startDevChecks(): void {
 		timer = setTimeout(() => {
 			report();
 			checkRegistrations();
+			checkGlobalSheets();
 		}, SETTLE_MS);
 	};
 	new MutationObserver(schedule).observe(document.documentElement, {

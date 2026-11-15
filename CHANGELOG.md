@@ -28,6 +28,7 @@ here; consult the commit history if you need that level of detail.
 - **A new kind of fix for `nldd lint --fix`.** A rule can wrap the text of an element in an element of its own (`wrap`). It only applies when the content is certain: text with a template expression or a comment is left alone, with its finding.
 - **`link-anchor-attributes-no-effect`** (warn) reports `href`, `target`, `rel`, `download`, `text`, `start-icon` or `end-icon` on an `nldd-link` that holds an `<a>`, and **`link-max-one-anchor`** (warn) one with more than one `<a>`. `link-needs-href` accepts the `href` on the `<a>`.
 - **`@nldd/design-system/styles/text`, `/styles/title`, `/styles/link` and `/styles/rich-text`** export the global stylesheets of the components that style plain HTML in light DOM, one by one. `global.css` includes all four; until now a site that picks its stylesheets could not import them.
+- **A warning in development when a global stylesheet is missing.** The links, code and other inline elements in a `<p>` of `nldd-text`, in a heading of `nldd-title` and in an `<a>` of `nldd-link` get their look from `text.css`, `title.css` and `link.css`. A page that does not load one of them now gets a console warning, once per stylesheet, with the entry point to import. Like the other checks in the browser, it runs only with a bundler that sets `import.meta.env.DEV`.
 
 ### Changed
 

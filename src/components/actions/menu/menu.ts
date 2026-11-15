@@ -898,6 +898,7 @@ export class NLDDMenu extends LitElement {
 	};
 	/** A press ends with its click, which reaches the menu after the item has
 	 *  selected, or with a touch that scrolls instead, or when the menu closes.
+	 *  A key press counts as a press of its own, so it clears the touch too.
 	 *  A disabled item fires no click, so a tap on one lasts until then. */
 	private _forgetPress = (): void => {
 		this._pressedByTouch = false;
