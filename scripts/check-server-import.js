@@ -5,6 +5,9 @@
  * page. Node has no window, document or matchMedia, so a component that reaches for
  * one of them while its module loads stops the whole build there.
  *
+ * The package is ESM only, without a `require` condition, so `import` and
+ * `default` are what a server loads.
+ *
  * Run after `npm run build:components`.
  */
 import { readFileSync } from 'node:fs';

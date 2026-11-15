@@ -178,7 +178,8 @@ const INLINE = new Set(['a', 'abbr', 'b', 'br', 'cite', 'code', 'del', 'em', 'i'
 function wrapEdits(source, { offset, endOffset, tag }, wrapper) {
 	const content = contentOf(source, offset, endOffset, tag);
 	const inner = content?.text.trim();
-	if (!inner) return [];
+	// A blank line ends raw HTML in Markdown, and indenting it leaves trailing space.
+	if (!inner || /\n[ \t]*\n/.test(inner)) return [];
 	const tags = [...inner.matchAll(/<\/?([a-zA-Z][\w-]*)/g)].map((match) => match[1].toLowerCase());
 	if (tags.some((name) => !INLINE.has(name))) return [];
 	const leading = /^\s*/.exec(content.text)[0];

@@ -560,7 +560,7 @@ describe('--fix', () => {
 		assert.equal(fixed('a.tsx', 'export const A = () => <nldd-text>Dakisolatie</nldd-text>;').text, 'export const A = () => <nldd-text><p>Dakisolatie</p></nldd-text>;');
 		assert.equal(fixed('a.html', '<nldd-text>Aanvraag <strong>A-1042</strong> is in behandeling.</nldd-text>').text, '<nldd-text><p>Aanvraag <strong>A-1042</strong> is in behandeling.</p></nldd-text>');
 		assert.equal(fixed('a.html', '<nldd-text>\n\tAanvraag <strong>A-1042</strong>\n</nldd-text>').text, '<nldd-text>\n\t<p>Aanvraag <strong>A-1042</strong></p>\n</nldd-text>');
-		for (const source of ['<nldd-text>a <div>b</div></nldd-text>', '<nldd-text>{{ a }}</nldd-text>', '<nldd-text><!-- x --> y</nldd-text>']) {
+		for (const source of ['<nldd-text>a <div>b</div></nldd-text>', '<nldd-text>{{ a }}</nldd-text>', '<nldd-text><!-- x --> y</nldd-text>', '<nldd-text>\n\tAanvraag A-1042\n\n\tDossier D-318\n</nldd-text>']) {
 			assert.equal(fixed('a.html', source).text, source);
 		}
 	});

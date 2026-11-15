@@ -73,8 +73,8 @@ let tooltipCounter = 0;
 const coarsePointerQuery = typeof matchMedia === 'function' ? matchMedia('(pointer: coarse)') : null;
 
 // Defaults mirror the values in tooltip.styles.ts. Used as fallback when the
-// CSS variable is unset or non-numeric — most often in SSR / early-load
-// environments where styles haven't reached the element yet. Without the
+// CSS variable is unset or non-numeric, most often while the styles have not
+// reached the element yet. Without the
 // fallback, parseInt('') returns NaN and setTimeout silently coerces it to
 // 0ms, so the tooltip would show instantly. Keep these in sync with CSS.
 const DEFAULT_SHOW_DELAY_MS = 700;
