@@ -11,7 +11,7 @@ interface TemplateHelpers {
 
 export function template(this: NLDDLink, helpers: TemplateHelpers) {
 	// The <a> of the app is the link: drawing one around it would nest two.
-	if (this._anchor) return html`<span class="anchor"><slot @slotchange=${helpers.handleDefaultSlotChange}></slot></span>`;
+	if (this._anchor) return html`<span class="link__anchor"><slot @slotchange=${helpers.handleDefaultSlotChange}></slot></span>`;
 	const resolvedRel = linkRel(this.rel, this.target);
 	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
 	// Suppressed when disabled (the <a> carries no href, so it doesn't navigate).

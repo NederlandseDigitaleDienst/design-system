@@ -45,6 +45,7 @@ for (const [subpath, target] of Object.entries(exports)) {
 if (failures.length > 0) {
 	console.error(`${failures.length} of ${checked} exports cannot be imported on a server:\n`);
 	for (const failure of failures) console.error(`  ${failure}`);
+	console.error('\nAn entry that only runs in a browser goes in BROWSER_ONLY in scripts/check-server-import.js.');
 	process.exit(1);
 }
 const left = Object.entries(skipped).filter(([, count]) => count > 0).map(([reason, count]) => `${count} ${reason}`);

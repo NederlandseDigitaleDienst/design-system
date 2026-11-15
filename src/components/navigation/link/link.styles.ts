@@ -127,7 +127,7 @@ export const linkStyles = css`
 
 	/* # Elements */
 
-	.anchor {
+	.link__anchor {
 		display: contents;
 	}
 
