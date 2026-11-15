@@ -74,9 +74,9 @@ const coarsePointerQuery = typeof matchMedia === 'function' ? matchMedia('(point
 
 // Defaults mirror the values in tooltip.styles.ts. Used as fallback when the
 // CSS variable is unset or non-numeric, most often while the styles have not
-// reached the element yet. Without the
-// fallback, parseInt('') returns NaN and setTimeout silently coerces it to
-// 0ms, so the tooltip would show instantly. Keep these in sync with CSS.
+// reached the element yet. Without the fallback, parseInt('') returns NaN and
+// setTimeout silently coerces it to 0ms, so the tooltip would show instantly.
+// Keep these in sync with CSS.
 const DEFAULT_SHOW_DELAY_MS = 700;
 const DEFAULT_HIDE_DELAY_MS = 50;
 
