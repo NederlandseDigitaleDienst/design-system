@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.25.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.24.0...v0.25.0) (2026-11-15)
+
 ### Highlights
 
 - **A slot for text takes a `<p>` or heading of your own** in `nldd-title`, `nldd-title-cell`, `nldd-text-cell` and `nldd-identity`, so the page has its paragraphs and headings in the HTML. Text straight in such a slot no longer gets a paragraph. See Breaking.
