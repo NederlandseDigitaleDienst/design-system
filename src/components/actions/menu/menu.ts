@@ -76,7 +76,8 @@ const HOVER_OPEN_MAX_MS = 150;
  * macOS does, so you see what you picked. After a tap there is no hover to
  * blink from, so the item lights up and holds a moment instead. `select`
  * fires at once: the action does not wait for the blink. With
- * `prefers-reduced-motion` the menu closes at once. A menu that scrolls fades at the edge where more items wait.
+ * `prefers-reduced-motion` the menu closes at once. A menu that scrolls
+ * fades at the edge where more items wait.
  *
  * Note: Only type="button" items are supported when used inside nldd-combo-box-field.
  * Radio and checkbox types may be used in standalone menus.
@@ -895,7 +896,8 @@ export class NLDDMenu extends LitElement {
 	private _notePress = (event: Event): void => {
 		this._pressedByTouch = (event as PointerEvent).pointerType === 'touch';
 	};
-	/** A touch that scrolls instead of selecting, or a menu that closes, ends the press. */
+	/** A press ends with its click, which reaches the menu after the item has
+	 *  selected, or with a touch that scrolls instead, or when the menu closes. */
 	private _forgetPress = (): void => {
 		this._pressedByTouch = false;
 	};
@@ -1030,6 +1032,7 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('pointerdown', this._notePress, true);
 		this.addEventListener('keydown', this._notePress, true);
 		this.addEventListener('pointercancel', this._forgetPress, true);
+		this.addEventListener('click', this._forgetPress);
 		document.addEventListener('click', this._handleDocumentClick);
 	}
 
@@ -1087,6 +1090,7 @@ export class NLDDMenu extends LitElement {
 		this.removeEventListener('pointerdown', this._notePress, true);
 		this.removeEventListener('keydown', this._notePress, true);
 		this.removeEventListener('pointercancel', this._forgetPress, true);
+		this.removeEventListener('click', this._forgetPress);
 		document.removeEventListener('click', this._handleDocumentClick);
 		// Defensive: the pointerdown + resize listeners are added on open
 		// and removed on close, but if the menu is torn down mid-open we'd

@@ -15,6 +15,7 @@ const root = resolve(import.meta.dirname, '..');
 const { exports } = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
 
 // The standalone bundle is for a plain <script src>, with the browser build of lit inlined.
+// A new entry that only runs in a browser goes here, or this check fails on it.
 const BROWSER_ONLY = new Set(['./bundle']);
 
 const failures = [];
