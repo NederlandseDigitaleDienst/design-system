@@ -20,9 +20,15 @@ const BROWSER_ONLY = new Set(['./bundle']);
 
 const failures = [];
 let checked = 0;
-const skipped = { 'not a script': 0, 'a wildcard': 0, 'browser only': 0 };
+const skipped = { 'not a script': 0, 'a wildcard': 0, 'browser only': 0, 'only types': 0 };
 for (const [subpath, target] of Object.entries(exports)) {
-	const file = typeof target === 'string' ? target : target.default;
+	const file = typeof target === 'string' ? target : (target.import ?? target.default);
+	// Conditions without a script would slip past the check unseen, unless they only carry types.
+	if (typeof target !== 'string' && !file) {
+		if (Object.keys(target).every((condition) => condition === 'types')) skipped['only types']++;
+		else failures.push(`${subpath}: no "import" or "default" condition to import`);
+		continue;
+	}
 	const reason = !file?.endsWith('.js') ? 'not a script' : file.includes('*') ? 'a wildcard' : BROWSER_ONLY.has(subpath) ? 'browser only' : null;
 	if (reason) {
 		skipped[reason]++;

@@ -897,7 +897,8 @@ export class NLDDMenu extends LitElement {
 		this._pressedByTouch = event.type === 'pointerdown' && (event as PointerEvent).pointerType === 'touch';
 	};
 	/** A press ends with its click, which reaches the menu after the item has
-	 *  selected, or with a touch that scrolls instead, or when the menu closes. */
+	 *  selected, or with a touch that scrolls instead, or when the menu closes.
+	 *  A disabled item fires no click, so a tap on one lasts until then. */
 	private _forgetPress = (): void => {
 		this._pressedByTouch = false;
 	};

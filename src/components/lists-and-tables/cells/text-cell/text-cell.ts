@@ -59,9 +59,9 @@
  * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive')
  */
 import { LitElement } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { holdsLooseText } from '../../../../utilities/slotted-block.js';
 import { setState } from '../../../../utilities/element-state.js';
-import { property, state } from 'lit/decorators.js';
 import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
