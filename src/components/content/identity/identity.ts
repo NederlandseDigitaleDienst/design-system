@@ -89,19 +89,30 @@ export class NLDDIdentity extends LitElement {
 	/** Tracks slot content so the text / supporting-text attribute fallbacks
 	 *  only render when their slot is empty. Bound per slot in the template via
 	 *  @slotchange, so Lit owns the listener lifecycle (it survives a
-	 *  move-and-reinsert) — no manual connect/disconnect bookkeeping. slotchange
-	 *  also fires for the initial assignment, so the first render is covered. */
+	 *  move-and-reinsert). */
 	_onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
-		const count = slot.assignedElements().length;
-		if (slot.name === 'avatars') {
-			this._avatarCount = slot.assignedElements()
-				.reduce((total, el) => total + (el.localName === 'nldd-avatar-group' ? el.children.length : 1), 0);
-			this._hasSlottedAvatars = count > 0;
-		}
-		else if (slot.name === 'text') this._hasSlottedText = count > 0;
-		else if (slot.name === 'supporting-text') this._hasSlottedSupportingText = count > 0;
+		this._readSlot(slot.name, slot.assignedElements());
 	};
+
+	/** Reads the children as the host connects, so the first render already
+	 *  draws the box that fits them instead of swapping it on slotchange. */
+	override connectedCallback(): void {
+		super.connectedCallback();
+		for (const name of ['avatars', 'text', 'supporting-text']) {
+			this._readSlot(name, [...this.children].filter((child) => child.getAttribute('slot') === name));
+		}
+	}
+
+	private _readSlot(name: string, assigned: Element[]): void {
+		if (name === 'avatars') {
+			this._avatarCount = assigned
+				.reduce((total, el) => total + (el.localName === 'nldd-avatar-group' ? el.children.length : 1), 0);
+			this._hasSlottedAvatars = assigned.length > 0;
+		}
+		else if (name === 'text') this._hasSlottedText = assigned.length > 0;
+		else if (name === 'supporting-text') this._hasSlottedSupportingText = assigned.length > 0;
+	}
 
 	override render() {
 		return identityTemplate(this);

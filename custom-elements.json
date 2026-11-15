@@ -52839,7 +52839,7 @@
         },
         {
           "kind": "class",
-          "description": "Tracks whether a slot holds something, for a component whose slot wins over\nan attribute. Pass `onChange` to the slot's `@slotchange` and render the\nattribute only while `has` is false:\n\n```ts\nprivate _textSlot = new SlotContent(this);\n// in the template\nhtml`${this._textSlot.has ? nothing : this.text}<slot",
+          "description": "Tracks whether the default slot holds something, for a component whose slot\nwins over an attribute. Pass `onChange` to the slot's `@slotchange` and render\nthe attribute only while `has` is false:\n\n```ts\nprivate _textSlot = new SlotContent(this);\n// in the template\nhtml`${this._textSlot.has ? nothing : this.text}<slot",
           "name": "SlotContent",
           "members": [
             {
@@ -52849,6 +52849,15 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",

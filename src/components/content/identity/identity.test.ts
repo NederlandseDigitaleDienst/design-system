@@ -209,6 +209,18 @@ describe('nldd-identity that swaps its box for a filled slot', () => {
 
 	afterEach(() => cleanup(el));
 
+	it('draws the box for its slotted text in the first render, so no swap follows', async () => {
+		el = document.createElement('nldd-identity');
+		el.innerHTML = '<p slot="text">Door Jan Jansen</p><nldd-avatar slot="avatars"></nldd-avatar><nldd-avatar slot="avatars"></nldd-avatar>';
+		const wrapper = document.createElement('div');
+		wrapper.append(el);
+		document.body.append(wrapper);
+		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		expect(el.shadowRoot!.querySelector('.identity__text')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.identity__supporting-text')?.localName ?? 'p').toBe('p');
+		expect((el as HTMLElement & { _avatarCount: number })._avatarCount).toBe(2);
+	});
+
 	it('settles after the swap: the slots stay, and slotchange stops', async () => {
 		el = await fixture('<nldd-identity><p slot="text">Door Jan Jansen</p><p slot="supporting-text">Team Uitvoering</p></nldd-identity>');
 		await waitForUpdate(el);
