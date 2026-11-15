@@ -20,9 +20,14 @@ const BROWSER_ONLY = new Set(['./bundle']);
 
 const failures = [];
 let checked = 0;
+const skipped = { 'not a script': 0, 'a wildcard': 0, 'browser only': 0 };
 for (const [subpath, target] of Object.entries(exports)) {
 	const file = typeof target === 'string' ? target : target.default;
-	if (!file?.endsWith('.js') || file.includes('*') || BROWSER_ONLY.has(subpath)) continue;
+	const reason = !file?.endsWith('.js') ? 'not a script' : file.includes('*') ? 'a wildcard' : BROWSER_ONLY.has(subpath) ? 'browser only' : null;
+	if (reason) {
+		skipped[reason]++;
+		continue;
+	}
 	checked++;
 	try {
 		await import(pathToFileURL(resolve(root, file)).href);
@@ -36,4 +41,5 @@ if (failures.length > 0) {
 	for (const failure of failures) console.error(`  ${failure}`);
 	process.exit(1);
 }
-console.log(`All ${checked} exports import on a server.`);
+const left = Object.entries(skipped).filter(([, count]) => count > 0).map(([reason, count]) => `${count} ${reason}`);
+console.log(`All ${checked} exports import on a server. Left out: ${left.join(', ')}.`);

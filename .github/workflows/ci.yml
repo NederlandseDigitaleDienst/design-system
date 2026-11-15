@@ -75,7 +75,7 @@ jobs:
       # A framework that renders on the server imports the package in Node, where
       # matchMedia and HTMLElement do not exist.
       - name: Verify every export imports on a server
-        run: node scripts/check-server-import.js
+        run: npm run check:server-import
       # The linter is what consumers run, from the tarball: lint/ has to be in it
       # and its dependencies have to resolve outside this repository.
       - name: Smoke test the packed linter

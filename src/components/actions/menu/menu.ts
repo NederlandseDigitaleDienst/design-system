@@ -894,7 +894,7 @@ export class NLDDMenu extends LitElement {
 	/** Whether the last press in this menu was a touch, so a tap gets no blink. */
 	private _pressedByTouch = false;
 	private _notePress = (event: Event): void => {
-		this._pressedByTouch = (event as PointerEvent).pointerType === 'touch';
+		this._pressedByTouch = event.type === 'pointerdown' && (event as PointerEvent).pointerType === 'touch';
 	};
 	/** A press ends with its click, which reaches the menu after the item has
 	 *  selected, or with a touch that scrolls instead, or when the menu closes. */

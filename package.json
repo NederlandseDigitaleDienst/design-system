@@ -596,6 +596,7 @@
     "generate:publiccode": "node scripts/sync-publiccode.js",
     "generate:skill-docs": "npm run generate:component-reference && npm run generate:skill-changelog && npm run generate:skill-principles && npm run generate:skill-patterns && npm run generate:plugin-version",
     "validate:styles": "node scripts/validate-css-variables.js",
+    "check:server-import": "node scripts/check-server-import.js",
     "validate:host-styles": "node scripts/validate-host-styles.js",
     "validate:component-api": "node scripts/validate-component-api.js",
     "validate:skill-markup": "node scripts/validate-skill-markup.js",
