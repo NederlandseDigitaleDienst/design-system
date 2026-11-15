@@ -391,3 +391,29 @@ describe('nldd-title-cell that swaps its box for a filled slot', () => {
 		expect(changes).toBe(0);
 	});
 });
+
+describe('nldd-title-cell whose slot fills and empties', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('swaps its box both ways and ends with the right one', async () => {
+		el = await fixture('<nldd-title-cell text="Dakisolatie" heading-level="3"></nldd-title-cell>');
+		await waitForUpdate(el);
+		const title = () => el.shadowRoot!.querySelector('.title-cell__title')!;
+		expect(title().localName).toBe('h3');
+		const heading = document.createElement('h3');
+		heading.textContent = 'Aanvraag A-1042';
+		el.append(heading);
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(title().localName).toBe('div');
+		expect(title().textContent!.trim()).toBe('');
+		heading.remove();
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(title().localName).toBe('h3');
+		expect(title().textContent!.trim()).toBe('Dakisolatie');
+		expect(el.shadowRoot!.querySelectorAll('slot:not([name])').length).toBe(1);
+	});
+});

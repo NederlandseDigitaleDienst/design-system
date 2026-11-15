@@ -14,6 +14,7 @@ import '../components/navigation/breadcrumbs/breadcrumbs.js';
 import '../components/layout/page-footer/page-footer.js';
 import '../components/status-and-feedback/step-bar/step-bar.js';
 import '../components/lists-and-tables/cells/icon-cell/icon-cell.js';
+import '../components/content/text/text.js';
 
 describe('hasSlotContent', () => {
 	let el: HTMLElement;
@@ -99,5 +100,28 @@ describe('slot wint van het attribuut', () => {
 		</nldd-icon-cell>`);
 		await settle();
 		expect(el.shadowRoot!.querySelector('nldd-icon')).not.toBeNull();
+	});
+});
+
+describe('SlotContent', () => {
+	let el: HTMLElement & { updateComplete: Promise<boolean> };
+	afterEach(() => el.remove());
+
+	it('knows the slot holds something from the first render, before the slot reports it', async () => {
+		el = document.createElement('nldd-text') as typeof el;
+		el.setAttribute('text', 'Dakisolatie');
+		el.innerHTML = '<p>Aanvraag A-1042</p>';
+		document.body.append(el);
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('.text')).toBeNull();
+	});
+
+	it('draws the attribute when only whitespace or a named slot is there', async () => {
+		el = document.createElement('nldd-text') as typeof el;
+		el.setAttribute('text', 'Dakisolatie');
+		el.innerHTML = '\n  <span slot="x"></span>\n';
+		document.body.append(el);
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('.text')!.textContent).toBe('Dakisolatie');
 	});
 });
