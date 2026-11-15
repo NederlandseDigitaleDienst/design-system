@@ -131,15 +131,7 @@ Sla bestanden over die geen route zijn, zoals een RSS-feed of een download zonde
 
 ## Renderen op de server
 
-Een framework dat op de server rendert (Next, Docusaurus, Remix) laadt je modules ook in Node, waar `customElements` niet bestaat. Laad de componenten daarom alleen in de browser, met een dynamische import achter een controle, en laat de server de tags gewoon als tekst uitschrijven:
-
-```ts
-if (typeof window !== 'undefined') {
-  void import('@nldd/design-system/autoloader');
-}
-```
-
-De stylesheet mag wel overal geïmporteerd worden. Wat er zonder script van de pagina overblijft, staat in [`SKILL.md`](SKILL.md) onder "Zonder JavaScript staat er geen kop".
+Een framework dat op de server rendert (Next, Docusaurus, Remix) laadt je modules ook in Node. Het pakket, elk subpad en het autoloader laden daar zonder fout, dus importeer ze gewoon waar je ze nodig hebt, net als de stylesheet. Een controle op `window` of een dynamische import eromheen is niet nodig. De server schrijft de tags als tekst uit, en in de browser worden het componenten. Wat er zonder script van de pagina overblijft, staat in [`SKILL.md`](SKILL.md) onder "Zonder JavaScript staat er geen kop".
 
 Typ refs naar een component met zijn eigen klasse, uit het subpad van dat component, zodat `tsc` de properties en methoden kent:
 
