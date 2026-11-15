@@ -38,7 +38,9 @@
  * the `<a>`, as it does to its own. A disabled link ignores a click before your
  * router sees it. The hint about
  * another website, a new tab or a download goes on it as `aria-description`, so
- * a screen reader reads it after the name. One `<a>` per link.
+ * a screen reader reads it after the name. Not as hidden text in the `<a>`: a
+ * framework that renders the `<a>` owns its children, and an extra one breaks
+ * hydration. One `<a>` per link.
  *
  * The look of the `<a>` comes from the global stylesheet, `dist/css/link.css`
  * or `global.css`, which includes it, so the link looks right before the
@@ -245,6 +247,9 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 		super.disconnectedCallback();
 		this.removeEventListener('click', this._blockDisabledAnchor, true);
 		this._anchorObserver?.disconnect();
+		// The <a> can outlive this link; connectedCallback finds it again on a move.
+		if (this._anchor) this._release(this._anchor);
+		this._anchor = null;
 	}
 
 	private _handleClick(e: MouseEvent): void {

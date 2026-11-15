@@ -355,6 +355,34 @@ describe('<nldd-link> with an <a> of its own', () => {
 		expect(own(el).getAttribute('aria-label')).toBe('Patronen bekijken');
 	});
 
+	it('leaves an attribute alone that the app changed after the link set it', async () => {
+		el = await fixture('<nldd-link accessible-label="Alle patronen"><a href="/patronen">Patronen</a></nldd-link>');
+		await waitForUpdate(el);
+		const a = own(el);
+		a.setAttribute('aria-label', 'Patronen bekijken');
+		(el as NLDDLink).accessibleLabel = 'Alle voorbeelden';
+		await waitForUpdate(el);
+		expect(a.getAttribute('aria-label')).toBe('Patronen bekijken');
+		(el as NLDDLink).accessibleLabel = '';
+		await waitForUpdate(el);
+		expect(a.getAttribute('aria-label')).toBe('Patronen bekijken');
+	});
+
+	it('takes back what it set when it leaves the page, and sets it again when it comes back', async () => {
+		el = await fixture('<div><nldd-link no-tab><a href="https://example.org/">Voorbeeld</a></nldd-link></div>');
+		const link = el.querySelector('nldd-link')!;
+		await waitForUpdate(link);
+		const a = own(link);
+		expect(a.getAttribute('tabindex')).toBe('-1');
+		link.remove();
+		expect(a.hasAttribute('tabindex')).toBe(false);
+		expect(a.hasAttribute('aria-description')).toBe(false);
+		el.append(link);
+		await waitForUpdate(link);
+		expect(a.getAttribute('tabindex')).toBe('-1');
+		expect(a.hasAttribute('aria-description')).toBe(true);
+	});
+
 	it('lets the popover of interestfor describe the <a>', async () => {
 		el = await fixture('<div><nldd-link interestfor="uitleg"><a href="/patronen">Patronen</a></nldd-link><nldd-popover id="uitleg">Hoe je componenten samenstelt</nldd-popover></div>');
 		const link = el.querySelector('nldd-link')!;

@@ -858,6 +858,9 @@ export class NLDDMenu extends LitElement {
 	 */
 	private _handleSelect = (event: Event): void => {
 		const item = event.target as HTMLElement;
+		// A select without a press first, from a screen reader or a script, is no tap.
+		const pressedByTouch = this._pressedByTouch;
+		this._pressedByTouch = false;
 		if (this._blinkTimer || item.hasAttribute('confirming')) return;
 		const button = item.localName === 'nldd-menu-item' ? item.shadowRoot?.querySelector('.menu__item') : null;
 		// A listbox belongs to a field, which shows the choice itself and closes it.
@@ -866,7 +869,7 @@ export class NLDDMenu extends LitElement {
 			return;
 		}
 		this._setHighlight(item as NLDDMenuItem);
-		item.setAttribute('confirming', this._pressedByTouch ? 'touch' : '');
+		item.setAttribute('confirming', pressedByTouch ? 'touch' : '');
 		let done = false;
 		const close = (): void => {
 			if (done) return;
