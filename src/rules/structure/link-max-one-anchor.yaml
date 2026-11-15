@@ -1,0 +1,7 @@
+severity: warn
+context: nldd-link
+count: { of: 'a:not([slot])', max: 1 }
+message: 'nldd-link holds more than one `<a>`. Give each link an nldd-link of its own.'
+examples:
+  passed: ['<nldd-link><a href="/patronen">Patronen</a></nldd-link>']
+  failed: ['<nldd-link><a href="/patronen">Patronen</a> en <a href="/componenten">componenten</a></nldd-link>']

@@ -756,7 +756,7 @@ export const MetUitlegOpInteresse = {
 							name="Sam de Vries"
 							size="24"
 						></nldd-avatar>
-						<nldd-text>Sam de Vries</nldd-text>
+						<nldd-text text="Sam de Vries"></nldd-text>
 					</nldd-container>
 					<nldd-container
 						layout="row"
@@ -767,7 +767,7 @@ export const MetUitlegOpInteresse = {
 							name="Noor Bakker"
 							size="24"
 						></nldd-avatar>
-						<nldd-text>Noor Bakker</nldd-text>
+						<nldd-text text="Noor Bakker"></nldd-text>
 					</nldd-container>
 				</nldd-container>
 			</nldd-popover>

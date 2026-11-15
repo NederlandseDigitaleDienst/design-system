@@ -56,6 +56,14 @@ describe('nldd-title', () => {
 		expect(el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="overline"]')!.assignedElements().length).toBeGreaterThan(0);
 	});
 
+	it('lays out a <p> of the app in the supporting-text slot as the attribute does', async () => {
+		el = await fixture('<nldd-title><h2>Aanvragen</h2><p slot="supporting-text">Ondertitel</p></nldd-title>');
+		await waitForUpdate(el);
+		const p = el.querySelector('p')!;
+		expect(getComputedStyle(p).marginBlockStart).toBe('0px');
+		expect(getComputedStyle(p).marginBlockEnd).toBe('0px');
+	});
+
 	it('renders slotted supporting-text content', async () => {
 		el = await fixture('<nldd-title><p slot="supporting-text">Ondertitel</p></nldd-title>');
 		await waitForUpdate(el);

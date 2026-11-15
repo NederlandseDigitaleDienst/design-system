@@ -6,4 +6,7 @@
 @import '../src/assets/styles/themes.css';
 @import '../src/assets/styles/document-reset.css';
 @import '../src/components/content/rich-text/rich-text.css';
+@import '../src/components/content/title/title.css';
+@import '../src/components/content/text/text.css';
+@import '../src/components/navigation/link/link.css';
 @import '../src/assets/styles/fouc.css';

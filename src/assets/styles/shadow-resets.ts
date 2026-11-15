@@ -39,6 +39,18 @@ export const slottedReset = css`
 `;
 
 /**
+ * A `<p>` or heading of the consumer in a slot whose box the component draws:
+ * it takes the text style of that box. `all: revert` drops what the page sets
+ * on its own paragraphs and headings; the margin and the heading size of the
+ * browser go with the two lines after it.
+ */
+export const slottedBlockReset = css`
+	all: revert !important;
+	margin: 0 !important;
+	font: inherit !important;
+`;
+
+/**
  * Inherited typography that the `font` shorthand does NOT cover and that a host
  * can otherwise leak into our text — directly (`a { text-decoration }`) or via
  * inheritance (`body { letter-spacing }`). Used in two places:

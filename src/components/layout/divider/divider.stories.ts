@@ -27,11 +27,7 @@ export default {
 };
 
 export const Standaard = () => html`
-	<nldd-text>
-		Inhoud boven de scheidingslijn.
-	</nldd-text>
+	<nldd-text text="Inhoud boven de scheidingslijn."></nldd-text>
 	<nldd-divider></nldd-divider>
-	<nldd-text>
-		Inhoud onder de scheidingslijn.
-	</nldd-text>
+	<nldd-text text="Inhoud onder de scheidingslijn."></nldd-text>
 `;

@@ -73,7 +73,9 @@ const HOVER_OPEN_MAX_MS = 150;
  * Use nldd-menu-item and nldd-menu-divider as children.
  *
  * A chosen item blinks once before the menu closes, as a native menu on
- * macOS does, so you see what you picked. `select` fires at once: the action
+ * macOS does, so you see what you picked. After a tap there is no hover to
+ * blink from, so the item lights up and holds a moment instead. `select`
+ * fires at once: the action
  * does not wait for the blink. With `prefers-reduced-motion` the menu closes
  * at once. A menu that scrolls fades at the edge where more items wait.
  *
@@ -864,7 +866,7 @@ export class NLDDMenu extends LitElement {
 			return;
 		}
 		this._setHighlight(item as NLDDMenuItem);
-		item.setAttribute('confirming', '');
+		item.setAttribute('confirming', this._pressedByTouch ? 'touch' : '');
 		let done = false;
 		const close = (): void => {
 			if (done) return;
@@ -886,6 +888,11 @@ export class NLDDMenu extends LitElement {
 	};
 
 	private _blinkTimer = 0;
+	/** Whether the last press in this menu was a touch, so a tap gets no blink. */
+	private _pressedByTouch = false;
+	private _notePress = (event: Event): void => {
+		this._pressedByTouch = (event as PointerEvent).pointerType === 'touch';
+	};
 	private _finishBlink: (() => void) | null = null;
 
 	/**
@@ -1014,6 +1021,8 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.addEventListener('submenu-open', this._handleSubmenuOpen);
 		this.addEventListener('select', this._handleSelect);
+		this.addEventListener('pointerdown', this._notePress, true);
+		this.addEventListener('keydown', this._notePress, true);
 		document.addEventListener('click', this._handleDocumentClick);
 	}
 
@@ -1068,6 +1077,8 @@ export class NLDDMenu extends LitElement {
 		this.removeEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.removeEventListener('submenu-open', this._handleSubmenuOpen);
 		this.removeEventListener('select', this._handleSelect);
+		this.removeEventListener('pointerdown', this._notePress, true);
+		this.removeEventListener('keydown', this._notePress, true);
 		document.removeEventListener('click', this._handleDocumentClick);
 		// Defensive: the pointerdown + resize listeners are added on open
 		// and removed on close, but if the menu is torn down mid-open we'd

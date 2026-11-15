@@ -199,7 +199,7 @@ export const VoorafIngevuld = {
 				size="xs"
 				color="secondary"
 			>
-				Auto-derive — alleen <code>value="nl"</code> gezet, de combo-box leest <code>text="Nederland"</code> van het matching menu-item.
+				<p>Auto-derive — alleen <code>value="nl"</code> gezet, de combo-box leest <code>text="Nederland"</code> van het matching menu-item.</p>
 			</nldd-text>
 			<nldd-spacer size="4"></nldd-spacer>
 			<nldd-combo-box
@@ -228,7 +228,7 @@ export const VoorafIngevuld = {
 				size="xs"
 				color="secondary"
 			>
-				Expliciet — <code>value</code> én <code>text</code> beide gezet (consumer bepaalt het label, bv. een custom format zoals <code>"Nederland (NL)"</code>).
+				<p>Expliciet — <code>value</code> én <code>text</code> beide gezet (consumer bepaalt het label, bv. een custom format zoals <code>"Nederland (NL)"</code>).</p>
 			</nldd-text>
 			<nldd-spacer size="4"></nldd-spacer>
 			<nldd-combo-box

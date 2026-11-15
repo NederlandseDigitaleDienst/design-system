@@ -110,9 +110,8 @@ export const Afbreken = {
 						size="sm"
 						weight="bold"
 						line-height="tight"
-					>
-						Zonder afbreking (standaard)
-					</nldd-text>
+						text="Zonder afbreking (standaard)"
+					></nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 280px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text spacing=${args.spacing}>${content}</nldd-rich-text>
@@ -124,7 +123,7 @@ export const Afbreken = {
 						weight="bold"
 						line-height="tight"
 					>
-						Met <code>hyphens</code>
+						<p>Met <code>hyphens</code></p>
 					</nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 280px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -216,9 +215,8 @@ export const Definitielijst = {
 						size="sm"
 						weight="bold"
 						line-height="tight"
-					>
-						sm (&lt; 641px) — gestapeld
-					</nldd-text>
+						text="sm (&lt; 641px) — gestapeld"
+					></nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
@@ -229,9 +227,8 @@ export const Definitielijst = {
 						size="sm"
 						weight="bold"
 						line-height="tight"
-					>
-						md (≥ 641px) — term links (240px), definitie rechts
-					</nldd-text>
+						text="md (≥ 641px) — term links (240px), definitie rechts"
+					></nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
@@ -242,9 +239,8 @@ export const Definitielijst = {
 						size="sm"
 						weight="bold"
 						line-height="tight"
-					>
-						lg (≥ 1008px) — term links (240px), definitie rechts
-					</nldd-text>
+						text="lg (≥ 1008px) — term links (240px), definitie rechts"
+					></nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
@@ -416,9 +412,8 @@ export const Witruimte = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-				>
-					flat
-				</nldd-text>
+					text="flat"
+				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-rich-text spacing="flat">
 					<h3>Wat telt als dakisolatie</h3>
@@ -434,9 +429,8 @@ export const Witruimte = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-				>
-					tight
-				</nldd-text>
+					text="tight"
+				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-rich-text spacing="tight">
 					<h3>Wat telt als dakisolatie</h3>
@@ -452,9 +446,8 @@ export const Witruimte = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-				>
-					snug (default)
-				</nldd-text>
+					text="snug (default)"
+				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-rich-text spacing="snug">
 					<h3>Wat telt als dakisolatie</h3>
@@ -470,9 +463,8 @@ export const Witruimte = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-				>
-					loose
-				</nldd-text>
+					text="loose"
+				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-rich-text spacing="loose">
 					<h3>Wat telt als dakisolatie</h3>
@@ -554,9 +546,8 @@ export const AlleGrootten = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-				>
-					sm (&lt; 641px) — beperkt tot 393px
-				</nldd-text>
+					text="sm (&lt; 641px) — beperkt tot 393px"
+				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text
@@ -577,9 +568,8 @@ export const AlleGrootten = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-				>
-					md (≥ 641px) — beperkt tot 834px
-				</nldd-text>
+					text="md (≥ 641px) — beperkt tot 834px"
+				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text
@@ -600,9 +590,8 @@ export const AlleGrootten = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-				>
-					lg (≥ 1008px) — beperkt tot 1200px
-				</nldd-text>
+					text="lg (≥ 1008px) — beperkt tot 1200px"
+				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text

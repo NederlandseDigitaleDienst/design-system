@@ -221,6 +221,7 @@ export const menuItemStyles = css`
 		--_menu-item-resting-content-color: var(--context-content-color);
 		--_menu-item-resting-content-secondary-color: var(--context-content-secondary-color);
 		--_menu-item-confirm-duration: var(--primitives-transition-duration-fast);
+		--_menu-item-confirm-hold-duration: var(--primitives-transition-duration-slow);
 
 		${inheritedTextReset}
 		display: block;
@@ -337,10 +338,15 @@ export const menuItemStyles = css`
 	/* ## Confirmed
 	 *
 	 * The chosen item blinks once before the menu closes, as on macOS: the
-	 * highlight goes off for a third of the duration and comes back. */
+	 * highlight goes off for a third of the duration and comes back. A tap
+	 * has no hover to blink from, so it holds the highlight instead. */
 
 	:host([confirming]) .menu__item {
 		animation: menu-item-confirm var(--_menu-item-confirm-duration) step-end;
+	}
+
+	:host([confirming="touch"]) .menu__item {
+		animation: menu-item-confirm-hold var(--_menu-item-confirm-hold-duration) step-end;
 	}
 
 	@keyframes menu-item-confirm {
@@ -350,6 +356,15 @@ export const menuItemStyles = css`
 			--context-content-secondary-color: var(--_menu-item-resting-content-secondary-color);
 		}
 		33.333% {
+			--_menu-item-background-color: var(--_menu-item-is-highlighted-background-color);
+			--context-content-color: var(--_menu-item-is-highlighted-content-color);
+			--context-content-secondary-color: var(--_menu-item-is-highlighted-content-color);
+		}
+	}
+
+
+	@keyframes menu-item-confirm-hold {
+		0%, 100% {
 			--_menu-item-background-color: var(--_menu-item-is-highlighted-background-color);
 			--context-content-color: var(--_menu-item-is-highlighted-content-color);
 			--context-content-secondary-color: var(--_menu-item-is-highlighted-content-color);

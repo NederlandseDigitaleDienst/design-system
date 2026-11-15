@@ -15,8 +15,8 @@ import './text.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-text>Toegewezen aan Yara Nijhuis</nldd-text>
- * <nldd-text size="sm" color="secondary">Vorige week bijgewerkt</nldd-text>
+ * <nldd-text text="Toegewezen aan Yara Nijhuis"></nldd-text>
+ * <nldd-text size="sm" color="secondary" text="Vorige week bijgewerkt"></nldd-text>
  * ```
  */
 export default {
@@ -94,7 +94,7 @@ export default {
 		},
 		text: {
 			control: 'text',
-			description: 'De tekst zelf (de default slot)',
+			description: 'Gewone tekst, getekend als een `<p>`. Een `<p>` of `<span>` in het slot neemt de plaats in.',
 		},
 	},
 };
@@ -119,7 +119,8 @@ const Template = ({
 		line-height=${lineHeight || nothing}
 		color=${color || nothing}
 		horizontal-alignment=${horizontalAlignment || nothing}
-	>${text}</nldd-text>
+		text="${text}"
+	></nldd-text>
 `;
 
 export const Standaard = {
@@ -133,11 +134,11 @@ export const Standaard = {
  */
 export const Grootten = {
 	render: () => html`
-		<nldd-text size="lg">lg — een regel op de grootste bodymaat</nldd-text>
-		<nldd-text size="md">md — de standaard</nldd-text>
-		<nldd-text size="sm">sm — een regel iets kleiner</nldd-text>
-		<nldd-text size="xs">xs — voor bijschriften</nldd-text>
-		<nldd-text size="xxs">xxs — het kleinste dat de schaal kent</nldd-text>
+		<nldd-text size="lg" text="lg — een regel op de grootste bodymaat"></nldd-text>
+		<nldd-text size="md" text="md — de standaard"></nldd-text>
+		<nldd-text size="sm" text="sm — een regel iets kleiner"></nldd-text>
+		<nldd-text size="xs" text="xs — voor bijschriften"></nldd-text>
+		<nldd-text size="xxs" text="xxs — het kleinste dat de schaal kent"></nldd-text>
 	`,
 };
 
@@ -150,12 +151,12 @@ export const Grootten = {
 export const DisplayMaten = {
 	name: 'Display-maten',
 	render: () => html`
-	<nldd-text size="display-6">display-6</nldd-text>
-	<nldd-text size="display-5">display-5</nldd-text>
-	<nldd-text size="display-4">display-4</nldd-text>
-	<nldd-text size="display-3">display-3</nldd-text>
-	<nldd-text size="display-2">display-2</nldd-text>
-	<nldd-text size="display-1">display-1</nldd-text>
+	<nldd-text size="display-6" text="display-6"></nldd-text>
+	<nldd-text size="display-5" text="display-5"></nldd-text>
+	<nldd-text size="display-4" text="display-4"></nldd-text>
+	<nldd-text size="display-3" text="display-3"></nldd-text>
+	<nldd-text size="display-2" text="display-2"></nldd-text>
+	<nldd-text size="display-1" text="display-1"></nldd-text>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -170,8 +171,8 @@ export const DisplayMaten = {
 export const EigenGrootte = {
 	name: 'Eigen grootte',
 	render: () => html`
-	<nldd-text size="display-1" sm-custom-size="64px" md-custom-size="96px" lg-custom-size="128px">245</nldd-text>
-	<nldd-text size="lg" color="secondary">regels voor toegankelijkheid en gebruiksgemak</nldd-text>
+	<nldd-text size="display-1" sm-custom-size="64px" md-custom-size="96px" lg-custom-size="128px" text="245"></nldd-text>
+	<nldd-text size="lg" color="secondary" text="regels voor toegankelijkheid en gebruiksgemak"></nldd-text>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -183,9 +184,9 @@ export const EigenGrootte = {
  */
 export const Gewichten = {
 	render: () => html`
-		<nldd-text weight="regular">regular — met <strong>nadruk</strong> erin</nldd-text>
-		<nldd-text weight="medium">medium — met <strong>nadruk</strong> erin</nldd-text>
-		<nldd-text weight="bold">bold — met <strong>nadruk</strong> erin</nldd-text>
+		<nldd-text weight="regular"><p>regular — met <strong>nadruk</strong> erin</p></nldd-text>
+		<nldd-text weight="medium"><p>medium — met <strong>nadruk</strong> erin</p></nldd-text>
+		<nldd-text weight="bold"><p>bold — met <strong>nadruk</strong> erin</p></nldd-text>
 	`,
 };
 
@@ -196,10 +197,10 @@ export const Gewichten = {
 export const Regelhoogtes = {
 	render: () => html`
 		<div style="display: grid; gap: 16px; max-width: 320px;">
-			<nldd-text line-height="flat">flat — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet.</nldd-text>
-			<nldd-text line-height="tight">tight — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet.</nldd-text>
-			<nldd-text line-height="snug">snug — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet.</nldd-text>
-			<nldd-text line-height="loose">loose — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet.</nldd-text>
+			<nldd-text line-height="flat" text="flat — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
+			<nldd-text line-height="tight" text="tight — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
+			<nldd-text line-height="snug" text="snug — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
+			<nldd-text line-height="loose" text="loose — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
 		</div>
 	`,
 };
@@ -210,12 +211,12 @@ export const Regelhoogtes = {
  */
 export const Kleuren = {
 	render: () => html`
-		<nldd-text color="content">content</nldd-text>
-		<nldd-text color="secondary">secondary</nldd-text>
-		<nldd-text color="accent">accent</nldd-text>
-		<nldd-text color="success">success</nldd-text>
-		<nldd-text color="warning">warning</nldd-text>
-		<nldd-text color="critical">critical</nldd-text>
+		<nldd-text color="content" text="content"></nldd-text>
+		<nldd-text color="secondary" text="secondary"></nldd-text>
+		<nldd-text color="accent" text="accent"></nldd-text>
+		<nldd-text color="success" text="success"></nldd-text>
+		<nldd-text color="warning" text="warning"></nldd-text>
+		<nldd-text color="critical" text="critical"></nldd-text>
 	`,
 };
 
@@ -226,9 +227,9 @@ export const Kleuren = {
 export const HorizontaleUitlijning = {
 	render: () => html`
 		<div style="display: grid; gap: 8px; max-width: 320px;">
-			<nldd-text horizontal-alignment="left">left</nldd-text>
-			<nldd-text horizontal-alignment="center">center</nldd-text>
-			<nldd-text horizontal-alignment="right">right</nldd-text>
+			<nldd-text horizontal-alignment="left" text="left"></nldd-text>
+			<nldd-text horizontal-alignment="center" text="center"></nldd-text>
+			<nldd-text horizontal-alignment="right" text="right"></nldd-text>
 		</div>
 	`,
 };
@@ -241,12 +242,14 @@ export const HorizontaleUitlijning = {
 export const InlineElementen = {
 	render: () => html`
 		<nldd-text>
-			Aanvraag A-1042 is <strong>in behandeling</strong> en wacht op een <em>controle</em>.
-			Zet <code>no-picker</code> om de knop weg te laten, lees meer over
-			<a href="#dakisolatie">de voorwaarden voor dakisolatie</a>, of let op de
-			<mark>gemarkeerde datum</mark>.
-			<a href="#anouk" data-mention>Anouk de Vries</a> vroeg om <q>een nieuwe offerte</q>, en
-			<span data-mention>Bram Jansen</span> kijkt mee.
+			<p>
+				Aanvraag A-1042 is <strong>in behandeling</strong> en wacht op een <em>controle</em>.
+				Zet <code>no-picker</code> om de knop weg te laten, lees meer over
+				<a href="#dakisolatie">de voorwaarden voor dakisolatie</a>, of let op de
+				<mark>gemarkeerde datum</mark>.
+				<a href="#anouk" data-mention>Anouk de Vries</a> vroeg om <q>een nieuwe offerte</q>, en
+				<span data-mention>Bram Jansen</span> kijkt mee.
+			</p>
 		</nldd-text>
 	`,
 };

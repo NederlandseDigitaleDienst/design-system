@@ -148,9 +148,7 @@ const Template = ({
 export const Standaard = Template.bind({});
 
 export const Kwartieren = () => html`
-	<nldd-text>
-		Stap 15: bij verlaten van het veld rondt de invoer af op het dichtstbijzijnde kwartier, en de pijltjestoetsen verspringen met een kwartier.
-	</nldd-text>
+	<nldd-text text="Stap 15: bij verlaten van het veld rondt de invoer af op het dichtstbijzijnde kwartier, en de pijltjestoetsen verspringen met een kwartier."></nldd-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
 		step="15"
@@ -160,7 +158,7 @@ export const Kwartieren = () => html`
 
 export const StapVanafMin = () => html`
 	<nldd-text>
-		De stap telt vanaf <code>min</code>, dus deze reeks loopt 09:07, 09:22, 09:37.
+		<p>De stap telt vanaf <code>min</code>, dus deze reeks loopt 09:07, 09:22, 09:37.</p>
 	</nldd-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
@@ -172,7 +170,7 @@ export const StapVanafMin = () => html`
 
 export const Kantooruren = () => html`
 	<nldd-text>
-		Buiten <code>min</code> en <code>max</code> blijft de getypte tekst staan, maar de waarde is leeg.
+		<p>Buiten <code>min</code> en <code>max</code> blijft de getypte tekst staan, maar de waarde is leeg.</p>
 	</nldd-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
@@ -184,9 +182,7 @@ export const Kantooruren = () => html`
 `;
 
 export const MetPicker = () => html`
-	<nldd-text>
-		De knop opent een popover met twee kolommen. Op een klein scherm wordt dat een bottom sheet met een titelbalk.
-	</nldd-text>
+	<nldd-text text="De knop opent een popover met twee kolommen. Op een klein scherm wordt dat een bottom sheet met een titelbalk."></nldd-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
 		value="09:30"
@@ -197,7 +193,7 @@ export const MetPicker = () => html`
 
 export const ZonderPicker = () => html`
 	<nldd-text>
-		Met <code>no-picker</code> vervalt de knop; het veld blijft precies breed genoeg voor een tijd en het validatie-icoon.
+		<p>Met <code>no-picker</code> vervalt de knop; het veld blijft precies breed genoeg voor een tijd en het validatie-icoon.</p>
 	</nldd-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field

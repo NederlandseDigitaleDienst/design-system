@@ -1,16 +1,24 @@
-import { html, nothing } from 'lit';
+import { nothing } from 'lit';
+import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
 import type { NLDDTextCell } from './text-cell.js';
 import { renderQueryMark } from '../../../../utilities/render-marked.js';
 
+const DIV = unsafeStatic('div');
+const P = unsafeStatic('p');
+
 export function template(this: NLDDTextCell) {
+	// A filled slot gets a <div> around it: the <p> of the app carries the meaning.
+	const overlineTag = this._hasOverlineSlotted ? DIV : P;
+	const textTag = this._hasDefaultSlotted ? DIV : P;
+	const supportingTextTag = this._hasSupportingTextSlotted ? DIV : P;
 	// Fallback content is rendered as a sibling of the slot, NOT inside it.
 	// Native slot fallback gets suppressed as soon as ANY node is assigned to
 	// the slot — including whitespace-only text nodes that consumers introduce
 	// inadvertently (e.g. from formatting or self-closing custom-element tags).
 	// By rendering the attribute path outside the slot, we control visibility
 	// purely via the `_has*Slotted` state (which filters whitespace).
-	return html`
-		<p
+	return staticHtml`
+		<${overlineTag}
 			class="text-cell__overline"
 			?hidden=${!this.overline && !this._hasOverlineSlotted}
 		>
@@ -21,8 +29,8 @@ export function template(this: NLDDTextCell) {
 				name="overline"
 				@slotchange=${this._onSlotChange}
 			></slot>
-		</p>
-		<p
+		</${overlineTag}>
+		<${textTag}
 			class="text-cell__text"
 			?hidden=${!this.text && !this._hasDefaultSlotted}
 		>
@@ -30,8 +38,8 @@ export function template(this: NLDDTextCell) {
 				? renderQueryMark(this.text, this.query, this.queryMarkMode)
 				: nothing}
 			<slot @slotchange=${this._onSlotChange}></slot>
-		</p>
-		<p
+		</${textTag}>
+		<${supportingTextTag}
 			class="text-cell__supporting-text"
 			?hidden=${!this.supportingText && !this._hasSupportingTextSlotted}
 		>
@@ -42,6 +50,6 @@ export function template(this: NLDDTextCell) {
 				name="supporting-text"
 				@slotchange=${this._onSlotChange}
 			></slot>
-		</p>
+		</${supportingTextTag}>
 	`;
 }

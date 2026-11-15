@@ -189,3 +189,17 @@ describe('nldd-identity', () => {
 		expect(el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="avatars"]')!.assignedElements().length).toBe(1);
 	});
 });
+
+describe('nldd-identity with a <p> of its own in a slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws a plain box around the <p>, so the two do not nest', async () => {
+		el = await fixture('<nldd-identity><p slot="text">Door Jan Jansen</p><p slot="supporting-text"><time datetime="2026-07-13">13 juli</time></p></nldd-identity>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.identity__text')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.identity__supporting-text')!.localName).toBe('div');
+		expect(getComputedStyle(el.querySelector('p')!).marginBlockStart).toBe('0px');
+	});
+});

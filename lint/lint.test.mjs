@@ -555,6 +555,46 @@ describe('--fix', () => {
 		assert.equal(text, '<nldd-button text=" variant=x" appearance="primary"></nldd-button><div variant="a"></div><nldd-progress-bar variant="b"></nldd-progress-bar>');
 	});
 
+	it('moves plain text into an attribute, on the line of its own when the tag has them', () => {
+		assert.equal(fixed('a.html', '<nldd-text>Dakisolatie, in behandeling</nldd-text>').text, '<nldd-text text="Dakisolatie, in behandeling"></nldd-text>');
+		assert.equal(fixed('a.html', '<nldd-text size="sm">Een &amp; "twee"</nldd-text>').text, '<nldd-text size="sm" text="Een &amp; &quot;twee&quot;"></nldd-text>');
+		assert.equal(fixed('a.html', '<nldd-text\n\tsize="sm"\n>Dakisolatie</nldd-text>').text, '<nldd-text\n\tsize="sm"\n\ttext="Dakisolatie"\n></nldd-text>');
+		assert.equal(fixed('a.tsx', 'export const A = () => <nldd-text>Dakisolatie</nldd-text>;').text, 'export const A = () => <nldd-text text="Dakisolatie"></nldd-text>;');
+	});
+
+	it('wraps text with inline elements, and leaves a block or a template alone', () => {
+		assert.equal(fixed('a.html', '<nldd-text>Aanvraag <strong>A-1042</strong> is in behandeling.</nldd-text>').text, '<nldd-text><p>Aanvraag <strong>A-1042</strong> is in behandeling.</p></nldd-text>');
+		assert.equal(fixed('a.html', '<nldd-text>\n\tAanvraag <strong>A-1042</strong>\n</nldd-text>').text, '<nldd-text>\n\t<p>Aanvraag <strong>A-1042</strong></p>\n</nldd-text>');
+		for (const source of ['<nldd-text>a <div>b</div></nldd-text>', '<nldd-text>{{ a }}</nldd-text>', '<nldd-text><!-- x --> y</nldd-text>']) {
+			assert.equal(fixed('a.html', source).text, source);
+		}
+	});
+
+	it('reads a folder with JSX in a .js file, and renames a tag there that closes itself', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.js'), 'export const A = () => <nldd-app-view />;\n');
+		const { stderr } = run(root, 'lint', '--fix', '.');
+		assert.equal(readFileSync(join(root, 'a.js'), 'utf8'), 'export const A = () => <nldd-shell />;\n');
+		assert.match(stderr, /Fixed 1 in 1 of 1 files/);
+	});
+
+	it('leaves a bundle alone, which carries the styles of the components', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'index-a1b2c3d4.js'), `const s=\`:host{--_button-gap:0}\`;${'x'.repeat(2000)}\n`);
+		writeFileSync(join(root, 'app.min.js'), 'const a = html`<nldd-button foo="b"></nldd-button>`;\n');
+		const { stdout } = run(root, 'lint', '.');
+		assert.match(stdout, /0 errors, 0 warnings in 0 files/);
+	});
+
+	it('reads MDX in a folder, and renames a tag in the prose and in a mention', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.mdx'), '# Kop\n\n<nldd-app-view>\n<nldd-text>los</nldd-text>\n</nldd-app-view>\n\nZie `<nldd-app-view>`.\n');
+		writeFileSync(join(root, 'CHANGELOG.md'), 'Zie `<nldd-app-view>`.\n');
+		run(root, 'lint', '--fix', '.');
+		assert.equal(readFileSync(join(root, 'a.mdx'), 'utf8'), '# Kop\n\n<nldd-shell>\n<nldd-text text="los"></nldd-text>\n</nldd-shell>\n\nZie `<nldd-shell>`.\n');
+		assert.equal(readFileSync(join(root, 'CHANGELOG.md'), 'utf8'), 'Zie `<nldd-app-view>`.\n');
+	});
+
 	it('does not choose between two attributes', () => {
 		const source = '<nldd-button text="a" variant="primary" appearance="secondary"></nldd-button>';
 		assert.equal(fixed('a.html', source).text, source);
@@ -1132,6 +1172,54 @@ describe('found in the sixth review', () => {
 		assert.deepEqual(found.flat(), []);
 	});
 
+	it('reads the markup in the prose of a Markdown file', async () => {
+		assert.deepEqual(await rulesIn('Tekst met <nldd-gone></nldd-gone> erin.', 'a.md'), ['unknown-element']);
+		assert.deepEqual(await rulesIn('Zie <https://example.com>.\n\n<nldd-button text="a" foo="b"></nldd-button>', 'a.md'), ['unknown-attribute']);
+	});
+
+	it('takes text after a blank line in Markdown for a paragraph, and text before it for raw HTML', async () => {
+		assert.deepEqual(await rulesIn('<nldd-text>\n\nAanvraag A-1042 is in behandeling.\n\n</nldd-text>', 'a.md'), []);
+		assert.deepEqual(await rulesIn('<nldd-text>\nAanvraag A-1042 is in behandeling.\n</nldd-text>', 'a.md'), ['text-needs-element']);
+	});
+
+	it('reads a Docusaurus page in MDX', async () => {
+		const source = [
+			'---',
+			'title: Mijn Dienst',
+			'---',
+			"import Tabs from '@theme/Tabs';",
+			"export const status = { a: 'b' };",
+			'',
+			'# Aanvragen',
+			'',
+			'<nldd-text>',
+			'Aanvraag {props.id} is in behandeling.',
+			'</nldd-text>',
+			'',
+			'<Tabs>',
+			'<nldd-button text={t("Bewaar")} onClick={() => save(a > b)} className="x" key="1"></nldd-button>',
+			'</Tabs>',
+			'',
+			'<nldd-text>{props.status}</nldd-text>',
+			'',
+			'```html',
+			'<nldd-text>Een voorbeeld</nldd-text>',
+			'```',
+		].join('\n');
+		assert.deepEqual(await rulesIn(source, 'a.mdx'), ['text-needs-element']);
+	});
+
+	it('takes text on the line of its tag in MDX for text, and on a line of its own for a paragraph', async () => {
+		assert.deepEqual(await rulesIn('<nldd-text>Dossier D-318</nldd-text>', 'a.mdx'), ['text-needs-element']);
+		assert.deepEqual(await rulesIn('<nldd-text>\nDossier D-318\n</nldd-text>', 'a.mdx'), []);
+	});
+
+	it('still checks what MDX writes in a tag next to a spread, and honors a suppression in a comment', async () => {
+		assert.deepEqual(await rulesIn('<nldd-button text="a" foo="b" {...rest}></nldd-button>', 'a.mdx'), ['unknown-attribute']);
+		const suppressed = '{/* nldd-lint-disable-next-line unknown-element -- demo */}\n<nldd-gone></nldd-gone>';
+		assert.deepEqual(await rulesIn(suppressed, 'a.mdx'), []);
+	});
+
 	it('closes a self-closing tag with a listener that has a dash', async () => {
 		const source = '<nldd-notification><nldd-button slot="actions" text="a" (action-click)="a()" /><nldd-button slot="actions" text="b" (action-click)="b()" /></nldd-notification>';
 		assert.deepEqual(await rulesIn(source, 'a.html'), []);
@@ -1614,7 +1702,7 @@ describe('CSS', () => {
 
 	it('reads a token wherever the file names it, in a style element, attribute or object', async () => {
 		assert.deepEqual(await rulesIn('<html><head><style>.a { color: var(--semantics-nope) }</style></head></html>', 'a.html'), ['token-not-found']);
-		assert.deepEqual(await rulesIn('<nldd-text style="color: var(--semantics-nope)">a</nldd-text>', 'a.html'), ['token-not-found']);
+		assert.deepEqual(await rulesIn('<nldd-text text="a" style="color: var(--semantics-nope)"></nldd-text>', 'a.html'), ['token-not-found']);
 		assert.deepEqual(await rulesIn('export const A = () => <div style={{ color: "var(--semantics-nope)" }} />;', 'a.tsx'), ['token-not-found']);
 	});
 
@@ -1626,7 +1714,7 @@ describe('CSS', () => {
 
 	it('skips a comment, also a line comment in Sass, but not a url in a page', async () => {
 		assert.deepEqual(await rulesIn('/* var(--semantics-nope) */\n// var(--semantics-nope)\n.a {}', 'a.scss'), []);
-		assert.deepEqual(await rulesIn('<a href=//example.com>a</a><nldd-text style="color: var(--semantics-nope)">a</nldd-text>', 'a.html'), ['token-not-found']);
+		assert.deepEqual(await rulesIn('<a href=//example.com>a</a><nldd-text text="a" style="color: var(--semantics-nope)"></nldd-text>', 'a.html'), ['token-not-found']);
 	});
 
 	it('reports an internal variable of a component that the app sets, and not one of its own', async () => {
@@ -1702,6 +1790,11 @@ describe('markup the linter cannot read', () => {
 	it('reads a Go template and Lit in a JavaScript file', async () => {
 		assert.deepEqual(await rulesIn('{{define "x"}}<nldd-button text="a" foo="b"></nldd-button>{{end}}', 'a.tmpl'), ['unknown-attribute']);
 		assert.deepEqual(await rulesIn('html`<nldd-button text="a" foo="b"></nldd-button>`;', 'a.js'), ['unknown-attribute']);
+	});
+
+	it('reads JSX in a JavaScript file, and says so where it does not parse', async () => {
+		assert.deepEqual(await rulesIn('export const A = () => <nldd-button text="a" foo="b" />;', 'a.js'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn('const a = "<nldd-button>";\nconst b = (c: number) => c;', 'b.js'), ['file-not-read']);
 	});
 
 	it('does not count what a markup parser skips on purpose', async () => {

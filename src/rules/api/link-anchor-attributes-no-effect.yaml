@@ -1,0 +1,11 @@
+severity: warn
+context: 'nldd-link:has(> a:not([slot]))'
+assert: ':not([href]):not([target]):not([rel]):not([download]):not([text]):not([start-icon]):not([end-icon])'
+message: 'nldd-link holds an `<a>` of its own, so `href`, `target`, `rel`, `download`, `text`, `start-icon` and `end-icon` on nldd-link do nothing. Put them on the `<a>`, and an icon in it as nldd-icon.'
+examples:
+  passed:
+    - '<nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link>'
+    - '<nldd-link href="/patronen" text="Patronen"></nldd-link>'
+  failed:
+    - '<nldd-link href="/patronen"><a href="/patronen">Patronen</a></nldd-link>'
+    - '<nldd-link end-icon="chevron-right"><a href="/patronen">Patronen</a></nldd-link>'

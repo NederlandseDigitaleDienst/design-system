@@ -102,9 +102,17 @@ Bij `expanded` op een rij zonder kinderen betekent afwezig "niet uitklapbaar". Z
 
 ## Links in een shadow root en je router
 
-React Router, de `Link` van Next en de router van Docusaurus vangen klikken op hun eigen `<a>`-elementen. Een `nldd-link`, een `nldd-card` met `href` of een `nldd-list-item` met `href` rendert zijn anker in een shadow root, en dat ziet de router niet. Elke klik laadt dan de hele pagina opnieuw. Er gaat niets stuk en er komt geen waarschuwing; de site wordt alleen trager en verliest zijn state.
+React Router, de `Link` van Next en de router van Docusaurus vangen klikken op hun eigen `<a>`-elementen. Een `nldd-link` met `href`, een `nldd-card` met `href` of een `nldd-list-item` met `href` rendert zijn anker in een shadow root, en dat ziet de router niet. Elke klik laadt dan de hele pagina opnieuw. Er gaat niets stuk en er komt geen waarschuwing; de site wordt alleen trager en verliest zijn state.
 
-Eén listener op `document` lost het op voor de hele app. `composedPath()` geeft ook het anker in de shadow root:
+Zet bij `nldd-link` de `Link` van je router in het slot. Die rendert een `<a>`, het component geeft hem zijn opmaak, en de router krijgt de klik:
+
+```tsx
+<nldd-link size="md">
+  <Link to="/aanvragen/A-1042">Aanvraag A-1042</Link>
+</nldd-link>
+```
+
+Zet `href`, `target` en een icoon dan op of in de `Link`, niet op `nldd-link`. Een `nldd-card` en een `nldd-list-item` met `href` nemen nog geen eigen `<a>`. Voor die twee lost één listener op `document` het op, voor de hele app. `composedPath()` geeft ook het anker in de shadow root:
 
 ```tsx
 useEffect(() => {

@@ -246,9 +246,7 @@ export const KleurContent = {
 					color="content"
 					size="24"
 				></nldd-avatar>
-				<nldd-text>
-					Bart van de Biezen
-				</nldd-text>
+				<nldd-text text="Bart van de Biezen"></nldd-text>
 			</span>
 			<span style="display: inline-flex; align-items: center; gap: 8px; --context-content-color: var(--semantics-content-accent-color); color: var(--semantics-content-accent-color);">
 				<nldd-avatar
@@ -256,9 +254,7 @@ export const KleurContent = {
 					color="content"
 					size="24"
 				></nldd-avatar>
-				<nldd-text>
-					Anna Ismaili
-				</nldd-text>
+				<nldd-text text="Anna Ismaili"></nldd-text>
 			</span>
 		</nldd-container>
 	`,
@@ -283,9 +279,8 @@ export const IcoonUitlijning = {
 					size="xs"
 					line-height="flat"
 					color="secondary"
-				>
-					icoon
-				</nldd-text>
+					text="icoon"
+				></nldd-text>
 				<nldd-icon
 					icon="person"
 					size="24"
@@ -297,9 +292,8 @@ export const IcoonUitlijning = {
 					size="xs"
 					line-height="flat"
 					color="secondary"
-				>
-					avatar (edge-to-edge)
-				</nldd-text>
+					text="avatar (edge-to-edge)"
+				></nldd-text>
 				<nldd-avatar
 					name="Bart van de Biezen"
 					size="24"
@@ -311,9 +305,8 @@ export const IcoonUitlijning = {
 					size="xs"
 					line-height="flat"
 					color="secondary"
-				>
-					avatar (icon-aligned)
-				</nldd-text>
+					text="avatar (icon-aligned)"
+				></nldd-text>
 				<nldd-avatar
 					name="Bart van de Biezen"
 					size="24"

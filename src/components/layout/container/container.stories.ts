@@ -42,8 +42,8 @@ const sizeControl = (description: string) => ({
  * 	padding="16"
  * 	sm-padding="8"
  * >
- *   <nldd-text>Eerste item</nldd-text>
- *   <nldd-text>Tweede item</nldd-text>
+ *   <nldd-text text="Eerste item"></nldd-text>
+ *   <nldd-text text="Tweede item"></nldd-text>
  * </nldd-container>
  * ```
  */
@@ -271,8 +271,8 @@ export const Standaard = {
 			vertical-alignment=${ifDefined(args.verticalAlignment)}
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Eerste item.</nldd-text>
-			<nldd-text>Tweede item.</nldd-text>
+			<nldd-text text="Eerste item."></nldd-text>
+			<nldd-text text="Tweede item."></nldd-text>
 		</nldd-container>
 	`,
 };
@@ -284,9 +284,9 @@ export const LayoutStack = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Eerste</nldd-text>
-			<nldd-text>Tweede</nldd-text>
-			<nldd-text>Derde</nldd-text>
+			<nldd-text text="Eerste"></nldd-text>
+			<nldd-text text="Tweede"></nldd-text>
+			<nldd-text text="Derde"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Layout: stack (standaard)',
@@ -300,9 +300,9 @@ export const LayoutRow = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Eerste</nldd-text>
-			<nldd-text>Tweede</nldd-text>
-			<nldd-text>Derde</nldd-text>
+			<nldd-text text="Eerste"></nldd-text>
+			<nldd-text text="Tweede"></nldd-text>
+			<nldd-text text="Derde"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Layout: row',
@@ -355,12 +355,12 @@ export const LayoutGrid = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Cell één</nldd-text>
-			<nldd-text>Cell twee</nldd-text>
-			<nldd-text>Cell drie</nldd-text>
-			<nldd-text>Cell vier</nldd-text>
-			<nldd-text>Cell vijf</nldd-text>
-			<nldd-text>Cell zes</nldd-text>
+			<nldd-text text="Cell één"></nldd-text>
+			<nldd-text text="Cell twee"></nldd-text>
+			<nldd-text text="Cell drie"></nldd-text>
+			<nldd-text text="Cell vier"></nldd-text>
+			<nldd-text text="Cell vijf"></nldd-text>
+			<nldd-text text="Cell zes"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Layout: grid (auto-fit, min 280px)',
@@ -374,14 +374,14 @@ export const LayoutColumns = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Eerste link in de lijst</nldd-text>
-			<nldd-text>Tweede link</nldd-text>
-			<nldd-text>Derde link in de lijst</nldd-text>
-			<nldd-text>Vierde link</nldd-text>
-			<nldd-text>Vijfde link in de lijst</nldd-text>
-			<nldd-text>Zesde link</nldd-text>
-			<nldd-text>Zevende link in de lijst</nldd-text>
-			<nldd-text>Achtste link</nldd-text>
+			<nldd-text text="Eerste link in de lijst"></nldd-text>
+			<nldd-text text="Tweede link"></nldd-text>
+			<nldd-text text="Derde link in de lijst"></nldd-text>
+			<nldd-text text="Vierde link"></nldd-text>
+			<nldd-text text="Vijfde link in de lijst"></nldd-text>
+			<nldd-text text="Zesde link"></nldd-text>
+			<nldd-text text="Zevende link in de lijst"></nldd-text>
+			<nldd-text text="Achtste link"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Layout: columns (multicol, min 280px)',
@@ -438,10 +438,10 @@ export const OrderRow = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text order="4">1 (order=4)</nldd-text>
-			<nldd-text order="3">2 (order=3)</nldd-text>
-			<nldd-text order="2">3 (order=2)</nldd-text>
-			<nldd-text order="1">4 (order=1)</nldd-text>
+			<nldd-text order="4" text="1 (order=4)"></nldd-text>
+			<nldd-text order="3" text="2 (order=3)"></nldd-text>
+			<nldd-text order="2" text="3 (order=2)"></nldd-text>
+			<nldd-text order="1" text="4 (order=1)"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Order: row (omgekeerd via per-child order)',
@@ -455,12 +455,12 @@ export const OrderGrid = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text order="3">1 (order=3)</nldd-text>
-			<nldd-text order="1">2 (order=1)</nldd-text>
-			<nldd-text order="2">3 (order=2)</nldd-text>
-			<nldd-text order="4">4 (order=4)</nldd-text>
-			<nldd-text order="6">5 (order=6)</nldd-text>
-			<nldd-text order="5">6 (order=5)</nldd-text>
+			<nldd-text order="3" text="1 (order=3)"></nldd-text>
+			<nldd-text order="1" text="2 (order=1)"></nldd-text>
+			<nldd-text order="2" text="3 (order=2)"></nldd-text>
+			<nldd-text order="4" text="4 (order=4)"></nldd-text>
+			<nldd-text order="6" text="5 (order=6)"></nldd-text>
+			<nldd-text order="5" text="6 (order=5)"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Order: grid (per cel, de grid-tracks blijven intact)',
@@ -474,9 +474,9 @@ export const OrderResponsief = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text order="1" sm-order="3">A (lg=1, sm=3)</nldd-text>
-			<nldd-text order="2" sm-order="1">B (lg=2, sm=1)</nldd-text>
-			<nldd-text order="3" sm-order="2">C (lg=3, sm=2)</nldd-text>
+			<nldd-text order="1" sm-order="3" text="A (lg=1, sm=3)"></nldd-text>
+			<nldd-text order="2" sm-order="1" text="B (lg=2, sm=1)"></nldd-text>
+			<nldd-text order="3" sm-order="2" text="C (lg=3, sm=2)"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Order: responsief (sm-order valt terug op order)',
@@ -490,10 +490,10 @@ export const OrderNegatief = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Item</nldd-text>
-			<nldd-text>Item</nldd-text>
-			<nldd-text order="-1">Eerste (order=-1)</nldd-text>
-			<nldd-text>Item</nldd-text>
+			<nldd-text text="Item"></nldd-text>
+			<nldd-text text="Item"></nldd-text>
+			<nldd-text order="-1" text="Eerste (order=-1)"></nldd-text>
+			<nldd-text text="Item"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Order: negatieve waarde duwt item naar voren',
@@ -510,10 +510,10 @@ export const ColumnCountFooter = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Kolom 1</nldd-text>
-			<nldd-text>Kolom 2</nldd-text>
-			<nldd-text>Kolom 3</nldd-text>
-			<nldd-text>Kolom 4</nldd-text>
+			<nldd-text text="Kolom 1"></nldd-text>
+			<nldd-text text="Kolom 2"></nldd-text>
+			<nldd-text text="Kolom 3"></nldd-text>
+			<nldd-text text="Kolom 4"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Column-count: footerpatroon (4 / md=2 / sm=1)',
@@ -528,7 +528,7 @@ export const ColumnCountGrid6 = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			${Array.from({ length: 12 }).map((_, i) => html`<nldd-text>${i + 1}</nldd-text>`)}
+			${Array.from({ length: 12 }).map((_, i) => html`<nldd-text text="${i + 1}"></nldd-text>`)}
 		</nldd-container>
 	`,
 	name: 'Column-count: grid 6 kolommen',
@@ -543,7 +543,7 @@ export const ColumnCountColumns = {
 			padding="16"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			${Array.from({ length: 9 }).map((_, i) => html`<nldd-text>Item ${i + 1}</nldd-text>`)}
+			${Array.from({ length: 9 }).map((_, i) => html`<nldd-text text="Item ${i + 1}"></nldd-text>`)}
 		</nldd-container>
 	`,
 	name: 'Column-count: multicol 3 kolommen',
@@ -555,7 +555,7 @@ export const PaddingAlleZijden = {
 			padding="24"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Padding aan alle zijden.</nldd-text>
+			<nldd-text text="Padding aan alle zijden."></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Padding: alle zijden',
@@ -567,7 +567,7 @@ export const PaddingInline = {
 			padding-inline="32"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Padding links en rechts.</nldd-text>
+			<nldd-text text="Padding links en rechts."></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Padding: inline (links/rechts)',
@@ -582,7 +582,7 @@ export const PaddingIndividueel = {
 			padding-left="64"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Individuele padding: top=8 right=32 bottom=16 left=64.</nldd-text>
+			<nldd-text text="Individuele padding: top=8 right=32 bottom=16 left=64."></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Padding: individuele zijden',
@@ -597,7 +597,7 @@ export const PaddingResponsief = {
 			lg-padding="32"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Padding: 8 (default) → 16 (sm) → 24 (md) → 32 (lg).</nldd-text>
+			<nldd-text text="Padding: 8 (default) → 16 (sm) → 24 (md) → 32 (lg)."></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Padding: responsief',
@@ -609,7 +609,7 @@ export const GeenPadding = {
 			padding="0"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Geen padding.</nldd-text>
+			<nldd-text text="Geen padding."></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Geen padding',
@@ -626,8 +626,8 @@ export const Uitlijning = {
 			min-height="200px"
 			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
-			<nldd-text>Gecentreerd</nldd-text>
-			<nldd-text>Op beide assen</nldd-text>
+			<nldd-text text="Gecentreerd"></nldd-text>
+			<nldd-text text="Op beide assen"></nldd-text>
 		</nldd-container>
 	`,
 	name: 'Uitlijning: center op beide assen',

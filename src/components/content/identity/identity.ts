@@ -5,10 +5,12 @@
  * a name line and supporting text (a role or a date, for instance). Every part
  * is optional.
  *
- * The name line and the supporting text come in as an attribute or as a slot.
- * Use the slots for richer content, such as a `<time datetime="…">` for a
- * machine-readable date or a link to the author's profile. Slotted content
- * replaces the matching attribute: the attribute is the slot's fallback.
+ * The name line and the supporting text come in as an attribute, which the
+ * component draws as a `<p>`, or as a `<p>` of your own in the slot. Use the
+ * slot for richer content and put it in that `<p>`: a `<time datetime="…">`
+ * for a machine-readable date, or a link to the author's profile. Slotted
+ * content replaces the matching attribute. Each of the two chooses for itself,
+ * so a `<p>` with a link in `text` can go with plain `supporting-text`.
  *
  * One avatar you slot as it is, and identity gives it its size. For more than
  * one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the
@@ -34,9 +36,9 @@
  * @attr {string} avatar-alt - Alt text for the avatar-src image; empty means decorative
  *
  * @slot avatars - One avatar (`nldd-avatar` or `img`), or an `nldd-avatar-group` for more
- * @accepts img
- * @slot text - Name line as rich content (a link to the author's profile, for instance)
- * @slot supporting-text - Supporting text as rich content (a time element, for instance)
+ * @accepts img, p
+ * @slot text - A `<p>` of your own for a name line that is more than text (with a link to the author's profile, for instance)
+ * @slot supporting-text - A `<p>` of your own for supporting text that is more than text (with a time element, for instance)
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';

@@ -186,7 +186,7 @@ Dezelfde regels draaien op drie plekken:
 
 | Waar | Wat het ziet |
 |------|--------------|
-| Bron (`.vue`, `.tsx`, `.jsx`, `.html`, `.j2`, ook Angular, Django en htmx) | Vóór de commit, per bestand, alleen wat zeker fout is |
+| Bron (`.vue`, `.tsx`, `.jsx`, `.js`, `.html`, `.j2`, `.mdx`, ook Angular, Django en htmx; `.md` als je hem noemt) | Vóór de commit, per bestand, alleen wat zeker fout is |
 | Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Daarom leest de linter geen `.astro`: dat loopt via zijn output |
 | Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen. Alleen met een bundler die `import.meta.env.DEV` zet, zoals Vite; Angular en server-rendered apps hebben de eerste twee rijen |
 

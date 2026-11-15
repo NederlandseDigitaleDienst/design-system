@@ -2994,7 +2994,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` the menu closes at once. A menu that scrolls fades at the edge where more items wait. Note: Only type=\"button\" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.",
+          "description": "A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up and holds a moment instead. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` the menu closes at once. A menu that scrolls fades at the edge where more items wait. Note: Only type=\"button\" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.",
           "name": "NLDDMenu",
           "slots": [
             {
@@ -5986,7 +5986,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "An editorial line that shows authors or editors: optional avatar or avatars, a name line and supporting text (a role or a date, for instance). Every part is optional. The name line and the supporting text come in as an attribute or as a slot. Use the slots for richer content, such as a `<time datetime=\"…\">` for a machine-readable date or a link to the author's profile. Slotted content replaces the matching attribute: the attribute is the slot's fallback. One avatar you slot as it is, and identity gives it its size. For more than one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the surface color. Identity does not build that group itself, because the avatars are the consumer's light DOM and a group can only style what arrives as its own child. Set the avatars to decorative (or an `img` to `alt=\"\"`) when the names already stand in the text. On narrow widths (an sm container, 640px and under) with more than one avatar the row of avatars moves above the names, so the text keeps the full width. With one avatar the identity stays on a single line. For a single avatar you can also hand over `avatar-src` (with an optional `avatar-srcset`) as an attribute instead of slotting; its size is fixed at 40px. Slotted avatars take precedence over `avatar-src`.",
+          "description": "An editorial line that shows authors or editors: optional avatar or avatars, a name line and supporting text (a role or a date, for instance). Every part is optional. The name line and the supporting text come in as an attribute, which the component draws as a `<p>`, or as a `<p>` of your own in the slot. Use the slot for richer content and put it in that `<p>`: a `<time datetime=\"…\">` for a machine-readable date, or a link to the author's profile. Slotted content replaces the matching attribute. Each of the two chooses for itself, so a `<p>` with a link in `text` can go with plain `supporting-text`. One avatar you slot as it is, and identity gives it its size. For more than one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the surface color. Identity does not build that group itself, because the avatars are the consumer's light DOM and a group can only style what arrives as its own child. Set the avatars to decorative (or an `img` to `alt=\"\"`) when the names already stand in the text. On narrow widths (an sm container, 640px and under) with more than one avatar the row of avatars moves above the names, so the text keeps the full width. With one avatar the identity stays on a single line. For a single avatar you can also hand over `avatar-src` (with an optional `avatar-srcset`) as an attribute instead of slotting; its size is fixed at 40px. Slotted avatars take precedence over `avatar-src`.",
           "name": "NLDDIdentity",
           "members": [
             {
@@ -6091,7 +6091,8 @@
           "tagName": "nldd-identity",
           "customElement": true,
           "accepts": [
-            "img"
+            "img",
+            "p"
           ],
           "slots": [
             {
@@ -6100,11 +6101,11 @@
             },
             {
               "name": "text",
-              "description": "Name line as rich content (a link to the author's profile, for instance)"
+              "description": "A `<p>` of your own for a name line that is more than text (with a link to the author's profile, for instance)"
             },
             {
               "name": "supporting-text",
-              "description": "Supporting text as rich content (a time element, for instance)"
+              "description": "A `<p>` of your own for supporting text that is more than text (with a time element, for instance)"
             }
           ]
         }
@@ -7368,9 +7369,19 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography — it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.",
+          "description": "One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography — it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Plain text goes in `text`, and the component draws a `<p>` for it. Text with a link, a `<strong>` or a tag goes in the slot, in a `<p>` of your own, or a `<span>` where the text is no paragraph, such as a label or a number. What is in the slot is in the HTML before any script runs; `text` is drawn in the browser. On a page of a website that has to read without script, use the slot. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.",
           "name": "NLDDText",
           "members": [
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "size",
@@ -7453,6 +7464,15 @@
             }
           ],
           "attributes": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "The text, when it is plain text. The component draws it as a `<p>`. Content in the slot wins."
+            },
             {
               "name": "size",
               "type": {
@@ -7548,6 +7568,8 @@
           "tagName": "nldd-text",
           "customElement": true,
           "accepts": [
+            "p",
+            "span",
             "strong",
             "b",
             "em",
@@ -7555,13 +7577,12 @@
             "a",
             "code",
             "mark",
-            "q",
-            "span"
+            "q"
           ],
           "slots": [
             {
               "name": "",
-              "description": "The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href=\"…\" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone."
+              "description": "Text that is more than plain text, in a `<p>` of your own, or a `<span>` for text that is no paragraph (a label, a number). Inline elements in it look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href=\"…\" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). Components such as `nldd-tag` are left alone. That styling comes from a global stylesheet, `dist/css/text.css` or `global.css`, which includes it: a shadow root cannot reach inside a slotted element."
             }
           ]
         }
@@ -7591,7 +7612,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. The level also sets the size: an h2 looks like `display-2`. Set `size` where the look should differ from the level, such as a section heading that is smaller than its place. A heading of your own in the default slot sets the level the same way, so `<h2>` there looks like `display-2` without a `heading-level`. A title without a level is no heading and shows as body text, whatever its `size`: give it a level, or for large letters that are not a heading use nldd-text with a display size. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text, and a filled slot takes the place of the attribute. Both grow and shrink with the size of the title, and keep to the width of a line of reading (40em), with balanced lines. The supporting text is a line or two, not a paragraph. What is in a slot is in the HTML the server sends; what comes from an attribute is drawn in the browser. On a page of a website, which search engines, link previews and reader mode read without script, put the heading in the default slot. In an application `text` with `heading-level` is enough. Inline elements in a slotted heading (a link, strong, em, code, mark, q) look as they do in nldd-text. A shadow root cannot reach inside a slotted element, so that styling comes from a global stylesheet: `dist/css/title.css`, or `global.css`, which includes it. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.",
+          "description": "A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. The level also sets the size: an h2 looks like `display-2`. Set `size` where the look should differ from the level, such as a section heading that is smaller than its place. A heading of your own in the default slot sets the level the same way, so `<h2>` there looks like `display-2` without a `heading-level`. A title without a level is no heading and shows as body text, whatever its `size`: give it a level, or for large letters that are not a heading use nldd-text with a display size. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text. The slot takes the element the attribute draws: a heading, or a `<p>` for a title that is no heading, and a `<p>` for the overline and the supporting text. Put inline markup inside that element. A filled slot takes the place of the attribute. Each of the three chooses for itself, so a heading in the slot can go with plain `supporting-text`. Both grow and shrink with the size of the title, and keep to the width of a line of reading (40em), with balanced lines. The supporting text is a line or two, not a paragraph. What is in a slot is in the HTML the server sends; what comes from an attribute is drawn in the browser. On a page of a website, which search engines, link previews and reader mode read without script, put the heading in the default slot. In an application `text` with `heading-level` is enough. Inline elements in a slotted heading or `<p>` (a link, strong, em, code, mark, q) look as they do in nldd-text. A shadow root cannot reach inside a slotted element, so that styling comes from a global stylesheet: `dist/css/title.css`, or `global.css`, which includes it. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.",
           "name": "NLDDTitle",
           "members": [
             {
@@ -7766,6 +7787,7 @@
             "h4",
             "h5",
             "h6",
+            "p",
             "a",
             "strong",
             "b",
@@ -7778,15 +7800,15 @@
           "slots": [
             {
               "name": "overline",
-              "description": "Overline that is more than text. Takes the place of the overline attribute."
+              "description": "Overline that is more than text, in a `<p>` of its own as the attribute draws it. Takes the place of the overline attribute."
             },
             {
               "name": "",
-              "description": "Title that is more than text, such as a link. Takes the place of text, and brings its own h1–h6 for semantics."
+              "description": "A heading (`h1`–`h6`) of your own for a title that is more than text, such as a link, or a `<p>` for a title that is no heading. Takes the place of text."
             },
             {
               "name": "supporting-text",
-              "description": "Supporting text that is more than text. Takes the place of the supporting-text attribute."
+              "description": "Supporting text that is more than text, in a `<p>` of its own as the attribute draws it. Takes the place of the supporting-text attribute."
             },
             {
               "name": "end",
@@ -40408,7 +40430,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, main text, supporting text) accepts either a string attribute or slotted DOM content. The slot is the source of truth: if the consumer provides slotted content, it replaces the attribute-based render for that region. Use slots when you need components mixed with text, such as `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`. The cell does not style plain HTML: for bold, write `**bold**` in the attribute, and for code put an `<nldd-text>` with a `<code>` in the slot. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.",
+          "description": "A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, main text, supporting text) takes plain text in its attribute, which the cell draws as a `<p>`, or a `<p>` of your own in its slot. Use the slot when you need components mixed with text, such as `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`, and put them in that `<p>`: the paragraph is then in the HTML before any script runs. The slot wins over the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `overline`, a `<p>` with a tag in the default slot. The cell does not style plain HTML: for bold, write `**bold**` in the attribute, and for code put an `<nldd-text>` in the `<p>`, with the `<code>` in a `<span>` of its own. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.",
           "name": "NLDDTextCell",
           "members": [
             {
@@ -40783,18 +40805,21 @@
           },
           "tagName": "nldd-text-cell",
           "customElement": true,
+          "accepts": [
+            "p"
+          ],
           "slots": [
             {
               "name": "overline",
-              "description": "Rich content for the overline region. Overrides the `overline` attribute when content is assigned."
+              "description": "A `<p>` of your own for an overline that is more than text. Wins over `overline`."
             },
             {
               "name": "",
-              "description": "(default) Rich content for the main text region. Wins over `text`."
+              "description": "(default) A `<p>` of your own for main text that is more than text. Wins over `text`."
             },
             {
               "name": "supporting-text",
-              "description": "Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned."
+              "description": "A `<p>` of your own for supporting text that is more than text. Wins over `supporting-text`."
             }
           ]
         }
@@ -40824,7 +40849,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying a title with optional overline and supporting text in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, title, supporting text) accepts either a string attribute or slotted DOM content. The slot is the source of truth: if the consumer provides slotted content, it replaces the attribute-based render for that region. Use slots when you need inline elements like `<nldd-tag>`, `<nldd-icon>` or other components mixed with text. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path — slotted content is rendered as-is.",
+          "description": "A cell component for displaying a title with optional overline and supporting text in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, title, supporting text) takes plain text in its attribute, or the element itself in its slot: a heading (`h1`–`h6`) or a `<p>` for the title, a `<p>` for the other two, as the cell draws them for the attribute. Use the slot when you need inline elements like `<nldd-tag>`, `<nldd-icon>` or other components mixed with text, and put them in that element: the heading is then in the HTML before any script runs. The slot wins over the attribute, and `heading-level` only applies to the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `supporting-text`, a heading with a tag in the default slot. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.",
           "name": "NLDDTitleCell",
           "members": [
             {
@@ -41217,18 +41242,27 @@
           },
           "tagName": "nldd-title-cell",
           "customElement": true,
+          "accepts": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "p"
+          ],
           "slots": [
             {
               "name": "overline",
-              "description": "Rich content for the overline region. Overrides the `overline` attribute when content is assigned."
+              "description": "A `<p>` of your own for an overline that is more than text. Wins over `overline`."
             },
             {
               "name": "",
-              "description": "(default) Rich content for the title. Wins over `text`."
+              "description": "(default) A heading (`h1`–`h6`) or `<p>` of your own for a title that is more than text. Wins over `text`."
             },
             {
               "name": "supporting-text",
-              "description": "Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned."
+              "description": "A `<p>` of your own for supporting text that is more than text. Wins over `supporting-text`."
             }
           ]
         }
@@ -43289,7 +43323,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Hyperlink component with two modes: 1. **Standalone (sized)**: set `size=\"xs\"|\"sm\"|\"md\"|\"lg\"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size=\"inherit\"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take.",
+          "description": "Hyperlink component with two modes: 1. **Standalone (sized)**: set `size=\"xs\"|\"sm\"|\"md\"|\"lg\"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size=\"inherit\"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take. Put an `<a>` in the default slot and the component draws no link of its own: it gives yours its look instead. A page then has the link in its HTML before any script runs, for a search engine that does not render the page, a link preview or reader mode, and a router gets the click: put the `<Link>` of React Router or Next in it, which renders an `<a>` and navigates itself. Without that, every click on a link in a shadow root loads the whole page. <nldd-link size=\"md\"><a href=\"/patronen\">Patronen</a></nldd-link> Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, and its text. Those attributes, `text`, `start-icon` and `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an nldd-icon, so it is part of what you click and inside the focus ring. `size`, `accessible-label`, `interestfor`, `no-tab` and `disabled` keep working: the component sets `aria-label`, the description, `tabindex` and `aria-disabled` on your `<a>`, and leaves an attribute you set yourself alone. With `target=\"_blank\"` it adds `noopener noreferrer` to the `rel` of the `<a>`, as it does to its own. A disabled link ignores a click before your router sees it. The hint about another website, a new tab or a download goes on it as `aria-description`, so a screen reader reads it after the name. One `<a>` per link. The look of the `<a>` comes from the global stylesheet, `dist/css/link.css` or `global.css`, which includes it, so the link looks right before the component loads, and without script.",
           "name": "NLDDLink",
           "members": [
             {
@@ -43560,10 +43594,13 @@
           },
           "tagName": "nldd-link",
           "customElement": true,
+          "accepts": [
+            "a"
+          ],
           "slots": [
             {
               "name": "",
-              "description": "Link text. Wins over `text`."
+              "description": "Link text. Wins over `text`. Or an `<a>` of your own, which takes the place of the link the component draws."
             },
             {
               "name": "start-icon",
@@ -52835,6 +52872,40 @@
           "declaration": {
             "name": "SlotContent",
             "module": "src/utilities/slot-content.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/slotted-block.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "holdsLooseText",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "slot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            }
+          ],
+          "description": "Whether a slot holds text of its own, outside any element."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "holdsLooseText",
+          "declaration": {
+            "name": "holdsLooseText",
+            "module": "src/utilities/slotted-block.ts"
           }
         }
       ]

@@ -455,9 +455,8 @@ export const ResponsieveKolommen = {
 					size="sm"
 					line-height="flat"
 					color="secondary"
-				>
-					${label}
-				</nldd-text>
+					text="${label}"
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-container width=${width}>
 					<nldd-table

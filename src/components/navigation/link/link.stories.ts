@@ -192,9 +192,8 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					In een h2 — link erft display-grootte
-				</nldd-text>
+					text="In een h2 — link erft display-grootte"
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-title size="display-2">
 					<h2>Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link>.</h2>
@@ -204,37 +203,34 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					In body-md — link is body-md
-				</nldd-text>
+					text="In body-md — link is body-md"
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="md">
-					Wil je subsidie aanvragen voor dakisolatie? Bekijk dan eerst <nldd-link href="https://example.com" target="_blank">de voorwaarden voor dakisolatie</nldd-link> op de website van Mijn Dienst.
+					<p>Wil je subsidie aanvragen voor dakisolatie? Bekijk dan eerst <nldd-link href="https://example.com" target="_blank">de voorwaarden voor dakisolatie</nldd-link> op de website van Mijn Dienst.</p>
 				</nldd-text>
 			</nldd-container>
 			<nldd-container>
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					In body-sm — link is body-sm
-				</nldd-text>
+					text="In body-sm — link is body-sm"
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="sm">
-					Disclaimer: deze pagina is informatief. Voor juridische details zie <nldd-link href="#disclaimer">de disclaimer</nldd-link>.
+					<p>Disclaimer: deze pagina is informatief. Voor juridische details zie <nldd-link href="#disclaimer">de disclaimer</nldd-link>.</p>
 				</nldd-text>
 			</nldd-container>
 			<nldd-container>
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					Lange link wraps over regels (display: inline)
-				</nldd-text>
+					text="Lange link wraps over regels (display: inline)"
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-container max-width="280px">
 					<nldd-text>
-						Lees meer over <nldd-link href="#">de voorwaarden voor dakisolatie en wat je moet aanleveren bij je aanvraag</nldd-link> voordat je begint.
+						<p>Lees meer over <nldd-link href="#">de voorwaarden voor dakisolatie en wat je moet aanleveren bij je aanvraag</nldd-link> voordat je begint.</p>
 					</nldd-text>
 				</nldd-container>
 			</nldd-container>
@@ -242,12 +238,11 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon
-				</nldd-text>
+					text="Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon"
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="md">
-					Vergelijk vooraf <nldd-link href="https://example.com" target="_blank" end-icon="square-arrow-right-top">de soorten warmtepompen</nldd-link> en wat ze kosten.
+					<p>Vergelijk vooraf <nldd-link href="https://example.com" target="_blank" end-icon="square-arrow-right-top">de soorten warmtepompen</nldd-link> en wat ze kosten.</p>
 				</nldd-text>
 			</nldd-container>
 			<nldd-container>
@@ -255,11 +250,11 @@ export const InLopendeTekst = {
 					size="xs"
 					color="secondary"
 				>
-					Expliciete <code>size="inherit"</code> doet hetzelfde als geen size
+					<p>Expliciete <code>size="inherit"</code> doet hetzelfde als geen size</p>
 				</nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="md">
-					Lees ook <nldd-link href="#" size="inherit">de toelichting bij Aanvraag A-1042</nldd-link> voor de stand van zaken.
+					<p>Lees ook <nldd-link href="#" size="inherit">de toelichting bij Aanvraag A-1042</nldd-link> voor de stand van zaken.</p>
 				</nldd-text>
 			</nldd-container>
 		</nldd-container>
@@ -347,11 +342,13 @@ export const ToestandDisabled = {
 export const MetVoorproefjeOpInteresse = {
 	render: () => html`
 		<nldd-text>
-			De stand van zaken staat bij
-			<nldd-link
-				href="#aanvraag-a-1042"
-				interestfor="voorproefje-a-1042"
-			>Aanvraag A-1042</nldd-link>.
+			<p>
+				De stand van zaken staat bij
+				<nldd-link
+					href="#aanvraag-a-1042"
+					interestfor="voorproefje-a-1042"
+				>Aanvraag A-1042</nldd-link>.
+			</p>
 		</nldd-text>
 		<nldd-popover
 			id="voorproefje-a-1042"
@@ -359,14 +356,13 @@ export const MetVoorproefjeOpInteresse = {
 			width="240px"
 		>
 			<nldd-container padding="12">
-				<nldd-text>Aanvraag A-1042</nldd-text>
+				<nldd-text text="Aanvraag A-1042"></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text
 					size="sm"
 					color="secondary"
-				>
-					Dakisolatie, in behandeling
-				</nldd-text>
+					text="Dakisolatie, in behandeling"
+				></nldd-text>
 			</nldd-container>
 		</nldd-popover>
 	`,
@@ -375,6 +371,38 @@ export const MetVoorproefjeOpInteresse = {
 		docs: {
 			description: {
 				story: 'Een popover waar <code>interestfor</code> naar wijst, laat zien waar de link heen gaat. Hij opent als je de aanwijzer op de link laat rusten, als de link focus krijgt en bij lang drukken op touch. Een klik of een tik volgt de link gewoon. De popover staat buiten de alinea, zodat zijn inhoud die niet kan breken. Alleen informatie: zet er geen link of knop in.',
+			},
+		},
+	},
+};
+
+export const MetEigenAnker = {
+	render: () => html`
+		<nldd-container
+			gap="8"
+			horizontal-alignment="left"
+		>
+			<nldd-link size="md"><a href="#aanvraag-a-1042">Aanvraag A-1042</a></nldd-link>
+			<nldd-link size="md">
+				<a href="#aanvraag-a-1043">Aanvraag A-1043 <nldd-icon icon="arrow-right"></nldd-icon></a>
+			</nldd-link>
+			<nldd-link
+				size="md"
+				disabled
+			><a href="#dossier-d-318">Dossier D-318</a></nldd-link>
+			<nldd-text>
+				<p>
+					Lees meer over
+					<nldd-link><a href="https://example.com">warmtepompen</a></nldd-link>.
+				</p>
+			</nldd-text>
+		</nldd-container>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Een eigen <code>&lt;a&gt;</code> in het slot. Het component tekent dan geen link en geeft de jouwe zijn opmaak, uit de globale stylesheet. Zo staat de link al in de HTML voordat het script draait, en krijgt een router de klik: zet er de <code>&lt;Link&gt;</code> van je router in. Alles van de link staat op de <code>&lt;a&gt;</code>, een icoon ook. <code>disabled</code> op <code>nldd-link</code> werkt ook hier: de klik gaat nergens heen, ook niet naar je router.',
 			},
 		},
 	},

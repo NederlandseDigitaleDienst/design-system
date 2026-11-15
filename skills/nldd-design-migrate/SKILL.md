@@ -52,7 +52,7 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 | `disabled={busy}` in React 18, zonder de JSX-typen van het pakket | De knop staat altijd uit, ook als `busy` false is |
 | Breedteloze container om een kind dat zijn ouder meet | Nul pixels, hoogte blijft |
 | Een waarde met markup, zoals een titel met een link, in een tekstattribuut als `text` | De tekst staat er, de link is weg |
-| Een link in een shadow root, in een app die zelf routeert | Elke klik laadt de hele pagina opnieuw |
+| Een `nldd-link` met `href` in een app die zelf routeert, in plaats van de `Link` van de router in zijn slot | Elke klik laadt de hele pagina opnieuw |
 | Een titel via `text` op een site die op de server rendert | Zonder JavaScript staat er geen kop in de HTML |
 
 ## Bouw de checks vóór je iets omzet
@@ -68,7 +68,7 @@ Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die
 
 De token- en klassencheck zijn steigers. Ze bewaken de CSS die er tijdens de omzetting nog staat, en verdwijnen samen met het laatste stylesheet. De groep `pure` blijft aan, want hij houdt de app daarna puur. Zet hem in de config en niet alleen als `--pure` in CI: dan doet een lokale `--update-baseline` hetzelfde als CI.
 
-Reken `pure` niet als vangnet voor fouten. Hij leest broncode per bestand. MDX en JSX in een `.js`-bestand leest hij niet, en dat meldt hij als `file-not-read`; van Markdown leest hij alleen de codeblokken, zonder melding over de rest. Wat een ander bestand om een component heen zet, ziet hij ook niet: een `<p>` die bij het renderen in een `nldd-rich-text` belandt, meldt hij toch. In één migratie vond hij geen van de fouten die bezoekers geraakt zouden hebben; die kwamen uit de gedragspoort, de waarschuwingen van de build en de browser. Wat hij wel doet: de omvang laten zien, in de laatste veegronde resten en dode code aanwijzen (dertig iconen die alleen nog in een datalijst stonden), en daarna verhinderen dat eigen opmaak terugkomt. Dat laatste werkt alleen als je per scherm commit en in elke commit `--tighten-baseline` draait. Eén grote commit met aan het eind `--update-baseline` keurt alles goed wat er op dat moment staat.
+Reken `pure` niet als vangnet voor fouten. Hij leest broncode per bestand. MDX en Markdown leest hij met proza en al, maar Markdown alleen als je het bestand noemt. Wat een ander bestand om een component heen zet, ziet hij ook niet: een `<p>` die bij het renderen in een `nldd-rich-text` belandt, meldt hij toch. In één migratie vond hij geen van de fouten die bezoekers geraakt zouden hebben; die kwamen uit de gedragspoort, de waarschuwingen van de build en de browser. Wat hij wel doet: de omvang laten zien, in de laatste veegronde resten en dode code aanwijzen (dertig iconen die alleen nog in een datalijst stonden), en daarna verhinderen dat eigen opmaak terugkomt. Dat laatste werkt alleen als je per scherm commit en in elke commit `--tighten-baseline` draait. Eén grote commit met aan het eind `--update-baseline` keurt alles goed wat er op dat moment staat.
 
 Bewaar ook de waarschuwingen van de build van vóór de omzetting. Vervang je een component van je framework door een eigen versie, dan verdwijnt wat het ongemerkt deed. Een eigen kopcomponent in Docusaurus meldde zijn ankers niet meer aan bij de linkcontrole, die daarop elf kapotte ankers meldde die er niet waren. Een waarschuwing die na de omzetting nieuw is, wijst meestal naar zo'n vervangen component.
 
@@ -204,7 +204,7 @@ Een component tekent zijn shadow root pas in de browser. De HTML die de server v
 
 De sweep hierboven ziet dit niet, want die meet in een browser waar het script al gedraaid heeft en zoekt ook in shadow roots. Tel de koppen daarom in de build of in de serverrespons, met een grep op `<h1`.
 
-Zet elke kop in het slot van `nldd-title`, zoals de paginapatronen doen: het slot gaat voor het attribuut, en de kop staat er dan ook zonder script. Een link blijft zonder script wel weg, ook met de tekst in het slot, want het anker tekent het component zelf. Beslis vóór je begint of de site zonder JavaScript moet werken; [`static-site-generator.md`](static-site-generator.md) zegt wat er dan overblijft.
+Zet elke kop in het slot van `nldd-title`, zoals de paginapatronen doen: het slot gaat voor het attribuut, en de kop staat er dan ook zonder script. Doe hetzelfde met een link: een `<a>` in het slot van `nldd-link` staat er ook zonder script. Een `nldd-link` met `href` niet, en een kaart of rij met `href` evenmin. Beslis vóór je begint of de site zonder JavaScript moet werken; [`static-site-generator.md`](static-site-generator.md) zegt wat er dan overblijft.
 
 ## Toegankelijkheid is waar deze migratie je te schande zet
 

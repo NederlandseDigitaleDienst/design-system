@@ -160,15 +160,14 @@ export const PerBreakpoint = {
 	render: () => html`
 		<nldd-container horizontal-alignment="left">
 			<nldd-text size="sm">
-				<code>sm-size="16" md-size="24" lg-size="32"</code>
+				<p><code>sm-size="16" md-size="24" lg-size="32"</code></p>
 			</nldd-text>
 			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-text
 				size="xs"
 				color="secondary"
-			>
-				Verklein het browservenster om de spacer mee te zien veranderen.
-			</nldd-text>
+				text="Verklein het browservenster om de spacer mee te zien veranderen."
+			></nldd-text>
 			<nldd-spacer size="16"></nldd-spacer>
 			<div style="display: flex; flex-direction: column; align-items: flex-start; border: 1px dashed var(--primitives-color-neutral-150); padding: 8px;">
 				<nldd-button text="Knop"></nldd-button>

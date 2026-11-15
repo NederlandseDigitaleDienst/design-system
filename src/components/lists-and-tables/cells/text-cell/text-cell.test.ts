@@ -346,11 +346,11 @@ describe('nldd-text-cell', () => {
 		const p = el.shadowRoot!.querySelector('.text-cell__text') as HTMLElement;
 		expect(p.hasAttribute('hidden')).toBe(true);
 
-		const span = document.createElement('span');
-		span.textContent = 'Late slot';
-		el.appendChild(span);
+		const late = document.createElement('p');
+		late.textContent = 'Late slot';
+		el.appendChild(late);
 		await waitForUpdate(el);
-		expect(p.hasAttribute('hidden')).toBe(false);
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.hasAttribute('hidden')).toBe(false);
 	});
 
 	it('renders **bold** markers as <b> elements', async () => {
@@ -475,5 +475,24 @@ describe('nldd-text-cell fit-content in een krappe rij', () => {
 		const cel = el.querySelector('nldd-text-cell')!;
 		expect(Math.round(cel.getBoundingClientRect().width)).toBeLessThanOrEqual(60);
 		cleanup(el);
+	});
+});
+
+describe('nldd-text-cell with a <p> of its own in a slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('draws a plain box around the <p>, and no <p> around loose text', async () => {
+		el = await fixture('<nldd-text-cell><p>Dossier D-318</p><p slot="overline">Team Uitvoering</p></nldd-text-cell>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.localName).toBe('div');
+		expect(el.shadowRoot!.querySelector('.text-cell__overline')!.localName).toBe('div');
+		expect(getComputedStyle(el.querySelector('p')!).marginBlockEnd).toBe('0px');
+		expect(el.matches(':state(loose-text)')).toBe(false);
+		el.querySelector(':scope > p:not([slot])')!.replaceWith('Dossier D-318');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.text-cell__text')!.localName).toBe('div');
+		expect(el.matches(':state(loose-text)')).toBe(true);
 	});
 });

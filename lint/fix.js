@@ -154,14 +154,78 @@ function tagEdits(source, offset, endOffset, name, to) {
 	return [open, { from: closing + 2, to: closing + 2 + name.length, text: to, closing: true }];
 }
 
+/**
+ * What stands between the start tag and the closing tag of an element, when the
+ * file says it for certain: no hole a template fills (`{ }`, `${ }`, `{{ }}`)
+ * and no comment, which could hold anything.
+ */
+function contentOf(source, offset, endOffset, name) {
+	if (endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return undefined;
+	const startTag = maskedTag(source, offset);
+	if (startTag.trimEnd().endsWith('/')) return undefined;
+	const start = offset + startTag.length + 1;
+	const closing = source.lastIndexOf('</', endOffset);
+	if (closing < start || !new RegExp(`^</${name}\\s*>$`).test(source.slice(closing, endOffset + 1))) return undefined;
+	const text = source.slice(start, closing);
+	if (/[{}]|<!--/.test(text)) return undefined;
+	return { startTag, start, end: closing, text };
+}
+
+const escapeAttribute = (text) => text.replace(/&(?![a-zA-Z]+;|#\d+;|#x[\da-fA-F]+;)/g, '&amp;').replace(/"/g, '&quot;');
+
+/**
+ * Plain text as the element's content moves to an attribute, on a line of its
+ * own when the start tag puts its attributes on lines of their own.
+ */
+function attributeEdits(source, { offset, endOffset, tag }, name) {
+	const content = contentOf(source, offset, endOffset, tag);
+	const text = content?.text.replace(/\s+/g, ' ').trim();
+	if (!text || /[<>]/.test(text) || findAttribute(source, offset, name)) return [];
+	// The masked tag has its values blanked, so the layout comes from the source.
+	const written = source.slice(offset, offset + content.startTag.length);
+	const trailing = /\s*$/.exec(written)[0];
+	const at = offset + written.length - trailing.length;
+	const lastLine = written.slice(0, written.length - trailing.length).split('\n');
+	const indent = lastLine.length > 1 ? /^\s*/.exec(lastLine.at(-1))[0] : undefined;
+	const attribute = `${name}="${escapeAttribute(text)}"`;
+	return [
+		{ from: at, to: at, text: indent === undefined ? ` ${attribute}` : `\n${indent}${attribute}` },
+		{ from: content.start, to: content.end, text: '' },
+	];
+}
+
+/** Elements that stand in a line of text, and so in a `<p>`. */
+const INLINE = new Set(['a', 'abbr', 'b', 'br', 'cite', 'code', 'del', 'em', 'i', 'ins', 'kbd', 'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'nldd-avatar', 'nldd-badge', 'nldd-icon', 'nldd-link', 'nldd-status-dot', 'nldd-tag', 'nldd-term', 'nldd-token']);
+
+/** Text with inline elements goes in an element of its own, such as a `<p>`. */
+function wrapEdits(source, { offset, endOffset, tag }, wrapper) {
+	const content = contentOf(source, offset, endOffset, tag);
+	const inner = content?.text.trim();
+	if (!inner || !/</.test(inner)) return [];
+	const tags = [...inner.matchAll(/<\/?([a-zA-Z][\w-]*)/g)].map((match) => match[1].toLowerCase());
+	if (tags.some((name) => !INLINE.has(name))) return [];
+	const leading = /^\s*/.exec(content.text)[0];
+	const trailing = /\s*$/.exec(content.text)[0];
+	const base = leading.includes('\n') ? leading.slice(leading.lastIndexOf('\n') + 1) : undefined;
+	let wrapped = `<${wrapper}>${inner}</${wrapper}>`;
+	if (base !== undefined && inner.includes('\n')) {
+		const unit = base.includes('\t') || !base ? '\t' : '  ';
+		wrapped = `<${wrapper}>\n${base}${unit}${inner.replace(/\n/g, `\n${unit}`)}\n${base}</${wrapper}>`;
+	}
+	return [{ from: content.start, to: content.end, text: leading + wrapped + trailing }];
+}
+
 /** An edit is `{ from, to, text }` in the source. What is not certain makes none. */
-function editsOf(source, { fix, offset, endOffset, tag }) {
+function editsOf(source, { fix, offset, endOffset, tag, mention }) {
 	return [
 		...Object.entries(fix.rename ?? {}).flatMap(([from, to]) => renameEdits(source, offset, from, to)),
 		...Object.entries(fix.value ?? {}).flatMap(([name, values]) => valueEdits(source, offset, name, values)),
 		...(fix.remove ?? []).flatMap((name) => removeEdits(source, offset, name)),
 		...Object.entries(fix.flag ?? {}).flatMap(([from, to]) => flagEdits(source, offset, from, to)),
-		...(fix.tag ? tagEdits(source, offset, endOffset, tag, fix.tag) : []),
+		...(fix.tag && mention ? [{ from: offset + 1, to: offset + 1 + tag.length, text: fix.tag }] : []),
+		...(fix.tag && !mention ? tagEdits(source, offset, endOffset, tag, fix.tag) : []),
+		...(fix.attribute ? attributeEdits(source, { offset, endOffset, tag }, fix.attribute) : []),
+		...(fix.wrap ? wrapEdits(source, { offset, endOffset, tag }, fix.wrap) : []),
 	];
 }
 

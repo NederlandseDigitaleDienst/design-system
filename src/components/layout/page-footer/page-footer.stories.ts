@@ -56,9 +56,7 @@ export const Standaard = {
 					heading-level="2"
 				></nldd-title>
 				<nldd-spacer size="12"></nldd-spacer>
-				<nldd-text>
-					Op Mijn Dienst vraag je subsidie aan voor isolatie en een warmtepomp, en volg je wat er met je aanvraag gebeurt.
-				</nldd-text>
+				<nldd-text text="Op Mijn Dienst vraag je subsidie aan voor isolatie en een warmtepomp, en volg je wat er met je aanvraag gebeurt."></nldd-text>
 				<nldd-spacer size="16"></nldd-spacer>
 				<nldd-link-group accessible-label="Over deze website">
 					<nldd-link
@@ -284,9 +282,7 @@ export const ZonderLegalBar = {
 				></nldd-breadcrumbs-item>
 			</nldd-breadcrumbs>
 			<nldd-container>
-				<nldd-text>
-					Heb je een vraag over je aanvraag? Noem dan altijd het nummer van de aanvraag.
-				</nldd-text>
+				<nldd-text text="Heb je een vraag over je aanvraag? Noem dan altijd het nummer van de aanvraag."></nldd-text>
 			</nldd-container>
 		</nldd-page-footer>
 	`,
@@ -321,9 +317,7 @@ export const Smal = {
 						heading-level="2"
 					></nldd-title>
 					<nldd-spacer size="12"></nldd-spacer>
-					<nldd-text>
-						Op Mijn Dienst vraag je subsidie aan en volg je je aanvraag.
-					</nldd-text>
+					<nldd-text text="Op Mijn Dienst vraag je subsidie aan en volg je je aanvraag."></nldd-text>
 				</nldd-container>
 				<nldd-page-footer-legal-bar slot="legal-bar">
 					<nldd-page-footer-legal-bar-item

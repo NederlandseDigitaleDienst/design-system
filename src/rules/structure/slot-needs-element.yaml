@@ -1,0 +1,13 @@
+severity: error
+context: ':is(nldd-title, nldd-title-cell):has(> :not([slot]):not(h1, h2, h3, h4, h5, h6, p)), nldd-text-cell:has(> :not([slot]):not(p)), :is(nldd-title, nldd-title-cell, nldd-text-cell):has(> :is([slot="overline"], [slot="supporting-text"]):not(p)), nldd-identity:has(> :is([slot="text"], [slot="supporting-text"]):not(p))'
+message: 'A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.'
+examples:
+  passed:
+    - '<nldd-title><h2>Aanvragen</h2><p slot="supporting-text">Dakisolatie, in behandeling</p></nldd-title>'
+    - '<nldd-text-cell><p>Dakisolatie, <strong>in behandeling</strong></p></nldd-text-cell>'
+    - '<nldd-identity><p slot="text"><a href="/team">Team Uitvoering</a></p></nldd-identity>'
+    - '<nldd-title-cell text="Aanvraag A-1042" supporting-text="Dakisolatie"></nldd-title-cell>'
+  failed:
+    - '<nldd-title><h2>Aanvragen</h2><span slot="supporting-text">Dakisolatie, in behandeling</span></nldd-title>'
+    - '<nldd-text-cell><strong>Dakisolatie</strong></nldd-text-cell>'
+    - '<nldd-identity><a slot="text" href="/team">Team Uitvoering</a></nldd-identity>'

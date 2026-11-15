@@ -11,10 +11,12 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 				size="sm"
 				color="secondary"
 			>
-				${component._t('components.term.source-capitalize')}:
-				${component.sourceHref
-					? html`<nldd-link href=${component.sourceHref}>${component.source}</nldd-link>`
-					: component.source}
+				<p>
+					${component._t('components.term.source-capitalize')}:
+					${component.sourceHref
+						? html`<nldd-link href=${component.sourceHref}>${component.source}</nldd-link>`
+						: component.source}
+				</p>
 			</nldd-text>
 		`
 		: nothing;
@@ -26,9 +28,7 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 				<nldd-container
 					padding="16"
 				>
-					<nldd-text>
-						${component.definition}
-					</nldd-text>
+					<nldd-text text="${component.definition}"></nldd-text>
 					${source}
 				</nldd-container>
 			</nldd-popover>

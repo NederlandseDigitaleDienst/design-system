@@ -96,11 +96,11 @@ function isUtf8(filename) {
 function fixReferences(renamedTags, paths, root, exclude) {
 	const isBuilt = (file) => relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
 	const inMarkup = findFiles(paths, root, exclude);
-	const elsewhere = findFiles(paths, root, exclude, REFERENCE_EXTENSIONS).filter((file) => REFERENCE_EXTENSIONS.includes(extname(file)));
+	const elsewhere = findFiles(paths, root, exclude, REFERENCE_EXTENSIONS).filter((file) => REFERENCE_EXTENSIONS.includes(extname(file)) && !inMarkup.includes(file));
 	let fixed = 0;
 	let files = 0;
 	const remaining = [];
-	const kindOf = (file) => (inMarkup.includes(file) ? 'markup' : /\.(css|scss|less)$/.test(file) ? 'styles' : 'script');
+	const kindOf = (file) => (/\.(css|scss|less)$/.test(file) ? 'styles' : /\.[cm]?[jt]s$/.test(file) || !inMarkup.includes(file) ? 'script' : 'markup');
 	for (const list of [inMarkup, elsewhere]) {
 		for (const filename of list.filter((file) => !/\.min\.[cm]?js$/.test(file))) {
 			const source = readFileSync(filename, 'utf8');
@@ -114,6 +114,14 @@ function fixReferences(renamedTags, paths, root, exclude) {
 		}
 	}
 	return { fixed, files, remaining };
+}
+
+/**
+ * A script a bundler wrote: the linter reads a build through its HTML, and a bundle
+ * carries the styles of the components as if they were the app's.
+ */
+function isBundle(filename, source) {
+	return /\.[cm]?js$/.test(filename) && (/\.min\.[cm]?js$/.test(filename) || /^.{2000}/m.test(source));
 }
 
 const MAX_FIX_PASSES = 10;
@@ -174,7 +182,7 @@ async function runLint(data, paths, options) {
 		: findFiles(paths, root, config.exclude, extensions).map((filename) => ({
 				filename,
 				source: readFileSync(filename, 'utf8'),
-			}));
+			})).filter(({ filename, source }) => !isBundle(filename, source));
 
 	// Most files in an app use no component at all, and those need no parser either.
 	// Tightening has to see every file the baseline names, also one without a component left.

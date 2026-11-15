@@ -10,13 +10,17 @@
  * use `vertical-alignment="top"`.
  *
  * ### Slots vs attributes
- * Each text region (overline, title, supporting text) accepts either a string
- * attribute or slotted DOM content. The slot is the source of truth: if the
- * consumer provides slotted content, it replaces the attribute-based render
- * for that region. Use slots when you need inline elements like `<nldd-tag>`,
- * `<nldd-icon>` or other components mixed with text. Note that `query`
- * highlighting and `**bold**` parsing only apply to the attribute path —
- * slotted content is rendered as-is.
+ * Each text region (overline, title, supporting text) takes plain text in its
+ * attribute, or the element itself in its slot: a heading (`h1`–`h6`) or a
+ * `<p>` for the title, a `<p>` for the other two, as the cell draws them for the
+ * attribute. Use the slot when you need inline elements like `<nldd-tag>`,
+ * `<nldd-icon>` or other components mixed with text, and put them in that
+ * element: the heading is then in the HTML before any script runs. The slot
+ * wins over the attribute, and `heading-level` only applies to the attribute.
+ * Each region chooses for itself, so an attribute and a slot stand side by
+ * side: plain text in `supporting-text`, a heading with a tag in the default slot.
+ * Note that `query` highlighting and `**bold**` parsing only apply to the
+ * attribute path; slotted content is rendered as-is.
  *
  * @element nldd-title-cell
  * @attr {string} size - Visual size of the title: 'display-1' to 'display-6', from large to small (unset: looks like 'display-5', and becomes 'display-6' in an `nldd-table-row`, where a title the size of the other cells reads better). Unlike nldd-title, `heading-level` does not set it: every row in a list looks the same, whatever its level
@@ -33,9 +37,10 @@
  * @attr {string} overline - Optional overline text displayed above the title. Supports **bold**. Falls back to `overline` slot.
  * @attr {number} heading-level - Heading level for the title element: 1–6 (default: none, renders a <p>)
  *
- * @slot overline - Rich content for the overline region. Overrides the `overline` attribute when content is assigned.
- * @slot - (default) Rich content for the title. Wins over `text`.
- * @slot supporting-text - Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned.
+ * @slot overline - A `<p>` of your own for an overline that is more than text. Wins over `overline`.
+ * @slot - (default) A heading (`h1`–`h6`) or `<p>` of your own for a title that is more than text. Wins over `text`.
+ * @slot supporting-text - A `<p>` of your own for supporting text that is more than text. Wins over `supporting-text`.
+ * @accepts h1, h2, h3, h4, h5, h6, p
  *
  * ### Query mark
  * Set `query` to a substring to bold-highlight the match across text, overline
@@ -53,6 +58,8 @@
  * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive')
  */
 import { LitElement } from 'lit';
+import { holdsLooseText } from '../../../../utilities/slotted-block.js';
+import { setState } from '../../../../utilities/element-state.js';
 import { property, state } from 'lit/decorators.js';
 import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
@@ -124,6 +131,8 @@ export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityM
 	@state() _hasDefaultSlotted = false;
 	/** @internal */
 	@state() _hasSupportingTextSlotted = false;
+	/** The slots that hold text of their own, outside any element. */
+	private _looseSlots = new Set<string>();
 
 	override updated(changed: Map<string, unknown>) {
 		super.updated(changed);
@@ -164,14 +173,12 @@ export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityM
 	/** @internal */
 	_onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
-		// Use assignedNodes() (not flatten) so we only count what the consumer
-		// actually slotted — fallback content is excluded by design.
-		const hasContent = slot.assignedNodes().some((node) => {
-			if (node.nodeType === Node.TEXT_NODE) {
-				return (node.textContent ?? '').trim().length > 0;
-			}
-			return node.nodeType === Node.ELEMENT_NODE;
-		});
+		// assignedNodes() (not flatten): only what the consumer slotted counts.
+		const hasContent = slot.assignedNodes().some((node) =>
+			node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim() !== ''));
+		if (holdsLooseText(slot)) this._looseSlots.add(slot.name);
+		else this._looseSlots.delete(slot.name);
+		setState(this, 'loose-text', this._looseSlots.size > 0);
 		switch (slot.name) {
 			case 'overline':
 				this._hasOverlineSlotted = hasContent;

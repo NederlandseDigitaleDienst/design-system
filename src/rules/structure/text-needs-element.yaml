@@ -1,0 +1,17 @@
+severity: error
+context: 'nldd-text'
+assert: '[text], :has(> :is(p, span))'
+message: 'nldd-text takes plain text in `text`, and text with inline elements in a `<p>` of its own, or a `<span>` where it is no paragraph.'
+fix:
+  attribute: text
+  wrap: p
+examples:
+  passed:
+    - '<nldd-text text="Dakisolatie, in behandeling"></nldd-text>'
+    - '<nldd-text><p>Aanvraag <strong>A-1042</strong> is in behandeling.</p></nldd-text>'
+    - '<nldd-text size="display-1"><span>100</span></nldd-text>'
+  failed:
+    - '<nldd-text>Dakisolatie, in behandeling</nldd-text>'
+    - '<nldd-text>Aanvraag <strong>A-1042</strong> is in behandeling.</nldd-text>'
+  cantTell:
+    - '<nldd-text :text="label"></nldd-text>'

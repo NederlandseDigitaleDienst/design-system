@@ -124,9 +124,7 @@ const itemContent = (i: any) => html`
 		heading-level="3"
 	></nldd-title>
 	<nldd-spacer size="4"></nldd-spacer>
-	<nldd-text>
-		${descriptions[descriptionOrder[i % descriptionOrder.length]]}
-	</nldd-text>
+	<nldd-text text="${descriptions[descriptionOrder[i % descriptionOrder.length]]}"></nldd-text>
 `;
 
 /* In the card footer, so the buttons line up across a row of cards of
@@ -364,9 +362,8 @@ export const InSimpleSectie = {
 			></nldd-spacer>
 			<nldd-text
 				slot="header"
-			>
-				Tekst boven de collectie om de uitlijning te zien.
-			</nldd-text>
+				text="Tekst boven de collectie om de uitlijning te zien."
+			></nldd-text>
 			<nldd-collection layout="horizontal-scroll">
 				${scrollItems}
 			</nldd-collection>

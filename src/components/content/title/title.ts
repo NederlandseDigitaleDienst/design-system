@@ -13,8 +13,12 @@
  * and shows as body text, whatever its `size`: give it a level, or for large
  * letters that are not a heading use nldd-text with a display size.
  * `overline` and `supporting-text` go above and below it. Each of the three
- * has a slot in the same place for content that is more than text, and a
- * filled slot takes the place of the attribute. Both grow and shrink with the
+ * has a slot in the same place for content that is more than text. The slot
+ * takes the element the attribute draws: a heading, or a `<p>` for a title
+ * that is no heading, and a `<p>` for the overline and the supporting text.
+ * Put inline markup inside that element. A filled slot takes the place of the
+ * attribute. Each of the three chooses for itself, so a heading in the slot can
+ * go with plain `supporting-text`. Both grow and shrink with the
  * size of the title, and keep to the width of a line of reading (40em), with
  * balanced lines. The supporting text is a line or two, not a paragraph.
  *
@@ -23,7 +27,7 @@
  * engines, link previews and reader mode read without script, put the heading
  * in the default slot. In an application `text` with `heading-level` is enough.
  *
- * Inline elements in a slotted heading (a link, strong, em, code, mark, q) look
+ * Inline elements in a slotted heading or `<p>` (a link, strong, em, code, mark, q) look
  * as they do in nldd-text. A shadow root cannot reach inside a slotted element,
  * so that styling comes from a global stylesheet: `dist/css/title.css`, or
  * `global.css`, which includes it.
@@ -47,14 +51,16 @@
  * @attr {string} overline - Text above the title. Content in the overline slot takes its place.
  * @attr {1|2|3|4|5|6} heading-level - Renders text as h1–h6, and sets the default size. Absent renders a p in body text, unless the default slot brings its own heading.
  *
- * @slot overline - Overline that is more than text. Takes the place of the overline attribute.
- * @slot - Title that is more than text, such as a link. Takes the place of text, and brings its own h1–h6 for semantics.
- * @accepts h1, h2, h3, h4, h5, h6, a, strong, b, em, i, code, mark, q
- * @slot supporting-text - Supporting text that is more than text. Takes the place of the supporting-text attribute.
+ * @slot overline - Overline that is more than text, in a `<p>` of its own as the attribute draws it. Takes the place of the overline attribute.
+ * @slot - A heading (`h1`–`h6`) of your own for a title that is more than text, such as a link, or a `<p>` for a title that is no heading. Takes the place of text.
+ * @accepts h1, h2, h3, h4, h5, h6, p, a, strong, b, em, i, code, mark, q
+ * @slot supporting-text - Supporting text that is more than text, in a `<p>` of its own as the attribute draws it. Takes the place of the supporting-text attribute.
  * @slot end - One thing at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there. More than one action goes in an nldd-toolbar below the title, not in this slot: the line has no room for a row of buttons on a narrow screen, and a toolbar moves what does not fit to its overflow menu.
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { holdsLooseText } from '../../../utilities/slotted-block.js';
+import { setState } from '../../../utilities/element-state.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { titleStyles } from './title.styles.js';
@@ -100,6 +106,8 @@ export class NLDDTitle extends LitElement {
 	@state() _hasSupportingTextSlotted = false;
 	/** @internal The level of a heading in the default slot. */
 	@state() _slottedLevel: HeadingLevel | null = null;
+	/** The slots that hold text of their own, outside any element. */
+	private _looseSlots = new Set<string>();
 
 	/** @internal */
 	_onSlotChange = (e: Event): void => {
@@ -108,6 +116,9 @@ export class NLDDTitle extends LitElement {
 		// would vanish behind a slot that only holds a newline.
 		const hasContent = slot.assignedNodes().some((node) =>
 			node.nodeType === Node.ELEMENT_NODE || (node.textContent ?? '').trim().length > 0);
+		if (holdsLooseText(slot)) this._looseSlots.add(slot.name);
+		else this._looseSlots.delete(slot.name);
+		setState(this, 'loose-text', this._looseSlots.size > 0);
 		if (slot.name === 'overline') this._hasOverlineSlotted = hasContent;
 		else if (slot.name === 'supporting-text') this._hasSupportingTextSlotted = hasContent;
 		else {

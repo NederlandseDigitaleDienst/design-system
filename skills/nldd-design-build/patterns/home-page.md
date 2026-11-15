@@ -338,7 +338,7 @@ nldd-shell                            de buitenste schil
     <nldd-simple-section background="tinted">
       <nldd-title>
         <h2>Aanvragen kost tien minuten</h2>
-        <span slot="supporting-text">Houd je DigiD bij de hand.</span>
+        <p slot="supporting-text">Houd je DigiD bij de hand.</p>
       </nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-button

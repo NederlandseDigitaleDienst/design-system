@@ -302,9 +302,8 @@ export const TagInDeSlot = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					Overline slot — tag als statuslabel boven de titel.
-				</nldd-text>
+					text="Overline slot — tag als statuslabel boven de titel."
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Overline slot">
 					<nldd-list-item>
@@ -312,12 +311,13 @@ export const TagInDeSlot = {
 							text="Aanvraag huurtoeslag"
 							supporting-text="Ingediend op 9 mei 2026"
 						>
-							<nldd-tag
-								slot="overline"
-								color="success"
-								size="sm"
-								text="Goedgekeurd"
-							></nldd-tag>
+							<p slot="overline">
+								<nldd-tag
+									color="success"
+									size="sm"
+									text="Goedgekeurd"
+								></nldd-tag>
+							</p>
 						</nldd-title-cell>
 					</nldd-list-item>
 				</nldd-list>
@@ -326,9 +326,8 @@ export const TagInDeSlot = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					Default slot — inline tag binnen de titel.
-				</nldd-text>
+					text="Default slot — inline tag binnen de titel."
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Default slot">
 					<nldd-list-item>
@@ -336,7 +335,7 @@ export const TagInDeSlot = {
 							overline="Sectie"
 							supporting-text="3 items"
 						>
-							Aardappelen <nldd-tag color="accent" size="sm" text="Nieuw"></nldd-tag>
+							<p>Aardappelen <nldd-tag color="accent" size="sm" text="Nieuw"></nldd-tag></p>
 						</nldd-title-cell>
 					</nldd-list-item>
 				</nldd-list>
@@ -369,9 +368,8 @@ export const ZoektermMarkeren = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					predictive (default) — vet de niet-gematchte rest.
-				</nldd-text>
+					text="predictive (default) — vet de niet-gematchte rest."
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Predictive">
 					<nldd-list-item>
@@ -386,9 +384,8 @@ export const ZoektermMarkeren = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					match — vet de gematchte query.
-				</nldd-text>
+					text="match — vet de gematchte query."
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Match">
 					<nldd-list-item>
@@ -404,9 +401,8 @@ export const ZoektermMarkeren = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-				>
-					Werkt op text, overline en supporting-text.
-				</nldd-text>
+					text="Werkt op text, overline en supporting-text."
+				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Alle tekstvelden">
 					<nldd-list-item>

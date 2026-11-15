@@ -11,15 +11,18 @@
  * use `vertical-alignment="top"`.
  *
  * ### Slots vs attributes
- * Each text region (overline, main text, supporting text) accepts either a
- * string attribute or slotted DOM content. The slot is the source of truth: if
- * the consumer provides slotted content, it replaces the attribute-based render
- * for that region. Use slots when you need components mixed with text, such as
- * `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`. The cell does not style plain
- * HTML: for bold, write `**bold**` in the attribute, and for code put an
- * `<nldd-text>` with a `<code>` in the slot. Note that `query` highlighting and
- * `**bold**` parsing only apply to the attribute path; slotted content is
- * rendered as-is.
+ * Each text region (overline, main text, supporting text) takes plain text in
+ * its attribute, which the cell draws as a `<p>`, or a `<p>` of your own in its
+ * slot. Use the slot when you need components mixed with text, such as
+ * `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`, and put them in that `<p>`: the
+ * paragraph is then in the HTML before any script runs. The slot wins over the
+ * attribute. Each region chooses for itself, so an attribute and a slot stand
+ * side by side: plain text in `overline`, a `<p>` with a tag in the default
+ * slot. The cell does not style plain HTML: for bold, write `**bold**` in the
+ * attribute, and for code put an `<nldd-text>` in the `<p>`, with the `<code>`
+ * in a `<span>` of its own.
+ * Note that `query` highlighting and `**bold**` parsing only apply to the
+ * attribute path; slotted content is rendered as-is.
  *
  * @element nldd-text-cell
  * @attr {string} size - Cell size: 'sm' | 'md' (default: 'md')
@@ -35,9 +38,10 @@
  * @attr {string} supporting-text - Optional supporting text displayed below the main content. Supports **bold**. Falls back to `supporting-text` slot.
  * @attr {string} overline - Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot.
  *
- * @slot overline - Rich content for the overline region. Overrides the `overline` attribute when content is assigned.
- * @slot - (default) Rich content for the main text region. Wins over `text`.
- * @slot supporting-text - Rich content for the supporting text region. Overrides the `supporting-text` attribute when content is assigned.
+ * @slot overline - A `<p>` of your own for an overline that is more than text. Wins over `overline`.
+ * @slot - (default) A `<p>` of your own for main text that is more than text. Wins over `text`.
+ * @slot supporting-text - A `<p>` of your own for supporting text that is more than text. Wins over `supporting-text`.
+ * @accepts p
  *
  * ### Query mark
  * Set `query` to a substring to bold-highlight the match across text, overline
@@ -55,6 +59,8 @@
  * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive')
  */
 import { LitElement } from 'lit';
+import { holdsLooseText } from '../../../../utilities/slotted-block.js';
+import { setState } from '../../../../utilities/element-state.js';
 import { property, state } from 'lit/decorators.js';
 import { ReorderHandleMixin } from '../../../../utilities/reorder-handle-mixin.js';
 import { customElement } from '../../../../utilities/custom-element.js';
@@ -119,6 +125,8 @@ export class NLDDTextCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityMi
 	@state() _hasDefaultSlotted = false;
 	/** @internal */
 	@state() _hasSupportingTextSlotted = false;
+	/** The slots that hold text of their own, outside any element. */
+	private _looseSlots = new Set<string>();
 
 	override updated(changed: Map<string, unknown>) {
 		super.updated(changed);
@@ -161,14 +169,12 @@ export class NLDDTextCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityMi
 	/** @internal */
 	_onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
-		// Use assignedNodes() (not flatten) so we only count what the consumer
-		// actually slotted — fallback content is excluded by design.
-		const hasContent = slot.assignedNodes().some((node) => {
-			if (node.nodeType === Node.TEXT_NODE) {
-				return (node.textContent ?? '').trim().length > 0;
-			}
-			return node.nodeType === Node.ELEMENT_NODE;
-		});
+		// assignedNodes() (not flatten): only what the consumer slotted counts.
+		const hasContent = slot.assignedNodes().some((node) =>
+			node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim() !== ''));
+		if (holdsLooseText(slot)) this._looseSlots.add(slot.name);
+		else this._looseSlots.delete(slot.name);
+		setState(this, 'loose-text', this._looseSlots.size > 0);
 		switch (slot.name) {
 			case 'overline':
 				this._hasOverlineSlotted = hasContent;

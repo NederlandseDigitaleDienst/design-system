@@ -116,18 +116,16 @@ export const Galerij = {
 											size="xs"
 											line-height="tight"
 											horizontal-alignment="center"
-										>
-											${iconName}
-										</nldd-text>
+											text="${iconName}"
+										></nldd-text>
 										${iconAliases.length > 0 ? html`
 											<nldd-text
 												size="xxs"
 												line-height="tight"
 												color="secondary"
 												horizontal-alignment="center"
-											>
-												${iconAliases.join(', ')}
-											</nldd-text>
+												text="${iconAliases.join(', ')}"
+											></nldd-text>
 										` : ''}
 									</nldd-container>
 								</nldd-card>

@@ -210,9 +210,7 @@ export const EigenKleur = {
 					color="content"
 					number="3"
 				></nldd-badge>
-				<nldd-text>
-					Erft de kleur van deze zin
-				</nldd-text>
+				<nldd-text text="Erft de kleur van deze zin"></nldd-text>
 			</span>
 			<nldd-badge
 				custom-color="#f8fafc"
