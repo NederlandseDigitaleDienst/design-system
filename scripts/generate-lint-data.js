@@ -14,10 +14,11 @@
  */
 
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { basename, dirname, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { aliases } from '../src/components/content/icon/icon-aliases.js';
 import { cssRules, declarations, TOKEN_PREFIX } from '../lint/css.js';
+import { shippedStylesheets } from './build-styles.js';
 import { booleanAttributes, buildClasses, buildContract, buildDevRules, loadRules, normalizeSelectors, seeUrl } from './lib/lint-data.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -70,15 +71,8 @@ function translationKeys() {
 }
 const translations = translationKeys();
 
-/** The stylesheets build:styles copies to dist/css, so the list has one source. */
 const pkg = read('package.json');
-const shippedCss = [...pkg.scripts['build:styles'].matchAll(/src\/[^\s]+?\.css/g)].flatMap(([path]) => {
-	if (!path.includes('*')) return [resolve(repoRoot, path)];
-	const directory = resolve(repoRoot, dirname(path));
-	const pattern = new RegExp(`^${basename(path).replace(/\./g, '\\.').replace('*', '.*')}$`);
-	return readdirSync(directory).filter((file) => pattern.test(file)).sort().map((file) => resolve(directory, file));
-});
-const stylesheets = shippedCss.map((file) => readFileSync(file, 'utf8'));
+const stylesheets = shippedStylesheets().map((file) => readFileSync(file, 'utf8'));
 // A context variable is API only where variables.css gives it a default; the rest is wiring between components.
 const contextDefaults = new Set(declarations(readFileSync(resolve(repoRoot, 'src/assets/styles/variables.css'), 'utf8')).map(({ name }) => name).filter((name) => name.startsWith('--context-')));
 const isToken = (name) => TOKEN_PREFIX.test(name) && (!name.startsWith('--context-') || contextDefaults.has(name));

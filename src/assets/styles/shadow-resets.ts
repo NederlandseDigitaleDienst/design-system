@@ -39,8 +39,9 @@ export const slottedReset = css`
 `;
 
 /**
- * A `<p>` or heading of the consumer in a slot whose box the component draws:
- * it takes the text style of that box. `all: revert` drops what the page sets
+ * A `<p>`, `<span>` or heading of the consumer in a slot whose box the
+ * component draws: it takes the text style of that box. Only for
+ * `::slotted()` rules on those elements. `all: revert` drops what the page sets
  * on its own paragraphs and headings; the margin and the heading size of the
  * browser go with the two lines after it. Each is `!important`, because a rule
  * of the page beats a normal `::slotted()` declaration whatever its specificity.
