@@ -18,6 +18,11 @@
  * size of the title, and keep to the width of a line of reading (40em), with
  * balanced lines. The supporting text is a line or two, not a paragraph.
  *
+ * What is in a slot is in the HTML the server sends; what comes from an
+ * attribute is drawn in the browser. On a page of a website, which search
+ * engines, link previews and reader mode read without script, put the heading
+ * in the default slot. In an application `text` with `heading-level` is enough.
+ *
  * Inline elements in a slotted heading (a link, strong, em, code, mark, q) look
  * as they do in nldd-text. A shadow root cannot reach inside a slotted element,
  * so that styling comes from a global stylesheet: `dist/css/title.css`, or

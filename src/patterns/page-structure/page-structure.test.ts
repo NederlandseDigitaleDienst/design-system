@@ -8,7 +8,7 @@ import headerAccount from './page-structure.header-account.html?raw';
 import headerStatus from './page-structure.header-status.html?raw';
 import footer from './page-structure.footer.html?raw';
 import footerHome from './page-structure.footer-home.html?raw';
-import { expectBreadcrumbsInFooter, expectLegalBar, expectSoundHeadings, expectTopBar } from '../page-checks.js';
+import { slottedHeading, expectBreadcrumbsInFooter, expectLegalBar, expectSoundHeadings, expectTopBar } from '../page-checks.js';
 import '../../components/index.js';
 
 describe('patroon: paginaopbouw', () => {
@@ -196,7 +196,7 @@ describe('patroon: paginaopbouw, de footer', () => {
 		await mount();
 		const titles = [...root.querySelectorAll('nldd-page-footer nldd-title')];
 		expect(titles.length).toBeGreaterThan(1);
-		expect(titles.every((title) => title.getAttribute('heading-level') === '2')).toBe(true);
+		expect(titles.every((title) => slottedHeading(title)?.tagName === 'H2')).toBe(true);
 		expectSoundHeadings(root);
 	});
 

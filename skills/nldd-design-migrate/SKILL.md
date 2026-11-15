@@ -204,7 +204,7 @@ Een component tekent zijn shadow root pas in de browser. De HTML die de server v
 
 De sweep hierboven ziet dit niet, want die meet in een browser waar het script al gedraaid heeft en zoekt ook in shadow roots. Tel de koppen daarom in de build of in de serverrespons, met een grep op `<h1`.
 
-Zet een paginatitel in het slot van `nldd-title`, als eigen kop: het slot gaat voor het attribuut, en de kop staat er dan ook zonder script. De voorbeelden in de patronen gebruiken `text`, en dat is genoeg voor een applicatie maar niet voor een site die zonder script leesbaar moet blijven. Beslis vóór je begint of de site zonder JavaScript moet werken; [`static-site-generator.md`](static-site-generator.md) zegt wat er dan overblijft.
+Zet elke kop in het slot van `nldd-title`, zoals de paginapatronen doen: het slot gaat voor het attribuut, en de kop staat er dan ook zonder script. Een link blijft zonder script wel weg, ook met de tekst in het slot, want het anker tekent het component zelf. Beslis vóór je begint of de site zonder JavaScript moet werken; [`static-site-generator.md`](static-site-generator.md) zegt wat er dan overblijft.
 
 ## Toegankelijkheid is waar deze migratie je te schande zet
 

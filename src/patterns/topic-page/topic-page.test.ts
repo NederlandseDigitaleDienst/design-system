@@ -52,7 +52,7 @@ describe('patroon: onderwerppagina', () => {
 	it('opent met een hero met de h1, een korte uitleg en de hoofdtaak als enige knop', () => {
 		const first = root.querySelector('nldd-page > :not([slot])')!;
 		expect(first.tagName).toBe('NLDD-HERO');
-		expect(first.querySelector(':scope > nldd-title[heading-level="1"]')).not.toBeNull();
+		expect(first.querySelector(':scope > nldd-title:has(> h1)')).not.toBeNull();
 		expect(first.querySelector(':scope > nldd-rich-text')).not.toBeNull();
 		const buttons = [...first.querySelectorAll('nldd-button')];
 		expect(buttons.length).toBe(1);

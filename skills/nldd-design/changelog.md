@@ -15,6 +15,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Changed
+
+- **The page patterns put their headings in the slot of `nldd-title`.** A title from `text` is drawn in the browser, so a search engine that does not render the page, a link preview or reader mode saw no headings at all. A heading in the slot is in the HTML the server sends. The home, content, topic, navigation and page structure patterns now do this, and the JSDoc of `nldd-title` says when the slot matters: on a page of a website. In an application `text` with `heading-level` stays enough.
+
 ### Fixed
 
 - **The package imports on a server.** A framework that renders pages on the server (Next, Docusaurus, Astro, Remix) loads its modules in Node, and 38 of the 132 entry points stopped the build there: the main entry and every component with a tooltip, through a `matchMedia` call, and `nldd-form`, `nldd-form-section` and `nldd-button-bar`, which extend `HTMLElement` without Lit. A plain `import '@nldd/design-system'` or a subpath import now works in shared code, without a check for `window` around it. The components still render in the browser: without JavaScript, what they draw in their shadow root is not in the HTML.

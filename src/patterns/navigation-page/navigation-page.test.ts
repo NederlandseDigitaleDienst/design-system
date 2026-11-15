@@ -37,7 +37,7 @@ describe('patroon: navigatiepagina', () => {
 			const sections = new DOMParser().parseFromString(source, 'text/html').querySelectorAll('nldd-page > :not([slot])');
 			expect(sections.length).toBe(1);
 			expect(sections[0].hasAttribute('background')).toBe(false);
-			const title = sections[0].querySelector(':scope > nldd-title[heading-level="1"]')!;
+			const title = sections[0].querySelector(':scope > nldd-title:has(> h1)')!;
 			const slot = title.getAttribute('slot');
 			expect(['header', 'left']).toContain(slot);
 			expect(sections[0].querySelector(`:scope > nldd-container`)).toBeNull();
@@ -54,7 +54,7 @@ describe('patroon: navigatiepagina', () => {
 	it('zet de lijst naast de intro, als navigatie met een naam waarin elke rij één link is', async () => {
 		await mount(markup);
 		const section = root.querySelector('nldd-one-third-two-thirds-section')!;
-		expect(section.querySelector(':scope > nldd-title[slot="left"][heading-level="1"]')).not.toBeNull();
+		expect(section.querySelector(':scope > nldd-title[slot="left"]:has(> h1)')).not.toBeNull();
 		const list = section.querySelector(':scope > [slot="right"]')!;
 		expect(list.tagName).toBe('NLDD-LIST');
 		expect(list.getAttribute('type')).toBe('navigation');
@@ -74,7 +74,7 @@ describe('patroon: navigatiepagina', () => {
 	it('zet de kaarten onder de intro in een collection over de volle breedte, en elke kaart is één link met een naam', async () => {
 		await mount(cards);
 		const section = root.querySelector('nldd-simple-section')!;
-		expect(section.querySelector(':scope > nldd-title[slot="header"][heading-level="1"]')).not.toBeNull();
+		expect(section.querySelector(':scope > nldd-title[slot="header"]:has(> h1)')).not.toBeNull();
 		const collection = section.querySelector(':scope > nldd-collection')!;
 		expect(collection.hasAttribute('slot')).toBe(false);
 		const items = [...collection.children];

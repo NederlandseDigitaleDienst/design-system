@@ -36,7 +36,7 @@ describe('patroon: contentpagina', () => {
 	it('opent zonder hero, met de titel als kop', () => {
 		expect(root.querySelector('nldd-hero')).toBeNull();
 		const first = root.querySelector('nldd-page > :not([slot])')!;
-		expect(first.querySelector(':scope > nldd-title[slot="header"][heading-level="1"]')).not.toBeNull();
+		expect(first.querySelector(':scope > nldd-title[slot="header"]:has(> h1)')).not.toBeNull();
 	});
 
 	it('zet een inhoudsopgave in de sidebar die naar elke kop in de tekst springt', () => {
@@ -165,7 +165,7 @@ describe('patroon: contentpagina', () => {
 			const section = page.querySelector('nldd-page > :not([slot])')!;
 			expect(section.tagName).toBe('NLDD-TWO-THIRDS-ONE-THIRD-SECTION');
 			expect(section.hasAttribute('grow')).toBe(true);
-			expect(section.querySelector(':scope > nldd-title[slot="header"][heading-level="1"]')).not.toBeNull();
+			expect(section.querySelector(':scope > nldd-title[slot="header"]:has(> h1)')).not.toBeNull();
 			expect(section.querySelector(':scope > nldd-rich-text[slot="left"]')).not.toBeNull();
 			expect(section.querySelector(':scope > nldd-card[slot="right"] nldd-button[appearance="primary"]')).not.toBeNull();
 			expect(page.querySelectorAll('nldd-button[appearance="primary"]').length).toBe(1);

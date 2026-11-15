@@ -87,9 +87,9 @@ Met een lijst:
     <nldd-one-third-two-thirds-section>
       <nldd-title
         slot="left"
-        text="Aanvragen"
-        heading-level="1"
-      ></nldd-title>
+      >
+        <h1>Aanvragen</h1>
+      </nldd-title>
       <nldd-spacer
         slot="left"
         size="16"
@@ -279,9 +279,9 @@ Met kaarten:
     <nldd-simple-section>
       <nldd-title
         slot="header"
-        text="Aanvragen"
-        heading-level="1"
-      ></nldd-title>
+      >
+        <h1>Aanvragen</h1>
+      </nldd-title>
       <nldd-spacer
         slot="header"
         size="16"
@@ -300,9 +300,9 @@ Met kaarten:
           <nldd-container padding="16">
             <nldd-title
               size="display-4"
-              text="Aanvraag indienen"
-              heading-level="2"
-            ></nldd-title>
+            >
+              <h2>Aanvraag indienen</h2>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Wat je nodig hebt en hoe het indienen gaat.</p>
@@ -316,9 +316,9 @@ Met kaarten:
           <nldd-container padding="16">
             <nldd-title
               size="display-4"
-              text="Behandeling volgen"
-              heading-level="2"
-            ></nldd-title>
+            >
+              <h2>Behandeling volgen</h2>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Bij welke stap je aanvraag ligt, en wie er aan werkt.</p>
@@ -332,9 +332,9 @@ Met kaarten:
           <nldd-container padding="16">
             <nldd-title
               size="display-4"
-              text="Aanvraag wijzigen"
-              heading-level="2"
-            ></nldd-title>
+            >
+              <h2>Aanvraag wijzigen</h2>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Gegevens aanvullen of een offerte vervangen, zolang de aanvraag loopt.</p>
@@ -348,9 +348,9 @@ Met kaarten:
           <nldd-container padding="16">
             <nldd-title
               size="display-4"
-              text="Aanvraag intrekken"
-              heading-level="2"
-            ></nldd-title>
+            >
+              <h2>Aanvraag intrekken</h2>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Stoppen met een aanvraag die nog in behandeling is.</p>
@@ -364,9 +364,9 @@ Met kaarten:
           <nldd-container padding="16">
             <nldd-title
               size="display-4"
-              text="Besluit begrijpen"
-              heading-level="2"
-            ></nldd-title>
+            >
+              <h2>Besluit begrijpen</h2>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Wat er in het besluit staat en wat het voor je betekent.</p>
@@ -380,9 +380,9 @@ Met kaarten:
           <nldd-container padding="16">
             <nldd-title
               size="display-4"
-              text="Bezwaar maken"
-              heading-level="2"
-            ></nldd-title>
+            >
+              <h2>Bezwaar maken</h2>
+            </nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
               <p>Wat je doet als je het niet eens bent met een besluit.</p>
@@ -454,7 +454,7 @@ Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbo
 
 Wat je gratis krijgt: elke rij en elke kaart is één link en één tabstop, een lijst met `type="navigation"` is een eigen navigatie, en op smal staat alles in de volgorde waarin je het leest.
 
-Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, een `accessible-label` op de lijst, en een titel die zonder de zin eronder ook te begrijpen is. Bij kaarten is die titel ook het `accessible-label`, dus een schermlezer die door de links springt hoort alleen die.
+Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, de kop van het juiste niveau in het slot van elke titel, een `accessible-label` op de lijst, en een titel die zonder de zin eronder ook te begrijpen is. Bij kaarten is die titel ook het `accessible-label`, dus een schermlezer die door de links springt hoort alleen die.
 
 ## Gezien in
 
