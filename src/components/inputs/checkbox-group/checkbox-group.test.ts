@@ -160,6 +160,11 @@ describe('nldd-checkbox-field nested in another one', () => {
 		await click(parent);
 		expect([dak.checked, vloer.checked]).toEqual([true, false]);
 		expect(state(parent)).toBe('mixed');
+		await click(parent);
+		expect([dak.checked, vloer.checked]).toEqual([false, false]);
+		expect(state(parent)).toBe(false);
+		await click(parent);
+		expect([dak.checked, vloer.checked]).toEqual([true, false]);
 	});
 
 	it('takes its first state from the options under it', async () => {

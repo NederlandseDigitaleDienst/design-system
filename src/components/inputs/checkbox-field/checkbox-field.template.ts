@@ -1,4 +1,5 @@
 import { html, nothing, TemplateResult } from 'lit';
+import { live } from 'lit/directives/live.js';
 import type { NLDDCheckboxField } from './checkbox-field.js';
 import '../checkbox/checkbox.js';
 
@@ -13,8 +14,8 @@ export function checkboxFieldTemplate(component: NLDDCheckboxField): TemplateRes
 					color=${component.color || nothing}
 					?invalid=${component.invalid}
 					?required=${component.required && !component._inGroup}
-					?checked=${component.checked}
-					?indeterminate=${component.indeterminate}
+					?checked=${live(component.checked)}
+					?indeterminate=${live(component.indeterminate)}
 					?disabled=${component.disabled}
 					name=${component.name || nothing}
 					value=${component.value}

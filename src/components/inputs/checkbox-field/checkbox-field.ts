@@ -10,7 +10,8 @@
  * when some are, and unchecked when none are. Checking or unchecking it does
  * the same to every option under it that is not disabled, nor under a
  * disabled one; those fire no `change` of their own then, so listen on this
- * one or higher up. Its own `change` fires when they change its state, so a
+ * one or higher up. When a disabled option keeps it indeterminate and the rest
+ * are already checked, a click unchecks them instead. Its own `change` fires when they change its state, so a
  * box further up follows too. In an nldd-checkbox-group, the options under it
  * belong to the group as well.
  *
@@ -88,7 +89,7 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	/** In an nldd-checkbox-group, where `required` is about the group and no
 	 *  single box is announced as required. */
 	get _inGroup(): boolean {
-		return this.closest('nldd-checkbox-group') !== null;
+		return this._group !== null;
 	}
 
 	/** Set by nldd-checkbox-group: whether any box in the group is checked,
@@ -144,6 +145,7 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Also when the app sets `checked` or a form resets it: the group answers
 	 *  `required` again, which it cannot see by itself. */
 	override willUpdate(changed: PropertyValues): void {
+		super.willUpdate(changed);
 		if (this.hasUpdated && changed.has('checked')) this._group?._optionChanged();
 	}
 
@@ -174,6 +176,13 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Gives every option under this one, at any depth, this state, except
 	 *  those that are disabled and everything under them. */
+	/** Whether setting the options under this one would change any of them. */
+	private _wouldChange(checked: boolean): boolean {
+		return this._childFields.some((field) => !field.disabled && (field._childFields.length > 0
+			? field._wouldChange(checked)
+			: field.checked !== checked));
+	}
+
 	private _setChildren(checked: boolean): void {
 		if (this._childFields.length === 0) return;
 		this._childFields.forEach((field) => {
@@ -227,7 +236,10 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	public _handleChange(e: Event): void {
-		const { checked } = (e as CustomEvent<{ checked: boolean }>).detail;
+		let { checked } = (e as CustomEvent<{ checked: boolean }>).detail;
+		// Partial because of an option it cannot change: checking would do
+		// nothing, so the click clears what it can.
+		if (checked && this._childFields.length > 0 && !this._wouldChange(true)) checked = false;
 		this.checked = checked;
 		this.indeterminate = false;
 		this._setChildren(checked);
