@@ -3,6 +3,15 @@ import type { DevRule } from './dev-checks.js';
 
 export const devRules: DevRule[] = [
 	{
+		"id": "accordion-item-needs-name",
+		"message": "An accordion item needs `text`: it is the name of the button that opens it, and the title a reader sees.",
+		"context": "nldd-accordion-item",
+		"assert": "[text]:not([text=\"\"])",
+		"properties": [
+			"text"
+		]
+	},
+	{
 		"id": "action-goes-on-button",
 		"message": "Put slot=\"actions\" on each nldd-button, not on an element around them.",
 		"context": ":is(nldd-modal-dialog, nldd-inline-dialog) > [slot=\"actions\"]:not(nldd-button)"

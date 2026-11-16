@@ -1,0 +1,8 @@
+severity: warn
+context: nldd-accordion-item
+assert: '[text]'
+message: 'An accordion item needs `text`: it is the name of the button that opens it, and the title a reader sees.'
+examples:
+  passed: ['<nldd-accordion><nldd-accordion-item text="Hoe lang duurt de beoordeling?"></nldd-accordion-item></nldd-accordion>']
+  failed: ['<nldd-accordion><nldd-accordion-item></nldd-accordion-item></nldd-accordion>']
+  cantTell: ['<nldd-accordion><nldd-accordion-item :text="vraag"></nldd-accordion-item></nldd-accordion>']
