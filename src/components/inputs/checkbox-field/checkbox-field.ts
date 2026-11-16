@@ -10,10 +10,10 @@
  * when some are, and unchecked when none are. Checking or unchecking it does
  * the same to every option under it that is not disabled, nor under a
  * disabled one; those fire no `change` of their own then, so listen on this
- * one or higher up. When a disabled option keeps it indeterminate and the rest
- * are already checked, a click unchecks them instead. Its own `change` fires when they change its state, so a
- * box further up follows too. In an nldd-checkbox-group, the options under it
- * belong to the group as well.
+ * one or higher up. When a disabled option keeps it indeterminate and the
+ * rest are already checked, a click unchecks them instead. Its own `change`
+ * fires when they change its state, so a box further up follows too. In an
+ * nldd-checkbox-group, the options under it belong to the group as well.
  *
  * Form-associated: participates in native form submission under `name` with
  * `value` when checked (the inner nldd-checkbox sits in the shadow root and
@@ -165,17 +165,14 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 		if (fields.length === 0) return;
 		const all = fields.every((field) => field.checked);
 		const some = fields.some((field) => field.checked || field.indeterminate);
-		const checked = all;
 		const indeterminate = !all && some;
-		if (checked === this.checked && indeterminate === this.indeterminate) return;
-		this.checked = checked;
+		if (all === this.checked && indeterminate === this.indeterminate) return;
+		this.checked = all;
 		this.indeterminate = indeterminate;
 		this.commitFormValue();
 		if (announce) this._dispatchChange();
 	}
 
-	/** Gives every option under this one, at any depth, this state, except
-	 *  those that are disabled and everything under them. */
 	/** Whether setting the options under this one would change any of them. */
 	private _wouldChange(checked: boolean): boolean {
 		return this._childFields.some((field) => !field.disabled && (field._childFields.length > 0
@@ -183,6 +180,8 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 			: field.checked !== checked));
 	}
 
+	/** Gives every option under this one, at any depth, this state, except
+	 *  those that are disabled and everything under them. */
 	private _setChildren(checked: boolean): void {
 		if (this._childFields.length === 0) return;
 		this._childFields.forEach((field) => {

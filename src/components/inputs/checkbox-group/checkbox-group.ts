@@ -60,6 +60,7 @@ export class NLDDCheckboxGroup extends LitElement {
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
+	private _answerQueued = false;
 
 	/**
 	 * Marks the control as invalid.
@@ -157,8 +158,6 @@ export class NLDDCheckboxGroup extends LitElement {
 			this._syncAnswered();
 		});
 	}
-
-	private _answerQueued = false;
 
 	_onSlotChange = (): void => {
 		this._syncFields();
