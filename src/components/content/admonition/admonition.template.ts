@@ -37,8 +37,8 @@ export function admonitionTemplate(component: NLDDAdmonition): TemplateResult {
 						<nldd-icon icon="chevron-down"></nldd-icon>
 					</span>
 				</summary>
-				<div class="admonition__content">
-					<div class="admonition__body">
+				<div class="admonition__main">
+					<div class="admonition__content">
 						<slot></slot>
 					</div>
 				</div>
@@ -53,9 +53,9 @@ export function admonitionTemplate(component: NLDDAdmonition): TemplateResult {
 					${title(component.text)}
 				</div>
 			` : nothing}
-			<div class="admonition__content">
+			<div class="admonition__main">
 				${component.text ? nothing : icon}
-				<div class="admonition__body">
+				<div class="admonition__content">
 					<slot></slot>
 				</div>
 			</div>

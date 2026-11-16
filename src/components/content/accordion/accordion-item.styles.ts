@@ -35,7 +35,7 @@ export const accordionItemStyles = css`
 	}
 
 
-	/* # Item */
+	/* # Block */
 
 	.accordion-item {
 		--context-background-color: var(--_accordion-item-background-color);
@@ -58,7 +58,7 @@ export const accordionItemStyles = css`
 	}
 
 
-	/* # Title bar */
+	/* # Elements */
 
 	.accordion-item__title-bar {
 		--context-background-color: var(--_accordion-item-title-bar-background-color);
@@ -138,9 +138,6 @@ export const accordionItemStyles = css`
 		overflow-wrap: break-word;
 	}
 
-
-	/* # Disclosure icon */
-
 	.accordion-item__disclosure-icon {
 		display: flex;
 		flex-shrink: 0;
@@ -153,9 +150,6 @@ export const accordionItemStyles = css`
 	.accordion-item[open] .accordion-item__disclosure-icon {
 		rotate: var(--_accordion-item-disclosure-icon-open-rotation);
 	}
-
-
-	/* # Content */
 
 	.accordion-item::details-content {
 		block-size: 0;

@@ -88,7 +88,7 @@ export const admonitionStyles = css`
 	}
 
 
-	/* # Title bar */
+	/* # Elements */
 
 	.admonition__title-bar {
 		--context-background-color: var(--_admonition-title-bar-background-color);
@@ -174,9 +174,6 @@ export const admonitionStyles = css`
 		font: inherit;
 	}
 
-
-	/* # Icon */
-
 	.admonition__icon {
 		display: flex;
 		flex-shrink: 0;
@@ -187,7 +184,7 @@ export const admonitionStyles = css`
 		color: var(--_admonition-icon-color);
 	}
 
-	.admonition__content > .admonition__icon {
+	.admonition__main > .admonition__icon {
 		margin-block-start: 0;
 	}
 
@@ -197,9 +194,6 @@ export const admonitionStyles = css`
 			color: CanvasText;
 		}
 	}
-
-
-	/* # Disclosure icon */
 
 	.admonition__disclosure-icon {
 		display: flex;
@@ -219,6 +213,19 @@ export const admonitionStyles = css`
 		.admonition__disclosure-icon {
 			transition: none;
 		}
+	}
+
+	.admonition__main {
+		box-sizing: border-box;
+		display: flex;
+		padding: var(--_admonition-inset);
+		gap: var(--_admonition-gap);
+	}
+
+	.admonition__content {
+		min-width: 0;
+		flex-grow: 1;
+		font: var(--primitives-font-body-md-regular-snug);
 	}
 
 
@@ -244,22 +251,6 @@ export const admonitionStyles = css`
 		details.admonition::details-content {
 			transition: none;
 		}
-	}
-
-
-	/* # Content */
-
-	.admonition__content {
-		box-sizing: border-box;
-		display: flex;
-		padding: var(--_admonition-inset);
-		gap: var(--_admonition-gap);
-	}
-
-	.admonition__body {
-		min-width: 0;
-		flex-grow: 1;
-		font: var(--primitives-font-body-md-regular-snug);
 	}
 
 
