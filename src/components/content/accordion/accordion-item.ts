@@ -16,7 +16,7 @@
  *
  * @slot - The content: an nldd-rich-text, or an nldd-text for a single paragraph.
  *
- * @fires toggle - When the item opens or closes, also when `open` is set from code, as nldd-accordion needs for `exclusive`; read `open` for the new state.
+ * @fires toggle - When the item opens or closes, also when `open` is set from code, as nldd-accordion needs for `exclusive`, and once on load for an item that starts open, as a native details does; read `open` for the new state.
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
