@@ -15,6 +15,11 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Fixed
+
+- `nldd-code-viewer`: "Gekopieerd" goes away when the page scrolls, and after a tap it goes after 2 seconds. On a phone the copy button kept its check mark and its tooltip until you tapped somewhere else.
+- `nldd-tooltip`: an open tooltip stays beside its trigger when the page scrolls, and hides while the trigger is out of view. It used to stay at the edge of the screen, apart from what it describes.
+
 ## [0.25.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.24.0...v0.25.0) (2026-11-15)
 
 ### Highlights

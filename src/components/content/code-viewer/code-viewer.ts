@@ -81,6 +81,10 @@ export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 /** Time to cross from the button onto the tooltip without losing it. */
 const COPY_LEAVE_DELAY_MS = 300;
 
+/** How long the outcome of a tap stays: on touch nothing ever leaves the
+ *  button, so the focus would hold it until the next tap elsewhere. */
+const COPY_TOUCH_DURATION_MS = 2000;
+
 /* navigator.clipboard is undefined off a secure context (not https/localhost),
  * so the copy button would be a permanent dead button that only ever flashes
  * "Kopiëren mislukt". Feature-detect and hide it when it genuinely can't work. */
@@ -153,6 +157,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	private _mutationObserver?: MutationObserver;
 	private _scrollableRaf?: number;
 	private _copyResetTimer?: ReturnType<typeof setTimeout>;
+	/** The pointer of the last press on the copy button, '' for a keyboard. */
+	private _copyPointerType = '';
 
 	/* The copy button only renders when the user hasn't opted out (no-copy) AND
 	 * the Clipboard API can actually work here (secure context). Off https the
@@ -243,6 +249,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		}
 		clearTimeout(this._copyResetTimer);
 		this._copyResetTimer = undefined;
+		document.removeEventListener('scroll', this._onCopyScroll, { capture: true });
 	}
 
 	override firstUpdated(): void {
@@ -297,6 +304,13 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	}
 
 	override updated(changed: Map<string, unknown>): void {
+		if (changed.has('_copyState')) {
+			if (this._copyState === 'idle') {
+				document.removeEventListener('scroll', this._onCopyScroll, { capture: true });
+			} else {
+				document.addEventListener('scroll', this._onCopyScroll, { capture: true, passive: true });
+			}
+		}
 		// Keep the button-suppression flag current when no-copy toggles at runtime.
 		if (changed.has('noCopy')) {
 			this._copyUnavailable = !this.noCopy && !isClipboardAvailable();
@@ -495,7 +509,9 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		// Safari and Firefox on Mac do not focus a button on click. The outcome
 		// clears on focusout, so without focus it could stay after the reader
 		// moved on.
-		(event?.currentTarget as HTMLElement | null)?.focus?.();
+		// Without preventScroll a half-visible button scrolls into view, and
+		// that scroll would clear the outcome right away.
+		(event?.currentTarget as HTMLElement | null)?.focus?.({ preventScroll: true });
 		try {
 			if (!isClipboardAvailable()) throw new Error('Clipboard API unavailable');
 			await navigator.clipboard.writeText(this._getRawText());
@@ -505,7 +521,29 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		}
 		clearTimeout(this._copyResetTimer);
 		this._copyResetTimer = undefined;
+		if (this._copyPointerType === 'touch') {
+			this._copyResetTimer = setTimeout(() => {
+				this._copyResetTimer = undefined;
+				this._copyState = 'idle';
+			}, COPY_TOUCH_DURATION_MS);
+		}
 	}
+
+	public _onCopyPointerDown(event: PointerEvent): void {
+		this._copyPointerType = event.pointerType;
+	}
+
+	public _onCopyKeyDown(): void {
+		this._copyPointerType = '';
+	}
+
+	/* The outcome belongs to the moment of copying: whoever scrolls has
+	 * moved on, and a tooltip fixed to the screen would drift off its button. */
+	private _onCopyScroll = (): void => {
+		clearTimeout(this._copyResetTimer);
+		this._copyResetTimer = undefined;
+		this._copyState = 'idle';
+	};
 
 	/* The outcome stays while the pointer or the focus is on the button
 	 * (WCAG 1.4.13): a timer took it away before a screen magnifier user had
