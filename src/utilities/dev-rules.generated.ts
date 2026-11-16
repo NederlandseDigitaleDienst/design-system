@@ -1169,6 +1169,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-top-title-bar:state(anchor-not-heading)"
 	},
 	{
+		"id": "top-title-bar-anchor-no-effect",
+		"message": "`collapse-anchor` has no effect without `sticky-header` on the nldd-page: the bar scrolls away before it turns compact.",
+		"context": "nldd-page:not([sticky-header]) > nldd-top-title-bar[collapse-anchor]:not([collapse-anchor=\"\"])"
+	},
+	{
 		"id": "top-title-bar-anchor-not-found",
 		"message": "`collapse-anchor` matches nothing yet. If it never renders, the bar keeps its own title and reads it out twice.",
 		"context": "nldd-top-title-bar:state(no-anchor)"

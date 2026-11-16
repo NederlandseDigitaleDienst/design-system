@@ -30,6 +30,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { cssTimeToMs } from '../../../utilities/css-time.js';
 import { timePickerStyles } from './time-picker.styles.js';
 import { timePickerTemplate } from './time-picker.template.js';
 import { nlddTimePickerTranslations, type NLDDTimePickerTranslations } from './time-picker.i18n.js';
@@ -58,13 +59,6 @@ export function fromMinutes(total: number): string {
 
 function isTime(value: string): boolean {
 	return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
-}
-
-/** A CSS time (`200ms`, `0.2s`) in milliseconds; 0 for anything else. */
-function toMs(time: string): number {
-	const value = parseFloat(time);
-	if (Number.isNaN(value)) return 0;
-	return time.trim().endsWith('ms') ? value : time.trim().endsWith('s') ? value * 1000 : 0;
 }
 
 @customElement('nldd-time-picker')
@@ -449,7 +443,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		const from = column.scrollTop;
 		const distance = top - from;
 		if (Math.abs(distance) < 1) return;
-		const duration = toMs(getComputedStyle(this).getPropertyValue('--_time-picker-glide-duration'));
+		const duration = cssTimeToMs(getComputedStyle(this).getPropertyValue('--_time-picker-glide-duration'));
 		const start = performance.now();
 		column.toggleAttribute('data-gliding', true);
 		const step = (now: number): void => {

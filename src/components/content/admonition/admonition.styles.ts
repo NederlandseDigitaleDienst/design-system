@@ -10,21 +10,23 @@ export const admonitionStyles = css`
 	/* # Host */
 
 	:host {
-		--_admonition-border-width: var(--semantics-surfaces-highlight-border-width);
-		--_admonition-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_admonition-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_admonition-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_admonition-corner-radius: var(--primitives-corner-radius-lg);
 		--_admonition-background-color: var(--semantics-surfaces-base-background-color);
 		--_admonition-content-color: var(--semantics-content-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_admonition-title-bar-hover-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-50));
-		--_admonition-title-bar-min-height: var(--semantics-controls-md-min-size);
-		--_admonition-inset: var(--primitives-space-12);
-		--_admonition-gap: var(--primitives-space-8);
-		--_admonition-title-bar-corner-radius: calc(var(--_admonition-corner-radius) - var(--_admonition-border-width));
+		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-tinted-is-hovered-background-color);
+		--_admonition-title-bar-min-height: var(--semantics-disclosures-title-bar-min-height);
+		--_admonition-title-bar-padding-block: var(--semantics-disclosures-title-bar-padding-block);
+		--_admonition-inset: var(--semantics-disclosures-inset);
+		--_admonition-gap: var(--semantics-disclosures-title-bar-gap);
+		--_admonition-title-bar-font: var(--semantics-disclosures-title-bar-font);
+		--_admonition-title-bar-corner-radius: calc(var(--_admonition-corner-radius) - var(--_admonition-highlight-border-width));
 		--_admonition-icon-size: var(--primitives-space-24);
 		--_admonition-icon-color: var(--primitives-color-neutral-750);
-		--_admonition-chevron-size: var(--primitives-space-20);
-		--_admonition-chevron-open-rotation: 180deg;
+		--_admonition-disclosure-icon-size: var(--semantics-disclosures-disclosure-icon-size);
+		--_admonition-disclosure-icon-open-rotation: var(--semantics-disclosures-disclosure-icon-open-rotation);
 		--_admonition-transition-duration: var(--primitives-transition-duration-fast);
 
 		${inheritedTextReset}
@@ -37,30 +39,30 @@ export const admonitionStyles = css`
 	}
 
 	:host([variant="accent"]) {
-		--_admonition-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
+		--_admonition-highlight-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-accent-tinted-background-color);
-		--_admonition-title-bar-hover-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-50));
+		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-accent-tinted-is-hovered-background-color);
 		--_admonition-icon-color: var(--components-admonition-accent-icon-color);
 	}
 
 	:host([variant="success"]) {
-		--_admonition-border-color: var(--semantics-surfaces-success-tinted-highlight-border-color);
+		--_admonition-highlight-border-color: var(--semantics-surfaces-success-tinted-highlight-border-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-success-tinted-background-color);
-		--_admonition-title-bar-hover-background-color: light-dark(var(--primitives-color-success-75), var(--primitives-color-success-50));
+		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-success-tinted-is-hovered-background-color);
 		--_admonition-icon-color: light-dark(var(--primitives-color-success-550), var(--primitives-color-success-650));
 	}
 
 	:host([variant="warning"]) {
-		--_admonition-border-color: var(--semantics-surfaces-warning-tinted-highlight-border-color);
+		--_admonition-highlight-border-color: var(--semantics-surfaces-warning-tinted-highlight-border-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-warning-tinted-background-color);
-		--_admonition-title-bar-hover-background-color: light-dark(var(--primitives-color-warning-75), var(--primitives-color-warning-50));
+		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-warning-tinted-is-hovered-background-color);
 		--_admonition-icon-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
 	}
 
 	:host([variant="critical"]) {
-		--_admonition-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
+		--_admonition-highlight-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-critical-tinted-background-color);
-		--_admonition-title-bar-hover-background-color: light-dark(var(--primitives-color-critical-75), var(--primitives-color-critical-50));
+		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-critical-tinted-is-hovered-background-color);
 		--_admonition-icon-color: var(--primitives-color-critical-600);
 	}
 
@@ -72,7 +74,7 @@ export const admonitionStyles = css`
 		${surfaceContent}
 		box-sizing: border-box;
 		display: block;
-		border: var(--_admonition-border-width) solid var(--_admonition-border-color);
+		border: var(--_admonition-highlight-border-width) solid var(--_admonition-highlight-border-color);
 		border-radius: var(--_admonition-corner-radius);
 		background-color: var(--_admonition-background-color);
 		--context-content-color: var(--_admonition-content-color);
@@ -96,19 +98,23 @@ export const admonitionStyles = css`
 		border-start-start-radius: var(--_admonition-title-bar-corner-radius);
 		border-start-end-radius: var(--_admonition-title-bar-corner-radius);
 		min-height: var(--_admonition-title-bar-min-height);
-		padding-block: calc((var(--_admonition-title-bar-min-height) - 1lh) / 2);
+		padding-block: var(--_admonition-title-bar-padding-block);
 		padding-inline-start: var(--_admonition-inset);
 		padding-inline-end: var(--_admonition-inset);
+		/* Wrapping makes the row a multi-line flex container, so align-content
+		   centers a single line in the min-height. The title never wraps. */
+		flex-wrap: wrap;
+		align-content: center;
 		align-items: flex-start;
 		gap: var(--_admonition-gap);
-		font: var(--primitives-font-body-md-medium-snug);
+		font: var(--_admonition-title-bar-font);
 		list-style: none;
 		-webkit-tap-highlight-color: transparent;
 	}
 
 	summary.admonition__title-bar {
 		cursor: default;
-		padding-inline-end: calc((var(--_admonition-title-bar-min-height) - var(--_admonition-chevron-size)) / 2);
+		padding-inline-end: calc((var(--_admonition-title-bar-min-height) - var(--_admonition-disclosure-icon-size)) / 2);
 	}
 
 	summary.admonition__title-bar::-webkit-details-marker {
@@ -157,13 +163,13 @@ export const admonitionStyles = css`
 	}
 
 	.admonition:is(div, [open]) > .admonition__title-bar {
-		border-block-end: var(--_admonition-border-width) solid var(--_admonition-border-color);
+		border-block-end: var(--_admonition-highlight-border-width) solid var(--_admonition-highlight-border-color);
 	}
 
 	.admonition__title {
 		margin: 0;
 		min-width: 0;
-		flex-grow: 1;
+		flex: 1 1 0;
 		overflow-wrap: break-word;
 		font: inherit;
 	}
@@ -193,24 +199,24 @@ export const admonitionStyles = css`
 	}
 
 
-	/* # Chevron */
+	/* # Disclosure icon */
 
-	.admonition__chevron {
+	.admonition__disclosure-icon {
 		display: flex;
 		flex-shrink: 0;
-		margin-block-start: calc((1lh - var(--_admonition-chevron-size)) / 2);
+		margin-block-start: calc((1lh - var(--_admonition-disclosure-icon-size)) / 2);
 		margin-inline-start: auto;
-		width: var(--_admonition-chevron-size);
-		height: var(--_admonition-chevron-size);
+		width: var(--_admonition-disclosure-icon-size);
+		height: var(--_admonition-disclosure-icon-size);
 		transition: rotate var(--_admonition-transition-duration) ease-out;
 	}
 
-	.admonition[open] .admonition__chevron {
-		rotate: var(--_admonition-chevron-open-rotation);
+	.admonition[open] .admonition__disclosure-icon {
+		rotate: var(--_admonition-disclosure-icon-open-rotation);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.admonition__chevron {
+		.admonition__disclosure-icon {
 			transition: none;
 		}
 	}
@@ -265,7 +271,7 @@ export const admonitionStyles = css`
 			block-size: auto;
 		}
 
-		.admonition__chevron {
+		.admonition__disclosure-icon {
 			display: none;
 		}
 	}

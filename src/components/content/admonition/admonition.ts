@@ -107,7 +107,7 @@ export class NLDDAdmonition extends LitElement {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		this.setAttribute('role', 'note');
+		if (!this.hasAttribute('role')) this.setAttribute('role', 'note');
 	}
 
 	override render() {

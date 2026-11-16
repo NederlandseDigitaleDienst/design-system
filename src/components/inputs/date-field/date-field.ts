@@ -52,6 +52,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { cssTimeToMs } from '../../../utilities/css-time.js';
 import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
@@ -508,7 +509,12 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	private _holdChoiceThenClose(): void {
 		clearTimeout(this._choiceTimer);
-		const hold = parseFloat(getComputedStyle(this).getPropertyValue('--_date-field-choice-hold-duration')) || 0;
+		const hold = cssTimeToMs(getComputedStyle(this).getPropertyValue('--_date-field-choice-hold-duration'));
+		if (!hold) {
+			this._choiceTimer = 0;
+			if (this._pickerOpen) this._popover?.hide();
+			return;
+		}
 		this._choiceTimer = window.setTimeout(() => {
 			this._choiceTimer = 0;
 			if (this._pickerOpen) this._popover?.hide();

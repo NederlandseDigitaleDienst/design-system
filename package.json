@@ -51,10 +51,6 @@
       "types": "./dist/components/content/accordion/accordion.d.ts",
       "default": "./dist/components/content/accordion/accordion.js"
     },
-    "./accordion-item": {
-      "types": "./dist/components/content/accordion-item/accordion-item.d.ts",
-      "default": "./dist/components/content/accordion-item/accordion-item.js"
-    },
     "./admonition": {
       "types": "./dist/components/content/admonition/admonition.d.ts",
       "default": "./dist/components/content/admonition/admonition.js"
@@ -518,6 +514,10 @@
     "./toolbar-title": {
       "types": "./dist/components/actions/toolbar/toolbar-title.d.ts",
       "default": "./dist/components/actions/toolbar/toolbar-title.js"
+    },
+    "./accordion-item": {
+      "types": "./dist/components/content/accordion/accordion-item.d.ts",
+      "default": "./dist/components/content/accordion/accordion-item.js"
     },
     "./kanban-column": {
       "types": "./dist/components/layout/kanban/kanban-column.d.ts",

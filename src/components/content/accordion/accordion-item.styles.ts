@@ -10,18 +10,20 @@ export const accordionItemStyles = css`
 	/* # Host */
 
 	:host {
-		--_accordion-item-border-width: var(--semantics-surfaces-highlight-border-width);
-		--_accordion-item-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_accordion-item-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_accordion-item-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_accordion-item-corner-radius: calc(var(--primitives-corner-radius-lg) - var(--semantics-surfaces-highlight-border-width));
 		--_accordion-item-background-color: var(--semantics-surfaces-base-background-color);
 		--_accordion-item-content-color: var(--semantics-content-color);
 		--_accordion-item-title-bar-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_accordion-item-title-bar-hover-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-50));
-		--_accordion-item-title-bar-min-height: var(--semantics-controls-md-min-size);
-		--_accordion-item-inset: var(--primitives-space-12);
-		--_accordion-item-gap: var(--primitives-space-8);
-		--_accordion-item-chevron-size: var(--primitives-space-20);
-		--_accordion-item-chevron-open-rotation: 180deg;
+		--_accordion-item-title-bar-hover-background-color: var(--semantics-surfaces-tinted-is-hovered-background-color);
+		--_accordion-item-title-bar-min-height: var(--semantics-disclosures-title-bar-min-height);
+		--_accordion-item-title-bar-padding-block: var(--semantics-disclosures-title-bar-padding-block);
+		--_accordion-item-inset: var(--semantics-disclosures-inset);
+		--_accordion-item-gap: var(--semantics-disclosures-title-bar-gap);
+		--_accordion-item-title-bar-font: var(--semantics-disclosures-title-bar-font);
+		--_accordion-item-disclosure-icon-size: var(--semantics-disclosures-disclosure-icon-size);
+		--_accordion-item-disclosure-icon-open-rotation: var(--semantics-disclosures-disclosure-icon-open-rotation);
 		--_accordion-item-transition-duration: var(--primitives-transition-duration-fast);
 
 		${inheritedTextReset}
@@ -46,7 +48,7 @@ export const accordionItemStyles = css`
 	}
 
 	:host(:not(:first-child)) .accordion-item {
-		border-block-start: var(--_accordion-item-border-width) solid var(--_accordion-item-border-color);
+		border-block-start: var(--_accordion-item-highlight-border-width) solid var(--_accordion-item-highlight-border-color);
 	}
 
 	@media (forced-colors: active) {
@@ -64,12 +66,16 @@ export const accordionItemStyles = css`
 		display: flex;
 		background-color: var(--_accordion-item-title-bar-background-color);
 		min-height: var(--_accordion-item-title-bar-min-height);
-		padding-block: calc((var(--_accordion-item-title-bar-min-height) - 1lh) / 2);
+		padding-block: var(--_accordion-item-title-bar-padding-block);
 		padding-inline-start: var(--_accordion-item-inset);
-		padding-inline-end: calc((var(--_accordion-item-title-bar-min-height) - var(--_accordion-item-chevron-size)) / 2);
+		padding-inline-end: calc((var(--_accordion-item-title-bar-min-height) - var(--_accordion-item-disclosure-icon-size)) / 2);
+		/* Wrapping makes the row a multi-line flex container, so align-content
+		   centers a single line in the min-height. The title never wraps. */
+		flex-wrap: wrap;
+		align-content: center;
 		align-items: flex-start;
 		gap: var(--_accordion-item-gap);
-		font: var(--primitives-font-body-md-medium-snug);
+		font: var(--_accordion-item-title-bar-font);
 		cursor: default;
 		list-style: none;
 		-webkit-tap-highlight-color: transparent;
@@ -98,7 +104,7 @@ export const accordionItemStyles = css`
 	}
 
 	.accordion-item[open] > .accordion-item__title-bar {
-		border-block-end: var(--_accordion-item-border-width) solid var(--_accordion-item-border-color);
+		border-block-end: var(--_accordion-item-highlight-border-width) solid var(--_accordion-item-highlight-border-color);
 	}
 
 	@media (hover: hover) {
@@ -128,24 +134,24 @@ export const accordionItemStyles = css`
 
 	.accordion-item__title {
 		min-width: 0;
-		flex-grow: 1;
+		flex: 1 1 0;
 		overflow-wrap: break-word;
 	}
 
 
-	/* # Chevron */
+	/* # Disclosure icon */
 
-	.accordion-item__chevron {
+	.accordion-item__disclosure-icon {
 		display: flex;
 		flex-shrink: 0;
-		margin-block-start: calc((1lh - var(--_accordion-item-chevron-size)) / 2);
-		width: var(--_accordion-item-chevron-size);
-		height: var(--_accordion-item-chevron-size);
+		margin-block-start: calc((1lh - var(--_accordion-item-disclosure-icon-size)) / 2);
+		width: var(--_accordion-item-disclosure-icon-size);
+		height: var(--_accordion-item-disclosure-icon-size);
 		transition: rotate var(--_accordion-item-transition-duration) ease-out;
 	}
 
-	.accordion-item[open] .accordion-item__chevron {
-		rotate: var(--_accordion-item-chevron-open-rotation);
+	.accordion-item[open] .accordion-item__disclosure-icon {
+		rotate: var(--_accordion-item-disclosure-icon-open-rotation);
 	}
 
 
@@ -173,7 +179,7 @@ export const accordionItemStyles = css`
 	/* # Motion */
 
 	@media (prefers-reduced-motion: reduce) {
-		.accordion-item__chevron,
+		.accordion-item__disclosure-icon,
 		.accordion-item::details-content,
 		.accordion-item:not([open]) > .accordion-item__title-bar {
 			transition: none;
@@ -189,7 +195,7 @@ export const accordionItemStyles = css`
 			block-size: auto;
 		}
 
-		.accordion-item__chevron {
+		.accordion-item__disclosure-icon {
 			display: none;
 		}
 	}

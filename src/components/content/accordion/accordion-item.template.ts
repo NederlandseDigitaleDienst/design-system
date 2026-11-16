@@ -11,7 +11,7 @@ export function accordionItemTemplate(component: NLDDAccordionItem): TemplateRes
 				<span class="accordion-item__title">
 					${component.text}
 				</span>
-				<span class="accordion-item__chevron"
+				<span class="accordion-item__disclosure-icon"
 					aria-hidden="true"
 				>
 					<nldd-icon icon="chevron-down"></nldd-icon>

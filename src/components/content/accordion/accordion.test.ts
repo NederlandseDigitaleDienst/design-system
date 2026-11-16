@@ -2,9 +2,9 @@ import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
 import { fixture, cleanup } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDAccordion } from './accordion.js';
-import type { NLDDAccordionItem } from '../accordion-item/accordion-item.js';
+import type { NLDDAccordionItem } from './accordion-item.js';
 import './accordion.js';
-import '../accordion-item/accordion-item.js';
+import './accordion-item.js';
 
 const items = (count: number, open: number[] = []) => Array.from({ length: count }, (_, index) => `
 	<nldd-accordion-item text="Vraag ${index + 1}"${open.includes(index) ? ' open' : ''}><p>Antwoord</p></nldd-accordion-item>
@@ -89,6 +89,16 @@ describe('nldd-accordion', () => {
 		expect(third.open).toBe(false);
 	});
 
+	it('closes an open item added later with exclusive, so the one already open stays', async () => {
+		el = await fixture(`<nldd-accordion exclusive>${items(2, [0])}</nldd-accordion>`);
+		el.insertAdjacentHTML('beforeend', items(1, [0]));
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		const [first, , added] = all();
+		expect(first.open).toBe(true);
+		expect(added.open).toBe(false);
+		expect(details(added).open).toBe(false);
+	});
+
 	it('leaves the items of a nested accordion alone', async () => {
 		el = await fixture(`
 			<nldd-accordion exclusive>
@@ -124,6 +134,25 @@ describe('nldd-accordion', () => {
 	it('makes the title bar as high as a control', async () => {
 		el = await fixture(`<nldd-accordion>${items(1)}</nldd-accordion>`);
 		const bar = summary(all()[0]);
-		expect(bar.getBoundingClientRect().height).toBe(44);
+		const style = getComputedStyle(bar);
+		expect(bar.getBoundingClientRect().height).toBeCloseTo(Math.max(44, parseFloat(style.lineHeight) + 2 * parseFloat(style.paddingTop)), 0);
+	});
+
+	it('centers a title of one line, and grows a title that wraps by its lines only', async () => {
+		el = await fixture(`<nldd-accordion style="width: 220px">
+			<nldd-accordion-item text="Vraag"></nldd-accordion-item>
+			<nldd-accordion-item text="Welke stukken horen bij de aanvraag voor dakisolatie?"></nldd-accordion-item>
+		</nldd-accordion>`);
+		const [short, long] = all();
+		const part = (item: NLDDAccordionItem, name: string) => item.shadowRoot!.querySelector(`.accordion-item__${name}`)!.getBoundingClientRect();
+		const middle = (rect: DOMRect) => (rect.top + rect.bottom) / 2;
+		expect(middle(part(short, 'title'))).toBeCloseTo(middle(summary(short).getBoundingClientRect()), 0);
+		const line = parseFloat(getComputedStyle(summary(long)).lineHeight);
+		const padding = parseFloat(getComputedStyle(summary(long)).paddingTop);
+		const height = summary(long).getBoundingClientRect().height;
+		const lines = Math.round((height - 2 * padding) / line);
+		expect(lines).toBeGreaterThanOrEqual(2);
+		expect(height).toBeCloseTo(lines * line + 2 * padding, 0);
+		expect(part(long, 'disclosure-icon').top - part(long, 'title').top).toBeCloseTo((line - part(long, 'disclosure-icon').height) / 2, 0);
 	});
 });

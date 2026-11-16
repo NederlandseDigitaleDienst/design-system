@@ -2758,6 +2758,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
 - `split-view-needs-main-page`: Set landmarks="page" on the page in the pane with the main content, or the screen offers no main landmark or two.
 - `subpage-needs-breadcrumbs` (hint): Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.
+- `top-title-bar-anchor-no-effect`: `collapse-anchor` has no effect without `sticky-header` on the nldd-page: the bar scrolls away before it turns compact.
 - `website-no-sticky-header`: A website lets its header scroll away: a fixed one takes room from the content.
 
 **Attributes**
@@ -3621,6 +3622,7 @@ A toolbar for page and container headings with optional navigation and action bu
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 - `top-title-bar-anchor-needs-heading`: `collapse-anchor` points at an element that is no heading and holds none. The bar keeps its own title as the heading, so the page has one, but a screen reader now finds the title twice. Point the anchor at the nldd-title that starts the content.
+- `top-title-bar-anchor-no-effect`: `collapse-anchor` has no effect without `sticky-header` on the nldd-page: the bar scrolls away before it turns compact.
 - `top-title-bar-anchor-not-found`: `collapse-anchor` matches nothing yet. If it never renders, the bar keeps its own title and reads it out twice.
 
 **Attributes**

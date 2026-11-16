@@ -31,7 +31,7 @@ export function admonitionTemplate(component: NLDDAdmonition): TemplateResult {
 					<span class="admonition__title">
 						${component.text}
 					</span>
-					<span class="admonition__chevron"
+					<span class="admonition__disclosure-icon"
 						aria-hidden="true"
 					>
 						<nldd-icon icon="chevron-down"></nldd-icon>

@@ -51,6 +51,7 @@
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { cssTimeToMs } from '../../../utilities/css-time.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { documentTabBarStyles, documentTabBarItemStyles } from './document-tab-bar.styles.js';
 import { documentTabBarTemplate, documentTabBarItemTemplate } from './document-tab-bar.template.js';
@@ -914,7 +915,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		const count = this._getVisibleItems().length;
 		const gap = row ? parseFloat(getComputedStyle(row).columnGap) || 0 : 0;
 		const to = row && count ? (row.clientWidth - gap * (count - 1)) / count : 0;
-		const duration = parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-release-duration')) || 0;
+		const duration = cssTimeToMs(getComputedStyle(this).getPropertyValue('--_document-tab-bar-release-duration'));
 		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 		if (!from || !to || !duration || reduced) {
 			finish();

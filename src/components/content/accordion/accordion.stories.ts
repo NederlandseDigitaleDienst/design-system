@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import './accordion.js';
-import '../accordion-item/accordion-item.js';
+import './accordion-item.js';
 import '../rich-text/rich-text.js';
 
 /**

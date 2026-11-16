@@ -27,7 +27,7 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { NLDDAccordionItem } from '../accordion-item/accordion-item.js';
+import { NLDDAccordionItem } from './accordion-item.js';
 import { accordionStyles } from './accordion.styles.js';
 import { accordionTemplate } from './accordion.template.js';
 
@@ -53,7 +53,8 @@ export class NLDDAccordion extends LitElement {
 		this._closeAllBut(item);
 	};
 
-	/** As with `details` that share a name, the first open item wins. */
+	/** As with `details` that share a name, the first open item wins: an open
+	 *  item added later is closed, and the one already open stays. */
 	public _onSlotChange = (): void => {
 		if (!this.exclusive) return;
 		const first = this._items.find((item) => item.open);

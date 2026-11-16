@@ -475,17 +475,25 @@ describe('nldd-rich-text details', () => {
 	const render = (html: string) => fixture<HTMLElement>(`<nldd-rich-text style="width: 600px">${html}</nldd-rich-text>`);
 	const block = (body = '<p>Inhoud</p>') => `<details><summary>Vraag</summary>${body}</details>`;
 
-	it('draws a summary as a row with a chevron, and no browser marker', async () => {
+	const middle = (rect: DOMRect) => (rect.top + rect.bottom) / 2;
+	const metrics = (summary: HTMLElement) => ({
+		line: parseFloat(getComputedStyle(summary).lineHeight),
+		padding: parseFloat(getComputedStyle(summary).paddingTop),
+		icon: parseFloat(getComputedStyle(summary, '::before').width),
+	});
+
+	it('draws a summary as a block with a disclosure icon, and no browser marker', async () => {
 		el = await render(block());
 		const details = el.querySelector('details')!;
 		const summary = el.querySelector('summary')!;
 		expect(getComputedStyle(details).borderTopLeftRadius).not.toBe('0px');
 		expect(getComputedStyle(details).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
-		expect(getComputedStyle(summary).display).toBe('flex');
+		expect(getComputedStyle(summary).display).toBe('block');
 		expect(getComputedStyle(summary).listStyleType).toBe('none');
 		expect(getComputedStyle(summary).fontWeight).toBe('475');
 		expect(parseFloat(getComputedStyle(summary).minHeight)).toBeGreaterThanOrEqual(44);
-		expect(getComputedStyle(summary, '::after').rotate).toBe('none');
+		expect(getComputedStyle(summary, '::before').float).toBe('inline-end');
+		expect(getComputedStyle(summary, '::before').rotate).toBe('none');
 	});
 
 	it('fills the main column, as the text does', async () => {
@@ -495,35 +503,50 @@ describe('nldd-rich-text details', () => {
 		expect(details.width).toBeCloseTo(p.width, 0);
 	});
 
-	it('centers the chevron in a square as high as the row', async () => {
+	it('centers the disclosure icon in a square as high as the bar', async () => {
 		el = await render(block());
 		const summary = el.querySelector('summary')!;
-		const style = getComputedStyle(summary);
-		const chevron = parseFloat(getComputedStyle(summary, '::after').width);
-		expect(parseFloat(style.paddingRight)).toBeCloseTo((summary.getBoundingClientRect().height - chevron) / 2, 0);
+		const icon = getComputedStyle(summary, '::before');
+		const fromEnd = parseFloat(getComputedStyle(summary).paddingRight) + parseFloat(icon.marginRight);
+		expect(fromEnd).toBeCloseTo((summary.getBoundingClientRect().height - parseFloat(icon.width)) / 2, 0);
 	});
 
-	it('keeps the chevron on the first line of a title that wraps', async () => {
-		el = await render('<details><summary style="width: 160px">Welke stukken horen bij de aanvraag voor dakisolatie?</summary></details>');
+	it('centers a title of one line in the bar', async () => {
+		el = await render('<details><summary><span style="display: inline-block">Vraag</span></summary></details>');
 		const summary = el.querySelector('summary')!;
-		const oneLine = parseFloat(getComputedStyle(summary).lineHeight);
-		const chevron = parseFloat(getComputedStyle(summary, '::after').marginTop);
-		expect(summary.getBoundingClientRect().height).toBeGreaterThan(oneLine * 2);
-		expect(chevron).toBeCloseTo((oneLine - 20) / 2, 0);
+		const line = summary.querySelector('span')!.getBoundingClientRect();
+		expect(middle(line)).toBeCloseTo(middle(summary.getBoundingClientRect()), 0);
 	});
 
-	it('turns the chevron when it opens', async () => {
+	it('keeps inline elements in the line of the title', async () => {
+		el = await render(`${block()}<details><summary>Vraag over <code>A-1042</code></summary></details>`);
+		const [plain, inline] = [...el.querySelectorAll('summary')];
+		expect(inline.getBoundingClientRect().height).toBeCloseTo(plain.getBoundingClientRect().height, 0);
+	});
+
+	it('grows a title that wraps by its lines only, with the disclosure icon on the first', async () => {
+		el = await render('<details><summary style="width: 200px">Welke stukken horen bij de aanvraag voor dakisolatie?</summary></details>');
+		const summary = el.querySelector('summary')!;
+		const { line, padding, icon } = metrics(summary);
+		const height = summary.getBoundingClientRect().height;
+		const lines = Math.round((height - 2 * padding) / line);
+		expect(lines).toBeGreaterThanOrEqual(2);
+		expect(height).toBeCloseTo(lines * line + 2 * padding, 0);
+		expect(parseFloat(getComputedStyle(summary, '::before').marginTop)).toBeCloseTo((line - icon) / 2, 0);
+	});
+
+	it('turns the disclosure icon when it opens', async () => {
 		el = await render(block());
 		const details = el.querySelector('details')!;
 		details.open = true;
-		expect(getComputedStyle(el.querySelector('summary')!, '::after').rotate).toBe('180deg');
+		expect(getComputedStyle(el.querySelector('summary')!, '::before').rotate).toBe('180deg');
 	});
 
 	it('fills the whole bar with the summary, as high as an md control', async () => {
 		el = await render(block());
 		const details = el.querySelector('details')!.getBoundingClientRect();
 		const summary = el.querySelector('summary')!.getBoundingClientRect();
-		expect(summary.height).toBeCloseTo(44, 0);
+		expect(summary.height).toBeCloseTo(Math.max(44, metrics(el.querySelector('summary')!).line + 2 * metrics(el.querySelector('summary')!).padding), 0);
 		expect(summary.left - details.left).toBeCloseTo(1, 0);
 		expect(details.right - summary.right).toBeCloseTo(1, 0);
 	});

@@ -32,6 +32,11 @@ describe('nldd-admonition', () => {
 		expect(el.hasAttribute('aria-live')).toBe(false);
 	});
 
+	it('keeps a role the page sets itself', async () => {
+		el = await fixture('<nldd-admonition role="region" aria-label="Tip" text="Tip"></nldd-admonition>');
+		expect(el.getAttribute('role')).toBe('region');
+	});
+
 	it('shows the title in a bar, with the icon of the variant', async () => {
 		el = await fixture('<nldd-admonition variant="warning" text="Let op"></nldd-admonition>');
 		expect(titleBar()!.textContent).toContain('Let op');

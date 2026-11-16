@@ -10,8 +10,8 @@ export const accordionStyles = css`
 	/* # Host */
 
 	:host {
-		--_accordion-border-width: var(--semantics-surfaces-highlight-border-width);
-		--_accordion-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_accordion-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_accordion-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_accordion-corner-radius: var(--primitives-corner-radius-lg);
 		--_accordion-background-color: var(--semantics-surfaces-base-background-color);
 
@@ -30,7 +30,7 @@ export const accordionStyles = css`
 	.accordion {
 		box-sizing: border-box;
 		display: block;
-		border: var(--_accordion-border-width) solid var(--_accordion-border-color);
+		border: var(--_accordion-highlight-border-width) solid var(--_accordion-highlight-border-color);
 		border-radius: var(--_accordion-corner-radius);
 		background-color: var(--_accordion-background-color);
 	}

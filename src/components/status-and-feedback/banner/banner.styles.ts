@@ -17,8 +17,8 @@ export const bannerStyles = css`
 		--_banner-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_banner-padding: var(--primitives-space-12);
 		--_banner-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
-		--_banner-border-width: var(--primitives-border-width-thin);
+		--_banner-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_banner-highlight-border-width: var(--primitives-border-width-thin);
 		--_banner-icon-color: var(--primitives-color-neutral-750);
 		--_banner-icon-size: var(--primitives-space-32);
 		--_banner-content-color: var(--semantics-content-color);
@@ -59,25 +59,25 @@ export const bannerStyles = css`
 
 	:host([variant="accent"]) {
 		--_banner-background-color: var(--semantics-surfaces-accent-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
+		--_banner-highlight-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
 		--_banner-icon-color: var(--components-banner-accent-icon-color);
 	}
 
 	:host([variant="success"]) {
 		--_banner-background-color: var(--semantics-surfaces-success-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-success-tinted-highlight-border-color);
+		--_banner-highlight-border-color: var(--semantics-surfaces-success-tinted-highlight-border-color);
 		--_banner-icon-color: light-dark(var(--primitives-color-success-550), var(--primitives-color-success-650));
 	}
 
 	:host([variant="warning"]) {
 		--_banner-background-color: var(--semantics-surfaces-warning-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-warning-tinted-highlight-border-color);
+		--_banner-highlight-border-color: var(--semantics-surfaces-warning-tinted-highlight-border-color);
 		--_banner-icon-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
 	}
 
 	:host([variant="critical"]) {
 		--_banner-background-color: var(--semantics-surfaces-critical-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
+		--_banner-highlight-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
 		--_banner-icon-color: var(--primitives-color-critical-600);
 	}
 
@@ -88,7 +88,7 @@ export const bannerStyles = css`
 		display: grid;
 		position: relative;
 		border-radius: var(--_banner-corner-radius);
-		box-shadow: inset 0 0 0 var(--_banner-border-width) var(--_banner-border-color);
+		box-shadow: inset 0 0 0 var(--_banner-highlight-border-width) var(--_banner-highlight-border-color);
 		background-color: var(--_banner-background-color);
 		padding: var(--_banner-padding);
 		grid-template-columns: auto 1fr;
@@ -101,7 +101,7 @@ export const bannerStyles = css`
 
 	@media (forced-colors: active) {
 		.banner {
-			border: var(--_banner-border-width) solid CanvasText;
+			border: var(--_banner-highlight-border-width) solid CanvasText;
 		}
 	}
 
