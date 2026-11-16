@@ -146,7 +146,9 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 			this.addController(apply);
 			// An element named by `accessible-described-by` may arrive after this
 			// one; look again when it matters, as focus arrives.
-			this.addEventListener('focusin', () => this.requestUpdate());
+			this.addEventListener('focusin', () => {
+				if (this.accessibleDescribedBy) this.requestUpdate();
+			});
 		}
 
 		/**

@@ -11288,7 +11288,7 @@
               },
               "default": "false",
               "fieldName": "required",
-              "description": "At least one box in the group has to be checked"
+              "description": "At least one box in the group has to be checked. Set on every field in the group, nested ones included, over a `required` of their own."
             },
             {
               "name": "accessible-label",

@@ -896,10 +896,10 @@ export const ReactieMetUitlegOpInteresse = {
 				vertical-alignment="center"
 			>
 				<nldd-avatar
-					name="Bart van de Biezen"
+					name="Sam de Vries"
 					size="24"
 				></nldd-avatar>
-				<nldd-text text="Bart van de Biezen"></nldd-text>
+				<nldd-text text="Sam de Vries"></nldd-text>
 			</nldd-container>
 		</nldd-popover>
 	</nldd-container>

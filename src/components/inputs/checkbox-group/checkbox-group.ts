@@ -16,7 +16,7 @@
  * @element nldd-checkbox-group
  * @attr {string} name - Forwarded to all nldd-checkbox-field elements in the group
  * @attr {boolean} disabled - Disables all fields in the group
- * @attr {boolean} required - At least one box in the group has to be checked
+ * @attr {boolean} required - At least one box in the group has to be checked. Set on every field in the group, nested ones included, over a `required` of their own.
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label on the group
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
