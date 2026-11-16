@@ -735,9 +735,8 @@ export const MetUitlegOpInteresse = {
 		<nldd-button
 			appearance="neutral-tinted"
 			size="sm"
-			start-icon="hand-thumbs-up"
-			text="2"
-			accessible-label="Duim omhoog, 2 reacties"
+			start-icon="person-2"
+			text="Delen"
 		>
 			<nldd-popover
 				slot="interest"
@@ -747,6 +746,10 @@ export const MetUitlegOpInteresse = {
 					padding="12"
 					gap="8"
 				>
+					<nldd-text
+						text="Dossier D-318 is gedeeld met"
+						color="secondary"
+					></nldd-text>
 					<nldd-container
 						layout="row"
 						gap="8"
@@ -777,7 +780,7 @@ export const MetUitlegOpInteresse = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Een popover in de <code>interest</code>-slot opent als je de aanwijzer op de knop laat rusten, als de knop focus krijgt en bij lang drukken op touch. De knop houdt zijn eigen klik (hier: de reactie aan of uit zetten), de focus blijft op de knop en de inhoud wordt voorgelezen als beschrijving van de knop. Alleen informatie: zet er geen link of knop in.',
+				story: 'Een popover in de <code>interest</code>-slot opent als je de aanwijzer op de knop laat rusten, als de knop focus krijgt en bij lang drukken op touch. De knop houdt zijn eigen klik (hier: delen), de focus blijft op de knop en de inhoud wordt voorgelezen als beschrijving van de knop. Alleen informatie: zet er geen link of knop in. Een reactie die je aan- en uitzet is een <code>nldd-toggle-button</code>, die de interest-slot ook heeft.',
 			},
 		},
 	},

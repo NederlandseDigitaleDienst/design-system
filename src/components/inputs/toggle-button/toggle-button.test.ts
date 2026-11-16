@@ -677,3 +677,126 @@ describe('nldd-toggle-button – selected-icon', () => {
 		});
 	});
 });
+
+describe('nldd-toggle-button – the app decides', () => {
+	let el: NLDDToggleButton;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('keeps the old state when change is prevented, without rendering the new one', async () => {
+		el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="👏 2"></nldd-toggle-button>');
+		const button = el.shadowRoot!.querySelector('button')!;
+		let seen: boolean | null = null;
+		el.addEventListener('change', (event) => {
+			seen = el.selected;
+			event.preventDefault();
+		});
+		button.click();
+		expect(seen).toBe(true);
+		expect(el.selected).toBe(false);
+		await waitForUpdate(el);
+		expect(button.getAttribute('aria-pressed')).toBe('false');
+	});
+
+	it('keeps a checkbox unchecked when change is prevented', async () => {
+		el = await fixture<NLDDToggleButton>('<form><nldd-toggle-button type="checkbox" name="r" text="👏 2"></nldd-toggle-button></form>').then((form) => form.querySelector('nldd-toggle-button')!);
+		el.addEventListener('change', (event) => event.preventDefault());
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('input')!;
+		input.click();
+		await waitForUpdate(el);
+		expect(el.selected).toBe(false);
+		expect(input.checked).toBe(false);
+		expect(new FormData(el.closest('form')!).get('r')).toBeNull();
+		cleanup(el.closest('form')!);
+	});
+
+	it('takes the state the app sets after it prevented the change', async () => {
+		el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="👏 2"></nldd-toggle-button>');
+		el.addEventListener('change', (event) => {
+			event.preventDefault();
+			queueMicrotask(() => { el.selected = true; });
+		});
+		el.shadowRoot!.querySelector('button')!.click();
+		await waitForUpdate(el);
+		expect(el.selected).toBe(true);
+	});
+
+	it('keeps a radio chosen, since its change cannot be prevented', async () => {
+		el = await fixture<NLDDToggleButton>('<nldd-toggle-button type="radio" text="Lijst"></nldd-toggle-button>');
+		el.addEventListener('change', (event) => event.preventDefault());
+		el.click();
+		expect(el.selected).toBe(true);
+	});
+});
+
+describe('nldd-toggle-button – interest', () => {
+	let el: NLDDToggleButton;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('is described by the popover in its interest slot, which replaces the tooltip', async () => {
+		await import('../../layout/popover/popover.js');
+		el = await fixture<NLDDToggleButton>(`
+			<nldd-toggle-button icon="hand-thumbs-up" accessible-label="Duim omhoog">
+				<nldd-popover slot="interest">Sam de Vries</nldd-popover>
+			</nldd-toggle-button>
+		`);
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('button') as HTMLButtonElement & { ariaDescribedByElements: Element[] | null };
+		expect(button.ariaDescribedByElements).toEqual([el.querySelector('nldd-popover')]);
+		expect(el.shadowRoot!.querySelector('nldd-tooltip')).toBeNull();
+	});
+
+	it('finds a popover named by interestfor', async () => {
+		await import('../../layout/popover/popover.js');
+		const root = await fixture<HTMLElement>(`
+			<div>
+				<nldd-toggle-button text="👏 2" interestfor="who"></nldd-toggle-button>
+				<nldd-popover id="who" accessible-label="Reacties">Sam de Vries</nldd-popover>
+			</div>
+		`);
+		el = root.querySelector('nldd-toggle-button')!;
+		el.dispatchEvent(new FocusEvent('focusin'));
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('button') as HTMLButtonElement & { ariaDescribedByElements: Element[] | null };
+		expect(button.ariaDescribedByElements).toEqual([root.querySelector('nldd-popover')]);
+		cleanup(root);
+	});
+
+	it('does not toggle a radio on a click in its popover', async () => {
+		await import('../../layout/popover/popover.js');
+		el = await fixture<NLDDToggleButton>(`
+			<nldd-toggle-button type="radio" text="Lijst">
+				<nldd-popover slot="interest"><span>Uitleg</span></nldd-popover>
+			</nldd-toggle-button>
+		`);
+		await waitForUpdate(el);
+		el.querySelector('span')!.click();
+		expect(el.selected).toBe(false);
+	});
+});
+
+describe('nldd-toggle-button – description', () => {
+	let el: NLDDToggleButton;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	for (const type of ['button', 'checkbox', 'radio'] as const) {
+		it(`puts a description on the element with the role, for type="${type}"`, async () => {
+			el = await fixture<NLDDToggleButton>(`<nldd-toggle-button type="${type}" text="Lijst"></nldd-toggle-button>`);
+			const help = document.createElement('p');
+			document.body.append(help);
+			el.describedByElements = [help];
+			await waitForUpdate(el);
+			const target = type === 'radio' ? el : el.shadowRoot!.querySelector(type === 'button' ? 'button' : 'input')!;
+			expect((target as Element & { ariaDescribedByElements: Element[] | null }).ariaDescribedByElements).toEqual([help]);
+			help.remove();
+		});
+	}
+});

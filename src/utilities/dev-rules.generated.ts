@@ -202,6 +202,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-combo-box:state(no-popover)"
 	},
 	{
+		"id": "description-no-effect",
+		"message": "`accessible-description` is not read while `accessible-described-by` finds an element. Keep one.",
+		"context": "[accessible-described-by]:not([accessible-described-by=\"\"])[accessible-description]:not([accessible-description=\"\"])"
+	},
+	{
+		"id": "description-not-found",
+		"message": "`accessible-described-by` names an ID that is not in this tree, so that description stays empty.",
+		"context": "[accessible-described-by]:not([accessible-described-by=\"\"]):state(no-description-target)"
+	},
+	{
 		"id": "document-tab-bar-needs-name",
 		"message": "nldd-document-tab-bar needs `accessible-label` for a meaningful navigation landmark name; without one it falls back to a generic name.",
 		"context": "nldd-document-tab-bar",
@@ -360,14 +370,14 @@ export const devRules: DevRule[] = [
 	{
 		"id": "interestfor-no-effect",
 		"message": "This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.",
-		"context": ":is(nldd-button, nldd-icon-button)[interestfor]:not([interestfor=\"\"])",
+		"context": ":is(nldd-button, nldd-icon-button, nldd-toggle-button)[interestfor]:not([interestfor=\"\"])",
 		"assert": ":not(:has(> nldd-popover[slot=\"interest\"]))",
 		"properties": []
 	},
 	{
 		"id": "interestfor-not-found",
 		"message": "`interestfor` names no nldd-popover in this tree, so nothing opens on interest.",
-		"context": ":is(nldd-button, nldd-icon-button, nldd-link):state(no-interest-target)"
+		"context": ":is(nldd-button, nldd-icon-button, nldd-toggle-button, nldd-link):state(no-interest-target)"
 	},
 	{
 		"id": "kanban-column-needs-name",

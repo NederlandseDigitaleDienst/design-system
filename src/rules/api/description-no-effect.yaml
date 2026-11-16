@@ -1,0 +1,9 @@
+severity: warn
+context: '[accessible-described-by][accessible-description]'
+message: '`accessible-description` is not read while `accessible-described-by` finds an element. Keep one.'
+examples:
+  passed:
+    - '<nldd-button text="Delen" accessible-described-by="gedeeld-met"></nldd-button>'
+    - '<nldd-button text="Delen" accessible-description="Gedeeld met team Beleid"></nldd-button>'
+  failed:
+    - '<nldd-button text="Delen" accessible-described-by="gedeeld-met" accessible-description="Gedeeld met team Beleid"></nldd-button>'

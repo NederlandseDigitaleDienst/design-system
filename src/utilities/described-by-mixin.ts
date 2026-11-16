@@ -1,5 +1,6 @@
 import { property } from 'lit/decorators.js';
 import { LitElement, type ReactiveController } from 'lit';
+import { setState } from './element-state.js';
 
 // Abstract, so an abstract base (nldd-code-editor and nldd-text-editor share
 // NLDDCodeMirrorElement) can be mixed in too.
@@ -8,6 +9,8 @@ type Constructor<T = Record<string, unknown>> = abstract new (...args: any[]) =>
 /** An element that accepts references to the elements describing it. */
 export interface DescribedElement {
 	describedByElements: readonly Element[];
+	accessibleDescription: string;
+	accessibleDescribedBy: string;
 	/** The element the description belongs to. Override where it differs. */
 	describedTarget(): Element | null;
 	/** Elements the component itself adds to the description. */
@@ -83,9 +86,36 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 	Base: T,
 ): T & Constructor<DescribedElement> {
 	abstract class DescribedByMixin extends Base implements DescribedElement {
-		/** Set by nldd-form-field. A consumer never writes this. */
+		/** Set by nldd-form-field. A consumer never writes this: the app has
+		 *  `accessible-described-by` and `accessible-description`. */
 		@property({ attribute: false })
 		describedByElements: readonly Element[] = [];
+
+		/**
+		 * A description in words, read after the name, role and state, as
+		 * `aria-description` would. Extra information, never the name: a button
+		 * with only an icon still needs its `accessible-label`. Not shown; prefer
+		 * `accessible-described-by` to text that is on the page. That one wins
+		 * when it finds an element, as `aria-describedby` wins from
+		 * `aria-description`.
+		 */
+		@property({ type: String, reflect: true, attribute: 'accessible-description' })
+		accessibleDescription = '';
+
+		/**
+		 * IDs of elements whose text describes this control, separated by spaces,
+		 * as `aria-describedby` takes them. Looked up in the tree of this element
+		 * and handed to the control inside, where an `aria-describedby` on the
+		 * host would not reach. Read after the name, role and state, after the
+		 * help and error text of an nldd-form-field.
+		 */
+		@property({ type: String, reflect: true, attribute: 'accessible-described-by' })
+		accessibleDescribedBy = '';
+
+		/** The hidden element that carries `accessible-description` in the shadow
+		 *  root, for the control to point at. Public for the same reason as
+		 *  `describedTarget()`. */
+		_descriptionTextElement: HTMLElement | null = null;
 
 		constructor(...args: any[]) {
 			super(...args);
@@ -97,7 +127,7 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 					// element. Handing it on there would hand it to itself, and a
 					// component that does that renders forever.
 					const onSelf = target === this;
-					applyDescribedBy(target, [...this.describedByElements, ...this.ownDescriptions()], onSelf);
+					applyDescribedBy(target, [...this.describedByElements, ...this._appDescriptions(onSelf), ...this.ownDescriptions()], onSelf);
 					// Optional: nldd-button carries this mixin for its description and
 					// has no validity of its own.
 					const invalid = (this as { invalid?: boolean }).invalid;
@@ -105,6 +135,46 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 				},
 			};
 			this.addController(apply);
+			// An element named by `accessible-described-by` may arrive after this
+			// one; look again when it matters, as focus arrives.
+			this.addEventListener('focusin', () => this.requestUpdate());
+		}
+
+		/**
+		 * What the app gives as the description: the elements that
+		 * `accessible-described-by` names, or else the text of
+		 * `accessible-description`. Public for the same reason as
+		 * `describedTarget()`.
+		 */
+		_appDescriptions(onSelf: boolean): readonly Element[] {
+			const ids = (this.accessibleDescribedBy ?? '').split(/\s+/).filter(Boolean);
+			const root = this.getRootNode() as Document | ShadowRoot;
+			const named = ids
+				.map((id) => (root.getElementById ? root.getElementById(id) : null))
+				.filter((el): el is HTMLElement => el !== null);
+			setState(this, 'no-description-target', named.length < ids.length);
+			const text = named.length ? '' : (this.accessibleDescription ?? '').trim();
+			// A control that is this element cannot point into its own shadow
+			// root, so it says the text itself.
+			if (onSelf) {
+				(this as unknown as { ariaDescription: string | null }).ariaDescription = text || null;
+				return named;
+			}
+			if (text) {
+				let el = this._descriptionTextElement;
+				if (!el || el.getRootNode() !== this.shadowRoot) {
+					el = document.createElement('span');
+					el.hidden = true;
+					el.dataset.description = '';
+					this.shadowRoot?.append(el);
+					this._descriptionTextElement = el;
+				}
+				el.textContent = text;
+				return [el];
+			}
+			this._descriptionTextElement?.remove();
+			this._descriptionTextElement = null;
+			return named;
 		}
 
 		/**

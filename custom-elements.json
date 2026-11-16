@@ -636,7 +636,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -942,6 +972,32 @@
               "fieldName": "rel"
             },
             {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "name": "translations",
               "type": {
                 "text": "Partial<T>"
@@ -1003,7 +1059,7 @@
             },
             {
               "name": "interest",
-              "description": "A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a reaction badge that toggles a reaction and shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read."
+              "description": "A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a share button that shows who already has access. A reaction you toggle is an nldd-toggle-button, which has this slot too. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read."
             }
           ]
         }
@@ -10652,7 +10708,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -10898,6 +10984,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -11143,7 +11255,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -11435,6 +11577,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -11540,7 +11708,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -11984,6 +12182,32 @@
               "default": "false",
               "fieldName": "lineNumbers",
               "description": "Show a line-number gutter"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             },
             {
               "name": "value",
@@ -12473,7 +12697,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -12843,6 +13097,32 @@
               },
               "description": "Most characters the value may have.",
               "fieldName": "maxlength"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -13425,7 +13705,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -13770,6 +14080,32 @@
               "default": "{}",
               "description": "Translations; unspecified keys fall back to Dutch.",
               "fieldName": "translations"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -13987,7 +14323,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -14130,6 +14496,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             },
             {
               "name": "translations",
@@ -14330,7 +14722,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -14426,6 +14848,32 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone."
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -15149,7 +15597,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -15434,6 +15912,32 @@
               "default": "{}",
               "fieldName": "translations",
               "description": "Override translation keys; unset keys fall back to Dutch"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -15745,7 +16249,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -16127,6 +16661,32 @@
               },
               "description": "Most characters the value may have.",
               "fieldName": "maxlength"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -16404,7 +16964,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -16715,6 +17305,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -17065,7 +17681,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -17392,6 +18038,32 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state. A code that is not complete counts as invalid too."
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -17723,7 +18395,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -18080,6 +18782,32 @@
               },
               "description": "Most characters the value may have.",
               "fieldName": "maxlength"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -18291,7 +19019,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -18542,6 +19300,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -18977,7 +19761,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -19255,6 +20069,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -19581,7 +20421,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -19954,6 +20824,32 @@
               "default": "false",
               "fieldName": "noSpellcheck",
               "description": "Disables browser spellchecking on the inner input"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -21152,7 +22048,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -21491,6 +22417,32 @@
               "default": "{}",
               "fieldName": "translations",
               "description": "Override translation keys; unset keys fall back to Dutch"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -21723,7 +22675,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -21989,6 +22971,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -22916,7 +23924,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -23153,6 +24191,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -23388,7 +24452,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -23674,6 +24768,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -26817,7 +27937,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -27308,6 +28458,32 @@
               "default": "{}",
               "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch.",
               "fieldName": "translations"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             },
             {
               "name": "value",
@@ -27917,7 +29093,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -28299,6 +29505,32 @@
               },
               "description": "Most characters the value may have.",
               "fieldName": "maxlength"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -28931,7 +30163,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -29276,6 +30538,32 @@
               "default": "{}",
               "description": "Translations; unspecified keys fall back to Dutch.",
               "fieldName": "translations"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -29532,7 +30820,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -29644,6 +30962,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -30118,6 +31462,16 @@
             },
             {
               "kind": "field",
+              "name": "interestfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "attribute": "interestfor",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "shortcut",
               "type": {
                 "text": "string"
@@ -30244,20 +31598,7 @@
                   "text": "Element | null"
                 }
               },
-              "description": "The button is the control, not the input that carries the value.",
-              "inheritedFrom": {
-                "name": "DescribedBy",
-                "module": "src/utilities/described-by-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "describedByElements",
-              "type": {
-                "text": "readonly Element[]"
-              },
-              "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "The element with the role: the button, the checkbox input, or in radio\nmode this element itself.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -30271,7 +31612,50 @@
                   "text": "readonly Element[]"
                 }
               },
-              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
+              "description": "The popover in the `interest` slot describes the button.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByElements",
+              "type": {
+                "text": "readonly Element[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -30430,7 +31814,7 @@
           "events": [
             {
               "name": "change",
-              "description": "When selection changes; detail: { selected: boolean, value: string }"
+              "description": "When selection changes; detail: { selected: boolean, value: string }. With `type=\"button\"` or `\"checkbox\"` it is cancelable: `preventDefault()` keeps the old state, so the app decides, for instance once a server has accepted the change. Set `selected` yourself then. A radio is always chosen, since its group has already moved on."
             }
           ],
           "attributes": [
@@ -30573,6 +31957,15 @@
               "description": "Accessible label; required for icon-only usage"
             },
             {
+              "name": "interestfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "interestfor",
+              "description": "ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button."
+            },
+            {
               "name": "shortcut",
               "type": {
                 "text": "string"
@@ -30616,6 +32009,32 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -30638,6 +32057,10 @@
             {
               "name": "icon",
               "description": "Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`."
+            },
+            {
+              "name": "interest",
+              "description": "A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the tooltip of an icon-only button, so let it say what the button does where the icon does not. The button keeps its own click, such as a reaction that you toggle and that shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here."
             }
           ]
         }
@@ -30924,7 +32347,37 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -31240,6 +32693,32 @@
               "default": "{}",
               "fieldName": "translations",
               "description": "Override translation keys; unset keys fall back to Dutch"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -49210,7 +50689,72 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_descriptionTextElement",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "The hidden element that carries `accessible-description` in the shadow\nroot, for the control to point at. Public for the same reason as\n`describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_appDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "onSelf",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -49488,6 +51032,32 @@
               "default": "false",
               "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -49867,7 +51437,56 @@
                 "text": "readonly Element[]"
               },
               "default": "[]",
-              "description": "Set by nldd-form-field. A consumer never writes this."
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`."
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_descriptionTextElement",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "The hidden element that carries `accessible-description` in the shadow\nroot, for the control to point at. Public for the same reason as\n`describedTarget()`."
+            },
+            {
+              "kind": "method",
+              "name": "_appDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "onSelf",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`."
             },
             {
               "kind": "method",
@@ -49888,6 +51507,26 @@
                 }
               },
               "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription"
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy"
             }
           ],
           "parameters": [

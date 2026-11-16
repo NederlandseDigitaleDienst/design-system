@@ -17,10 +17,15 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
+- **`nldd-toggle-button` takes an `interest` slot and `interestfor`,** as `nldd-button` and `nldd-icon-button` do: a popover that opens when the pointer rests on the button, on focus and on a long press, and is read as its description. For a reaction you toggle, it shows who reacted.
+- **The app can decide the state of an `nldd-toggle-button`.** With `type="button"` or `"checkbox"`, `change` is cancelable: `preventDefault()` keeps the old state before it is drawn, and the app sets `selected` itself once a server has accepted the change. A radio is always chosen.
+- **`accessible-described-by` and `accessible-description` on every control that takes a description,** such as `nldd-button`, `nldd-toggle-button` and the input fields. `accessible-described-by` takes the IDs of elements on the page, as `aria-describedby` does, and hands them to the control inside, where an `aria-describedby` on the element would not reach. `accessible-description` takes the text itself. A description is read after the name, the role and the state, and never stands in for the name. The reference wins when both are set, and it comes after the help and error text of an `nldd-form-field`.
+- **`description-no-effect`** (warn) reports `accessible-description` next to `accessible-described-by`, and **`description-not-found`** (warn, in the browser) an ID that `accessible-described-by` does not find.
 - **`card-no-card`** (warn) reports an `nldd-card` inside another `nldd-card`. A card is one thing to go to or choose; to group content visually, use `nldd-box` or a layout of your own.
 
 ### Fixed
 
+- **The help and error text of an `nldd-form-field` describe an `nldd-toggle-button` with `type="checkbox"` or `"radio"`.** They only reached one with `type="button"`.
 - **An `nldd-card` reacts only to its own link or button.** A clickable card inside another card made the outer one draw the focus ring and the pressed shade too.
 - **A press on the control of an `nldd-menu` while the chosen item blinks opens the menu again.** It used to close the menu, which was about to close anyway, so the press seemed to do nothing.
 - **Space chooses an `nldd-menu-item` with an `href`, as it does every other item in the menu.** It used to scroll the page, with the menu open and moving out of view. In a `navigation` menu Space still scrolls, as on any link.

@@ -114,7 +114,11 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 		`;
 	}
 
-	if (tooltipText || hasShortcut(component)) {
+	/* A popover in the interest slot opens on the same hover and focus, and
+	 * takes the tooltip's place. */
+	const interestSlot = html`<slot name="interest" @slotchange=${component._interest.handleSlotChange}></slot>`;
+
+	if ((tooltipText || hasShortcut(component)) && !component._interest.overlay) {
 		return html`
 			<nldd-tooltip
 				text=${tooltipText || nothing}
@@ -125,7 +129,8 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 			>
 				${result}
 			</nldd-tooltip>
+			${interestSlot}
 		`;
 	}
-	return result;
+	return html`${result}${interestSlot}`;
 }

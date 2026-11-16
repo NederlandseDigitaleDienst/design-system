@@ -93,7 +93,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `start-icon` | Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`. |
 | `end-icon` | Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`. |
 | `popup` | A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay. |
-| `interest` | A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a reaction badge that toggles a reaction and shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read. |
+| `interest` | A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a share button that shows who already has access. A reaction you toggle is an nldd-toggle-button, which has this slot too. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read. |
 
 **Events**
 
@@ -2181,6 +2181,8 @@ A selectable button that toggles between selected and unselected. Available as a
 **Rules** (`nldd lint`)
 
 - `button-bar-no-toggle-button`: The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.
+- `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
+- `interestfor-not-found`: `interestfor` names no nldd-popover in this tree, so nothing opens on interest.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `toggle-button-icon-variant-needs-icon`: nldd-toggle-button with variant="icon" has no `icon` and no slot="icon" content, so a placeholder icon is shown.
 - `toggle-button-needs-name`: nldd-toggle-button needs `text` or `accessible-label`, otherwise it has no accessible name.
@@ -2208,18 +2210,20 @@ A selectable button that toggles between selected and unselected. Available as a
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 
 **Slots**
 
 | Slot | Description |
 | --- | --- |
 | `icon` | Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`. |
+| `interest` | A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the tooltip of an icon-only button, so let it say what the button does where the icon does not. The button keeps its own click, such as a reaction that you toggle and that shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here. |
 
 **Events**
 
 | Event | Description |
 | --- | --- |
-| `change` | When selection changes; detail: { selected: boolean, value: string } |
+| `change` | When selection changes; detail: { selected: boolean, value: string }. With `type="button"` or `"checkbox"` it is cancelable: `preventDefault()` keeps the old state, so the app decides, for instance once a server has accepted the change. Set `selected` yourself then. A radio is always chosen, since its group has already moved on. |
 
 ### `<nldd-toggle-button-group>`
 

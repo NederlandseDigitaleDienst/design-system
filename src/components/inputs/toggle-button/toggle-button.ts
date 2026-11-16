@@ -35,9 +35,12 @@
  * @attr {boolean} required - Required state. Set by nldd-toggle-button-group.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
- * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`.
+ * @attr {string} interestfor - ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button.
  *
- * @fires change - When selection changes; detail: { selected: boolean, value: string }
+ * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`.
+ * @slot interest - A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the tooltip of an icon-only button, so let it say what the button does where the icon does not. The button keeps its own click, such as a reaction that you toggle and that shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here.
+ *
+ * @fires change - When selection changes; detail: { selected: boolean, value: string }. With `type="button"` or `"checkbox"` it is cancelable: `preventDefault()` keeps the old state, so the app decides, for instance once a server has accepted the change. Set `selected` yourself then. A radio is always chosen, since its group has already moved on.
  */
 
 import { LitElement, type PropertyValues } from 'lit';
@@ -55,6 +58,7 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { InterestController } from '../../../utilities/interest-controller.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
 export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
@@ -124,6 +128,14 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
+	@property({ type: String, reflect: true })
+	interestfor: string | undefined = undefined;
+
+	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
+	 * and a long press, in place of the tooltip. Not private: the template
+	 * module reads it. */
+	_interest = new InterestController(this);
+
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	shortcut = '';
 
@@ -182,6 +194,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	override updated(changed: PropertyValues): void {
+		if (changed.has('interestfor')) this._interest.refresh();
 		if (changed.has('selected') || changed.has('value') || changed.has('type')) {
 			this.commitFormValue();
 		}
@@ -223,8 +236,11 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 		this.setAttribute('tabindex', tabbable ? '0' : '-1');
 	}
 
-	private _onRadioClick = (): void => {
+	private _onRadioClick = (event: MouseEvent): void => {
 		if (this.type !== 'radio') return;
+		// The popover in the interest slot is a child of this element.
+		const overlay = this._interest.overlay;
+		if (overlay && event.composedPath().includes(overlay)) return;
 		this.toggle();
 	};
 
@@ -300,20 +316,31 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	_handleInputChange(e: Event): void {
 		const input = e.target as HTMLInputElement;
 		this.selected = input.checked;
-		this._dispatchChange();
+		if (this._dispatchChange()) return;
+		this.selected = !input.checked;
+		input.checked = this.selected;
+		this.commitFormValue();
 	}
 
 	private _toggle(): void {
 		this.selected = !this.selected;
-		this._dispatchChange();
+		if (this._dispatchChange()) return;
+		this.selected = !this.selected;
+		this.commitFormValue();
 	}
 
-	private _dispatchChange(): void {
+	/**
+	 * Tells the app, which may say no. The state is already set, so a listener
+	 * reads the new one; turned back before the next render, so a refusal never
+	 * shows. Returns whether the change stands.
+	 */
+	private _dispatchChange(): boolean {
 		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
+		return this.dispatchEvent(new CustomEvent('change', {
 			detail: { selected: this.selected, value: this.value },
 			bubbles: true,
 			composed: true,
+			cancelable: this.type !== 'radio',
 		}));
 	}
 
@@ -345,9 +372,16 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 			?.focus(options);
 	}
 
-	/** The button is the control, not the input that carries the value. */
+	/** The element with the role: the button, the checkbox input, or in radio
+	 *  mode this element itself. */
 	override describedTarget(): Element | null {
-		return this.shadowRoot?.querySelector('button.toggle-button') ?? null;
+		if (this.type === 'radio') return this;
+		return this.shadowRoot?.querySelector('button.toggle-button, .toggle-button__input') ?? null;
+	}
+
+	/** The popover in the `interest` slot describes the button. */
+	override ownDescriptions(): readonly Element[] {
+		return this._interest.overlay ? [this._interest.overlay] : [];
 	}
 
 	override render() {
