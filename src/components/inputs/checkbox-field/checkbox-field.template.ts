@@ -12,7 +12,7 @@ export function checkboxFieldTemplate(component: NLDDCheckboxField): TemplateRes
 				<nldd-checkbox
 					color=${component.color || nothing}
 					?invalid=${component.invalid}
-					?required=${component.required}
+					?required=${component.required && !component._inGroup}
 					?checked=${component.checked}
 					?indeterminate=${component.indeterminate}
 					?disabled=${component.disabled}
@@ -22,7 +22,17 @@ export function checkboxFieldTemplate(component: NLDDCheckboxField): TemplateRes
 					@change=${component._handleChange}
 				></nldd-checkbox>
 			</div>
-			<span class="checkbox-field__label">${component.label}</span>
+			<span class="checkbox-field__label" id="label">${component.label}</span>
+		</div>
+		<div
+			class="checkbox-field__children"
+			role=${component._childFields.length > 0 ? 'group' : nothing}
+			aria-labelledby=${component._childFields.length > 0 ? 'label' : nothing}
+		>
+			<slot
+				name="children"
+				@slotchange=${component._handleChildrenSlotChange}
+			></slot>
 		</div>
 	`;
 }

@@ -37,6 +37,8 @@ export default {
 		weekNumbers: false,
 		width: '',
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		value: '',
 		start: '',
 		end: '',
@@ -74,6 +76,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijke naam van de kalender',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		value: {
 			control: 'text',
 			description: 'De gekozen datum als ISO (jjjj-mm-dd). Alleen zonder range.',
@@ -108,7 +120,7 @@ const Template = ({
 	firstDayOfWeek,
 	weekNumbers,
 	width,
-	accessibleLabel,
+	accessibleLabel, accessibleDescription,
 	value,
 	start,
 	end,
@@ -122,6 +134,7 @@ const Template = ({
 		?week-numbers=${weekNumbers}
 		width=${width || nothing}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		value=${value || nothing}
 		start=${start || nothing}
 		end=${end || nothing}

@@ -55,6 +55,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
@@ -84,6 +94,8 @@ export default {
 		checked: false,
 		indeterminate: false,
 		accessibleLabel: 'Checkbox',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		invalid: false,
 		disabled: false,
 		required: false,
@@ -91,7 +103,7 @@ export default {
 	},
 };
 
-const Template = ({ color, name, value, checked, indeterminate, accessibleLabel, invalid, disabled, required, decorative }: Record<string, any>) => html`
+const Template = ({ color, name, value, checked, indeterminate, accessibleLabel, accessibleDescription, invalid, disabled, required, decorative }: Record<string, any>) => html`
 	<nldd-checkbox
 		color=${color || nothing}
 		?checked=${checked}
@@ -103,6 +115,7 @@ const Template = ({ color, name, value, checked, indeterminate, accessibleLabel,
 		value=${value}
 		name=${name}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 	></nldd-checkbox>
 `;
 

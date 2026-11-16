@@ -115,6 +115,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 	},
 	args: {
 		size: 'md',
@@ -136,6 +146,8 @@ export default {
 		autocomplete: 'off',
 		noSpellcheck: false,
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 	},
 };
 
@@ -159,6 +171,7 @@ const Template = (args: Record<string, any>) => html`
 		?required=${args.required}
 		autocomplete=${args.autocomplete}
 		accessible-label=${args.accessibleLabel || nothing}
+		accessible-description=${args.accessibleDescription || nothing}
 		?no-spellcheck=${args.noSpellcheck}
 	>
 		<nldd-menu empty-text="Geen resultaten">

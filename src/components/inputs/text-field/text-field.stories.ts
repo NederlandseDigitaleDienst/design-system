@@ -135,6 +135,16 @@ export default {
 			description: 'Disabled state',
 			table: { defaultValue: { summary: false } },
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 	},
 	args: {
 		size: 'md',
@@ -155,10 +165,12 @@ export default {
 		pattern: '',
 		required: false,
 		disabled: false,
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 	},
 };
 
-const Template = ({ size, name, value, placeholder, type, keyboard, enterKey, autocomplete, valid, invalid, readonly, minlength, maxlength, pattern, required, disabled, noSpellcheck, width }: Record<string, any>) => html`
+const Template = ({ size, name, value, placeholder, type, keyboard, enterKey, autocomplete, valid, invalid, readonly, minlength, maxlength, pattern, required, disabled, noSpellcheck, width, accessibleDescription }: Record<string, any>) => html`
 	<nldd-text-field
 		minlength=${minlength ?? nothing}
 		maxlength=${maxlength ?? nothing}
@@ -178,6 +190,7 @@ const Template = ({ size, name, value, placeholder, type, keyboard, enterKey, au
 		pattern=${pattern || nothing}
 		?no-spellcheck=${noSpellcheck}
 		width=${width}
+		accessible-description=${accessibleDescription || nothing}
 	></nldd-text-field>
 `;
 

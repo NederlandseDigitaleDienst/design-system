@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './dropdown.js';
 import '../../layout/container/container.js';
 
@@ -52,6 +52,16 @@ export default {
 			table: { defaultValue: { summary: false } },
 		},
 
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 	},
 	args: {
 		size: 'md',
@@ -60,6 +70,8 @@ export default {
 		invalid: false,
 		disabled: false,
 		required: false,
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 	},
 };
 
@@ -71,7 +83,7 @@ const options = (selected = '') => [1, 2, 3, 4, 5, 6].map((option) => html`
 	>Optie ${option}</option>
 `);
 
-const Template = ({ size, valid, invalid, disabled, width, required }: Record<string, any>) => html`
+const Template = ({ size, valid, invalid, disabled, width, required, accessibleDescription }: Record<string, any>) => html`
 	<nldd-dropdown
 		size=${size}
 		?valid=${valid}
@@ -79,6 +91,7 @@ const Template = ({ size, valid, invalid, disabled, width, required }: Record<st
 		?disabled=${disabled}
 		?required=${required}
 		width=${width}
+		accessible-description=${accessibleDescription || nothing}
 	>
 		<select
 			name="option"

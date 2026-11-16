@@ -147,6 +147,10 @@
       "types": "./dist/components/inputs/checkbox-field/checkbox-field.d.ts",
       "default": "./dist/components/inputs/checkbox-field/checkbox-field.js"
     },
+    "./checkbox-group": {
+      "types": "./dist/components/inputs/checkbox-group/checkbox-group.d.ts",
+      "default": "./dist/components/inputs/checkbox-group/checkbox-group.js"
+    },
     "./code-editor": {
       "types": "./dist/components/inputs/code-editor/code-editor.d.ts",
       "default": "./dist/components/inputs/code-editor/code-editor.js"

@@ -15,6 +15,10 @@ export interface DescribedElement {
 	describedTarget(): Element | null;
 	/** Elements the component itself adds to the description. */
 	ownDescriptions(): readonly Element[];
+	/** The hidden element in the shadow root that carries `accessible-description`. */
+	_descriptionTextElement: HTMLElement | null;
+	/** What the app gives as the description. */
+	_appDescriptions(onSelf: boolean): readonly Element[];
 }
 
 /**

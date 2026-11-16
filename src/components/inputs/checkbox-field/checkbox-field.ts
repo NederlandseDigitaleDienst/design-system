@@ -3,6 +3,15 @@
  *
  * A checkbox with an inline label for use in forms.
  *
+ * Options that belong under this one are nldd-checkbox-fields of their own,
+ * each with `slot="children"`, as rows nest in nldd-list-item. They indent to
+ * line up with the label, and are a group named after this option. This
+ * checkbox then follows them: checked when all of them are, indeterminate
+ * when some are, and unchecked when none are. Checking or unchecking it does
+ * the same to every option under it that is not disabled. Its own `change`
+ * fires when that changes its state, so a box further up follows too. In an
+ * nldd-checkbox-group, the options under it belong to the group as well.
+ *
  * Form-associated: participates in native form submission under `name` with
  * `value` when checked (the inner nldd-checkbox sits in the shadow root and
  * never joins the consumer's form; the field submits on its behalf).
@@ -15,13 +24,15 @@
  * @attr {string} value - Value for form submission
  * @attr {string} name - Name for form submission
  * @attr {string} label - Label text for the checkbox
- * @attr {boolean} required - Required state
+ * @attr {boolean} required - Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ *
+ * @slot children - nldd-checkbox-field elements with the options under this one.
  *
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
 import { LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, uncheckedValidity, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { checkboxFieldStyles } from './checkbox-field.styles.js';
@@ -71,6 +82,17 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
+	/** In an nldd-checkbox-group, where `required` is about the group and no
+	 *  single box is announced as required. */
+	get _inGroup(): boolean {
+		return this.closest('nldd-checkbox-group') !== null;
+	}
+
+	/** Set by nldd-checkbox-group: whether any box in the group is checked,
+	 *  which is what `required` asks there. */
+	@state()
+	_groupHasSelection = false;
+
 
 	/**
 	 * Marks the control as invalid.
@@ -88,6 +110,77 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 		this._initialChecked = this.checked;
 	}
 
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this.addEventListener('change', this._handleChildChange);
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this.removeEventListener('change', this._handleChildChange);
+	}
+
+	/** The options right under this one, not those further down. */
+	@state()
+	_childFields: NLDDCheckboxField[] = [];
+
+	public _handleChildrenSlotChange(e: Event): void {
+		const slot = e.target as HTMLSlotElement;
+		this._childFields = slot.assignedElements()
+			.filter((el): el is NLDDCheckboxField => el.localName === 'nldd-checkbox-field');
+		this._followChildren(false);
+	}
+
+	/** A change of an option right under this one; one further down reaches
+	 *  this through the option it belongs to. */
+	private _handleChildChange = (e: Event): void => {
+		const target = e.target as Element;
+		if (target === this || target.localName !== 'nldd-checkbox-field') return;
+		if (!this._childFields.includes(target as NLDDCheckboxField)) return;
+		this._followChildren(true);
+	};
+
+	/** Checked when all options under this one are, indeterminate when some
+	 *  are, unchecked when none are. */
+	private _followChildren(announce: boolean): void {
+		const fields = this._childFields;
+		if (fields.length === 0) return;
+		const all = fields.every((field) => field.checked);
+		const some = fields.some((field) => field.checked || field.indeterminate);
+		const checked = all;
+		const indeterminate = !all && some;
+		if (checked === this.checked && indeterminate === this.indeterminate) return;
+		this.checked = checked;
+		this.indeterminate = indeterminate;
+		this.commitFormValue();
+		if (announce) this._dispatchChange();
+	}
+
+	/** Gives every option under this one, at any depth, this state, except
+	 *  those that are disabled. */
+	private _setChildren(checked: boolean): void {
+		if (this._childFields.length === 0) return;
+		const descendants = [...this.querySelectorAll('nldd-checkbox-field')];
+		descendants.forEach((field) => {
+			if (field.disabled) return;
+			field.checked = checked;
+			field.indeterminate = false;
+			field.commitFormValue();
+		});
+		// A disabled option keeps its state, so a box may end up partial. From
+		// the bottom up, so each box reads options that are settled.
+		descendants.reverse().forEach((field) => field._followChildren(false));
+		this._followChildren(false);
+	}
+
+	private _dispatchChange(): void {
+		this.dispatchEvent(new CustomEvent('change', {
+			detail: { checked: this.checked, value: this.value },
+			bubbles: true,
+			composed: true,
+		}));
+	}
+
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;
@@ -96,12 +189,14 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	/** The checkbox that carries `required` sits in a shadow root of its own,
 	 *  where the form cannot see it. */
 	override ownValidity(): OwnValidity | null {
-		return uncheckedValidity(this);
+		return uncheckedValidity({ required: this.required, checked: this.checked || this._groupHasSelection, disabled: this.disabled });
 	}
 
 	formResetCallback(): void {
 		this.checked = this._initialChecked;
 		this.indeterminate = false;
+		// The options under this one reset too, in their own callbacks.
+		if (this._childFields.length > 0) queueMicrotask(() => this._followChildren(false));
 	}
 
 
@@ -120,12 +215,9 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 		const { checked } = (e as CustomEvent<{ checked: boolean }>).detail;
 		this.checked = checked;
 		this.indeterminate = false;
+		this._setChildren(checked);
 		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { checked: this.checked, value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this._dispatchChange();
 	}
 
 	/**

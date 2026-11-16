@@ -64,6 +64,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		required: {
 			control: 'boolean',
 			description: 'Er moet een waarde ingevuld zijn; leeg is dan ongeldig',
@@ -90,13 +100,15 @@ export default {
 		max: 10,
 		step: 1,
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		required: false,
 		invalid: false,
 		disabled: false,
 	},
 };
 
-const Template = ({ size, hideSpinButtons, name, value, min, max, step, width, accessibleLabel, required, invalid, disabled }: Record<string, any>) => html`
+const Template = ({ size, hideSpinButtons, name, value, min, max, step, width, accessibleLabel, accessibleDescription, required, invalid, disabled }: Record<string, any>) => html`
 	<nldd-number-field
 		value=${value ?? nothing}
 		min=${min}
@@ -110,6 +122,7 @@ const Template = ({ size, hideSpinButtons, name, value, min, max, step, width, a
 		?hide-spin-buttons=${hideSpinButtons}
 		width=${width || nothing}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 	></nldd-number-field>
 `;
 

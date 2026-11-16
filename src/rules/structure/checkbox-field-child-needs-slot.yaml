@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-checkbox-field'
+report: ':has(> :not(nldd-checkbox-field[slot="children"]))'
+message: 'nldd-checkbox-field only renders nldd-checkbox-fields with `slot="children"`, the options under it. Anything else in it does not render.'
+examples:
+  passed: ['<nldd-checkbox-group><nldd-checkbox-field label="Isolatie"><nldd-checkbox-field slot="children" label="Dakisolatie"></nldd-checkbox-field></nldd-checkbox-field></nldd-checkbox-group>']
+  failed:
+    - '<nldd-checkbox-group><nldd-checkbox-field label="Isolatie"><nldd-checkbox-field label="Dakisolatie"></nldd-checkbox-field></nldd-checkbox-field></nldd-checkbox-group>'
+    - '<nldd-checkbox-group><nldd-checkbox-field label="Isolatie"><nldd-checkbox-group slot="children"><nldd-checkbox-field label="Dakisolatie"></nldd-checkbox-field></nldd-checkbox-group></nldd-checkbox-field></nldd-checkbox-group>'

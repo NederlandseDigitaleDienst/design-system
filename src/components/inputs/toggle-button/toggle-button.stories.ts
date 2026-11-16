@@ -115,6 +115,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers (verplicht voor icon-only)',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
@@ -147,6 +157,8 @@ export default {
 		type: 'button',
 		selected: false,
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		invalid: false,
 		required: false,
 		disabled: false,
@@ -171,6 +183,7 @@ const Template = (args: Record<string, any>) => html`
 		shortcut-windows=${args.shortcutWindows || nothing}
 		shortcut-linux=${args.shortcutLinux || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
+		accessible-description=${args.accessibleDescription || nothing}
 	></nldd-toggle-button>
 `;
 

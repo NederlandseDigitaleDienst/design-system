@@ -1249,11 +1249,12 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 ### `<nldd-checkbox-field>`
 
-A checkbox with an inline label for use in forms. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).
+A checkbox with an inline label for use in forms. Options that belong under this one are nldd-checkbox-fields of their own, each with `slot="children"`, as rows nest in nldd-list-item. They indent to line up with the label, and are a group named after this option. This checkbox then follows them: checked when all of them are, indeterminate when some are, and unchecked when none are. Checking or unchecking it does the same to every option under it that is not disabled. Its own `change` fires when that changes its state, so a box further up follows too. In an nldd-checkbox-group, the options under it belong to the group as well. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).
 
 **Rules** (`nldd lint`)
 
 - `checkbox-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-checkbox.
+- `checkbox-field-child-needs-slot`: nldd-checkbox-field only renders nldd-checkbox-fields with `slot="children"`, the options under it. Anything else in it does not render.
 - `filter-no-options-as-fields` (hint): Make the options rows of an nldd-list, with `checkbox` on the row: the whole row is the target and there is nothing to submit.
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
 - `login-remember-me-needs-checked` (hint): Set `checked`: staying signed in is the right default, and who does not want it turns it off.
@@ -1269,14 +1270,47 @@ A checkbox with an inline label for use in forms. Form-associated: participates 
 | `value` | `string` | Value for form submission |
 | `name` | `string` | Name for form submission |
 | `label` | `string` | Label text for the checkbox |
-| `required` | `boolean` | Required state |
+| `required` | `boolean` | Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `children` | nldd-checkbox-field elements with the options under this one. |
 
 **Events**
 
 | Event | Description |
 | --- | --- |
 | `change` | When checked state changes; detail: { checked: boolean, value: string } |
+
+### `<nldd-checkbox-group>`
+
+Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio buttons: the same layout, one name for all of them, and a group that a screen reader announces with its label. Each checkbox is a stop of its own for Tab, as checkboxes are; the arrow keys belong to a radio group. Use inside nldd-form-field, which provides the group label. `required` asks for at least one checked box, not for every box: while none is checked, each field reports a missing value, and as soon as one is checked, none does. Nothing announces it per box, since no single box is required, and ARIA has no `aria-required` for a group: say it in the label or the help text, or mark the other questions optional.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `name` | `string` | Forwarded to all nldd-checkbox-field elements in the group |
+| `disabled` | `boolean` | Disables all fields in the group |
+| `required` | `boolean` | At least one box in the group has to be checked |
+| `accessible-label` | `string` | Accessible name for the group, set as aria-label on the group |
+| `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | Slot for nldd-checkbox-field elements. Options nested in the `children` slot of a field belong to the group too; see nldd-checkbox-field. |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `change` | Bubbles up from the field that changed; detail: { checked: boolean, value: string } |
 
 ### `<nldd-code-editor>`
 
@@ -3327,7 +3361,7 @@ A horizontal tab bar for document tabs with an automatic overflow button and an 
 
 ### `<nldd-link>`
 
-Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"sm"|"md"|"lg"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size="inherit"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take. Put an `<a>` in the default slot and the component draws no link of its own: it gives yours its look instead. A page then has the link in its HTML before any script runs, for a search engine that does not render the page, a link preview or reader mode, and a router gets the click: put the `<Link>` of React Router or Next in it, which renders an `<a>` and navigates itself. Without that, every click on a link in a shadow root loads the whole page. <nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link> Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, and its text. Those attributes, `text`, `start-icon` and `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an nldd-icon, so it is part of what you click and inside the focus ring. `size`, `accessible-label`, `interestfor`, `no-tab` and `disabled` keep working: the component sets `aria-label`, the description, `tabindex` and `aria-disabled` on your `<a>`, and leaves an attribute you set yourself alone. With `target="_blank"` it adds `noopener noreferrer` to the `rel` of the `<a>`, as it does to its own. A disabled link ignores a click before your router sees it. The hint about another website, a new tab or a download goes on it as `aria-description`, so a screen reader reads it after the name. Not as hidden text in the `<a>`: a framework that renders the `<a>` owns its children, and an extra one breaks hydration. One `<a>` per link. The look of the `<a>` comes from the global stylesheet, `dist/css/link.css` or `global.css`, which includes it, so the link looks right before the component loads, and without script.
+Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"sm"|"md"|"lg"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size="inherit"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take. Put an `<a>` in the default slot and the component draws no link of its own: it gives yours its look instead. A page then has the link in its HTML before any script runs, for a search engine that does not render the page, a link preview or reader mode, and a router gets the click: put the `<Link>` of React Router or Next in it, which renders an `<a>` and navigates itself. Without that, every click on a link in a shadow root loads the whole page. <nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link> Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, and its text. Those attributes, `text`, `start-icon` and `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an nldd-icon, so it is part of what you click and inside the focus ring. `size`, `accessible-label`, `accessible-description`, `accessible-described-by`, `interestfor`, `no-tab` and `disabled` keep working: the component sets `aria-label`, the description, `tabindex` and `aria-disabled` on your `<a>`, and leaves an attribute you set yourself alone. With `target="_blank"` it adds `noopener noreferrer` to the `rel` of the `<a>`, as it does to its own. A disabled link ignores a click before your router sees it. The hint about another website, a new tab or a download goes on it as `aria-description`, so a screen reader reads it after the name, after the text of `accessible-description`. `accessible-described-by` points the `<a>` at the elements it names. Not as hidden text in the `<a>`: a framework that renders the `<a>` owns its children, and an extra one breaks hydration. One `<a>` per link. The look of the `<a>` comes from the global stylesheet, `dist/css/link.css` or `global.css`, which includes it, so the link looks right before the component loads, and without script.
 
 **Rules** (`nldd lint`)
 

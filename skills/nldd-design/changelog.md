@@ -15,11 +15,18 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-checkbox-group`, a new component for a set of checkboxes,** the counterpart of `nldd-radio-button-group`, and **nested checkboxes**: an option can have options under it, and follows them. See Added.
+
 ### Added
 
+- **`nldd-checkbox-group`.** Puts `nldd-checkbox-field`s together as one group, as `nldd-radio-button-group` does for radio buttons: it is named by an `nldd-form-field` or with `accessible-label`, hands `name`, `disabled` and `required` to every option, and with `required` asks for at least one checked box, not each one. Each checkbox stays a tab stop of its own.
+- **Nested checkboxes.** An `nldd-checkbox-field` with `slot="children"` in another one is an option under it, as rows nest in `nldd-list-item`. The options under it are indented under its label and are a group named after it. The option above follows them: checked when all are, indeterminate when some are, unchecked when none are. Checking or unchecking it does the same to every option under it that is not disabled. It nests as deep as you need.
+- **`checkbox-field-child-needs-slot`** (warn) reports a child of an `nldd-checkbox-field` that is not an `nldd-checkbox-field` with `slot="children"`, which does not render.
 - **`nldd-toggle-button` takes an `interest` slot and `interestfor`,** as `nldd-button` and `nldd-icon-button` do: a popover that opens when the pointer rests on the button, on focus and on a long press, and is read as its description. For a reaction you toggle, it shows who reacted.
 - **The app can decide the state of an `nldd-toggle-button`.** With `type="button"` or `"checkbox"`, `change` is cancelable: `preventDefault()` keeps the old state before it is drawn, and the app sets `selected` itself once a server has accepted the change. A radio is always chosen.
-- **`accessible-described-by` and `accessible-description` on every control that takes a description,** such as `nldd-button`, `nldd-toggle-button` and the input fields. `accessible-described-by` takes the IDs of elements on the page, as `aria-describedby` does, and hands them to the control inside, where an `aria-describedby` on the element would not reach. `accessible-description` takes the text itself. A description is read after the name, the role and the state, and never stands in for the name. The reference wins when both are set, and it comes after the help and error text of an `nldd-form-field`.
+- **`accessible-described-by` and `accessible-description` on every control that takes a description,** such as `nldd-button`, `nldd-icon-button`, `nldd-toggle-button`, `nldd-link` and the input fields. `accessible-described-by` takes the IDs of elements on the page, as `aria-describedby` does, and hands them to the control inside, where an `aria-describedby` on the element would not reach. `accessible-description` takes the text itself. A description is read after the name, the role and the state, and never stands in for the name. The reference wins when both are set, and it comes after the help and error text of an `nldd-form-field`. On an `<a>` of your own in `nldd-link`, the text goes on its `aria-description`, before the hint about a new tab or a download.
 - **`description-no-effect`** (warn) reports `accessible-description` next to `accessible-described-by`, and **`description-not-found`** (warn, in the browser) an ID that `accessible-described-by` does not find.
 - **`card-no-card`** (warn) reports an `nldd-card` inside another `nldd-card`. A card is one thing to go to or choose; to group content visually, use `nldd-box` or a layout of your own.
 

@@ -26,6 +26,8 @@ export default {
 		step: 1,
 		noPicker: false,
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
 		readonly: false,
@@ -77,6 +79,16 @@ export default {
 			description: 'Toegankelijk label voor de interne input',
 			table: { defaultValue: { summary: 'Tijd' } },
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		valid: {
 			control: 'boolean',
 			description: 'Markeert het veld als geldig',
@@ -118,7 +130,7 @@ const Template = ({
 	max,
 	step,
 	noPicker,
-	accessibleLabel,
+	accessibleLabel, accessibleDescription,
 	valid,
 	invalid,
 	readonly,
@@ -136,6 +148,7 @@ const Template = ({
 		step=${step || nothing}
 		?no-picker=${noPicker}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?valid=${valid}
 		?readonly=${readonly}
 		?invalid=${invalid}

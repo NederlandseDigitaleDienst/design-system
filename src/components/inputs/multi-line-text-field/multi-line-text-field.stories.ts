@@ -68,6 +68,8 @@ export default {
 		autocomplete: '',
 		noSpellcheck: false,
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
 		readonly: false,
@@ -172,10 +174,20 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 	},
 };
 
-const Template = ({ size, resize, rows, width, placeholder, valid, invalid, readonly, disabled, name, value, minlength, maxlength, required, keyboard, enterKey, autocomplete, accessibleLabel, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, resize, rows, width, placeholder, valid, invalid, readonly, disabled, name, value, minlength, maxlength, required, keyboard, enterKey, autocomplete, accessibleLabel, accessibleDescription, noSpellcheck }: Record<string, any>) => html`
 	<nldd-multi-line-text-field
 		minlength=${minlength ?? nothing}
 		size=${size}
@@ -195,6 +207,7 @@ const Template = ({ size, resize, rows, width, placeholder, valid, invalid, read
 		?required=${required}
 		autocomplete=${autocomplete}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?no-spellcheck=${noSpellcheck}
 	></nldd-multi-line-text-field>
 `;

@@ -64,6 +64,8 @@ export default {
 		multiple: false,
 		directory: false,
 		accessibleLabel: 'Bijlage',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
 		disabled: false,
@@ -102,6 +104,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijke naam; wordt door nldd-form-field automatisch gezet',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		valid: {
 			control: 'boolean',
 			description: 'Markeert het veld als geldig',
@@ -136,6 +148,7 @@ export const Standaard = ({
 	multiple,
 	directory,
 	accessibleLabel,
+	accessibleDescription,
 	valid,
 	invalid,
 	disabled,
@@ -149,6 +162,7 @@ export const Standaard = ({
 		?multiple=${multiple}
 		?directory=${directory}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?valid=${valid}
 		?invalid=${invalid}
 		?disabled=${disabled}

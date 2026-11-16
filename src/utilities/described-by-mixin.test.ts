@@ -1,6 +1,8 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../test-utils.js';
 import '../components/actions/button/button.js';
+import '../components/actions/icon-button/icon-button.js';
+import '../components/navigation/link/link.js';
 import '../components/inputs/text-field/text-field.js';
 import '../components/inputs/toggle-button/toggle-button.js';
 import '../components/inputs/checkbox-field/checkbox-field.js';
@@ -116,5 +118,54 @@ describe('accessible-described-by and accessible-description', () => {
 		const toggle = root.querySelector('nldd-toggle-button')! as unknown as Described & HTMLElement;
 		await waitForUpdate(toggle);
 		expect(toggle.ariaDescription).toBe('Toont alle aanvragen');
+	});
+
+	it('describes the button of an nldd-icon-button, before its popover', async () => {
+		root = await fixture<HTMLElement>(`
+			<div>
+				<nldd-icon-button icon="share" accessible-label="Delen" accessible-description="Alleen lezen">
+					<nldd-popover slot="interest">Gedeeld met Sam de Vries</nldd-popover>
+				</nldd-icon-button>
+			</div>
+		`);
+		const iconButton = root.querySelector('nldd-icon-button')!;
+		await waitForUpdate(iconButton);
+		const button = iconButton.shadowRoot!.querySelector('.icon-button') as unknown as Described;
+		expect(textOf(button.ariaDescribedByElements)).toEqual(['Alleen lezen', 'Gedeeld met Sam de Vries']);
+	});
+
+	it('describes the link nldd-link renders', async () => {
+		root = await fixture<HTMLElement>(`
+			<div>
+				<nldd-link href="/aanvragen/A-1042" text="Aanvraag A-1042" accessible-described-by="status"></nldd-link>
+				<p id="status">In behandeling</p>
+			</div>
+		`);
+		const link = root.querySelector('nldd-link')!;
+		await waitForUpdate(link);
+		const anchor = link.shadowRoot!.querySelector('.link') as unknown as Described;
+		expect(textOf(anchor.ariaDescribedByElements)).toEqual(['In behandeling']);
+	});
+
+	it('points an <a> of the app at the elements it names, and gives it the text as aria-description', async () => {
+		root = await fixture<HTMLElement>(`
+			<div>
+				<nldd-link accessible-described-by="status"><a href="/aanvragen/A-1042">Aanvraag A-1042</a></nldd-link>
+				<p id="status">In behandeling</p>
+				<nldd-link accessible-description="Alleen lezen"><a href="/aanvraag.pdf" download>Aanvraag A-1042</a></nldd-link>
+			</div>
+		`);
+		const [named, texted] = [...root.querySelectorAll('nldd-link')];
+		await waitForUpdate(named);
+		await waitForUpdate(texted);
+		const first = named.querySelector('a') as unknown as Described;
+		expect(textOf(first.ariaDescribedByElements)).toEqual(['In behandeling']);
+		const second = texted.querySelector('a')!;
+		expect((second as unknown as Described).ariaDescribedByElements).toBeNull();
+		expect(second.getAttribute('aria-description')).toMatch(/^Alleen lezen\. \S/);
+
+		texted.removeAttribute('accessible-description');
+		await waitForUpdate(texted);
+		expect(second.getAttribute('aria-description')).not.toContain('Alleen lezen');
 	});
 });

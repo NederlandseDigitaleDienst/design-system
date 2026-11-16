@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './token-field.js';
 import '../../actions/menu/menu.js';
 
@@ -29,6 +29,8 @@ export default {
 		type: 'text',
 		autocomplete: '',
 		accessibleLabel: 'Landen',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		allowCustom: false,
 		noFilter: false,
 		valid: false,
@@ -62,6 +64,16 @@ export default {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijk label, doorgegeven als aria-label aan de invoer.',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
 		allowCustom: {
 			name: 'allow-custom',
@@ -137,6 +149,7 @@ const render = (args: Record<string, unknown>) => html`
 		type=${(args.type as string) ?? 'text'}
 		autocomplete=${(args.autocomplete as string) ?? ''}
 		accessible-label=${(args.accessibleLabel as string) ?? ''}
+		accessible-description=${(args.accessibleDescription as string) || nothing}
 		?allow-custom=${args.allowCustom}
 		?no-filter=${args.noFilter}
 		?valid=${args.valid}

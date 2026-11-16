@@ -1416,6 +1416,77 @@
               "description": "Delegates focus to the inner `<button>` (or `<a>` when `href` is set), so\nconsumers can call `iconButtonEl.focus()` without reaching into shadow DOM."
             },
             {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The button or link it renders, not the host around it.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "The popover in the `interest` slot describes the button.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByElements",
+              "type": {
+                "text": "readonly Element[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "translations",
               "type": {
@@ -1688,6 +1759,32 @@
               "fieldName": "rel"
             },
             {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "name": "translations",
               "type": {
                 "text": "Partial<T>"
@@ -1702,6 +1799,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "DescribedBy",
+              "module": "/src/utilities/described-by-mixin.js"
+            },
             {
               "name": "withTranslations",
               "module": "/src/utilities/with-translations.js"
@@ -9728,6 +9829,14 @@
         },
         {
           "kind": "js",
+          "name": "NLDDCheckboxGroup",
+          "declaration": {
+            "name": "NLDDCheckboxGroup",
+            "module": "./inputs/checkbox-group/checkbox-group.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "NLDDCodeEditor",
           "declaration": {
             "name": "NLDDCodeEditor",
@@ -10510,7 +10619,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A checkbox with an inline label for use in forms. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).",
+          "description": "A checkbox with an inline label for use in forms. Options that belong under this one are nldd-checkbox-fields of their own, each with `slot=\"children\"`, as rows nest in nldd-list-item. They indent to line up with the label, and are a group named after this option. This checkbox then follows them: checked when all of them are, indeterminate when some are, and unchecked when none are. Checking or unchecking it does the same to every option under it that is not disabled. Its own `change` fires when that changes its state, so a box further up follows too. In an nldd-checkbox-group, the options under it belong to the group as well. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).",
           "name": "NLDDCheckboxField",
           "members": [
             {
@@ -10974,7 +11083,7 @@
               },
               "default": "false",
               "fieldName": "required",
-              "description": "Required state"
+              "description": "Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one."
             },
             {
               "name": "invalid",
@@ -11027,7 +11136,13 @@
             "package": "lit"
           },
           "tagName": "nldd-checkbox-field",
-          "customElement": true
+          "customElement": true,
+          "slots": [
+            {
+              "name": "children",
+              "description": "nldd-checkbox-field elements with the options under this one."
+            }
+          ]
         }
       ],
       "exports": [
@@ -11045,6 +11160,199 @@
           "declaration": {
             "name": "NLDDCheckboxField",
             "module": "src/components/inputs/checkbox-field/checkbox-field.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/checkbox-group/checkbox-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio buttons: the same layout, one name for all of them, and a group that a screen reader announces with its label. Each checkbox is a stop of its own for Tab, as checkboxes are; the arrow keys belong to a radio group. Use inside nldd-form-field, which provides the group label. `required` asks for at least one checked box, not for every box: while none is checked, each field reports a missing value, and as soon as one is checked, none does. Nothing announces it per box, since no single box is required, and ARIA has no `aria-required` for a group: say it in the label or the help text, or mark the other questions optional.",
+          "name": "NLDDCheckboxGroup",
+          "members": [
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name forwarded as aria-label to the group host.",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabeledBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-labeled-by"
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "attribute": "invalid",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Delegates focus to the first checked box, or else to the first one that\nis enabled, so a label pointing at the group lands on a box."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "description": "Forwarded to all nldd-checkbox-field elements in the group"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disables all fields in the group"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required",
+              "description": "At least one box in the group has to be checked"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name for the group, set as aria-label on the group",
+              "fieldName": "accessibleLabel"
+            },
+            {
+              "name": "accessible-labeled-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabeledBy",
+              "description": "Id of an external label element, set as aria-labelledby on the group"
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
+              "fieldName": "invalid"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-checkbox-group",
+          "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "Bubbles up from the field that changed; detail: { checked: boolean, value: string }"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Slot for nldd-checkbox-field elements. Options nested in the `children` slot of a field belong to the group too; see nldd-checkbox-field."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDCheckboxGroup",
+          "declaration": {
+            "name": "NLDDCheckboxGroup",
+            "module": "src/components/inputs/checkbox-group/checkbox-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-checkbox-group",
+          "declaration": {
+            "name": "NLDDCheckboxGroup",
+            "module": "src/components/inputs/checkbox-group/checkbox-group.ts"
           }
         }
       ]
@@ -45144,7 +45452,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Hyperlink component with two modes: 1. **Standalone (sized)**: set `size=\"xs\"|\"sm\"|\"md\"|\"lg\"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size=\"inherit\"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take. Put an `<a>` in the default slot and the component draws no link of its own: it gives yours its look instead. A page then has the link in its HTML before any script runs, for a search engine that does not render the page, a link preview or reader mode, and a router gets the click: put the `<Link>` of React Router or Next in it, which renders an `<a>` and navigates itself. Without that, every click on a link in a shadow root loads the whole page. <nldd-link size=\"md\"><a href=\"/patronen\">Patronen</a></nldd-link> Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, and its text. Those attributes, `text`, `start-icon` and `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an nldd-icon, so it is part of what you click and inside the focus ring. `size`, `accessible-label`, `interestfor`, `no-tab` and `disabled` keep working: the component sets `aria-label`, the description, `tabindex` and `aria-disabled` on your `<a>`, and leaves an attribute you set yourself alone. With `target=\"_blank\"` it adds `noopener noreferrer` to the `rel` of the `<a>`, as it does to its own. A disabled link ignores a click before your router sees it. The hint about another website, a new tab or a download goes on it as `aria-description`, so a screen reader reads it after the name. Not as hidden text in the `<a>`: a framework that renders the `<a>` owns its children, and an extra one breaks hydration. One `<a>` per link. The look of the `<a>` comes from the global stylesheet, `dist/css/link.css` or `global.css`, which includes it, so the link looks right before the component loads, and without script.",
+          "description": "Hyperlink component with two modes: 1. **Standalone (sized)**: set `size=\"xs\"|\"sm\"|\"md\"|\"lg\"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size=\"inherit\"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take. Put an `<a>` in the default slot and the component draws no link of its own: it gives yours its look instead. A page then has the link in its HTML before any script runs, for a search engine that does not render the page, a link preview or reader mode, and a router gets the click: put the `<Link>` of React Router or Next in it, which renders an `<a>` and navigates itself. Without that, every click on a link in a shadow root loads the whole page. <nldd-link size=\"md\"><a href=\"/patronen\">Patronen</a></nldd-link> Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, and its text. Those attributes, `text`, `start-icon` and `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an nldd-icon, so it is part of what you click and inside the focus ring. `size`, `accessible-label`, `accessible-description`, `accessible-described-by`, `interestfor`, `no-tab` and `disabled` keep working: the component sets `aria-label`, the description, `tabindex` and `aria-disabled` on your `<a>`, and leaves an attribute you set yourself alone. With `target=\"_blank\"` it adds `noopener noreferrer` to the `rel` of the `<a>`, as it does to its own. A disabled link ignores a click before your router sees it. The hint about another website, a new tab or a download goes on it as `aria-description`, so a screen reader reads it after the name, after the text of `accessible-description`. `accessible-described-by` points the `<a>` at the elements it names. Not as hidden text in the `<a>`: a framework that renders the `<a>` owns its children, and an extra one breaks hydration. One `<a>` per link. The look of the `<a>` comes from the global stylesheet, `dist/css/link.css` or `global.css`, which includes it, so the link looks right before the component loads, and without script.",
           "name": "NLDDLink",
           "members": [
             {
@@ -45262,6 +45570,77 @@
               "default": "undefined",
               "attribute": "interestfor",
               "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The `<a>` of the app, or else the one this component renders.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "The popover in the `interest` slot describes the link.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByElements",
+              "type": {
+                "text": "readonly Element[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescription",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "attribute": "accessible-description",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "attribute": "accessible-described-by",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -45390,6 +45769,32 @@
               "description": "ID of an nldd-popover that previews where the link goes, looked up in the tree of this link. It opens on interest instead of on a click: when the pointer rests on the link, when it gets keyboard focus, and on a long press on touch. A click or a tap still follows the link. Focus stays on the link, the popover's content is read as the link's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: put no link or button in it. Keep the popover outside the paragraph: a link stands in a `<p>`, and a `<p>` of your own inside it would close that paragraph. One popover can serve several links. Keep `accessible-label` on it: it is left out while the popover describes a link."
             },
             {
+              "name": "accessible-description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A description in words, read after the name, role and state, as\n`aria-description` would. Extra information, never the name: a button\nwith only an icon still needs its `accessible-label`. Not shown; prefer\n`accessible-described-by` to text that is on the page. That one wins\nwhen it finds an element, as `aria-describedby` wins from\n`aria-description`.",
+              "fieldName": "accessibleDescription",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "name": "accessible-described-by",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "IDs of elements whose text describes this control, separated by spaces,\nas `aria-describedby` takes them. Looked up in the tree of this element\nand handed to the control inside, where an `aria-describedby` on the\nhost would not reach. Read after the name, role and state, after the\nhelp and error text of an nldd-form-field.",
+              "fieldName": "accessibleDescribedBy",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "name": "translations",
               "type": {
                 "text": "Partial<T>"
@@ -45404,6 +45809,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "DescribedBy",
+              "module": "/src/utilities/described-by-mixin.js"
+            },
             {
               "name": "withTranslations",
               "module": "/src/utilities/with-translations.js"
@@ -50130,7 +50539,7 @@
           "type": {
             "text": "Record<string, () => Promise<unknown>>"
           },
-          "default": "{ 'nldd-accordion': () => import('../components/content/accordion/accordion.js'), 'nldd-accordion-item': () => import('../components/content/accordion/accordion-item.js'), 'nldd-activity-indicator': () => import('../components/status-and-feedback/activity-indicator/activity-indicator.js'), 'nldd-admonition': () => import('../components/content/admonition/admonition.js'), 'nldd-avatar': () => import('../components/content/avatar/avatar.js'), 'nldd-avatar-group': () => import('../components/content/avatar-group/avatar-group.js'), 'nldd-badge': () => import('../components/status-and-feedback/badge/badge.js'), 'nldd-banner': () => import('../components/status-and-feedback/banner/banner.js'), 'nldd-bar-split-view': () => import('../components/layout/split-views/bar-split-view/bar-split-view.js'), 'nldd-blockquote': () => import('../components/content/blockquote/blockquote.js'), 'nldd-box': () => import('../components/layout/box/box.js'), 'nldd-breadcrumbs': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-breadcrumbs-item': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-button': () => import('../components/actions/button/button.js'), 'nldd-button-bar': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-bar-divider': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-group': () => import('../components/actions/button-group/button-group.js'), 'nldd-card': () => import('../components/layout/card/card.js'), 'nldd-cell': () => import('../components/lists-and-tables/cells/cell/cell.js'), 'nldd-checkbox': () => import('../components/inputs/checkbox/checkbox.js'), 'nldd-checkbox-field': () => import('../components/inputs/checkbox-field/checkbox-field.js'), 'nldd-code-editor': () => import('../components/inputs/code-editor/code-editor.js'), 'nldd-code-viewer': () => import('../components/content/code-viewer/code-viewer.js'), 'nldd-collection': () => import('../components/layout/collection/collection.js'), 'nldd-combo-box': () => import('../components/inputs/combo-box/combo-box.js'), 'nldd-container': () => import('../components/layout/container/container.js'), 'nldd-date-field': () => import('../components/inputs/date-field/date-field.js'), 'nldd-date-picker': () => import('../components/inputs/date-picker/date-picker.js'), 'nldd-description-cell': () => import('../components/lists-and-tables/cells/description-cell/description-cell.js'), 'nldd-divider': () => import('../components/layout/divider/divider.js'), 'nldd-document-tab-bar': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-document-tab-bar-item': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-dropdown': () => import('../components/inputs/dropdown/dropdown.js'), 'nldd-file-field': () => import('../components/inputs/file-field/file-field.js'), 'nldd-form': () => import('../components/forms/form/form.js'), 'nldd-form-actions': () => import('../components/forms/form-actions/form-actions.js'), 'nldd-form-field': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-field-help-text': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-section': () => import('../components/forms/form-section/form-section.js'), 'nldd-full-bleed-section': () => import('../components/layout/page-sections/full-bleed-section/full-bleed-section.js'), 'nldd-hero': () => import('../components/layout/page-sections/hero/hero.js'), 'nldd-icon': () => import('../components/content/icon/icon.js'), 'nldd-icon-button': () => import('../components/actions/icon-button/icon-button.js'), 'nldd-icon-cell': () => import('../components/lists-and-tables/cells/icon-cell/icon-cell.js'), 'nldd-identity': () => import('../components/content/identity/identity.js'), 'nldd-image': () => import('../components/content/image/image.js'), 'nldd-inline-dialog': () => import('../components/status-and-feedback/inline-dialog/inline-dialog.js'), 'nldd-just-in-time-education': () => import('../components/status-and-feedback/just-in-time-education/just-in-time-education.js'), 'nldd-kanban': () => import('../components/layout/kanban/kanban.js'), 'nldd-kanban-column': () => import('../components/layout/kanban/kanban-column.js'), 'nldd-keyboard-shortcut': () => import('../components/content/keyboard-shortcut/keyboard-shortcut.js'), 'nldd-link': () => import('../components/navigation/link/link.js'), 'nldd-link-group': () => import('../components/navigation/link-group/link-group.js'), 'nldd-list': () => import('../components/lists-and-tables/list/list.js'), 'nldd-list-item': () => import('../components/lists-and-tables/list-item/list-item.js'), 'nldd-list-item-segment': () => import('../components/lists-and-tables/list-item-segment/list-item-segment.js'), 'nldd-menu': () => import('../components/actions/menu/menu.js'), 'nldd-menu-bar': () => import('../components/navigation/menu-bar/menu-bar.js'), 'nldd-menu-bar-item': () => import('../components/navigation/menu-bar-item/menu-bar-item.js'), 'nldd-menu-divider': () => import('../components/actions/menu/menu-divider.js'), 'nldd-menu-group': () => import('../components/actions/menu/menu-group.js'), 'nldd-menu-item': () => import('../components/actions/menu/menu-item.js'), 'nldd-modal-dialog': () => import('../components/status-and-feedback/modal-dialog/modal-dialog.js'), 'nldd-multi-line-text-field': () => import('../components/inputs/multi-line-text-field/multi-line-text-field.js'), 'nldd-navigation-split-view': () => import('../components/layout/split-views/navigation-split-view/navigation-split-view.js'), 'nldd-notification': () => import('../components/status-and-feedback/notification/notification.js'), 'nldd-number-field': () => import('../components/inputs/number-field/number-field.js'), 'nldd-one-half-one-half-section': () => import('../components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.js'), 'nldd-one-third-two-thirds-section': () => import('../components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.js'), 'nldd-one-time-code-field': () => import('../components/inputs/one-time-code-field/one-time-code-field.js'), 'nldd-page': () => import('../components/layout/page/page.js'), 'nldd-page-footer': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar-item': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-pagination': () => import('../components/navigation/pagination/pagination.js'), 'nldd-password-field': () => import('../components/inputs/password-field/password-field.js'), 'nldd-popover': () => import('../components/layout/popover/popover.js'), 'nldd-progress-bar': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-bar-segment-indicator': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-circle': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-progress-circle-segment-indicator': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-radio-button': () => import('../components/inputs/radio-button/radio-button.js'), 'nldd-radio-button-field': () => import('../components/inputs/radio-button-field/radio-button-field.js'), 'nldd-radio-button-group': () => import('../components/inputs/radio-button-group/radio-button-group.js'), 'nldd-reorder-handle-cell': () => import('../components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js'), 'nldd-rich-text': () => import('../components/content/rich-text/rich-text.js'), 'nldd-search-field': () => import('../components/inputs/search-field/search-field.js'), 'nldd-segmented-control': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-segmented-control-item': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-sheet': () => import('../components/layout/sheet/sheet.js'), 'nldd-shell': () => import('../components/layout/shell/shell.js'), 'nldd-side-by-side-split-view': () => import('../components/layout/split-views/side-by-side-split-view/side-by-side-split-view.js'), 'nldd-sidebar-section': () => import('../components/layout/page-sections/sidebar-section/sidebar-section.js'), 'nldd-simple-section': () => import('../components/layout/page-sections/simple-section/simple-section.js'), 'nldd-skip-link': () => import('../components/navigation/skip-link/skip-link.js'), 'nldd-slider': () => import('../components/inputs/slider/slider.js'), 'nldd-spacer': () => import('../components/layout/spacer/spacer.js'), 'nldd-spacer-cell': () => import('../components/lists-and-tables/cells/spacer-cell/spacer-cell.js'), 'nldd-split-button': () => import('../components/actions/split-button/split-button.js'), 'nldd-split-view-divider': () => import('../components/layout/split-views/split-view-divider/split-view-divider.js'), 'nldd-split-view-pane': () => import('../components/layout/split-views/split-view-pane/split-view-pane.js'), 'nldd-stacked-split-view': () => import('../components/layout/split-views/stacked-split-view/stacked-split-view.js'), 'nldd-status-bar': () => import('../components/status-and-feedback/status-bar/status-bar.js'), 'nldd-step-bar': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-bar-item': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-cell': () => import('../components/lists-and-tables/cells/step-cell/step-cell.js'), 'nldd-stepper': () => import('../components/inputs/stepper/stepper.js'), 'nldd-swatch-picker': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-swatch-picker-item': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-switch': () => import('../components/inputs/switch/switch.js'), 'nldd-switch-field': () => import('../components/inputs/switch-field/switch-field.js'), 'nldd-tab-bar': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-tab-bar-item': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-table': () => import('../components/lists-and-tables/table/table.js'), 'nldd-table-row': () => import('../components/lists-and-tables/table/table.js'), 'nldd-tag': () => import('../components/content/tag/tag.js'), 'nldd-term': () => import('../components/content/term/term.js'), 'nldd-text': () => import('../components/content/text/text.js'), 'nldd-text-cell': () => import('../components/lists-and-tables/cells/text-cell/text-cell.js'), 'nldd-text-editor': () => import('../components/inputs/text-editor/text-editor.js'), 'nldd-text-field': () => import('../components/inputs/text-field/text-field.js'), 'nldd-time-field': () => import('../components/inputs/time-field/time-field.js'), 'nldd-time-picker': () => import('../components/inputs/time-picker/time-picker.js'), 'nldd-title': () => import('../components/content/title/title.js'), 'nldd-title-cell': () => import('../components/lists-and-tables/cells/title-cell/title-cell.js'), 'nldd-toggle-button': () => import('../components/inputs/toggle-button/toggle-button.js'), 'nldd-toggle-button-group': () => import('../components/inputs/toggle-button-group/toggle-button-group.js'), 'nldd-token': () => import('../components/content/token/token.js'), 'nldd-token-field': () => import('../components/inputs/token-field/token-field.js'), 'nldd-toolbar': () => import('../components/actions/toolbar/toolbar.js'), 'nldd-toolbar-item': () => import('../components/actions/toolbar/toolbar-item.js'), 'nldd-toolbar-title': () => import('../components/actions/toolbar/toolbar-title.js'), 'nldd-tooltip': () => import('../components/content/tooltip/tooltip.js'), 'nldd-top-navigation-bar': () => import('../components/navigation/top-navigation-bar/top-navigation-bar.js'), 'nldd-top-title-bar': () => import('../components/navigation/top-title-bar/top-title-bar.js'), 'nldd-two-thirds-one-third-section': () => import('../components/layout/page-sections/two-thirds-one-third-section/two-thirds-one-third-section.js'), 'nldd-validation-item': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-validation-list': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-visually-hidden': () => import('../components/content/visually-hidden/visually-hidden.js'), 'nldd-window': () => import('../components/layout/window/window.js'), }",
+          "default": "{ 'nldd-accordion': () => import('../components/content/accordion/accordion.js'), 'nldd-accordion-item': () => import('../components/content/accordion/accordion-item.js'), 'nldd-activity-indicator': () => import('../components/status-and-feedback/activity-indicator/activity-indicator.js'), 'nldd-admonition': () => import('../components/content/admonition/admonition.js'), 'nldd-avatar': () => import('../components/content/avatar/avatar.js'), 'nldd-avatar-group': () => import('../components/content/avatar-group/avatar-group.js'), 'nldd-badge': () => import('../components/status-and-feedback/badge/badge.js'), 'nldd-banner': () => import('../components/status-and-feedback/banner/banner.js'), 'nldd-bar-split-view': () => import('../components/layout/split-views/bar-split-view/bar-split-view.js'), 'nldd-blockquote': () => import('../components/content/blockquote/blockquote.js'), 'nldd-box': () => import('../components/layout/box/box.js'), 'nldd-breadcrumbs': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-breadcrumbs-item': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-button': () => import('../components/actions/button/button.js'), 'nldd-button-bar': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-bar-divider': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-group': () => import('../components/actions/button-group/button-group.js'), 'nldd-card': () => import('../components/layout/card/card.js'), 'nldd-cell': () => import('../components/lists-and-tables/cells/cell/cell.js'), 'nldd-checkbox': () => import('../components/inputs/checkbox/checkbox.js'), 'nldd-checkbox-field': () => import('../components/inputs/checkbox-field/checkbox-field.js'), 'nldd-checkbox-group': () => import('../components/inputs/checkbox-group/checkbox-group.js'), 'nldd-code-editor': () => import('../components/inputs/code-editor/code-editor.js'), 'nldd-code-viewer': () => import('../components/content/code-viewer/code-viewer.js'), 'nldd-collection': () => import('../components/layout/collection/collection.js'), 'nldd-combo-box': () => import('../components/inputs/combo-box/combo-box.js'), 'nldd-container': () => import('../components/layout/container/container.js'), 'nldd-date-field': () => import('../components/inputs/date-field/date-field.js'), 'nldd-date-picker': () => import('../components/inputs/date-picker/date-picker.js'), 'nldd-description-cell': () => import('../components/lists-and-tables/cells/description-cell/description-cell.js'), 'nldd-divider': () => import('../components/layout/divider/divider.js'), 'nldd-document-tab-bar': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-document-tab-bar-item': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-dropdown': () => import('../components/inputs/dropdown/dropdown.js'), 'nldd-file-field': () => import('../components/inputs/file-field/file-field.js'), 'nldd-form': () => import('../components/forms/form/form.js'), 'nldd-form-actions': () => import('../components/forms/form-actions/form-actions.js'), 'nldd-form-field': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-field-help-text': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-section': () => import('../components/forms/form-section/form-section.js'), 'nldd-full-bleed-section': () => import('../components/layout/page-sections/full-bleed-section/full-bleed-section.js'), 'nldd-hero': () => import('../components/layout/page-sections/hero/hero.js'), 'nldd-icon': () => import('../components/content/icon/icon.js'), 'nldd-icon-button': () => import('../components/actions/icon-button/icon-button.js'), 'nldd-icon-cell': () => import('../components/lists-and-tables/cells/icon-cell/icon-cell.js'), 'nldd-identity': () => import('../components/content/identity/identity.js'), 'nldd-image': () => import('../components/content/image/image.js'), 'nldd-inline-dialog': () => import('../components/status-and-feedback/inline-dialog/inline-dialog.js'), 'nldd-just-in-time-education': () => import('../components/status-and-feedback/just-in-time-education/just-in-time-education.js'), 'nldd-kanban': () => import('../components/layout/kanban/kanban.js'), 'nldd-kanban-column': () => import('../components/layout/kanban/kanban-column.js'), 'nldd-keyboard-shortcut': () => import('../components/content/keyboard-shortcut/keyboard-shortcut.js'), 'nldd-link': () => import('../components/navigation/link/link.js'), 'nldd-link-group': () => import('../components/navigation/link-group/link-group.js'), 'nldd-list': () => import('../components/lists-and-tables/list/list.js'), 'nldd-list-item': () => import('../components/lists-and-tables/list-item/list-item.js'), 'nldd-list-item-segment': () => import('../components/lists-and-tables/list-item-segment/list-item-segment.js'), 'nldd-menu': () => import('../components/actions/menu/menu.js'), 'nldd-menu-bar': () => import('../components/navigation/menu-bar/menu-bar.js'), 'nldd-menu-bar-item': () => import('../components/navigation/menu-bar-item/menu-bar-item.js'), 'nldd-menu-divider': () => import('../components/actions/menu/menu-divider.js'), 'nldd-menu-group': () => import('../components/actions/menu/menu-group.js'), 'nldd-menu-item': () => import('../components/actions/menu/menu-item.js'), 'nldd-modal-dialog': () => import('../components/status-and-feedback/modal-dialog/modal-dialog.js'), 'nldd-multi-line-text-field': () => import('../components/inputs/multi-line-text-field/multi-line-text-field.js'), 'nldd-navigation-split-view': () => import('../components/layout/split-views/navigation-split-view/navigation-split-view.js'), 'nldd-notification': () => import('../components/status-and-feedback/notification/notification.js'), 'nldd-number-field': () => import('../components/inputs/number-field/number-field.js'), 'nldd-one-half-one-half-section': () => import('../components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.js'), 'nldd-one-third-two-thirds-section': () => import('../components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.js'), 'nldd-one-time-code-field': () => import('../components/inputs/one-time-code-field/one-time-code-field.js'), 'nldd-page': () => import('../components/layout/page/page.js'), 'nldd-page-footer': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar-item': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-pagination': () => import('../components/navigation/pagination/pagination.js'), 'nldd-password-field': () => import('../components/inputs/password-field/password-field.js'), 'nldd-popover': () => import('../components/layout/popover/popover.js'), 'nldd-progress-bar': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-bar-segment-indicator': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-circle': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-progress-circle-segment-indicator': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-radio-button': () => import('../components/inputs/radio-button/radio-button.js'), 'nldd-radio-button-field': () => import('../components/inputs/radio-button-field/radio-button-field.js'), 'nldd-radio-button-group': () => import('../components/inputs/radio-button-group/radio-button-group.js'), 'nldd-reorder-handle-cell': () => import('../components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js'), 'nldd-rich-text': () => import('../components/content/rich-text/rich-text.js'), 'nldd-search-field': () => import('../components/inputs/search-field/search-field.js'), 'nldd-segmented-control': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-segmented-control-item': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-sheet': () => import('../components/layout/sheet/sheet.js'), 'nldd-shell': () => import('../components/layout/shell/shell.js'), 'nldd-side-by-side-split-view': () => import('../components/layout/split-views/side-by-side-split-view/side-by-side-split-view.js'), 'nldd-sidebar-section': () => import('../components/layout/page-sections/sidebar-section/sidebar-section.js'), 'nldd-simple-section': () => import('../components/layout/page-sections/simple-section/simple-section.js'), 'nldd-skip-link': () => import('../components/navigation/skip-link/skip-link.js'), 'nldd-slider': () => import('../components/inputs/slider/slider.js'), 'nldd-spacer': () => import('../components/layout/spacer/spacer.js'), 'nldd-spacer-cell': () => import('../components/lists-and-tables/cells/spacer-cell/spacer-cell.js'), 'nldd-split-button': () => import('../components/actions/split-button/split-button.js'), 'nldd-split-view-divider': () => import('../components/layout/split-views/split-view-divider/split-view-divider.js'), 'nldd-split-view-pane': () => import('../components/layout/split-views/split-view-pane/split-view-pane.js'), 'nldd-stacked-split-view': () => import('../components/layout/split-views/stacked-split-view/stacked-split-view.js'), 'nldd-status-bar': () => import('../components/status-and-feedback/status-bar/status-bar.js'), 'nldd-step-bar': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-bar-item': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-cell': () => import('../components/lists-and-tables/cells/step-cell/step-cell.js'), 'nldd-stepper': () => import('../components/inputs/stepper/stepper.js'), 'nldd-swatch-picker': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-swatch-picker-item': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-switch': () => import('../components/inputs/switch/switch.js'), 'nldd-switch-field': () => import('../components/inputs/switch-field/switch-field.js'), 'nldd-tab-bar': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-tab-bar-item': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-table': () => import('../components/lists-and-tables/table/table.js'), 'nldd-table-row': () => import('../components/lists-and-tables/table/table.js'), 'nldd-tag': () => import('../components/content/tag/tag.js'), 'nldd-term': () => import('../components/content/term/term.js'), 'nldd-text': () => import('../components/content/text/text.js'), 'nldd-text-cell': () => import('../components/lists-and-tables/cells/text-cell/text-cell.js'), 'nldd-text-editor': () => import('../components/inputs/text-editor/text-editor.js'), 'nldd-text-field': () => import('../components/inputs/text-field/text-field.js'), 'nldd-time-field': () => import('../components/inputs/time-field/time-field.js'), 'nldd-time-picker': () => import('../components/inputs/time-picker/time-picker.js'), 'nldd-title': () => import('../components/content/title/title.js'), 'nldd-title-cell': () => import('../components/lists-and-tables/cells/title-cell/title-cell.js'), 'nldd-toggle-button': () => import('../components/inputs/toggle-button/toggle-button.js'), 'nldd-toggle-button-group': () => import('../components/inputs/toggle-button-group/toggle-button-group.js'), 'nldd-token': () => import('../components/content/token/token.js'), 'nldd-token-field': () => import('../components/inputs/token-field/token-field.js'), 'nldd-toolbar': () => import('../components/actions/toolbar/toolbar.js'), 'nldd-toolbar-item': () => import('../components/actions/toolbar/toolbar-item.js'), 'nldd-toolbar-title': () => import('../components/actions/toolbar/toolbar-title.js'), 'nldd-tooltip': () => import('../components/content/tooltip/tooltip.js'), 'nldd-top-navigation-bar': () => import('../components/navigation/top-navigation-bar/top-navigation-bar.js'), 'nldd-top-title-bar': () => import('../components/navigation/top-title-bar/top-title-bar.js'), 'nldd-two-thirds-one-third-section': () => import('../components/layout/page-sections/two-thirds-one-third-section/two-thirds-one-third-section.js'), 'nldd-validation-item': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-validation-list': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-visually-hidden': () => import('../components/content/visually-hidden/visually-hidden.js'), 'nldd-window': () => import('../components/layout/window/window.js'), }",
           "description": "Per nldd-* tag, a dynamic import of the module that defines it."
         }
       ],

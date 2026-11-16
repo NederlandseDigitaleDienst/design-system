@@ -56,6 +56,16 @@ export default {
 			table: { defaultValue: { summary: false } },
 		},
 
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 	},
 	args: {
 		color: '',
@@ -65,10 +75,12 @@ export default {
 		invalid: false,
 		disabled: false,
 		required: false,
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 	},
 };
 
-const Template = ({ color, label, value, checked, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ color, label, value, checked, invalid, disabled, required, accessibleDescription }: Record<string, any>) => html`
 	<nldd-radio-button-field
 		color=${color || nothing}
 		label=${label}
@@ -77,6 +89,7 @@ const Template = ({ color, label, value, checked, invalid, disabled, required }:
 		?required=${required}
 		?disabled=${disabled}
 		value=${value}
+		accessible-description=${accessibleDescription || nothing}
 	></nldd-radio-button-field>
 `;
 

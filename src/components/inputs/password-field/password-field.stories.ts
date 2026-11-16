@@ -73,6 +73,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		readonly: {
 			control: 'boolean',
 			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, maar is hier niet te wijzigen',
@@ -114,6 +124,8 @@ export default {
 		valid: false,
 		invalid: false,
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		readonly: false,
 		disabled: false,
 		minlength: null,
@@ -123,7 +135,7 @@ export default {
 	},
 };
 
-const Template = ({ size, name, value, placeholder, autocomplete, masked, valid, invalid, accessibleLabel, readonly, disabled, minlength, maxlength, pattern, required, width }: Record<string, any>) => html`
+const Template = ({ size, name, value, placeholder, autocomplete, masked, valid, invalid, accessibleLabel, accessibleDescription, readonly, disabled, minlength, maxlength, pattern, required, width }: Record<string, any>) => html`
 	<nldd-password-field
 		minlength=${minlength ?? nothing}
 		maxlength=${maxlength ?? nothing}
@@ -141,6 +153,7 @@ const Template = ({ size, name, value, placeholder, autocomplete, masked, valid,
 		autocomplete=${autocomplete}
 		width=${width}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 	></nldd-password-field>
 `;
 
