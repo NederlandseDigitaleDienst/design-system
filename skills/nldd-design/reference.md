@@ -496,6 +496,45 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 ## Content
 
+### `<nldd-accordion>`
+
+A stack of nldd-accordion-item elements, each a title that opens and closes its content in place. Fold away only short, additional content: an answer to a question, a detail most readers skip. Content folded in place costs orientation, since the page grows and shifts under the reader. Content that is long, holds a form or is a task of its own goes in rows of an nldd-list that each open an nldd-sheet; see the design guidelines on expand/collapse. The items join into one block: a border around them, a line between them, each title in a tinted bar and its content on the base surface. It looks like a `details` in nldd-rich-text, so in running text that is the lighter choice. The title of an open item sticks to the top while you scroll through its content, so you always see where you are and can close it. With `exclusive` only one item is open at a time: opening one closes the other. Nothing else differs, so each item stays a native `details` with its keyboard, screen reader and find-in-page behavior.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `exclusive` | `boolean` | Only one item is open at a time |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | nldd-accordion-item elements. |
+
+### `<nldd-accordion-item>`
+
+One item of an nldd-accordion: a title in a tinted bar that opens and closes the content below it. It is a native `details` inside, so the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts closed, as a `details` does; add `open` to start open. The title is the name of the button that opens the item, so it is plain text and not a heading. While the item is open, the title bar sticks to the top of the scrolling area, below any bar that stays there.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `text` | `string` | Title in the bar |
+| `open` | `boolean` | Whether the item is open |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The content: an nldd-rich-text, or an nldd-text for a single paragraph. |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `toggle` | When the item opens or closes; read `open` for the new state. |
+
 ### `<nldd-admonition>`
 
 A note, tip or warning set apart in running text: what a `:::warning` becomes in a markdown page. It is content, not feedback. It says nothing when the page loads and cannot be dismissed, so a screen reader meets it in reading order as a note (`role="note"`). For a notice that responds to what the user does or what changes, such as an error summary, use nldd-banner, which is a live region. The title sits in a bar tinted in the color of the variant, with the icon of the variant before it. The content sits below it on the base surface, inside a border of the same color, so the admonition reads as part of the text and not as a message. Without `text` there is no bar, and the icon stands before the content. A warning or a critical note says in its title what it is: the color and the icon are not read out. With `collapsible` the title bar opens and closes the content, as a native `details` does: the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts open; add `collapsed` to start closed. Keep what you fold away short and additional: see the design guidelines on expand/collapse. A collapsible admonition needs `text`, and its title is the name of the button that opens it, so `heading-level` does not apply there. A markdown renderer does not make one by itself: `:::tip` is syntax of the parser, so the app maps each type to an admonition. The types of Docusaurus, remark-directive and markdown-it-container map as follows: `note` to `variant="neutral"`, `info` to `variant="accent"`, `tip` to `variant="success" icon="idea"`, `warning` and `caution` to `variant="warning"`, and `danger` to `variant="critical"`. The label of the type, or the title given in the markdown, becomes `text`. One admonition does not hold another: an aside within an aside is a sign the text wants to be written differently.

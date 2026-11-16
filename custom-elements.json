@@ -4750,6 +4750,159 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/content/accordion-item/accordion-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One item of an nldd-accordion: a title in a tinted bar that opens and closes the content below it. It is a native `details` inside, so the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts closed, as a `details` does; add `open` to start open. The title is the name of the button that opens the item, so it is plain text and not a heading. While the item is open, the title bar sticks to the top of the scrolling area, below any bar that stays there.",
+          "name": "NLDDAccordionItem",
+          "members": [
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "Title in the bar"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open",
+              "description": "Whether the item is open"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-accordion-item",
+          "customElement": true,
+          "events": [
+            {
+              "name": "toggle",
+              "description": "When the item opens or closes; read `open` for the new state."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The content: an nldd-rich-text, or an nldd-text for a single paragraph."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDAccordionItem",
+          "declaration": {
+            "name": "NLDDAccordionItem",
+            "module": "src/components/content/accordion-item/accordion-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-accordion-item",
+          "declaration": {
+            "name": "NLDDAccordionItem",
+            "module": "src/components/content/accordion-item/accordion-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/content/accordion/accordion.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A stack of nldd-accordion-item elements, each a title that opens and closes its content in place. Fold away only short, additional content: an answer to a question, a detail most readers skip. Content folded in place costs orientation, since the page grows and shifts under the reader. Content that is long, holds a form or is a task of its own goes in rows of an nldd-list that each open an nldd-sheet; see the design guidelines on expand/collapse. The items join into one block: a border around them, a line between them, each title in a tinted bar and its content on the base surface. It looks like a `details` in nldd-rich-text, so in running text that is the lighter choice. The title of an open item sticks to the top while you scroll through its content, so you always see where you are and can close it. With `exclusive` only one item is open at a time: opening one closes the other. Nothing else differs, so each item stays a native `details` with its keyboard, screen reader and find-in-page behavior.",
+          "name": "NLDDAccordion",
+          "members": [
+            {
+              "kind": "field",
+              "name": "exclusive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "exclusive",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "exclusive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "exclusive",
+              "description": "Only one item is open at a time"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-accordion",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "nldd-accordion-item elements."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDAccordion",
+          "declaration": {
+            "name": "NLDDAccordion",
+            "module": "src/components/content/accordion/accordion.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-accordion",
+          "declaration": {
+            "name": "NLDDAccordion",
+            "module": "src/components/content/accordion/accordion.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/content/admonition/admonition.ts",
       "declarations": [
         {
@@ -9315,6 +9468,22 @@
           "declaration": {
             "name": "NLDDMenu",
             "module": "./actions/menu/menu.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDAccordion",
+          "declaration": {
+            "name": "NLDDAccordion",
+            "module": "./content/accordion/accordion.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDAccordionItem",
+          "declaration": {
+            "name": "NLDDAccordionItem",
+            "module": "./content/accordion-item/accordion-item.js"
           }
         },
         {

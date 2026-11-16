@@ -22,6 +22,8 @@ export { NLDDMenu } from './actions/menu/menu.js';
 
 // # Content components
 
+export { NLDDAccordion } from './content/accordion/accordion.js';
+export { NLDDAccordionItem } from './content/accordion-item/accordion-item.js';
 export { NLDDAdmonition } from './content/admonition/admonition.js';
 export { NLDDAvatar } from './content/avatar/avatar.js';
 export { NLDDBlockquote } from './content/blockquote/blockquote.js';
