@@ -534,12 +534,41 @@ describe('nldd-rich-text details', () => {
 		const summary = el.querySelector('summary')!;
 		expect(getComputedStyle(summary).borderBottomStyle).toBe('none');
 		details.open = true;
+		// Opening transitions the height and padding of the content; wait for it.
+		await new Promise((resolve) => setTimeout(resolve, 400));
 		expect(getComputedStyle(summary).borderBottomWidth).toBe('1px');
 		const content = getComputedStyle(details, '::details-content').backgroundColor;
 		expect(content).not.toBe(getComputedStyle(details).backgroundColor);
 		// The room above the first paragraph is inside the white area, not a tinted strip above it.
 		expect(parseFloat(getComputedStyle(el.querySelector('p')!).marginTop)).toBe(0);
 		expect(getComputedStyle(details, '::details-content').paddingTop).toBe('12px');
+	});
+
+	it('opens and closes with a transition of the content height', async () => {
+		el = await render('<details><summary>Vraag</summary><p>Inhoud</p></details>');
+		const details = el.querySelector('details')!;
+		expect(getComputedStyle(details).getPropertyValue('interpolate-size')).toBe('allow-keywords');
+		expect(getComputedStyle(details, '::details-content').transitionProperty).toContain('block-size');
+		details.open = true;
+		await new Promise((resolve) => setTimeout(resolve, 60));
+		const height = parseFloat(getComputedStyle(details, '::details-content').blockSize);
+		await new Promise((resolve) => setTimeout(resolve, 400));
+		const opened = parseFloat(getComputedStyle(details, '::details-content').blockSize);
+		expect(height).toBeGreaterThan(0);
+		expect(height).toBeLessThan(opened);
+		// Closing keeps the content visible until the height reaches 0.
+		details.open = false;
+		await new Promise((resolve) => setTimeout(resolve, 60));
+		const closing = parseFloat(getComputedStyle(details, '::details-content').blockSize);
+		expect(closing).toBeGreaterThan(0);
+		expect(closing).toBeLessThan(opened);
+		// The bar stays square and keeps its line until the content is gone.
+		const summary = el.querySelector('summary')!;
+		expect(getComputedStyle(summary).borderBottomLeftRadius).toBe('0px');
+		expect(getComputedStyle(summary).borderBottomStyle).toBe('solid');
+		await new Promise((resolve) => setTimeout(resolve, 400));
+		expect(getComputedStyle(summary).borderBottomLeftRadius).not.toBe('0px');
+		expect(getComputedStyle(summary).borderBottomStyle).toBe('none');
 	});
 
 	it('joins details that follow each other into one block', async () => {

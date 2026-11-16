@@ -127,9 +127,17 @@ export const admonitionStyles = css`
 		background-color: var(--_admonition-title-bar-hover-background-color);
 	}
 
+	/* Closing, the bar keeps its square corners and its line until the content is gone. */
 	.admonition:not([open]) > summary.admonition__title-bar {
 		border-end-start-radius: var(--_admonition-title-bar-corner-radius);
 		border-end-end-radius: var(--_admonition-title-bar-corner-radius);
+		transition: border-radius 0s var(--_admonition-transition-duration), border-block-end 0s var(--_admonition-transition-duration) allow-discrete;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.admonition:not([open]) > summary.admonition__title-bar {
+			transition: none;
+		}
 	}
 
 	summary.admonition__title-bar:focus-visible {
@@ -202,6 +210,31 @@ export const admonitionStyles = css`
 	}
 
 
+	/* # Open and close */
+
+	details.admonition {
+		interpolate-size: allow-keywords;
+	}
+
+	details.admonition::details-content {
+		block-size: 0;
+		overflow-y: clip;
+		transition:
+			block-size var(--_admonition-transition-duration) ease-out,
+			content-visibility var(--_admonition-transition-duration) allow-discrete;
+	}
+
+	details.admonition[open]::details-content {
+		block-size: auto;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		details.admonition::details-content {
+			transition: none;
+		}
+	}
+
+
 	/* # Content */
 
 	.admonition__content {
@@ -223,6 +256,7 @@ export const admonitionStyles = css`
 	@media print {
 		.admonition::details-content {
 			content-visibility: visible;
+			block-size: auto;
 		}
 
 		.admonition__chevron {

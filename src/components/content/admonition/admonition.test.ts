@@ -95,6 +95,34 @@ describe('nldd-admonition', () => {
 		expect(el.shadowRoot!.querySelector('details')!.open).toBe(false);
 	});
 
+	it('animates the height of the content as it opens', async () => {
+		el = await fixture('<nldd-admonition text="Vraag" collapsible collapsed><p>Inhoud</p></nldd-admonition>');
+		const details = el.shadowRoot!.querySelector('details')!;
+		// A transition needs a style to start from.
+		expect(getComputedStyle(details, '::details-content').blockSize).toBe('0px');
+		el.collapsed = false;
+		await el.updateComplete;
+		await new Promise((resolve) => setTimeout(resolve, 60));
+		const height = parseFloat(getComputedStyle(details, '::details-content').blockSize);
+		await new Promise((resolve) => setTimeout(resolve, 400));
+		const opened = parseFloat(getComputedStyle(details, '::details-content').blockSize);
+		expect(height).toBeGreaterThan(0);
+		expect(height).toBeLessThan(opened);
+	});
+
+	it('keeps the bar square with its line until the content has closed', async () => {
+		el = await fixture('<nldd-admonition text="Vraag" collapsible><p>Inhoud</p></nldd-admonition>');
+		expect(getComputedStyle(titleBar()!).borderBottomStyle).toBe('solid');
+		el.collapsed = true;
+		await el.updateComplete;
+		await new Promise((resolve) => setTimeout(resolve, 60));
+		expect(getComputedStyle(titleBar()!).borderBottomLeftRadius).toBe('0px');
+		expect(getComputedStyle(titleBar()!).borderBottomStyle).toBe('solid');
+		await new Promise((resolve) => setTimeout(resolve, 400));
+		expect(getComputedStyle(titleBar()!).borderBottomLeftRadius).not.toBe('0px');
+		expect(getComputedStyle(titleBar()!).borderBottomStyle).toBe('none');
+	});
+
 	it('does not collapse without a title to click on', async () => {
 		el = await fixture('<nldd-admonition collapsible></nldd-admonition>');
 		expect(el.shadowRoot!.querySelector('details')).toBeNull();

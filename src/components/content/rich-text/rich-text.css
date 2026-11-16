@@ -626,6 +626,15 @@ nldd-rich-text summary {
 	}
 }
 
+/* Closing, the bar keeps its square corners and its line until the content is gone. */
+nldd-rich-text details:not([open]) > summary {
+	transition: border-radius 0s var(--primitives-transition-duration-fast), border-block-end 0s var(--primitives-transition-duration-fast) allow-discrete;
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
+}
+
 nldd-rich-text details[open] > summary {
 	border-end-start-radius: 0;
 	border-end-end-radius: 0;
@@ -664,6 +673,27 @@ nldd-rich-text details[open] {
 		padding-block: var(--_rich-text-details-inset);
 	}
 
+	nldd-rich-text details {
+		interpolate-size: allow-keywords;
+	}
+
+	nldd-rich-text details::details-content {
+		block-size: 0;
+		overflow-y: clip;
+		transition:
+			block-size var(--primitives-transition-duration-fast) ease-out,
+			padding-block var(--primitives-transition-duration-fast) ease-out,
+			content-visibility var(--primitives-transition-duration-fast) allow-discrete;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+	}
+
+	nldd-rich-text details[open]::details-content {
+		block-size: auto;
+	}
+
 	nldd-rich-text details > summary + * {
 		margin-block-start: 0;
 	}
@@ -682,6 +712,7 @@ nldd-rich-text details + details {
 @media print {
 	nldd-rich-text details::details-content {
 		content-visibility: visible;
+		block-size: auto;
 	}
 
 	nldd-rich-text summary::after {
