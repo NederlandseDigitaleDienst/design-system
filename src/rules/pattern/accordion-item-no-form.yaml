@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-accordion-item:has(nldd-form, :form-input)'
+message: 'Do not fold a form away in place. Open it in an nldd-sheet from a row.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed: ['<nldd-accordion><nldd-accordion-item text="Hoe lang duurt de beoordeling?"><nldd-text text="Binnen acht weken."></nldd-text></nldd-accordion-item></nldd-accordion>']
+  failed: ['<nldd-accordion><nldd-accordion-item text="Gegevens"><nldd-text-field accessible-label="Naam"></nldd-text-field></nldd-accordion-item></nldd-accordion>']

@@ -145,5 +145,6 @@ Deze compositie komt voor in vrijwel elke applicatie op dit designsysteem, in Vu
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
+- `accordion-item-no-form`: Do not fold a form away in place. Open it in an nldd-sheet from a row.
 - `sheet-form-max-one-action`: Keep one action under the form. The way out is `dismiss-text` on the title bar.
 - `sheet-title-bar-needs-anchor`: Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.

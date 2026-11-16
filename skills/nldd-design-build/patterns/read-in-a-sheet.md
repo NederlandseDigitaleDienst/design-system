@@ -118,3 +118,9 @@ nldd-sheet                     open, placement, width; in de document-root
 Wat je gratis krijgt: elke rij is een knop, de sheet heeft de dialoogrol en de naam uit de titelbalk, sluit met Esc en met een klik ernaast, en de focus gaat na het sluiten terug naar de rij die hem opende.
 
 Wat jij nog moet doen: een `accessible-label` op de lijst, een `text` op de titelbalk die zegt waar de sheet over gaat, en een `dismiss-text`.
+
+## Regels
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `accordion-item-no-heading`: Content with headings of its own is too long to fold in place. Open it in an nldd-sheet from a row.

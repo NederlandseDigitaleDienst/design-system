@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-accordion-item:has(h2, h3, h4, h5, h6, nldd-title)'
+message: 'Content with headings of its own is too long to fold in place. Open it in an nldd-sheet from a row.'
+see: patronen/read-in-a-sheet
+examples:
+  passed: ['<nldd-accordion><nldd-accordion-item text="Hoe lang duurt de beoordeling?"><nldd-rich-text><p>Binnen acht weken.</p></nldd-rich-text></nldd-accordion-item></nldd-accordion>']
+  failed: ['<nldd-accordion><nldd-accordion-item text="Stukken"><nldd-rich-text><h2>De offerte</h2><p>Tekst.</p></nldd-rich-text></nldd-accordion-item></nldd-accordion>']

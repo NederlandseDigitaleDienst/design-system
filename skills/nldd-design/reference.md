@@ -516,6 +516,11 @@ A stack of nldd-accordion-item elements, each a title that opens and closes its 
 
 One item of an nldd-accordion: a title in a tinted bar that opens and closes the content below it. It is a native `details` inside, so the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts closed, as a `details` does; add `open` to start open. The title is the name of the button that opens the item, so it is plain text and not a heading.
 
+**Rules** (`nldd lint`)
+
+- `accordion-item-no-form` (hint): Do not fold a form away in place. Open it in an nldd-sheet from a row.
+- `accordion-item-no-heading` (hint): Content with headings of its own is too long to fold in place. Open it in an nldd-sheet from a row.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -917,6 +922,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 
 **Rules** (`nldd lint`)
 
+- `accordion-item-no-heading` (hint): Content with headings of its own is too long to fold in place. Open it in an nldd-sheet from a row.
 - `card-title-needs-level` (hint): Set `heading-level`: the title of a card that is a choice is a heading, directly below the page title or the section heading.
 - `form-title-goes-in-form-section` (hint): Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
@@ -1042,6 +1048,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 
 **Rules** (`nldd lint`)
 
+- `accordion-item-no-form` (hint): Do not fold a form away in place. Open it in an nldd-sheet from a row.
 - `button-submit-needs-form`: Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.
 - `form-action-goes-in-form-actions` (hint): Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.
 - `form-field-no-own-label-alignment` (hint): Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
