@@ -539,7 +539,7 @@ One item of an nldd-accordion: a title in a tinted bar that opens and closes the
 
 | Event | Description |
 | --- | --- |
-| `toggle` | When the item opens or closes; read `open` for the new state. |
+| `toggle` | When the item opens or closes, also when `open` is set from code, as nldd-accordion needs for `exclusive`; read `open` for the new state. |
 
 ### `<nldd-admonition>`
 
