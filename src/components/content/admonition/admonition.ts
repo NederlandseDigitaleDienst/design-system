@@ -4,9 +4,9 @@
  * A note, tip or warning set apart in running text: what a `:::warning`
  * becomes in a markdown page. It is content, not feedback. It says nothing
  * when the page loads and cannot be dismissed, so a screen reader meets it in
- * reading order as a note (`role="note"`). For a notice about what happens
- * on the page, such as an error summary, use nldd-banner, which is a live
- * region.
+ * reading order as a note (`role="note"`). For a notice that responds to what
+ * the user does or what changes, such as an error summary, use nldd-banner,
+ * which is a live region.
  *
  * The title sits in a bar tinted in the color of the variant, with the icon
  * of the variant before it. The content sits below it on the base surface,
