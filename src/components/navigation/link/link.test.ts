@@ -274,6 +274,9 @@ describe('<nldd-link> with an <a> of its own', () => {
 	it('looks like a link through the global stylesheet', async () => {
 		el = await fixture('<nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link>');
 		await waitForUpdate(el);
+		// The color of the <a> transitions; a slow machine reads it halfway,
+		// the same color written as oklab.
+		own(el).getAnimations().forEach((animation) => animation.finish());
 		const style = getComputedStyle(own(el));
 		expect(style.textDecorationLine).toBe('underline');
 		// A flex item of the host, so the browser makes inline-flex flex.
