@@ -280,3 +280,74 @@ describe('nldd-radio-button-group – place in the group', () => {
 		expect(document.activeElement).toBe(el.querySelector('#na'));
 	});
 });
+
+describe('nldd-radio-button-group, checked from outside', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const stops = (fields: NLDDRadioButtonField[]) => fields.map((field) => field.getAttribute('tabindex'));
+	const settle = async (fields: NLDDRadioButtonField[]) => {
+		await Promise.all(fields.map((field) => waitForUpdate(field)));
+		await Promise.all(fields.map((field) => field.updateComplete));
+	};
+
+	it('moves the stop for Tab and unchecks the old option when the app sets checked', async () => {
+		el = await fixture<HTMLElement>(groupFixture('thema'));
+		const fields = [...el.querySelectorAll<NLDDRadioButtonField>('nldd-radio-button-field')];
+		await settle(fields);
+		fields[1].checked = true;
+		await settle(fields);
+		expect(fields.map((field) => field.checked)).toEqual([false, true, false]);
+		expect(stops(fields)).toEqual(['-1', '0', '-1']);
+
+		fields[2].setAttribute('checked', '');
+		await settle(fields);
+		expect(stops(fields)).toEqual(['-1', '-1', '0']);
+	});
+
+	it('does so in a group without a name too', async () => {
+		el = await fixture<HTMLElement>(`
+			<nldd-radio-button-group>
+				<nldd-radio-button-field value="licht" label="Licht"></nldd-radio-button-field>
+				<nldd-radio-button-field value="donker" label="Donker"></nldd-radio-button-field>
+			</nldd-radio-button-group>
+		`);
+		const fields = [...el.querySelectorAll<NLDDRadioButtonField>('nldd-radio-button-field')];
+		await settle(fields);
+		expect(stops(fields)).toEqual(['0', '-1']);
+		fields[1].checked = true;
+		await settle(fields);
+		expect(stops(fields)).toEqual(['-1', '0']);
+		fields[0].checked = true;
+		await settle(fields);
+		expect(fields.map((field) => field.checked)).toEqual([true, false]);
+		expect(stops(fields)).toEqual(['0', '-1']);
+	});
+
+	it('moves the stop back on a form reset', async () => {
+		el = await fixture<HTMLElement>(`<form>${groupFixture('thema')}</form>`);
+		const fields = [...el.querySelectorAll<NLDDRadioButtonField>('nldd-radio-button-field')];
+		await settle(fields);
+		fields[2].click();
+		await settle(fields);
+		expect(stops(fields)).toEqual(['-1', '-1', '0']);
+		(el as HTMLFormElement).reset();
+		await settle(fields);
+		expect(fields.map((field) => field.checked)).toEqual([true, false, false]);
+		expect(stops(fields)).toEqual(['0', '-1', '-1']);
+	});
+
+	it('lands Shift+Tab on the option the app checked', async () => {
+		el = await fixture<HTMLElement>(`<div>${groupFixture('thema')}<button>Na</button></div>`);
+		const fields = [...el.querySelectorAll<NLDDRadioButtonField>('nldd-radio-button-field')];
+		await settle(fields);
+		fields[1].checked = true;
+		await settle(fields);
+		el.querySelector('button')!.focus();
+		await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+		expect(document.activeElement).toBe(fields[1]);
+	});
+});

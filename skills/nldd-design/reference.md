@@ -1468,7 +1468,7 @@ A calendar for picking a date or a period. The component works on its own (inlin
 
 ### `<nldd-dropdown>`
 
-A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options. A dropdown hides its options, so it is the last resort for a choice from a fixed set. Show a handful of options with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group, and let the user type in nldd-combo-box when there are many, a list of countries included. The design guidelines explain the order.
+A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options. The browser draws the open list, outside the reach of the component. The colors of its options come from the global stylesheet, `dist/css/dropdown.css` or `global.css`, which includes it, so the list follows light and dark mode. A dropdown hides its options, so it is the last resort for a choice from a fixed set. Show a handful of options with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group, and let the user type in nldd-combo-box when there are many, a list of countries included. The design guidelines explain the order.
 
 **Rules** (`nldd lint`)
 

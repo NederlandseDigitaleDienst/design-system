@@ -26,6 +26,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **The open list of an `nldd-dropdown` is readable in dark mode on Windows.** Its options took the light text of the dark theme on the white background Windows draws, a contrast of 1.4. The global stylesheet now colors them from the tokens, in `dist/css/dropdown.css`, which `global.css` includes.
+- **The stop for Tab in `nldd-radio-button-group` and in `nldd-toggle-button-group` with `type="radio"` follows the chosen option, whoever chose it.** When the app set `checked` or `selected`, or a form reset it, Tab still landed on the option chosen before.
 - **The help and error text of an `nldd-form-field` describe an `nldd-toggle-button` with `type="checkbox"` or `"radio"`.** They only reached one with `type="button"`.
 - **An `nldd-card` reacts only to its own link or button.** A clickable card inside another card made the outer one draw the focus ring and the pressed shade too.
 - **A press on the control of an `nldd-menu` while the chosen item blinks opens the menu again.** It used to close the menu, which was about to close anyway, so the press seemed to do nothing.

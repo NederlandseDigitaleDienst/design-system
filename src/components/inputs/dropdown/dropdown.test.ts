@@ -1,4 +1,7 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
+import variablesCss from '../../../assets/styles/variables.css?raw';
+import colorsCss from '../../../assets/styles/colors.generated.css?raw';
+import dropdownCss from './dropdown.css?raw';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import { NLDDDropdown } from './dropdown.js';
 
@@ -422,5 +425,56 @@ describe('nldd-dropdown – change event', () => {
 		`);
 		await waitForUpdate(el);
 		expect(el.querySelector('select')!.getAttribute('aria-label')).toBe('Land');
+	});
+});
+
+describe('dropdown.css: the options of the open list', () => {
+	let styles: HTMLStyleElement[] = [];
+	let root: HTMLElement | null = null;
+
+	beforeAll(() => {
+		// variables.css imports the palettes; inject those separately, since an
+		// @import with a relative path does not resolve from a <style> tag.
+		styles = [colorsCss, variablesCss.replace(/@import[^;]+;/g, ''), dropdownCss].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
+	});
+
+	afterAll(() => {
+		styles.forEach((style) => style.remove());
+		delete document.documentElement.dataset.scheme;
+	});
+
+	afterEach(() => {
+		root?.remove();
+		root = null;
+	});
+
+	const measure = async (scheme: 'light' | 'dark') => {
+		document.documentElement.dataset.scheme = scheme;
+		root = document.createElement('div');
+		root.innerHTML = `
+			<nldd-dropdown><select><optgroup label="Uren"><option>8 uur</option></optgroup></select></nldd-dropdown>
+			<div style="background-color: var(--semantics-surfaces-base-background-color); color: var(--semantics-content-color)"></div>
+		`;
+		document.body.append(root);
+		// Until the dropdown renders its slot, the select is in no flat tree,
+		// and Chromium computes no style for it.
+		await root.querySelector<NLDDDropdown>('nldd-dropdown')!.updateComplete;
+		const option = getComputedStyle(root.querySelector('option')!);
+		const probe = getComputedStyle(root.querySelector('div')!);
+		return { option: [option.backgroundColor, option.color], tokens: [probe.backgroundColor, probe.color] };
+	};
+
+	it('colors them from the same scheme, light and dark', async () => {
+		const light = await measure('light');
+		expect(light.option).toEqual(light.tokens);
+		root!.remove();
+		const dark = await measure('dark');
+		expect(dark.option).toEqual(dark.tokens);
+		expect(dark.option[0]).not.toBe(light.option[0]);
 	});
 });

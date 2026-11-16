@@ -563,3 +563,36 @@ describe('nldd-toggle-button-group – place in the group', () => {
 		expect(buttons.map((button) => toggleInput(button).hasAttribute('tabindex'))).toEqual([false, false, false]);
 	});
 });
+
+describe('nldd-toggle-button-group type="radio", selected from outside', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('moves the stop for Tab when the app moves selected', async () => {
+		el = await fixture<HTMLElement>(`
+			<nldd-toggle-button-group type="radio" name="weergave" accessible-label="Weergave">
+				<nldd-toggle-button value="lijst" text="Lijst" selected></nldd-toggle-button>
+				<nldd-toggle-button value="raster" text="Raster"></nldd-toggle-button>
+			</nldd-toggle-button-group>
+		`);
+		const buttons = [...el.querySelectorAll<NLDDToggleButton>('nldd-toggle-button')];
+		const settle = async () => {
+			await Promise.all(buttons.map((button) => waitForUpdate(button)));
+			await Promise.all(buttons.map((button) => button.updateComplete));
+		};
+		await settle();
+		expect(buttons.map((button) => button.getAttribute('tabindex'))).toEqual(['0', '-1']);
+		buttons[0].selected = false;
+		buttons[1].selected = true;
+		await settle();
+		expect(buttons.map((button) => button.getAttribute('tabindex'))).toEqual(['-1', '0']);
+
+		buttons[0].selected = true;
+		await settle();
+		expect(buttons.map((button) => button.selected)).toEqual([true, false]);
+		expect(buttons.map((button) => button.getAttribute('tabindex'))).toEqual(['0', '-1']);
+	});
+});

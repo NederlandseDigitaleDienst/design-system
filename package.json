@@ -536,6 +536,7 @@
     "./styles/text": "./dist/css/text.css",
     "./styles/title": "./dist/css/title.css",
     "./styles/link": "./dist/css/link.css",
+    "./styles/dropdown": "./dist/css/dropdown.css",
     "./styles/rich-text": "./dist/css/rich-text.css",
     "./themes": "./dist/css/themes.css",
     "./themes/*": "./dist/css/themes/*",

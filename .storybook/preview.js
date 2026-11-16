@@ -6,6 +6,7 @@ import '../src/components/content/rich-text/rich-text.css';
 import '../src/components/content/title/title.css';
 import '../src/components/content/text/text.css';
 import '../src/components/navigation/link/link.css';
+import '../src/components/inputs/dropdown/dropdown.css';
 import '../src/components/forms/form-section/form-section.css';
 import '../src/components/forms/form/form.css';
 import '../src/assets/styles/fouc.css';

@@ -193,6 +193,14 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 		this._initialSelected = this.selected;
 	}
 
+	/** Also when the app sets `selected` or a form resets it: the group moves
+	 *  the stop for Tab along, which it cannot see by itself. */
+	override willUpdate(changed: PropertyValues): void {
+		if (this.hasUpdated && (changed.has('selected') || changed.has('disabled'))) {
+			(this.closest('nldd-toggle-button-group') as { _optionChanged?: (button: NLDDToggleButton) => void } | null)?._optionChanged?.(this);
+		}
+	}
+
 	override updated(changed: PropertyValues): void {
 		if (changed.has('interestfor')) this._interest.refresh();
 		if (changed.has('selected') || changed.has('value') || changed.has('type')) {

@@ -148,9 +148,21 @@ export class NLDDRadioButtonGroup extends LitElement {
 			});
 	}
 
+	/** Called by a field whose `checked` or `disabled` changed, whoever changed
+	 *  it: the user, the app or a form reset. */
+	_optionChanged(changedField: NLDDRadioButtonField): void {
+		if (changedField.checked) this._uncheckOthers(changedField);
+		this._positionFields();
+	}
+
 	private _handleChange = (e: Event): void => {
 		const changedField = e.target as NLDDRadioButtonField;
 		if (!changedField.checked) return;
+		this._uncheckOthers(changedField);
+		this._positionFields();
+	};
+
+	private _uncheckOthers(changedField: NLDDRadioButtonField): void {
 		this._getFields().forEach(field => {
 			if (field === changedField) return;
 			field.checked = false;
@@ -159,8 +171,7 @@ export class NLDDRadioButtonGroup extends LitElement {
 			// its listener would otherwise still see this field's old value.
 			field.commitFormValue?.();
 		});
-		this._positionFields();
-	};
+	}
 
 	private _handleKeyDown = (e: KeyboardEvent): void => {
 		if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' &&

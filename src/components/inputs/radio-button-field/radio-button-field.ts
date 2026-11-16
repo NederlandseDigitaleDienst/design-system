@@ -155,6 +155,11 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 		if (changed.has('checked') && this.checked) this._grouping.uncheckOthers();
 		if (changed.has('name')) this._grouping.regroup();
 		else if (changed.has('checked') || changed.has('disabled')) this._grouping.refresh();
+		// Also when the app sets `checked` or a form resets it: the group moves
+		// the stop for Tab along, which it cannot see by itself.
+		if (this.hasUpdated && (changed.has('checked') || changed.has('disabled'))) {
+			(this.closest('nldd-radio-button-group') as { _optionChanged?: (field: NLDDRadioButtonField) => void } | null)?._optionChanged?.(this);
+		}
 	}
 
 	override updated(changed: PropertyValues<this>): void {
