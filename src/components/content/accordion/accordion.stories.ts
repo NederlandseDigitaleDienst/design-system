@@ -61,26 +61,3 @@ export const EenTegelijk = {
 	name: 'Eén tegelijk open',
 	render: () => Template({ exclusive: true }),
 };
-
-export const KopBlijftStaan = {
-	name: 'Kop blijft staan',
-	render: () => html`
-		<nldd-accordion>
-			<nldd-accordion-item
-				text="Wat beoordeelt team Uitvoering?"
-				open
-			>
-				<nldd-rich-text>
-					${Array.from({ length: 12 }, () => html`
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-					`)}
-				</nldd-rich-text>
-			</nldd-accordion-item>
-			<nldd-accordion-item text="Hoe lang duurt de beoordeling?">
-				<nldd-rich-text>
-					<p>Team Uitvoering neemt binnen acht weken een besluit over de aanvraag.</p>
-				</nldd-rich-text>
-			</nldd-accordion-item>
-		</nldd-accordion>
-	`,
-};

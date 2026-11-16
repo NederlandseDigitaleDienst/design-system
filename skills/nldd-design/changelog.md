@@ -18,12 +18,12 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **`nldd-admonition`, a new component for a note, tip or warning in running text,** such as a `:::warning` in a markdown page. Unlike `nldd-banner` it is no live region, so nothing is read out when the page loads. See Added.
-- **`nldd-accordion`, for short questions and answers that open in place.** Each item is a native `details`, and the title of an open item stays at the top while you scroll its content. See Added.
+- **`nldd-accordion`, for short questions and answers that open in place.** Each item is a native `details`, so find in page opens it. See Added.
 
 ### Added
 
 - **`nldd-admonition`.** A note, tip or warning set apart in running text, with the variants and icons of `nldd-banner`: the title in a bar tinted in the color of the variant, the content below it on the base surface. It is a note for a screen reader (`role="note"`), not a live region, and it cannot be dismissed. With `collapsible` the title bar opens and closes the content, as a native `details` does, so find in page opens it too.
-- **`nldd-accordion` and `nldd-accordion-item`.** Items that each open and close their content in place, joined into one block that looks like `details` in `nldd-rich-text`. Each item is a native `details`, so find in page opens it, and it prints open. The title of an open item sticks to the top, below any bar that stays there. With `exclusive` only one item is open at a time. Fold away only short, additional content: for long content, a form or a task of its own, use rows of an `nldd-list` that open an `nldd-sheet`.
+- **`nldd-accordion` and `nldd-accordion-item`.** Items that each open and close their content in place, joined into one block that looks like `details` in `nldd-rich-text`. Each item is a native `details`, so find in page opens it, and it prints open. With `exclusive` only one item is open at a time. Fold away only short, additional content: for long content, a form or a task of its own, use rows of an `nldd-list` that open an `nldd-sheet`.
 - Opening and closing a collapsible `nldd-admonition` or a `<details>` in `nldd-rich-text` animates its height, in browsers that support `interpolate-size`. Elsewhere it opens at once.
 - `<details>` and `<summary>` in `nldd-rich-text` read as a bordered block: a tinted bar with a chevron that points down to open and up to close, the content on a white surface below it, and details that follow each other joined into one block. They stay native, so find in page opens the one it finds in, and they print open where the browser supports it.
 

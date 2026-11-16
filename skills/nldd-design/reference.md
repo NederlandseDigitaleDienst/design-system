@@ -498,7 +498,7 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 ### `<nldd-accordion>`
 
-A stack of nldd-accordion-item elements, each a title that opens and closes its content in place. Fold away only short, additional content: an answer to a question, a detail most readers skip. Content folded in place costs orientation, since the page grows and shifts under the reader. Content that is long, holds a form or is a task of its own goes in rows of an nldd-list that each open an nldd-sheet; see the design guidelines on expand/collapse. The items join into one block: a border around them, a line between them, each title in a tinted bar and its content on the base surface. It looks like a `details` in nldd-rich-text, so in running text that is the lighter choice. The title of an open item sticks to the top while you scroll through its content, so you always see where you are and can close it. With `exclusive` only one item is open at a time: opening one closes the other. Nothing else differs, so each item stays a native `details` with its keyboard, screen reader and find-in-page behavior.
+A stack of nldd-accordion-item elements, each a title that opens and closes its content in place. Fold away only short, additional content: an answer to a question, a detail most readers skip. Content folded in place costs orientation, since the page grows and shifts under the reader. Content that is long, holds a form or is a task of its own goes in rows of an nldd-list that each open an nldd-sheet; see the design guidelines on expand/collapse. The items join into one block: a border around them, a line between them, each title in a tinted bar and its content on the base surface. It looks like a `details` in nldd-rich-text, so in running text that is the lighter choice. With `exclusive` only one item is open at a time: opening one closes the other. Nothing else differs, so each item stays a native `details` with its keyboard, screen reader and find-in-page behavior.
 
 **Attributes**
 
@@ -514,7 +514,7 @@ A stack of nldd-accordion-item elements, each a title that opens and closes its 
 
 ### `<nldd-accordion-item>`
 
-One item of an nldd-accordion: a title in a tinted bar that opens and closes the content below it. It is a native `details` inside, so the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts closed, as a `details` does; add `open` to start open. The title is the name of the button that opens the item, so it is plain text and not a heading. While the item is open, the title bar sticks to the top of the scrolling area, below any bar that stays there.
+One item of an nldd-accordion: a title in a tinted bar that opens and closes the content below it. It is a native `details` inside, so the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts closed, as a `details` does; add `open` to start open. The title is the name of the button that opens the item, so it is plain text and not a heading.
 
 **Attributes**
 

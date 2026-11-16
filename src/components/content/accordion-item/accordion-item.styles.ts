@@ -18,7 +18,6 @@ export const accordionItemStyles = css`
 		--_accordion-item-title-bar-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_accordion-item-title-bar-hover-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-50));
 		--_accordion-item-title-bar-min-height: var(--semantics-controls-md-min-size);
-		--_accordion-item-title-bar-sticky-top: var(--context-inset-top, 0px);
 		--_accordion-item-inset: var(--primitives-space-12);
 		--_accordion-item-gap: var(--primitives-space-8);
 		--_accordion-item-chevron-size: var(--primitives-space-20);
@@ -63,9 +62,6 @@ export const accordionItemStyles = css`
 		--context-background-color: var(--_accordion-item-title-bar-background-color);
 		box-sizing: border-box;
 		display: flex;
-		position: sticky;
-		top: var(--_accordion-item-title-bar-sticky-top);
-		z-index: 1;
 		background-color: var(--_accordion-item-title-bar-background-color);
 		min-height: var(--_accordion-item-title-bar-min-height);
 		padding-block: calc((var(--_accordion-item-title-bar-min-height) - 1lh) / 2);
@@ -117,8 +113,10 @@ export const accordionItemStyles = css`
 		background-color: var(--_accordion-item-title-bar-hover-background-color);
 	}
 
+	/* Above the item below, which would cover the ring. */
 	.accordion-item__title-bar:focus-visible {
-		z-index: 2;
+		position: relative;
+		z-index: 1;
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
@@ -189,10 +187,6 @@ export const accordionItemStyles = css`
 		.accordion-item::details-content {
 			content-visibility: visible;
 			block-size: auto;
-		}
-
-		.accordion-item__title-bar {
-			position: static;
 		}
 
 		.accordion-item__chevron {

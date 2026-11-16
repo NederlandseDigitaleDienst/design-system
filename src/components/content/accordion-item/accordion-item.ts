@@ -7,8 +7,7 @@
  * opens it. It starts closed, as a `details` does; add `open` to start open.
  *
  * The title is the name of the button that opens the item, so it is plain
- * text and not a heading. While the item is open, the title bar sticks to the
- * top of the scrolling area, below any bar that stays there.
+ * text and not a heading.
  *
  * @element nldd-accordion-item
  *

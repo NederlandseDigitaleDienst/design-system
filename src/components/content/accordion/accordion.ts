@@ -12,8 +12,7 @@
  * The items join into one block: a border around them, a line between them,
  * each title in a tinted bar and its content on the base surface. It looks
  * like a `details` in nldd-rich-text, so in running text that is the lighter
- * choice. The title of an open item sticks to the top while you scroll through
- * its content, so you always see where you are and can close it.
+ * choice.
  *
  * With `exclusive` only one item is open at a time: opening one closes the
  * other. Nothing else differs, so each item stays a native `details` with its

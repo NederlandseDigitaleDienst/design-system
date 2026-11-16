@@ -121,10 +121,9 @@ describe('nldd-accordion', () => {
 		}
 	});
 
-	it('makes the title bar as high as a control and sticks it to the top', async () => {
+	it('makes the title bar as high as a control', async () => {
 		el = await fixture(`<nldd-accordion>${items(1)}</nldd-accordion>`);
 		const bar = summary(all()[0]);
 		expect(bar.getBoundingClientRect().height).toBe(44);
-		expect(getComputedStyle(bar).position).toBe('sticky');
 	});
 });
