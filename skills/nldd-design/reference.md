@@ -1293,7 +1293,7 @@ Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio butt
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `name` | `string` | Forwarded to all nldd-checkbox-field elements in the group |
+| `name` | `string` | Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had |
 | `disabled` | `boolean` | Disables all fields in the group |
 | `required` | `boolean` | At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides. |
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label on the group |

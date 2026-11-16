@@ -1577,7 +1577,9 @@ export class NLDDMenu extends LitElement {
 				// with it. Repeated presses cycle through matches.
 				// Not in a navigation menu: there the letter keys are the screen
 				// reader's, for moving through links and headings.
-				if (this.variant !== 'navigation' && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+				// A Space that starts nothing is a choice, not a search.
+				const choosing = event.key === ' ' && !this._typeaheadBuffer;
+				if (this.variant !== 'navigation' && event.key.length === 1 && !choosing && !event.ctrlKey && !event.metaKey && !event.altKey) {
 					this._handleTypeahead(event, items, index);
 				}
 				// Space chooses a button item, but on a link the browser scrolls
@@ -1629,6 +1631,7 @@ export class NLDDMenu extends LitElement {
 	 * target either, though, and that one does leave the menu.
 	 */
 	private _handleFocusOut = (event: FocusEvent): void => {
+		this._spaceLink = null;
 		if (this.variant !== 'navigation') return;
 		if (!(this as HTMLElement).matches(':popover-open')) return;
 		const next = event.relatedTarget as Node | null;

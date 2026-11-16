@@ -167,6 +167,18 @@ describe('nldd-checkbox-field nested in another one', () => {
 		expect([dak.checked, vloer.checked]).toEqual([true, false]);
 	});
 
+	it('keeps its box as it was when a click can change nothing under it', async () => {
+		const [parent] = await setup(`
+			<nldd-checkbox-field slot="children" value="dak" label="Dakisolatie" disabled></nldd-checkbox-field>
+			<nldd-checkbox-field slot="children" value="vloer" label="Vloerisolatie" disabled></nldd-checkbox-field>
+		`);
+		await click(parent);
+		const box = parent.shadowRoot!.querySelector('nldd-checkbox')!;
+		await box.updateComplete;
+		expect(state(parent)).toBe(false);
+		expect([box.checked, box.indeterminate]).toEqual([false, false]);
+	});
+
 	it('takes its first state from the options under it', async () => {
 		const [parent] = await setup(`
 			<nldd-checkbox-field slot="children" value="dak" label="Dakisolatie" checked></nldd-checkbox-field>

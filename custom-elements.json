@@ -11270,7 +11270,7 @@
               },
               "default": "''",
               "fieldName": "name",
-              "description": "Forwarded to all nldd-checkbox-field elements in the group"
+              "description": "Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had"
             },
             {
               "name": "disabled",

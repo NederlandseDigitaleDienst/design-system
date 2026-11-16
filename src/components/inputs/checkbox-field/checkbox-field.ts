@@ -242,6 +242,8 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 		this.checked = checked;
 		this.indeterminate = false;
 		this._setChildren(checked);
+		// The box toggled itself; render even when this field ends where it was.
+		this.requestUpdate();
 		this.commitFormValue();
 		this._dispatchChange();
 	}
