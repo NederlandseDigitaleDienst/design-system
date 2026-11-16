@@ -1057,6 +1057,7 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('beforetoggle', this._handleBeforeToggle);
 		this.addEventListener('toggle', this._handleToggle);
 		this.addEventListener('keydown', this._handleKeydown);
+		this.addEventListener('keyup', this._handleSpaceUp);
 		this.addEventListener('focusout', this._handleFocusOut);
 		this.addEventListener('mouseenter', this._handleMenuItemMouseenter, true);
 		this.addEventListener('mouseover', this._handleMouseover);
@@ -1113,6 +1114,8 @@ export class NLDDMenu extends LitElement {
 		this._previousAnchorForResync?.removeEventListener('pointerdown', this._resyncAnchorFromPopoverState, true);
 		this._previousAnchorForResync = null;
 		this.removeEventListener('keydown', this._handleKeydown);
+		this.removeEventListener('keyup', this._handleSpaceUp);
+		this._spaceLink = null;
 		this.removeEventListener('focusout', this._handleFocusOut);
 		clearTimeout(this._tabbingTimer);
 		this._tabbing = false;
@@ -1469,6 +1472,17 @@ export class NLDDMenu extends LitElement {
 
 	// — Private handlers ——————————————————————————————————————————————————————
 
+	/** The link item Space went down on, chosen when Space comes up on it. */
+	private _spaceLink: HTMLAnchorElement | null = null;
+
+	private _handleSpaceUp = (event: KeyboardEvent): void => {
+		if (event.key !== ' ' || !this._spaceLink) return;
+		const link = this._spaceLink;
+		this._spaceLink = null;
+		const root = link.getRootNode() as ShadowRoot;
+		if (root.activeElement === link) link.click();
+	};
+
 	private _handleKeydown = (event: KeyboardEvent): void => {
 		if (event.key === 'Tab' && this._tabOut(event)) return;
 		// Only a navigation menu closes on a Tab out; see _handleFocusOut.
@@ -1568,12 +1582,13 @@ export class NLDDMenu extends LitElement {
 				}
 				// Space chooses a button item, but on a link the browser scrolls
 				// the page instead. In a menu of actions every item is chosen the
-				// same way, so a link item takes Space as a click too.
+				// same way, so a link item takes Space as a click too: on keyup,
+				// as a button does, so moving away before letting go chooses nothing.
 				if (event.key === ' ' && !event.defaultPrevented && this.variant !== 'navigation') {
 					const link = items[index]?.shadowRoot?.querySelector<HTMLAnchorElement>('a.menu__item');
 					if (link) {
 						event.preventDefault();
-						if (!event.repeat) link.click();
+						if (!event.repeat) this._spaceLink = link;
 					}
 				}
 			}

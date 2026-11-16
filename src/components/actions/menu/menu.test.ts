@@ -338,7 +338,7 @@ describe('nldd-menu-item href (link items)', () => {
 		expect(a.querySelector('nldd-text-cell')?.getAttribute('text')).toBe('Profiel');
 	});
 
-	const pressSpace = async (variant: string, repeat = false): Promise<{ selected: number; clicked: number; prevented: boolean }> => {
+	const pressSpace = async (variant: string, repeat = false, moveAway = false): Promise<{ selected: number; clicked: number; prevented: boolean }> => {
 		el = await fixture(`<nldd-menu variant="${variant}"><nldd-menu-item text="Nieuw bericht"></nldd-menu-item><nldd-menu-item text="Instellingen" href="#instellingen"></nldd-menu-item></nldd-menu>`);
 		(el as HTMLElement).showPopover();
 		await waitForUpdate(el);
@@ -352,6 +352,8 @@ describe('nldd-menu-item href (link items)', () => {
 		await waitForUpdate(el);
 		const space = new KeyboardEvent('keydown', { key: ' ', repeat, bubbles: true, composed: true, cancelable: true });
 		a.dispatchEvent(space);
+		if (moveAway) (el.querySelectorAll('nldd-menu-item')[0] as HTMLElement).focus();
+		a.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', bubbles: true, composed: true, cancelable: true }));
 		return { selected, clicked, prevented: space.defaultPrevented };
 	};
 
@@ -361,6 +363,10 @@ describe('nldd-menu-item href (link items)', () => {
 
 	it('does not follow a link again while Space is held, nor scroll the page', async () => {
 		expect(await pressSpace('menu', true)).toEqual({ selected: 0, clicked: 0, prevented: true });
+	});
+
+	it('chooses nothing when focus moves away before Space comes up', async () => {
+		expect(await pressSpace('menu', false, true)).toEqual({ selected: 0, clicked: 0, prevented: true });
 	});
 
 	it('leaves Space on a link in a navigation menu to the browser', async () => {

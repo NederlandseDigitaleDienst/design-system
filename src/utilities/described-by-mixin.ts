@@ -178,6 +178,8 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 					el = document.createElement('span');
 					el.hidden = true;
 					el.dataset.description = '';
+					// Beside Lit's content, not in the template: this holds because
+					// Lit never clears a root it renders into.
 					this.shadowRoot?.append(el);
 					this._descriptionTextElement = el;
 				}

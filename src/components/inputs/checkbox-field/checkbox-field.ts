@@ -8,11 +8,11 @@
  * line up with the label, and are a group named after this option. This
  * checkbox then follows them: checked when all of them are, indeterminate
  * when some are, and unchecked when none are. Checking or unchecking it does
- * the same to every option under it that is not disabled; those fire no
- * `change` of their own then, so listen on this one or higher up. Its own
- * `change` fires when they change its state, so a box further up follows
- * too. In an nldd-checkbox-group, the options under it belong to the group as
- * well.
+ * the same to every option under it that is not disabled, nor under a
+ * disabled one; those fire no `change` of their own then, so listen on this
+ * one or higher up. Its own `change` fires when they change its state, so a
+ * box further up follows too. In an nldd-checkbox-group, the options under it
+ * belong to the group as well.
  *
  * Form-associated: participates in native form submission under `name` with
  * `value` when checked (the inner nldd-checkbox sits in the shadow root and
@@ -173,19 +173,18 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/** Gives every option under this one, at any depth, this state, except
-	 *  those that are disabled. */
+	 *  those that are disabled and everything under them. */
 	private _setChildren(checked: boolean): void {
 		if (this._childFields.length === 0) return;
-		const descendants = [...this.querySelectorAll('nldd-checkbox-field')];
-		descendants.forEach((field) => {
+		this._childFields.forEach((field) => {
+			// A disabled option keeps its state, and so does everything under it.
 			if (field.disabled) return;
 			field.checked = checked;
 			field.indeterminate = false;
+			// Depth first, so each box follows options that are settled.
+			field._setChildren(checked);
 			field.commitFormValue();
 		});
-		// A disabled option keeps its state, so a box may end up partial. From
-		// the bottom up, so each box reads options that are settled.
-		descendants.reverse().forEach((field) => field._followChildren(false));
 		this._followChildren(false);
 	}
 

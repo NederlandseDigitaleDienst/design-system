@@ -265,3 +265,30 @@ describe('nldd-checkbox-group, changes it did not see', () => {
 		expect(nested.required).toBe(true);
 	});
 });
+
+describe('nldd-checkbox-field with a disabled option in between', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('leaves the disabled option and everything under it alone', async () => {
+		el = await fixture<HTMLElement>(`
+			<nldd-checkbox-group name="maatregel">
+				<nldd-checkbox-field value="isolatie" label="Isolatie">
+					<nldd-checkbox-field slot="children" value="dak" label="Dakisolatie" disabled>
+						<nldd-checkbox-field slot="children" value="plat" label="Plat dak"></nldd-checkbox-field>
+					</nldd-checkbox-field>
+					<nldd-checkbox-field slot="children" value="vloer" label="Vloerisolatie"></nldd-checkbox-field>
+				</nldd-checkbox-field>
+			</nldd-checkbox-group>
+		`);
+		const [top, dak, plat, vloer] = [...el.querySelectorAll<NLDDCheckboxField>('nldd-checkbox-field')];
+		await Promise.all([top, dak, plat, vloer].map((field) => field.updateComplete));
+		top.shadowRoot!.querySelector('nldd-checkbox')!.shadowRoot!.querySelector('input')!.click();
+		await Promise.all([top, dak, plat, vloer].map((field) => waitForUpdate(field)));
+		expect([dak.checked, plat.checked, vloer.checked]).toEqual([false, false, true]);
+		expect(top.indeterminate).toBe(true);
+	});
+});
