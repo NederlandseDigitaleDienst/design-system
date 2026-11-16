@@ -9,6 +9,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Changed
+
+- `nldd-term`: on a phone the definition opens with the term as a small title and a "Sluit" button. A long definition keeps the term in the bar while you scroll.
+
 ### Fixed
 
 - `nldd-code-viewer`: "Gekopieerd" goes away when the page scrolls, and after a tap it goes after 2 seconds. On a phone the copy button kept its check mark and its tooltip until you tapped somewhere else.

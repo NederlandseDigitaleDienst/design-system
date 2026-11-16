@@ -319,6 +319,7 @@ export const papAW: Record<TranslationKey, string> = {
 	'components.step-bar.status-future-label': 'Ainda pa haci',
 	'components.step-bar.compact-text': 'Paso {current} di {total}',
 	'components.term.source-capitalize': 'Fuente',
+	'components.term.sheet-dismiss-action': 'Cera',
 };
 
 export default papAW;
