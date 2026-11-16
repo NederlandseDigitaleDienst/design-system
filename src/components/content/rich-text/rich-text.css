@@ -626,12 +626,15 @@ nldd-rich-text summary {
 	}
 }
 
-/* Closing, the bar keeps its square corners and its line until the content is gone. */
-nldd-rich-text details:not([open]) > summary {
-	transition: border-radius 0s var(--primitives-transition-duration-fast), border-block-end 0s var(--primitives-transition-duration-fast) allow-discrete;
+/* Where the height animates, the bar keeps its square corners and its line
+   until the closing content is gone. */
+@supports (interpolate-size: allow-keywords) {
+	nldd-rich-text details:not([open]) > summary {
+		transition: border-radius 0s var(--primitives-transition-duration-fast), border-block-end 0s var(--primitives-transition-duration-fast) allow-discrete;
 
-	@media (prefers-reduced-motion: reduce) {
-		transition: none;
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
 	}
 }
 

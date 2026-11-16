@@ -127,11 +127,17 @@ export const admonitionStyles = css`
 		background-color: var(--_admonition-title-bar-hover-background-color);
 	}
 
-	/* Closing, the bar keeps its square corners and its line until the content is gone. */
 	.admonition:not([open]) > summary.admonition__title-bar {
 		border-end-start-radius: var(--_admonition-title-bar-corner-radius);
 		border-end-end-radius: var(--_admonition-title-bar-corner-radius);
-		transition: border-radius 0s var(--_admonition-transition-duration), border-block-end 0s var(--_admonition-transition-duration) allow-discrete;
+	}
+
+	/* Where the height animates, the bar keeps its square corners and its line
+	   until the closing content is gone. */
+	@supports (interpolate-size: allow-keywords) {
+		.admonition:not([open]) > summary.admonition__title-bar {
+			transition: border-radius 0s var(--_admonition-transition-duration), border-block-end 0s var(--_admonition-transition-duration) allow-discrete;
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
