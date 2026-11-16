@@ -59,7 +59,7 @@ describe('nldd-admonition', () => {
 	it('has no bar without text, and puts the icon before the content', async () => {
 		el = await fixture('<nldd-admonition><p>Inhoud</p></nldd-admonition>');
 		expect(titleBar()).toBeNull();
-		expect(el.shadowRoot!.querySelector('.admonition__main > .admonition__icon')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('.admonition__main > .admonition__variant-icon')).not.toBeNull();
 	});
 
 	it('takes an icon override', async () => {

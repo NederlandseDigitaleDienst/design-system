@@ -61,14 +61,14 @@ describe('nldd-banner', () => {
 	])('variant="%s" uses default icon "%s"', async (variant, expectedIcon) => {
 		el = await fixture(`<nldd-banner variant="${variant}"></nldd-banner>`);
 		await waitForUpdate(el);
-		const icon = el.shadowRoot!.querySelector('.banner__icon nldd-icon');
+		const icon = el.shadowRoot!.querySelector('.banner__variant-icon nldd-icon');
 		expect(icon!.getAttribute('icon')).toBe(expectedIcon);
 	});
 
 	it('icon attribute overrides the default', async () => {
 		el = await fixture('<nldd-banner variant="success" icon="star"></nldd-banner>');
 		await waitForUpdate(el);
-		const icon = el.shadowRoot!.querySelector('.banner__icon nldd-icon');
+		const icon = el.shadowRoot!.querySelector('.banner__variant-icon nldd-icon');
 		expect(icon!.getAttribute('icon')).toBe('star');
 	});
 
@@ -245,7 +245,7 @@ describe('nldd-banner onder een universele reset', () => {
 		`);
 		const banner = el.querySelector('nldd-banner') as HTMLElement;
 		await waitForUpdate(banner);
-		const icon = banner.shadowRoot!.querySelector('.banner__icon')!;
+		const icon = banner.shadowRoot!.querySelector('.banner__variant-icon')!;
 		const offset = icon.getBoundingClientRect().left - banner.getBoundingClientRect().left;
 		expect(offset).toBe(12);
 	});

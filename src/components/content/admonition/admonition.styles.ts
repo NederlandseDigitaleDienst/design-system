@@ -23,8 +23,8 @@ export const admonitionStyles = css`
 		--_admonition-gap: var(--semantics-disclosures-title-bar-gap);
 		--_admonition-title-bar-font: var(--semantics-disclosures-title-bar-font);
 		--_admonition-title-bar-corner-radius: calc(var(--_admonition-corner-radius) - var(--_admonition-highlight-border-width));
-		--_admonition-icon-size: var(--primitives-space-24);
-		--_admonition-icon-color: var(--primitives-color-neutral-750);
+		--_admonition-variant-icon-size: var(--primitives-space-24);
+		--_admonition-variant-icon-color: var(--primitives-color-neutral-750);
 		--_admonition-disclosure-icon-size: var(--semantics-disclosures-disclosure-icon-size);
 		--_admonition-disclosure-icon-open-rotation: var(--semantics-disclosures-disclosure-icon-open-rotation);
 		--_admonition-transition-duration: var(--primitives-transition-duration-fast);
@@ -42,28 +42,28 @@ export const admonitionStyles = css`
 		--_admonition-highlight-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-accent-tinted-background-color);
 		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-accent-tinted-is-hovered-background-color);
-		--_admonition-icon-color: var(--components-admonition-accent-icon-color);
+		--_admonition-variant-icon-color: var(--components-admonition-accent-icon-color);
 	}
 
 	:host([variant="success"]) {
 		--_admonition-highlight-border-color: var(--semantics-surfaces-success-tinted-highlight-border-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-success-tinted-background-color);
 		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-success-tinted-is-hovered-background-color);
-		--_admonition-icon-color: light-dark(var(--primitives-color-success-550), var(--primitives-color-success-650));
+		--_admonition-variant-icon-color: light-dark(var(--primitives-color-success-550), var(--primitives-color-success-650));
 	}
 
 	:host([variant="warning"]) {
 		--_admonition-highlight-border-color: var(--semantics-surfaces-warning-tinted-highlight-border-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-warning-tinted-background-color);
 		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-warning-tinted-is-hovered-background-color);
-		--_admonition-icon-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
+		--_admonition-variant-icon-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
 	}
 
 	:host([variant="critical"]) {
 		--_admonition-highlight-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-critical-tinted-background-color);
 		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-critical-tinted-is-hovered-background-color);
-		--_admonition-icon-color: var(--primitives-color-critical-600);
+		--_admonition-variant-icon-color: var(--primitives-color-critical-600);
 	}
 
 
@@ -174,22 +174,22 @@ export const admonitionStyles = css`
 		font: inherit;
 	}
 
-	.admonition__icon {
+	.admonition__variant-icon {
 		display: flex;
 		flex-shrink: 0;
-		margin-block-start: calc((1lh - var(--_admonition-icon-size)) / 2);
-		width: var(--_admonition-icon-size);
-		height: var(--_admonition-icon-size);
-		--context-content-color: var(--_admonition-icon-color);
-		color: var(--_admonition-icon-color);
+		margin-block-start: calc((1lh - var(--_admonition-variant-icon-size)) / 2);
+		width: var(--_admonition-variant-icon-size);
+		height: var(--_admonition-variant-icon-size);
+		--context-content-color: var(--_admonition-variant-icon-color);
+		color: var(--_admonition-variant-icon-color);
 	}
 
-	.admonition__main > .admonition__icon {
+	.admonition__main > .admonition__variant-icon {
 		margin-block-start: 0;
 	}
 
 	@media (forced-colors: active) {
-		.admonition__icon {
+		.admonition__variant-icon {
 			/* No context: the system color is not one to pass on. */
 			color: CanvasText;
 		}

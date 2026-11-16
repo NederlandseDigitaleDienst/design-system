@@ -3,7 +3,7 @@ import type { NLDDAdmonition } from './admonition.js';
 
 export function admonitionTemplate(component: NLDDAdmonition): TemplateResult {
 	const icon = html`
-		<span class="admonition__icon"
+		<span class="admonition__variant-icon"
 			aria-hidden="true"
 		>
 			<nldd-icon icon=${component._resolvedIcon}></nldd-icon>
