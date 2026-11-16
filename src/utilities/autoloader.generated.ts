@@ -2,7 +2,10 @@
 
 /** Per nldd-* tag, a dynamic import of the module that defines it. */
 export const loaders: Record<string, () => Promise<unknown>> = {
+	'nldd-accordion': () => import('../components/content/accordion/accordion.js'),
+	'nldd-accordion-item': () => import('../components/content/accordion/accordion-item.js'),
 	'nldd-activity-indicator': () => import('../components/status-and-feedback/activity-indicator/activity-indicator.js'),
+	'nldd-admonition': () => import('../components/content/admonition/admonition.js'),
 	'nldd-avatar': () => import('../components/content/avatar/avatar.js'),
 	'nldd-avatar-group': () => import('../components/content/avatar-group/avatar-group.js'),
 	'nldd-badge': () => import('../components/status-and-feedback/badge/badge.js'),

@@ -80,6 +80,10 @@ export const tooltipStyles = css`
 		transition: none;
 	}
 
+	.tooltip[reference-hidden] {
+		visibility: hidden;
+	}
+
 	@starting-style {
 		.tooltip:popover-open {
 			opacity: 0;

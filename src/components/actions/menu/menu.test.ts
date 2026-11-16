@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate, installUniversalReset, until } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, installUniversalReset, until, reduceMotion } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './menu.js';
 import '../button/button.js';
@@ -3678,6 +3678,70 @@ describe('nldd-menu confirms a choice', () => {
 		await new Promise((resolve) => setTimeout(resolve, 650));
 		expect(root.matches(':popover-open')).toBe(false);
 		expect(item.hasAttribute('confirming')).toBe(false);
+	});
+
+	it('lights a tapped item from the press, so it does not go dark before the hold', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item><nldd-menu-item text="Warmtepomp"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const [first, second] = Array.from(root.querySelectorAll('nldd-menu-item'));
+		const button = second.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+		button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+		expect(second.hasAttribute('highlighted')).toBe(true);
+		expect(first.hasAttribute('highlighted')).toBe(false);
+		button.click();
+		expect(second.hasAttribute('highlighted')).toBe(true);
+		expect(second.getAttribute('confirming')).toBe('touch');
+		await new Promise((resolve) => setTimeout(resolve, 650));
+	});
+
+	it('drops the highlight of a touch that turns into a scroll', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+		button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+		button.dispatchEvent(new PointerEvent('pointercancel', { pointerType: 'touch', bubbles: true, composed: true }));
+		expect(item.hasAttribute('highlighted')).toBe(false);
+	});
+
+	it('does not highlight on a mouse press, where hover already does', async () => {
+		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const item = root.querySelector('nldd-menu-item')!;
+		const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+		button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'mouse', bubbles: true, composed: true }));
+		expect(item.hasAttribute('highlighted')).toBe(false);
+	});
+
+	it('still holds a tapped item with reduced motion, but closes at once after a click', async () => {
+		const restore = await reduceMotion();
+		try {
+			root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>');
+			await waitForUpdate(root);
+			root.showPopover();
+			await waitForUpdate(root);
+			const item = root.querySelector('nldd-menu-item')!;
+			const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+			button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+			button.click();
+			expect(item.getAttribute('confirming')).toBe('touch');
+			expect(root.matches(':popover-open')).toBe(true);
+			await new Promise((resolve) => setTimeout(resolve, 650));
+			expect(root.matches(':popover-open')).toBe(false);
+			root.showPopover();
+			await waitForUpdate(root);
+			button.click();
+			expect(item.hasAttribute('confirming')).toBe(false);
+			expect(root.matches(':popover-open')).toBe(false);
+		} finally {
+			await restore();
+		}
 	});
 
 	it('blinks for a select without a press, also after a tap', async () => {

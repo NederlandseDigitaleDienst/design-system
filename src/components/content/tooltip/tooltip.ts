@@ -56,7 +56,7 @@ import { LitElement } from 'lit';
 import type { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { computePosition, flip, shift, offset, type OffsetOptions } from '@floating-ui/dom';
+import { computePosition, flip, hide, limitShift, shift, offset, type OffsetOptions } from '@floating-ui/dom';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tooltipStyles } from './tooltip.styles.js';
 import { tooltipTemplate } from './tooltip.template.js';
@@ -479,19 +479,24 @@ export class NLDDTooltip extends LitElement {
 				return Math.max(gap, (fingertip - across) / 2);
 			}
 			: gap;
-		const { x, y } = await computePosition(trigger, tooltip, {
+		// limitShift keeps the tooltip beside its trigger, and hide takes it away
+		// once the trigger has scrolled out of view: without them shift pinned it
+		// to the edge of the screen, apart from what it describes.
+		const { x, y, middlewareData } = await computePosition(trigger, tooltip, {
 			placement: this._effectivePlacement,
 			strategy: 'fixed',
 			middleware: [
 				offset(distance),
 				flip(),
-				shift({ padding: parseInt(styles.getPropertyValue('--_tooltip-shift-padding'), 10) }),
+				shift({ padding: parseInt(styles.getPropertyValue('--_tooltip-shift-padding'), 10), limiter: limitShift() }),
+				hide(),
 			],
 		});
 
 		if (version !== this._positionVersion) return;
 		tooltip.style.left = `${x}px`;
 		tooltip.style.top = `${y}px`;
+		tooltip.toggleAttribute('reference-hidden', !!middlewareData.hide?.referenceHidden);
 		tooltip.setAttribute('positioned', ''); // placed — let it fade in (see _visible handler)
 	}
 

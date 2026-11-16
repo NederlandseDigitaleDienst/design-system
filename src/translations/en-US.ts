@@ -314,6 +314,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.step-bar.status-future-label': 'To do',
 	'components.step-bar.compact-text': 'Step {current} of {total}',
 	'components.term.source-capitalize': 'Source',
+	'components.term.sheet-dismiss-action': 'Close',
 };
 
 export default enUS;

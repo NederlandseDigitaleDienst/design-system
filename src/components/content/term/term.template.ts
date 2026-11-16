@@ -20,16 +20,39 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 			</nldd-text>
 		`
 		: nothing;
+	const definition = html`
+		<nldd-text text="${component.definition}"></nldd-text>
+		${source}
+	`;
+	// On sm the popover is a bottom sheet over the sentence, so it names the
+	// term itself: as a title that goes into the bar once a long definition
+	// scrolls, with a button to close it.
+	const content = component._isSm
+		? html`
+			<nldd-page sticky-header>
+				<nldd-top-title-bar
+					slot="header"
+					text=${component._termText}
+					dismiss-text=${component._t('components.term.sheet-dismiss-action')}
+					collapse-anchor="term-title"
+				></nldd-top-title-bar>
+				<nldd-container padding="16">
+					<nldd-title
+						id="term-title"
+						size="display-4"
+						text=${component._termText}
+					></nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
+					${definition}
+				</nldd-container>
+			</nldd-page>
+		`
+		: html`<nldd-container padding="16">${definition}</nldd-container>`;
 	const ownPopover = component.definition && !component.popovertarget
 		? html`
 			<nldd-popover
 				accessible-label=${component._termText || nothing}
-			>
-				<nldd-container padding="16">
-					<nldd-text text="${component.definition}"></nldd-text>
-					${source}
-				</nldd-container>
-			</nldd-popover>
+			>${content}</nldd-popover>
 		`
 		: nothing;
 	// A span, not a button: a button lays out as inline-block, so a term of

@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-admonition[collapsible][text][heading-level]'
+message: '`heading-level` does nothing on a collapsible admonition: its title is the name of the button that opens it, not a heading.'
+examples:
+  passed: ['<nldd-admonition text="Let op" heading-level="2"></nldd-admonition>']
+  failed: ['<nldd-admonition collapsible text="Let op" heading-level="2"></nldd-admonition>']

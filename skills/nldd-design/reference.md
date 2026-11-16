@@ -226,7 +226,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 
 ### `<nldd-menu>`
 
-A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up and holds a moment instead. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` the menu closes at once. A menu that scrolls fades at the edge where more items wait. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
+A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A menu that scrolls fades at the edge where more items wait. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
 
 **Rules** (`nldd lint`)
 
@@ -496,6 +496,84 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 ## Content
 
+### `<nldd-accordion>`
+
+A stack of nldd-accordion-item elements, each a title that opens and closes its content in place. Fold away only short, additional content: an answer to a question, a detail most readers skip. Content folded in place costs orientation, since the page grows and shifts under the reader. Content that is long, holds a form or is a task of its own goes in rows of an nldd-list that each open an nldd-sheet; see the design guidelines on expand/collapse. The items join into one block: a border around them, a line between them, each title in a tinted bar and its content on the base surface. It looks like a `details` in nldd-rich-text, so in running text that is the lighter choice. With `exclusive` only one item is open at a time: opening one closes the other. Nothing else differs, so each item stays a native `details` with its keyboard, screen reader and find-in-page behavior.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `exclusive` | `boolean` | Only one item is open at a time |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | nldd-accordion-item elements. |
+
+### `<nldd-accordion-item>`
+
+One item of an nldd-accordion: a title in a tinted bar that opens and closes the content below it. It is a native `details` inside, so the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts closed, as a `details` does; add `open` to start open. The title is the name of the button that opens the item, so it is plain text and not a heading.
+
+**Rules** (`nldd lint`)
+
+- `accordion-item-needs-name`: An accordion item needs `text`: it is the name of the button that opens it, and the title a reader sees.
+- `accordion-item-no-form` (hint): Do not fold a form away in place. Open it in an nldd-sheet from a row.
+- `accordion-item-no-heading` (hint): Content with headings of its own is too long to fold in place. Open it in an nldd-sheet from a row.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `text` | `string` | Title in the bar |
+| `open` | `boolean` | Whether the item is open |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The content: an nldd-rich-text, or an nldd-text for a single paragraph. |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `toggle` | When the item opens or closes, also when `open` is set from code, as nldd-accordion needs for `exclusive`, and once on load for an item that starts open, as a native details does; read `open` for the new state. |
+
+### `<nldd-admonition>`
+
+A note, tip or warning set apart in running text: what a `:::warning` becomes in a markdown page. It is content, not feedback. It says nothing when the page loads and cannot be dismissed, so a screen reader meets it in reading order as a note (`role="note"`), unless the page gives it a role of its own before it connects. For a notice that responds to what the user does or what changes, such as an error summary, use nldd-banner, which is a live region. The title sits in a bar tinted in the color of the variant, with the icon of the variant before it. The content sits below it on the base surface, inside a border of the same color, so the admonition reads as part of the text and not as a message. Without `text` there is no bar, and the icon stands before the content. A warning or a critical note says in its title what it is: the color and the icon are not read out. With `collapsible` the title bar opens and closes the content, as a native `details` does: the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts open; add `collapsed` to start closed. Keep what you fold away short and additional: see the design guidelines on expand/collapse. A collapsible admonition needs `text`, and its title is the name of the button that opens it, so `heading-level` does not apply there. A markdown renderer does not make one by itself: `:::tip` is syntax of the parser, so the app maps each type to an admonition. The types of Docusaurus, remark-directive and markdown-it-container map as follows: `note` to `variant="neutral"`, `info` to `variant="accent"`, `tip` to `variant="success" icon="idea"`, `warning` and `caution` to `variant="warning"`, and `danger` to `variant="critical"`. The label of the type, or the title given in the markdown, becomes `text`. One admonition does not hold another: an aside within an aside is a sign the text wants to be written differently.
+
+**Rules** (`nldd lint`)
+
+- `admonition-collapsed-no-effect`: `collapsed` does nothing unless the admonition is `collapsible` and has `text`.
+- `admonition-collapsible-no-effect`: `collapsible` does nothing without `text`: there is no title bar to open and close the content with.
+- `admonition-heading-level-no-effect`: `heading-level` does nothing on a collapsible admonition: its title is the name of the button that opens it, not a heading.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `variant` | `'neutral'\|'accent'\|'success'\|'warning'\|'critical'` | Color and default icon (default: 'neutral') |
+| `text` | `string` | Title in the bar above the content. Without it there is no bar |
+| `heading-level` | `1\|2\|3\|4\|5\|6` | Renders the title as h1–h6; absent renders a p. Not with `collapsible` |
+| `icon` | `string` | Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled |
+| `collapsible` | `boolean` | The title bar opens and closes the content. Needs `text` |
+| `collapsed` | `boolean` | Whether a collapsible admonition is closed |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The content: an nldd-rich-text, or an nldd-text for a single paragraph. |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `toggle` | When the user opens or closes a collapsible admonition; read `collapsed` for the new state. Setting `collapsed` does not fire it. |
+
 ### `<nldd-avatar>`
 
 Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role="img"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.
@@ -736,7 +814,7 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 
 ### `<nldd-rich-text>`
 
-A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-rich-text-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. The content is HTML made of block elements, so whoever produces it, a server, a CMS or a markdown renderer, wraps text in a `p`. Bare text or an inline element such as `strong` or `a` as a direct child lands in a column of 0px, one word per line. Plain text, where a component has no attribute for it, goes in nldd-text. The headings keep one size on every width, the one they have on a phone. A heading in running text sits in a column as wide as a line of reading, on any screen, so its relation to the text beside it does not change and it has no reason to grow. Growing, an h2 on a wide screen was more than twice the size of the text, and an article broke into blocks at every heading. Page and section titles do grow: use nldd-title for those. Children are placed in three zones. A child belongs to the text unless it is listed, so it reads at the `main` size and is never wider than a line: text (headings, paragraphs, lists, blockquote, div/section) and every component that is not named below, such as nldd-box, nldd-card, nldd-banner, nldd-list and a button, and code (pre, nldd-code-viewer), which scrolls inside its block when a line is longer. Media, tables and a step bar (img, figure, video, iframe, table, nldd-table, nldd-image, nldd-step-bar) get the `wide` accent. What needs the room gets the `full` span: hr, nldd-collection and nldd-container. A child takes the room it needs inside its zone (`justify-self: start`), so the room is available without being forced. Overridable per child with `data-rich-text-width="main" | "wide" | "full"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical. An element with `data-mention` reads as a mention: the name in the mention color with the @ icon in front of it. Use `<a href="…" data-mention>` when the person has a page to go to: it becomes the tinted token nldd-text-editor shows, and the tint is what says you can follow it. Use `<span data-mention>` when not: it keeps the color and the icon, without the tint. Write the name without the `@`: the rich text draws it. A mention in the editor's value, `[@Name](user:id)`, comes out of a markdown renderer as a link to `user:id`, which goes nowhere, so turn it into one of these yourself.
+A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-rich-text-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. The content is HTML made of block elements, so whoever produces it, a server, a CMS or a markdown renderer, wraps text in a `p`. Bare text or an inline element such as `strong` or `a` as a direct child lands in a column of 0px, one word per line. Plain text, where a component has no attribute for it, goes in nldd-text. The headings keep one size on every width, the one they have on a phone. A heading in running text sits in a column as wide as a line of reading, on any screen, so its relation to the text beside it does not change and it has no reason to grow. Growing, an h2 on a wide screen was more than twice the size of the text, and an article broke into blocks at every heading. Page and section titles do grow: use nldd-title for those. Children are placed in three zones. A child belongs to the text unless it is listed, so it reads at the `main` size and is never wider than a line: text (headings, paragraphs, lists, blockquote, div/section) and every component that is not named below, such as nldd-box, nldd-card, nldd-banner, nldd-list and a button, and code (pre, nldd-code-viewer), which scrolls inside its block when a line is longer. Media, tables and a step bar (img, figure, video, iframe, table, nldd-table, nldd-image, nldd-step-bar) get the `wide` accent. What needs the room gets the `full` span: hr, nldd-collection and nldd-container. A child takes the room it needs inside its zone (`justify-self: start`), so the room is available without being forced. Overridable per child with `data-rich-text-width="main" | "wide" | "full"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical. An element with `data-mention` reads as a mention: the name in the mention color with the @ icon in front of it. Use `<a href="…" data-mention>` when the person has a page to go to: it becomes the tinted token nldd-text-editor shows, and the tint is what says you can follow it. Use `<span data-mention>` when not: it keeps the color and the icon, without the tint. Write the name without the `@`: the rich text draws it. A mention in the editor's value, `[@Name](user:id)`, comes out of a markdown renderer as a link to `user:id`, which goes nowhere, so turn it into one of these yourself. A `details` is a bordered block with rounded corners. Its `summary` is a tinted bar as high as an md control, with a chevron at the end that points down while it is closed and up once it is open, and the whole bar shows hover and press. Open, the content sits on the base surface below a line, where the browser supports `::details-content`; elsewhere it stays on the tinted surface. Details that follow each other join into one block; give them the same `name` and only one opens at a time. They stay native, so the keyboard, a screen reader and find in page work as they do anywhere, and find in page opens the one it finds in. When printed they are open, where the browser supports `::details-content`; elsewhere a closed one prints closed. Keep what you fold away short and additional: see the design guidelines on expand/collapse.
 
 **Rules** (`nldd lint`)
 
@@ -753,7 +831,7 @@ A container for rich text content that automatically applies responsive typograp
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `hyphens` | `boolean` | Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own. |
 
-**Plain HTML it styles:** `<p>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`, `<strong>`, `<b>`, `<em>`, `<i>`, `<u>`, `<s>`, `<del>`, `<ins>`, `<code>`, `<kbd>`, `<samp>`, `<var>`, `<small>`, `<mark>`, `<q>`, `<cite>`, `<abbr>`, `<sub>`, `<sup>`, `<br>`, `<span>`, `<ul>`, `<ol>`, `<li>`, `<dl>`, `<dt>`, `<dd>`, `<blockquote>`, `<pre>`, `<figure>`, `<figcaption>`, `<img>`, `<picture>`, `<source>`, `<table>`, `<thead>`, `<tbody>`, `<tfoot>`, `<tr>`, `<th>`, `<td>`, `<caption>`, `<hr>`, `<div>`, `<section>`, `<video>`, `<iframe>`. `nldd lint --pure` reports plain HTML only where no component styles it.
+**Plain HTML it styles:** `<p>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`, `<strong>`, `<b>`, `<em>`, `<i>`, `<u>`, `<s>`, `<del>`, `<ins>`, `<code>`, `<kbd>`, `<samp>`, `<var>`, `<small>`, `<mark>`, `<q>`, `<cite>`, `<abbr>`, `<sub>`, `<sup>`, `<br>`, `<span>`, `<ul>`, `<ol>`, `<li>`, `<dl>`, `<dt>`, `<dd>`, `<blockquote>`, `<pre>`, `<figure>`, `<figcaption>`, `<img>`, `<picture>`, `<source>`, `<table>`, `<thead>`, `<tbody>`, `<tfoot>`, `<tr>`, `<th>`, `<td>`, `<caption>`, `<hr>`, `<div>`, `<section>`, `<details>`, `<summary>`, `<video>`, `<iframe>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-tag>`
 
@@ -785,7 +863,7 @@ A compact property that has been assigned to something: a category, a type, a ro
 
 ### `<nldd-term>`
 
-A term in running text with an explanation behind it, such as a legal term from a glossary. The term stays part of the sentence, marked with a dotted underline, and opens its definition in a popover on a click, a tap, Enter or Space. On sm the popover is a bottom sheet. The term is the control: it carries the button role and its expanded state, so a term injected into content needs no ARIA of your own. Focus moves into the popover when it opens, so its content is read, and returns to the term when it closes. Mark only the first occurrence of a concept in a question or section. The underline is the only sign that the term is a control, so it cannot get lighter or go away. A text that marks every occurrence gets busy. A short definition goes in `definition`, as text: <p>De <nldd-term definition="Degene die het doel van en de middelen voor de verwerking vaststelt." source="Artikel 4 AVG" source-href="…">verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> A `source` shows under the definition, as a link with `source-href`. A definition with more paragraphs or links is an nldd-popover of your own, outside the sentence, that `popovertarget` points at. Every term for the same concept can point at the same popover: it opens against the term you clicked. Markup in the term itself would break: a `<p>` inside a `<p>` closes the paragraph, and the definition would fall out of the term. Give a source in that popover the shape the term gives it: after an `nldd-spacer size="8"`, an nldd-text with `size="sm"` and `color="secondary"`, with "Bron:" and an nldd-link. <p>De <nldd-term popovertarget="verwerkingsverantwoordelijke"> verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> <nldd-popover id="verwerkingsverantwoordelijke" accessible-label="Verwerkingsverantwoordelijke">…</nldd-popover>
+A term in running text with an explanation behind it, such as a legal term from a glossary. The term stays part of the sentence, marked with a dotted underline, and opens its definition in a popover on a click, a tap, Enter or Space. On sm the popover is a bottom sheet, which covers the sentence. The popover of `definition` then names the term in a small title, which moves into a top title bar with a "Sluit" button once a long definition scrolls. The term is the control: it carries the button role and its expanded state, so a term injected into content needs no ARIA of your own. Focus moves into the popover when it opens, so its content is read, and returns to the term when it closes. Mark only the first occurrence of a concept in a question or section. The underline is the only sign that the term is a control, so it cannot get lighter or go away. A text that marks every occurrence gets busy. A short definition goes in `definition`, as text: <p>De <nldd-term definition="Degene die het doel van en de middelen voor de verwerking vaststelt." source="Artikel 4 AVG" source-href="…">verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> A `source` shows under the definition, as a link with `source-href`. A definition with more paragraphs or links is an nldd-popover of your own, outside the sentence, that `popovertarget` points at. Every term for the same concept can point at the same popover: it opens against the term you clicked. Markup in the term itself would break: a `<p>` inside a `<p>` closes the paragraph, and the definition would fall out of the term. Give a source in that popover the shape the term gives it: after an `nldd-spacer size="8"`, an nldd-text with `size="sm"` and `color="secondary"`, with "Bron:" and an nldd-link. <p>De <nldd-term popovertarget="verwerkingsverantwoordelijke"> verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> <nldd-popover id="verwerkingsverantwoordelijke" accessible-label="Verwerkingsverantwoordelijke">…</nldd-popover>
 
 **Rules** (`nldd lint`)
 
@@ -851,6 +929,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 
 **Rules** (`nldd lint`)
 
+- `accordion-item-no-heading` (hint): Content with headings of its own is too long to fold in place. Open it in an nldd-sheet from a row.
 - `card-title-needs-level` (hint): Set `heading-level`: the title of a card that is a choice is a heading, directly below the page title or the section heading.
 - `form-title-goes-in-form-section` (hint): Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
@@ -976,6 +1055,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 
 **Rules** (`nldd lint`)
 
+- `accordion-item-no-form` (hint): Do not fold a form away in place. Open it in an nldd-sheet from a row.
 - `button-submit-needs-form`: Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.
 - `form-action-goes-in-form-actions` (hint): Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.
 - `form-field-no-own-label-alignment` (hint): Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
@@ -1286,7 +1366,7 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 
 ### `<nldd-date-field>`
 
-A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.
+A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. After a choice in the calendar the chosen day stays lit a moment before the calendar closes, so you see what you picked. The value and `change` do not wait for it. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.
 
 **Attributes**
 
@@ -2685,6 +2765,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
 - `split-view-needs-main-page`: Set landmarks="page" on the page in the pane with the main content, or the screen offers no main landmark or two.
 - `subpage-needs-breadcrumbs` (hint): Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.
+- `top-title-bar-anchor-no-effect`: `collapse-anchor` has no effect without `sticky-header` on the nldd-page: the bar scrolls away before it turns compact.
 - `website-no-sticky-header`: A website lets its header scroll away: a fixed one takes room from the content.
 
 **Attributes**
@@ -3548,6 +3629,7 @@ A toolbar for page and container headings with optional navigation and action bu
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 - `top-title-bar-anchor-needs-heading`: `collapse-anchor` points at an element that is no heading and holds none. The bar keeps its own title as the heading, so the page has one, but a screen reader now finds the title twice. Point the anchor at the nldd-title that starts the content.
+- `top-title-bar-anchor-no-effect`: `collapse-anchor` has no effect without `sticky-header` on the nldd-page: the bar scrolls away before it turns compact.
 - `top-title-bar-anchor-not-found`: `collapse-anchor` matches nothing yet. If it never renders, the bar keeps its own title and reads it out twice.
 
 **Attributes**

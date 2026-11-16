@@ -41,6 +41,7 @@ const PATTERNS = {
 	'Patronen/Formulier': 'form',
 	'Patronen/Menu bij een knop': 'menu-from-a-button',
 	'Patronen/Bewerken in een sheet': 'edit-in-a-sheet',
+	'Patronen/Lezen in een sheet': 'read-in-a-sheet',
 	'Patronen/Onomkeerbare actie': 'irreversible-action',
 };
 

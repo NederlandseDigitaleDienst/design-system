@@ -295,6 +295,39 @@ export const Citaat = {
 	`,
 };
 
+export const Uitklapblok = {
+	render: (args: Record<string, any>) => html`
+		<nldd-rich-text
+			spacing=${args.spacing}
+			?centered=${args.centered}
+		>
+			<h3>Aanvraag A-1042</h3>
+			<p>Team Uitvoering beoordeelt de aanvraag voor dakisolatie. Wat er nodig is voor het besluit, staat hieronder.</p>
+			<details>
+				<summary>Welke stukken horen bij de aanvraag?</summary>
+				<p>De offerte van het isolatiebedrijf en een foto van het dak voor de isolatie.</p>
+				<ul>
+					<li>De offerte noemt de isolatiewaarde.</li>
+					<li>De foto laat het hele schuine dak zien.</li>
+				</ul>
+			</details>
+			<p>Losse blokken die op elkaar volgen, worden samen één blok. Met dezelfde <code>name</code> staat er maar één tegelijk open.</p>
+			<details name="voorwaarden" open>
+				<summary>Wanneer komt de aanvraag in aanmerking?</summary>
+				<p>Als de isolatie het hele schuine dak beslaat en de oude isolatie is verwijderd.</p>
+			</details>
+			<details name="voorwaarden">
+				<summary>Hoe lang duurt de beoordeling?</summary>
+				<p>Team Uitvoering neemt binnen acht weken een besluit over de aanvraag.</p>
+			</details>
+			<details name="voorwaarden">
+				<summary>Wat als de aanvraag niet compleet is?</summary>
+				<p>Dan vraagt team Uitvoering om de stukken die ontbreken, en wacht de beoordeling tot die er zijn.</p>
+			</details>
+		</nldd-rich-text>
+	`,
+};
+
 export const Figuur = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text
@@ -673,6 +706,10 @@ export const OpKleurvlak = {
 						>
 						<figcaption>Figuur 1 — de figcaption staat op verlaagde dekking</figcaption>
 					</figure>
+					<details>
+						<summary>Welke stukken horen bij de aanvraag?</summary>
+						<p>De offerte van het isolatiebedrijf en een foto van het dak.</p>
+					</details>
 				</nldd-rich-text>
 			</div>
 			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); --context-background-color: var(--semantics-categories-oranje-filled-background-color); --context-content-color: var(--semantics-categories-oranje-filled-content-color); --context-content-secondary-color: var(--semantics-categories-oranje-filled-content-secondary-color); --context-link-color: var(--semantics-categories-oranje-filled-content-color); --context-link-is-hovered-color: var(--semantics-categories-oranje-filled-content-color); --context-link-is-active-color: var(--semantics-categories-oranje-filled-content-color);">

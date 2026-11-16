@@ -178,3 +178,45 @@ describe('nldd-term with popovertarget', () => {
 		expect(first.matches(':state(no-popover-target)')).toBe(true);
 	});
 });
+
+describe('nldd-term with definition on sm', () => {
+	let el: NLDDTerm;
+
+	afterEach(() => {
+		const popover = el?.shadowRoot?.querySelector<NLDDPopover>('nldd-popover');
+		if (popover?.matches(':popover-open')) popover.hidePopover();
+		if (el) cleanup(el);
+	});
+
+	async function setup(sm: boolean): Promise<NLDDPopover> {
+		el = await fixture<NLDDTerm>('<nldd-term definition="Degene die het doel vaststelt.">verwerkings&shy;verantwoordelijke</nldd-term>');
+		el._isSm = sm;
+		await waitForUpdate(el);
+		return el.shadowRoot!.querySelector<NLDDPopover>('nldd-popover')!;
+	}
+
+	it('names the term in a title bar with a close button, with the title as its anchor', async () => {
+		const popover = await setup(true);
+		const bar = popover.querySelector('nldd-top-title-bar')!;
+		expect(bar.getAttribute('text')).toBe('verwerkingsverantwoordelijke');
+		expect(bar.getAttribute('dismiss-text')).toBe('Sluit');
+		const title = popover.querySelector('nldd-title')!;
+		expect(title.getAttribute('text')).toBe('verwerkingsverantwoordelijke');
+		expect(bar.getAttribute('collapse-anchor')).toBe(title.id);
+	});
+
+	it('closes when the bar is dismissed', async () => {
+		const popover = await setup(true);
+		triggerOf(el).click();
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(true);
+		popover.querySelector('nldd-top-title-bar')!.dispatchEvent(new CustomEvent('dismiss', { bubbles: true, composed: true }));
+		await vi.waitFor(() => expect(popover.matches(':popover-open')).toBe(false));
+	});
+
+	it('has no bar on md and up', async () => {
+		const popover = await setup(false);
+		expect(popover.querySelector('nldd-top-title-bar')).toBeNull();
+		expect(popover.querySelector('nldd-title')).toBeNull();
+	});
+});

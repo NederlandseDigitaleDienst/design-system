@@ -9,6 +9,37 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-admonition`, a new component for a note, tip or warning in running text,** such as a `:::warning` in a markdown page. Unlike `nldd-banner` it is no live region, so nothing is read out when the page loads. See Added.
+- **`nldd-accordion`, for short questions and answers that open in place.** Each item is a native `details`, so find in page opens it. See Added.
+- **`<details>` in `nldd-rich-text` reads as a block,** with a tinted title bar and a chevron, so a markdown page can fold away a detail without a component. See Added.
+
+### Added
+
+- **`nldd-admonition`.** A note, tip or warning set apart in running text, with the variants and icons of `nldd-banner`: the title in a bar tinted in the color of the variant, the content below it on the base surface. It is a note for a screen reader (`role="note"`), not a live region, and it cannot be dismissed. With `collapsible` the title bar opens and closes the content, as a native `details` does, so find in page opens it too.
+- **`nldd-accordion` and `nldd-accordion-item`.** Items that each open and close their content in place, joined into one block that looks like `details` in `nldd-rich-text`. Each item is a native `details`, so find in page opens it, and it prints open. With `exclusive` only one item is open at a time. Fold away only short, additional content: for long content, a form or a task of its own, use rows of an `nldd-list` that open an `nldd-sheet`.
+- **Pattern "Lezen in een sheet".** A row of an `nldd-list` opens an `nldd-sheet` with the text that belongs to it, so the page itself never shifts. It is the choice for content too long for `nldd-accordion`, and the reading counterpart of "Bewerken in een sheet".
+- **`accordion-item-needs-name`** (warn) reports an `nldd-accordion-item` without `text`, whose button would have no name.
+- **`admonition-collapsible-no-effect`**, **`admonition-collapsed-no-effect`** and **`admonition-heading-level-no-effect`** (warn) report `collapsible` without `text`, `collapsed` on an admonition that does not collapse, and `heading-level` on a collapsible one, whose title is the name of a button.
+- **`top-title-bar-anchor-no-effect`** (warn) reports `collapse-anchor` on an `nldd-top-title-bar` in an `nldd-page` without `sticky-header`. The bar scrolls away with the content, so it turns compact out of view and never takes over the title.
+- `--semantics-disclosures-*`: the inset, the title bar (min-height, padding, gap, font) and the disclosure icon that `nldd-admonition`, `nldd-accordion-item` and `<details>` in `nldd-rich-text` share. A title of one line keeps the bar at the height of an md control, a longer one grows by its lines only.
+- `--semantics-surfaces-tinted-is-hovered-background-color` and its accent, success, warning and critical versions: the hover of a bar on a tinted surface, as on the title bars of `nldd-admonition`, `nldd-accordion-item` and `<details>` in `nldd-rich-text`. In the red and orange themes the accent one is gray, like the surface it sits on.
+- Opening and closing a collapsible `nldd-admonition` or a `<details>` in `nldd-rich-text` animates its height, in browsers that support `interpolate-size`. Elsewhere it opens at once.
+- `<details>` and `<summary>` in `nldd-rich-text` read as a bordered block: a tinted bar with a chevron that points down to open and up to close, the content on a white surface below it, and details that follow each other joined into one block. They stay native, so find in page opens the one it finds in, and they print open where the browser supports it.
+
+### Changed
+
+- `nldd-term`: on a phone the definition opens with the term as a small title and a "Sluit" button. A long definition keeps the term in the bar while you scroll.
+
+### Fixed
+
+- Pattern "Bewerken in een sheet": the page in the sheet has `sticky-header`. Without it the title bar scrolled away with the content, so it never took over the title, and the way out went with it.
+- `nldd-menu`: a tapped item stays lit from the press until the menu closes. On a phone it went dark between the press and the hold, which looked like a blink.
+- `nldd-date-field`: the chosen day stays lit a moment before the calendar closes. It closed at once, so a click showed nothing. The value and `change` do not wait.
+- `nldd-code-viewer`: "Gekopieerd" goes away when the page scrolls, and after a tap or a pen it goes after 2 seconds. On a phone the copy button kept its check mark and its tooltip until you tapped somewhere else.
+- `nldd-tooltip`: an open tooltip stays beside its trigger when the page scrolls, and hides while the trigger is out of view. It used to stay at the edge of the screen, apart from what it describes.
+
 ## [0.25.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.24.0...v0.25.0) (2026-11-15)
 
 ### Highlights

@@ -43,6 +43,11 @@ describe('patroon: bewerken in een sheet', () => {
 		expect(sheet.open).toBe(false);
 	});
 
+	it('houdt de titelbalk in beeld, zodat hij de titel kan overnemen', async () => {
+		const sheet = await mount();
+		expect(sheet.querySelector('nldd-page')!.hasAttribute('sticky-header')).toBe(true);
+	});
+
 	it('laat de titelbalk naar de kop in de inhoud wijzen, met dezelfde woorden', async () => {
 		const sheet = await mount();
 		const bar = sheet.querySelector('nldd-top-title-bar')!;

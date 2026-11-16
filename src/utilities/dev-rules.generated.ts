@@ -3,9 +3,33 @@ import type { DevRule } from './dev-checks.js';
 
 export const devRules: DevRule[] = [
 	{
+		"id": "accordion-item-needs-name",
+		"message": "An accordion item needs `text`: it is the name of the button that opens it, and the title a reader sees.",
+		"context": "nldd-accordion-item",
+		"assert": "[text]:not([text=\"\"])",
+		"properties": [
+			"text"
+		]
+	},
+	{
 		"id": "action-goes-on-button",
 		"message": "Put slot=\"actions\" on each nldd-button, not on an element around them.",
 		"context": ":is(nldd-modal-dialog, nldd-inline-dialog) > [slot=\"actions\"]:not(nldd-button)"
+	},
+	{
+		"id": "admonition-collapsed-no-effect",
+		"message": "`collapsed` does nothing unless the admonition is `collapsible` and has `text`.",
+		"context": "nldd-admonition[collapsed]:not([collapsible][text]:not([text=\"\"]))"
+	},
+	{
+		"id": "admonition-collapsible-no-effect",
+		"message": "`collapsible` does nothing without `text`: there is no title bar to open and close the content with.",
+		"context": "nldd-admonition[collapsible]:not([text]:not([text=\"\"]))"
+	},
+	{
+		"id": "admonition-heading-level-no-effect",
+		"message": "`heading-level` does nothing on a collapsible admonition: its title is the name of the button that opens it, not a heading.",
+		"context": "nldd-admonition[collapsible][text]:not([text=\"\"])[heading-level]:not([heading-level=\"\"])"
 	},
 	{
 		"id": "avatar-color-renamed",
@@ -1169,6 +1193,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-top-title-bar:state(anchor-not-heading)"
 	},
 	{
+		"id": "top-title-bar-anchor-no-effect",
+		"message": "`collapse-anchor` has no effect without `sticky-header` on the nldd-page: the bar scrolls away before it turns compact.",
+		"context": "nldd-page:not([sticky-header]) > nldd-top-title-bar[collapse-anchor]:not([collapse-anchor=\"\"])"
+	},
+	{
 		"id": "top-title-bar-anchor-not-found",
 		"message": "`collapse-anchor` matches nothing yet. If it never renders, the bar keeps its own title and reads it out twice.",
 		"context": "nldd-top-title-bar:state(no-anchor)"
@@ -1302,6 +1331,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-toolbar-size",
 		"message": "`size` on nldd-toolbar takes: lg, md, sm.",
 		"context": "nldd-toolbar[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-admonition-variant",
+		"message": "`variant` on nldd-admonition takes: accent, critical, neutral, success, warning.",
+		"context": "nldd-admonition[variant]:not([variant=\"accent\"], [variant=\"critical\"], [variant=\"neutral\"], [variant=\"success\"], [variant=\"warning\"])"
 	},
 	{
 		"id": "invalid-value-avatar-type",

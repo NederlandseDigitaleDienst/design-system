@@ -17,12 +17,12 @@ export const bannerStyles = css`
 		--_banner-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_banner-padding: var(--primitives-space-12);
 		--_banner-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
-		--_banner-border-width: var(--primitives-border-width-thin);
-		--_banner-icon-color: var(--primitives-color-neutral-750);
-		--_banner-icon-size: var(--primitives-space-32);
+		--_banner-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_banner-highlight-border-width: var(--primitives-border-width-thin);
+		--_banner-variant-icon-color: var(--primitives-color-neutral-750);
+		--_banner-variant-icon-size: var(--primitives-space-32);
 		--_banner-content-color: var(--semantics-content-color);
-		--_banner-text-icon-offset: calc((var(--_banner-icon-size) - var(--primitives-font-size-100) * var(--primitives-line-height-tight)) / 2);
+		--_banner-text-variant-icon-offset: calc((var(--_banner-variant-icon-size) - var(--primitives-font-size-100) * var(--primitives-line-height-tight)) / 2);
 		--_banner-column-gap: var(--primitives-space-8);
 		--_banner-dismiss-inset: 0px;
 		--_banner-dismissible-padding-right: calc(var(--_banner-dismiss-inset) + var(--semantics-controls-md-min-size));
@@ -43,7 +43,8 @@ export const bannerStyles = css`
 
 	/* The dismiss slot narrows with the icon-button the template swaps in, so
 	   the reserved right padding tracks the control size rather than a fixed
-	   value. --_banner-text-icon-offset follows --_banner-icon-size on its own.
+	   value. --_banner-text-variant-icon-offset follows
+	   --_banner-variant-icon-size on its own.
 
 	   --_banner-dismiss-inset pulls the 34px button up until its center sits on the
 	   24px icon's center (8 - (34 - 24) / 2 = 3), and the same value on the
@@ -51,34 +52,34 @@ export const bannerStyles = css`
 
 	:host([size="sm"]) {
 		--_banner-padding: var(--primitives-space-8);
-		--_banner-icon-size: var(--primitives-space-24);
+		--_banner-variant-icon-size: var(--primitives-space-24);
 		--_banner-column-gap: var(--primitives-space-4);
-		--_banner-dismiss-inset: calc(var(--_banner-padding) - (var(--semantics-controls-sm-min-size) - var(--_banner-icon-size)) / 2);
+		--_banner-dismiss-inset: calc(var(--_banner-padding) - (var(--semantics-controls-sm-min-size) - var(--_banner-variant-icon-size)) / 2);
 		--_banner-dismissible-padding-right: calc(var(--_banner-dismiss-inset) + var(--semantics-controls-sm-min-size));
 	}
 
 	:host([variant="accent"]) {
 		--_banner-background-color: var(--semantics-surfaces-accent-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
-		--_banner-icon-color: var(--components-banner-accent-icon-color);
+		--_banner-highlight-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
+		--_banner-variant-icon-color: var(--components-banner-accent-icon-color);
 	}
 
 	:host([variant="success"]) {
 		--_banner-background-color: var(--semantics-surfaces-success-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-success-tinted-highlight-border-color);
-		--_banner-icon-color: light-dark(var(--primitives-color-success-550), var(--primitives-color-success-650));
+		--_banner-highlight-border-color: var(--semantics-surfaces-success-tinted-highlight-border-color);
+		--_banner-variant-icon-color: light-dark(var(--primitives-color-success-550), var(--primitives-color-success-650));
 	}
 
 	:host([variant="warning"]) {
 		--_banner-background-color: var(--semantics-surfaces-warning-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-warning-tinted-highlight-border-color);
-		--_banner-icon-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
+		--_banner-highlight-border-color: var(--semantics-surfaces-warning-tinted-highlight-border-color);
+		--_banner-variant-icon-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
 	}
 
 	:host([variant="critical"]) {
 		--_banner-background-color: var(--semantics-surfaces-critical-tinted-background-color);
-		--_banner-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
-		--_banner-icon-color: var(--primitives-color-critical-600);
+		--_banner-highlight-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
+		--_banner-variant-icon-color: var(--primitives-color-critical-600);
 	}
 
 	/* # Block */
@@ -88,7 +89,7 @@ export const bannerStyles = css`
 		display: grid;
 		position: relative;
 		border-radius: var(--_banner-corner-radius);
-		box-shadow: inset 0 0 0 var(--_banner-border-width) var(--_banner-border-color);
+		box-shadow: inset 0 0 0 var(--_banner-highlight-border-width) var(--_banner-highlight-border-color);
 		background-color: var(--_banner-background-color);
 		padding: var(--_banner-padding);
 		grid-template-columns: auto 1fr;
@@ -101,21 +102,21 @@ export const bannerStyles = css`
 
 	@media (forced-colors: active) {
 		.banner {
-			border: var(--_banner-border-width) solid CanvasText;
+			border: var(--_banner-highlight-border-width) solid CanvasText;
 		}
 	}
 
 
 	/* # Icon */
 
-	.banner__icon {
+	.banner__variant-icon {
 		display: flex;
 		grid-column: 1;
 		grid-row: 1;
-		width: var(--_banner-icon-size);
+		width: var(--_banner-variant-icon-size);
 		align-items: flex-start;
-		--context-content-color: var(--_banner-icon-color);
-		color: var(--_banner-icon-color);
+		--context-content-color: var(--_banner-variant-icon-color);
+		color: var(--_banner-variant-icon-color);
 	}
 
 
@@ -132,12 +133,12 @@ export const bannerStyles = css`
 
 	.banner__heading {
 		display: flex;
-		padding-top: var(--_banner-text-icon-offset);
+		padding-top: var(--_banner-text-variant-icon-offset);
 		flex-direction: column;
 	}
 
 	.banner__heading:has(.banner__supporting-text) {
-		padding-top: calc(var(--_banner-text-icon-offset) - var(--primitives-space-2));
+		padding-top: calc(var(--_banner-text-variant-icon-offset) - var(--primitives-space-2));
 	}
 
 	/* A banner carries text it did not write: a server message, an identifier, a

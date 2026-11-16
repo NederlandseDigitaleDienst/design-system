@@ -6,6 +6,10 @@
  * Typing is not masked: input is accepted generously and normalized only when
  * the field is left.
  *
+ * After a choice in the calendar the chosen day stays lit a moment before the
+ * calendar closes, so you see what you picked. The value and `change` do not
+ * wait for it.
+ *
  * Error messages belong to nldd-form-field, not here. This field reflects only
  * `invalid` / `valid`, like nldd-text-field.
  *
@@ -48,6 +52,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { cssTimeToMs } from '../../../utilities/css-time.js';
 import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
@@ -489,8 +494,37 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 			this.value = detail.value;
 			this._focusOnClose = 'trigger';
 		}
-		this._popover?.hide();
 		this._emit('change');
+		this._holdChoiceThenClose();
+	}
+
+	private _choiceTimer = 0;
+
+	/**
+	 * The calendar stays a moment after a choice, so you see the day you picked
+	 * light up before it goes: closed at once, the click showed nothing. The
+	 * value and `change` do not wait. A day lights up only when chosen, not on
+	 * hover, so it holds and does not blink. That is no motion, so it holds with
+	 * reduced motion too. A second choice in that moment counts as the last.
+	 */
+	private _holdChoiceThenClose(): void {
+		clearTimeout(this._choiceTimer);
+		const hold = cssTimeToMs(getComputedStyle(this).getPropertyValue('--_date-field-choice-hold-duration'));
+		if (!hold) {
+			this._choiceTimer = 0;
+			if (this._pickerOpen) this._popover?.hide();
+			return;
+		}
+		this._choiceTimer = window.setTimeout(() => {
+			this._choiceTimer = 0;
+			if (this._pickerOpen) this._popover?.hide();
+		}, hold);
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		clearTimeout(this._choiceTimer);
+		this._choiceTimer = 0;
 	}
 
 	// — Actions ——————————————————————————————————————————————————————————————

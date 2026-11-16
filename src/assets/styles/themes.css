@@ -1177,6 +1177,7 @@
 
 	--semantics-surfaces-accent-tinted-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-75));
 	--semantics-surfaces-accent-tinted-highlight-border-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-200));
+	--semantics-surfaces-accent-tinted-is-hovered-background-color: var(--primitives-color-neutral-50);
 	--semantics-surfaces-accent-filled-background-color: light-dark(var(--primitives-color-accent-550), var(--primitives-color-accent-450));
 	--semantics-surfaces-accent-filled-highlight-border-color: light-dark(var(--primitives-color-accent-600), var(--primitives-color-accent-500));
 
@@ -1664,6 +1665,7 @@
 
 	--semantics-surfaces-accent-tinted-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-75));
 	--semantics-surfaces-accent-tinted-highlight-border-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-200));
+	--semantics-surfaces-accent-tinted-is-hovered-background-color: var(--primitives-color-neutral-50);
 	--semantics-surfaces-accent-filled-background-color: light-dark(var(--primitives-color-accent-550), var(--primitives-color-accent-450));
 	--semantics-surfaces-accent-filled-highlight-border-color: light-dark(var(--primitives-color-accent-600), var(--primitives-color-accent-500));
 
@@ -1919,6 +1921,7 @@
 
 	--semantics-surfaces-accent-tinted-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-75));
 	--semantics-surfaces-accent-tinted-highlight-border-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-200));
+	--semantics-surfaces-accent-tinted-is-hovered-background-color: var(--primitives-color-neutral-50);
 	--semantics-surfaces-accent-filled-background-color: light-dark(var(--primitives-color-accent-400), var(--primitives-color-accent-600));
 	--semantics-surfaces-accent-filled-highlight-border-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-650));
 

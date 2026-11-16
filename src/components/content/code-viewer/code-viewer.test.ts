@@ -367,6 +367,65 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
+	it('a scroll clears the outcome, also with focus on the button', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const viewer = el as unknown as NLDDCodeViewer;
+			await viewer.updateComplete;
+			const button = el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-button')!;
+			await viewer._onCopyClick({ currentTarget: button } as unknown as Event);
+			await viewer.updateComplete;
+			expect(viewer._copyState).toBe('success');
+			document.dispatchEvent(new Event('scroll'));
+			await viewer.updateComplete;
+			expect(viewer._copyState).toBe('idle');
+			const iconBtn = el.shadowRoot!.querySelector('nldd-icon-button')!;
+			expect(iconBtn.getAttribute('icon')).toBe('copy');
+			expect(el.shadowRoot!.querySelector('nldd-tooltip')!.hasAttribute('open')).toBe(false);
+		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
+	it('a tap or a pen shows the outcome for 2 seconds, a click keeps it while focused', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
+		vi.useFakeTimers();
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const viewer = el as unknown as NLDDCodeViewer;
+			await viewer.updateComplete;
+			const button = el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-button')!;
+
+			button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true, composed: true }));
+			await viewer._onCopyClick({ currentTarget: button } as unknown as Event);
+			await viewer.updateComplete;
+			expect(viewer._copyState).toBe('success');
+			await vi.advanceTimersByTimeAsync(2100);
+			await viewer.updateComplete;
+			expect(viewer._copyState).toBe('idle');
+
+			button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'pen', bubbles: true, composed: true }));
+			await viewer._onCopyClick({ currentTarget: button } as unknown as Event);
+			await viewer.updateComplete;
+			await vi.advanceTimersByTimeAsync(2100);
+			await viewer.updateComplete;
+			expect(viewer._copyState).toBe('idle');
+
+			button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'mouse', bubbles: true, composed: true }));
+			await viewer._onCopyClick({ currentTarget: button } as unknown as Event);
+			await viewer.updateComplete;
+			await vi.advanceTimersByTimeAsync(2100);
+			await viewer.updateComplete;
+			expect(viewer._copyState).toBe('success');
+		} finally {
+			vi.useRealTimers();
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
 	// Off a secure context navigator.clipboard is undefined, so the copy button
 	// would be a dead button that only ever flashes "Kopiëren mislukt". It must
 	// not render at all when the Clipboard API can't work.

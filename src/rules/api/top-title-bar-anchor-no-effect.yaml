@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-page:not([sticky-header]) > nldd-top-title-bar[collapse-anchor]'
+message: '`collapse-anchor` has no effect without `sticky-header` on the nldd-page: the bar scrolls away before it turns compact.'
+examples:
+  passed: ['<nldd-page sticky-header><nldd-top-title-bar slot="header" text="Aanvraag A-1042" collapse-anchor="titel"></nldd-top-title-bar><nldd-title id="titel" text="Aanvraag A-1042"></nldd-title></nldd-page>']
+  failed: ['<nldd-page><nldd-top-title-bar slot="header" text="Aanvraag A-1042" collapse-anchor="titel"></nldd-top-title-bar><nldd-title id="titel" text="Aanvraag A-1042"></nldd-title></nldd-page>']

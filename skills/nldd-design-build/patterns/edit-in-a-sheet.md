@@ -14,7 +14,7 @@ Met een sheet kan iemand iets aanpassen zonder de pagina waarop diegene werkt te
 de pagina eronder             de lijst of het detail waar de sheet vandaan komt
 
 nldd-sheet                     open, placement, width; in de document-root
-  └─ nldd-page
+  └─ nldd-page               sticky-header, zodat de balk in beeld blijft
        ├─ nldd-top-title-bar   slot="header", met text, dismiss-text en collapse-anchor
        └─ nldd-simple-section
             ├─ nldd-title      slot="header", het id waar de balk naar wijst
@@ -69,7 +69,7 @@ nldd-sheet                     open, placement, width; in de document-root
   placement="right"
   width="480px"
 >
-  <nldd-page>
+  <nldd-page sticky-header>
     <nldd-top-title-bar
       slot="header"
       text="Aanvraag A-1042 bewerken"
@@ -122,7 +122,7 @@ nldd-sheet                     open, placement, width; in de document-root
 
 **Noem waar de sheet over gaat.** "Aanvraag A-1042 bewerken" in plaats van "Aanvraag bewerken": een sheet opent meestal vanaf een rij tussen rijen die op elkaar lijken. De ingevulde velden zeggen het ook, maar alleen zolang ze in beeld zijn.
 
-**De titel staat in de inhoud, de balk neemt die over bij het scrollen.** Zet een [`nldd-title`](../../nldd-design/reference.md#nldd-title) boven het formulier en laat de [`nldd-top-title-bar`](../../nldd-design/reference.md#nldd-top-title-bar) daarnaar wijzen met `collapse-anchor`. Zolang de kop in beeld staat is de balk stil, met alleen de uitweg erin; zodra je eroverheen scrolt, schuift de titel de balk in. Allebei dezelfde woorden dus, want de balk verbergt zijn eigen titel dan voor een schermlezer: die zou anders dezelfde titel twee keer tegenkomen.
+**De titel staat in de inhoud, de balk neemt die over bij het scrollen.** Zet een [`nldd-title`](../../nldd-design/reference.md#nldd-title) boven het formulier en laat de [`nldd-top-title-bar`](../../nldd-design/reference.md#nldd-top-title-bar) daarnaar wijzen met `collapse-anchor`. Zolang de kop in beeld staat is de balk stil, met alleen de uitweg erin; zodra je eroverheen scrolt, schuift de titel de balk in. Dat werkt alleen met `sticky-header` op de pagina: zonder scrolt de balk met de inhoud mee weg, en komt hij niet meer terug. Allebei dezelfde woorden dus, want de balk verbergt zijn eigen titel dan voor een schermlezer: die zou anders dezelfde titel twee keer tegenkomen.
 
 **Zet de sheet in de document-root.** Die hoort niet in de inhoud van een split view: als slotted kind pikt die daar de hoogte van het paneel in, waarna een sticky footer los in het scherm komt te hangen. In een framework teleporteer je die naar `document.body`; [`nldd-sheet`](../../nldd-design/reference.md#nldd-sheet) legt uit waarom.
 
@@ -145,5 +145,6 @@ Deze compositie komt voor in vrijwel elke applicatie op dit designsysteem, in Vu
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
+- `accordion-item-no-form`: Do not fold a form away in place. Open it in an nldd-sheet from a row.
 - `sheet-form-max-one-action`: Keep one action under the form. The way out is `dismiss-text` on the title bar.
 - `sheet-title-bar-needs-anchor`: Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.

@@ -317,6 +317,7 @@ export const fy: Record<TranslationKey, string> = {
 	'components.step-bar.status-future-label': 'Noch te dwaan',
 	'components.step-bar.compact-text': 'Stap {current} fan {total}',
 	'components.term.source-capitalize': 'Boarne',
+	'components.term.sheet-dismiss-action': 'Slút',
 };
 
 export default fy;

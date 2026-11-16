@@ -40,6 +40,8 @@ export function codeViewerTemplate(component: NLDDCodeViewer): TemplateResult {
 						accessible-label=${buttonLabel}
 						tooltip-timing="never"
 						size="sm"
+						@pointerdown=${component._onCopyPointerDown}
+						@keydown=${component._onCopyKeyDown}
 						@click=${component._onCopyClick}
 						@focusout=${component._onCopyBlur}
 					></nldd-icon-button>

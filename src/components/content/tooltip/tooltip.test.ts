@@ -510,4 +510,32 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		await waitForUpdate(tooltip);
 		expect(isTooltipVisible(tooltip)).toBe(true);
 	});
+
+	it('gaat mee met zijn trigger en verbergt zich als die uit beeld scrolt', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test" open placement="left" style="display:inline-block;margin:300px 0 0 400px"><button>Trigger</button></nldd-tooltip>');
+		el = tooltip;
+		const spacer = document.createElement('div');
+		spacer.style.height = '5000px';
+		document.body.append(spacer);
+		onTestFinished(() => { spacer.remove(); window.scrollTo(0, 0); });
+		await until(() => isTooltipVisible(tooltip));
+		const tip = tooltip.shadowRoot!.querySelector<HTMLElement>('.tooltip')!;
+		const button = tooltip.querySelector('button')!;
+		const settle = () => new Promise((resolve) => setTimeout(resolve, 100));
+
+		window.scrollTo(0, 0);
+		await settle();
+		expect(tip.hasAttribute('reference-hidden')).toBe(false);
+
+		// Without limitShift, shift pinned it to the top of the screen.
+		window.scrollTo(0, button.getBoundingClientRect().top + window.scrollY + 500);
+		await settle();
+		expect(tip.getBoundingClientRect().bottom).toBeLessThan(0);
+		expect(tip.hasAttribute('reference-hidden')).toBe(true);
+		expect(getComputedStyle(tip).visibility).toBe('hidden');
+
+		window.scrollTo(0, 0);
+		await settle();
+		expect(tip.hasAttribute('reference-hidden')).toBe(false);
+	});
 });

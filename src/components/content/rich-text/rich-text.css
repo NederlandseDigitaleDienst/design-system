@@ -79,8 +79,8 @@ nldd-rich-text[centered] > div:only-child:not([class], [style], [role], [data-ri
 	justify-self: center;
 }
 
-nldd-rich-text > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote),
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote) {
+nldd-rich-text > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote, details),
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote, details) {
 	grid-column: main;
 	/* Fill the main column so short text blocks keep a shared left edge —
 	   justify-self: center would otherwise float a shrinkwrapped heading
@@ -531,6 +531,204 @@ nldd-rich-text blockquote {
 
 nldd-rich-text blockquote > p {
 	margin: 0;
+}
+
+
+/* # Details */
+
+nldd-rich-text details {
+	--_rich-text-details-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
+	--_rich-text-details-background-color: var(--semantics-surfaces-tinted-background-color);
+	--_rich-text-details-content-color: var(--semantics-content-color);
+	--_rich-text-details-content-background-color: var(--semantics-surfaces-base-background-color);
+	--_rich-text-details-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+	--_rich-text-details-corner-radius: var(--primitives-corner-radius-lg);
+	--_rich-text-details-start-corner-radius: var(--_rich-text-details-corner-radius);
+	--_rich-text-details-end-corner-radius: var(--_rich-text-details-corner-radius);
+	--_rich-text-details-inset: var(--semantics-disclosures-inset);
+	--_rich-text-details-summary-min-size: var(--semantics-disclosures-title-bar-min-height);
+	--_rich-text-details-summary-padding-block: var(--semantics-disclosures-title-bar-padding-block);
+	--_rich-text-details-summary-gap: var(--semantics-disclosures-title-bar-gap);
+	--_rich-text-details-summary-font: var(--semantics-disclosures-title-bar-font);
+	--_rich-text-details-disclosure-icon-size: var(--semantics-disclosures-disclosure-icon-size);
+	--_rich-text-details-disclosure-icon-open-rotation: var(--semantics-disclosures-disclosure-icon-open-rotation);
+	--_rich-text-details-summary-hover-background-color: var(--semantics-surfaces-tinted-is-hovered-background-color);
+
+	--context-background-color: var(--_rich-text-details-background-color);
+	--context-content-color: var(--_rich-text-details-content-color);
+	--context-content-secondary-color: var(--semantics-content-secondary-color);
+	--context-content-accent-color: var(--semantics-content-accent-color);
+	--context-content-success-color: var(--semantics-content-success-color);
+	--context-content-warning-color: var(--semantics-content-warning-color);
+	--context-content-critical-color: var(--semantics-content-critical-color);
+	--context-link-color: var(--semantics-links-color);
+	--context-link-is-hovered-color: var(--semantics-links-is-hovered-color);
+	--context-link-is-active-color: var(--semantics-links-is-active-color);
+	box-sizing: border-box;
+	border: var(--_rich-text-details-highlight-border-width) solid var(--_rich-text-details-highlight-border-color);
+	border-radius: var(--_rich-text-details-start-corner-radius) var(--_rich-text-details-start-corner-radius) var(--_rich-text-details-end-corner-radius) var(--_rich-text-details-end-corner-radius);
+	background-color: var(--_rich-text-details-background-color);
+	color: var(--_rich-text-details-content-color);
+}
+
+/* A block, not a row: the summary holds text and inline elements of the page,
+   and a flex or grid row would make each of them a column. */
+nldd-rich-text summary {
+	display: block;
+	align-content: center;
+	box-sizing: border-box;
+	border-radius: max(0px, var(--_rich-text-details-start-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-start-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width));
+	min-height: var(--_rich-text-details-summary-min-size);
+	padding-block: var(--_rich-text-details-summary-padding-block);
+	padding-inline-start: var(--_rich-text-details-inset);
+	padding-inline-end: calc((var(--_rich-text-details-summary-min-size) - var(--_rich-text-details-disclosure-icon-size)) / 2 + var(--_rich-text-details-disclosure-icon-size) + var(--_rich-text-details-summary-gap));
+	font: var(--_rich-text-details-summary-font);
+	cursor: default;
+	list-style: none;
+	overflow-wrap: break-word;
+	-webkit-tap-highlight-color: transparent;
+
+	&::-webkit-details-marker {
+		display: none;
+	}
+
+	/* Floated into the padding on the first line, so it moves with the centered
+	   text and a second line does not run under it. */
+	&::before {
+		content: '';
+		float: inline-end;
+		margin-block-start: calc((1lh - var(--_rich-text-details-disclosure-icon-size)) / 2);
+		margin-inline-end: calc(-1 * (var(--_rich-text-details-disclosure-icon-size) + var(--_rich-text-details-summary-gap)));
+		background-color: currentColor;
+		width: var(--_rich-text-details-disclosure-icon-size);
+		height: var(--_rich-text-details-disclosure-icon-size);
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cpath d='M48 60.7 13.6 26.4 8 32l40 40 40-40-5.6-5.6z'/%3E%3C/svg%3E") center / contain no-repeat;
+		transition: rotate var(--primitives-transition-duration-fast) ease-out;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+
+		@media (forced-colors: active) {
+			forced-color-adjust: none;
+			background-color: CanvasText;
+		}
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			--context-background-color: var(--_rich-text-details-summary-hover-background-color);
+			background-color: var(--_rich-text-details-summary-hover-background-color);
+		}
+	}
+
+	&:active {
+		--context-background-color: var(--_rich-text-details-summary-hover-background-color);
+		background-color: var(--_rich-text-details-summary-hover-background-color);
+	}
+
+	/* Above a joined block below, which would cover the ring. */
+	&:focus-visible {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+/* Where the height animates, the bar keeps its square corners and its line
+   until the closing content is gone. */
+@supports (interpolate-size: allow-keywords) {
+	nldd-rich-text details:not([open]) > summary {
+		transition: border-radius 0s var(--primitives-transition-duration-fast), border-block-end 0s var(--primitives-transition-duration-fast) allow-discrete;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+	}
+}
+
+nldd-rich-text details[open] > summary {
+	border-end-start-radius: 0;
+	border-end-end-radius: 0;
+	border-block-end: var(--_rich-text-details-highlight-border-width) solid var(--_rich-text-details-highlight-border-color);
+}
+
+nldd-rich-text details[open] > summary::before {
+	rotate: var(--_rich-text-details-disclosure-icon-open-rotation);
+}
+
+nldd-rich-text details > :not(summary) {
+	margin: var(--_rich-text-spacing) var(--_rich-text-details-inset) 0;
+}
+
+nldd-rich-text details > summary + * {
+	margin-block-start: var(--_rich-text-details-inset);
+}
+
+nldd-rich-text details[open] {
+	padding-block-end: var(--_rich-text-details-inset);
+}
+
+@supports selector(::details-content) {
+	nldd-rich-text details[open] {
+		padding-block-end: 0;
+	}
+
+	nldd-rich-text details::details-content {
+		--context-background-color: var(--_rich-text-details-content-background-color);
+		border-end-start-radius: max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width));
+		border-end-end-radius: max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width));
+		background-color: var(--_rich-text-details-content-background-color);
+	}
+
+	nldd-rich-text details[open]::details-content {
+		padding-block: var(--_rich-text-details-inset);
+	}
+
+	nldd-rich-text details {
+		interpolate-size: allow-keywords;
+	}
+
+	nldd-rich-text details::details-content {
+		block-size: 0;
+		overflow-y: clip;
+		transition:
+			block-size var(--primitives-transition-duration-fast) ease-out,
+			padding-block var(--primitives-transition-duration-fast) ease-out,
+			content-visibility var(--primitives-transition-duration-fast) allow-discrete;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+	}
+
+	nldd-rich-text details[open]::details-content {
+		block-size: auto;
+	}
+
+	nldd-rich-text details > summary + * {
+		margin-block-start: 0;
+	}
+}
+
+nldd-rich-text details:has(+ details) {
+	--_rich-text-details-end-corner-radius: 0px;
+}
+
+/* Pulled up over the gap and the border, so the two borders become one line. */
+nldd-rich-text details + details {
+	margin-block-start: calc(-1 * (var(--_rich-text-spacing) + var(--_rich-text-details-highlight-border-width)));
+	--_rich-text-details-start-corner-radius: 0px;
+}
+
+@media print {
+	nldd-rich-text details::details-content {
+		content-visibility: visible;
+		block-size: auto;
+	}
+
+	nldd-rich-text summary::before {
+		display: none;
+	}
 }
 
 

@@ -4,7 +4,10 @@
  * A term in running text with an explanation behind it, such as a legal term
  * from a glossary. The term stays part of the sentence, marked with a dotted
  * underline, and opens its definition in a popover on a click, a tap, Enter
- * or Space. On sm the popover is a bottom sheet.
+ * or Space. On sm the popover is a bottom sheet, which covers the sentence.
+ * The popover of `definition` then names the term in a small title, which
+ * moves into a top title bar with a "Sluit" button once a long definition
+ * scrolls.
  *
  * The term is the control: it carries the button role and its expanded state,
  * so a term injected into content needs no ARIA of your own. Focus moves into
@@ -64,6 +67,10 @@ import '../../layout/container/container.js';
 import '../text/text.js';
 import '../../navigation/link/link.js';
 import '../../layout/spacer/spacer.js';
+import '../../layout/page/page.js';
+import '../../navigation/top-title-bar/top-title-bar.js';
+import '../title/title.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
 @customElement('nldd-term')
 export class NLDDTerm extends LitElement {
@@ -94,6 +101,16 @@ export class NLDDTerm extends LitElement {
 	@state()
 	_termText = '';
 
+	/** Whether the viewport is sm, where the popover is a bottom sheet and
+	 *  the term's own definition gets a title bar to close it. */
+	@state()
+	_isSm = false;
+
+	private _smQuery: MediaQueryList | null = null;
+	private _handleViewportChange = (): void => {
+		this._isSm = this._smQuery?.matches ?? false;
+	};
+
 	@query('.term')
 	private _triggerEl!: HTMLElement | null;
 
@@ -114,6 +131,9 @@ export class NLDDTerm extends LitElement {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
+		this._smQuery = window.matchMedia(`(max-width: ${queryBreakpoints.smMax})`);
+		this._smQuery.addEventListener('change', this._handleViewportChange);
+		this._isSm = this._smQuery.matches;
 		this._textObserver.observe(this, { characterData: true, childList: true, subtree: true });
 		if (this.hasUpdated) {
 			this._listenToSharedOverlay();
@@ -123,6 +143,8 @@ export class NLDDTerm extends LitElement {
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
+		this._smQuery?.removeEventListener('change', this._handleViewportChange);
+		this._smQuery = null;
 		this._textObserver.disconnect();
 		this._setSharedOverlay(null);
 	}
