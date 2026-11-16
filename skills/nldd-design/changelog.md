@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.25.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.25.0...v0.25.1) (2026-11-16)
+
 ### Highlights
 
 - **`nldd-admonition`, a new component for a note, tip or warning in running text,** such as a `:::warning` in a markdown page. Unlike `nldd-banner` it is no live region, so nothing is read out when the page loads. See Added.
