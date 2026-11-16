@@ -1,0 +1,68 @@
+<nldd-page>
+  <nldd-simple-section>
+    <nldd-title
+      slot="header"
+      size="display-2"
+      text="Aanvraag A-1042"
+      heading-level="1"
+    ></nldd-title>
+    <nldd-list
+      appearance="box-base"
+      accessible-label="Over de aanvraag"
+    >
+      <nldd-list-item button>
+        <nldd-text-cell text="Stukken bij de aanvraag"></nldd-text-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
+      </nldd-list-item>
+      <nldd-list-item button>
+        <nldd-text-cell text="Beoordeling door team Uitvoering"></nldd-text-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
+      </nldd-list-item>
+    </nldd-list>
+  </nldd-simple-section>
+</nldd-page>
+
+<nldd-sheet
+  placement="right"
+  width="480px"
+>
+  <nldd-page sticky-header>
+    <nldd-top-title-bar
+      slot="header"
+      text="Stukken bij de aanvraag"
+      dismiss-text="Sluit"
+      collapse-anchor="onderwerp-titel"
+    ></nldd-top-title-bar>
+
+    <nldd-simple-section>
+      <nldd-title
+        id="onderwerp-titel"
+        slot="header"
+        size="display-2"
+        text="Stukken bij de aanvraag"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-rich-text>
+        <p>Bij een aanvraag voor dakisolatie horen de offerte van het isolatiebedrijf en een foto van het dak voor de isolatie.</p>
+        <h2>De offerte</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <ul>
+          <li>De offerte noemt de isolatiewaarde.</li>
+          <li>De offerte noemt de oppervlakte van het dak.</li>
+        </ul>
+        <h2>De foto</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+      </nldd-rich-text>
+    </nldd-simple-section>
+  </nldd-page>
+</nldd-sheet>

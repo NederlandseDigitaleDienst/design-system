@@ -18,6 +18,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-admonition`.** A note, tip or warning set apart in running text, with the variants and icons of `nldd-banner`: the title in a bar tinted in the color of the variant, the content below it on the base surface. It is a note for a screen reader (`role="note"`), not a live region, and it cannot be dismissed. With `collapsible` the title bar opens and closes the content, as a native `details` does, so find in page opens it too.
 - **`nldd-accordion` and `nldd-accordion-item`.** Items that each open and close their content in place, joined into one block that looks like `details` in `nldd-rich-text`. Each item is a native `details`, so find in page opens it, and it prints open. With `exclusive` only one item is open at a time. Fold away only short, additional content: for long content, a form or a task of its own, use rows of an `nldd-list` that open an `nldd-sheet`.
+- **Pattern "Lezen in een sheet".** A row of an `nldd-list` opens an `nldd-sheet` with the text that belongs to it, so the page itself never shifts. It is the choice for content too long for `nldd-accordion`, and the reading counterpart of "Bewerken in een sheet".
 - Opening and closing a collapsible `nldd-admonition` or a `<details>` in `nldd-rich-text` animates its height, in browsers that support `interpolate-size`. Elsewhere it opens at once.
 - `<details>` and `<summary>` in `nldd-rich-text` read as a bordered block: a tinted bar with a chevron that points down to open and up to close, the content on a white surface below it, and details that follow each other joined into one block. They stay native, so find in page opens the one it finds in, and they print open where the browser supports it.
 
@@ -27,6 +28,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- Pattern "Bewerken in een sheet": the page in the sheet has `sticky-header`. Without it the title bar scrolled away with the content, so it never took over the title, and the way out went with it.
 - `nldd-menu`: a tapped item stays lit from the press until the menu closes. On a phone it went dark between the press and the hold, which looked like a blink.
 - `nldd-date-field`: the chosen day stays lit a moment before the calendar closes. It closed at once, so a click showed nothing. The value and `change` do not wait.
 - `nldd-code-viewer`: "Gekopieerd" goes away when the page scrolls, and after a tap it goes after 2 seconds. On a phone the copy button kept its check mark and its tooltip until you tapped somewhere else.

@@ -22,6 +22,7 @@ De set groeit met wat zich in productie bewijst. Staat jouw geval er nog niet bi
 |---|---|
 | [Lijst](list.md) | Een reeks records tonen waar je per record iets mee doet |
 | [Filteren](filtering.md) | Zoeken en filteren, met de filters in beeld en een weg terug |
+| [Lezen in een sheet](read-in-a-sheet.md) | Lange uitleg bij een rij tonen zonder dat de pagina verschuift |
 
 **Iets van de gebruiker vragen**
 
