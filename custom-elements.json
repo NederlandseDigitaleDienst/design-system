@@ -5042,7 +5042,7 @@
           "events": [
             {
               "name": "toggle",
-              "description": "When a collapsible admonition opens or closes; read `collapsed` for the new state."
+              "description": "When the user opens or closes a collapsible admonition; read `collapsed` for the new state. Setting `collapsed` does not fire it."
             }
           ],
           "slots": [

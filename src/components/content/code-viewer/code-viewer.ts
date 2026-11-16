@@ -521,7 +521,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		}
 		clearTimeout(this._copyResetTimer);
 		this._copyResetTimer = undefined;
-		if (this._copyPointerType === 'touch') {
+		if (this._copyPointerType && this._copyPointerType !== 'mouse') {
 			this._copyResetTimer = setTimeout(() => {
 				this._copyResetTimer = undefined;
 				this._copyState = 'idle';

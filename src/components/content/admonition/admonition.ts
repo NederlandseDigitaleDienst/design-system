@@ -46,7 +46,7 @@
  *
  * @slot - The content: an nldd-rich-text, or an nldd-text for a single paragraph.
  *
- * @fires toggle - When a collapsible admonition opens or closes; read `collapsed` for the new state.
+ * @fires toggle - When the user opens or closes a collapsible admonition; read `collapsed` for the new state. Setting `collapsed` does not fire it.
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';

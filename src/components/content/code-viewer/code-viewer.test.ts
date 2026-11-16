@@ -389,7 +389,7 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
-	it('a tap shows the outcome for 2 seconds, a click keeps it while focused', async () => {
+	it('a tap or a pen shows the outcome for 2 seconds, a click keeps it while focused', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
 		vi.useFakeTimers();
@@ -403,6 +403,13 @@ describe('nldd-code-viewer', () => {
 			await viewer._onCopyClick({ currentTarget: button } as unknown as Event);
 			await viewer.updateComplete;
 			expect(viewer._copyState).toBe('success');
+			await vi.advanceTimersByTimeAsync(2100);
+			await viewer.updateComplete;
+			expect(viewer._copyState).toBe('idle');
+
+			button.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'pen', bubbles: true, composed: true }));
+			await viewer._onCopyClick({ currentTarget: button } as unknown as Event);
+			await viewer.updateComplete;
 			await vi.advanceTimersByTimeAsync(2100);
 			await viewer.updateComplete;
 			expect(viewer._copyState).toBe('idle');

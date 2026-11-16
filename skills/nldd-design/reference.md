@@ -572,7 +572,7 @@ A note, tip or warning set apart in running text: what a `:::warning` becomes in
 
 | Event | Description |
 | --- | --- |
-| `toggle` | When a collapsible admonition opens or closes; read `collapsed` for the new state. |
+| `toggle` | When the user opens or closes a collapsible admonition; read `collapsed` for the new state. Setting `collapsed` does not fire it. |
 
 ### `<nldd-avatar>`
 
