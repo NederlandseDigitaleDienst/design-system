@@ -53,11 +53,13 @@
  * into one of these yourself.
  *
  * ## Details
- * A `details` with its `summary` reads as a box list with one row: the tinted
- * surface, its border and rounded corners, and a chevron at the end of the
- * summary that points down while it is closed and up once it is open. Details that follow each other join
- * into one block, as the rows of a list do; give them the same `name` and only
- * one opens at a time. They stay native, so the keyboard, a screen reader and
+ * A `details` is a bordered block with rounded corners. Its `summary` is a
+ * tinted bar as high as an md control, with a chevron at the end that points
+ * down while it is closed and up once it is open, and the whole bar shows
+ * hover and press. Open, the content sits on the base surface below a line,
+ * where the browser supports `::details-content`; elsewhere it stays on the
+ * tinted surface. Details that follow each other join into one block; give
+ * them the same `name` and only one opens at a time. They stay native, so the keyboard, a screen reader and
  * find in page work as they do anywhere, and find in page opens the one it
  * finds in. When printed they are open, where the browser supports
  * `::details-content`; elsewhere a closed one prints closed. Keep what you fold

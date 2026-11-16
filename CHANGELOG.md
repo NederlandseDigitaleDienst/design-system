@@ -11,7 +11,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
-- `<details>` and `<summary>` in `nldd-rich-text` read as a box list with one row: a tinted surface, a chevron that points down to open and up to close, and details that follow each other joined into one block. They stay native, so find in page opens the one it finds in, and they print open where the browser supports it.
+- `<details>` and `<summary>` in `nldd-rich-text` read as a bordered block: a tinted bar with a chevron that points down to open and up to close, the content on a white surface below it, and details that follow each other joined into one block. They stay native, so find in page opens the one it finds in, and they print open where the browser supports it.
 
 ### Changed
 

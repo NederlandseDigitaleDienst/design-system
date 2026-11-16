@@ -483,7 +483,7 @@ describe('nldd-rich-text details', () => {
 		expect(getComputedStyle(details).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
 		expect(getComputedStyle(summary).display).toBe('flex');
 		expect(getComputedStyle(summary).listStyleType).toBe('none');
-		expect(getComputedStyle(summary).fontWeight).toBe('600');
+		expect(getComputedStyle(summary).fontWeight).toBe('475');
 		expect(parseFloat(getComputedStyle(summary).minHeight)).toBeGreaterThanOrEqual(44);
 		expect(getComputedStyle(summary, '::after').rotate).toBe('none');
 	});
@@ -519,17 +519,27 @@ describe('nldd-rich-text details', () => {
 		expect(getComputedStyle(el.querySelector('summary')!, '::after').rotate).toBe('180deg');
 	});
 
-	it('draws an inset divider between an open summary and its content', async () => {
+	it('fills the whole bar with the summary, as high as an md control', async () => {
+		el = await render(block());
+		const details = el.querySelector('details')!.getBoundingClientRect();
+		const summary = el.querySelector('summary')!.getBoundingClientRect();
+		expect(summary.height).toBeCloseTo(44, 0);
+		expect(summary.left - details.left).toBeCloseTo(1, 0);
+		expect(details.right - summary.right).toBeCloseTo(1, 0);
+	});
+
+	it('puts the content of an open block on the base surface, under a line', async () => {
 		el = await render('<details><summary>Vraag</summary><p>Inhoud</p></details>');
 		const details = el.querySelector('details')!;
 		const summary = el.querySelector('summary')!;
-		expect(getComputedStyle(summary, '::before').content).toBe('none');
+		expect(getComputedStyle(summary).borderBottomStyle).toBe('none');
 		details.open = true;
-		const divider = getComputedStyle(summary, '::before');
-		expect(divider.borderTopWidth).toBe('1px');
-		expect(divider.left).toBe(getComputedStyle(summary).paddingLeft);
-		const p = el.querySelector('p')!.getBoundingClientRect();
-		expect(p.top - summary.getBoundingClientRect().bottom).toBeGreaterThan(8);
+		expect(getComputedStyle(summary).borderBottomWidth).toBe('1px');
+		const content = getComputedStyle(details, '::details-content').backgroundColor;
+		expect(content).not.toBe(getComputedStyle(details).backgroundColor);
+		// The room above the first paragraph is inside the white area, not a tinted strip above it.
+		expect(parseFloat(getComputedStyle(el.querySelector('p')!).marginTop)).toBe(0);
+		expect(getComputedStyle(details, '::details-content').paddingTop).toBe('12px');
 	});
 
 	it('joins details that follow each other into one block', async () => {

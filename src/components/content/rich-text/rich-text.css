@@ -537,17 +537,14 @@ nldd-rich-text blockquote > p {
 /* # Details */
 
 nldd-rich-text details {
-	--_rich-text-details-padding: var(--primitives-space-4);
+	--_rich-text-details-border-width: var(--semantics-surfaces-highlight-border-width);
 	--_rich-text-details-corner-radius: var(--primitives-corner-radius-lg);
-	--_rich-text-details-inner-corner-radius: calc(var(--_rich-text-details-corner-radius) - var(--_rich-text-details-padding));
-	--_rich-text-details-inline-inset: max(var(--semantics-list-items-indicator-inline-inset), var(--_rich-text-details-inner-corner-radius));
+	--_rich-text-details-inset: var(--primitives-space-12);
 	--_rich-text-details-summary-min-size: var(--semantics-controls-md-min-size);
-	--_rich-text-details-summary-padding-block: var(--primitives-space-10);
 	--_rich-text-details-summary-gap: var(--primitives-space-8);
 	--_rich-text-details-chevron-size: var(--primitives-space-20);
 	--_rich-text-details-open-rotation: 180deg;
-	--_rich-text-details-divider-thickness: var(--semantics-dividers-thickness);
-	--_rich-text-details-divider-color: var(--semantics-dividers-color);
+	--_rich-text-details-focus-outline-offset: calc(-2 * var(--primitives-border-width-regular));
 
 	--context-background-color: var(--semantics-surfaces-tinted-background-color);
 	--context-content-color: var(--semantics-content-color);
@@ -560,33 +557,24 @@ nldd-rich-text details {
 	--context-link-is-hovered-color: var(--semantics-links-is-hovered-color);
 	--context-link-is-active-color: var(--semantics-links-is-active-color);
 	box-sizing: border-box;
-	padding: var(--_rich-text-details-padding);
+	overflow: clip;
+	border: var(--_rich-text-details-border-width) solid var(--semantics-surfaces-tinted-highlight-border-color);
 	border-radius: var(--_rich-text-details-corner-radius);
 	background-color: var(--semantics-surfaces-tinted-background-color);
-	box-shadow: inset 0 0 0 1px var(--semantics-surfaces-tinted-highlight-border-color);
 	color: var(--semantics-content-color);
-
-	@media (forced-colors: active) {
-		border: 1px solid CanvasText;
-	}
-}
-
-nldd-rich-text details[open] {
-	padding-block-end: calc(var(--_rich-text-details-padding) + var(--_rich-text-details-summary-padding-block));
 }
 
 nldd-rich-text summary {
 	display: flex;
-	position: relative;
 	align-items: center;
 	gap: var(--_rich-text-details-summary-gap);
 	box-sizing: border-box;
 	min-height: var(--_rich-text-details-summary-min-size);
-	padding: var(--_rich-text-details-summary-padding-block) var(--_rich-text-details-inline-inset);
-	padding-inline-end: calc(var(--_rich-text-details-summary-padding-block) + (1lh - var(--_rich-text-details-chevron-size)) / 2);
-	border-radius: var(--_rich-text-details-inner-corner-radius);
-	font: var(--primitives-font-body-md-bold-snug);
-	cursor: pointer;
+	padding-block: calc((var(--_rich-text-details-summary-min-size) - 1lh) / 2);
+	padding-inline-start: var(--_rich-text-details-inset);
+	padding-inline-end: calc((var(--_rich-text-details-summary-min-size) - var(--_rich-text-details-chevron-size)) / 2);
+	font: var(--primitives-font-body-md-medium-snug);
+	cursor: default;
 	list-style: none;
 	overflow-wrap: break-word;
 	-webkit-tap-highlight-color: transparent;
@@ -630,26 +618,51 @@ nldd-rich-text summary {
 		background-color: var(--semantics-list-items-is-active-background-color);
 		color: var(--semantics-list-items-is-active-content-color);
 	}
+
+	/* The block clips to its corners, so the ring goes inside. */
+	&:focus-visible {
+		outline-offset: var(--_rich-text-details-focus-outline-offset);
+		box-shadow: none;
+	}
+}
+
+nldd-rich-text details[open] > summary {
+	border-block-end: var(--_rich-text-details-border-width) solid var(--semantics-surfaces-tinted-highlight-border-color);
 }
 
 nldd-rich-text details[open] > summary::after {
 	rotate: var(--_rich-text-details-open-rotation);
 }
 
-nldd-rich-text details[open] > summary::before {
-	content: '';
-	position: absolute;
-	inset-inline: var(--_rich-text-details-inline-inset);
-	inset-block-end: calc(-1 * var(--_rich-text-details-divider-thickness));
-	border-block-start: var(--_rich-text-details-divider-thickness) solid var(--_rich-text-details-divider-color);
-}
-
 nldd-rich-text details > :not(summary) {
-	margin: var(--_rich-text-spacing) var(--_rich-text-details-inline-inset) 0;
+	margin: var(--_rich-text-spacing) var(--_rich-text-details-inset) 0;
 }
 
 nldd-rich-text details > summary + * {
-	margin-block-start: calc(var(--_rich-text-details-summary-padding-block) + var(--_rich-text-details-divider-thickness));
+	margin-block-start: var(--_rich-text-details-inset);
+}
+
+nldd-rich-text details[open] {
+	padding-block-end: var(--_rich-text-details-inset);
+}
+
+@supports selector(::details-content) {
+	nldd-rich-text details[open] {
+		padding-block-end: 0;
+	}
+
+	nldd-rich-text details::details-content {
+		--context-background-color: var(--semantics-surfaces-base-background-color);
+		background-color: var(--semantics-surfaces-base-background-color);
+	}
+
+	nldd-rich-text details[open]::details-content {
+		padding-block: var(--_rich-text-details-inset);
+	}
+
+	nldd-rich-text details > summary + * {
+		margin-block-start: 0;
+	}
 }
 
 nldd-rich-text details:has(+ details) {
@@ -657,9 +670,9 @@ nldd-rich-text details:has(+ details) {
 	border-end-end-radius: 0;
 }
 
-/* Pulled up over the gap by one pixel more, so the two inset borders become one line. */
+/* Pulled up over the gap and the border, so the two borders become one line. */
 nldd-rich-text details + details {
-	margin-block-start: calc(-1 * var(--_rich-text-spacing) - 1px);
+	margin-block-start: calc(-1 * (var(--_rich-text-spacing) + var(--_rich-text-details-border-width)));
 	border-start-start-radius: 0;
 	border-start-end-radius: 0;
 }
