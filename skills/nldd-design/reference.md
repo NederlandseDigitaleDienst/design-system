@@ -1295,7 +1295,7 @@ Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio butt
 | --- | --- | --- |
 | `name` | `string` | Forwarded to all nldd-checkbox-field elements in the group |
 | `disabled` | `boolean` | Disables all fields in the group |
-| `required` | `boolean` | At least one box in the group has to be checked. Set on every field in the group, nested ones included, over a `required` of their own. |
+| `required` | `boolean` | At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides. |
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label on the group |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |

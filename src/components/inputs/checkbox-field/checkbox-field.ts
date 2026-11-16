@@ -40,6 +40,7 @@ import { FormAssociated, uncheckedValidity, type FormValue, type OwnValidity } f
 import { checkboxFieldStyles } from './checkbox-field.styles.js';
 import { checkboxFieldTemplate } from './checkbox-field.template.js';
 import type { NLDDCheckbox } from '../checkbox/checkbox.js';
+import type { NLDDCheckboxGroup } from '../checkbox-group/checkbox-group.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
@@ -132,18 +133,18 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 			.filter((el): el is NLDDCheckboxField => el.localName === 'nldd-checkbox-field');
 		this._followChildren(false);
 		// The group sees only its own children arrive, not the options under them.
-		this._group?._onSlotChange?.();
+		this._group?._onSlotChange();
 	}
 
 	/** The nldd-checkbox-group around this field, if any. */
-	private get _group(): { _onSlotChange?: () => void; _optionChanged?: () => void } | null {
+	private get _group(): NLDDCheckboxGroup | null {
 		return this.closest('nldd-checkbox-group');
 	}
 
 	/** Also when the app sets `checked` or a form resets it: the group answers
 	 *  `required` again, which it cannot see by itself. */
 	override willUpdate(changed: PropertyValues): void {
-		if (this.hasUpdated && changed.has('checked')) this._group?._optionChanged?.();
+		if (this.hasUpdated && changed.has('checked')) this._group?._optionChanged();
 	}
 
 	/** A change of an option right under this one; one further down reaches
