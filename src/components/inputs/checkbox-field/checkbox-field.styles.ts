@@ -10,6 +10,8 @@ export const checkboxFieldStyles = css`
 	/* # Host */
 
 	:host {
+		--_checkbox-field-children-padding-inline-start: calc(var(--semantics-controls-xs-min-size) + var(--primitives-space-8));
+
 		${inheritedTextReset}
 		display: block;
 	}
@@ -60,5 +62,9 @@ export const checkboxFieldStyles = css`
 
 	:host([disabled]) .checkbox-field__label {
 		opacity: var(--primitives-opacity-disabled);
+	}
+
+	.checkbox-field__children {
+		padding-inline-start: var(--_checkbox-field-children-padding-inline-start);
 	}
 `;

@@ -57,7 +57,7 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddIconButtonTranslations } from './icon-button.i18n.js';
 import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
 import { InterestController } from '../../../utilities/interest-controller.js';
-import { applyDescribedBy } from '../../../utilities/described-by-mixin.js';
+import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
@@ -83,7 +83,7 @@ export type ButtonType = 'button' | 'submit' | 'reset';
 export type PopupType = 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid';
 
 @customElement('nldd-icon-button')
-export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonTranslations) {
+export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nlddIconButtonTranslations)) {
 	static override styles = iconButtonStyles;
 
 	// Form-associated so a type="submit"/"reset" icon-button can drive its
@@ -260,9 +260,6 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	override updated(changedProperties: Map<string, unknown>): void {
 		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
 		if (changedProperties.has('interestfor')) this._interest.refresh();
-		// By element: the button sits in this shadow root, the popover outside it.
-		const overlay = this._interest.overlay;
-		applyDescribedBy(this.shadowRoot?.querySelector('.icon-button'), overlay ? [overlay] : [], true);
 		if (changedProperties.has('width')) {
 			const w = this.width;
 			// 'full' switches host to block + 100% via CSS attribute selector.
@@ -329,6 +326,16 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	// listener every render; mirrors the other @slotchange handlers.
 	_onIconSlotChange(): void {
 		this.requestUpdate();
+	}
+
+	/** The button or link it renders, not the host around it. */
+	override describedTarget(): Element | null {
+		return this.shadowRoot?.querySelector('.icon-button') ?? null;
+	}
+
+	/** The popover in the `interest` slot describes the button. */
+	override ownDescriptions(): readonly Element[] {
+		return this._interest.overlay ? [this._interest.overlay] : [];
 	}
 
 	override render() {

@@ -28,6 +28,8 @@ export default {
 		shortcutWindows: '',
 		shortcutLinux: '',
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		searchButton: undefined,
 		invalid: false,
 		disabled: false,
@@ -78,6 +80,16 @@ export default {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijke naam van het veld; valt terug op de placeholder',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
 		searchButton: {
 			name: 'search-button',
@@ -133,7 +145,7 @@ export default {
 	},
 };
 
-const Template = ({ size, width, placeholder, shortcut, shortcutMac, shortcutWindows, shortcutLinux, accessibleLabel, searchButton, invalid, disabled, name, value, required, minlength, maxlength, pattern, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, shortcut, shortcutMac, shortcutWindows, shortcutLinux, accessibleLabel, accessibleDescription, searchButton, invalid, disabled, name, value, required, minlength, maxlength, pattern, noSpellcheck }: Record<string, any>) => html`
 	<nldd-search-field
 		size=${size}
 		width=${width}
@@ -143,6 +155,7 @@ const Template = ({ size, width, placeholder, shortcut, shortcutMac, shortcutWin
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
 		accessible-label=${accessibleLabel}
+		accessible-description=${accessibleDescription || nothing}
 		search-button=${searchButton ?? nothing}
 		?invalid=${invalid}
 		?disabled=${disabled}

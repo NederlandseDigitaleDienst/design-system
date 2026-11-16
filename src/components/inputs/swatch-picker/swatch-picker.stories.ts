@@ -16,6 +16,7 @@ export default {
 	args: {
 		size: 'md',
 		accessibleLabel: 'Kleur',
+		accessibleLabeledBy: '',
 		invalid: false,
 		disabled: false,
 		name: '',
@@ -33,6 +34,11 @@ export default {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijke naam van de groep; in een nldd-form-field geeft het veld de naam',
+		},
+		accessibleLabeledBy: {
+			name: 'accessible-labeled-by',
+			control: false,
+			description: 'Id van een element elders op de pagina dat deze groep benoemt, zoals `aria-labelledby`.',
 		},
 		invalid: {
 			control: 'boolean',

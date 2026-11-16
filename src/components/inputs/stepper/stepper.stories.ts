@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './stepper.js';
 import '../../layout/container/container.js';
 import '../../content/text/text.js';
@@ -56,6 +56,16 @@ export default {
 			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 	},
 	args: {
 		size: 'md',
@@ -65,10 +75,12 @@ export default {
 		step: 1,
 		invalid: false,
 		disabled: false,
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 	},
 };
 
-const Template = ({ size, value, min, max, step, invalid, disabled }: Record<string, any>) => html`
+const Template = ({ size, value, min, max, step, invalid, disabled, accessibleDescription }: Record<string, any>) => html`
 	<nldd-container
 		layout="row"
 		gap="16"
@@ -83,6 +95,7 @@ const Template = ({ size, value, min, max, step, invalid, disabled }: Record<str
 			?invalid=${invalid}
 			?disabled=${disabled}
 			size=${size}
+			accessible-description=${accessibleDescription || nothing}
 			@change=${(e: any) => {
 				const display = e.target.previousElementSibling;
 				if (display) display.textContent = e.detail.value;

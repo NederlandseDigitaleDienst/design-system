@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-card nldd-card'
+message: 'Move this nldd-card out of the nldd-card around it: a card is one thing to go to or choose. To group content visually, use nldd-box or a layout of your own.'
+examples:
+  passed:
+    - '<nldd-box><nldd-text text="Bericht"></nldd-text><nldd-card button accessible-label="bestand.pdf"><nldd-text text="bestand.pdf"></nldd-text></nldd-card></nldd-box>'
+  failed:
+    - '<nldd-card><nldd-card button accessible-label="bestand.pdf"><nldd-text text="bestand.pdf"></nldd-text></nldd-card></nldd-card>'
+    - '<nldd-card><nldd-container><nldd-card><nldd-text text="Dossier D-318"></nldd-text></nldd-card></nldd-container></nldd-card>'

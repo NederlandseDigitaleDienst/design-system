@@ -93,7 +93,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `start-icon` | Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`. |
 | `end-icon` | Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`. |
 | `popup` | A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay. |
-| `interest` | A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a reaction badge that toggles a reaction and shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read. |
+| `interest` | A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a share button that shows who already has access. A reaction you toggle is an nldd-toggle-button, which has this slot too. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read. |
 
 **Events**
 
@@ -226,7 +226,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 
 ### `<nldd-menu>`
 
-A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A menu that scrolls fades at the edge where more items wait. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
+A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A press on the menu's control during the blink or hold ends it and opens the menu again, since the menu was already on its way out. A menu that scrolls fades at the edge where more items wait. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
 
 **Rules** (`nldd lint`)
 
@@ -318,7 +318,7 @@ A single item within an nldd-menu.
 | `icon` | `string` | Icon name rendered before the text. An icon in the `icon` slot takes its place. |
 | `shortcut` | `string` | Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable. |
 | `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
-| `href` | `string` | Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled. |
+| `href` | `string` | Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Space chooses it like any other item, except in a `navigation` menu, where Space scrolls the page as on any link. Ignored for submenu openers, checkbox/radio items, and while disabled. |
 | `target` | `string` | Where an item with an `href` opens (e.g. '_blank'); adjusts rel automatically. With '_blank' the item adds a visually hidden "opent in nieuw tabblad" for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply. |
 | `rel` | `string` | Link rel of an item with an `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set. |
 | `translations` | `object` | Override translation keys (the new-tab and other-website announcements); unset keys fall back to Dutch. |
@@ -1249,11 +1249,12 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 ### `<nldd-checkbox-field>`
 
-A checkbox with an inline label for use in forms. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).
+A checkbox with an inline label for use in forms. Options that belong under this one are nldd-checkbox-fields of their own, each with `slot="children"`, as rows nest in nldd-list-item. They indent to line up with the label, and are a group named after this option. This checkbox then follows them: checked when all of them are, indeterminate when some are, and unchecked when none are. Checking or unchecking it does the same to every option under it that is not disabled, nor under a disabled one; those fire no `change` of their own then, so listen on this one or higher up. When a disabled option keeps it indeterminate and the rest are already checked, a click unchecks them instead. Its own `change` fires when they change its state, so a box further up follows too. In an nldd-checkbox-group, the options under it belong to the group as well. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).
 
 **Rules** (`nldd lint`)
 
 - `checkbox-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-checkbox.
+- `checkbox-field-child-needs-slot`: nldd-checkbox-field only renders nldd-checkbox-fields with `slot="children"`, the options under it. Anything else in it does not render.
 - `filter-no-options-as-fields` (hint): Make the options rows of an nldd-list, with `checkbox` on the row: the whole row is the target and there is nothing to submit.
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
 - `login-remember-me-needs-checked` (hint): Set `checked`: staying signed in is the right default, and who does not want it turns it off.
@@ -1269,14 +1270,47 @@ A checkbox with an inline label for use in forms. Form-associated: participates 
 | `value` | `string` | Value for form submission |
 | `name` | `string` | Name for form submission |
 | `label` | `string` | Label text for the checkbox |
-| `required` | `boolean` | Required state |
+| `required` | `boolean` | Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `children` | nldd-checkbox-field elements with the options under this one. |
 
 **Events**
 
 | Event | Description |
 | --- | --- |
 | `change` | When checked state changes; detail: { checked: boolean, value: string } |
+
+### `<nldd-checkbox-group>`
+
+Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio buttons: the same layout, one name for all of them, and a group that a screen reader announces with its label. Each checkbox is a stop of its own for Tab, as checkboxes are; the arrow keys belong to a radio group. Use inside nldd-form-field, which provides the group label. `required` asks for at least one checked box, not for every box: while none is checked, each field reports a missing value, and as soon as one is checked, none does. Nothing announces it per box, since no single box is required, and ARIA has no `aria-required` for a group: say it in the label or the help text, or mark the other questions optional.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `name` | `string` | Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had |
+| `disabled` | `boolean` | Disables all fields in the group |
+| `required` | `boolean` | At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides. |
+| `accessible-label` | `string` | Accessible name for the group, set as aria-label on the group |
+| `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | Slot for nldd-checkbox-field elements. Options nested in the `children` slot of a field belong to the group too; see nldd-checkbox-field. |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `change` | Bubbles up from the field that changed; detail: { checked: boolean, value: string } |
 
 ### `<nldd-code-editor>`
 
@@ -1434,7 +1468,7 @@ A calendar for picking a date or a period. The component works on its own (inlin
 
 ### `<nldd-dropdown>`
 
-A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options. A dropdown hides its options, so it is the last resort for a choice from a fixed set. Show a handful of options with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group, and let the user type in nldd-combo-box when there are many, a list of countries included. The design guidelines explain the order.
+A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options. The browser draws the open list, outside the reach of the component. The colors of its options come from the global stylesheet, `dist/css/dropdown.css` or `global.css`, which includes it, so the list follows light and dark mode. A dropdown hides its options, so it is the last resort for a choice from a fixed set. Show a handful of options with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group, and let the user type in nldd-combo-box when there are many, a list of countries included. The design guidelines explain the order.
 
 **Rules** (`nldd lint`)
 
@@ -2181,6 +2215,8 @@ A selectable button that toggles between selected and unselected. Available as a
 **Rules** (`nldd lint`)
 
 - `button-bar-no-toggle-button`: The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.
+- `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
+- `interestfor-not-found`: `interestfor` names no nldd-popover in this tree, so nothing opens on interest.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `toggle-button-icon-variant-needs-icon`: nldd-toggle-button with variant="icon" has no `icon` and no slot="icon" content, so a placeholder icon is shown.
 - `toggle-button-needs-name`: nldd-toggle-button needs `text` or `accessible-label`, otherwise it has no accessible name.
@@ -2208,18 +2244,20 @@ A selectable button that toggles between selected and unselected. Available as a
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 
 **Slots**
 
 | Slot | Description |
 | --- | --- |
 | `icon` | Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`. |
+| `interest` | A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the tooltip of an icon-only button, so let it say what the button does where the icon does not. The button keeps its own click, such as a reaction that you toggle and that shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here. |
 
 **Events**
 
 | Event | Description |
 | --- | --- |
-| `change` | When selection changes; detail: { selected: boolean, value: string } |
+| `change` | When selection changes; detail: { selected: boolean, value: string }. With `type="button"` or `"checkbox"` it is cancelable: `preventDefault()` keeps the old state, so the app decides, for instance once a server has accepted the change. Set `selected` yourself then. A radio is always chosen, since its group has already moved on. |
 
 ### `<nldd-toggle-button-group>`
 
@@ -2352,12 +2390,13 @@ Use a box to visually group related components in a distinct, contained region. 
 
 ### `<nldd-card>`
 
-A visually bounded card with optional header, body and footer sections. The card is elevated by default. Padding is left to nested containers. With `href` the whole card becomes a link (an overlay anchor across the card), with `button` a button (an overlay button that fires a plain, composed `click`, so a click listener or htmx attribute on the card itself works directly, and Enter/Space work natively). `href` wins when both are set. Nested interactive content, footer buttons for instance, has to be lifted above it with `position: relative; z-index: 1` to stay clickable. A card that is a link or button steps its surface and border one shade up on hover and one more while pressed, as a neutral-base button does; content lifted above the overlay does not set it off. On a touch screen there is no hover, and a touch that turns into a scroll lets go of the pressed shade.
+A visually bounded card with optional header, body and footer sections. The card is elevated by default. Padding is left to nested containers. With `href` the whole card becomes a link (an overlay anchor across the card), with `button` a button (an overlay button that fires a plain, composed `click`, so a click listener or htmx attribute on the card itself works directly, and Enter/Space work natively). `href` wins when both are set. Nested interactive content, footer buttons for instance, has to be lifted above it with `position: relative; z-index: 1` to stay clickable. A card that is a link or button steps its surface and border one shade up on hover and one more while pressed, as a neutral-base button does; content lifted above the overlay does not set it off. On a touch screen there is no hover, and a touch that turns into a scroll lets go of the pressed shade. Put no card in a card: a card is one thing you go to or choose. To group content visually, use `nldd-box` or a layout of your own instead.
 
 **Rules** (`nldd lint`)
 
 - `card-clickable-needs-name`: A card that is a link or button needs `accessible-label`: the control has no text of its own.
 - `card-clickable-no-control` (hint): Drop this control: the whole card already is one link and one tab stop.
+- `card-no-card`: Move this nldd-card out of the nldd-card around it: a card is one thing to go to or choose. To group content visually, use nldd-box or a layout of your own.
 - `card-no-loose-link` (hint): Set `href` and `accessible-label` on the card and drop this link: then each choice is one link and one tab stop.
 - `card-title-needs-level` (hint): Set `heading-level`: the title of a card that is a choice is a heading, directly below the page title or the section heading.
 - `download-target-no-effect`: `target` does nothing with `download`, which saves the file instead of opening it. Remove one of the two.
@@ -3322,7 +3361,7 @@ A horizontal tab bar for document tabs with an automatic overflow button and an 
 
 ### `<nldd-link>`
 
-Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"sm"|"md"|"lg"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size="inherit"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take. Put an `<a>` in the default slot and the component draws no link of its own: it gives yours its look instead. A page then has the link in its HTML before any script runs, for a search engine that does not render the page, a link preview or reader mode, and a router gets the click: put the `<Link>` of React Router or Next in it, which renders an `<a>` and navigates itself. Without that, every click on a link in a shadow root loads the whole page. <nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link> Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, and its text. Those attributes, `text`, `start-icon` and `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an nldd-icon, so it is part of what you click and inside the focus ring. `size`, `accessible-label`, `interestfor`, `no-tab` and `disabled` keep working: the component sets `aria-label`, the description, `tabindex` and `aria-disabled` on your `<a>`, and leaves an attribute you set yourself alone. With `target="_blank"` it adds `noopener noreferrer` to the `rel` of the `<a>`, as it does to its own. A disabled link ignores a click before your router sees it. The hint about another website, a new tab or a download goes on it as `aria-description`, so a screen reader reads it after the name. Not as hidden text in the `<a>`: a framework that renders the `<a>` owns its children, and an extra one breaks hydration. One `<a>` per link. The look of the `<a>` comes from the global stylesheet, `dist/css/link.css` or `global.css`, which includes it, so the link looks right before the component loads, and without script.
+Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"sm"|"md"|"lg"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size="inherit"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take. Put an `<a>` in the default slot and the component draws no link of its own: it gives yours its look instead. A page then has the link in its HTML before any script runs, for a search engine that does not render the page, a link preview or reader mode, and a router gets the click: put the `<Link>` of React Router or Next in it, which renders an `<a>` and navigates itself. Without that, every click on a link in a shadow root loads the whole page. <nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link> Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, and its text. Those attributes, `text`, `start-icon` and `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an nldd-icon, so it is part of what you click and inside the focus ring. `size`, `accessible-label`, `accessible-description`, `accessible-described-by`, `interestfor`, `no-tab` and `disabled` keep working: the component sets `aria-label`, the description, `tabindex` and `aria-disabled` on your `<a>`, and leaves an attribute you set yourself alone. With `target="_blank"` it adds `noopener noreferrer` to the `rel` of the `<a>`, as it does to its own. A disabled link ignores a click before your router sees it. The hint about another website, a new tab or a download goes on it as `aria-description`, so a screen reader reads it after the name, after the text of `accessible-description`. `accessible-described-by` points the `<a>` at the elements it names. Not as hidden text in the `<a>`: a framework that renders the `<a>` owns its children, and an extra one breaks hydration. One `<a>` per link. The look of the `<a>` comes from the global stylesheet, `dist/css/link.css` or `global.css`, which includes it, so the link looks right before the component loads, and without script.
 
 **Rules** (`nldd lint`)
 

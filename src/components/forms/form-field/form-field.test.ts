@@ -19,6 +19,7 @@ import '../../inputs/checkbox-field/checkbox-field.js';
 import '../../inputs/radio-button/radio-button.js';
 import '../../inputs/radio-button-field/radio-button-field.js';
 import '../../inputs/radio-button-group/radio-button-group.js';
+import '../../inputs/checkbox-group/checkbox-group.js';
 import '../../inputs/segmented-control/segmented-control.js';
 import '../../inputs/swatch-picker/swatch-picker.js';
 import '../../inputs/stepper/stepper.js';
@@ -373,6 +374,15 @@ const SLOTTED_CONTROLS: Array<{ name: string; markup: string }> = [
 		`,
 	},
 	{
+		name: 'checkbox-group',
+		markup: `
+			<nldd-checkbox-group name="c">
+				<nldd-checkbox-field value="1" label="Optie 1"></nldd-checkbox-field>
+				<nldd-checkbox-field value="2" label="Optie 2"></nldd-checkbox-field>
+			</nldd-checkbox-group>
+		`,
+	},
+	{
 		name: 'toggle-button-group',
 		markup: `
 			<nldd-toggle-button-group type="button" name="t">
@@ -461,6 +471,7 @@ const NAMED_VIA_ACCESSIBLE_LABEL = [
 	'<nldd-stepper></nldd-stepper>',
 	'<nldd-dropdown><select><option>a</option></select></nldd-dropdown>',
 	'<nldd-radio-button-group name="g"><nldd-radio-button-field value="1" label="Een"></nldd-radio-button-field></nldd-radio-button-group>',
+	'<nldd-checkbox-group name="c"><nldd-checkbox-field value="1" label="Een"></nldd-checkbox-field></nldd-checkbox-group>',
 	'<nldd-toggle-button-group name="t"><nldd-toggle-button value="a" text="A"></nldd-toggle-button></nldd-toggle-button-group>',
 	'<nldd-segmented-control><nldd-segmented-control-item value="a" text="A"></nldd-segmented-control-item></nldd-segmented-control>',
 	'<nldd-swatch-picker><nldd-swatch-picker-item value="rood" color="rood"></nldd-swatch-picker-item></nldd-swatch-picker>',

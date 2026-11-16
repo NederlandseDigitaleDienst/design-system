@@ -193,13 +193,25 @@ export class NLDDToggleButtonGroup extends LitElement {
 			});
 	}
 
+	/** Called by a button whose `selected` or `disabled` changed, whoever
+	 *  changed it: the user, the app or a form reset. */
+	_optionChanged(changedButton: NLDDToggleButton): void {
+		if (this.type === 'radio' && changedButton.selected) this._deselectOthers(changedButton);
+		this._positionButtons();
+	}
+
 	private _handleChange = (e: Event): void => {
 		if (this.type !== 'radio') return;
 
 		const changedButton = e.target as NLDDToggleButton;
 		if (!changedButton.selected) return;
 
-		// Deselect all other buttons when a radio button is selected
+		this._deselectOthers(changedButton);
+		this._positionButtons();
+	};
+
+	/** Deselects every other button, as a radio group does. */
+	private _deselectOthers(changedButton: NLDDToggleButton): void {
 		this._getButtons().forEach(button => {
 			if (button === changedButton) return;
 			button.selected = false;
@@ -208,8 +220,7 @@ export class NLDDToggleButtonGroup extends LitElement {
 			// its listener would otherwise still see this button's old value.
 			button.commitFormValue?.();
 		});
-		this._positionButtons();
-	};
+	}
 
 	private _handleKeyDown = (e: KeyboardEvent): void => {
 		if (this.type !== 'radio') return;

@@ -55,6 +55,7 @@ export { NLDDFormSection } from './forms/form-section/form-section.js';
 
 export { NLDDCheckbox } from './inputs/checkbox/checkbox.js';
 export { NLDDCheckboxField } from './inputs/checkbox-field/checkbox-field.js';
+export { NLDDCheckboxGroup } from './inputs/checkbox-group/checkbox-group.js';
 export { NLDDCodeEditor } from './inputs/code-editor/code-editor.js';
 export { NLDDComboBox } from './inputs/combo-box/combo-box.js';
 export { NLDDDateField } from './inputs/date-field/date-field.js';

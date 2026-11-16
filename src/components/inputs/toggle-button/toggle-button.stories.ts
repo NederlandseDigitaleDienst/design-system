@@ -3,6 +3,8 @@ import './toggle-button.js';
 import { ICONS } from './../../content/icon/icon.js';
 import '../../layout/container/container.js';
 import '../../content/text/text.js';
+import '../../layout/popover/popover.js';
+import '../../content/avatar/avatar.js';
 import '../../layout/spacer/spacer.js';
 
 /**
@@ -113,6 +115,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers (verplicht voor icon-only)',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
@@ -145,6 +157,8 @@ export default {
 		type: 'button',
 		selected: false,
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		invalid: false,
 		required: false,
 		disabled: false,
@@ -169,6 +183,7 @@ const Template = (args: Record<string, any>) => html`
 		shortcut-windows=${args.shortcutWindows || nothing}
 		shortcut-linux=${args.shortcutLinux || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
+		accessible-description=${args.accessibleDescription || nothing}
 	></nldd-toggle-button>
 `;
 
@@ -813,6 +828,90 @@ export const TypeRadio = {
 			},
 	},
 },
+};
+
+export const ReactieMetUitlegOpInteresse = {
+	name: 'Reactie met uitleg op interesse',
+	render: () => html`
+	<nldd-container
+		layout="row"
+		gap="8"
+	>
+		<nldd-toggle-button
+			size="sm"
+			icon="hand-thumbs-up"
+			text="2"
+			accessible-label="Duim omhoog, 2 reacties"
+			selected
+		>
+			<nldd-popover
+				slot="interest"
+				width="240px"
+			>
+				<nldd-container
+					padding="12"
+					gap="8"
+				>
+					<nldd-container
+						layout="row"
+						gap="8"
+						vertical-alignment="center"
+					>
+						<nldd-avatar
+							name="Sam de Vries"
+							size="24"
+						></nldd-avatar>
+						<nldd-text text="Sam de Vries"></nldd-text>
+					</nldd-container>
+					<nldd-container
+						layout="row"
+						gap="8"
+						vertical-alignment="center"
+					>
+						<nldd-avatar
+							name="Noor Bakker"
+							size="24"
+						></nldd-avatar>
+						<nldd-text text="Noor Bakker"></nldd-text>
+					</nldd-container>
+				</nldd-container>
+			</nldd-popover>
+		</nldd-toggle-button>
+		<nldd-toggle-button
+			size="sm"
+			icon="hand-thumbs-down"
+			text="1"
+			accessible-label="Duim omlaag, 1 reactie"
+			interestfor="reactie-duim-omlaag"
+		></nldd-toggle-button>
+		<nldd-popover
+			id="reactie-duim-omlaag"
+			accessible-label="Reacties"
+			width="240px"
+		>
+			<nldd-container
+				padding="12"
+				layout="row"
+				gap="8"
+				vertical-alignment="center"
+			>
+				<nldd-avatar
+					name="Sam de Vries"
+					size="24"
+				></nldd-avatar>
+				<nldd-text text="Sam de Vries"></nldd-text>
+			</nldd-container>
+		</nldd-popover>
+	</nldd-container>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Een reactie zet je aan en uit, dus het is een toggle-button. Een popover in de <code>interest</code>-slot, of een die je met <code>interestfor</code> aanwijst, laat zien wie er reageerde: hij opent als de aanwijzer op de knop rust, bij focus en bij lang drukken op touch, en wordt voorgelezen als beschrijving. Bepaalt een server of de reactie doorgaat, roep dan <code>preventDefault()</code> aan op <code>change</code> en zet <code>selected</code> zelf als het antwoord binnen is.',
+			},
+		},
+	},
 };
 
 export const MetSneltoets = {

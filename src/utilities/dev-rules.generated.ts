@@ -153,9 +153,20 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "card-no-card",
+		"message": "Move this nldd-card out of the nldd-card around it: a card is one thing to go to or choose. To group content visually, use nldd-box or a layout of your own.",
+		"context": "nldd-card nldd-card"
+	},
+	{
 		"id": "checkbox-color-renamed",
 		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-checkbox.",
 		"context": "nldd-checkbox[color=\"inherit\"], nldd-checkbox-field[color=\"inherit\"]"
+	},
+	{
+		"id": "checkbox-field-child-needs-slot",
+		"message": "nldd-checkbox-field only renders nldd-checkbox-fields with `slot=\"children\"`, the options under it. Anything else in it does not render.",
+		"context": "nldd-checkbox-field",
+		"report": ":has(> :not(nldd-checkbox-field[slot=\"children\"]))"
 	},
 	{
 		"id": "code-viewer-diff-lines-invalid",
@@ -195,6 +206,16 @@ export const devRules: DevRule[] = [
 		"id": "combo-box-popover-not-found",
 		"message": "This browser has no Popover API, so the dropdown does not open.",
 		"context": "nldd-combo-box:state(no-popover)"
+	},
+	{
+		"id": "description-no-effect",
+		"message": "`accessible-description` is not read while `accessible-described-by` finds an element. Keep one.",
+		"context": "[accessible-described-by]:not([accessible-described-by=\"\"])[accessible-description]:not([accessible-description=\"\"])"
+	},
+	{
+		"id": "description-not-found",
+		"message": "`accessible-described-by` names an ID that is not in this tree, so that description stays empty.",
+		"context": "[accessible-described-by]:not([accessible-described-by=\"\"]):state(no-description-target)"
 	},
 	{
 		"id": "document-tab-bar-needs-name",
@@ -239,7 +260,7 @@ export const devRules: DevRule[] = [
 		"id": "form-field-needs-input",
 		"message": "nldd-form-field holds no form input, so the label cannot name anything or move focus into it.",
 		"context": "nldd-form-field[label]:not([label=\"\"]):has(> :not(nldd-form-field-help-text))",
-		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-one-time-code-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
+		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-checkbox-group, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-one-time-code-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
 		"properties": []
 	},
 	{
@@ -355,14 +376,14 @@ export const devRules: DevRule[] = [
 	{
 		"id": "interestfor-no-effect",
 		"message": "This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.",
-		"context": ":is(nldd-button, nldd-icon-button)[interestfor]:not([interestfor=\"\"])",
+		"context": ":is(nldd-button, nldd-icon-button, nldd-toggle-button)[interestfor]:not([interestfor=\"\"])",
 		"assert": ":not(:has(> nldd-popover[slot=\"interest\"]))",
 		"properties": []
 	},
 	{
 		"id": "interestfor-not-found",
 		"message": "`interestfor` names no nldd-popover in this tree, so nothing opens on interest.",
-		"context": ":is(nldd-button, nldd-icon-button, nldd-link):state(no-interest-target)"
+		"context": ":is(nldd-button, nldd-icon-button, nldd-toggle-button, nldd-link):state(no-interest-target)"
 	},
 	{
 		"id": "kanban-column-needs-name",

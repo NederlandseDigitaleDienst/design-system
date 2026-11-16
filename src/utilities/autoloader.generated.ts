@@ -23,6 +23,7 @@ export const loaders: Record<string, () => Promise<unknown>> = {
 	'nldd-cell': () => import('../components/lists-and-tables/cells/cell/cell.js'),
 	'nldd-checkbox': () => import('../components/inputs/checkbox/checkbox.js'),
 	'nldd-checkbox-field': () => import('../components/inputs/checkbox-field/checkbox-field.js'),
+	'nldd-checkbox-group': () => import('../components/inputs/checkbox-group/checkbox-group.js'),
 	'nldd-code-editor': () => import('../components/inputs/code-editor/code-editor.js'),
 	'nldd-code-viewer': () => import('../components/content/code-viewer/code-viewer.js'),
 	'nldd-collection': () => import('../components/layout/collection/collection.js'),

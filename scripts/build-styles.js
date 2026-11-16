@@ -20,6 +20,7 @@ const GLOBAL = [
 	'src/components/content/title/title.css',
 	'src/components/content/text/text.css',
 	'src/components/navigation/link/link.css',
+	'src/components/inputs/dropdown/dropdown.css',
 	'src/components/forms/form-section/form-section.css',
 	'src/components/forms/form/form.css',
 	`${styles}/fouc.css`,

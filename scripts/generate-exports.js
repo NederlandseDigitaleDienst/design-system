@@ -114,6 +114,7 @@ const exports = {
 	'./styles/text': './dist/css/text.css',
 	'./styles/title': './dist/css/title.css',
 	'./styles/link': './dist/css/link.css',
+	'./styles/dropdown': './dist/css/dropdown.css',
 	'./styles/rich-text': './dist/css/rich-text.css',
 	// The themes: one stylesheet per accent color, or all of them for a site that
 	// switches at runtime. Each one only applies under data-nldd-theme on <html>.

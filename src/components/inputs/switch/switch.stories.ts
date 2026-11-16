@@ -42,6 +42,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
@@ -64,13 +74,15 @@ export default {
 		size: 'sm',
 		checked: false,
 		accessibleLabel: 'Switch',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		invalid: false,
 		disabled: false,
 		required: false,
 	},
 };
 
-const Template = ({ color, size, checked, accessibleLabel, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ color, size, checked, accessibleLabel, accessibleDescription, invalid, disabled, required }: Record<string, any>) => html`
 	<nldd-switch
 		color=${color || nothing}
 		?checked=${checked}
@@ -79,6 +91,7 @@ const Template = ({ color, size, checked, accessibleLabel, invalid, disabled, re
 		?disabled=${disabled}
 		size=${size}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 	></nldd-switch>
 `;
 

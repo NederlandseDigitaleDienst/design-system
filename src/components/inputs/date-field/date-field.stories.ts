@@ -37,6 +37,8 @@ export default {
 		width: '',
 		placeholder: '',
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		noPicker: false,
 		valid: false,
 		invalid: false,
@@ -74,6 +76,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label. Wordt automatisch gezet door nldd-form-field.',
 			table: { defaultValue: { summary: 'Datum' } },
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
 		noPicker: {
 			name: 'no-picker',
@@ -134,7 +146,7 @@ const Template = ({
 	size,
 	width,
 	placeholder,
-	accessibleLabel,
+	accessibleLabel, accessibleDescription,
 	noPicker,
 	valid,
 	invalid,
@@ -153,6 +165,7 @@ const Template = ({
 		width=${width || nothing}
 		placeholder=${placeholder || nothing}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?no-picker=${noPicker}
 		?valid=${valid}
 		?readonly=${readonly}

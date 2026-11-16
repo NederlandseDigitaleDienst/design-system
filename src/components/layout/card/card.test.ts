@@ -256,6 +256,27 @@ describe('nldd-card – hover', () => {
 		expect(el.hasAttribute('data-action-pressed')).toBe(false);
 	});
 
+	it('reageert niet op de focus en de druk van een kaart erin', async () => {
+		el = await fixture<NLDDCard>(`
+			<nldd-card>
+				<nldd-card button accessible-label="bestand.pdf" style="position: relative; z-index: 1"><p>bestand.pdf</p></nldd-card>
+			</nldd-card>
+		`);
+		const inner = el.querySelector('nldd-card') as NLDDCard;
+		await waitForUpdate(inner);
+		const action = inner.shadowRoot!.querySelector<HTMLElement>('.card__action')!;
+
+		await userEvent.keyboard('{Tab}');
+		await waitForUpdate(inner);
+		expect(inner.hasAttribute('data-action-focused')).toBe(true);
+		expect(el.hasAttribute('data-action-focused')).toBe(false);
+
+		action.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+		expect(inner.hasAttribute('data-action-pressed')).toBe(true);
+		expect(el.hasAttribute('data-action-pressed')).toBe(false);
+		window.dispatchEvent(new PointerEvent('pointerup'));
+	});
+
 	it('zet de ingedrukte toestand niet bij een druk op inhoud boven de kaart', async () => {
 		el = await fixture<NLDDCard>('<nldd-card href="/aanvraag" accessible-label="Aanvraag A-1042"><button slot="footer" style="position: relative; z-index: 1">Bekijk</button></nldd-card>');
 		await waitForUpdate(el);

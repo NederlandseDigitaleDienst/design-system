@@ -23,6 +23,8 @@ export default {
 		max: '',
 		step: 1,
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		invalid: false,
 
 	},
@@ -59,6 +61,16 @@ export default {
 			description: 'Toegankelijke naam van de picker',
 			table: { defaultValue: { summary: 'Tijd kiezen' } },
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
@@ -75,7 +87,7 @@ const Template = ({
 	min,
 	max,
 	step,
-	accessibleLabel,
+	accessibleLabel, accessibleDescription,
 	invalid,
 }: Record<string, any>) => html`
 	<nldd-time-picker
@@ -87,6 +99,7 @@ const Template = ({
 		max=${max || nothing}
 		step=${step || nothing}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 	></nldd-time-picker>
 `;
 

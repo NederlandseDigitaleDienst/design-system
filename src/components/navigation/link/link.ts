@@ -31,14 +31,17 @@
  * `download`, and its text. Those attributes, `text`, `start-icon` and
  * `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an
  * nldd-icon, so it is part of what you click and inside the focus ring.
- * `size`, `accessible-label`, `interestfor`, `no-tab` and `disabled` keep
+ * `size`, `accessible-label`, `accessible-description`,
+ * `accessible-described-by`, `interestfor`, `no-tab` and `disabled` keep
  * working: the component sets `aria-label`, the description, `tabindex` and
  * `aria-disabled` on your `<a>`, and leaves an attribute you set yourself
  * alone. With `target="_blank"` it adds `noopener noreferrer` to the `rel` of
  * the `<a>`, as it does to its own. A disabled link ignores a click before your
  * router sees it. The hint about
  * another website, a new tab or a download goes on it as `aria-description`, so
- * a screen reader reads it after the name. Not as hidden text in the `<a>`: a
+ * a screen reader reads it after the name, after the text of
+ * `accessible-description`. `accessible-described-by` points the `<a>` at the
+ * elements it names. Not as hidden text in the `<a>`: a
  * framework that renders the `<a>` owns its children, and an extra one breaks
  * hydration. One `<a>` per link.
  *
@@ -77,7 +80,7 @@ import { template } from './link.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddLinkTranslations } from './link.i18n.js';
 import { InterestController } from '../../../utilities/interest-controller.js';
-import { applyDescribedBy } from '../../../utilities/described-by-mixin.js';
+import { applyDescribedBy, DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { downloadLinkHintKey } from '../../../utilities/link-hint.js';
 import { linkRel } from '../../../utilities/link-rel.js';
 import './../../content/icon/icon.js';
@@ -85,7 +88,7 @@ import './../../content/icon/icon.js';
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'inherit';
 
 @customElement('nldd-link')
-export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations) {
+export class NLDDLink extends DescribedBy(withTranslations(LitElement, nlddLinkTranslations)) {
 	static override styles = linkStyles;
 
 	/** @internal Whether the default slot holds text, which wins over `text`. */
@@ -218,7 +221,10 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 
 	private _updateAnchor(anchor: HTMLAnchorElement): void {
 		const key = downloadLinkHintKey(anchor.getAttribute('href'), anchor.getAttribute('target'), anchor.getAttribute('download'));
-		this._applyToAnchor(anchor, 'aria-description', key ? this._t(`components.link.${key}`) : null);
+		// The mixin fills this element in its controller, which Lit runs before
+		// `updated()`, so the text is current here.
+		const description = [this._descriptionTextElement?.textContent, key ? this._t(`components.link.${key}`) : ''].filter(Boolean).join('. ');
+		this._applyToAnchor(anchor, 'aria-description', description || null);
 		this._applyToAnchor(anchor, 'aria-label', this.accessibleLabel || null);
 		// Without an href an <a> is not focusable; a disabled link stays reachable.
 		const unreachable = this.disabled && !anchor.hasAttribute('href');
@@ -264,11 +270,24 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
 		if (changed.has('interestfor')) this._interest.refresh();
-		// By element: the link sits in this shadow root, the popover outside it.
-		// An <a> of the app sits next to the popover, in the same tree.
-		const overlay = this._interest.overlay;
 		if (this._anchor) this._updateAnchor(this._anchor);
-		applyDescribedBy(this._anchor ?? this.shadowRoot?.querySelector('.link'), overlay ? [overlay] : [], true);
+	}
+
+	/** The `<a>` of the app, or else the one this component renders. */
+	override describedTarget(): Element | null {
+		return this._anchor ?? this.shadowRoot?.querySelector('.link') ?? null;
+	}
+
+	/** The popover in the `interest` slot describes the link. */
+	override ownDescriptions(): readonly Element[] {
+		return this._interest.overlay ? [this._interest.overlay] : [];
+	}
+
+	/** An `<a>` of the app cannot point into this shadow root, so the text of
+	 *  `accessible-description` goes on its `aria-description` instead. */
+	override _appDescriptions(onSelf: boolean): readonly Element[] {
+		const elements = super._appDescriptions(onSelf);
+		return this._anchor ? elements.filter((el) => el !== this._descriptionTextElement) : elements;
 	}
 
 	override render() {

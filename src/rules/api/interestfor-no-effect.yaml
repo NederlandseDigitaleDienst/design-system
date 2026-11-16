@@ -1,5 +1,5 @@
 severity: warn
-context: ':is(nldd-button, nldd-icon-button)[interestfor]'
+context: ':is(nldd-button, nldd-icon-button, nldd-toggle-button)[interestfor]'
 assert: ':not(:has(> nldd-popover[slot="interest"]))'
 message: 'This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.'
 examples:

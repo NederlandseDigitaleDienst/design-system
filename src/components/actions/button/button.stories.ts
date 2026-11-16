@@ -198,6 +198,16 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		loading: {
 			control: 'boolean',
 			description: 'Laad-toestand: toont een activity indicator over de verborgen content, zet aria-busy en blokkeert activatie (knop blijft focusbaar).',
@@ -244,13 +254,15 @@ export default {
 		target: '',
 		download: '(geen)',
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		loading: false,
 		loadingText: '',
 		disabled: false,
 	},
 };
 
-const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, download, accessibleLabel, loading, loadingText, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, download, accessibleLabel, accessibleDescription, loading, loadingText, disabled }: Record<string, any>) => html`
 	<nldd-button
 		appearance=${appearance}
 		size=${size}
@@ -271,6 +283,7 @@ const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expa
 		shortcut-linux=${shortcutLinux || nothing}
 		popup-type=${popupType || nothing}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?expandable=${expandable}
 		?expanded=${expanded}
 		?single-line=${singleLine}
@@ -735,9 +748,8 @@ export const MetUitlegOpInteresse = {
 		<nldd-button
 			appearance="neutral-tinted"
 			size="sm"
-			start-icon="hand-thumbs-up"
-			text="2"
-			accessible-label="Duim omhoog, 2 reacties"
+			start-icon="person-2"
+			text="Delen"
 		>
 			<nldd-popover
 				slot="interest"
@@ -747,6 +759,10 @@ export const MetUitlegOpInteresse = {
 					padding="12"
 					gap="8"
 				>
+					<nldd-text
+						text="Dossier D-318 is gedeeld met"
+						line-height="tight"
+					></nldd-text>
 					<nldd-container
 						layout="row"
 						gap="8"
@@ -777,7 +793,7 @@ export const MetUitlegOpInteresse = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Een popover in de <code>interest</code>-slot opent als je de aanwijzer op de knop laat rusten, als de knop focus krijgt en bij lang drukken op touch. De knop houdt zijn eigen klik (hier: de reactie aan of uit zetten), de focus blijft op de knop en de inhoud wordt voorgelezen als beschrijving van de knop. Alleen informatie: zet er geen link of knop in.',
+				story: 'Een popover in de <code>interest</code>-slot opent als je de aanwijzer op de knop laat rusten, als de knop focus krijgt en bij lang drukken op touch. De knop houdt zijn eigen klik (hier: delen), de focus blijft op de knop en de inhoud wordt voorgelezen als beschrijving van de knop. Alleen informatie: zet er geen link of knop in. Een reactie die je aan- en uitzet is een <code>nldd-toggle-button</code>, die de interest-slot ook heeft.',
 			},
 		},
 	},

@@ -55,6 +55,8 @@ export default {
 		startIcon: '',
 		endIcon: '',
 		accessibleLabel: 'Volume',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		tooltipTiming: 'instant',
 		invalid: false,
 		disabled: false,
@@ -101,6 +103,16 @@ export default {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijke naam; een range zet er "minimum" en "maximum" achter',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
 		tooltipTiming: {
 			name: 'tooltip-timing',
@@ -162,6 +174,7 @@ export const Standaard = {
 			start-icon=${args.startIcon || nothing}
 			end-icon=${args.endIcon || nothing}
 			accessible-label=${args.accessibleLabel || nothing}
+			accessible-description=${args.accessibleDescription || nothing}
 			tooltip-timing=${args.tooltipTiming}
 			?invalid=${args.invalid}
 			?disabled=${args.disabled}

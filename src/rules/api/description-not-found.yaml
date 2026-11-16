@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: '[accessible-described-by]:state(no-description-target)'
+message: '`accessible-described-by` names an ID that is not in this tree, so that description stays empty.'

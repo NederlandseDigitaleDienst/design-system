@@ -1,0 +1,17 @@
+/* # Host */
+
+nldd-dropdown {
+	--_dropdown-option-background-color: var(--semantics-surfaces-base-background-color);
+	--_dropdown-option-color: var(--semantics-content-color);
+}
+
+
+/* # The options of the app's <select> */
+
+/* The select is transparent and takes the text color of the surface; an open
+   list on Windows keeps its own white background, so the options get both. */
+nldd-dropdown > select :is(option, optgroup) {
+	background-color: var(--_dropdown-option-background-color);
+	--context-content-color: var(--_dropdown-option-color);
+	color: var(--_dropdown-option-color);
+}

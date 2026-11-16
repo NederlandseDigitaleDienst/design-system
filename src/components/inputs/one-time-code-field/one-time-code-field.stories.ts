@@ -25,6 +25,8 @@ export default {
 		length: 6,
 		format: '',
 		accessibleLabel: 'Code uit de sms',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		invalid: false,
 		readonly: false,
 		disabled: false,
@@ -58,6 +60,16 @@ export default {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijke naam; een nldd-form-field zet hem zelf',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
 		invalid: {
 			control: 'boolean',
@@ -97,13 +109,14 @@ export default {
 	},
 };
 
-const Template = ({ size, centered, length, format, accessibleLabel, invalid, readonly, disabled, value, type, uppercase, required }: Record<string, any>) => html`
+const Template = ({ size, centered, length, format, accessibleLabel, accessibleDescription, invalid, readonly, disabled, value, type, uppercase, required }: Record<string, any>) => html`
 	<nldd-one-time-code-field
 		size=${size || nothing}
 		?centered=${centered}
 		length=${length ?? nothing}
 		format=${format || nothing}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?invalid=${invalid}
 		?readonly=${readonly}
 		?disabled=${disabled}

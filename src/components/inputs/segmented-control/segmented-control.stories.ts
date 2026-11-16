@@ -59,6 +59,11 @@ export default {
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 		},
+		accessibleLabeledBy: {
+			name: 'accessible-labeled-by',
+			control: false,
+			description: 'Id van een element elders op de pagina dat deze groep benoemt, zoals `aria-labelledby`.',
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
@@ -84,6 +89,7 @@ export default {
 		value: 'bold',
 		type: 'radio',
 		accessibleLabel: '',
+		accessibleLabeledBy: '',
 		invalid: false,
 		disabled: false,
 		required: false,

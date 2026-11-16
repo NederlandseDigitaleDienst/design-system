@@ -1,4 +1,5 @@
 import { html, nothing, TemplateResult } from 'lit';
+import { live } from 'lit/directives/live.js';
 import type { NLDDCheckboxField } from './checkbox-field.js';
 import '../checkbox/checkbox.js';
 
@@ -12,9 +13,9 @@ export function checkboxFieldTemplate(component: NLDDCheckboxField): TemplateRes
 				<nldd-checkbox
 					color=${component.color || nothing}
 					?invalid=${component.invalid}
-					?required=${component.required}
-					?checked=${component.checked}
-					?indeterminate=${component.indeterminate}
+					?required=${component.required && !component._inGroup}
+					?checked=${live(component.checked)}
+					?indeterminate=${live(component.indeterminate)}
 					?disabled=${component.disabled}
 					name=${component.name || nothing}
 					value=${component.value}
@@ -22,7 +23,20 @@ export function checkboxFieldTemplate(component: NLDDCheckboxField): TemplateRes
 					@change=${component._handleChange}
 				></nldd-checkbox>
 			</div>
-			<span class="checkbox-field__label">${component.label}</span>
+			<span class="checkbox-field__label"
+				id="label"
+			>
+				${component.label}
+			</span>
+		</div>
+		<div class="checkbox-field__children"
+			role=${component._childFields.length > 0 ? 'group' : nothing}
+			aria-labelledby=${component._childFields.length > 0 ? 'label' : nothing}
+		>
+			<slot
+				name="children"
+				@slotchange=${component._handleChildrenSlotChange}
+			></slot>
 		</div>
 	`;
 }

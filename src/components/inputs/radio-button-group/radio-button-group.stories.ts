@@ -54,6 +54,16 @@ export default {
 			description: 'Schakelt alle velden uit',
 			table: { defaultValue: { summary: false } },
 		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: false,
+			description: 'Toegankelijk label voor screen readers. In een `nldd-form-field` geeft het veld de groep zijn naam.',
+		},
+		accessibleLabeledBy: {
+			name: 'accessible-labeled-by',
+			control: false,
+			description: 'Id van een element elders op de pagina dat deze groep benoemt, zoals `aria-labelledby`.',
+		},
 	},
 	args: {
 		name: 'demo',

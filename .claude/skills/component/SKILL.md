@@ -678,12 +678,13 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 ```
 
 ### Templates (`.template.ts`)
-- Elk attribuut op een **eigen regel**, met twee uitzonderingen:
+- Elk attribuut op een **eigen regel**, met drie uitzonderingen:
   - `class` staat altijd op **dezelfde regel** als het element
   - Een element met **één enkel attribuut** (zonder `class`) staat op één regel: `<nldd-title slot="header">`, niet over drie regels
+  - Een **inline element in lopende tekst** (een `<span>` naast andere tekst, een `<a>` in een zin) staat in zijn geheel op één regel, attributen en inhoud erbij. Het is een stuk van de zin, en de zin moet leesbaar blijven. Heeft het zoveel attributen dat die regel te lang wordt, dan is het waarschijnlijk geen inline element
 - **Nooit een class op een child component** — wrap het in een container die positie en size bepaalt; het child vult die container (bijv. `--_icon-size: 100%`). De container heet naar de functie van het child: een wrapper om een knop is `__…-button` (`toolbar__overflow-button`, niet `toolbar__overflow`)
 - Geen lege regels in templates
-- **Element-content op een eigen ingesprongen regel** — ook een enkele `${...}`-interpolatie; de open- en sluittag staan dan op hun eigen regel. Zo blijven regels kort en tonen diffs alleen de gewijzigde inhoud, niet de hele tag-regel. Geldt voor losstaande elementen in de template-body. Een kort inline `html`-fragment binnen een expressie of ternary mag op één regel blijven (zie het voorbeeld hieronder); dat opsplitsen levert juist lelijke fragmenten op.
+- **Element-content op een eigen ingesprongen regel** — ook een enkele `${...}`-interpolatie; de open- en sluittag staan dan op hun eigen regel. Zo blijven regels kort en tonen diffs alleen de gewijzigde inhoud, niet de hele tag-regel. Geldt voor losstaande elementen in de template-body, en alleen als het element een blok-, flex- of grid-vak is: daar valt de witruimte aan het begin en eind van de regel weg. Een inline element in lopende tekst staat in zijn geheel op één regel (zie hierboven), want daar wordt die witruimte een spatie die je ziet, bijvoorbeeld als een onderstreping die te ver doorloopt. In `textContent` zit de witruimte altijd; trim in een test. Een kort inline `html`-fragment binnen een expressie of ternary mag op één regel blijven (zie het voorbeeld hieronder); dat opsplitsen levert juist lelijke fragmenten op.
 
 ```html
 <!-- GOED — class + meerdere attributen -->
@@ -720,6 +721,18 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 
 <!-- GOED — kort inline html-fragment in een ternary: mag op één regel -->
 ${component.hasBadge ? html`<span class="dialog__badge">${component.badge}</span>` : nothing}
+
+<!-- GOED — inline element in lopende tekst: in zijn geheel op één regel -->
+<p class="dialog__supporting-text">
+	Bewaard in <span class="dialog__location" title=${component.path}>${component.location}</span>.
+</p>
+
+<!-- FOUT — inline element in lopende tekst over meer regels -->
+<p class="dialog__supporting-text">
+	Bewaard in <span class="dialog__location"
+		title=${component.path}
+	>${component.location}</span>.
+</p>
 
 <!-- FOUT — content inline op de tag-regel -->
 <p class="dialog__supporting-text">${component.supportingText}</p>

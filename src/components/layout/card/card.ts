@@ -14,6 +14,8 @@
  * on hover and one more while pressed, as a neutral-base button does; content
  * lifted above the overlay does not set it off. On a touch screen there is no
  * hover, and a touch that turns into a scroll lets go of the pressed shade.
+ * Put no card in a card: a card is one thing you go to or choose. To group
+ * content visually, use `nldd-box` or a layout of your own instead.
  *
  * @element nldd-card
  *
@@ -88,7 +90,7 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 		// composedPath()[0], not e.target: the control lives in the shadow root, so
 		// the event is retargeted to the host by the time it reaches this listener.
 		const focused = e.composedPath()[0] as Element | undefined;
-		this._actionFocused = !!focused?.matches?.('.card__action:focus-visible');
+		this._actionFocused = !!focused?.matches?.('.card__action:focus-visible') && focused.getRootNode() === this.shadowRoot;
 	};
 
 	private _onFocusOut = (): void => {
@@ -106,7 +108,8 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	private _onPointerDown = (e: PointerEvent): void => {
 		if (e.button > 0) return;
 		const target = e.composedPath()[0] as Element | undefined;
-		if (!target?.matches?.('.card__action')) return;
+		// Its own overlay only, not that of a card inside it.
+		if (!target?.matches?.('.card__action') || target.getRootNode() !== this.shadowRoot) return;
 		this.toggleAttribute('data-action-pressed', true);
 		window.addEventListener('pointerup', this._clearPressed);
 		window.addEventListener('pointercancel', this._clearPressed);

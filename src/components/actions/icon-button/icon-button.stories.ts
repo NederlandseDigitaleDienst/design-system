@@ -165,6 +165,16 @@ export default {
 			control: 'text',
 			description: 'Overschrijft de tekst als aria-label en title tooltip voor schermlezer-context. Gebruik als de zichtbare tekst onvoldoende context biedt (bijv. tekst "Toon", accessible-label "Toon wachtwoord"). De tekst blijft zichtbaar in lg formaat.',
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		tooltipTiming: {
 			name: 'tooltip-timing',
 			control: 'select',
@@ -216,6 +226,8 @@ export default {
 		target: '',
 		download: '(geen)',
 		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		tooltipTiming: 'delay',
 		loading: false,
 		loadingText: '',
@@ -223,7 +235,7 @@ export default {
 	},
 };
 
-const Template = ({ appearance, size, width, hideLgText, expandable, expanded, popupType, text, icon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, download, accessibleLabel, tooltipTiming, loading, loadingText, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, hideLgText, expandable, expanded, popupType, text, icon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, download, accessibleLabel, accessibleDescription, tooltipTiming, loading, loadingText, disabled }: Record<string, any>) => html`
 	<nldd-icon-button
 		appearance=${appearance}
 		size=${size}
@@ -246,6 +258,7 @@ const Template = ({ appearance, size, width, hideLgText, expandable, expanded, p
 		loading-text=${loadingText || nothing}
 		?disabled=${disabled}
 		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		tooltip-timing=${tooltipTiming || nothing}
 	></nldd-icon-button>
 `;

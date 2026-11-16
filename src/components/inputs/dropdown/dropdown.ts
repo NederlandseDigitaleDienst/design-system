@@ -7,6 +7,10 @@
  * and keyboard navigation, including `<optgroup>`, `data-*` attributes and
  * dynamic changes to options.
  *
+ * The browser draws the open list, outside the reach of the component. The
+ * colors of its options come from the global stylesheet, `dist/css/dropdown.css`
+ * or `global.css`, which includes it, so the list follows light and dark mode.
+ *
  * A dropdown hides its options, so it is the last resort for a choice from a
  * fixed set. Show a handful of options with nldd-segmented-control,
  * nldd-toggle-button-group or nldd-radio-button-group, and let the user type
