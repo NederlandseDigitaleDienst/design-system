@@ -148,8 +148,17 @@ export class NLDDCheckboxGroup extends LitElement {
 	/** Called by a field whose `checked` changed, whoever changed it: the
 	 *  user, the app or a form reset. */
 	_optionChanged(): void {
-		this._syncAnswered();
+		// Once for all of them: checking an option with others under it changes
+		// every one of those, each of which reports here.
+		if (this._answerQueued) return;
+		this._answerQueued = true;
+		queueMicrotask(() => {
+			this._answerQueued = false;
+			this._syncAnswered();
+		});
 	}
+
+	private _answerQueued = false;
 
 	_onSlotChange = (): void => {
 		this._syncFields();
