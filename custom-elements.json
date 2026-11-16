@@ -49597,7 +49597,7 @@
               }
             }
           ],
-          "description": "A CSS time (`200ms`, `0.2s`) in milliseconds; 0 for anything else. A token\nread with getPropertyValue keeps the unit it was written in."
+          "description": "A CSS time (`200ms`, `0.2s`, `.2S`) in milliseconds; 0 for anything else.\nA token read with getPropertyValue keeps the unit as it was written."
         }
       ],
       "exports": [
