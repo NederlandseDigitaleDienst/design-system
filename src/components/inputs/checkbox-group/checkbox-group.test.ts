@@ -244,6 +244,23 @@ describe('nldd-checkbox-group, changes it did not see', () => {
 		await Promise.all(fields.map((field) => field.updateComplete));
 	};
 
+	it('stops announcing a single box as required once it moves into a required group', async () => {
+		form = await fixture<HTMLFormElement>(`
+			<form>
+				<nldd-checkbox-field value="dak" label="Dakisolatie" required></nldd-checkbox-field>
+				<nldd-checkbox-group name="maatregel" required></nldd-checkbox-group>
+			</form>
+		`);
+		await settle();
+		const field = form.querySelector<NLDDCheckboxField>('nldd-checkbox-field')!;
+		const box = field.shadowRoot!.querySelector('nldd-checkbox')!;
+		expect(box.required).toBe(true);
+		form.querySelector('nldd-checkbox-group')!.append(field);
+		await settle();
+		await box.updateComplete;
+		expect(box.required).toBe(false);
+	});
+
 	it('answers required again when the app sets checked, and after a form reset', async () => {
 		form = await fixture<HTMLFormElement>(`
 			<form>

@@ -221,6 +221,8 @@ export class NLDDLink extends DescribedBy(withTranslations(LitElement, nlddLinkT
 
 	private _updateAnchor(anchor: HTMLAnchorElement): void {
 		const key = downloadLinkHintKey(anchor.getAttribute('href'), anchor.getAttribute('target'), anchor.getAttribute('download'));
+		// The mixin fills this element in its controller, which Lit runs before
+		// `updated()`, so the text is current here.
 		const description = [this._descriptionTextElement?.textContent, key ? this._t(`components.link.${key}`) : ''].filter(Boolean).join('. ');
 		this._applyToAnchor(anchor, 'aria-description', description || null);
 		this._applyToAnchor(anchor, 'aria-label', this.accessibleLabel || null);

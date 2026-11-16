@@ -112,7 +112,8 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 		 * as `aria-describedby` takes them. Looked up in the tree of this element
 		 * and handed to the control inside, where an `aria-describedby` on the
 		 * host would not reach. Read after the name, role and state, after the
-		 * help and error text of an nldd-form-field.
+		 * help and error text of an nldd-form-field. Looked up again on each render
+		 * and when focus comes in, so an element added later counts from then on.
 		 */
 		@property({ type: String, reflect: true, attribute: 'accessible-described-by' })
 		accessibleDescribedBy = '';
