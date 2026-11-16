@@ -27,7 +27,7 @@ describe('nldd-checkbox-field', () => {
 		el = await fixture('<nldd-checkbox-field label="Optie 1"></nldd-checkbox-field>');
 		await waitForUpdate(el);
 		const label = el.shadowRoot!.querySelector<HTMLElement>('.checkbox-field__label')!;
-		expect(label.textContent).toBe('Optie 1');
+		expect(label.textContent!.trim()).toBe('Optie 1');
 	});
 
 	it('renders nldd-checkbox in shadow DOM', async () => {

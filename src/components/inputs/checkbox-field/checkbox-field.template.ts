@@ -22,10 +22,13 @@ export function checkboxFieldTemplate(component: NLDDCheckboxField): TemplateRes
 					@change=${component._handleChange}
 				></nldd-checkbox>
 			</div>
-			<span class="checkbox-field__label" id="label">${component.label}</span>
+			<span class="checkbox-field__label"
+				id="label"
+			>
+				${component.label}
+			</span>
 		</div>
-		<div
-			class="checkbox-field__children"
+		<div class="checkbox-field__children"
 			role=${component._childFields.length > 0 ? 'group' : nothing}
 			aria-labelledby=${component._childFields.length > 0 ? 'label' : nothing}
 		>

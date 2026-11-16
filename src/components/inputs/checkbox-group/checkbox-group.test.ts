@@ -190,7 +190,7 @@ describe('nldd-checkbox-field nested in another one', () => {
 		const wrapper = parent.shadowRoot!.querySelector('.checkbox-field__children')!;
 		expect(wrapper.getAttribute('role')).toBe('group');
 		const label = parent.shadowRoot!.getElementById(wrapper.getAttribute('aria-labelledby')!)!;
-		expect(label.textContent).toBe('Isolatie');
+		expect(label.textContent!.trim()).toBe('Isolatie');
 		expect(wrapper.querySelector<HTMLSlotElement>('slot[name="children"]')!.assignedElements()).toEqual([dak, vloer]);
 		expect(dak.shadowRoot!.querySelector('.checkbox-field__children')!.hasAttribute('role')).toBe(false);
 	});
