@@ -117,7 +117,18 @@ describe('accessible-described-by and accessible-description', () => {
 		root = await fixture<HTMLElement>('<div><nldd-toggle-button type="radio" text="Lijst" accessible-description="Toont alle aanvragen"></nldd-toggle-button></div>');
 		const toggle = root.querySelector('nldd-toggle-button')! as unknown as Described & HTMLElement;
 		await waitForUpdate(toggle);
-		expect(toggle.ariaDescription).toBe('Toont alle aanvragen');
+		expect(toggle.getAttribute('aria-description')).toBe('Toont alle aanvragen');
+
+		toggle.removeAttribute('accessible-description');
+		await waitForUpdate(toggle);
+		expect(toggle.hasAttribute('aria-description')).toBe(false);
+	});
+
+	it('leaves an aria-description the app wrote on such a control alone', async () => {
+		root = await fixture<HTMLElement>('<div><nldd-toggle-button type="radio" text="Lijst" aria-description="Eigen tekst" accessible-description="Toont alle aanvragen"></nldd-toggle-button></div>');
+		const toggle = root.querySelector('nldd-toggle-button')!;
+		await waitForUpdate(toggle);
+		expect(toggle.getAttribute('aria-description')).toBe('Eigen tekst');
 	});
 
 	it('describes the button of an nldd-icon-button, before its popover', async () => {

@@ -145,6 +145,12 @@ export class NLDDCheckboxGroup extends LitElement {
 		this._syncAnswered();
 	};
 
+	/** Called by a field whose `checked` changed, whoever changed it: the
+	 *  user, the app or a form reset. */
+	_optionChanged(): void {
+		this._syncAnswered();
+	}
+
 	_onSlotChange = (): void => {
 		this._syncFields();
 	};

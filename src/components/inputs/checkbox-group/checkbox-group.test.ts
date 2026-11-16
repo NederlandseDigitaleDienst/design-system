@@ -213,3 +213,55 @@ describe('nldd-checkbox-field nested in another one', () => {
 		expect(form.checkValidity()).toBe(true);
 	});
 });
+
+describe('nldd-checkbox-group, changes it did not see', () => {
+	let form: HTMLFormElement;
+
+	afterEach(() => {
+		if (form) cleanup(form);
+	});
+
+	const settle = async () => {
+		const fields = [...form.querySelectorAll<NLDDCheckboxField>('nldd-checkbox-field')];
+		await Promise.all(fields.map((field) => waitForUpdate(field)));
+		await Promise.all(fields.map((field) => field.updateComplete));
+	};
+
+	it('answers required again when the app sets checked, and after a form reset', async () => {
+		form = await fixture<HTMLFormElement>(`
+			<form>
+				<nldd-checkbox-group name="maatregel" required>
+					<nldd-checkbox-field value="dak" label="Dakisolatie"></nldd-checkbox-field>
+					<nldd-checkbox-field value="vloer" label="Vloerisolatie"></nldd-checkbox-field>
+				</nldd-checkbox-group>
+			</form>
+		`);
+		await settle();
+		const [dak] = form.querySelectorAll<NLDDCheckboxField>('nldd-checkbox-field');
+		expect(form.checkValidity()).toBe(false);
+		dak.checked = true;
+		await settle();
+		expect(form.checkValidity()).toBe(true);
+		form.reset();
+		await settle();
+		expect(dak.checked).toBe(false);
+		expect(form.checkValidity()).toBe(false);
+	});
+
+	it('hands its name and required to an option nested after the first render', async () => {
+		form = await fixture<HTMLFormElement>(`
+			<form>
+				<nldd-checkbox-group name="maatregel" required>
+					<nldd-checkbox-field value="isolatie" label="Isolatie"></nldd-checkbox-field>
+				</nldd-checkbox-group>
+			</form>
+		`);
+		await settle();
+		const parent = form.querySelector<NLDDCheckboxField>('nldd-checkbox-field')!;
+		parent.insertAdjacentHTML('beforeend', '<nldd-checkbox-field slot="children" value="dak" label="Dakisolatie"></nldd-checkbox-field>');
+		await settle();
+		const nested = parent.querySelector<NLDDCheckboxField>('nldd-checkbox-field')!;
+		expect(nested.name).toBe('maatregel');
+		expect(nested.required).toBe(true);
+	});
+});

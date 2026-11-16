@@ -761,7 +761,7 @@ export const MetUitlegOpInteresse = {
 				>
 					<nldd-text
 						text="Dossier D-318 is gedeeld met"
-						color="secondary"
+						line-height="tight"
 					></nldd-text>
 					<nldd-container
 						layout="row"

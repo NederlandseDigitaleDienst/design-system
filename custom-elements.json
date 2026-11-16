@@ -10619,7 +10619,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A checkbox with an inline label for use in forms. Options that belong under this one are nldd-checkbox-fields of their own, each with `slot=\"children\"`, as rows nest in nldd-list-item. They indent to line up with the label, and are a group named after this option. This checkbox then follows them: checked when all of them are, indeterminate when some are, and unchecked when none are. Checking or unchecking it does the same to every option under it that is not disabled. Its own `change` fires when that changes its state, so a box further up follows too. In an nldd-checkbox-group, the options under it belong to the group as well. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).",
+          "description": "A checkbox with an inline label for use in forms. Options that belong under this one are nldd-checkbox-fields of their own, each with `slot=\"children\"`, as rows nest in nldd-list-item. They indent to line up with the label, and are a group named after this option. This checkbox then follows them: checked when all of them are, indeterminate when some are, and unchecked when none are. Checking or unchecking it does the same to every option under it that is not disabled; those fire no `change` of their own then, so listen on this one or higher up. Its own `change` fires when they change its state, so a box further up follows too. In an nldd-checkbox-group, the options under it belong to the group as well. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).",
           "name": "NLDDCheckboxField",
           "members": [
             {
@@ -51148,6 +51148,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_appliedDescription",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "The aria-description this element wrote on itself, so it only takes\nback its own.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "_appDescriptions",
               "return": {
@@ -51878,6 +51891,15 @@
               },
               "default": "null",
               "description": "The hidden element that carries `accessible-description` in the shadow\nroot, for the control to point at. Public for the same reason as\n`describedTarget()`."
+            },
+            {
+              "kind": "field",
+              "name": "_appliedDescription",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "The aria-description this element wrote on itself, so it only takes\nback its own."
             },
             {
               "kind": "method",

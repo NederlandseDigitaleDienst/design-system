@@ -8,9 +8,11 @@
  * line up with the label, and are a group named after this option. This
  * checkbox then follows them: checked when all of them are, indeterminate
  * when some are, and unchecked when none are. Checking or unchecking it does
- * the same to every option under it that is not disabled. Its own `change`
- * fires when that changes its state, so a box further up follows too. In an
- * nldd-checkbox-group, the options under it belong to the group as well.
+ * the same to every option under it that is not disabled; those fire no
+ * `change` of their own then, so listen on this one or higher up. Its own
+ * `change` fires when they change its state, so a box further up follows
+ * too. In an nldd-checkbox-group, the options under it belong to the group as
+ * well.
  *
  * Form-associated: participates in native form submission under `name` with
  * `value` when checked (the inner nldd-checkbox sits in the shadow root and
@@ -31,7 +33,7 @@
  *
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
-import { LitElement } from 'lit';
+import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, uncheckedValidity, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
@@ -129,6 +131,19 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 		this._childFields = slot.assignedElements()
 			.filter((el): el is NLDDCheckboxField => el.localName === 'nldd-checkbox-field');
 		this._followChildren(false);
+		// The group sees only its own children arrive, not the options under them.
+		this._group?._onSlotChange?.();
+	}
+
+	/** The nldd-checkbox-group around this field, if any. */
+	private get _group(): { _onSlotChange?: () => void; _optionChanged?: () => void } | null {
+		return this.closest('nldd-checkbox-group');
+	}
+
+	/** Also when the app sets `checked` or a form resets it: the group answers
+	 *  `required` again, which it cannot see by itself. */
+	override willUpdate(changed: PropertyValues): void {
+		if (this.hasUpdated && changed.has('checked')) this._group?._optionChanged?.();
 	}
 
 	/** A change of an option right under this one; one further down reaches

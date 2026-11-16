@@ -1,6 +1,7 @@
 import { property } from 'lit/decorators.js';
 import { LitElement, type ReactiveController } from 'lit';
 import { setState } from './element-state.js';
+import { setOwnedAttribute } from './owned-attribute.js';
 
 // Abstract, so an abstract base (nldd-code-editor and nldd-text-editor share
 // NLDDCodeMirrorElement) can be mixed in too.
@@ -121,6 +122,10 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 		 *  `describedTarget()`. */
 		_descriptionTextElement: HTMLElement | null = null;
 
+		/** The aria-description this element wrote on itself, so it only takes
+		 *  back its own. */
+		_appliedDescription: string | null = null;
+
 		constructor(...args: any[]) {
 			super(...args);
 			const apply: ReactiveController = {
@@ -159,9 +164,10 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 			setState(this, 'no-description-target', named.length < ids.length);
 			const text = named.length ? '' : (this.accessibleDescription ?? '').trim();
 			// A control that is this element cannot point into its own shadow
-			// root, so it says the text itself.
+			// root, so it says the text itself. As an attribute: not every browser
+			// reflects `ariaDescription`. Only ever takes back what it wrote.
 			if (onSelf) {
-				(this as unknown as { ariaDescription: string | null }).ariaDescription = text || null;
+				this._appliedDescription = setOwnedAttribute(this, 'aria-description', text, this._appliedDescription);
 				return named;
 			}
 			if (text) {
