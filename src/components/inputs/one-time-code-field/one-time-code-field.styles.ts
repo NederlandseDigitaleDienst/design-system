@@ -248,6 +248,7 @@ export const oneTimeCodeFieldStyles = css`
 		top: 0;
 		right: 0;
 		bottom: 0;
+		border-radius: 0 calc(var(--_one-time-code-field-box-corner-radius) - var(--semantics-input-fields-border-width)) calc(var(--_one-time-code-field-box-corner-radius) - var(--semantics-input-fields-border-width)) 0;
 		background: linear-gradient(90deg, color-mix(in oklch, var(--_one-time-code-field-box-background-color) 0%, transparent) 0%, var(--_one-time-code-field-box-background-color) 100%);
 		pointer-events: none;
 		width: var(--primitives-space-8);

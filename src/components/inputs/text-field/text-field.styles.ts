@@ -51,7 +51,6 @@ export const textFieldStyles = css`
 		border-radius: var(--_text-field-corner-radius);
 		background-color: var(--_text-field-background-color);
 		min-height: var(--_text-field-min-size);
-		overflow: hidden;
 		padding-left: calc(var(--_text-field-inline-padding) - var(--semantics-input-fields-border-width));
 		flex-direction: row;
 		align-items: center;
@@ -136,7 +135,7 @@ export const textFieldStyles = css`
 		top: 0;
 		right: 0;
 		bottom: 0;
-		border-radius: var(--_text-field-corner-radius);
+		border-radius: 0 calc(var(--_text-field-corner-radius) - var(--semantics-input-fields-border-width)) calc(var(--_text-field-corner-radius) - var(--semantics-input-fields-border-width)) 0;
 		background: linear-gradient(90deg, color-mix(in oklch, var(--_text-field-background-color) 0%, transparent) 0%, var(--_text-field-background-color) 100%);
 		pointer-events: none;
 		width: var(--primitives-space-8);
