@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-admonition[collapsible]:not([text])'
+message: '`collapsible` does nothing without `text`: there is no title bar to open and close the content with.'
+examples:
+  passed: ['<nldd-admonition collapsible text="Meer over de beoordeling"></nldd-admonition>']
+  failed: ['<nldd-admonition collapsible></nldd-admonition>']

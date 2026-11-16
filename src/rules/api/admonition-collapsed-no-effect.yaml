@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-admonition[collapsed]:not([collapsible][text])'
+message: '`collapsed` does nothing unless the admonition is `collapsible` and has `text`.'
+examples:
+  passed: ['<nldd-admonition collapsible collapsed text="Meer over de beoordeling"></nldd-admonition>']
+  failed: ['<nldd-admonition collapsed text="Meer over de beoordeling"></nldd-admonition>']

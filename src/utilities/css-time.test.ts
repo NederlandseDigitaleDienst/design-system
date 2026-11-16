@@ -5,6 +5,8 @@ describe('cssTimeToMs', () => {
 	it('reads milliseconds and seconds', () => {
 		expect(cssTimeToMs('300ms')).toBe(300);
 		expect(cssTimeToMs(' 0.3s')).toBe(300);
+		expect(cssTimeToMs('.3S')).toBe(300);
+		expect(cssTimeToMs('300MS')).toBe(300);
 	});
 
 	it('returns 0 for anything else', () => {

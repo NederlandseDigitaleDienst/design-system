@@ -538,6 +538,10 @@ nldd-rich-text blockquote > p {
 
 nldd-rich-text details {
 	--_rich-text-details-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
+	--_rich-text-details-background-color: var(--semantics-surfaces-tinted-background-color);
+	--_rich-text-details-content-color: var(--semantics-content-color);
+	--_rich-text-details-content-background-color: var(--semantics-surfaces-base-background-color);
+	--_rich-text-details-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 	--_rich-text-details-corner-radius: var(--primitives-corner-radius-lg);
 	--_rich-text-details-start-corner-radius: var(--_rich-text-details-corner-radius);
 	--_rich-text-details-end-corner-radius: var(--_rich-text-details-corner-radius);
@@ -550,8 +554,8 @@ nldd-rich-text details {
 	--_rich-text-details-disclosure-icon-open-rotation: var(--semantics-disclosures-disclosure-icon-open-rotation);
 	--_rich-text-details-summary-hover-background-color: var(--semantics-surfaces-tinted-is-hovered-background-color);
 
-	--context-background-color: var(--semantics-surfaces-tinted-background-color);
-	--context-content-color: var(--semantics-content-color);
+	--context-background-color: var(--_rich-text-details-background-color);
+	--context-content-color: var(--_rich-text-details-content-color);
 	--context-content-secondary-color: var(--semantics-content-secondary-color);
 	--context-content-accent-color: var(--semantics-content-accent-color);
 	--context-content-success-color: var(--semantics-content-success-color);
@@ -561,10 +565,10 @@ nldd-rich-text details {
 	--context-link-is-hovered-color: var(--semantics-links-is-hovered-color);
 	--context-link-is-active-color: var(--semantics-links-is-active-color);
 	box-sizing: border-box;
-	border: var(--_rich-text-details-highlight-border-width) solid var(--semantics-surfaces-tinted-highlight-border-color);
+	border: var(--_rich-text-details-highlight-border-width) solid var(--_rich-text-details-highlight-border-color);
 	border-radius: var(--_rich-text-details-start-corner-radius) var(--_rich-text-details-start-corner-radius) var(--_rich-text-details-end-corner-radius) var(--_rich-text-details-end-corner-radius);
-	background-color: var(--semantics-surfaces-tinted-background-color);
-	color: var(--semantics-content-color);
+	background-color: var(--_rich-text-details-background-color);
+	color: var(--_rich-text-details-content-color);
 }
 
 /* A block, not a row: the summary holds text and inline elements of the page,
@@ -645,7 +649,7 @@ nldd-rich-text summary {
 nldd-rich-text details[open] > summary {
 	border-end-start-radius: 0;
 	border-end-end-radius: 0;
-	border-block-end: var(--_rich-text-details-highlight-border-width) solid var(--semantics-surfaces-tinted-highlight-border-color);
+	border-block-end: var(--_rich-text-details-highlight-border-width) solid var(--_rich-text-details-highlight-border-color);
 }
 
 nldd-rich-text details[open] > summary::before {
@@ -670,10 +674,10 @@ nldd-rich-text details[open] {
 	}
 
 	nldd-rich-text details::details-content {
-		--context-background-color: var(--semantics-surfaces-base-background-color);
+		--context-background-color: var(--_rich-text-details-content-background-color);
 		border-end-start-radius: max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width));
 		border-end-end-radius: max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width));
-		background-color: var(--semantics-surfaces-base-background-color);
+		background-color: var(--_rich-text-details-content-background-color);
 	}
 
 	nldd-rich-text details[open]::details-content {

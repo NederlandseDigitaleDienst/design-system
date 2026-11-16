@@ -8,6 +8,21 @@ export const devRules: DevRule[] = [
 		"context": ":is(nldd-modal-dialog, nldd-inline-dialog) > [slot=\"actions\"]:not(nldd-button)"
 	},
 	{
+		"id": "admonition-collapsed-no-effect",
+		"message": "`collapsed` does nothing unless the admonition is `collapsible` and has `text`.",
+		"context": "nldd-admonition[collapsed]:not([collapsible][text]:not([text=\"\"]))"
+	},
+	{
+		"id": "admonition-collapsible-no-effect",
+		"message": "`collapsible` does nothing without `text`: there is no title bar to open and close the content with.",
+		"context": "nldd-admonition[collapsible]:not([text]:not([text=\"\"]))"
+	},
+	{
+		"id": "admonition-heading-level-no-effect",
+		"message": "`heading-level` does nothing on a collapsible admonition: its title is the name of the button that opens it, not a heading.",
+		"context": "nldd-admonition[collapsible][text]:not([text=\"\"])[heading-level]:not([heading-level=\"\"])"
+	},
+	{
 		"id": "avatar-color-renamed",
 		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-avatar.",
 		"context": "nldd-avatar[color=\"inherit\"]"
