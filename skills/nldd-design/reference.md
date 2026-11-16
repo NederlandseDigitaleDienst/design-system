@@ -496,6 +496,33 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 ## Content
 
+### `<nldd-admonition>`
+
+A note, tip or warning set apart in running text: what a `:::warning` becomes in a markdown page. It is content, not feedback. It says nothing when the page loads and cannot be dismissed, so a screen reader meets it in reading order as a note (`role="note"`). For a notice about what happens on the page, such as an error summary, use nldd-banner, which is a live region. The title sits in a bar tinted in the color of the variant, with the icon of the variant before it. The content sits below it on the base surface, inside a border of the same color, so the admonition reads as part of the text and not as a message. Without `text` there is no bar, and the icon stands before the content. A warning or a critical note says in its title what it is: the color and the icon are not read out. With `collapsible` the title bar opens and closes the content, as a native `details` does: the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts open; add `collapsed` to start closed. Keep what you fold away short and additional: see the design guidelines on expand/collapse. A collapsible admonition needs `text`, and its title is the name of the button that opens it, so `heading-level` does not apply there. A markdown renderer does not make one by itself: `:::tip` is syntax of the parser, so the app maps each type to an admonition. The types of Docusaurus, remark-directive and markdown-it-container map as follows: `note` to `variant="neutral"`, `info` to `variant="accent"`, `tip` to `variant="success" icon="idea"`, `warning` and `caution` to `variant="warning"`, and `danger` to `variant="critical"`. The label of the type, or the title given in the markdown, becomes `text`. One admonition does not hold another: an aside within an aside is a sign the text wants to be written differently.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `variant` | `'neutral'\|'accent'\|'success'\|'warning'\|'critical'` | Color and default icon (default: 'neutral') |
+| `text` | `string` | Title in the bar above the content. Without it there is no bar |
+| `heading-level` | `1\|2\|3\|4\|5\|6` | Renders the title as h1–h6; absent renders a p. Not with `collapsible` |
+| `icon` | `string` | Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled |
+| `collapsible` | `boolean` | The title bar opens and closes the content. Needs `text` |
+| `collapsed` | `boolean` | Whether a collapsible admonition is closed |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The content: an nldd-rich-text, or an nldd-text for a single paragraph. |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `toggle` | When a collapsible admonition opens or closes; read `collapsed` for the new state. |
+
 ### `<nldd-avatar>`
 
 Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role="img"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.

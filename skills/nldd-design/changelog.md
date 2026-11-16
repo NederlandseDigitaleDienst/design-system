@@ -15,8 +15,13 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-admonition`, a new component for a note, tip or warning in running text,** such as a `:::warning` in a markdown page. Unlike `nldd-banner` it is no live region, so nothing is read out when the page loads. See Added.
+
 ### Added
 
+- **`nldd-admonition`.** A note, tip or warning set apart in running text, with the variants and icons of `nldd-banner`: the title in a bar tinted in the color of the variant, the content below it on the base surface. It is a note for a screen reader (`role="note"`), not a live region, and it cannot be dismissed. With `collapsible` the title bar opens and closes the content, as a native `details` does, so find in page opens it too.
 - `<details>` and `<summary>` in `nldd-rich-text` read as a bordered block: a tinted bar with a chevron that points down to open and up to close, the content on a white surface below it, and details that follow each other joined into one block. They stay native, so find in page opens the one it finds in, and they print open where the browser supports it.
 
 ### Changed

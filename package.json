@@ -47,6 +47,10 @@
       "types": "./dist/components/actions/menu/menu.d.ts",
       "default": "./dist/components/actions/menu/menu.js"
     },
+    "./admonition": {
+      "types": "./dist/components/content/admonition/admonition.d.ts",
+      "default": "./dist/components/content/admonition/admonition.js"
+    },
     "./avatar": {
       "types": "./dist/components/content/avatar/avatar.d.ts",
       "default": "./dist/components/content/avatar/avatar.js"

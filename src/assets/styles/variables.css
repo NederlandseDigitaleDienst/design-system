@@ -1763,6 +1763,11 @@
 	   Tokens of one component, here only because a theme sets them: a theme
 	   reaches :root, not a component's own styles. */
 
+	/* ## Admonition */
+
+	--components-admonition-accent-icon-color: var(--components-banner-accent-icon-color);
+
+
 	/* ## Badge */
 
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));

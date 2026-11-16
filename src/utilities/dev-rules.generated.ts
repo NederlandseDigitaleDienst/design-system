@@ -1304,6 +1304,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-toolbar[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-admonition-variant",
+		"message": "`variant` on nldd-admonition takes: accent, critical, neutral, success, warning.",
+		"context": "nldd-admonition[variant]:not([variant=\"accent\"], [variant=\"critical\"], [variant=\"neutral\"], [variant=\"success\"], [variant=\"warning\"])"
+	},
+	{
 		"id": "invalid-value-avatar-type",
 		"message": "`type` on nldd-avatar takes: organization, person.",
 		"context": "nldd-avatar[type]:not([type=\"organization\"], [type=\"person\"])"
