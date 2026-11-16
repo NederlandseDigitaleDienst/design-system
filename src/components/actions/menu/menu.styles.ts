@@ -221,7 +221,7 @@ export const menuItemStyles = css`
 		--_menu-item-resting-content-color: var(--context-content-color);
 		--_menu-item-resting-content-secondary-color: var(--context-content-secondary-color);
 		--_menu-item-confirm-duration: var(--primitives-transition-duration-fast);
-		--_menu-item-confirm-hold-duration: var(--primitives-transition-duration-slow);
+		--_menu-item-confirm-hold-duration: var(--primitives-transition-duration-fast);
 
 		${inheritedTextReset}
 		display: block;

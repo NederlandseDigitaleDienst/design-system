@@ -338,6 +338,31 @@ describe('nldd-menu-item href (link items)', () => {
 		expect(a.querySelector('nldd-text-cell')?.getAttribute('text')).toBe('Profiel');
 	});
 
+	const pressSpace = async (variant: string): Promise<{ selected: number; clicked: number; prevented: boolean }> => {
+		el = await fixture(`<nldd-menu variant="${variant}"><nldd-menu-item text="Nieuw bericht"></nldd-menu-item><nldd-menu-item text="Instellingen" href="#instellingen"></nldd-menu-item></nldd-menu>`);
+		(el as HTMLElement).showPopover();
+		await waitForUpdate(el);
+		const item = el.querySelectorAll('nldd-menu-item')[1] as HTMLElement;
+		const a = action(item);
+		let selected = 0;
+		let clicked = 0;
+		el.addEventListener('select', () => selected++);
+		a.addEventListener('click', (event) => { clicked++; event.preventDefault(); });
+		item.focus();
+		await waitForUpdate(el);
+		const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, composed: true, cancelable: true });
+		a.dispatchEvent(space);
+		return { selected, clicked, prevented: space.defaultPrevented };
+	};
+
+	it('chooses a link item with Space, as it does a button item', async () => {
+		expect(await pressSpace('menu')).toEqual({ selected: 1, clicked: 1, prevented: true });
+	});
+
+	it('leaves Space on a link in a navigation menu to the browser', async () => {
+		expect(await pressSpace('navigation')).toEqual({ selected: 0, clicked: 0, prevented: false });
+	});
+
 	it('opens in a new tab with target, and says so to a screen reader', async () => {
 		el = await fixture('<nldd-menu><nldd-menu-item text="Handleiding" href="/handleiding" target="_blank" rel="help"></nldd-menu-item></nldd-menu>');
 		await waitForUpdate(el);
@@ -3811,6 +3836,64 @@ describe('nldd-menu confirms a choice', () => {
 		const item = root.querySelector('nldd-menu-item')!;
 		item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
 		expect(item.hasAttribute('confirming')).toBe(false);
+	});
+
+	const pressAndClick = async (target: HTMLElement, pointerType = 'mouse'): Promise<void> => {
+		target.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, pointerType }));
+		target.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
+		await waitForUpdate(target);
+	};
+
+	for (const pointerType of ['mouse', 'touch']) {
+		it(`reopens on a ${pointerType} press of its nldd-button during the blink`, async () => {
+			root = await fixture<HTMLElement>(`
+				<nldd-button text="Menu">
+					<nldd-menu slot="popup"><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>
+				</nldd-button>
+			`);
+			await waitForUpdate(root);
+			const inner = root.shadowRoot!.querySelector('button') as HTMLButtonElement;
+			const menu = root.querySelector('nldd-menu') as HTMLElement;
+			const item = menu.querySelector('nldd-menu-item')!;
+			await pressAndClick(inner);
+			expect(menu.matches(':popover-open')).toBe(true);
+			await waitForUpdate(menu);
+
+			const button = item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!;
+			button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, pointerType }));
+			button.click();
+			expect(item.hasAttribute('confirming')).toBe(true);
+
+			await pressAndClick(inner, pointerType);
+			expect(item.hasAttribute('confirming')).toBe(false);
+			expect(menu.matches(':popover-open')).toBe(true);
+			// The blink's fallback timer is gone, so it does not close the reopened menu.
+			await new Promise((resolve) => setTimeout(resolve, 450));
+			expect(menu.matches(':popover-open')).toBe(true);
+		});
+	}
+
+	it('reopens on a press of its anchor during the blink', async () => {
+		root = await fixture<HTMLElement>(`
+			<div>
+				<button id="blink-anchor">Menu</button>
+				<nldd-menu anchor="blink-anchor"><nldd-menu-item text="Dakisolatie"></nldd-menu-item></nldd-menu>
+			</div>
+		`);
+		const anchor = root.querySelector('button') as HTMLButtonElement;
+		const menu = root.querySelector('nldd-menu') as HTMLElement;
+		await waitForUpdate(menu);
+		await pressAndClick(anchor);
+		expect(menu.matches(':popover-open')).toBe(true);
+		await waitForUpdate(menu);
+
+		const item = menu.querySelector('nldd-menu-item')!;
+		item.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(item.hasAttribute('confirming')).toBe(true);
+
+		await pressAndClick(anchor);
+		expect(item.hasAttribute('confirming')).toBe(false);
+		expect(menu.matches(':popover-open')).toBe(true);
 	});
 
 	it('stops the blink when the menu leaves the page', async () => {

@@ -2153,7 +2153,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled.",
+              "description": "Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Space chooses it like any other item, except in a `navigation` menu, where Space scrolls the page as on any link. Ignored for submenu openers, checkbox/radio items, and while disabled.",
               "name": "href",
               "default": "''",
               "fieldName": "href"
@@ -2994,7 +2994,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A menu that scrolls fades at the edge where more items wait. Note: Only type=\"button\" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.",
+          "description": "A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A press on the menu's control during the blink or hold ends it and opens the menu again, since the menu was already on its way out. A menu that scrolls fades at the edge where more items wait. Note: Only type=\"button\" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.",
           "name": "NLDDMenu",
           "slots": [
             {
@@ -31362,7 +31362,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A visually bounded card with optional header, body and footer sections. The card is elevated by default. Padding is left to nested containers. With `href` the whole card becomes a link (an overlay anchor across the card), with `button` a button (an overlay button that fires a plain, composed `click`, so a click listener or htmx attribute on the card itself works directly, and Enter/Space work natively). `href` wins when both are set. Nested interactive content, footer buttons for instance, has to be lifted above it with `position: relative; z-index: 1` to stay clickable. A card that is a link or button steps its surface and border one shade up on hover and one more while pressed, as a neutral-base button does; content lifted above the overlay does not set it off. On a touch screen there is no hover, and a touch that turns into a scroll lets go of the pressed shade.",
+          "description": "A visually bounded card with optional header, body and footer sections. The card is elevated by default. Padding is left to nested containers. With `href` the whole card becomes a link (an overlay anchor across the card), with `button` a button (an overlay button that fires a plain, composed `click`, so a click listener or htmx attribute on the card itself works directly, and Enter/Space work natively). `href` wins when both are set. Nested interactive content, footer buttons for instance, has to be lifted above it with `position: relative; z-index: 1` to stay clickable. A card that is a link or button steps its surface and border one shade up on hover and one more while pressed, as a neutral-base button does; content lifted above the overlay does not set it off. On a touch screen there is no hover, and a touch that turns into a scroll lets go of the pressed shade. Put no card in a card: a card is one thing you go to or choose. To group content visually, use `nldd-box` or a layout of your own instead.",
           "name": "NLDDCard",
           "members": [
             {

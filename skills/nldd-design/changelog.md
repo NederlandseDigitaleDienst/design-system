@@ -15,6 +15,17 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **`card-no-card`** (warn) reports an `nldd-card` inside another `nldd-card`. A card is one thing to go to or choose; to group content visually, use `nldd-box` or a layout of your own.
+
+### Fixed
+
+- **An `nldd-card` reacts only to its own link or button.** A clickable card inside another card made the outer one draw the focus ring and the pressed shade too.
+- **A press on the control of an `nldd-menu` while the chosen item blinks opens the menu again.** It used to close the menu, which was about to close anyway, so the press seemed to do nothing.
+- **Space chooses an `nldd-menu-item` with an `href`, as it does every other item in the menu.** It used to scroll the page, with the menu open and moving out of view. In a `navigation` menu Space still scrolls, as on any link.
+- After a tap, the chosen item of an `nldd-menu` holds for 150 ms instead of 300 ms, as long as the blink after a click.
+
 ## [0.25.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.25.0...v0.25.1) (2026-11-16)
 
 ### Highlights

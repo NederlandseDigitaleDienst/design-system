@@ -153,6 +153,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "card-no-card",
+		"message": "Move this nldd-card out of the nldd-card around it: a card is one thing to go to or choose. To group content visually, use nldd-box or a layout of your own.",
+		"context": "nldd-card nldd-card"
+	},
+	{
 		"id": "checkbox-color-renamed",
 		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-checkbox.",
 		"context": "nldd-checkbox[color=\"inherit\"], nldd-checkbox-field[color=\"inherit\"]"

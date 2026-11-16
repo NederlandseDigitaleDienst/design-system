@@ -78,7 +78,9 @@ const HOVER_OPEN_MAX_MS = 150;
  * instead, without going dark in between. `select`
  * fires at once: the action does not wait for the blink. With
  * `prefers-reduced-motion` there is no blink, and the menu closes at once
- * after a click; a tap still holds, since that is no motion. A menu that scrolls
+ * after a click; a tap still holds, since that is no motion. A press on the
+ * menu's control during the blink or hold ends it and opens the menu again,
+ * since the menu was already on its way out. A menu that scrolls
  * fades at the edge where more items wait.
  *
  * Note: Only type="button" items are supported when used inside nldd-combo-box-field.
@@ -920,6 +922,23 @@ export class NLDDMenu extends LitElement {
 	private _finishBlink: (() => void) | null = null;
 
 	/**
+	 * A press on the anchor while a chosen item blinks: the menu is on its way
+	 * out, so the press means "open it again". Finish the blink now, so the
+	 * control sees a closed menu and its click opens it, instead of closing a
+	 * menu that was about to close anyway.
+	 */
+	private _finishBlinkForAnchorPress(event: PointerEvent): boolean {
+		const root = this._chainRoot ?? this;
+		const anchorEl = root._getAnchorEl();
+		const path = event.composedPath();
+		if (!anchorEl || !path.includes(anchorEl) || path.includes(root)) return false;
+		const blinking = [root, ...root._openChain.map((level) => level.submenu)].find((menu) => menu._finishBlink);
+		if (!blinking) return false;
+		blinking._finishBlink?.();
+		return true;
+	}
+
+	/**
 	 * Collapse the entire menu chain at once — root + every open submenu —
 	 * with no "back one level" re-show. Used when the action is final:
 	 * selecting an item, clicking the anchor, clicking/tapping outside, or
@@ -971,6 +990,7 @@ export class NLDDMenu extends LitElement {
 	 * leaves the chain untouched, matching root-menu behavior.
 	 */
 	private _handleDocumentPointerdown = (event: PointerEvent): void => {
+		if (this._finishBlinkForAnchorPress(event)) return;
 		if (!this._isOpen) return;
 		// Anchor pointerdown on a root menu while open: capture as a gesture
 		// so the trailing click — fired after native popover light-dismiss
@@ -1545,6 +1565,16 @@ export class NLDDMenu extends LitElement {
 				// reader's, for moving through links and headings.
 				if (this.variant !== 'navigation' && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
 					this._handleTypeahead(event, items, index);
+				}
+				// Space chooses a button item, but on a link the browser scrolls
+				// the page instead. In a menu of actions every item is chosen the
+				// same way, so a link item takes Space as a click too.
+				if (event.key === ' ' && !event.defaultPrevented && this.variant !== 'navigation') {
+					const link = items[index]?.shadowRoot?.querySelector<HTMLAnchorElement>('a.menu__item');
+					if (link) {
+						event.preventDefault();
+						if (!event.repeat) link.click();
+					}
 				}
 			}
 		}
