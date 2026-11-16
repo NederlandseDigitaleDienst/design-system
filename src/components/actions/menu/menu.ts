@@ -74,9 +74,11 @@ const HOVER_OPEN_MAX_MS = 150;
  *
  * A chosen item blinks once before the menu closes, as a native menu on
  * macOS does, so you see what you picked. After a tap there is no hover to
- * blink from, so the item lights up and holds a moment instead. `select`
+ * blink from, so the item lights up from the press and holds a moment
+ * instead, without going dark in between. `select`
  * fires at once: the action does not wait for the blink. With
- * `prefers-reduced-motion` the menu closes at once. A menu that scrolls
+ * `prefers-reduced-motion` there is no blink, and the menu closes at once
+ * after a click; a tap still holds, since that is no motion. A menu that scrolls
  * fades at the edge where more items wait.
  *
  * Note: Only type="button" items are supported when used inside nldd-combo-box-field.
@@ -854,7 +856,8 @@ export class NLDDMenu extends LitElement {
 	 * closes after it, so you see what you picked. `select` has already gone
 	 * out: the action does not wait for the blink. Every menu in the chain
 	 * hears the event; the first one runs the blink and the rest leave it.
-	 * Without motion, in a menu that is not open, or in a listbox, it closes at once.
+	 * In a menu that is not open, in a listbox, or after a click or key with
+	 * reduced motion, it closes at once; a tap still holds.
 	 */
 	private _handleSelect = (event: Event): void => {
 		const item = event.target as HTMLElement;
@@ -864,7 +867,10 @@ export class NLDDMenu extends LitElement {
 		if (this._blinkTimer || item.hasAttribute('confirming')) return;
 		const button = item.localName === 'nldd-menu-item' ? item.shadowRoot?.querySelector('.menu__item') : null;
 		// A listbox belongs to a field, which shows the choice itself and closes it.
-		if (!button || !this._isOpen || this.variant === 'listbox' || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		// Holding a tapped item lit is no motion, so only the blink gives way to
+		// reduced motion.
+		const reduceMotion = !pressedByTouch && matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (!button || !this._isOpen || this.variant === 'listbox' || reduceMotion) {
 			this._collapseChain();
 			return;
 		}
@@ -895,12 +901,20 @@ export class NLDDMenu extends LitElement {
 	private _pressedByTouch = false;
 	private _notePress = (event: Event): void => {
 		this._pressedByTouch = event.type === 'pointerdown' && (event as PointerEvent).pointerType === 'touch';
+		if (!this._pressedByTouch) return;
+		// The press highlight of a tap is :active, which ends when the finger
+		// lifts, before the click selects: the item went dark between press and
+		// hold. Highlighted from the press, it stays lit until the menu closes.
+		const item = (event.target as Element | null)?.closest('nldd-menu-item') as NLDDMenuItem | null;
+		if (item && !item.disabled && item.closest('nldd-menu') === this) this._setHighlight(item);
 	};
 	/** A press ends with its click, which reaches the menu after the item has
 	 *  selected, or with a touch that scrolls instead, or when the menu closes.
 	 *  A key press counts as a press of its own, so it clears the touch too.
 	 *  A disabled item fires no click, so a tap on one lasts until then. */
-	private _forgetPress = (): void => {
+	private _forgetPress = (event?: Event): void => {
+		// A touch that turns into a scroll picked nothing, so nothing stays lit.
+		if (event?.type === 'pointercancel' && this._pressedByTouch) this._clearHighlight();
 		this._pressedByTouch = false;
 	};
 	private _finishBlink: (() => void) | null = null;

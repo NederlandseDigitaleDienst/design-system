@@ -21,6 +21,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- `nldd-menu`: a tapped item stays lit from the press until the menu closes. On a phone it went dark between the press and the hold, which looked like a blink.
+- `nldd-date-field`: the chosen day stays lit a moment before the calendar closes. It closed at once, so a click showed nothing. The value and `change` do not wait.
 - `nldd-code-viewer`: "Gekopieerd" goes away when the page scrolls, and after a tap it goes after 2 seconds. On a phone the copy button kept its check mark and its tooltip until you tapped somewhere else.
 - `nldd-tooltip`: an open tooltip stays beside its trigger when the page scrolls, and hides while the trigger is out of view. It used to stay at the edge of the screen, apart from what it describes.
 

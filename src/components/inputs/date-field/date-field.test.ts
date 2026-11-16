@@ -398,6 +398,27 @@ describe('nldd-date-field', () => {
 		expect(calls).toEqual(['show', 'hide']);
 	});
 
+	// Closed at once, a click on a day showed nothing: the chosen day lights up
+	// and holds a moment first. The value and change do not wait.
+	it('houdt de gekozen dag even vast voordat de kalender sluit', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field></nldd-date-field>');
+		await waitForUpdate(el);
+		pickerButton(el)!.click();
+		await waitForUpdate(el);
+		const popover = el.shadowRoot!.querySelector('nldd-popover')!;
+		await vi.waitFor(() => expect(popover.matches(':popover-open')).toBe(true));
+		let changes = 0;
+		el.addEventListener('change', () => changes++);
+
+		picker(el)!.dispatchEvent(new CustomEvent('change', {
+			detail: { value: '2026-12-31' }, bubbles: true, composed: true,
+		}));
+		expect(el.value).toBe('2026-12-31');
+		expect(changes).toBe(1);
+		expect(popover.matches(':popover-open')).toBe(true);
+		await vi.waitFor(() => expect(popover.matches(':popover-open')).toBe(false), { timeout: 1000 });
+	});
+
 	// The popover restores focus to the host, which delegates it to the text input,
 	// so without intervention focus jumps back past the button you just used and
 	// you have to tab forward again to reopen.

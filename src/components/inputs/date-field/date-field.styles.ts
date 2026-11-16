@@ -17,6 +17,7 @@ export const dateFieldStyles = css`
 		   tabular, so every date measures the same), but as air around the date and
 		   as a grip to select and drag by. */
 		--_date-field-text-width: 10.5ch;
+		--_date-field-choice-hold-duration: var(--primitives-transition-duration-slow);
 		/* Room reserved for the separator. The character itself gets its own width,
 		   because it is translatable and would clip in a fixed box. Whatever that
 		   reservation gets wrong is absorbed by the end date field. */
