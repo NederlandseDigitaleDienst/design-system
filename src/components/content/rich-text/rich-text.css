@@ -79,8 +79,8 @@ nldd-rich-text[centered] > div:only-child:not([class], [style], [role], [data-ri
 	justify-self: center;
 }
 
-nldd-rich-text > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote),
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote) {
+nldd-rich-text > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote, details),
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote, details) {
 	grid-column: main;
 	/* Fill the main column so short text blocks keep a shared left edge —
 	   justify-self: center would otherwise float a shrinkwrapped heading
@@ -531,6 +531,147 @@ nldd-rich-text blockquote {
 
 nldd-rich-text blockquote > p {
 	margin: 0;
+}
+
+
+/* # Details */
+
+nldd-rich-text details {
+	--_rich-text-details-padding: var(--primitives-space-4);
+	--_rich-text-details-corner-radius: var(--primitives-corner-radius-lg);
+	--_rich-text-details-inner-corner-radius: calc(var(--_rich-text-details-corner-radius) - var(--_rich-text-details-padding));
+	--_rich-text-details-inline-inset: max(var(--semantics-list-items-indicator-inline-inset), var(--_rich-text-details-inner-corner-radius));
+	--_rich-text-details-summary-min-size: var(--semantics-controls-md-min-size);
+	--_rich-text-details-summary-padding-block: var(--primitives-space-10);
+	--_rich-text-details-summary-gap: var(--primitives-space-8);
+	--_rich-text-details-chevron-size: var(--primitives-space-20);
+	--_rich-text-details-open-rotation: 180deg;
+	--_rich-text-details-divider-thickness: var(--semantics-dividers-thickness);
+	--_rich-text-details-divider-color: var(--semantics-dividers-color);
+
+	--context-background-color: var(--semantics-surfaces-tinted-background-color);
+	--context-content-color: var(--semantics-content-color);
+	--context-content-secondary-color: var(--semantics-content-secondary-color);
+	--context-content-accent-color: var(--semantics-content-accent-color);
+	--context-content-success-color: var(--semantics-content-success-color);
+	--context-content-warning-color: var(--semantics-content-warning-color);
+	--context-content-critical-color: var(--semantics-content-critical-color);
+	--context-link-color: var(--semantics-links-color);
+	--context-link-is-hovered-color: var(--semantics-links-is-hovered-color);
+	--context-link-is-active-color: var(--semantics-links-is-active-color);
+	box-sizing: border-box;
+	padding: var(--_rich-text-details-padding);
+	border-radius: var(--_rich-text-details-corner-radius);
+	background-color: var(--semantics-surfaces-tinted-background-color);
+	box-shadow: inset 0 0 0 1px var(--semantics-surfaces-tinted-highlight-border-color);
+	color: var(--semantics-content-color);
+
+	@media (forced-colors: active) {
+		border: 1px solid CanvasText;
+	}
+}
+
+nldd-rich-text details[open] {
+	padding-block-end: calc(var(--_rich-text-details-padding) + var(--_rich-text-details-summary-padding-block));
+}
+
+nldd-rich-text summary {
+	display: flex;
+	position: relative;
+	align-items: center;
+	gap: var(--_rich-text-details-summary-gap);
+	box-sizing: border-box;
+	min-height: var(--_rich-text-details-summary-min-size);
+	padding: var(--_rich-text-details-summary-padding-block) var(--_rich-text-details-inline-inset);
+	padding-inline-end: calc(var(--_rich-text-details-summary-padding-block) + (1lh - var(--_rich-text-details-chevron-size)) / 2);
+	border-radius: var(--_rich-text-details-inner-corner-radius);
+	font: var(--primitives-font-body-md-bold-snug);
+	cursor: pointer;
+	list-style: none;
+	overflow-wrap: break-word;
+	-webkit-tap-highlight-color: transparent;
+
+	&::-webkit-details-marker {
+		display: none;
+	}
+
+	&::after {
+		content: '';
+		flex: none;
+		align-self: flex-start;
+		margin-block-start: calc((1lh - var(--_rich-text-details-chevron-size)) / 2);
+		margin-inline-start: auto;
+		background-color: currentColor;
+		width: var(--_rich-text-details-chevron-size);
+		height: var(--_rich-text-details-chevron-size);
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cpath d='M48 60.7 13.6 26.4 8 32l40 40 40-40-5.6-5.6z'/%3E%3C/svg%3E") center / contain no-repeat;
+		transition: rotate var(--primitives-transition-duration-fast) ease-out;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+
+		@media (forced-colors: active) {
+			forced-color-adjust: none;
+			background-color: CanvasText;
+		}
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			--context-content-color: var(--semantics-list-items-is-hovered-content-color);
+			background-color: var(--semantics-list-items-is-hovered-background-color);
+			color: var(--semantics-list-items-is-hovered-content-color);
+		}
+	}
+
+	&:active {
+		--context-content-color: var(--semantics-list-items-is-active-content-color);
+		background-color: var(--semantics-list-items-is-active-background-color);
+		color: var(--semantics-list-items-is-active-content-color);
+	}
+}
+
+nldd-rich-text details[open] > summary::after {
+	rotate: var(--_rich-text-details-open-rotation);
+}
+
+nldd-rich-text details[open] > summary::before {
+	content: '';
+	position: absolute;
+	inset-inline: var(--_rich-text-details-inline-inset);
+	inset-block-end: calc(-1 * var(--_rich-text-details-divider-thickness));
+	border-block-start: var(--_rich-text-details-divider-thickness) solid var(--_rich-text-details-divider-color);
+}
+
+nldd-rich-text details > :not(summary) {
+	margin: var(--_rich-text-spacing) var(--_rich-text-details-inline-inset) 0;
+}
+
+nldd-rich-text details > summary + * {
+	margin-block-start: calc(var(--_rich-text-details-summary-padding-block) + var(--_rich-text-details-divider-thickness));
+}
+
+nldd-rich-text details:has(+ details) {
+	border-end-start-radius: 0;
+	border-end-end-radius: 0;
+}
+
+/* Pulled up over the gap by one pixel more, so the two inset borders become one line. */
+nldd-rich-text details + details {
+	margin-block-start: calc(-1 * var(--_rich-text-spacing) - 1px);
+	border-start-start-radius: 0;
+	border-start-end-radius: 0;
+}
+
+@media print {
+	nldd-rich-text details::details-content {
+		content-visibility: visible;
+	}
+
+	nldd-rich-text summary::after {
+		display: none;
+	}
 }
 
 

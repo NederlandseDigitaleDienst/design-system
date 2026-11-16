@@ -450,3 +450,114 @@ describe('nldd-rich-text links', () => {
 		expect(getComputedStyle(onSurface).color).toBe('rgb(255, 255, 255)');
 	});
 });
+
+describe('nldd-rich-text details', () => {
+	let styles: HTMLStyleElement[] = [];
+	let el: HTMLElement;
+
+	beforeAll(() => {
+		styles = [colorsCss, variablesCss.replace(/@import[^;]+;/g, ''), richTextCss].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
+	});
+
+	afterAll(() => {
+		styles.forEach((s) => s.remove());
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const render = (html: string) => fixture<HTMLElement>(`<nldd-rich-text style="width: 600px">${html}</nldd-rich-text>`);
+	const block = (body = '<p>Inhoud</p>') => `<details><summary>Vraag</summary>${body}</details>`;
+
+	it('draws a summary as a row with a chevron, and no browser marker', async () => {
+		el = await render(block());
+		const details = el.querySelector('details')!;
+		const summary = el.querySelector('summary')!;
+		expect(getComputedStyle(details).borderTopLeftRadius).not.toBe('0px');
+		expect(getComputedStyle(details).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+		expect(getComputedStyle(summary).display).toBe('flex');
+		expect(getComputedStyle(summary).listStyleType).toBe('none');
+		expect(getComputedStyle(summary).fontWeight).toBe('600');
+		expect(parseFloat(getComputedStyle(summary).minHeight)).toBeGreaterThanOrEqual(44);
+		expect(getComputedStyle(summary, '::after').rotate).toBe('none');
+	});
+
+	it('fills the main column, as the text does', async () => {
+		el = await render(`<p>Tekst</p>${block()}`);
+		const p = el.querySelector('p')!.getBoundingClientRect();
+		const details = el.querySelector('details')!.getBoundingClientRect();
+		expect(details.width).toBeCloseTo(p.width, 0);
+	});
+
+	it('centers the chevron in a square as high as the row', async () => {
+		el = await render(block());
+		const summary = el.querySelector('summary')!;
+		const style = getComputedStyle(summary);
+		const chevron = parseFloat(getComputedStyle(summary, '::after').width);
+		expect(parseFloat(style.paddingRight)).toBeCloseTo((summary.getBoundingClientRect().height - chevron) / 2, 0);
+	});
+
+	it('keeps the chevron on the first line of a title that wraps', async () => {
+		el = await render('<details><summary style="width: 160px">Welke stukken horen bij de aanvraag voor dakisolatie?</summary></details>');
+		const summary = el.querySelector('summary')!;
+		const oneLine = parseFloat(getComputedStyle(summary).lineHeight);
+		const chevron = parseFloat(getComputedStyle(summary, '::after').marginTop);
+		expect(summary.getBoundingClientRect().height).toBeGreaterThan(oneLine * 2);
+		expect(chevron).toBeCloseTo((oneLine - 20) / 2, 0);
+	});
+
+	it('turns the chevron when it opens', async () => {
+		el = await render(block());
+		const details = el.querySelector('details')!;
+		details.open = true;
+		expect(getComputedStyle(el.querySelector('summary')!, '::after').rotate).toBe('180deg');
+	});
+
+	it('draws an inset divider between an open summary and its content', async () => {
+		el = await render('<details><summary>Vraag</summary><p>Inhoud</p></details>');
+		const details = el.querySelector('details')!;
+		const summary = el.querySelector('summary')!;
+		expect(getComputedStyle(summary, '::before').content).toBe('none');
+		details.open = true;
+		const divider = getComputedStyle(summary, '::before');
+		expect(divider.borderTopWidth).toBe('1px');
+		expect(divider.left).toBe(getComputedStyle(summary).paddingLeft);
+		const p = el.querySelector('p')!.getBoundingClientRect();
+		expect(p.top - summary.getBoundingClientRect().bottom).toBeGreaterThan(8);
+	});
+
+	it('joins details that follow each other into one block', async () => {
+		el = await render(`${block()}${block()}${block()}`);
+		const [first, second, third] = Array.from(el.querySelectorAll('details'));
+		expect(getComputedStyle(first).borderTopLeftRadius).not.toBe('0px');
+		expect(getComputedStyle(first).borderBottomLeftRadius).toBe('0px');
+		expect(getComputedStyle(second).borderTopLeftRadius).toBe('0px');
+		expect(getComputedStyle(second).borderBottomLeftRadius).toBe('0px');
+		expect(getComputedStyle(third).borderTopLeftRadius).toBe('0px');
+		expect(getComputedStyle(third).borderBottomLeftRadius).not.toBe('0px');
+		// One pixel of overlap, so the two borders draw a single line.
+		expect(second.getBoundingClientRect().top).toBeCloseTo(first.getBoundingClientRect().bottom - 1, 0);
+	});
+
+	it('keeps a details on its own after a paragraph rounded and spaced', async () => {
+		el = await render(`${block()}<p>Tekst</p>${block()}`);
+		const [, second] = Array.from(el.querySelectorAll('details'));
+		const p = el.querySelector('p')!.getBoundingClientRect();
+		expect(getComputedStyle(second).borderTopLeftRadius).not.toBe('0px');
+		expect(second.getBoundingClientRect().top).toBeGreaterThan(p.bottom);
+	});
+
+	it('lines the content up with the summary text', async () => {
+		el = await render('<details open><summary>Vraag</summary><p>Inhoud</p></details>');
+		const summary = el.querySelector('summary')!;
+		const p = el.querySelector('p')!.getBoundingClientRect();
+		const textStart = summary.getBoundingClientRect().left + parseFloat(getComputedStyle(summary).paddingLeft);
+		expect(p.left).toBeCloseTo(textStart, 0);
+	});
+});

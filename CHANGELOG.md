@@ -9,6 +9,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- `<details>` and `<summary>` in `nldd-rich-text` read as a box list with one row: a tinted surface, a chevron that points down to open and up to close, and details that follow each other joined into one block. They stay native, so find in page opens the one it finds in, and they print open where the browser supports it.
+
 ### Changed
 
 - `nldd-term`: on a phone the definition opens with the term as a small title and a "Sluit" button. A long definition keeps the term in the bar while you scroll.

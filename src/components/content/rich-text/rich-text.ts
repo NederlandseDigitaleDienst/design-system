@@ -52,6 +52,17 @@
  * of a markdown renderer as a link to `user:id`, which goes nowhere, so turn it
  * into one of these yourself.
  *
+ * ## Details
+ * A `details` with its `summary` reads as a box list with one row: the tinted
+ * surface, its border and rounded corners, and a chevron at the end of the
+ * summary that points down while it is closed and up once it is open. Details that follow each other join
+ * into one block, as the rows of a list do; give them the same `name` and only
+ * one opens at a time. They stay native, so the keyboard, a screen reader and
+ * find in page work as they do anywhere, and find in page opens the one it
+ * finds in. When printed they are open, where the browser supports
+ * `::details-content`; elsewhere a closed one prints closed. Keep what you fold
+ * away short and additional: see the design guidelines on expand/collapse.
+ *
  * @element nldd-rich-text
  *
  * @attr {string} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
@@ -67,7 +78,7 @@
  *   attribute, but only a word of at least 12 letters, as in `nldd-title`, so
  *   a short word moves to the next line whole. A soft hyphen (`&shy;`) adds
  *   a place to break of your own.
- * @accepts p, h1, h2, h3, h4, h5, h6, a, strong, b, em, i, u, s, del, ins, code, kbd, samp, var, small, mark, q, cite, abbr, sub, sup, br, span, ul, ol, li, dl, dt, dd, blockquote, pre, figure, figcaption, img, picture, source, table, thead, tbody, tfoot, tr, th, td, caption, hr, div, section, video, iframe
+ * @accepts p, h1, h2, h3, h4, h5, h6, a, strong, b, em, i, u, s, del, ins, code, kbd, samp, var, small, mark, q, cite, abbr, sub, sup, br, span, ul, ol, li, dl, dt, dd, blockquote, pre, figure, figcaption, img, picture, source, table, thead, tbody, tfoot, tr, th, td, caption, hr, div, section, details, summary, video, iframe
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
