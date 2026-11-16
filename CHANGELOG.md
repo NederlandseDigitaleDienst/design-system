@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.25.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.25.1...v0.25.2) (2026-11-16)
+
 ### Highlights
 
 - **`nldd-checkbox-group`, a new component for a set of checkboxes,** the counterpart of `nldd-radio-button-group`, and **nested checkboxes**: an option can have options under it, and follows them. See Added.
