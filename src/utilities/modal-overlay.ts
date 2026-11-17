@@ -150,7 +150,8 @@ export class ModalOverlay implements ReactiveController {
 			if (getComputedStyle(dialog).animationName === 'none') finish();
 		});
 		// animationend is not guaranteed: a background tab pauses animations, and
-		// `_closing` would then keep the overlay open for good.
+		// `_closing` would then keep the overlay open for good. One timer at a
+		// time: the next hide() only comes after a show(), whose _settle() cleared it.
 		this._closeFallback = window.setTimeout(finish, CLOSE_TIMEOUT_MS);
 	}
 
