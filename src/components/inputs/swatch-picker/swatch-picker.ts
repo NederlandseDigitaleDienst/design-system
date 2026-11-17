@@ -321,7 +321,6 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
-
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
 

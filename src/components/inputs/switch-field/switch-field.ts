@@ -74,7 +74,6 @@ export class NLDDSwitchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;
 	}

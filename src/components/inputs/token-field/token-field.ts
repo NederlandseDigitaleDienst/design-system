@@ -78,7 +78,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
 
-
 	// Property order matches the story controls (values kept high, above
 	// placeholder, per the text-field convention). No `size` axis yet — the field
 	// is md-only for now; a sm variant lands later.

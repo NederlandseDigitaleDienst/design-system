@@ -3,7 +3,6 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import '../../../assets/styles/variables.css';
 import './avatar-group.js';
 
-
 /** The text of the rules the group generates, the last sheet it adopted. */
 function generatedRules(el: HTMLElement): string {
 	const sheets = el.shadowRoot!.adoptedStyleSheets;

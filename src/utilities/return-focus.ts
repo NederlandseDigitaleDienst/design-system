@@ -1,7 +1,6 @@
 import { deepActiveElement } from './deep-active-element.js';
 import { isPointerMode } from './input-modality.js';
 
-
 /**
  * Hands focus back to `target` once `overlay` (a popover, menu, sheet or window)
  * has closed. Call it after the close, with the element that had focus when the
