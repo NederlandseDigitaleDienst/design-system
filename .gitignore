@@ -4,9 +4,6 @@ node_modules/
 # Build output
 dist/
 
-# Astro generated types and content collections
-.astro/
-
 # Environment variables (contains secrets)
 .env
 .env.local
@@ -43,13 +40,6 @@ temp/
 
 *storybook.log
 storybook-static
-
-# Playwright MCP screenshots
-.playwright-mcp/
-
-# Lost Pixel (keep baseline, ignore current and difference)
-.lostpixel/current/
-.lostpixel/difference/
 
 # Git worktrees
 .worktrees/

@@ -147,7 +147,7 @@ Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs` (
 
 ## Ontwerprichtlijnen
 
-De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs/Ontwerprichtlijnen"): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes). Heb je de directory `.claude/skills/ontwerprichtlijnen/` lokaal nog staan (van de oude generator), verwijder die dan handmatig; hij is nu een ongetrackte overblijver.
+De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs/Ontwerprichtlijnen"): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes).
 
 Een ontwerpregel staat daarmee op één plek. Een skill of een patroon mag hem hoogstens in één zin noemen met een link naar de sectie, en schrijft hem niet opnieuw uit. Doe je dat wel, dan lopen de twee versies uiteen: de sticky-headerregel stond een tijd strenger in `nldd-design-build` dan in de richtlijn zelf, en niemand zag dat.
 
