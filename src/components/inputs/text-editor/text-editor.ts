@@ -133,7 +133,7 @@
  */
 import { relabel } from './text-editor.labels.js';
 import { type PropertyValues } from 'lit';
-import { property, query } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { EditorView, drawSelection, dropCursor } from '@codemirror/view';
@@ -332,6 +332,10 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	private _toolbar = new ToolbarBinding(this, () => this.view?.focus());
 	private _stuck = new StuckToolbar(this, () => this._container ?? null);
 
+	/** @internal Whether the toolbar slot is filled; empty, it is hidden and takes no room. */
+	@state()
+	_hasSlottedToolbar = false;
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._toolbar.connect();
@@ -347,15 +351,12 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 
 	override firstUpdated(): void {
 		super.firstUpdated();
-		// A filled slot gets its padding and divider; a toolbar put in later
-		// follows the state at once.
-		for (const slot of this.renderRoot.querySelectorAll('slot')) {
-			slot.addEventListener('slotchange', () => {
-				slot.classList.toggle('is-filled', slot.assignedElements().length > 0);
-				this._toolbar.reflect();
-				this._stuck.update();
-			});
-		}
+		// A toolbar put in later follows the state at once.
+		const slot = this.renderRoot.querySelector<HTMLSlotElement>('slot[name="toolbar"]')!;
+		slot.addEventListener('slotchange', () => {
+			this._hasSlottedToolbar = slot.assignedElements().length > 0;
+			this._toolbar.reflect();
+		});
 	}
 
 	/** Resolve a translation key, applying `{name}` placeholder substitution from
@@ -570,7 +571,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
 		if (changed.has('disabled') || changed.has('readonly')) this._toolbar.reflect();
-		if (changed.has('embedded') && this.hasUpdated) this._stuck.update();
+		if ((changed.has('embedded') || changed.has('_hasSlottedToolbar')) && this.hasUpdated) this._stuck.update();
 		if (import.meta.env?.DEV && changed.has('typeaheads')) setState(this, 'invalid-typeahead-query', hasInvalidQuery(this.typeaheads));
 		if (!this.view) return;
 		// A render after setTranslations() or a new `translations`: the labels

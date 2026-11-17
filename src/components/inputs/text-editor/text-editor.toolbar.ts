@@ -263,7 +263,7 @@ export class StuckToolbar {
 	 *  embedded editor keeps a gap while stuck; elsewhere there is nothing to do. */
 	update(): void {
 		const slot = this._slot();
-		const watch = Boolean(slot?.classList.contains('is-filled')) && this.host.hasAttribute('embedded');
+		const watch = Boolean(slot && !slot.hidden) && this.host.hasAttribute('embedded');
 		if (!watch) slot?.classList.remove('is-stuck');
 		if (watch && !this._listening) {
 			this._gap = parseFloat(getComputedStyle(slot!).getPropertyValue('--_text-editor-stuck-gap')) || 0;

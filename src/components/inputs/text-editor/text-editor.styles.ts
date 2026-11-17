@@ -227,16 +227,17 @@ export const textEditorStyles = css`
 		z-index: var(--_text-editor-toolbar-z-index);
 		border-radius: inherit;
 		background-color: var(--_text-editor-toolbar-background-color);
-	}
-
-	slot[name="toolbar"].is-filled {
 		padding: var(--_text-editor-toolbar-padding);
 		border-end-start-radius: 0;
 		border-end-end-radius: 0;
 		border-block-end: var(--_text-editor-toolbar-divider);
 	}
 
-	:host([embedded]) slot[name="toolbar"].is-filled {
+	slot[name="toolbar"][hidden] {
+		display: none;
+	}
+
+	:host([embedded]) slot[name="toolbar"] {
 		padding-block-end: var(--_text-editor-toolbar-gap);
 	}
 
@@ -248,7 +249,7 @@ export const textEditorStyles = css`
 		box-shadow: 0 calc(-1 * var(--_text-editor-stuck-gap)) 0 0 var(--_text-editor-toolbar-background-color);
 	}
 
-	:host([embedded]) .text-editor:has(> slot[name="toolbar"].is-filled) .cm-content {
+	:host([embedded]) .text-editor:has(> slot[name="toolbar"]:not([hidden])) .cm-content {
 		padding-block-start: var(--_text-editor-toolbar-text-gap);
 	}
 
