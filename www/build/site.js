@@ -20,6 +20,7 @@ import { collectComponents, collectPatterns, parseStoryFile, readFacts, repoRoot
 import { codeViewer, escapeHtml, renderMarkdown } from './markdown.js';
 import { controlFor } from './attribute-values.js';
 import { MARKDOWN_INSERTS } from './skills.js';
+import { DEFAULT_THEME, themesByHue } from '../../scripts/lib/themes.js';
 
 const SITE_NAME = 'NLDD Designsysteem';
 
@@ -55,7 +56,9 @@ const PROSE = [
 function withBase(html, base) {
 	if (base === '/') return html;
 	// Every href in a tag, so the `website-href` and `back-href` of the bar too.
-	return html.replace(/(<link\b[^>]*>)|\bhref="\/(?!\/)/g, (match, link) => link ?? `href="${base}`);
+	return html
+		.replace(/(<link\b[^>]*>)|\bhref="\/(?!\/)/g, (match, link) => link ?? `href="${base}`)
+		.replace('src="/theme.js"', `src="${base}theme.js"`);
 }
 
 function read(path) {
@@ -64,7 +67,7 @@ function read(path) {
 
 const identity = (path) => path;
 
-function head({ title, description, entry, stylesheet = 'styles.css', robots = '' }) {
+function head({ title, description, entry, stylesheet = 'styles.css', robots = '', theme = true }) {
 	const pageTitle = title === SITE_NAME ? SITE_NAME : `${title} · ${SITE_NAME}`;
 	return `<head>
 	<meta charset="utf-8">
@@ -72,12 +75,18 @@ function head({ title, description, entry, stylesheet = 'styles.css', robots = '
 	<title>${escapeHtml(pageTitle)}</title>
 	<meta name="description" content="${escapeHtml(description)}">${robots}
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-	<link rel="stylesheet" href="/${stylesheet}">
+	<link rel="stylesheet" href="/${stylesheet}">${theme ? '\n\t<script vite-ignore src="/theme.js"></script>' : ''}
 	<script type="module" src="/${entry}"></script>
 </head>`;
 }
 
 const REPOSITORY = 'https://github.com/NederlandseDigitaleDienst/design-system';
+
+/** Every theme, the default first, for the menu that shows the site in one. */
+const THEMES = [
+	DEFAULT_THEME,
+	...themesByHue(JSON.parse(readFileSync(resolve(repoRoot, 'scripts/reference-colors.json'), 'utf8'))).map((theme) => theme.name),
+];
 
 /** The sections of the site, as the menu of every page behind the landing page. */
 const SECTIONS = [
@@ -101,20 +110,41 @@ function homePage() {
 	const bar = /<nldd-skip-link slot="header">[^]*?<\/nldd-skip-link>/;
 	if (!bar.test(html)) throw new Error('www/index.html heeft geen nldd-skip-link in de header.');
 	return html
-		.replace(/<head>[^]*?<\/head>/, head({ title, description, entry: 'home.ts', stylesheet: 'home.css' }))
+		.replace(/<head>[^]*?<\/head>/, head({ title, description, entry: 'home.ts', stylesheet: 'home.css', theme: false }))
 		.replace(bar, header('/', []));
 }
 
 /**
  * The bar of every page, with the sections as its menu. The item of the
- * section a page is in is the current one. Behind the landing page the name of
- * the site leads back to it, and a page inside a section has a back button to
- * the page above it.
+ * section a page is in is the current one, and behind the landing page the
+ * name of the site leads back to it. There is no back button: the menu and the
+ * breadcrumbs in the footer already say where a page is. Behind the landing
+ * page the bar also has the menu that shows the site in
+ * another theme; the landing page has a picker of its own for that.
  */
 function header(path, trail) {
-	const [backText, backHref] = trail[trail.length - 1] ?? [];
 	const home = trail.length > 0 ? '\n\t\t\t\twebsite-href="/"' : '';
-	const back = trail.length > 1 ? `\n\t\t\t\tback-text="${backText}"\n\t\t\t\tback-href="${backHref}"` : '';
+	const themeMenu =
+		trail.length > 0
+			? `
+					<nldd-menu-bar-item
+						text="Thema"
+						icon="themes"
+						expandable
+						content-priority="text"
+						data-site-theme
+					>
+						<nldd-menu>
+							${THEMES.map(
+								(theme) => `<nldd-menu-item
+								text="${theme.charAt(0).toUpperCase()}${theme.slice(1)}"
+								type="radio"
+								value="${theme}"${theme === DEFAULT_THEME ? '\n\t\t\t\t\t\t\t\tselected' : ''}
+							></nldd-menu-item>`,
+							).join('\n\t\t\t\t\t\t\t')}
+						</nldd-menu>
+					</nldd-menu-bar-item>`
+			: '';
 	const items = SECTIONS.map(
 		([text, href]) => `<nldd-menu-bar-item
 						text="${text}"
@@ -125,13 +155,13 @@ function header(path, trail) {
 			<nldd-top-navigation-bar
 				logo-title="Nederlandse Digitale Dienst"
 				logo-subtitle="Ministerie van Economische Zaken en Klimaat"
-				website-title="${SITE_NAME}"${home}${back}
+				website-title="${SITE_NAME}"${home}
 			>
 				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- A reference site with a few fixed sections: a reader goes from a component to a pattern and back, and should not have to pass the landing page each time. -->
 				<nldd-menu-bar slot="global">
 					${items}
 				</nldd-menu-bar>
-				<nldd-menu-bar slot="utility">
+				<nldd-menu-bar slot="utility">${themeMenu}
 					<nldd-menu-bar-item
 						text="GitHub"
 						href="${REPOSITORY}"

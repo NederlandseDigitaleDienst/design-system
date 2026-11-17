@@ -72,14 +72,20 @@ test('every page behind the landing page has the same bar and footer', () => {
 	}
 });
 
-test('a page marks its section in the menu and leads back to the page above it', () => {
+test('a page marks its section in the menu and says where it is in the breadcrumbs', () => {
 	const button = pages['componenten/button/index.html'];
 	assert.match(button, /text="Componenten"\s+href="\/componenten\/"\s+current/);
 	assert.equal((button.match(/<nldd-menu-bar-item\b[^>]*\bcurrent\b/g) ?? []).length, 1);
-	assert.match(button, /website-href="\/"\s+back-text="Componenten"\s+back-href="\/componenten\/"/);
+	assert.match(button, /website-href="\/"/);
 	assert.match(button, /<nldd-breadcrumbs-item text="Home" href="\/"><\/nldd-breadcrumbs-item>\s*<nldd-breadcrumbs-item text="Componenten" href="\/componenten\/">/);
-	// A page directly under the landing page has the name of the site to go back by.
-	assert.doesNotMatch(pages['componenten/index.html'], /back-text=/);
+});
+
+test('a page behind the landing page can be shown in another theme, set before the first paint', () => {
+	const button = pages['componenten/button/index.html'];
+	assert.match(button, /<script vite-ignore src="\/theme\.js"><\/script>\s*<script type="module"/);
+	assert.match(button, /data-site-theme[^]*<nldd-menu-item\s+text="Groen"\s+type="radio"\s+value="groen"/);
+	// The landing page has a picker of its own.
+	assert.doesNotMatch(pages['index.html'], /data-site-theme|theme\.js/);
 });
 
 test('a pattern page ends with the lint rules that point at it', () => {
@@ -90,7 +96,7 @@ test('a page under a deploy base links within that base', () => {
 	const based = buildPages({ base: '/design-system/' }).pages;
 	assert.match(based['index.html'], /href="\/design-system\/componenten\/"/);
 	assert.match(based['componenten/index.html'], /website-href="\/design-system\/"/);
-	assert.match(based['componenten/button/index.html'], /back-href="\/design-system\/componenten\/"/);
+	assert.match(based['componenten/button/index.html'], /src="\/design-system\/theme\.js"/);
 	// Vite adds the base to the entry script and the icons itself.
 	assert.match(based['index.html'], /src="\/home\.ts"/);
 	assert.match(based['index.html'], /<link rel="icon"[^>]*href="\/favicon\.svg"/);

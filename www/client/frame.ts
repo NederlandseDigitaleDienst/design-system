@@ -14,6 +14,7 @@ import './autoload.js';
 import { loadStory, mapArgs, mount, sourceOf, type LoadedStory } from './stories.js';
 import { withContext, type StoryContext } from './runtime.js';
 import { keepInPlace } from './stage.js';
+import { chosenTheme, onThemeChosenElsewhere, showTheme } from './theme.js';
 
 const params = new URLSearchParams(location.search);
 const file = params.get('file') ?? '';
@@ -83,9 +84,10 @@ try {
 	story = await loadStory(file, name);
 	args = { ...story.args };
 	// A story that shows one theme says which; lintblauw is the absence of one.
-	const theme = story.globals.nlddTheme;
-	if (theme === 'lintblauw') delete document.documentElement.dataset.nlddTheme;
-	else if (theme) document.documentElement.dataset.nlddTheme = theme;
+	// Any other story follows the theme chosen for the site.
+	const own = story.globals.nlddTheme;
+	showTheme(own ?? chosenTheme());
+	if (!own) onThemeChosenElsewhere(showTheme);
 	if (story.parameters.layout !== 'fullscreen') root.classList.add('site-frame__root--padded');
 	keepInPlace(root);
 	draw();

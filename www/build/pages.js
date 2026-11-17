@@ -22,7 +22,7 @@ export const generatedDir = resolve(repoRoot, 'www/.generated');
 // after the unstyled page showed.
 const ENTRIES = {
 	'home.ts': "import '../main.ts';\n",
-	'home.css': "@import '../styles.css';\n",
+	'home.css': "@import '../styles.css';\n@import '../client/first-paint.css';\n",
 	'main.ts': "import '../client/main.ts';\n",
 	'frame.ts': "import '../client/frame.ts';\n",
 	'styles.css': [
@@ -30,11 +30,17 @@ const ENTRIES = {
 		'../../src/components/inputs/dropdown/dropdown.css',
 		'../../src/components/forms/form-section/form-section.css',
 		'../../src/components/forms/form/form.css',
+		'../client/first-paint.css',
 		'../client/site.css',
 	]
 		.map((path) => `@import '${path}';\n`)
 		.join(''),
 };
+
+// The script that sets the chosen theme before the first paint. Not a module,
+// so Vite does not bundle it: it is copied as it is, in development and in
+// the build.
+const themeScript = resolve(repoRoot, 'www/client/theme-first-paint.js');
 
 const WATCHED = [/\.stories\.ts$/, /\.md$/, /custom-elements\.json$/, /www\/index\.html$/, /www\/build\//, /lint\/data\.generated\.json$/];
 
@@ -94,6 +100,7 @@ export function generate({ base = '/' } = {}) {
 		if (!(relative(generatedDir, file) in pages)) rmSync(file);
 	}
 	copyFileSync(resolve(repoRoot, 'src/assets/favicon/favicon.svg'), join(generatedDir, 'favicon.svg'));
+	copyFileSync(themeScript, join(generatedDir, 'theme.js'));
 	return { inputs: Object.keys(pages).map((path) => join(generatedDir, path)), counts };
 }
 
@@ -110,6 +117,9 @@ export function sitePages() {
 			if (id !== '\0virtual:site-components') return null;
 			const entries = Object.entries(componentModules()).map(([tag, file]) => `\t'${tag}': () => import('${file}'),`);
 			return `export default {\n${entries.join('\n')}\n};\n`;
+		},
+		generateBundle() {
+			this.emitFile({ type: 'asset', fileName: 'theme.js', source: readFileSync(themeScript, 'utf8') });
 		},
 		config(config) {
 			base = config.base ?? '/';

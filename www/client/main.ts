@@ -6,6 +6,7 @@
  */
 
 import './autoload.js';
+import { chooseTheme, chosenTheme, showTheme } from './theme.js';
 import './stage.js';
 import './built-with.js';
 
@@ -49,5 +50,26 @@ function wireSidebar(): void {
 	}
 }
 
+/**
+ * The menu in the bar shows the site in another theme, and the choice goes
+ * along to the next page.
+ */
+function wireTheme(): void {
+	const items = [...document.querySelectorAll<HTMLElement>('[data-site-theme] nldd-menu-item')];
+	const mark = (theme: string) => {
+		for (const item of items) item.toggleAttribute('selected', item.getAttribute('value') === theme);
+	};
+	showTheme(chosenTheme());
+	mark(chosenTheme());
+	for (const item of items) {
+		item.addEventListener('select', () => {
+			const theme = item.getAttribute('value') ?? '';
+			chooseTheme(theme);
+			mark(theme);
+		});
+	}
+}
+
+wireTheme();
 wireFilter();
 wireSidebar();

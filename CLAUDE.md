@@ -166,7 +166,7 @@ De landingspagina (`www/index.html`, met `www/main.ts` en `www/styles.css`) is m
 | `/toegankelijkheid/`, `/changelog/` | `docs/ACCESSIBILITY.md`, `CHANGELOG.md` |
 | `/aan-de-slag/` | `www/content/*.md` |
 
-Een component heeft dus een pagina omdat het een stories-bestand heeft; niemand schrijft een componentpagina. Elke pagina heeft een menubalk met de vaste secties (`SECTIONS` in `site.js`), met een onderdrukking van de hint `top-navigation-bar-no-menu-row` en de reden erbij: op een naslagsite ga je van een component naar een patroon en terug. Een pagina binnen een sectie heeft daarnaast een terugknop naar de pagina erboven, en elke pagina heeft breadcrumbs.
+Een component heeft dus een pagina omdat het een stories-bestand heeft; niemand schrijft een componentpagina. Elke pagina heeft een menubalk met de vaste secties (`SECTIONS` in `site.js`), met een onderdrukking van de hint `top-navigation-bar-no-menu-row` en de reden erbij: op een naslagsite ga je van een component naar een patroon en terug. Achter de landingspagina heeft de balk ook een menu Thema: de keuze geldt voor elke pagina en elk voorbeeld, zodat je een component in de kleur van je eigen organisatie ziet. Elke pagina heeft breadcrumbs in de footer.
 
 Een voorbeeld staat altijd op een podium (`site-stage`, `www/client/stage.ts`), dat met opzet geen component van het designsysteem is: zo zie je wat voorbeeld is en wat pagina. De controls onder het eerste voorbeeld komen uit de attributen van het component; `argTypes` in een story vullen alleen aan. De stories importeren nog `storybook/actions` en `storybook/preview-api`; die namen wijzen via een alias naar `www/client/shims/`.
 
