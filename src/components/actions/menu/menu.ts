@@ -1402,7 +1402,10 @@ export class NLDDMenu extends LitElement {
 	/** Recalculate position and size relative to the anchor element. */
 	public async reposition(): Promise<void> {
 		const anchorEl = this._getAnchorEl();
-		if (!anchorEl || !this._isOpen) return;
+		// The open state follows the toggle event, which WebKit and Gecko fire
+		// after a last resize of the hidden menu: measured at no height, it fits
+		// below anything, and that pass would leave its max-height behind.
+		if (!anchorEl || !this._isOpen || !this.matches(':popover-open')) return;
 
 		const viewportMargin = this._cssPx('--_menu-viewport-margin');
 
@@ -1762,6 +1765,9 @@ export class NLDDMenu extends LitElement {
 		this._updateEmptyState();
 		this._claimItems();
 
+		// Flip measures the menu as it stands: the height left over from the last
+		// open would make it fit on a side it does not fit on now.
+		this.style.removeProperty('--_menu-max-height');
 		await this.reposition();
 		this.setAttribute('positioned', ''); // placed — reveal it (see _handleBeforeToggle)
 		const anchorEl = this._getAnchorEl();
