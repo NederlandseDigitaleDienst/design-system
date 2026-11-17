@@ -12,6 +12,7 @@ export const admonitionStyles = css`
 	:host {
 		--_admonition-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
 		--_admonition-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_admonition-title-bar-divider: inset 0 0 0 transparent;
 		--_admonition-corner-radius: var(--primitives-corner-radius-lg);
 		--_admonition-background-color: var(--semantics-surfaces-base-background-color);
 		--_admonition-content-color: var(--semantics-content-color);
@@ -93,6 +94,7 @@ export const admonitionStyles = css`
 	.admonition__title-bar {
 		--context-background-color: var(--_admonition-title-bar-background-color);
 		box-sizing: border-box;
+		box-shadow: var(--_admonition-title-bar-divider);
 		display: flex;
 		background-color: var(--_admonition-title-bar-background-color);
 		border-start-start-radius: var(--_admonition-title-bar-corner-radius);
@@ -142,7 +144,7 @@ export const admonitionStyles = css`
 	   until the closing content is gone. */
 	@supports (interpolate-size: allow-keywords) {
 		.admonition:not([open]) > summary.admonition__title-bar {
-			transition: border-radius 0s var(--_admonition-transition-duration), border-block-end 0s var(--_admonition-transition-duration) allow-discrete;
+			transition: border-radius 0s var(--_admonition-transition-duration), box-shadow 0s var(--_admonition-transition-duration);
 		}
 	}
 
@@ -155,7 +157,7 @@ export const admonitionStyles = css`
 	summary.admonition__title-bar:focus-visible {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_admonition-title-bar-divider);
 	}
 
 	summary.admonition__title-bar:focus:not(:focus-visible) {
@@ -163,7 +165,7 @@ export const admonitionStyles = css`
 	}
 
 	.admonition:is(div, [open]) > .admonition__title-bar {
-		border-block-end: var(--_admonition-highlight-border-width) solid var(--_admonition-highlight-border-color);
+		--_admonition-title-bar-divider: inset 0 calc(-1 * var(--_admonition-highlight-border-width)) 0 var(--_admonition-highlight-border-color);
 	}
 
 	.admonition__title {

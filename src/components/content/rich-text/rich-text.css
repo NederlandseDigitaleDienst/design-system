@@ -542,6 +542,7 @@ nldd-rich-text details {
 	--_rich-text-details-content-color: var(--semantics-content-color);
 	--_rich-text-details-content-background-color: var(--semantics-surfaces-base-background-color);
 	--_rich-text-details-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+	--_rich-text-details-summary-divider: inset 0 0 0 transparent;
 	--_rich-text-details-corner-radius: var(--primitives-corner-radius-lg);
 	--_rich-text-details-start-corner-radius: var(--_rich-text-details-corner-radius);
 	--_rich-text-details-end-corner-radius: var(--_rich-text-details-corner-radius);
@@ -580,6 +581,7 @@ nldd-rich-text summary {
 	border-radius: max(0px, var(--_rich-text-details-start-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-start-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width));
 	min-height: var(--_rich-text-details-summary-min-size);
 	padding-block: var(--_rich-text-details-summary-padding-block);
+	box-shadow: var(--_rich-text-details-summary-divider);
 	padding-inline-start: var(--_rich-text-details-inset);
 	padding-inline-end: calc((var(--_rich-text-details-summary-min-size) - var(--_rich-text-details-disclosure-icon-size)) / 2 + var(--_rich-text-details-disclosure-icon-size) + var(--_rich-text-details-summary-gap));
 	font: var(--_rich-text-details-summary-font);
@@ -638,7 +640,7 @@ nldd-rich-text summary {
    until the closing content is gone. */
 @supports (interpolate-size: allow-keywords) {
 	nldd-rich-text details:not([open]) > summary {
-		transition: border-radius 0s var(--primitives-transition-duration-fast), border-block-end 0s var(--primitives-transition-duration-fast) allow-discrete;
+		transition: border-radius 0s var(--primitives-transition-duration-fast), box-shadow 0s var(--primitives-transition-duration-fast);
 
 		@media (prefers-reduced-motion: reduce) {
 			transition: none;
@@ -649,7 +651,11 @@ nldd-rich-text summary {
 nldd-rich-text details[open] > summary {
 	border-end-start-radius: 0;
 	border-end-end-radius: 0;
-	border-block-end: var(--_rich-text-details-highlight-border-width) solid var(--_rich-text-details-highlight-border-color);
+	--_rich-text-details-summary-divider: inset 0 calc(-1 * var(--_rich-text-details-highlight-border-width)) 0 var(--_rich-text-details-highlight-border-color);
+}
+
+nldd-rich-text summary:focus-visible {
+	box-shadow: var(--semantics-focus-ring-box-shadow), var(--_rich-text-details-summary-divider);
 }
 
 nldd-rich-text details[open] > summary::before {

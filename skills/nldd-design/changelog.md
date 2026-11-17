@@ -26,6 +26,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **The title of `nldd-accordion-item`, a collapsible `nldd-admonition` and a `details` in `nldd-rich-text` stays in place when it opens.** The line under the title bar came as a border, which took a pixel from the bar and moved the title up by half of it. It is a shadow inside the bar now, which takes no room. In forced colors there is no line between the bar and the content; the frame around it stays.
 - **The bar beside a quote in `nldd-text-editor` has the light gray of `nldd-blockquote`** and of a blockquote in `nldd-rich-text`, where it had the color of the text. The color is a token of its own now, `--semantics-blockquotes-border-color`, which `--semantics-blockquotes-border` is made of.
 - **"Gekopieerd" on a code block in `nldd-text-editor` stays while the pointer is on the button,** as it does in `nldd-code-viewer`. It went after 2 seconds, before someone using a screen magnifier had found it. It goes 300ms after the pointer leaves the button, on Escape, or at the next press in the editor; in a read-only editor also when the focus leaves the button. After a tap it still goes after 2 seconds.
 - **`nldd-form-field` no longer takes a control in a toolbar for its input.** The formatting toolbar above an `nldd-text-editor` came first, so a click on the label focused "Vet" and the help text described the toolbar. The field now skips what sits in an `nldd-toolbar` inside it.

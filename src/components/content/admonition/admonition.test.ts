@@ -45,10 +45,10 @@ describe('nldd-admonition', () => {
 
 	it('draws a line between the bar and the content, also when it does not collapse', async () => {
 		el = await fixture('<nldd-admonition text="Let op"><p>Inhoud</p></nldd-admonition>');
-		expect(getComputedStyle(titleBar()!).borderBottomStyle).toBe('solid');
+		expect(getComputedStyle(titleBar()!).boxShadow).toContain('0px -1px 0px');
 		cleanup(el);
 		el = await fixture('<nldd-admonition text="Vraag" collapsible collapsed><p>Inhoud</p></nldd-admonition>');
-		expect(getComputedStyle(titleBar()!).borderBottomStyle).toBe('none');
+		expect(getComputedStyle(titleBar()!).boxShadow).not.toContain('0px -1px 0px');
 	});
 
 	it('renders the title as a heading at heading-level', async () => {
@@ -117,15 +117,15 @@ describe('nldd-admonition', () => {
 
 	it('keeps the bar square with its line until the content has closed', async () => {
 		el = await fixture('<nldd-admonition text="Vraag" collapsible><p>Inhoud</p></nldd-admonition>');
-		expect(getComputedStyle(titleBar()!).borderBottomStyle).toBe('solid');
+		expect(getComputedStyle(titleBar()!).boxShadow).toContain('0px -1px 0px');
 		el.collapsed = true;
 		await el.updateComplete;
 		await new Promise((resolve) => setTimeout(resolve, 60));
 		expect(getComputedStyle(titleBar()!).borderBottomLeftRadius).toBe('0px');
-		expect(getComputedStyle(titleBar()!).borderBottomStyle).toBe('solid');
+		expect(getComputedStyle(titleBar()!).boxShadow).toContain('0px -1px 0px');
 		await new Promise((resolve) => setTimeout(resolve, 400));
 		expect(getComputedStyle(titleBar()!).borderBottomLeftRadius).not.toBe('0px');
-		expect(getComputedStyle(titleBar()!).borderBottomStyle).toBe('none');
+		expect(getComputedStyle(titleBar()!).boxShadow).not.toContain('0px -1px 0px');
 	});
 
 	it('does not collapse without a title to click on', async () => {
