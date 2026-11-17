@@ -106,7 +106,7 @@ describe('nldd-menu-bar', () => {
 		// Explicit-toggle path (mirrors menu-bar-item._toggleMenu): open.
 		(el as unknown as { _toggleOverflowMenu(): void })._toggleOverflowMenu();
 		await waitForUpdate(el);
-		const menu = document.querySelector('nldd-menu') as HTMLElement;
+		const menu = el.shadowRoot!.querySelector('nldd-menu') as HTMLElement;
 		expect(menu).not.toBeNull();
 		expect(menu.matches(':popover-open')).toBe(true);
 		// Anchored to the always-visible trigger, not the display-toggled wrapper.
@@ -148,7 +148,7 @@ describe('nldd-menu-bar', () => {
 
 		toggle();
 		await waitForUpdate(bar);
-		const menu = (bar as unknown as { _overflowMenu: HTMLElement })._overflowMenu;
+		const menu = (bar as unknown as { _overflowMenu: { menu: HTMLElement } })._overflowMenu.menu;
 		const items = Array.from(menu.querySelectorAll(':scope > nldd-menu-item')) as HTMLElement[];
 		await waitForUpdate(items[1]);
 		items[1].focus();
@@ -178,7 +178,7 @@ describe('nldd-menu-bar', () => {
 
 		toggle();
 		await waitForUpdate(el);
-		const menu = document.querySelector('nldd-menu') as HTMLElement;
+		const menu = el.shadowRoot!.querySelector('nldd-menu') as HTMLElement;
 		expect(menu.matches(':popover-open')).toBe(true);
 
 		menu.hidePopover(); // simulate light-dismiss
@@ -216,7 +216,7 @@ describe('nldd-menu-bar', () => {
 
 		(el as unknown as { _toggleOverflowMenu(): void })._toggleOverflowMenu();
 		await waitForUpdate(el);
-		const overflowMenu = (el as unknown as { _overflowMenu: HTMLElement })._overflowMenu;
+		const overflowMenu = (el as unknown as { _overflowMenu: { menu: HTMLElement } })._overflowMenu.menu;
 
 		// The parent is a single direct menu-item (no flat divider-separated
 		// siblings at the overflow root, no dead label).
@@ -263,7 +263,7 @@ describe('nldd-menu-bar', () => {
 		el.querySelector('nldd-menu-item[text="Mijn gegevens"]')!
 			.addEventListener('select', () => { originalSelectFired = true; });
 
-		const overflowMenu = (el as unknown as { _overflowMenu: HTMLElement })._overflowMenu;
+		const overflowMenu = (el as unknown as { _overflowMenu: { menu: HTMLElement } })._overflowMenu.menu;
 		const clone = [...overflowMenu.querySelectorAll('nldd-menu-item')]
 			.find(mi => mi.getAttribute('text') === 'Mijn gegevens') as HTMLElement;
 		expect(clone).toBeTruthy();
@@ -376,7 +376,7 @@ describe('nldd-menu-bar – overflow detection', () => {
 		(el as any)._toggleOverflowMenu();
 		await waitForUpdate(el);
 
-		const menuItems = (el as any)._overflowMenu.querySelectorAll('nldd-menu-item') as NodeListOf<HTMLElement>;
+		const menuItems = (el as any)._overflowMenu.menu.querySelectorAll('nldd-menu-item') as NodeListOf<HTMLElement>;
 		expect(menuItems.length).toBe(2);
 		await waitForUpdate(menuItems[1]);
 		const home = menuItems[0].shadowRoot!.querySelector('a')!;
@@ -531,7 +531,7 @@ describe('nldd-menu-bar – overflow detection with real layout', () => {
 
 		(el as unknown as { _toggleOverflowMenu(): void })._toggleOverflowMenu();
 		await waitForUpdate(el);
-		const menu = document.querySelector('nldd-menu') as HTMLElement;
+		const menu = el.shadowRoot!.querySelector('nldd-menu') as HTMLElement;
 		await until(() => menu.matches(':popover-open'));
 
 		// Widening would normally put the items back. While the menu is open it

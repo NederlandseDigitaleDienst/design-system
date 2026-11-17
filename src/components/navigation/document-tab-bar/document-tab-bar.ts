@@ -57,10 +57,8 @@ import { documentTabBarStyles, documentTabBarItemStyles } from './document-tab-b
 import { documentTabBarTemplate, documentTabBarItemTemplate } from './document-tab-bar.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddDocumentTabBarTranslations } from './document-tab-bar.i18n.js';
-import './../../actions/menu/menu.js';
-import type { NLDDMenu } from '../../actions/menu/menu.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
-import { carryContext } from '../../../utilities/carried-context.js';
+import { OverflowMenu } from '../../../utilities/overflow-menu.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 // Pointer movement threshold in px before drag mode activates.
@@ -196,10 +194,13 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	@state()
 	_overflowCount = 0;
 
-	@state()
-	_menuOpen = false;
+	/** The menu with the tabs that do not fit. */
+	private _overflowMenu = new OverflowMenu(this, { id: 'nldd-document-tab-bar-menu' });
 
-	private _menu: NLDDMenu | null = null;
+	/** @internal Used by template — drives the overflow button's expanded state. */
+	get _menuOpen(): boolean {
+		return this._overflowMenu.open;
+	}
 	private _resizeObserver: ResizeObserver | null = null;
 	private _hasCustomLabel = false;
 
@@ -235,7 +236,6 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this.addEventListener('dismiss', this._handleItemDismiss as EventListener);
 		this.addEventListener('keydown', this._handleKeyDown);
 		this.addEventListener('pointerdown', this._onPointerDown);
-		this._createMenu();
 	}
 
 	override disconnectedCallback(): void {
@@ -252,9 +252,6 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this.removeAttribute('data-releasing-widths');
 		this.style.removeProperty('--_document-tab-bar-held-item-width');
 		this._holding = false;
-
-		this._menu?.remove();
-		this._menu = null;
 
 		this._resizeObserver?.disconnect();
 		this._resizeObserver = null;
@@ -695,17 +692,14 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	// — Overflow menu ——————————————————————————————————————————————————————————
 
 	private _updateMenu(): void {
-		if (!this._menu) return;
 		// Rebuilds menu DOM from scratch on every overflow recalculation.
 		// Any event listeners added directly to nldd-menu-item elements by consumers
 		// will be lost. Consumers should listen on the nldd-document-tab-bar itself
 		// using event delegation rather than on individual menu items.
-		this._menu.innerHTML = '';
-
 		const items = this._getItems();
 		const visibleCount = items.length - this._overflowCount;
 
-		items.slice(visibleCount).forEach(item => {
+		this._overflowMenu.replace(items.slice(visibleCount).map(item => {
 			const menuItemText = item.supportingText
 				? `${item.text || '–'} · ${item.supportingText}`
 				: item.text || '–';
@@ -713,10 +707,10 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 			menuItem.setAttribute('text', menuItemText);
 			menuItem.addEventListener('click', () => {
 				this._selectAndPromote(item);
-				this._closeMenu();
+				this._overflowMenu.hide();
 			});
-			this._menu!.appendChild(menuItem);
-		});
+			return menuItem;
+		}));
 	}
 
 	private _selectAndPromote(targetItem: NLDDDocumentTabBarItem): void {
@@ -745,54 +739,8 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		}));
 	}
 
-	private _createMenu(): void {
-		if (this._menu) return;
-		// SSR guard — document is not available in server-side rendering contexts
-		if (typeof document === 'undefined') return;
-		const menu = document.createElement('nldd-menu');
-		menu.setAttribute('placement', 'bottom-end');
-		menu.id = `${this._id}-menu`;
-		menu.addEventListener('toggle', (event: Event) => {
-			this._menuOpen = (event as ToggleEvent).newState === 'open';
-		});
-		menu.addEventListener('beforetoggle', (event: Event) => {
-			if ((event as ToggleEvent).newState === 'open') carryContext(menu, this);
-		});
-		document.body.appendChild(menu);
-		this._menu = menu;
-	}
-
 	private _syncMenuAnchor(): void {
-		if (!this._menu) return;
-		const button = this.shadowRoot?.querySelector('.document-tab-bar__overflow-button nldd-icon-button') as HTMLElement & {
-			popoverTargetElement?: Element | null;
-			popoverTargetAction?: 'toggle' | 'show' | 'hide';
-		} | null;
-		if (button) {
-			this._menu.anchorElement = button;
-			// Wire the button as the menu's invoker. The browser handles
-			// open/close natively via popovertarget — no `@click` handler
-			// needed. The menu syncs `popoverTargetAction` on every toggle
-			// (`'hide'` while open, `'show'` while closed), so the next
-			// click does the right thing without racing against light-
-			// dismiss. Seed `'show'` here for the very first click before
-			// the menu has ever toggled.
-			if ('popoverTargetElement' in button) {
-				button.popoverTargetElement = this._menu;
-			}
-			// Default IDL value is 'toggle'; replace it with 'show' so the
-			// very first click opens via the explicit-show path. Once the
-			// menu has opened, `_syncAnchorPopupState` keeps the action in
-			// sync with state ('hide' while open, 'show' while closed) and
-			// this seed never overrides it.
-			if ('popoverTargetAction' in button && button.popoverTargetAction === 'toggle') {
-				button.popoverTargetAction = 'show';
-			}
-		}
-	}
-
-	private _closeMenu(): void {
-		this._menu?.hidePopover();
+		this._overflowMenu.anchorTo(this.shadowRoot?.querySelector('.document-tab-bar__overflow-button nldd-icon-button') ?? null);
 	}
 
 

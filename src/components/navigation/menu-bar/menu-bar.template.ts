@@ -26,8 +26,8 @@ export function template(component: NLDDMenuBar) {
 							 _toggleOverflowMenu (same mechanism as an expandable
 							 nldd-menu-bar-item's own submenu): anchored to this
 							 always-visible trigger + a reopen guard. aria-controls
-							 omitted: ARIA IDREF attributes cannot cross shadow DOM
-							 boundaries and the menu is reparented to document.body;
+							 omitted: the menu sits in this shadow root and the
+							 button in the item's own, and an IDREF cannot cross that;
 							 haspopup + expanded forward to the inner button and give
 							 sufficient AT context for WCAG 2.1 AA. -->
 					</nldd-menu-bar-item>

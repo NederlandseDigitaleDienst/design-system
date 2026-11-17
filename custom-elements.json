@@ -4598,150 +4598,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/actions/toolbar/toolbar.overflow-menu.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "The overflow menu of an nldd-toolbar: an nldd-menu holding copies of the\nmenu items of everything that did not fit, and of the toolbar's own\n`overflow` slot.\n\nIt lives in the toolbar's shadow root, not in document.body. It is a popover,\nso the top layer gets it past any clipping anyway, and a menu in the body goes\ninert (visible but untouchable) when the toolbar sits in a modal dialog:\neverything outside the dialog is inert then.\n\nThe menu holds clones, because the originals stay where the consumer put\nthem. A clone's `select` never reaches listeners on its original, so it is\nsent on: every original is stamped with an id that its clone carries, and a\n`select` from a clone is dispatched again on the original.",
-          "name": "ToolbarOverflowMenu",
-          "members": [
-            {
-              "kind": "field",
-              "name": "_counter",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "static": true,
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the menu is open. The toolbar renders its button from this."
-            },
-            {
-              "kind": "field",
-              "name": "_menu",
-              "type": {
-                "text": "NLDDMenu | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_originals",
-              "privacy": "private",
-              "default": "new Map<string, Element>()"
-            },
-            {
-              "kind": "method",
-              "name": "hostConnected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "hostDisconnected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "hide",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "anchorTo",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "button",
-                  "type": {
-                    "text": "(HTMLElement & {\n\t\tpopoverTargetElement?: Element | null;\n\t\tpopoverTargetAction?: 'toggle' | 'show' | 'hide';\n\t}) | null"
-                  }
-                }
-              ],
-              "description": "Make `button` the menu's invoker. The browser opens and closes it\nnatively through popovertarget, and the menu keeps `popoverTargetAction`\nin step with its state ('hide' while open, 'show' while closed). The\ndefault 'toggle' becomes 'show' here, for the very first click before the\nmenu ever toggled."
-            },
-            {
-              "kind": "method",
-              "name": "fill",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "items",
-                  "type": {
-                    "text": "Element[]"
-                  }
-                }
-              ],
-              "description": "Fill the menu with copies of `items`, in this order."
-            },
-            {
-              "kind": "method",
-              "name": "_clone",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Element"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "original",
-                  "type": {
-                    "text": "Element"
-                  }
-                }
-              ],
-              "description": "Stamps the original and every descendant with an id the clone copies.\n`data-toolbar-oid` is outside the toolbar's attribute filter, so stamping\nstarts no new sync."
-            },
-            {
-              "kind": "field",
-              "name": "_forwardSelect",
-              "privacy": "private"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ToolbarOverflowMenu",
-          "declaration": {
-            "name": "ToolbarOverflowMenu",
-            "module": "src/components/actions/toolbar/toolbar.overflow-menu.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/actions/toolbar/toolbar.story-sync.ts",
       "declarations": [
         {
@@ -57014,6 +56870,177 @@
           "declaration": {
             "name": "isLinux",
             "module": "src/utilities/os.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/overflow-menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The \"more\" menu of a bar that hides what does not fit: nldd-toolbar,\nnldd-menu-bar and nldd-document-tab-bar. Each bar decides for itself what\nfits; this is the menu that lists the rest.\n\nIt lives in the bar's shadow root, not in document.body. It is a popover,\nso the top layer gets it past any clipping anyway, and a menu in the body\ngoes inert (visible but untouchable) when the bar sits in a modal dialog:\neverything outside the dialog is inert then. In the shadow root it also\ninherits the bar's color scheme, language and context, with nothing to carry.\n\nA `select` in the menu stays in the menu: what the bar wants the app to hear\nit sends on itself, from the original the entry stands for. Leaving it would\nreach the bar's own listeners as if one of its items had been chosen.",
+          "name": "OverflowMenu",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_counter",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the menu is open. The bar renders its button from this."
+            },
+            {
+              "kind": "field",
+              "name": "_menu",
+              "type": {
+                "text": "NLDDMenu | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_originals",
+              "privacy": "private",
+              "default": "new Map<string, Element>()"
+            },
+            {
+              "kind": "field",
+              "name": "menu",
+              "type": {
+                "text": "NLDDMenu | null"
+              },
+              "description": "The menu, while the bar is connected.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "anchorTo",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "button",
+                  "type": {
+                    "text": "(HTMLElement & {\n\t\tpopoverTargetElement?: Element | null;\n\t\tpopoverTargetAction?: string;\n\t}) | null"
+                  }
+                }
+              ],
+              "description": "Make `button` the menu's invoker. The browser opens and closes it\nnatively through popovertarget, and the menu keeps `popoverTargetAction`\nin step with its state ('hide' while open, 'show' while closed). The\ndefault 'toggle' becomes 'show' here, for the very first click before the\nmenu ever toggled."
+            },
+            {
+              "kind": "method",
+              "name": "replace",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entries",
+                  "type": {
+                    "text": "Element[]"
+                  }
+                }
+              ],
+              "description": "Fill the menu with entries the bar built itself."
+            },
+            {
+              "kind": "method",
+              "name": "mirror",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "items",
+                  "type": {
+                    "text": "Element[]"
+                  }
+                }
+              ],
+              "description": "Fill the menu with copies of `items`, in this order. The originals stay\nwhere the app put them, so a copy's `select`, which never reaches\nlisteners on its original, is dispatched again on the original: every\noriginal is stamped with an id that its copy carries."
+            },
+            {
+              "kind": "method",
+              "name": "_clone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "original",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "`data-overflow-oid` is outside the attributes a bar watches, so\nstamping starts no new sync."
+            },
+            {
+              "kind": "field",
+              "name": "_handleSelect",
+              "privacy": "private"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "OverflowMenu",
+          "declaration": {
+            "name": "OverflowMenu",
+            "module": "src/utilities/overflow-menu.ts"
           }
         }
       ]
