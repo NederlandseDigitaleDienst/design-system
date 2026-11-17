@@ -22,6 +22,10 @@ here; consult the commit history if you need that level of detail.
 - **Menus behave in more places.** The "more" menu of `nldd-menu-bar` and `nldd-document-tab-bar` works inside a modal dialog, `nldd-menu` opens on the side that fits after a choice closed it, and `nldd-avatar-group` needs no `'unsafe-inline'` in your CSP. See Fixed.
 - **4 accessibility fixes:** focus goes back to what opened `nldd-modal-dialog`, and to the overflow button when a sheet or dialog opened from that menu closes. A tooltip shown by keyboard focus no longer vanishes when the pointer crosses its trigger, and the label of `nldd-form-field` reaches the control past a hidden input. See Fixed.
 
+### Added
+
+- **`nldd lint` reports `value`, `min`, `max` or `step` on an `nldd-time-picker` in the `picker` slot of an `nldd-time-field`** (`time-picker-in-field-no-effect`, a warning). The field writes them onto the picker, so they do nothing there: set them on the field.
+
 ### Fixed
 
 - **A message from `setCustomValidity()` on `nldd-token-field` and `nldd-file-field` survives the next render.** Both fields wrote their own validity after the shared one, which wiped a reason that an `nldd-validation-list` or a server had set. Their "required and empty" now goes through the same check as every other field.
