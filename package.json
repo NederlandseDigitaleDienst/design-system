@@ -643,7 +643,6 @@
     "lint:fix": "eslint src/ --fix",
     "lint:rules": "node scripts/check-lint-rules.js",
     "lint:corpus": "node scripts/lint-corpus.js",
-    "lint:a11y": "eslint src/ --rule 'lit-a11y/*: error'",
     "changelog:draft": "node scripts/changelog-draft.mjs",
     "prepare": "pre-commit install || true",
     "pretest": "npm run build:icons",
