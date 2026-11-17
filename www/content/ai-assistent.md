@@ -24,7 +24,7 @@ Deze route is in Claude Code gemeten en in Cursor nog niet. Loopt hij bij jou an
 
 De plugin levert zes skills. De assistent kiest zelf welke hij nodig heeft.
 
-{{skillsTable}}
+{{skillsList}}
 
 In Claude Code roep je er ook zelf een aan, met `/nldd-design`.
 

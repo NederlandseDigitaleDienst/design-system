@@ -35,7 +35,7 @@ Bouw je met Claude Code of Cursor, geef je assistent dan de skills van het desig
 
 De plugin levert zes skills, en je assistent kiest zelf welke hij nodig heeft:
 
-{{skillsTable}}
+{{skillsList}}
 
 Hoe je ze in Cursor zet en waar hun kennis vandaan komt, staat bij [werken met een AI-assistent](/aan-de-slag/ai-assistent/).
 

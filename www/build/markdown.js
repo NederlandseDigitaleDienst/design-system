@@ -78,7 +78,8 @@ export function renderMarkdown(markdown, { href, example }) {
 			},
 			html({ text }) {
 				const marker = text.match(/^<!--\s*voorbeeld:\s*(\w+)\s*-->\s*$/);
-				if (!marker) return text;
+				// A component written in the Markdown stands on its own, outside the prose.
+				if (!marker) return /^<nldd-/.test(text) ? `${BREAK}${text}${BREAK}` : text;
 				if (!example) throw new Error(`Voorbeeld ${marker[1]} op een pagina zonder stories.`);
 				return `${BREAK}${example(marker[1])}${BREAK}`;
 			},
