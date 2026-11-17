@@ -168,3 +168,40 @@ describe('nldd-token-field', () => {
 		expect(el.values).toEqual(['Dakisolatie']);
 	});
 });
+
+describe('nldd-token-field restore', () => {
+	it('restores the values bfcache saved', async () => {
+		const c = { tag: 'nldd-token-field', attrs: 'accessible-label="Tags" allow-custom' } as Case;
+		const source = await mount(c, c.attrs, (control) => { control.values = ['Dakisolatie']; });
+		source.values = ['Dakisolatie', 'Warmtepomp'];
+		await settle(source);
+		const state = source.formState() ?? source.formValue();
+		form.remove();
+
+		const el = await mount(c);
+		el.formStateRestoreCallback(state, 'restore');
+		await settle(el);
+		expect(submitted()).toBe('Dakisolatie,Warmtepomp');
+	});
+});
+
+describe('state restore', () => {
+	/** The class whose formStateRestoreCallback a control runs. */
+	const restoredBy = (tag: string): unknown => {
+		let proto = customElements.get(tag)!.prototype;
+		while (!Object.prototype.hasOwnProperty.call(proto, 'formStateRestoreCallback')) proto = Object.getPrototypeOf(proto);
+		return proto.constructor;
+	};
+	const mixinOf = (tag: string): unknown => {
+		let ctor = customElements.get(tag) as unknown as { formAssociated?: boolean } | null;
+		while (ctor && !Object.prototype.hasOwnProperty.call(ctor, 'formAssociated')) ctor = Object.getPrototypeOf(ctor);
+		return ctor;
+	};
+
+	// The mixin fills one property; a value in more than one needs the control's own.
+	it.each([...cases.map((c) => c.tag), 'nldd-token-field'])('%s restores each property that holds its value', (tag) => {
+		const properties = (customElements.get(tag) as unknown as { formProperties: readonly string[] }).formProperties;
+		if (properties.length === 1) return;
+		expect(restoredBy(tag)).not.toBe(mixinOf(tag));
+	});
+});

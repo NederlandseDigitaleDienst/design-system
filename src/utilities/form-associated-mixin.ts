@@ -85,10 +85,13 @@ export interface FormAssociatedElement {
  * does: the attribute when there is one, else what the property held after the
  * first render (a framework sets the property, not the attribute). A property
  * that reflects is its own attribute, so it always goes back to the first
- * render. A restore fills a single property from the saved state: a boolean is
- * on when a value was saved, anything else goes through the property's own
- * converter. A component overrides the callbacks only for what is its own: a
- * value to clamp, text to clear, two properties in one state.
+ * render. A value set after the first render (data that loads later) counts as
+ * an edit, as `input.value` does natively: a reset does not go back to it, the
+ * attribute does. A restore fills a single property from the saved state: a
+ * boolean is on when a value was saved, a list takes the entries of a
+ * `FormData`, anything else goes through the property's own converter. A
+ * component overrides the callbacks only for what is its own: a value to
+ * clamp, text to clear, two properties in one state.
  */
 export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 	abstract class FormAssociatedMixin extends Base implements FormAssociatedElement {
@@ -161,8 +164,13 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 			const properties = this._formProperties;
 			if (properties.length !== 1) return;
 			const [name] = properties;
-			if (this._options(name).type === Boolean) (this as Record<string, unknown>)[name] = state !== null;
-			else if (typeof state === 'string') (this as Record<string, unknown>)[name] = this._fromAttribute(name, state);
+			const self = this as Record<string, unknown>;
+			if (this._options(name).type === Boolean) self[name] = state !== null;
+			else if (typeof state === 'string') self[name] = this._fromAttribute(name, state);
+			// One entry per value, as nldd-token-field submits them.
+			else if (state instanceof FormData && Array.isArray(self[name])) {
+				self[name] = [...state.values()].filter((value): value is string => typeof value === 'string');
+			}
 		}
 
 		emitFormEvent(type: string, detail?: unknown, init: EventInit = {}): boolean {
