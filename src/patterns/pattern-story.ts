@@ -1,4 +1,5 @@
 import '../components/index.js';
+import { sampleImage } from '../sample-images.js';
 
 /**
  * A pattern story renders its example markup exactly as the skill ships it. The
@@ -22,6 +23,13 @@ export function patternStory(markup: string, wire?: (root: HTMLElement) => void,
 			if (frame) root.style.height = '100dvh';
 			else root.style.display = 'contents';
 			root.innerHTML = markup;
+			// The markup leaves the place of a photo empty, because an address
+			// in it would be one a consumer copies. Shown, an empty image reads
+			// as a broken one, so the example gets a photo; the markup does not.
+			for (const image of root.querySelectorAll('nldd-image:not([src]):empty')) {
+				image.setAttribute('src', sampleImage('butterfly-1200.jpg'));
+				image.toggleAttribute('decorative', true);
+			}
 			wire?.(root);
 			return root;
 		},

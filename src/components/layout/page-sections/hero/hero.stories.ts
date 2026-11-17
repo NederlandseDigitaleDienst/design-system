@@ -6,8 +6,9 @@ import '../../../actions/button/button.js';
 import '../../../actions/button-group/button-group.js';
 import '../../spacer/spacer.js';
 import '../../container/container.js';
+import { sampleImage } from '../../../../sample-images.js';
 
-const MEDIA = 'sample-images/butterfly-1200.jpg';
+const MEDIA = sampleImage('butterfly-1200.jpg');
 
 /**
  * Een paginakop met een afbeelding en een tekstpaneel erop, op acht mogelijke

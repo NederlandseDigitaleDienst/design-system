@@ -4,6 +4,7 @@ import '../../status-and-feedback/banner/banner.js';
 import '../../layout/container/container.js';
 import '../text/text.js';
 import '../../layout/spacer/spacer.js';
+import { sampleImage } from '../../../sample-images.js';
 
 export default {
 	title: 'Components/Content/Rich Text',
@@ -673,7 +674,7 @@ export const Breedtezones = {
 			</table>
 			<p>Afbeeldingen krijgen het wide-accent: iets breder dan de tekst, zonder de pagina te domineren.</p>
 			<img
-				src="sample-images/butterfly-960.jpg"
+				src=${sampleImage('butterfly-960.jpg')}
 				alt="Vlinder op een bloem"
 			>
 			<p>Componenten zoals een banner horen bij de tekst en worden niet breder dan de main-maat.</p>
@@ -701,7 +702,7 @@ export const OpKleurvlak = {
 					<p>Alle tekst erft de contentkleur van het vlak, inclusief <a href="#">links met hun onderstreping</a> en <strong>nadruk</strong>.</p>
 					<figure>
 						<img
-							src="sample-images/butterfly-480.jpg"
+							src=${sampleImage('butterfly-480.jpg')}
 							alt="Vlinder op een bloem"
 						>
 						<figcaption>Figuur 1 — de figcaption staat op verlaagde dekking</figcaption>

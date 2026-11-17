@@ -2,21 +2,12 @@ import { html, nothing } from 'lit';
 import './image.js';
 import './lqip-encoder-element.js';
 import '../../layout/container/container.js';
+import { sampleImage } from '../../../sample-images.js';
 
-// Lokale voorbeeldafbeelding (public/sample-images/), zodat de stories niet
-// afhankelijk zijn van een externe host en consumers van offline Storybook-builds.
-// Foto: Bart van de Biezen — Klein koolwitje op een vlinderstruik.
-// Paden zijn RELATIEF (geen leading slash): de preview-iframe staat op
-// `.../iframe.html`, dus `sample-images/...` resolvet correct onder de
-// GitHub-Pages base-path (`/storybook/`) én op localhost (root). Een absoluut
-// `/sample-images/...` zou op Pages tegen de origin resolven en 404'en.
-const SAMPLE_SRC = 'sample-images/butterfly-1200.jpg';
+const SAMPLE_SRC = sampleImage('butterfly-1200.jpg');
 const SAMPLE_ALT = 'Klein koolwitje op een vlinderstruik';
 
-const SAMPLE_SRCSET =
-	'sample-images/butterfly-480.jpg 480w, ' +
-	'sample-images/butterfly-960.jpg 960w, ' +
-	'sample-images/butterfly-1600.jpg 1600w';
+const SAMPLE_SRCSET = [480, 960, 1600].map((width) => `${sampleImage(`butterfly-${width}.jpg`)} ${width}w`).join(', ');
 
 /** LQIP CSV string berekend uit de bron (zeven 0-255 Oklab bytes). Regenereer
  *  via de "LQIP encoder tool" story als je de afbeelding vervangt. */
