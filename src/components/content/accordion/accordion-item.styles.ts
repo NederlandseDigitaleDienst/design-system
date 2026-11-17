@@ -12,7 +12,7 @@ export const accordionItemStyles = css`
 	:host {
 		--_accordion-item-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
 		--_accordion-item-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
-		--_accordion-item-title-bar-divider: inset 0 0 0 transparent;
+		--_accordion-item-title-bar-highlight-border: inset 0 0 0 transparent;
 		--_accordion-item-corner-radius: calc(var(--primitives-corner-radius-lg) - var(--semantics-surfaces-highlight-border-width));
 		--_accordion-item-background-color: var(--semantics-surfaces-base-background-color);
 		--_accordion-item-content-color: var(--semantics-content-color);
@@ -64,7 +64,7 @@ export const accordionItemStyles = css`
 	.accordion-item__title-bar {
 		--context-background-color: var(--_accordion-item-title-bar-background-color);
 		box-sizing: border-box;
-		box-shadow: var(--_accordion-item-title-bar-divider);
+		box-shadow: var(--_accordion-item-title-bar-highlight-border);
 		display: flex;
 		background-color: var(--_accordion-item-title-bar-background-color);
 		min-height: var(--_accordion-item-title-bar-min-height);
@@ -106,7 +106,7 @@ export const accordionItemStyles = css`
 	}
 
 	.accordion-item[open] > .accordion-item__title-bar {
-		--_accordion-item-title-bar-divider: inset 0 calc(-1 * var(--_accordion-item-highlight-border-width)) 0 var(--_accordion-item-highlight-border-color);
+		--_accordion-item-title-bar-highlight-border: inset 0 calc(-1 * var(--_accordion-item-highlight-border-width)) 0 var(--_accordion-item-highlight-border-color);
 	}
 
 	@media (hover: hover) {
@@ -127,7 +127,7 @@ export const accordionItemStyles = css`
 		z-index: 1;
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_accordion-item-title-bar-divider);
+		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_accordion-item-title-bar-highlight-border);
 	}
 
 	.accordion-item__title-bar:focus:not(:focus-visible) {

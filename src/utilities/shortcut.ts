@@ -49,24 +49,24 @@ export function parseKeys(spec: string): string[] {
 		.filter(Boolean);
 }
 
-/** A key as it is shown, and as it is read: `label` may be a symbol, `spoken` is a word. */
+/** A key as it is shown, and as it is read: `label` may be a symbol, `name` is a word. */
 export interface DisplayKey {
 	label: string;
-	spoken: string;
+	name: string;
 	/** A modifier shown as its macOS symbol, which the next key follows without a '+'. */
 	symbol?: boolean;
 }
 
 interface Modifier {
 	symbol: string;
-	spoken: string;
+	name: string;
 }
 
 // In the order macOS lists them in a menu: ⌃⌥⇧⌘.
-const CONTROL: Modifier = { symbol: '⌃', spoken: 'Control' };
-const OPTION: Modifier = { symbol: '⌥', spoken: 'Option' };
-const SHIFT: Modifier = { symbol: '⇧', spoken: 'Shift' };
-const COMMAND: Modifier = { symbol: '⌘', spoken: 'Command' };
+const CONTROL: Modifier = { symbol: '⌃', name: 'Control' };
+const OPTION: Modifier = { symbol: '⌥', name: 'Option' };
+const SHIFT: Modifier = { symbol: '⇧', name: 'Shift' };
+const COMMAND: Modifier = { symbol: '⌘', name: 'Command' };
 const MAC_ORDER = [CONTROL, OPTION, SHIFT, COMMAND];
 
 const MODIFIERS: Record<string, Modifier> = {
@@ -85,17 +85,17 @@ const MODIFIERS: Record<string, Modifier> = {
 export function displayKeys(spec: string, os: OS): DisplayKey[] {
 	const keys = parseKeys(spec);
 	if (os !== 'mac') {
-		return keys.map((key) => ({ label: key, spoken: key.length === 1 && MODIFIERS[key] ? MODIFIERS[key].spoken : key }));
+		return keys.map((key) => ({ label: key, name: key.length === 1 && MODIFIERS[key] ? MODIFIERS[key].name : key }));
 	}
 	const modifiers = new Set<Modifier>();
 	const rest: DisplayKey[] = [];
 	for (const key of keys) {
 		const modifier = MODIFIERS[key.toLowerCase()];
 		if (modifier) modifiers.add(modifier);
-		else rest.push({ label: key, spoken: key });
+		else rest.push({ label: key, name: key });
 	}
 	const ordered = MAC_ORDER.filter((modifier) => modifiers.has(modifier))
-		.map(({ symbol, spoken }) => ({ label: symbol, spoken, symbol: true }));
+		.map(({ symbol, name }) => ({ label: symbol, name, symbol: true }));
 	return [...ordered, ...rest];
 }
 
@@ -150,5 +150,5 @@ export function shortcutLabel(hint: ShortcutHint): string {
 		windowsKeys: hint.shortcutWindows,
 		linuxKeys: hint.shortcutLinux,
 	}, detectOS());
-	return displayKeys(spec, detectOS()).map((key) => key.spoken).join(' ');
+	return displayKeys(spec, detectOS()).map((key) => key.name).join(' ');
 }

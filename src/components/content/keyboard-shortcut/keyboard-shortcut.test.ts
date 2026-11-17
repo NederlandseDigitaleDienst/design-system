@@ -263,8 +263,8 @@ describe('nldd-keyboard-shortcut on macOS', () => {
 		await waitForUpdate(el);
 		const [option, command, k] = keysOf(el);
 		expect(option.querySelector('[aria-hidden="true"]')!.textContent).toBe('⌥');
-		expect(option.querySelector('.keyboard-shortcut__spoken')!.textContent).toBe('Option');
-		expect(command.querySelector('.keyboard-shortcut__spoken')!.textContent).toBe('Command');
+		expect(option.querySelector('.keyboard-shortcut__key-name')!.textContent).toBe('Option');
+		expect(command.querySelector('.keyboard-shortcut__key-name')!.textContent).toBe('Command');
 		expect(k.children.length).toBe(0);
 	});
 

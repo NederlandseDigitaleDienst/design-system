@@ -68,15 +68,15 @@ describe('shortcut', () => {
 		expect(labels('Cmd+Shift+Z')).toEqual(['⇧', '⌘', 'Z']);
 		expect(labels('command+alt+ctrl+K')).toEqual(['⌃', '⌥', '⌘', 'K']);
 		expect(labels('⌘+K')).toEqual(['⌘', 'K']);
-		expect(displayKeys('Cmd+Shift+Z', 'mac').map((key) => key.spoken)).toEqual(['Shift', 'Command', 'Z']);
+		expect(displayKeys('Cmd+Shift+Z', 'mac').map((key) => key.name)).toEqual(['Shift', 'Command', 'Z']);
 	});
 
 	it('leaves the keys as written on other platforms, and reads a symbol as its name', () => {
 		expect(displayKeys('Shift+Ctrl+K', 'windows')).toEqual([
-			{ label: 'Shift', spoken: 'Shift' },
-			{ label: 'Ctrl', spoken: 'Ctrl' },
-			{ label: 'K', spoken: 'K' },
+			{ label: 'Shift', name: 'Shift' },
+			{ label: 'Ctrl', name: 'Ctrl' },
+			{ label: 'K', name: 'K' },
 		]);
-		expect(displayKeys('⌘+K', 'other').map((key) => key.spoken)).toEqual(['Command', 'K']);
+		expect(displayKeys('⌘+K', 'other').map((key) => key.name)).toEqual(['Command', 'K']);
 	});
 });

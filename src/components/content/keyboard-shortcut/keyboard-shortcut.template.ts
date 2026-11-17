@@ -3,9 +3,9 @@ import type { NLDDKeyboardShortcut } from './keyboard-shortcut.js';
 import type { DisplayKey } from '../../../utilities/shortcut.js';
 
 /** A symbol is shown, its name is read. */
-function keyContent({ label, spoken }: DisplayKey) {
-	if (label === spoken) return label;
-	return html`<span class="keyboard-shortcut__symbol" aria-hidden="true">${label}</span><span class="keyboard-shortcut__spoken">${spoken}</span>`;
+function keyContent({ label, name }: DisplayKey) {
+	if (label === name) return label;
+	return html`<span class="keyboard-shortcut__symbol" aria-hidden="true">${label}</span><span class="keyboard-shortcut__key-name">${name}</span>`;
 }
 
 export function template(component: NLDDKeyboardShortcut) {

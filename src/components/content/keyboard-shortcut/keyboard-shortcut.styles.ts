@@ -142,7 +142,7 @@ export const keyboardShortcutStyles = css`
 	}
 
 	/* Standard visually-hidden recipe. */
-	.keyboard-shortcut__spoken {
+	.keyboard-shortcut__key-name {
 		position: absolute;
 		width: 1px;
 		height: 1px;
