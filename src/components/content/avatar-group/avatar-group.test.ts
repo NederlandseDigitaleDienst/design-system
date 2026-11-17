@@ -104,6 +104,24 @@ describe('nldd-avatar-group', () => {
 		expect(getComputedStyle(avatars[2]).display).toBe('none');
 	});
 
+	it('zet zijn regels terug als de lijst met stylesheets is vervangen', async () => {
+		el = await fixture(`
+			<nldd-avatar-group max="2">
+				<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
+				<nldd-avatar name="Piet Pietersen" decorative></nldd-avatar>
+				<nldd-avatar name="Fatima Ahmadi" decorative></nldd-avatar>
+			</nldd-avatar-group>
+		`);
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		// As style hot reloading does: the static styles alone.
+		root.adoptedStyleSheets = root.adoptedStyleSheets.slice(0, -1);
+		el.setAttribute('max', '1');
+		await waitForUpdate(el);
+		const avatars = Array.from(el.querySelectorAll('nldd-avatar'));
+		expect(getComputedStyle(avatars[1]).display).toBe('none');
+	});
+
 	it('verbergt niemand bij max="0"', async () => {
 		el = await fixture(`
 			<nldd-avatar-group max="0">

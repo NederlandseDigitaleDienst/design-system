@@ -203,11 +203,10 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 	private _syncGeneratedRules(): void {
 		const root = this.shadowRoot;
 		if (!root) return;
-		if (!this._generatedRules) {
-			this._generatedRules = new CSSStyleSheet();
-			root.adoptedStyleSheets = [...root.adoptedStyleSheets, this._generatedRules];
-		}
+		this._generatedRules ??= new CSSStyleSheet();
 		const sheet = this._generatedRules;
+		// Again when the list was replaced since, as style hot reloading does.
+		if (!root.adoptedStyleSheets.includes(sheet)) root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
 		const total = this._total;
 		const max = this._effectiveMax;
 		const hide = this._overflow.length > 0 && max !== undefined
