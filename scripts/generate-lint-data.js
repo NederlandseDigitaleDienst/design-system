@@ -83,24 +83,26 @@ for (const css of stylesheets) {
 }
 const designSystemCss = Object.fromEntries([...designSystemRules.keys()].sort().map((key) => [key, [...designSystemRules.get(key)].sort()]));
 
-const removedPath = resolve(repoRoot, 'src/assets/styles/removed-tokens.json');
-const removedTokens = read('src/assets/styles/removed-tokens.json');
 const previousData = resolve(repoRoot, 'lint/data.generated.json');
-const previousTokens = existsSync(previousData) ? (JSON.parse(readFileSync(previousData, 'utf8')).tokens ?? []) : [];
-const current = new Set(tokens);
-for (const name of previousTokens) if (!current.has(name) && !removedTokens[name]) removedTokens[name] = { last: pkg.version };
-for (const name of tokens) delete removedTokens[name];
-const removedLines = Object.keys(removedTokens).sort().map((name) => `\t${JSON.stringify(name)}: ${JSON.stringify(removedTokens[name])}`);
-writeFileSync(removedPath, `{\n${removedLines.join(',\n')}\n}\n`);
+const previous = existsSync(previousData) ? JSON.parse(readFileSync(previousData, 'utf8')) : {};
 
-const keysPath = resolve(repoRoot, 'src/translations/removed-keys.json');
-const removedKeys = existsSync(keysPath) ? read('src/translations/removed-keys.json') : {};
-const previousKeys = existsSync(previousData) ? Object.values(JSON.parse(readFileSync(previousData, 'utf8')).translations ?? {}).flat() : [];
-const currentKeys = new Set(Object.values(translations).flat());
-for (const key of previousKeys) if (!currentKeys.has(key) && !removedKeys[key]) removedKeys[key] = { last: pkg.version };
-for (const key of currentKeys) delete removedKeys[key];
-const keyLines = Object.keys(removedKeys).sort().map((key) => `\t${JSON.stringify(key)}: ${JSON.stringify(removedKeys[key])}`);
-writeFileSync(keysPath, `{\n${keyLines.join(',\n')}\n}\n`);
+/**
+ * Keeps a removal ledger: a name that was in the previous data and is gone now
+ * gets the version that last had it; a name that came back leaves the ledger.
+ */
+function updateLedger(path, before, now) {
+	const file = resolve(repoRoot, path);
+	const ledger = existsSync(file) ? read(path) : {};
+	const current = new Set(now);
+	for (const name of before) if (!current.has(name) && !ledger[name]) ledger[name] = { last: pkg.version };
+	for (const name of current) delete ledger[name];
+	const lines = Object.keys(ledger).sort().map((name) => `\t${JSON.stringify(name)}: ${JSON.stringify(ledger[name])}`);
+	writeFileSync(file, `{\n${lines.join(',\n')}\n}\n`);
+	return ledger;
+}
+
+const removedTokens = updateLedger('src/assets/styles/removed-tokens.json', previous.tokens ?? [], tokens);
+const removedKeys = updateLedger('src/translations/removed-keys.json', Object.values(previous.translations ?? {}).flat(), Object.values(translations).flat());
 
 const sorted = (object) => Object.fromEntries(Object.keys(object).sort().map((name) => [name, object[name]]));
 const data = { tags, classes, icons, rules, tokens, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), designSystemCss };

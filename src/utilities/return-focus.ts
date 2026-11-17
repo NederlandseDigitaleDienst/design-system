@@ -1,11 +1,6 @@
+import { deepActiveElement } from './deep-active-element.js';
 import { isPointerMode } from './input-modality.js';
 
-/** The element that really holds focus, inside any shadow roots. */
-export function deepActiveElement(): HTMLElement | null {
-	let el = document.activeElement;
-	while (el?.shadowRoot?.activeElement) el = el.shadowRoot.activeElement;
-	return el as HTMLElement | null;
-}
 
 /**
  * Hands focus back to `target` once `overlay` (a popover, menu, sheet or window)

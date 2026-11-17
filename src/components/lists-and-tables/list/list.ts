@@ -14,6 +14,7 @@ import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
+import { deepActiveElement } from '../../../utilities/deep-active-element.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';
 
@@ -1261,7 +1262,7 @@ export class NLDDList extends LitElement {
 		// Capture the actual focused element (may live inside the handle's shadow DOM,
 		// e.g. the <button> inside nldd-reorder-handle-cell) so we can restore focus
 		// after the consumer reorders the DOM in response to reorder.
-		const focused = this._getDeepActiveElement() ?? handle;
+		const focused = deepActiveElement() ?? handle;
 
 		// Mirror pointer-drag semantics: don't mutate the DOM ourselves — emit
 		// reorder with from/to indices and let the consumer reorder. toIndex
@@ -1273,14 +1274,6 @@ export class NLDDList extends LitElement {
 		// Wait for the consumer to reorder, then restore focus on the moved item's handle.
 		requestAnimationFrame(() => focused.focus());
 	};
-
-	private _getDeepActiveElement(): HTMLElement | null {
-		let active: Element | null = document.activeElement;
-		while (active?.shadowRoot?.activeElement) {
-			active = active.shadowRoot.activeElement;
-		}
-		return active instanceof HTMLElement ? active : null;
-	}
 
 	// — Drag: core ———————————————————————————————————————————————————————————
 
