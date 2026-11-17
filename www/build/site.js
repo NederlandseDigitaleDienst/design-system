@@ -771,7 +771,10 @@ function ruleList(rules, { label, anchors = false, link = true, appearance = 'bo
 		color="secondary"
 		icon="chevron-right"
 	></nldd-icon-cell>`
-			: ''
+			: // A row without a link keeps the room of the chevron, so the levels line up.
+				`
+	<nldd-spacer-cell size="12"></nldd-spacer-cell>
+	<nldd-spacer-cell size="20"></nldd-spacer-cell>`
 	}
 </nldd-list-item>`;
 	});
