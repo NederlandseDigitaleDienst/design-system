@@ -34,6 +34,8 @@ here; consult the commit history if you need that level of detail.
 - **The component reference in the skill lists the attributes a component inherits,** such as `accessible-description`, `accessible-described-by` and `translations`: 130 that were missing. The Vue types now type `nldd-button-bar-divider`, and `nldd-tab-bar-item` no longer shows an internal attribute.
 - **`nldd lint --fix` also fixes an attribute in a JSX tag that holds a block comment.**
 
+## [0.26.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.0...v0.26.1) (2026-11-17)
+
 ## [0.26.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.25.2...v0.26.0) (2026-11-17)
 
 ### Highlights
