@@ -3,6 +3,13 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import '../../../assets/styles/variables.css';
 import './avatar-group.js';
 
+
+/** The text of the rules the group generates, the last sheet it adopted. */
+function generatedRules(el: HTMLElement): string {
+	const sheets = el.shadowRoot!.adoptedStyleSheets;
+	return Array.from(sheets[sheets.length - 1].cssRules, (rule: CSSRule) => rule.cssText).join('\n');
+}
+
 describe('nldd-avatar-group', () => {
 	let el: HTMLElement;
 
@@ -76,8 +83,25 @@ describe('nldd-avatar-group', () => {
 		expect(namen).toEqual(['Fatima Ahmadi', 'Sanne de Vries']);
 
 		// And the rule that hides the rest counts from the first one that no longer fits.
-		const regels = el.shadowRoot!.querySelector('#generated-rules')!.textContent!;
-		expect(regels).toContain(':nth-child(n + 3)');
+		const regels = generatedRules(el);
+		expect(regels).toMatch(/:nth-child\(n ?\+ ?3\)/);
+	});
+
+	it('zet zijn regels zonder <style>-element, zodat een CSP zonder unsafe-inline ze laat staan', async () => {
+		// #455: a policy without 'unsafe-inline' refuses a <style> element, in a
+		// shadow root too, and then max and the stacking order were gone.
+		el = await fixture(`
+			<nldd-avatar-group max="2">
+				<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
+				<nldd-avatar name="Piet Pietersen" decorative></nldd-avatar>
+				<nldd-avatar name="Fatima Ahmadi" decorative></nldd-avatar>
+			</nldd-avatar-group>
+		`);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('style')).toBeNull();
+		const avatars = Array.from(el.querySelectorAll('nldd-avatar'));
+		expect(avatars.map((avatar) => getComputedStyle(avatar).zIndex)).toEqual(['3', '2', '1']);
+		expect(getComputedStyle(avatars[2]).display).toBe('none');
 	});
 
 	it('verbergt niemand bij max="0"', async () => {

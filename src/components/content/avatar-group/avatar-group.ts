@@ -194,10 +194,20 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 	 *  everything past `max`, and stacking the row so the first avatar lies on
 	 *  top of the second and so on down to the overflow button. Generated as a
 	 *  rule rather than as attributes, because the avatars are the consumer's
-	 *  light DOM and nth-child() cannot read a custom property. */
+	 *  light DOM and nth-child() cannot read a custom property.
+	 *
+	 *  A constructed sheet, not a `<style>` element: a Content Security Policy
+	 *  without 'unsafe-inline' refuses the element, in a shadow root too (#455). */
+	private _generatedRules?: CSSStyleSheet;
+
 	private _syncGeneratedRules(): void {
-		const sheet = this.shadowRoot?.querySelector('#generated-rules');
-		if (!sheet) return;
+		const root = this.shadowRoot;
+		if (!root) return;
+		if (!this._generatedRules) {
+			this._generatedRules = new CSSStyleSheet();
+			root.adoptedStyleSheets = [...root.adoptedStyleSheets, this._generatedRules];
+		}
+		const sheet = this._generatedRules;
 		const total = this._total;
 		const max = this._effectiveMax;
 		const hide = this._overflow.length > 0 && max !== undefined
@@ -214,7 +224,7 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 		// and the overflow button ends up at the bottom of it.
 		const stack = Array.from({ length: total }, (_, i) =>
 			`.avatar-group ::slotted(:nth-child(${i + 1})) { z-index: ${total - i}; }`).join('\n');
-		sheet.textContent = `${width}\n${hide}\n${stack}`;
+		sheet.replaceSync(`${width}\n${hide}\n${stack}`);
 	}
 
 	/** The popover resolves its anchor by id against the document, and an id in
