@@ -255,6 +255,27 @@ describe('nldd-token-field', () => {
 		expect(el._isOpen).toBe(false);
 	});
 
+	it('keeps the menu under the input row when the picker opens it', async () => {
+		el = await withMenu();
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as HTMLElement & { anchorElement: Element | null };
+		const anchors: (Element | null)[] = [];
+		const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(menu), 'anchorElement')!;
+		Object.defineProperty(menu, 'anchorElement', {
+			configurable: true,
+			get: () => descriptor.get!.call(menu),
+			set: (value: Element | null) => { anchors.push(value); descriptor.set!.call(menu, value); },
+		});
+		// The second time: the first open already moved it off the host.
+		for (let i = 0; i < 3; i++) {
+			el._togglePicker();
+			await waitForUpdate(el);
+		}
+		expect(el._isOpen).toBe(true);
+		expect(anchors).not.toContain(el);
+		expect(menu.anchorElement).not.toBe(el);
+	});
+
 	it('highlights the first option when the menu opens', async () => {
 		el = await withMenu();
 		await waitForUpdate(el);

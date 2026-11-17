@@ -202,6 +202,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	private _templateObserver: MutationObserver | null = null;
 	/** The picker button opens and closes the list; typing opens it too. */
 	private _picker: OverlayInvoker = new OverlayInvoker(this, {
+		// Where _openMenu anchors it: the invoker must not move it to the host.
+		anchorFor: (): Element => this._inputArea ?? this._input ?? this,
 		open: (): void => {
 			this._syncMenuItems();
 			this._openMenu();
