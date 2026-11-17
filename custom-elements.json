@@ -54052,6 +54052,434 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/overlay-invoker.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isOverlayOpen",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "overlay",
+              "type": {
+                "text": "InvokableOverlay"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "OverlayInvoker",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_anchorFor",
+              "type": {
+                "text": "() => Element | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_options",
+              "type": {
+                "text": "OverlayInvokerOptions"
+              },
+              "privacy": "private",
+              "default": "options"
+            },
+            {
+              "kind": "field",
+              "name": "_overlay",
+              "type": {
+                "text": "InvokableOverlay | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_wasOpenOnPointerdown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "InvokableOverlay | null"
+              },
+              "description": "The overlay this control opens, or null.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "isOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the overlay is open for this control.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_isOpenFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "overlay",
+                  "type": {
+                    "text": "InvokableOverlay"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleSlotChange",
+              "description": "Bind to a slot's `slotchange`: adopts the first `nldd-menu` or\n`nldd-popover` in it. Flattened, so a component can forward its own slot\ninto this one (nldd-split-button hands its popup to the chevron)."
+            },
+            {
+              "kind": "method",
+              "name": "setOverlay",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "overlay",
+                  "type": {
+                    "text": "InvokableOverlay | null"
+                  }
+                }
+              ],
+              "description": "Adopt an overlay (or none). Lets go of the previous one first: left\nanchored, a removed overlay keeps positioning against this control and\nwriting its state onto it, and the pair can never be collected."
+            },
+            {
+              "kind": "method",
+              "name": "anchor",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "(Re-)anchor the overlay. Call once the anchor target exists when it\nresolves later than the overlay."
+            },
+            {
+              "kind": "field",
+              "name": "handlePointerdown",
+              "description": "Bind to the trigger's `pointerdown`. Covers mouse, touch and pen. A press\ninside the overlay is not a press on the trigger, even where the overlay\nsits inside it (a menu in a menu bar item)."
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Call from the trigger's click handler: opens the overlay, or closes it.\nReturns true when there is an overlay, so the click is spent: a popup\ncontrol neither submits a form nor navigates.\n\nOnly a pointer-driven click (detail > 0) has a pointerdown before it. A\nkeyboard click ignores the snapshot, which could be left over from a\ngesture that ended without a click (a drag off the control, a scroll)."
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens the overlay, unless it is open already."
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes the overlay, unless it is closed already."
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "invokesNatively",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "trigger",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "overlay",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Whether `trigger` opens `overlay` as a native popover invoker\n(`popovertarget` or `popoverTargetElement`). The browser then toggles it as\nthe click's default action, and no script should toggle it again."
+        },
+        {
+          "kind": "function",
+          "name": "watchTrigger",
+          "return": {
+            "type": {
+              "text": "() => void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "invoker",
+              "type": {
+                "text": "OverlayInvoker"
+              }
+            },
+            {
+              "name": "trigger",
+              "type": {
+                "text": "() => Element | null"
+              }
+            }
+          ],
+          "description": "Makes an element outside any design-system control the invoker of\n`overlay`: a plain `<button>` that an overlay names with `anchor=\"id\"`.\nListens on the document, so the element may come and go, and calls the\ninvoker for presses that land on it and not in the overlay. A trigger that\nis a native invoker of the overlay is left to the browser.\n\nReturns the function that stops listening."
+        },
+        {
+          "kind": "class",
+          "description": "Writes an overlay's state onto the element it hangs off: expanded, the\npopup type and the link to the overlay. The overlay says what it is and\nwhether it is open; this decides how a trigger shows that.\n\n`aria-haspopup` is set from the first sync, not from the first open: it is\na static property of the trigger (\"this button opens a menu\"), and a screen\nreader user tabbing a row of identical buttons needs it before anything was\nopened. A popup type the consumer chose is left alone; one this wrote follows\nthe overlay when it changes.",
+          "name": "TriggerAria",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_trigger",
+              "type": {
+                "text": "Trigger | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_seededPopupType",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "sync",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                },
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "TriggerState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "clear",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                },
+                {
+                  "name": "controls",
+                  "type": {
+                    "text": "string | undefined"
+                  }
+                }
+              ],
+              "description": "Takes everything off the trigger, for an overlay that leaves the page. In\na single-page app the overlay can go while its trigger stays, and an\n`aria-controls` pointing at an element that no longer exists fails WCAG\n4.1.2. A control that keeps its expanded state is reset too, or it stays\nstuck in its expanded look."
+            },
+            {
+              "kind": "method",
+              "name": "_release",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controls",
+                  "type": {
+                    "text": "string | undefined"
+                  }
+                }
+              ],
+              "description": "Takes the state off a trigger the overlay leaves, so it does not linger\nas a toggle for a screen reader."
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "popoverTargetOf",
+          "return": {
+            "type": {
+              "text": "Element | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "element",
+              "type": {
+                "text": "Element | null"
+              }
+            }
+          ],
+          "description": "The popover a component's inner button invokes, from `popovertarget` or\n`popoverTargetElement` on the host.\n\nAn id written on the inner button is looked up in the component's own\nshadow root, where the popover never is, so the button opened nothing. The\nid is looked up here in the tree of the host instead, and the inner button\ngets the element. The element wins when both are set.\n\nLook it up again on click: a popover rendered after the button is not there\nyet on the button's first render."
+        },
+        {
+          "kind": "function",
+          "name": "anchorPopoverTarget",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "Element | null"
+              }
+            }
+          ],
+          "description": "Positions an `nldd-menu` or `nldd-popover` that `popovertarget` points at\nagainst the control that opens it, so the overlay needs no `anchor` of its\nown. The browser already opens and closes it; this adds where it stands and\nthe ARIA link back to the control, as a slotted overlay gets.\n\nAn overlay with an `anchor` id, or anchored to another element, is\nleft alone: someone chose where it goes. Pass `null` to let go, as on\ndisconnect or when `popovertarget` changes."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isOverlayOpen",
+          "declaration": {
+            "name": "isOverlayOpen",
+            "module": "src/utilities/overlay-invoker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "OverlayInvoker",
+          "declaration": {
+            "name": "OverlayInvoker",
+            "module": "src/utilities/overlay-invoker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "invokesNatively",
+          "declaration": {
+            "name": "invokesNatively",
+            "module": "src/utilities/overlay-invoker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "watchTrigger",
+          "declaration": {
+            "name": "watchTrigger",
+            "module": "src/utilities/overlay-invoker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TriggerAria",
+          "declaration": {
+            "name": "TriggerAria",
+            "module": "src/utilities/overlay-invoker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "popoverTargetOf",
+          "declaration": {
+            "name": "popoverTargetOf",
+            "module": "src/utilities/overlay-invoker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "anchorPopoverTarget",
+          "declaration": {
+            "name": "anchorPopoverTarget",
+            "module": "src/utilities/overlay-invoker.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/owned-attribute.ts",
       "declarations": [
         {
@@ -54492,206 +54920,6 @@
           "declaration": {
             "name": "PageSectionMixin",
             "module": "src/utilities/page-section-mixin.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/utilities/popover-target.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "popoverTargetOf",
-          "return": {
-            "type": {
-              "text": "Element | null"
-            }
-          },
-          "parameters": [
-            {
-              "name": "host",
-              "type": {
-                "text": "Element"
-              }
-            },
-            {
-              "name": "id",
-              "type": {
-                "text": "string | undefined"
-              }
-            },
-            {
-              "name": "element",
-              "type": {
-                "text": "Element | null"
-              }
-            }
-          ],
-          "description": "The popover a component's inner button invokes, from `popovertarget` or\n`popoverTargetElement` on the host.\n\nAn id written on the inner button is looked up in the component's own\nshadow root, where the popover never is, so the button opened nothing. The\nid is looked up here in the tree of the host instead, and the inner button\ngets the element. The element wins when both are set.\n\nLook it up again on click: a popover rendered after the button is not there\nyet on the button's first render."
-        },
-        {
-          "kind": "function",
-          "name": "anchorPopoverTarget",
-          "return": {
-            "type": {
-              "text": "void"
-            }
-          },
-          "parameters": [
-            {
-              "name": "host",
-              "type": {
-                "text": "Element"
-              }
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "Element | null"
-              }
-            }
-          ],
-          "description": "Positions an `nldd-menu` or `nldd-popover` that `popovertarget` points at\nagainst the control that opens it, so the overlay needs no `anchor` of its\nown. The browser already opens and closes it; this adds where it stands and\nthe ARIA link back to the control, as a slotted overlay gets.\n\nAn overlay with an `anchor` id, or anchored to another element, is\nleft alone: someone chose where it goes. Pass `null` to let go, as on\ndisconnect or when `popovertarget` changes."
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "popoverTargetOf",
-          "declaration": {
-            "name": "popoverTargetOf",
-            "module": "src/utilities/popover-target.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "anchorPopoverTarget",
-          "declaration": {
-            "name": "anchorPopoverTarget",
-            "module": "src/utilities/popover-target.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/utilities/popup-anchor-controller.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "PopupAnchorController",
-          "members": [
-            {
-              "kind": "field",
-              "name": "_anchorFor",
-              "type": {
-                "text": "() => Element | null"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_onChange",
-              "type": {
-                "text": "(overlay: Overlay | null, previous: Overlay | null) => void | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_overlay",
-              "type": {
-                "text": "Overlay | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_wasOpenOnPointerdown",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "overlay",
-              "type": {
-                "text": "Overlay | null"
-              },
-              "description": "The slotted overlay, or null when none is slotted.",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "handleSlotChange",
-              "description": "Bind to the popup slot's `slotchange`."
-            },
-            {
-              "kind": "method",
-              "name": "setOverlay",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "overlay",
-                  "type": {
-                    "text": "Overlay | null"
-                  }
-                }
-              ],
-              "description": "Adopt an overlay (or none). Releases the previous one first: left\nanchored, a removed overlay keeps positioning against this control and\nsyncing `expanded` onto it, and the pair can never be collected."
-            },
-            {
-              "kind": "method",
-              "name": "anchor",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "(Re-)anchor the current overlay. Call once the anchor target exists when\nit resolves later than the first `slotchange`."
-            },
-            {
-              "kind": "field",
-              "name": "handlePointerdown",
-              "description": "Bind to the invoker's `pointerdown`. Snapshots the open state before the\nbrowser's light-dismiss runs. Covers mouse, touch and pen — `mousedown`\nalone would skip touch, where no mousedown precedes the synthetic click."
-            },
-            {
-              "kind": "method",
-              "name": "handleClick",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Call from the control's click handler. Returns true when the click was\nconsumed (an overlay is slotted, so the control is its invoker and\nneither submits a form nor navigates); false to fall through."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "PopupAnchorController",
-          "declaration": {
-            "name": "PopupAnchorController",
-            "module": "src/utilities/popup-anchor-controller.ts"
           }
         }
       ]

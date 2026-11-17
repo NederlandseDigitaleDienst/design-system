@@ -45,6 +45,7 @@
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { tokenFieldStyles } from './token-field.styles.js';
 import { tokenFieldTemplate } from './token-field.template.js';
@@ -198,9 +199,14 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  per-token menus so they re-clone. These components run on live sites, not just
 	 *  static demos, so the prototypes can change at runtime. */
 	private _templateObserver: MutationObserver | null = null;
-	/** True between a picker pointerdown-while-open and its trailing click, so the
-	 *  click (which follows the native light-dismiss) doesn't reopen the menu. */
-	private _pickerPointerdownWhileOpen = false;
+	/** The picker button opens and closes the list; typing opens it too. */
+	private _picker: OverlayInvoker = new OverlayInvoker(this, {
+		open: (): void => {
+			this._syncMenuItems();
+			this._openMenu();
+		},
+		close: (): void => this._closeMenu(),
+	});
 
 	public _t(key: keyof NLDDTokenFieldTranslations): string {
 		return translate(this.translations, nlddTokenFieldTranslations, key);
@@ -727,22 +733,16 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 * pointerdown light-dismisses it; the flag makes the trailing click a no-op so
 	 * it doesn't flicker back open. Mirrors the combo-box picker.
 	 */
-	public _handlePickerPointerdown(): void {
-		if (this._isOpen) this._pickerPointerdownWhileOpen = true;
+	public _handlePickerPointerdown(event?: PointerEvent): void {
+		this._picker.setOverlay(this._menu as InvokableOverlay | null);
+		this._picker.handlePointerdown(event);
 	}
 
-	public _togglePicker(): void {
+	/** Without an event it acts as a keyboard click. */
+	public _togglePicker(event?: MouseEvent): void {
 		this._input?.focus();
-		if (this._pickerPointerdownWhileOpen) {
-			this._pickerPointerdownWhileOpen = false;
-			return;
-		}
-		if (this._isOpen) {
-			this._closeMenu();
-		} else {
-			this._syncMenuItems();
-			this._openMenu();
-		}
+		this._picker.setOverlay(this._menu as InvokableOverlay | null);
+		this._picker.handleClick(event ?? new MouseEvent('click'));
 	}
 
 	// — Menu wiring ——————————————————————————————————————————————————————————

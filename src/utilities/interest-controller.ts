@@ -21,7 +21,7 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type { NLDDPopover } from '../components/layout/popover/popover.js';
 import { isTouchMode } from './input-modality.js';
-import { popoverTargetOf } from './popover-target.js';
+import { popoverTargetOf } from './overlay-invoker.js';
 import { setState } from './element-state.js';
 
 /** The nldd-popover `interestfor` names, looked up in the tree of the host. */

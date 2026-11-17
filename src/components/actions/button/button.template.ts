@@ -4,7 +4,7 @@ import { linkRel } from '../../../utilities/link-rel.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
-import { popoverTargetOf } from '../../../utilities/popover-target.js';
+import { popoverTargetOf } from '../../../utilities/overlay-invoker.js';
 
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;

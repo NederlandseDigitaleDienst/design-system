@@ -55,7 +55,7 @@ import { iconButtonStyles } from './icon-button.styles.js';
 import { template } from './icon-button.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddIconButtonTranslations } from './icon-button.i18n.js';
-import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
+import { anchorPopoverTarget, OverlayInvoker, popoverTargetOf } from '../../../utilities/overlay-invoker.js';
 import { InterestController } from '../../../utilities/interest-controller.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
@@ -63,7 +63,6 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { internalsOf } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
-import { anchorPopoverTarget, popoverTargetOf } from '../../../utilities/popover-target.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
 export type Appearance =
@@ -242,7 +241,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	/** Shared wiring for an overlay slotted into `popup`: anchors it to this
 	 * button and turns clicks into open/close. Not private: the template module
 	 * binds its handlers. */
-	_popup = new PopupAnchorController(this);
+	_popup = new OverlayInvoker(this);
 
 	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
 	 * and a long press, in place of the tooltip. Not private: the template

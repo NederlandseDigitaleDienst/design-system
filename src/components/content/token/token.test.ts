@@ -267,7 +267,7 @@ describe('nldd-token – menu', () => {
 		el = await fixture<NLDDToken>('<nldd-token control="menu" disabled>Label</nldd-token>');
 		await waitForUpdate(el);
 
-		el._handleMenuClick();
+		el._handleMenuClick(new MouseEvent('click'));
 		await waitForUpdate(el);
 		expect(el.expanded).toBe(false);
 	});

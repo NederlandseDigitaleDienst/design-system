@@ -60,7 +60,7 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { internalsOf } from '../../../utilities/element-state.js';
 import { ownerForm } from '../../../utilities/owner-form.js';
-import { popoverTargetOf } from '../../../utilities/popover-target.js';
+import { popoverTargetOf } from '../../../utilities/overlay-invoker.js';
 import { translate } from '../../../utilities/translations.js';
 import { splitButtonStyles } from './split-button.styles.js';
 import { splitButtonTemplate } from './split-button.template.js';

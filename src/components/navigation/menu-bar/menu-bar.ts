@@ -25,6 +25,7 @@ import '../menu-bar-item/menu-bar-item.js';
 import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import '../../actions/menu/menu.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { setState } from '../../../utilities/element-state.js';
 import { markListItems } from '../../../utilities/list-items.js';
 
@@ -65,7 +66,6 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 	_menuOpen = false;
 
 	private _overflowMenu: PopoverMenu | null = null;
-	private _overflowPointerdownWhileOpen = false;
 	private _overflowUpdatePending = false;
 
 	private _resizeObserver: ResizeObserver | null = null;
@@ -93,6 +93,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		this._cleanupOverflowDetection();
 		this._overflowMenu?.remove();
 		this._overflowMenu = null;
+		this._overflowInvoker.setOverlay(null);
 	}
 
 	override firstUpdated(): void {
@@ -282,38 +283,29 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		this._overflowMenu = menu;
 	}
 
-	/**
-	 * @internal Used by template.
-	 *
-	 * Opens/closes the overflow popover explicitly. Anchored to the
-	 * always-visible trigger so floating-ui never collapses to 0,0.
-	 * The native popover-invoker path was unusable here (anchor inside a
-	 * display-toggled wrapper). Reopen-after-light-dismiss on touch is
-	 * prevented deterministically via the pointerdown flag below.
-	 */
-	_toggleOverflowMenu = (): void => {
-		if (this._overflowPointerdownWhileOpen) {
-			this._overflowPointerdownWhileOpen = false;
-			return;
-		}
+	/** Opens and closes the overflow menu against the always-visible trigger,
+	 *  so floating-ui never collapses to 0,0. The native popover-invoker path
+	 *  was unusable here (the anchor sits inside a display-toggled wrapper). */
+	private _overflowInvoker: OverlayInvoker = new OverlayInvoker(this, {
+		anchorFor: (): Element | null => this._overflowButton?.querySelector('nldd-menu-bar-item') ?? this._overflowButton ?? null,
+		open: (menu): void => {
+			this._populateOverflowMenu();
+			carryContext(menu, this);
+			menu.showPopover();
+		},
+	});
+
+	/** @internal Used by template. Without an event it acts as a keyboard click. */
+	_toggleOverflowMenu = (event?: MouseEvent): void => {
 		this._createOverflowMenu();
 		if (!this._overflowMenu) return;
-		const trigger = this._overflowButton?.querySelector('nldd-menu-bar-item');
-		this._overflowMenu.anchorElement = trigger ?? this._overflowButton;
-		if (this._menuOpen) {
-			this._overflowMenu.hidePopover();
-		} else {
-			this._populateOverflowMenu();
-			carryContext(this._overflowMenu, this);
-			this._overflowMenu.showPopover();
-		}
+		this._overflowInvoker.setOverlay(this._overflowMenu as unknown as InvokableOverlay);
+		this._overflowInvoker.handleClick(event ?? new MouseEvent('click'));
 	};
 
-	/** @internal Used by template — captures touch-tap-to-close so the trailing click doesn't reopen. */
-	_handleOverflowButtonPointerdown = (): void => {
-		if (this._menuOpen) {
-			this._overflowPointerdownWhileOpen = true;
-		}
+	/** @internal Used by template. */
+	_handleOverflowButtonPointerdown = (event: PointerEvent): void => {
+		this._overflowInvoker.handlePointerdown(event);
 	};
 
 	private _populateOverflowMenu(): void {

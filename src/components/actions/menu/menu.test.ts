@@ -1696,7 +1696,8 @@ describe('nldd-menu drill-in chain', () => {
 		await waitForUpdate(root);
 		expect(l2Menu.matches(':popover-open')).toBe(false);
 
-		anch.click();
+		// A pointer click: detail 1, as the browser gives it after a press.
+		anch.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
 		await waitForUpdate(root);
 
 		expect(menu.matches(':popover-open')).toBe(false); // did NOT reopen
@@ -2077,7 +2078,7 @@ describe('nldd-menu drill-in chain', () => {
 		// closed after a single click.
 		anchor.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
 		await waitForUpdate(root);
-		anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+		anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
 		await waitForUpdate(root);
 
 		expect(l2Menu.matches(':popover-open')).toBe(false);

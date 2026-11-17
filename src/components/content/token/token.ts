@@ -35,6 +35,7 @@ import { nlddTokenTranslations, type NLDDTokenTranslations } from './token.i18n.
 import type { NLDDMenu } from '../../actions/menu/menu.js';
 import './../../actions/icon-button/icon-button.js';
 import { translate } from '../../../utilities/translations.js';
+import { OverlayInvoker } from '../../../utilities/overlay-invoker.js';
 
 export type TokenControl = 'none' | 'dismiss' | 'menu';
 
@@ -119,22 +120,22 @@ export class NLDDToken extends LitElement {
 	@query('.token__menu-action nldd-icon-button')
 	private _menuButton?: HTMLElement;
 
-	private _menu: NLDDMenu | null = null;
-	private _pointerdownWhileOpen = false;
+	/** Anchors a slotted nldd-menu to the chevron and opens and closes it. */
+	private _menu: OverlayInvoker = new OverlayInvoker(this, {
+		anchorFor: (): Element => this._menuButton ?? this,
+		onChange: (menu, previous) => {
+			previous?.removeEventListener('toggle', this._handleMenuToggle);
+			if (!menu) return;
+			(menu as NLDDMenu).variant = 'menu';
+			(menu as NLDDMenu).placement = 'bottom-start';
+			menu.addEventListener('toggle', this._handleMenuToggle);
+		},
+	});
 
 	/** Wire a slotted nldd-menu: anchor it to the chevron button and mirror its open
 	 *  state onto `expanded`. The menu closes itself on select and on light-dismiss. */
 	_onMenuSlotChange(e: Event): void {
-		const menu = (e.target as HTMLSlotElement)
-			.assignedElements({ flatten: true })
-			.find((el) => el.tagName.toLowerCase() === 'nldd-menu') as NLDDMenu | undefined;
-		if (!menu || menu === this._menu) return;
-		this._menu?.removeEventListener('toggle', this._handleMenuToggle);
-		this._menu = menu;
-		menu.variant = 'menu';
-		menu.placement = 'bottom-start';
-		menu.anchorElement = this._menuButton ?? this;
-		menu.addEventListener('toggle', this._handleMenuToggle);
+		this._menu.handleSlotChange(e);
 	}
 
 	private _handleMenuToggle = (e: Event): void => {
@@ -149,23 +150,14 @@ export class NLDDToken extends LitElement {
 		}
 	};
 
-	/** Pointerdown on an open menu's button light-dismisses the popover before the
-	 *  click fires; flag it so the trailing click doesn't immediately reopen it. */
-	_handleMenuButtonPointerdown(): void {
-		if (this._menu?.matches(':popover-open')) this._pointerdownWhileOpen = true;
-	}
+	_handleMenuButtonPointerdown = (e: PointerEvent): void => {
+		this._menu.handlePointerdown(e);
+	};
 
-	_handleMenuClick(): void {
+	_handleMenuClick = (e: MouseEvent): void => {
 		if (this.disabled) return;
-		if (this._pointerdownWhileOpen) {
-			this._pointerdownWhileOpen = false;
-			return;
-		}
-		const menu = this._menu;
-		if (!menu || !('showPopover' in menu) || menu.matches(':popover-open')) return;
-		menu.anchorElement = this._menuButton ?? this;
-		menu.showPopover();
-	}
+		this._menu.handleClick(e);
+	};
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -188,7 +180,7 @@ export class NLDDToken extends LitElement {
 		if (e.composedPath()[0] !== this) return;
 		if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
 			e.preventDefault();
-			this._handleMenuClick();
+			this._menu.open();
 		}
 	};
 

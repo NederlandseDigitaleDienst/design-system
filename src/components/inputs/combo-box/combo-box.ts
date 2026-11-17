@@ -71,6 +71,7 @@
 import { LitElement } from 'lit';
 import { property, state, query } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { comboBoxStyles } from './combo-box.styles.js';
@@ -492,26 +493,27 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		(this._menu as HTMLElement).hidePopover();
 	}
 
-	private _pickerPointerdownWhileOpen = false;
-
-	public _toggleMenu(): void {
-		if (this._pickerPointerdownWhileOpen) {
-			this._pickerPointerdownWhileOpen = false;
-			return;
-		}
-		if (this._isOpen) {
-			this._closeMenu();
-			this._input?.focus();
-		} else {
+	/** The picker button opens and closes the list; typing opens it too. */
+	private _picker: OverlayInvoker = new OverlayInvoker(this, {
+		open: (): void => {
 			this._openMenu();
 			this._input?.focus();
-		}
+		},
+		close: (): void => {
+			this._closeMenu();
+			this._input?.focus();
+		},
+	});
+
+	/** Without an event it acts as a keyboard click. */
+	public _toggleMenu(event?: MouseEvent): void {
+		this._picker.setOverlay(this._menu as InvokableOverlay | null);
+		this._picker.handleClick(event ?? new MouseEvent('click'));
 	}
 
-	public _handlePickerPointerdown(): void {
-		if (this._isOpen) {
-			this._pickerPointerdownWhileOpen = true;
-		}
+	public _handlePickerPointerdown(event?: PointerEvent): void {
+		this._picker.setOverlay(this._menu as InvokableOverlay | null);
+		this._picker.handlePointerdown(event);
 	}
 
 	// — Handlers ————————————————————————————————————————————————————————————

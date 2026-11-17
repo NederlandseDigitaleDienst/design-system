@@ -10,7 +10,7 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { nlddListItemSegmentTranslations } from './list-item-segment.i18n.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
-import { anchorPopoverTarget, popoverTargetOf } from '../../../utilities/popover-target.js';
+import { anchorPopoverTarget, popoverTargetOf } from '../../../utilities/overlay-invoker.js';
 
 export type ListItemSegmentWidth = 'fit-content' | 'full';
 
