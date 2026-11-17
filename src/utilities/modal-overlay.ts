@@ -49,6 +49,8 @@ export class ModalOverlay implements ReactiveController {
 	 *  itself is still open here until its close event: a render in between
 	 *  must not read that as a request to open it again. */
 	private _known = false;
+	/** The close in progress, for whichever of its three routes ends it first. */
+	private _finishClose: (() => void) | null = null;
 
 	constructor(
 		private readonly host: ModalOverlayHost & { updateComplete: Promise<boolean> },
@@ -158,9 +160,6 @@ export class ModalOverlay implements ReactiveController {
 		dialog.classList.toggle('is-pointer-focus', isPointerMode());
 		dialog.focus();
 	}
-
-	/** The close in progress, for whichever of its three routes ends it first. */
-	private _finishClose: (() => void) | null = null;
 
 	private _settle(dialog: HTMLDialogElement): void {
 		window.clearTimeout(this._closeFallback);

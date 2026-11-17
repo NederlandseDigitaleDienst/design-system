@@ -197,7 +197,9 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 	 *  light DOM and nth-child() cannot read a custom property.
 	 *
 	 *  A constructed sheet, not a `<style>` element: a Content Security Policy
-	 *  without 'unsafe-inline' refuses the element, in a shadow root too (#455). */
+	 *  without 'unsafe-inline' refuses the element, in a shadow root too (#455).
+	 *  Every browser with the Popover API can adopt one; without it (jsdom) the
+	 *  rules are left out and the row shows every avatar. */
 	private _generatedRules?: CSSStyleSheet;
 
 	private _syncGeneratedRules(): void {

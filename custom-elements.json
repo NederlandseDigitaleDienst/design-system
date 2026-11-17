@@ -56727,6 +56727,16 @@
             },
             {
               "kind": "field",
+              "name": "_finishClose",
+              "type": {
+                "text": "(() => void) | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The close in progress, for whichever of its three routes ends it first."
+            },
+            {
+              "kind": "field",
               "name": "dialog",
               "type": {
                 "text": "HTMLDialogElement | null"
@@ -56797,16 +56807,6 @@
                 }
               ],
               "description": "An `[autofocus]` inside, else the dialog itself, with a ring only for the keyboard."
-            },
-            {
-              "kind": "field",
-              "name": "_finishClose",
-              "type": {
-                "text": "(() => void) | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "description": "The close in progress, for whichever of its three routes ends it first."
             },
             {
               "kind": "method",
