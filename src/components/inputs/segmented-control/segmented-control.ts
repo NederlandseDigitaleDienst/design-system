@@ -48,6 +48,7 @@
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { announceGroupState, setGroupDisabled } from '../../../utilities/choice-group.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
@@ -491,30 +492,13 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 
 	private _syncItems(): void {
 		const items = this._getItems();
-		this.toggleAttribute('aria-required', this.required);
 		// Announced, not drawn. See the note on `invalid`.
-		if (this.invalid) this.setAttribute('aria-invalid', 'true');
-		else this.removeAttribute('aria-invalid');
+		announceGroupState(this, { required: this.required, invalid: this.invalid });
 
 		const selectedValues = this._getSelectedValues();
 
-		if (this.disabled) {
-			items.forEach(item => {
-				if (!item.hasAttribute('disabled')) {
-					item.setAttribute('group-disabled', '');
-					item.disabled = true;
-				}
-			});
-		} else {
-			items.forEach(item => {
-				if (item.hasAttribute('group-disabled')) {
-					item.removeAttribute('group-disabled');
-					item.disabled = false;
-				}
-			});
-		}
-
 		items.forEach(item => {
+			setGroupDisabled(item, this.disabled);
 			item.appearance = this.appearance;
 			item.size = this.size;
 			item.inputType = this.type;

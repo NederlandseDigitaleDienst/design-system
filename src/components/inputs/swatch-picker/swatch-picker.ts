@@ -45,6 +45,7 @@
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { announceGroupState, setGroupDisabled } from '../../../utilities/choice-group.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
@@ -382,18 +383,10 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 
 	private _syncItems(): void {
 		const items = this._getItems();
-		this.toggleAttribute('aria-required', this.required);
-		if (this.invalid) this.setAttribute('aria-invalid', 'true');
-		else this.removeAttribute('aria-invalid');
+		announceGroupState(this, { required: this.required, invalid: this.invalid });
 
 		for (const item of items) {
-			if (this.disabled && !item.hasAttribute('disabled')) {
-				item.setAttribute('group-disabled', '');
-				item.disabled = true;
-			} else if (!this.disabled && item.hasAttribute('group-disabled')) {
-				item.removeAttribute('group-disabled');
-				item.disabled = false;
-			}
+			setGroupDisabled(item, this.disabled);
 			item.size = this.size;
 			item.selected = !!this.value && item.value === this.value;
 		}

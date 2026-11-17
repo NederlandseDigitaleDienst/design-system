@@ -40,6 +40,7 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import type { RadioPosition } from '../../../utilities/radio-position.js';
 import { RadioGrouping } from '../../../utilities/radio-grouping.js';
+import { ChoiceGroup } from '../../../utilities/choice-group.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { isKeyboardMode } from '../../../utilities/input-modality.js';
@@ -115,10 +116,10 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 		return this._groupPosition ?? this._grouping.position;
 	}
 
-	/** Whether anything in its group is checked. Either source saying so is
-	 *  enough: they answer for the same set of radios. */
+	/** Whether anything in its group is checked: the group around it answers,
+	 *  or else the radios it shares a name with. */
 	get _answered(): boolean {
-		return this._groupHasSelection || this._grouping.answered;
+		return ChoiceGroup.of(this) ? this._groupHasSelection : this._grouping.answered;
 	}
 
 	/** The aria-label this field wrote on itself, so it only takes back its own. */
@@ -155,7 +156,7 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 		// Also when the app sets `checked` or a form resets it: the group moves
 		// the stop for Tab along, which it cannot see by itself.
 		if (this.hasUpdated && (changed.has('checked') || changed.has('disabled'))) {
-			(this.closest('nldd-radio-button-group') as { _optionChanged?: (field: NLDDRadioButtonField) => void } | null)?._optionChanged?.(this);
+			ChoiceGroup.of(this)?.optionChanged(this);
 		}
 	}
 

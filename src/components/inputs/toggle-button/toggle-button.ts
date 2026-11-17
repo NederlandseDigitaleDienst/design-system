@@ -59,6 +59,7 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 import { InterestController } from '../../../utilities/interest-controller.js';
+import { ChoiceGroup } from '../../../utilities/choice-group.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
 export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
@@ -195,7 +196,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
 		if (this.hasUpdated && (changed.has('selected') || changed.has('disabled'))) {
-			(this.closest('nldd-toggle-button-group') as { _optionChanged?: (button: NLDDToggleButton) => void } | null)?._optionChanged?.(this);
+			ChoiceGroup.of(this)?.optionChanged(this);
 		}
 	}
 

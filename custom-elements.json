@@ -53310,6 +53310,228 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/choice-group.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "setGroupDisabled",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "option",
+              "type": {
+                "text": "HTMLElement & { disabled: boolean }"
+              }
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "Disables an option for its group, and enables only what the group disabled:\nan option that is disabled of its own stays so when the group is enabled again."
+        },
+        {
+          "kind": "function",
+          "name": "announceGroupState",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "state",
+              "type": {
+                "text": "{ required?: boolean; invalid: boolean }"
+              }
+            }
+          ],
+          "description": "What a group announces on itself. Announced, not drawn: what is wrong goes in\nan nldd-validation-list, in words. Leave `required` out where the role has\nno `aria-required`, as `group` has not."
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ChoiceGroup",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_settleQueued",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "of",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "ChoiceGroup<ChoiceOption> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "The group an option belongs to, or null for one that stands alone."
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "answered",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether anything in the group is chosen.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "sync",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands every option what the group decides, then settles what follows from the choice."
+            },
+            {
+              "kind": "method",
+              "name": "settle",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Whether anything is chosen, on every option, and for single choice each\noption's place and the stop for Tab. Committed at once: a listener on\n`change` reads the validity this just changed."
+            },
+            {
+              "kind": "method",
+              "name": "optionChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "An option's choice or `disabled` changed, whoever changed it."
+            },
+            {
+              "kind": "field",
+              "name": "handleChange",
+              "description": "Bind to the group's `change`: what the user chose."
+            },
+            {
+              "kind": "method",
+              "name": "selectOnly",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "chosen",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "Deselects every other option, as a radio group does."
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "focusOptions",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Focus on the first chosen option, or else the first enabled one, as Tab lands."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "setGroupDisabled",
+          "declaration": {
+            "name": "setGroupDisabled",
+            "module": "src/utilities/choice-group.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "announceGroupState",
+          "declaration": {
+            "name": "announceGroupState",
+            "module": "src/utilities/choice-group.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ChoiceGroup",
+          "declaration": {
+            "name": "ChoiceGroup",
+            "module": "src/utilities/choice-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/codemirror/codemirror-input.ts",
       "declarations": [
         {
