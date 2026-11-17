@@ -66,6 +66,13 @@ describe('ModalOverlay', () => {
 		expect(onOpen).toHaveBeenCalledOnce();
 	});
 
+	it('says it is open when its dialog was opened without it', async () => {
+		const el = await mount();
+		dialogOf(el).showModal();
+		el.show();
+		expect(el.open).toBe(true);
+	});
+
 	it('follows open set from outside', async () => {
 		const el = await mount();
 		el.open = true;

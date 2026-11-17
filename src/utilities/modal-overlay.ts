@@ -96,6 +96,7 @@ export class ModalOverlay implements ReactiveController {
 
 		if (dialog.open && !this._closing) {
 			this._known = true;
+			this.host.open = true;
 			return;
 		}
 		// Also when it reopens during the close: what it reads may have changed since.
