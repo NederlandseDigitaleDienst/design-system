@@ -153,6 +153,7 @@ export class OverflowMenu implements ReactiveController {
 	 * Carry what changed on the originals over to their copies, in place: a
 	 * choice that checks an item shows its check mark while it blinks. Only the
 	 * attributes the original has or had: the menu writes its own on an entry.
+	 * The text of an element without children of its own, such as a label.
 	 */
 	private _updateCopies(): void {
 		for (const copy of this._menu?.querySelectorAll('[data-overflow-oid]') ?? []) {
@@ -168,6 +169,9 @@ export class OverflowMenu implements ReactiveController {
 				if (copy.getAttribute(name) !== value) copy.setAttribute(name, value);
 			}
 			this._copiedAttributes.set(oid, names);
+			if (original.childElementCount === 0 && copy.textContent !== original.textContent) {
+				copy.textContent = original.textContent;
+			}
 		}
 	}
 

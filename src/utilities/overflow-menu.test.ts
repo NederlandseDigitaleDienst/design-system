@@ -101,6 +101,21 @@ describe('OverflowMenu', () => {
 		expect(copies.map((copy) => copy.hasAttribute('selected'))).toEqual([false, true]);
 	});
 
+	it('carries a changed label over to its copy while the menu is open', async () => {
+		const host = await mountHost();
+		const original = document.createElement('span');
+		original.textContent = 'Dakisolatie';
+		container.append(original);
+		host.overflow.mirror([original]);
+		host.overflow.menu!.showPopover();
+		await frames();
+		const [copy] = host.overflow.menu!.children;
+		original.textContent = 'Warmtepomp';
+		host.overflow.mirror([original]);
+		expect(host.overflow.menu!.firstElementChild).toBe(copy);
+		expect(copy.textContent).toBe('Warmtepomp');
+	});
+
 	it('refills at once while closed', async () => {
 		const host = await mountHost();
 		host.overflow.replace([Object.assign(document.createElement('nldd-menu-item'), { text: 'Geen' })]);
