@@ -128,6 +128,17 @@ describe('ModalLifecycle', () => {
 		expect(el.open).toBe(true);
 	});
 
+	it('runs beforeOpen again when it is opened during its close', async () => {
+		const beforeOpen = vi.fn();
+		const el = await mount({ animatedClose: true, beforeOpen });
+		el.show();
+		el.hide();
+		el.show();
+		expect(beforeOpen).toHaveBeenCalledTimes(2);
+		el.show();
+		expect(beforeOpen).toHaveBeenCalledTimes(2);
+	});
+
 	it('finishes a close whose animation never ends', async () => {
 		vi.useFakeTimers();
 		try {

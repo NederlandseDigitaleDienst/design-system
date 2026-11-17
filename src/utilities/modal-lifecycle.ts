@@ -87,12 +87,13 @@ export class ModalLifecycle implements ReactiveController {
 			return;
 		}
 
+		if (dialog.open && !this._closing) return;
+		// Also when it reopens during the close: what it reads may have changed since.
+		this.options.beforeOpen?.();
 		if (this._closing) {
 			// Opened again while the close animation runs: call the close off.
 			this._settle(dialog);
 		} else {
-			if (dialog.open) return;
-			this.options.beforeOpen?.();
 			this._focusReturn.remember();
 			dialog.showModal();
 			this._focusFirst(dialog);
@@ -204,7 +205,8 @@ export class ModalLifecycle implements ReactiveController {
 	handleClose = (e: Event): void => {
 		// Only the dialog's own close: a nested component's composed `close`
 		// reaches this listener too, retargeted to its slotted host.
-		// Nor the queued close of a dialog that has been opened again since.
+		// Nor the queued close of a dialog that has been opened again since: no
+		// _settle() needed there, since the show() that reopened it settled first.
 		const dialog = this.dialog;
 		if (!dialog || e.target !== dialog || dialog.open) return;
 		this._settle(dialog);
