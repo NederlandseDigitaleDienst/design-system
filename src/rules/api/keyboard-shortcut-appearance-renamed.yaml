@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-keyboard-shortcut:is([appearance="box"], [appearance="simple"])'
+fix: { value: { appearance: { box: keycap, simple: text } } }
+message: '`appearance="box"` and `appearance="simple"` are now `keycap` and `text`, and the old values do nothing. Rename them here and on every other nldd-keyboard-shortcut.'
+examples:
+  passed: ['<nldd-keyboard-shortcut keys="Cmd+K" appearance="text"></nldd-keyboard-shortcut>']
+  failed: ['<nldd-keyboard-shortcut keys="Cmd+K" appearance="simple"></nldd-keyboard-shortcut>', '<nldd-keyboard-shortcut keys="Cmd+K" appearance="box"></nldd-keyboard-shortcut>']

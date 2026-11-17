@@ -46,10 +46,10 @@ export default {
 		},
 		appearance: {
 			control: 'select',
-			options: ['box', 'simple'],
-			description: "'box' (default) toont elke toets als keycap; 'simple' toont de toetsen als platte tekst — lichter, voor inline gebruik zoals in een menu",
+			options: ['keycap', 'text'],
+			description: "'keycap' (default) toont elke toets als keycap, zonder plus ertussen; 'text' toont de toetsen als platte tekst, lichter, voor inline gebruik zoals in een menu",
 			table: {
-				defaultValue: { summary: 'box' },
+				defaultValue: { summary: 'keycap' },
 			},
 		},
 		color: {
@@ -90,7 +90,7 @@ export default {
 	},
 	args: {
 		size: 'md',
-		appearance: 'box',
+		appearance: 'keycap',
 		color: 'neutral',
 		alwaysVisible: false,
 		keys: 'Ctrl+K',
@@ -168,12 +168,12 @@ export const SchaaltMee = {
 		>
 			<span style="font-size: 20px;">Druk <nldd-keyboard-shortcut size="inherit" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut> om te zoeken (20px).</span>
 			<span style="font-size: 14px;">Druk <nldd-keyboard-shortcut size="inherit" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut> om te zoeken (14px).</span>
-			<span style="font-size: 14px;">Of als tekst: <nldd-keyboard-shortcut size="inherit" appearance="simple" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut>.</span>
+			<span style="font-size: 14px;">Of als tekst: <nldd-keyboard-shortcut size="inherit" appearance="text" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut>.</span>
 		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: '`size="inherit"` schaalt mee met de font-size van de omringende tekst — de box-keycaps in em, de simple-appearance als platte tekst.' } },
+		docs: { description: { story: '`size="inherit"` schaalt mee met de font-size van de omringende tekst: de keycaps in em, `text` als platte tekst.' } },
 	},
 };
 
@@ -185,18 +185,18 @@ export const Appearances = {
 			vertical-alignment="center"
 		>
 			<nldd-keyboard-shortcut
-				appearance="box"
+				appearance="keycap"
 				keys="Cmd+K"
 			></nldd-keyboard-shortcut>
 			<nldd-keyboard-shortcut
-				appearance="simple"
+				appearance="text"
 				keys="Cmd+K"
 			></nldd-keyboard-shortcut>
 		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: '`appearance="box"` (default, keycaps) naast `appearance="simple"` (platte tekst — lichter, voor inline gebruik zoals in een menu).' } },
+		docs: { description: { story: '`appearance="keycap"` (default, keycaps) naast `appearance="text"` (platte tekst — lichter, voor inline gebruik zoals in een menu).' } },
 	},
 };
 
@@ -221,17 +221,27 @@ export const KleurContent = {
 
 export const Mac = {
 	render: () => html`
-		<nldd-keyboard-shortcut
-			debug-os="mac"
-			keys="Ctrl+K"
-			mac-keys="⌘+K"
-			windows-keys="Ctrl+K"
-			linux-keys="Ctrl+K"
-		></nldd-keyboard-shortcut>
+		<nldd-container
+			layout="row"
+			gap="24"
+			vertical-alignment="center"
+		>
+			<nldd-keyboard-shortcut
+				debug-os="mac"
+				keys="Ctrl+Shift+Z"
+				mac-keys="Cmd+Shift+Z"
+			></nldd-keyboard-shortcut>
+			<nldd-keyboard-shortcut
+				debug-os="mac"
+				appearance="text"
+				keys="Ctrl+Shift+Z"
+				mac-keys="Cmd+Shift+Z"
+			></nldd-keyboard-shortcut>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: 'Per-instance `debug-os="mac"` override — toont `mac-keys`.' } },
+		docs: { description: { story: 'Met `debug-os="mac"` toont het component `mac-keys`. De modifiers worden symbolen in de volgorde van een macOS-menu: `Cmd+Shift+Z` wordt ⇧⌘Z, als tekst zonder plus. Een screenreader leest de naam, zoals "Shift Command Z".' } },
 	},
 };
 

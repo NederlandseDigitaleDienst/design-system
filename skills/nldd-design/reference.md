@@ -785,10 +785,11 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 
 ### `<nldd-keyboard-shortcut>`
 
-Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms.
+Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms. On macOS the modifiers show as their symbols, in the order of a macOS menu: `Cmd+Shift+Z` becomes ⇧⌘Z. Write them as Cmd (or Command, Meta), Option (or Alt, Opt), Shift and Ctrl (or Control), or as the symbols. A screen reader reads the name (Command), not the symbol.
 
 **Rules** (`nldd lint`)
 
+- `keyboard-shortcut-appearance-renamed`: `appearance="box"` and `appearance="simple"` are now `keycap` and `text`, and the old values do nothing. Rename them here and on every other nldd-keyboard-shortcut.
 - `keyboard-shortcut-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-keyboard-shortcut.
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
@@ -800,8 +801,8 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 | `mac-keys` | `string` | Optional override for macOS (iPhone/iPad/iPod included). |
 | `windows-keys` | `string` | Optional override for Windows. |
 | `linux-keys` | `string` | Optional override for Linux/ChromeOS. |
-| `size` | `string` | Size: 'sm' \| 'md' \| 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; in the box variant the keycaps then scale along in em. |
-| `appearance` | `string` | 'box' (default) shows each key as a keycap with a fill and a highlight edge. 'simple' shows the keys as plain text with separators: lighter, for inline use such as in a menu item. |
+| `size` | `string` | Size: 'sm' \| 'md' \| 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; with keycaps they then scale along in em. |
+| `appearance` | `string` | 'keycap' (default) shows each key as a keycap with a fill and a highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter, for inline use such as in a menu item. As text the keys are joined by '+' (Ctrl+K), except on macOS. |
 | `always-visible` | `boolean` | Show on touch-only devices too, where shortcuts cannot be invoked. |
 | `color` | `string` | 'neutral' (default) uses the component colors of its own. 'content' lets the keys and separators follow the content color of the context, with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row. |
 | `debug-os` | `'mac'\|'windows'\|'linux'\|'other'` | Development aid: overrides the OS detection for this instance, so you can show several platform variants side by side in Storybook or documentation. Not meant for production use; leave it empty (default) so the real OS detection applies. |

@@ -727,7 +727,7 @@ describe('nldd-segmented-control-item shortcut', () => {
 		`);
 		const item = el.querySelector<NLDDSegmentedControlItem>('nldd-segmented-control-item')!;
 		await waitForUpdate(item);
-		expect(item.shadowRoot!.querySelector('input')!.getAttribute('aria-label')).toBe('Vet Cmd B');
+		expect(item.shadowRoot!.querySelector('input')!.getAttribute('aria-label')).toBe('Vet Command B');
 		const tooltip = item.shadowRoot!.querySelector('nldd-tooltip')!;
 		expect(tooltip.getAttribute('text')).toBe('Vet');
 		expect(tooltip.getAttribute('shortcut-mac')).toBe('Cmd+B');

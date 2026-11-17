@@ -7152,7 +7152,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms.",
+          "description": "Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms. On macOS the modifiers show as their symbols, in the order of a macOS menu: `Cmd+Shift+Z` becomes ⇧⌘Z. Write them as Cmd (or Command, Meta), Option (or Alt, Opt), Shift and Ctrl (or Control), or as the symbols. A screen reader reads the name (Command), not the symbol.",
           "name": "NLDDKeyboardShortcut",
           "members": [
             {
@@ -7211,8 +7211,8 @@
               "type": {
                 "text": "Appearance"
               },
-              "default": "'box'",
-              "description": "'box' (default) renders each key as a keycap with a fill and highlight\nborder. 'simple' renders the keys as plain text with separators — lighter,\nfor inline use such as inside a menu item.",
+              "default": "'keycap'",
+              "description": "'keycap' (default) renders each key as a keycap with a fill and highlight\nborder. 'text' renders the keys as plain text: lighter, for inline use\nsuch as inside a menu item.",
               "attribute": "appearance",
               "reflects": true
             },
@@ -7285,18 +7285,18 @@
               "expandedType": {
                 "text": "'inherit' | 'md' | 'sm'"
               },
-              "description": "Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; in the box variant the keycaps then scale along in em."
+              "description": "Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; with keycaps they then scale along in em."
             },
             {
               "name": "appearance",
               "type": {
                 "text": "Appearance"
               },
-              "default": "'box'",
-              "description": "'box' (default) shows each key as a keycap with a fill and a highlight edge. 'simple' shows the keys as plain text with separators: lighter, for inline use such as in a menu item.",
+              "default": "'keycap'",
+              "description": "'keycap' (default) shows each key as a keycap with a fill and a highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter, for inline use such as in a menu item. As text the keys are joined by '+' (Ctrl+K), except on macOS.",
               "fieldName": "appearance",
               "expandedType": {
-                "text": "'box' | 'simple'"
+                "text": "'keycap' | 'text'"
               }
             },
             {
@@ -55719,6 +55719,30 @@
         },
         {
           "kind": "function",
+          "name": "displayKeys",
+          "return": {
+            "type": {
+              "text": "DisplayKey[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "spec",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "os",
+              "type": {
+                "text": "OS"
+              }
+            }
+          ],
+          "description": "The keys of a spec as this OS shows them. On macOS the modifiers become\ntheir symbols, in the macOS order (`Cmd+Shift+Z` is ⇧ ⌘ Z); elsewhere the\nkeys stay as written. A symbol is read as its name, as the speech engine\nsays nothing for ⌘ ⌥ ⇧ ⌃."
+        },
+        {
+          "kind": "function",
           "name": "shortcutsAvailable",
           "return": {
             "type": {
@@ -55811,6 +55835,14 @@
           "name": "parseKeys",
           "declaration": {
             "name": "parseKeys",
+            "module": "src/utilities/shortcut.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "displayKeys",
+          "declaration": {
+            "name": "displayKeys",
             "module": "src/utilities/shortcut.ts"
           }
         },

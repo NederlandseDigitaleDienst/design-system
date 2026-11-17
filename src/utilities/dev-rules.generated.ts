@@ -411,6 +411,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-task-board, nldd-column-board"
 	},
 	{
+		"id": "keyboard-shortcut-appearance-renamed",
+		"message": "`appearance=\"box\"` and `appearance=\"simple\"` are now `keycap` and `text`, and the old values do nothing. Rename them here and on every other nldd-keyboard-shortcut.",
+		"context": "nldd-keyboard-shortcut:is([appearance=\"box\"], [appearance=\"simple\"])"
+	},
+	{
 		"id": "keyboard-shortcut-color-renamed",
 		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-keyboard-shortcut.",
 		"context": "nldd-keyboard-shortcut[color=\"inherit\"]"
@@ -1445,8 +1450,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-keyboard-shortcut-appearance",
-		"message": "`appearance` on nldd-keyboard-shortcut takes: box, simple.",
-		"context": "nldd-keyboard-shortcut[appearance]:not([appearance=\"box\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"message": "`appearance` on nldd-keyboard-shortcut takes: keycap, text.",
+		"context": "nldd-keyboard-shortcut[appearance]:not([appearance=\"keycap\"], [appearance=\"text\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-keyboard-shortcut-color",

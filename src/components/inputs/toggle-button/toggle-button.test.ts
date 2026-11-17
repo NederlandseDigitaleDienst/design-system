@@ -636,7 +636,7 @@ describe('nldd-toggle-button – selected-icon', () => {
 			_setOSOverride('mac');
 			el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon" icon="bold" text="Vet" shortcut="Ctrl+B" shortcut-mac="Cmd+B"></nldd-toggle-button>');
 			await waitForUpdate(el);
-			expect(el.shadowRoot!.querySelector('button')!.getAttribute('aria-label')).toBe('Vet Cmd B');
+			expect(el.shadowRoot!.querySelector('button')!.getAttribute('aria-label')).toBe('Vet Command B');
 			const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
 			expect(tooltip.getAttribute('text')).toBe('Vet');
 			expect(tooltip.getAttribute('shortcut-mac')).toBe('Cmd+B');

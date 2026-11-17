@@ -29,7 +29,7 @@ export function tooltipTemplate(component: NLDDTooltip): TemplateResult {
 					<span class="tooltip__shortcut">
 						<nldd-keyboard-shortcut
 							size="inherit"
-							appearance="simple"
+							appearance="text"
 							color="content"
 							keys=${component.shortcut || nothing}
 							mac-keys=${component.shortcutMac || nothing}
