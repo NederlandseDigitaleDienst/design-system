@@ -19,13 +19,14 @@ export function template(component: NLDDKeyboardShortcut) {
 		`;
 	}
 
-	// Keycaps stand apart on their own, and macOS writes ⇧⌘Z without one.
-	const joined = component.appearance === 'text' && component._resolvedOS !== 'mac';
+	// Keycaps stand apart on their own. As text, macOS writes ⇧⌘Z: no '+' after
+	// a modifier symbol, but still between two keys (G+H).
+	const joined = (index: number) => component.appearance === 'text' && index > 0 && !keys[index - 1].symbol;
 
 	return html`
 		<kbd class="keyboard-shortcut">
 			${keys.map((key, index) => html`
-				${joined && index > 0 ? html`<span class="keyboard-shortcut__separator"
+				${joined(index) ? html`<span class="keyboard-shortcut__separator"
 					aria-hidden="true"
 				>+</span>` : ''}
 				<kbd class="keyboard-shortcut__key">${keyContent(key)}</kbd>

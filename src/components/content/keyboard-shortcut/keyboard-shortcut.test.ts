@@ -227,10 +227,18 @@ describe('nldd-keyboard-shortcut appearance', () => {
 		expect(el.getAttribute('appearance')).toBe('text');
 	});
 
-	it('writes text on macOS without a "+", as a macOS menu does', async () => {
+	it('writes text on macOS without a "+" after a modifier, as a macOS menu does', async () => {
 		el = await fixture('<nldd-keyboard-shortcut appearance="text" debug-os="mac" keys="Ctrl+K" mac-keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.keyboard-shortcut__separator')).toBeNull();
+	});
+
+	it('keeps the "+" between two plain keys on macOS', async () => {
+		el = await fixture('<nldd-keyboard-shortcut appearance="text" debug-os="mac" keys="Shift+G+H" always-visible></nldd-keyboard-shortcut>');
+		await waitForUpdate(el);
+		const text = el.shadowRoot!.querySelector('.keyboard-shortcut')!;
+		const shown = [...text.children].map((child) => child.querySelector('.keyboard-shortcut__symbol')?.textContent ?? child.textContent);
+		expect(shown).toEqual(['⇧', 'G', '+', 'H']);
 	});
 });
 

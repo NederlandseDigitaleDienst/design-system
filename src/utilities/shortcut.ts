@@ -53,6 +53,8 @@ export function parseKeys(spec: string): string[] {
 export interface DisplayKey {
 	label: string;
 	spoken: string;
+	/** A modifier shown as its macOS symbol, which the next key follows without a '+'. */
+	symbol?: boolean;
 }
 
 interface Modifier {
@@ -93,7 +95,7 @@ export function displayKeys(spec: string, os: OS): DisplayKey[] {
 		else rest.push({ label: key, spoken: key });
 	}
 	const ordered = MAC_ORDER.filter((modifier) => modifiers.has(modifier))
-		.map(({ symbol, spoken }) => ({ label: symbol, spoken }));
+		.map(({ symbol, spoken }) => ({ label: symbol, spoken, symbol: true }));
 	return [...ordered, ...rest];
 }
 
