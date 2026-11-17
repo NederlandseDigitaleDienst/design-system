@@ -40465,16 +40465,6 @@
               }
             }
           ],
-          "events": [
-            {
-              "name": "open",
-              "description": "Fired when the sheet is opened"
-            },
-            {
-              "name": "close",
-              "description": "Fired when the sheet is fully closed. Does not bubble: overlays nest, and a listener on one sheet asking about that sheet should not also hear the form it opened. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice."
-            }
-          ],
           "attributes": [
             {
               "name": "width",
@@ -40531,6 +40521,16 @@
           },
           "tagName": "nldd-sheet",
           "customElement": true,
+          "events": [
+            {
+              "name": "open",
+              "description": "Fired when the sheet is opened"
+            },
+            {
+              "name": "close",
+              "description": "Fired when the sheet is fully closed. Does not bubble: overlays nest, and a listener on one sheet asking about that sheet should not also hear the form it opened. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice."
+            }
+          ],
           "slots": [
             {
               "name": "",
@@ -41601,16 +41601,6 @@
               }
             }
           ],
-          "events": [
-            {
-              "name": "open",
-              "description": "When the window opens"
-            },
-            {
-              "name": "close",
-              "description": "When the window has fully closed. Does not bubble: overlays can sit inside each other, and a listener on one window should not also hear the form that opened it. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice."
-            }
-          ],
           "attributes": [
             {
               "name": "scheme",
@@ -41724,6 +41714,16 @@
           },
           "tagName": "nldd-window",
           "customElement": true,
+          "events": [
+            {
+              "name": "open",
+              "description": "When the window opens"
+            },
+            {
+              "name": "close",
+              "description": "When the window has fully closed. Does not bubble: overlays can sit inside each other, and a listener on one window should not also hear the form that opened it. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice."
+            }
+          ],
           "slots": [
             {
               "name": "",
@@ -49381,16 +49381,6 @@
               }
             }
           ],
-          "events": [
-            {
-              "name": "open",
-              "description": "When the dialog is opened"
-            },
-            {
-              "name": "close",
-              "description": "When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened."
-            }
-          ],
           "attributes": [
             {
               "name": "variant",
@@ -49468,6 +49458,16 @@
           },
           "tagName": "nldd-modal-dialog",
           "customElement": true,
+          "events": [
+            {
+              "name": "open",
+              "description": "When the dialog is opened"
+            },
+            {
+              "name": "close",
+              "description": "When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened."
+            }
+          ],
           "slots": [
             {
               "name": "",
@@ -52290,6 +52290,32 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/deep-active-element.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "deepActiveElement",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "description": "The element that really holds focus, inside any shadow roots.\n`document.activeElement` only names the outermost shadow host."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "deepActiveElement",
+          "declaration": {
+            "name": "deepActiveElement",
+            "module": "src/utilities/deep-active-element.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/defer-focus.ts",
       "declarations": [
         {
@@ -53909,49 +53935,232 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/utilities/open-when-rendered.ts",
+      "path": "src/utilities/modal-lifecycle.ts",
       "declarations": [
         {
-          "kind": "function",
-          "name": "openWhenRendered",
-          "return": {
-            "type": {
-              "text": ""
-            }
-          },
-          "parameters": [
+          "kind": "class",
+          "description": "The life of a modal overlay (nldd-sheet, nldd-window, nldd-modal-dialog):\nopening once rendered, the first focus, closing with or without an\nanimation, one `close` per open cycle, focus back to where it came from,\nand the dismiss routes (Escape, the backdrop, a title bar).\n\nThe host keeps `open`, show() and hide() as its API and calls show() and\nhide() here. The template binds the dialog's `pointerdown`, `pointerup`,\n`click`, `cancel` and `close` to the handlers of the same name.",
+          "name": "ModalLifecycle",
+          "members": [
             {
-              "name": "host",
+              "kind": "field",
+              "name": "_closing",
               "type": {
-                "text": "LitElement"
+                "text": "boolean"
               },
-              "description": "The overlay element."
+              "privacy": "private",
+              "default": "false"
             },
             {
-              "name": "getDialog",
+              "kind": "field",
+              "name": "_closeFallback",
               "type": {
-                "text": "() => HTMLDialogElement | null"
+                "text": "number"
               },
-              "description": "Resolves the dialog from the shadow root."
+              "privacy": "private",
+              "default": "0"
             },
             {
-              "name": "open",
+              "kind": "field",
+              "name": "_closeEmitted",
               "type": {
-                "text": "() => void"
+                "text": "boolean"
               },
-              "description": "Opens the overlay: the caller's own `show()`."
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_cancelPendingOpen",
+              "type": {
+                "text": "(() => void) | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_focusReturn",
+              "privacy": "private",
+              "default": "new FocusReturn()"
+            },
+            {
+              "kind": "field",
+              "name": "_downOnBackdrop",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_upOnBackdrop",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "dialog",
+              "type": {
+                "text": "HTMLDialogElement | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostUpdated",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Follows `open` set from outside, as a binding does."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_focusFirst",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dialog",
+                  "type": {
+                    "text": "HTMLDialogElement"
+                  }
+                }
+              ],
+              "description": "An `[autofocus]` inside, else the dialog itself, with a ring only for the keyboard."
+            },
+            {
+              "kind": "method",
+              "name": "_settle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dialog",
+                  "type": {
+                    "text": "HTMLDialogElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_emitClose",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Once per open cycle, from whichever route closed the dialog."
+            },
+            {
+              "kind": "method",
+              "name": "_onBackdrop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "On the backdrop: the event targets the dialog itself, outside its box. The\ntarget comes first, because a click from code carries 0,0 as coordinates."
+            },
+            {
+              "kind": "field",
+              "name": "handlePointerDown"
+            },
+            {
+              "kind": "field",
+              "name": "handlePointerUp"
+            },
+            {
+              "kind": "field",
+              "name": "handleClick",
+              "description": "Closes only when the press and the release both land on the backdrop: a\ndrag between the content and the backdrop is no dismissal (WCAG 2.5.2)."
+            },
+            {
+              "kind": "field",
+              "name": "handleCancel",
+              "description": "Escape: close through hide(), with its animation, not the browser's close."
+            },
+            {
+              "kind": "field",
+              "name": "handleClose",
+              "description": "A close that skips hide(), such as a `<form method=\"dialog\">`."
+            },
+            {
+              "kind": "field",
+              "name": "_handleDismiss",
+              "privacy": "private"
             }
-          ],
-          "description": "Defers an overlay's `show()` until the element has rendered its `<dialog>`.\n\n`show()` needs a dialog in the shadow root to call `showModal()` on. A consumer\nthat opens an overlay in the same tick it is created — an overlay bound to\n`show=true` on a routed component, say — gets there first, and without this the\ncall would silently do nothing with nothing to retry it: the overlay stays shut\nfor good, which reads as a broken component rather than a race.\n\nRetried exactly once. If the dialog still is not there after the update, the\nelement was never rendered at all, and opening again would only queue another\nretry against the same missing dialog."
+          ]
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "openWhenRendered",
+          "name": "ModalLifecycle",
           "declaration": {
-            "name": "openWhenRendered",
-            "module": "src/utilities/open-when-rendered.ts"
+            "name": "ModalLifecycle",
+            "module": "src/utilities/modal-lifecycle.ts"
           }
         }
       ]
@@ -55464,16 +55673,6 @@
       "declarations": [
         {
           "kind": "function",
-          "name": "deepActiveElement",
-          "return": {
-            "type": {
-              "text": "HTMLElement | null"
-            }
-          },
-          "description": "The element that really holds focus, inside any shadow roots."
-        },
-        {
-          "kind": "function",
           "name": "returnFocus",
           "return": {
             "type": {
@@ -55596,14 +55795,6 @@
         }
       ],
       "exports": [
-        {
-          "kind": "js",
-          "name": "deepActiveElement",
-          "declaration": {
-            "name": "deepActiveElement",
-            "module": "src/utilities/return-focus.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "returnFocus",

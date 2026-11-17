@@ -102,11 +102,13 @@ describe('nldd-window', () => {
 		// fully validate the coordinate logic. Verify in browser-based tests.
 		// Press AND release on the backdrop: the drag-guard only dismisses when
 		// the pointerdown started there too.
-		dialog.dispatchEvent(new PointerEvent('pointerdown', {
-			clientX: rect.left - 10,
-			clientY: rect.top - 10,
-			bubbles: true,
-		}));
+		for (const type of ['pointerdown', 'pointerup']) {
+			dialog.dispatchEvent(new PointerEvent(type, {
+				clientX: rect.left - 10,
+				clientY: rect.top - 10,
+				bubbles: true,
+			}));
+		}
 		const backdropClick = new MouseEvent('click', {
 			clientX: rect.left - 10,
 			clientY: rect.top - 10,
@@ -431,6 +433,7 @@ describe('nldd-window – backdrop click', () => {
 		// A real backdrop interaction is a press followed by a release, both on
 		// the backdrop.
 		d.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, clientX: 0, clientY: 0 }));
+		d.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, composed: true, clientX: 0, clientY: 0 }));
 		d.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, clientX: 0, clientY: 0 }));
 		await waitForUpdate(el);
 		expect(d.open).toBe(false);

@@ -194,13 +194,13 @@ describe('nldd-sheet – backdrop klik', () => {
 		const dialog = el.shadowRoot!.querySelector('dialog')!;
 		const down = new PointerEvent('pointerdown', { bubbles: true });
 		Object.defineProperty(down, 'target', { value: dialog });
-		el._handleDialogPointerDown(down);
+		el._modal.handlePointerDown(down);
 		const up = new PointerEvent('pointerup', { bubbles: true });
 		Object.defineProperty(up, 'target', { value: dialog });
-		el._handleDialogPointerUp(up);
+		el._modal.handlePointerUp(up);
 		const event = new MouseEvent('click', { bubbles: true });
 		Object.defineProperty(event, 'target', { value: dialog });
-		el._handleDialogClick(event);
+		el._modal.handleClick(event);
 
 		expect(hideSpy).toHaveBeenCalledOnce();
 	});
@@ -215,14 +215,14 @@ describe('nldd-sheet – backdrop klik', () => {
 			Object.defineProperty(event, 'target', { value: dialog });
 			return event;
 		};
-		el._handleDialogPointerDown(onDialog(new PointerEvent('pointerdown', { bubbles: true })));
-		el._handleDialogPointerUp(onDialog(new PointerEvent('pointerup', { bubbles: true })));
-		el._handleDialogClick(onDialog(new MouseEvent('click', { bubbles: true })));
+		el._modal.handlePointerDown(onDialog(new PointerEvent('pointerdown', { bubbles: true })));
+		el._modal.handlePointerUp(onDialog(new PointerEvent('pointerup', { bubbles: true })));
+		el._modal.handleClick(onDialog(new MouseEvent('click', { bubbles: true })));
 
 		el.show();
 		const hideSpy = vi.spyOn(el, 'hide');
 		// A click from code or from assistive technology: no pointer events.
-		el._handleDialogClick(onDialog(new MouseEvent('click', { bubbles: true })));
+		el._modal.handleClick(onDialog(new MouseEvent('click', { bubbles: true })));
 
 		expect(hideSpy).not.toHaveBeenCalled();
 	});
@@ -237,14 +237,14 @@ describe('nldd-sheet – backdrop klik', () => {
 		const body = el.shadowRoot!.querySelector('.sheet__body')!;
 		const down = new PointerEvent('pointerdown', { bubbles: true });
 		Object.defineProperty(down, 'target', { value: dialog });
-		el._handleDialogPointerDown(down);
+		el._modal.handlePointerDown(down);
 		// The release lands in the sheet; the click resolves to the dialog they share.
 		const up = new PointerEvent('pointerup', { bubbles: true });
 		Object.defineProperty(up, 'target', { value: body });
-		el._handleDialogPointerUp(up);
+		el._modal.handlePointerUp(up);
 		const event = new MouseEvent('click', { bubbles: true });
 		Object.defineProperty(event, 'target', { value: dialog });
-		el._handleDialogClick(event);
+		el._modal.handleClick(event);
 
 		expect(hideSpy).not.toHaveBeenCalled();
 	});
@@ -260,11 +260,11 @@ describe('nldd-sheet – backdrop klik', () => {
 		// Press begins on the content (e.g. selecting text in the input)…
 		const down = new PointerEvent('pointerdown', { bubbles: true });
 		Object.defineProperty(down, 'target', { value: body });
-		el._handleDialogPointerDown(down);
+		el._modal.handlePointerDown(down);
 		// …and the drag ends on the backdrop, so the click resolves to the dialog.
 		const event = new MouseEvent('click', { bubbles: true });
 		Object.defineProperty(event, 'target', { value: dialog });
-		el._handleDialogClick(event);
+		el._modal.handleClick(event);
 
 		expect(hideSpy).not.toHaveBeenCalled();
 	});
@@ -295,7 +295,7 @@ describe('nldd-sheet – Escape-toets', () => {
 		const event = new Event('cancel', { cancelable: true });
 		const preventSpy = vi.spyOn(event, 'preventDefault');
 
-		el._handleCancel(event);
+		el._modal.handleCancel(event);
 
 		expect(preventSpy).toHaveBeenCalled();
 		expect(hideSpy).toHaveBeenCalledOnce();

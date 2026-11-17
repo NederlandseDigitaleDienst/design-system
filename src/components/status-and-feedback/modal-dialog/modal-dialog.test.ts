@@ -253,6 +253,7 @@ describe('nldd-modal-dialog', () => {
 			clientY: rect.top - 10,
 		};
 		dialog.dispatchEvent(new PointerEvent('pointerdown', outside));
+		dialog.dispatchEvent(new PointerEvent('pointerup', outside));
 		dialog.dispatchEvent(new MouseEvent('click', outside));
 		expect(dialog.classList.contains('is-closing')).toBe(true);
 	});

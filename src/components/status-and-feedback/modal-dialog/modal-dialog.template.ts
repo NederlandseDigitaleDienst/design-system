@@ -8,10 +8,11 @@ export function modalDialogTemplate(component: NLDDModalDialog) {
 			role=${component.variant === 'alert' ? 'alertdialog' : nothing}
 			aria-label=${component.accessibleLabel || component.text || nothing}
 			aria-modal="true"
-			@pointerdown=${component._handleDialogPointerDown}
-			@click=${component._handleBackdropClick}
-			@cancel=${component._handleCancel}
-			@close=${component._handleDialogClose}
+			@pointerdown=${component._modal.handlePointerDown}
+			@pointerup=${component._modal.handlePointerUp}
+			@click=${component._modal.handleClick}
+			@cancel=${component._modal.handleCancel}
+			@close=${component._modal.handleClose}
 		>
 			<nldd-inline-dialog
 				variant=${component.variant || nothing}

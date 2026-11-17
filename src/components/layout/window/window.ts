@@ -44,14 +44,10 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { windowStyles } from './window.styles.js';
 import { windowTemplate } from './window.template.js';
 import { nlddWindowTranslations, type NLDDWindowTranslations } from './window.i18n.js';
-import { isPointerMode } from '../../../utilities/input-modality.js';
-import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
-import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
-import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
+import { ModalLifecycle } from '../../../utilities/modal-lifecycle.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
-import { FocusReturn } from '../../../utilities/return-focus.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
@@ -100,23 +96,25 @@ export class NLDDWindow extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	open = false;
 
-	private _closing = false;
 	private _titleBar = new TitleBarLabelController(this);
 
+	_modal = new ModalLifecycle(this, {
+		titleBarDismiss: true,
+		lightDismiss: () => !this.noLightDismiss,
+		beforeOpen: () => {
+			setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text);
+			this._applyPositionStyles();
+		},
+	});
+
 	private get _dialog(): HTMLDialogElement | null {
-		return this.shadowRoot?.querySelector('dialog') ?? null;
+		return this._modal.dialog;
 	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.style.containerType = 'inline-size';
 		this.style.containerName = 'layout-container';
-		this.addEventListener('dismiss', this._handleDismiss);
-	}
-
-	override disconnectedCallback(): void {
-		super.disconnectedCallback();
-		this.removeEventListener('dismiss', this._handleDismiss);
 	}
 
 	override firstUpdated(): void {
@@ -128,11 +126,6 @@ export class NLDDWindow extends LitElement {
 	}
 
 	override updated(changed: PropertyValues): void {
-		if (changed.has('open')) {
-			const dialog = this._dialog;
-			if (this.open && !dialog?.open) this.show();
-			else if (!this.open && dialog?.open) this.hide();
-		}
 		this._applyPositionStyles();
 		if (changed.has('scheme')) {
 			this._applyScheme();
@@ -160,93 +153,12 @@ export class NLDDWindow extends LitElement {
 		return this.accessibleLabel || this._titleBar.text || this._t('components.window.accessible-label');
 	}
 
-	/** Cancels a `show()` that is waiting for the first render; null when none is. */
-	private _cancelPendingOpen: (() => void) | null = null;
-
 	show(): void {
-		const dialog = this._dialog;
-		if (!dialog) {
-			this._cancelPendingOpen?.();
-			this._cancelPendingOpen = openWhenRendered(
-				this,
-				() => this._dialog,
-				() => this.show(),
-			);
-			return;
-		}
-
-		this._cancelPendingOpen?.();
-		this._cancelPendingOpen = null;
-
-		// New open cycle: the next close may emit again.
-		this._closeEmitted = false;
-
-		setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text);
-
-		this._focusReturn.remember();
-		dialog.showModal();
-		this.open = true;
-		this._applyPositionStyles();
-		this._manageFocus();
-		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
+		this._modal.show();
 	}
 
 	hide(): void {
-		// A hide() beats a show() that is still waiting for the first render.
-		this._cancelPendingOpen?.();
-		this._cancelPendingOpen = null;
-
-		const dialog = this._dialog;
-		if (!dialog || !dialog.open || this._closing) return;
-
-		this.open = false;
-		this._closing = true;
-		dialog.close();
-		this._closing = false;
-		this._emitClose();
-	}
-
-	/**
-	 * Emitted once per open cycle, from whichever route actually closed the
-	 * window. Same reasoning as nldd-sheet: Escape on a non-modal dialog closes
-	 * through the CloseWatcher, which @cancel cannot reliably stop, while jsdom
-	 * never fires the dialog's own close event.
-	 */
-	private _closeEmitted = false;
-
-	private _focusReturn = new FocusReturn();
-
-	private _emitClose(): void {
-		this.open = false;
-		if (this._closeEmitted) return;
-		this._closeEmitted = true;
-		this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
-		// After the event, so focus a close handler moves elsewhere stays there.
-		this._focusReturn.restore(this);
-	}
-
-	_handleDialogClose = (e: Event): void => {
-		// Only the dialog's own native close counts. That event does not bubble, so
-		// its target is the dialog. A nested component's `close` (an nldd-popover
-		// datepicker, say) is composed and bubbling, so it reaches this same @close
-		// listener retargeted to the slotted host — without this guard the window
-		// would emit its own close while staying open, and `_closeEmitted` would
-		// then swallow the real one for the rest of this open cycle.
-		if (e.target !== this._dialog) return;
-		this._closing = false;
-		this._emitClose();
-	};
-
-	private _manageFocus(): void {
-		// 1. autofocus element present — focus it ourselves: a design-system
-		// field keeps its input in shadow DOM, which the browser's own autofocus
-		// skips (see focusAutofocusTarget).
-		if (focusAutofocusTarget(this)) return;
-
-		const dialog = this._dialog;
-		if (!dialog) return;
-		dialog.classList.toggle('is-pointer-focus', isPointerMode());
-		dialog.focus();
+		this._modal.hide();
 	}
 
 	private _applyPositionStyles(): void {
@@ -282,58 +194,6 @@ export class NLDDWindow extends LitElement {
 		// UA-default centering (which only kicks in without explicit position).
 		dialog.style.margin = hasOverride ? '0' : '';
 	}
-
-	/** Whether the press preceding a click started on the backdrop rather than
-	 *  inside the window. Guards against a drag that begins inside (selecting
-	 *  text in an input, dragging a control) and ends on the backdrop being
-	 *  read as a backdrop click — same fix as nldd-sheet. */
-	private _pointerDownOnBackdrop = false;
-
-	_handleDialogPointerDown = (e: PointerEvent): void => {
-		this._pointerDownOnBackdrop = this._isOnBackdrop(e);
-	};
-
-	/** True when the event landed on the backdrop: it targets the dialog
-	 *  itself (content clicks target the content) with coordinates outside the
-	 *  dialog box. The target check comes BEFORE the coordinates, because a
-	 *  programmatic `.click()` carries clientX/clientY 0,0 — outside any dialog
-	 *  rect — and would otherwise read as a backdrop press from inside. */
-	private _isOnBackdrop(e: MouseEvent): boolean {
-		const dialog = this._dialog;
-		if (!dialog) return false;
-		if (e.composedPath()[0] !== dialog) return false;
-		const rect = dialog.getBoundingClientRect();
-		return e.clientX < rect.left || e.clientX > rect.right
-			|| e.clientY < rect.top || e.clientY > rect.bottom;
-	}
-
-	_handleDialogClick = (e: MouseEvent): void => {
-		if (this.noLightDismiss) return;
-		// Close only on a genuine backdrop click: the press AND the release both
-		// land on the backdrop. Without the pointerdown check, a drag that starts
-		// inside the window and releases on the backdrop would dismiss it.
-		if (this._isOnBackdrop(e) && this._pointerDownOnBackdrop) {
-			this.hide();
-		}
-	};
-
-	_handleCancel = (e: Event): void => {
-		// Intercept Escape key — close via hide() for consistent behavior
-		e.preventDefault();
-		this.hide();
-	};
-
-	private _handleDismiss = (e: Event): void => {
-		// Only our own top-title-bar's dismiss closes the window. A nested component
-		// (nldd-token remove, nldd-banner, nldd-document-tab-bar) fires its own
-		// dismiss inside the window; those must not close it.
-		if (isDismissFromTitleBar(e)) {
-			// Stop the matched dismiss here so a nested window/sheet's own title-bar
-			// dismiss can't keep bubbling up and also close an outer overlay.
-			e.stopPropagation();
-			this.hide();
-		}
-	};
 
 	override render() {
 		return windowTemplate(this);
