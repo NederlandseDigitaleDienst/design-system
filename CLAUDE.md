@@ -8,7 +8,10 @@ Web Components voor de Nederlandse Digitale Dienst (Rijksoverheid).
 npm run storybook        # Dev server op localhost:6006
 npm run build:styles     # Kopieer CSS + fonts naar dist
 npm run build            # Volledige build
+npm run generate:all     # Alle gegenereerde bestanden, in de volgorde van wat ze lezen
 ```
+
+Welk script welk gecommit bestand maakt, staat in `scripts/generated-files.js`. `npm run check:generated` draait ze allemaal en noemt per verouderd bestand het script; `validate.yml` doet hetzelfde.
 
 ## Ontwikkelworkflow
 

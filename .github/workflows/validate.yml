@@ -79,48 +79,13 @@ jobs:
       - name: Lint the marketing page
         run: npm run lint:www
 
-      # Guards reference.md (JSDoc-derived) against drift on every PR.
-      # changelog.md is intentionally NOT guarded here: it is synced from the
-      # root CHANGELOG by the release pipeline (@semantic-release/exec), so it
-      # only needs to be current at release time, not per-PR.
-      - name: Check skill component reference is in sync
-        shell: bash
-        run: |
-          set -e
-          npm run generate:component-reference
-          git diff --exit-code skills/nldd-design/reference.md \
-            || (echo "::error::skills/nldd-design/reference.md is verouderd. Draai 'npm run generate:component-reference' en commit het resultaat." && exit 1)
-
-      # The pattern pages in the skill are generated from src/patterns/, the
-      # same markup the Storybook pages render, so an edit to a pattern that did
-      # not reach the skill is drift.
-      - name: Check skill patterns are in sync
-        shell: bash
-        run: |
-          set -e
-          npm run generate:skill-patterns
-          git diff --exit-code skills/nldd-design-build/patterns/ \
-            || (echo "::error::skills/nldd-design-build/patterns/ is verouderd. Draai 'npm run generate:skill-patterns' en commit het resultaat." && exit 1)
-
-      # The theme stylesheets are generated from the palettes, so a change to a
-      # reference color or a step rule that did not reach them is drift.
-      - name: Check theme stylesheets are in sync
-        shell: bash
-        run: |
-          set -e
-          npm run generate:themes
-          test -z "$(git status --porcelain src/assets/styles/themes src/assets/styles/themes.css src/assets/favicon)" \
-            || (echo "::error::De themabestanden zijn verouderd. Draai 'npm run generate:themes' en commit het resultaat." && exit 1)
-
-      # The manifest is committed rather than built on publish, so a change to a
-      # component's public API is visible in the diff of a pull request.
-      - name: Check custom elements manifest is in sync
-        shell: bash
-        run: |
-          set -e
-          npm run generate:cem
-          git diff --exit-code custom-elements.json lint/data.generated.json src/assets/styles/removed-tokens.json src/translations/removed-keys.json src/utilities/dev-rules.generated.ts src/utilities/autoloader.generated.ts \
-            || (echo "::error::custom-elements.json, lint/data.generated.json, removed-tokens.json, removed-keys.json of autoloader.generated.ts is verouderd. Draai 'npm run generate:cem' en commit het resultaat." && exit 1)
+      # Every committed file a script writes, from the table in
+      # scripts/generated-files.js: the producers run in the order of what they
+      # read (the reference after the manifest), and each file that changed is
+      # reported with the script that makes it. The skill changelog and
+      # publiccode.yml are written by the release itself, so they are not here.
+      - name: Check generated files are in sync
+        run: npm run check:generated
 
       # Every example does what it claims, no selector names something that does
       # not exist, and every pattern passes. A rename fails here, in its own PR.
