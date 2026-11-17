@@ -58,7 +58,7 @@ function tooltipState(el: NLDDTooltip) {
 		popoverOpen: isTooltipVisible(el),
 		visible: (el as unknown as { _visible: boolean })._visible,
 		hideDelay: getComputedStyle(el).getPropertyValue('--_tooltip-hide-delay').trim(),
-		pendingHide: (el as unknown as { _hideTimeout: unknown })._hideTimeout !== null,
+		pendingHide: (el as unknown as { _interest: { _hideTimer: unknown } })._interest._hideTimer !== null,
 	};
 }
 

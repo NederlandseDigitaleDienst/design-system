@@ -20,7 +20,7 @@
  */
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type { NLDDPopover } from '../components/layout/popover/popover.js';
-import { isTouchMode } from './input-modality.js';
+import { InterestIntent } from './interest-intent.js';
 import { popoverTargetOf } from './overlay-invoker.js';
 import { setState } from './element-state.js';
 
@@ -44,16 +44,18 @@ export class InterestController implements ReactiveController {
 	private _overlay: NLDDPopover | null = null;
 	private _slotted: NLDDPopover | null = null;
 
-	private _hovered = false;
-	private _focused = false;
-	private _pressed = false;
-	/** Escape closed it: hover and focus do not bring it back until both leave. */
-	private _dismissed = false;
+	private _intent = new InterestIntent({
+		showDelay: () => SHOW_DELAY_MS,
+		hideDelay: () => HIDE_DELAY_MS,
+		isOpen: () => this._isOpen,
+		available: () => Boolean(this._overlay) && !this._disabled,
+		show: () => this._show(),
+		hide: () => this._overlay?.hide(),
+	});
+
 	/** A long press opened it: the click that ends the press is not an activation. */
 	private _swallowClick = false;
 
-	private _showTimer: ReturnType<typeof setTimeout> | null = null;
-	private _hideTimer: ReturnType<typeof setTimeout> | null = null;
 	private _pressTimer: ReturnType<typeof setTimeout> | null = null;
 	private _pressStart: { x: number; y: number } | null = null;
 
@@ -157,11 +159,6 @@ export class InterestController implements ReactiveController {
 
 	// — Open and close ————————————————————————————————————————————————————————
 
-	private get _wanted(): boolean {
-		// Disabled can come in while the hover delay runs.
-		return !this._disabled && !this._dismissed && (this._hovered || this._focused || this._pressed);
-	}
-
 	/** Open for this control: a shared popover may be open for another. */
 	private get _isOpen(): boolean {
 		return Boolean(this._overlay?.matches(':popover-open') && this._overlay.anchorElement === this._host);
@@ -178,51 +175,24 @@ export class InterestController implements ReactiveController {
 			&& child.matches('nldd-menu, nldd-popover') && child.matches(':popover-open'));
 	}
 
-	private _update(): void {
-		this._clearTimer('_hideTimer');
-		if (this._wanted) {
-			const overlay = this._overlay;
-			if (!overlay || this._isOpen || this._otherOverlayOpen) return;
-			if (overlay.matches(':popover-open')) overlay.hidePopover();
-			this._anchor();
-			overlay.show();
-			this._listenWhileOpen(true);
-		} else if (this._isOpen) {
-			this._overlay?.hide();
-		}
-	}
-
-	private _scheduleHide(): void {
-		this._clearTimer('_hideTimer');
-		this._hideTimer = setTimeout(() => {
-			this._hideTimer = null;
-			this._update();
-		}, HIDE_DELAY_MS);
-	}
-
-	private _close(): void {
-		this._hovered = false;
-		this._focused = false;
-		this._pressed = false;
-		this._clearTimer('_showTimer');
-		this._update();
+	private _show(): void {
+		const overlay = this._overlay;
+		if (!overlay || this._otherOverlayOpen) return;
+		if (overlay.matches(':popover-open')) overlay.hidePopover();
+		this._anchor();
+		overlay.show();
+		this._listenWhileOpen(true);
 	}
 
 	private _reset(): void {
-		this._hovered = false;
-		this._focused = false;
-		this._pressed = false;
-		this._dismissed = false;
+		this._intent.reset();
 		this._swallowClick = false;
-		this._clearTimer('_showTimer');
-		this._clearTimer('_hideTimer');
-		this._clearTimer('_pressTimer');
+		this._clearPressTimer();
 	}
 
-	private _clearTimer(name: '_showTimer' | '_hideTimer' | '_pressTimer'): void {
-		const timer = this[name];
-		if (timer) clearTimeout(timer);
-		this[name] = null;
+	private _clearPressTimer(): void {
+		if (this._pressTimer) clearTimeout(this._pressTimer);
+		this._pressTimer = null;
 	}
 
 	private _listenWhileOpen(on: boolean): void {
@@ -239,9 +209,7 @@ export class InterestController implements ReactiveController {
 		if (this._isOpen) return;
 		this._listenWhileOpen(false);
 		// Closed another way (the backdrop of the bottom sheet): start over.
-		this._hovered = false;
-		this._pressed = false;
-		this._clearTimer('_hideTimer');
+		this._intent.closed();
 	};
 
 	// — Hover ———————————————————————————————————————————————————————————————
@@ -251,47 +219,27 @@ export class InterestController implements ReactiveController {
 		if (!this._overlay || event.pointerType === 'touch' || this._disabled) return;
 		// Onto a shared popover that shows for another control.
 		if (event.currentTarget !== this._host && !this._isOpen) return;
-		this._clearTimer('_hideTimer');
-		if (this._hovered) return;
-		// Back from the gap onto the popover, or onto the control while it shows.
-		if (this._isOpen) {
-			this._hovered = true;
-			return;
-		}
-		this._clearTimer('_showTimer');
-		this._showTimer = setTimeout(() => {
-			this._showTimer = null;
-			this._hovered = true;
-			this._update();
-		}, SHOW_DELAY_MS);
+		this._intent.enter();
 	};
 
 	private _onPointerLeave = (event: PointerEvent): void => {
 		if (event.pointerType === 'touch') return;
 		if (event.currentTarget !== this._host && !this._isOpen) return;
-		this._clearTimer('_showTimer');
-		this._dismissed = this._dismissed && this._focused;
-		if (!this._hovered) return;
-		this._hovered = false;
-		if (!this._wanted) this._scheduleHide();
+		this._intent.leave();
 	};
 
 	// — Focus ———————————————————————————————————————————————————————————————
 
 	private _onFocusIn = (): void => {
 		this.refresh();
-		// A tap focuses a button on some platforms; that is no keyboard intent.
-		if (!this._overlay || this._focused || isTouchMode() || this._disabled) return;
-		this._focused = true;
-		this._update();
+		if (!this._overlay || this._disabled) return;
+		this._intent.focus();
 	};
 
 	private _onFocusOut = (event: FocusEvent): void => {
 		const related = event.relatedTarget as Node | null;
 		if (related && (this._host.contains(related) || this._host.shadowRoot?.contains(related))) return;
-		this._focused = false;
-		this._dismissed = this._dismissed && this._hovered;
-		this._update();
+		this._intent.blur();
 	};
 
 	// — Long press ————————————————————————————————————————————————————————————
@@ -302,14 +250,12 @@ export class InterestController implements ReactiveController {
 		if (this._overlay.contains(event.target as Node)) return;
 		this._swallowClick = false;
 		this._pressStart = { x: event.clientX, y: event.clientY };
-		this._clearTimer('_pressTimer');
+		this._clearPressTimer();
 		this._pressTimer = setTimeout(() => {
 			this._pressTimer = null;
 			this._pressStart = null;
 			this._swallowClick = true;
-			this._dismissed = false;
-			this._pressed = true;
-			this._update();
+			this._intent.hold();
 		}, LONG_PRESS_MS);
 	};
 
@@ -321,7 +267,7 @@ export class InterestController implements ReactiveController {
 	};
 
 	private _cancelPress = (): void => {
-		this._clearTimer('_pressTimer');
+		this._clearPressTimer();
 		this._pressStart = null;
 	};
 
@@ -348,7 +294,7 @@ export class InterestController implements ReactiveController {
 		}
 		// The control does what it does; the description has served its purpose,
 		// and would otherwise stay on top of what the click opened.
-		this._close();
+		this._intent.close();
 	};
 
 	// — While open ————————————————————————————————————————————————————————————
@@ -359,15 +305,13 @@ export class InterestController implements ReactiveController {
 		// the second the dialog.
 		event.preventDefault();
 		event.stopPropagation();
-		this._dismissed = true;
-		this._pressed = false;
-		this._update();
+		this._intent.dismiss();
 	};
 
 	private _onDocumentPointerdown = (event: PointerEvent): void => {
 		if (!this._isOpen) return;
 		const path = event.composedPath();
 		if (path.includes(this._host) || (this._overlay && path.includes(this._overlay))) return;
-		this._close();
+		this._intent.close();
 	};
 }
