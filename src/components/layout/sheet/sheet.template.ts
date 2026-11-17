@@ -7,11 +7,11 @@ export function sheetTemplate(component: NLDDSheet) {
 		<dialog class="sheet"
 			aria-label=${component._resolvedAccessibleLabel}
 			aria-modal="true"
-			@pointerdown=${component._modal.handlePointerDown}
-			@pointerup=${component._modal.handlePointerUp}
-			@click=${component._modal.handleClick}
-			@cancel=${component._modal.handleCancel}
-			@close=${component._modal.handleClose}
+			@pointerdown=${component._modalOverlay.handlePointerDown}
+			@pointerup=${component._modalOverlay.handlePointerUp}
+			@click=${component._modalOverlay.handleClick}
+			@cancel=${component._modalOverlay.handleCancel}
+			@close=${component._modalOverlay.handleClose}
 		>
 			<div class="sheet__body">
 				<slot></slot>

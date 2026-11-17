@@ -10,13 +10,13 @@ import { FocusReturn } from './return-focus.js';
 const CLOSE_TIMEOUT_MS = 1000;
 
 /** An overlay built on a modal `<dialog>` in its shadow root. */
-export interface ModalHost extends ReactiveControllerHost, HTMLElement {
+export interface ModalOverlayHost extends ReactiveControllerHost, HTMLElement {
 	open: boolean;
 	/** The host's own hide(): every dismiss route goes through it. */
 	hide(): void;
 }
 
-export interface ModalLifecycleOptions {
+export interface ModalOverlayOptions {
 	/** Plays the closing animation (`.is-closing` on the dialog) before it closes. */
 	animatedClose?: boolean;
 	/** Closes on the dismiss button of an nldd-top-title-bar inside. */
@@ -37,7 +37,7 @@ export interface ModalLifecycleOptions {
  * hide() here. The template binds the dialog's `pointerdown`, `pointerup`,
  * `click`, `cancel` and `close` to the handlers of the same name.
  */
-export class ModalLifecycle implements ReactiveController {
+export class ModalOverlay implements ReactiveController {
 	private _closing = false;
 	private _closeFallback = 0;
 	private _closeEmitted = false;
@@ -47,8 +47,8 @@ export class ModalLifecycle implements ReactiveController {
 	private _upOnBackdrop = false;
 
 	constructor(
-		private readonly host: ModalHost & { updateComplete: Promise<boolean> },
-		private readonly options: ModalLifecycleOptions = {},
+		private readonly host: ModalOverlayHost & { updateComplete: Promise<boolean> },
+		private readonly options: ModalOverlayOptions = {},
 	) {
 		host.addController(this);
 	}
@@ -122,7 +122,9 @@ export class ModalLifecycle implements ReactiveController {
 		this._closing = true;
 		dialog.classList.add('is-closing');
 		const finish = (): void => {
-			if (!this._closing) return;
+			// Only this close: after a reopen and a second hide() in the same frame,
+			// the first close's frame callback is still due.
+			if (this._finishClose !== finish) return;
 			this._settle(dialog);
 			dialog.close();
 			this._emitClose();
@@ -131,7 +133,7 @@ export class ModalLifecycle implements ReactiveController {
 		dialog.addEventListener('animationend', finish, { once: true });
 		// Reduced motion: no animation runs, so none ends.
 		requestAnimationFrame(() => {
-			if (this._closing && getComputedStyle(dialog).animationName === 'none') finish();
+			if (getComputedStyle(dialog).animationName === 'none') finish();
 		});
 		// animationend is not guaranteed: a background tab pauses animations, and
 		// `_closing` would then keep the overlay open for good.

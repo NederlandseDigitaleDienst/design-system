@@ -48,7 +48,7 @@ import { sheetStyles } from './sheet.styles.js';
 import { sheetTemplate } from './sheet.template.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 import { setState } from '../../../utilities/element-state.js';
-import { ModalLifecycle } from '../../../utilities/modal-lifecycle.js';
+import { ModalOverlay } from '../../../utilities/modal-overlay.js';
 
 type Placement = 'left' | 'right' | 'bottom';
 
@@ -90,7 +90,7 @@ export class NLDDSheet extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	open = false;
 
-	_modal = new ModalLifecycle(this, {
+	_modalOverlay = new ModalOverlay(this, {
 		animatedClose: true,
 		titleBarDismiss: true,
 		beforeOpen: () => setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text),
@@ -125,11 +125,11 @@ export class NLDDSheet extends LitElement {
 	}
 
 	show(): void {
-		this._modal.show();
+		this._modalOverlay.show();
 	}
 
 	hide(): void {
-		this._modal.hide();
+		this._modalOverlay.hide();
 	}
 
 	override render() {

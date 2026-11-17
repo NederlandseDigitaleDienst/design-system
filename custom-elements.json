@@ -56648,12 +56648,12 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/utilities/modal-lifecycle.ts",
+      "path": "src/utilities/modal-overlay.ts",
       "declarations": [
         {
           "kind": "class",
           "description": "The life of a modal overlay (nldd-sheet, nldd-window, nldd-modal-dialog):\nopening once rendered, the first focus, closing with or without an\nanimation, one `close` per open cycle, focus back to where it came from,\nand the dismiss routes (Escape, the backdrop, a title bar).\n\nThe host keeps `open`, show() and hide() as its API and calls show() and\nhide() here. The template binds the dialog's `pointerdown`, `pointerup`,\n`click`, `cancel` and `close` to the handlers of the same name.",
-          "name": "ModalLifecycle",
+          "name": "ModalOverlay",
           "members": [
             {
               "kind": "field",
@@ -56880,10 +56880,10 @@
       "exports": [
         {
           "kind": "js",
-          "name": "ModalLifecycle",
+          "name": "ModalOverlay",
           "declaration": {
-            "name": "ModalLifecycle",
-            "module": "src/utilities/modal-lifecycle.ts"
+            "name": "ModalOverlay",
+            "module": "src/utilities/modal-overlay.ts"
           }
         }
       ]

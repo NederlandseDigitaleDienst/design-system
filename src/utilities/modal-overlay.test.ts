@@ -1,44 +1,44 @@
 /* eslint-disable lit-a11y/click-events-have-key-events -- native dialog handles keyboard via @cancel */
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { LitElement, html } from 'lit';
-import { ModalLifecycle, type ModalLifecycleOptions } from './modal-lifecycle.js';
+import { ModalOverlay, type ModalOverlayOptions } from './modal-overlay.js';
 import '../components/navigation/top-title-bar/top-title-bar.js';
 
-let options: ModalLifecycleOptions = {};
+let options: ModalOverlayOptions = {};
 
-class TestModal extends LitElement {
+class TestModalOverlay extends LitElement {
 	static override properties = { open: { type: Boolean, reflect: true } };
 	open = false;
-	_modal = new ModalLifecycle(this, options);
+	_modalOverlay = new ModalOverlay(this, options);
 	show(): void {
-		this._modal.show();
+		this._modalOverlay.show();
 	}
 	hide(): void {
-		this._modal.hide();
+		this._modalOverlay.hide();
 	}
 	override render() {
 		return html`<dialog
 			style="inset: 100px; width: 200px; height: 200px; margin: 0; padding: 0"
-			@pointerdown=${this._modal.handlePointerDown}
-			@pointerup=${this._modal.handlePointerUp}
-			@click=${this._modal.handleClick}
-			@cancel=${this._modal.handleCancel}
-			@close=${this._modal.handleClose}
+			@pointerdown=${this._modalOverlay.handlePointerDown}
+			@pointerup=${this._modalOverlay.handlePointerUp}
+			@click=${this._modalOverlay.handleClick}
+			@cancel=${this._modalOverlay.handleCancel}
+			@close=${this._modalOverlay.handleClose}
 		><slot></slot></dialog>`;
 	}
 }
-customElements.define('test-modal-lifecycle', TestModal);
+customElements.define('test-modal-overlay', TestModalOverlay);
 
-async function mount(opts: ModalLifecycleOptions = {}, inner = ''): Promise<TestModal> {
+async function mount(opts: ModalOverlayOptions = {}, inner = ''): Promise<TestModalOverlay> {
 	options = opts;
-	const el = document.createElement('test-modal-lifecycle') as TestModal;
+	const el = document.createElement('test-modal-overlay') as TestModalOverlay;
 	el.innerHTML = inner;
 	document.body.append(el);
 	await el.updateComplete;
 	return el;
 }
 
-const dialogOf = (el: TestModal) => el.shadowRoot!.querySelector('dialog')!;
+const dialogOf = (el: TestModalOverlay) => el.shadowRoot!.querySelector('dialog')!;
 
 /** A press, a release and the click they make, all at one point. */
 function gesture(target: Element, down: [number, number], up = down): void {
@@ -48,14 +48,14 @@ function gesture(target: Element, down: [number, number], up = down): void {
 }
 
 afterEach(() => {
-	for (const el of document.querySelectorAll('test-modal-lifecycle')) {
-		const dialog = (el as TestModal).shadowRoot?.querySelector('dialog');
+	for (const el of document.querySelectorAll('test-modal-overlay')) {
+		const dialog = (el as TestModalOverlay).shadowRoot?.querySelector('dialog');
 		if (dialog?.open) dialog.close();
 	}
 	document.body.replaceChildren();
 });
 
-describe('ModalLifecycle', () => {
+describe('ModalOverlay', () => {
 	it('opens modal, sets open and fires open', async () => {
 		const el = await mount();
 		const onOpen = vi.fn();
@@ -245,21 +245,21 @@ describe('ModalLifecycle', () => {
 
 	it('runs beforeOpen on every open, before the dialog opens', async () => {
 		let wasOpen: boolean | null = null;
-		const el: TestModal = await mount({ beforeOpen: () => { wasOpen = dialogOf(el).open; } });
+		const el: TestModalOverlay = await mount({ beforeOpen: () => { wasOpen = dialogOf(el).open; } });
 		el.show();
 		expect(wasOpen).toBe(false);
 	});
 
 	it('waits for the first render to open, and a hide() before it cancels that', async () => {
 		options = {};
-		const early = document.createElement('test-modal-lifecycle') as TestModal;
+		const early = document.createElement('test-modal-overlay') as TestModalOverlay;
 		document.body.append(early);
 		early.show();
 		await early.updateComplete;
 		await Promise.resolve();
 		expect(dialogOf(early).open).toBe(true);
 
-		const cancelled = document.createElement('test-modal-lifecycle') as TestModal;
+		const cancelled = document.createElement('test-modal-overlay') as TestModalOverlay;
 		document.body.append(cancelled);
 		cancelled.show();
 		cancelled.hide();

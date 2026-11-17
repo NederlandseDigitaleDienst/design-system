@@ -45,7 +45,7 @@ import { windowStyles } from './window.styles.js';
 import { windowTemplate } from './window.template.js';
 import { nlddWindowTranslations, type NLDDWindowTranslations } from './window.i18n.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
-import { ModalLifecycle } from '../../../utilities/modal-lifecycle.js';
+import { ModalOverlay } from '../../../utilities/modal-overlay.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
@@ -98,7 +98,7 @@ export class NLDDWindow extends LitElement {
 
 	private _titleBar = new TitleBarLabelController(this);
 
-	_modal = new ModalLifecycle(this, {
+	_modalOverlay = new ModalOverlay(this, {
 		titleBarDismiss: true,
 		lightDismiss: () => !this.noLightDismiss,
 		beforeOpen: () => {
@@ -108,7 +108,7 @@ export class NLDDWindow extends LitElement {
 	});
 
 	private get _dialog(): HTMLDialogElement | null {
-		return this._modal.dialog;
+		return this._modalOverlay.dialog;
 	}
 
 	override connectedCallback(): void {
@@ -154,11 +154,11 @@ export class NLDDWindow extends LitElement {
 	}
 
 	show(): void {
-		this._modal.show();
+		this._modalOverlay.show();
 	}
 
 	hide(): void {
-		this._modal.hide();
+		this._modalOverlay.hide();
 	}
 
 	private _applyPositionStyles(): void {

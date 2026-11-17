@@ -43,7 +43,7 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { modalDialogStyles } from './modal-dialog.styles.js';
 import { modalDialogTemplate } from './modal-dialog.template.js';
-import { ModalLifecycle } from '../../../utilities/modal-lifecycle.js';
+import { ModalOverlay } from '../../../utilities/modal-overlay.js';
 import type { InlineDialogVariant, InlineDialogHorizontalAlignment } from '../inline-dialog/inline-dialog.js';
 import '../inline-dialog/inline-dialog.js';
 
@@ -73,14 +73,14 @@ export class NLDDModalDialog extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	open = false;
 
-	_modal = new ModalLifecycle(this, { animatedClose: true });
+	_modalOverlay = new ModalOverlay(this, { animatedClose: true });
 
 	show(): void {
-		this._modal.show();
+		this._modalOverlay.show();
 	}
 
 	hide(): void {
-		this._modal.hide();
+		this._modalOverlay.hide();
 	}
 
 	override render() {
