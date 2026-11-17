@@ -311,12 +311,17 @@ export class TriggerAria {
 	}
 
 	/** Takes the state off a trigger the overlay leaves, so it does not linger
-	 *  as a toggle for a screen reader. */
+	 *  as a toggle for a screen reader, nor in its expanded look. */
 	private _release(controls: string | undefined): void {
 		const previous = this._trigger;
 		this._trigger = null;
 		this._seededPopupType = null;
-		if (!previous || !this._options.attributes || 'expanded' in previous) return;
+		if (!previous) return;
+		if ('expanded' in previous) {
+			previous.expanded = false;
+			return;
+		}
+		if (!this._options.attributes) return;
 		previous.removeAttribute('aria-expanded');
 		if (controls && previous.getAttribute('aria-controls') === controls) previous.removeAttribute('aria-controls');
 	}

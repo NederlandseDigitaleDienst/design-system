@@ -238,6 +238,16 @@ describe('TriggerAria', () => {
 		expect(chosen.popupType).toBe('dialog');
 	});
 
+	it('takes the expanded state off a control the overlay moves away from', () => {
+		const aria = new TriggerAria({ attributes: false });
+		const first = Object.assign(document.createElement('div'), { expanded: false, popupType: '' });
+		const second = Object.assign(document.createElement('div'), { expanded: false, popupType: '' });
+		aria.sync(first, { open: true, popupType: 'menu' });
+		aria.sync(second, { open: true, popupType: 'menu' });
+		expect(first.expanded).toBe(false);
+		expect(second.expanded).toBe(true);
+	});
+
 	it('clears everything from a trigger whose overlay leaves the page', () => {
 		const aria = new TriggerAria({ attributes: true });
 		const trigger = document.createElement('span');
