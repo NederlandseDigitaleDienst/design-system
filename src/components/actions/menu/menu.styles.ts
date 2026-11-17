@@ -62,11 +62,6 @@ export const menuStyles = css`
 		visibility: hidden;
 	}
 
-	:host([scroll-active]) {
-		--_menu-item-is-highlighted-background-color: transparent;
-		--_menu-item-is-highlighted-content-color: initial;
-	}
-
 
 	/* # Block */
 
@@ -218,8 +213,8 @@ export const menuItemStyles = css`
 	:host {
 		--_menu-item-is-expanded-content-color: var(--primitives-color-neutral-1000);
 		--_menu-item-is-destructive-content-color: var(--semantics-content-critical-color);
-		--_menu-item-resting-content-color: var(--context-content-color);
-		--_menu-item-resting-content-secondary-color: var(--context-content-secondary-color);
+		--_menu-item-content-color: var(--context-content-color);
+		--_menu-item-content-secondary-color: var(--context-content-secondary-color);
 		--_menu-item-confirm-duration: var(--primitives-transition-duration-fast);
 		--_menu-item-confirm-hold-duration: var(--primitives-transition-duration-fast);
 
@@ -250,7 +245,7 @@ export const menuItemStyles = css`
 	 * :hover on [aria-expanded="true"] covers the cursor-on-open-opener
 	 * case where [highlighted] has been cleared by submenu-open.
 	 * :active:hover is the press flash on touch (neutralised during
-	 * scroll via --_menu-item-is-highlighted-* on :host([scroll-active])). */
+	 * scroll, see Scrolling below). */
 
 	:host([highlighted]) .menu__item,
 	.menu__item[aria-expanded="true"]:hover,
@@ -267,6 +262,16 @@ export const menuItemStyles = css`
 		--_menu-item-is-highlighted-content-color: var(--primitives-color-neutral-0);
 		--context-content-color: var(--_menu-item-is-destructive-content-color);
 		--context-content-secondary-color: var(--_menu-item-is-destructive-content-color);
+	}
+
+	/* ## Scrolling
+	 *
+	 * A finger that scrolls the menu presses no item: the press flash goes, and
+	 * the item keeps its own colors, a destructive one too. */
+
+	:host([scroll-active]) {
+		--_menu-item-is-highlighted-background-color: transparent;
+		--_menu-item-is-highlighted-content-color: var(--_menu-item-content-color);
 	}
 
 
@@ -352,8 +357,8 @@ export const menuItemStyles = css`
 	@keyframes menu-item-confirm {
 		0% {
 			--_menu-item-background-color: transparent;
-			--context-content-color: var(--_menu-item-resting-content-color);
-			--context-content-secondary-color: var(--_menu-item-resting-content-secondary-color);
+			--context-content-color: var(--_menu-item-content-color);
+			--context-content-secondary-color: var(--_menu-item-content-secondary-color);
 		}
 		33.333% {
 			--_menu-item-background-color: var(--_menu-item-is-highlighted-background-color);
