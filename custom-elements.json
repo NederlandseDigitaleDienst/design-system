@@ -55883,7 +55883,211 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/utilities/interest-controller.ts",
+      "path": "src/utilities/interest-intent.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "When something that describes a control shows: a tooltip, or a popover that\nopens on interest. It shows while the pointer rests on the control or on\nwhat it shows, while the control has keyboard focus, or while a long press\nholds it, and goes when none of those is left.\n\n- A pointer waits `showDelay` before it shows, and gets `hideDelay` to cross\n  the gap when it leaves. Focus shows and hides at once.\n- Escape dismisses it until the pointer and focus have both left (WCAG\n  1.4.13): hover and focus do not bring it back before that.\n- Activating the control closes it: it has done its job.\n\nThe owner wires the events and calls in here; where it shows, how, and what\nelse ends it (a scroll, a shared overlay moving on) stays with the owner.",
+          "name": "InterestIntent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_hovered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_focused",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_held",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_dismissed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_showTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_hideTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "focused",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether keyboard focus is one of the reasons it shows.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "wanted",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "enter",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The pointer came onto the control, or onto what it shows."
+            },
+            {
+              "kind": "method",
+              "name": "leave",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The pointer left the control, or what it shows."
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Keyboard focus came into the control. A tap that focuses is no keyboard intent."
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Focus left the control."
+            },
+            {
+              "kind": "method",
+              "name": "hold",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "A long press holds it open until something else closes it."
+            },
+            {
+              "kind": "method",
+              "name": "dismiss",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Escape: gone, and kept away until the pointer and focus have both left."
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The control was activated, or the page moved away from under the pointer."
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Forget everything, without showing or hiding: for a new overlay or a disconnect."
+            },
+            {
+              "kind": "method",
+              "name": "closed",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closed some other way (a backdrop): what the pointer did no longer counts."
+            },
+            {
+              "kind": "method",
+              "name": "_clearShow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_clearHide",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "InterestIntent",
+          "declaration": {
+            "name": "InterestIntent",
+            "module": "src/utilities/interest-intent.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/interest-invoker.ts",
       "declarations": [
         {
           "kind": "function",
@@ -55912,7 +56116,7 @@
         {
           "kind": "class",
           "description": "",
-          "name": "InterestController",
+          "name": "InterestInvoker",
           "members": [
             {
               "kind": "field",
@@ -56192,219 +56396,15 @@
           "name": "interestTargetOf",
           "declaration": {
             "name": "interestTargetOf",
-            "module": "src/utilities/interest-controller.ts"
+            "module": "src/utilities/interest-invoker.ts"
           }
         },
         {
           "kind": "js",
-          "name": "InterestController",
+          "name": "InterestInvoker",
           "declaration": {
-            "name": "InterestController",
-            "module": "src/utilities/interest-controller.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/utilities/interest-intent.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "When something that describes a control shows: a tooltip, or a popover that\nopens on interest. It shows while the pointer rests on the control or on\nwhat it shows, while the control has keyboard focus, or while a long press\nholds it, and goes when none of those is left.\n\n- A pointer waits `showDelay` before it shows, and gets `hideDelay` to cross\n  the gap when it leaves. Focus shows and hides at once.\n- Escape dismisses it until the pointer and focus have both left (WCAG\n  1.4.13): hover and focus do not bring it back before that.\n- Activating the control closes it: it has done its job.\n\nThe owner wires the events and calls in here; where it shows, how, and what\nelse ends it (a scroll, a shared overlay moving on) stays with the owner.",
-          "name": "InterestIntent",
-          "members": [
-            {
-              "kind": "field",
-              "name": "_hovered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_focused",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_held",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_dismissed",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_showTimer",
-              "type": {
-                "text": "ReturnType<typeof setTimeout> | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_hideTimer",
-              "type": {
-                "text": "ReturnType<typeof setTimeout> | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "focused",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Whether keyboard focus is one of the reasons it shows.",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "wanted",
-              "type": {
-                "text": "boolean"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "enter",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "The pointer came onto the control, or onto what it shows."
-            },
-            {
-              "kind": "method",
-              "name": "leave",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "The pointer left the control, or what it shows."
-            },
-            {
-              "kind": "method",
-              "name": "focus",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Keyboard focus came into the control. A tap that focuses is no keyboard intent."
-            },
-            {
-              "kind": "method",
-              "name": "blur",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Focus left the control."
-            },
-            {
-              "kind": "method",
-              "name": "hold",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "A long press holds it open until something else closes it."
-            },
-            {
-              "kind": "method",
-              "name": "dismiss",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Escape: gone, and kept away until the pointer and focus have both left."
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "The control was activated, or the page moved away from under the pointer."
-            },
-            {
-              "kind": "method",
-              "name": "reset",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Forget everything, without showing or hiding: for a new overlay or a disconnect."
-            },
-            {
-              "kind": "method",
-              "name": "closed",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Closed some other way (a backdrop): what the pointer did no longer counts."
-            },
-            {
-              "kind": "method",
-              "name": "_clearShow",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_clearHide",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "InterestIntent",
-          "declaration": {
-            "name": "InterestIntent",
-            "module": "src/utilities/interest-intent.ts"
+            "name": "InterestInvoker",
+            "module": "src/utilities/interest-invoker.ts"
           }
         }
       ]

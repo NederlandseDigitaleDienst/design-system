@@ -58,7 +58,7 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
-import { InterestController } from '../../../utilities/interest-controller.js';
+import { InterestInvoker } from '../../../utilities/interest-invoker.js';
 import { ChoiceGroup } from '../../../utilities/choice-group.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
@@ -136,7 +136,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
 	 * and a long press, in place of the tooltip. Not private: the template
 	 * module reads it. */
-	_interest = new InterestController(this);
+	_interest = new InterestInvoker(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	shortcut = '';

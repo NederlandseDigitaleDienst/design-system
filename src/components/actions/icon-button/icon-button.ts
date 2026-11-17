@@ -56,7 +56,7 @@ import { template } from './icon-button.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddIconButtonTranslations } from './icon-button.i18n.js';
 import { anchorPopoverTarget, OverlayInvoker, popoverTargetOf } from '../../../utilities/overlay-invoker.js';
-import { InterestController } from '../../../utilities/interest-controller.js';
+import { InterestInvoker } from '../../../utilities/interest-invoker.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
@@ -246,7 +246,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
 	 * and a long press, in place of the tooltip. Not private: the template
 	 * module reads it. */
-	_interest = new InterestController(this);
+	_interest = new InterestInvoker(this);
 
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);

@@ -159,7 +159,7 @@ export class NLDDPopover extends LitElement {
 
 	/**
 	 * Set by the control this popover opens on interest for, from its
-	 * `interest` slot or `interestfor` (see InterestController). The popover
+	 * `interest` slot or `interestfor` (see InterestInvoker). The popover
 	 * then describes that control: it opens on hover, focus or a long press,
 	 * leaves focus where it is, and puts no disclosure state on the control.
 	 * Not an attribute of its own: it follows from the control.
@@ -529,7 +529,7 @@ export class NLDDPopover extends LitElement {
 
 	private _updateAnchorAria(open: boolean): void {
 		// A description is no disclosure: the control gets no expanded state and
-		// no haspopup. InterestController links the two instead.
+		// no haspopup. InterestInvoker links the two instead.
 		if (this._interestMode) return;
 		this._triggerAria.sync(this._getAnchorEl(), { open, popupType: 'dialog', controls: this.id || undefined });
 	}
@@ -562,11 +562,11 @@ export class NLDDPopover extends LitElement {
 	 */
 	private _syncMode(): void {
 		// Changing the attribute of an open popover closes it, so an open one
-		// keeps its mode and catches up when it closes. InterestController sets
+		// keeps its mode and catches up when it closes. InterestInvoker sets
 		// _interest before it opens the popover, so in practice it never waits.
 		if (!this._managesMode || this.matches(':popover-open')) return;
 		// Interest opens it, so a hover must not close a menu that is open, as
-		// an auto popover would. InterestController closes it instead.
+		// an auto popover would. InterestInvoker closes it instead.
 		this.setAttribute('popover', this._smQuery?.matches || this._interestMode ? 'manual' : '');
 	}
 

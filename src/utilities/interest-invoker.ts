@@ -39,7 +39,7 @@ const LONG_PRESS_MS = 500;
 /** A finger that moves further than this is scrolling, not pressing. */
 const LONG_PRESS_SLOP_PX = 10;
 
-export class InterestController implements ReactiveController {
+export class InterestInvoker implements ReactiveController {
 	private _host: ReactiveControllerHost & HTMLElement;
 	private _overlay: NLDDPopover | null = null;
 	private _slotted: NLDDPopover | null = null;
