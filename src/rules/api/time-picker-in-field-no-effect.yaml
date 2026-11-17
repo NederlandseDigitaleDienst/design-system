@@ -1,0 +1,10 @@
+severity: warn
+context: 'nldd-time-field > nldd-time-picker[slot="picker"]:is([value], [min], [max], [step])'
+message: '`value`, `min`, `max` and `step` do nothing on a time picker in the `picker` slot of a time field: the field sets them. Set them on the field.'
+examples:
+  passed:
+    - '<nldd-time-field accessible-label="Begintijd" min="09:00" max="17:00" step="15"><nldd-time-picker slot="picker"></nldd-time-picker></nldd-time-field>'
+    - '<nldd-time-picker accessible-label="Begintijd" min="09:00" max="17:00"></nldd-time-picker>'
+  failed:
+    - '<nldd-time-field accessible-label="Begintijd"><nldd-time-picker slot="picker" min="09:00" max="17:00"></nldd-time-picker></nldd-time-field>'
+    - '<nldd-time-field accessible-label="Begintijd"><nldd-time-picker slot="picker" step="15"></nldd-time-picker></nldd-time-field>'

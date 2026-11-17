@@ -2213,6 +2213,10 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid time or nothing, so an empty field and one with text that is no time both read as ''. `validity` tells them apart: `badInput` for text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside `min` / `max`. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. "Klaar" and Enter keep the choice, and so does a click outside once you have picked something. Escape puts the old time back. On sm, where the picker is a bottom sheet, "Klaar" sits in its title bar and the sheet offers no cancel: as with a native wheel, you turn back to change your mind. The built-in wheels show 7 rows, and fewer, down to 3, when the picker would otherwise run off the window; they grow back when the window does. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.
 
+**Rules** (`nldd lint`)
+
+- `time-picker-in-field-no-effect`: `value`, `min`, `max` and `step` do nothing on a time picker in the `picker` slot of a time field: the field sets them. Set them on the field.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -2254,6 +2258,10 @@ A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch
 ### `<nldd-time-picker>`
 
 Two columns, hours and minutes, that slide like a wheel past the selection in the middle. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-time-field. There the field sets `value`, `min`, `max` and `step`; set them on the field. Values are always 24-hour `HH:mm`. Scrolling is choosing: whatever comes to rest in the middle is the value. The keyboard drives that same selection, because that is what a wheel is: hour and minute are each a spinbutton. The columns underneath are aria-hidden, so the same values are not read out twice.
+
+**Rules** (`nldd lint`)
+
+- `time-picker-in-field-no-effect`: `value`, `min`, `max` and `step` do nothing on a time picker in the `picker` slot of a time field: the field sets them. Set them on the field.
 
 **Attributes**
 

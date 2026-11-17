@@ -1132,6 +1132,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text[size^=\"display-\"][weight]:not([weight=\"\"])"
 	},
 	{
+		"id": "time-picker-in-field-no-effect",
+		"message": "`value`, `min`, `max` and `step` do nothing on a time picker in the `picker` slot of a time field: the field sets them. Set them on the field.",
+		"context": "nldd-time-field > nldd-time-picker[slot=\"picker\"]:is([value]:not([value=\"\"]), [min]:not([min=\"\"]), [max]:not([max=\"\"]), [step]:not([step=\"\"]))"
+	},
+	{
 		"id": "title-cell-size-renamed",
 		"message": "The sizes of a title cell are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title-cell.",
 		"context": "nldd-title-cell[size=\"1\"], nldd-title-cell[size=\"2\"], nldd-title-cell[size=\"3\"], nldd-title-cell[size=\"4\"], nldd-title-cell[size=\"5\"], nldd-title-cell[size=\"6\"]"
