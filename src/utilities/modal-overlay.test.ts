@@ -153,6 +153,28 @@ describe('ModalOverlay', () => {
 		expect(el.open).toBe(true);
 	});
 
+	it('fires open twice and close not at all when it is opened again during its close', async () => {
+		vi.useFakeTimers();
+		try {
+			const el = await mount({ animatedClose: true });
+			const events: string[] = [];
+			el.addEventListener('open', () => events.push('open'));
+			el.addEventListener('close', () => events.push('close'));
+			el.show();
+			el.hide();
+			el.show();
+			// Past the fallback of the close that was called off.
+			vi.advanceTimersByTime(1000);
+			expect(events).toEqual(['open', 'open']);
+			expect(dialogOf(el).open).toBe(true);
+			el.hide();
+			vi.advanceTimersByTime(1000);
+			expect(events).toEqual(['open', 'open', 'close']);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
 	it('runs beforeOpen again when it is opened during its close', async () => {
 		const beforeOpen = vi.fn();
 		const el = await mount({ animatedClose: true, beforeOpen });
