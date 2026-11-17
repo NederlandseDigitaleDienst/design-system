@@ -787,4 +787,28 @@ describe('nldd-time-field – eigen picker in de slot', () => {
 		await waitForUpdate(el);
 		expect(picker.max).toBe('12:00');
 	});
+
+	it('schrijft de oude waarde niet terug als de picker een keuze meldt', async () => {
+		el = await fixture<NLDDTimeField>(`
+			<nldd-time-field value="09:30" min="08:00" max="17:00" step="15">
+				<nldd-time-picker slot="picker"></nldd-time-picker>
+			</nldd-time-field>
+		`);
+		await waitForUpdate(el);
+		const picker = el.querySelector('nldd-time-picker') as HTMLElement & {
+			value: string;
+			_select(column: 'hours' | 'minutes', number: number, commit?: boolean): void;
+		};
+		const seen: string[] = [];
+		// A render in between would write the field's old value onto the picker.
+		picker.addEventListener('change', () => {
+			el.requestUpdate();
+			seen.push(picker.value);
+		});
+		picker._select('hours', 11, true);
+		await waitForUpdate(el);
+		expect(seen).toEqual(['11:30']);
+		expect(el.value).toBe('11:30');
+		expect(picker.value).toBe('11:30');
+	});
 });
