@@ -205,6 +205,31 @@ describe('nldd-sheet – backdrop klik', () => {
 		expect(hideSpy).toHaveBeenCalledOnce();
 	});
 
+	// The backdrop is what lies outside the dialog's box; the panel fills that box
+	// in every placement, so a press next to the panel closes and one on it does not.
+	for (const [placement, outside] of [
+		['right', (r: DOMRect) => [r.left - 10, r.top + 10]],
+		['left', (r: DOMRect) => [r.right + 10, r.top + 10]],
+		['bottom', (r: DOMRect) => [r.left + 10, r.top - 10]],
+	] as const) {
+		it(`closes on a press beside a ${placement} sheet and not on the sheet's edge`, async () => {
+			el = await fixture<NLDDSheet>(`<nldd-sheet placement="${placement}" accessible-label="Test"><p>Inhoud</p></nldd-sheet>`);
+			await waitForUpdate(el);
+			el.show();
+			await waitForUpdate(el);
+			const dialog = el.shadowRoot!.querySelector('dialog')!;
+			const press = ([clientX, clientY]: number[]) => {
+				for (const type of ['pointerdown', 'pointerup']) dialog.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX, clientY }));
+				dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX, clientY }));
+			};
+			const rect = dialog.getBoundingClientRect();
+			press([rect.left + 2, rect.top + 2]);
+			expect(dialog.open).toBe(true);
+			press(outside(rect));
+			expect(el.open).toBe(false);
+		});
+	}
+
 	it('does not hide() on a click without a press and release of its own after an earlier backdrop gesture', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet></nldd-sheet>');
 		await waitForUpdate(el);
