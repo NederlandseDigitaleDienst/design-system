@@ -1,13 +1,13 @@
-/** The `nldd` command, started from cli.js. */
+/** The `nldd` command, started from cli.js: arguments in, formatted findings out. What it checks is lint/session.js. */
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, extname, join, relative, resolve, sep } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
-import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, OPT_IN_GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
-import { applyBaseline, DEFAULT_EXTENSIONS, isBundle, isRelevant, looseInBaseline, projectTokens as tokensDeclaredIn, tightenBaseline, findFiles, IGNORED_DIRECTORIES, readBaseline, readConfig, REFERENCE_EXTENSIONS, STYLESHEET_EXTENSIONS, writeBaseline } from './project.js';
+import { applyBaseline, looseInBaseline, tightenBaseline, readBaseline, readConfig, writeBaseline } from './project.js';
+import { knownKeys, lintProject } from './session.js';
 
 const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
@@ -85,60 +85,6 @@ function noteOtherVersion(root) {
 	}
 }
 
-/** Writing back what was read as UTF-8 would destroy any other encoding. */
-function isUtf8(filename) {
-	const bytes = readFileSync(filename);
-	return bytes.equals(Buffer.from(bytes.toString('utf8')));
-}
-
-/** The tag is gone from the markup; what still names it would break or stop matching. */
-function fixReferences(renamedTags, paths, root, exclude) {
-	const isBuilt = (file) => relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
-	const inMarkup = findFiles(paths, root, exclude);
-	const elsewhere = findFiles(paths, root, exclude, REFERENCE_EXTENSIONS).filter((file) => REFERENCE_EXTENSIONS.includes(extname(file)) && !inMarkup.includes(file));
-	let fixed = 0;
-	let files = 0;
-	const remaining = [];
-	const kindOf = (file) => (/\.(css|scss|less)$/.test(file) ? 'styles' : /\.[cm]?[jt]s$/.test(file) || !inMarkup.includes(file) ? 'script' : 'markup');
-	for (const list of [inMarkup, elsewhere]) {
-		for (const filename of list.filter((file) => !/\.min\.[cm]?js$/.test(file))) {
-			const source = readFileSync(filename, 'utf8');
-			const change = isBuilt(filename) ? { source, fixed: 0 } : renameReferences(source, renamedTags, kindOf(filename));
-			if (change.fixed > 0 && isUtf8(filename)) {
-				writeFileSync(filename, change.source);
-				fixed += change.fixed;
-				files += 1;
-			}
-			for (const line of linesNaming(change.source, renamedTags)) remaining.push(`${relative(root, filename)}:${line}`);
-		}
-	}
-	return { fixed, files, remaining };
-}
-
-/**
- * A script a bundler wrote: the linter reads a build through its HTML, and a bundle
- * carries the styles of the components as if they were the app's. Minified code
- * has few lines for its size; one long line, such as an inline SVG, does not make
- * a file of the app a bundle.
- */
-const MAX_FIX_PASSES = 10;
-
-/** One fix can open the way for the next: a renamed tag has rules of its own. */
-async function fixUntilStable(linter, original, filename) {
-	let source = original;
-	let fixed = 0;
-	const renamedTags = new Map();
-	for (let pass = 0; pass < MAX_FIX_PASSES; pass++) {
-		const { findings } = await linter.lintSource(source, filename);
-		const change = applyFixes(source, findings);
-		if (change.fixed === 0) return { source, fixed, renamedTags, findings };
-		source = change.source;
-		fixed += change.fixed;
-		for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
-	}
-	return { source, fixed, renamedTags, findings: (await linter.lintSource(source, filename)).findings };
-}
-
 async function runLint(data, paths, options) {
 	if (!/^\d+$/.test(options['max-warnings'] ?? '0')) throw new Error('--max-warnings takes a whole number, 0 or more.');
 	const formatName = options.format ?? 'text';
@@ -157,7 +103,7 @@ async function runLint(data, paths, options) {
 	if (options.fix && (options.stdin || options['update-baseline'])) {
 		throw new Error('--fix writes files, so it takes no --stdin or --update-baseline.');
 	}
-	const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES), ...GROUPS]);
+	const known = knownKeys(data);
 	const list = (value) => value?.split(',').map((key) => key.trim());
 	const select = list(options.select);
 	const ignore = list(options.ignore);
@@ -167,55 +113,24 @@ async function runLint(data, paths, options) {
 	const config = readConfig(root, known);
 	noteOtherVersion(root);
 	const canonical = createCanonical(data);
-
 	const severities = resolveSeverities(data, config.rules, { select, ignore, optIn: options.pure ? OPT_IN_GROUPS : [] });
-	// An app that is to be pure has to be read in full: a file without a single component
-	// is the least pure of all, and a stylesheet is one too.
-	const pure = data.rules.some((rule) => OPT_IN_GROUPS.includes(rule.group) && severities[rule.id] !== 'off');
-	const extensions = [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS];
 
-	const inputs = options.stdin
-		? [{ filename: resolve(root, options.filename ?? 'stdin.html'), source: readFileSync(0, 'utf8') }]
-		: findFiles(paths, root, config.exclude, extensions).map((filename) => ({
-				filename,
-				source: readFileSync(filename, 'utf8'),
-			})).filter(({ filename, source }) => !isBundle(filename, source));
-
-	// Most files in an app use no component at all, and those need no parser either.
 	// Tightening has to see every file the baseline names, also one without a component left.
 	const inBaseline = options['tighten-baseline'] ? new Set(Object.keys(readBaseline(root, canonical))) : new Set();
-	const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));
-	const keep = (filename) => inBaseline.has(relative(root, filename));
-	const relevant = pure ? inputs : inputs.filter((input) => isRelevant(input, { wrappers: config.wrappers, keep }));
-	const counted = pure ? inputs.length : inputs.filter(({ filename }) => !isStylesheet(filename)).length + relevant.filter(({ filename }) => isStylesheet(filename)).length;
-	const projectTokens = tokensDeclaredIn(inputs);
-	const results = [];
-	let fixed = 0;
-	let fixedFiles = 0;
-	const renamedTags = new Map();
-	if (relevant.length > 0) {
-		const { createLinter } = await import('./linter.js');
-		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens });
-		for (const { filename, source } of relevant) {
-			const canWrite = options.fix && isUtf8(filename);
-			if (options.fix && !canWrite) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
-			if (!canWrite) {
-				results.push({ filename, source, ...(await linter.lintSource(source, filename)) });
-				continue;
-			}
-			const change = await fixUntilStable(linter, source, filename);
-			if (change.fixed > 0) {
-				writeFileSync(filename, change.source);
-				fixed += change.fixed;
-				fixedFiles += 1;
-				for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
-			}
-			results.push({ filename, source: change.source, findings: change.findings });
-		}
-	}
-	if (options.fix) console.error(`Fixed ${fixed} in ${fixedFiles} of ${counted} files.`);
-	if (renamedTags.size > 0) {
-		const references = fixReferences(renamedTags, paths, root, config.exclude);
+	const session = await lintProject(data, {
+		root,
+		paths,
+		config,
+		severities,
+		input: options.stdin ? { filename: options.filename ?? 'stdin.html', source: readFileSync(0, 'utf8') } : undefined,
+		fix: options.fix,
+		keep: (filename) => inBaseline.has(relative(root, filename)),
+	});
+	const { results } = session;
+	for (const filename of session.notUtf8) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
+	if (options.fix) console.error(`Fixed ${session.fixed} in ${session.fixedFiles} of ${session.files} files.`);
+	if (session.references) {
+		const { references } = session;
 		if (references.fixed > 0) console.error(`Renamed ${references.fixed} imports, classes and selectors of old tags in ${references.files} files.`);
 		for (const place of references.remaining) console.error(`Still names an old tag: ${place}`);
 		if (paths.some((path) => resolve(root, path) !== root)) {
@@ -248,7 +163,7 @@ async function runLint(data, paths, options) {
 
 	const context = {
 		root,
-		files: counted,
+		files: session.files,
 		ms: Math.round(performance.now() - started),
 		skipped,
 		loose: looseInBaseline(results, baseline, root, ran),

@@ -9,16 +9,17 @@
  *
  * With --pure the opt-in group pure runs too, over every file and stylesheet.
  *
- * Each app is read the way `nldd lint` reads it: the same files, the tokens it
- * declares itself, and the `wrappers` and `exclude` from its .nldd-lint.json.
- * Its rule levels are not taken over, so every rule shows what it would find.
+ * Each app goes through lint/session.js, the same session `nldd lint` runs: the
+ * same files, the tokens it declares itself, and the `wrappers` and `exclude`
+ * from its .nldd-lint.json. Its rule levels are not taken over, so every rule
+ * shows what it would find.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
-import { createLinter, loadData } from '../lint/linter.js';
-import { DEFAULT_EXTENSIONS, findFiles, isBundle, isRelevant, projectTokens, readConfig, STYLESHEET_EXTENSIONS } from '../lint/project.js';
-import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
+import { readConfig } from '../lint/project.js';
+import { loadData, OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
+import { knownKeys, lintProject } from '../lint/session.js';
 
 const directories = (process.env.NLDD_LINT_CORPUS ?? '').split(',').filter(Boolean);
 if (directories.length === 0) {
@@ -31,8 +32,7 @@ const pure = args.includes('--pure');
 const only = args.find((arg) => !arg.startsWith('--'));
 const data = loadData();
 const severities = resolveSeverities(data, {}, { optIn: pure ? OPT_IN_GROUPS : [] });
-const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES), ...GROUPS]);
-const extensions = [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS];
+const known = knownKeys(data);
 
 /** The app's .nldd-lint.json: in the directory itself or the nearest one above it
  *  that has one, without leaving the project (a package.json or .git ends it). */
@@ -51,13 +51,9 @@ for (const directory of directories) {
 	const root = resolve(directory);
 	const app = basename(root.replace(/(\/(src|frontend|web))+$/, ''));
 	const config = configFor(root);
-	const inputs = findFiles([root], root, config.exclude, extensions)
-		.map((filename) => ({ filename, source: readFileSync(filename, 'utf8') }))
-		.filter(({ filename, source }) => !isBundle(filename, source));
-	const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs) });
-	for (const { filename, source } of pure ? inputs : inputs.filter((input) => isRelevant(input, { wrappers: config.wrappers }))) {
-		fileCount++;
-		const { findings, counts } = await linter.lintSource(source, filename);
+	const { results, files } = await lintProject(data, { root, paths: [root], config, severities });
+	fileCount += files;
+	for (const { filename, findings, counts } of results) {
 		for (const key of Object.keys(totals)) totals[key] += counts[key];
 		for (const finding of findings) {
 			if (!perRule.has(finding.rule)) perRule.set(finding.rule, { count: 0, apps: new Set(), samples: [] });
