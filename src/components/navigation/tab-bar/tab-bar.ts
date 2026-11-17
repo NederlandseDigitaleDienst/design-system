@@ -75,8 +75,8 @@ export class NLDDTabBarItem extends LitElement {
 	@property({ type: String })
 	href = '';
 
-	/** Set by nldd-tab-bar. Not part of the public API. */
-	@property({ type: String })
+	/** Set by nldd-tab-bar. Not part of the public API, so no attribute. */
+	@property({ attribute: false })
 	_groupVariant: 'icon-and-text' | 'text' | 'icon' | '' = '';
 
 	// Author-set variant captured once in connectedCallback.
@@ -249,6 +249,13 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	@state()
 	_overflowItems: NLDDTabBarItem[] = [];
 
+	/** @internal What the overflow menu lists. Held while the menu is open: a tab
+	 *  chosen there moves into view, and the list would change under its blink. */
+	@state()
+	_menuItems: NLDDTabBarItem[] = [];
+
+	private _menuOpen = false;
+
 	private _resizeObserver: ResizeObserver | null = null;
 	private _itemObserver: MutationObserver | null = null;
 	private _overflowFrame: number | null = null;
@@ -410,14 +417,20 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 		const changed = next.length !== this._overflowItems.length || next.some((item, i) => item !== this._overflowItems[i]);
 		if (changed) {
 			this._overflowItems = next;
+			if (!this._menuOpen) this._menuItems = next;
 			this._syncItems();
 		}
 	}
 
 	/** @internal A tab picked from the overflow menu. */
-	_selectFromOverflow(event: Event, item: NLDDTabBarItem): void {
-		event.stopPropagation();
+	_selectFromOverflow(item: NLDDTabBarItem): void {
 		this._activate(item);
+	}
+
+	/** @internal The overflow menu opened or closed. */
+	_overflowMenuToggled(open: boolean): void {
+		this._menuOpen = open;
+		if (!open) this._menuItems = this._overflowItems;
 	}
 
 	override firstUpdated(): void {

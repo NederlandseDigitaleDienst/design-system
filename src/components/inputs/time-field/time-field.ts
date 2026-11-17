@@ -94,6 +94,8 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = timeFieldStyles;
 
+	static formProperties = ['value'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -104,8 +106,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Counts for the implicit-submission rule: a single-line field where Enter
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
-
-	private _initialValue = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
@@ -314,6 +314,24 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
 	public _handlePickerSlotChange(): void {
 		this._hasSlottedPicker = this._slottedPicker !== null;
+		this._syncSlottedPicker();
+	}
+
+	/**
+	 * The field owns the value and the rules, and writes them onto a slotted
+	 * picker every render, as it does on its own: a picker with other bounds
+	 * would offer times the field then refuses. What only a picker knows (its
+	 * rows, its translations) is left untouched.
+	 */
+	private _syncSlottedPicker(): void {
+		const picker = this._slottedPicker;
+		if (!picker) return;
+		picker.value = this._pickerValue;
+		picker.min = this.min;
+		picker.max = this.max;
+		picker.step = this.step;
+		// nldd-popover reads this to pick its focus target inside the overlay.
+		picker.toggleAttribute('autofocus', true);
 	}
 
 	@state()
@@ -569,29 +587,19 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 	}
 
-	formResetCallback(): void {
+	override formResetCallback(): void {
+		super.formResetCallback();
 		// The text as well: text that is no time leaves value empty, so a reset to
 		// an empty value would not change value and the text would stay.
-		this._display = this._initialValue;
-		this.value = this._initialValue;
+		this._display = this.value;
 		this.commitFormValue();
-	}
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') this.value = state;
 	}
 
 	private _emit(type: 'input' | 'change'): void {
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent(type, {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent(type, { value: this.value });
 	}
 
 	override firstUpdated(): void {
-		this._initialValue = this.value;
 		this.commitFormValue();
 	}
 
@@ -611,6 +619,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		if (popover && trigger && popover.anchorElement !== trigger) {
 			popover.anchorElement = trigger;
 		}
+		this._syncSlottedPicker();
 		if (changed.has('width')) {
 			const w = this.width;
 			// Unlike a text field the default here is an intrinsic width that fits a

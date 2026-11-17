@@ -54,7 +54,7 @@
 import { LitElement } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { popoverTargetOf } from '../../../utilities/popover-target.js';
+import { OverlayInvoker, popoverTargetOf } from '../../../utilities/overlay-invoker.js';
 import { setState } from '../../../utilities/element-state.js';
 import { termStyles } from './term.styles.js';
 import { termTemplate } from './term.template.js';
@@ -117,10 +117,20 @@ export class NLDDTerm extends LitElement {
 	@query('nldd-popover')
 	private _ownPopoverEl!: NLDDPopover | null;
 
-	/** Whether the popover was open for this term when the pointer went down:
-	 *  the browser closes it on that pointerdown, before the click, and the
-	 *  click must not open it again. */
-	private _wasOpenOnPointerdown = false;
+	/** Opens the term's popover. A popover that `popovertarget` names can be
+	 *  shared by several terms, so it counts as open only while it stands at
+	 *  this one, and opening it here moves it over. */
+	private _invoker = new OverlayInvoker(this, {
+		// Anchored on open, not on adoption: a shared popover open at another
+		// term must stay there until this term is clicked.
+		anchorFor: () => null,
+		isOpen: (overlay) => overlay.matches(':popover-open') && overlay.anchorElement === this._triggerEl,
+		open: (overlay) => {
+			if (overlay.matches(':popover-open')) overlay.hidePopover();
+			overlay.anchorElement = this._triggerEl;
+			(overlay as NLDDPopover).show();
+		},
+	});
 	/** Whether Space went down on the term, so its keyup may click. */
 	private _spaceDown = false;
 	/** The shared popover this term listens to, to keep its expanded state. */
@@ -207,26 +217,16 @@ export class NLDDTerm extends LitElement {
 		this._termText = text.replace(/\u00AD/g, '');
 	}
 
-	_handlePointerdown(): void {
-		const overlay = this._overlay();
-		this._wasOpenOnPointerdown = Boolean(overlay?.matches(':popover-open') && overlay.anchorElement === this._triggerEl);
+	_handlePointerdown(event: PointerEvent): void {
+		this._invoker.setOverlay(this._overlay());
+		this._invoker.handlePointerdown(event);
 	}
 
 	_handleClick(event: MouseEvent): void {
 		this._listenToSharedOverlay();
-		const overlay = this._overlay();
-		const trigger = this._triggerEl;
-		// A keyboard click has no pointerdown before it, so a snapshot left
-		// from a gesture that ended without a click must not count.
-		const wasOpen = event.detail > 0 && this._wasOpenOnPointerdown;
-		this._wasOpenOnPointerdown = false;
-		if (!overlay || !trigger) return;
-		// A shared popover may be open against another term.
-		if (overlay.anchorElement !== trigger) {
-			if (overlay.matches(':popover-open')) overlay.hidePopover();
-			overlay.anchorElement = trigger;
-		}
-		if (!wasOpen && !overlay.matches(':popover-open')) overlay.show();
+		if (!this._triggerEl) return;
+		this._invoker.setOverlay(this._overlay());
+		this._invoker.handleClick(event);
 	}
 
 	/** As a native button: Enter acts on the key going down, Space on the key

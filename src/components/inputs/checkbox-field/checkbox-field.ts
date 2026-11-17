@@ -41,7 +41,7 @@ import { FormAssociated, uncheckedValidity, type FormValue, type OwnValidity } f
 import { checkboxFieldStyles } from './checkbox-field.styles.js';
 import { checkboxFieldTemplate } from './checkbox-field.template.js';
 import type { NLDDCheckbox } from '../checkbox/checkbox.js';
-import type { NLDDCheckboxGroup } from '../checkbox-group/checkbox-group.js';
+import { ChoiceGroup } from '../../../utilities/choice-group.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
@@ -51,12 +51,12 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = checkboxFieldStyles;
 
+	static formProperties = ['checked'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
-
-	private _initialChecked = false;
 
 	@property({ type: Boolean, reflect: true })
 	checked = false;
@@ -89,7 +89,7 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	/** In an nldd-checkbox-group, where `required` is about the group and no
 	 *  single box is announced as required. */
 	get _inGroup(): boolean {
-		return this._group !== null;
+		return ChoiceGroup.of(this) !== null;
 	}
 
 	/** Set by nldd-checkbox-group: whether any box in the group is checked,
@@ -109,10 +109,6 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
-
-	override firstUpdated(): void {
-		this._initialChecked = this.checked;
-	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -134,19 +130,14 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 			.filter((el): el is NLDDCheckboxField => el.localName === 'nldd-checkbox-field');
 		this._followChildren(false);
 		// The group sees only its own children arrive, not the options under them.
-		this._group?._onSlotChange();
-	}
-
-	/** The nldd-checkbox-group around this field, if any. */
-	private get _group(): NLDDCheckboxGroup | null {
-		return this.closest('nldd-checkbox-group');
+		ChoiceGroup.of(this)?.sync();
 	}
 
 	/** Also when the app sets `checked` or a form resets it: the group answers
 	 *  `required` again, which it cannot see by itself. */
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
-		if (this.hasUpdated && changed.has('checked')) this._group?._optionChanged();
+		if (this.hasUpdated && changed.has('checked')) ChoiceGroup.of(this)?.optionChanged(this);
 	}
 
 	/** A change of an option right under this one; one further down reaches
@@ -215,17 +206,13 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 		return uncheckedValidity({ required: this.required, checked: this.checked || this._groupHasSelection, disabled: this.disabled });
 	}
 
-	formResetCallback(): void {
-		this.checked = this._initialChecked;
-		this.indeterminate = false;
-		// The options under this one reset too, in their own callbacks.
+	override formResetCallback(): void {
+		super.formResetCallback();
+		// `indeterminate` stays, as on a native checkbox. The options under this
+		// one reset too, in their own callbacks, and this one follows them.
 		if (this._childFields.length > 0) queueMicrotask(() => this._followChildren(false));
 	}
 
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		this.checked = state !== null;
-	}
 
 	public _handleLabelClick(e: Event): void {
 		if (this.disabled) return;

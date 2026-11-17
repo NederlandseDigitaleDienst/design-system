@@ -46,20 +46,11 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { sheetStyles } from './sheet.styles.js';
 import { sheetTemplate } from './sheet.template.js';
-import { isPointerMode } from '../../../utilities/input-modality.js';
-import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
-import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
-import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 import { setState } from '../../../utilities/element-state.js';
-import { FocusReturn } from '../../../utilities/return-focus.js';
+import { ModalOverlay } from '../../../utilities/modal-overlay.js';
 
 type Placement = 'left' | 'right' | 'bottom';
-
-/** Generous compared to the ~0.2s close animation: long enough that a normal
- *  close always wins on animationend, short enough that a paused or dropped
- *  animation does not leave the sheet stuck. */
-const SHEET_CLOSE_TIMEOUT_MS = 1000;
 
 @customElement('nldd-sheet')
 export class NLDDSheet extends LitElement {
@@ -99,12 +90,13 @@ export class NLDDSheet extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	open = false;
 
+	_modalOverlay = new ModalOverlay(this, {
+		animatedClose: true,
+		titleBarDismiss: true,
+		beforeOpen: () => setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text),
+	});
+
 	override updated(changed: Map<string, unknown>) {
-		if (changed.has('open')) {
-			const dialog = this._dialog;
-			if (this.open && (!dialog?.open || this._closing)) this.show();
-			else if (!this.open && dialog?.open && !this._closing) this.hide();
-		}
 		if (changed.has('width')) {
 			if (this.width) {
 				this.style.setProperty('--_sheet-width', this.width);
@@ -126,193 +118,19 @@ export class NLDDSheet extends LitElement {
 		}
 	}
 
-	private _closing = false;
-
-	private get _dialog(): HTMLDialogElement | null {
-		return this.shadowRoot?.querySelector('dialog') ?? null;
-	}
-
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.style.containerType = 'inline-size';
 		this.style.containerName = 'layout-container';
-		// Listen for dismiss events bubbling up from nldd-top-title-bar
-		this.addEventListener('dismiss', this._handleDismiss);
 	}
-
-	override disconnectedCallback(): void {
-		super.disconnectedCallback();
-		this.removeEventListener('dismiss', this._handleDismiss);
-	}
-
-	/** Cancels a `show()` that is waiting for the first render; null when none is. */
-	private _cancelPendingOpen: (() => void) | null = null;
 
 	show(): void {
-		const dialog = this._dialog;
-		if (!dialog) {
-			this._cancelPendingOpen?.();
-			this._cancelPendingOpen = openWhenRendered(
-				this,
-				() => this._dialog,
-				() => this.show(),
-			);
-			return;
-		}
-
-		this._cancelPendingOpen?.();
-		this._cancelPendingOpen = null;
-
-		// New open cycle: the next close may emit again.
-		this._closeEmitted = false;
-
-		setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text);
-
-		if (this._closing) {
-			// Opened again while the close animation runs: call the close off.
-			window.clearTimeout(this._closeFallback);
-			this._closing = false;
-			dialog.classList.remove('is-closing');
-		} else {
-			this._focusReturn.remember();
-			dialog.showModal();
-		}
-		this.open = true;
-		this._manageFocus();
-		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
-	}
-
-	private _manageFocus(): void {
-		// 1. autofocus element present — focus it ourselves: a design-system
-		// field keeps its input in shadow DOM, which the browser's own autofocus
-		// skips (see focusAutofocusTarget).
-		if (focusAutofocusTarget(this)) return;
-
-		// 2. Focus the dialog — show focus ring only when opened via keyboard
-		const dialog = this._dialog;
-		if (!dialog) return;
-		dialog.classList.toggle('is-pointer-focus', isPointerMode());
-		dialog.focus();
+		this._modalOverlay.show();
 	}
 
 	hide(): void {
-		// A hide() beats a show() that is still waiting for the first render.
-		this._cancelPendingOpen?.();
-		this._cancelPendingOpen = null;
-
-		const dialog = this._dialog;
-		if (!dialog || !dialog.open || this._closing) return;
-
-		this.open = false;
-		this._closing = true;
-		dialog.classList.add('is-closing');
-
-		const finish = () => {
-			if (!this._closing) return;
-			window.clearTimeout(this._closeFallback);
-			dialog.classList.remove('is-closing');
-			this._closing = false;
-			dialog.close();
-			this._emitClose();
-		};
-
-		dialog.addEventListener('animationend', finish, { once: true });
-
-		// Fallback for prefers-reduced-motion (no animation fires)
-		// Use requestAnimationFrame to let CSS skip the animation first
-		requestAnimationFrame(() => {
-			if (this._closing && getComputedStyle(dialog).animationName === 'none') finish();
-		});
-
-		// Last resort: animationend is not guaranteed. A background tab pauses CSS
-		// animations, so the event may never arrive — and because `_closing` gates
-		// this method, the sheet would then be wedged open for the rest of its
-		// life, ignoring every later hide(). Close on a timer instead of trusting
-		// the animation to end.
-		this._closeFallback = window.setTimeout(finish, SHEET_CLOSE_TIMEOUT_MS);
+		this._modalOverlay.hide();
 	}
-
-	/** Timer id for the close fallback above. */
-	private _closeFallback = 0;
-
-	/** Whether the press preceding a click started on the backdrop (the dialog
-	 *  itself) rather than inside the sheet content. Guards against a drag that
-	 *  begins inside (selecting text in an input, dragging a control) and ends on
-	 *  the backdrop being read as a backdrop click. */
-	private _pointerDownOnBackdrop = false;
-
-	/** Whether the release before a click was on the backdrop too. A press on the
-	 *  backdrop and a release in the sheet fire their click on the element both
-	 *  share, the dialog, so the click alone cannot tell (WCAG 2.5.2). */
-	private _pointerUpOnBackdrop = false;
-
-	_handleDialogPointerDown(e: PointerEvent): void {
-		this._pointerDownOnBackdrop = e.target === this._dialog;
-	}
-
-	_handleDialogPointerUp(e: PointerEvent): void {
-		this._pointerUpOnBackdrop = e.target === this._dialog;
-	}
-
-	_handleDialogClick(e: MouseEvent): void {
-		// Close only when the press and the release both land on the backdrop.
-		const onBackdrop = e.target === this._dialog && this._pointerDownOnBackdrop && this._pointerUpOnBackdrop;
-		// Each click gets the flags of its own gesture only: a click without one
-		// (from code, from assistive technology) would read the last gesture's.
-		this._pointerDownOnBackdrop = false;
-		this._pointerUpOnBackdrop = false;
-		if (onBackdrop) this.hide();
-	}
-
-	/**
-	 * Emitted once per open cycle, from whichever route actually closed the sheet.
-	 *
-	 * The dialog's own close event cannot be the only source: jsdom does not fire
-	 * it, so the event would be untestable. hide() calls this too, and the flag
-	 * keeps it to one per cycle.
-	 */
-	private _closeEmitted = false;
-
-	private _focusReturn = new FocusReturn();
-
-	private _emitClose(): void {
-		this.open = false;
-		if (this._closeEmitted) return;
-		this._closeEmitted = true;
-		this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
-		// After the event, so focus a close handler moves elsewhere stays there.
-		this._focusReturn.restore(this);
-	}
-
-	_handleDialogClose(e: Event): void {
-		// Only the dialog's own native close counts. That event does not bubble, so
-		// its target is the dialog. A nested component's `close` (an nldd-popover
-		// datepicker, say) is composed and bubbling, so it reaches this same @close
-		// listener retargeted to the slotted host — without this guard it would emit
-		// the sheet's close and make consumers tear the sheet down while it stays open.
-		if (e.target !== this._dialog) return;
-		this._closing = false;
-		this._dialog?.classList.remove('is-closing');
-		this._emitClose();
-	}
-
-	_handleCancel(e: Event): void {
-		// Intercept Escape key default close — run hide animation instead
-		e.preventDefault();
-		this.hide();
-	}
-
-	private _handleDismiss = (e: Event): void => {
-		// Only our own top-title-bar's dismiss button closes the sheet. Other
-		// components fire `dismiss` for their own element (nldd-token's remove,
-		// nldd-banner, nldd-document-tab-bar); inside a sheet those must not close it.
-		if (isDismissFromTitleBar(e)) {
-			// Stop the matched dismiss here so a nested sheet/window's own title-bar
-			// dismiss can't keep bubbling up and also close an outer overlay.
-			e.stopPropagation();
-			this.hide();
-		}
-	};
 
 	override render() {
 		return sheetTemplate(this);

@@ -4,7 +4,7 @@ import { linkRel } from '../../../utilities/link-rel.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/tooltip/tooltip.js';
-import { popoverTargetOf } from '../../../utilities/popover-target.js';
+import { popoverTargetOf } from '../../../utilities/overlay-invoker.js';
 
 function renderContent(component: NLDDIconButton) {
 	return html`

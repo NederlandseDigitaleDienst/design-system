@@ -28,7 +28,6 @@ export function avatarGroupTemplate(component: NLDDAvatarGroup) {
 	const title = component.accessibleLabel || component._t('components.avatar-group.overflow-popover-label');
 
 	return html`
-		<style id="generated-rules"></style>
 		<div class="avatar-group"
 			role=${component.accessibleLabel ? 'group' : nothing}
 			aria-label=${component.accessibleLabel || nothing}

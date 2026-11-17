@@ -79,6 +79,17 @@ const PADDING_KEYS = [
  * ```ts
  * class NLDDSimpleSection extends PageSectionMixin(LitElement) { … }
  * ```
+ *
+ * @mixin PageSectionMixin
+ * @attr sm-padding-block - Top and bottom padding in the sm range; wins there over the padding attributes without a breakpoint.
+ * @attr sm-padding-top - Top padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint.
+ * @attr sm-padding-bottom - Bottom padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint.
+ * @attr md-padding-block - Top and bottom padding in the md range; wins there over the padding attributes without a breakpoint.
+ * @attr md-padding-top - Top padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint.
+ * @attr md-padding-bottom - Bottom padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint.
+ * @attr lg-padding-block - Top and bottom padding in the lg range; wins there over the padding attributes without a breakpoint.
+ * @attr lg-padding-top - Top padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint.
+ * @attr lg-padding-bottom - Bottom padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint.
  */
 export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 	Base: TBase,

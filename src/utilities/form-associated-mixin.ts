@@ -1,4 +1,4 @@
-import type { LitElement, ReactiveController } from 'lit';
+import { defaultConverter, type LitElement, type PropertyDeclaration, type ReactiveController } from 'lit';
 import { internalsOf } from './element-state.js';
 
 /**
@@ -48,6 +48,14 @@ export interface FormAssociatedElement {
 	/** Extra state for bfcache and state restore, when the value alone is not enough. */
 	formState(): FormValue | undefined;
 	commitFormValue(): void;
+	/** What a reset puts the property `name` back to: its attribute, or what it held after the first render. */
+	formDefault(name: string): unknown;
+	/** Puts the value back to its default, as a form reset does. */
+	formResetCallback(): void;
+	/** Fills the value from what bfcache or autocomplete saved. */
+	formStateRestoreCallback(state: FormValue, mode?: 'restore' | 'autocomplete'): void;
+	/** Commits the value, then fires `type`: a listener reads the form as it is now. */
+	emitFormEvent(type: string, detail?: unknown, init?: EventInit): boolean;
 	/** The native control whose constraints the host reports as its own. */
 	validationTarget(): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
 	/** Where an invalid submit points its message and puts the focus. */
@@ -72,10 +80,18 @@ export interface FormAssociatedElement {
  * otherwise read the value from before the change. That contract is checked for
  * every input at once in `form-value-timing.test.ts`.
  *
- * Reset and state restore stay with the component: what "the initial value" is
- * differs per input (checked, text, a number to clamp, two fields at once), so
- * a component implements `formResetCallback` / `formStateRestoreCallback`
- * itself.
+ * Reset and state restore follow `static formProperties`, the properties that
+ * hold the value. A reset puts each back to its default, as a native input
+ * does: the attribute when there is one, else what the property held after the
+ * first render (a framework sets the property, not the attribute). A property
+ * that reflects is its own attribute, so it always goes back to the first
+ * render. A value set after the first render (data that loads later) counts as
+ * an edit, as `input.value` does natively: a reset does not go back to it, the
+ * attribute does. A restore fills a single property from the saved state: a
+ * boolean is on when a value was saved, a list takes the entries of a
+ * `FormData`, anything else goes through the property's own converter. A
+ * component overrides the callbacks only for what is its own: a value to
+ * clamp, text to clear, two properties in one state.
  */
 export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 	abstract class FormAssociatedMixin extends Base implements FormAssociatedElement {
@@ -83,12 +99,85 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 
 		readonly internals = internalsOf(this);
 
+		/** The properties that hold the value, for reset and restore. */
+		static formProperties: readonly string[] = [];
+
 		constructor(...args: any[]) {
 			super(...args);
 			// A controller, not an updated() override: a component that defines
 			// its own updated() would have to remember to call super.
-			const commit: ReactiveController = { hostUpdated: () => this.commitFormValue() };
+			const commit: ReactiveController = {
+				hostConnected: () => {
+					if (this.hasUpdated || this._defaultsPending) return;
+					this._defaultsPending = true;
+					// After the first render has settled, as a component's own firstUpdated saw it.
+					void this.updateComplete.then(() => this._takeDefaults());
+				},
+				hostUpdated: () => this.commitFormValue(),
+			};
 			this.addController(commit);
+		}
+
+		private _defaultsPending = false;
+		private _defaults = new Map<string, unknown>();
+
+		private get _formProperties(): readonly string[] {
+			return (this.constructor as unknown as { formProperties: readonly string[] }).formProperties;
+		}
+
+		private _options(name: string): PropertyDeclaration {
+			return (this.constructor as unknown as typeof LitElement).getPropertyOptions(name);
+		}
+
+		private _fromAttribute(name: string, text: string | null): unknown {
+			const options = this._options(name);
+			const converter = options.converter ?? defaultConverter;
+			const from = typeof converter === 'function' ? converter : converter.fromAttribute ?? defaultConverter.fromAttribute!;
+			return from(text, options.type);
+		}
+
+		private _takeDefaults(): void {
+			for (const name of this._formProperties) {
+				this._defaults.set(name, copy((this as Record<string, unknown>)[name]));
+			}
+		}
+
+		/** What a reset puts `name` back to: its attribute, or the first render. */
+		formDefault(name: string): unknown {
+			const options = this._options(name);
+			const attribute = typeof options.attribute === 'string' ? options.attribute : name.toLowerCase();
+			if (options.attribute !== false && !options.reflect && this.hasAttribute(attribute)) {
+				const value = this._fromAttribute(name, this.getAttribute(attribute));
+				// An attribute that is no number says nothing: keep what it rendered with.
+				if (!(typeof value === 'number' && Number.isNaN(value))) return value;
+			}
+			// A reset before the first render settled: what it holds now is its default.
+			const self = this as Record<string, unknown>;
+			return copy(this._defaults.has(name) ? this._defaults.get(name) : self[name]);
+		}
+
+		formResetCallback(): void {
+			for (const name of this._formProperties) {
+				(this as Record<string, unknown>)[name] = this.formDefault(name);
+			}
+		}
+
+		formStateRestoreCallback(state: FormValue, _mode?: 'restore' | 'autocomplete'): void {
+			const properties = this._formProperties;
+			if (properties.length !== 1) return;
+			const [name] = properties;
+			const self = this as Record<string, unknown>;
+			if (this._options(name).type === Boolean) self[name] = state !== null;
+			else if (typeof state === 'string') self[name] = this._fromAttribute(name, state);
+			// One entry per value, as nldd-token-field submits them.
+			else if (state instanceof FormData && Array.isArray(self[name])) {
+				self[name] = [...state.values()].filter((value): value is string => typeof value === 'string');
+			}
+		}
+
+		emitFormEvent(type: string, detail?: unknown, init: EventInit = {}): boolean {
+			this.commitFormValue();
+			return this.dispatchEvent(new CustomEvent(type, { bubbles: true, composed: true, ...init, detail }));
 		}
 
 		/** The value submitted under `name`; `null` submits nothing. Override. */
@@ -209,6 +298,11 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 			// (with its own reflection), so the mixin only writes to it.
 			(this as unknown as { disabled: boolean }).disabled = disabled;
 		}
+	}
+
+	/** An array is a value too: the default must not move with the live one. */
+	function copy<V>(value: V): V {
+		return (Array.isArray(value) ? [...value] : value) as V;
 	}
 
 	return FormAssociatedMixin as unknown as T & Constructor<InstanceType<T> & FormAssociatedElement>;

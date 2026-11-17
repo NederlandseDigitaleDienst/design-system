@@ -1,3 +1,5 @@
+export { deepActiveElement } from './utilities/deep-active-element.js';
+
 /**
  * Creates a DOM fixture by parsing the given HTML string, appending it to the
  * document body inside a wrapper <div>, and waiting for the first element
@@ -26,20 +28,6 @@ export async function fixture<T extends HTMLElement = HTMLElement>(html: string)
  */
 export function cleanup(el: Element): void {
 	el.parentElement?.remove();
-}
-
-/**
- * Walks shadow roots from `document.activeElement` down to the deepest
- * focused element. Use this in tests that assert focus delegation —
- * `document.activeElement` only returns the outermost shadow host, not
- * the inner element that actually received focus.
- */
-export function deepActiveElement(): Element | null {
-	let active: Element | null = document.activeElement;
-	while (active?.shadowRoot?.activeElement) {
-		active = active.shadowRoot.activeElement;
-	}
-	return active;
 }
 
 /**

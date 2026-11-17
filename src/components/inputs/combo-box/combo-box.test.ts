@@ -424,7 +424,7 @@ describe('nldd-combo-box – picker pointerdown (touch close)', () => {
 
 		// Now the click arrives. _toggleMenu would normally reopen, but the flag
 		// prevents it.
-		el._toggleMenu();
+		el._toggleMenu(new MouseEvent('click', { detail: 1 }));
 		await waitForUpdate(el);
 		expect(el._isOpen).toBe(false);
 	});

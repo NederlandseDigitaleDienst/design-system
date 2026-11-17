@@ -22,15 +22,11 @@ export function template(
 	centerOnly: boolean,
 	t: (key: keyof NLDDToolbarTranslations) => string,
 ) {
-	// Overflow button: aria-controls is intentionally omitted. ARIA IDREF
-	// attributes cannot cross shadow DOM boundaries, and the menu is
-	// reparented to document.body while this button lives in the toolbar's
-	// shadow root — so the IDREF could not resolve from the host nor a
-	// forwarded inner button. popup-type + expanded forward to the inner
-	// button as aria-haspopup / aria-expanded and give sufficient AT
-	// context for WCAG 2.1 AA. Restore aria-controls once nldd-menu moves
-	// into the shadow root, or CSS Anchor Positioning lets the menu escape
-	// the stacking context without document.body.
+	// Overflow button: aria-controls is intentionally omitted. The menu sits
+	// in this shadow root and the button in the icon button's own, and an
+	// ARIA IDREF cannot cross that boundary. popup-type + expanded forward to
+	// the inner button as aria-haspopup / aria-expanded and give sufficient
+	// AT context for WCAG 2.1 AA.
 	return html`
 		<div class="toolbar"
 			role="toolbar"

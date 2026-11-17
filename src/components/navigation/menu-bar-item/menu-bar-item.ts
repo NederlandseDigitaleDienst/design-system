@@ -40,6 +40,7 @@ import { template } from './menu-bar-item.template.js';
 import '../../content/icon/icon.js';
 import '../../actions/menu/menu.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 
 /**
  * Minimal typed interface for nldd-menu.
@@ -120,8 +121,13 @@ export class NLDDMenuBarItem extends LitElement {
 	// ## Menu popover state
 
 	private _menu: PopoverMenu | null = null;
-	private _menuOpen = false;
-	private _pointerdownWhileMenuOpen = false;
+	/** Opens and closes the slotted menu against this item. */
+	private _invoker: OverlayInvoker = new OverlayInvoker(this, {
+		open: (menu): void => {
+			(menu as unknown as PopoverMenu).anchorOffset = -this._indicatorInset();
+			menu.showPopover();
+		},
+	});
 	private _menuToggleHandler: ((event: Event) => void) | null = null;
 	/** Re-renders when the menu's variant changes, since that decides whether
 	 *  the control promises a menu (aria-haspopup) or only says expanded. */
@@ -191,10 +197,10 @@ export class NLDDMenuBarItem extends LitElement {
 		this._menu = menu;
 		this._menuToggleHandler = (event: Event) => {
 			const isOpen = (event as ToggleEvent).newState === 'open';
-			this._menuOpen = isOpen;
 			this.expanded = isOpen;
 		};
 		menu.addEventListener('toggle', this._menuToggleHandler);
+		this._invoker.setOverlay(menu as unknown as InvokableOverlay);
 		this._menuVariantObserver = new MutationObserver(() => this.requestUpdate());
 		this._menuVariantObserver.observe(menu, { attributes: true, attributeFilter: ['variant'] });
 		this.requestUpdate();
@@ -206,27 +212,22 @@ export class NLDDMenuBarItem extends LitElement {
 		}
 		this._menuVariantObserver?.disconnect();
 		this._menuVariantObserver = null;
+		this._invoker.setOverlay(null);
 		this._menu = null;
 		this._menuToggleHandler = null;
-		this._menuOpen = false;
 	}
 
 	// ## Event handlers
 
-	private _handlePointerdown = (): void => {
-		if (this._menuOpen) {
-			this._pointerdownWhileMenuOpen = true;
-		}
+	private _handlePointerdown = (event: PointerEvent): void => {
+		this._invoker.handlePointerdown(event);
 	};
 
 	private _handleClick = (event: Event): void => {
 		// A click in the menu belongs to its item, not to this one: toggling here
 		// would cancel the link of an item with `href`, and a router with it.
 		const menu = this._findMenu();
-		if (menu && event.composedPath().includes(menu)) {
-			this._pointerdownWhileMenuOpen = false;
-			return;
-		}
+		if (menu && event.composedPath().includes(menu)) return;
 
 		if (this.disabled) {
 			event.preventDefault();
@@ -236,7 +237,7 @@ export class NLDDMenuBarItem extends LitElement {
 
 		if (this.expandable && this._findMenu()) {
 			event.preventDefault();
-			this._toggleMenu();
+			this._invoker.handleClick(event as MouseEvent);
 			return;
 		}
 
@@ -259,23 +260,6 @@ export class NLDDMenuBarItem extends LitElement {
 		if (!item) return 0;
 		const inset = parseFloat(getComputedStyle(item, '::before').top);
 		return Number.isNaN(inset) ? 0 : inset;
-	}
-
-	private _toggleMenu(): void {
-		if (this._pointerdownWhileMenuOpen) {
-			this._pointerdownWhileMenuOpen = false;
-			return;
-		}
-		// _wireMenu already ran in connectedCallback and re-runs on
-		// slotchange — no need to call it here.
-		if (!this._menu) return;
-		this._menu.anchorElement = this;
-		this._menu.anchorOffset = -this._indicatorInset();
-		if (this._menuOpen) {
-			this._menu.hidePopover();
-		} else {
-			this._menu.showPopover();
-		}
 	}
 
 	override render() {

@@ -60,7 +60,7 @@ import { computePosition, flip, hide, limitShift, shift, offset, type OffsetOpti
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tooltipStyles } from './tooltip.styles.js';
 import { tooltipTemplate } from './tooltip.template.js';
-import { isTouchMode } from '../../../utilities/input-modality.js';
+import { InterestIntent } from '../../../utilities/interest-intent.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../keyboard-shortcut/keyboard-shortcut.js';
 import { carryContext } from '../../../utilities/carried-context.js';
@@ -117,17 +117,28 @@ export class NLDDTooltip extends LitElement {
 	_visible = false;
 
 	private _tooltipId = `nldd-tooltip-${++tooltipCounter}`;
-	private _hideTimeout: ReturnType<typeof setTimeout> | null = null;
-	private _showTimeout: ReturnType<typeof setTimeout> | null = null;
 	private _descriptionEl: HTMLSpanElement | null = null;
 	private _currentTrigger: Element | null = null;
 	private _boundSlotChange = () => this._syncAriaDescribedBy();
 	/** Refreshes the description when shortcuts become available or unavailable, for the shortcut in it. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this, () => this._syncAriaDescribedBy());
 	private _positionVersion = 0;
-	/** Whether hover put it up: then a scroll takes it down, since the pointer
-	 *  is no longer over what it describes. Shown by focus or `open`, it follows. */
-	private _shownByHover = false;
+
+	private _interest = new InterestIntent({
+		showDelay: () => this.timing === 'instant' ? 0 : this._delay('--_tooltip-show-delay', DEFAULT_SHOW_DELAY_MS),
+		hideDelay: () => this._delay('--_tooltip-hide-delay', DEFAULT_HIDE_DELAY_MS),
+		isOpen: () => this._visible,
+		available: () => this.timing !== 'never' && this._hasContent,
+		show: () => { this._visible = true; },
+		// A forced tooltip stays: `open` belongs to the consumer.
+		hide: () => { if (!this.open) this._visible = false; },
+	});
+
+	/** The delays are tokens, so a consumer can tune them from CSS. */
+	private _delay(name: string, fallback: number): number {
+		const parsed = parseInt(getComputedStyle(this).getPropertyValue(name), 10);
+		return Number.isFinite(parsed) ? parsed : fallback;
+	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -147,22 +158,10 @@ export class NLDDTooltip extends LitElement {
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('open')) {
-			if (this.open) {
-				/* Force-show: cancel any pending hide so the tooltip stays up
-				 * even if the cursor left the trigger area. */
-				if (this._hideTimeout) {
-					clearTimeout(this._hideTimeout);
-					this._hideTimeout = null;
-				}
-				if (this._showTimeout) {
-					clearTimeout(this._showTimeout);
-					this._showTimeout = null;
-				}
-				this._shownByHover = false;
-				this._visible = true;
-			} else if (this._visible) {
-				this._visible = false;
-			}
+			// Forced or released, it starts over: what hover and focus did before no longer counts.
+			this._interest.reset();
+			if (this.open) this._visible = true;
+			else if (this._visible) this._visible = false;
 		}
 		if (changed.has('_visible')) {
 			// On the document and only while showing: a tooltip opened by hover
@@ -200,12 +199,8 @@ export class NLDDTooltip extends LitElement {
 			this._updatePosition();
 		}
 		if (changed.has('timing') && this.timing === 'never') {
-			// Cancel any pending show — without this the timer fires after
-			// timing flips to 'never' and re-opens the tooltip.
-			if (this._showTimeout) {
-				clearTimeout(this._showTimeout);
-				this._showTimeout = null;
-			}
+			// A pending show would otherwise open it after all.
+			this._interest.reset();
 			if (this._visible) this._visible = false;
 		}
 	}
@@ -288,71 +283,18 @@ export class NLDDTooltip extends LitElement {
 		// Whether a shortcut shows depends on the pointer, which can change
 		// without a property change; refresh the description with it.
 		this._syncAriaDescribedBy();
-		if (!this._hasContent) return;
-		if (coarsePointerQuery?.matches) return;
-		if (this._hideTimeout) {
-			clearTimeout(this._hideTimeout);
-			this._hideTimeout = null;
-		}
-		// `timing='instant'` skips the hover show-delay. Touch suppression and
-		// the hide-delay still apply — only the show timer is bypassed.
-		if (this._showTimeout) clearTimeout(this._showTimeout);
-		if (this.timing === 'instant') {
-			this._showTimeout = null;
-			this._shownByHover = !this._visible || this._shownByHover;
-			this._visible = true;
-			return;
-		}
-		// Pointer-hover show delay: schedule via JS now that the visibility
-		// transition is binary (popover open/closed) and the CSS no longer
-		// holds the delay. Read the same `--_tooltip-show-delay` token so the value
-		// stays consumer-tunable from CSS.
-		const parsedShow = parseInt(getComputedStyle(this).getPropertyValue('--_tooltip-show-delay'), 10);
-		const showDelay = Number.isFinite(parsedShow) ? parsedShow : DEFAULT_SHOW_DELAY_MS;
-		this._showTimeout = setTimeout(() => {
-			this._showTimeout = null;
-			this._shownByHover = !this._visible || this._shownByHover;
-			this._visible = true;
-		}, showDelay);
+		if (!this._hasContent || coarsePointerQuery?.matches) return;
+		this._interest.enter();
 	}
 
 	_handleFocusIn(): void {
 		if (this.timing === 'never') return;
 		this._syncAriaDescribedBy();
-		if (!this._hasContent) return;
-		// Touch taps can focus elements with explicit `tabindex` (e.g. tab-bar's
-		// roving-tabindex pattern on iOS, Android `<button>` focus-on-tap).
-		// Suppress the tooltip in that case — it's not a keyboard intent.
-		if (isTouchMode()) return;
-		if (this._hideTimeout) {
-			clearTimeout(this._hideTimeout);
-			this._hideTimeout = null;
-		}
-		// Focus-triggered show: no delay (keyboard intent is explicit).
-		if (this._showTimeout) {
-			clearTimeout(this._showTimeout);
-			this._showTimeout = null;
-		}
-		this._shownByHover = false;
-		this._visible = true;
+		this._interest.focus();
 	}
 
 	_handleTriggerLeave(): void {
-		// Cancel a scheduled show — leaving before delay elapsed means no show.
-		if (this._showTimeout) {
-			clearTimeout(this._showTimeout);
-			this._showTimeout = null;
-		}
-		if (this.open) return; // force-shown — hover-out doesn't dismiss
-		if (this._hideTimeout) {
-			clearTimeout(this._hideTimeout);
-		}
-		const parsedHide = parseInt(getComputedStyle(this).getPropertyValue('--_tooltip-hide-delay'), 10);
-		const hideDelay = Number.isFinite(parsedHide) ? parsedHide : DEFAULT_HIDE_DELAY_MS;
-		this._hideTimeout = setTimeout(() => {
-			this._visible = false;
-			this._hideTimeout = null;
-		}, hideDelay);
+		this._interest.leave();
 	}
 
 	/** Focus guard checks one shadow root level deep for composite triggers. */
@@ -363,7 +305,7 @@ export class NLDDTooltip extends LitElement {
 		const stillInside = related && assigned.some(el =>
 			el.contains(related) || (el as HTMLElement).shadowRoot?.contains(related)
 		);
-		if (!stillInside) this._handleTriggerLeave();
+		if (!stillInside) this._interest.blur();
 	}
 
 	/* A tooltip is transient help for a control; once you activate that control
@@ -375,41 +317,26 @@ export class NLDDTooltip extends LitElement {
 	 * which activation must not cancel. */
 	_handleTriggerActivate(): void {
 		if (this.open) return;
-		if (this._showTimeout) {
-			clearTimeout(this._showTimeout);
-			this._showTimeout = null;
-		}
-		if (this._hideTimeout) {
-			clearTimeout(this._hideTimeout);
-			this._hideTimeout = null;
-		}
-		this._visible = false;
+		this._interest.close();
 	}
 
 	_handleTooltipEnter(): void {
-		if (this._hideTimeout) {
-			clearTimeout(this._hideTimeout);
-			this._hideTimeout = null;
-		}
+		this._interest.enter();
 	}
 
 	_handleTooltipLeave(): void {
-		this._handleTriggerLeave();
+		this._interest.leave();
 	}
 
 	/** A hover tooltip goes when the page scrolls: it is fixed to the screen,
 	 *  and the pointer leaves its trigger without a mouseleave until the
 	 *  scrolling stops. One shown by focus or `open` follows its trigger. */
 	private _handleScroll = (): void => {
-		if (this.open || !this._shownByHover) {
+		if (this.open || this._interest.focused) {
 			this._updatePosition();
 			return;
 		}
-		if (this._hideTimeout) {
-			clearTimeout(this._hideTimeout);
-			this._hideTimeout = null;
-		}
-		this._visible = false;
+		this._interest.close();
 	};
 
 	private _handleKeyDown = (e: KeyboardEvent): void => {
@@ -438,7 +365,7 @@ export class NLDDTooltip extends LitElement {
 		// menu, the first press takes the tooltip and the second whatever is
 		// around it. Two tooltips showing at once both close on that first
 		// press, since each hears it on the document.
-		this._visible = false;
+		this._interest.dismiss();
 		e.preventDefault();
 		e.stopPropagation();
 	};
@@ -505,14 +432,7 @@ export class NLDDTooltip extends LitElement {
 		document.removeEventListener('keydown', this._handleKeyDown, true);
 		document.removeEventListener('scroll', this._handleScroll, { capture: true });
 		this.shadowRoot?.querySelector('slot')?.removeEventListener('slotchange', this._boundSlotChange);
-		if (this._hideTimeout) {
-			clearTimeout(this._hideTimeout);
-			this._hideTimeout = null;
-		}
-		if (this._showTimeout) {
-			clearTimeout(this._showTimeout);
-			this._showTimeout = null;
-		}
+		this._interest.reset();
 		// Clean up aria-describedby on trigger and remove description span from body
 		this._currentTrigger?.removeAttribute('aria-describedby');
 		this._currentTrigger = null;

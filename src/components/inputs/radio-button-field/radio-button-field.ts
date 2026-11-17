@@ -40,6 +40,7 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import type { RadioPosition } from '../../../utilities/radio-position.js';
 import { RadioGrouping } from '../../../utilities/radio-grouping.js';
+import { ChoiceGroup } from '../../../utilities/choice-group.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { isKeyboardMode } from '../../../utilities/input-modality.js';
@@ -49,12 +50,13 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 
 	static override styles = radioButtonFieldStyles;
 
+	static formProperties = ['checked'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
 
-	private _initialChecked = false;
 
 	@property({ type: Boolean, reflect: true })
 	checked = false;
@@ -114,10 +116,10 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 		return this._groupPosition ?? this._grouping.position;
 	}
 
-	/** Whether anything in its group is checked. Either source saying so is
-	 *  enough: they answer for the same set of radios. */
+	/** Whether anything in its group is checked: the group around it answers,
+	 *  or else the radios it shares a name with. */
 	get _answered(): boolean {
-		return this._groupHasSelection || this._grouping.answered;
+		return ChoiceGroup.of(this) ? this._groupHasSelection : this._grouping.answered;
 	}
 
 	/** The aria-label this field wrote on itself, so it only takes back its own. */
@@ -144,10 +146,6 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 		this.removeEventListener('blur', this._onBlur);
 	}
 
-	override firstUpdated(): void {
-		this._initialChecked = this.checked;
-	}
-
 	/** Counting happens before the render, not after it: the place this field is
 	 *  given decides what `updated()` writes on it, and a count from there would
 	 *  ask for a second render of what was just drawn. */
@@ -158,7 +156,7 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 		// Also when the app sets `checked` or a form resets it: the group moves
 		// the stop for Tab along, which it cannot see by itself.
 		if (this.hasUpdated && (changed.has('checked') || changed.has('disabled'))) {
-			(this.closest('nldd-radio-button-group') as { _optionChanged?: (field: NLDDRadioButtonField) => void } | null)?._optionChanged?.(this);
+			ChoiceGroup.of(this)?.optionChanged(this);
 		}
 	}
 
@@ -200,15 +198,6 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 	 *  the form while `change` is still propagating never sees two values. */
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;
-	}
-
-	formResetCallback(): void {
-		this.checked = this._initialChecked;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		this.checked = state !== null;
 	}
 
 	/** Checks this field, the way a click or the space bar does. The group hears

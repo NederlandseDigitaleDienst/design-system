@@ -1,7 +1,8 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
   Bron: de JSDoc (@element / @attr / @slot / @fires) van elk component in
-  src/components, plus de iconnamen uit content/icon/icons en icon-aliases.
+  src/components, de geërfde attributen uit custom-elements.json, en de
+  iconnamen uit content/icon/icons en icon-aliases.
   Hergenereren: npm run generate:component-reference
 -->
 
@@ -84,6 +85,8 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
 | `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -209,6 +212,8 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
 | `popovertarget` | `string` | ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
 | `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -627,6 +632,7 @@ Shows several avatars as one group: they overlap, and each one gets a ring in th
 | `size` | `string` | Diameter of each avatar in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96); default 40 |
 | `max` | `number` | Shows at most this many avatars; the rest go behind a "+N" button that opens them as a list of names. A longer number is set smaller, and where it no longer fits the disc the button shows an ellipsis with the count in a tooltip (a number shows from size 24 with one digit, 40 with two, 56 with three and 80 with four) |
 | `accessible-label` | `string` | Describes the group as a whole (e.g. "Editors"); without a label the group is not a landmark of its own and the avatars speak for themselves |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 
@@ -1241,6 +1247,8 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 | `accessible-label` | `string` | Accessible label forwarded as aria-label to the native input. |
 | `required` | `boolean` | Required state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1273,6 +1281,8 @@ A checkbox with an inline label for use in forms. Options that belong under this
 | `label` | `string` | Label text for the checkbox |
 | `required` | `boolean` | Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -1343,6 +1353,8 @@ A monospace editor for code, YAML, JSON and other technical content, built on Co
 | `line-numbers` | `boolean` | Show a line-number gutter |
 | `accessible-label` | `string` | Accessible label forwarded to the editor. Set automatically by nldd-form-field. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1385,6 +1397,8 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 | `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -1425,6 +1439,8 @@ A text field for a date, with an optional calendar in a popover. The value is al
 | `accessible-label` | `string` | Accessible label for the internal input. Set automatically by nldd-form-field. |
 | `width` | `string` | Width. By default exactly wide enough for a date plus the icons; 'full' fills the container; 'fit-content' drops the room for the validation icon and grows again as soon as the field turns valid or invalid; or pass your own CSS length. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -1459,6 +1475,8 @@ A calendar for picking a date or a period. The component works on its own (inlin
 | `accessible-label` | `string` | Accessible name of the calendar. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1489,6 +1507,8 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 | `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
 | `accessible-label` | `string` | Accessible name, forwarded as aria-label to the slotted select |
 | `required` | `boolean` | Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -1525,6 +1545,8 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 | `name` | `string` | Name for form submission |
 | `required` | `boolean` | Marks the field required (invalid while no file is chosen) |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1563,6 +1585,8 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 | `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -1602,6 +1626,8 @@ A numeric input field with decrement and increment buttons.
 | `hide-spin-buttons` | `boolean` | When set, hides the decrement and increment buttons |
 | `accessible-label` | `string` | Accessible label (aria-label) forwarded to the native input |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1638,6 +1664,8 @@ A field for a code someone receives once and types over: by text message, by ema
 | `type` | `string` | What the code holds: 'numeric' (default, digits only, raises the number keyboard) \| 'alphanumeric' (letters and digits) |
 | `uppercase` | `boolean` | Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type="alphanumeric"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells "a" from "A", such as some recovery codes: a value turned into capitals would no longer match. |
 | `required` | `boolean` | Required state. A code that is not complete counts as invalid too. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1673,6 +1701,8 @@ A password input field with visibility toggle and validation states.
 | `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1704,6 +1734,8 @@ WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and
 | `value` | `string` | Value submitted with the form when this radio button is checked |
 | `accessible-label` | `string` | Accessible label, set as aria-label on this element: it is the radio. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1732,6 +1764,8 @@ A radio button with an inline label. Use inside nldd-radio-button-group, which s
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group. |
 | `label` | `string` | Label text for the radio button |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1803,6 +1837,8 @@ A search input with a leading search icon, an optional dismiss button, and an op
 | `maxlength` | `number` | Most characters the value may have. |
 | `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
 | `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1913,6 +1949,8 @@ A value picked along a track, by dragging its thumb, pressing the track or with 
 | `max` | `number` | Largest value (default: 100) |
 | `step` | `number` | Step between values (default: 1) |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -1939,6 +1977,8 @@ A numeric control with increment and decrement buttons.
 | `accessible-label` | `string` | Accessible name for the spinbutton; falls back to a generic label |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -2024,6 +2064,8 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 | `accessible-label` | `string` | Accessible label forwarded as aria-label to the native input. Required when using nldd-switch without nldd-switch-field. |
 | `required` | `boolean` | Required state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -2052,6 +2094,8 @@ A switch toggle with an inline label for use in forms.
 | `label` | `string` | Label text for the switch |
 | `required` | `boolean` | Required state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -2097,6 +2141,8 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `text-editor-command` | `string` | The command a control runs on its editor: a name from `runCommand()`, with an argument after a colon (`setHeading:2`, `setList:task`). On an nldd-toggle-button, nldd-button, nldd-icon-button, `<button>` or nldd-menu-item, also in a toolbar's overflow menu. On an nldd-segmented-control the command takes the value of the chosen item: `text-editor-command="setList"` with items `none`, `bullet`, `ordered` and `task`, where a second click on the list that is on turns it off. Works inside the editor (its `toolbar` slot) or inside an element with `text-editor-for`. The editor sets `selected` and `disabled` on it, so do not set those yourself. Disabled: undo and redo without history, indent and outdent where the list item cannot move, copy and cut without a selection, the inline formats in code and the block formats in a code block, and everything but copy in a read-only editor. `setHeading` steps out of a code block first, so "Paragraaf" is the way out. |
 | `text-editor-for` | `string` | Set on any element that holds controls for an editor elsewhere on the page, such as an nldd-toolbar in a bar of the page: the editor's id. Its controls with `text-editor-command` drive that editor. The id is looked up in the document, not in a shadow root. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -2147,6 +2193,8 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 | `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -2164,6 +2212,10 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 ### `<nldd-time-field>`
 
 A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid time or nothing, so an empty field and one with text that is no time both read as ''. `validity` tells them apart: `badInput` for text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside `min` / `max`. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. "Klaar" and Enter keep the choice, and so does a click outside once you have picked something. Escape puts the old time back. On sm, where the picker is a bottom sheet, "Klaar" sits in its title bar and the sheet offers no cancel: as with a native wheel, you turn back to change your mind. The built-in wheels show 7 rows, and fewer, down to 3, when the picker would otherwise run off the window; they grow back when the window does. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.
+
+**Rules** (`nldd lint`)
+
+- `time-picker-in-field-no-effect`: `value`, `min`, `max` and `step` do nothing on a time picker in the `picker` slot of a time field: the field sets them. Set them on the field.
 
 **Attributes**
 
@@ -2187,6 +2239,8 @@ A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch
 | `accessible-label` | `string` | Accessible label for the internal input. Set automatically by nldd-form-field. |
 | `width` | `string` | Width. By default exactly wide enough for a time plus the validation icon; 'full' fills the container; 'fit-content' drops the room for the validation icon and grows again as soon as the field turns valid or invalid; or pass your own CSS length. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -2203,21 +2257,27 @@ A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch
 
 ### `<nldd-time-picker>`
 
-Two columns, hours and minutes, that slide like a wheel past the selection in the middle. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-time-field. Values are always 24-hour `HH:mm`. Scrolling is choosing: whatever comes to rest in the middle is the value. The keyboard drives that same selection, because that is what a wheel is: hour and minute are each a spinbutton. The columns underneath are aria-hidden, so the same values are not read out twice.
+Two columns, hours and minutes, that slide like a wheel past the selection in the middle. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-time-field. There the field sets `value`, `min`, `max` and `step`; set them on the field. Values are always 24-hour `HH:mm`. Scrolling is choosing: whatever comes to rest in the middle is the value. The keyboard drives that same selection, because that is what a wheel is: hour and minute are each a spinbutton. The columns underneath are aria-hidden, so the same values are not read out twice.
+
+**Rules** (`nldd lint`)
+
+- `time-picker-in-field-no-effect`: `value`, `min`, `max` and `step` do nothing on a time picker in the `picker` slot of a time field: the field sets them. Set them on the field.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | The chosen time as `HH:mm` (24-hour). |
-| `min` | `string` | Earliest allowed time as `HH:mm`. Also the base that `step` counts from. |
-| `max` | `string` | Latest allowed time as `HH:mm`. |
+| `value` | `string` | The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it. |
+| `min` | `string` | Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from. |
+| `max` | `string` | Latest allowed time as `HH:mm`, read as generously as `min`. |
 | `step` | `number` | Step in minutes (default 1). Decides which minutes are in the column. |
 | `rows` | `number` | Height of the columns in rows (default 7, minimum 3). The chosen value always sits in the middle, so an odd number shows whole rows and an even number cuts off half a row at the top and bottom. |
 | `width` | `string` | Width: `full` fills the container, or pass your own CSS length. |
 | `accessible-label` | `string` | Accessible name of the picker. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Events**
 
@@ -2263,6 +2323,8 @@ A selectable button that toggles between selected and unselected. Available as a
 | `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -2336,6 +2398,8 @@ A multi-select input that looks like a normal input field: chosen values show as
 | `token-control` | `string` | Trailing control per token: 'dismiss' (default, a ✕ that removes it) or 'menu' (a ⌄ opening a per-token action menu supplied by the template prototypes) |
 | `name` | `string` | Name for form submission |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -2579,6 +2643,14 @@ A section that spans the full width without horizontal padding. Useful for backg
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |
 | `sm-padding-block` | `string` | Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}). |
+| `sm-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `sm-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the md range; wins there over the padding attributes without a breakpoint. |
+| `md-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the lg range; wins there over the padding attributes without a breakpoint. |
+| `lg-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
 
 **Slots**
 
@@ -2628,6 +2700,18 @@ The section that says what a page is for: it names the main goal of what you can
 | `media-srcset` | `string` | Responsive source set for media-src |
 | `media-sizes` | `string` | Source sizes hint for media-src |
 | `media-alt` | `string` | Alt text for media-src; empty means decorative |
+| `height` | `string` | — |
+| `padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | — |
+| `padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | — |
+| `sm-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the sm range; wins there over the padding attributes without a breakpoint. |
+| `sm-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `sm-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the md range; wins there over the padding attributes without a breakpoint. |
+| `md-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the lg range; wins there over the padding attributes without a breakpoint. |
+| `lg-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
 
 **Slots**
 
@@ -2753,6 +2837,14 @@ A section with two equal columns side by side. The columns stand side by side in
 | `padding-bottom` | `string` | Bottom padding override. |
 | `sm-padding-block` | `string` | Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}). |
 | `vertical-alignment` | `'top'\|'center'\|'bottom'` | Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other. |
+| `sm-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `sm-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the md range; wins there over the padding attributes without a breakpoint. |
+| `md-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the lg range; wins there over the padding attributes without a breakpoint. |
+| `lg-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
 
 **Slots**
 
@@ -2791,6 +2883,14 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 | `padding-bottom` | `string` | Bottom padding override. |
 | `sm-padding-block` | `string` | Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}). |
 | `vertical-alignment` | `'top'\|'center'\|'bottom'` | Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other. |
+| `sm-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `sm-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the md range; wins there over the padding attributes without a breakpoint. |
+| `md-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the lg range; wins there over the padding attributes without a breakpoint. |
+| `lg-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
 
 **Slots**
 
@@ -3076,6 +3176,20 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 | `sticky-top` | `string` | Sticky top inset on lg (CSS length; default = 16px). |
 | `sticky-bottom` | `string` | Sticky bottom inset on lg (CSS length; default = 16px). |
 | `collapsed` | `boolean` | Read-only, reflected: true while the sidebar is a sheet (the section is narrower than lg). Target it via CSS to reveal sheet-only chrome. |
+| `background` | `'base' \| 'inherit' \| 'tinted'` | — |
+| `height` | `string` | — |
+| `padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | — |
+| `padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | — |
+| `padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | — |
+| `sm-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the sm range; wins there over the padding attributes without a breakpoint. |
+| `sm-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `sm-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the md range; wins there over the padding attributes without a breakpoint. |
+| `md-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the lg range; wins there over the padding attributes without a breakpoint. |
+| `lg-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
 
 **Slots**
 
@@ -3124,6 +3238,14 @@ A basic section with responsive padding and gap based on container size. Contain
 | `sm-padding-block` | `string` | Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}). |
 | `horizontal-alignment` | `'left'\|'center'\|'right'` | Where the body's children sit across the body ('left' default). Use it to place something narrower than the body, such as a container with a max-width. |
 | `vertical-alignment` | `'top'\|'center'\|'bottom'` | Where the body's children sit down the section ('top' default). Only visible when the section is taller than its content. |
+| `sm-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `sm-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the md range; wins there over the padding attributes without a breakpoint. |
+| `md-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the lg range; wins there over the padding attributes without a breakpoint. |
+| `lg-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
 
 **Slots**
 
@@ -3227,6 +3349,14 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 | `padding-bottom` | `string` | Bottom padding override. |
 | `sm-padding-block` | `string` | Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}). |
 | `vertical-alignment` | `'top'\|'center'\|'bottom'` | Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other. |
+| `sm-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `sm-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the sm range; wins there over `sm-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the md range; wins there over the padding attributes without a breakpoint. |
+| `md-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `md-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the md range; wins there over `md-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top and bottom padding in the lg range; wins there over the padding attributes without a breakpoint. |
+| `lg-padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Top padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
+| `lg-padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | Bottom padding in the lg range; wins there over `lg-padding-block` and the padding attributes without a breakpoint. |
 
 **Slots**
 
@@ -3414,6 +3544,8 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 | `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `translations` | `object` | Override translation keys (e.g. the "opent in nieuw tabblad" announcement); unset keys fall back to Dutch. |
+| `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
+| `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
 **Slots**
 
@@ -3461,6 +3593,7 @@ Horizontal row of nldd-menu-bar-item elements with automatic overflow detection.
 | `overflow-text` | `string` | Text for the overflow button (default through i18n) |
 | `accessible-label` | `string` | aria-label for the nav landmark |
 | `compact` | `boolean` | Propagates the compact attribute to slotted items (activates content priority) |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 
@@ -3556,6 +3689,7 @@ Accessibility pattern that lets keyboard users skip past content. Wraps content 
 | --- | --- | --- |
 | `text` | `string` | Text of the skip link. Name what is skipped. Falls back to "Ga naar de hoofdinhoud" around the header of a page, and to "Sla over" elsewhere. |
 | `href` | `string` | Optional external target id. Without href it jumps to the first rendered element after the skip link. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 
@@ -3665,6 +3799,7 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 | `back-href` | `string` | URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself. |
 | `back-text` | `string` | Text of the back button. The button appears as soon as back-text or back-href is set; without text it falls back to the translation ("Terug"). |
 | `width` | `string` | Limits the bar content to a max-width so it lines up with the page sections. 'full' fills the entire width, or pass your own CSS length. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 
@@ -3761,6 +3896,7 @@ Shows the state of something, or how much of it there is: a status, a number of 
 | `icon` | `string` | Icon name. Icon-only renders as a square; with text or number the icon goes on the left. |
 | `accessible-label` | `string` | Accessible label for screen readers. Falls back to text/number; otherwise to the i18n default ("Notificatie"). |
 | `decorative` | `boolean` | Hides the badge from assistive software (use when the text beside it says the same, such as a dot next to a status word) |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 ### `<nldd-banner>`
 
@@ -3835,6 +3971,7 @@ A guided-discovery coach mark. Put a control (nldd-search-field, for instance) i
 | `dismissable` | `boolean` | Show the dismiss button and allow closing with one click or key press outside the coach mark. False by default: the consumer then manages closing itself. |
 | `arrow-length` | `string` | Arrow length, and therefore the distance between card and control, as a CSS length (e.g. `333px`, `30vh`). Empty = the DS default; anything under 40px is clamped. |
 | `no-arrow` | `boolean` | Hide the arrow; the card then sits close against the control. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 
@@ -4265,6 +4402,7 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `disabled` | `boolean` | Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row. |
 | `divider-start` | `boolean` | The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line. |
 | `divider-end` | `boolean` | The divider stops after this cell. With several markers the line runs from the first start to the last end. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 
@@ -4318,6 +4456,7 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 | `disabled` | `boolean` | Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off. |
 | `divider-start` | `boolean` | The row's divider starts at this cell instead of at its first text or title cell. |
 | `divider-end` | `boolean` | The row's divider stops after this cell. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 

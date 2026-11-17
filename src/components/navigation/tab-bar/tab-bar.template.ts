@@ -34,13 +34,15 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 						slot="popup"
 						placement="bottom-end"
 						@beforetoggle=${(event: ToggleEvent) => { if (event.newState === 'open') component.requestUpdate(); }}
+						@toggle=${(event: ToggleEvent) => component._overflowMenuToggled(event.newState === 'open')}
+						@select=${(event: Event) => event.stopPropagation()}
 					>
-						${component._overflowItems.map(item => html`
+						${component._menuItems.map(item => html`
 							<nldd-menu-item
 								text=${item.text}
 								icon=${item.icon || nothing}
 								href=${sanitizeUrl(item.href) || nothing}
-								@select=${(event: Event) => component._selectFromOverflow(event, item)}
+								@select=${() => component._selectFromOverflow(item)}
 							>${item._slottedIcon?.cloneNode(true) ?? nothing}</nldd-menu-item>
 						`)}
 					</nldd-menu>

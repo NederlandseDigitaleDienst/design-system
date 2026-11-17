@@ -33,8 +33,8 @@ import { toggleButtonGroupStyles } from './toggle-button-group.styles.js';
 import { toggleButtonGroupTemplate } from './toggle-button-group.template.js';
 import type { NLDDToggleButton, ToggleButtonAppearance, ToggleButtonSize } from '../toggle-button/toggle-button.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
-import { radioPositions } from '../../../utilities/radio-position.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { ChoiceGroup, announceGroupState } from '../../../utilities/choice-group.js';
 
 type GroupType = 'button' | 'checkbox' | 'radio';
 
@@ -102,16 +102,32 @@ export class NLDDToggleButtonGroup extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	private _choices = new ChoiceGroup<NLDDToggleButton>(this, {
+		options: () => this._getButtons(),
+		isSelected: (button) => button.selected,
+		deselect: (button) => { button.selected = false; },
+		single: () => this.type === 'radio',
+		// A name is only meaningful for checkbox and radio.
+		name: () => this.type === 'button' ? null : this.name,
+		// Only in radio mode. See the note on `required`.
+		required: () => this.required && this.type === 'radio',
+		forward: (button) => {
+			button.type = this.type;
+			button.appearance = this.appearance;
+			button.size = this.size;
+		},
+	});
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._syncRole();
-		this.addEventListener('change', this._handleChange);
+		this.addEventListener('change', this._choices.handleChange);
 		this.addEventListener('keydown', this._handleKeyDown);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this.removeEventListener('change', this._handleChange);
+		this.removeEventListener('change', this._choices.handleChange);
 		this.removeEventListener('keydown', this._handleKeyDown);
 	}
 
@@ -147,79 +163,8 @@ export class NLDDToggleButtonGroup extends LitElement {
 	}
 
 	private _syncButtons(): void {
-		this.toggleAttribute('aria-required', this.required);
-		// Announced, not drawn. See the note on `invalid`.
-		if (this.invalid) this.setAttribute('aria-invalid', 'true');
-		else this.removeAttribute('aria-invalid');
-
-		this._getButtons().forEach(button => {
-			button.type = this.type;
-			button.appearance = this.appearance;
-			button.size = this.size;
-			button.required = this.required && this.type === 'radio';
-
-			// name is only meaningful for checkbox and radio
-			if (this.type !== 'button') {
-				button.name = this.name;
-			}
-
-			if (this.disabled) {
-				if (!button.hasAttribute('disabled')) {
-					button.setAttribute('group-disabled', '');
-					button.disabled = true;
-				}
-			} else if (button.hasAttribute('group-disabled')) {
-				button.removeAttribute('group-disabled');
-				button.disabled = false;
-			}
-		});
-		this._positionButtons();
-	}
-
-	/** In radio mode, each button its place in the group and the group one stop
-	 *  for Tab. Every button renders its input in a shadow root of its own, so
-	 *  the browser would count each as a group of one. */
-	private _positionButtons(): void {
-		const buttons = this._getButtons();
-		if (this.type !== 'radio') {
-			buttons.forEach((button) => { button._groupPosition = null; });
-			return;
-		}
-		const answered = buttons.some((button) => button.selected);
-		radioPositions(buttons, (button) => button.selected, (button) => button.disabled)
-			.forEach((position, index) => {
-				buttons[index]._groupPosition = position;
-				buttons[index]._groupHasSelection = answered;
-			});
-	}
-
-	/** Called by a button whose `selected` or `disabled` changed, whoever
-	 *  changed it: the user, the app or a form reset. */
-	_optionChanged(changedButton: NLDDToggleButton): void {
-		if (this.type === 'radio' && changedButton.selected) this._deselectOthers(changedButton);
-		this._positionButtons();
-	}
-
-	private _handleChange = (e: Event): void => {
-		if (this.type !== 'radio') return;
-
-		const changedButton = e.target as NLDDToggleButton;
-		if (!changedButton.selected) return;
-
-		this._deselectOthers(changedButton);
-		this._positionButtons();
-	};
-
-	/** Deselects every other button, as a radio group does. */
-	private _deselectOthers(changedButton: NLDDToggleButton): void {
-		this._getButtons().forEach(button => {
-			if (button === changedButton) return;
-			button.selected = false;
-			// Synchronously, not via the button's own update cycle: the change
-			// event is still propagating, and a consumer serializing the form in
-			// its listener would otherwise still see this button's old value.
-			button.commitFormValue?.();
-		});
+		announceGroupState(this, { required: this.required, invalid: this.invalid });
+		this._choices.sync();
 	}
 
 	private _handleKeyDown = (e: KeyboardEvent): void => {
@@ -242,14 +187,14 @@ export class NLDDToggleButtonGroup extends LitElement {
 		e.preventDefault();
 
 		// Directly mutate selected rather than calling toggle() to avoid triggering
-		// _handleChange which would attempt to deselect other buttons a second time.
+		// the change handler, which would deselect the other buttons a second time.
 		if (activeButton) {
 			activeButton.selected = false;
 			activeButton.commitFormValue?.();
 		}
 		nextButton.selected = true;
 		nextButton.commitFormValue?.();
-		this._positionButtons();
+		this._choices.settle();
 
 		nextButton.focus();
 
@@ -271,8 +216,7 @@ export class NLDDToggleButtonGroup extends LitElement {
 	 */
 	override focus(options?: FocusOptions): void {
 		if (deferFocus(this, options)) return;
-		const buttons = this._getEnabledButtons();
-		(buttons.find(button => button.selected) ?? buttons[0])?.focus(options);
+		this._choices.focus(options);
 	}
 
 	override render() {

@@ -14,7 +14,7 @@
  */
 
 import { LitElement, type PropertyValues } from 'lit';
-import { property, query, state } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { menuBarStyles } from './menu-bar.styles.js';
@@ -23,19 +23,10 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddMenuBarTranslations } from './menu-bar.i18n.js';
 import '../menu-bar-item/menu-bar-item.js';
 import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
-import '../../actions/menu/menu.js';
-import { carryContext } from '../../../utilities/carried-context.js';
+import { OverflowMenu } from '../../../utilities/overflow-menu.js';
+import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { setState } from '../../../utilities/element-state.js';
 import { markListItems } from '../../../utilities/list-items.js';
-
-/**
- * Minimal typed interface for nldd-menu.
- */
-interface PopoverMenu extends HTMLElement {
-	anchorElement: Element | null;
-	showPopover(): void;
-	hidePopover(): void;
-}
 
 @customElement('nldd-menu-bar')
 export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTranslations) {
@@ -60,12 +51,23 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 
 	// ## Overflow state
 
-	/** @internal Used by template — drives the overflow button's expanded state. */
-	@state()
-	_menuOpen = false;
+	/** The menu with the items that do not fit. */
+	private _overflowMenu = new OverflowMenu(this, {
+		id: 'nldd-menu-bar-overflow-menu',
+		onToggle: (open) => {
+			// Flush any overflow recalc that was deferred while open.
+			if (!open && this._overflowUpdatePending) {
+				this._overflowUpdatePending = false;
+				this._scheduleOverflowUpdate();
+			}
+		},
+	});
 
-	private _overflowMenu: PopoverMenu | null = null;
-	private _overflowPointerdownWhileOpen = false;
+	/** @internal Used by template — drives the overflow button's expanded state. */
+	get _menuOpen(): boolean {
+		return this._overflowMenu.open;
+	}
+
 	private _overflowUpdatePending = false;
 
 	private _resizeObserver: ResizeObserver | null = null;
@@ -91,8 +93,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this._cleanupOverflowDetection();
-		this._overflowMenu?.remove();
-		this._overflowMenu = null;
+		this._overflowInvoker.setOverlay(null);
 	}
 
 	override firstUpdated(): void {
@@ -261,64 +262,32 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 
 	// ## Overflow popover menu
 
-	private _createOverflowMenu(): void {
-		if (this._overflowMenu) return;
-		// SSR guard — document is unavailable in server-side rendering.
-		if (typeof document === 'undefined') return;
-		const menu = document.createElement('nldd-menu') as unknown as PopoverMenu;
-		menu.setAttribute('placement', 'bottom-end');
-		menu.addEventListener('toggle', (event: Event) => {
-			const isOpen = (event as ToggleEvent).newState === 'open';
-			this._menuOpen = isOpen;
-			if (!isOpen) {
-				// Flush any overflow recalc that was deferred while open.
-				if (this._overflowUpdatePending) {
-					this._overflowUpdatePending = false;
-					this._scheduleOverflowUpdate();
-				}
-			}
-		});
-		document.body.appendChild(menu);
-		this._overflowMenu = menu;
-	}
-
-	/**
-	 * @internal Used by template.
-	 *
-	 * Opens/closes the overflow popover explicitly. Anchored to the
-	 * always-visible trigger so floating-ui never collapses to 0,0.
-	 * The native popover-invoker path was unusable here (anchor inside a
-	 * display-toggled wrapper). Reopen-after-light-dismiss on touch is
-	 * prevented deterministically via the pointerdown flag below.
-	 */
-	_toggleOverflowMenu = (): void => {
-		if (this._overflowPointerdownWhileOpen) {
-			this._overflowPointerdownWhileOpen = false;
-			return;
-		}
-		this._createOverflowMenu();
-		if (!this._overflowMenu) return;
-		const trigger = this._overflowButton?.querySelector('nldd-menu-bar-item');
-		this._overflowMenu.anchorElement = trigger ?? this._overflowButton;
-		if (this._menuOpen) {
-			this._overflowMenu.hidePopover();
-		} else {
+	/** Opens and closes the overflow menu against the always-visible trigger,
+	 *  so floating-ui never collapses to 0,0. The native popover-invoker path
+	 *  was unusable here (the anchor sits inside a display-toggled wrapper). */
+	private _overflowInvoker: OverlayInvoker = new OverlayInvoker(this, {
+		anchorFor: (): Element | null => this._overflowButton?.querySelector('nldd-menu-bar-item') ?? this._overflowButton ?? null,
+		open: (menu): void => {
 			this._populateOverflowMenu();
-			carryContext(this._overflowMenu, this);
-			this._overflowMenu.showPopover();
-		}
+			menu.showPopover();
+		},
+	});
+
+	/** @internal Used by template. Without an event it acts as a keyboard click. */
+	_toggleOverflowMenu = (event?: MouseEvent): void => {
+		const menu = this._overflowMenu.menu;
+		if (!menu) return;
+		this._overflowInvoker.setOverlay(menu as unknown as InvokableOverlay);
+		this._overflowInvoker.handleClick(event ?? new MouseEvent('click'));
 	};
 
-	/** @internal Used by template — captures touch-tap-to-close so the trailing click doesn't reopen. */
-	_handleOverflowButtonPointerdown = (): void => {
-		if (this._menuOpen) {
-			this._overflowPointerdownWhileOpen = true;
-		}
+	/** @internal Used by template. */
+	_handleOverflowButtonPointerdown = (event: PointerEvent): void => {
+		this._overflowInvoker.handlePointerdown(event);
 	};
 
 	private _populateOverflowMenu(): void {
-		if (!this._overflowMenu) return;
-		this._overflowMenu.replaceChildren();
+		const entries: HTMLElement[] = [];
 
 		const slottedElements = this._defaultSlot?.assignedElements({ flatten: true }) ?? [];
 		const overflowItems = slottedElements.filter(
@@ -362,12 +331,13 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 					// its submenu once at firstUpdated (`:scope > nldd-menu`);
 					// a nldd-menu added after it connects is ignored.
 					menuItem.appendChild(submenu);
-					this._overflowMenu!.appendChild(menuItem);
+					entries.push(menuItem);
 					continue;
 				}
 			}
 
 			menuItem.addEventListener('click', (event) => {
+				this._overflowMenu.handOff();
 				if (!item.href) {
 					item.click();
 					return;
@@ -382,8 +352,9 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 				item.dispatchEvent(forwarded);
 				if (forwarded.defaultPrevented) event.preventDefault();
 			});
-			this._overflowMenu!.appendChild(menuItem);
+			entries.push(menuItem);
 		}
+		this._overflowMenu.replace(entries);
 	}
 
 	// ## Render

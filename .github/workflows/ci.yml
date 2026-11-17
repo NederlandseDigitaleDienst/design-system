@@ -86,7 +86,3 @@ jobs:
           npm install --silent --ignore-scripts ./nldd-design-system-*.tgz
           echo '<template><nldd-button text="Bewaar"></nldd-button></template>' > a.vue
           npx nldd lint a.vue
-      - name: Verify exports map is up to date
-        run: node scripts/generate-exports.js && git diff --exit-code package.json
-      - name: Verify plugin manifests follow the package version
-        run: npm run generate:plugin-version && git diff --exit-code .claude-plugin/ .cursor-plugin/

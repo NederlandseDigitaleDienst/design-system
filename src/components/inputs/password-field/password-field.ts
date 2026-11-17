@@ -50,6 +50,8 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = passwordFieldStyles;
 
+	static formProperties = ['value'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -62,7 +64,6 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 	static blocksImplicitSubmission = true;
 
 
-	private _initialValue = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
@@ -129,10 +130,6 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Number, reflect: true })
 	maxlength?: number;
 
-	override firstUpdated(): void {
-		this._initialValue = this.value;
-	}
-
 	override updated(changed: PropertyValues): void {
 		if (changed.has('width')) {
 			const w = this.width;
@@ -146,15 +143,6 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override formValue(): FormValue {
 		return this.value;
-	}
-
-	formResetCallback(): void {
-		this.value = this._initialValue;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') this.value = state;
 	}
 
 	public _t(key: keyof NLDDPasswordFieldTranslations): string {
@@ -171,24 +159,14 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
 		this.value = input.value;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('input', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('input', { value: this.value });
 	}
 
 	public _handleChange(e: Event): void {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
 		this.value = input.value;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { value: this.value });
 	}
 
 	public _handleToggle(): void {

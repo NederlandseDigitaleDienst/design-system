@@ -73,6 +73,12 @@ describe('nldd-time-picker', () => {
 		await waitForUpdate(el);
 		expect(options(el, 'minutes')).toEqual(['00', '15', '30']);
 	});
+
+	it('leest min en max zoals nldd-time-field ze leest', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker min="9:00" max="11u"></nldd-time-picker>');
+		await waitForUpdate(el);
+		expect(options(el, 'hours')).toEqual(['09', '10', '11']);
+	});
 });
 
 

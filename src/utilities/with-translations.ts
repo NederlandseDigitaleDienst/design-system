@@ -22,6 +22,9 @@ type Constructor<T = object> = abstract new (...args: any[]) => T;
  *   }
  * }
  * ```
+ *
+ * @mixin withTranslations
+ * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  */
 export function withTranslations<T extends Record<string, string>>(
 	Base: Constructor<LitElement> & typeof LitElement,

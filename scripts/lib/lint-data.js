@@ -6,45 +6,12 @@
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
-import { GROUPS, OPT_IN_GROUPS } from '../../lint/rule-data.js';
+import { GROUPS } from '../../lint/rule-data.js';
+import { compileForBrowser } from '../../lint/rule-compiler.js';
 import { basename, join, dirname } from 'node:path';
 import Ajv from 'ajv';
 import { parse as parseSelector, stringify } from 'css-what';
 import { parse as parseYaml } from 'yaml';
-
-function declarationsByName(manifest) {
-	const declarations = new Map();
-	for (const module of manifest.modules) {
-		for (const declaration of module.declarations ?? []) declarations.set(declaration.name, declaration);
-	}
-	return declarations;
-}
-
-function inheritedAttributes(declaration, declarations, seen = new Set()) {
-	if (seen.has(declaration.name)) return [];
-	seen.add(declaration.name);
-	const parents = [...(declaration.mixins ?? []), declaration.superclass].filter(Boolean);
-	return [
-		...(declaration.attributes ?? []),
-		...parents.flatMap(({ name }) => {
-			const parent = declarations.get(name);
-			return parent ? inheritedAttributes(parent, declarations, seen) : [];
-		}),
-	];
-}
-
-function inheritedMembers(declaration, declarations, seen = new Set()) {
-	if (seen.has(declaration.name)) return [];
-	seen.add(declaration.name);
-	const parents = [...(declaration.mixins ?? []), declaration.superclass].filter(Boolean);
-	return [
-		...(declaration.members ?? []),
-		...parents.flatMap(({ name }) => {
-			const parent = declarations.get(name);
-			return parent ? inheritedMembers(parent, declarations, seen) : [];
-		}),
-	];
-}
 
 function literalValues(text) {
 	return [...text.matchAll(/'([^']*)'|(-?\d+(?:\.\d+)?)/g)].map((match) => match[1] ?? match[2]);
@@ -65,17 +32,18 @@ export function seeUrl(see, patternTitle) {
 /** Set on any form control and read by nldd-validation-list, which is its sibling. */
 const FORM_INPUT_ATTRS = { unmet: {} };
 
-/** @returns {Record<string, { attrs: object, slots: string[], anySlot: boolean }>} */
-export function buildContract(manifest) {
-	const declarations = declarationsByName(manifest);
+/**
+ * @param {import('./component-model.js').Element[]} elements
+ * @returns {Record<string, { attrs: object, slots: string[], anySlot: boolean }>}
+ */
+export function buildContract(elements) {
 	const tags = {};
-	for (const declaration of declarations.values()) {
-		if (!declaration.customElement || !declaration.tagName) continue;
+	for (const { tag, attributes, declaration } of elements) {
 		const attrs = {};
 		const childAttrs = {};
 		const descendantAttrs = {};
 		const globalAttrs = {};
-		for (const attribute of inheritedAttributes(declaration, declarations)) {
+		for (const attribute of attributes) {
 			const target = attribute.global ? globalAttrs : attribute.forDescendants ? descendantAttrs : attribute.forChildren ? childAttrs : attrs;
 			if (target[attribute.name]) continue;
 			const entry = {};
@@ -84,10 +52,10 @@ export function buildContract(manifest) {
 			if (attribute.deprecated) entry.deprecated = attribute.deprecated;
 			target[attribute.name] = entry;
 		}
-		const members = inheritedMembers(declaration, declarations);
+		const members = declaration.members ?? [];
 		if (members.some((member) => member.name === 'isFormInput')) Object.assign(attrs, FORM_INPUT_ATTRS);
 		const slots = (declaration.slots ?? []).map((slot) => slot.name);
-		tags[declaration.tagName] = {
+		tags[tag] = {
 			attrs,
 			childAttrs,
 			...(Object.keys(descendantAttrs).length > 0 ? { descendantAttrs } : {}),
@@ -104,23 +72,20 @@ export function buildContract(manifest) {
 }
 
 /** Tag classes rules can select on, so no rule carries its own list of tags. */
-export function buildClasses(manifest) {
-	const elements = manifest.modules
-		.flatMap((module) => module.declarations ?? [])
-		.filter((declaration) => declaration.customElement && declaration.tagName);
-	const tags = (predicate) => elements.filter(predicate).map((element) => element.tagName).sort();
+export function buildClasses(elements) {
+	const tags = (predicate) => elements.filter(predicate).map((element) => element.tag).sort();
 	return {
 		// Native controls count too, as in nldd-form-field. Natives have no manifest entry.
-		'form-input': [...tags((element) => element.members?.some((member) => member.name === 'isFormInput')), 'input', 'select', 'textarea'].sort(),
-		cell: tags((element) => element.tagName.endsWith('-cell')),
+		'form-input': [...tags((element) => element.declaration.members?.some((member) => member.name === 'isFormInput')), 'input', 'select', 'textarea'].sort(),
+		cell: tags((element) => element.tag.endsWith('-cell')),
 	};
 }
 
 /** Attributes that mean something by being there, where `x=""` still counts. */
-export function booleanAttributes(manifest) {
+export function booleanAttributes(elements) {
 	const types = new Map();
-	for (const declaration of manifest.modules.flatMap((module) => module.declarations ?? [])) {
-		for (const attribute of declaration.attributes ?? []) {
+	for (const { attributes } of elements) {
+		for (const attribute of attributes) {
 			const isBoolean = attribute.type?.text === 'boolean';
 			types.set(attribute.name, (types.get(attribute.name) ?? true) && isBoolean);
 		}
@@ -174,55 +139,9 @@ function valueRules(tags) {
 	);
 }
 
-const toProperty = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-
-/**
- * `[accessible-label]` in an assert also holds for the property `accessibleLabel`.
- * Not inside a `:not()`: there the attribute is what may not be there, and a
- * property that is set does not excuse it.
- */
-function propertiesIn(assert) {
-	const names = [];
-	const negated = [];
-	for (let i = 0; i < assert.length; i++) {
-		if (assert.startsWith(':not(', i)) {
-			negated.push(true);
-			i += 4;
-		} else if (assert[i] === '(') {
-			negated.push(false);
-		} else if (assert[i] === ')') {
-			negated.pop();
-		} else if (assert[i] === '[' && negated.filter(Boolean).length % 2 === 0) {
-			const match = /^\[([a-z-]+)\]/.exec(assert.slice(i));
-			if (match) names.push(toProperty(match[1]));
-		}
-	}
-	return [...new Set(names)];
-}
-
-/** The rules the browser runs: plain CSS, so class pseudos become lists of tags. */
+/** The rules the browser runs, as plain CSS. See lint/rule-compiler.js. */
 export function buildDevRules(rules, classes, tags) {
-	// On a running page the field has set the attribute, so no exception is needed.
-	const expand = (selector) =>
-		selector
-		&& selector
-			.replace(/, :named-by-field/, '')
-			.replace(/:([a-z-]+)/g, (match, name) => (classes[name] ? `:is(${classes[name].join(', ')})` : match));
-	const authored = rules
-		// Components write `style`, `id` and more on a live page, which a hint would take for
-		// the app's own markup. A hint is advice for whoever writes the source.
-		// The group pure judges the app's own markup too, and a live page is full of what
-		// components write themselves; it is also off unless a project turns it on.
-		.filter((rule) => !rule.ref && rule.severity !== 'hint' && !OPT_IN_GROUPS.includes(rule.group))
-		.map(({ id, context, assert, report, count, message }) => ({
-			id,
-			message,
-			context: expand(context),
-			...(assert ? { assert: expand(assert), properties: propertiesIn(expand(assert)) } : {}),
-			...(report ? { report: expand(report) } : {}),
-			...(count ? { count: { ...count, of: expand(count.of) } } : {}),
-		}));
-	return [...authored, ...valueRules(tags)];
+	return [...rules.map((rule) => compileForBrowser(rule, classes)).filter(Boolean), ...valueRules(tags)];
 }
 
 export function loadRules(rulesDir, schema) {

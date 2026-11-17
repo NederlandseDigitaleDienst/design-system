@@ -45,6 +45,7 @@
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { announceGroupState, setGroupDisabled } from '../../../utilities/choice-group.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
@@ -283,6 +284,8 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 	static override styles = swatchPickerStyles;
 
+	static formProperties = ['value'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -318,8 +321,6 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
-	private _initialValue = '';
-
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
 
@@ -338,19 +339,10 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 
 	override firstUpdated(): void {
 		this._syncItems();
-		this._initialValue = this.value;
 	}
 
 	override formValue(): FormValue {
 		return this.value || null;
-	}
-
-	formResetCallback(): void {
-		this.value = this._initialValue;
-	}
-
-	formStateRestoreCallback(state: FormData | string | null): void {
-		if (typeof state === 'string') this.value = state;
 	}
 
 	/** The group has no focus of its own, so an invalid submit lands where Tab
@@ -390,18 +382,10 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 
 	private _syncItems(): void {
 		const items = this._getItems();
-		this.toggleAttribute('aria-required', this.required);
-		if (this.invalid) this.setAttribute('aria-invalid', 'true');
-		else this.removeAttribute('aria-invalid');
+		announceGroupState(this, { required: this.required, invalid: this.invalid });
 
 		for (const item of items) {
-			if (this.disabled && !item.hasAttribute('disabled')) {
-				item.setAttribute('group-disabled', '');
-				item.disabled = true;
-			} else if (!this.disabled && item.hasAttribute('group-disabled')) {
-				item.removeAttribute('group-disabled');
-				item.disabled = false;
-			}
+			setGroupDisabled(item, this.disabled);
 			item.size = this.size;
 			item.selected = !!this.value && item.value === this.value;
 		}
@@ -417,12 +401,7 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 		if (this.disabled || e.detail.value === this.value) return;
 		this.value = e.detail.value;
 		this._syncItems();
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { value: this.value });
 	};
 
 	private _handleKeydown = (e: KeyboardEvent): void => {

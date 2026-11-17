@@ -1,154 +1,71 @@
 /**
  * Applies what `--fix` may do without anyone looking. A rule says what changes, in
  * its `fix`; this file knows how that is written in each framework. A fix works on
- * the text of the file, so the rest of it stays exactly as it was.
+ * the text of the file, so the rest of it stays exactly as it was. Where an
+ * attribute stands comes from the parser (`startTag` on the node, see tree.js):
+ * nothing here reads a tag again.
  */
 
 const toCamelCase = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 
-/** Where a template language opens a hole in a string: `${ }`, `{{ }}` or `{% %}`. */
-const isHole = (source, at) => source.startsWith('${', at) || source.startsWith('{{', at) || source.startsWith('{%', at);
-
-/**
- * The closing quote of the string at `start`, past the holes in it, which hold
- * quotes of their own. A backslash escapes only in code: HTML has no such thing.
- */
-function endOfString(source, start, inCode = false) {
-	for (let at = start + 1; at < source.length; at++) {
-		if (inCode && source[at] === '\\') at += 1;
-		else if (source[at] === source[start]) return at;
-		else if (isHole(source, at)) {
-			at = endOfBraces(source, source.indexOf('{', at));
-			if (at === undefined) return undefined;
-		}
-	}
-	return undefined;
+/** An attribute as the parser read it, under its own name or in camelCase. */
+function findAttribute(startTag, name) {
+	const names = [name, toCamelCase(name)];
+	return startTag?.attributes.find((attribute) => names.includes(attribute.name));
 }
 
-/** The last `}` of the braces at `start`. */
-function endOfBraces(source, start) {
-	let depth = 0;
-	for (let at = start; at < source.length; at++) {
-		const char = source[at];
-		if (source.startsWith('/*', at)) {
-			at = source.indexOf('*/', at) + 1;
-			if (at === 0) return undefined;
-		} else if (source.startsWith('//', at)) {
-			at = source.indexOf('\n', at);
-			if (at === -1) return undefined;
-		} else if (/["'`]/.test(char)) {
-			at = endOfString(source, at, true);
-			if (at === undefined) return undefined;
-		} else if (char === '{') depth += 1;
-		else if (char === '}' && --depth === 0) return at;
-	}
-	return undefined;
-}
-
-/** The start tag from `start`, with strings and `{ }` blanked: a value can hold anything. */
-function maskedTag(source, start) {
-	let masked = '';
-	for (let at = start; at < source.length; at++) {
-		const char = source[at];
-		const quoted = /["'`]/.test(char);
-		if (char === '>') return masked;
-		if (quoted || char === '{') {
-			const end = quoted ? endOfString(source, at) : endOfBraces(source, at);
-			if (end === undefined) return masked;
-			masked += ' '.repeat(end - at + 1);
-			at = end;
-		} else masked += char;
-	}
-	return masked;
-}
-
-/** Vue, Alpine, Lit and Angular write a name with a prefix, and JSX bare. */
-function attributePattern(name) {
-	const names = [...new Set([name, toCamelCase(name)])].join('|');
-	return new RegExp(`(?<=\\s)(:|v-bind:|x-bind:|\\.|\\?|\\[attr\\.|\\[\\(?)?(${names})(?=[\\s=/\\])]|$)`);
-}
-
-/** Where the attribute stands in the start tag at `offset`, if it does. */
-function findAttribute(source, offset, name) {
-	const masked = maskedTag(source, offset);
-	// A comment in a tag can hold anything, and a line comment takes what follows it.
-	if (/\/[*/]/.test(masked)) return undefined;
-	const match = attributePattern(name).exec(masked);
-	if (!match) return undefined;
-	const [, prefix = '', written] = match;
-	const start = offset + match.index + prefix.length;
-	return { prefix, written, start, end: start + written.length };
-}
-
-function renameEdits(source, offset, from, to) {
-	const found = findAttribute(source, offset, from);
-	if (!found || findAttribute(source, offset, to)) return [];
-	const { prefix, written, start, end } = found;
+function renameEdits(source, startTag, from, to) {
+	const found = findAttribute(startTag, from);
+	if (!found || findAttribute(startTag, to)) return [];
+	const { prefix, name, nameStart, nameEnd } = found;
 	const isProperty = prefix === '.' || (prefix.startsWith('[') && prefix !== '[attr.');
-	return [{ from: start, to: end, text: isProperty || written !== from ? toCamelCase(to) : to }];
+	return [{ from: nameStart, to: nameEnd, text: isProperty || name !== from ? toCamelCase(to) : to }];
 }
 
 /** Only a value written out in the markup: a bound one can hold anything. */
-function valueEdits(source, offset, name, values) {
-	const found = findAttribute(source, offset, name);
-	if (!found || found.prefix) return [];
-	const opening = /^\s*=\s*(["']?)/.exec(source.slice(found.end));
-	if (!opening) return [];
-	const at = found.end + opening[0].length;
-	return Object.entries(values).flatMap(([from, to]) => {
-		const after = source[at + from.length];
-		const whole = opening[1] ? after === opening[1] : /[\s/>]/.test(after ?? ' ');
-		return source.startsWith(from, at) && whole ? [{ from: at, to: at + from.length, text: to }] : [];
-	});
+function valueEdits(source, startTag, name, values) {
+	const found = findAttribute(startTag, name);
+	const value = found?.value;
+	if (!value || found.prefix || value.quote === '{') return [];
+	const at = value.quote ? value.start + 1 : value.start;
+	const end = value.quote ? value.end - 1 : value.end;
+	return Object.entries(values).flatMap(([from, to]) =>
+		at + from.length === end && source.startsWith(from, at) ? [{ from: at, to: end, text: to }] : [],
+	);
 }
 
-const endsValue = (source, at) => at >= source.length || /[\s>]/.test(source[at]) || source.startsWith('/>', at);
-
-/** The end of an attribute's value, or undefined when it does not end where a value ends. */
-function endOfValue(source, name) {
-	const closers = /^[\])]*/.exec(source.slice(name))[0].length;
-	const equals = /^\s*=\s*/.exec(source.slice(name + closers));
-	if (!equals) return name + closers;
-	const start = name + closers + equals[0].length;
-	if (source.startsWith('{%', start)) return undefined;
-	let at = start;
-	while (at !== undefined && !endsValue(source, at)) {
-		if (/["'`]/.test(source[at])) at = endOfString(source, at);
-		else if (source[at] === '{') at = endOfBraces(source, at);
-		if (at !== undefined) at += 1;
-	}
-	return at;
+/** What stands before an attribute, back to the one before it or the tag name. */
+function gapBefore(source, { offset, tag, startTag }, found) {
+	const previous = startTag.attributes.filter((attribute) => attribute.end <= found.start).at(-1);
+	return source.slice(previous ? previous.end : offset + 1 + tag.length, found.start);
 }
 
-function removeEdits(source, offset, name) {
-	const found = findAttribute(source, offset, name);
-	const end = found && endOfValue(source, found.end);
-	if (end === undefined) return [];
-	let from = found.start - found.prefix.length;
+/** The whitespace before it goes too; a comment there would swallow what follows. */
+function removeEdits(source, finding, name) {
+	const found = findAttribute(finding.startTag, name);
+	if (!found || found.templated || /\/[*/]/.test(gapBefore(source, finding, found))) return [];
+	let from = found.start;
 	while (/\s/.test(source[from - 1])) from -= 1;
-	return [{ from, to: end, text: '' }];
+	return [{ from, to: found.end, text: '' }];
 }
 
 /** A value written out in the markup that became a boolean: the whole attribute
  *  turns into the new name. The rule's context says which value that is. */
-function flagEdits(source, offset, from, to) {
-	const found = findAttribute(source, offset, from);
-	if (!found || found.prefix || findAttribute(source, offset, to)) return [];
-	const end = endOfValue(source, found.end);
-	if (end === undefined) return [];
-	return [{ from: found.start, to: end, text: to }];
+function flagEdits(source, startTag, from, to) {
+	const found = findAttribute(startTag, from);
+	if (!found || found.prefix || found.templated || findAttribute(startTag, to)) return [];
+	return [{ from: found.start, to: found.end, text: to }];
 }
 
 /**
  * The parser says where an element ends: a comment or a string that looks like its
  * closing tag does not count. Without a closing tag of its own it stays as it is.
  */
-function tagEdits(source, offset, endOffset, name, to) {
+function tagEdits(source, { offset, endOffset, tag: name, startTag }, to) {
 	// An element the file never closes ends past the last character.
-	if (endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return [];
+	if (!startTag || endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return [];
 	const open = { from: offset + 1, to: offset + 1 + name.length, text: to };
-	const startTag = maskedTag(source, offset);
-	if (startTag.trimEnd().endsWith('/') && offset + startTag.length === endOffset) return [open];
+	if (startTag.selfClosing && startTag.end === endOffset) return [open];
 	const closing = source.lastIndexOf('</', endOffset);
 	if (closing <= offset || !new RegExp(`^</${name}\\s*>$`).test(source.slice(closing, endOffset + 1))) return [];
 	return [open, { from: closing + 2, to: closing + 2 + name.length, text: to, closing: true }];
@@ -159,24 +76,23 @@ function tagEdits(source, offset, endOffset, name, to) {
  * file says it for certain: no hole a template fills (`{ }`, `${ }`, `{{ }}`)
  * and no comment, which could hold anything.
  */
-function contentOf(source, offset, endOffset, name) {
-	if (endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return undefined;
-	const startTag = maskedTag(source, offset);
-	if (startTag.trimEnd().endsWith('/')) return undefined;
-	const start = offset + startTag.length + 1;
+function contentOf(source, { offset, endOffset, tag: name, startTag }) {
+	if (!startTag || endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return undefined;
+	if (startTag.selfClosing) return undefined;
+	const start = startTag.end + 1;
 	const closing = source.lastIndexOf('</', endOffset);
 	if (closing < start || !new RegExp(`^</${name}\\s*>$`).test(source.slice(closing, endOffset + 1))) return undefined;
 	const text = source.slice(start, closing);
 	if (/[{}]|<!--/.test(text)) return undefined;
-	return { startTag, start, end: closing, text };
+	return { start, end: closing, text };
 }
 
 /** Elements that stand in a line of text, and so in a `<p>`. */
 const INLINE = new Set(['a', 'abbr', 'b', 'br', 'cite', 'code', 'del', 'em', 'i', 'ins', 'kbd', 'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'nldd-avatar', 'nldd-badge', 'nldd-icon', 'nldd-link', 'nldd-status-dot', 'nldd-tag', 'nldd-term', 'nldd-token']);
 
 /** Text, with or without inline elements, goes in an element of its own, such as a `<p>`. */
-function wrapEdits(source, { offset, endOffset, tag }, wrapper) {
-	const content = contentOf(source, offset, endOffset, tag);
+function wrapEdits(source, finding, wrapper) {
+	const content = contentOf(source, finding);
 	const inner = content?.text.trim();
 	// A blank line ends raw HTML in Markdown, and indenting it leaves trailing space.
 	if (!inner || /\n[ \t]*\n/.test(inner)) return [];
@@ -194,15 +110,16 @@ function wrapEdits(source, { offset, endOffset, tag }, wrapper) {
 }
 
 /** An edit is `{ from, to, text }` in the source. What is not certain makes none. */
-function editsOf(source, { fix, offset, endOffset, tag, mention }) {
+function editsOf(source, finding) {
+	const { fix, offset, tag, mention, startTag } = finding;
 	return [
-		...Object.entries(fix.rename ?? {}).flatMap(([from, to]) => renameEdits(source, offset, from, to)),
-		...Object.entries(fix.value ?? {}).flatMap(([name, values]) => valueEdits(source, offset, name, values)),
-		...(fix.remove ?? []).flatMap((name) => removeEdits(source, offset, name)),
-		...Object.entries(fix.flag ?? {}).flatMap(([from, to]) => flagEdits(source, offset, from, to)),
+		...Object.entries(fix.rename ?? {}).flatMap(([from, to]) => renameEdits(source, startTag, from, to)),
+		...Object.entries(fix.value ?? {}).flatMap(([name, values]) => valueEdits(source, startTag, name, values)),
+		...(fix.remove ?? []).flatMap((name) => removeEdits(source, finding, name)),
+		...Object.entries(fix.flag ?? {}).flatMap(([from, to]) => flagEdits(source, startTag, from, to)),
 		...(fix.tag && mention ? [{ from: offset + 1, to: offset + 1 + tag.length, text: fix.tag }] : []),
-		...(fix.tag && !mention ? tagEdits(source, offset, endOffset, tag, fix.tag) : []),
-		...(fix.wrap ? wrapEdits(source, { offset, endOffset, tag }, fix.wrap) : []),
+		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag) : []),
+		...(fix.wrap ? wrapEdits(source, finding, fix.wrap) : []),
 	];
 }
 

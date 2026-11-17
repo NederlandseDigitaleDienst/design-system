@@ -88,6 +88,8 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	static override styles = oneTimeCodeFieldStyles;
 
+	static formProperties = ['value'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -98,8 +100,6 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	/** Counts for the implicit-submission rule: a single-line field where Enter
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
-
-	private _initialValue = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<OneTimeCodeSize>('md') })
 	size: OneTimeCodeSize = 'md';
@@ -235,10 +235,6 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 		}
 	}
 
-	override firstUpdated(): void {
-		this._initialValue = this.value;
-	}
-
 	private _resizeObserver?: ResizeObserver;
 
 	override connectedCallback(): void {
@@ -283,14 +279,6 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	override formValue(): FormValue {
 		return this.value;
-	}
-
-	formResetCallback(): void {
-		this.value = this._initialValue;
-	}
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') this.value = state;
 	}
 
 	/** The first empty box, or the last one when every box is filled. */
@@ -514,12 +502,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	public _handleChange(e: Event): void {
 		e.stopPropagation();
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { value: this.value });
 	}
 
 	public blur(): void {

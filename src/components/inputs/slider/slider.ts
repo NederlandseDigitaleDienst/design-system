@@ -115,6 +115,8 @@ function decimalsOf(number: number): number {
 export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	static override styles = sliderStyles;
 
+	static formProperties = ['value', 'startValue', 'endValue'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -188,7 +190,6 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	@queryAll('.slider__input')
 	private _inputs!: NodeListOf<HTMLInputElement>;
 
-	private _initial: { value?: number; startValue?: number; endValue?: number } = {};
 	/** Lays the tooltips out again when the slider or the window changes size. */
 	private _resizeObserver: ResizeObserver | null = null;
 	/** The thumb a press on the track of a range moves, until it is let go. */
@@ -256,7 +257,6 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		if (!this.hasUpdated) this._initial = { value: this.value, startValue: this.startValue, endValue: this.endValue };
 		this._resizeObserver = new ResizeObserver(this._layoutTooltips);
 		this._resizeObserver.observe(this);
 		window.addEventListener('resize', this._layoutTooltips);
@@ -281,19 +281,7 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 		return data;
 	}
 
-	/** Back to the values in the attributes, as a native input resets to its
-	 *  `value` attribute, or else to what it had when it was first connected. */
-	formResetCallback(): void {
-		const attribute = (name: string) => {
-			const value = parseFloat(this.getAttribute(name) ?? '');
-			return Number.isFinite(value) ? value : undefined;
-		};
-		this.value = attribute('value') ?? this._initial.value;
-		this.startValue = attribute('start-value') ?? this._initial.startValue;
-		this.endValue = attribute('end-value') ?? this._initial.endValue;
-	}
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
+	override formStateRestoreCallback(state: File | string | FormData | null): void {
 		// A restored state that is not a number keeps the value as it was.
 		const number = (entry: unknown) => {
 			const value = parseFloat(String(entry));
