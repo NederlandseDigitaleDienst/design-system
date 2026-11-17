@@ -870,6 +870,29 @@ describe('nldd-sheet – open attribute', () => {
 		expect(dialog().open).toBe(true);
 		expect(dialog().classList.contains('is-closing')).toBe(false);
 	});
+
+	// #454: the dialog's own close event arrives after the sheet's, and used to
+	// close a sheet that had been opened again in between.
+	for (const [when, reopen] of [
+		['in the close handler', (fn: () => void) => fn()],
+		['right after close', (fn: () => void) => setTimeout(fn, 0)],
+	] as const) {
+		it(`stays open when opened again ${when}`, async () => {
+			el = await fixture<NLDDSheet>('<nldd-sheet accessible-label="Test" open></nldd-sheet>');
+			await waitForUpdate(el);
+			const events: string[] = [];
+			el.addEventListener('open', () => events.push('open'));
+			el.addEventListener('close', () => events.push('close'));
+			el.addEventListener('close', () => reopen(() => { el.open = true; }), { once: true });
+			el.open = false;
+			await el.updateComplete;
+			dialog().dispatchEvent(new Event('animationend'));
+			await new Promise((resolve) => setTimeout(resolve, 100));
+			expect(events).toEqual(['close', 'open']);
+			expect(dialog().open).toBe(true);
+			expect(el.open).toBe(true);
+		});
+	}
 });
 
 describe('nldd-sheet – focus terug na sluiten', () => {
