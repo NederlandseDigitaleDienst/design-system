@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.26.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.25.2...v0.26.0) (2026-11-17)
+
 ### Highlights
 
 - **Many improvements to `nldd-text-editor`.** The formatting marks are hidden by default, a toolbar is markup with `text-editor-command`, and typing and pasting lists, setting `value` and copying a code block are fixed. See Breaking, Added and Fixed.
