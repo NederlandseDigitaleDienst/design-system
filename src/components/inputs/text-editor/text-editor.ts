@@ -12,7 +12,16 @@
  * message field) that owns its chrome and focus; the caret is then a
  * prominent accent.
  *
- * Headless: there is no built-in toolbar. A consumer drives formatting via the
+ * A toolbar is markup: put an nldd-toolbar in the `toolbar` slot, or
+ * anywhere on the page inside an element with `text-editor-for` set to the
+ * editor's id, and give each control a `text-editor-command`. The editor runs
+ * the command, gives focus back to the text and keeps the control's state:
+ * `selected` on a toggle, a menu item or a segmented-control item, the list
+ * type on a segmented control, and `disabled` where the command cannot run.
+ * Controls without the attribute, such as a send button, are left alone.
+ *
+ * There is no built-in toolbar: which controls, in what order, is the app's. A
+ * consumer can also drive formatting itself via the
  * command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/
  * toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand
  * to toggle, and
@@ -21,7 +30,19 @@
  * states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are
  * bound out of the box.
  *
- * With `syntax="hidden"` a task item (`- [ ]`, `- [x]`) reads as a box in the
+ * Enter in a list or a quote puts the next marker down, and Enter on an empty
+ * item ends the list, or steps one level out of a nested one. A marker typed
+ * where the editor already put one does not stack: `- ` on a fresh `- `, or right
+ * after the bullet of an item with text, stays one bullet,`2. ` on `2. ` stays `2. `, `> ` on `> ` one quote. `1. ` on a later
+ * number starts a numbered list under the item above, and a marker of the other
+ * kind takes the place of the editor's: `1. ` on `- ` makes a numbered list at
+ * that level. Spaces typed before a
+ * marker nest it one level under the item above, at the indent markdown needs
+ * (2 spaces under `- `, 3 under `1. `); Cmd/Ctrl+] does the same. Backspace right
+ * after a marker is the way back: a nested item steps one level out, an item
+ * on the first level leaves the list. Cmd/Ctrl+Z brings back what was typed. Pasted text and a value the app sets stay as they are.
+ *
+ * With the marks hidden (the default) a task item (`- [ ]`, `- [x]`) reads as a box in the
  * place of its bullet, and like every other mark shows its markdown on the line
  * the caret is on. A click on the box checks or unchecks it without moving the
  * caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the
@@ -32,7 +53,9 @@
  * it, as in nldd-code-viewer; the grammar loads with the first such block. Its
  * opening line is the head of the block, with a "Kopieer" button at the right
  * edge that copies the code without its fences and says "Gekopieerd" or
- * "Kopiëren mislukt", as the code viewer does. In an editable editor the button
+ * "Kopiëren mislukt", as the code viewer does: the outcome stays while the
+ * pointer or the focus is on the button, and goes when you leave it, press
+ * Escape or go on in the editor. In an editable editor the button
  * is no tab stop (select and copy is the keyboard route); read-only or disabled
  * it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps
  * the selected text (whitespace at its edges stays outside the markers), unwraps
@@ -40,7 +63,9 @@
  * of it. Bold that a typed space has broken (`**woord **`) keeps its styling
  * while the caret is inside; the space moves outside the markers when the caret
  * leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to,
- * text) writes at the same clean offsets getSelection() reads. An @-mention typeahead
+ * text) writes at the same clean offsets getSelection() reads. applyChanges(changes)
+ * takes text from outside, such as what a collaborator types, without moving the
+ * caret or entering the user's undo history. An @-mention typeahead
  * (mentionSource) collapses to an atomic token, further typeahead lists on their
  * own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay
  * (annotations) marks ranges with a light tint and a count badge without touching
@@ -54,13 +79,23 @@
  *
  * A line indented four spaces stays text, unlike CommonMark, where it starts a
  * code block: in a field for prose that is pasted or indented text, and code
- * takes a fence. Turn indented code off in the renderer too, so the page shows
- * what the editor showed: `md.disable('code')` in markdown-it and
+ * takes a fence. That holds whatever the line starts with, so `    - punt` is no
+ * list and `    # kop` no heading; in a list the four spaces count from the
+ * text of the item. Turn indented code off in the renderer too, so the page
+ * shows what the editor showed: `md.disable('code')` in markdown-it and
  * markdown-it-py, for example.
+ *
+ * Text pasted at the start of a line becomes the markdown it looks like: the
+ * indent all its lines share goes, a bullet from Word or Outlook (`•` and a
+ * tab) becomes `- `, and a pasted list nests the way typing does (with indent
+ * of its own one level under the item above, without it at the level of the
+ * empty item it lands on). A list of several lines pasted at the end of a line
+ * with text starts on the next line. Cmd/Ctrl+Z brings back the text as pasted, and
+ * Cmd/Ctrl+Shift+V pastes it as it is. Nothing changes in a code block.
  *
  * @element nldd-text-editor
  *
- * @attr {string} value - Editor content (markdown)
+ * @attr {string} value - Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history.
  * @attr {string} placeholder - Placeholder text shown while empty
  * @attr {string} input-id - Sets the id on the editable element. Set automatically by nldd-form-field.
  * @attr {boolean} disabled - Disabled state
@@ -72,19 +107,24 @@
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
  * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
- * @attr {string} syntax - 'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
+ * @attr {string} syntax - 'hidden' (default) or 'visible'. 'visible': every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`), for people who write markdown. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
  *
  * @prop {MentionSource} mentionSource - Consumer-supplied @-mention candidate source (property only). Without it, @-typeahead is inert.
  * @prop {string} mentionQuery - What may follow the `@` of a mention, as a regular expression source (property only). Default: letters with any accent, digits, `_`, `.`, `+` and `-`. Allow one space to search on a full name, as in `@sam jansen`.
  * @prop {Function} mentionEmptyText - What to say when the @-list has no candidates, called with the typed query (property only). Without it the list says "Typ om te zoeken" or "Niets gevonden", both translatable. Return null to close the list without a word.
- * @prop {Typeahead[]} typeaheads - Your own typeahead lists next to the @-mention (property only): each a trigger character (`#`, `:`, `/`), a `source` that returns candidates for the text typed after it, an optional `query` (a regular expression for what may follow the trigger, such as a space in a full name), an optional `emptyText` (what to say when there are no candidates, instead of the translated default) and an optional `insert` that decides what a choice writes (by default the trigger, the text and a space). Lists on one trigger are merged in order. A screen reader hears how many candidates there are when the list opens or changes length, and the empty text when there are none. A candidate is `{ id, text, supportingText? }` and can carry an `avatar` (its row then takes two lines, the supporting text under the text; `avatar.name` or `avatar.initials` set the initials when `text` is not the name), an `icon` or a `symbol` for its row.
+ * @prop {Typeahead[]} typeaheads - Your own typeahead lists next to the @-mention (property only): each a trigger character (`#`, `:`, `/`) that opens its list at a line start, after whitespace or after an opening bracket or quote, also with `**`, `_` or `~~` in between (`(@sam`, `**@sam`), not inside a word, a `source` that returns candidates for the text typed after it, an optional `query` (a regular expression for what may follow the trigger, such as a space in a full name), an optional `emptyText` (what to say when there are no candidates, instead of the translated default) and an optional `insert` that decides what a choice writes (by default the trigger, the text and a space). Lists on one trigger are merged in order. A screen reader hears how many candidates there are when the list opens or changes length, and the empty text when there are none. A candidate is `{ id, text, supportingText? }` and can carry an `avatar` (its row then takes two lines, the supporting text under the text; `avatar.name` or `avatar.initials` set the initials when `text` is not the name), an `icon` or a `symbol` for its row.
  * @attr {boolean} annotatable - Enable the annotation overlay (off by default). Annotations only render when this is set.
  * @prop {Annotation[]} annotations - Consumer-supplied annotation overlay (property only). Anchored by offset and mapped through edits; the text stays clean. Requires `annotatable`. Assign a NEW array to apply changes (Lit dirty-checks by identity, so in-place mutation like `.push()` won't re-render): `editor.annotations = [...editor.annotations, next]`.
  * @attr {object} translations - Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
- * @fires input - When the content changes (detail: { value })
+ * @slot toolbar - An nldd-toolbar above the text, inside the frame. Its controls with `text-editor-command` drive this editor. Sticks to the top of the scroll container, below the page's own bars (`--context-inset-top`), while the editor grows past it; in an `embedded` editor it keeps 8px from that edge while it sticks.
+ *
+ * @globalattr {string} text-editor-command - The command a control runs on its editor: a name from `runCommand()`, with an argument after a colon (`setHeading:2`, `setList:task`). On an nldd-toggle-button, nldd-button, nldd-icon-button, `<button>` or nldd-menu-item, also in a toolbar's overflow menu. On an nldd-segmented-control the command takes the value of the chosen item: `text-editor-command="setList"` with items `none`, `bullet`, `ordered` and `task`, where a second click on the list that is on turns it off. Works inside the editor (its `toolbar` slot) or inside an element with `text-editor-for`. The editor sets `selected` and `disabled` on it, so do not set those yourself. Disabled: undo and redo without history, indent and outdent where the list item cannot move, copy and cut without a selection, the inline formats in code and the block formats in a code block, and everything but copy in a read-only editor. `setHeading` steps out of a code block first, so "Paragraaf" is the way out.
+ * @globalattr {string} text-editor-for - Set on any element that holds controls for an editor elsewhere on the page, such as an nldd-toolbar in a bar of the page: the editor's id. Its controls with `text-editor-command` drive that editor. The id is looked up in the document, not in a shadow root.
+ *
+ * @fires input - When the user changes the content (detail: { value }). Setting `value` or calling `applyChanges()` does not fire it.
  * @fires change - When the content is committed on blur (detail: { value })
  * @fires state-change - When the selection or content changes (detail: TextEditorState), for toolbar toggle state
  * @fires mention - When an @-mention is inserted (detail: MentionInsertedDetail with id, text, from, to; clean offsets, like getSelection())
@@ -100,6 +140,7 @@ import { EditorView, drawSelection, dropCursor } from '@codemirror/view';
 import { Compartment, Prec, Transaction, type Extension } from '@codemirror/state';
 import { history, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
 import { NLDDCodeMirrorInput } from '../../../utilities/codemirror/codemirror-input.js';
+import { minimalChange } from '../../../utilities/codemirror/codemirror-element.js';
 import { nlddCodeMirrorTheme } from '../../../utilities/codemirror/theme.js';
 import { markdownEditing } from './text-editor.markdown.js';
 import { mentionInsert, mentionToken, mentionRangeAt } from './text-editor.mention.js';
@@ -146,12 +187,21 @@ import {
 } from './text-editor.commands.js';
 import { textEditorStyles } from './text-editor.styles.js';
 import { textEditorTemplate } from './text-editor.template.js';
-import { stripSentinels, docToClean, cleanToDoc, sentinelPositions } from './text-editor.annotation-sentinels.js';
+import { ANNOTATION_SENTINEL, stripSentinels, docToClean, cleanToDoc, sentinelPositions } from './text-editor.annotation-sentinels.js';
 import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './text-editor.i18n.js';
 import { translate } from '../../../utilities/translations.js';
 import { tasks } from './text-editor.tasks.js';
 import { codeCopy } from './text-editor.code-copy.js';
 import { setState } from '../../../utilities/element-state.js';
+import { ToolbarBinding, StuckToolbar } from './text-editor.toolbar.js';
+
+/** One change for `applyChanges()`: the text from `from` to `to` becomes
+ *  `insert`. Offsets are clean, in the text before any of the changes. */
+export interface TextChange {
+	from: number;
+	to?: number;
+	insert?: string;
+}
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 export type TextEditorSyntax = 'visible' | 'hidden';
@@ -187,8 +237,8 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	@property({ type: Boolean, reflect: true })
 	embedded = false;
 
-	@property({ reflect: true, converter: reflectNonDefault<TextEditorSyntax>('visible') })
-	syntax: TextEditorSyntax = 'visible';
+	@property({ reflect: true, converter: reflectNonDefault<TextEditorSyntax>('hidden') })
+	syntax: TextEditorSyntax = 'hidden';
 
 	/** Consumer-supplied @-mention source: called with the text typed after `@`
 	 *  and returns (a promise of) candidates. Property only (set via JS); without
@@ -267,6 +317,37 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 
 	protected getEditorParent(): HTMLElement | null | undefined {
 		return this._container;
+	}
+
+	/** Runs the commands of the controls with `text-editor-command` and sets
+	 *  their state. */
+	private _toolbar = new ToolbarBinding(this, () => this.view?.focus());
+	private _stuck = new StuckToolbar(this, () => this._container ?? null);
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this._toolbar.connect();
+		// Moved in the DOM: the slots keep their content, so no slotchange comes.
+		if (this.hasUpdated) this._stuck.update();
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this._toolbar.disconnect();
+		this._stuck.stop();
+	}
+
+	override firstUpdated(): void {
+		super.firstUpdated();
+		// A filled slot gets its padding and divider; a toolbar put in later
+		// follows the state at once.
+		for (const slot of this.renderRoot.querySelectorAll('slot')) {
+			slot.addEventListener('slotchange', () => {
+				slot.classList.toggle('is-filled', slot.assignedElements().length > 0);
+				this._toolbar.reflect();
+				this._stuck.update();
+			});
+		}
 	}
 
 	/** Resolve a translation key, applying `{name}` placeholder substitution from
@@ -380,10 +461,28 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 					this._clipboard.forget();
 					return false;
 				},
+				// Cmd/Ctrl+Shift+V pastes the text as it is, and so does Safari's
+				// Option+Shift+Cmd+V. The paste event cannot tell, so the key that came
+				// before it does (by code: Option changes the key on a Mac). Safari has no
+				// paste for Cmd+Shift+V at all; without one, the editor reads the
+				// clipboard itself, which Safari confirms with a Paste button.
+				keydown: (event, view) => {
+					this._plainPaste = (event.metaKey || event.ctrlKey) && event.shiftKey && event.code === 'KeyV';
+					if (this._plainPaste) {
+						setTimeout(() => {
+							if (!this._plainPaste || this.view !== view) return;
+							this._plainPaste = false;
+							void navigator.clipboard?.readText().then((raw) => this._clipboard.paste(view, raw, true), () => {});
+						}, 100);
+					}
+					return false;
+				},
 				paste: (event, view) => {
 					const raw = event.clipboardData?.getData('text/plain');
+					const plain = this._plainPaste;
+					this._plainPaste = false;
 					if (raw === undefined) return false; // no clipboard data — let CodeMirror handle it
-					this._clipboard.paste(view, raw);
+					this._clipboard.paste(view, raw, plain);
 					event.preventDefault();
 					return true;
 				},
@@ -448,6 +547,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
+		if (changed.has('disabled') || changed.has('readonly')) this._toolbar.reflect();
 		if (import.meta.env?.DEV && changed.has('typeaheads')) setState(this, 'invalid-typeahead-query', hasInvalidQuery(this.typeaheads));
 		if (!this.view) return;
 		// A render after setTranslations() or a new `translations`: the labels
@@ -584,6 +684,9 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	/** Carries the annotations of a cut along to a paste of the same text. */
 	private _clipboard = new AnnotationClipboard();
 
+	/** Set by Cmd/Ctrl+Shift+V, read by the paste that follows it. */
+	private _plainPaste = false;
+
 	/** Copy the current selection to the clipboard, sentinel-free. No-op when the
 	 *  selection is empty or the clipboard is unavailable (e.g. permission denied). */
 	async copy(): Promise<void> {
@@ -632,6 +735,40 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		const clean = stripSentinels(text);
 		if (clean) this.view.dispatch({ ...this.view.state.replaceSelection(clean), userEvent: 'input' });
 		this.view.focus();
+	}
+
+	/** Applies changes that come from outside, such as what a collaborator types.
+	 *  Unlike `replaceRange()`, the caret and the selection stay where they are
+	 *  (they move along with the text), the focus stays where it is, and the
+	 *  changes stay out of the user's undo history. The offsets are CLEAN, all in
+	 *  the text before any of the changes, and must not overlap. Fires no `input`,
+	 *  and works on a read-only editor too: the text is not the user's edit. */
+	applyChanges(changes: readonly TextChange[]): void {
+		const view = this.view;
+		if (!view || changes.length === 0) return;
+		const doc = view.state.doc.toString();
+		const sentinels = sentinelPositions(doc);
+		const cleanLength = doc.length - sentinels.length;
+		const specs = [...changes]
+			.sort((a, b) => a.from - b.from)
+			.map((change) => {
+				const from = Math.max(0, Math.min(change.from, cleanLength));
+				const to = Math.max(from, Math.min(change.to ?? from, cleanLength));
+				const docFrom = cleanToDoc(sentinels, from);
+				let docTo = from === to ? docFrom : cleanToDoc(sentinels, to);
+				// An annotation edge right after the range stays.
+				while (docTo > docFrom && doc[docTo - 1] === ANNOTATION_SENTINEL) docTo--;
+				return { from: docFrom, to: docTo, insert: stripSentinels(change.insert ?? '') };
+			});
+		view.dispatch({ changes: specs, annotations: [Transaction.remote.of(true), Transaction.addToHistory.of(false)] });
+	}
+
+	/* The document carries annotation sentinels and `text` does not, so the change
+	 * is found in clean text and goes in around them. */
+	protected override setDoc(text: string): void {
+		const view = this.view;
+		const change = view && minimalChange(stripSentinels(view.state.doc.toString()), text);
+		if (change) this.applyChanges([change]);
 	}
 
 	/** Replaces the text between two offsets with `text`, and leaves the caret
@@ -775,6 +912,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			&& (Object.keys(state.active) as (keyof TextEditorActiveFormats)[]).every((key) => last.active[key] === state.active[key])
 		) return;
 		this._lastState = state;
+		this._toolbar.reflect(state);
 		this.dispatchEvent(new CustomEvent('state-change', {
 			detail: state,
 			bubbles: true,

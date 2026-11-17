@@ -84,7 +84,7 @@ describe('nldd-text-editor spellcheck', () => {
 	});
 
 	it('leaves out the address of a link but checks its text', async () => {
-		el = await make('Zie [de regelz](https://example.org/regelz) en https://regelrecht.rijks.app hier.');
+		el = await make('Zie [de regelz](https://example.org/regelz) en https://regelrecht.rijks.app hier.', 'syntax="visible"');
 		expect(checked(el, 'regelz]')).toBe(true);
 		expect(checked(el, 'https://example.org')).toBe(false);
 		expect(checked(el, 'https://regelrecht')).toBe(false);

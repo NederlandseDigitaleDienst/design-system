@@ -1073,6 +1073,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text:state(custom-size-below-floor)"
 	},
 	{
+		"id": "text-editor-command-needs-editor",
+		"message": "A control with `text-editor-command` needs to be inside nldd-text-editor or inside an element with `text-editor-for`, or it drives no editor.",
+		"context": "[text-editor-command]:not([text-editor-command=\"\"])",
+		"assert": "nldd-text-editor [text-editor-command]:not([text-editor-command=\"\"]), [text-editor-for]:not([text-editor-for=\"\"]) [text-editor-command]:not([text-editor-command=\"\"]), [text-editor-for]:not([text-editor-for=\"\"])[text-editor-command]:not([text-editor-command=\"\"])",
+		"properties": [
+			"textEditorCommand",
+			"textEditorFor"
+		]
+	},
+	{
 		"id": "text-editor-command-not-found",
 		"message": "runCommand() got a name that is not a command.",
 		"context": "nldd-text-editor:state(unknown-command)"

@@ -645,3 +645,33 @@ describe('nldd-form-field – finds the control', () => {
 		expect(el.firstElementChild!.getAttribute('accessible-label')).toBe('Kies een land');
 	});
 });
+
+describe('nldd-form-field – a toolbar in the field is never the field', () => {
+	let el: HTMLElement;
+	afterEach(() => { if (el) cleanup(el); });
+
+	it('finds the editor below a toolbar, not the toggle in it (#422)', async () => {
+		await import('../../actions/toolbar/toolbar.js');
+		await import('../../inputs/toggle-button/toggle-button.js');
+		await import('../../inputs/text-editor/text-editor.js');
+		el = await fixture(`
+			<nldd-form-field label="Omschrijving">
+				<div>
+					<nldd-toolbar accessible-label="Opmaak">
+						<nldd-toolbar-item slot="start" label="Vet">
+							<nldd-toggle-button variant="icon" icon="bold" accessible-label="Vet"></nldd-toggle-button>
+						</nldd-toolbar-item>
+					</nldd-toolbar>
+					<nldd-text-editor></nldd-text-editor>
+				</div>
+				<nldd-form-field-help-text>Waar gaat het over?</nldd-form-field-help-text>
+			</nldd-form-field>`);
+		await waitForUpdate(el);
+		const editor = el.querySelector('nldd-text-editor') as HTMLElement;
+		await waitForUpdate(editor);
+		expect(editor.getAttribute('accessible-label')).toBe('Omschrijving');
+		expect(el.querySelector('nldd-toggle-button')!.getAttribute('accessible-label')).toBe('Vet');
+		el.shadowRoot!.querySelector<HTMLElement>('.form-field__label')!.click();
+		expect(focusIsInside(editor)).toBe(true);
+	});
+});

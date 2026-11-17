@@ -1,0 +1,12 @@
+severity: warn
+context: '[text-editor-command]'
+assert: 'nldd-text-editor [text-editor-command], [text-editor-for] [text-editor-command], [text-editor-for][text-editor-command]'
+message: 'A control with `text-editor-command` needs to be inside nldd-text-editor or inside an element with `text-editor-for`, or it drives no editor.'
+examples:
+  passed:
+    - '<nldd-text-editor><nldd-toggle-button slot="toolbar" text-editor-command="bold" text="Vet"></nldd-toggle-button></nldd-text-editor>'
+    - '<html><body><nldd-toolbar text-editor-for="notities" accessible-label="Opmaak"><nldd-toolbar-item slot="start" label="Vet"><nldd-toggle-button text-editor-command="bold" text="Vet"></nldd-toggle-button></nldd-toolbar-item></nldd-toolbar><nldd-text-editor id="notities"></nldd-text-editor></body></html>'
+  failed:
+    - '<html><body><nldd-toolbar accessible-label="Opmaak"><nldd-toolbar-item slot="start" label="Vet"><nldd-toggle-button text-editor-command="bold" text="Vet"></nldd-toggle-button></nldd-toolbar-item></nldd-toolbar><nldd-text-editor></nldd-text-editor></body></html>'
+  cantTell:
+    - '<nldd-toggle-button text-editor-command="bold" text="Vet"></nldd-toggle-button>'

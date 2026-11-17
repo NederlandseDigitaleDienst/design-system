@@ -1,7 +1,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import { EditorView, placeholder as cmPlaceholder } from '@codemirror/view';
-import { Compartment, EditorState, type Extension } from '@codemirror/state';
+import { Compartment, EditorState, Transaction, type Extension } from '@codemirror/state';
 import { FormAssociated, type FormValue } from '../form-associated-mixin.js';
 import { reflectNonDefault } from '../reflect-non-default.js';
 import { DescribedBy } from '../described-by-mixin.js';
@@ -102,7 +102,7 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 			this._editableCompartment.of(this._editableExtension()),
 			this._attrsCompartment.of(this._attrsExtension()),
 			EditorView.updateListener.of((u) => {
-				if (u.docChanged) this._onDocChanged();
+				if (u.docChanged) this._onDocChanged(u.transactions.every((tr) => !tr.docChanged || tr.annotation(Transaction.remote)));
 			}),
 			EditorView.domEventHandlers({
 				focus: () => {
@@ -185,11 +185,17 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 		}
 	}
 
-	private _onDocChanged(): void {
+	/* A change marked remote came from outside (a value the app set, a
+	 * collaborator's edit): the value follows, but it is not the user's input.
+	 * Without an edit of the user's own since focus, it is no change on blur
+	 * either. */
+	private _onDocChanged(remote: boolean): void {
 		const text = this.docToValue(this.doc);
 		if (text === this.value) return;
+		if (remote && this.value === this._valueAtFocus) this._valueAtFocus = text;
 		this.value = text;
 		this.commitFormValue();
+		if (remote) return;
 		this.dispatchEvent(new CustomEvent('input', {
 			detail: { value: text },
 			bubbles: true,

@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { EditorView } from '@codemirror/view';
-import { EditorState, type Compartment, type Extension } from '@codemirror/state';
+import { EditorState, Transaction, type Compartment, type Extension } from '@codemirror/state';
 
 /**
  * Shared base for design-system editors built on CodeMirror 6
@@ -12,6 +12,18 @@ import { EditorState, type Compartment, type Extension } from '@codemirror/state
  * provide the parent element and the extension set; everything component
  * specific (form association, public attributes, events) lives there.
  */
+/** The one range that differs between two texts: what `before` loses from
+ *  `from` to `to`, and what takes its place. Null when they are the same. */
+export function minimalChange(before: string, after: string): { from: number; to: number; insert: string } | null {
+	if (before === after) return null;
+	const max = Math.min(before.length, after.length);
+	let start = 0;
+	while (start < max && before.charCodeAt(start) === after.charCodeAt(start)) start++;
+	let end = 0;
+	while (end < max - start && before.charCodeAt(before.length - 1 - end) === after.charCodeAt(after.length - 1 - end)) end++;
+	return { from: start, to: before.length - end, insert: after.slice(start, after.length - end) };
+}
+
 export abstract class NLDDCodeMirrorElement extends LitElement {
 	protected view?: EditorView;
 
@@ -76,11 +88,16 @@ export abstract class NLDDCodeMirrorElement extends LitElement {
 		this.view = undefined;
 	}
 
-	/** Replace the whole document (used by the `value` property setter). */
+	/** Bring the document to `text` (used by the `value` property setter). Only the
+	 *  range that differs changes, so the selection maps through, and the change
+	 *  stays out of the undo history: it is not the user's to undo. Marked as
+	 *  remote, so nothing treats it as an edit to answer (the list renumbering in
+	 *  nldd-text-editor). */
 	protected setDoc(text: string): void {
 		const view = this.view;
-		if (!view || view.state.doc.toString() === text) return;
-		view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } });
+		const change = view && minimalChange(view.state.doc.toString(), text);
+		if (!view || !change) return;
+		view.dispatch({ changes: change, annotations: [Transaction.remote.of(true), Transaction.addToHistory.of(false)] });
 	}
 
 	/** Swap a single compartment at runtime (language, readonly, wrap, …). */

@@ -1,7 +1,7 @@
 import { ViewPlugin, Decoration, type DecorationSet, EditorView, type ViewUpdate } from '@codemirror/view';
 import { syntaxTree } from '@codemirror/language';
 import { markdown } from '@codemirror/lang-markdown';
-import { GFM } from '@lezer/markdown';
+import { GFM, type MarkdownConfig } from '@lezer/markdown';
 import { StateField, type EditorState, type Extension, type Range } from '@codemirror/state';
 import type { SyntaxNode } from '@lezer/common';
 import { isMentionLink, mentionTokens } from './text-editor.mention.js';
@@ -9,6 +9,7 @@ import { inLinkContext } from './text-editor.links.js';
 import { heldEmphasis, heldEmphasisField } from './text-editor.emphasis.js';
 import { forEachLineStart, inCodeBlock, isRuleLine, treeAdvanced } from './text-editor.syntax.js';
 import { nestedLanguages } from '../../../utilities/codemirror/languages.js';
+import { listKeymap, listMarkerInput } from './text-editor.list-input.js';
 
 /* Hybrid markdown rendering: the document stays plain markdown text, but the
  * formatting is shown inline (bold is bold, headings are larger, links are
@@ -271,13 +272,39 @@ const hangingIndentField = StateField.define<DecorationSet>({
 	provide: (field) => EditorView.decorations.from(field),
 });
 
+/* A line indented four spaces or more past where it stands (the start of the
+ * line, or the text of the list item it is in) is text, whatever it starts
+ * with. CommonMark would make it code; with indented code turned off, as the
+ * editor and the renderer it recommends do (md.disable('code')), it is a
+ * paragraph, so `    - punt` is no list and `    # kop` no heading. Removing
+ * IndentedCode alone does not do that: the other block parsers count on it to
+ * have taken such a line first. Each such line is a paragraph of its own. */
+const indentedText: MarkdownConfig = {
+	parseBlock: [{
+		name: 'IndentedText',
+		before: 'FencedCode',
+		parse(cx, line) {
+			if (line.indent < line.baseIndent + 4) return false;
+			const from = cx.lineStart + line.pos;
+			const text = line.text.slice(line.pos);
+			cx.addElement(cx.elt('Paragraph', from, from + text.length, cx.parser.parseInline(text, from)));
+			cx.nextLine();
+			return true;
+		},
+	}],
+};
+
 /** Markdown language (with GFM) plus the hybrid inline-styling decorations. */
 export const markdownEditing: Extension = [
 	// A code block that names its language is highlighted in it, as in the code
 	// viewer; the grammar loads when the first such block appears.
 	// A line indented four spaces stays text: in a field for prose that is pasted
 	// or indented text, not code. Code takes a fence, which nobody types by accident.
-	markdown({ extensions: [GFM, { remove: ['IndentedCode'] }], codeLanguages: nestedLanguages }),
+	// The language's own Enter and Backspace come from listKeymap, with Enter
+	// ending a list on any empty item.
+	markdown({ extensions: [GFM, { remove: ['IndentedCode'] }, indentedText], codeLanguages: nestedLanguages, addKeymap: false }),
+	listKeymap,
+	listMarkerInput,
 	markDecorationPlugin,
 	heldEmphasis,
 	hangingIndentField,

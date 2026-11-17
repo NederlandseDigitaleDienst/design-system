@@ -1,0 +1,11 @@
+severity: warn
+context: '[text-editor-for]'
+ref: { attr: text-editor-for, target: nldd-text-editor }
+message: '`text-editor-for` needs the id of an nldd-text-editor on this page, or its controls drive no editor.'
+examples:
+  passed:
+    - '<html><body><div text-editor-for="notities"></div><nldd-text-editor id="notities"></nldd-text-editor></body></html>'
+  failed:
+    - '<html><body><div text-editor-for="notitie"></div><nldd-text-editor id="notities"></nldd-text-editor></body></html>'
+  cantTell:
+    - '<div text-editor-for="notities"></div>'

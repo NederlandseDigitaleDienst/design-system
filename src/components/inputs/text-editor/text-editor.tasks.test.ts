@@ -68,7 +68,7 @@ describe('nldd-text-editor – taken', () => {
 	});
 
 	it('tekent geen vakje als de opmaak zichtbaar is', async () => {
-		el = await editor('Taken\n\n- [ ] Open');
+		el = await editor('Taken\n\n- [ ] Open', 'syntax="visible"');
 		expect(boxes(el).length).toBe(0);
 	});
 

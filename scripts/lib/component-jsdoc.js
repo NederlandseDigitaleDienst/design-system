@@ -170,13 +170,16 @@ function parseComponent(block, filePath, fallbackTag) {
 				break;
 			case 'attr':
 			case 'childattr':
-			case 'descendantattr': {
+			case 'descendantattr':
+			case 'globalattr': {
 				if (!current) break;
 				const entry = parseTypedTag(rest);
 				// Set on a child and read by this component, like `only` on a pane.
 				if (tag === 'childattr') entry.forChildren = true;
 				// Set on anything inside this component, at any depth.
 				if (tag === 'descendantattr') entry.forDescendants = true;
+				// Set on any element on the page, and read by this component.
+				if (tag === 'globalattr') entry.global = true;
 				current.attrs.push(entry);
 				lastEntry = entry;
 				break;

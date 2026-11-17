@@ -8,8 +8,10 @@ import { treeAdvanced } from './text-editor.syntax.js';
  * there, in both syntax modes, so the button never moves and entering the block
  * does not push it down.
  *
- * Same feedback as nldd-code-viewer: "Gekopieerd" for a moment, or "Kopiëren
- * mislukt" until you move on, both announced. In an editable editor it is no
+ * Same feedback as nldd-code-viewer: "Gekopieerd" or "Kopiëren mislukt",
+ * announced, stays while the pointer or the focus is on the button (WCAG
+ * 1.4.13). Leaving the button, Escape or a press elsewhere in the editor clears
+ * it; after a tap it goes after a moment. In an editable editor it is no
  * tab stop, like the box of a task: Tab leaves the editor, and selecting the
  * code and copying it is the keyboard route. Read-only or disabled, the editor
  * is a read view and copying is the main thing to do there, so the button can
@@ -26,7 +28,10 @@ export const codeCopyLabels = Facet.define<CodeCopyLabels, CodeCopyLabels>({
 	combine: (values) => values[0] ?? { copy: () => 'Kopieer', success: () => 'Gekopieerd', failure: () => 'Kopiëren mislukt' },
 });
 
-const COPY_FEEDBACK_DURATION_MS = 2000;
+/** How long the outcome stays after the pointer leaves the button. */
+const COPY_LEAVE_DELAY_MS = 300;
+/** How long the outcome stays after a tap: a finger leaves no pointer behind. */
+const COPY_TOUCH_DURATION_MS = 2000;
 
 function clipboardAvailable(): boolean {
 	return typeof window !== 'undefined' && window.isSecureContext && typeof navigator.clipboard?.writeText === 'function';
@@ -57,7 +62,7 @@ function setState(button: HTMLElement, labels: CodeCopyLabels, state: 'idle' | '
 	button.nextElementSibling!.textContent = state === 'idle' ? '' : text;
 }
 
-/** The timer that ends "Gekopieerd", per button, so a button the editor
+/** The timer that ends the outcome, per button, so a button the editor
  *  removes does not have its state set after it is gone. */
 const feedbackTimers = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
 
@@ -73,7 +78,7 @@ class CopyButton extends WidgetType {
 	}
 
 	toDOM(view: EditorView): HTMLElement {
-		// Read when an event comes, not when the button is made, as clearFailures does.
+		// Read when an event comes, not when the button is made, as clearOutcomes does.
 		const labels = () => view.state.facet(codeCopyLabels);
 		const button = document.createElement('button');
 		button.type = 'button';
@@ -94,23 +99,36 @@ class CopyButton extends WidgetType {
 		setState(button, labels(), 'idle');
 		// Keep the caret where it is: a press on the button is not a place in the text.
 		button.addEventListener('mousedown', (event) => event.preventDefault());
+		let pointerType = '';
+		const later = (ms: number) => {
+			clearTimeout(feedbackTimers.get(wrap));
+			feedbackTimers.set(wrap, setTimeout(() => setState(button, labels(), 'idle'), ms));
+		};
+		const reset = () => {
+			clearTimeout(feedbackTimers.get(wrap));
+			if (button.dataset.state !== 'idle') setState(button, labels(), 'idle');
+		};
+		button.addEventListener('pointerdown', (event) => { pointerType = event.pointerType; });
+		button.addEventListener('keydown', (event) => {
+			pointerType = '';
+			if (event.key === 'Escape') reset();
+		});
 		button.addEventListener('click', async () => {
 			clearTimeout(feedbackTimers.get(wrap));
 			try {
 				await navigator.clipboard.writeText(codeOf(view.state, view.state.doc.lineAt(view.posAtDOM(button)).from));
 				setState(button, labels(), 'success');
-				feedbackTimers.set(wrap, setTimeout(() => setState(button, labels(), 'idle'), COPY_FEEDBACK_DURATION_MS));
 			} catch {
-				// Stays until the reader moves on, as in nldd-code-viewer.
 				setState(button, labels(), 'failure');
 			}
+			if (pointerType && pointerType !== 'mouse') later(COPY_TOUCH_DURATION_MS);
 		});
-		button.addEventListener('blur', () => {
-			if (button.dataset.state === 'failure') setState(button, labels(), 'idle');
+		button.addEventListener('pointerenter', () => clearTimeout(feedbackTimers.get(wrap)));
+		button.addEventListener('pointerleave', () => {
+			if (button.dataset.state === 'idle' || button.matches(':focus')) return;
+			later(COPY_LEAVE_DELAY_MS);
 		});
-		button.addEventListener('keydown', (event) => {
-			if (event.key === 'Escape' && button.dataset.state === 'failure') setState(button, labels(), 'idle');
-		});
+		button.addEventListener('blur', reset);
 		return wrap;
 	}
 
@@ -145,15 +163,18 @@ function buildButtons(state: EditorState): DecorationSet {
 
 const head = Decoration.line({ class: 'cm-md-code-head' });
 
-function clearFailures(_event: Event, view: EditorView): boolean {
+function clearOutcomes(_event: Event, view: EditorView): boolean {
 	const labels = view.state.facet(codeCopyLabels);
-	for (const button of view.dom.querySelectorAll<HTMLElement>('.cm-md-code-copy[data-state="failure"]')) setState(button, labels, 'idle');
+	for (const button of view.dom.querySelectorAll<HTMLElement>('.cm-md-code-copy:not([data-state="idle"])')) {
+		clearTimeout(feedbackTimers.get(button.parentElement!));
+		setState(button, labels, 'idle');
+	}
 	return false;
 }
 
-/** In an editable editor the button has no focus, so a failure clears at the
- *  next press in the editor instead of on blur. */
-const clearFailure = EditorView.domEventHandlers({ mousedown: clearFailures, keydown: clearFailures });
+/** In an editable editor the button has no focus, so the outcome also clears
+ *  at the next press in the editor instead of on blur. */
+const clearOutcome = EditorView.domEventHandlers({ mousedown: clearOutcomes, keydown: clearOutcomes });
 
 /** A copy button on the opening line of each code block. */
 export function codeCopy(labels: CodeCopyLabels): Extension {
@@ -162,5 +183,5 @@ export function codeCopy(labels: CodeCopyLabels): Extension {
 		update: (value, tr) => (tr.docChanged || tr.reconfigured || treeAdvanced(tr.startState, tr.state) ? buildButtons(tr.state) : value),
 		provide: (f) => EditorView.decorations.from(f),
 	});
-	return [codeCopyLabels.of(labels), field, clearFailure];
+	return [codeCopyLabels.of(labels), field, clearOutcome];
 }

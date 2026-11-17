@@ -20,7 +20,7 @@ type Api = HTMLElement & {
 };
 
 async function withValue(markdown: string): Promise<Api> {
-	const el = await fixture<Api>('<nldd-text-editor accessible-label="Tekst"></nldd-text-editor>');
+	const el = await fixture<Api>('<nldd-text-editor accessible-label="Tekst" syntax="visible"></nldd-text-editor>');
 	el.value = markdown;
 	await el.updateComplete;
 	await waitForUpdate(el);
