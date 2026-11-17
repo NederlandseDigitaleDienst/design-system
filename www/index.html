@@ -17,37 +17,7 @@
 				logo-title="Nederlandse Digitale Dienst"
 				logo-subtitle="Ministerie van Economische Zaken en Klimaat"
 				website-title="NLDD Designsysteem"
-			>
-				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- A reference site with a few fixed sections: a reader goes from a component to a pattern and back, and should not have to pass the home page each time. -->
-				<nldd-menu-bar slot="global">
-					<nldd-menu-bar-item
-						text="Aan de slag"
-						href="/aan-de-slag/"
-					></nldd-menu-bar-item>
-					<nldd-menu-bar-item
-						text="Componenten"
-						href="/componenten/"
-					></nldd-menu-bar-item>
-					<nldd-menu-bar-item
-						text="Patronen"
-						href="/patronen/"
-					></nldd-menu-bar-item>
-					<nldd-menu-bar-item
-						text="Iconen"
-						href="/iconen/"
-					></nldd-menu-bar-item>
-					<nldd-menu-bar-item
-						text="Richtlijnen"
-						href="/richtlijnen/"
-					></nldd-menu-bar-item>
-				</nldd-menu-bar>
-				<nldd-menu-bar slot="utility">
-					<nldd-menu-bar-item
-						text="GitHub"
-						href="https://github.com/NederlandseDigitaleDienst/design-system"
-					></nldd-menu-bar-item>
-				</nldd-menu-bar>
-			</nldd-top-navigation-bar>
+			></nldd-top-navigation-bar>
 		</nldd-skip-link>
 
 		<nldd-hero
@@ -65,8 +35,8 @@
 			<nldd-button-group>
 				<nldd-button
 					appearance="content-filled"
-					text="Ga aan de slag"
-					href="/aan-de-slag/"
+					text="Bekijk code en start"
+					href="https://github.com/NederlandseDigitaleDienst/design-system"
 				></nldd-button>
 				<nldd-button
 					appearance="content-tinted"
@@ -1514,201 +1484,12 @@ otherwise it has no accessible name.</nldd-code-viewer>
 			>npm install @nldd/design-system</nldd-code-viewer>
 		</nldd-simple-section>
 
-		<nldd-simple-section id="verder" background="tinted">
-			<nldd-title slot="header">
-				<h2>Alles over het designsysteem</h2>
-			</nldd-title>
-			<nldd-collection
-				layout="grid"
-				item-min-width="240px"
-			>
-				<nldd-card
-					href="/aan-de-slag/"
-					accessible-label="Aan de slag"
-				>
-					<nldd-container padding="16">
-						<nldd-title size="display-5">
-							<h3>Aan de slag</h3>
-						</nldd-title>
-						<nldd-spacer size="4"></nldd-spacer>
-						<nldd-rich-text>
-							<p>Installeer het pakket en zet je eerste component neer.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-				<nldd-card
-					href="/componenten/"
-					accessible-label="Componenten"
-				>
-					<nldd-container padding="16">
-						<nldd-title size="display-5">
-							<h3>Componenten</h3>
-						</nldd-title>
-						<nldd-spacer size="4"></nldd-spacer>
-						<nldd-rich-text>
-							<p>Elk component met live voorbeelden, attributen, slots en events.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-				<nldd-card
-					href="/patronen/"
-					accessible-label="Patronen"
-				>
-					<nldd-container padding="16">
-						<nldd-title size="display-5">
-							<h3>Patronen</h3>
-						</nldd-title>
-						<nldd-spacer size="4"></nldd-spacer>
-						<nldd-rich-text>
-							<p>Hoe je componenten samenstelt tot een pagina, een formulier of een lijst.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-				<nldd-card
-					href="/iconen/"
-					accessible-label="Iconen"
-				>
-					<nldd-container padding="16">
-						<nldd-title size="display-5">
-							<h3>Iconen</h3>
-						</nldd-title>
-						<nldd-spacer size="4"></nldd-spacer>
-						<nldd-rich-text>
-							<p>Alle iconen op naam, met hun aliassen.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-				<nldd-card
-					href="/themas/"
-					accessible-label="Thema's"
-				>
-					<nldd-container padding="16">
-						<nldd-title size="display-5">
-							<h3>Thema's</h3>
-						</nldd-title>
-						<nldd-spacer size="4"></nldd-spacer>
-						<nldd-rich-text>
-							<p>De kleur van je organisatie, in licht en donker.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-				<nldd-card
-					href="/richtlijnen/"
-					accessible-label="Ontwerprichtlijnen"
-				>
-					<nldd-container padding="16">
-						<nldd-title size="display-5">
-							<h3>Ontwerprichtlijnen</h3>
-						</nldd-title>
-						<nldd-spacer size="4"></nldd-spacer>
-						<nldd-rich-text>
-							<p>De ontwerpkeuzes van het systeem en de redenen erachter.</p>
-						</nldd-rich-text>
-					</nldd-container>
-				</nldd-card>
-			</nldd-collection>
-		</nldd-simple-section>
-
 		<nldd-page-footer slot="footer">
-			<nldd-container
-				layout="grid"
-				sm-column-count="2"
-				md-column-count="2"
-				lg-column-count="3"
-				gap="24"
-			>
-				<nldd-container>
-					<nldd-title size="display-5">
-						<h2>Het systeem</h2>
-					</nldd-title>
-					<nldd-spacer size="8"></nldd-spacer>
-					<nldd-link-group
-						orientation="vertical"
-						accessible-label="Het systeem"
-					>
-						<nldd-link
-							href="/componenten/"
-							text="Componenten"
-						></nldd-link>
-						<nldd-link
-							href="/patronen/"
-							text="Patronen"
-						></nldd-link>
-						<nldd-link
-							href="/iconen/"
-							text="Iconen"
-						></nldd-link>
-						<nldd-link
-							href="/themas/"
-							text="Thema's"
-						></nldd-link>
-						<nldd-link
-							href="/richtlijnen/"
-							text="Ontwerprichtlijnen"
-						></nldd-link>
-					</nldd-link-group>
-				</nldd-container>
-				<nldd-container>
-					<nldd-title size="display-5">
-						<h2>Bouwen</h2>
-					</nldd-title>
-					<nldd-spacer size="8"></nldd-spacer>
-					<nldd-link-group
-						orientation="vertical"
-						accessible-label="Bouwen"
-					>
-						<nldd-link
-							href="/aan-de-slag/"
-							text="Aan de slag"
-						></nldd-link>
-						<nldd-link
-							href="/aan-de-slag/ai-assistent/"
-							text="Werken met een AI-assistent"
-						></nldd-link>
-						<nldd-link
-							href="/breakpoints/"
-							text="Breakpoints"
-						></nldd-link>
-						<nldd-link
-							href="/vertalingen/"
-							text="Vertalingen"
-						></nldd-link>
-						<nldd-link
-							href="/changelog/"
-							text="Changelog"
-						></nldd-link>
-					</nldd-link-group>
-				</nldd-container>
-				<nldd-container>
-					<nldd-title size="display-5">
-						<h2>Meedoen</h2>
-					</nldd-title>
-					<nldd-spacer size="8"></nldd-spacer>
-					<nldd-link-group
-						orientation="vertical"
-						accessible-label="Meedoen"
-					>
-						<nldd-link
-							href="https://github.com/NederlandseDigitaleDienst/design-system/issues"
-							text="Meld een probleem of idee"
-						></nldd-link>
-						<nldd-link
-							href="https://github.com/NederlandseDigitaleDienst/design-system"
-							text="Broncode op GitHub"
-						></nldd-link>
-					</nldd-link-group>
-				</nldd-container>
-			</nldd-container>
 			<nldd-page-footer-legal-bar slot="legal-bar">
 				<nldd-page-footer-legal-bar-item
 					slot="start"
 					href="https://digitaledienst.overheid.nl/"
 					text="Nederlandse Digitale Dienst"
-				></nldd-page-footer-legal-bar-item>
-				<nldd-page-footer-legal-bar-item
-					slot="end"
-					href="/toegankelijkheid/"
-					text="Toegankelijkheid"
 				></nldd-page-footer-legal-bar-item>
 				<nldd-page-footer-legal-bar-item
 					slot="end"

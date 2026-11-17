@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { buildPages } from './site.js';
 import { collectComponents, repoRoot, storyName } from './sources.js';
@@ -51,20 +51,24 @@ test('no page still points into Storybook', () => {
 	assert.deepEqual(stale, []);
 });
 
-test('the landing page is the one written by hand, with the head every page has', () => {
-	const home = pages['index.html'];
-	assert.match(home, /<nldd-hero/);
-	assert.match(home, /<link rel="stylesheet" href="\/styles\.css">/);
-	assert.match(home, /<script type="module" src="\/home\.ts"><\/script>/);
+test('the landing page is the one written by hand, with the head and the bar every page has', () => {
+	const written = readFileSync(resolve(repoRoot, 'www/index.html'), 'utf8');
+	// Everything from the first section on is the file as it was written.
+	const content = (html) => html.slice(html.indexOf('</nldd-skip-link>'));
+	assert.equal(content(pages['index.html']), content(written));
+	assert.match(pages['index.html'], /<link rel="stylesheet" href="\/home\.css">/);
+	assert.match(pages['index.html'], /<script type="module" src="\/home\.ts"><\/script>/);
+	assert.match(pages['index.html'], /<nldd-menu-bar slot="global">/);
+	assert.doesNotMatch(pages['index.html'], /back-text=|website-href=|<nldd-menu-bar-item\b[^>]*\bcurrent\b/);
 });
 
-test('every page carries the header and footer of the landing page', () => {
-	const home = pages['index.html'];
-	const footerLinks = [...home.match(/<nldd-page-footer slot="footer">[^]*<\/nldd-page-footer>/)[0].matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
-	assert.ok(footerLinks.length > 5);
+test('every page behind the landing page has the same bar and footer', () => {
 	for (const path of ['componenten/button/index.html', 'patronen/form/index.html', 'richtlijnen/index.html']) {
-		for (const href of footerLinks) assert.ok(pages[path].includes(`href="${href}"`), `${path} mist ${href}`);
 		assert.match(pages[path], /logo-title="Nederlandse Digitale Dienst"/, path);
+		assert.match(pages[path], /<nldd-menu-bar slot="global">/, path);
+		for (const href of ['/componenten/', '/patronen/', '/themas/', '/toegankelijkheid/', '/changelog/']) {
+			assert.ok(pages[path].includes(`href="${href}"`), `${path} mist ${href}`);
+		}
 	}
 });
 
@@ -76,7 +80,6 @@ test('a page marks its section in the menu and leads back to the page above it',
 	assert.match(button, /<nldd-breadcrumbs-item text="Home" href="\/"><\/nldd-breadcrumbs-item>\s*<nldd-breadcrumbs-item text="Componenten" href="\/componenten\/">/);
 	// A page directly under the landing page has the name of the site to go back by.
 	assert.doesNotMatch(pages['componenten/index.html'], /back-text=/);
-	assert.doesNotMatch(pages['index.html'], /back-text=|website-href=|<nldd-menu-bar-item\b[^>]*\bcurrent\b/);
 });
 
 test('a pattern page ends with the lint rules that point at it', () => {

@@ -5,7 +5,6 @@
  * wait for the hundred components it does not show.
  */
 
-import { applyPreferences } from './preferences.js';
 import './autoload.js';
 import './stage.js';
 import './built-with.js';
@@ -50,6 +49,5 @@ function wireSidebar(): void {
 	}
 }
 
-applyPreferences();
 wireFilter();
 wireSidebar();

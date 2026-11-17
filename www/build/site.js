@@ -64,7 +64,7 @@ function read(path) {
 
 const identity = (path) => path;
 
-function head({ title, description, entry, robots = '' }) {
+function head({ title, description, entry, stylesheet = 'styles.css', robots = '' }) {
 	const pageTitle = title === SITE_NAME ? SITE_NAME : `${title} · ${SITE_NAME}`;
 	return `<head>
 	<meta charset="utf-8">
@@ -72,73 +72,211 @@ function head({ title, description, entry, robots = '' }) {
 	<title>${escapeHtml(pageTitle)}</title>
 	<meta name="description" content="${escapeHtml(description)}">${robots}
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-	<link rel="stylesheet" href="/styles.css">
+	<link rel="stylesheet" href="/${stylesheet}">
 	<script type="module" src="/${entry}"></script>
 </head>`;
 }
 
+const REPOSITORY = 'https://github.com/NederlandseDigitaleDienst/design-system';
+
+/** The sections of the site, as the menu of every page behind the landing page. */
+const SECTIONS = [
+	['Aan de slag', '/aan-de-slag/'],
+	['Componenten', '/componenten/'],
+	['Patronen', '/patronen/'],
+	['Iconen', '/iconen/'],
+	['Richtlijnen', '/richtlijnen/'],
+];
+
 /**
- * The landing page is written by hand in www/index.html. Its header and footer
- * are the header and footer of every page: they are read from there, so the
- * navigation is written once and a page behind the landing page cannot drift
- * from it.
+ * The landing page is written by hand in www/index.html and is shown as it is,
+ * with two things replaced: its head, so it loads from the same place as every
+ * other page, and its bar, so it has the menu every page has. It keeps a
+ * stylesheet and a script of its own.
  */
-function readHome() {
+function homePage() {
 	const html = read('www/index.html');
-	const part = (pattern, what) => {
-		const found = html.match(pattern)?.[0];
-		if (!found) throw new Error(`www/index.html heeft geen ${what}.`);
-		return found;
-	};
-	return {
-		html,
-		header: part(/<nldd-skip-link slot="header">[^]*?<\/nldd-skip-link>/, 'nldd-skip-link in de header'),
-		footer: part(/<nldd-page-footer slot="footer">[^]*?<\/nldd-page-footer>/, 'nldd-page-footer'),
-	};
-}
-
-/** The landing page with the head every page has. Its body stays as written. */
-function homePage(home) {
-	const title = home.html.match(/<title>([^<]*)<\/title>/)?.[1] ?? SITE_NAME;
-	const description = home.html.match(/<meta name="description" content="([^"]*)">/)?.[1] ?? '';
-	return home.html.replace(/<head>[^]*?<\/head>/, head({ title, description, entry: 'home.ts' }));
+	const title = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? SITE_NAME;
+	const description = html.match(/<meta name="description" content="([^"]*)">/)?.[1] ?? '';
+	const bar = /<nldd-skip-link slot="header">[^]*?<\/nldd-skip-link>/;
+	if (!bar.test(html)) throw new Error('www/index.html heeft geen nldd-skip-link in de header.');
+	return html
+		.replace(/<head>[^]*?<\/head>/, head({ title, description, entry: 'home.ts', stylesheet: 'home.css' }))
+		.replace(bar, header('/', []));
 }
 
 /**
- * The page shell: the header and footer of the landing page around the main
- * content. The item of the section a page is in is the current one, and the
- * name of the site leads back to the landing page. A page inside a section
- * also has a back button to the page above it, and every page has breadcrumbs
- * in the footer, as the page structure pattern has it.
+ * The bar of every page, with the sections as its menu. The item of the
+ * section a page is in is the current one. Behind the landing page the name of
+ * the site leads back to it, and a page inside a section has a back button to
+ * the page above it.
+ */
+function header(path, trail) {
+	const [backText, backHref] = trail[trail.length - 1] ?? [];
+	const home = trail.length > 0 ? '\n\t\t\t\twebsite-href="/"' : '';
+	const back = trail.length > 1 ? `\n\t\t\t\tback-text="${backText}"\n\t\t\t\tback-href="${backHref}"` : '';
+	const items = SECTIONS.map(
+		([text, href]) => `<nldd-menu-bar-item
+						text="${text}"
+						href="${href}"${path.startsWith(href) ? '\n\t\t\t\t\t\tcurrent' : ''}
+					></nldd-menu-bar-item>`,
+	).join('\n\t\t\t\t\t');
+	return `<nldd-skip-link slot="header">
+			<nldd-top-navigation-bar
+				logo-title="Nederlandse Digitale Dienst"
+				logo-subtitle="Ministerie van Economische Zaken en Klimaat"
+				website-title="${SITE_NAME}"${home}${back}
+			>
+				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- A reference site with a few fixed sections: a reader goes from a component to a pattern and back, and should not have to pass the landing page each time. -->
+				<nldd-menu-bar slot="global">
+					${items}
+				</nldd-menu-bar>
+				<nldd-menu-bar slot="utility">
+					<nldd-menu-bar-item
+						text="GitHub"
+						href="${REPOSITORY}"
+					></nldd-menu-bar-item>
+				</nldd-menu-bar>
+			</nldd-top-navigation-bar>
+		</nldd-skip-link>`;
+}
+
+/** The footer of every page behind the landing page: where it is, and the rest of the site. */
+function footer(title, trail, facts) {
+	return `<nldd-page-footer slot="footer">
+			<nldd-breadcrumbs slot="breadcrumbs">
+				${trail.map(([text, href]) => `<nldd-breadcrumbs-item text="${text}" href="${href}"></nldd-breadcrumbs-item>`).join('\n\t\t\t\t')}
+				<nldd-breadcrumbs-item text="${escapeHtml(title)}" current></nldd-breadcrumbs-item>
+			</nldd-breadcrumbs>
+			<nldd-container
+				layout="grid"
+				sm-column-count="2"
+				md-column-count="2"
+				lg-column-count="3"
+				gap="24"
+			>
+				<nldd-container>
+					<nldd-title size="display-5">
+						<h2>Het systeem</h2>
+					</nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-link-group
+						orientation="vertical"
+						accessible-label="Het systeem"
+					>
+						<nldd-link
+							href="/componenten/"
+							text="Componenten"
+						></nldd-link>
+						<nldd-link
+							href="/patronen/"
+							text="Patronen"
+						></nldd-link>
+						<nldd-link
+							href="/iconen/"
+							text="Iconen"
+						></nldd-link>
+						<nldd-link
+							href="/themas/"
+							text="Thema's"
+						></nldd-link>
+						<nldd-link
+							href="/richtlijnen/"
+							text="Ontwerprichtlijnen"
+						></nldd-link>
+					</nldd-link-group>
+				</nldd-container>
+				<nldd-container>
+					<nldd-title size="display-5">
+						<h2>Bouwen</h2>
+					</nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-link-group
+						orientation="vertical"
+						accessible-label="Bouwen"
+					>
+						<nldd-link
+							href="/aan-de-slag/"
+							text="Aan de slag"
+						></nldd-link>
+						<nldd-link
+							href="/aan-de-slag/ai-assistent/"
+							text="Werken met een AI-assistent"
+						></nldd-link>
+						<nldd-link
+							href="/breakpoints/"
+							text="Breakpoints"
+						></nldd-link>
+						<nldd-link
+							href="/vertalingen/"
+							text="Vertalingen"
+						></nldd-link>
+						<nldd-link
+							href="/changelog/"
+							text="Changelog"
+						></nldd-link>
+					</nldd-link-group>
+				</nldd-container>
+				<nldd-container>
+					<nldd-title size="display-5">
+						<h2>Meedoen</h2>
+					</nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-link-group
+						orientation="vertical"
+						accessible-label="Meedoen"
+					>
+						<nldd-link
+							href="${REPOSITORY}/issues"
+							text="Meld een probleem of idee"
+						></nldd-link>
+						<nldd-link
+							href="${REPOSITORY}"
+							text="Broncode op GitHub"
+						></nldd-link>
+					</nldd-link-group>
+				</nldd-container>
+			</nldd-container>
+			<site-built-with pages="${facts.slugs}"></site-built-with>
+			<nldd-page-footer-legal-bar slot="legal-bar">
+				<nldd-page-footer-legal-bar-item
+					slot="start"
+					href="https://digitaledienst.overheid.nl/"
+					text="Nederlandse Digitale Dienst"
+				></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="end"
+					href="/toegankelijkheid/"
+					text="Toegankelijkheid"
+				></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="end"
+					href="https://digitaledienst.overheid.nl/over/privacy/"
+					text="Privacy"
+				></nldd-page-footer-legal-bar-item>
+			</nldd-page-footer-legal-bar>
+		</nldd-page-footer>`;
+}
+
+/**
+ * The page shell around the main content.
  *
  * @param {object} input
  * @param {string} input.path - where the page lives, `/componenten/button/`
  * @param {[text: string, href: string][]} input.trail - the pages above this one, from the landing page down
  */
-function layout({ title, description, path, trail, main, home, facts }) {
-	const [backText, backHref] = trail[trail.length - 1];
-	const back = trail.length > 1 ? `\n\t\t\t\tback-text="${backText}"\n\t\t\t\tback-href="${backHref}"` : '';
-	const header = home.header
-		.replace(/<nldd-menu-bar-item\b[^>]*?href="(\/[^"]*)"/g, (item, href) =>
-			path.startsWith(href) ? `${item}\n\t\t\t\t\t\tcurrent` : item,
-		)
-		.replace(/website-title="[^"]*"/, (match) => `${match}\n\t\t\t\twebsite-href="/"${back}`);
-	const breadcrumbs = `<nldd-breadcrumbs slot="breadcrumbs">
-				${trail.map(([text, href]) => `<nldd-breadcrumbs-item text="${text}" href="${href}"></nldd-breadcrumbs-item>`).join('\n\t\t\t\t')}
-				<nldd-breadcrumbs-item text="${escapeHtml(title)}" current></nldd-breadcrumbs-item>
-			</nldd-breadcrumbs>
-			<site-built-with pages="${facts.slugs}"></site-built-with>`;
+function layout({ title, description, path, trail, main, facts }) {
 	return `<!doctype html>
 <html lang="nl">
 ${head({ title, description, entry: 'main.ts' })}
 <body class="site">
 <nldd-shell>
 	<nldd-page>
-		${header}
+		${header(path, trail)}
 
 ${main}
 
-		${home.footer.replace(/(<nldd-page-footer slot="footer">)/, `$1\n\t\t\t${breadcrumbs}`)}
+		${footer(title, trail, facts)}
 	</nldd-page>
 </nldd-shell>
 </body>
@@ -519,7 +657,7 @@ function componentPage(component, components, facts) {
 		? `\n\t\t\t\t<nldd-tag slot="end" text="${STATUS[component.status] ?? component.status}"></nldd-tag>`
 		: '';
 	const source = component.sourceFile
-		? `<nldd-link href="${facts.repository}/blob/main/${component.sourceFile}" text="Broncode op GitHub"></nldd-link>`
+		? `<nldd-link href="${REPOSITORY}/blob/main/${component.sourceFile}" text="Broncode op GitHub"></nldd-link>`
 		: '';
 	const groups = groupBy(components, 'category').sort(([a], [b]) => a.localeCompare(b));
 	return siblingPage({
@@ -571,16 +709,15 @@ ${hints.length ? `<p>Hints: zo is het bedoeld. Die laten niets falen.</p>\n${lis
 export function buildPages({ base = '/' } = {}) {
 	const components = collectComponents();
 	const patterns = collectPatterns();
-	const home = readHome();
 	const facts = { ...readFacts(), slugs: components.map((c) => c.slug).join(' ') };
 	const lintRules = loadData().rules;
 	const pages = {};
 	const HOME = ['Home', '/'];
 	const page = (path, title, description, main, trail = [HOME]) => {
-		pages[`${path.slice(1)}index.html`] = withBase(layout({ title, description, path, trail, main, home, facts }), base);
+		pages[`${path.slice(1)}index.html`] = withBase(layout({ title, description, path, trail, main, facts }), base);
 	};
 
-	pages['index.html'] = withBase(homePage(home), base);
+	pages['index.html'] = withBase(homePage(), base);
 
 	let stories = 0;
 	for (const { path, file, title, description, stories: storiesPath, examples } of PROSE) {

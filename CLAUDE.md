@@ -156,7 +156,7 @@ Hetzelfde geldt een laag lager voor gedrag: wat een component doet, documenteer 
 
 De website in `www/` is de documentatie: de landingspagina, en daarachter een pagina per component, per patroon en per onderwerp. Hij draait op `design.digitaledienst.overheid.nl` en is gebouwd met de componenten zelf, rechtstreeks uit `src/`. `npm run www` start hem lokaal, `npm run build:www` bouwt hem naar `www-dist/`.
 
-Alleen de landingspagina (`www/index.html`) is met de hand geschreven. Haar header en footer zijn die van elke pagina: de generator leest ze daaruit, dus een link in de footer zet je daar. De rest wordt gegenereerd (`www/build/site.js`) uit bronnen die er al zijn:
+De landingspagina (`www/index.html`, met `www/main.ts` en `www/styles.css`) is met de hand geschreven en blijft zoals ze is: de generator vervangt alleen haar `<head>` en haar balk, zodat ze hetzelfde menu heeft als elke pagina. De pagina's erachter worden gegenereerd (`www/build/site.js`) uit bronnen die er al zijn:
 
 | Pagina | Bron |
 |--------|------|
@@ -166,7 +166,7 @@ Alleen de landingspagina (`www/index.html`) is met de hand geschreven. Haar head
 | `/toegankelijkheid/`, `/changelog/` | `docs/ACCESSIBILITY.md`, `CHANGELOG.md` |
 | `/aan-de-slag/` | `www/content/*.md` |
 
-Een component heeft dus een pagina omdat het een stories-bestand heeft; niemand schrijft een componentpagina. De menubalk met de vaste secties staat ook in `www/index.html`, met een onderdrukking van de hint `top-navigation-bar-no-menu-row` en de reden erbij: op een naslagsite ga je van een component naar een patroon en terug. Een pagina binnen een sectie heeft daarnaast een terugknop naar de pagina erboven, en elke pagina heeft breadcrumbs.
+Een component heeft dus een pagina omdat het een stories-bestand heeft; niemand schrijft een componentpagina. Elke pagina heeft een menubalk met de vaste secties (`SECTIONS` in `site.js`), met een onderdrukking van de hint `top-navigation-bar-no-menu-row` en de reden erbij: op een naslagsite ga je van een component naar een patroon en terug. Een pagina binnen een sectie heeft daarnaast een terugknop naar de pagina erboven, en elke pagina heeft breadcrumbs.
 
 Een voorbeeld staat altijd op een podium (`site-stage`, `www/client/stage.ts`), dat met opzet geen component van het designsysteem is: zo zie je wat voorbeeld is en wat pagina. De controls onder het eerste voorbeeld komen uit de attributen van het component; `argTypes` in een story vullen alleen aan. De stories importeren nog `storybook/actions` en `storybook/preview-api`; die namen wijzen via een alias naar `www/client/shims/`.
 

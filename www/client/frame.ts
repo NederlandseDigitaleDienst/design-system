@@ -14,7 +14,6 @@ import './autoload.js';
 import { loadStory, mapArgs, mount, sourceOf, type LoadedStory } from './stories.js';
 import { withContext, type StoryContext } from './runtime.js';
 import { keepInPlace } from './stage.js';
-import { applyPreferences } from './preferences.js';
 
 const params = new URLSearchParams(location.search);
 const file = params.get('file') ?? '';
@@ -25,7 +24,6 @@ document.body.append(root);
 
 const scheme = params.get('scheme');
 if (scheme) document.documentElement.dataset.scheme = scheme;
-applyPreferences();
 
 const overrides = new Map<string, { tag: string; value: string | boolean }>();
 let story: LoadedStory | undefined;

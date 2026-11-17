@@ -14,16 +14,26 @@ import { readManifest, repoRoot } from './sources.js';
 
 export const generatedDir = resolve(repoRoot, 'www/.generated');
 
-// What every page loads. The landing page runs its own script; the other pages
-// run the one that knows the stage. The stylesheet is a file of its own, linked
+// What every page loads. The landing page keeps its own script and its own
+// stylesheet; the other pages run the script that knows the stage, and add to
+// the stylesheet what the stories and the stage need. The stylesheet is a file of its own, linked
 // from the head of every page, and not an import of a script: a stylesheet in
 // the head is there before the first paint, where one a script adds arrives
 // after the unstyled page showed.
 const ENTRIES = {
-	'home.ts': "import '../client/autoload.ts';\nimport '../main.ts';\n",
+	'home.ts': "import '../main.ts';\n",
+	'home.css': "@import '../styles.css';\n",
 	'main.ts': "import '../client/main.ts';\n",
 	'frame.ts': "import '../client/frame.ts';\n",
-	'styles.css': "@import '../styles.css';\n",
+	'styles.css': [
+		'../styles.css',
+		'../../src/components/inputs/dropdown/dropdown.css',
+		'../../src/components/forms/form-section/form-section.css',
+		'../../src/components/forms/form/form.css',
+		'../client/site.css',
+	]
+		.map((path) => `@import '${path}';\n`)
+		.join(''),
 };
 
 const WATCHED = [/\.stories\.ts$/, /\.md$/, /custom-elements\.json$/, /www\/index\.html$/, /www\/build\//, /lint\/data\.generated\.json$/];
