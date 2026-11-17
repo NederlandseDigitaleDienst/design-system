@@ -34,7 +34,7 @@
  * @slot - One or more `nldd-avatar` elements
  */
 
-import { LitElement } from 'lit';
+import { LitElement, supportsAdoptingStyleSheets } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { avatarGroupStyles } from './avatar-group.styles.js';
@@ -202,7 +202,7 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 
 	private _syncGeneratedRules(): void {
 		const root = this.shadowRoot;
-		if (!root) return;
+		if (!root || !supportsAdoptingStyleSheets) return;
 		this._generatedRules ??= new CSSStyleSheet();
 		const sheet = this._generatedRules;
 		// Again when the list was replaced since, as style hot reloading does.
