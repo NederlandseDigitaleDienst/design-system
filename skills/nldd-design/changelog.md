@@ -32,6 +32,9 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-form-field` walks past an `<input type="hidden">` to the control beside it.** A server-rendered form puts hidden fields next to its controls (the counters of a Django formset), and the label and description went to the hidden input, where no one reaches them. `nldd lint` no longer counts a hidden input as the control either, so `form-field-needs-input` reports a field that holds nothing else.
 - **Focus goes back to the button of an overflow menu when a sheet or dialog opened from that menu closes,** in `nldd-toolbar` and `nldd-menu-bar`. It fell to the page, because the item that opened it was gone with the menu.
 - **The "more" menu of `nldd-menu-bar` and `nldd-document-tab-bar` works inside a modal dialog.** It was placed in the page body, which a modal dialog makes inert: you saw it but could not use it. It now also follows the color scheme and language of its bar.
+- **A checkbox or radio item in the overflow menu of `nldd-toolbar` shows its check mark at once and blinks before the menu closes,** like any other item. The menu was rebuilt under the click: no blink, and a group divider that should stay hidden came back.
+- **A tab chosen from the overflow menu of `nldd-tab-bar` blinks and closes the menu.** The menu stayed open.
+- **`nldd-token-field` gets its values back when the browser restores a page from its cache.**
 - **`nldd-menu` opens on the side that fits after a choice closed it.** In Safari and Firefox it then opened below its button, cut short and scrolling, even with room above.
 - **A sheet, window or modal dialog that you open again in its `close` handler, or right after it, stays open,** and fires `close` once. It used to close again by itself.
 - **The backdrop of `nldd-sheet`, `nldd-window` and `nldd-modal-dialog` closes it only when the press and the release are both on the backdrop,** so a text selection that ends outside no longer closes it.
