@@ -707,7 +707,7 @@ A customizable icon component that renders SVG icons from a predefined library. 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `icon` | `string` | The name of the icon to display. The same attribute every other component that renders an icon takes. |
+| `icon` | `string` | The name of the icon to display. The same attribute every other component that renders an icon takes. Prefer an alias that names what the icon means here (`microphone-off`, `info`, `new-account`) over the name of the drawing; both show the same icon. |
 | `size` | `string` | `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). |
 | `color` | `string` | Functional (`content`, the default, `secondary`, `accent`, `critical`, `warning`, `success`, the colors the surface passes on as `--context-content-*`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). |
 | `custom-color` | `string` | A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know. It wins over `color`. |
@@ -1536,6 +1536,7 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 
 **Rules** (`nldd lint`)
 
+- `multi-line-text-field-button-size-no-effect`: The button in the `button` slot has a size of its own, but the field sets it: `sm` in a field of `md`, `xs` in one of `sm`. Leave the size off the button.
 - `multi-line-text-field-needs-name`: nldd-multi-line-text-field needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name.
 
 **Attributes**
@@ -1562,6 +1563,12 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 | `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `button` | One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` in a row under the text, inside the border: the one action of a form that is only this field (post a reply, add a note), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`. |
 
 **Events**
 
@@ -2145,7 +2152,7 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 | Slot | Description |
 | --- | --- |
-| `button` | One `nldd-button` or `nldd-icon-button` at the end of the field, for the one action of a form that is only this field: sign up with an email address, redeem a code. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`. |
+| `button` | One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` at the end of the field: the one action of a form that is only this field (sign up with an email address, redeem a code), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`. |
 
 **Events**
 

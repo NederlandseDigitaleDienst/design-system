@@ -636,6 +636,11 @@ export const devRules: DevRule[] = [
 		}
 	},
 	{
+		"id": "multi-line-text-field-button-size-no-effect",
+		"message": "The button in the `button` slot has a size of its own, but the field sets it: `sm` in a field of `md`, `xs` in one of `sm`. Leave the size off the button.",
+		"context": "nldd-multi-line-text-field:state(own-button-size-overwritten)"
+	},
+	{
 		"id": "multi-line-text-field-needs-name",
 		"message": "nldd-multi-line-text-field needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-multi-line-text-field",

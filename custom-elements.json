@@ -6389,7 +6389,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "The name of the icon to display. The same attribute every other component that renders an icon takes.",
+              "description": "The name of the icon to display. The same attribute every other component that renders an icon takes. Prefer an alias that names what the icon means here (`microphone-off`, `info`, `new-account`) over the name of the drawing; both show the same icon.",
               "name": "icon",
               "default": "'circle-dashed'",
               "fieldName": "icon"
@@ -17075,7 +17075,13 @@
             "package": "lit"
           },
           "tagName": "nldd-multi-line-text-field",
-          "customElement": true
+          "customElement": true,
+          "slots": [
+            {
+              "name": "button",
+              "description": "One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` in a row under the text, inside the border: the one action of a form that is only this field (post a reply, add a note), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type=\"submit\"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`."
+            }
+          ]
         }
       ],
       "exports": [
@@ -29858,15 +29864,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "buttonSize",
-              "type": {
-                "text": "'sm' | 'xs'"
-              },
-              "description": "The size a slotted button gets: one step below the field, so it fits inside the border.",
-              "readonly": true
-            },
-            {
               "kind": "method",
               "name": "formValue",
               "return": {
@@ -30401,7 +30398,7 @@
           "slots": [
             {
               "name": "button",
-              "description": "One `nldd-button` or `nldd-icon-button` at the end of the field, for the one action of a form that is only this field: sign up with an email address, redeem a code. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type=\"submit\"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`."
+              "description": "One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` at the end of the field: the one action of a form that is only this field (sign up with an email address, redeem a code), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type=\"submit\"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`."
             }
           ]
         }
@@ -52710,6 +52707,94 @@
           "declaration": {
             "name": "setState",
             "module": "src/utilities/element-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/field-button-controller.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The `button` slot of a text field: gives the button a size one step below\nthe field, so it sits inside the border, and disables it with the field.\nUsed by nldd-text-field and nldd-multi-line-text-field.",
+          "name": "FieldButtonController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasButton",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the slot holds anything, so an empty one reserves no space."
+            },
+            {
+              "kind": "field",
+              "name": "_sized",
+              "privacy": "private",
+              "default": "new WeakSet<Element>()",
+              "description": "Buttons whose size the field has set, so a size of their own can be told apart."
+            },
+            {
+              "kind": "field",
+              "name": "_disabled",
+              "privacy": "private",
+              "default": "new WeakSet<Element>()",
+              "description": "Buttons the field disabled, so it only enables what it disabled itself."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'xs'"
+              },
+              "description": "The size a slotted button gets: `sm` in a field of `md`, `xs` in one of `sm`.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_buttons",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostUpdated",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handleSlotChange"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FieldButtonController",
+          "declaration": {
+            "name": "FieldButtonController",
+            "module": "src/utilities/field-button-controller.ts"
           }
         }
       ]
