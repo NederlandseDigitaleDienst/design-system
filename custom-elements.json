@@ -2639,7 +2639,7 @@
         },
         {
           "kind": "class",
-          "description": "The pointer gestures of a menu, each with its own coordinates and listeners:\n\n1. **Press, drag and release.** A native `<select>` lets you press on one\n   option, drag to another and release to pick that one. Click events don't\n   fire across two elements, so the release is caught on document and, when\n   it lands on another enabled item, that item is selected. The click on the\n   pressed item still owns a press without a drag.\n2. **No press flash while scrolling.** On touch, pressing an item sets\n   :active and the sticky :hover lands on it, so the press highlight shows.\n   When the gesture turns into a scroll of a cramped menu, :active lingers\n   until the browser recognizes the pan. Past the threshold the host gets\n   `scroll-active`, and the styles drop the press highlight while it is set.\n   A tap never moves that far, so it keeps its brief feedback.\n3. **A tap beside the menu.** An outside touch is also how a page scroll\n   begins, so the menu only hears of it once the finger lifts without\n   having moved past the threshold.",
+          "description": "The pointer gestures of a menu, each with its own coordinates and listeners:\n\n1. **Press, drag and release.** A native `<select>` lets you press on one\n   option, drag to another and release to pick that one. Click events don't\n   fire across two elements, so the release is caught on document and, when\n   it lands on another enabled item, that item is selected. The click on the\n   pressed item still owns a press without a drag.\n2. **No press flash while scrolling.** On touch, pressing an item sets\n   :active and the sticky :hover lands on it, so the press highlight shows.\n   When the gesture turns into a scroll of a cramped menu, :active lingers\n   until the browser recognizes the pan. Past the threshold the host and\n   its items get `scroll-active`, and each item drops its press highlight\n   while it is set.\n   A tap never moves that far, so it keeps its brief feedback.\n3. **A tap beside the menu.** An outside touch is also how a page scroll\n   begins, so the menu only hears of it once the finger lifts without\n   having moved past the threshold.",
           "name": "MenuPointerController",
           "members": [
             {
@@ -2705,6 +2705,25 @@
               "kind": "field",
               "name": "_handleRelease",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_setScrollActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "on",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "On the menu and on its own items, which drop their press colors: the\ncolors of an item are its own, so the menu cannot reach them."
             },
             {
               "kind": "method",
