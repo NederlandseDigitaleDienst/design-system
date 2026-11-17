@@ -6,7 +6,8 @@
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
-import { GROUPS, OPT_IN_GROUPS } from '../../lint/rule-data.js';
+import { GROUPS } from '../../lint/rule-data.js';
+import { compileForBrowser } from '../../lint/rule-compiler.js';
 import { basename, join, dirname } from 'node:path';
 import Ajv from 'ajv';
 import { parse as parseSelector, stringify } from 'css-what';
@@ -174,55 +175,9 @@ function valueRules(tags) {
 	);
 }
 
-const toProperty = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-
-/**
- * `[accessible-label]` in an assert also holds for the property `accessibleLabel`.
- * Not inside a `:not()`: there the attribute is what may not be there, and a
- * property that is set does not excuse it.
- */
-function propertiesIn(assert) {
-	const names = [];
-	const negated = [];
-	for (let i = 0; i < assert.length; i++) {
-		if (assert.startsWith(':not(', i)) {
-			negated.push(true);
-			i += 4;
-		} else if (assert[i] === '(') {
-			negated.push(false);
-		} else if (assert[i] === ')') {
-			negated.pop();
-		} else if (assert[i] === '[' && negated.filter(Boolean).length % 2 === 0) {
-			const match = /^\[([a-z-]+)\]/.exec(assert.slice(i));
-			if (match) names.push(toProperty(match[1]));
-		}
-	}
-	return [...new Set(names)];
-}
-
-/** The rules the browser runs: plain CSS, so class pseudos become lists of tags. */
+/** The rules the browser runs, as plain CSS. See lint/rule-compiler.js. */
 export function buildDevRules(rules, classes, tags) {
-	// On a running page the field has set the attribute, so no exception is needed.
-	const expand = (selector) =>
-		selector
-		&& selector
-			.replace(/, :named-by-field/, '')
-			.replace(/:([a-z-]+)/g, (match, name) => (classes[name] ? `:is(${classes[name].join(', ')})` : match));
-	const authored = rules
-		// Components write `style`, `id` and more on a live page, which a hint would take for
-		// the app's own markup. A hint is advice for whoever writes the source.
-		// The group pure judges the app's own markup too, and a live page is full of what
-		// components write themselves; it is also off unless a project turns it on.
-		.filter((rule) => !rule.ref && rule.severity !== 'hint' && !OPT_IN_GROUPS.includes(rule.group))
-		.map(({ id, context, assert, report, count, message }) => ({
-			id,
-			message,
-			context: expand(context),
-			...(assert ? { assert: expand(assert), properties: propertiesIn(expand(assert)) } : {}),
-			...(report ? { report: expand(report) } : {}),
-			...(count ? { count: { ...count, of: expand(count.of) } } : {}),
-		}));
-	return [...authored, ...valueRules(tags)];
+	return [...rules.map((rule) => compileForBrowser(rule, classes)).filter(Boolean), ...valueRules(tags)];
 }
 
 export function loadRules(rulesDir, schema) {

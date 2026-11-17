@@ -24,18 +24,18 @@ describe('rules in the browser', () => {
 
 	afterEach(() => root?.remove());
 
-	// The group pure is a choice of the project and judges its source, so it stays out of the browser.
-	// A rule that follows an id (`ref`) is no selector, and stays out too.
-	for (const { id, examples } of data.rules.filter((each) => each.examples && !each.ref && each.severity !== 'hint' && each.group !== 'pure')) {
-		const rule = devRules.find((each) => each.id === id)!;
+	// Every rule the browser runs, as lint/rule-compiler.js decides.
+	for (const rule of devRules) {
+		const examples = data.rules.find((each) => each.id === rule.id)?.examples;
+		if (!examples) continue;
 
-		it(`${id} agrees with its examples`, async () => {
-			for (const example of examples!.passed) {
+		it(`${rule.id} agrees with its examples`, async () => {
+			for (const example of examples.passed) {
 				await mount(example);
 				expect(findViolations(root, [rule]), example).toEqual([]);
 				root.remove();
 			}
-			for (const example of examples!.failed) {
+			for (const example of examples.failed) {
 				await mount(example.replace(/<\/?(html|body)>/g, ''));
 				// The document, not root: a notification moves itself to its area.
 				expect(findViolations(document, [rule]).length, example).toBeGreaterThan(0);
