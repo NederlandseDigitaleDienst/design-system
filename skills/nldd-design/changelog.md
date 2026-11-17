@@ -17,6 +17,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
+- **Components that do the same thing now share how they do it.** Sheet, window and modal dialog open, close and return focus the same way; so do the overflow menus of the toolbar, menu bar and document tab bar, the radio, checkbox and toggle groups, and the reset of every form control. Most fixes below came out of that, and the next fix in one of them reaches all of them. See Fixed.
 - **Custom validation messages stay on `nldd-token-field` and `nldd-file-field`,** and `nldd-time-picker` keeps to the same bounds as `nldd-time-field`. See Fixed.
 - **Menus behave in more places.** The "more" menu of `nldd-menu-bar` and `nldd-document-tab-bar` works inside a modal dialog, `nldd-menu` opens on the side that fits after a choice closed it, and `nldd-avatar-group` needs no `'unsafe-inline'` in your CSP. See Fixed.
 - **4 accessibility fixes:** focus goes back to what opened `nldd-modal-dialog`, and to the overflow button when a sheet or dialog opened from that menu closes. A tooltip shown by focus stays, and the label of `nldd-form-field` reaches the control past a hidden input. See Fixed.
