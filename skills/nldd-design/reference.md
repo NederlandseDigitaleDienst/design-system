@@ -2259,7 +2259,7 @@ Two columns, hours and minutes, that slide like a wheel past the selection in th
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | The chosen time as `HH:mm` (24-hour). |
+| `value` | `string` | The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it. |
 | `min` | `string` | Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from. |
 | `max` | `string` | Latest allowed time as `HH:mm`, read as generously as `min`. |
 | `step` | `number` | Step in minutes (default 1). Decides which minutes are in the column. |

@@ -33432,7 +33432,7 @@
               },
               "default": "''",
               "fieldName": "value",
-              "description": "The chosen time as `HH:mm` (24-hour)."
+              "description": "The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it."
             },
             {
               "name": "min",

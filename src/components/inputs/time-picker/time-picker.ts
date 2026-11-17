@@ -14,7 +14,7 @@
  *
  * @element nldd-time-picker
  *
- * @attr {string} value - The chosen time as `HH:mm` (24-hour).
+ * @attr {string} value - The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it.
  * @attr {string} min - Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from.
  * @attr {string} max - Latest allowed time as `HH:mm`, read as generously as `min`.
  * @attr {number} step - Step in minutes (default 1). Decides which minutes are in the column.
@@ -123,8 +123,12 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	/** Read the way nldd-time-field reads them, so a bound the field accepts
 	 *  (`9:00`) is one the wheel keeps to as well. */
 	private get _rules(): TimeRules {
-		return resolveRules(this.min, this.max, this.step);
+		const key = `${this.min}|${this.max}|${this.step}`;
+		if (this._rulesFor?.key !== key) this._rulesFor = { key, rules: resolveRules(this.min, this.max, this.step) };
+		return this._rulesFor.rules;
 	}
+
+	private _rulesFor: { key: string; rules: TimeRules } | null = null;
 
 	private get _minMinutes(): number {
 		return this._rules.min ? toMinutes(this._rules.min) : 0;
