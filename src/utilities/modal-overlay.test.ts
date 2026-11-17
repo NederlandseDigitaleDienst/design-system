@@ -175,6 +175,16 @@ describe('ModalOverlay', () => {
 		}
 	});
 
+	it('finishes its close on its own animation, not on one in its content', async () => {
+		const el = await mount({ animatedClose: true }, '<span>Bezig</span>');
+		el.show();
+		el.hide();
+		el.querySelector('span')!.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+		expect(dialogOf(el).open).toBe(true);
+		dialogOf(el).dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+		expect(dialogOf(el).open).toBe(false);
+	});
+
 	it('runs beforeOpen again when it is opened during its close', async () => {
 		const beforeOpen = vi.fn();
 		const el = await mount({ animatedClose: true, beforeOpen });

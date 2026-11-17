@@ -135,16 +135,19 @@ export class ModalOverlay implements ReactiveController {
 
 		this._closing = true;
 		dialog.classList.add('is-closing');
-		const finish = (): void => {
+		const finish = (event?: Event): void => {
 			// Only this close: after a reopen and a second hide() in the same frame,
 			// the first close's frame callback is still due.
 			if (this._finishClose !== finish) return;
+			// animationend bubbles: an animation in the content ends no close.
+			if (event && event.target !== dialog) return;
 			this._settle(dialog);
 			dialog.close();
 			this._emitClose();
 		};
 		this._finishClose = finish;
-		dialog.addEventListener('animationend', finish, { once: true });
+		// Not once: one from the content is skipped. _settle() takes it off.
+		dialog.addEventListener('animationend', finish);
 		// Reduced motion: no animation runs, so none ends.
 		requestAnimationFrame(() => {
 			if (getComputedStyle(dialog).animationName === 'none') finish();
