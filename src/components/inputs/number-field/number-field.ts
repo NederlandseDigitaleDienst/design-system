@@ -57,6 +57,8 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = numberFieldStyles;
 
+	static formProperties = ['value'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -68,8 +70,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
 
-
-	private _initialValue: number | null = null;
 
 	/** The value, or null for an empty field. An empty or unreadable attribute is empty too. */
 	@property({ converter: emptyOrNumber })
@@ -133,10 +133,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  that arrives in the meantime comes from outside and counts as committed. */
 	private _typed: number | null | undefined = undefined;
 
-	override firstUpdated(): void {
-		this._initialValue = this.value === null ? null : this._clamp(this.value);
-	}
-
 	override updated(changedProperties: Map<string, unknown>): void {
 		if (changedProperties.has('width')) {
 			const w = this.width;
@@ -161,15 +157,19 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 		return this.value === null ? '' : String(this.value);
 	}
 
-	formResetCallback(): void {
-		this.value = this._initialValue;
+	/** A reset or restore lands within min and max, as typing does. */
+	override formResetCallback(): void {
+		super.formResetCallback();
+		this._clampValue();
 	}
 
+	override formStateRestoreCallback(state: FormValue, mode?: 'restore' | 'autocomplete'): void {
+		super.formStateRestoreCallback(state, mode);
+		this._clampValue();
+	}
 
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state !== 'string') return;
-		const parsed = emptyOrNumber(state);
-		this.value = parsed === null ? null : this._clamp(parsed);
+	private _clampValue(): void {
+		if (this.value !== null) this.value = this._clamp(this.value);
 	}
 
 	// — i18n —————————————————————————————————————————————————————————————————
@@ -212,12 +212,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 		if (parsed === this.value) return;
 		this._typed = parsed;
 		this.value = parsed;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('input', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('input', { value: this.value });
 	}
 
 	/** Fires on blur or Enter. Clamps the value; an emptied field stays empty. */

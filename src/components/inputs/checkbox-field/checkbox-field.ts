@@ -51,12 +51,12 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = checkboxFieldStyles;
 
+	static formProperties = ['checked'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
-
-	private _initialChecked = false;
 
 	@property({ type: Boolean, reflect: true })
 	checked = false;
@@ -109,10 +109,6 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
-
-	override firstUpdated(): void {
-		this._initialChecked = this.checked;
-	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -215,17 +211,13 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 		return uncheckedValidity({ required: this.required, checked: this.checked || this._groupHasSelection, disabled: this.disabled });
 	}
 
-	formResetCallback(): void {
-		this.checked = this._initialChecked;
+	override formResetCallback(): void {
+		super.formResetCallback();
 		this.indeterminate = false;
 		// The options under this one reset too, in their own callbacks.
 		if (this._childFields.length > 0) queueMicrotask(() => this._followChildren(false));
 	}
 
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		this.checked = state !== null;
-	}
 
 	public _handleLabelClick(e: Event): void {
 		if (this.disabled) return;

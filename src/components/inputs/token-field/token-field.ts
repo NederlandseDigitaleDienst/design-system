@@ -65,6 +65,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = tokenFieldStyles;
 
+	static formProperties = ['values'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -76,7 +78,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
 
-	private _initialValues: string[] = [];
 
 	// Property order matches the story controls (values kept high, above
 	// placeholder, per the text-field convention). No `size` axis yet — the field
@@ -247,7 +248,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	override firstUpdated(): void {
-		this._initialValues = [...this.values];
 		this.commitFormValue();
 		// Give the host a lasting accessible name and grouping via ElementInternals.
 		// The input carries aria-label, but it is removed when every value is chosen
@@ -335,11 +335,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 			message: this._t('components.token-field.required-error-text'),
 		};
 	}
-
-	formResetCallback(): void {
-		this.values = [...this._initialValues];
-	}
-
 
 	private get _input(): HTMLInputElement | null {
 		return this.shadowRoot?.querySelector<HTMLInputElement>('.token-field__input') ?? null;

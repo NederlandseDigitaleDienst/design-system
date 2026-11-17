@@ -89,6 +89,8 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = dateFieldStyles;
 
+	static formProperties = ['value'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -101,7 +103,6 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	static blocksImplicitSubmission = true;
 
 
-	private _initialValue = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
@@ -273,7 +274,6 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	override firstUpdated(): void {
-		this._initialValue = this.value;
 		this._handlePickerSlotChange();
 	}
 
@@ -322,17 +322,13 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 		this._syncSlottedPicker();
 	}
 
-	formResetCallback(): void {
+	override formResetCallback(): void {
+		super.formResetCallback();
 		// The texts as well: text that is no date leaves value empty, so a reset to
 		// an empty value would not change value and the text would stay.
-		this._texts = splitValue(this._initialValue, this._endCount).map(formatDisplay);
-		this.value = this._initialValue;
+		this._texts = splitValue(this.value, this._endCount).map(formatDisplay);
 	}
 
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') this.value = state;
-	}
 
 	// — i18n —————————————————————————————————————————————————————————————————
 
@@ -613,12 +609,7 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	private _emit(type: 'input' | 'change'): void {
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent(type, {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent(type, { value: this.value });
 	}
 
 	override render() {

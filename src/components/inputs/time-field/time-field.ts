@@ -94,6 +94,8 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = timeFieldStyles;
 
+	static formProperties = ['value'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -105,7 +107,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
 
-	private _initialValue = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
@@ -587,29 +588,19 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 	}
 
-	formResetCallback(): void {
+	override formResetCallback(): void {
+		super.formResetCallback();
 		// The text as well: text that is no time leaves value empty, so a reset to
 		// an empty value would not change value and the text would stay.
-		this._display = this._initialValue;
-		this.value = this._initialValue;
+		this._display = this.value;
 		this.commitFormValue();
-	}
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') this.value = state;
 	}
 
 	private _emit(type: 'input' | 'change'): void {
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent(type, {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent(type, { value: this.value });
 	}
 
 	override firstUpdated(): void {
-		this._initialValue = this.value;
 		this.commitFormValue();
 	}
 

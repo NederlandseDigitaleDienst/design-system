@@ -73,12 +73,13 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	required = false;
 	static override styles = toggleButtonStyles;
 
+	static formProperties = ['selected'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
 
-	private _initialSelected = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonType>('button') })
 	type: ToggleButtonType = 'button';
@@ -189,10 +190,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
-	override firstUpdated(): void {
-		this._initialSelected = this.selected;
-	}
-
 	/** Also when the app sets `selected` or a form resets it: the group moves
 	 *  the stop for Tab along, which it cannot see by itself. */
 	override willUpdate(changed: PropertyValues): void {
@@ -273,15 +270,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 		return submits && this.selected ? this.value : null;
 	}
 
-	formResetCallback(): void {
-		this.selected = this._initialSelected;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		this.selected = state !== null;
-	}
-
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.addEventListener('click', this._onRadioClick);
@@ -344,13 +332,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	 * shows. Returns whether the change stands.
 	 */
 	private _dispatchChange(): boolean {
-		this.commitFormValue();
-		return this.dispatchEvent(new CustomEvent('change', {
-			detail: { selected: this.selected, value: this.value },
-			bubbles: true,
-			composed: true,
-			cancelable: this.type !== 'radio',
-		}));
+		return this.emitFormEvent('change', { selected: this.selected, value: this.value }, { cancelable: this.type !== 'radio' });
 	}
 
 	/**

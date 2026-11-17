@@ -318,13 +318,12 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 
 	static override styles = segmentedControlStyles;
 
+	static formProperties = ['value', 'values'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
-
-	private _initialValue = '';
-	private _initialValues: string[] = [];
 
 	/** Selected value for radio type. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -396,8 +395,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 
 	override firstUpdated(): void {
 		this._syncItems();
-		this._initialValue = this.value;
-		this._initialValues = [...this.values];
 	}
 
 	override formValue(): FormValue {
@@ -409,11 +406,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		return data;
 	}
 
-	formResetCallback(): void {
-		this.value = this._initialValue;
-		this.values = [...this._initialValues];
-	}
-
 	/** The group has no focus of its own, so an invalid submit lands where Tab
 	 *  would: on the chosen option, or the first one that is enabled. */
 	override validationAnchor(): HTMLElement | undefined {
@@ -422,7 +414,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	}
 
 
-	formStateRestoreCallback(state: FormData | string | null): void {
+	override formStateRestoreCallback(state: FormData | string | null): void {
 		if (state === null) return;
 		if (this.type === 'checkbox' && state instanceof FormData && this.name) {
 			this.values = state.getAll(this.name).map(String);
@@ -568,22 +560,12 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 				: current.filter(v => v !== e.detail.value);
 			this.values = updated;
 			this._syncItems();
-			this.commitFormValue();
-			this.dispatchEvent(new CustomEvent('change', {
-				detail: { values: updated },
-				bubbles: true,
-				composed: true,
-			}));
+			this.emitFormEvent('change', { values: updated });
 		} else {
 			if (e.detail.value === this.value) return;
 			this.value = e.detail.value;
 			this._syncItems();
-			this.commitFormValue();
-			this.dispatchEvent(new CustomEvent('change', {
-				detail: { value: this.value },
-				bubbles: true,
-				composed: true,
-			}));
+			this.emitFormEvent('change', { value: this.value });
 		}
 	};
 

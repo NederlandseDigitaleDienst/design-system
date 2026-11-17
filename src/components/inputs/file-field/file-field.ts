@@ -788,12 +788,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	private _commit(): void {
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { files: this._files, paths: this._paths },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { files: this._files, paths: this._paths });
 	}
 
 
@@ -834,7 +829,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Back to empty, as a clear, but without a change event, as a native
 	 *  input resets: a folder still being read is dropped too. */
-	formResetCallback(): void {
+	override formResetCallback(): void {
 		this._action++;
 		this._stopReading();
 		this._clearRejection();

@@ -10643,6 +10643,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['checked']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -10777,24 +10791,11 @@
                 "type": {
                   "text": "void"
                 }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
               },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -10903,6 +10904,91 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -11387,6 +11473,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['checked']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -11527,24 +11627,11 @@
                 "type": {
                   "text": "void"
                 }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
               },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -11663,6 +11750,91 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -11794,12 +11966,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "description": "Fired when the checkbox state changes; detail: { checked: boolean, value: string }"
             }
           ],
           "attributes": [
@@ -11947,7 +12113,13 @@
             "package": "lit"
           },
           "tagName": "nldd-checkbox",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "Fired when the checkbox state changes; detail: { checked: boolean, value: string }"
+            }
+          ]
         }
       ],
       "exports": [
@@ -12116,6 +12288,118 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "[]",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -12439,40 +12723,6 @@
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
               }
-            },
-            {
-              "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "NLDDCodeMirrorInput",
-                "module": "src/utilities/codemirror/codemirror-input.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "NLDDCodeMirrorInput",
-                "module": "src/utilities/codemirror/codemirror-input.ts"
-              }
             }
           ],
           "attributes": [
@@ -12727,6 +12977,20 @@
           "description": "A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu with nldd-menu-item children to provide options. After typing, a screen reader hears how many options are shown (\"2 resultaten\"), or the empty text when none are, also for options that a server sends in later. Only the number it lands on: it waits until the options settle. The slotted nldd-menu keeps its default focus behavior (menu container receives focus) so that typing keeps focus on the input. The picker button moves focus to the menu explicitly on activation. Note: Only nldd-menu-item type=\"button\" is supported. Radio and checkbox types are not supported in this context.",
           "name": "NLDDComboBox",
           "members": [
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value', 'text']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
             {
               "kind": "field",
               "name": "isFormInput",
@@ -12998,15 +13262,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
               "name": "formStateRestoreCallback",
               "return": {
                 "type": {
@@ -13020,7 +13275,11 @@
                     "text": "File | string | FormData | null"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -13129,6 +13388,76 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -13246,16 +13575,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "input",
-              "description": "When the input value changes; detail: { value: string }"
-            },
-            {
-              "name": "change",
-              "description": "When an option is selected or a custom value is committed; detail: { value: string }"
             }
           ],
           "attributes": [
@@ -13492,6 +13811,16 @@
           },
           "tagName": "nldd-combo-box",
           "customElement": true,
+          "events": [
+            {
+              "name": "input",
+              "description": "When the input value changes; detail: { value: string }"
+            },
+            {
+              "name": "change",
+              "description": "When an option is selected or a custom value is committed; detail: { value: string }"
+            }
+          ],
           "slots": [
             {
               "name": "",
@@ -13801,6 +14130,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -14012,24 +14355,11 @@
                 "type": {
                   "text": "void"
                 }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
               },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -14154,6 +14484,91 @@
             },
             {
               "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "formState",
               "return": {
                 "type": {
@@ -14264,16 +14679,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "input",
-              "description": "On every change. detail: { value } with the ISO date, or '' while there is no valid date."
-            },
-            {
-              "name": "change",
-              "description": "When the value is committed. detail: { value } with the ISO date, or ''."
             }
           ],
           "attributes": [
@@ -14485,6 +14890,16 @@
           },
           "tagName": "nldd-date-field",
           "customElement": true,
+          "events": [
+            {
+              "name": "input",
+              "description": "On every change. detail: { value } with the ISO date, or '' while there is no valid date."
+            },
+            {
+              "name": "change",
+              "description": "When the value is committed. detail: { value } with the ISO date, or ''."
+            }
+          ],
           "slots": [
             {
               "name": "picker",
@@ -15944,7 +16359,11 @@
                   "text": "void"
                 }
               },
-              "description": "Back to empty, as a clear, but without a change event, as a native\ninput resets: a folder still being read is dropped too."
+              "description": "Back to empty, as a clear, but without a change event, as a native\ninput resets: a folder still being read is dropped too.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -16059,6 +16478,105 @@
               }
             },
             {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "[]",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "formState",
               "return": {
@@ -16142,12 +16660,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "description": "When the chosen files change, including a clear; detail: { files: File[], paths: string[] }"
             }
           ],
           "attributes": [
@@ -16316,7 +16828,13 @@
             "package": "lit"
           },
           "tagName": "nldd-file-field",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "When the chosen files change, including a clear; detail: { files: File[], paths: string[] }"
+            }
+          ]
         }
       ],
       "exports": [
@@ -16355,6 +16873,20 @@
               },
               "static": true,
               "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -16588,32 +17120,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
               "kind": "field",
               "name": "describedByElements",
               "type": {
@@ -16701,6 +17207,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -16832,16 +17436,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "input",
-              "description": "When value changes"
-            },
-            {
-              "name": "change",
-              "description": "When value is committed (blur)"
             }
           ],
           "attributes": [
@@ -17076,6 +17670,16 @@
           },
           "tagName": "nldd-multi-line-text-field",
           "customElement": true,
+          "events": [
+            {
+              "name": "input",
+              "description": "When value changes"
+            },
+            {
+              "name": "change",
+              "description": "When value is committed (blur)"
+            }
+          ],
           "slots": [
             {
               "name": "button",
@@ -17128,6 +17732,20 @@
           "description": "A numeric input field with decrement and increment buttons.",
           "name": "NLDDNumberField",
           "members": [
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
             {
               "kind": "field",
               "name": "isFormInput",
@@ -17306,6 +17924,11 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "description": "A reset or restore lands within min and max, as typing does.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
               }
             },
             {
@@ -17320,10 +17943,21 @@
                 {
                   "name": "state",
                   "type": {
-                    "text": "File | string | FormData | null"
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -17432,6 +18066,63 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -17782,6 +18473,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -18018,32 +18723,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "blur",
               "privacy": "public",
               "return": {
@@ -18159,6 +18838,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -18528,6 +19305,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -18751,32 +19542,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "focus",
               "privacy": "public",
               "return": {
@@ -18883,6 +19648,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -19014,16 +19877,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "input",
-              "description": "When the input value changes ({ detail: { value } })"
-            },
-            {
-              "name": "change",
-              "description": "When the input value is committed ({ detail: { value } })"
             }
           ],
           "attributes": [
@@ -19232,7 +20085,17 @@
             "package": "lit"
           },
           "tagName": "nldd-password-field",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "input",
+              "description": "When the input value changes ({ detail: { value } })"
+            },
+            {
+              "name": "change",
+              "description": "When the input value is committed ({ detail: { value } })"
+            }
+          ]
         }
       ],
       "exports": [
@@ -19263,6 +20126,20 @@
           "description": "A radio button with an inline label. Use inside nldd-radio-button-group, which sets the name and labels the group. Fields that stand on their own group by name, the way native radios do: checking one unchecks the others, the arrow keys move between them and Tab stops at the group once. Put them in a container with role=\"radiogroup\", or a screen reader has nothing to count them from. The field is the radio: it carries the role, the state, the label it is announced by and the focus, and the nldd-radio-button inside only draws the shape. A radio of its own in there would be a second control inside a control, and a group of one to count. Form-associated: the checked field submits its `value` under `name`. Unchecking siblings is the group's job, so exactly one value per group reaches the form.",
           "name": "NLDDRadioButtonField",
           "members": [
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['checked']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
             {
               "kind": "field",
               "name": "isFormInput",
@@ -19370,32 +20247,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "select",
               "privacy": "public",
               "return": {
@@ -19493,6 +20344,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -19976,6 +20925,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['checked']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -20126,32 +21089,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "select",
               "privacy": "public",
               "return": {
@@ -20235,6 +21172,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -20552,6 +21587,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -20788,32 +21837,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "focus",
               "return": {
                 "type": {
@@ -20919,6 +21942,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -21686,6 +22807,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value', 'values']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -21822,15 +22957,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
               "name": "validationAnchor",
               "return": {
                 "type": {
@@ -21858,7 +22984,11 @@
                     "text": "FormData | string | null"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -21896,6 +23026,76 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -22209,6 +23409,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value', 'startValue', 'endValue']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -22400,16 +23614,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Back to the values in the attributes, as a native input resets to its\n`value` attribute, or else to what it had when it was first connected."
-            },
-            {
-              "kind": "method",
               "name": "formStateRestoreCallback",
               "return": {
                 "type": {
@@ -22423,7 +23627,11 @@
                     "text": "File | string | FormData | null"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -22532,6 +23740,76 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -22910,6 +24188,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -23028,15 +24320,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
               "name": "formStateRestoreCallback",
               "return": {
                 "type": {
@@ -23050,7 +24333,11 @@
                     "text": "File | string | FormData | null"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -23159,6 +24446,76 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -23290,12 +24647,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "description": "When the value changes; detail: { value: number }"
             }
           ],
           "attributes": [
@@ -23431,7 +24782,13 @@
             "package": "lit"
           },
           "tagName": "nldd-stepper",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "When the value changes; detail: { value: number }"
+            }
+          ]
         }
       ],
       "exports": [
@@ -23712,6 +25069,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -23816,32 +25187,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "FormData | string | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "validationAnchor",
               "return": {
                 "type": {
@@ -23890,6 +25235,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -24158,6 +25601,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['checked']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -24277,32 +25734,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "focus",
               "return": {
                 "type": {
@@ -24408,6 +25839,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -24525,12 +26054,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "description": "When checked state changes; detail: { checked: boolean, value: string }"
             }
           ],
           "attributes": [
@@ -24651,7 +26174,13 @@
             "package": "lit"
           },
           "tagName": "nldd-switch-field",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "When checked state changes; detail: { checked: boolean, value: string }"
+            }
+          ]
         }
       ],
       "exports": [
@@ -24682,6 +26211,20 @@
           "description": "A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.",
           "name": "NLDDSwitch",
           "members": [
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['checked']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
             {
               "kind": "field",
               "name": "isFormInput",
@@ -24809,32 +26352,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "toggle",
               "privacy": "public",
               "return": {
@@ -24950,6 +26467,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -25081,12 +26696,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "description": "When the switch state changes; detail: { checked: boolean, value: string }"
             }
           ],
           "attributes": [
@@ -25228,7 +26837,13 @@
             "package": "lit"
           },
           "tagName": "nldd-switch",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "When the switch state changes; detail: { checked: boolean, value: string }"
+            }
+          ]
         }
       ],
       "exports": [
@@ -28833,6 +30448,118 @@
               }
             },
             {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "[]",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "formValue",
               "return": {
@@ -29146,40 +30873,6 @@
               "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
               "attribute": "invalid",
               "reflects": true,
-              "inheritedFrom": {
-                "name": "NLDDCodeMirrorInput",
-                "module": "src/utilities/codemirror/codemirror-input.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "NLDDCodeMirrorInput",
-                "module": "src/utilities/codemirror/codemirror-input.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ],
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -29637,6 +31330,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -29879,32 +31586,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "blur",
               "privacy": "public",
               "return": {
@@ -30020,6 +31701,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -30151,16 +31930,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "input",
-              "description": "When input value changes"
-            },
-            {
-              "name": "change",
-              "description": "When input value is committed"
             }
           ],
           "attributes": [
@@ -30395,6 +32164,16 @@
           },
           "tagName": "nldd-text-field",
           "customElement": true,
+          "events": [
+            {
+              "name": "input",
+              "description": "When input value changes"
+            },
+            {
+              "name": "change",
+              "description": "When input value is committed"
+            }
+          ],
           "slots": [
             {
               "name": "button",
@@ -30755,6 +32534,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -30993,24 +32786,11 @@
                 "type": {
                   "text": "void"
                 }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
               },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -31100,6 +32880,91 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -31217,16 +33082,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "input",
-              "description": "On every change. detail: { value } with `HH:mm`, or '' while there is no valid time."
-            },
-            {
-              "name": "change",
-              "description": "When the value is committed: on leaving the field, and on closing the picker in a way that keeps the choice. detail: { value } with `HH:mm`, or ''."
             }
           ],
           "attributes": [
@@ -31438,6 +33293,16 @@
           },
           "tagName": "nldd-time-field",
           "customElement": true,
+          "events": [
+            {
+              "name": "input",
+              "description": "On every change. detail: { value } with `HH:mm`, or '' while there is no valid time."
+            },
+            {
+              "name": "change",
+              "description": "When the value is committed: on leaving the field, and on closing the picker in a way that keeps the choice. detail: { value } with `HH:mm`, or ''."
+            }
+          ],
           "slots": [
             {
               "name": "picker",
@@ -32143,6 +34008,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['selected']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isFormInput",
               "type": {
                 "text": "boolean"
@@ -32359,32 +34238,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "toggle",
               "return": {
                 "type": {
@@ -32500,6 +34353,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -32631,12 +34582,6 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "description": "When selection changes; detail: { selected: boolean, value: string }. With `type=\"button\"` or `\"checkbox\"` it is cancelable: `preventDefault()` keeps the old state, so the app decides, for instance once a server has accepted the change. Set `selected` yourself then. A radio is always chosen, since its group has already moved on."
             }
           ],
           "attributes": [
@@ -32875,6 +34820,12 @@
           },
           "tagName": "nldd-toggle-button",
           "customElement": true,
+          "events": [
+            {
+              "name": "change",
+              "description": "When selection changes; detail: { selected: boolean, value: string }. With `type=\"button\"` or `\"checkbox\"` it is cancelable: `preventDefault()` keeps the old state, so the app decides, for instance once a server has accepted the change. Set `selected` yourself then. A radio is always chosen, since its group has already moved on."
+            }
+          ],
           "slots": [
             {
               "name": "icon",
@@ -32915,6 +34866,20 @@
           "description": "A multi-select input that looks like a normal input field: chosen values show as dismissible tokens in a wrapping row, followed by an inline text input that stretches to fill the remaining space and wraps to a new line (growing the field) when it no longer fits. Options are supplied as a slotted nldd-menu, exactly like nldd-combo-box; the menu filters as you type, with a chevron picker button, arrow-key roving across the tokens and ElementInternals form participation. Options can arrive after the keystroke, from a server you query per keystroke. Slot them into the menu when they come in: if the user is still in the field and the keystroke found nothing to show, the menu opens then. After Escape, or once the user left the field, it stays shut. After typing, a screen reader hears how many options are shown (\"2 resultaten\"), or the empty text when none are, also for options that a server sends in later. Only the number it lands on: it waits until the options settle.",
           "name": "NLDDTokenField",
           "members": [
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['values']",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
             {
               "kind": "field",
               "name": "isFormInput",
@@ -33160,15 +35125,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
               "name": "focus",
               "return": {
                 "type": {
@@ -33274,6 +35230,104 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -51600,6 +53654,10 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
               }
             },
             {
@@ -51617,7 +53675,11 @@
                     "text": "File | string | FormData | null"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -51755,6 +53817,177 @@
               "kind": "field",
               "name": "internals",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "[]",
+              "description": "The properties that hold the value, for reset and restore.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_defaultsPending",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_defaults",
+              "privacy": "private",
+              "default": "new Map<string, unknown>()",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_options",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PropertyDeclaration"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_fromAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_takeDefaults",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -51912,6 +54145,16 @@
               "name": "change",
               "type": {
                 "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
               }
             }
           ],
@@ -52991,7 +55234,7 @@
         },
         {
           "kind": "mixin",
-          "description": "Turns a Lit element into a form-associated custom element: it submits under\n`name`, follows a disabled fieldset, and can be read back with `FormData`.\n\nA component supplies the one thing that is its own — what it submits — by\noverriding `formValue()`. Everything around it lives here, including the\ntiming: the value is committed on every render AND has to be committed again\nfrom the handler that changed it, with `commitFormValue()`. A render is a\ntask later than the event, so a listener that serializes the form on `change`\n(htmx, or a plain `new FormData(form)`) runs before the render and would\notherwise read the value from before the change. That contract is checked for\nevery input at once in `form-value-timing.test.ts`.\n\nReset and state restore stay with the component: what \"the initial value\" is\ndiffers per input (checked, text, a number to clamp, two fields at once), so\na component implements `formResetCallback` / `formStateRestoreCallback`\nitself.",
+          "description": "Turns a Lit element into a form-associated custom element: it submits under\n`name`, follows a disabled fieldset, and can be read back with `FormData`.\n\nA component supplies the one thing that is its own — what it submits — by\noverriding `formValue()`. Everything around it lives here, including the\ntiming: the value is committed on every render AND has to be committed again\nfrom the handler that changed it, with `commitFormValue()`. A render is a\ntask later than the event, so a listener that serializes the form on `change`\n(htmx, or a plain `new FormData(form)`) runs before the render and would\notherwise read the value from before the change. That contract is checked for\nevery input at once in `form-value-timing.test.ts`.\n\nReset and state restore follow `static formProperties`, the properties that\nhold the value. A reset puts each back to its default, as a native input\ndoes: the attribute when there is one, else what the property held after the\nfirst render (a framework sets the property, not the attribute). A property\nthat reflects is its own attribute, so it always goes back to the first\nrender. A restore fills a single property from the saved state: a boolean is\non when a value was saved, anything else goes through the property's own\nconverter. A component overrides the callbacks only for what is its own: a\nvalue to clamp, text to clear, two properties in one state.",
           "name": "FormAssociated",
           "members": [
             {
@@ -53007,6 +55250,174 @@
               "kind": "field",
               "name": "internals",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "[]",
+              "description": "The properties that hold the value, for reset and restore."
+            },
+            {
+              "kind": "field",
+              "name": "_defaultsPending",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_defaults",
+              "privacy": "private",
+              "default": "new Map<string, unknown>()"
+            },
+            {
+              "kind": "field",
+              "name": "_formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_options",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PropertyDeclaration"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_fromAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_takeDefaults",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render."
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -53121,6 +55532,14 @@
                   }
                 }
               ]
+            }
+          ],
+          "events": [
+            {
+              "name": "type",
+              "type": {
+                "text": "CustomEvent"
+              }
             }
           ],
           "parameters": [

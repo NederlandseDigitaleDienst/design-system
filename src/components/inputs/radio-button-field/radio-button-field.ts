@@ -49,12 +49,13 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 
 	static override styles = radioButtonFieldStyles;
 
+	static formProperties = ['checked'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
 
-	private _initialChecked = false;
 
 	@property({ type: Boolean, reflect: true })
 	checked = false;
@@ -144,10 +145,6 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 		this.removeEventListener('blur', this._onBlur);
 	}
 
-	override firstUpdated(): void {
-		this._initialChecked = this.checked;
-	}
-
 	/** Counting happens before the render, not after it: the place this field is
 	 *  given decides what `updated()` writes on it, and a count from there would
 	 *  ask for a second render of what was just drawn. */
@@ -200,15 +197,6 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 	 *  the form while `change` is still propagating never sees two values. */
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;
-	}
-
-	formResetCallback(): void {
-		this.checked = this._initialChecked;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		this.checked = state !== null;
 	}
 
 	/** Checks this field, the way a click or the space bar does. The group hears
