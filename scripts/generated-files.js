@@ -5,7 +5,7 @@
  * - `after` names the scripts whose output this one reads. The component
  *   reference reads custom-elements.json for what mixins bring in, so it comes
  *   after generate:cem; run the other way round it describes the old manifest.
- * - `check: 'pr'` runs in validate.yml on every pull request
+ * - `check: 'pr'` runs in validate.yml on every pull request and push to main
  *   (`npm run check:generated`). `check: 'release'` is written by the release
  *   pipeline (prepareCmd in .releaserc.json) and only has to be current then.
  *

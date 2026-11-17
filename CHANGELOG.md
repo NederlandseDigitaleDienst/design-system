@@ -29,6 +29,7 @@ here; consult the commit history if you need that level of detail.
 - **A checkbox or radio item in the overflow menu of `nldd-toolbar` shows its check mark at once and blinks before the menu closes,** like any other item. The menu was rebuilt under the click: no blink, and a group divider that should stay hidden came back.
 - **A tab chosen from the overflow menu of `nldd-tab-bar` blinks and closes the menu.** The menu stayed open.
 - **`nldd-token-field` gets its values back when the browser restores a page from its cache.**
+- **A form reset puts every control back the way a native input does:** to its `value` or `checked` attribute as it is now, else to what it held after its first render. Each control had its own rule, and some, such as `nldd-time-field`, went back to a value they had kept from the first render even after the attribute changed. A value set after the first render, such as data that loads later, counts as an edit: a reset does not go back to it.
 - **`nldd-menu` opens on the side that fits after a choice closed it.** In Safari and Firefox it then opened below its button, cut short and scrolling, even with room above.
 - **A sheet, window or modal dialog that you open again in its `close` handler, or right after it, stays open,** and fires `close` once. It used to close again by itself.
 - **The backdrop of `nldd-sheet`, `nldd-window` and `nldd-modal-dialog` closes it only when the press and the release are both on the backdrop,** so a text selection that ends outside no longer closes it.
