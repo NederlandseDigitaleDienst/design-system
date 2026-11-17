@@ -802,10 +802,10 @@ describe('--fix', () => {
 		assert.equal(fixed('a.ts', lit('.full-height=${a ? "}" : 2}')).text, lit('').replace('  ', ' '));
 	});
 
-	it('leaves a tag with a comment in it alone', () => {
+	it('fixes past a comment in a tag, and leaves a tag it cannot parse alone', () => {
+		// The parser says where the attribute is, so what the comment holds does not matter.
 		const inside = 'const a = <nldd-button /* variant="old" */ variant="primary" text="b" />;';
-		assert.equal(fixed('a.tsx', inside).text, inside);
-		assert.match(fixed('a.tsx', inside).stderr, /Fixed 0/);
+		assert.equal(fixed('a.tsx', inside).text, 'const a = <nldd-button /* variant="old" */ appearance="primary" text="b" />;');
 		const line = 'const a = <nldd-sheet // keep\n  full-height accessible-label="b" />;';
 		assert.equal(fixed('a.tsx', line).text, line);
 	});

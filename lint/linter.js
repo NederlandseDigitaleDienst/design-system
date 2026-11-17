@@ -405,6 +405,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				offset: node.offset,
 				endOffset: node.endOffset,
 				mention: node.mention,
+				startTag: node.startTag,
 				...position(node.offset),
 			}))
 			.concat(
