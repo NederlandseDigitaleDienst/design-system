@@ -1,0 +1,45 @@
+# Lezen in een sheet
+
+Een rij in een lijst opent een sheet met de uitleg die erbij hoort. De pagina blijft staan zoals hij was, en wie klaar is met lezen, sluit de sheet en staat weer op dezelfde plek. Gebruik deze vorm waar je anders een [`nldd-accordion`](/componenten/accordion/) zou kiezen, maar de inhoud lang is, een formulier bevat of een taak op zich is.
+
+## Wanneer wel en niet
+
+Een accordion klapt de inhoud uit op de plek zelf. Dat werkt voor een kort antwoord: de pagina schuift een paar regels op en je ziet nog waar je was. Bij een lange tekst duwt hij alles eronder uit beeld, en wie dichtklapt, staat ergens anders dan waar hij begon. Een sheet legt de inhoud over de pagina heen in plaats van erin, dus de pagina zelf verschuift nooit.
+
+Kies de accordion voor korte, aanvullende inhoud. Kies deze sheet zodra de inhoud langer is dan een scherm, koppen nodig heeft, of iets vraagt om te doen. Moet er iets ingevuld worden, dan is het [bewerken in een sheet](/patronen/edit-in-a-sheet/). Zie ook de [ontwerprichtlijnen](/richtlijnen/) over in- en uitklappen.
+
+## Compositie
+
+```
+nldd-page                      de pagina met de lijst
+  └─ nldd-simple-section
+       └─ nldd-list            appearance="box-base", accessible-label
+            └─ nldd-list-item  button, per onderwerp
+                 ├─ nldd-text-cell     het onderwerp
+                 └─ nldd-icon-cell     chevron-right: hier gaat iets open
+
+nldd-sheet                     open, placement, width; in de document-root
+  └─ nldd-page               sticky-header, zodat de balk in beeld blijft
+       ├─ nldd-top-title-bar   slot="header", met text, dismiss-text en collapse-anchor
+       └─ nldd-simple-section
+            ├─ nldd-title      slot="header", het id waar de balk naar wijst
+            └─ nldd-rich-text  de inhoud, met eigen koppen
+```
+
+<!-- voorbeeld: Standaard -->
+
+## Waarom zo
+
+**De rij zegt waar hij heen gaat.** De chevron naar rechts belooft een nieuw vlak, waar de chevron van een accordion belooft dat er iets openklapt. Het onderwerp in de rij is dezelfde zin als de titel in de sheet, zodat je ziet dat je bent aangekomen waar je op klikte.
+
+**De sheet heeft een eigen pagina.** Daardoor krijgt de inhoud de hele hoogte van het scherm, eigen koppen en een titelbalk die met `sticky-header` in beeld blijft en de titel overneemt zodra je eroverheen scrolt, net als bij [bewerken in een sheet](/patronen/edit-in-a-sheet/). In een accordion zou een kop in de inhoud ondergeschikt zijn aan de titel van het item, en die titel scrolt weg.
+
+**"Sluit", niet "Annuleer".** Er valt niets te annuleren: je hebt alleen gelezen. Er is ook geen primaire actie, dus de uitweg in de titelbalk is de enige knop.
+
+**Zet de sheet in de document-root.** Om dezelfde reden als bij [bewerken in een sheet](/patronen/edit-in-a-sheet/): als kind van een split view pikt hij de hoogte van het paneel in. In een framework teleporteer je hem naar `document.body`.
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: elke rij is een knop, de sheet heeft de dialoogrol en de naam uit de titelbalk, sluit met Esc en met een klik ernaast, en de focus gaat na het sluiten terug naar de rij die hem opende.
+
+Wat jij nog moet doen: een `accessible-label` op de lijst, een `text` op de titelbalk die zegt waar de sheet over gaat, en een `dismiss-text`.

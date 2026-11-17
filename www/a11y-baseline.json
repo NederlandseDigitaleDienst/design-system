@@ -1,0 +1,203 @@
+{
+	"/componenten/avatar/": {
+		"label-content-name-mismatch": 3
+	},
+	"/componenten/button/": {
+		"label-content-name-mismatch": 1
+	},
+	"/componenten/checkbox-field/": {
+		"color-contrast": 3
+	},
+	"/componenten/checkbox-group/": {
+		"color-contrast": 4
+	},
+	"/componenten/code-editor/": {
+		"color-contrast": 2
+	},
+	"/componenten/document-tab-bar/": {
+		"aria-required-children": 3,
+		"label-content-name-mismatch": 11
+	},
+	"/componenten/list-item-segment/": {
+		"aria-hidden-focus": 3,
+		"nested-interactive": 13
+	},
+	"/componenten/list/": {
+		"label": 1,
+		"nested-interactive": 30
+	},
+	"/componenten/menu-bar-item/": {
+		"label-content-name-mismatch": 1
+	},
+	"/componenten/menu-bar/": {
+		"label-content-name-mismatch": 2
+	},
+	"/componenten/multi-line-text-field/": {
+		"label": 4
+	},
+	"/componenten/number-field/": {
+		"label": 13
+	},
+	"/componenten/password-field/": {
+		"label": 4
+	},
+	"/componenten/rich-text/": {
+		"scrollable-region-focusable": 1
+	},
+	"/componenten/stepper/": {
+		"aria-hidden-focus": 10
+	},
+	"/componenten/switch-field/": {
+		"color-contrast": 2
+	},
+	"/componenten/text-field/": {
+		"label": 4
+	},
+	"/componenten/token/": {
+		"color-contrast": 3
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fbar-split-view%2Fbar-split-view.stories.ts&story=MetStatusbalk": {
+		"scrollable-region-focusable": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fnavigation-split-view%2Fnavigation-split-view.stories.ts&story=Standaard": {
+		"scrollable-region-focusable": 2
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fside-by-side-split-view%2Fside-by-side-split-view.stories.ts&story=DrieKolommen": {
+		"scrollable-region-focusable": 3
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fstacked-split-view%2Fstacked-split-view.stories.ts&story=DrieRijen": {
+		"scrollable-region-focusable": 3
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fstacked-split-view%2Fstacked-split-view.stories.ts&story=Standaard": {
+		"scrollable-region-focusable": 2
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=AlleToestanden": {
+		"label-content-name-mismatch": 2
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=MetTerugknop": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=MetWoordmerk": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=SmalScherm": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=VeelGlobaleItems": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Bruin": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Donkerblauw": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Donkerbruin": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Donkergeel": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Donkergroen": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Geel": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Groen": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Hemelblauw": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Lichtblauw": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Lintblauw": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Mintgroen": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Mosgroen": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Oranje": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Paars": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Robijnrood": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Rood": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Roze": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Violet": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fcontent-page%2Fcontent-page.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fcontent-page%2Fcontent-page.stories.ts&story=ZonderInhoudsopgave": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fhome-page%2Fhome-page.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fnavigation-page%2Fnavigation-page.stories.ts&story=Kaarten": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fnavigation-page%2Fnavigation-page.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=Header": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=HeaderAccount": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=HeaderHome": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=HeaderLogin": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=HeaderStatus": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Ftopic-page%2Ftopic-page.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"donker /componenten/button/": {
+		"label-content-name-mismatch": 1
+	}
+}

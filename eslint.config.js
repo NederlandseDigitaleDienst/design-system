@@ -1,6 +1,3 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from 'eslint-plugin-storybook';
-
 import js from '@eslint/js';
 import globals from 'globals';
 import litA11y from 'eslint-plugin-lit-a11y';
@@ -82,11 +79,12 @@ export default [js.configs.recommended, {
   ignores: [
     'dist/**',
     'node_modules/**',
-    'storybook-static/**',
-    '.storybook/**',
+    'www-dist/**',
+    'www/.generated/**',
+    'www/build/**',
     '.claude/**',
     'scripts/**',
     'lint/**',
     '*.config.js',
   ],
-}, ...storybook.configs["flat/recommended"]];
+}];

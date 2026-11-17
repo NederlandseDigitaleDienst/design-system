@@ -38,8 +38,6 @@ tmp/
 temp/
 *.tgz
 
-*storybook.log
-storybook-static
 
 # Git worktrees
 .worktrees/
@@ -51,3 +49,4 @@ www-dist
 
 # ZAD CLI: project and API key of the active project (secret)
 .env.zadctl
+www/.generated

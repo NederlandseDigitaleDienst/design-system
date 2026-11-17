@@ -2,7 +2,7 @@
 
 Een component beantwoordt "wat is dit ding". Een patroon beantwoordt "hoe zet ik deze dingen samen tot iets dat een taak van de gebruiker afhandelt".
 
-De set groeit met wat zich in productie bewijst. Staat jouw geval er nog niet bij, kijk dan of een van deze patronen de compositie al dekt; zo niet, dan is [`../reference.md`](../../nldd-design/reference.md) de volledige API en [Storybook](https://nederlandsedigitaledienst.github.io/design-system/) het levende voorbeeld.
+De set groeit met wat zich in productie bewijst. Staat jouw geval er nog niet bij, kijk dan of een van deze patronen de compositie al dekt; zo niet, dan is [`../reference.md`](../../nldd-design/reference.md) de volledige API en [de website](https://design.digitaledienst.overheid.nl/componenten/) het levende voorbeeld.
 
 **De opbouw van een scherm**
 
@@ -48,6 +48,6 @@ Ze zijn afgeleid uit code die in productie draait, niet uit wat we ons herinnere
 
 Een patroon voorstellen doe je via een issue, met het probleem en het bewijs erbij: waar draait dit, en welke taak lost het op. Code mag later.
 
-Elk patroon staat ook in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/), onder "Patronen", met de voorbeelden live en een test op wat het patroon belooft. De bestanden hier zijn uit die pagina's gegenereerd, uit dezelfde markup die daar draait: het voorbeeld dat je kopieert, is het voorbeeld dat getest is.
+Elk patroon staat ook op [de website](https://design.digitaledienst.overheid.nl/patronen/), met de voorbeelden live en een test op wat het patroon belooft. De bestanden hier zijn uit die pagina's gegenereerd, uit dezelfde markup die daar draait: het voorbeeld dat je kopieert, is het voorbeeld dat getest is.
 
 Elk `nldd-*`-element in deze bestanden wordt in CI gecontroleerd tegen de echte component-API (`npm run validate:skill-markup`), dus een tag, attribuut, slot of icoonnaam die niet bestaat laat de build falen.

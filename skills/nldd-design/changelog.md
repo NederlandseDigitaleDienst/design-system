@@ -15,6 +15,17 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The documentation moved to [design.digitaledienst.overheid.nl](https://design.digitaledienst.overheid.nl), behind the landing page.** Every component, pattern and guideline has an address you can share: `/componenten/button/`, `/patronen/form/`, `/richtlijnen/`. The pages are built with the components they document, and Storybook is gone.
+- **Every live example stands on a stage.** The frame around an example has its own switch for light and dark and for the base and tinted surface. An example that needs a whole window, such as a page pattern, runs in one and can be made narrow.
+- **Every attribute has a control.** The controls under the first example of a component come from the component itself, with the values of its type.
+
+### Changed
+
+- **A finding of `nldd lint` links to the website.** The address after a rule that points at a pattern or a guideline is now `https://design.digitaledienst.overheid.nl/patronen/form/` where it was a Storybook address.
+- **The links in the skills and in `reference.md` point to the website.**
+
 ## [0.25.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.25.1...v0.25.2) (2026-11-16)
 
 ### Highlights

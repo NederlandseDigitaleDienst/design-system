@@ -1016,12 +1016,12 @@ describe('statistics', () => {
 });
 
 describe('a rule points at its page', () => {
-	it('gives a link the Storybook of the design system opens', () => {
+	it('gives a link the website of the design system opens', () => {
 		const { rules } = loadData();
 		const url = (id) => rules.find((rule) => rule.id === id).url;
-		assert.equal(url('form-actions-needs-button-group'), 'https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/patronen-formulier--docs');
+		assert.equal(url('form-actions-needs-button-group'), 'https://design.digitaledienst.overheid.nl/patronen/form/');
 		const guideline = rules.find((rule) => rule.see?.startsWith('ontwerprichtlijnen/'));
-		assert.equal(guideline.url, `https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-ontwerprichtlijnen--docs#${guideline.see.split('/')[1]}`);
+		assert.equal(guideline.url, `https://design.digitaledienst.overheid.nl/richtlijnen/#${guideline.see.split('/')[1]}`);
 	});
 });
 
@@ -1624,7 +1624,7 @@ describe('nldd command', () => {
 
 	it('explains a rule', () => {
 		const output = execFileSync(process.execPath, [cli, 'explain', 'toolbar-item-needs-overflow'], { encoding: 'utf8' });
-		assert.match(output, /patronen-werkbalk-met-acties--docs/);
+		assert.match(output, /patronen\/toolbar-with-actions\//);
 	});
 
 	it('lists the rules about a component, also where it is only mentioned', () => {

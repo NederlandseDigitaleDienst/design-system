@@ -34,12 +34,8 @@ const icons = iconFiles
 
 const booleans = booleanAttributes(manifest);
 const classes = buildClasses(manifest);
-const patternTitle = (slug) => {
-	const stories = readFileSync(resolve(repoRoot, `src/patterns/${slug}/${slug}.stories.ts`), 'utf8');
-	return stories.match(/title: (['"])(.+?)\1/)[2];
-};
 const rules = loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.json')).map((rule) => {
-	const url = seeUrl(rule.see, patternTitle);
+	const url = seeUrl(rule.see);
 	return { ...normalizeSelectors(rule, booleans), ...(url && { url }) };
 });
 const tags = buildContract(manifest);

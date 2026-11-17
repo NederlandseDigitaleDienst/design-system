@@ -25,7 +25,7 @@ const data = loadData();
 const linter = createLinter(data);
 const problems = [];
 
-const guidelines = readFileSync(join(repoRoot, 'src/docs/design-guidelines.mdx'), 'utf8');
+const guidelines = readFileSync(join(repoRoot, 'src/docs/design-guidelines.md'), 'utf8');
 const guidelineHeadings = new Set(
 	[...guidelines.matchAll(/^#+ (.+)$/gm)].map(([, heading]) => heading.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')),
 );

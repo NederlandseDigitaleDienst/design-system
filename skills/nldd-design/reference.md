@@ -7,7 +7,7 @@
 
 # Componentreferentie — @nldd/design-system
 
-Elk custom element met zijn attributen, slots en events. Dit is een offline snelreferentie; de levende documentatie met voorbeelden staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/), en de exacte types staan in de `.d.ts` bestanden van het pakket.
+Elk custom element met zijn attributen, slots en events. Dit is een offline snelreferentie; de levende documentatie met voorbeelden staat op [de website](https://design.digitaledienst.overheid.nl/componenten/), en de exacte types staan in de `.d.ts` bestanden van het pakket.
 
 > Deze referentie komt uit de JSDoc van de componenten. Dat elk attribuut er in staat, wordt in CI afgedwongen: `npm run validate:component-api` vergelijkt de `@property`-decorators met de `@attr`-regels.
 

@@ -5,7 +5,7 @@ Web Components voor de Nederlandse Digitale Dienst (Rijksoverheid).
 ## Snelreferentie
 
 ```bash
-npm run storybook        # Dev server op localhost:6006
+npm run www              # De website met alle componenten en patronen, op localhost:5173
 npm run build:styles     # Kopieer CSS + fonts naar dist
 npm run build            # Volledige build
 ```
@@ -18,7 +18,6 @@ npm run build            # Volledige build
 |------|-------|--------------|
 | Nieuwe branch starten | `/worktree <branch>` | Maakt worktree + kopieert .env en .claude/ |
 | Component maken/updaten | `/component <naam>` | Alle regels, formatting, BEM, CSS, templates |
-| Storybook beheren | `/storybook-manager` | Start/stop/status van Storybook instances |
 | Lintregel toevoegen | `/rule <wat er mis is>` | Schrijft de regel, test hem op patronen en echte apps |
 
 **Typische flow voor nieuwe feature:**
@@ -35,7 +34,7 @@ src/components/{categorie}/{naam}/
   {naam}.styles.ts    # Component styles
   {naam}.template.ts  # Render template
   {naam}.i18n.ts      # Vertalingen (optioneel)
-  {naam}.stories.ts   # Storybook stories
+  {naam}.stories.ts   # Stories: de voorbeelden op de pagina van het component
   {naam}.test.ts      # Unit tests
 ```
 
@@ -147,36 +146,56 @@ Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs` (
 
 ## Ontwerprichtlijnen
 
-De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs/Ontwerprichtlijnen"): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes).
+De ontwerprichtlijnen staan in `src/docs/design-guidelines.md` (op de website `/richtlijnen/`): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes).
 
 Een ontwerpregel staat daarmee op één plek. Een skill of een patroon mag hem hoogstens in één zin noemen met een link naar de sectie, en schrijft hem niet opnieuw uit. Doe je dat wel, dan lopen de twee versies uiteen: de sticky-headerregel stond een tijd strenger in `nldd-design-build` dan in de richtlijn zelf, en niemand zag dat.
 
 Hetzelfde geldt een laag lager voor gedrag: wat een component doet, documenteer je in zijn JSDoc. De skills erven dat via `reference.md`, dus een compositieregel in een skill die het gedrag van één component beschrijft hoort in dat component thuis.
 
+## Website
+
+De website in `www/` is de documentatie: de landingspagina, en daarachter een pagina per component, per patroon en per onderwerp. Hij draait op `design.digitaledienst.overheid.nl` en is gebouwd met de componenten zelf, rechtstreeks uit `src/`. `npm run www` start hem lokaal, `npm run build:www` bouwt hem naar `www-dist/`.
+
+Alleen de landingspagina (`www/index.html`) is met de hand geschreven. Haar header en footer zijn die van elke pagina: de generator leest ze daaruit, dus een link in de footer zet je daar. De rest wordt gegenereerd (`www/build/site.js`) uit bronnen die er al zijn:
+
+| Pagina | Bron |
+|--------|------|
+| `/componenten/<naam>/` | `<naam>.stories.ts` voor de voorbeelden, `custom-elements.json` voor de API-tabel |
+| `/patronen/<slug>/` | `src/patterns/<slug>/`, met de lintregels die naar het patroon wijzen eronder |
+| `/richtlijnen/`, `/themas/`, `/iconen/`, `/vertalingen/`, `/breakpoints/` | `src/docs/*.md` |
+| `/toegankelijkheid/`, `/changelog/` | `docs/ACCESSIBILITY.md`, `CHANGELOG.md` |
+| `/aan-de-slag/` | `www/content/*.md` |
+
+Een component heeft dus een pagina omdat het een stories-bestand heeft; niemand schrijft een componentpagina. De menubalk met de vaste secties staat ook in `www/index.html`, met een onderdrukking van de hint `top-navigation-bar-no-menu-row` en de reden erbij: op een naslagsite ga je van een component naar een patroon en terug. Een pagina binnen een sectie heeft daarnaast een terugknop naar de pagina erboven, en elke pagina heeft breadcrumbs.
+
+Een voorbeeld staat altijd op een podium (`site-stage`, `www/client/stage.ts`), dat met opzet geen component van het designsysteem is: zo zie je wat voorbeeld is en wat pagina. De controls onder het eerste voorbeeld komen uit de attributen van het component; `argTypes` in een story vullen alleen aan. De stories importeren nog `storybook/actions` en `storybook/preview-api`; die namen wijzen via een alias naar `www/client/shims/`.
+
+`npm run test:a11y` haalt axe over elke pagina en elk voorbeeld. Een bevinding op de site zelf faalt altijd. Bevindingen in voorbeelden staan in `www/a11y-baseline.json`: een nieuwe faalt, en een opgeloste moet eruit (`npm run test:a11y -- --update`). `www/client/stories.test.ts` rendert elke story, en `www/build/site.test.mjs` controleert dat elke interne link naar een bestaande pagina gaat.
+
 ## Patronen
 
-Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. Ze staan in Storybook onder "Patronen" en reizen als `skills/nldd-design-build/patterns/*.md` met de plugin mee naar consumenten.
+Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. Ze staan op de website onder `/patronen/` en reizen als `skills/nldd-design-build/patterns/*.md` met de plugin mee naar consumenten.
 
 Een patroon woont in `src/patterns/<slug>/`, met vier bestanden:
 
 - `<slug>.html`: de voorbeeldmarkup, zonder framework. Dit is de enige bron: de live story rendert hem, het codeblok op de docs-pagina toont hem en de skill neemt hem over.
 - `<slug>.stories.ts`: rendert de markup via `patternStory()` uit `src/patterns/pattern-story.ts`, plus het beetje gedrag dat een consument zelf schrijft (een knop die een sheet opent).
-- `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet, de compositie en waarom zo.
+- `<slug>.md`: de pagina op de website, met het probleem, wanneer wel en niet, de compositie en waarom zo. De regel `<!-- voorbeeld: Standaard -->` zet de story met die naam op de pagina.
 - `<slug>.test.ts`: test wat het patroon belooft, op dezelfde markup.
 
-`npm run generate:skill-patterns` (onderdeel van `generate:skill-docs`) maakt daar de skill-pagina van. De vertaling zit in `scripts/lib/skill-patterns.js` met tests ernaast: `<Canvas>` wordt het `.html`-bestand, en een link `?path=/docs/...` wordt een link naar het andere patroon, naar de component in `reference.md` of naar de ontwerprichtlijnen. `validate.yml` controleert dat de gegenereerde pagina's bij hun bron passen. Link in de MDX dus naar Storybook, en naar de voorbeelden in `examples/` via hun GitHub-URL. De titel en de bestandsnaam van elk patroon staan in `PATTERNS` in `scripts/generate-skill-patterns.js`.
+`npm run generate:skill-patterns` (onderdeel van `generate:skill-docs`) maakt daar de skill-pagina van. De vertaling zit in `scripts/lib/skill-patterns.js` met tests ernaast: de voorbeeldregel wordt het `.html`-bestand, en een link naar een pagina van de website (`/componenten/sheet/`) wordt een link naar het andere patroon, naar de component in `reference.md` of naar de ontwerprichtlijnen. `validate.yml` controleert dat de gegenereerde pagina's bij hun bron passen. Link in de pagina dus met het pad op de website, en naar de voorbeelden in `examples/` via hun GitHub-URL. De titel en de bestandsnaam van elk patroon staan in `PATTERNS` in `scripts/lib/skill-patterns.js`; die volgorde is ook de volgorde op de website.
 
 Een regel die over één component gaat, hoort niet in een patroon maar in de JSDoc van dat component. Een patroon houdt de compositie en de redenen die over meer componenten gaan.
 
 De voorbeelden gebruiken één vaste cast, zodat een nieuw patroon schrijven kopiëren is en niet verzinnen: een **aanvraag** (`Aanvraag A-1042`, Dakisolatie, in behandeling; `Aanvraag A-1043`, Warmtepomp, afgerond), een **dossier** (`Dossier D-318`, team Uitvoering; `Dossier D-319`, team Beleid) en als dienstnaam **Mijn Dienst**. Geen datums, jaartallen, product- of organisatienamen, want die verouderen of vragen om een discussie die niets met het patroon te maken heeft. Lopende tekst mag gevulde tekst zijn; labels, knoppen, titels en validatieteksten blijven echt, want juist daar zijn de betekenis en de lengte het punt.
 
-Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-top-title-bar`](?path=…)`, niet "titelbalk" of "title bar". Dat is de naam die ook in de markup en in `reference.md` staat, dus wie erop zoekt vindt hem. In de zin eromheen schrijf je gewoon Nederlands ("de balk", "de rij"), want dan is net gezegd waar het over gaat.
+Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-top-title-bar`](/componenten/top-title-bar/)`, niet "titelbalk" of "title bar". Dat is de naam die ook in de markup en in `reference.md` staat, dus wie erop zoekt vindt hem. In de zin eromheen schrijf je gewoon Nederlands ("de balk", "de rij"), want dan is net gezegd waar het over gaat.
 
 Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `docs/CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
 Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) en de README wordt gecontroleerd met `npm run validate:skill-markup`, dat in `validate.yml` draait. Dat zijn alle regels van `nldd lint`, hints inbegrepen: dit is wat consumenten en agents overnemen. Hetzelfde geldt voor de Lit-templates in de stories, met `npm run lint:stories`: de documentatie volgt de eigen regels. Een voorbeeld dat bewust fout is, krijgt een onderdrukking met een reden; zie Linter.
 
-Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.mdx`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
+Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.md`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
 
 ## Linter
 
@@ -200,8 +219,8 @@ De linter hoort bij zijn eigen versie: hij zit in het pakket, dus een project dr
 |------|------------|---------------------|
 | API | JSDoc en TS-types | `custom-elements.json`, `reference.md`, de ingebouwde regels |
 | Regel | `src/rules/<groep>/<id>.yaml` | Linter, `reference.md`, sectie `Regels` op een patroon |
-| Patroon: hoe en waarom | `<slug>.mdx` | Storybook, skill-pagina |
-| Voorbeeld | `<slug>.html` | Story, docs, skill |
+| Patroon: hoe en waarom | `<slug>.md` | Website, skill-pagina |
+| Voorbeeld | `<slug>.html` | Story, website, skill |
 
 Er zijn drie niveaus: `error` en `warn` kunnen CI laten falen; een `hint` nooit. Een hint zegt hoe iets bedoeld is en wijst met `see` naar het patroon of de richtlijn. Hints draaien op broncode en gebouwde pagina's, niet in de browser: daar schrijven componenten zelf `style` en `id`, en dat zou een hint voor de markup van de app aanzien.
 
@@ -218,7 +237,7 @@ Eén regel, één bestand in `src/rules/<groep>/`, ook als hij over meer compone
 
 `pure` is de enige groep die een project zelf aanzet, met `--pure` of met een niveau in `.nldd-lint.json` (`"rules": { "pure": "error" }`). Zijn regels gaan over de eigen opmaak van een app (een `class`, `style`, kale HTML, een stylesheet), niet over het gebruik van een component, en zonder die keuze vuren ze nooit. Ze draaien daarom ook niet in de browser. Een stylesheet leest de linter als een `<style>`-element, zodat één regel een CSS-bestand, een `<style>`-blok in Vue en een `<style>` in HTML vangt. `:written(class)` matcht een attribuut dat er staat, ook met een gebonden waarde; `[class]` vraagt een waarde die we kunnen lezen. De regels waarmee `pure` begon zijn `error`, want niemand had de groep toen aan; een regel die er later bij komt, komt als `warn`, zoals elke nieuwe regel.
 
-Een naam begint met waar hij over gaat: de tag zonder `nldd-`, of een begrip uit `CONCEPTS` in `scripts/check-lint-rules.js`. Daarna één van vier vormen: `-needs-` (iets ontbreekt), `-no-` (mag niet), `-max-` (te veel), `-goes-` (verkeerde plek). In `api` eindigt hij op `-renamed`, `-invalid`, `-no-effect` of `-not-found`. `lint:rules` bewaakt dit. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.mdx` hoeft niet mee te veranderen.
+Een naam begint met waar hij over gaat: de tag zonder `nldd-`, of een begrip uit `CONCEPTS` in `scripts/check-lint-rules.js`. Daarna één van vier vormen: `-needs-` (iets ontbreekt), `-no-` (mag niet), `-max-` (te veel), `-goes-` (verkeerde plek). In `api` eindigt hij op `-renamed`, `-invalid`, `-no-effect` of `-not-found`. `lint:rules` bewaakt dit. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.md` hoeft niet mee te veranderen.
 
 `message` zegt wat hier fout is, in het Engels, zoals een compilerfout. Het waarom staat op de pagina waar `see` naar wijst en wordt niet overgeschreven.
 

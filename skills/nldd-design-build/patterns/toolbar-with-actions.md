@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/toolbar-with-actions/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/toolbar-with-actions/ (de .md-pagina en de .html-voorbeelden ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 

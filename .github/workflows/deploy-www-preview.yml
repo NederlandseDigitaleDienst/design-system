@@ -1,6 +1,6 @@
 name: Preview website on ZAD
 
-# Every pull request that touches the marketing page gets its own ZAD
+# Every pull request that touches the website gets its own ZAD
 # deployment pr-<number>, with the same image, nginx config and CSP as
 # production. The link goes in a comment on the PR. See deploy/README.md.
 
@@ -11,11 +11,18 @@ on:
       - reopened
       - synchronize
       - closed
-    # The page is www/ plus the components it imports from src/. Only www/
-    # and its deploy count here: almost every PR touches src/, and Storybook
-    # is the preview for that.
+    # The website is www/ plus everything it is generated from: the components
+    # and their stories, the patterns and the docs in src/, the manifest, the
+    # lint rules a pattern page lists and the Markdown files it shows as pages.
+    # So a change to a component can be seen on its page before the merge.
     paths:
       - 'www/**'
+      - 'src/**'
+      - 'public/**'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'custom-elements.json'
+      - 'lint/data.generated.json'
       - 'deploy/**'
       - '.dockerignore'
       - '.github/workflows/deploy-www.yml'

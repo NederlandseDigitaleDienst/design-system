@@ -32,7 +32,7 @@ export default {
 		status: { type: 'stable' },
 		docs: {
 			description: {
-				component: 'A flexible icon component. By default it fills its parent and takes the content color of its context. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the design system cannot know, set `custom-color` to any CSS color value. Every icon name and alias is listed under [Docs/Iconen](?path=/docs/docs-iconen--docs).',
+				component: 'A flexible icon component. By default it fills its parent and takes the content color of its context. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the design system cannot know, set `custom-color` to any CSS color value. Every icon name and alias is listed under [Iconen](/iconen/).',
 			},
 		},
 	},

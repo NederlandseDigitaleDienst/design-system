@@ -74,9 +74,10 @@ jobs:
       - name: Lint the stories
         run: npm run lint:stories
 
-      # The marketing page in www/ is built from the components and goes
-      # online as is, so it holds to the rules consumers get.
-      - name: Lint the marketing page
+      # The website in www/ is built from the components and goes online as
+      # is, so its pages and their Markdown sources hold to the rules consumers
+      # get.
+      - name: Lint the website
         run: npm run lint:www
 
       # Guards reference.md (JSDoc-derived) against drift on every PR.
@@ -92,7 +93,7 @@ jobs:
             || (echo "::error::skills/nldd-design/reference.md is verouderd. Draai 'npm run generate:component-reference' en commit het resultaat." && exit 1)
 
       # The pattern pages in the skill are generated from src/patterns/, the
-      # same markup the Storybook pages render, so an edit to a pattern that did
+      # same markup the pattern pages of the website render, so an edit to a pattern that did
       # not reach the skill is drift.
       - name: Check skill patterns are in sync
         shell: bash

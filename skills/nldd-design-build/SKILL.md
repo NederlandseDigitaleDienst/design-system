@@ -16,7 +16,7 @@ Twee plekken horen bij deze skill:
 
 De naslag staat apart, in `nldd-design`, want die geldt ook als je niets nieuws bouwt: de [componentreferentie](../nldd-design/reference.md) met elk `nldd-*` element en de icoonnamen, de [changelog](../nldd-design/changelog.md) en de [ontwerprichtlijnen](../nldd-design/design-guidelines.md).
 
-De levende documentatie met visuele voorbeelden staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/). De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee als bron van waarheid voor detailvragen; deze skill leert je hoe je het designsysteem *goed* gebruikt.
+De levende documentatie met visuele voorbeelden staat op [de website](https://design.digitaledienst.overheid.nl/componenten/). De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee als bron van waarheid voor detailvragen; deze skill leert je hoe je het designsysteem *goed* gebruikt.
 
 Zet je een **bestaande** applicatie om naar dit designsysteem in plaats van een nieuwe te bouwen, gebruik dan de `nldd-design-migrate` skill. Die gaat over wat er bij zo'n omzetting stil misgaat en hoe je dat merkt.
 
@@ -138,7 +138,7 @@ import '@nldd/design-system/themes/geel.css';   // of '@nldd/design-system/theme
 <html lang="nl" data-nldd-theme="geel">
 ```
 
-Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het designsysteem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-thema-s--docs).
+Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het designsysteem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://design.digitaledienst.overheid.nl/themas/).
 
 ## CSS-variabelen
 
@@ -251,7 +251,7 @@ Draait je applicatie al op dit designsysteem en moet de versie omhoog, gebruik d
 
 ## Bron van waarheid
 
-1. **[Storybook](https://nederlandsedigitaledienst.github.io/design-system/)**: levende voorbeelden en controls per component.
+1. **[De website](https://design.digitaledienst.overheid.nl/componenten/)**: levende voorbeelden en controls per component.
 2. **`.d.ts` types in het pakket**: de exacte, actuele API.
 3. **[`reference.md`](../nldd-design/reference.md)**: offline snelreferentie van alle elementen.
 4. **[`patterns/`](patterns/)**: hoe je die elementen samenstelt, met het waarom erbij. De referentie zegt wat een component kan; een patroon zegt hoe je er een taak mee afhandelt.

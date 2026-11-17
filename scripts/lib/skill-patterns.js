@@ -1,26 +1,51 @@
 /**
- * Turns a pattern's Storybook page into the Markdown page the skill ships.
+ * Turns a pattern's page into the Markdown page the skill ships.
  *
  * A pattern lives in src/patterns/<slug>/: the example markup as .html, a
- * stories file that renders it through patternStory(), and an .mdx page with
- * the prose around it. The .mdx is Markdown plus three things only Storybook
- * understands, and each is translated here:
+ * stories file that renders it through patternStory(), and a .md page with the
+ * prose around it. That page is Markdown plus two things that only mean
+ * something on the website, and each is translated here:
  *
- * - the import lines and <Meta>, which are dropped;
- * - <Canvas of={Stories.X} />, which becomes an html code block holding the
- *   markup file that story renders, so the skill shows exactly what the live
- *   example runs;
- * - links of the form ?path=/docs/..., which point into Storybook and become
- *   links a reader of the skill can follow: another pattern, the component in
+ * - the line `<!-- voorbeeld: X -->`, which the website turns into a live
+ *   example and which becomes an html code block here, holding the markup file
+ *   that story renders, so the skill shows exactly what the live example runs;
+ * - links to a page of the website (`/componenten/sheet/`), which become links
+ *   a reader of the skill can follow: another pattern, the component in
  *   reference.md, or the design guidelines.
  *
- * Anything else that looks like JSX is an error rather than something to pass
- * through, because a stray <Canvas> in the skill would be a broken example.
+ * The rules that point at the pattern follow the page, as they do on the
+ * website.
  */
 
+const SITE = 'https://design.digitaledienst.overheid.nl';
 const REPO_BLOB = 'https://github.com/NederlandseDigitaleDienst/design-system/blob/main/skills/nldd-design-build/';
 
-/** The Storybook id of a title, as Storybook sanitizes it. */
+/**
+ * The set of patterns: the title of its stories to the file name in the skill, which is
+ * also the directory in src/patterns/ and the path on the website. The order
+ * here is the order the website lists them in.
+ */
+export const PATTERNS = {
+	"Patronen/Pagina's/Paginaopbouw": 'page-structure',
+	"Patronen/Pagina's/Home": 'home-page',
+	"Patronen/Pagina's/Onderwerppagina": 'topic-page',
+	"Patronen/Pagina's/Navigatiepagina": 'navigation-page',
+	"Patronen/Pagina's/Contentpagina": 'content-page',
+	'Patronen/Applicatie': 'application',
+	'Patronen/Werkbalk met acties': 'toolbar-with-actions',
+	'Patronen/Lijst': 'list',
+	'Patronen/Filteren': 'filtering',
+	'Patronen/Formulier': 'form',
+	'Patronen/Menu bij een knop': 'menu-from-a-button',
+	'Patronen/Bewerken in een sheet': 'edit-in-a-sheet',
+	'Patronen/Lezen in een sheet': 'read-in-a-sheet',
+	'Patronen/Onomkeerbare actie': 'irreversible-action',
+};
+
+/**
+ * The id Storybook gave a title. A story keeps the id it had, so an address
+ * of an example stays what it was.
+ */
 export function storybookId(title) {
 	return title
 		.toLowerCase()
@@ -52,34 +77,35 @@ export function parsePatternStories(stories) {
 }
 
 /**
- * Rewrites one Storybook link target into a link for the skill.
+ * Rewrites one link target into a link for the skill.
  *
- * @param {string} target - the link target as written in the .mdx
- * @param {{ patterns: Record<string, string>, tags: Set<string> }} context -
- *   Storybook docs id to skill slug for every pattern, and the tags that have a
- *   section in reference.md
+ * @param {string} target - the link target as written in the pattern's page
+ * @param {{ patterns: Set<string>, tags: Set<string> }} context - the slugs of
+ *   the patterns, and the tags that have a section in reference.md
  */
 export function rewriteLink(target, { patterns, tags }) {
 	if (target.startsWith(REPO_BLOB)) return `../${target.slice(REPO_BLOB.length)}`;
-	const path = target.match(/^\?path=\/docs\/([a-z0-9-]+)--docs(#[\w-]+)?$/);
-	if (!path) {
-		if (target.startsWith('?path=')) throw new Error(`Onbekende Storybook-link: ${target}`);
-		return target;
+	if (target.startsWith('?path=')) throw new Error(`Storybook-link: ${target}. Link naar de pagina op de website.`);
+	if (!target.startsWith('/')) return target;
+	const [path, anchor = ''] = target.split(/(?=#)/);
+	if (path === '/richtlijnen/') return `../../nldd-design/design-guidelines.md${anchor}`;
+	const pattern = path.match(/^\/patronen\/([a-z0-9-]+)\/$/);
+	if (pattern) {
+		if (!patterns.has(pattern[1])) throw new Error(`Geen patroon voor ${target}`);
+		return `${pattern[1]}.md${anchor}`;
 	}
-	const [, id, anchor = ''] = path;
-	if (id === 'docs-ontwerprichtlijnen') return `../../nldd-design/design-guidelines.md${anchor}`;
-	if (patterns[id]) return `${patterns[id]}.md${anchor}`;
-	if (id.startsWith('components-')) {
-		const tag = [...tags]
-			.filter((t) => id.endsWith(`-${t.slice('nldd-'.length)}`))
-			.sort((a, b) => b.length - a.length)[0];
-		if (!tag) throw new Error(`Geen component in reference.md voor ${target}`);
+	const component = path.match(/^\/componenten\/([a-z0-9-]+)\/$/);
+	if (component) {
+		const tag = `nldd-${component[1]}`;
+		if (!tags.has(tag)) throw new Error(`Geen component in reference.md voor ${target}`);
 		return `../../nldd-design/reference.md#${tag}`;
 	}
-	throw new Error(`Geen bestemming in de skill voor ${target}`);
+	// Any other page has no copy in the skill, so the link goes to the website.
+	return `${SITE}${target}`;
 }
 
-function renderRules(rules) {
+/** The section "Regels" of a pattern, as Markdown lines. */
+export function renderRules(rules) {
 	const line = (rule) => `- \`${rule.id}\`: ${rule.message}`;
 	const required = rules.filter((rule) => rule.severity !== 'hint');
 	const hints = rules.filter((rule) => rule.severity === 'hint');
@@ -92,33 +118,31 @@ function renderRules(rules) {
 
 /**
  * @param {object} input
- * @param {string} input.mdx - source of the pattern's .mdx page
+ * @param {string} input.page - source of the pattern's .md page
  * @param {Record<string, string>} input.markup - story name to markup source
- * @param {{ patterns: Record<string, string>, tags: Set<string> }} input.context
+ * @param {{ patterns: Set<string>, tags: Set<string> }} input.context
+ * @param {object[]} [input.rules] - the lint rules that point at this pattern
  * @returns {string} the Markdown body for the skill
  */
-export function patternToMarkdown({ mdx, markup, context, rules = [] }) {
+export function patternToMarkdown({ page, markup, context, rules = [] }) {
 	let inFence = false;
 	const lines = [];
-	for (const line of mdx.split('\n')) {
+	for (const line of page.split('\n')) {
 		if (/^```/.test(line)) inFence = !inFence;
 		if (inFence || /^```/.test(line)) {
 			lines.push(line);
 			continue;
 		}
-		if (/^import\s.+\sfrom\s+['"][^'"]+['"];?\s*$/.test(line) || /^<Meta\b/.test(line)) continue;
-		const canvas = line.match(/^<Canvas of=\{Stories\.(\w+)\}\s*\/>$/);
-		if (canvas) {
-			const source = markup[canvas[1]];
-			if (source === undefined) throw new Error(`Geen markup voor story ${canvas[1]}.`);
+		const example = line.match(/^<!--\s*voorbeeld:\s*(\w+)\s*-->$/);
+		if (example) {
+			const source = markup[example[1]];
+			if (source === undefined) throw new Error(`Geen markup voor story ${example[1]}.`);
 			lines.push('```html', source.trimEnd(), '```');
 			continue;
 		}
-		if (/^<Rules pattern="[\w-]+" \/>$/.test(line)) {
-			if (rules.length > 0) lines.push(...renderRules(rules));
-			continue;
-		}
-		if (/^\s*<[A-Z]/.test(line)) throw new Error(`Niet te vertalen MDX: ${line.trim()}`);
+		// A leftover from the time these pages were MDX would end up in the skill
+		// as a broken example, so it is an error rather than passed through.
+		if (/^\s*<[A-Z]/.test(line)) throw new Error(`Geen Markdown: ${line.trim()}`);
 		const heading = line.match(/^# (.+)$/);
 		if (heading) {
 			lines.push(`# Patroon: ${heading[1].charAt(0).toLowerCase()}${heading[1].slice(1)}`);
@@ -126,6 +150,7 @@ export function patternToMarkdown({ mdx, markup, context, rules = [] }) {
 		}
 		lines.push(line.replace(/\]\(([^)\s]+)\)/g, (_, target) => `](${rewriteLink(target, context)})`));
 	}
+	if (rules.length > 0) lines.push('', ...renderRules(rules));
 	return `${lines.join('\n').replace(/^\n+/, '').replace(/\n{3,}/g, '\n\n').trimEnd()}\n`;
 }
 
