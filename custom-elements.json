@@ -12272,6 +12272,20 @@
             },
             {
               "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -12703,6 +12717,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -13765,6 +13789,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -16315,6 +16349,16 @@
             },
             {
               "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "'md' | 'sm'"
@@ -17071,6 +17115,16 @@
             },
             {
               "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
+            },
+            {
+              "kind": "field",
               "name": "blocksImplicitSubmission",
               "type": {
                 "text": "boolean"
@@ -17710,6 +17764,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -18446,6 +18510,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -20460,6 +20534,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -28893,6 +28977,20 @@
             },
             {
               "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -29521,6 +29619,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -30638,6 +30746,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -32824,6 +32942,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -51171,6 +51299,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",

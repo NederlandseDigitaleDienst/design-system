@@ -74,6 +74,8 @@ function isWithin(node: Node, container: Element): boolean {
 }
 
 function isTextEntry(el: HTMLElement): boolean {
+	// A component says so itself: its input sits in its shadow root.
+	if ((el.constructor as { isTextEntry?: boolean }).isTextEntry === true) return true;
 	if (el.isContentEditable || el instanceof HTMLTextAreaElement) return true;
 	return el instanceof HTMLInputElement
 		&& !['button', 'checkbox', 'color', 'file', 'image', 'radio', 'range', 'reset', 'submit'].includes(el.type);

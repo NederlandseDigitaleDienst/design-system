@@ -29,6 +29,9 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
+	/** Says you type in this control, so focus moved into it by script keeps
+	 *  its ring after a click too, as a text field does. See focusAsLastInput. */
+	static isTextEntry = true;
 
 	@property({ type: String })
 	value = '';
