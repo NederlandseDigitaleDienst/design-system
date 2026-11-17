@@ -46781,6 +46781,116 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/lists-and-tables/list/list.roving.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The roving tab stop of a list: one row is the tab stop, the arrow keys move\nit, and a list is one stop from the outside. The list decides which rows\nthere are and which of them are stops; this decides which one is current and\nkeeps that in step with where focus is.",
+          "name": "ListRoving",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_scheduled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "current",
+              "type": {
+                "text": "Row | undefined"
+              },
+              "description": "The row Tab lands on, if the roving runs.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "moveTo",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
+                  }
+                }
+              ],
+              "description": "Make `row` the current one, now: the caller hands it focus in the same\ntick, and a row without a tab stop cannot take it. Every row, not only the\nstops: Escape can leave a row that is no stop marked current."
+            },
+            {
+              "kind": "method",
+              "name": "_apply",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The current row stays the current one while it is still a stop, else the\nselected one, else the first."
+            },
+            {
+              "kind": "field",
+              "name": "_onFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onFocusOut",
+              "privacy": "private",
+              "description": "Focus gone from the list: park everything but the row.\n\nThe stops a row hands out to its controls last as long as the row is the\ncurrent one, so without this they are still there after you tab away, and\nShift+Tab back in lands inside the control you left rather than on the row.\n\nDeferred: focus moving between two controls of the same row fires focusout\nbefore focusin, and `relatedTarget` is retargeted at a shadow boundary, so\nthe only reliable answer to \"did focus leave\" is the one you get after it\nhas landed."
+            },
+            {
+              "kind": "method",
+              "name": "_containsFocus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "document.activeElement only names the outermost host, so this walks down\nthe chain of active elements: at every level, is this the list or inside it."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ListRoving",
+          "declaration": {
+            "name": "ListRoving",
+            "module": "src/components/lists-and-tables/list/list.roving.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/lists-and-tables/list/list.ts",
       "declarations": [
         {

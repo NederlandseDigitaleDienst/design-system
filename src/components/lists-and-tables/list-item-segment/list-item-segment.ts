@@ -5,7 +5,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { listItemSegmentStyles } from './list-item-segment.styles.js';
 import { template, type ListItemSegmentControl } from './list-item-segment.template.js';
-import type { NLDDList } from '../list/list.js';
+import type { ListContext, NLDDList } from '../list/list.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { nlddListItemSegmentTranslations } from './list-item-segment.i18n.js';
@@ -204,12 +204,12 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 
 	override firstUpdated() {
 		const list = this.closest<NLDDList>('nldd-list');
-		if (list) this._applyParentType(list.type);
+		if (list) this._listContext = { appearance: list.appearance, type: list.type };
 	}
 
-	/** Called by the parent nldd-list-item so a runtime type switch tracks. */
-	_applyParentType(type: string) {
-		this._parentType = type;
+	/** @internal Set by the parent nldd-list-item, so a runtime type switch tracks. */
+	set _listContext(context: ListContext) {
+		this._parentType = context.type;
 	}
 
 	/** Whether the consumer asked for an interactive segment at all. */

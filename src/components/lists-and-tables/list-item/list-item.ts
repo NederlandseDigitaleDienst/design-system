@@ -9,7 +9,8 @@ import { isPointerMode } from '../../../utilities/input-modality.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddListItemTranslations } from './list-item.i18n.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
-import type { NLDDList, ListType } from '../list/list.js';
+import type { ListContext, ListType, NLDDList } from '../list/list.js';
+import type { RovingState } from '../list/list.roving.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
@@ -350,16 +351,34 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	@state()
 	private _parentType: ListType = 'list';
 
-	/** Set by the parent nldd-list when it runs the roving tabindex (everywhere
-	 *  except a listbox and a reorderable list).
-	 *  Switches the inner action from a normal tab stop to a roving one. */
+	/** Where this row stands in the list's roving tab stop; see RovingState. */
 	@state()
-	_arrowNavigation = false;
+	private _rovingState: RovingState = 'off';
 
-	/** Set by the parent nldd-list: while the roving runs, exactly one item
-	 *  is the roving entry point (tabindex 0); the rest are tabindex -1. */
-	@state()
-	_rovingActive = false;
+	/**
+	 * Set by the parent nldd-list. Puts the tab stops of the row and its
+	 * controls in place straight away, also when the state stays the same: the
+	 * list writes it right before it hands focus over, and to give a row's
+	 * controls their stops back.
+	 *
+	 * @internal
+	 */
+	get _roving(): RovingState {
+		return this._rovingState;
+	}
+
+	set _roving(state: RovingState) {
+		this._rovingState = state;
+		this._syncRovingTabStops();
+	}
+
+	private get _arrowNavigation(): boolean {
+		return this._rovingState !== 'off';
+	}
+
+	private get _rovingActive(): boolean {
+		return this._rovingState === 'stop';
+	}
 
 	/** Set by the parent nldd-list in `type="listbox"`: marks this option as
 	 *  highlighted — the active descendant the search input's `aria-activedescendant`
@@ -657,7 +676,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		if (changed.has('accessibleLabel') || changed.has('href') || changed.has('button')) {
 			this._syncLabelFacts();
 		}
-		if (changed.has('_arrowNavigation') || changed.has('_rovingActive')) {
+		if (changed.has('_rovingState')) {
 			this._syncRovingTabStops();
 		}
 		// A row that switches off mid-flight stops being a stop, but the tab stop it
@@ -767,32 +786,37 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/**
 	 * Reads the initial appearance + type from the closest parent nldd-list, before
 	 * the first render, so the item is styled correctly on first paint. Later changes
-	 * are PUSHED by the list: its `updated` / `_updateItems` calls `_applyAppearance`
-	 * and `_applyParentType` on every item, so the list is the single source of
-	 * truth and a runtime appearance/type switch (or an item moved to another list)
-	 * always tracks its current parent.
+	 * come from the list, which sets `_listContext` on every row in its slot, so a
+	 * runtime appearance/type switch (or an item moved to another list) always
+	 * tracks its current parent.
 	 */
 	private _syncWithList() {
 		const list = this._parentList;
 		if (!list) return;
-		this._applyAppearance(list.appearance);
-		this._applyParentType(list.type);
+		this._listContext = { appearance: list.appearance, type: list.type };
 	}
 
-	_applyAppearance(appearance: string) {
-		this._isBoxed = appearance.startsWith('box');
-		this._relayToChildren(item => item._applyAppearance(appearance));
+	private _context: ListContext = { appearance: 'simple', type: 'list' };
+
+	/**
+	 * What the list gives its rows, passed on to the nested rows and to the
+	 * row's own segments: in a listbox a segment degrades to a plain container,
+	 * since an `option` may not hold interactive descendants.
+	 *
+	 * @internal Set by the parent nldd-list, or by the row this one hangs under.
+	 */
+	set _listContext(context: ListContext) {
+		this._context = context;
+		this._isBoxed = context.appearance.startsWith('box');
 		this.classList.toggle('is-boxed', this._isBoxed);
+		this._parentType = context.type;
+		this._relayToChildren(item => { item._listContext = context; });
+		this._ownDescendants<HTMLElement & { _listContext?: ListContext }>('nldd-list-item-segment')
+			.forEach(segment => { segment._listContext = context; });
 	}
 
-	_applyParentType(type: ListType) {
-		this._parentType = type;
-		this._relayToChildren(item => item._applyParentType(type));
-		// Segments need the list type too: in a listbox they degrade to a
-		// plain container, since an `option` may not hold interactive descendants.
-		// Own segments only — nested rows get the relay above and push their own.
-		this._ownDescendants<HTMLElement & { _applyParentType?: (t: string) => void }>('nldd-list-item-segment')
-			.forEach(segment => segment._applyParentType?.(type));
+	get _listContext(): ListContext {
+		return this._context;
 	}
 
 	/** Nested rows sit in this item's `children` slot, not the list's, so a plain
@@ -976,11 +1000,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		if (this._showChildren) {
 			// Nested rows are not in the list's own slot, so the list's pushes never
 			// reach them. Relay what we were given, and they relay it downwards.
-			rows.forEach(row => {
-				const item = row as NLDDListItem;
-				item._applyAppearance?.(this._isBoxed ? 'box-tinted' : 'simple');
-				item._applyParentType?.(this._parentType);
-			});
+			rows.forEach(row => { (row as NLDDListItem)._listContext = this._context; });
 		}
 		this._syncExpandedFacts();
 	}
@@ -1109,10 +1129,10 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * isn't tabbable — so a `-1` on a branch made every row inside it
 	 * unreachable with Shift+Tab, while forward navigation still found them.
 	 *
-	 * @internal Also called by the list right after it moves the roving, so the
-	 * tab stop is in the DOM before focus is handed over.
+	 * Runs whenever `_roving` is written, so the tab stop is in the DOM before
+	 * the list hands focus over.
 	 */
-	_syncRovingTabStops(): void {
+	private _syncRovingTabStops(): void {
 		const ownSegments = this._ownSegments();
 		if (!this._arrowNavigation) {
 			this.removeAttribute('tabindex');
