@@ -75,8 +75,8 @@ export class NLDDTabBarItem extends LitElement {
 	@property({ type: String })
 	href = '';
 
-	/** Set by nldd-tab-bar. Not part of the public API. */
-	@property({ type: String })
+	/** Set by nldd-tab-bar. Not part of the public API, so no attribute. */
+	@property({ attribute: false })
 	_groupVariant: 'icon-and-text' | 'text' | 'icon' | '' = '';
 
 	// Author-set variant captured once in connectedCallback.

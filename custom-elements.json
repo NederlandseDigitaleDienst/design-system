@@ -49180,18 +49180,6 @@
               "description": "Optional link URL; renders an anchor instead of a button"
             },
             {
-              "name": "_groupVariant",
-              "type": {
-                "text": "'icon-and-text' | 'text' | 'icon' | ''"
-              },
-              "default": "''",
-              "description": "Set by nldd-tab-bar. Not part of the public API.",
-              "fieldName": "_groupVariant",
-              "expandedType": {
-                "text": "'' | 'icon' | 'icon-and-text' | 'text'"
-              }
-            },
-            {
               "name": "text",
               "type": {
                 "text": "string"

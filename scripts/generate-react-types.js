@@ -20,50 +20,28 @@
  * Usage: node scripts/generate-react-types.js
  */
 
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { docComment, isBooleanAttribute, loadComponentModel, toCamel, toPascal } from './lib/component-model.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
-const manifestPath = resolve(repoRoot, 'custom-elements.json');
 const outputPath = resolve(repoRoot, 'dist/types/react.d.ts');
 
 const PACKAGE = '@nldd/design-system';
 
-const toCamel = (name) => name.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
-const toPascal = (name) => {
-	const camel = toCamel(name);
-	return camel.charAt(0).toUpperCase() + camel.slice(1);
-};
+const comment = (text) => docComment(text, '\t');
 
-/** One JSDoc line, so hovering a prop in an editor shows what it does. */
-function comment(text) {
-	return text ? `\n\t/** ${String(text).replace(/\s+/g, ' ').replace(/\*\//g, '*\\/')} */` : '';
-}
-
-/** A boolean attribute, also one typed `boolean | undefined` for a third state. */
-function isBoolean(attribute) {
-	const text = attribute.type?.text ?? '';
-	const parts = text.split('|').map((part) => part.trim()).filter((part) => part && part !== 'undefined');
-	return parts.length === 1 && parts[0] === 'boolean';
-}
-
-const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-
-const components = [];
-for (const module of manifest.modules ?? []) {
-	const subpath = module.path.split('/').pop().replace(/\.ts$/, '');
-	for (const declaration of module.declarations ?? []) {
-		if (!declaration.customElement || !declaration.tagName) continue;
-		// A class without a name of its own (nldd-button-bar-divider) has no type to
-		// import, so it is typed as a plain element with string attributes.
-		const anonymous = /^anonymous_/.test(declaration.name);
-		const propsName = `${toPascal(declaration.tagName)}Props`;
-		components.push({ ...declaration, subpath, anonymous, propsName });
-	}
-}
-components.sort((a, b) => a.tagName.localeCompare(b.tagName));
+// A class without a name of its own (nldd-button-bar-divider) has no type to
+// import, so it is typed as a plain element with string attributes.
+const components = loadComponentModel().map((element) => ({
+	...element.declaration,
+	attributes: element.attributes,
+	subpath: element.subpath,
+	anonymous: element.anonymous,
+	propsName: `${toPascal(element.tag)}Props`,
+}));
 
 const imports = components
 	.filter((c) => !c.anonymous)
@@ -73,12 +51,9 @@ const imports = components
 const propsTypes = components
 	.map((component) => {
 		const lines = [];
-		const seen = new Set();
-		for (const attribute of component.attributes ?? []) {
-			if (seen.has(attribute.name)) continue;
-			seen.add(attribute.name);
+		for (const attribute of component.attributes) {
 			const field = attribute.fieldName ?? toCamel(attribute.name);
-			const type = isBoolean(attribute) ? 'true' : component.anonymous ? 'string' : `${component.name}['${field}']`;
+			const type = isBooleanAttribute(attribute) ? 'true' : component.anonymous ? 'string' : `${component.name}['${field}']`;
 			lines.push(`${comment(attribute.description)}\n\t'${attribute.name}'?: ${type};`);
 		}
 		return `type ${component.propsName} = {${lines.join('')}\n};`;

@@ -13,27 +13,23 @@
  * Usage: node scripts/generate-lint-data.js
  */
 
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { aliases } from '../src/components/content/icon/icon-aliases.js';
 import { cssRules, declarations, TOKEN_PREFIX } from '../lint/css.js';
 import { shippedStylesheets } from './build-styles.js';
 import { booleanAttributes, buildClasses, buildContract, buildDevRules, loadRules, normalizeSelectors, seeUrl } from './lib/lint-data.js';
+import { iconCatalog, loadComponentModel } from './lib/component-model.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => JSON.parse(readFileSync(resolve(repoRoot, path), 'utf8'));
 
-const manifest = read('custom-elements.json');
-const iconFiles = readdirSync(resolve(repoRoot, 'src/components/content/icon/icons'));
-const icons = iconFiles
-	.filter((file) => file.endsWith('.svg'))
-	.map((file) => file.slice(0, -4))
-	.concat(Object.keys(aliases))
-	.sort();
+const elements = loadComponentModel();
+const catalog = iconCatalog();
+const icons = [...catalog.names, ...catalog.aliases].sort();
 
-const booleans = booleanAttributes(manifest);
-const classes = buildClasses(manifest);
+const booleans = booleanAttributes(elements);
+const classes = buildClasses(elements);
 const patternTitle = (slug) => {
 	const stories = readFileSync(resolve(repoRoot, `src/patterns/${slug}/${slug}.stories.ts`), 'utf8');
 	return stories.match(/title: (['"])(.+?)\1/)[2];
@@ -42,7 +38,7 @@ const rules = loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.j
 	const url = seeUrl(rule.see, patternTitle);
 	return { ...normalizeSelectors(rule, booleans), ...(url && { url }) };
 });
-const tags = buildContract(manifest);
+const tags = buildContract(elements);
 
 /**
  * The translation keys each element reads from its own `translations`: the defaults
@@ -50,22 +46,19 @@ const tags = buildContract(manifest);
  */
 function translationKeys() {
 	const keys = {};
-	for (const module of manifest.modules ?? []) {
-		const file = existsSync(resolve(repoRoot, module.path)) ? readFileSync(resolve(repoRoot, module.path), 'utf8') : '';
-		for (const { tagName, name: className } of module.declarations ?? []) {
-			if (!tagName) continue;
-			// A file can hold more than one element: read the class, with the imports above it.
-			const start = file.search(new RegExp(`class ${className}\\b`));
-			const next = file.slice(start + 1).search(/\nexport class /);
-			const source = file.slice(0, file.search(/\n(export )?(abstract )?class /) + 1) + file.slice(start, next < 0 ? undefined : start + 1 + next);
-			const name = source.match(/translate\(\s*this\.translations,\s*(nldd\w+Translations)/)?.[1] ?? source.match(/withTranslations(?:<[^>]*>)?\([^)]*?(nldd\w+Translations),?\s*\)/)?.[1];
-			if (!name) continue;
-			const from = source.match(new RegExp(`import \\{[^}]*\\b${name}\\b[^}]*\\} from '([^']+)'`))?.[1];
-			if (!from) throw new Error(`No import of ${name} in ${module.path}`);
-			const i18n = readFileSync(resolve(repoRoot, dirname(module.path), from.replace(/\.js$/, '.ts')), 'utf8');
-			const body = i18n.slice(i18n.indexOf(`export const ${name}`)).match(/=\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
-			keys[tagName] = [...body.matchAll(/^\s*'([^']+)'\s*:/gm)].map((match) => match[1]).sort();
-		}
+	for (const { tag: tagName, className, path } of elements) {
+		const file = existsSync(resolve(repoRoot, path)) ? readFileSync(resolve(repoRoot, path), 'utf8') : '';
+		// A file can hold more than one element: read the class, with the imports above it.
+		const start = file.search(new RegExp(`class ${className}\\b`));
+		const next = file.slice(start + 1).search(/\nexport class /);
+		const source = file.slice(0, file.search(/\n(export )?(abstract )?class /) + 1) + file.slice(start, next < 0 ? undefined : start + 1 + next);
+		const name = source.match(/translate\(\s*this\.translations,\s*(nldd\w+Translations)/)?.[1] ?? source.match(/withTranslations(?:<[^>]*>)?\([^)]*?(nldd\w+Translations),?\s*\)/)?.[1];
+		if (!name) continue;
+		const from = source.match(new RegExp(`import \\{[^}]*\\b${name}\\b[^}]*\\} from '([^']+)'`))?.[1];
+		if (!from) throw new Error(`No import of ${name} in ${path}`);
+		const i18n = readFileSync(resolve(repoRoot, dirname(path), from.replace(/\.js$/, '.ts')), 'utf8');
+		const body = i18n.slice(i18n.indexOf(`export const ${name}`)).match(/=\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+		keys[tagName] = [...body.matchAll(/^\s*'([^']+)'\s*:/gm)].map((match) => match[1]).sort();
 	}
 	return Object.fromEntries(Object.keys(keys).sort().map((tag) => [tag, keys[tag]]));
 }
