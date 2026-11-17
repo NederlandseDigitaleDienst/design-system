@@ -11478,19 +11478,6 @@
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "toggle",
               "privacy": "public",
               "return": {
@@ -11628,6 +11615,19 @@
                 }
               ],
               "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -56717,6 +56717,16 @@
             },
             {
               "kind": "field",
+              "name": "_known",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "The open state this controller last acted on. A dialog that closed by\nitself is still open here until its close event: a render in between\nmust not read that as a request to open it again."
+            },
+            {
+              "kind": "field",
               "name": "dialog",
               "type": {
                 "text": "HTMLDialogElement | null"
@@ -56749,7 +56759,7 @@
                   "text": "void"
                 }
               },
-              "description": "Follows `open` set from outside, as a binding does."
+              "description": "Follows `open` set from outside, as a binding does: only a change."
             },
             {
               "kind": "method",
@@ -57153,7 +57163,7 @@
                   "text": "void"
                 }
               },
-              "description": "Carry what changed on the originals over to their copies, in place: a\nchoice that checks an item shows its check mark while it blinks. Only the\nattributes the original has or had: the menu writes its own on an entry."
+              "description": "Carry what changed on the originals over to their copies, in place: a\nchoice that checks an item shows its check mark while it blinks. Only the\nattributes the original has or had: the menu writes its own on an entry.\nThe text of an element without children of its own, such as a label."
             },
             {
               "kind": "field",
@@ -57547,7 +57557,7 @@
                   }
                 }
               ],
-              "description": "Takes the state off a trigger the overlay leaves, so it does not linger\nas a toggle for a screen reader."
+              "description": "Takes the state off a trigger the overlay leaves, so it does not linger\nas a toggle for a screen reader, nor in its expanded look."
             }
           ]
         },

@@ -151,7 +151,9 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 				// An attribute that is no number says nothing: keep what it rendered with.
 				if (!(typeof value === 'number' && Number.isNaN(value))) return value;
 			}
-			return copy(this._defaults.get(name));
+			// A reset before the first render settled: what it holds now is its default.
+			const self = this as Record<string, unknown>;
+			return copy(this._defaults.has(name) ? this._defaults.get(name) : self[name]);
 		}
 
 		formResetCallback(): void {

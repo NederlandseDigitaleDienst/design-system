@@ -93,11 +93,6 @@ export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
 		return this.checked ? this.value : null;
 	}
 
-	override formResetCallback(): void {
-		super.formResetCallback();
-		this.indeterminate = false;
-	}
-
 	public toggle(): void {
 		if (this.disabled) return;
 		this.checked = !this.checked;

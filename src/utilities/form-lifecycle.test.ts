@@ -169,6 +169,33 @@ describe('nldd-token-field', () => {
 	});
 });
 
+describe('a reset before the first render settled', () => {
+	it('keeps the value it has, as its default', async () => {
+		form = document.createElement('form');
+		form.innerHTML = '<nldd-text-field name="field" accessible-label="Naam"></nldd-text-field>';
+		const el = form.firstElementChild as Control;
+		// Set as a framework does, with no attribute to fall back on.
+		el.value = 'Dakisolatie';
+		document.body.append(form);
+		form.reset();
+		await settle(el);
+		expect(el.value).toBe('Dakisolatie');
+		expect(submitted()).toBe('Dakisolatie');
+	});
+});
+
+describe('nldd-checkbox on a reset', () => {
+	it('keeps indeterminate, as a native checkbox does', async () => {
+		const c = { tag: 'nldd-checkbox', attrs: 'accessible-label="Alles"' } as Case;
+		const el = await mount(c) as Control & { indeterminate: boolean };
+		el.indeterminate = true;
+		await settle(el);
+		form.reset();
+		await settle(el);
+		expect(el.indeterminate).toBe(true);
+	});
+});
+
 describe('nldd-token-field restore', () => {
 	it('restores the values bfcache saved', async () => {
 		const c = { tag: 'nldd-token-field', attrs: 'accessible-label="Tags" allow-custom' } as Case;

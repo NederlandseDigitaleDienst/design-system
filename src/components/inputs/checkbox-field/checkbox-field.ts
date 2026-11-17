@@ -208,8 +208,8 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override formResetCallback(): void {
 		super.formResetCallback();
-		this.indeterminate = false;
-		// The options under this one reset too, in their own callbacks.
+		// `indeterminate` stays, as on a native checkbox. The options under this
+		// one reset too, in their own callbacks, and this one follows them.
 		if (this._childFields.length > 0) queueMicrotask(() => this._followChildren(false));
 	}
 
