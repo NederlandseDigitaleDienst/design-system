@@ -258,6 +258,8 @@ export interface TriggerAriaOptions {
 export class TriggerAria {
 	private _trigger: Trigger | null = null;
 	private _seededPopupType: string | null = null;
+	/** The `aria-haspopup` this wrote on a plain trigger, so it takes back only its own. */
+	private _seededHasPopup: string | null = null;
 
 	constructor(private readonly _options: TriggerAriaOptions) {}
 
@@ -281,6 +283,7 @@ export class TriggerAria {
 			}
 		} else if (attributes && state.popupType && !element.hasAttribute('aria-haspopup')) {
 			element.setAttribute('aria-haspopup', state.popupType);
+			this._seededHasPopup = state.popupType;
 		}
 
 		if (attributes && state.controls && !element.hasAttribute('aria-controls')) {
@@ -303,6 +306,7 @@ export class TriggerAria {
 		const element = (trigger ?? this._trigger) as Trigger | null;
 		this._trigger = null;
 		this._seededPopupType = null;
+		this._seededHasPopup = null;
 		if (!element) return;
 		if ('expanded' in element) element.expanded = false;
 		if (!this._options.attributes) return;
@@ -315,8 +319,10 @@ export class TriggerAria {
 	 *  as a toggle for a screen reader, nor in its expanded look. */
 	private _release(controls: string | undefined): void {
 		const previous = this._trigger;
+		const hasPopup = this._seededHasPopup;
 		this._trigger = null;
 		this._seededPopupType = null;
+		this._seededHasPopup = null;
 		if (!previous) return;
 		if ('expanded' in previous) {
 			previous.expanded = false;
@@ -324,6 +330,7 @@ export class TriggerAria {
 		}
 		if (!this._options.attributes) return;
 		previous.removeAttribute('aria-expanded');
+		if (hasPopup && previous.getAttribute('aria-haspopup') === hasPopup) previous.removeAttribute('aria-haspopup');
 		if (controls && previous.getAttribute('aria-controls') === controls) previous.removeAttribute('aria-controls');
 	}
 }

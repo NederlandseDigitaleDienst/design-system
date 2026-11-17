@@ -248,6 +248,18 @@ describe('TriggerAria', () => {
 		expect(chosen.popupType).toBe('dialog');
 	});
 
+	it('takes the popup type it wrote off a plain trigger it leaves, not one the app wrote', () => {
+		const aria = new TriggerAria({ attributes: true });
+		const first = document.createElement('button');
+		const own = document.createElement('button');
+		own.setAttribute('aria-haspopup', 'menu');
+		aria.sync(first, { open: false, popupType: 'dialog' });
+		aria.sync(own, { open: false, popupType: 'dialog' });
+		expect(first.hasAttribute('aria-haspopup')).toBe(false);
+		aria.sync(document.createElement('button'), { open: false, popupType: 'dialog' });
+		expect(own.getAttribute('aria-haspopup')).toBe('menu');
+	});
+
 	it('takes the expanded state off a control the overlay moves away from', () => {
 		const aria = new TriggerAria({ attributes: false });
 		const first = Object.assign(document.createElement('div'), { expanded: false, popupType: '' });

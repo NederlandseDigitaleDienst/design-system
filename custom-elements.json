@@ -57494,6 +57494,16 @@
               "default": "null"
             },
             {
+              "kind": "field",
+              "name": "_seededHasPopup",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The `aria-haspopup` this wrote on a plain trigger, so it takes back only its own."
+            },
+            {
               "kind": "method",
               "name": "sync",
               "return": {
