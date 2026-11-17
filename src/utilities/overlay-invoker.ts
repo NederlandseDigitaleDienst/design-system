@@ -204,8 +204,9 @@ export function watchTrigger(invoker: OverlayInvoker, trigger: () => Element | n
 	const onPointerdown = (event: PointerEvent): void => {
 		if (landsOnTrigger(event)) invoker.handlePointerdown(event);
 	};
+	// A click the app called off opens nothing, as with popovertarget.
 	const onClick = (event: MouseEvent): void => {
-		if (landsOnTrigger(event)) invoker.handleClick(event);
+		if (!event.defaultPrevented && landsOnTrigger(event)) invoker.handleClick(event);
 	};
 	document.addEventListener('pointerdown', onPointerdown, true);
 	document.addEventListener('click', onClick);

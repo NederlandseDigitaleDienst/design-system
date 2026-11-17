@@ -162,6 +162,16 @@ describe('watchTrigger', () => {
 		expect(overlay.matches(':popover-open')).toBe(false);
 	});
 
+	it('opens nothing on a click the app called off', () => {
+		const { trigger, overlay } = setup();
+		const invoker = new OverlayInvoker(overlay, { anchorFor: () => null });
+		invoker.setOverlay(overlay);
+		cleanups.push(watchTrigger(invoker, () => trigger));
+		trigger.addEventListener('click', (event) => event.preventDefault());
+		trigger.click();
+		expect(overlay.matches(':popover-open')).toBe(false);
+	});
+
 	it('leaves a native invoker to the browser', () => {
 		const { trigger, overlay } = setup();
 		const open = vi.fn();
