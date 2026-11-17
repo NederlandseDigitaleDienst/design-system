@@ -430,6 +430,7 @@ describe('nldd-tooltip – aria-describedby', () => {
 		it('puts the keys on the baseline of the text', async () => {
 			const removeTokens = loadTokens();
 			onTestFinished(removeTokens);
+			_setOSOverride('windows');
 			el = await fixture<NLDDTooltip>('<nldd-tooltip text="Link" shortcut="Ctrl+K" open><button>Link</button></nldd-tooltip>');
 			await waitForUpdate(el);
 			const glyphBottom = (node: Element) => {

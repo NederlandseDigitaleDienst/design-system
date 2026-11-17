@@ -49,6 +49,9 @@ export function multiLineTextFieldTemplate(component: NLDDMultiLineTextField): T
 				@change=${component._handleChange}
 			></textarea>
 			${renderValidationIcon(component)}
+			<div class="multi-line-text-field__end" ?hidden=${!component._button.hasButton}>
+				<slot name="button" @slotchange=${component._button.handleSlotChange}></slot>
+			</div>
 		</div>
 	`;
 }

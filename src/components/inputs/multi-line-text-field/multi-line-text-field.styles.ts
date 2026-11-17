@@ -19,6 +19,9 @@ export const multiLineTextFieldStyles = css`
 		--_multi-line-text-field-icon-area-size: calc(var(--_multi-line-text-field-min-height) - var(--semantics-input-fields-border-width) * 2);
 		--_multi-line-text-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 		--_multi-line-text-field-rows: 3;
+		--_multi-line-text-field-end-padding: calc((var(--_multi-line-text-field-min-height) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_multi-line-text-field-nested-control-corner-radius: calc(var(--_multi-line-text-field-corner-radius) - var(--_multi-line-text-field-end-padding) - var(--semantics-input-fields-border-width));
+		--_multi-line-text-field-button-focus-z-index: 1;
 
 		${inheritedTextReset}
 		display: block;
@@ -37,6 +40,7 @@ export const multiLineTextFieldStyles = css`
 		--_multi-line-text-field-min-height: var(--semantics-controls-sm-min-size);
 		--_multi-line-text-field-text-font: var(--semantics-input-fields-sm-text-font);
 		--_multi-line-text-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
+		--_multi-line-text-field-end-padding: calc((var(--_multi-line-text-field-min-height) - var(--semantics-controls-xs-min-size)) / 2 - var(--semantics-input-fields-border-width));
 	}
 
 
@@ -49,7 +53,6 @@ export const multiLineTextFieldStyles = css`
 		border: var(--semantics-input-fields-border);
 		border-radius: var(--_multi-line-text-field-corner-radius);
 		background-color: var(--_multi-line-text-field-background-color);
-		overflow: hidden;
 	}
 
 	:host([valid]) .multi-line-text-field {
@@ -74,7 +77,7 @@ export const multiLineTextFieldStyles = css`
 		--_multi-line-text-field-background-color: var(--semantics-input-fields-is-autofill-background-color);
 	}
 
-	.multi-line-text-field:focus-within {
+	.multi-line-text-field:has(.multi-line-text-field__input:focus-visible) {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
@@ -163,5 +166,24 @@ export const multiLineTextFieldStyles = css`
 	.multi-line-text-field__validation-icon {
 		width: var(--_multi-line-text-field-validation-icon-size);
 		height: var(--_multi-line-text-field-validation-icon-size);
+	}
+
+	.multi-line-text-field__end {
+		display: flex;
+		padding: 0 var(--_multi-line-text-field-end-padding) var(--_multi-line-text-field-end-padding);
+		justify-content: flex-end;
+	}
+
+	.multi-line-text-field__end[hidden] {
+		display: none;
+	}
+
+	.multi-line-text-field__end slot::slotted(*) {
+		--context-control-corner-radius: var(--_multi-line-text-field-nested-control-corner-radius);
+	}
+
+	.multi-line-text-field__end:focus-within {
+		position: relative;
+		z-index: var(--_multi-line-text-field-button-focus-z-index);
 	}
 `;

@@ -2639,7 +2639,7 @@
         },
         {
           "kind": "class",
-          "description": "The pointer gestures of a menu, each with its own coordinates and listeners:\n\n1. **Press, drag and release.** A native `<select>` lets you press on one\n   option, drag to another and release to pick that one. Click events don't\n   fire across two elements, so the release is caught on document and, when\n   it lands on another enabled item, that item is selected. The click on the\n   pressed item still owns a press without a drag.\n2. **No press flash while scrolling.** On touch, pressing an item sets\n   :active and the sticky :hover lands on it, so the press highlight shows.\n   When the gesture turns into a scroll of a cramped menu, :active lingers\n   until the browser recognizes the pan. Past the threshold the host gets\n   `scroll-active`, and the styles drop the press highlight while it is set.\n   A tap never moves that far, so it keeps its brief feedback.\n3. **A tap beside the menu.** An outside touch is also how a page scroll\n   begins, so the menu only hears of it once the finger lifts without\n   having moved past the threshold.",
+          "description": "The pointer gestures of a menu, each with its own coordinates and listeners:\n\n1. **Press, drag and release.** A native `<select>` lets you press on one\n   option, drag to another and release to pick that one. Click events don't\n   fire across two elements, so the release is caught on document and, when\n   it lands on another enabled item, that item is selected. The click on the\n   pressed item still owns a press without a drag.\n2. **No press flash while scrolling.** On touch, pressing an item sets\n   :active and the sticky :hover lands on it, so the press highlight shows.\n   When the gesture turns into a scroll of a cramped menu, :active lingers\n   until the browser recognizes the pan. Past the threshold the host and\n   its items get `scroll-active`, and each item drops its press highlight\n   while it is set.\n   A tap never moves that far, so it keeps its brief feedback.\n3. **A tap beside the menu.** An outside touch is also how a page scroll\n   begins, so the menu only hears of it once the finger lifts without\n   having moved past the threshold.",
           "name": "MenuPointerController",
           "members": [
             {
@@ -2705,6 +2705,25 @@
               "kind": "field",
               "name": "_handleRelease",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_setScrollActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "on",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "On the menu and on its own items, which drop their press colors: the\ncolors of an item are its own, so the menu cannot reach them."
             },
             {
               "kind": "method",
@@ -6370,7 +6389,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "The name of the icon to display. The same attribute every other component that renders an icon takes.",
+              "description": "The name of the icon to display. The same attribute every other component that renders an icon takes. Prefer an alias that names what the icon means here (`microphone-off`, `info`, `new-account`) over the name of the drawing; both show the same icon.",
               "name": "icon",
               "default": "'circle-dashed'",
               "fieldName": "icon"
@@ -7133,7 +7152,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms.",
+          "description": "Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms. On macOS the modifiers show as their symbols, in the order of a macOS menu: `Cmd+Shift+Z` becomes ⇧⌘Z. Write them as Cmd (or Command, Meta), Option (or Alt, Opt), Shift and Ctrl (or Control), or as the symbols. A screen reader reads the name (Command), not the symbol.",
           "name": "NLDDKeyboardShortcut",
           "members": [
             {
@@ -7192,8 +7211,8 @@
               "type": {
                 "text": "Appearance"
               },
-              "default": "'box'",
-              "description": "'box' (default) renders each key as a keycap with a fill and highlight\nborder. 'simple' renders the keys as plain text with separators — lighter,\nfor inline use such as inside a menu item.",
+              "default": "'keycap'",
+              "description": "'keycap' (default) renders each key as a keycap with a fill and highlight\nborder. 'text' renders the keys as plain text: lighter, for inline use\nsuch as inside a menu item.",
               "attribute": "appearance",
               "reflects": true
             },
@@ -7266,18 +7285,18 @@
               "expandedType": {
                 "text": "'inherit' | 'md' | 'sm'"
               },
-              "description": "Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; in the box variant the keycaps then scale along in em."
+              "description": "Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; with keycaps they then scale along in em."
             },
             {
               "name": "appearance",
               "type": {
                 "text": "Appearance"
               },
-              "default": "'box'",
-              "description": "'box' (default) shows each key as a keycap with a fill and a highlight edge. 'simple' shows the keys as plain text with separators: lighter, for inline use such as in a menu item.",
+              "default": "'keycap'",
+              "description": "'keycap' (default) shows each key as a keycap with a fill and a highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter, for inline use such as in a menu item. As text the keys are joined by '+' (Ctrl+K), except on macOS.",
               "fieldName": "appearance",
               "expandedType": {
-                "text": "'box' | 'simple'"
+                "text": "'keycap' | 'text'"
               }
             },
             {
@@ -8879,7 +8898,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list.",
+          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list.",
           "name": "NLDDFormField",
           "members": [
             {
@@ -12272,6 +12291,20 @@
             },
             {
               "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -12703,6 +12736,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -13765,6 +13808,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -16315,6 +16368,16 @@
             },
             {
               "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "'md' | 'sm'"
@@ -17012,7 +17075,13 @@
             "package": "lit"
           },
           "tagName": "nldd-multi-line-text-field",
-          "customElement": true
+          "customElement": true,
+          "slots": [
+            {
+              "name": "button",
+              "description": "One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` in a row under the text, inside the border: the one action of a form that is only this field (post a reply, add a note), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type=\"submit\"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`."
+            }
+          ]
         }
       ],
       "exports": [
@@ -17068,6 +17137,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -17710,6 +17789,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -18446,6 +18535,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -20460,6 +20559,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -25691,9 +25800,13 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "plain",
+                  "default": "false"
                 }
               ],
-              "description": "Put `raw` at the selection. When it is the text of the last cut, its\nannotations come along, once: a second paste would duplicate their ids."
+              "description": "Put `raw` at the selection. When it is the text of the last cut, its\nannotations come along, once: a second paste would duplicate their ids.\nOtherwise, unless `plain`, the pasted text is then made into the markdown\nit looks like (see planPaste), as a step of its own, so Cmd/Ctrl+Z brings\nback the text as it was pasted."
             }
           ]
         }
@@ -25992,7 +26105,7 @@
               }
             }
           ],
-          "description": "Backspace at a list item's content start (right after the marker) removes the\nmarker and its trailing space — the item's own indent is kept — so a top-level\nitem cleanly returns to column 0 for every number, not just the first. CodeMirror's\ndefault deleteMarkupBackward instead aligns the content under the previous item,\nleaving stray whitespace on items 2, 3, … Returns false (so other handlers run)\nunless the caret sits exactly at a list marker's end outside a code block."
+          "description": "Backspace at a list item's content start (right after the marker) steps a\nnested item one level out, next to its parent, marker and all: the way back\nfrom the space that nested it. On the first level it removes the marker and\nits trailing space, so the line leaves the list, back at column 0 for every\nnumber, not just the first. CodeMirror's default deleteMarkupBackward instead\naligns the content under the previous item, leaving stray whitespace on items\n2, 3, … Returns false (so other handlers run) unless the caret sits exactly at\na list marker's end outside a code block."
         },
         {
           "kind": "function",
@@ -26693,6 +26806,91 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.list-input.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "listKeymap",
+          "type": {
+            "text": "Extension"
+          },
+          "description": "Enter and Backspace in markdown, in place of the language's own keymap."
+        },
+        {
+          "kind": "variable",
+          "name": "ITEM_RE",
+          "default": "/^( *)([-*+]|\\d{1,9}[.)])( +|$)/"
+        },
+        {
+          "kind": "function",
+          "name": "itemsAbove",
+          "return": {
+            "type": {
+              "text": "Item[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "lineNumber",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The list items above `lineNumber` that a new item can sit under or next to,\nnearest first, each less indented than the one before: the item above, its\nparent, and so on. Stops where the list ends (two blank lines, or text\nwithout indent after a blank line)."
+        },
+        {
+          "kind": "variable",
+          "name": "listMarkerInput",
+          "type": {
+            "text": "Extension"
+          },
+          "description": "Puts the typed space in first, as its own undo step, then the rewrite: Cmd+Z\nbrings back what was typed, as it does after an autocorrection."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "listKeymap",
+          "declaration": {
+            "name": "listKeymap",
+            "module": "src/components/inputs/text-editor/text-editor.list-input.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ITEM_RE",
+          "declaration": {
+            "name": "ITEM_RE",
+            "module": "src/components/inputs/text-editor/text-editor.list-input.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "itemsAbove",
+          "declaration": {
+            "name": "itemsAbove",
+            "module": "src/components/inputs/text-editor/text-editor.list-input.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "listMarkerInput",
+          "declaration": {
+            "name": "listMarkerInput",
+            "module": "src/components/inputs/text-editor/text-editor.list-input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.markdown.ts",
       "declarations": [
         {
@@ -26715,11 +26913,19 @@
         },
         {
           "kind": "variable",
+          "name": "from",
+          "type": {
+            "text": "number"
+          },
+          "default": "0"
+        },
+        {
+          "kind": "variable",
           "name": "markdownEditing",
           "type": {
             "text": "Extension"
           },
-          "default": "[ // A code block that names its language is highlighted in it, as in the code // viewer; the grammar loads when the first such block appears. // A line indented four spaces stays text: in a field for prose that is pasted // or indented text, not code. Code takes a fence, which nobody types by accident. markdown({ extensions: [GFM, { remove: ['IndentedCode'] }], codeLanguages: nestedLanguages }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
+          "default": "[ // A code block that names its language is highlighted in it, as in the code // viewer; the grammar loads when the first such block appears. // A line indented four spaces stays text: in a field for prose that is pasted // or indented text, not code. Code takes a fence, which nobody types by accident. // The language's own Enter and Backspace come from listKeymap, with Enter // ending a list on any empty item. markdown({ extensions: [GFM, { remove: ['IndentedCode'] }, indentedText], codeLanguages: nestedLanguages, addKeymap: false }), listKeymap, listMarkerInput, markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
           "description": "Markdown language (with GFM) plus the hybrid inline-styling decorations."
         }
       ],
@@ -27271,6 +27477,46 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.paste.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "planPaste",
+          "return": {
+            "type": {
+              "text": "PastePlan | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "What a paste of `text` at the selection should become, or null to paste it\nas it is."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "planPaste",
+          "declaration": {
+            "name": "planPaste",
+            "module": "src/components/inputs/text-editor/text-editor.paste.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.selection.ts",
       "declarations": [
         {
@@ -27793,11 +28039,248 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.toolbar.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "parseCommand",
+          "return": {
+            "type": {
+              "text": "[string, unknown]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "`setHeading:2` → `['setHeading', 2]`; a number stays a number."
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ToolbarBinding",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_listBeforePress",
+              "type": {
+                "text": "ListValue | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The list before the press: a second click on the list that is on turns\nit off. A radio does not change on that click, and a click on another item\nhas already switched the list by the time the click arrives."
+            },
+            {
+              "kind": "method",
+              "name": "connect",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "disconnect",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "controls",
+              "return": {
+                "type": {
+                  "text": "Element[]"
+                }
+              },
+              "description": "Every control of this editor, in its slot and in the containers naming it."
+            },
+            {
+              "kind": "method",
+              "name": "_run",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handle",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                },
+                {
+                  "name": "control",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Called by the document listeners for a control this editor owns."
+            },
+            {
+              "kind": "method",
+              "name": "reflect",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "default": "this.target.getState()",
+                  "type": {
+                    "text": "TextEditorState"
+                  }
+                }
+              ],
+              "description": "Sets `selected`, the value of a segmented control and `disabled` on every\ncontrol from the editor's state."
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "description": "Marks the toolbar slot `is-stuck` while it sticks to the top of its scroll\ncontainer, so it can take room from that edge without moving the text.\n\nMeasured, not observed: a slot that sticks has left its place at the edge of\nthe frame, whichever element scrolls. The check runs on any scroll (a capture\nlistener sees every scroll container) and when the editor changes size, once\nper frame, and only in an embedded editor with a filled slot.",
+          "name": "StuckToolbar",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_frame",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_resize",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_listening",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_gap",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "_slot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLSlotElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "stop",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_schedule",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "check",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "parseCommand",
+          "declaration": {
+            "name": "parseCommand",
+            "module": "src/components/inputs/text-editor/text-editor.toolbar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ToolbarBinding",
+          "declaration": {
+            "name": "ToolbarBinding",
+            "module": "src/components/inputs/text-editor/text-editor.toolbar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StuckToolbar",
+          "declaration": {
+            "name": "StuckToolbar",
+            "module": "src/components/inputs/text-editor/text-editor.toolbar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Framed like the other input fields by default. `embedded` drops the frame, fill, padding and focus ring, for an editor inside a composition (e.g. a message field) that owns its chrome and focus; the caret is then a prominent accent. Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the state-change event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax=\"hidden\"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads \"Taak, open\" or \"Taak, afgerond\" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a \"Kopieer\" button at the right edge that copies the code without its fences and says \"Gekopieerd\" or \"Kopiëren mislukt\", as the code viewer does. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint. A line indented four spaces stays text, unlike CommonMark, where it starts a code block: in a field for prose that is pasted or indented text, and code takes a fence. Turn indented code off in the renderer too, so the page shows what the editor showed: `md.disable('code')` in markdown-it and markdown-it-py, for example.",
+          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Framed like the other input fields by default. `embedded` drops the frame, fill, padding and focus ring, for an editor inside a composition (e.g. a message field) that owns its chrome and focus; the caret is then a prominent accent. A toolbar is markup: put an nldd-toolbar in the `toolbar` slot, or anywhere on the page inside an element with `text-editor-for` set to the editor's id, and give each control a `text-editor-command`. The editor runs the command, gives focus back to the text and keeps the control's state: `selected` on a toggle, a menu item or a segmented-control item, the list type on a segmented control, and `disabled` where the command cannot run. Controls without the attribute, such as a send button, are left alone. There is no built-in toolbar: which controls, in what order, is the app's. A consumer can also drive formatting itself via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the state-change event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. Enter in a list or a quote puts the next marker down, and Enter on an empty item ends the list, or steps one level out of a nested one. A marker typed where the editor already put one does not stack: `- ` on a fresh `- `, or right after the bullet of an item with text, stays one bullet, `2. ` on `2. ` stays `2. `, `> ` on `> ` one quote. `1. ` on a later number starts a numbered list under the item above, and a marker of the other kind takes the place of the editor's: `1. ` on `- ` makes a numbered list at that level. Spaces typed before a marker nest it one level under the item above, at the indent markdown needs (2 spaces under `- `, 3 under `1. `); Cmd/Ctrl+] does the same. Backspace right after a marker is the way back: a nested item steps one level out, an item on the first level leaves the list. Cmd/Ctrl+Z brings back what was typed. Pasted text and a value the app sets stay as they are. With the marks hidden (the default) a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads \"Taak, open\" or \"Taak, afgerond\" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a \"Kopieer\" button at the right edge that copies the code without its fences and says \"Gekopieerd\" or \"Kopiëren mislukt\", as the code viewer does: the outcome stays while the pointer or the focus is on the button, and goes when you leave it, press Escape or go on in the editor. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. applyChanges(changes) takes text from outside, such as what a collaborator types, without moving the caret or entering the user's undo history. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint. A line indented four spaces stays text, unlike CommonMark, where it starts a code block: in a field for prose that is pasted or indented text, and code takes a fence. That holds whatever the line starts with, so ` - punt` is no list and ` # kop` no heading; in a list the four spaces count from the text of the item. Turn indented code off in the renderer too, so the page shows what the editor showed: `md.disable('code')` in markdown-it and markdown-it-py, for example. Text pasted at the start of a line becomes the markdown it looks like: the indent all its lines share goes, a bullet from Word or Outlook (`•` and a tab) becomes `- `, and a pasted list nests the way typing does (with indent of its own one level under the item above, without it at the level of the empty item it lands on). A list of several lines pasted at the end of a line with text starts on the next line. Cmd/Ctrl+Z brings back the text as pasted, and Cmd/Ctrl+Shift+V pastes it as it is. Nothing changes in a code block.",
           "name": "NLDDTextEditor",
           "members": [
             {
@@ -27847,7 +28330,7 @@
               "type": {
                 "text": "TextEditorSyntax"
               },
-              "default": "'visible'",
+              "default": "'hidden'",
               "attribute": "syntax",
               "reflects": true
             },
@@ -28152,6 +28635,24 @@
                 }
               ],
               "description": "Puts `text` at the caret, in place of the selection when there is one, and\nleaves the caret after it, with focus on the editor. Plain text: markdown\nin it stays as written and is styled like anything typed. Does nothing on\na read-only editor."
+            },
+            {
+              "kind": "method",
+              "name": "applyChanges",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "changes",
+                  "type": {
+                    "text": "readonly TextChange[]"
+                  }
+                }
+              ],
+              "description": "Applies changes that come from outside, such as what a collaborator types.\nUnlike `replaceRange()`, the caret and the selection stay where they are\n(they move along with the text), the focus stays where it is, and the\nchanges stay out of the user's undo history. The offsets are CLEAN, all in\nthe text before any of the changes, and must not overlap. Fires no `input`,\nand works on a read-only editor too: the text is not the user's edit."
             },
             {
               "kind": "method",
@@ -28501,6 +29002,20 @@
             },
             {
               "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -28674,7 +29189,7 @@
           "events": [
             {
               "name": "input",
-              "description": "When the content changes (detail: { value })"
+              "description": "When the user changes the content (detail: { value }). Setting `value` or calling `applyChanges()` does not fire it."
             },
             {
               "name": "change",
@@ -28742,12 +29257,12 @@
               "type": {
                 "text": "TextEditorSyntax"
               },
-              "default": "'visible'",
+              "default": "'hidden'",
               "fieldName": "syntax",
               "expandedType": {
                 "text": "'hidden' | 'visible'"
               },
-              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
+              "description": "'hidden' (default) or 'visible'. 'visible': every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`), for people who write markdown. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
               "name": "annotatable",
@@ -28804,7 +29319,7 @@
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
               },
-              "description": "Editor content (markdown)"
+              "description": "Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history."
             },
             {
               "name": "input-id",
@@ -28922,6 +29437,22 @@
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
               }
+            },
+            {
+              "name": "text-editor-command",
+              "description": "The command a control runs on its editor: a name from `runCommand()`, with an argument after a colon (`setHeading:2`, `setList:task`). On an nldd-toggle-button, nldd-button, nldd-icon-button, `<button>` or nldd-menu-item, also in a toolbar's overflow menu. On an nldd-segmented-control the command takes the value of the chosen item: `text-editor-command=\"setList\"` with items `none`, `bullet`, `ordered` and `task`, where a second click on the list that is on turns it off. Works inside the editor (its `toolbar` slot) or inside an element with `text-editor-for`. The editor sets `selected` and `disabled` on it, so do not set those yourself. Disabled: undo and redo without history, indent and outdent where the list item cannot move, copy and cut without a selection, the inline formats in code and the block formats in a code block, and everything but copy in a read-only editor. `setHeading` steps out of a code block first, so \"Paragraaf\" is the way out.",
+              "type": {
+                "text": "string"
+              },
+              "global": true
+            },
+            {
+              "name": "text-editor-for",
+              "description": "Set on any element that holds controls for an editor elsewhere on the page, such as an nldd-toolbar in a bar of the page: the editor's id. Its controls with `text-editor-command` drive that editor. The id is looked up in the document, not in a shadow root.",
+              "type": {
+                "text": "string"
+              },
+              "global": true
             }
           ],
           "superclass": {
@@ -28929,7 +29460,13 @@
             "module": "/src/utilities/codemirror/codemirror-input.js"
           },
           "tagName": "nldd-text-editor",
-          "customElement": true
+          "customElement": true,
+          "slots": [
+            {
+              "name": "toolbar",
+              "description": "An nldd-toolbar above the text, inside the frame. Its controls with `text-editor-command` drive this editor. Sticks to the top of the scroll container, below the page's own bars (`--context-inset-top`), while the editor grows past it; in an `embedded` editor it keeps 8px from that edge while it sticks."
+            }
+          ]
         }
       ],
       "exports": [
@@ -29107,6 +29644,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -29315,15 +29862,6 @@
               "description": "Most characters the value may have, as the native `maxlength`.",
               "attribute": "maxlength",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "buttonSize",
-              "type": {
-                "text": "'sm' | 'xs'"
-              },
-              "description": "The size a slotted button gets: one step below the field, so it fits inside the border.",
-              "readonly": true
             },
             {
               "kind": "method",
@@ -29860,7 +30398,7 @@
           "slots": [
             {
               "name": "button",
-              "description": "One `nldd-button` or `nldd-icon-button` at the end of the field, for the one action of a form that is only this field: sign up with an email address, redeem a code. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type=\"submit\"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`."
+              "description": "One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` at the end of the field: the one action of a form that is only this field (sign up with an email address, redeem a code), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type=\"submit\"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`."
             }
           ]
         }
@@ -30224,6 +30762,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -32410,6 +32958,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
             },
             {
               "kind": "field",
@@ -50760,6 +51318,16 @@
             },
             {
               "kind": "field",
+              "name": "isTextEntry",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says you type in this control, so focus moved into it by script keeps\nits ring after a click too, as a text field does. See focusAsLastInput."
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -51020,7 +51588,15 @@
                 "type": {
                   "text": "void"
                 }
-              }
+              },
+              "parameters": [
+                {
+                  "name": "remote",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -52131,6 +52707,94 @@
           "declaration": {
             "name": "setState",
             "module": "src/utilities/element-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/field-button-controller.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The `button` slot of a text field: gives the button a size one step below\nthe field, so it sits inside the border, and disables it with the field.\nUsed by nldd-text-field and nldd-multi-line-text-field.",
+          "name": "FieldButtonController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasButton",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the slot holds anything, so an empty one reserves no space."
+            },
+            {
+              "kind": "field",
+              "name": "_sized",
+              "privacy": "private",
+              "default": "new WeakSet<Element>()",
+              "description": "Buttons whose size the field has set, so a size of their own can be told apart."
+            },
+            {
+              "kind": "field",
+              "name": "_disabled",
+              "privacy": "private",
+              "default": "new WeakSet<Element>()",
+              "description": "Buttons the field disabled, so it only enables what it disabled itself."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'xs'"
+              },
+              "description": "The size a slotted button gets: `sm` in a field of `md`, `xs` in one of `sm`.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_buttons",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostUpdated",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handleSlotChange"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FieldButtonController",
+          "declaration": {
+            "name": "FieldButtonController",
+            "module": "src/utilities/field-button-controller.ts"
           }
         }
       ]
@@ -55140,6 +55804,30 @@
         },
         {
           "kind": "function",
+          "name": "displayKeys",
+          "return": {
+            "type": {
+              "text": "DisplayKey[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "spec",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "os",
+              "type": {
+                "text": "OS"
+              }
+            }
+          ],
+          "description": "The keys of a spec as this OS shows them. On macOS the modifiers become\ntheir symbols, in the macOS order (`Cmd+Shift+Z` is ⇧ ⌘ Z); elsewhere the\nkeys stay as written. A symbol is read as its name, as the speech engine\nsays nothing for ⌘ ⌥ ⇧ ⌃."
+        },
+        {
+          "kind": "function",
           "name": "shortcutsAvailable",
           "return": {
             "type": {
@@ -55232,6 +55920,14 @@
           "name": "parseKeys",
           "declaration": {
             "name": "parseKeys",
+            "module": "src/utilities/shortcut.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "displayKeys",
+          "declaration": {
+            "name": "displayKeys",
             "module": "src/utilities/shortcut.ts"
           }
         },

@@ -5,6 +5,7 @@ import '../../forms/form/form.js';
 import '../../forms/form-field/form-field.js';
 import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
+import '../toggle-button/toggle-button.js';
 import '../../actions/button-group/button-group.js';
 import '../../layout/container/container.js';
 
@@ -280,6 +281,29 @@ export const Meegroeiend = {
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
+};
+
+export const MetKnop = {
+	render: () => html`
+	<nldd-form-field label="Toelichting bij aanvraag A-1042">
+		<nldd-multi-line-text-field name="toelichting">
+			<nldd-toggle-button
+				slot="button"
+				icon="microphone-on"
+				selected-icon="microphone-off"
+				text="Dicteer"
+			></nldd-toggle-button>
+		</nldd-multi-line-text-field>
+	</nldd-form-field>
+`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Het `button`-slot zet een knop in een rij onder de tekst, binnen de rand: hier een `nldd-toggle-button` die dicteren aan- en uitzet. Ook de enige actie van een formulier dat alleen uit dit veld bestaat kan er staan. Het veld geeft de knop zelf zijn maat en zijn hoek.',
+			},
+		},
+	},
 };
 
 export const InteractiefVoorbeeld = {

@@ -58,11 +58,12 @@ function fromAncestors(node, tags, anyDescendantAttrs) {
 	return attrs;
 }
 
-function checkAttributes(node, { tags, icons, anyChildAttrs, anyDescendantAttrs, isPlainHtml }, report) {
+function checkAttributes(node, { tags, icons, anyChildAttrs, anyDescendantAttrs, globalAttrs, isPlainHtml }, report) {
 	if (node.templated) return;
 	const contract = tags[node.name];
 	// A parent in another file may be the one reading it, so any child attribute goes.
 	const fromParent = {
+		...globalAttrs,
 		...fromAncestors(node, tags, anyDescendantAttrs),
 		...(node.parent.opaque ? anyChildAttrs : (tags[node.parent.name]?.childAttrs ?? {})),
 	};
@@ -221,6 +222,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		icons: new Set(data.icons),
 		anyChildAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.childAttrs)),
 		anyDescendantAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.descendantAttrs ?? {})),
+		// Set on any element, such as `text-editor-for` on a toolbar elsewhere on the page.
+		globalAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.globalAttrs ?? {})),
 		translations: data.translations ?? {},
 		removedKeys: data.removedKeys ?? {},
 	};

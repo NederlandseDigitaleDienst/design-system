@@ -45,6 +45,49 @@ describe('nldd-text-editor – kopieerknop op een codeblok', () => {
 		expect(button(el).textContent).toBe('Kopieer');
 	});
 
+	it('laat "Gekopieerd" staan zolang de muis op de knop staat, en haalt het weg na het verlaten', async () => {
+		vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
+		el = await editor('```\ncode\n```');
+		button(el).dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'mouse', bubbles: true }));
+		button(el).click();
+		await vi.waitFor(() => expect(button(el).dataset.state).toBe('success'));
+		await new Promise((r) => setTimeout(r, 2100));
+		expect(button(el).dataset.state).toBe('success');
+		button(el).dispatchEvent(new PointerEvent('pointerleave'));
+		button(el).dispatchEvent(new PointerEvent('pointerenter'));
+		await new Promise((r) => setTimeout(r, 350));
+		expect(button(el).dataset.state).toBe('success');
+		button(el).dispatchEvent(new PointerEvent('pointerleave'));
+		await vi.waitFor(() => expect(button(el).dataset.state).toBe('idle'));
+	});
+
+	it('haalt "Gekopieerd" na een tik na een moment weg', async () => {
+		vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
+		el = await editor('```\ncode\n```');
+		button(el).dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true }));
+		button(el).click();
+		await vi.waitFor(() => expect(button(el).dataset.state).toBe('success'));
+		await vi.waitFor(() => expect(button(el).dataset.state).toBe('idle'), { timeout: 3000 });
+	});
+
+	it('laat de uitkomst in een alleen-lezen editor staan tot de focus weggaat of Escape', async () => {
+		vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
+		el = await editor('```\ncode\n```', 'readonly');
+		button(el).focus();
+		button(el).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+		button(el).click();
+		await vi.waitFor(() => expect(button(el).dataset.state).toBe('success'));
+		button(el).dispatchEvent(new PointerEvent('pointerleave'));
+		await new Promise((r) => setTimeout(r, 350));
+		expect(button(el).dataset.state).toBe('success');
+		button(el).dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		expect(button(el).dataset.state).toBe('idle');
+		button(el).click();
+		await vi.waitFor(() => expect(button(el).dataset.state).toBe('success'));
+		button(el).blur();
+		expect(button(el).dataset.state).toBe('idle');
+	});
+
 	it('is geen tabstop in een bewerkbare editor, wel in een alleen-lezen', async () => {
 		el = await editor('```\ncode\n```');
 		expect(button(el).tabIndex).toBe(-1);

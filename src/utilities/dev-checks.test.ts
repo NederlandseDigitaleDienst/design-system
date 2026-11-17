@@ -25,7 +25,8 @@ describe('rules in the browser', () => {
 	afterEach(() => root?.remove());
 
 	// The group pure is a choice of the project and judges its source, so it stays out of the browser.
-	for (const { id, examples } of data.rules.filter((each) => each.examples && each.severity !== 'hint' && each.group !== 'pure')) {
+	// A rule that follows an id (`ref`) is no selector, and stays out too.
+	for (const { id, examples } of data.rules.filter((each) => each.examples && !each.ref && each.severity !== 'hint' && each.group !== 'pure')) {
 		const rule = devRules.find((each) => each.id === id)!;
 
 		it(`${id} agrees with its examples`, async () => {

@@ -12,6 +12,11 @@
  * `linux-keys`. The component picks the right one from the detected OS, with
  * `keys` as the fallback for unknown platforms.
  *
+ * On macOS the modifiers show as their symbols, in the order of a macOS menu:
+ * `Cmd+Shift+Z` becomes ⇧⌘Z. Write them as Cmd (or Command, Meta), Option (or
+ * Alt, Opt), Shift and Ctrl (or Control), or as the symbols. A screen reader
+ * reads the name (Command), not the symbol.
+ *
  * @element nldd-keyboard-shortcut
  * @attr {string} keys - Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P').
  *   End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++'
@@ -21,10 +26,11 @@
  * @attr {string} windows-keys - Optional override for Windows.
  * @attr {string} linux-keys - Optional override for Linux/ChromeOS.
  * @attr {string} size - Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the
- *   font-size from the container; in the box variant the keycaps then scale along in em.
- * @attr {string} appearance - 'box' (default) shows each key as a keycap with a fill and a
- *   highlight edge. 'simple' shows the keys as plain text with separators: lighter, for
- *   inline use such as in a menu item.
+ *   font-size from the container; with keycaps they then scale along in em.
+ * @attr {string} appearance - 'keycap' (default) shows each key as a keycap with a fill and a
+ *   highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter,
+ *   for inline use such as in a menu item. As text the keys are joined by '+' (Ctrl+K), except
+ *   on macOS.
  * @attr {boolean} always-visible - Show on touch-only devices too, where shortcuts cannot be invoked.
  * @attr {string} color - 'neutral' (default) uses the component colors of its own. 'content'
  *   lets the keys and separators follow the content color of the context, with a
@@ -45,11 +51,11 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { keyboardShortcutStyles } from './keyboard-shortcut.styles.js';
 import { template } from './keyboard-shortcut.template.js';
 import { detectOS, type OS } from '../../../utilities/os.js';
-import { resolveKeys, parseKeys } from '../../../utilities/shortcut.js';
+import { resolveKeys, displayKeys, type DisplayKey } from '../../../utilities/shortcut.js';
 
 type Size = 'sm' | 'md' | 'inherit';
 type Color = 'neutral' | 'content';
-type Appearance = 'box' | 'simple';
+type Appearance = 'keycap' | 'text';
 
 @customElement('nldd-keyboard-shortcut')
 export class NLDDKeyboardShortcut extends LitElement {
@@ -71,12 +77,12 @@ export class NLDDKeyboardShortcut extends LitElement {
 	size: Size = 'md';
 
 	/**
-	 * 'box' (default) renders each key as a keycap with a fill and highlight
-	 * border. 'simple' renders the keys as plain text with separators — lighter,
-	 * for inline use such as inside a menu item.
+	 * 'keycap' (default) renders each key as a keycap with a fill and highlight
+	 * border. 'text' renders the keys as plain text: lighter, for inline use
+	 * such as inside a menu item.
 	 */
-	@property({ reflect: true, converter: reflectNonDefault<Appearance>('box') })
-	appearance: Appearance = 'box';
+	@property({ reflect: true, converter: reflectNonDefault<Appearance>('keycap') })
+	appearance: Appearance = 'keycap';
 
 	/**
 	 * 'neutral' (default) uses the component's own palette. 'content' makes the
@@ -111,8 +117,8 @@ export class NLDDKeyboardShortcut extends LitElement {
 		return resolveKeys(this, this._resolvedOS);
 	}
 
-	get _parsedKeys(): string[] {
-		return parseKeys(this._resolvedKeys);
+	get _displayKeys(): DisplayKey[] {
+		return displayKeys(this._resolvedKeys, this._resolvedOS);
 	}
 
 	override render() {

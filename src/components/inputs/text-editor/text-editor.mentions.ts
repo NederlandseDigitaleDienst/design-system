@@ -33,10 +33,12 @@ export const DEFAULT_TYPEAHEAD_QUERY = '[\\p{L}\\p{M}\\p{N}_.+-]*';
  *  default query. */
 export type TypeaheadTrigger = string | { trigger: string; query?: string };
 
-/** The query being typed: a trigger at the start of the line or after
- *  whitespace, followed by what the list allows, up to the caret. Anchored that
- *  way so a trigger inside a word (an e-mail address, `piet@sam`) stays a plain
- *  character. */
+/** The query being typed: a trigger at the start of the line, after whitespace
+ *  or after an opening bracket or quote (`(@sam`, `"@sam`), followed by what the
+ *  list allows, up to the caret. The marks that open bold, italic or
+ *  strikethrough may come in between (`**@sam`, what Cmd+B leaves to type in).
+ *  Anchored that way so a trigger inside a word (an e-mail address, `piet@sam`)
+ *  stays a plain character, and so does one in a URL (`https://`). */
 const queryPatterns = new Map<string, RegExp | null>();
 function queryPattern(trigger: string, query: string): RegExp | null {
 	if (trigger.length !== 1 || /[\s\p{L}\p{N}_]/u.test(trigger)) return null;
@@ -44,7 +46,9 @@ function queryPattern(trigger: string, query: string): RegExp | null {
 	if (queryPatterns.has(key)) return queryPatterns.get(key)!;
 	let pattern: RegExp | null;
 	try {
-		pattern = new RegExp(`(^|\\s)(${trigger.replace(/[\\^$.*+?()[\]{}|/]/g, '\\$&')})(${query})$`, 'u');
+		const marks = ['*', '_', '~'].filter((mark) => mark !== trigger).join('');
+		const escaped = trigger.replace(/[\\^$.*+?()[\]{}|/]/g, '\\$&');
+		pattern = new RegExp(`((?:^|[\\s\\p{Ps}\\p{Pi}"'])[${marks}]*)(${escaped})(${query})$`, 'u');
 	} catch {
 		pattern = query === DEFAULT_TYPEAHEAD_QUERY ? null : queryPattern(trigger, DEFAULT_TYPEAHEAD_QUERY);
 	}
@@ -129,8 +133,10 @@ export interface TypeaheadCandidate {
 export type TypeaheadSource = (query: string) => TypeaheadCandidate[] | Promise<TypeaheadCandidate[]>;
 
 export interface Typeahead {
-	/** One character that opens the list at a line start or after whitespace:
-	 *  `#`, `:`, `/`. Not a letter, digit or whitespace. */
+	/** One character that opens the list at a line start, after whitespace or
+	 *  after an opening bracket or quote, with the marks of bold, italic or
+	 *  strikethrough allowed in between: `#`, `:`, `/`. Not a letter, digit or
+	 *  whitespace. */
 	trigger: string;
 	source: TypeaheadSource;
 	/** What may follow the trigger, as a regular expression without anchors or

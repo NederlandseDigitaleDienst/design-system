@@ -1,4 +1,6 @@
 import type { EditorView } from '@codemirror/view';
+import { isolateHistory } from '@codemirror/commands';
+import { planPaste } from './text-editor.paste.js';
 import { currentAnnotations, pasteAnnotations } from './text-editor.annotations.js';
 import { docToClean, stripSentinels } from './text-editor.annotation-sentinels.js';
 
@@ -42,9 +44,12 @@ export class AnnotationClipboard {
 	}
 
 	/** Put `raw` at the selection. When it is the text of the last cut, its
-	 *  annotations come along, once: a second paste would duplicate their ids. */
-	paste(view: EditorView, raw: string): void {
-		const text = stripSentinels(raw);
+	 *  annotations come along, once: a second paste would duplicate their ids.
+	 *  Otherwise, unless `plain`, the pasted text is then made into the markdown
+	 *  it looks like (see planPaste), as a step of its own, so Cmd/Ctrl+Z brings
+	 *  back the text as it was pasted. */
+	paste(view: EditorView, raw: string, plain = false): void {
+		const text = stripSentinels(raw).replace(/\r\n?/g, '\n');
 		if (!text || view.state.readOnly) return;
 		const cut = this.cut;
 		// A clipboard from another app may hand back CRLF where the cut holds LF.
@@ -53,8 +58,21 @@ export class AnnotationClipboard {
 		const at = docToClean(view.state.doc.toString(), view.state.selection.main.from);
 		// input.paste, like CodeMirror's own paste: history groups it as one step and
 		// a transaction filter can tell a paste from typing.
+		const plan = carry || plain ? null : planPaste(view.state, text);
+		const end = view.state.selection.main.to;
 		const spec = { ...view.state.replaceSelection(text), userEvent: 'input.paste' };
-		view.dispatch(carry ? { ...spec, effects: pasteAnnotations.of({ at, anns: cut!.anns }) } : spec);
+		const tr = view.state.update(carry ? { ...spec, effects: pasteAnnotations.of({ at, anns: cut!.anns }) } : spec);
+		view.dispatch(tr);
 		if (carry) this.cut = null;
+		if (!plan) return;
+		// Mapped through the paste, renumbering included.
+		const from = tr.changes.mapPos(plan.from, -1);
+		const to = tr.changes.mapPos(end, 1);
+		view.dispatch({
+			changes: { from, to, insert: plan.insert },
+			selection: { anchor: from + plan.insert.length },
+			userEvent: 'input.complete',
+			annotations: isolateHistory.of('before'),
+		});
 	}
 }

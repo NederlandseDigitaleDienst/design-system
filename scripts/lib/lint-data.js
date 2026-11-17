@@ -74,11 +74,12 @@ export function buildContract(manifest) {
 		const attrs = {};
 		const childAttrs = {};
 		const descendantAttrs = {};
+		const globalAttrs = {};
 		for (const attribute of inheritedAttributes(declaration, declarations)) {
-			const target = attribute.forDescendants ? descendantAttrs : attribute.forChildren ? childAttrs : attrs;
+			const target = attribute.global ? globalAttrs : attribute.forDescendants ? descendantAttrs : attribute.forChildren ? childAttrs : attrs;
 			if (target[attribute.name]) continue;
 			const entry = {};
-			const literals = attribute.expandedType?.text ?? ((attribute.forChildren || attribute.forDescendants) && attribute.type?.text);
+			const literals = attribute.expandedType?.text ?? ((attribute.forChildren || attribute.forDescendants || attribute.global) && attribute.type?.text);
 			if (literals && literals.includes("'")) entry.values = literalValues(literals);
 			if (attribute.deprecated) entry.deprecated = attribute.deprecated;
 			target[attribute.name] = entry;
@@ -90,6 +91,7 @@ export function buildContract(manifest) {
 			attrs,
 			childAttrs,
 			...(Object.keys(descendantAttrs).length > 0 ? { descendantAttrs } : {}),
+			...(Object.keys(globalAttrs).length > 0 ? { globalAttrs } : {}),
 			// Set from a framework, so `:annotations="a"` is fine without an attribute.
 			props: members.filter((member) => member.kind === 'field' && !member.attribute).map((member) => member.name),
 			slots: slots.filter((slot) => slot !== '*'),

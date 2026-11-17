@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { ShortcutAvailabilityController, hasShortcut, parseKeys, resolveKeys, shortcutLabel } from './shortcut.js';
+import { ShortcutAvailabilityController, displayKeys, hasShortcut, parseKeys, resolveKeys, shortcutLabel } from './shortcut.js';
 import { _setOSOverride } from './os.js';
 
 const hint = (overrides: Partial<Parameters<typeof shortcutLabel>[0]> = {}) => ({
@@ -59,6 +59,24 @@ describe('shortcut', () => {
 		expect(shortcutLabel(hint({ shortcut: 'Alt+P', shortcutMac: 'Option+P' }))).toBe('Alt P');
 		_setOSOverride('mac');
 		expect(shortcutLabel(hint({ shortcut: 'Alt+P', shortcutMac: 'Option+P' }))).toBe('Option P');
+		expect(shortcutLabel(hint({ shortcut: 'Ctrl+S', shortcutMac: 'Cmd+S' }))).toBe('Command S');
 		expect(shortcutLabel(hint())).toBe('');
+	});
+
+	it('shows the modifiers on macOS as symbols, in the order of a macOS menu', () => {
+		const labels = (spec: string) => displayKeys(spec, 'mac').map((key) => key.label);
+		expect(labels('Cmd+Shift+Z')).toEqual(['⇧', '⌘', 'Z']);
+		expect(labels('command+alt+ctrl+K')).toEqual(['⌃', '⌥', '⌘', 'K']);
+		expect(labels('⌘+K')).toEqual(['⌘', 'K']);
+		expect(displayKeys('Cmd+Shift+Z', 'mac').map((key) => key.name)).toEqual(['Shift', 'Command', 'Z']);
+	});
+
+	it('leaves the keys as written on other platforms, and reads a symbol as its name', () => {
+		expect(displayKeys('Shift+Ctrl+K', 'windows')).toEqual([
+			{ label: 'Shift', name: 'Shift' },
+			{ label: 'Ctrl', name: 'Ctrl' },
+			{ label: 'K', name: 'K' },
+		]);
+		expect(displayKeys('⌘+K', 'other').map((key) => key.name)).toEqual(['Command', 'K']);
 	});
 });

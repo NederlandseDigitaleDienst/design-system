@@ -48,6 +48,38 @@ describe('mention trigger', () => {
 		expect(typeaheadQueryAt(state, pos, ['@'])).toBeNull();
 	});
 
+	// #438: a mention between brackets or quotes, "(@sam, pak jij dit op?)".
+	it('opent na een openingshaakje of aanhalingsteken', () => {
+		for (const opener of ['(', '[', '{', '"', "'", '“', '‘', '«']) {
+			const { state, pos } = at(`zie ${opener}@sam|`);
+			expect(typeaheadQueryAt(state, pos, ['@']), opener).toEqual({ from: 5, to: 9, query: 'sam', trigger: '@' });
+		}
+		const { state, pos } = at('(@sam|');
+		expect(typeaheadQueryAt(state, pos, ['@'])?.query).toBe('sam');
+	});
+
+	// What Cmd+B leaves to type in: `**|**`.
+	it('opent na de tekens die vet, cursief of doorhalen openen', () => {
+		for (const marks of ['**', '*', '_', '__', '~~', '(**']) {
+			const { state, pos } = at(`zie ${marks}@sam|`);
+			expect(typeaheadQueryAt(state, pos, ['@'])?.query, marks).toBe('sam');
+		}
+	});
+
+	it('opent niet na opmaaktekens die aan een woord vastzitten', () => {
+		for (const text of ['snake_@sam|', '5*@sam|', 'a~~@sam|']) {
+			const { state, pos } = at(text);
+			expect(typeaheadQueryAt(state, pos, ['@']), text).toBeNull();
+		}
+	});
+
+	it('opent niet na een ander leesteken, zoals in een URL', () => {
+		for (const text of ['https:/|', 'a.@sam|', 'zie:@sam|', 'a)@sam|']) {
+			const { state, pos } = at(text);
+			expect(typeaheadQueryAt(state, pos, ['@', '/']), text).toBeNull();
+		}
+	});
+
 	it('opent niet in inline code', () => {
 		const { state, pos } = at('gebruik `@sam|` hier');
 		expect(typeaheadQueryAt(state, pos, ['@'])).toBeNull();

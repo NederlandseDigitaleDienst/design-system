@@ -4,7 +4,9 @@
  * A field around one input: its label, supporting label, optional badge,
  * validation and help text. It finds the input among its children, hands it
  * the label as its accessible name and gives it an id, so you write no `for`
- * or `id` yourself.
+ * or `id` yourself. The input is the first one it finds, leaving out what sits
+ * in an nldd-toolbar inside the field: a toolbar works on the field, such as
+ * the formatting bar above an nldd-text-editor, and is never the field itself.
  *
  * Mark the optional fields with `optional`, not the required ones; the design
  * guidelines say why. Put the requirements on a value in an
@@ -83,6 +85,16 @@ function isFormInput(el: Element): boolean {
 		|| el instanceof HTMLSelectElement
 		|| el instanceof HTMLTextAreaElement
 		|| (el.constructor as { isFormInput?: boolean }).isFormInput === true;
+}
+
+const isToolbar = (el: Element): boolean => el.tagName.toLowerCase() === 'nldd-toolbar';
+
+/** Whether a toolbar sits between `el` and `top`, a child of the field. */
+function inToolbar(el: Element, top: Element): boolean {
+	for (let node = el.parentElement; node && node !== top; node = node.parentElement) {
+		if (isToolbar(node)) return true;
+	}
+	return false;
 }
 
 // crypto.randomUUID() requires a secure context (HTTPS or localhost).
@@ -312,10 +324,10 @@ export class NLDDFormField extends LitElement {
 	 */
 	private _findInput(): Element | undefined {
 		const children = Array.from(this.children)
-			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()));
+			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && !isToolbar(el));
 		for (const child of children) {
 			if (isFormInput(child)) return child;
-			const nested = Array.from(child.querySelectorAll('*')).find(isFormInput);
+			const nested = Array.from(child.querySelectorAll('*')).find(el => isFormInput(el) && !inToolbar(el, child));
 			if (nested) return nested;
 		}
 		return undefined;

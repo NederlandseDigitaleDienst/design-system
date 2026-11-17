@@ -555,11 +555,14 @@ describe('nldd-rich-text details', () => {
 		el = await render('<details><summary>Vraag</summary><p>Inhoud</p></details>');
 		const details = el.querySelector('details')!;
 		const summary = el.querySelector('summary')!;
-		expect(getComputedStyle(summary).borderBottomStyle).toBe('none');
+		expect(getComputedStyle(summary).boxShadow).not.toContain('0px -1px 0px');
+		const closedRoom = summary.clientHeight;
 		details.open = true;
 		// Opening transitions the height and padding of the content; wait for it.
 		await new Promise((resolve) => setTimeout(resolve, 400));
-		expect(getComputedStyle(summary).borderBottomWidth).toBe('1px');
+		expect(getComputedStyle(summary).boxShadow).toContain('0px -1px 0px');
+		// The line takes no room, so the title stays where it was.
+		expect(summary.clientHeight).toBe(closedRoom);
 		const content = getComputedStyle(details, '::details-content').backgroundColor;
 		expect(content).not.toBe(getComputedStyle(details).backgroundColor);
 		// The room above the first paragraph is inside the white area, not a tinted strip above it.
@@ -588,10 +591,10 @@ describe('nldd-rich-text details', () => {
 		// The bar stays square and keeps its line until the content is gone.
 		const summary = el.querySelector('summary')!;
 		expect(getComputedStyle(summary).borderBottomLeftRadius).toBe('0px');
-		expect(getComputedStyle(summary).borderBottomStyle).toBe('solid');
+		expect(getComputedStyle(summary).boxShadow).toContain('0px -1px 0px');
 		await new Promise((resolve) => setTimeout(resolve, 400));
 		expect(getComputedStyle(summary).borderBottomLeftRadius).not.toBe('0px');
-		expect(getComputedStyle(summary).borderBottomStyle).toBe('none');
+		expect(getComputedStyle(summary).boxShadow).not.toContain('0px -1px 0px');
 	});
 
 	it('joins details that follow each other into one block', async () => {

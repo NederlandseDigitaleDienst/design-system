@@ -274,6 +274,8 @@ describe('<nldd-link> with an <a> of its own', () => {
 	it('looks like a link through the global stylesheet', async () => {
 		el = await fixture('<nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link>');
 		await waitForUpdate(el);
+		// A pointer left there by an earlier test would give the hover color.
+		await userEvent.unhover(document.body);
 		// The color of the <a> transitions; a slow machine reads it halfway,
 		// the same color written as oklab.
 		own(el).getAnimations().forEach((animation) => animation.finish());

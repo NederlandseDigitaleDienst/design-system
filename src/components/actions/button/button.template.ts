@@ -27,7 +27,7 @@ function renderContent(component: NLDDButton) {
 				<span class="button__shortcut">
 					<nldd-keyboard-shortcut
 						size="inherit"
-						appearance="simple"
+						appearance="text"
 						color="content"
 						keys=${component.shortcut || nothing}
 						mac-keys=${component.shortcutMac || nothing}

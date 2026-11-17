@@ -7,6 +7,7 @@ import '../../inputs/combo-box/combo-box.js';
 import '../../inputs/token-field/token-field.js';
 import { pointInPolygon, wedge, apexAt, STALL_DISMISS_MS, SafeTriangleController } from './menu.safe-triangle.js';
 import { menuItemFromPoint } from './menu.pointer.js';
+import variablesCss from '../../../assets/styles/variables.css?inline';
 
 function getButton(el: Element): HTMLElement {
 	return el.shadowRoot?.querySelector('button') as HTMLElement;
@@ -2462,6 +2463,42 @@ describe('nldd-menu touch-scroll press suppression', () => {
 		expect(menu.hasAttribute('scroll-active')).toBe(false);
 
 		cleanup(menu);
+	});
+
+	it('keeps the colors of a pressed item while the menu scrolls, a destructive one too', async () => {
+		// The colors are tokens.
+		const tokens = new CSSStyleSheet();
+		tokens.replaceSync(variablesCss);
+		document.adoptedStyleSheets = [...document.adoptedStyleSheets, tokens];
+		const menu = await fixture<HTMLElement>(`
+			<nldd-menu>
+				<nldd-menu-item text="Dupliceer"></nldd-menu-item>
+				<nldd-menu-item text="Verwijderen" destructive></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await waitForUpdate(menu);
+		(menu as HTMLElement & { showPopover: () => void }).showPopover();
+		await waitForUpdate(menu);
+		const [plain, destructive] = [...menu.querySelectorAll('nldd-menu-item')];
+		const colors = (item: Element) => {
+			const button = item.shadowRoot!.querySelector('.menu__item')!;
+			const style = getComputedStyle(button);
+			// The text reads the context the item passes on.
+			return { color: style.getPropertyValue('--context-content-color').trim(), background: style.backgroundColor };
+		};
+		const resting = [colors(plain), colors(destructive)];
+		const scroller = menu.shadowRoot!.querySelector('.menu')!;
+		scroller.dispatchEvent(touchEvent('touchstart', scroller, 100, 100));
+		scroller.dispatchEvent(touchEvent('touchmove', scroller, 100, 130));
+		expect(plain.hasAttribute('scroll-active')).toBe(true);
+		// What a press shows: the highlighted colors, as :active:hover sets them.
+		for (const item of [plain, destructive]) item.setAttribute('highlighted', '');
+		expect([colors(plain), colors(destructive)]).toEqual(resting);
+		scroller.dispatchEvent(touchEvent('touchend', scroller, 100, 130));
+		expect(plain.hasAttribute('scroll-active')).toBe(false);
+		expect(resting[1].color).not.toBe(resting[0].color);
+		cleanup(menu);
+		document.adoptedStyleSheets = document.adoptedStyleSheets.filter((sheet) => sheet !== tokens);
 	});
 
 	it('a pure tap (no significant move) never sets scroll-active', async () => {

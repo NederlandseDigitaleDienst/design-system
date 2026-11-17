@@ -38,6 +38,19 @@ describe('renumberOrderedLists', () => {
 		expect(apply('1. a\n   1. x\n   5. y\n2. b')).toBe('1. a\n   1. x\n   2. y\n2. b');
 	});
 
+	// CommonMark: nested only from the column where the item's text starts.
+	it('reads an item indented less than the text above as the next item', () => {
+		expect(apply('1. a\n 3. b')).toBe('1. a\n 2. b');
+		expect(apply('1. a\n  3. b')).toBe('1. a\n  2. b');
+		expect(apply('1. a\n   3. b')).toBe('1. a\n   1. b');
+		expect(apply('10. a\n   3. b\n    3. c')).toBe('1. a\n   2. b\n    3. c');
+	});
+
+	it('ends the list at text after a blank line that does not reach the item text', () => {
+		expect(apply('1. a\n\n text\n2. b')).toBe('1. a\n\n text\n1. b');
+		expect(apply('1. a\n\n   text\n3. b')).toBe('1. a\n\n   text\n2. b');
+	});
+
 	it('treats a single blank line as a loose-list continuation', () => {
 		expect(apply('1. a\n\n5. b')).toBe('1. a\n\n2. b');
 	});
@@ -48,6 +61,37 @@ describe('renumberOrderedLists', () => {
 
 	it('starts a new list after a paragraph', () => {
 		expect(apply('1. a\n3. b\n\ntekst\n\n1. c\n4. d')).toBe('1. a\n2. b\n\ntekst\n\n1. c\n2. d');
+	});
+
+	// CommonMark's lazy continuation: plain text right after an item's text belongs to it.
+	it('keeps a list running across a continuation line without indent', () => {
+		const doc = '1. Eerste lid, met een regel die\ndoorloopt zonder inspringing.\n\n2. Tweede lid.';
+		expect(renumberOrderedLists(doc)).toEqual([]);
+		expect(apply('1. a\nb\nc\n5. d')).toBe('1. a\nb\nc\n2. d');
+	});
+
+	it('keeps a nested list running across a continuation of its last item', () => {
+		expect(apply('1. a\n   1. b\nlazy\n   3. c\n4. d')).toBe('1. a\n   1. b\nlazy\n   2. c\n2. d');
+		expect(apply('1. a\n   - b\nlazy\n5. c')).toBe('1. a\n   - b\nlazy\n2. c');
+	});
+
+	it('ends the list at text that follows a blank line', () => {
+		expect(apply('1. a\n\ntekst\n2. b')).toBe('1. a\n\ntekst\n1. b');
+	});
+
+	it('ends the list at a line that opens a block of its own', () => {
+		expect(apply('1. a\n# Kop\n2. b')).toBe('1. a\n# Kop\n1. b');
+		expect(apply('1. a\n- punt\n2. b')).toBe('1. a\n- punt\n1. b');
+		expect(apply('1. a\n---\n2. b')).toBe('1. a\n---\n1. b');
+		expect(apply('1. a\n```\nx\n```\n2. b')).toBe('1. a\n```\nx\n```\n1. b');
+	});
+
+	it('does not continue an empty item', () => {
+		expect(apply('1.\ntekst\n2. b')).toBe('1.\ntekst\n1. b');
+	});
+
+	it('lets a quoted item take a continuation without the quote marker', () => {
+		expect(apply('> 1. a\nlazy\n> 3. b')).toBe('> 1. a\nlazy\n> 2. b');
 	});
 
 	it('does not renumber inside a fenced code block (and the fence breaks the list)', () => {
@@ -99,6 +143,36 @@ describe('nldd-text-editor ordered-list renumbering (integration)', () => {
 		el.view.dispatch({ changes: { from: el.view.state.doc.length, insert: '\n3. twee' } });
 		await waitForUpdate(el);
 		expect(el.value).toBe('1. een\n2. twee');
+	});
+
+	// A value the app sets is content as it stands, as it is on the first mount.
+	it('leaves a value set from outside as it is, without an input event', async () => {
+		el = await fixture<El>('<nldd-text-editor accessible-label="t"></nldd-text-editor>');
+		const inputs: string[] = [];
+		el.addEventListener('input', (event) => inputs.push((event as CustomEvent).detail.value));
+		el.value = '1. a\n1. b\n5. c';
+		await el.updateComplete; await waitForUpdate(el);
+		expect(el.value).toBe('1. a\n1. b\n5. c');
+		expect(el.view.state.doc.toString()).toBe('1. a\n1. b\n5. c');
+		expect(inputs).toEqual([]);
+	});
+
+	it('renumbers a value set from outside once the user edits the list', async () => {
+		el = await fixture<El>('<nldd-text-editor accessible-label="t"></nldd-text-editor>');
+		el.value = '1. a\n1. b';
+		await el.updateComplete; await waitForUpdate(el);
+		el.view.dispatch({ changes: { from: el.view.state.doc.length, insert: '\n1. c' }, userEvent: 'input' });
+		await waitForUpdate(el);
+		expect(el.value).toBe('1. a\n2. b\n3. c');
+	});
+
+	it('renumbers when a continuation line becomes a heading', async () => {
+		el = await fixture<El>('<nldd-text-editor accessible-label="t"></nldd-text-editor>');
+		el.value = '1. a\nlazy\n2. b';
+		await el.updateComplete; await waitForUpdate(el);
+		el.view.dispatch({ changes: { from: '1. a\n'.length, insert: '# ' }, userEvent: 'input.type' });
+		await waitForUpdate(el);
+		expect(el.value).toBe('1. a\n# lazy\n1. b');
 	});
 
 	it('keeps annotations anchored while renumbering', async () => {

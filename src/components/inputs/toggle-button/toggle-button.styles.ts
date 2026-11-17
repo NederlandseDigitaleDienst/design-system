@@ -11,6 +11,8 @@ export const toggleButtonStyles = css`
 
 	:host {
 		--_toggle-button-corner-radius: var(--semantics-controls-md-corner-radius);
+		/* Unset outside a field, so border-radius falls back to the own corner. */
+		--_toggle-button-nested-corner-radius: var(--context-control-corner-radius);
 		--_toggle-button-min-size: var(--semantics-controls-md-min-size);
 		--_toggle-button-block-padding: var(--semantics-controls-md-block-padding);
 		--_toggle-button-inline-padding: var(--semantics-buttons-md-inline-padding);
@@ -176,7 +178,7 @@ export const toggleButtonStyles = css`
 		position: relative;
 		margin: 0;
 		border: none;
-		border-radius: var(--_toggle-button-corner-radius);
+		border-radius: var(--_toggle-button-nested-corner-radius, var(--_toggle-button-corner-radius));
 		background: none;
 		background-color: var(--_toggle-button-background-color);
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_toggle-button-highlight-border-color);

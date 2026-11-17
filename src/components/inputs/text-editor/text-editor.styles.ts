@@ -15,9 +15,16 @@ export const textEditorStyles = css`
 		--_text-editor-caret-ring-color: var(--semantics-surfaces-base-background-color);
 		--_text-editor-corner-radius: var(--primitives-corner-radius-lg);
 		--_text-editor-background-color: var(--semantics-input-fields-background-color);
+		--_text-editor-toolbar-background-color: var(--_text-editor-background-color);
+		--_text-editor-toolbar-divider: var(--semantics-dividers-thickness) solid var(--semantics-dividers-color);
+		--_text-editor-toolbar-padding: var(--primitives-space-8);
+		--_text-editor-toolbar-gap: var(--primitives-space-8);
+		--_text-editor-toolbar-text-gap: var(--primitives-space-12);
+		--_text-editor-stuck-gap: 0px;
 		--_text-editor-input-field-border-color: var(--semantics-input-fields-border-color);
 		--_text-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_text-editor-input-field-border-color);
-		--_text-editor-input-field-border-z-index: 1;
+		--_text-editor-toolbar-z-index: 1;
+		--_text-editor-input-field-border-z-index: 2;
 		--_text-editor-padding-block: var(--semantics-controls-md-inline-padding);
 		--_text-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 		--_text-editor-content-color: var(--semantics-content-color);
@@ -55,7 +62,7 @@ export const textEditorStyles = css`
 		--_text-editor-bullet-color: var(--semantics-content-color);
 		--_text-editor-rule-thickness: var(--semantics-dividers-thickness);
 		--_text-editor-quote-border-width: var(--primitives-border-width-regular);
-		--_text-editor-quote-border-color: var(--semantics-content-color);
+		--_text-editor-quote-border-color: var(--semantics-blockquotes-border-color);
 		--_text-editor-quote-rule: linear-gradient(var(--_text-editor-quote-border-color), var(--_text-editor-quote-border-color));
 		--_text-editor-rule-color: var(--semantics-dividers-color);
 		--_text-editor-heading-marker-scale: 75%;
@@ -165,6 +172,9 @@ export const textEditorStyles = css`
 		--_text-editor-background-color: transparent;
 		--_text-editor-input-field-border-color: transparent;
 		--_text-editor-input-field-border-shadow: none;
+		--_text-editor-toolbar-background-color: var(--context-background-color);
+		--_text-editor-toolbar-padding: 0px;
+		--_text-editor-stuck-gap: var(--_text-editor-toolbar-gap);
 		--_text-editor-padding-block: 0px;
 		/* Room for the caret's own ink at the first and last position of a line:
 		   its width plus its ring. Without it the edge carets are clipped. */
@@ -204,6 +214,43 @@ export const textEditorStyles = css`
 
 	.text-editor .cm-editor {
 		isolation: isolate;
+	}
+
+
+	/* # Toolbar */
+
+	slot[name="toolbar"] {
+		display: block;
+		order: -1;
+		position: sticky;
+		top: var(--context-inset-top, 0px);
+		z-index: var(--_text-editor-toolbar-z-index);
+		border-radius: inherit;
+		background-color: var(--_text-editor-toolbar-background-color);
+		padding: var(--_text-editor-toolbar-padding);
+		border-end-start-radius: 0;
+		border-end-end-radius: 0;
+		border-block-end: var(--_text-editor-toolbar-divider);
+	}
+
+	slot[name="toolbar"][hidden] {
+		display: none;
+	}
+
+	:host([embedded]) slot[name="toolbar"] {
+		padding-block-end: var(--_text-editor-toolbar-gap);
+	}
+
+	/* Stuck, the bar keeps a gap to the edge it sticks to, filled with its own
+	   background so the text scrolls under it. Offset and shadow, not padding:
+	   the text does not move when it starts to stick. */
+	slot[name="toolbar"].is-stuck {
+		top: calc(var(--context-inset-top, 0px) + var(--_text-editor-stuck-gap));
+		box-shadow: 0 calc(-1 * var(--_text-editor-stuck-gap)) 0 0 var(--_text-editor-toolbar-background-color);
+	}
+
+	:host([embedded]) .text-editor:has(> slot[name="toolbar"]:not([hidden])) .cm-content {
+		padding-block-start: var(--_text-editor-toolbar-text-gap);
 	}
 
 	:host([disabled]) .text-editor {
