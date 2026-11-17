@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, afterEach, vi } from 'vitest';
 import variablesCss from '../../../assets/styles/variables.css?raw';
 import colorsCss from '../../../assets/styles/colors.generated.css?raw';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import { groupForOverflow } from './toolbar.js';
 import { spacerZeros } from './toolbar.layout.js';
 import { loadTokens } from '../../../test-tokens.js';
@@ -383,6 +383,53 @@ describe('nldd-toolbar', () => {
 		clone!.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true }));
 
 		expect(fired).toBe(true);
+	});
+
+	it('checks the chosen copy at once and keeps it in the menu while it blinks', async () => {
+		el = await fixture(`
+			<nldd-toolbar>
+				<nldd-toolbar-item slot="start" label="Tekststijl">
+					<nldd-icon-button aria-label="Tekststijl"></nldd-icon-button>
+					<nldd-menu-group slot="overflow" text="Tekststijl">
+						<nldd-menu-item text="Vet" type="checkbox"></nldd-menu-item>
+						<nldd-menu-item text="Onderstrepen" type="checkbox"></nldd-menu-item>
+					</nldd-menu-group>
+				</nldd-toolbar-item>
+				<nldd-toolbar-item slot="start" label="Lijst">
+					<nldd-icon-button aria-label="Lijst"></nldd-icon-button>
+					<nldd-menu-group slot="overflow" text="Lijst">
+						<nldd-menu-item text="Geen" type="radio"></nldd-menu-item>
+					</nldd-menu-group>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		`);
+		await waitForUpdate(el);
+		// What an app does: the original follows the choice.
+		const original = el.querySelector('nldd-menu-item[text="Onderstrepen"]')!;
+		original.addEventListener('select', () => original.toggleAttribute('selected'));
+
+		// Too narrow for either item, measured by the toolbar itself: a measurement
+		// after the menu opened would close it.
+		(el as HTMLElement).style.width = '48px';
+		const menu = el.shadowRoot!.querySelector('nldd-menu')!;
+		await until(() => menu.querySelector('nldd-menu-item[text="Onderstrepen"]') !== null);
+		await new Promise(resolve => setTimeout(resolve, 100));
+		menu.showPopover();
+		await new Promise(resolve => setTimeout(resolve, 50));
+		// The menu hides a group's divider at the edges when it opens.
+		const dividers = () => [...menu.querySelectorAll('nldd-menu-group')]
+			.map(group => [group.hasAttribute('data-no-top-divider'), group.hasAttribute('data-no-bottom-divider')]);
+		const before = dividers();
+
+		const copy = menu.querySelector('nldd-menu-item[text="Onderstrepen"]')!;
+		copy.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		await new Promise(resolve => setTimeout(resolve, 0));
+
+		expect(copy.isConnected).toBe(true);
+		expect(copy.hasAttribute('confirming')).toBe(true);
+		expect(copy.hasAttribute('selected')).toBe(true);
+		expect(dividers()).toEqual(before);
+		menu.hidePopover();
 	});
 
 	// ## MutationObserver

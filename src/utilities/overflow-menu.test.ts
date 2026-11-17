@@ -66,6 +66,47 @@ describe('OverflowMenu', () => {
 		expect(host.toggles).toEqual([true, false]);
 	});
 
+	it('refills once it has closed, so a chosen entry keeps its blink', async () => {
+		const host = await mountHost();
+		const entry = (text: string): HTMLElement => Object.assign(document.createElement('nldd-menu-item'), { text });
+		const chosen = entry('Opsomming');
+		host.overflow.replace([chosen]);
+		host.overflow.menu!.showPopover();
+		await frames();
+		host.overflow.replace([entry('Genummerd')]);
+		expect(chosen.isConnected).toBe(true);
+		host.overflow.hide();
+		await frames();
+		expect([...host.overflow.menu!.children].map((item) => (item as HTMLElement & { text: string }).text)).toEqual(['Genummerd']);
+	});
+
+	it('checks a copy at once when its original is checked while the menu is open', async () => {
+		const host = await mountHost();
+		const originals = ['Geen', 'Opsomming'].map((text) => {
+			const item = document.createElement('nldd-menu-item');
+			item.setAttribute('type', 'radio');
+			item.setAttribute('text', text);
+			container.append(item);
+			return item;
+		});
+		originals[0].setAttribute('selected', '');
+		host.overflow.mirror(originals);
+		host.overflow.menu!.showPopover();
+		await frames();
+		const copies = [...host.overflow.menu!.children];
+		originals[0].removeAttribute('selected');
+		originals[1].setAttribute('selected', '');
+		host.overflow.mirror(originals);
+		expect([...host.overflow.menu!.children]).toEqual(copies);
+		expect(copies.map((copy) => copy.hasAttribute('selected'))).toEqual([false, true]);
+	});
+
+	it('refills at once while closed', async () => {
+		const host = await mountHost();
+		host.overflow.replace([Object.assign(document.createElement('nldd-menu-item'), { text: 'Geen' })]);
+		expect(host.overflow.menu!.children).toHaveLength(1);
+	});
+
 	it('keeps a select in the menu, and sends a copy’s on from its original', async () => {
 		const host = await mountHost();
 		const original = document.createElement('nldd-menu-item');

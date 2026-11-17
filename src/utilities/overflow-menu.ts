@@ -62,6 +62,7 @@ export class OverflowMenu implements ReactiveController {
 		menu.id = `${this._options.id}-${OverflowMenu._counter++}`;
 		menu.addEventListener('toggle', (event: Event) => {
 			this.open = (event as ToggleEvent).newState === 'open';
+			if (!this.open) this._applyPending();
 			this._host.requestUpdate();
 			this._options.onToggle?.(this.open);
 		});
@@ -112,9 +113,11 @@ export class OverflowMenu implements ReactiveController {
 
 	/** Fill the menu with entries the bar built itself. */
 	replace(entries: Element[]): void {
-		if (!this._menu) return;
-		this._originals.clear();
-		this._menu.replaceChildren(...entries);
+		this._fill(() => {
+			this._originals.clear();
+			this._copiedAttributes.clear();
+			this._menu?.replaceChildren(...entries);
+		});
 	}
 
 	/**
@@ -124,9 +127,68 @@ export class OverflowMenu implements ReactiveController {
 	 * original is stamped with an id that its copy carries.
 	 */
 	mirror(items: Element[]): void {
+		if (this.open && this._showsCopiesOf(items)) {
+			this._updateCopies();
+			return;
+		}
+		this._fill(() => {
+			this._originals.clear();
+			this._copiedAttributes.clear();
+			this._menu?.replaceChildren(...items.map((item) => this._clone(item)));
+		});
+	}
+
+	/** Whether the menu holds a copy of each of `items`, in this order. */
+	private _showsCopiesOf(items: Element[]): boolean {
+		const shown = [...(this._menu?.children ?? [])].map((copy) => copy.getAttribute('data-overflow-oid'));
+		return shown.length === items.length
+			&& items.every((item, i) => item.getAttribute('data-overflow-oid') === shown[i] && shown[i] !== null);
+	}
+
+	/**
+	 * Carry what changed on the originals over to their copies, in place: a
+	 * choice that checks an item shows its check mark while it blinks. Only the
+	 * attributes the original has or had: the menu writes its own on an entry.
+	 */
+	private _updateCopies(): void {
+		for (const copy of this._menu?.querySelectorAll('[data-overflow-oid]') ?? []) {
+			const oid = copy.getAttribute('data-overflow-oid')!;
+			const original = this._originals.get(oid);
+			if (!original) continue;
+			const names = new Set(original.getAttributeNames().filter((name) => name !== 'slot'));
+			for (const name of this._copiedAttributes.get(oid) ?? []) {
+				if (!names.has(name)) copy.removeAttribute(name);
+			}
+			for (const name of names) {
+				const value = original.getAttribute(name)!;
+				if (copy.getAttribute(name) !== value) copy.setAttribute(name, value);
+			}
+			this._copiedAttributes.set(oid, names);
+		}
+	}
+
+	private _copiedAttributes = new Map<string, Set<string>>();
+	private _pending: (() => void) | null = null;
+
+	/**
+	 * Refill now, or once the menu has closed. New entries while it is open
+	 * would cut the blink of a chosen one short and skip the menu's divider
+	 * pass. The entries are made from the originals as they are by then.
+	 */
+	private _fill(apply: () => void): void {
 		if (!this._menu) return;
-		this._originals.clear();
-		this._menu.replaceChildren(...items.map((item) => this._clone(item)));
+		if (this.open) {
+			this._pending = apply;
+			return;
+		}
+		this._pending = null;
+		apply();
+	}
+
+	private _applyPending(): void {
+		const apply = this._pending;
+		this._pending = null;
+		apply?.();
 	}
 
 	/** `data-overflow-oid` is outside the attributes a bar watches, so
@@ -139,6 +201,7 @@ export class OverflowMenu implements ReactiveController {
 				node.setAttribute('data-overflow-oid', oid);
 			}
 			this._originals.set(oid, node);
+			this._copiedAttributes.set(oid, new Set(node.getAttributeNames().filter((name) => name !== 'slot')));
 		}
 		const clone = original.cloneNode(true) as Element;
 		clone.removeAttribute('slot');
