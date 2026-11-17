@@ -129,6 +129,8 @@ export class ModalOverlay implements ReactiveController {
 		if (!dialog || !dialog.open || this._closing) return;
 
 		if (!this.options.animatedClose) {
+			// The native close event follows later: handleClose skips it if the
+			// dialog was opened again by then, and _emitClose() once per cycle.
 			dialog.close();
 			this._emitClose();
 			return;
