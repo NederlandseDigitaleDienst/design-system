@@ -45,6 +45,10 @@ export class ModalOverlay implements ReactiveController {
 	private _focusReturn = new FocusReturn();
 	private _downOnBackdrop = false;
 	private _upOnBackdrop = false;
+	/** The open state this controller last acted on. A dialog that closed by
+	 *  itself is still open here until its close event: a render in between
+	 *  must not read that as a request to open it again. */
+	private _known = false;
 
 	constructor(
 		private readonly host: ModalOverlayHost & { updateComplete: Promise<boolean> },
@@ -65,11 +69,12 @@ export class ModalOverlay implements ReactiveController {
 		this.host.removeEventListener('dismiss', this._handleDismiss);
 	}
 
-	/** Follows `open` set from outside, as a binding does. */
+	/** Follows `open` set from outside, as a binding does: only a change. */
 	hostUpdated(): void {
-		const dialog = this.dialog;
-		if (this.host.open && (!dialog?.open || this._closing)) this.show();
-		else if (!this.host.open && dialog?.open && !this._closing) this.hide();
+		const open = this.host.open;
+		if (open === this._known) return;
+		if (open) this.show();
+		else this.hide();
 	}
 
 	show(): void {
@@ -87,7 +92,10 @@ export class ModalOverlay implements ReactiveController {
 			return;
 		}
 
-		if (dialog.open && !this._closing) return;
+		if (dialog.open && !this._closing) {
+			this._known = true;
+			return;
+		}
 		// Also when it reopens during the close: what it reads may have changed since.
 		this.options.beforeOpen?.();
 		if (this._closing) {
@@ -101,6 +109,7 @@ export class ModalOverlay implements ReactiveController {
 		}
 		// New open cycle: the next close may emit again.
 		this._closeEmitted = false;
+		this._known = true;
 		this.host.open = true;
 		this.host.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
 	}
@@ -110,10 +119,12 @@ export class ModalOverlay implements ReactiveController {
 		this._cancelPendingOpen?.();
 		this._cancelPendingOpen = null;
 
+		// Also before the first render: an `open` set earlier must not open it then.
+		this._known = false;
+		this.host.open = false;
 		const dialog = this.dialog;
 		if (!dialog || !dialog.open || this._closing) return;
 
-		this.host.open = false;
 		if (!this.options.animatedClose) {
 			dialog.close();
 			this._emitClose();
@@ -161,6 +172,7 @@ export class ModalOverlay implements ReactiveController {
 
 	/** Once per open cycle, from whichever route closed the dialog. */
 	private _emitClose(): void {
+		this._known = false;
 		this.host.open = false;
 		if (this._closeEmitted) return;
 		this._closeEmitted = true;

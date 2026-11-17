@@ -107,6 +107,31 @@ describe('ModalOverlay', () => {
 		expect(el.open).toBe(true);
 	});
 
+	it('stays closed when it renders between a close of its own and the close event', async () => {
+		const el = await mount();
+		el.show();
+		await el.updateComplete;
+		const closed = new Promise((resolve) => dialogOf(el).addEventListener('close', resolve, { once: true }));
+		dialogOf(el).close();
+		el.requestUpdate();
+		await el.updateComplete;
+		await closed;
+		await el.updateComplete;
+		expect(dialogOf(el).open).toBe(false);
+		expect(el.open).toBe(false);
+	});
+
+	it('stays closed when hidden before its first render, after open was set', async () => {
+		options = {};
+		const el = document.createElement('test-modal-overlay') as TestModalOverlay;
+		el.open = true;
+		document.body.append(el);
+		el.hide();
+		await el.updateComplete;
+		expect(dialogOf(el).open).toBe(false);
+		expect(el.open).toBe(false);
+	});
+
 	it('ignores the close of a nested component', async () => {
 		const el = await mount({}, '<span></span>');
 		const onClose = vi.fn();
