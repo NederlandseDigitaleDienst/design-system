@@ -397,4 +397,53 @@ describe('nldd-modal-dialog – open attribute', () => {
 		expect(dialog().open).toBe(true);
 		expect(dialog().classList.contains('is-closing')).toBe(false);
 	});
+
+	it('clears open and fires close once when the native dialog closes without hide()', async () => {
+		el = await fixture<NLDDModalDialog>('<nldd-modal-dialog accessible-label="Test" open></nldd-modal-dialog>');
+		await waitForUpdate(el);
+		const onClose = vi.fn();
+		el.addEventListener('close', onClose);
+		// The native close event is queued as a task, so wait for it rather than a render.
+		const closed = new Promise((resolve) => dialog().addEventListener('close', resolve, { once: true }));
+		dialog().close();
+		await closed;
+		await waitForUpdate(el);
+		expect(el.open).toBe(false);
+		expect(onClose).toHaveBeenCalledTimes(1);
+	});
+
+	it('ignores a close event from something nested inside it', async () => {
+		el = await fixture<NLDDModalDialog>('<nldd-modal-dialog accessible-label="Test" open><span>Inhoud</span></nldd-modal-dialog>');
+		await waitForUpdate(el);
+		el.querySelector('span')!.dispatchEvent(new Event('close', { bubbles: true, composed: true }));
+		await waitForUpdate(el);
+		expect(el.open).toBe(true);
+		expect(dialog().open).toBe(true);
+	});
+});
+
+describe('nldd-modal-dialog – focus return', () => {
+	let el: NLDDModalDialog;
+	let opener: HTMLButtonElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		opener?.remove();
+	});
+
+	it('hands focus back to what had it before it opened', async () => {
+		opener = document.createElement('button');
+		opener.textContent = 'Verwijderen';
+		document.body.appendChild(opener);
+		opener.focus();
+		el = await fixture<NLDDModalDialog>('<nldd-modal-dialog accessible-label="Test"></nldd-modal-dialog>');
+		el.show();
+		await waitForUpdate(el);
+		expect(document.activeElement).not.toBe(opener);
+
+		const closed = new Promise((resolve) => el.addEventListener('close', resolve, { once: true }));
+		el.hide();
+		await closed;
+		expect(document.activeElement).toBe(opener);
+	});
 });

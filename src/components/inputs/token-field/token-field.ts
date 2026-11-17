@@ -45,7 +45,7 @@
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
+import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { tokenFieldStyles } from './token-field.styles.js';
 import { tokenFieldTemplate } from './token-field.template.js';
 import { nlddTokenFieldTranslations, type NLDDTokenFieldTranslations } from './token-field.i18n.js';
@@ -279,7 +279,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 				if (!this._showInput) this._closeMenu();
 			}
 		}
-		if (changed.has('required')) this._updateValidity();
 		if (changed.has('readonly') && this.readonly) this._closeMenu();
 		if (changed.has('accessibleLabel')) this.internals.ariaLabel = this.accessibleLabel || null;
 	}
@@ -312,22 +311,23 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		return data;
 	}
 
-	override commitFormValue(): void {
-		super.commitFormValue();
-		this._updateValidity();
+	/** The text input only takes the next token; the tokens are the value, so
+	 *  the host answers for itself. */
+	override validationTarget(): null {
+		return null;
+	}
+
+	override validationAnchor(): HTMLElement | undefined {
+		return this._input ?? undefined;
 	}
 
 	/** A required field with no tokens is invalid (valueMissing). */
-	private _updateValidity(): void {
-		if (this.required && this.values.length === 0) {
-			this.internals.setValidity(
-				{ valueMissing: true },
-				this._t('components.token-field.required-error-text'),
-				this._input ?? this,
-			);
-		} else {
-			this.internals.setValidity({});
-		}
+	override ownValidity(): OwnValidity | null {
+		if (!this.required || this.values.length > 0) return null;
+		return {
+			flags: { valueMissing: true },
+			message: this._t('components.token-field.required-error-text'),
+		};
 	}
 
 	formResetCallback(): void {

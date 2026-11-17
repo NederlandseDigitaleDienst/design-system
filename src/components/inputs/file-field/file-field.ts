@@ -116,7 +116,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
+import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { fileFieldStyles } from './file-field.styles.js';
 import { fileFieldTemplate } from './file-field.template.js';
@@ -553,7 +553,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override willUpdate(changed: PropertyValues): void {
 		if (changed.has('_files')) this._resetFit();
-		if (changed.has('required')) this._updateValidity();
 		if (changed.has('accessibleLabel')) this.internals.ariaLabel = this.accessibleLabel || null;
 	}
 
@@ -814,22 +813,23 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		return data;
 	}
 
-	override commitFormValue(): void {
-		super.commitFormValue();
-		this._updateValidity();
+	/** The native input is emptied after every pick, so its own `required`
+	 *  says nothing about the files held here: the host answers for itself. */
+	override validationTarget(): null {
+		return null;
+	}
+
+	override validationAnchor(): HTMLElement | undefined {
+		return this._input ?? undefined;
 	}
 
 	/** A required field without a file is invalid (valueMissing). */
-	private _updateValidity(): void {
-		if (this.required && this._files.length === 0) {
-			this.internals.setValidity(
-				{ valueMissing: true },
-				this._t('components.file-field.required-error-text'),
-				this._input ?? this,
-			);
-		} else {
-			this.internals.setValidity({});
-		}
+	override ownValidity(): OwnValidity | null {
+		if (!this.required || this._files.length > 0) return null;
+		return {
+			flags: { valueMissing: true },
+			message: this._t('components.file-field.required-error-text'),
+		};
 	}
 
 	/** Back to empty, as a clear, but without a change event, as a native

@@ -761,3 +761,30 @@ describe('nldd-time-field meldt wat value niet kan zeggen', () => {
 		expect(el.invalid).toBe(false);
 	});
 });
+
+describe('nldd-time-field – eigen picker in de slot', () => {
+	let el: NLDDTimeField;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('geeft waarde, grenzen en stap door aan een geslotte picker', async () => {
+		el = await fixture<NLDDTimeField>(`
+			<nldd-time-field value="09:30" min="08:00" max="17:00" step="15">
+				<nldd-time-picker slot="picker"></nldd-time-picker>
+			</nldd-time-field>
+		`);
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('nldd-time-picker')).toBeNull();
+		const picker = el.querySelector('nldd-time-picker') as HTMLElement & { value: string; min: string; max: string; step: number };
+		expect(picker.value).toBe('09:30');
+		expect(picker.min).toBe('08:00');
+		expect(picker.max).toBe('17:00');
+		expect(picker.step).toBe(15);
+
+		el.max = '12:00';
+		await waitForUpdate(el);
+		expect(picker.max).toBe('12:00');
+	});
+});

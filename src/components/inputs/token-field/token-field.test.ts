@@ -9,6 +9,8 @@ type TokenFieldEl = HTMLElement & {
 	_removeValue(v: string): void;
 	_togglePicker(): void;
 	_handleBlur(e: FocusEvent): void;
+	setCustomValidity(message: string): void;
+	internals: ElementInternals;
 };
 
 describe('nldd-token-field', () => {
@@ -661,6 +663,18 @@ describe('nldd-token-field', () => {
 		await waitForUpdate(field);
 		expect(form.checkValidity()).toBe(true);
 		form.remove();
+	});
+
+	it('keeps a custom reason through the next render', async () => {
+		const field = document.createElement('nldd-token-field') as TokenFieldEl;
+		document.body.appendChild(field);
+		await waitForUpdate(field);
+		field.setCustomValidity('Kies een land in de EU.');
+		field.values = ['nl'];
+		await waitForUpdate(field);
+		expect(field.internals.validity.customError).toBe(true);
+		expect(field.internals.validationMessage).toBe('Kies een land in de EU.');
+		field.remove();
 	});
 
 });

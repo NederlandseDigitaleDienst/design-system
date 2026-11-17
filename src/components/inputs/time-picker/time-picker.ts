@@ -14,8 +14,8 @@
  * @element nldd-time-picker
  *
  * @attr {string} value - The chosen time as `HH:mm` (24-hour).
- * @attr {string} min - Earliest allowed time as `HH:mm`. Also the base that `step` counts from.
- * @attr {string} max - Latest allowed time as `HH:mm`.
+ * @attr {string} min - Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from.
+ * @attr {string} max - Latest allowed time as `HH:mm`, read as generously as `min`.
  * @attr {number} step - Step in minutes (default 1). Decides which minutes are in the column.
  * @attr {number} rows - Height of the columns in rows (default 7, minimum 3). The chosen value always sits in the middle, so an odd number shows whole rows and an even number cuts off half a row at the top and bottom.
  * @attr {string} width - Width: `full` fills the container, or pass your own CSS length.
@@ -38,6 +38,9 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { translate } from '../../../utilities/translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { fromMinutes, resolveRules, toMinutes, type TimeRules } from '../time-field/time-field.times.js';
+
+export { fromMinutes, toMinutes };
 
 const LAST_MINUTE_OF_DAY = 23 * 60 + 59;
 /** A column that cannot scroll, such as one in a closed popover, has no
@@ -47,15 +50,6 @@ function canScroll(el: HTMLElement): boolean {
 }
 
 const HAS_SCROLLEND = typeof window !== 'undefined' && 'onscrollend' in window;
-
-export function toMinutes(time: string): number {
-	const [hours, minutes] = time.split(':');
-	return Number(hours) * 60 + Number(minutes);
-}
-
-export function fromMinutes(total: number): string {
-	return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
-}
 
 function isTime(value: string): boolean {
 	return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
@@ -125,16 +119,22 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		return this.accessibleLabel || this._t('components.time-picker.default-label');
 	}
 
+	/** Read the way nldd-time-field reads them, so a bound the field accepts
+	 *  (`9:00`) is one the wheel keeps to as well. */
+	private get _rules(): TimeRules {
+		return resolveRules(this.min, this.max, this.step);
+	}
+
 	private get _minMinutes(): number {
-		return isTime(this.min) ? toMinutes(this.min) : 0;
+		return this._rules.min ? toMinutes(this._rules.min) : 0;
 	}
 
 	private get _maxMinutes(): number {
-		return isTime(this.max) ? toMinutes(this.max) : LAST_MINUTE_OF_DAY;
+		return this._rules.max ? toMinutes(this._rules.max) : LAST_MINUTE_OF_DAY;
 	}
 
 	private get _stepMinutes(): number {
-		return Math.max(1, Math.round(this.step));
+		return this._rules.step;
 	}
 
 	/** Every valid time: from `min` (or midnight) in increments of `step`, up to

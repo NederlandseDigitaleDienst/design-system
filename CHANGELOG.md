@@ -9,6 +9,19 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Custom validation messages stay on `nldd-token-field` and `nldd-file-field`,** and `nldd-time-picker` keeps to the same bounds as `nldd-time-field`. See Fixed.
+- **1 accessibility fix:** focus goes back to what opened `nldd-modal-dialog` the same way it does for a sheet or window, without a focus ring after a mouse click. See Fixed.
+
+### Fixed
+
+- **A message from `setCustomValidity()` on `nldd-token-field` and `nldd-file-field` survives the next render.** Both fields wrote their own validity after the shared one, which wiped a reason that an `nldd-validation-list` or a server had set. Their "required and empty" now goes through the same check as every other field.
+- **`nldd-modal-dialog` returns focus the way `nldd-sheet` and `nldd-window` do.** After a mouse click the element that opened it gets focus back without a focus ring, and from the keyboard with one.
+- **`nldd-modal-dialog` clears `open` and fires `close` when the native dialog closes on its own,** such as through a `<form method="dialog">` inside it. A `close` from a component inside the dialog no longer counts as its own.
+- **`nldd-time-picker` reads `min` and `max` as generously as `nldd-time-field` does.** `min="9:00"` was a bound in the field but ignored by the wheel, which then offered times the field refused.
+- **`nldd-time-field` hands `value`, `min`, `max` and `step` to a picker in its `picker` slot,** as its documentation said and `nldd-date-field` already did. A slotted picker showed every time of the day.
+
 ## [0.26.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.25.2...v0.26.0) (2026-11-17)
 
 ### Highlights

@@ -15896,13 +15896,41 @@
             },
             {
               "kind": "method",
-              "name": "commitFormValue",
+              "name": "validationTarget",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "null"
                 }
               },
-              "description": "Commit the value now, from the handler that changed it.",
+              "description": "The native input is emptied after every pick, so its own `required`\nsays nothing about the files held here: the host answers for itself.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "A required field without a file is invalid (valueMissing).",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -16046,41 +16074,13 @@
             },
             {
               "kind": "method",
-              "name": "validationTarget",
+              "name": "commitFormValue",
               "return": {
                 "type": {
-                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                  "text": "void"
                 }
               },
-              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "validationAnchor",
-              "return": {
-                "type": {
-                  "text": "HTMLElement | undefined"
-                }
-              },
-              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "ownValidity",
-              "return": {
-                "type": {
-                  "text": "OwnValidity | null"
-                }
-              },
-              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "description": "Commit the value now, from the handler that changed it.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -31486,40 +31486,6 @@
       "path": "src/components/inputs/time-picker/time-picker.ts",
       "declarations": [
         {
-          "kind": "function",
-          "name": "toMinutes",
-          "return": {
-            "type": {
-              "text": "number"
-            }
-          },
-          "parameters": [
-            {
-              "name": "time",
-              "type": {
-                "text": "string"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "fromMinutes",
-          "return": {
-            "type": {
-              "text": "string"
-            }
-          },
-          "parameters": [
-            {
-              "name": "total",
-              "type": {
-                "text": "number"
-              }
-            }
-          ]
-        },
-        {
           "kind": "class",
           "description": "Two columns, hours and minutes, that slide like a wheel past the selection in the middle. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-time-field. Values are always 24-hour `HH:mm`. Scrolling is choosing: whatever comes to rest in the middle is the value. The keyboard drives that same selection, because that is what a wheel is: hour and minute are each a spinbutton. The columns underneath are aria-hidden, so the same values are not read out twice.",
           "name": "NLDDTimePicker",
@@ -31754,7 +31720,7 @@
               },
               "default": "''",
               "fieldName": "min",
-              "description": "Earliest allowed time as `HH:mm`. Also the base that `step` counts from."
+              "description": "Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from."
             },
             {
               "name": "max",
@@ -31763,7 +31729,7 @@
               },
               "default": "''",
               "fieldName": "max",
-              "description": "Latest allowed time as `HH:mm`."
+              "description": "Latest allowed time as `HH:mm`, read as generously as `min`."
             },
             {
               "name": "step",
@@ -31863,17 +31829,17 @@
       "exports": [
         {
           "kind": "js",
-          "name": "toMinutes",
+          "name": "fromMinutes",
           "declaration": {
-            "name": "toMinutes",
+            "name": "fromMinutes",
             "module": "src/components/inputs/time-picker/time-picker.ts"
           }
         },
         {
           "kind": "js",
-          "name": "fromMinutes",
+          "name": "toMinutes",
           "declaration": {
-            "name": "fromMinutes",
+            "name": "toMinutes",
             "module": "src/components/inputs/time-picker/time-picker.ts"
           }
         },
@@ -33152,13 +33118,41 @@
             },
             {
               "kind": "method",
-              "name": "commitFormValue",
+              "name": "validationTarget",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "null"
                 }
               },
-              "description": "Commit the value now, from the handler that changed it.",
+              "description": "The text input only takes the next token; the tokens are the value, so\nthe host answers for itself.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "A required field with no tokens is invalid (valueMissing).",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -33301,41 +33295,13 @@
             },
             {
               "kind": "method",
-              "name": "validationTarget",
+              "name": "commitFormValue",
               "return": {
                 "type": {
-                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                  "text": "void"
                 }
               },
-              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "validationAnchor",
-              "return": {
-                "type": {
-                  "text": "HTMLElement | undefined"
-                }
-              },
-              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "ownValidity",
-              "return": {
-                "type": {
-                  "text": "OwnValidity | null"
-                }
-              },
-              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "description": "Commit the value now, from the handler that changed it.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"

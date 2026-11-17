@@ -314,6 +314,24 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
 	public _handlePickerSlotChange(): void {
 		this._hasSlottedPicker = this._slottedPicker !== null;
+		this._syncSlottedPicker();
+	}
+
+	/**
+	 * The field owns the value and the rules, and writes them onto a slotted
+	 * picker every render, as it does on its own: a picker with other bounds
+	 * would offer times the field then refuses. What only a picker knows (its
+	 * rows, its translations) is left untouched.
+	 */
+	private _syncSlottedPicker(): void {
+		const picker = this._slottedPicker;
+		if (!picker) return;
+		picker.value = this._pickerValue;
+		picker.min = this.min;
+		picker.max = this.max;
+		picker.step = this.step;
+		// nldd-popover reads this to pick its focus target inside the overlay.
+		picker.toggleAttribute('autofocus', true);
 	}
 
 	@state()
@@ -611,6 +629,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		if (popover && trigger && popover.anchorElement !== trigger) {
 			popover.anchorElement = trigger;
 		}
+		this._syncSlottedPicker();
 		if (changed.has('width')) {
 			const w = this.width;
 			// Unlike a text field the default here is an intrinsic width that fits a

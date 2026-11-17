@@ -4,11 +4,10 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { parseArgs } from 'node:util';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
-import { declarations, TOKEN_PREFIX } from './css.js';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, OPT_IN_GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
-import { applyBaseline, DEFAULT_EXTENSIONS, looseInBaseline, tightenBaseline, findFiles, IGNORED_DIRECTORIES, readBaseline, readConfig, REFERENCE_EXTENSIONS, STYLESHEET_EXTENSIONS, writeBaseline } from './project.js';
+import { applyBaseline, DEFAULT_EXTENSIONS, isBundle, isRelevant, looseInBaseline, projectTokens as tokensDeclaredIn, tightenBaseline, findFiles, IGNORED_DIRECTORIES, readBaseline, readConfig, REFERENCE_EXTENSIONS, STYLESHEET_EXTENSIONS, writeBaseline } from './project.js';
 
 const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
@@ -122,14 +121,6 @@ function fixReferences(renamedTags, paths, root, exclude) {
  * has few lines for its size; one long line, such as an inline SVG, does not make
  * a file of the app a bundle.
  */
-function isBundle(filename, source) {
-	if (!/\.[cm]?js$/.test(filename)) return false;
-	return /\.min\.[cm]?js$/.test(filename) || source.length / source.split('\n').length > MINIFIED_LINE_LENGTH;
-}
-
-/** The average line length above which a script counts as minified. */
-const MINIFIED_LINE_LENGTH = 500;
-
 const MAX_FIX_PASSES = 10;
 
 /** One fix can open the way for the next: a renamed tag has rules of its own. */
@@ -193,19 +184,11 @@ async function runLint(data, paths, options) {
 	// Most files in an app use no component at all, and those need no parser either.
 	// Tightening has to see every file the baseline names, also one without a component left.
 	const inBaseline = options['tighten-baseline'] ? new Set(Object.keys(readBaseline(root, canonical))) : new Set();
-	// A stylesheet counts for the tokens it names and the variables it sets, and only then.
 	const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));
-	const namesTokens = (source) => /var\(\s*--(primitives|semantics|components|context)-|--_[a-z]/.test(source);
-	const relevant = pure
-		? inputs
-		: inputs.filter(({ filename, source }) =>
-				isStylesheet(filename)
-					? namesTokens(source) || inBaseline.has(relative(root, filename))
-					: /nldd-|Nldd/.test(source) || namesTokens(source) || config.wrappers || inBaseline.has(relative(root, filename)),
-			);
+	const keep = (filename) => inBaseline.has(relative(root, filename));
+	const relevant = pure ? inputs : inputs.filter((input) => isRelevant(input, { wrappers: config.wrappers, keep }));
 	const counted = pure ? inputs.length : inputs.filter(({ filename }) => !isStylesheet(filename)).length + relevant.filter(({ filename }) => isStylesheet(filename)).length;
-	// What the project declares itself, in any file read, is its own token and not a typo.
-	const projectTokens = [...new Set(inputs.flatMap(({ source }) => (/--(primitives|semantics|components|context)-/.test(source) ? declarations(source).map(({ name }) => name) : [])).filter((name) => TOKEN_PREFIX.test(name)))];
+	const projectTokens = tokensDeclaredIn(inputs);
 	const results = [];
 	let fixed = 0;
 	let fixedFiles = 0;

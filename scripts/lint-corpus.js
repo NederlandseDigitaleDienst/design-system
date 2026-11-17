@@ -8,13 +8,17 @@
  * Usage: NLDD_LINT_CORPUS=../app-a/src,../app-b/src node scripts/lint-corpus.js [--pure] [rule]
  *
  * With --pure the opt-in group pure runs too, over every file and stylesheet.
+ *
+ * Each app is read the way `nldd lint` reads it: the same files, the tokens it
+ * declares itself, and the `wrappers` and `exclude` from its .nldd-lint.json.
+ * Its rule levels are not taken over, so every rule shows what it would find.
  */
 
-import { readFileSync } from 'node:fs';
-import { basename, relative, resolve } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 import { createLinter, loadData } from '../lint/linter.js';
-import { DEFAULT_EXTENSIONS, findFiles, STYLESHEET_EXTENSIONS } from '../lint/project.js';
-import { OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
+import { DEFAULT_EXTENSIONS, findFiles, isBundle, isRelevant, projectTokens, readConfig, STYLESHEET_EXTENSIONS } from '../lint/project.js';
+import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
 
 const directories = (process.env.NLDD_LINT_CORPUS ?? '').split(',').filter(Boolean);
 if (directories.length === 0) {
@@ -26,8 +30,18 @@ const args = process.argv.slice(2);
 const pure = args.includes('--pure');
 const only = args.find((arg) => !arg.startsWith('--'));
 const data = loadData();
-const linter = createLinter(data, { severities: resolveSeverities(data, {}, { optIn: pure ? OPT_IN_GROUPS : [] }) });
-const extensions = pure ? [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS] : DEFAULT_EXTENSIONS;
+const severities = resolveSeverities(data, {}, { optIn: pure ? OPT_IN_GROUPS : [] });
+const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES), ...GROUPS]);
+const extensions = [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS];
+
+/** The app's .nldd-lint.json: in the directory itself or the nearest one above it
+ *  that has one, without leaving the project (a package.json or .git ends it). */
+function configFor(directory) {
+	for (let dir = directory; ; dir = dirname(dir)) {
+		if (existsSync(join(dir, '.nldd-lint.json'))) return readConfig(dir, known);
+		if (existsSync(join(dir, 'package.json')) || existsSync(join(dir, '.git')) || dirname(dir) === dir) return {};
+	}
+}
 const perRule = new Map();
 const totals = { failed: 0, passed: 0, cantTell: 0 };
 let fileCount = 0;
@@ -36,9 +50,12 @@ const started = performance.now();
 for (const directory of directories) {
 	const root = resolve(directory);
 	const app = basename(root.replace(/(\/(src|frontend|web))+$/, ''));
-	for (const filename of findFiles([root], root, [], extensions)) {
-		const source = readFileSync(filename, 'utf8');
-		if (!pure && !source.includes('nldd-')) continue;
+	const config = configFor(root);
+	const inputs = findFiles([root], root, config.exclude, extensions)
+		.map((filename) => ({ filename, source: readFileSync(filename, 'utf8') }))
+		.filter(({ filename, source }) => !isBundle(filename, source));
+	const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs) });
+	for (const { filename, source } of pure ? inputs : inputs.filter((input) => isRelevant(input, { wrappers: config.wrappers }))) {
 		fileCount++;
 		const { findings, counts } = await linter.lintSource(source, filename);
 		for (const key of Object.keys(totals)) totals[key] += counts[key];

@@ -2210,8 +2210,8 @@ Two columns, hours and minutes, that slide like a wheel past the selection in th
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `value` | `string` | The chosen time as `HH:mm` (24-hour). |
-| `min` | `string` | Earliest allowed time as `HH:mm`. Also the base that `step` counts from. |
-| `max` | `string` | Latest allowed time as `HH:mm`. |
+| `min` | `string` | Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from. |
+| `max` | `string` | Latest allowed time as `HH:mm`, read as generously as `min`. |
 | `step` | `number` | Step in minutes (default 1). Decides which minutes are in the column. |
 | `rows` | `number` | Height of the columns in rows (default 7, minimum 3). The chosen value always sits in the middle, so an odd number shows whole rows and an even number cuts off half a row at the top and bottom. |
 | `width` | `string` | Width: `full` fills the container, or pass your own CSS length. |

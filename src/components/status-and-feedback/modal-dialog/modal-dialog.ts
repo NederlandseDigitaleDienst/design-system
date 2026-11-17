@@ -50,6 +50,7 @@ import { modalDialogTemplate } from './modal-dialog.template.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
+import { FocusReturn } from '../../../utilities/return-focus.js';
 import type { InlineDialogVariant, InlineDialogHorizontalAlignment } from '../inline-dialog/inline-dialog.js';
 import '../inline-dialog/inline-dialog.js';
 
@@ -111,6 +112,9 @@ export class NLDDModalDialog extends LitElement {
 		this._cancelPendingOpen?.();
 		this._cancelPendingOpen = null;
 
+		// New open cycle: the next close may emit again.
+		this._closeEmitted = false;
+
 		if (this._closing) {
 			// Opened again while the close animation runs: call the close off.
 			window.clearTimeout(this._closeFallback);
@@ -118,6 +122,7 @@ export class NLDDModalDialog extends LitElement {
 			dialog.classList.remove('is-closing');
 		} else {
 			if (dialog.open) return;
+			this._focusReturn.remember();
 			dialog.showModal();
 			this._manageFocus();
 		}
@@ -156,7 +161,7 @@ export class NLDDModalDialog extends LitElement {
 			dialog.classList.remove('is-closing');
 			this._closing = false;
 			dialog.close();
-			this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
+			this._emitClose();
 		};
 
 		dialog.addEventListener('animationend', finish, { once: true });
@@ -209,6 +214,33 @@ export class NLDDModalDialog extends LitElement {
 			this.hide();
 		}
 	}
+
+	/**
+	 * Emitted once per open cycle, from whichever route closed the dialog: hide(),
+	 * or a native close that skips it, such as a `<form method="dialog">`.
+	 */
+	private _closeEmitted = false;
+
+	private _focusReturn = new FocusReturn();
+
+	private _emitClose(): void {
+		this.open = false;
+		if (this._closeEmitted) return;
+		this._closeEmitted = true;
+		this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));
+		// After the event, so focus a close handler moves elsewhere stays there.
+		this._focusReturn.restore(this);
+	}
+
+	_handleDialogClose = (e: Event): void => {
+		// Only the dialog's own native close: a nested component's composed
+		// `close` reaches this listener too, retargeted to its slotted host.
+		if (e.target !== this._dialog) return;
+		window.clearTimeout(this._closeFallback);
+		this._closing = false;
+		this._dialog?.classList.remove('is-closing');
+		this._emitClose();
+	};
 
 	_handleCancel(e: Event): void {
 		e.preventDefault();

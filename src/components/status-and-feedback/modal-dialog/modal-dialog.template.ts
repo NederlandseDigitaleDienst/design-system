@@ -11,6 +11,7 @@ export function modalDialogTemplate(component: NLDDModalDialog) {
 			@pointerdown=${component._handleDialogPointerDown}
 			@click=${component._handleBackdropClick}
 			@cancel=${component._handleCancel}
+			@close=${component._handleDialogClose}
 		>
 			<nldd-inline-dialog
 				variant=${component.variant || nothing}
