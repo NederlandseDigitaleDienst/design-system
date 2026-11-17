@@ -74,10 +74,20 @@ nldd-rich-text td code {
 	.site-stage__canvas {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 
+		box-sizing: border-box;
 		padding: 24px;
 		background-color: var(--semantics-surfaces-base-background-color);
 		font: var(--primitives-font-body-md-regular-snug);
 		color: var(--semantics-content-color);
+	}
+
+	/* Where the stage measures a variant of the example before it is chosen. */
+	/* Fixed, so it adds nothing to what the mat can scroll. */
+	.site-stage__probe {
+		position: fixed;
+		inset-block-start: 0;
+		inset-inline-start: 0;
+		visibility: hidden;
 	}
 
 	.site-stage__canvas[data-surface='tinted'] {

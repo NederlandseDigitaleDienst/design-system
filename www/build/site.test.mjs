@@ -89,7 +89,7 @@ test('a page behind the landing page can be shown in another theme, set before t
 });
 
 test('a pattern page ends with the lint rules that point at it', () => {
-	assert.match(pages['patronen/form/index.html'], /<h2 id="regels">Regels<\/h2>[^]*<code>form-actions-needs-button-group<\/code>/);
+	assert.match(pages['patronen/form/index.html'], /id="regels"[^]*<h2>Regels<\/h2>[^]*text="form-actions-needs-button-group"/);
 });
 
 test('a page under a deploy base links within that base', () => {

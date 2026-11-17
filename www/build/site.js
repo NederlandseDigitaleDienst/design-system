@@ -722,30 +722,87 @@ function patternsOverview(patterns) {
 ${sections.join('\n')}`;
 }
 
-const withCode = (message) => escapeHtml(message).replace(/`([^`]+)`/g, '<code>$1</code>');
+/** How each level of the linter reads on a rule, strictest first. */
+const SEVERITIES = {
+	error: { label: 'Fout', color: 'critical' },
+	warn: { label: 'Waarschuwing', color: 'warning' },
+	hint: { label: 'Hint', color: 'neutral' },
+};
 
-/** A list of lint rules, each with its id as an anchor when it is the place a rule lives. */
-function ruleList(rules, { anchors = false } = {}) {
-	const item = (rule) =>
-		`<li${anchors ? ` id="${rule.id}"` : ''}><code>${rule.id}</code>${rule.severity === 'hint' && anchors ? ' (hint)' : ''}: ${withCode(rule.message)}</li>`;
-	return `<ul>\n${rules.map(item).join('\n')}\n</ul>`;
+/** Where the reason behind a rule is written down: its pattern or its guideline. */
+function seePath(see) {
+	const [kind, slug] = (see ?? '').split('/');
+	if (kind === 'patronen') return `/patronen/${slug}/`;
+	if (kind === 'ontwerprichtlijnen') return `/richtlijnen/#${slug}`;
+	return undefined;
+}
+
+/**
+ * Lint rules as rows: the id, what is wrong, and the level. A row links to the
+ * page with the reason when there is one and the list is not on that page.
+ */
+function ruleList(rules, { label, anchors = false, link = true, appearance = 'box-tinted' } = {}) {
+	const order = Object.keys(SEVERITIES);
+	const sorted = [...rules].sort(
+		(a, b) => order.indexOf(a.severity) - order.indexOf(b.severity) || a.id.localeCompare(b.id),
+	);
+	const bold = (message) => escapeHtml(message.replace(/\*\*/g, '').replace(/`([^`]+)`/g, '**$1**'));
+	const rows = sorted.map((rule) => {
+		const severity = SEVERITIES[rule.severity] ?? SEVERITIES.warn;
+		const href = link ? seePath(rule.see) : undefined;
+		return `<nldd-list-item${anchors ? ` id="${rule.id}"` : ''}${href ? ` href="${href}"` : ''}>
+	<nldd-text-cell
+		text="${rule.id}"
+		supporting-text="${bold(rule.message)}"
+	></nldd-text-cell>
+	<nldd-spacer-cell size="12"></nldd-spacer-cell>
+	<nldd-cell>
+		<nldd-tag
+			size="sm"
+			color="${severity.color}"
+			text="${severity.label}"
+		></nldd-tag>
+	</nldd-cell>${
+		href
+			? `
+	<nldd-spacer-cell size="12"></nldd-spacer-cell>
+	<nldd-icon-cell
+		size="20"
+		color="secondary"
+		icon="chevron-right"
+	></nldd-icon-cell>`
+			: ''
+	}
+</nldd-list-item>`;
+	});
+	return `<nldd-list
+	appearance="${appearance}"
+	accessible-label="${escapeHtml(label)}"
+>
+${rows.join('\n')}
+</nldd-list>`;
 }
 
 /**
  * The section "Regels" of a pattern or a component: the lint rules that point
  * at the pattern with `see`, or that name the component.
  */
-function rulesSection(rules) {
+function rulesSection(rules, { link = true } = {}) {
 	if (!rules.length) return '';
-	const required = rules.filter((rule) => rule.severity !== 'hint');
-	const hints = rules.filter((rule) => rule.severity === 'hint');
 	return `
-<nldd-rich-text>
-<h2 id="regels">Regels</h2>
-${required.length ? `<p><code>nldd lint</code> controleert dit:</p>\n${ruleList(required)}` : ''}
-${hints.length ? `<p>Hints: zo is het bedoeld. Die laten niets falen.</p>\n${ruleList(hints)}` : ''}
-<p><a href="/linter/">Over de linter</a></p>
-</nldd-rich-text>`;
+<nldd-container gap="12" id="regels">
+	<nldd-title
+		size="display-4"
+		supporting-text="Wat nldd lint hier controleert. Een hint laat niets falen."
+	>
+		<h2>Regels</h2>
+	</nldd-title>
+	${ruleList(rules, { label: 'Regels', link })}
+	<nldd-link
+		href="/linter/"
+		text="Over de linter"
+	></nldd-link>
+</nldd-container>`;
 }
 
 /** The question each group of rules answers, in the order the linter asks them. */
@@ -758,17 +815,31 @@ const RULE_GROUPS = [
 	['pure', 'Komt alles uit het designsysteem?'],
 ];
 
-/** Every rule of the linter, per group, for the page about the linter. */
+/** Every rule of the linter, a group per fold, for the page about the linter. */
 function allRules(rules) {
-	const headings = [];
-	const html = RULE_GROUPS.map(([group, question]) => {
+	const items = RULE_GROUPS.map(([group, question]) => {
 		const inGroup = rules.filter((rule) => rule.group === group);
 		if (!inGroup.length) return '';
-		const id = `regels-${group}`;
-		headings.push({ id, text: `Regels: ${group}` });
-		return `<h2 id="${id}">Regels: <code>${group}</code></h2>\n<p>${question} ${inGroup.length} regels.</p>\n${ruleList(inGroup, { anchors: true })}`;
+		return `<nldd-accordion-item
+	id="regels-${group}"
+	text="${group}: ${escapeHtml(question.toLowerCase())} (${inGroup.length})"
+>
+${ruleList(inGroup, { label: `Regels in de groep ${group}`, anchors: true, appearance: 'simple' })}
+</nldd-accordion-item>`;
 	}).join('\n');
-	return { html: `\n<nldd-rich-text>\n${html}\n</nldd-rich-text>`, headings };
+	const html = `
+<nldd-container gap="12" id="alle-regels">
+	<nldd-title
+		size="display-4"
+		supporting-text="${rules.length} regels in zes groepen. De linter loopt ze in deze volgorde af."
+	>
+		<h2>Alle regels</h2>
+	</nldd-title>
+	<nldd-accordion>
+${items}
+	</nldd-accordion>
+</nldd-container>`;
+	return { html, headings: [{ id: 'alle-regels', text: 'Alle regels' }] };
 }
 
 /**
@@ -853,7 +924,7 @@ export function buildPages({ base = '/' } = {}) {
 				label: 'Patronen',
 				title: pageTitle(pattern.name, { overline: pattern.group }),
 				nav: siblingNav(patternGroups, pattern, (p) => `/patronen/${p.slug}/`),
-				body: `${rendered.html}${rulesSection(rulesOfPattern(lintRules, pattern.slug))}`,
+				body: `${rendered.html}${rulesSection(rulesOfPattern(lintRules, pattern.slug), { link: false })}`,
 			}),
 			[HOME, ['Patronen', '/patronen/']],
 		);

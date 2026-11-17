@@ -120,6 +120,10 @@ export class SiteStage extends HTMLElement {
 	private eventLog = section('site-stage__events', [this.events]);
 	private dark = siteIsDark();
 	private tinted = false;
+	private reserved = { width: 0, height: 0 };
+	private reserving = 0;
+	/** Each value of each choice in the controls: what the example can be set to. */
+	private variants: { name: string; arg?: string; value: string }[] = [];
 	private started = false;
 
 	connectedCallback(): void {
@@ -321,11 +325,61 @@ export class SiteStage extends HTMLElement {
 				mat.removeAttribute('role');
 				mat.removeAttribute('aria-label');
 			}
+			this.holdHeight();
 		}).observe(this.canvas);
 		this.eventLog.hidden = true;
 		this.events.setAttribute('aria-label', `Events van ${name}`);
 		this.box.replaceChildren(bar, mat, this.eventLog);
 		this.replaceChildren(this.box);
+	}
+
+	/**
+	 * The canvas keeps the tallest height it has had at this width, so the page
+	 * below it does not move when an option makes the example shorter again.
+	 */
+	private holdHeight(): void {
+		const { offsetWidth: width, offsetHeight: height } = this.canvas;
+		if (width !== this.reserved.width) {
+			this.reserved = { width, height: 0 };
+			this.canvas.style.minHeight = '';
+			clearTimeout(this.reserving);
+			this.reserving = window.setTimeout(() => void this.reserveHeight(), 200);
+			return;
+		}
+		this.reserve(height);
+	}
+
+	private reserve(height: number): void {
+		if (height <= this.reserved.height) return;
+		this.reserved.height = height;
+		this.canvas.style.minHeight = `${height}px`;
+	}
+
+	/**
+	 * Makes room for the tallest variant before the reader picks it: the example
+	 * is drawn once per value of each choice, out of sight and at the width of
+	 * the canvas. One choice at a time, so a combination can still be taller;
+	 * holdHeight() catches that the first time it shows.
+	 */
+	private async reserveHeight(): Promise<void> {
+		const story = this.story;
+		if (!story || this.frame || !this.variants.length) return;
+		const probe = element('div', 'site-stage__canvas site-stage__probe');
+		probe.inert = true;
+		probe.dataset.surface = this.canvas.dataset.surface;
+		probe.style.width = `${this.canvas.offsetWidth}px`;
+		this.canvas.after(probe);
+		const silent = (args: Args): StoryContext => ({ args, updateArgs: () => {}, log: () => {} });
+		for (const variant of this.variants) {
+			const args = variant.arg ? { ...this.args, [variant.arg]: variant.value } : this.args;
+			mount(withContext(silent(args), () => story.render(mapArgs(args, story.argTypes))), probe);
+			this.applyOverrides(probe);
+			if (!variant.arg) probe.querySelector(this.controls?.tag ?? ':not(*)')?.setAttribute(variant.name, variant.value);
+			// Components draw after their update, one task later.
+			await new Promise((resolve) => setTimeout(resolve));
+			this.reserve(probe.offsetHeight);
+		}
+		probe.remove();
 	}
 
 	private async setSource(code: string): Promise<void> {
@@ -444,6 +498,11 @@ export class SiteStage extends HTMLElement {
 				if (fromArg) this.setArg(fromArg, attribute.kind === 'number' && value !== '' ? Number(value) : value);
 				else this.setOverride(attribute.name, value);
 			};
+			const choices = fromStory?.argType.options?.map(String) ?? (attribute.kind === 'select' ? attribute.values : undefined);
+			// A label of the story stands for a value it maps itself, so only plain values are tried.
+			if (!fromStory?.argType.mapping) {
+				for (const value of choices ?? []) this.variants.push({ name: attribute.name, arg: fromArg, value });
+			}
 			row(
 				attribute.name,
 				this.input(attribute, start, change, fromStory?.argType),
@@ -472,6 +531,7 @@ export class SiteStage extends HTMLElement {
 		const code = this.box.querySelector(':scope > .site-stage__code');
 		if (code) code.previousElementSibling!.before(nldd('divider'), panel);
 		else this.box.append(nldd('divider'), panel);
+		void this.reserveHeight();
 	}
 
 	private input(
