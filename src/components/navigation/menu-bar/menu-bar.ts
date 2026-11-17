@@ -337,6 +337,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 			}
 
 			menuItem.addEventListener('click', (event) => {
+				this._overflowMenu.handOff();
 				if (!item.href) {
 					item.click();
 					return;

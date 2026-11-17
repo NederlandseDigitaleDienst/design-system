@@ -4,6 +4,9 @@ import { OverflowMenu } from './overflow-menu.js';
 import '../components/navigation/menu-bar/menu-bar.js';
 import '../components/navigation/document-tab-bar/document-tab-bar.js';
 import '../components/actions/toolbar/toolbar.js';
+import '../components/actions/button/button.js';
+import '../components/layout/sheet/sheet.js';
+import { deepActiveElement } from './deep-active-element.js';
 
 const frames = async (n = 3): Promise<void> => {
 	for (let i = 0; i < n; i++) await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -79,6 +82,74 @@ describe('OverflowMenu', () => {
 		copy.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true, detail: { value: 'x' } }));
 		expect(onOriginal.map((event) => (event as CustomEvent).detail)).toEqual([{ value: 'x' }]);
 		expect(onHost).toEqual([]);
+	});
+
+	it('gives focus back to the button of the menu when a sheet opened from it closes', async () => {
+		// #450: the sheet remembered the copy in the menu, which was out of view
+		// once the menu closed, and focus fell to the body.
+		container = document.createElement('div');
+		container.innerHTML = `
+			<div style="width: 160px">
+				<nldd-toolbar>
+					<nldd-toolbar-item slot="end">
+						<nldd-button text="Filter met een lange naam"></nldd-button>
+						<nldd-menu-item slot="overflow" text="Filter"></nldd-menu-item>
+					</nldd-toolbar-item>
+				</nldd-toolbar>
+			</div>
+			<nldd-sheet accessible-label="Filter"><nldd-button text="Sluit"></nldd-button></nldd-sheet>
+		`;
+		document.body.append(container);
+		const toolbar = container.querySelector('nldd-toolbar') as HTMLElement & { _overflowMenu: OverflowMenu };
+		const sheet = container.querySelector('nldd-sheet') as HTMLElement & { show(): void; hide(): void };
+		container.querySelector('nldd-menu-item[slot="overflow"]')!.addEventListener('select', () => sheet.show());
+		await frames(6);
+
+		const button = toolbar.shadowRoot!.querySelector<HTMLElement>('.toolbar__overflow-button nldd-icon-button')!;
+		const menu = toolbar._overflowMenu.menu!;
+		const copy = menu.querySelector<HTMLElement>('nldd-menu-item')!;
+		expect(copy).not.toBeNull();
+		button.focus();
+		menu.showPopover();
+		await frames();
+		expect(toolbar._overflowMenu.open).toBe(true);
+		copy.focus();
+		copy.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true }));
+		await frames();
+		const closed = new Promise((resolve) => sheet.addEventListener('close', resolve, { once: true }));
+		sheet.hide();
+		await closed;
+		await frames();
+		const active = deepActiveElement();
+		expect(active === button || button.shadowRoot!.contains(active)).toBe(true);
+	});
+
+	it('does the same for an item of a menu bar', async () => {
+		container = document.createElement('div');
+		container.innerHTML = `
+			<nldd-menu-bar style="width: 150px">${['Aanvragen', 'Dossiers', 'Instellingen', 'Berichten', 'Hulp'].map((text) => `<nldd-menu-bar-item text="${text}"></nldd-menu-bar-item>`).join('')}</nldd-menu-bar>
+			<nldd-sheet accessible-label="Hulp"><nldd-button text="Sluit"></nldd-button></nldd-sheet>
+		`;
+		document.body.append(container);
+		const bar = container.querySelector('nldd-menu-bar') as unknown as HTMLElement & { _overflowMenu: OverflowMenu; _toggleOverflowMenu(): void };
+		const sheet = container.querySelector('nldd-sheet') as HTMLElement & { show(): void; hide(): void };
+		container.querySelector('nldd-menu-bar-item:last-child')!.addEventListener('click', () => sheet.show());
+		await frames(6);
+		const button = bar.shadowRoot!.querySelector<HTMLElement>('.menu-bar__overflow-button nldd-menu-bar-item')!;
+		button.focus();
+		bar._toggleOverflowMenu();
+		await frames();
+		const entries = [...bar._overflowMenu.menu!.querySelectorAll<HTMLElement>('nldd-menu-item')];
+		const entry = entries.find((item) => item.getAttribute('text') === 'Hulp')!;
+		entry.focus();
+		entry.click();
+		await frames();
+		const closed = new Promise((resolve) => sheet.addEventListener('close', resolve, { once: true }));
+		sheet.hide();
+		await closed;
+		await frames();
+		const active = deepActiveElement();
+		expect(active === button || button.shadowRoot!.contains(active)).toBe(true);
 	});
 });
 

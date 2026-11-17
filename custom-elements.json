@@ -56978,7 +56978,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The \"more\" menu of a bar that hides what does not fit: nldd-toolbar,\nnldd-menu-bar and nldd-document-tab-bar. Each bar decides for itself what\nfits; this is the menu that lists the rest.\n\nIt lives in the bar's shadow root, not in document.body. It is a popover,\nso the top layer gets it past any clipping anyway, and a menu in the body\ngoes inert (visible but untouchable) when the bar sits in a modal dialog:\neverything outside the dialog is inert then. In the shadow root it also\ninherits the bar's color scheme, language and context, with nothing to carry.\n\nA `select` in the menu stays in the menu: what the bar wants the app to hear\nit sends on itself, from the original the entry stands for. Leaving it would\nreach the bar's own listeners as if one of its items had been chosen.",
+          "description": "The \"more\" menu of a bar that hides what does not fit: nldd-toolbar,\nnldd-menu-bar and nldd-document-tab-bar. Each bar decides for itself what\nfits; this is the menu that lists the rest.\n\nIt lives in the bar's shadow root, not in document.body. It is a popover,\nso the top layer gets it past any clipping anyway, and a menu in the body\ngoes inert (visible but untouchable) when the bar sits in a modal dialog:\neverything outside the dialog is inert then. In the shadow root it also\ninherits the bar's color scheme, language and context, with nothing to carry.\n\nA `select` in the menu stays in the menu: what the bar wants the app to hear\nit sends on itself, from the original the entry stands for. Leaving it would\nreach the bar's own listeners as if one of its items had been chosen.\n\nBefore an entry's action runs, focus goes to the bar's button (`handOff`).\nWhatever the action opens, a sheet or a dialog, remembers where focus was,\nand the entry is gone from view once the menu closes.",
           "name": "OverflowMenu",
           "members": [
             {
@@ -57068,6 +57068,16 @@
                 }
               ],
               "description": "Make `button` the menu's invoker. The browser opens and closes it\nnatively through popovertarget, and the menu keeps `popoverTargetAction`\nin step with its state ('hide' while open, 'show' while closed). The\ndefault 'toggle' becomes 'show' here, for the very first click before the\nmenu ever toggled."
+            },
+            {
+              "kind": "method",
+              "name": "handOff",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Focus to the button that opens the menu, before what an entry stands for\nruns. An overlay that opens from it would otherwise remember the entry,\nwhich sits in a closed menu by the time it hands focus back, and focus\nended on the body (#450)."
             },
             {
               "kind": "method",

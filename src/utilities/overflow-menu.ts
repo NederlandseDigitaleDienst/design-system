@@ -1,6 +1,7 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type { NLDDMenu } from '../components/actions/menu/menu.js';
 import '../components/actions/menu/menu.js';
+import { focusAsLastInput } from './return-focus.js';
 
 /** What the overflow menu needs from the bar it belongs to. */
 export interface OverflowMenuHost extends ReactiveControllerHost, HTMLElement {
@@ -28,6 +29,10 @@ export interface OverflowMenuOptions {
  * A `select` in the menu stays in the menu: what the bar wants the app to hear
  * it sends on itself, from the original the entry stands for. Leaving it would
  * reach the bar's own listeners as if one of its items had been chosen.
+ *
+ * Before an entry's action runs, focus goes to the bar's button (`handOff`).
+ * Whatever the action opens, a sheet or a dialog, remembers where focus was,
+ * and the entry is gone from view once the menu closes.
  */
 export class OverflowMenu implements ReactiveController {
 	private static _counter = 0;
@@ -94,6 +99,17 @@ export class OverflowMenu implements ReactiveController {
 		}
 	}
 
+	/**
+	 * Focus to the button that opens the menu, before what an entry stands for
+	 * runs. An overlay that opens from it would otherwise remember the entry,
+	 * which sits in a closed menu by the time it hands focus back, and focus
+	 * ended on the body (#450).
+	 */
+	handOff(): void {
+		const button = this._menu?.anchorElement;
+		if (button instanceof HTMLElement && button.isConnected) focusAsLastInput(button);
+	}
+
 	/** Fill the menu with entries the bar built itself. */
 	replace(entries: Element[]): void {
 		if (!this._menu) return;
@@ -137,6 +153,7 @@ export class OverflowMenu implements ReactiveController {
 			.find((node): node is Element => node instanceof Element && node.hasAttribute('data-overflow-oid'));
 		const original = stamped && this._originals.get(stamped.getAttribute('data-overflow-oid')!);
 		if (!original) return;
+		this.handOff();
 		original.dispatchEvent(new CustomEvent('select', {
 			bubbles: true,
 			composed: true,
