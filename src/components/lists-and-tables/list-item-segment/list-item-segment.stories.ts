@@ -298,9 +298,11 @@ export const MetMenu = {
 					text="Bewerken"
 					icon="edit"
 				></nldd-menu-item>
+				<nldd-menu-divider></nldd-menu-divider>
 				<nldd-menu-item
 					text="Verwijderen"
 					icon="trash"
+					destructive
 				></nldd-menu-item>
 			</nldd-menu>
 		`)}
