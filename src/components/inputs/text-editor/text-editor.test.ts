@@ -8,7 +8,7 @@ import { loadTokens } from '../../../test-tokens.js';
 type TextEditorEl = HTMLElement & { value: string; updateComplete: Promise<boolean> };
 
 async function withValue(markdown: string): Promise<TextEditorEl> {
-	const el = await fixture<TextEditorEl>('<nldd-text-editor accessible-label="Tekst"></nldd-text-editor>');
+	const el = await fixture<TextEditorEl>('<nldd-text-editor accessible-label="Tekst" syntax="visible"></nldd-text-editor>');
 	el.value = markdown;
 	await el.updateComplete;
 	await waitForUpdate(el);

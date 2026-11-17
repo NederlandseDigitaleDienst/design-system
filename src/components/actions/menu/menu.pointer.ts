@@ -61,8 +61,9 @@ export interface MenuPointerHost extends ReactiveControllerHost, HTMLElement {
  * 2. **No press flash while scrolling.** On touch, pressing an item sets
  *    :active and the sticky :hover lands on it, so the press highlight shows.
  *    When the gesture turns into a scroll of a cramped menu, :active lingers
- *    until the browser recognizes the pan. Past the threshold the host gets
- *    `scroll-active`, and the styles drop the press highlight while it is set.
+ *    until the browser recognizes the pan. Past the threshold the host and
+ *    its items get `scroll-active`, and each item drops its press highlight
+ *    while it is set.
  *    A tap never moves that far, so it keeps its brief feedback.
  * 3. **A tap beside the menu.** An outside touch is also how a page scroll
  *    begins, so the menu only hears of it once the finger lifts without
@@ -119,7 +120,7 @@ export class MenuPointerController implements ReactiveController {
 		const t = event.touches[0];
 		if (!t) return;
 		this._touchStart = { x: t.clientX, y: t.clientY };
-		this._host.removeAttribute('scroll-active');
+		this._setScrollActive(false);
 	};
 
 	/** @internal */
@@ -128,14 +129,23 @@ export class MenuPointerController implements ReactiveController {
 		const t = event.touches[0];
 		if (!t) return;
 		if (Math.hypot(t.clientX - this._touchStart.x, t.clientY - this._touchStart.y) > TOUCH_SCROLL_THRESHOLD_PX) {
-			this._host.setAttribute('scroll-active', '');
+			this._setScrollActive(true);
 		}
 	};
 
 	/** @internal */
 	touchEnd = (): void => {
-		this._host.removeAttribute('scroll-active');
+		this._setScrollActive(false);
 	};
+
+	/** On the menu and on its own items, which drop their press colors: the
+	 *  colors of an item are its own, so the menu cannot reach them. */
+	private _setScrollActive(on: boolean): void {
+		this._host.toggleAttribute('scroll-active', on);
+		for (const item of this._host.querySelectorAll('nldd-menu-item')) {
+			if (item.closest('nldd-menu') === this._host) item.toggleAttribute('scroll-active', on);
+		}
+	}
 
 	// 3. A tap beside the menu.
 

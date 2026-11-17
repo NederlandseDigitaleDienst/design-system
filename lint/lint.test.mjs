@@ -1887,6 +1887,10 @@ describe('attributes a component reads at any depth', () => {
 		]);
 	});
 
+	it('accepts an attribute an editor reads on any element, and checks no value of it', async () => {
+		assert.deepEqual(await unknown(page('<nldd-toolbar text-editor-for="notities" accessible-label="Opmaak"><nldd-toolbar-item slot="start" label="Vet"><nldd-toggle-button text-editor-command="bold" text="Vet"></nldd-toggle-button></nldd-toolbar-item></nldd-toolbar><nldd-text-editor id="notities"></nldd-text-editor>')), []);
+	});
+
 	it('cannot tell in a fragment, whose section may be in another file', async () => {
 		assert.deepEqual(await linter.lintSource('<nldd-button text="Filters" sidebar-section-only="collapsed"></nldd-button>', 'a.html').then(({ findings }) => findings.filter(({ rule }) => rule === 'unknown-attribute')), []);
 	});

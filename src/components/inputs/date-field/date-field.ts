@@ -92,6 +92,9 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
+	/** Says you type in this control, so focus moved into it by script keeps
+	 *  its ring after a click too, as a text field does. See focusAsLastInput. */
+	static isTextEntry = true;
 
 	/** Counts for the implicit-submission rule: a single-line field where Enter
 	 *  would submit the form. See utilities/implicit-submission.ts. */

@@ -12,6 +12,7 @@ import '../../layout/container/container.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import '../../layout/spacer/spacer.js';
+import '../../forms/form-field/form-field.js';
 
 const SAMPLE = `# Aanvraag A-1042
 
@@ -21,677 +22,136 @@ Een **vetgedrukte** en *cursieve* zin met \`inline code\`. Lees meer over [dakis
 
 - Eerste punt
 - Tweede punt
+  - Een genest punt
+
+1. Aanvraag indienen
+2. Beoordeling door team Uitvoering
+
+- [x] Gegevens gecontroleerd
+- [ ] Besluit versturen
+
+---
 
 ## Subkop
 
-Tekst met ~~doorhaling~~ (GFM).`;
+Tekst met ~~doorhaling~~ (GFM).
 
-/* Shared toolbar demo. The editor is headless: this builds a real toolbar from
- * DS components and wires it both ways — the controls drive the editor's command
- * API, and the editor's state-change event drives the controls. Used
- * by the WithToolbar and Mixed stories (pass the editor template in). */
-const editorOf = (el: Element): any => el.closest('.demo-editor')?.querySelector('nldd-text-editor');
-const reconcile = (el: Element, keys: string[], values: string[]) => {
-	const editor = editorOf(el);
-	if (!editor) return;
-	const active = editor.getState().active;
-	const desired = new Set(values);
-	keys.forEach((key) => { if (desired.has(key) !== Boolean(active[key])) editor.runCommand(key); });
-};
-const listTypeOf = (value: string) => (value === 'numbered' ? 'ordered' : value);
-const currentList = (editor: any): string => {
-	const active = editor.getState().active;
-	return active.taskList ? 'task' : active.orderedList ? 'numbered' : active.bulletList ? 'bullet' : 'none';
-};
-const onListChange = (event: CustomEvent) => {
-	editorOf(event.currentTarget as Element)?.setList(listTypeOf(event.detail.value as string));
-};
-// A second click on the list that is on turns it off, like the other toggles.
-// A radio does not change on that click, so the list is read at pointerdown,
-// before a click on another item has switched it.
-let listAtPointerDown: string | null = null;
-const onListPointerDown = (event: PointerEvent) => {
-	const editor = editorOf(event.currentTarget as Element);
-	listAtPointerDown = editor ? currentList(editor) : null;
-};
-const onListClick = (event: MouseEvent) => {
-	const item = (event.target as Element).closest('nldd-segmented-control-item') as any;
-	const editor = editorOf(event.currentTarget as Element);
-	if (editor && item && item.value !== 'none' && item.value === listAtPointerDown) editor.setList('none');
-	listAtPointerDown = null;
-};
-const HEADING_LABELS = ['Paragraaf', 'Kop 1', 'Kop 2', 'Kop 3', 'Kop 4', 'Kop 5', 'Kop 6'];
-const onHeadingSelect = (event: Event) => {
-	const item = event.target as HTMLElement;
-	if (item?.tagName !== 'NLDD-MENU-ITEM') return;
-	const editor = editorOf(event.currentTarget as Element);
-	if (!editor) return;
-	const value = item.getAttribute('value') ?? '0';
-	const inCodeBlock = editor.getState().active.codeBlock;
-	if (value === 'codeblock') {
-		if (!inCodeBlock) editor.toggleCodeBlock(); // wrap; re-selecting it is a no-op
-		return;
-	}
-	// A text style: a code block is its own block type, so step out of it first —
-	// that's what makes "Paragraaf" double as the way out of a code block.
-	if (inCodeBlock) editor.toggleCodeBlock();
-	editor.setHeading(Number(value));
-};
-const onLink = (event: Event) => editorOf(event.currentTarget as Element)?.toggleLink();
-const onIndent = (event: Event) => editorOf(event.currentTarget as Element)?.indent();
-const onOutdent = (event: Event) => editorOf(event.currentTarget as Element)?.outdent();
-const onUndo = (event: Event) => editorOf(event.currentTarget as Element)?.undo();
-const onRedo = (event: Event) => editorOf(event.currentTarget as Element)?.redo();
-const onCopy = (event: Event) => editorOf(event.currentTarget as Element)?.copy();
-const onCut = (event: Event) => editorOf(event.currentTarget as Element)?.cut();
-const onPaste = (event: Event) => editorOf(event.currentTarget as Element)?.paste();
+\`\`\`bash
+npm run test:a11y
+\`\`\``;
 
-// Run one overflow-menu action against its editor. Mirrors the inline handlers
-// (onHeadingSelect/onListChange/…) so an overflowed control behaves the same.
-const runOverflowAction = (editor: any, action: string): void => {
-	const [name, value] = action.split(':');
-	if (name === 'heading') {
-		// A code block is its own block type, so step out of it before setting a
-		// text style. That is what makes "Paragraaf" double as the way out.
-		const inCodeBlock = editor.getState().active.codeBlock;
-		if (value === 'codeblock') { if (!inCodeBlock) editor.runCommand('codeBlock'); return; }
-		if (inCodeBlock) editor.runCommand('codeBlock');
-		editor.runCommand('setHeading', Number(value));
-		return;
-	}
-	if (name === 'list') {
-		editor.runCommand('setList', value !== 'none' && value === currentList(editor) ? 'none' : listTypeOf(value));
-		return;
-	}
-	editor.runCommand(name);
-};
-
-// The toolbar's overflow menu holds copies of the menu items in each item's
-// `overflow` slot, and sends a `select` on a copy on to its original. Those
-// originals sit here in the light DOM, so a listener on the wrapper sees them
-// and runs the item's `value` as an action.
-const onOverflowSelect = (event: Event) => {
-	const item = event.target as HTMLElement | null;
-	if (item?.tagName !== 'NLDD-MENU-ITEM' || !item.closest('[slot="overflow"]')) return;
-	const action = item.getAttribute('value');
-	const editor = editorOf(event.currentTarget as Element);
-	if (action && editor) runOverflowAction(editor, action);
-};
-const onToolbarState = (event: CustomEvent) => {
-	const active = event.detail.active;
-	const root = event.currentTarget as Element;
-	// Multi-select segmented controls reflect via .values; single toggle buttons via .selected.
-	const reflect = (group: string, keys: string[]) => {
-		const el: any = root.querySelector(`[data-group="${group}"]`);
-		if (el) el.values = keys.filter((key) => active[key]);
-	};
-	const reflectToggle = (group: string, key: string) => {
-		const el: any = root.querySelector(`[data-group="${group}"]`);
-		if (el) el.selected = Boolean(active[key]);
-	};
-	reflect('inline', ['bold', 'italic', 'strikethrough']);
-	reflectToggle('code', 'inlineCode');
-	reflectToggle('link', 'link');
-	reflectToggle('quote', 'quote');
-	const list: any = root.querySelector('[data-group="list"]');
-	// A task is a bullet too, so it has to be asked about first.
-	if (list) list.value = active.taskList ? 'task' : active.orderedList ? 'numbered' : active.bulletList ? 'bullet' : 'none';
-
-	// Formatting inside code is literal text, not markup: lock the inline formats in
-	// any code, and the block formats inside a code block — only the code-block toggle
-	// stays (to get back out).
-	const inCode = active.inlineCode || active.codeBlock;
-	const setDisabled = (group: string, cond: boolean) => {
-		const el: any = root.querySelector(`[data-group="${group}"]`);
-		if (el) el.disabled = cond;
-	};
-	setDisabled('inline', inCode);
-	setDisabled('link', inCode);
-	setDisabled('code', active.codeBlock);
-	setDisabled('quote', active.codeBlock);
-	setDisabled('list', active.codeBlock);
-
-	// History buttons: enable undo/redo only when there's history in that direction,
-	// and dim the whole bar (divider included) when neither applies.
-	const historyBar: any = root.querySelector('[data-group="history"]');
-	if (historyBar) {
-		const { canUndo, canRedo } = event.detail;
-		historyBar.disabled = !canUndo && !canRedo;
-		historyBar.updateComplete.then(() => {
-			const [undoButton, redoButton] = historyBar.querySelectorAll('nldd-icon-button');
-			if (undoButton) undoButton.disabled = !canUndo;
-			if (redoButton) redoButton.disabled = !canRedo;
-		});
-	}
-
-	// Clipboard bar: copy and cut need a selection; paste is always available.
-	const clipboardBar: any = root.querySelector('[data-group="clipboard"]');
-	if (clipboardBar) {
-		clipboardBar.updateComplete.then(() => {
-			const [copyButton, cutButton] = clipboardBar.querySelectorAll('nldd-icon-button');
-			if (copyButton) copyButton.disabled = event.detail.empty;
-			if (cutButton) cutButton.disabled = event.detail.empty;
-		});
-	}
-
-	// Indent buttons reflect what's possible: increase only with a parent to nest
-	// under, decrease only when the item is already nested. When neither applies,
-	// disable the whole bar so its divider dims too, not just the two buttons.
-	const indentBar: any = root.querySelector('[data-group="indent"]');
-	if (indentBar) {
-		const { canIndent, canOutdent } = event.detail;
-		indentBar.disabled = !canIndent && !canOutdent;
-		// The bar re-syncs its children from a snapshot whenever `disabled` flips; set
-		// the per-button state after that settles so a half-usable bar keeps the exact
-		// arrow we want enabled.
-		indentBar.updateComplete.then(() => {
-			const [increase, decrease] = indentBar.querySelectorAll('nldd-icon-button');
-			if (increase) increase.disabled = !canIndent;
-			if (decrease) decrease.disabled = !canOutdent;
-		});
-	}
-
-	// The block-type menu also carries "Codeblok", and it stays enabled in a code
-	// block — picking "Paragraaf" is how you get back out.
-	const headingButton: any = root.querySelector('[data-group="heading"]');
-	if (headingButton) headingButton.text = active.codeBlock ? 'Codeblok' : (HEADING_LABELS[active.heading] ?? 'Paragraaf');
-	root.querySelectorAll('#heading-menu nldd-menu-item').forEach((item) => {
-		const value = item.getAttribute('value');
-		(item as any).selected = active.codeBlock ? value === 'codeblock' : Number(value) === active.heading;
-	});
-
-	// Mirror the disabled state onto the overflow fallbacks, so an overflowed control
-	// is just as unusable in the menu as it is in the bar. Set it on both the light-DOM
-	// originals (used for the next clone) and the live clones in the toolbar's overflow
-	// menu, in its shadow root.
-	const toolbar = root.querySelector('nldd-toolbar');
-	const overflowMenu = toolbar?.shadowRoot?.querySelector('nldd-menu[id^="nldd-toolbar-overflow-menu"]') ?? null;
-	const { canUndo, canRedo, canIndent, canOutdent, empty } = event.detail;
-	const disabledByValue: Record<string, boolean> = {
-		bold: inCode, italic: inCode, strikethrough: inCode,
-		inlineCode: active.codeBlock,
-		link: inCode,
-		quote: active.codeBlock,
-		'list:none': active.codeBlock, 'list:bullet': active.codeBlock, 'list:numbered': active.codeBlock, 'list:task': active.codeBlock,
-		indent: !canIndent, outdent: !canOutdent,
-		copy: empty, cut: empty,
-		undo: !canUndo, redo: !canRedo,
-	};
-	for (const [value, disabled] of Object.entries(disabledByValue)) {
-		const selector = `nldd-menu-item[value="${value}"]`;
-		root.querySelectorAll(selector).forEach((item) => { (item as any).disabled = disabled; });
-		overflowMenu?.querySelectorAll(selector).forEach((item) => { (item as any).disabled = disabled; });
-	}
-
-	// And mirror the active/checked state onto the checkbox and radio fallbacks, so an
-	// overflowed toggle shows the same checkmark (and radio group the same selection)
-	// as the control it stands in for. Momentary actions (indent, clipboard, history)
-	// carry no state and are absent here.
-	const noList = !active.bulletList && !active.orderedList;
-	const selectedByValue: Record<string, boolean> = {
-		bold: active.bold, italic: active.italic, strikethrough: active.strikethrough,
-		inlineCode: active.inlineCode,
-		link: active.link,
-		quote: active.quote,
-		'list:none': noList, 'list:bullet': active.bulletList && !active.taskList, 'list:numbered': active.orderedList, 'list:task': active.taskList,
-		'heading:0': !active.codeBlock && active.heading === 0,
-		'heading:1': !active.codeBlock && active.heading === 1,
-		'heading:2': !active.codeBlock && active.heading === 2,
-		'heading:3': !active.codeBlock && active.heading === 3,
-		'heading:4': !active.codeBlock && active.heading === 4,
-		'heading:5': !active.codeBlock && active.heading === 5,
-		'heading:6': !active.codeBlock && active.heading === 6,
-		'heading:codeblock': active.codeBlock,
-	};
-	for (const [value, selected] of Object.entries(selectedByValue)) {
-		const selector = `nldd-menu-item[value="${value}"]`;
-		root.querySelectorAll(selector).forEach((item) => { (item as any).selected = selected; });
-		overflowMenu?.querySelectorAll(selector).forEach((item) => { (item as any).selected = selected; });
-	}
-};
-function toolbarEditor(editor: unknown) {
+/* The formatting toolbar of the stories: markup only. Each control names its
+ * command in `text-editor-command`, and the editor runs it and keeps its state,
+ * in the toolbar and in its overflow menu alike. `slot` puts it in the editor's
+ * frame; `editorId` points it at an editor elsewhere on the page. */
+function formatToolbar({ slot, editorId }: { slot?: string; editorId?: string } = {}) {
 	return html`
-		<div class="demo-editor"
-			@state-change=${onToolbarState}
-			@select=${onOverflowSelect}
+		<nldd-toolbar
+			slot=${slot ?? nothing}
+			text-editor-for=${editorId ?? nothing}
+			accessible-label="Opmaak"
 		>
-			<nldd-toolbar size="md">
-				<nldd-toolbar-item
-					slot="start"
-					label="Nadruk"
-				>
-					<nldd-segmented-control
-						data-group="inline"
-						type="checkbox"
-						variant="icon"
-						accessible-label="Nadruk"
-						@change=${(event: CustomEvent) => reconcile(event.currentTarget as Element, ['bold', 'italic', 'strikethrough'], event.detail.values)}
-					>
-						<nldd-segmented-control-item
-							value="bold"
-							text="Vet"
-							shortcut="Ctrl+B"
-							shortcut-mac="Cmd+B"
-							icon="bold"
-						></nldd-segmented-control-item>
-						<nldd-segmented-control-item
-							value="italic"
-							text="Cursief"
-							shortcut="Ctrl+I"
-							shortcut-mac="Cmd+I"
-							icon="italic"
-						></nldd-segmented-control-item>
-						<nldd-segmented-control-item
-							value="strikethrough"
-							text="Doorhalen"
-							icon="strikethrough"
-						></nldd-segmented-control-item>
-					</nldd-segmented-control>
-					<nldd-menu-group
-						slot="overflow"
-						text="Nadruk"
-					>
-						<nldd-menu-item
-							type="checkbox"
-							value="bold"
-							text="Vet"
-							shortcut="Ctrl+B"
-							shortcut-mac="Cmd+B"
-							icon="bold"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="checkbox"
-							value="italic"
-							text="Cursief"
-							shortcut="Ctrl+I"
-							shortcut-mac="Cmd+I"
-							icon="italic"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="checkbox"
-							value="strikethrough"
-							text="Doorhalen"
-							icon="strikethrough"
-						></nldd-menu-item>
-					</nldd-menu-group>
-				</nldd-toolbar-item>
-				<nldd-toolbar-item
-					slot="start"
-					label="Code"
-				>
-					<nldd-toggle-button
-						data-group="code"
-						variant="icon"
-						icon="code"
-						accessible-label="Code"
-						shortcut="Ctrl+E"
-						shortcut-mac="Cmd+E"
-						@change=${(event: CustomEvent) => editorOf(event.currentTarget as Element)?.runCommand('inlineCode')}
-					></nldd-toggle-button>
-					<nldd-menu-item
-						slot="overflow"
-						type="checkbox"
-						value="inlineCode"
-						text="Code"
-						shortcut="Ctrl+E"
-						shortcut-mac="Cmd+E"
-						icon="code"
-					></nldd-menu-item>
-				</nldd-toolbar-item>
-				<nldd-toolbar-item
-					slot="start"
-					label="Link"
-				>
-					<nldd-toggle-button
-						data-group="link"
-						variant="icon"
-						icon="link"
-						accessible-label="Link"
-						shortcut="Ctrl+K"
-						shortcut-mac="Cmd+K"
-						@change=${onLink}
-					></nldd-toggle-button>
-					<nldd-menu-item
-						slot="overflow"
-						type="checkbox"
-						value="link"
-						text="Link"
-						shortcut="Ctrl+K"
-						shortcut-mac="Cmd+K"
-						icon="link"
-					></nldd-menu-item>
-				</nldd-toolbar-item>
-				<nldd-toolbar-item
-					slot="start"
-					label="Citaat"
-				>
-					<nldd-toggle-button
-						data-group="quote"
-						variant="icon"
-						icon="text-quote"
-						accessible-label="Citaat"
-						@change=${(event: CustomEvent) => editorOf(event.currentTarget as Element)?.runCommand('quote')}
-					></nldd-toggle-button>
-					<nldd-menu-item
-						slot="overflow"
-						type="checkbox"
-						value="quote"
-						text="Citaat"
-						icon="text-quote"
-					></nldd-menu-item>
-				</nldd-toolbar-item>
-				<nldd-toolbar-item
-					slot="start"
-					label="Lijst"
-				>
-					<nldd-segmented-control
-						data-group="list"
-						type="radio"
-						variant="icon"
-						value="none"
-						accessible-label="Lijst"
-						@change=${onListChange}
-						@pointerdown=${onListPointerDown}
-						@click=${onListClick}
-					>
-						<nldd-segmented-control-item
-							value="none"
-							text="Geen lijst"
-							icon="minus"
-						></nldd-segmented-control-item>
-						<nldd-segmented-control-item
-							value="bullet"
-							text="Opsomming"
-							icon="bullet-list"
-						></nldd-segmented-control-item>
-						<nldd-segmented-control-item
-							value="numbered"
-							text="Genummerd"
-							icon="numbered-list"
-						></nldd-segmented-control-item>
-						<nldd-segmented-control-item
-							value="task"
-							text="Taken"
-							icon="checkbox-list"
-						></nldd-segmented-control-item>
-					</nldd-segmented-control>
-					<nldd-menu-group
-						slot="overflow"
-						text="Lijst"
-					>
-						<nldd-menu-item
-							type="radio"
-							value="list:none"
-							text="Geen lijst"
-							icon="minus"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="list:bullet"
-							text="Opsomming"
-							icon="bullet-list"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="list:numbered"
-							text="Genummerd"
-							icon="numbered-list"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="list:task"
-							text="Taken"
-							icon="checkbox-list"
-						></nldd-menu-item>
-					</nldd-menu-group>
-				</nldd-toolbar-item>
-				<nldd-toolbar-item
-					slot="start"
-					label="Inspringen"
-				>
-					<nldd-button-bar data-group="indent">
-						<nldd-icon-button
-							icon="indent-increase"
-							text="Meer inspringen"
-							shortcut="Ctrl+]"
-							shortcut-mac="Cmd+]"
-							@click=${onIndent}
-						></nldd-icon-button>
-						<nldd-button-bar-divider></nldd-button-bar-divider>
-						<nldd-icon-button
-							icon="indent-decrease"
-							text="Minder inspringen"
-							shortcut="Ctrl+["
-							shortcut-mac="Cmd+["
-							@click=${onOutdent}
-						></nldd-icon-button>
-					</nldd-button-bar>
-					<nldd-menu-group
-						slot="overflow"
-						text="Inspringen"
-					>
-						<nldd-menu-item
-							value="indent"
-							text="Meer inspringen"
-							shortcut="Ctrl+]"
-							shortcut-mac="Cmd+]"
-							icon="indent-increase"
-						></nldd-menu-item>
-						<nldd-menu-item
-							value="outdent"
-							text="Minder inspringen"
-							shortcut="Ctrl+["
-							shortcut-mac="Cmd+["
-							icon="indent-decrease"
-						></nldd-menu-item>
-					</nldd-menu-group>
-				</nldd-toolbar-item>
-				<nldd-toolbar-item
-					slot="start"
-					label="Tekststijl"
-				>
-					<nldd-button
-						data-group="heading"
-						expandable
-						text="Paragraaf"
-					>
-						<nldd-menu
-							id="heading-menu"
-							slot="popup"
-							@select=${onHeadingSelect}
-						>
-							<nldd-menu-item
-								type="radio"
-								value="0"
-								text="Paragraaf"
-								selected
-							></nldd-menu-item>
-							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item
-								type="radio"
-								value="1"
-								text="Kop 1"
-							></nldd-menu-item>
-							<nldd-menu-item
-								type="radio"
-								value="2"
-								text="Kop 2"
-							></nldd-menu-item>
-							<nldd-menu-item
-								type="radio"
-								value="3"
-								text="Kop 3"
-							></nldd-menu-item>
-							<nldd-menu-item
-								type="radio"
-								value="4"
-								text="Kop 4"
-							></nldd-menu-item>
-							<nldd-menu-item
-								type="radio"
-								value="5"
-								text="Kop 5"
-							></nldd-menu-item>
-							<nldd-menu-item
-								type="radio"
-								value="6"
-								text="Kop 6"
-							></nldd-menu-item>
-							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item
-								type="radio"
-								value="codeblock"
-								text="Codeblok"
-							></nldd-menu-item>
-						</nldd-menu>
-					</nldd-button>
-					<nldd-menu-group
-						slot="overflow"
-						text="Tekststijl"
-					>
-						<nldd-menu-item
-							type="radio"
-							value="heading:0"
-							text="Paragraaf"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="heading:1"
-							text="Kop 1"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="heading:2"
-							text="Kop 2"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="heading:3"
-							text="Kop 3"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="heading:4"
-							text="Kop 4"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="heading:5"
-							text="Kop 5"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="heading:6"
-							text="Kop 6"
-						></nldd-menu-item>
-						<nldd-menu-item
-							type="radio"
-							value="heading:codeblock"
-							text="Codeblok"
-						></nldd-menu-item>
-					</nldd-menu-group>
-				</nldd-toolbar-item>
-				<nldd-toolbar-item
-					slot="end"
-					label="Klembord"
-				>
-					<nldd-button-bar data-group="clipboard">
-						<nldd-icon-button
-							icon="copy"
-							text="Kopieer"
-							shortcut="Ctrl+C"
-							shortcut-mac="Cmd+C"
-							@click=${onCopy}
-						></nldd-icon-button>
-						<nldd-button-bar-divider></nldd-button-bar-divider>
-						<nldd-icon-button
-							icon="cut"
-							text="Knip"
-							shortcut="Ctrl+X"
-							shortcut-mac="Cmd+X"
-							@click=${onCut}
-						></nldd-icon-button>
-						<nldd-button-bar-divider></nldd-button-bar-divider>
-						<nldd-icon-button
-							icon="paste"
-							text="Plak"
-							shortcut="Ctrl+V"
-							shortcut-mac="Cmd+V"
-							@click=${onPaste}
-						></nldd-icon-button>
-					</nldd-button-bar>
-					<nldd-menu-group
-						slot="overflow"
-						text="Klembord"
-					>
-						<nldd-menu-item
-							value="copy"
-							text="Kopieer"
-							shortcut="Ctrl+C"
-							shortcut-mac="Cmd+C"
-							icon="copy"
-						></nldd-menu-item>
-						<nldd-menu-item
-							value="cut"
-							text="Knip"
-							shortcut="Ctrl+X"
-							shortcut-mac="Cmd+X"
-							icon="cut"
-						></nldd-menu-item>
-						<nldd-menu-item
-							value="paste"
-							text="Plak"
-							shortcut="Ctrl+V"
-							shortcut-mac="Cmd+V"
-							icon="paste"
-						></nldd-menu-item>
-					</nldd-menu-group>
-				</nldd-toolbar-item>
-				<nldd-toolbar-item
-					slot="end"
-					label="Geschiedenis"
-				>
-					<nldd-button-bar data-group="history">
-						<nldd-icon-button
-							icon="undo"
-							text="Maak ongedaan"
-							shortcut="Ctrl+Z"
-							shortcut-mac="Cmd+Z"
-							@click=${onUndo}
-						></nldd-icon-button>
-						<nldd-button-bar-divider></nldd-button-bar-divider>
-						<nldd-icon-button
-							icon="redo"
-							text="Voer opnieuw uit"
-							shortcut="Ctrl+Y"
-							shortcut-mac="Cmd+Shift+Z"
-							@click=${onRedo}
-						></nldd-icon-button>
-					</nldd-button-bar>
-					<nldd-menu-group
-						slot="overflow"
-						text="Geschiedenis"
-					>
-						<nldd-menu-item
-							value="undo"
-							text="Maak ongedaan"
-							shortcut="Ctrl+Z"
-							shortcut-mac="Cmd+Z"
-							icon="undo"
-						></nldd-menu-item>
-						<nldd-menu-item
-							value="redo"
-							text="Voer opnieuw uit"
-							shortcut="Ctrl+Y"
-							shortcut-mac="Cmd+Shift+Z"
-							icon="redo"
-						></nldd-menu-item>
-					</nldd-menu-group>
-				</nldd-toolbar-item>
-			</nldd-toolbar>
-			<nldd-spacer size="24"></nldd-spacer>
-			${editor}
-		</div>
+			<nldd-toolbar-item slot="start" label="Nadruk">
+				<nldd-segmented-control type="checkbox" variant="icon" accessible-label="Nadruk">
+					<nldd-segmented-control-item text-editor-command="bold" value="bold" text="Vet" shortcut="Ctrl+B" shortcut-mac="Cmd+B" icon="bold"></nldd-segmented-control-item>
+					<nldd-segmented-control-item text-editor-command="italic" value="italic" text="Cursief" shortcut="Ctrl+I" shortcut-mac="Cmd+I" icon="italic"></nldd-segmented-control-item>
+					<nldd-segmented-control-item text-editor-command="strikethrough" value="strikethrough" text="Doorhalen" icon="strikethrough"></nldd-segmented-control-item>
+				</nldd-segmented-control>
+				<nldd-menu-group slot="overflow" text="Nadruk">
+					<nldd-menu-item type="checkbox" text-editor-command="bold" text="Vet" shortcut="Ctrl+B" shortcut-mac="Cmd+B" icon="bold"></nldd-menu-item>
+					<nldd-menu-item type="checkbox" text-editor-command="italic" text="Cursief" shortcut="Ctrl+I" shortcut-mac="Cmd+I" icon="italic"></nldd-menu-item>
+					<nldd-menu-item type="checkbox" text-editor-command="strikethrough" text="Doorhalen" icon="strikethrough"></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item slot="start" label="Code">
+				<nldd-toggle-button text-editor-command="inlineCode" variant="icon" icon="code" accessible-label="Code" shortcut="Ctrl+E" shortcut-mac="Cmd+E"></nldd-toggle-button>
+				<nldd-menu-item slot="overflow" type="checkbox" text-editor-command="inlineCode" text="Code" shortcut="Ctrl+E" shortcut-mac="Cmd+E" icon="code"></nldd-menu-item>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item slot="start" label="Link">
+				<nldd-toggle-button text-editor-command="link" variant="icon" icon="link" accessible-label="Link" shortcut="Ctrl+K" shortcut-mac="Cmd+K"></nldd-toggle-button>
+				<nldd-menu-item slot="overflow" type="checkbox" text-editor-command="link" text="Link" shortcut="Ctrl+K" shortcut-mac="Cmd+K" icon="link"></nldd-menu-item>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item slot="start" label="Citaat">
+				<nldd-toggle-button text-editor-command="quote" variant="icon" icon="text-quote" accessible-label="Citaat"></nldd-toggle-button>
+				<nldd-menu-item slot="overflow" type="checkbox" text-editor-command="quote" text="Citaat" icon="text-quote"></nldd-menu-item>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item slot="start" label="Lijst">
+				<nldd-segmented-control text-editor-command="setList" type="radio" variant="icon" value="none" accessible-label="Lijst">
+					<nldd-segmented-control-item value="none" text="Geen lijst" icon="minus"></nldd-segmented-control-item>
+					<nldd-segmented-control-item value="bullet" text="Opsomming" icon="bullet-list"></nldd-segmented-control-item>
+					<nldd-segmented-control-item value="ordered" text="Genummerd" icon="numbered-list"></nldd-segmented-control-item>
+					<nldd-segmented-control-item value="task" text="Taken" icon="checkbox-list"></nldd-segmented-control-item>
+				</nldd-segmented-control>
+				<nldd-menu-group slot="overflow" text="Lijst">
+					<nldd-menu-item type="radio" text-editor-command="setList:none" text="Geen lijst" icon="minus"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setList:bullet" text="Opsomming" icon="bullet-list"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setList:ordered" text="Genummerd" icon="numbered-list"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setList:task" text="Taken" icon="checkbox-list"></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item slot="start" label="Inspringen">
+				<nldd-button-bar>
+					<nldd-icon-button text-editor-command="indent" icon="indent-increase" text="Meer inspringen" shortcut="Ctrl+]" shortcut-mac="Cmd+]"></nldd-icon-button>
+					<nldd-button-bar-divider></nldd-button-bar-divider>
+					<nldd-icon-button text-editor-command="outdent" icon="indent-decrease" text="Minder inspringen" shortcut="Ctrl+[" shortcut-mac="Cmd+["></nldd-icon-button>
+				</nldd-button-bar>
+				<nldd-menu-group slot="overflow" text="Inspringen">
+					<nldd-menu-item text-editor-command="indent" text="Meer inspringen" shortcut="Ctrl+]" shortcut-mac="Cmd+]" icon="indent-increase"></nldd-menu-item>
+					<nldd-menu-item text-editor-command="outdent" text="Minder inspringen" shortcut="Ctrl+[" shortcut-mac="Cmd+[" icon="indent-decrease"></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item slot="start" label="Tekststijl">
+				<nldd-button expandable text="Tekststijl">
+					<nldd-menu slot="popup">
+						<nldd-menu-item type="radio" text-editor-command="setHeading:0" text="Paragraaf"></nldd-menu-item>
+						<nldd-menu-divider></nldd-menu-divider>
+						<nldd-menu-item type="radio" text-editor-command="setHeading:1" text="Kop 1"></nldd-menu-item>
+						<nldd-menu-item type="radio" text-editor-command="setHeading:2" text="Kop 2"></nldd-menu-item>
+						<nldd-menu-item type="radio" text-editor-command="setHeading:3" text="Kop 3"></nldd-menu-item>
+						<nldd-menu-item type="radio" text-editor-command="setHeading:4" text="Kop 4"></nldd-menu-item>
+						<nldd-menu-item type="radio" text-editor-command="setHeading:5" text="Kop 5"></nldd-menu-item>
+						<nldd-menu-item type="radio" text-editor-command="setHeading:6" text="Kop 6"></nldd-menu-item>
+						<nldd-menu-divider></nldd-menu-divider>
+						<nldd-menu-item type="radio" text-editor-command="codeBlock" text="Codeblok"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-button>
+				<nldd-menu-group slot="overflow" text="Tekststijl">
+					<nldd-menu-item type="radio" text-editor-command="setHeading:0" text="Paragraaf"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setHeading:1" text="Kop 1"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setHeading:2" text="Kop 2"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setHeading:3" text="Kop 3"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setHeading:4" text="Kop 4"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setHeading:5" text="Kop 5"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="setHeading:6" text="Kop 6"></nldd-menu-item>
+					<nldd-menu-item type="radio" text-editor-command="codeBlock" text="Codeblok"></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item slot="end" label="Klembord">
+				<nldd-button-bar>
+					<nldd-icon-button text-editor-command="copy" icon="copy" text="Kopieer" shortcut="Ctrl+C" shortcut-mac="Cmd+C"></nldd-icon-button>
+					<nldd-button-bar-divider></nldd-button-bar-divider>
+					<nldd-icon-button text-editor-command="cut" icon="cut" text="Knip" shortcut="Ctrl+X" shortcut-mac="Cmd+X"></nldd-icon-button>
+					<nldd-button-bar-divider></nldd-button-bar-divider>
+					<nldd-icon-button text-editor-command="paste" icon="paste" text="Plak" shortcut="Ctrl+V" shortcut-mac="Cmd+V"></nldd-icon-button>
+				</nldd-button-bar>
+				<nldd-menu-group slot="overflow" text="Klembord">
+					<nldd-menu-item text-editor-command="copy" text="Kopieer" shortcut="Ctrl+C" shortcut-mac="Cmd+C" icon="copy"></nldd-menu-item>
+					<nldd-menu-item text-editor-command="cut" text="Knip" shortcut="Ctrl+X" shortcut-mac="Cmd+X" icon="cut"></nldd-menu-item>
+					<nldd-menu-item text-editor-command="paste" text="Plak" shortcut="Ctrl+V" shortcut-mac="Cmd+V" icon="paste"></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item slot="end" label="Geschiedenis">
+				<nldd-button-bar>
+					<nldd-icon-button text-editor-command="undo" icon="undo" text="Maak ongedaan" shortcut="Ctrl+Z" shortcut-mac="Cmd+Z"></nldd-icon-button>
+					<nldd-button-bar-divider></nldd-button-bar-divider>
+					<nldd-icon-button text-editor-command="redo" icon="redo" text="Voer opnieuw uit" shortcut="Ctrl+Y" shortcut-mac="Cmd+Shift+Z"></nldd-icon-button>
+				</nldd-button-bar>
+				<nldd-menu-group slot="overflow" text="Geschiedenis">
+					<nldd-menu-item text-editor-command="undo" text="Maak ongedaan" shortcut="Ctrl+Z" shortcut-mac="Cmd+Z" icon="undo"></nldd-menu-item>
+					<nldd-menu-item text-editor-command="redo" text="Voer opnieuw uit" shortcut="Ctrl+Y" shortcut-mac="Cmd+Shift+Z" icon="redo"></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-toolbar-item>
+		</nldd-toolbar>
 	`;
 }
 
@@ -708,7 +168,7 @@ export default {
 	},
 	args: {
 		embedded: false,
-		syntax: 'visible',
+		syntax: 'hidden',
 		value: SAMPLE,
 		placeholder: '',
 		rows: 8,
@@ -729,9 +189,9 @@ export default {
 		},
 		syntax: {
 			control: 'select',
-			options: ['visible', 'hidden'],
-			description: 'Opmaaktekens. "visible" laat ze gedimd staan; "hidden" verbergt ze en toont ze waar de cursor of selectie een constructie raakt.',
-			table: { defaultValue: { summary: 'visible' } },
+			options: ['hidden', 'visible'],
+			description: 'Opmaaktekens. "hidden" verbergt ze en toont ze waar de cursor of selectie een constructie raakt; "visible" laat ze gedimd staan, voor wie markdown schrijft.',
+			table: { defaultValue: { summary: 'hidden' } },
 		},
 		value: {
 			control: 'text',
@@ -1194,9 +654,8 @@ export const Gemengd = {
 			{ id: 'm4', ...at('Screenreader-tests') },
 			{ id: 'm5', ...at('Screenreader-tests inplannen voor de livegang') },
 		];
-		return toolbarEditor(html`
+		return html`
 			<nldd-text-editor
-				embedded
 				rows="15"
 				annotatable
 				accessible-label="Tekst"
@@ -1204,29 +663,64 @@ export const Gemengd = {
 				.mentionSource=${source}
 				.annotations=${annotations}
 				@mention=${(event: CustomEvent) => action('mention')(event.detail)}
-			></nldd-text-editor>
-		`);
+			>${formatToolbar({ slot: 'toolbar' })}</nldd-text-editor>
+		`;
 	},
 	parameters: {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Alles samen: een echte toolbar (DS-componenten, headless gekoppeld) boven een `embedded` editor met annotaties en @-mentions, door verschillende soorten content heen (koppen, vet, inline code, een lijst, een blockquote en links). De annotatie-overlay en de mention-tokens bestaan naast elkaar zonder elkaar in de weg te zitten; de tekst blijft schone markdown.',
+				story: 'Alles samen: een werkbalk in het `toolbar`-slot boven een editor met annotaties en @-mentions, door verschillende soorten content heen (koppen, vet, inline code, een lijst, een blockquote en links). De annotatie-overlay en de mention-tokens bestaan naast elkaar zonder elkaar in de weg te zitten; de tekst blijft schone markdown.',
 			},
 		},
 	},
 };
 
 export const MetWerkbalk = {
-	render: () =>
-		toolbarEditor(
-			html`<nldd-text-editor embedded rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
-		),
+	render: () => html`
+		<nldd-text-editor rows="10" .value=${SAMPLE} accessible-label="Tekst">
+			${formatToolbar({ slot: 'toolbar' })}
+		</nldd-text-editor>
+	`,
 	parameters: {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'De editor is headless. Deze toolbar is opgebouwd uit DS-componenten — `nldd-toolbar` met icon-`nldd-segmented-control`s (nadruk vet/cursief, code, citaat, en een exclusieve lijst-keuze geen/opsomming/genummerd) en een uitklapbare `nldd-button` met een `nldd-menu` voor de tekststijl (Paragraaf/Kop 1/…). Tweerichtings gekoppeld: de controls sturen de editor (`runCommand`, `setList`, `setHeading`) en het `state-change`-event zet hun actieve staat. Sneltoetsen Cmd/Ctrl+B/I/E/K werken ook.',
+				story: 'Een `nldd-toolbar` in het `toolbar`-slot staat binnen de rand van de editor. Elk control met `text-editor-command` is gekoppeld: de editor voert het commando uit, zet de focus terug in de tekst en houdt `selected` en `disabled` bij, ook in het overloopmenu. Een argument staat na een dubbele punt (`setHeading:2`), en op een `nldd-segmented-control` met `text-editor-command="setList"` is de waarde van het gekozen item het argument. Groeit de editor mee met zijn tekst, dan blijft de werkbalk bovenaan plakken. Er is geen koppelcode: wat hier staat is alle markup.',
+			},
+		},
+	},
+};
+
+export const EmbeddedMetWerkbalk = {
+	render: () => html`
+		<nldd-text-editor embedded rows="10" .value=${SAMPLE} accessible-label="Tekst">
+			${formatToolbar({ slot: 'toolbar' })}
+		</nldd-text-editor>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Met `embedded` valt het kader weg en zorgt de compositie eromheen voor de randen. De werkbalk staat gelijk met de tekst, met 8px tot de scheidingslijn.',
+			},
+		},
+	},
+};
+
+export const WerkbalkElders = {
+	render: () => html`
+		${formatToolbar({ editorId: 'notities' })}
+		<nldd-spacer size="16"></nldd-spacer>
+		<nldd-form-field label="Notities">
+			<nldd-text-editor id="notities" rows="8" .value=${SAMPLE}></nldd-text-editor>
+		</nldd-form-field>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Een werkbalk die niet bij de editor staat, zoals in een balk van de pagina of een sheet, wijst met `text-editor-for` naar het id van de editor. Dat mag op elk element: de controls erin met `text-editor-command` sturen die editor. In een `nldd-form-field` kan de werkbalk ook binnen het veld staan: het veld slaat een `nldd-toolbar` over en koppelt zijn label aan de editor.',
 			},
 		},
 	},
@@ -1260,22 +754,21 @@ const HIDDEN_SYNTAX_SAMPLE = [
 	'```',
 ].join('\n');
 
-export const VerborgenOpmaak = {
-	render: () => toolbarEditor(html`
+export const ZichtbareOpmaak = {
+	render: () => html`
 		<nldd-text-editor
-			embedded
-			syntax="hidden"
+			syntax="visible"
 			rows="15"
 			accessible-label="Tekst"
 			.value=${HIDDEN_SYNTAX_SAMPLE}
 			.mentionSource=${mixedSource}
-		></nldd-text-editor>
-	`),
+		>${formatToolbar({ slot: 'toolbar' })}</nldd-text-editor>
+	`,
 	parameters: {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `syntax="hidden"` zijn de tekens van vet, cursief, doorhalen, inline code, links en de `#` van koppen verborgen, is een opsommingsteken een bolletje, een citaat een lijn links, is `---` een scheidingslijn en verliest een codeblok zijn ```-regels. Waar de cursor of selectie een constructie raakt, komen de tekens terug, zodat je de markdown bewerkt zoals hij is. De nummers van een genummerde lijst blijven staan. De waarde blijft gewone markdown.',
+				story: 'Standaard zijn de tekens van vet, cursief, doorhalen, inline code, links en de `#` van koppen verborgen, is een opsommingsteken een bolletje, een citaat een lijn links, is `---` een scheidingslijn en verliest een codeblok zijn ```-regels. Waar de cursor of selectie een constructie raakt, komen de tekens terug. Met `syntax="visible"` blijven alle tekens gedimd staan, zoals hier: voor wie markdown schrijft. De waarde is in beide gevallen gewone markdown.',
 			},
 		},
 	},

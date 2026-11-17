@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { FocusReturn, returnFocus } from './return-focus.js';
+import { FocusReturn, focusAsLastInput, returnFocus } from './return-focus.js';
 
 function setUp() {
 	const root = document.createElement('div');
@@ -122,5 +122,24 @@ describe('returnFocus', () => {
 			returnFocus(els.target, els.overlay);
 			expect(els.root.shadowRoot!.activeElement).toBe(els.elsewhere);
 		});
+	});
+});
+
+describe('focusAsLastInput', () => {
+	let root: HTMLElement | undefined;
+	afterEach(() => root?.remove());
+
+	it('geeft een component waarin je typt zijn ring, ook na een aanwijzer', async () => {
+		await import('../components/inputs/text-field/text-field.js');
+		root = document.createElement('div');
+		root.innerHTML = '<nldd-text-field label="Naam"></nldd-text-field>';
+		document.body.append(root);
+		const field = root.querySelector('nldd-text-field') as HTMLElement & { updateComplete: Promise<boolean> };
+		await field.updateComplete;
+		pointer();
+		const focus = vi.spyOn(field, 'focus');
+		focusAsLastInput(field);
+		expect(focus).toHaveBeenCalledWith();
+		expect(field.shadowRoot!.querySelector('input')!.matches(':focus-visible')).toBe(true);
 	});
 });

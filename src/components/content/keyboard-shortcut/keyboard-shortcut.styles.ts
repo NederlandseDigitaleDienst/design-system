@@ -13,6 +13,7 @@ export const keyboardShortcutStyles = css`
 		--_keyboard-shortcut-size: var(--primitives-space-24);
 		--_keyboard-shortcut-inline-padding: var(--primitives-space-4);
 		--_keyboard-shortcut-font-family: var(--primitives-font-family-monospace);
+		--_keyboard-shortcut-symbol-font-family: var(--primitives-font-family-body);
 		--_keyboard-shortcut-font-size: var(--primitives-font-size-80);
 		--_keyboard-shortcut-font-weight: var(--primitives-font-weight-body-regular);
 		--_keyboard-shortcut-line-height: var(--primitives-line-height-flat);
@@ -21,7 +22,8 @@ export const keyboardShortcutStyles = css`
 		--_keyboard-shortcut-highlight-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-250));
 		--_keyboard-shortcut-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_keyboard-shortcut-border-width: var(--primitives-border-width-thin);
-		--_keyboard-shortcut-corner-radius: var(--primitives-corner-radius-xs);
+		--_keyboard-shortcut-gap: var(--primitives-space-4);
+		--_keyboard-shortcut-corner-radius: calc(var(--_keyboard-shortcut-size) * 0.2);
 
 		${inheritedTextReset}
 		display: inline-flex;
@@ -46,18 +48,19 @@ export const keyboardShortcutStyles = css`
 		--_keyboard-shortcut-font-size: 0.75em;
 	}
 
-	:host([appearance="simple"]) {
+	:host([appearance="text"]) {
+		--_keyboard-shortcut-gap: 0;
 		--_keyboard-shortcut-font-family: var(--primitives-font-family-body);
 		--_keyboard-shortcut-font-size: var(--primitives-font-size-100);
 
 		vertical-align: baseline;
 	}
 
-	:host([appearance="simple"][size="sm"]) {
+	:host([appearance="text"][size="sm"]) {
 		--_keyboard-shortcut-font-size: var(--primitives-font-size-90);
 	}
 
-	:host([appearance="simple"][size="inherit"]) {
+	:host([appearance="text"][size="inherit"]) {
 		--_keyboard-shortcut-font-size: inherit;
 	}
 
@@ -77,7 +80,7 @@ export const keyboardShortcutStyles = css`
 
 	.keyboard-shortcut {
 		display: inline-flex;
-		gap: var(--primitives-space-2);
+		gap: var(--_keyboard-shortcut-gap);
 		align-items: center;
 	}
 
@@ -86,7 +89,7 @@ export const keyboardShortcutStyles = css`
 		top: -0.05em;
 	}
 
-	:host([size="inherit"][appearance="simple"]) .keyboard-shortcut {
+	:host([size="inherit"][appearance="text"]) .keyboard-shortcut {
 		position: static;
 	}
 
@@ -95,6 +98,7 @@ export const keyboardShortcutStyles = css`
 
 	.keyboard-shortcut__key {
 		box-sizing: border-box;
+		position: relative;
 		display: inline-flex;
 		box-shadow: inset 0 0 0 var(--_keyboard-shortcut-border-width) var(--_keyboard-shortcut-highlight-border-color);
 		border-radius: var(--_keyboard-shortcut-corner-radius);
@@ -113,11 +117,7 @@ export const keyboardShortcutStyles = css`
 		white-space: nowrap;
 	}
 
-	:host([appearance="simple"]) .keyboard-shortcut {
-		gap: 0;
-	}
-
-	:host([appearance="simple"]) .keyboard-shortcut__key {
+	:host([appearance="text"]) .keyboard-shortcut__key {
 		box-shadow: none;
 		background-color: transparent;
 		border-radius: 0;
@@ -131,10 +131,24 @@ export const keyboardShortcutStyles = css`
 			color: CanvasText;
 		}
 
-		:host(:not([appearance="simple"])) .keyboard-shortcut__key {
+		:host(:not([appearance="text"])) .keyboard-shortcut__key {
 			border: var(--_keyboard-shortcut-border-width) solid CanvasText;
 			background-color: Canvas;
 		}
+	}
+
+	.keyboard-shortcut__symbol {
+		font-family: var(--_keyboard-shortcut-symbol-font-family);
+	}
+
+	/* Standard visually-hidden recipe. */
+	.keyboard-shortcut__key-name {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
 	}
 
 	.keyboard-shortcut__separator {

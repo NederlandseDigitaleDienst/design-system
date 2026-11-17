@@ -49,6 +49,56 @@ export function parseKeys(spec: string): string[] {
 		.filter(Boolean);
 }
 
+/** A key as it is shown, and as it is read: `label` may be a symbol, `name` is a word. */
+export interface DisplayKey {
+	label: string;
+	name: string;
+	/** A modifier shown as its macOS symbol, which the next key follows without a '+'. */
+	symbol?: boolean;
+}
+
+interface Modifier {
+	symbol: string;
+	name: string;
+}
+
+// In the order macOS lists them in a menu: ⌃⌥⇧⌘.
+const CONTROL: Modifier = { symbol: '⌃', name: 'Control' };
+const OPTION: Modifier = { symbol: '⌥', name: 'Option' };
+const SHIFT: Modifier = { symbol: '⇧', name: 'Shift' };
+const COMMAND: Modifier = { symbol: '⌘', name: 'Command' };
+const MAC_ORDER = [CONTROL, OPTION, SHIFT, COMMAND];
+
+const MODIFIERS: Record<string, Modifier> = {
+	ctrl: CONTROL, control: CONTROL, '⌃': CONTROL,
+	alt: OPTION, opt: OPTION, option: OPTION, '⌥': OPTION,
+	shift: SHIFT, '⇧': SHIFT,
+	cmd: COMMAND, command: COMMAND, meta: COMMAND, '⌘': COMMAND,
+};
+
+/**
+ * The keys of a spec as this OS shows them. On macOS the modifiers become
+ * their symbols, in the macOS order (`Cmd+Shift+Z` is ⇧ ⌘ Z); elsewhere the
+ * keys stay as written. A symbol is read as its name, as the speech engine
+ * says nothing for ⌘ ⌥ ⇧ ⌃.
+ */
+export function displayKeys(spec: string, os: OS): DisplayKey[] {
+	const keys = parseKeys(spec);
+	if (os !== 'mac') {
+		return keys.map((key) => ({ label: key, name: key.length === 1 && MODIFIERS[key] ? MODIFIERS[key].name : key }));
+	}
+	const modifiers = new Set<Modifier>();
+	const rest: DisplayKey[] = [];
+	for (const key of keys) {
+		const modifier = MODIFIERS[key.toLowerCase()];
+		if (modifier) modifiers.add(modifier);
+		else rest.push({ label: key, name: key });
+	}
+	const ordered = MAC_ORDER.filter((modifier) => modifiers.has(modifier))
+		.map(({ symbol, name }) => ({ label: symbol, name, symbol: true }));
+	return [...ordered, ...rest];
+}
+
 // A browser cannot tell whether there is a keyboard. A device whose pointers
 // cannot hover is touch-only and most likely has none; nldd-keyboard-shortcut
 // hides itself on the same media query.
@@ -100,5 +150,5 @@ export function shortcutLabel(hint: ShortcutHint): string {
 		windowsKeys: hint.shortcutWindows,
 		linuxKeys: hint.shortcutLinux,
 	}, detectOS());
-	return parseKeys(spec).join(' ');
+	return displayKeys(spec, detectOS()).map((key) => key.name).join(' ');
 }

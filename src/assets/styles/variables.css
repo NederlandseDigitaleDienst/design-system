@@ -1271,7 +1271,8 @@
 
 	--semantics-blockquotes-sm-spacing: calc(var(--primitives-font-size-200) * var(--primitives-line-height-snug));
 	--semantics-blockquotes-md-spacing: calc(var(--primitives-font-size-300) * var(--primitives-line-height-snug));
-	--semantics-blockquotes-border: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-250));
+	--semantics-blockquotes-border-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-250));
+	--semantics-blockquotes-border: var(--primitives-border-width-regular) solid var(--semantics-blockquotes-border-color);
 	--semantics-blockquotes-sm-quote-font:
 		italic
 		var(--primitives-font-weight-body-regular)

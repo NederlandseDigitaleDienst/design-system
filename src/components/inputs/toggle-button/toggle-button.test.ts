@@ -636,7 +636,7 @@ describe('nldd-toggle-button – selected-icon', () => {
 			_setOSOverride('mac');
 			el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon" icon="bold" text="Vet" shortcut="Ctrl+B" shortcut-mac="Cmd+B"></nldd-toggle-button>');
 			await waitForUpdate(el);
-			expect(el.shadowRoot!.querySelector('button')!.getAttribute('aria-label')).toBe('Vet Cmd B');
+			expect(el.shadowRoot!.querySelector('button')!.getAttribute('aria-label')).toBe('Vet Command B');
 			const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
 			expect(tooltip.getAttribute('text')).toBe('Vet');
 			expect(tooltip.getAttribute('shortcut-mac')).toBe('Cmd+B');
@@ -799,4 +799,22 @@ describe('nldd-toggle-button – description', () => {
 			help.remove();
 		});
 	}
+});
+
+describe('nldd-toggle-button – in a field', () => {
+	let wrapper: HTMLElement;
+
+	afterEach(() => cleanup(wrapper));
+
+	const radius = (host: Element) => getComputedStyle(host.shadowRoot!.querySelector('.toggle-button')!).borderRadius;
+
+	it('takes the corner a field passes on, and its own corner outside one', async () => {
+		wrapper = await fixture<HTMLElement>(
+			'<div><nldd-toggle-button size="sm" icon="microphone-on" text="Dicteer"></nldd-toggle-button><div style="--context-control-corner-radius: 5px"><nldd-toggle-button size="sm" icon="microphone-on" text="Dicteer"></nldd-toggle-button></div></div>'
+		);
+		const [own, nested] = wrapper.querySelectorAll('nldd-toggle-button');
+		await waitForUpdate(nested as HTMLElement);
+		expect(radius(nested)).toBe('5px');
+		expect(radius(own)).not.toBe('5px');
+	});
 });

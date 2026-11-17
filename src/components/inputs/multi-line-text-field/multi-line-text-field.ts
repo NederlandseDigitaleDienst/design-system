@@ -24,6 +24,8 @@
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
  *
+ * @slot button - One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` in a row under the text, inside the border: the one action of a form that is only this field (post a reply, add a note), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`.
+ *
  * @fires input - When value changes
  * @fires change - When value is committed (blur)
  */
@@ -36,6 +38,7 @@ import { multiLineTextFieldStyles } from './multi-line-text-field.styles.js';
 import { multiLineTextFieldTemplate } from './multi-line-text-field.template.js';
 import type { Keyboard, EnterKey } from '../text-field/text-field.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { FieldButtonController } from '../../../utilities/field-button-controller.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 
@@ -54,7 +57,13 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
+	/** Says you type in this control, so focus moved into it by script keeps
+	 *  its ring after a click too, as a text field does. See focusAsLastInput. */
+	static isTextEntry = true;
 
+
+	/** @internal The `button` slot: its size, its disabled state, and whether it is filled. */
+	_button = new FieldButtonController(this);
 
 	private _initialValue = '';
 

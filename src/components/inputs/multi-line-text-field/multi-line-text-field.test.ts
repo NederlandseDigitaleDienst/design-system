@@ -246,3 +246,43 @@ describe('nldd-multi-line-text-field', () => {
 		expect(area.getAttribute('enterkeyhint')).toBe('send');
 	});
 });
+
+describe('nldd-multi-line-text-field – button slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const end = () => el.shadowRoot!.querySelector<HTMLElement>('.multi-line-text-field__end')!;
+
+	it('reserves no space while the slot is empty', async () => {
+		el = await fixture('<nldd-multi-line-text-field></nldd-multi-line-text-field>');
+		expect(end().hidden).toBe(true);
+	});
+
+	it('puts the button in a row under the text, sized one step below the field', async () => {
+		el = await fixture('<nldd-multi-line-text-field><nldd-button slot="button" size="lg" text="Plaats"></nldd-button></nldd-multi-line-text-field>');
+		await waitForUpdate(el);
+		const button = el.querySelector('nldd-button')!;
+		expect(end().hidden).toBe(false);
+		const textarea = el.shadowRoot!.querySelector('textarea')!;
+		expect(end().getBoundingClientRect().top).toBeGreaterThanOrEqual(textarea.getBoundingClientRect().bottom);
+		expect(button.getAttribute('size')).toBe('sm');
+		el.setAttribute('size', 'sm');
+		await waitForUpdate(el);
+		expect(button.getAttribute('size')).toBe('xs');
+	});
+
+	it('disables the button with the field, and enables only what it disabled', async () => {
+		el = await fixture('<nldd-multi-line-text-field><nldd-button slot="button" text="Plaats"></nldd-button></nldd-multi-line-text-field>');
+		await waitForUpdate(el);
+		const button = el.querySelector('nldd-button')!;
+		el.setAttribute('disabled', '');
+		await waitForUpdate(el);
+		expect(button.hasAttribute('disabled')).toBe(true);
+		el.removeAttribute('disabled');
+		await waitForUpdate(el);
+		expect(button.hasAttribute('disabled')).toBe(false);
+	});
+});

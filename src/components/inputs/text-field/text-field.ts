@@ -24,13 +24,13 @@
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
  *
- * @slot button - One `nldd-button` or `nldd-icon-button` at the end of the field, for the one action of a form that is only this field: sign up with an email address, redeem a code. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`.
+ * @slot button - One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` at the end of the field: the one action of a form that is only this field (sign up with an email address, redeem a code), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`.
  *
  * @fires input - When input value changes
  * @fires change - When input value is committed
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { property, query, state } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
@@ -40,6 +40,7 @@ import { textFieldTemplate } from './text-field.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { FieldButtonController } from '../../../utilities/field-button-controller.js';
 
 export type InputType = 'text' | 'email' | 'tel' | 'url';
 
@@ -74,6 +75,9 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
+	/** Says you type in this control, so focus moved into it by script keeps
+	 *  its ring after a click too, as a text field does. See focusAsLastInput. */
+	static isTextEntry = true;
 
 	/** Counts for the implicit-submission rule: a single-line field where Enter
 	 *  would submit the form. See utilities/implicit-submission.ts. */
@@ -142,9 +146,8 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	@query('.text-field__input')
 	private _input!: HTMLInputElement;
 
-	/** Whether the `button` slot holds anything, so an empty one reserves no space. */
-	@state()
-	_hasButton = false;
+	/** @internal The `button` slot: its size, its disabled state, and whether it is filled. */
+	_button = new FieldButtonController(this);
 
 
 	/** Regular expression the value has to match, as the native `pattern`. */
@@ -165,8 +168,6 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('keyboard') || changed.has('type')) this._syncKeyboardConflict();
-		if (changed.has('size')) this._sizeButton();
-		if (changed.has('disabled')) this._disableButton();
 		if (changed.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {
@@ -183,49 +184,6 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	private _syncKeyboardConflict(): void {
 		const implied = KEYBOARD_IMPLIED_BY_TYPE[this.type];
 		setState(this, 'keyboard-contradicts-type', !!this.keyboard && !!implied && this.keyboard !== implied);
-	}
-
-	/** The size a slotted button gets: one step below the field, so it fits inside the border. */
-	get buttonSize(): 'sm' | 'xs' {
-		return this.size === 'sm' ? 'xs' : 'sm';
-	}
-
-	private _buttons(): Element[] {
-		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="button"]');
-		return slot?.assignedElements({ flatten: true }) ?? [];
-	}
-
-	/** Buttons whose size the field has set, so a size of their own can be told apart. */
-	private _sized = new WeakSet<Element>();
-
-	private _sizeButton(): void {
-		for (const button of this._buttons()) {
-			const own = button.getAttribute('size');
-			if (own !== null && own !== this.buttonSize && !this._sized.has(button)) setState(this, 'own-button-size-overwritten', true);
-			if (own !== this.buttonSize) button.setAttribute('size', this.buttonSize);
-			this._sized.add(button);
-		}
-	}
-
-	/** Buttons this field disabled, so it only enables what it disabled itself. */
-	private _disabledButtons = new WeakSet<Element>();
-
-	private _disableButton(): void {
-		for (const button of this._buttons()) {
-			if (this.disabled && !button.hasAttribute('disabled')) {
-				button.setAttribute('disabled', '');
-				this._disabledButtons.add(button);
-			} else if (!this.disabled && this._disabledButtons.has(button)) {
-				button.removeAttribute('disabled');
-				this._disabledButtons.delete(button);
-			}
-		}
-	}
-
-	public _handleButtonSlotChange(): void {
-		this._hasButton = this._buttons().length > 0;
-		this._sizeButton();
-		this._disableButton();
 	}
 
 	override formValue(): FormValue {

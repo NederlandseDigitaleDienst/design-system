@@ -5,6 +5,7 @@ import { EMPHASIS_MARKERS, heldEmphasisField, holdEmphasis, repairChangesFor } f
 import { enclosingNamed, inCodeBlock, isRuleLine } from './text-editor.syntax.js';
 import { isMentionLink } from './text-editor.mention.js';
 import { caretToEndBeforeFirstFocus } from './text-editor.focus-selection.js';
+import { itemsAbove } from './text-editor.list-input.js';
 
 /* Markdown editing operations for the headless command API. Each works on the
  * main selection and leaves focus on the editor, so a
@@ -373,12 +374,14 @@ export function canOutdentListItem(view: EditorView): boolean {
 	return !!match && match[1].length > 0;
 }
 
-/** Backspace at a list item's content start (right after the marker) removes the
- *  marker and its trailing space — the item's own indent is kept — so a top-level
- *  item cleanly returns to column 0 for every number, not just the first. CodeMirror's
- *  default deleteMarkupBackward instead aligns the content under the previous item,
- *  leaving stray whitespace on items 2, 3, … Returns false (so other handlers run)
- *  unless the caret sits exactly at a list marker's end outside a code block. */
+/** Backspace at a list item's content start (right after the marker) steps a
+ *  nested item one level out, next to its parent, marker and all: the way back
+ *  from the space that nested it. On the first level it removes the marker and
+ *  its trailing space, so the line leaves the list, back at column 0 for every
+ *  number, not just the first. CodeMirror's default deleteMarkupBackward instead
+ *  aligns the content under the previous item, leaving stray whitespace on items
+ *  2, 3, … Returns false (so other handlers run) unless the caret sits exactly at
+ *  a list marker's end outside a code block. */
 export function clearListMarkerBackward(view: EditorView): boolean {
 	// Consume Backspace entirely on a read-only editor. Returning false would hand it
 	// to the markdown language's deleteMarkupBackward, which (unlike @codemirror/commands)
@@ -393,10 +396,21 @@ export function clearListMarkerBackward(view: EditorView): boolean {
 	if (!marker || sel.head !== line.from + marker[0].length) return false;
 	// A leading marker in a code block is literal text, not a list.
 	if (inCodeBlock(state, line.from)) return false;
-	const from = line.from + marker[1].length; // keep the item's own indent
+	const indent = marker[1].length;
+	const parent = indent > 0 ? itemsAbove(state, line.number).find((item) => item.markerCol < indent) : undefined;
+	if (parent) {
+		const to = line.from + indent;
+		const insert = ' '.repeat(parent.markerCol);
+		view.dispatch({
+			changes: { from: line.from, to, insert },
+			selection: { anchor: sel.head - (indent - insert.length) },
+			userEvent: 'delete.backward',
+		});
+		return true;
+	}
 	view.dispatch({
-		changes: { from, to: line.from + marker[0].length },
-		selection: { anchor: from },
+		changes: { from: line.from, to: line.from + marker[0].length },
+		selection: { anchor: line.from },
 		userEvent: 'delete.backward',
 	});
 	return true;

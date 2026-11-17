@@ -411,6 +411,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-task-board, nldd-column-board"
 	},
 	{
+		"id": "keyboard-shortcut-appearance-renamed",
+		"message": "`appearance=\"box\"` and `appearance=\"simple\"` are now `keycap` and `text`, and the old values do nothing. Rename them here and on every other nldd-keyboard-shortcut.",
+		"context": "nldd-keyboard-shortcut:is([appearance=\"box\"], [appearance=\"simple\"])"
+	},
+	{
 		"id": "keyboard-shortcut-color-renamed",
 		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-keyboard-shortcut.",
 		"context": "nldd-keyboard-shortcut[color=\"inherit\"]"
@@ -629,6 +634,11 @@ export const devRules: DevRule[] = [
 			"of": "nldd-button[slot=\"actions\"]",
 			"min": 2
 		}
+	},
+	{
+		"id": "multi-line-text-field-button-size-no-effect",
+		"message": "The button in the `button` slot has a size of its own, but the field sets it: `sm` in a field of `md`, `xs` in one of `sm`. Leave the size off the button.",
+		"context": "nldd-multi-line-text-field:state(own-button-size-overwritten)"
 	},
 	{
 		"id": "multi-line-text-field-needs-name",
@@ -1073,6 +1083,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text:state(custom-size-below-floor)"
 	},
 	{
+		"id": "text-editor-command-needs-editor",
+		"message": "A control with `text-editor-command` needs to be inside nldd-text-editor or inside an element with `text-editor-for`, or it drives no editor.",
+		"context": "[text-editor-command]:not([text-editor-command=\"\"])",
+		"assert": "nldd-text-editor [text-editor-command]:not([text-editor-command=\"\"]), [text-editor-for]:not([text-editor-for=\"\"]) [text-editor-command]:not([text-editor-command=\"\"]), [text-editor-for]:not([text-editor-for=\"\"])[text-editor-command]:not([text-editor-command=\"\"])",
+		"properties": [
+			"textEditorCommand",
+			"textEditorFor"
+		]
+	},
+	{
 		"id": "text-editor-command-not-found",
 		"message": "runCommand() got a name that is not a command.",
 		"context": "nldd-text-editor:state(unknown-command)"
@@ -1435,8 +1455,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "invalid-value-keyboard-shortcut-appearance",
-		"message": "`appearance` on nldd-keyboard-shortcut takes: box, simple.",
-		"context": "nldd-keyboard-shortcut[appearance]:not([appearance=\"box\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"message": "`appearance` on nldd-keyboard-shortcut takes: keycap, text.",
+		"context": "nldd-keyboard-shortcut[appearance]:not([appearance=\"keycap\"], [appearance=\"text\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-keyboard-shortcut-color",

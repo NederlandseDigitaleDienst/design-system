@@ -44,7 +44,7 @@ export const stepBarStyles = css`
 		--_step-bar-compact-bar-segment-gap: var(--primitives-space-2);
 		--_step-bar-compact-bar-corner-radius: var(--primitives-corner-radius-full);
 		--_step-bar-track-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
-		--_step-bar-compact-bar-height: var(--primitives-space-6);
+		--_step-bar-compact-bar-height: var(--primitives-space-8);
 		--_step-bar-compact-bar-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
 		--_step-bar-compact-bar-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
 		--_step-bar-compact-bar-progress-border-color: var(--semantics-steps-progress-highlight-border-color);

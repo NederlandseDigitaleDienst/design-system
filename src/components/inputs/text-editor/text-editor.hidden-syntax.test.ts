@@ -314,16 +314,18 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		expect(line(el, 0).textContent).toBe('Titel');
 	});
 
-	it('shows every mark by default, and follows a change of the attribute', async () => {
+	it('hides the marks by default, and follows a change of the attribute', async () => {
 		el = await make('');
 		caret(el, DOC.indexOf('Slot'));
-		expect(line(el, 0).textContent).toBe('# Titel');
-		el.syntax = 'hidden';
-		await el.updateComplete;
 		expect(line(el, 0).textContent).toBe('Titel');
+		expect(el.hasAttribute('syntax')).toBe(false);
 		el.syntax = 'visible';
 		await el.updateComplete;
 		expect(line(el, 0).textContent).toBe('# Titel');
+		expect(el.getAttribute('syntax')).toBe('visible');
+		el.syntax = 'hidden';
+		await el.updateComplete;
+		expect(line(el, 0).textContent).toBe('Titel');
 	});
 
 	it('keeps the value plain markdown', async () => {

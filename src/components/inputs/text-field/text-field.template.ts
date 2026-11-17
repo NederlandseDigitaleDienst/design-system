@@ -53,9 +53,9 @@ export function textFieldTemplate(component: NLDDTextField): TemplateResult {
 			/>
 			<div class="text-field__input-fade"></div>
 			${renderValidationIcon(component)}
-			<div class="text-field__end" ?hidden=${!component._hasButton}>
+			<div class="text-field__end" ?hidden=${!component._button.hasButton}>
 				<div class="text-field__button">
-					<slot name="button" @slotchange=${component._handleButtonSlotChange}></slot>
+					<slot name="button" @slotchange=${component._button.handleSlotChange}></slot>
 				</div>
 			</div>
 		</div>
