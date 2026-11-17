@@ -141,6 +141,23 @@ describe('ModalLifecycle', () => {
 		}
 	});
 
+	it('leaves no animationend listener behind when another route ends the close', async () => {
+		vi.useFakeTimers();
+		try {
+			const el = await mount({ animatedClose: true });
+			const dialog = dialogOf(el);
+			const added = vi.spyOn(dialog, 'addEventListener');
+			const removed = vi.spyOn(dialog, 'removeEventListener');
+			el.show();
+			el.hide();
+			vi.advanceTimersByTime(1000);
+			const listener = added.mock.calls.find(([type]) => type === 'animationend')![1];
+			expect(removed).toHaveBeenCalledWith('animationend', listener);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
 	it('closes on Escape through the host\'s hide()', async () => {
 		const el = await mount();
 		el.show();

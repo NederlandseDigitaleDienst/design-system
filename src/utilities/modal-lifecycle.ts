@@ -89,9 +89,7 @@ export class ModalLifecycle implements ReactiveController {
 
 		if (this._closing) {
 			// Opened again while the close animation runs: call the close off.
-			window.clearTimeout(this._closeFallback);
-			this._closing = false;
-			dialog.classList.remove('is-closing');
+			this._settle(dialog);
 		} else {
 			if (dialog.open) return;
 			this.options.beforeOpen?.();
@@ -128,6 +126,7 @@ export class ModalLifecycle implements ReactiveController {
 			dialog.close();
 			this._emitClose();
 		};
+		this._finishClose = finish;
 		dialog.addEventListener('animationend', finish, { once: true });
 		// Reduced motion: no animation runs, so none ends.
 		requestAnimationFrame(() => {
@@ -145,8 +144,13 @@ export class ModalLifecycle implements ReactiveController {
 		dialog.focus();
 	}
 
+	/** The close in progress, for whichever of its three routes ends it first. */
+	private _finishClose: (() => void) | null = null;
+
 	private _settle(dialog: HTMLDialogElement): void {
 		window.clearTimeout(this._closeFallback);
+		if (this._finishClose) dialog.removeEventListener('animationend', this._finishClose);
+		this._finishClose = null;
 		this._closing = false;
 		dialog.classList.remove('is-closing');
 	}

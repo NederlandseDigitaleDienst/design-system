@@ -55410,7 +55410,7 @@
         },
         {
           "kind": "mixin",
-          "description": "Turns a Lit element into a form-associated custom element: it submits under\n`name`, follows a disabled fieldset, and can be read back with `FormData`.\n\nA component supplies the one thing that is its own — what it submits — by\noverriding `formValue()`. Everything around it lives here, including the\ntiming: the value is committed on every render AND has to be committed again\nfrom the handler that changed it, with `commitFormValue()`. A render is a\ntask later than the event, so a listener that serializes the form on `change`\n(htmx, or a plain `new FormData(form)`) runs before the render and would\notherwise read the value from before the change. That contract is checked for\nevery input at once in `form-value-timing.test.ts`.\n\nReset and state restore follow `static formProperties`, the properties that\nhold the value. A reset puts each back to its default, as a native input\ndoes: the attribute when there is one, else what the property held after the\nfirst render (a framework sets the property, not the attribute). A property\nthat reflects is its own attribute, so it always goes back to the first\nrender. A restore fills a single property from the saved state: a boolean is\non when a value was saved, anything else goes through the property's own\nconverter. A component overrides the callbacks only for what is its own: a\nvalue to clamp, text to clear, two properties in one state.",
+          "description": "Turns a Lit element into a form-associated custom element: it submits under\n`name`, follows a disabled fieldset, and can be read back with `FormData`.\n\nA component supplies the one thing that is its own — what it submits — by\noverriding `formValue()`. Everything around it lives here, including the\ntiming: the value is committed on every render AND has to be committed again\nfrom the handler that changed it, with `commitFormValue()`. A render is a\ntask later than the event, so a listener that serializes the form on `change`\n(htmx, or a plain `new FormData(form)`) runs before the render and would\notherwise read the value from before the change. That contract is checked for\nevery input at once in `form-value-timing.test.ts`.\n\nReset and state restore follow `static formProperties`, the properties that\nhold the value. A reset puts each back to its default, as a native input\ndoes: the attribute when there is one, else what the property held after the\nfirst render (a framework sets the property, not the attribute). A property\nthat reflects is its own attribute, so it always goes back to the first\nrender. A value set after the first render (data that loads later) counts as\nan edit, as `input.value` does natively: a reset does not go back to it, the\nattribute does. A restore fills a single property from the saved state: a\nboolean is on when a value was saved, a list takes the entries of a\n`FormData`, anything else goes through the property's own converter. A\ncomponent overrides the callbacks only for what is its own: a value to\nclamp, text to clear, two properties in one state.",
           "name": "FormAssociated",
           "members": [
             {
@@ -56789,6 +56789,16 @@
               "description": "An `[autofocus]` inside, else the dialog itself, with a ring only for the keyboard."
             },
             {
+              "kind": "field",
+              "name": "_finishClose",
+              "type": {
+                "text": "(() => void) | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The close in progress, for whichever of its three routes ends it first."
+            },
+            {
               "kind": "method",
               "name": "_settle",
               "privacy": "private",
@@ -57114,6 +57124,80 @@
                 }
               ],
               "description": "Fill the menu with copies of `items`, in this order. The originals stay\nwhere the app put them, so a copy's `select`, which never reaches\nlisteners on its original, is dispatched again on the original: every\noriginal is stamped with an id that its copy carries."
+            },
+            {
+              "kind": "method",
+              "name": "_showsCopiesOf",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "items",
+                  "type": {
+                    "text": "Element[]"
+                  }
+                }
+              ],
+              "description": "Whether the menu holds a copy of each of `items`, in this order."
+            },
+            {
+              "kind": "method",
+              "name": "_updateCopies",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Carry what changed on the originals over to their copies, in place: a\nchoice that checks an item shows its check mark while it blinks. Only the\nattributes the original has or had: the menu writes its own on an entry."
+            },
+            {
+              "kind": "field",
+              "name": "_copiedAttributes",
+              "privacy": "private",
+              "default": "new Map<string, Set<string>>()"
+            },
+            {
+              "kind": "field",
+              "name": "_pending",
+              "type": {
+                "text": "(() => void) | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_fill",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "apply",
+                  "type": {
+                    "text": "() => void"
+                  }
+                }
+              ],
+              "description": "Refill now, or once the menu has closed. New entries while it is open\nwould cut the blink of a chosen one short and skip the menu's divider\npass. The entries are made from the originals as they are by then."
+            },
+            {
+              "kind": "method",
+              "name": "_applyPending",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "method",
