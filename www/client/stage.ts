@@ -3,10 +3,11 @@
  *
  * The site is built with the components it documents, so without a frame a
  * reader cannot tell an example from the page around it. Everything live
- * stands on a stage, and nothing else does. The frame is deliberately not from
- * the system (`site-` prefix, monospace label, a dotted mat), while the canvas
- * inside it is a real surface of the system, so the example looks as it does in
- * an application.
+ * stands on a stage, and nothing else does. What marks the border is the mat:
+ * a dotted field around the canvas, the one thing here that is not from the
+ * system. Everything around it (the bar, the controls, the code) is built with
+ * the components themselves, and the canvas inside it is a real surface of the
+ * system, so the example looks as it does in an application.
  *
  * A stage owns three things the page does not: its color scheme, its surface
  * and, for an example that needs a window of its own, its width. That keeps the
@@ -14,6 +15,13 @@
  * visible the moment one of them is switched.
  */
 
+import '../../src/components/actions/button/button.js';
+import '../../src/components/content/text/text.js';
+import '../../src/components/content/title/title.js';
+import '../../src/components/inputs/segmented-control/segmented-control.js';
+import '../../src/components/layout/box/box.js';
+import '../../src/components/layout/container/container.js';
+import '../../src/components/layout/divider/divider.js';
 import { loadStory, mapArgs, mount, sourceOf, type ArgType, type LoadedStory } from './stories.js';
 import { withContext, type StoryContext } from './runtime.js';
 
@@ -39,6 +47,9 @@ const WIDTHS: [label: string, width: string][] = [
 	['Vol', '100%'],
 ];
 
+/** A choice from a handful of options is shown whole; a longer one is a list. */
+const SHOWN_WHOLE = { options: 4, characters: 28 };
+
 const kebab = (name: string) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
 function element<K extends keyof HTMLElementTagNameMap>(
@@ -50,6 +61,29 @@ function element<K extends keyof HTMLElementTagNameMap>(
 	if (className) node.className = className;
 	if (text !== undefined) node.textContent = text;
 	return node;
+}
+
+/** An element of the design system, with its attributes. */
+function nldd(tag: string, attributes: Record<string, string | boolean> = {}, children: Node[] = []): HTMLElement {
+	const node = document.createElement(`nldd-${tag}`);
+	for (const [name, value] of Object.entries(attributes)) {
+		if (typeof value === 'boolean') node.toggleAttribute(name, value);
+		else node.setAttribute(name, value);
+	}
+	node.append(...children);
+	return node;
+}
+
+/** A section of the stage below the mat, with the inset every section shares. */
+function section(className: string, children: Node[]): HTMLElement {
+	const container = nldd('container', { padding: '16', gap: '12' }, children);
+	container.classList.add(className);
+	return container;
+}
+
+/** A description from JSDoc, with its backticks as code. */
+function described(text: string): Node[] {
+	return text.split('`').map((part, index) => (index % 2 ? element('code', '', part) : new Text(part)));
 }
 
 function siteIsDark(): boolean {
@@ -81,7 +115,9 @@ export class SiteStage extends HTMLElement {
 	private canvas = element('div', 'site-stage__canvas');
 	private frame?: HTMLIFrameElement;
 	private code?: HTMLElement;
-	private events = element('ol', 'site-stage__events');
+	private box = nldd('box');
+	private events = nldd('container', { list: true, gap: '4' });
+	private eventLog = section('site-stage__events', [this.events]);
 	private dark = siteIsDark();
 	private tinted = false;
 	private started = false;
@@ -122,7 +158,7 @@ export class SiteStage extends HTMLElement {
 		this.build({ tools: true });
 		if (!this.story.framed) this.draw(this.canvas);
 		this.showSource();
-		this.buildControls();
+		void this.buildControls();
 	}
 
 	private get context(): StoryContext {
@@ -156,10 +192,10 @@ export class SiteStage extends HTMLElement {
 	}
 
 	private log(name: string, detail: unknown): void {
-		const item = element('li', '', detail ? `${name} ${detail}` : name);
+		const item = nldd('text', { size: 'sm', color: 'secondary', text: detail ? `${name} ${detail}` : name });
 		this.events.prepend(item);
 		while (this.events.children.length > 4) this.events.lastElementChild?.remove();
-		this.events.hidden = false;
+		this.eventLog.hidden = false;
 	}
 
 	private buildFrame(file: string, name: string): void {
@@ -182,63 +218,81 @@ export class SiteStage extends HTMLElement {
 		this.frame?.contentWindow?.postMessage({ site: 'stage', ...message }, location.origin);
 	}
 
-	private toggle(label: () => string, onClick: () => void): HTMLButtonElement {
-		const button = element('button', 'site-stage__tool', label());
-		button.type = 'button';
-		button.addEventListener('click', () => {
-			onClick();
-			button.textContent = label();
-		});
-		return button;
+	/** One choice between a few named options, shown whole. */
+	private choice(
+		name: string,
+		options: [label: string, value: string][],
+		selected: string,
+		onChange: (value: string) => void,
+	): HTMLElement {
+		const control = nldd(
+			'segmented-control',
+			{ size: 'sm', appearance: 'neutral-base', width: 'fit-content', 'accessible-label': name, value: selected },
+			options.map(([text, value]) => nldd('segmented-control-item', { text, value })),
+		);
+		control.addEventListener('change', (event) => onChange((event as CustomEvent<{ value: string }>).detail.value));
+		return control;
 	}
 
 	private build({ tools }: { tools: boolean }): void {
+		const name = this.getAttribute('name') ?? '';
 		const bar = element('div', 'site-stage__bar');
-		bar.append(element('span', 'site-stage__label', 'Voorbeeld'));
-		bar.append(element('span', 'site-stage__name', this.getAttribute('name') ?? ''));
-		const toolbar = element('div', 'site-stage__tools');
+		bar.append(nldd('title', { overline: 'Voorbeeld', text: name }));
+		const toolbar = nldd('container', { layout: 'wrap', gap: '8', width: 'fit-content', 'vertical-alignment': 'center' });
 		if (tools) {
 			toolbar.append(
-				this.toggle(
-					() => (this.dark ? 'Donker' : 'Licht'),
-					() => {
-						this.dark = !this.dark;
-						this.canvas.style.colorScheme = this.dark ? 'dark' : 'light';
-						this.post({ type: 'scheme', scheme: this.dark ? 'dark' : 'light' });
+				this.choice(
+					`Kleurenschema van ${name}`,
+					[
+						['Licht', 'light'],
+						['Donker', 'dark'],
+					],
+					this.dark ? 'dark' : 'light',
+					(scheme) => {
+						this.dark = scheme === 'dark';
+						this.canvas.style.colorScheme = scheme;
+						this.post({ type: 'scheme', scheme });
 					},
 				),
 			);
 			if (!this.frame) {
 				toolbar.append(
-					this.toggle(
-						() => (this.tinted ? 'Getint' : 'Basis'),
-						() => {
-							this.tinted = !this.tinted;
-							this.canvas.dataset.surface = this.tinted ? 'tinted' : 'base';
+					this.choice(
+						`Ondergrond van ${name}`,
+						[
+							['Basis', 'base'],
+							['Getint', 'tinted'],
+						],
+						'base',
+						(surface) => {
+							this.tinted = surface === 'tinted';
+							this.canvas.dataset.surface = surface;
 						},
 					),
 				);
 			} else {
-				for (const [label, width] of WIDTHS) {
-					const button = element('button', 'site-stage__tool', label);
-					button.type = 'button';
-					button.setAttribute('aria-pressed', String(width === '100%'));
-					button.addEventListener('click', () => {
-						this.frame!.style.width = width;
-						for (const other of toolbar.querySelectorAll('[aria-pressed]')) {
-							other.setAttribute('aria-pressed', String(other === button));
-						}
-					});
-					toolbar.append(button);
-				}
+				toolbar.append(
+					this.choice(
+						`Breedte van ${name}`,
+						WIDTHS.map(([label, width]) => [label, width]),
+						'100%',
+						(width) => {
+							this.frame!.style.width = width;
+						},
+					),
+				);
 			}
 			const file = this.getAttribute('file');
 			if (file) {
-				const open = element('a', 'site-stage__tool', 'Open los');
-				open.href = `${import.meta.env.BASE_URL}voorbeeld/?file=${encodeURIComponent(file)}&story=${encodeURIComponent(this.getAttribute('story') ?? '')}`;
-				open.target = '_blank';
-				open.rel = 'noopener';
-				toolbar.append(open);
+				toolbar.append(
+					nldd('button', {
+						size: 'sm',
+						appearance: 'neutral-base',
+						text: 'Open los',
+						href: `${import.meta.env.BASE_URL}voorbeeld/?file=${encodeURIComponent(file)}&story=${encodeURIComponent(this.getAttribute('story') ?? '')}`,
+						target: '_blank',
+					}),
+				);
 			}
 		}
 		bar.append(toolbar);
@@ -268,9 +322,10 @@ export class SiteStage extends HTMLElement {
 				mat.removeAttribute('aria-label');
 			}
 		}).observe(this.canvas);
-		this.events.hidden = true;
-		this.events.setAttribute('aria-label', 'Events van dit voorbeeld');
-		this.replaceChildren(bar, mat, this.events);
+		this.eventLog.hidden = true;
+		this.events.setAttribute('aria-label', `Events van ${name}`);
+		this.box.replaceChildren(bar, mat, this.eventLog);
+		this.replaceChildren(this.box);
 	}
 
 	private async setSource(code: string): Promise<void> {
@@ -287,11 +342,10 @@ export class SiteStage extends HTMLElement {
 			this.code = document.createElement('nldd-code-viewer');
 			this.code.setAttribute('language', this.story.parameters.docs?.source?.language ?? 'html');
 			this.code.setAttribute('appearance', 'simple');
-			const wrapper = element('div', 'site-stage__code');
-			wrapper.append(this.code);
+			this.code.setAttribute('max-height', '420px');
 			// The code closes the stage, below the controls, whichever of the two
 			// arrives first: a framed example reports its markup later.
-			this.append(wrapper);
+			this.box.append(nldd('divider'), section('site-stage__code', [this.code]));
 		}
 		this.code.textContent = text;
 	}
@@ -331,7 +385,7 @@ export class SiteStage extends HTMLElement {
 		this.showSource();
 	}
 
-	private buildControls(): void {
+	private async buildControls(): Promise<void> {
 		const story = this.story;
 		if (!story || !this.hasAttribute('primary') || story.parameters.controls?.disable) return;
 		const attributes = this.controls?.attributes ?? [];
@@ -340,35 +394,47 @@ export class SiteStage extends HTMLElement {
 		// What the story file says about an attribute, by attribute name: a Dutch
 		// description, and the arg that feeds it. Everything in argTypes that is
 		// not an attribute (the text in a slot, the number of items) is content.
-		const described = new Map<string, { key: string; argType: ArgType }>();
+		const known = new Map<string, { key: string; argType: ArgType }>();
 		for (const [key, argType] of Object.entries(story.argTypes)) {
-			described.set(argType.name ?? kebab(key), { key, argType });
+			known.set(argType.name ?? kebab(key), { key, argType });
 		}
 		const names = new Set(attributes.map((a) => a.name));
-		const content = [...described].filter(
+		const content = [...known].filter(
 			([name, { argType }]) => !names.has(name) && argType.control !== false && argType.control !== 'none',
 		);
 		if (!attributes.length && !content.length) return;
 
+		// Only the first example of a page has controls, so only that one loads
+		// the form components.
+		await Promise.all([
+			import('../../src/components/content/accordion/accordion.js'),
+			import('../../src/components/forms/form/form.js'),
+			import('../../src/components/forms/form-field/form-field.js'),
+			import('../../src/components/inputs/switch/switch.js'),
+			import('../../src/components/inputs/dropdown/dropdown.js'),
+			import('../../src/components/inputs/number-field/number-field.js'),
+			import('../../src/components/inputs/text-field/text-field.js'),
+			import('../../src/components/inputs/combo-box/combo-box.js'),
+			import('../../src/components/actions/menu/menu.js'),
+			import('../../src/components/actions/menu/menu-item.js'),
+		]);
+
 		// Open from the start: changing an attribute and watching the example
 		// follow is what the first example of a page is for.
-		const panel = element('details', 'site-stage__controls');
-		panel.open = true;
-		panel.append(element('summary', '', `Pas dit voorbeeld aan (${attributes.length + content.length} attributen)`));
-		const grid = element('div', 'site-stage__grid');
+		const form = nldd('form', { 'label-alignment': 'left', novalidate: true });
+		form.addEventListener('submit', (event) => event.preventDefault());
 
 		const row = (name: string, input: HTMLElement, description: string) => {
-			const label = element('label', 'site-stage__control');
-			label.append(element('code', '', name), input);
-			if (description) label.append(element('span', 'site-stage__hint', description));
-			grid.append(label);
+			const field = nldd('form-field', { label: name }, [input]);
+			if (description) field.append(nldd('form-field-help-text', {}, described(description)));
+			form.append(field);
 		};
 
 		for (const attribute of attributes) {
-			const known = described.get(attribute.name);
+			const fromStory = known.get(attribute.name);
 			// An attribute the story feeds from an arg follows that arg, so the
 			// two cannot disagree; every other attribute is set on the element.
-			const fromArg = known && known.key in story.args ? known.key : undefined;
+			const fromArg = fromStory && fromStory.key in story.args ? fromStory.key : undefined;
 			const start = fromArg
 				? story.args[fromArg]
 				: attribute.kind === 'boolean'
@@ -380,8 +446,8 @@ export class SiteStage extends HTMLElement {
 			};
 			row(
 				attribute.name,
-				this.input(attribute, start, change, known?.argType),
-				known?.argType.description ?? attribute.description,
+				this.input(attribute, start, change, fromStory?.argType),
+				fromStory?.argType.description ?? attribute.description,
 			);
 		}
 		for (const [name, { key, argType }] of content) {
@@ -396,10 +462,16 @@ export class SiteStage extends HTMLElement {
 			};
 			row(name, this.input(control, story.args[key], (value) => this.setArg(key, value), argType), control.description);
 		}
-		panel.append(grid);
-		const code = this.querySelector(':scope > .site-stage__code');
-		if (code) code.before(panel);
-		else this.append(panel);
+		// Folded in place although it is a form: the example has to stay in view
+		// while an attribute changes, which a sheet over the page would not allow.
+		const panel = section('site-stage__controls', [
+			nldd('accordion', {}, [
+				nldd('accordion-item', { text: `Pas dit voorbeeld aan (${attributes.length + content.length} attributen)`, open: true }, [form]),
+			]),
+		]);
+		const code = this.box.querySelector(':scope > .site-stage__code');
+		if (code) code.previousElementSibling!.before(nldd('divider'), panel);
+		else this.box.append(nldd('divider'), panel);
 	}
 
 	private input(
@@ -409,39 +481,56 @@ export class SiteStage extends HTMLElement {
 		argType?: ArgType,
 	): HTMLElement {
 		if (control.kind === 'boolean') {
-			const input = element('input', '');
-			input.type = 'checkbox';
-			input.checked = start === true || start === 'true';
-			input.addEventListener('change', () => change(input.checked));
+			const input = nldd('switch', { checked: start === true || start === 'true' });
+			input.addEventListener('change', (event) => change((event as CustomEvent<{ checked: boolean }>).detail.checked));
 			return input;
 		}
+		const text = start === undefined || start === null ? '' : String(start);
 		// The story's own options win when it has them: they carry the labels a
 		// reader knows from the story, such as "(geen)" for an empty value.
 		const values = argType?.options?.map(String) ?? control.values;
 		if (control.kind === 'select' && values && (control.strict || argType?.options)) {
-			const select = element('select', '');
-			if (!argType?.options) select.append(new Option('(standaard)', ''));
-			for (const value of values) select.append(new Option(value, value));
+			const options: [label: string, value: string][] = values.map((value) => [value, value]);
+			if (!argType?.options) options.unshift(['(standaard)', '']);
 			// An arg holds the value, the list shows the label: find the label
 			// whose mapping gives this value, the way the story expects it back.
 			const label = Object.entries(argType?.mapping ?? {}).find(([, value]) => value === start)?.[0];
-			select.value = label ?? (start === undefined || start === null ? '' : String(start));
+			const selected = label ?? text;
+			const fits =
+				options.length <= SHOWN_WHOLE.options &&
+				options.reduce((sum, [name]) => sum + name.length, 0) <= SHOWN_WHOLE.characters &&
+				options.every(([, value]) => value !== '');
+			if (fits) return this.choice(control.name, options, selected, change);
+			const select = element('select', '');
+			for (const [name, value] of options) select.append(new Option(name, value));
+			select.value = selected;
 			select.addEventListener('change', () => change(select.value));
-			return select;
+			return nldd('dropdown', {}, [select]);
 		}
-		const input = element('input', '');
-		input.type = control.kind === 'number' ? 'number' : 'text';
-		input.value = start === undefined || start === null ? '' : String(start);
-		if (control.default !== undefined && control.default !== '') input.placeholder = control.default;
+		if (control.kind === 'number') {
+			const input = nldd('number-field', text === '' ? {} : { value: text });
+			input.addEventListener('input', (event) => {
+				const { value } = (event as CustomEvent<{ value: number | null }>).detail;
+				change(value === null ? '' : String(value));
+			});
+			return input;
+		}
+		const placeholder: Record<string, string> = control.default ? { placeholder: control.default } : {};
 		if (values) {
-			const list = element('datalist', '');
-			list.id = `site-values-${control.name}-${Math.random().toString(36).slice(2, 8)}`;
-			for (const value of values) list.append(new Option(value, value));
-			input.setAttribute('list', list.id);
-			// The input is placed by the caller; the list goes next to it after that.
-			queueMicrotask(() => input.after(list));
+			const input = nldd('combo-box', { value: text, text, 'allow-custom': true, ...placeholder }, [
+				nldd(
+					'menu',
+					{},
+					values.map((value) => nldd('menu-item', { text: value, value })),
+				),
+			]);
+			for (const type of ['input', 'change']) {
+				input.addEventListener(type, (event) => change((event as CustomEvent<{ value: string }>).detail.value));
+			}
+			return input;
 		}
-		input.addEventListener('input', () => change(input.value));
+		const input = nldd('text-field', { value: text, ...placeholder });
+		input.addEventListener('input', () => change((input as HTMLElement & { value: string }).value));
 		return input;
 	}
 }

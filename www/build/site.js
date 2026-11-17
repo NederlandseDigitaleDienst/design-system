@@ -14,7 +14,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 import { storybookId } from '../../scripts/lib/skill-patterns.js';
-import { rulesOfPattern } from '../../lint/rule-index.js';
+import { rulesAboutTag, rulesOfPattern } from '../../lint/rule-index.js';
 import { loadData } from '../../lint/linter.js';
 import { collectComponents, collectPatterns, parseStoryFile, readFacts, repoRoot } from './sources.js';
 import { codeViewer, escapeHtml, renderMarkdown } from './markdown.js';
@@ -42,6 +42,7 @@ const PROSE = [
 	{ path: '/richtlijnen/', file: 'src/docs/design-guidelines.md', description: 'De ontwerpkeuzes van het systeem en de redenen erachter.' },
 	{ path: '/themas/', file: 'src/docs/themes.md', stories: 'src/docs/themes.stories.ts', examples: 'Elk thema op een pagina vol componenten', description: 'De accentkleur van je dienst, in licht en donker.' },
 	{ path: '/iconen/', file: 'src/docs/icons.md', stories: 'src/components/content/icon/icon-gallery.stories.ts', description: 'Alle iconen, met hun aliassen.' },
+	{ path: '/linter/', file: 'www/content/linter.md', rules: true, description: 'Controleer je code met nldd lint, en lees elke regel.' },
 	{ path: '/breakpoints/', file: 'src/docs/breakpoints.md', description: 'Bij welke breedtes de layout verandert.' },
 	{ path: '/vertalingen/', file: 'src/docs/translations.md', description: 'Een interface in een andere taal dan Nederlands.' },
 	{ path: '/toegankelijkheid/', file: 'docs/ACCESSIBILITY.md', description: 'Wat het systeem voor toegankelijkheid regelt, en wat jij nog doet.' },
@@ -95,6 +96,7 @@ const SECTIONS = [
 	['Patronen', '/patronen/'],
 	['Iconen', '/iconen/'],
 	['Richtlijnen', '/richtlijnen/'],
+	['Linter', '/linter/'],
 ];
 
 /**
@@ -234,6 +236,10 @@ function footer(title, trail, facts) {
 							text="Werken met een AI-assistent"
 						></nldd-link>
 						<nldd-link
+							href="/linter/"
+							text="Linter"
+						></nldd-link>
+						<nldd-link
 							href="/breakpoints/"
 							text="Breakpoints"
 						></nldd-link>
@@ -267,7 +273,6 @@ function footer(title, trail, facts) {
 					</nldd-link-group>
 				</nldd-container>
 			</nldd-container>
-			<site-built-with pages="${facts.slugs}"></site-built-with>
 			<nldd-page-footer-legal-bar slot="legal-bar">
 				<nldd-page-footer-legal-bar-item
 					slot="start"
@@ -666,7 +671,7 @@ ${body}
 		</nldd-sidebar-section>`;
 }
 
-function componentPage(component, components, facts) {
+function componentPage(component, components, facts, lintRules) {
 	const visible = component.stories.filter((s) => !s.hidden);
 	const controls = controlsOf(component);
 	const description = component.description ? renderMarkdown(component.description, { href: identity }).html : '';
@@ -683,6 +688,7 @@ function componentPage(component, components, facts) {
 		})
 		.join('\n\t\t\t\t');
 	const api = component.elements.map(elementApi).filter(Boolean).join('\n');
+	const rules = [...new Set(component.elements.flatMap((element) => rulesAboutTag(lintRules, element.tagName)))];
 	const status = component.status
 		? `\n\t\t\t\t<nldd-tag slot="end" text="${STATUS[component.status] ?? component.status}"></nldd-tag>`
 		: '';
@@ -698,7 +704,8 @@ function componentPage(component, components, facts) {
 				${description}
 				${source}
 				${stories}
-				${api ? `<nldd-title size="display-4" id="api">\n\t\t\t\t\t<h2>API</h2>\n\t\t\t\t</nldd-title>\n${api}` : ''}`,
+				${api ? `<nldd-title size="display-4" id="api">\n\t\t\t\t\t<h2>API</h2>\n\t\t\t\t</nldd-title>\n${api}` : ''}
+				${rulesSection(rules)}`,
 	});
 }
 
@@ -715,20 +722,53 @@ function patternsOverview(patterns) {
 ${sections.join('\n')}`;
 }
 
-/** The section "Regels" of a pattern: the lint rules that point at it with `see`. */
+const withCode = (message) => escapeHtml(message).replace(/`([^`]+)`/g, '<code>$1</code>');
+
+/** A list of lint rules, each with its id as an anchor when it is the place a rule lives. */
+function ruleList(rules, { anchors = false } = {}) {
+	const item = (rule) =>
+		`<li${anchors ? ` id="${rule.id}"` : ''}><code>${rule.id}</code>${rule.severity === 'hint' && anchors ? ' (hint)' : ''}: ${withCode(rule.message)}</li>`;
+	return `<ul>\n${rules.map(item).join('\n')}\n</ul>`;
+}
+
+/**
+ * The section "Regels" of a pattern or a component: the lint rules that point
+ * at the pattern with `see`, or that name the component.
+ */
 function rulesSection(rules) {
 	if (!rules.length) return '';
-	const withCode = (message) => escapeHtml(message).replace(/`([^`]+)`/g, '<code>$1</code>');
-	const list = (items) =>
-		`<ul>\n${items.map((rule) => `<li><code>${rule.id}</code>: ${withCode(rule.message)}</li>`).join('\n')}\n</ul>`;
 	const required = rules.filter((rule) => rule.severity !== 'hint');
 	const hints = rules.filter((rule) => rule.severity === 'hint');
 	return `
 <nldd-rich-text>
 <h2 id="regels">Regels</h2>
-${required.length ? `<p><code>nldd lint</code> controleert dit:</p>\n${list(required)}` : ''}
-${hints.length ? `<p>Hints: zo is het bedoeld. Die laten niets falen.</p>\n${list(hints)}` : ''}
+${required.length ? `<p><code>nldd lint</code> controleert dit:</p>\n${ruleList(required)}` : ''}
+${hints.length ? `<p>Hints: zo is het bedoeld. Die laten niets falen.</p>\n${ruleList(hints)}` : ''}
+<p><a href="/linter/">Over de linter</a></p>
 </nldd-rich-text>`;
+}
+
+/** The question each group of rules answers, in the order the linter asks them. */
+const RULE_GROUPS = [
+	['api', 'Bestaat dit, en heeft het effect?'],
+	['a11y', 'Mist hulptechnologie iets?'],
+	['copy', 'Klopt de tekst?'],
+	['structure', 'Klopt de samenstelling?'],
+	['pattern', 'Is er een bedoelde manier?'],
+	['pure', 'Komt alles uit het designsysteem?'],
+];
+
+/** Every rule of the linter, per group, for the page about the linter. */
+function allRules(rules) {
+	const headings = [];
+	const html = RULE_GROUPS.map(([group, question]) => {
+		const inGroup = rules.filter((rule) => rule.group === group);
+		if (!inGroup.length) return '';
+		const id = `regels-${group}`;
+		headings.push({ id, text: `Regels: ${group}` });
+		return `<h2 id="${id}">Regels: <code>${group}</code></h2>\n<p>${question} ${inGroup.length} regels.</p>\n${ruleList(inGroup, { anchors: true })}`;
+	}).join('\n');
+	return { html: `\n<nldd-rich-text>\n${html}\n</nldd-rich-text>`, headings };
 }
 
 /**
@@ -739,7 +779,7 @@ ${hints.length ? `<p>Hints: zo is het bedoeld. Die laten niets falen.</p>\n${lis
 export function buildPages({ base = '/' } = {}) {
 	const components = collectComponents();
 	const patterns = collectPatterns();
-	const facts = { ...readFacts(), slugs: components.map((c) => c.slug).join(' ') };
+	const facts = readFacts();
 	const lintRules = loadData().rules;
 	const pages = {};
 	const HOME = ['Home', '/'];
@@ -750,7 +790,7 @@ export function buildPages({ base = '/' } = {}) {
 	pages['index.html'] = withBase(homePage(), base);
 
 	let stories = 0;
-	for (const { path, file, title, description, stories: storiesPath, examples } of PROSE) {
+	for (const { path, file, title, description, stories: storiesPath, examples, rules } of PROSE) {
 		// A page written for the site can insert what is kept in one place, such
 		// as the list of skills. A file that is shown as it is in the repository
 		// has links relative to itself.
@@ -763,7 +803,11 @@ export function buildPages({ base = '/' } = {}) {
 		const storyFile = storiesPath ? parseStoryFile(resolve(repoRoot, storiesPath)) : undefined;
 		stories += storyFile?.stories.length ?? 0;
 		const rendered = renderProse(source, storyFile);
-		const extra = examples
+		const ruleIndex = rules ? allRules(lintRules) : undefined;
+		if (ruleIndex) rendered.headings.push(...ruleIndex.headings);
+		const extra = ruleIndex
+			? ruleIndex.html
+			: examples
 			? `\n<nldd-rich-text><h2 id="voorbeelden">${escapeHtml(examples)}</h2></nldd-rich-text>\n${storyFile.stories
 					.map(
 						(story) =>
@@ -792,7 +836,7 @@ export function buildPages({ base = '/' } = {}) {
 			`/componenten/${component.slug}/`,
 			component.name,
 			firstSentence(component.description || component.elements[0]?.description || component.name),
-			componentPage(component, components, facts),
+			componentPage(component, components, facts, lintRules),
 			[HOME, ['Componenten', '/componenten/']],
 		);
 	}

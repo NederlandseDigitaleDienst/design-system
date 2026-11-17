@@ -8,7 +8,6 @@
 import './autoload.js';
 import { chooseTheme, chosenTheme, showTheme } from './theme.js';
 import './stage.js';
-import './built-with.js';
 
 /** The search field above a set of cards hides the cards that do not match. */
 function wireFilter(): void {
