@@ -47,6 +47,9 @@ const WIDTHS: [label: string, width: string][] = [
 	['Vol', '100%'],
 ];
 
+/** The controls start open while they leave the examples below them within reach. */
+const OPEN_UP_TO = 8;
+
 /** A choice from a handful of options is shown whole; a longer one is a list. */
 const SHOWN_WHOLE = { options: 4, characters: 28 };
 
@@ -473,8 +476,6 @@ export class SiteStage extends HTMLElement {
 			import('../../src/components/actions/menu/menu-item.js'),
 		]);
 
-		// Open from the start: changing an attribute and watching the example
-		// follow is what the first example of a page is for.
 		const form = nldd('form', { 'label-alignment': 'left', novalidate: true });
 		form.addEventListener('submit', (event) => event.preventDefault());
 
@@ -521,11 +522,12 @@ export class SiteStage extends HTMLElement {
 			};
 			row(name, this.input(control, story.args[key], (value) => this.setArg(key, value), argType), control.description);
 		}
+		const count = attributes.length + content.length;
 		// Folded in place although it is a form: the example has to stay in view
 		// while an attribute changes, which a sheet over the page would not allow.
 		const panel = section('site-stage__controls', [
 			nldd('accordion', {}, [
-				nldd('accordion-item', { text: `Pas dit voorbeeld aan (${attributes.length + content.length} attributen)`, open: true }, [form]),
+				nldd('accordion-item', { text: `Pas dit voorbeeld aan (${count} attributen)`, open: count <= OPEN_UP_TO }, [form]),
 			]),
 		]);
 		const code = this.box.querySelector(':scope > .site-stage__code');

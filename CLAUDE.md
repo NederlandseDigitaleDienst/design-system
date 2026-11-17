@@ -163,7 +163,8 @@ De landingspagina (`www/index.html`, met `www/main.ts` en `www/styles.css`) is m
 | `/componenten/<naam>/` | `<naam>.stories.ts` voor de voorbeelden, `custom-elements.json` voor de API-tabel |
 | `/patronen/<slug>/` | `src/patterns/<slug>/`, met de lintregels die naar het patroon wijzen eronder |
 | `/richtlijnen/`, `/themas/`, `/iconen/`, `/vertalingen/`, `/breakpoints/` | `src/docs/*.md` |
-| `/toegankelijkheid/`, `/changelog/` | `docs/ACCESSIBILITY.md`, `CHANGELOG.md` |
+| `/toegankelijkheid/` | `docs/ACCESSIBILITY.md` |
+| `/changelog/`, `/changelog/<versie>/` | `CHANGELOG.md`, een pagina per versie |
 | `/aan-de-slag/` | `www/content/*.md` |
 
 Een component heeft dus een pagina omdat het een stories-bestand heeft; niemand schrijft een componentpagina. Elke pagina heeft een menubalk met de vaste secties (`SECTIONS` in `site.js`), met een onderdrukking van de hint `top-navigation-bar-no-menu-row` en de reden erbij: op een naslagsite ga je van een component naar een patroon en terug. Achter de landingspagina heeft de balk ook een menu Thema: de keuze geldt voor elke pagina en elk voorbeeld, zodat je een component in de kleur van je eigen organisatie ziet. Elke pagina heeft breadcrumbs in de footer.

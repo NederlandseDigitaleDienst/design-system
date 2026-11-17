@@ -46,7 +46,6 @@ const PROSE = [
 	{ path: '/breakpoints/', file: 'src/docs/breakpoints.md', description: 'Bij welke breedtes de layout verandert.' },
 	{ path: '/vertalingen/', file: 'src/docs/translations.md', description: 'Een interface in een andere taal dan Nederlands.' },
 	{ path: '/toegankelijkheid/', file: 'docs/ACCESSIBILITY.md', description: 'Wat het systeem voor toegankelijkheid regelt, en wat jij nog doet.' },
-	{ path: '/changelog/', file: 'CHANGELOG.md', title: 'Changelog', description: 'Wat er per versie is veranderd.' },
 ];
 
 /**
@@ -556,15 +555,22 @@ function componentsOverview(components) {
 ${sections.join('\n')}`;
 }
 
-function apiTable(heading, columns, rows) {
-	if (!rows.length) return '';
+/**
+ * One part of the API of an element, as a definition list: the name beside
+ * what it does, and under each other on a narrow screen. A table with four
+ * columns leaves the description a sliver, and on a phone none at all.
+ */
+function apiList(heading, entries) {
+	if (!entries.length) return '';
 	return `<h4>${heading}</h4>
-<table>
-<thead><tr>${columns.map((c) => `<th>${c}</th>`).join('')}</tr></thead>
-<tbody>
-${rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('\n')}
-</tbody>
-</table>`;
+<dl>
+${entries
+	.map(
+		({ name, text, facts = [] }) =>
+			`<dt>${name}</dt>\n<dd>${text || '&nbsp;'}</dd>${facts.length ? `\n<dd>${facts.join(' ')}</dd>` : ''}`,
+	)
+	.join('\n')}
+</dl>`;
 }
 
 const inlineCode = (text) => `<code>${escapeHtml(text)}</code>`;
@@ -585,23 +591,24 @@ function describe(text = '') {
 }
 
 function elementApi(element) {
-	const attributes = (element.attributes ?? []).map((a) => [
-		inlineCode(a.name),
-		a.type?.text ? typeCode(a.type.text) : '',
-		a.default !== undefined ? inlineCode(a.default) : '',
-		describe(a.description),
-	]);
-	const slots = (element.slots ?? []).map((s) => [s.name ? inlineCode(s.name) : '(standaard)', describe(s.description)]);
-	const events = (element.events ?? []).map((e) => [inlineCode(e.name), describe(e.description)]);
-	const tables = [
-		apiTable('Attributen', ['Naam', 'Type', 'Standaard', 'Beschrijving'], attributes),
-		apiTable('Slots', ['Naam', 'Beschrijving'], slots),
-		apiTable('Events', ['Naam', 'Beschrijving'], events),
-	].filter(Boolean);
-	if (!tables.length) return '';
+	const attributes = (element.attributes ?? []).map((a) => ({
+		name: inlineCode(a.name),
+		text: describe(a.description),
+		facts: [
+			a.type?.text ? `Type: ${typeCode(a.type.text)}.` : '',
+			a.default !== undefined && a.default !== "''" ? `Standaard: ${inlineCode(a.default)}.` : '',
+		].filter(Boolean),
+	}));
+	const slots = (element.slots ?? []).map((s) => ({
+		name: s.name ? inlineCode(s.name) : '(standaard)',
+		text: describe(s.description),
+	}));
+	const events = (element.events ?? []).map((e) => ({ name: inlineCode(e.name), text: describe(e.description) }));
+	const lists = [apiList('Attributen', attributes), apiList('Slots', slots), apiList('Events', events)].filter(Boolean);
+	if (!lists.length) return '';
 	return `<nldd-rich-text data-site-api>
 <h3 id="${element.tagName}"><code>&lt;${element.tagName}&gt;</code></h3>
-${tables.join('\n')}
+${lists.join('\n')}
 </nldd-rich-text>`;
 }
 
@@ -702,10 +709,56 @@ function componentPage(component, components, facts, lintRules) {
 		nav: siblingNav(groups, component, (c) => `/componenten/${c.slug}/`),
 		body: `				${component.tag ? `<nldd-rich-text><p><code>&lt;${component.tag}&gt;</code></p></nldd-rich-text>` : ''}
 				${description}
-				${source}
+				<nldd-container
+					layout="wrap"
+					gap="16"
+				>
+					<nldd-link
+						href="#${visible[0] ? visible[0].id.split('--')[1] : 'api'}"
+						text="Voorbeelden (${visible.length})"
+					></nldd-link>
+					${api ? '<nldd-link\n\t\t\t\t\t\thref="#api"\n\t\t\t\t\t\ttext="API"\n\t\t\t\t\t></nldd-link>' : ''}
+					${rules.length ? `<nldd-link\n\t\t\t\t\t\thref="#regels"\n\t\t\t\t\t\ttext="Regels (${rules.length})"\n\t\t\t\t\t></nldd-link>` : ''}
+					${source}
+				</nldd-container>
 				${stories}
 				${api ? `<nldd-title size="display-4" id="api">\n\t\t\t\t\t<h2>API</h2>\n\t\t\t\t</nldd-title>\n${api}` : ''}
 				${rulesSection(rules)}`,
+	});
+}
+
+/**
+ * The changelog, cut into its versions. What stands above the first version
+ * heading is the release that is coming: the introduction of the file, then
+ * the entries that wait for a version number.
+ */
+function changelogEntries(markdown) {
+	const [head, ...blocks] = markdown.split(/^(?=## )/m);
+	const coming = head.slice(head.search(/^### /m) === -1 ? head.length : head.search(/^### /m)).trim();
+	const entries = blocks.map((block) => {
+		const [heading, ...body] = block.split('\n');
+		const version = heading.match(/\d+\.\d+\.\d+/)?.[0] ?? heading.replace(/^## /, '');
+		return {
+			name: version,
+			slug: version,
+			date: heading.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? '',
+			group: version.split('.').slice(0, 2).join('.'),
+			body: body.join('\n').trim(),
+		};
+	});
+	if (coming) entries.unshift({ name: 'Komende versie', slug: '', date: '', group: '', body: coming });
+	return entries;
+}
+
+const changelogPath = (entry, entries) => (entry === entries[0] ? '/changelog/' : `/changelog/${entry.slug}/`);
+
+function changelogPage(entry, entries) {
+	const rendered = renderProse(absoluteLinks(entry.body || 'Geen beschrijving bij deze versie.', 'CHANGELOG.md'));
+	return siblingPage({
+		label: 'Versies',
+		title: pageTitle(entry.name, { overline: entry.date ? `Changelog, ${entry.date}` : 'Changelog' }),
+		nav: siblingNav(groupBy(entries, 'group'), entry, (other) => changelogPath(other, entries)),
+		body: rendered.html,
 	});
 }
 
@@ -750,18 +803,34 @@ function ruleList(rules, { label, anchors = false, link = true, appearance = 'bo
 	const rows = sorted.map((rule) => {
 		const severity = SEVERITIES[rule.severity] ?? SEVERITIES.warn;
 		const href = link ? seePath(rule.see) : undefined;
-		return `<nldd-list-item${anchors ? ` id="${rule.id}"` : ''}${href ? ` href="${href}"` : ''}>
-	<nldd-text-cell
-		text="${rule.id}"
-		supporting-text="${bold(rule.message)}"
-	></nldd-text-cell>
-	<nldd-spacer-cell size="12"></nldd-spacer-cell>
-	<nldd-cell>
-		<nldd-tag
+		const tag = `<nldd-tag
 			size="sm"
 			color="${severity.color}"
 			text="${severity.label}"
-		></nldd-tag>
+		></nldd-tag>`;
+		// On a narrow screen the level stands with the name, as in the list
+		// pattern: beside the text it would leave the text half the row.
+		return `<nldd-list-item${anchors ? ` id="${rule.id}"` : ''}${href ? ` href="${href}"` : ''}>
+	<nldd-text-cell
+		hide-below="md"
+		text="${rule.id}"
+		supporting-text="${bold(rule.message)}"
+	></nldd-text-cell>
+	<nldd-text-cell
+		hide-above="sm"
+		supporting-text="${bold(rule.message)}"
+	>
+		<p>
+			${rule.id}
+			${tag}
+		</p>
+	</nldd-text-cell>
+	<nldd-spacer-cell
+		size="12"
+		hide-below="md"
+	></nldd-spacer-cell>
+	<nldd-cell hide-below="md">
+		${tag}
 	</nldd-cell>${
 		href
 			? `
@@ -773,8 +842,14 @@ function ruleList(rules, { label, anchors = false, link = true, appearance = 'bo
 	></nldd-icon-cell>`
 			: // A row without a link keeps the room of the chevron, so the levels line up.
 				`
-	<nldd-spacer-cell size="12"></nldd-spacer-cell>
-	<nldd-spacer-cell size="20"></nldd-spacer-cell>`
+	<nldd-spacer-cell
+		size="12"
+		hide-below="md"
+	></nldd-spacer-cell>
+	<nldd-spacer-cell
+		size="20"
+		hide-below="md"
+	></nldd-spacer-cell>`
 	}
 </nldd-list-item>`;
 	});
@@ -864,6 +939,18 @@ export function buildPages({ base = '/' } = {}) {
 	pages['index.html'] = withBase(homePage(), base);
 
 	let stories = 0;
+	const versions = changelogEntries(read('CHANGELOG.md'));
+	for (const entry of versions) {
+		const path = changelogPath(entry, versions);
+		page(
+			path,
+			path === '/changelog/' ? 'Changelog' : `Changelog ${entry.name}`,
+			path === '/changelog/' ? 'Wat er per versie is veranderd.' : `Wat er in versie ${entry.name} is veranderd.`,
+			changelogPage(entry, versions),
+			path === '/changelog/' ? [HOME] : [HOME, ['Changelog', '/changelog/']],
+		);
+	}
+
 	for (const { path, file, title, description, stories: storiesPath, examples, rules } of PROSE) {
 		// A page written for the site can insert what is kept in one place, such
 		// as the list of skills. A file that is shown as it is in the repository

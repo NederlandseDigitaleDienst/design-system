@@ -41,6 +41,13 @@ export function codeViewer(code, language = '', { wrap = false } = {}) {
 
 const BREAK = '\u0000break\u0000';
 
+const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" };
+
+/** The text of what the Markdown renderer escaped. */
+function decodeEntities(html) {
+	return html.replace(/&(?:amp|lt|gt|quot|#39);/g, (entity) => ENTITIES[entity]);
+}
+
 /**
  * @param {string} markdown
  * @param {object} options
@@ -60,7 +67,8 @@ export function renderMarkdown(markdown, { href, example }) {
 				// The first h1 is the title of the page, which the page shows in
 				// its own header.
 				if (depth === 1 && !title) {
-					title = text;
+					// The title is plain text: whoever shows it escapes it.
+					title = decodeEntities(text);
 					return '';
 				}
 				const id = headingId(text);
