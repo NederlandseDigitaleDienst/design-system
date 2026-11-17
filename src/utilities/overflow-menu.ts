@@ -75,6 +75,10 @@ export class OverflowMenu implements ReactiveController {
 		this._menu?.remove();
 		this._menu = null;
 		this.open = false;
+		// The bar fills a new menu when it connects again; these point into the old one.
+		this._pending = null;
+		this._originals.clear();
+		this._copiedAttributes.clear();
 	}
 
 	hide(): void {
