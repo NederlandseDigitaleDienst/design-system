@@ -91,7 +91,8 @@ export class ModalOverlay implements ReactiveController {
 		// Also when it reopens during the close: what it reads may have changed since.
 		this.options.beforeOpen?.();
 		if (this._closing) {
-			// Opened again while the close animation runs: call the close off.
+			// Opened again while the close animation runs: call the close off. The
+			// dialog stayed modal, so focus is still inside it, where it was.
 			this._settle(dialog);
 		} else {
 			this._focusReturn.remember();
