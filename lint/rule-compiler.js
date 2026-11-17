@@ -16,6 +16,20 @@ import { OPT_IN_GROUPS } from './rule-data.js';
 import { isDesignSystemCss } from './css.js';
 import { BOUND } from './tree.js';
 
+/**
+ * A member of a tag class that counts only in part. A hidden input has no box
+ * and no place in the accessibility tree, so it is no form input, though its
+ * tag is (#421).
+ */
+const CLASS_EXCEPTIONS = {
+	'form-input': { input: { attribute: 'type', value: 'hidden' } },
+};
+
+function excepted(className, node) {
+	const exception = CLASS_EXCEPTIONS[className]?.[node.name];
+	return Boolean(exception) && node.attrs.get(exception.attribute) === exception.value;
+}
+
 /** Pseudo-classes of CSS itself, which mean the same everywhere. */
 const CSS_PSEUDOS = new Set(['is', 'not', 'has', 'where', 'matches']);
 
@@ -151,7 +165,7 @@ export function sourcePseudos({ classes = {}, tags = {}, designSystemCss = {} } 
 	const shared = Object.fromEntries(
 		Object.entries(classes).map(([name, members]) => {
 			const set = new Set(members);
-			return [name, (node) => set.has(node.name)];
+			return [name, (node) => set.has(node.name) && !excepted(name, node)];
 		}),
 	);
 	const context = { tags, designSystemCss, isInput: shared['form-input'] ?? (() => false) };
@@ -197,7 +211,13 @@ function compileList(list, classes, selector) {
 function compileToken(token, classes, selector) {
 	if (token.type !== 'pseudo') return token;
 	if (classes[token.name]) {
-		return { type: 'pseudo', name: 'is', data: classes[token.name].map((name) => [{ type: 'tag', name, namespace: null }]) };
+		return { type: 'pseudo', name: 'is', data: classes[token.name].map((name) => {
+			const tag = { type: 'tag', name, namespace: null };
+			const exception = CLASS_EXCEPTIONS[token.name]?.[name];
+			if (!exception) return [tag];
+			const attribute = { type: 'attribute', name: exception.attribute, action: 'equals', value: exception.value, namespace: null, ignoreCase: null };
+			return [tag, { type: 'pseudo', name: 'not', data: [[attribute]] }];
+		}) };
 	}
 	const browser = CSS_PSEUDOS.has(token.name) ? 'native' : VOCABULARY[token.name]?.browser;
 	if (browser === 'drop') throw new Error(`${selector}: :${token.name} can only stand on its own in a list.`);

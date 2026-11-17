@@ -260,7 +260,7 @@ export const devRules: DevRule[] = [
 		"id": "form-field-needs-input",
 		"message": "nldd-form-field holds no form input, so the label cannot name anything or move focus into it.",
 		"context": "nldd-form-field[label]:not([label=\"\"]):has(> :not(nldd-form-field-help-text))",
-		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-checkbox-group, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-one-time-code-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
+		"assert": ":has(:is(input:not([type=\"hidden\"]), nldd-checkbox, nldd-checkbox-field, nldd-checkbox-group, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-one-time-code-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-swatch-picker, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
 		"properties": []
 	},
 	{

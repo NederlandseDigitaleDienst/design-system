@@ -81,7 +81,10 @@ const HELPER_TAGS = ['nldd-form-field-help-text'];
  * control themselves and leaves this field out of it.
  */
 function isFormInput(el: Element): boolean {
-	return el instanceof HTMLInputElement
+	// A hidden input has no box and no place in the accessibility tree, so a
+	// label or a description on it reaches no one. Server-rendered forms put
+	// them beside the control (a Django formset's counters).
+	return (el instanceof HTMLInputElement && el.type !== 'hidden')
 		|| el instanceof HTMLSelectElement
 		|| el instanceof HTMLTextAreaElement
 		|| (el.constructor as { isFormInput?: boolean }).isFormInput === true;

@@ -6,7 +6,11 @@ const classes = { 'form-input': ['input', 'nldd-text-field'], cell: ['nldd-text-
 
 describe('forBrowser', () => {
 	it('turns a class of tags into :is() of its tags', () => {
-		assert.equal(forBrowser('nldd-form-field > :form-input', classes), 'nldd-form-field > :is(input, nldd-text-field)');
+		assert.equal(forBrowser('nldd-row > :cell', classes), 'nldd-row > :is(nldd-text-cell)');
+	});
+
+	it('leaves a hidden input out of the form inputs', () => {
+		assert.equal(forBrowser('nldd-form-field > :form-input', classes), 'nldd-form-field > :is(input:not([type="hidden"]), nldd-text-field)');
 	});
 
 	it('expands a class inside :not() and :has()', () => {
@@ -63,7 +67,7 @@ describe('compileForBrowser', () => {
 	it('compiles every selector of a rule', () => {
 		const rule = { id: 'x', message: 'm', group: 'a11y', severity: 'warn', context: ':form-input', assert: '[accessible-label], :named-by-field' };
 		assert.deepEqual(compileForBrowser(rule, classes), {
-			id: 'x', message: 'm', context: ':is(input, nldd-text-field)', assert: '[accessible-label]', properties: ['accessibleLabel'],
+			id: 'x', message: 'm', context: ':is(input:not([type="hidden"]), nldd-text-field)', assert: '[accessible-label]', properties: ['accessibleLabel'],
 		});
 	});
 
@@ -100,5 +104,13 @@ describe('sourcePseudos', () => {
 			assert.equal(typeof pseudos[name], 'function', name);
 		}
 		assert.equal(pseudos.state(), false);
+	});
+
+	it('takes no hidden input for a form input', () => {
+		const pseudos = sourcePseudos({ classes });
+		const input = (type) => ({ name: 'input', attrs: new Map(type ? [['type', type]] : []) });
+		assert.equal(pseudos['form-input'](input()), true);
+		assert.equal(pseudos['form-input'](input('text')), true);
+		assert.equal(pseudos['form-input'](input('hidden')), false);
 	});
 });
