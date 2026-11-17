@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.26.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.1...v0.26.2) (2026-11-17)
+
 ### Highlights
 
 - **Components that do the same thing now share how they do it.** Sheet, window and modal dialog open, close and return focus the same way; so do the overflow menus of the toolbar, menu bar and document tab bar, the radio, checkbox and toggle groups, and the reset of every form control. Most fixes below came out of that, and the next fix in one of them reaches all of them. See Fixed.
