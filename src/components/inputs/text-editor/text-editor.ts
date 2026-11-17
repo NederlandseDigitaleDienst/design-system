@@ -33,7 +33,7 @@
  * Enter in a list or a quote puts the next marker down, and Enter on an empty
  * item ends the list, or steps one level out of a nested one. A marker typed
  * where the editor already put one does not stack: `- ` on a fresh `- `, or right
- * after the bullet of an item with text, stays one bullet,`2. ` on `2. ` stays `2. `, `> ` on `> ` one quote. `1. ` on a later
+ * after the bullet of an item with text, stays one bullet, `2. ` on `2. ` stays `2. `, `> ` on `> ` one quote. `1. ` on a later
  * number starts a numbered list under the item above, and a marker of the other
  * kind takes the place of the editor's: `1. ` on `- ` makes a numbered list at
  * that level. Spaces typed before a
@@ -201,6 +201,14 @@ export interface TextChange {
 	from: number;
 	to?: number;
 	insert?: string;
+}
+
+/** A Cmd/Ctrl+Shift+V waiting for its paste event, or for the editor to read
+ *  the clipboard itself where none comes (Safari). */
+interface PlainPaste {
+	timer?: ReturnType<typeof setTimeout>;
+	/** The editor read the clipboard and pasted. */
+	done?: boolean;
 }
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
@@ -467,20 +475,34 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 				// paste for Cmd+Shift+V at all; without one, the editor reads the
 				// clipboard itself, which Safari confirms with a Paste button.
 				keydown: (event, view) => {
-					this._plainPaste = (event.metaKey || event.ctrlKey) && event.shiftKey && event.code === 'KeyV';
-					if (this._plainPaste) {
-						setTimeout(() => {
-							if (!this._plainPaste || this.view !== view) return;
-							this._plainPaste = false;
-							void navigator.clipboard?.readText().then((raw) => this._clipboard.paste(view, raw, true), () => {});
-						}, 100);
-					}
+					clearTimeout(this._plainPaste?.timer);
+					this._plainPaste = null;
+					if (!((event.metaKey || event.ctrlKey) && event.shiftKey && event.code === 'KeyV')) return false;
+					const pending: PlainPaste = {};
+					this._plainPaste = pending;
+					pending.timer = setTimeout(() => {
+						if (this._plainPaste !== pending || this.view !== view) return;
+						void navigator.clipboard?.readText().then((raw) => {
+							// A paste event that came in the meantime has pasted it.
+							if (this._plainPaste !== pending) return;
+							pending.done = true;
+							this._clipboard.paste(view, raw, true);
+							pending.timer = setTimeout(() => { if (this._plainPaste === pending) this._plainPaste = null; }, 1000);
+						}, () => {});
+					}, 100);
 					return false;
 				},
 				paste: (event, view) => {
+					const pending = this._plainPaste;
+					clearTimeout(pending?.timer);
+					this._plainPaste = null;
+					// A paste event after the editor read the clipboard itself: done already.
+					if (pending?.done) {
+						event.preventDefault();
+						return true;
+					}
+					const plain = Boolean(pending);
 					const raw = event.clipboardData?.getData('text/plain');
-					const plain = this._plainPaste;
-					this._plainPaste = false;
 					if (raw === undefined) return false; // no clipboard data — let CodeMirror handle it
 					this._clipboard.paste(view, raw, plain);
 					event.preventDefault();
@@ -548,6 +570,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
 		if (changed.has('disabled') || changed.has('readonly')) this._toolbar.reflect();
+		if (changed.has('embedded') && this.hasUpdated) this._stuck.update();
 		if (import.meta.env?.DEV && changed.has('typeaheads')) setState(this, 'invalid-typeahead-query', hasInvalidQuery(this.typeaheads));
 		if (!this.view) return;
 		// A render after setTranslations() or a new `translations`: the labels
@@ -685,7 +708,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	private _clipboard = new AnnotationClipboard();
 
 	/** Set by Cmd/Ctrl+Shift+V, read by the paste that follows it. */
-	private _plainPaste = false;
+	private _plainPaste: PlainPaste | null = null;
 
 	/** Copy the current selection to the clipboard, sentinel-free. No-op when the
 	 *  selection is empty or the clipboard is unavailable (e.g. permission denied). */

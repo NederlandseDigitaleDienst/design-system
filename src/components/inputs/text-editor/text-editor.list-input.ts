@@ -12,7 +12,8 @@ import { inCodeBlock } from './text-editor.syntax.js';
  * still one blank line and a typed marker away.
  *
  * A marker typed where the editor already put one does not stack: `- ` on a
- * fresh `- `, or right after the marker of an item with text, stays one bullet,`2. ` on `2. ` stays `2. `, `> ` on `> ` one quote.
+ * fresh `- `, or right after the marker of an item with text, stays one bullet,
+ * `2. ` on `2. ` stays `2. `, `> ` on `> ` one quote.
  * With spaces before it, the typed marker goes one level deeper instead, and so
  * does `1. ` on a later number: it starts a list under the item above. A marker
  * of the other kind takes the place of the editor's: `1. ` on `- ` makes a

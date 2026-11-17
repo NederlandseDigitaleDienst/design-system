@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
 import type { EditorView } from '@codemirror/view';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './text-editor.js';
@@ -93,6 +93,43 @@ describe('nldd-text-editor toolbar in a slot', () => {
 		expect(control.value).toBe('none');
 	});
 
+	it('turns the list off with a second press on the keyboard too', async () => {
+		const el = await make(`
+			<nldd-segmented-control slot="toolbar" text-editor-command="setList" accessible-label="Lijst">
+				<nldd-segmented-control-item value="none" text="Geen"></nldd-segmented-control-item>
+				<nldd-segmented-control-item value="bullet" text="Opsomming"></nldd-segmented-control-item>
+			</nldd-segmented-control>`, '- een woord');
+		const bullet = el.querySelectorAll('nldd-segmented-control-item')[1] as HTMLElement;
+		bullet.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, composed: true }));
+		bullet.click();
+		await settle(el);
+		expect(el.value).toBe('een woord');
+	});
+
+	it('runs a command chosen from the overflow menu once', async () => {
+		root = await fixture<HTMLElement>(`
+			<div style="width: 120px">
+				<nldd-text-editor accessible-label="t">
+					<nldd-toolbar slot="toolbar" accessible-label="Opmaak">
+						<nldd-toolbar-item slot="start" label="Vet">
+							<nldd-toggle-button text-editor-command="bold" text="Vet met een lange naam"></nldd-toggle-button>
+							<nldd-menu-item slot="overflow" type="checkbox" text-editor-command="bold" text="Vet"></nldd-menu-item>
+						</nldd-toolbar-item>
+					</nldd-toolbar>
+				</nldd-text-editor>
+			</div>`);
+		const el = root.querySelector('nldd-text-editor') as El;
+		el.value = 'een woord';
+		await el.updateComplete; await settle(el);
+		el.view.dispatch({ selection: { anchor: 4, head: 9 } });
+		const toolbar = el.querySelector('nldd-toolbar')!;
+		await vi.waitFor(() => expect(toolbar.shadowRoot!.querySelector('nldd-menu-item[text-editor-command="bold"]')).not.toBeNull());
+		const copy = toolbar.shadowRoot!.querySelector('nldd-menu-item[text-editor-command="bold"]')!;
+		copy.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true }));
+		await settle(el);
+		expect(el.value).toBe('een **woord**');
+	});
+
 	it('leaves a control without a command alone', async () => {
 		const el = await make(`<nldd-button slot="toolbar" text="Verstuur"></nldd-button>`);
 		const send = el.querySelector('nldd-button')!;
@@ -178,10 +215,10 @@ describe('nldd-text-editor toolbar that sticks', () => {
 
 	const frame = (): Promise<void> => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 
-	async function make(): Promise<{ el: El; scroller: HTMLElement; slotEl: HTMLSlotElement }> {
+	async function make(embedded = true): Promise<{ el: El; scroller: HTMLElement; slotEl: HTMLSlotElement }> {
 		root = await fixture<HTMLElement>(`
 			<div style="height: 200px; overflow: auto">
-				<nldd-text-editor embedded accessible-label="t"><nldd-toolbar slot="toolbar" accessible-label="Opmaak"></nldd-toolbar></nldd-text-editor>
+				<nldd-text-editor ${embedded ? 'embedded' : ''} accessible-label="t"><nldd-toolbar slot="toolbar" accessible-label="Opmaak"></nldd-toolbar></nldd-text-editor>
 			</div>`);
 		const el = root.querySelector('nldd-text-editor') as El;
 		el.value = Array.from({ length: 60 }, (_, i) => `Regel ${i}`).join('\n\n');
@@ -198,6 +235,14 @@ describe('nldd-text-editor toolbar that sticks', () => {
 		expect(slotEl.getBoundingClientRect().top - scroller.getBoundingClientRect().top).toBe(8);
 		scroller.scrollTop = 0;
 		await frame(); await frame();
+		expect(slotEl.classList.contains('is-stuck')).toBe(false);
+		expect(slotEl.getBoundingClientRect().top - scroller.getBoundingClientRect().top).toBe(0);
+	});
+
+	it('leaves a framed editor alone: it keeps no gap', async () => {
+		const { scroller, slotEl } = await make(false);
+		scroller.scrollTop = 300;
+		await frame();
 		expect(slotEl.classList.contains('is-stuck')).toBe(false);
 		expect(slotEl.getBoundingClientRect().top - scroller.getBoundingClientRect().top).toBe(0);
 	});

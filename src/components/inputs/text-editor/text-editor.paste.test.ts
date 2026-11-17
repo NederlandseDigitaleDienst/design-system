@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { EditorState } from '@codemirror/state';
 import { ensureSyntaxTree } from '@codemirror/language';
 import type { EditorView } from '@codemirror/view';
@@ -194,5 +194,35 @@ describe('nldd-text-editor paste', () => {
 		await editor('');
 		paste('•\tpunt', true);
 		expect(doc()).toBe('•\tpunt');
+	});
+
+	it('reads the clipboard itself where Cmd+Shift+V brings no paste event, and pastes once', async () => {
+		await editor('');
+		vi.spyOn(navigator.clipboard, 'readText').mockResolvedValue('•\tpunt');
+		const content = el.view.contentDOM;
+		content.dispatchEvent(new KeyboardEvent('keydown', { key: 'V', code: 'KeyV', metaKey: true, shiftKey: true, bubbles: true, cancelable: true }));
+		await vi.waitFor(() => expect(doc()).toBe('•\tpunt'));
+		// A paste event that comes after all: the text is there already.
+		const data = new DataTransfer();
+		data.setData('text/plain', '•\tpunt');
+		content.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }));
+		expect(doc()).toBe('•\tpunt');
+		vi.restoreAllMocks();
+	});
+
+	it('leaves the clipboard it read alone when the paste event comes while reading', async () => {
+		await editor('');
+		let resolve!: (text: string) => void;
+		vi.spyOn(navigator.clipboard, 'readText').mockReturnValue(new Promise((r) => { resolve = r; }));
+		const content = el.view.contentDOM;
+		content.dispatchEvent(new KeyboardEvent('keydown', { key: 'V', code: 'KeyV', metaKey: true, shiftKey: true, bubbles: true, cancelable: true }));
+		await new Promise((r) => setTimeout(r, 150));
+		const data = new DataTransfer();
+		data.setData('text/plain', '•\tpunt');
+		content.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }));
+		resolve('•\tpunt');
+		await new Promise((r) => setTimeout(r));
+		expect(doc()).toBe('•\tpunt');
+		vi.restoreAllMocks();
 	});
 });

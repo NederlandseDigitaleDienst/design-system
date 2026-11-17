@@ -83,50 +83,78 @@ function* ancestry(el: Element): Generator<Element> {
 	}
 }
 
-export class ToolbarBinding {
-	/** The list at pointerdown: a second click on the list that is on turns it
-	 *  off. A radio does not change on that click, and a click on another item has
-	 *  already switched the list by the time the click arrives. */
-	private _listAtPointerDown: ListValue | null = null;
+/** A copy nldd-toolbar made for its overflow menu: the toolbar sends its
+ *  `select` on to the original, so the copy itself is not a control. */
+function isOverflowCopy(el: Element): boolean {
+	const root = el.getRootNode();
+	return root instanceof ShadowRoot && tag(root.host) === 'nldd-toolbar';
+}
 
-	constructor(private readonly target: CommandTarget, private readonly focusText: () => void) {}
+/* One set of listeners on the document for every editor: an event finds its
+ * control once, and only the editor that owns it answers. */
+const bindings = new Set<ToolbarBinding>();
+
+/** The nearest element with a command along the event's path. An editor on the
+ *  way ends the search: what is inside it is not a control of an editor above. */
+function controlOf(event: Event): Element | null {
+	for (const node of event.composedPath()) {
+		if (!(node instanceof Element)) continue;
+		if (tag(node) === 'nldd-text-editor') return null;
+		if (node.hasAttribute(COMMAND_ATTR)) return isOverflowCopy(node) ? null : node;
+	}
+	return null;
+}
+
+/** The binding of the editor `el` belongs to: the one a container names, or,
+ *  in none, the editor it sits in. */
+function ownerOf(el: Element): ToolbarBinding | undefined {
+	for (const node of ancestry(el)) {
+		const id = node.getAttribute(FOR_ATTR);
+		if (id !== null) {
+			if (id === '') return undefined;
+			for (const binding of bindings) if (binding.target.id === id) return binding;
+			return undefined;
+		}
+		for (const binding of bindings) if (binding.target === node) return binding;
+	}
+	return undefined;
+}
+
+function listen(type: 'click' | 'change' | 'select' | 'pointerdown' | 'keydown'): EventListener {
+	return (event) => {
+		const control = controlOf(event);
+		const owner = control && ownerOf(control);
+		owner?.handle(type, event, control!);
+	};
+}
+
+const LISTENERS = (['click', 'change', 'select', 'pointerdown', 'keydown'] as const).map((type) => [type, listen(type)] as const);
+// Capture for the moment before a control answers: a click switches the list first.
+const CAPTURE = new Set(['pointerdown', 'keydown']);
+
+export class ToolbarBinding {
+	/** The list before the press: a second click on the list that is on turns
+	 *  it off. A radio does not change on that click, and a click on another item
+	 *  has already switched the list by the time the click arrives. */
+	private _listBeforePress: ListValue | null = null;
+
+	constructor(readonly target: CommandTarget, private readonly focusText: () => void) {}
 
 	connect(): void {
-		document.addEventListener('click', this._onClick);
-		document.addEventListener('change', this._onChange);
-		document.addEventListener('select', this._onSelect);
-		document.addEventListener('pointerdown', this._onPointerDown, true);
+		if (bindings.size === 0) {
+			for (const [type, listener] of LISTENERS) document.addEventListener(type, listener, CAPTURE.has(type));
+		}
+		bindings.add(this);
 	}
 
 	disconnect(): void {
-		document.removeEventListener('click', this._onClick);
-		document.removeEventListener('change', this._onChange);
-		document.removeEventListener('select', this._onSelect);
-		document.removeEventListener('pointerdown', this._onPointerDown, true);
-	}
-
-	/** Whether `el` belongs to this editor: in a container that names it, or, in
-	 *  none, inside the editor itself. */
-	private _owns(el: Element): boolean {
-		for (const node of ancestry(el)) {
-			if (node === this.target) return true;
-			const id = node.getAttribute(FOR_ATTR);
-			if (id !== null) return id !== '' && id === this.target.id;
+		bindings.delete(this);
+		if (bindings.size === 0) {
+			for (const [type, listener] of LISTENERS) document.removeEventListener(type, listener, CAPTURE.has(type));
 		}
-		return false;
 	}
 
-	/** The nearest element with a command along the event's path, if it is ours. */
-	private _control(event: Event): Element | null {
-		for (const node of event.composedPath()) {
-			if (!(node instanceof Element)) continue;
-			if (node === this.target) return null;
-			if (node.hasAttribute(COMMAND_ATTR)) return this._owns(node) ? node : null;
-		}
-		return null;
-	}
-
-	/** Every control of this editor, in its slots and in the containers naming it. */
+	/** Every control of this editor, in its slot and in the containers naming it. */
 	controls(): Element[] {
 		const own = [...this.target.querySelectorAll(`[${COMMAND_ATTR}]`)];
 		const id = this.target.id;
@@ -136,7 +164,7 @@ export class ToolbarBinding {
 				...box.querySelectorAll(`[${COMMAND_ATTR}]`),
 			])
 			: [];
-		return [...own, ...elsewhere].filter((el) => this._owns(el));
+		return [...own, ...elsewhere].filter((el) => ownerOf(el) === this);
 	}
 
 	private _run(value: string): void {
@@ -144,53 +172,55 @@ export class ToolbarBinding {
 		// A code block is its own block type: a text style steps out of it first,
 		// which makes "Paragraaf" the way out of a code block.
 		if (name === 'setHeading' && this.target.getState().active.codeBlock) this.target.runCommand('codeBlock');
+		// The state-change that follows sets the controls.
 		this.target.runCommand(name, arg);
 		// After a menu has given focus back to its button.
 		queueMicrotask(this.focusText);
-		this.reflect();
 	}
 
-	private _onPointerDown = (event: Event): void => {
-		const control = this._control(event);
-		this._listAtPointerDown = control && tag(control) === 'nldd-segmented-control' ? currentList(this.target.getState()) : null;
-	};
-
-	private _onClick = (event: Event): void => {
-		const control = this._control(event);
-		if (!control) return;
+	/** Called by the document listeners for a control this editor owns. */
+	handle(type: string, event: Event, control: Element): void {
 		const kind = tag(control);
-		// A menu item answers with `select`.
-		if (kind === 'nldd-menu-item') return;
-		if (kind === 'nldd-segmented-control') {
-			// A segmented control answers with `change`, except a second click on
-			// the list that is on, which turns it off.
-			const item = (event.target as Element).closest?.('nldd-segmented-control-item') as { value?: string } | null;
-			const [name] = parseCommand(control.getAttribute(COMMAND_ATTR)!);
-			if (name === 'setList' && item?.value && item.value !== 'none' && item.value === this._listAtPointerDown) this._run('setList:none');
-			this._listAtPointerDown = null;
-			return;
-		}
-		this._run(control.getAttribute(COMMAND_ATTR)!);
-	};
-
-	private _onChange = (event: Event): void => {
-		const control = this._control(event);
-		if (!control || tag(control) !== 'nldd-segmented-control') return;
 		const [name] = parseCommand(control.getAttribute(COMMAND_ATTR)!);
-		const value = (control as unknown as { value?: string }).value;
-		if (value) this._run(`${name}:${value}`);
-	};
-
-	private _onSelect = (event: Event): void => {
-		const control = this._control(event);
-		if (!control || tag(control) !== 'nldd-menu-item') return;
-		const value = control.getAttribute(COMMAND_ATTR)!;
-		// Choosing the radio that is on changes nothing, as in any radio group:
-		// "Codeblok" in a code block keeps it.
-		const [name, arg] = parseCommand(value);
-		if (control.getAttribute('type') === 'radio' && isActive(name, arg, this.target.getState())) return;
-		this._run(value);
-	};
+		switch (type) {
+			case 'pointerdown':
+			case 'keydown': {
+				// A press by pointer, or by Enter or Space on the keyboard.
+				if (type === 'keydown' && !['Enter', ' '].includes((event as KeyboardEvent).key)) return;
+				this._listBeforePress = kind === 'nldd-segmented-control' ? currentList(this.target.getState()) : null;
+				return;
+			}
+			case 'click': {
+				// A menu item answers with `select`.
+				if (kind === 'nldd-menu-item') return;
+				if (kind === 'nldd-segmented-control') {
+					// A segmented control answers with `change`, except a second press on
+					// the list that is on, which turns it off.
+					const item = (event.target as Element).closest?.('nldd-segmented-control-item') as { value?: string } | null;
+					if (name === 'setList' && item?.value && item.value !== 'none' && item.value === this._listBeforePress) this._run('setList:none');
+					this._listBeforePress = null;
+					return;
+				}
+				this._run(control.getAttribute(COMMAND_ATTR)!);
+				return;
+			}
+			case 'change': {
+				if (kind !== 'nldd-segmented-control') return;
+				const value = (control as unknown as { value?: string }).value;
+				if (value) this._run(`${name}:${value}`);
+				return;
+			}
+			case 'select': {
+				if (kind !== 'nldd-menu-item') return;
+				const value = control.getAttribute(COMMAND_ATTR)!;
+				// Choosing the radio that is on changes nothing, as in any radio group:
+				// "Codeblok" in a code block keeps it.
+				const [, arg] = parseCommand(value);
+				if (control.getAttribute('type') === 'radio' && isActive(name, arg, this.target.getState())) return;
+				this._run(value);
+			}
+		}
+	}
 
 	/** Sets `selected`, the value of a segmented control and `disabled` on every
 	 *  control from the editor's state. */
@@ -216,11 +246,12 @@ export class ToolbarBinding {
  *  Measured, not observed: a slot that sticks has left its place at the edge of
  *  the frame, whichever element scrolls. The check runs on any scroll (a capture
  *  listener sees every scroll container) and when the editor changes size, once
- *  per frame, and only while the slot is filled. */
+ *  per frame, and only in an embedded editor with a filled slot. */
 export class StuckToolbar {
 	private _frame = 0;
 	private _resize?: ResizeObserver;
 	private _listening = false;
+	private _gap = 0;
 
 	constructor(private readonly host: HTMLElement, private readonly container: () => HTMLElement | null) {}
 
@@ -228,15 +259,19 @@ export class StuckToolbar {
 		return this.container()?.querySelector<HTMLSlotElement>('slot[name="toolbar"]') ?? null;
 	}
 
-	/** Starts or stops watching, after the slot changed. */
+	/** Starts or stops watching, after the slot or `embedded` changed. Only an
+	 *  embedded editor keeps a gap while stuck; elsewhere there is nothing to do. */
 	update(): void {
-		const filled = Boolean(this._slot()?.classList.contains('is-filled'));
-		if (filled && !this._listening) {
+		const slot = this._slot();
+		const watch = Boolean(slot?.classList.contains('is-filled')) && this.host.hasAttribute('embedded');
+		if (!watch) slot?.classList.remove('is-stuck');
+		if (watch && !this._listening) {
+			this._gap = parseFloat(getComputedStyle(slot!).getPropertyValue('--_text-editor-stuck-gap')) || 0;
 			document.addEventListener('scroll', this._schedule, { capture: true, passive: true });
 			this._resize = new ResizeObserver(this._schedule);
 			this._resize.observe(this.host);
 			this._listening = true;
-		} else if (!filled && this._listening) {
+		} else if (!watch && this._listening) {
 			this.stop();
 		}
 		this._schedule();
@@ -260,10 +295,10 @@ export class StuckToolbar {
 
 	check(): void {
 		const slot = this._slot();
-		if (!slot) return;
+		if (!slot || !this._listening) return;
 		const moved = slot.getBoundingClientRect().top - this.container()!.getBoundingClientRect().top;
 		// Stuck, the bar sits a gap further from the edge: that alone is no reason to stay stuck.
-		const gap = slot.classList.contains('is-stuck') ? parseFloat(getComputedStyle(slot).getPropertyValue('--_text-editor-stuck-gap')) || 0 : 0;
-		slot.classList.toggle('is-stuck', slot.classList.contains('is-filled') && moved > gap + 0.5);
+		const gap = slot.classList.contains('is-stuck') ? this._gap : 0;
+		slot.classList.toggle('is-stuck', moved > gap + 0.5);
 	}
 }
