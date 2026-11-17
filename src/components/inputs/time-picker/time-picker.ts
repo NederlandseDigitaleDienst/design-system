@@ -3,7 +3,8 @@
  *
  * Two columns, hours and minutes, that slide like a wheel past the selection in
  * the middle. The component works on its own (inline on a page, in a filter
- * panel) and also sits in the popover of nldd-time-field. Values are always
+ * panel) and also sits in the popover of nldd-time-field. There the field sets
+ * `value`, `min`, `max` and `step`; set them on the field. Values are always
  * 24-hour `HH:mm`.
  *
  * Scrolling is choosing: whatever comes to rest in the middle is the value. The

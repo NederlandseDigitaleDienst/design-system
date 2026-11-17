@@ -107,7 +107,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
 
-
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
 
