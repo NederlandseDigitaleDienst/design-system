@@ -22,7 +22,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
-- **`nldd lint dist` skips the scripts of a build.** A bundler's chunks hold the styles and markup of the components themselves, which read as an app overriding them: a built site got a `local-variable-no-override` for every component it used, and a `file-not-read` for every chunk. A script in `dist`, `build`, `.next` or `.nuxt` is now left alone, when you run the linter from the root of the project; the pages and stylesheets next to it are read as before. This goes by the name of the directory, so a script in a source directory named `build` or `dist` is skipped too.
+- **`nldd lint dist` skips the scripts of a build.** A bundler's chunks hold the styles and markup of the components themselves, which read as an app overriding them: a built site got a `local-variable-no-override` for every component it used, and a `file-not-read` for every chunk. A script in `dist`, `build`, `coverage`, `.next` or `.nuxt` is now left alone, when you run the linter from the root of the project; the pages and stylesheets next to it are read as before. This goes by the name of the directory, so a script in a source directory named `build` or `dist` is skipped too.
 
 ## [0.26.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.2...v0.26.3) (2026-11-18)
 

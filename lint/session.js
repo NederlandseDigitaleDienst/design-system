@@ -136,6 +136,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	}
 	const references = renamedTags.size > 0 ? fixReferences(renamedTags, paths, root, config.exclude) : undefined;
 	// Not in `files`: what has our markup and was not read, so the summary can say so.
-	const unread = results.filter(({ filename, findings }) => UNREAD_EXTENSIONS.includes(extname(filename)) && findings.some(({ rule }) => rule === 'file-not-read')).length;
+	// Counted on the markup, so a suppressed `file-not-read` does not make it read.
+	const unread = inputs.filter(({ filename, source }) => UNREAD_EXTENSIONS.includes(extname(filename)) && /<nldd-[a-z]/.test(source)).length;
 	return { results, files, unread, fixed, fixedFiles, notUtf8, references };
 }

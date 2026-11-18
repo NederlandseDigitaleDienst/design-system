@@ -1645,6 +1645,7 @@ describe('nldd command', () => {
 		assert.match(result.stdout, /1 error, 1 warning in 1 file \(1 not read\)/);
 		assert.match(run(root, 'lint', 'src/b.svelte', 'src/c.svelte').stdout, /0 errors, 1 warning in 0 files \(1 not read\)/);
 		assert.match(run(root, 'lint', '--statistics').stdout, /2 findings in 1 file \(1 not read\)/);
+		assert.match(run(root, 'lint', '--ignore', 'file-not-read').stdout, /1 error, 0 warnings in 1 file \(1 not read\)/);
 	});
 
 	it('skips the scripts of a build, whose chunks hold the styles of the components themselves', () => {
