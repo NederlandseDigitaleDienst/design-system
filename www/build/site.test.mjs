@@ -83,7 +83,15 @@ test('a page marks its section in the first sidebar, itself in the second, and g
 	assert.match(button, /data-site-search="icon button icon-button acties"/);
 	assert.match(button, /slot="main"\s+has-content[^]*back-text="Componenten"\s+back-href="\/componenten\/"/);
 	// A page without a list of its own goes back to the sections.
-	assert.match(pages['iconen/index.html'], /slot="main"\s+has-content[^]*back-text="Documentatie"\s+collapse-anchor/);
+	assert.match(pages['iconen/index.html'], /slot="main"\s+has-content[^]*back-text="Documentatie"\s+back-href="\/documentatie\/"/);
+});
+
+test('the sections have a page of their own, with only the first sidebar and nothing chosen', () => {
+	const docs = pages['documentatie/index.html'];
+	assert.match(docs, /slot="primary-sidebar"/);
+	assert.doesNotMatch(docs, /slot="secondary-sidebar"/);
+	assert.match(docs, /<nldd-split-view-pane\s+slot="main"\s*>[^]*text="Kies een onderdeel"/);
+	assert.doesNotMatch(docs, / current[\s>]/);
 });
 
 test('an overview has the list and an empty main, so a phone opens on the list', () => {

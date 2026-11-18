@@ -41,8 +41,6 @@ nldd-rich-text td code {
 	/* ## Stage */
 
 	site-stage {
-		--_stage-line: color-mix(in srgb, var(--semantics-content-color) 28%, transparent);
-
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
@@ -58,17 +56,24 @@ nldd-rich-text td code {
 		}
 	}
 
-	/* The mat: a dotted field around the canvas that belongs to the frame. */
+	/* Inside the highlight border of the box, which the frame would paint over. */
 	.site-stage__mat {
-		padding: 12px;
-		background-image: radial-gradient(circle, var(--_stage-line) 1px, transparent 1.5px);
-		background-size: 12px 12px;
+		padding-inline: var(--semantics-surfaces-highlight-border-width);
 		overflow-x: auto;
 	}
 
 	.site-stage__mat--frame {
 		display: flex;
 		justify-content: center;
+	}
+
+	/* A frame is square: with nothing under it, it would cut off the rounded corners of the box. */
+	nldd-box:not(:has(.site-stage__quick)) > .site-stage__mat--frame:not(:has(> .site-stage__frame--narrow)) {
+		padding-block-end: var(--semantics-surfaces-corner-radius);
+
+		& .site-stage__frame {
+			border-block-end: var(--semantics-dividers-thickness) solid var(--semantics-dividers-color);
+		}
 	}
 
 	/* The canvas is a surface of the system, set here and nowhere inherited from:
@@ -79,24 +84,12 @@ nldd-rich-text td code {
 
 		box-sizing: border-box;
 		padding: 24px;
-		background-color: var(--semantics-surfaces-base-background-color);
 		font: var(--primitives-font-body-md-regular-snug);
 		color: var(--semantics-content-color);
 	}
 
-	/* Where the stage measures a variant of the example before it is chosen. */
-	/* Fixed, so it adds nothing to what the mat can scroll. */
-	.site-stage__probe {
-		position: fixed;
-		inset-block-start: 0;
-		inset-inline-start: 0;
-		visibility: hidden;
-	}
-
 	.site-stage__canvas[data-surface='tinted'] {
 		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-
-		background-color: var(--semantics-surfaces-tinted-background-color);
 	}
 
 	.site-stage__frame {
@@ -105,6 +98,15 @@ nldd-rich-text td code {
 		max-width: 100%;
 		border: 0;
 		background-color: var(--semantics-surfaces-base-background-color);
+	}
+
+	/* A narrower frame is a window of its own in the stage. */
+	.site-stage__mat--frame:has(> .site-stage__frame--narrow) {
+		padding-block: 24px;
+	}
+
+	.site-stage__frame--narrow {
+		border: var(--semantics-dividers-thickness) solid var(--semantics-dividers-color);
 	}
 
 	/* ## Around the stage */

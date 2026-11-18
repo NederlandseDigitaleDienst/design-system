@@ -81,7 +81,7 @@ function kebab(exportName) {
 
 /**
  * @returns {{ file: string, title: string, tag: string|undefined, description: string,
- *   status: string|undefined, sourceFile: string|undefined, fullscreen: boolean,
+ *   sourceFile: string|undefined, fullscreen: boolean,
  *   stories: { exportName: string, id: string, name: string, description: string, hidden: boolean }[] }}
  */
 export function parseStoryFile(file) {
@@ -92,7 +92,6 @@ export function parseStoryFile(file) {
 		title: '',
 		tag: undefined,
 		description: '',
-		status: undefined,
 		sourceFile: undefined,
 		fullscreen: false,
 		stories: [],
@@ -105,7 +104,6 @@ export function parseStoryFile(file) {
 			result.description =
 				stringValue(path(meta, 'parameters', 'docs', 'description', 'component')) ??
 				leadingJsDoc(source, statement);
-			result.status = stringValue(path(meta, 'parameters', 'status', 'type'));
 			result.sourceFile = stringValue(path(meta, 'parameters', 'componentSource', 'file'));
 			result.fullscreen = stringValue(path(meta, 'parameters', 'layout')) === 'fullscreen';
 			continue;

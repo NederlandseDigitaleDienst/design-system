@@ -149,7 +149,11 @@ function focusTitle(main: Element): void {
 	const heading = main.querySelector<HTMLElement>('#pagina-titel :is(h1, h2)') ?? main.querySelector<HTMLElement>('nldd-page');
 	if (!heading) return;
 	heading.tabIndex = -1;
-	heading.focus({ preventScroll: true });
+	// Focus is there to announce the page, not to show where you are: no ring,
+	// also in Safari, where the reset of nldd-title brings back its own.
+	// @ts-expect-error lib.dom lacks focusVisible; this fails once it has it.
+	const noRing: FocusOptions = { preventScroll: true, focusVisible: false };
+	heading.focus(noRing);
 }
 
 let pending: AbortController | null = null;

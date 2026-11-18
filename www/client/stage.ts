@@ -3,11 +3,10 @@
  *
  * The site is built with the components it documents, so without a frame a
  * reader cannot tell an example from the page around it. Everything live
- * stands on a stage, and nothing else does. What marks the border is the mat:
- * a dotted field around the canvas, the one thing here that is not from the
- * system. Everything around it (the bar, the controls, the code) is built with
- * the components themselves, and the canvas inside it is a real surface of the
- * system, so the example looks as it does in an application.
+ * stands on a stage, and nothing else does. The stage is one box in the
+ * surface and color scheme of the example, with dividers under the bar and
+ * above the controls. Everything around the example is built with the
+ * components themselves, so the example looks as it does in an application.
  *
  * A stage owns three things the page does not: its color scheme, its surface
  * and, for an example that needs a window of its own, its width. That keeps the
@@ -51,7 +50,7 @@ interface QuickEntry {
 	kind: 'boolean' | 'select' | 'field';
 	/** The labels of a choice that set the attribute, as the controls list them. */
 	options: string[];
-	/** The attribute as the code writes it, for a value. */
+	/** The attribute and its value as the token reads: `size: 56`, or the name alone. */
 	written: (value: string) => string;
 	isDefault: (value: string | boolean) => boolean;
 	current: string | boolean;
@@ -121,6 +120,9 @@ function element<K extends keyof HTMLElementTagNameMap>(
 	return node;
 }
 
+/** Lines from which the code of an example is folded away. */
+const LONG_CODE = 12;
+
 /** An element of the design system, with its attributes. */
 function nldd(tag: string, attributes: Record<string, string | boolean> = {}, children: Node[] = []): HTMLElement {
 	const node = document.createElement(`nldd-${tag}`);
@@ -171,19 +173,16 @@ export class SiteStage extends HTMLElement {
 	private overrides = new Map<string, string | boolean>();
 	private controls?: ControlsData;
 	private canvas = element('div', 'site-stage__canvas');
+	private mat = element('div', 'site-stage__mat');
 	private frame?: HTMLIFrameElement;
 	private code?: HTMLElement;
-	private box = nldd('box');
+	private box = nldd('box', { background: 'base' });
 	private events = nldd('container', { list: true, gap: '4' });
 	private eventLog = section('site-stage__events', [this.events]);
 	private dark = siteIsDark();
 	/** Auto follows the scheme of the site, also when it changes later. */
 	private scheme = 'auto';
 	private tinted = false;
-	private reserved = { width: 0, height: 0 };
-	private reserving = 0;
-	/** Each value of each choice in the controls: what the example can be set to. */
-	private variants: { name: string; arg?: string; value: string }[] = [];
 	private started = false;
 	private quick: QuickEntry[] = [];
 	private quickTokens = new Map<string, HTMLElement>();
@@ -277,7 +276,9 @@ export class SiteStage extends HTMLElement {
 	private buildFrame(file: string, name: string): void {
 		const base = import.meta.env.BASE_URL;
 		const frame = element('iframe', 'site-stage__frame');
-		const height = this.story?.parameters.docs?.story?.height ?? this.story?.parameters.docs?.story?.iframeHeight ?? 480;
+		// A story that fills its window says how tall; any other gets the height
+		// of what is in it, which the frame reports.
+		const height = this.story?.parameters.docs?.story?.height ?? this.story?.parameters.docs?.story?.iframeHeight ?? 160;
 		frame.style.height = typeof height === 'number' ? `${height}px` : height;
 		frame.title = `Voorbeeld: ${this.getAttribute('name') ?? name}`;
 		frame.loading = 'lazy';
@@ -287,13 +288,14 @@ export class SiteStage extends HTMLElement {
 			if (event.source !== frame.contentWindow || event.data?.site !== 'stage') return;
 			if (event.data.type === 'event') this.log(event.data.name, event.data.detail);
 			if (event.data.type === 'source') void this.setSource(event.data.code);
+			if (event.data.type === 'height') frame.style.height = `${event.data.height}px`;
 		});
 	}
 
 	private applyScheme(): void {
 		this.dark = this.scheme === 'auto' ? siteIsDark() : this.scheme === 'dark';
-		// Auto leaves the canvas to inherit the page; a frame is told.
-		this.canvas.style.colorScheme = this.scheme === 'auto' ? '' : this.scheme;
+		// Auto leaves the stage to inherit the page; a frame is told.
+		this.box.style.colorScheme = this.scheme === 'auto' ? '' : this.scheme;
 		this.post({ type: 'scheme', scheme: this.dark ? 'dark' : 'light' });
 	}
 
@@ -402,6 +404,7 @@ export class SiteStage extends HTMLElement {
 						(surface) => {
 							this.tinted = surface === 'tinted';
 							this.canvas.dataset.surface = surface;
+							this.box.setAttribute('background', surface);
 						},
 						1,
 					),
@@ -415,6 +418,7 @@ export class SiteStage extends HTMLElement {
 						'100%',
 						(width) => {
 							this.frame!.style.width = width;
+							this.frame!.classList.toggle('site-stage__frame--narrow', width !== '100%');
 						},
 						1,
 					),
@@ -425,8 +429,8 @@ export class SiteStage extends HTMLElement {
 				const href = `${import.meta.env.BASE_URL}voorbeeld/?file=${encodeURIComponent(file)}&story=${encodeURIComponent(this.getAttribute('story') ?? '')}`;
 				toolbar.append(
 					this.toolItem(
-						nldd('button', { text: 'Open los', href, target: '_blank' }),
-						nldd('menu-item', { text: 'Open los', href, target: '_blank' }),
+						nldd('icon-button', { icon: 'open-new-page', text: 'Open in nieuw tabblad', href, target: '_blank' }),
+						nldd('menu-item', { icon: 'open-new-page', text: 'Open in nieuw tabblad', href, target: '_blank' }),
 						0,
 						'end',
 					),
@@ -435,7 +439,7 @@ export class SiteStage extends HTMLElement {
 		}
 		bar.append(toolbar);
 
-		const mat = element('div', 'site-stage__mat');
+		const mat = this.mat;
 		this.canvas.dataset.surface = 'base';
 		if (this.frame) {
 			mat.classList.add('site-stage__mat--frame');
@@ -459,61 +463,11 @@ export class SiteStage extends HTMLElement {
 				mat.removeAttribute('role');
 				mat.removeAttribute('aria-label');
 			}
-			this.holdHeight();
 		}).observe(this.canvas);
 		this.eventLog.hidden = true;
 		this.events.setAttribute('aria-label', `Events van ${name}`);
-		this.box.replaceChildren(...(toolbar.children.length ? [bar] : []), mat, this.eventLog);
+		this.box.replaceChildren(...(toolbar.children.length ? [bar, nldd('divider')] : []), mat, this.eventLog);
 		this.replaceChildren(this.box);
-	}
-
-	/**
-	 * The canvas keeps the tallest height it has had at this width, so the page
-	 * below it does not move when an option makes the example shorter again.
-	 */
-	private holdHeight(): void {
-		const { offsetWidth: width, offsetHeight: height } = this.canvas;
-		if (width !== this.reserved.width) {
-			this.reserved = { width, height: 0 };
-			this.canvas.style.minHeight = '';
-			clearTimeout(this.reserving);
-			this.reserving = window.setTimeout(() => void this.reserveHeight(), 200);
-			return;
-		}
-		this.reserve(height);
-	}
-
-	private reserve(height: number): void {
-		if (height <= this.reserved.height) return;
-		this.reserved.height = height;
-		this.canvas.style.minHeight = `${height}px`;
-	}
-
-	/**
-	 * Makes room for the tallest variant before the reader picks it: the example
-	 * is drawn once per value of each choice, out of sight and at the width of
-	 * the canvas. One choice at a time, so a combination can still be taller;
-	 * holdHeight() catches that the first time it shows.
-	 */
-	private async reserveHeight(): Promise<void> {
-		const story = this.story;
-		if (!story || this.frame || !this.variants.length) return;
-		const probe = element('div', 'site-stage__canvas site-stage__probe');
-		probe.inert = true;
-		probe.dataset.surface = this.canvas.dataset.surface;
-		probe.style.width = `${this.canvas.offsetWidth}px`;
-		this.canvas.after(probe);
-		const silent = (args: Args): StoryContext => ({ args, updateArgs: () => {}, log: () => {} });
-		for (const variant of this.variants) {
-			const args = variant.arg ? { ...this.args, [variant.arg]: variant.value } : this.args;
-			mount(withContext(silent(args), () => story.render(mapArgs(args, story.argTypes))), probe);
-			this.applyOverrides(probe);
-			if (!variant.arg) probe.querySelector(this.controls?.tag ?? ':not(*)')?.setAttribute(variant.name, variant.value);
-			// Components draw after their update, one task later.
-			await new Promise((resolve) => setTimeout(resolve));
-			this.reserve(probe.offsetHeight);
-		}
-		probe.remove();
 	}
 
 	private async setSource(code: string): Promise<void> {
@@ -535,8 +489,14 @@ export class SiteStage extends HTMLElement {
 			this.code.classList.add('site-stage__code');
 			// The code comes right after the example, before the controls,
 			// whichever of the two arrives first: a framed example reports its
-			// markup later.
-			this.box.after(this.code);
+			// markup later. Long code of an example folds away under it.
+			if (!changes && text.split('\n').length > LONG_CODE) {
+				await import('../../src/components/content/accordion/accordion.js');
+				await import('../../src/components/content/accordion/accordion-item.js');
+				this.code.setAttribute('appearance', 'simple');
+				const item = nldd('accordion-item', { text: 'Bekijk code' }, [this.code]);
+				this.box.after(nldd('accordion', {}, [item]));
+			} else this.box.after(this.code);
 			this.code.textContent = text;
 			// The code keeps the height it has before any change, scrolling when
 			// it grows, so the controls below it stay where they are.
@@ -690,11 +650,6 @@ export class SiteStage extends HTMLElement {
 				if (fromArg) this.setArg(fromArg, attribute.kind === 'number' && value !== '' ? Number(value) : value);
 				else this.setOverride(attribute.name, value);
 			};
-			const choices = fromStory?.argType.options?.map(String) ?? (attribute.kind === 'select' ? attribute.values : undefined);
-			// A label of the story stands for a value it maps itself, so only plain values are tried.
-			if (!fromStory?.argType.mapping) {
-				for (const value of choices ?? []) this.variants.push({ name: attribute.name, arg: fromArg, value });
-			}
 			let entry: QuickEntry | undefined = undefined;
 			const input = this.input(
 				attribute,
@@ -742,7 +697,6 @@ export class SiteStage extends HTMLElement {
 			// A popover open when its button goes would stay without an anchor.
 			if (!narrow) for (const popover of popovers) (popover as HTMLElement & { open: boolean }).open = false;
 		}).observe(list);
-		void this.reserveHeight();
 	}
 
 	/** The entry in the strip for an attribute, when it is a switch or a choice. */
@@ -765,7 +719,7 @@ export class SiteStage extends HTMLElement {
 				set,
 			};
 		}
-		const values = argType?.options?.map(String) ?? control.values;
+		const values = argType?.options?.map(String) ?? control.values ?? [];
 		// The story knows a default the manifest leaves out, such as a centered alignment.
 		const fallback = control.default || String(argType?.table?.defaultValue?.summary ?? '');
 		if (!isChoice(control, argType)) {
@@ -773,7 +727,7 @@ export class SiteStage extends HTMLElement {
 				name: control.name,
 				kind: 'field',
 				options: [],
-				written: (value) => `${control.name}="${value}"`,
+				written: (value) => `${control.name}: ${value}`,
 				isDefault: (value) => [fallback, ''].includes(String(value)),
 				current: start === undefined || start === null ? '' : String(start),
 				unset: '',
@@ -796,7 +750,7 @@ export class SiteStage extends HTMLElement {
 			name: control.name,
 			kind: 'select',
 			options: values.filter((value) => !absent(value)),
-			written: (value) => (raw(value) === '' ? control.name : `${control.name}="${String(raw(value))}"`),
+			written: (value) => (raw(value) === '' ? control.name : `${control.name}: ${String(raw(value))}`),
 			isDefault,
 			current: label ?? (start === undefined || start === null ? '' : String(start)),
 			// An arg goes back to the label of the default; an attribute of its own is taken off.
@@ -807,7 +761,7 @@ export class SiteStage extends HTMLElement {
 
 	/**
 	 * A strip of tokens under the example, one for each attribute that is set,
-	 * written as in the code: what the example is now, in view while it changes.
+	 * by its name and value: what the example is now, in view while it changes.
 	 */
 	private buildQuick(): void {
 		const tag = this.controls?.tag ?? '';
@@ -829,7 +783,7 @@ export class SiteStage extends HTMLElement {
 			[this.quickAdd],
 		);
 		this.quickStrip.classList.add('site-stage__quick');
-		this.eventLog.before(this.quickStrip);
+		this.eventLog.before(nldd('divider'), this.quickStrip);
 		this.showQuick();
 	}
 
@@ -902,7 +856,7 @@ export class SiteStage extends HTMLElement {
 			this.showQuick();
 			setTimeout(() => {
 				const active = document.activeElement;
-				if (!active || active === document.body) this.quickAdd?.focus();
+				if (!active || active === document.body) this.quickAdd?.focus({ preventScroll: true });
 			});
 		});
 		return nldd('token', { control: 'menu', 'menu-text': `Bewerk ${entry.name}` }, [popover]);
@@ -934,7 +888,7 @@ export class SiteStage extends HTMLElement {
 		// A token that goes takes the focus with it: it goes to the add button.
 		setTimeout(() => {
 			const active = document.activeElement;
-			if (!active || active === document.body) this.quickAdd?.focus();
+			if (!active || active === document.body) this.quickAdd?.focus({ preventScroll: true });
 		});
 	}
 

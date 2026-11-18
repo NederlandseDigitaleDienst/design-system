@@ -128,6 +128,16 @@ export function sitePages() {
 			return { build: { rollupOptions: { input: inputs } } };
 		},
 		configureServer(server) {
+			// A page without its trailing slash goes to the page, as nginx does in
+			// production; without this the dev server answers with an empty page.
+			server.middlewares.use((request, response, next) => {
+				const [path, query] = (request.url ?? '').split(/\?(.*)/s);
+				const page = path.startsWith(base) ? path.slice(base.length) : '';
+				if (!page || path.endsWith('/') || /\.[^/]*$/.test(path) || !existsSync(join(generatedDir, page, 'index.html')))
+					return next();
+				response.writeHead(301, { Location: `${path}/${query ? `?${query}` : ''}` });
+				response.end();
+			});
 			server.watcher.add([
 				resolve(repoRoot, 'src'),
 				resolve(repoRoot, 'www/index.html'),

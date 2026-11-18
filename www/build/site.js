@@ -24,13 +24,6 @@ import { DEFAULT_THEME, themesByHue } from '../../scripts/lib/themes.js';
 
 const SITE_NAME = 'NLDD Designsysteem';
 
-const STATUS = {
-	stable: 'Stabiel',
-	beta: 'Bèta',
-	experimental: 'Experimenteel',
-	wip: 'In ontwikkeling',
-};
-
 /**
  * The pages that are prose: where they live on the site and their source.
  * `stories` is the file the examples on the page come from; with `examples`
@@ -146,6 +139,9 @@ const ABOUT = [
 ];
 
 const DOCS = 'Documentatie';
+
+/** The sections on a page of their own, with nothing chosen yet. */
+const DOCS_PATH = '/documentatie/';
 
 /** The section a page belongs to: the one whose path is the longest start of it. */
 function currentSection(path) {
@@ -388,16 +384,17 @@ function toolbar() {
  * @param {string} input.path - where the page lives, `/componenten/button/`
  * @param {string} [input.main] - the content of the page; without it main is empty and says what to pick
  * @param {{ title: string, path: string, nav: string, empty: string }} [input.secondary] - the pages of the section
+ * @param {string} [input.empty] - what main says to pick when there is neither content nor a section
  */
-function layout({ title, description, path, main, secondary }) {
+function layout({ title, description, path, main, secondary, empty }) {
 	const mainPane = main
 		? pane({
 				slot: 'main',
 				id: 'pagina-titel',
 				title,
 				// Main goes back to the list it was chosen from. Without one, back
-				// shows the sections, which have no page of their own.
-				back: secondary ? { text: secondary.title, href: secondary.path } : { text: DOCS },
+				// goes to the sections.
+				back: secondary ? { text: secondary.title, href: secondary.path } : { text: DOCS, href: DOCS_PATH },
 				landmarks: true,
 				body: main,
 			})
@@ -405,7 +402,7 @@ function layout({ title, description, path, main, secondary }) {
 			`<nldd-split-view-pane slot="main">
 		<nldd-page landmarks="page">
 			<nldd-simple-section grow>
-				<nldd-inline-dialog text="${escapeHtml(secondary.empty)}"></nldd-inline-dialog>
+				<nldd-inline-dialog text="${escapeHtml(secondary?.empty ?? empty)}"></nldd-inline-dialog>
 			</nldd-simple-section>
 		</nldd-page>
 	</nldd-split-view-pane>`;
@@ -422,7 +419,7 @@ function layout({ title, description, path, main, secondary }) {
 					slot: 'secondary-sidebar',
 					id: 'lijst-titel',
 					title: secondary.title,
-					back: { text: DOCS },
+					back: { text: DOCS, href: DOCS_PATH },
 					nav: secondary.nav,
 				})
 			: '',
@@ -522,8 +519,7 @@ function prosePage({ title, rendered, extra = [] }) {
 	const headings = rendered.headings;
 	// The blocks are of different kinds (prose, code, an example), so a spacer
 	// stands between each two rather than a gap over all of them.
-	const blocks = [...(rendered.blocks ?? [rendered.html]), ...extra].filter((block) => block.trim());
-	const body = blocks.join('\n<nldd-spacer size="24"></nldd-spacer>\n');
+	const body = stack([...(rendered.blocks ?? [rendered.html]), ...extra], 24);
 	if (headings.length < 2 || headings.length > 24) {
 		return `		<nldd-simple-section grow>
 			${pageTitle(title)}
@@ -730,18 +726,45 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
  * The body of a page in main: its title, and the blocks under it. The blocks
  * are of different kinds, so a spacer stands between each two.
  */
-function docBody({ title, blocks }) {
+function docBody({ title, intro = [], tabs = '', blocks }) {
+	// The introduction and the tabs belong to the title, in the header: the
+	// section keeps its own distance between the header and what follows.
+	const header = [
+		intro.some((block) => block?.trim())
+			? `
+			<nldd-spacer slot="header" size="16"></nldd-spacer>
+			<nldd-container slot="header">
+${stack(intro, 12)}
+			</nldd-container>`
+			: '',
+		tabs
+			? `
+			<nldd-spacer slot="header" size="24"></nldd-spacer>
+			${tabs.replace('navigation', 'navigation\n\t\t\t\t\tslot="header"')}`
+			: '',
+	].join('');
 	return `		<nldd-simple-section grow>
-			${title}
+			${title}${header}
 			<nldd-container>
 ${stack(blocks, 32)}
 			</nldd-container>
 		</nldd-simple-section>`;
 }
 
-/** Blocks under each other, a spacer of `size` between each two. */
+/** A block that ends in a heading: what comes next belongs to it. */
+const endsInHeading = (block) => /<\/h[2-6]>\s*<\/nldd-rich-text>\s*$/.test(block);
+
+/**
+ * Blocks under each other, a spacer of `size` between each two, and a smaller
+ * one after a heading, which stands closer to what it introduces.
+ */
 function stack(blocks, size) {
-	return blocks.filter((block) => block?.trim()).join(`\n<nldd-spacer size="${size}"></nldd-spacer>\n`);
+	return blocks
+		.filter((block) => block?.trim())
+		.map((block, index, all) =>
+			index === all.length - 1 ? block : `${block}\n<nldd-spacer size="${endsInHeading(block) ? 12 : size}"></nldd-spacer>`,
+		)
+		.join('\n');
 }
 
 /** The tabs of a component or a pattern, each a page of its own. */
@@ -784,7 +807,9 @@ function patternPages(pattern, lintRules) {
 		title: tab.title,
 		main: docBody({
 			title: pageTitle(pattern.name, { overline: pattern.group }),
-			blocks: [...intro, tabs.length > 1 ? tabBar(pattern.name, tabs, tab) : '', ...tab.body],
+			intro,
+			tabs: tabs.length > 1 ? tabBar(pattern.name, tabs, tab) : '',
+			blocks: tab.body,
 		}),
 	}));
 }
@@ -815,9 +840,6 @@ function componentPages(component, lintRules) {
 	const usageBlocks = usageText.trim() ? renderMarkdown(usageText, { href: identity }).blocks : [];
 	const api = component.elements.map(elementApi).filter(Boolean);
 	const rules = [...new Set(component.elements.flatMap((element) => rulesAboutTag(lintRules, element.tagName)))];
-	const status = component.status
-		? `\n\t\t\t\t<nldd-tag slot="end" text="${STATUS[component.status] ?? component.status}"></nldd-tag>`
-		: '';
 	const source = component.sourceFile
 		? `<nldd-link
 					href="${REPOSITORY}/blob/main/${component.sourceFile}"
@@ -867,14 +889,10 @@ function componentPages(component, lintRules) {
 		path: tab.path,
 		title: tab.title,
 		main: docBody({
-			title: pageTitle(component.name, { overline: component.category, end: status }),
-			blocks: [
-				`<nldd-container>
-					${stack([description, source], 12)}
-				</nldd-container>`,
-				tabBar(component.name, tabs, tab),
-				...tab.body,
-			],
+			title: pageTitle(component.name, { overline: component.category }),
+			intro: [description, source],
+			tabs: tabBar(component.name, tabs, tab),
+			blocks: tab.body,
 		}),
 	}));
 }
@@ -1065,6 +1083,16 @@ export function buildPages({ base = '/' } = {}) {
 		pages[`${path.slice(1)}index.html`] = withBase(layout({ title, description, path, main, secondary }), base);
 	};
 
+	pages[`${DOCS_PATH.slice(1)}index.html`] = withBase(
+		layout({
+			title: DOCS,
+			description: 'Componenten, patronen en handleidingen van het NLDD Designsysteem.',
+			path: DOCS_PATH,
+			empty: 'Kies een onderdeel',
+		}),
+		base,
+	);
+
 	pages['index.html'] = withBase(homePage(), base);
 
 	let stories = 0;
@@ -1154,7 +1182,7 @@ export function buildPages({ base = '/' } = {}) {
 	}
 
 	// One story on a bare page, without the site around it: what a stage shows in
-	// its frame, and what "Open los" on a stage leads to.
+	// its frame, and what "Open in nieuw tabblad" on a stage leads to.
 	pages['voorbeeld/index.html'] = withBase(
 		`<!doctype html>
 <html lang="nl">

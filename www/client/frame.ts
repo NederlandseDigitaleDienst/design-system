@@ -4,8 +4,8 @@
  * This is where an example runs when it needs the whole window: an
  * nldd-app-view, a page with a navigation bar, an overlay. It loads the
  * stylesheets the way an application does, so the example behaves here as it
- * does for a consumer. A stage shows this page in a frame, and "Open los" on a
- * stage opens it in a tab.
+ * does for a consumer. A stage shows this page in a frame, and "Open in nieuw
+ * tabblad" on a stage opens it in a tab.
  *
  * The address is `/voorbeeld/?file=<story file>&story=<export>`.
  */
@@ -91,6 +91,11 @@ try {
 	if (story.parameters.layout !== 'fullscreen') root.classList.add('site-frame__root--padded');
 	keepInPlace(root);
 	draw();
+	// Without a height of its own the frame is as tall as what is in it.
+	const docs = story.parameters.docs?.story;
+	if (docs?.height === undefined && docs?.iframeHeight === undefined) {
+		new ResizeObserver(() => tell({ type: 'height', height: root.offsetHeight })).observe(root);
+	}
 } catch (error) {
 	root.textContent = `Dit voorbeeld kon niet geladen worden: ${(error as Error).message}`;
 }
