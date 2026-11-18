@@ -7,7 +7,7 @@ import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { cssRules, isDesignSystemCss } from './css.js';
 import { createEngine } from './engine.js';
-import { parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue } from './frontends.js';
+import { parseAstro, parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue } from './frontends.js';
 import { createCanonical, createLinter, loadData } from './linter.js';
 import { resolveSeverities } from './rule-data.js';
 import { readBaseline } from './project.js';
@@ -51,6 +51,38 @@ describe('frontends', () => {
 	it('closes only a full document', () => {
 		assert.equal(parseHtml('<html><body></body></html>')[0].opaque, false);
 		assert.equal(parseHtml('<nldd-a></nldd-a>')[0].opaque, true);
+	});
+
+	it('reads Astro: frontmatter gone, elements in an expression kept with what is around them', () => {
+		const source = [
+			'---',
+			"const html = '<nldd-in-frontmatter>';",
+			'---',
+			'<nldd-list {...rest} {id}>',
+			'\t{items.map((item) => <nldd-a text={item.title} size={`${a}`}/>)}',
+			'\t{show && <nldd-b text="a" />}',
+			'\t{a < b ? <nldd-c /> : <><nldd-d></nldd-d><br></>}',
+			"\t{/* it's a comment with a } and <nldd-e> */}",
+			'\t{children}',
+			'\t<nldd-f set:html={body} class:list={[a]} client:load />',
+			'</nldd-list>',
+			"<script>const t = '<nldd-in-script>{';</script>",
+		].join('\n');
+		const roots = parseAstro(source);
+		const list = first(roots, 'nldd-list');
+		assert.equal(list.spread, true);
+		assert.equal(list.templated, false);
+		assert.deepEqual(list.children.map((node) => node.name), ['nldd-a', 'nldd-b', 'nldd-c', 'nldd-d', 'br', '#unknown', 'nldd-f']);
+		const [a, b, c, d] = list.children;
+		assert.deepEqual([a.repeated, a.conditional], [true, false]);
+		assert.deepEqual([...a.attrs], [['text', BOUND], ['size', BOUND]]);
+		assert.deepEqual([b.repeated, b.conditional, b.attrs.get('text')], [false, true, 'a']);
+		assert.equal(c.conditional && d.conditional, true);
+		const filled = first(roots, 'nldd-f');
+		assert.deepEqual([...filled.attrs], [['class', BOUND]]);
+		assert.deepEqual(filled.children.map((node) => node.name), ['#unknown']);
+		assert.equal(source.slice(a.offset, a.offset + 7), '<nldd-a');
+		assert.equal(roots[0].opaque, true);
 	});
 
 	it('reads JSX with conditions, lists, fragments and spreads', async () => {
@@ -587,6 +619,14 @@ describe('--fix', () => {
 		writeFileSync(join(root, 'logo.js'), `${lines}\nconst d = '${'M0 0'.repeat(800)}';\nexport const Logo = () => <nldd-button foo="b"></nldd-button>;\n`);
 		const { stdout } = run(root, 'lint', '.');
 		assert.match(stdout, /foo/);
+	});
+
+	it('fixes Astro where the name or the value is written out, and leaves an expression alone', () => {
+		const rename = (attribute) => fixed('a.astro', `---\nconst b = 1;\n---\n${attribute}`).text.split('\n').at(-1);
+		assert.equal(rename('<nldd-button text="a" variant={b} />'), '<nldd-button text="a" appearance={b} />');
+		assert.equal(rename('{list.map((b) => <nldd-title text={b} size="3" />)}'), '{list.map((b) => <nldd-title text={b} size="display-3" />)}');
+		assert.equal(rename('<nldd-app-view>{b && <nldd-app-view></nldd-app-view>}</nldd-app-view>'), '<nldd-shell>{b && <nldd-shell></nldd-shell>}</nldd-shell>');
+		assert.equal(rename('<nldd-button text="a" {variant} />'), '<nldd-button text="a" {variant} />');
 	});
 
 	it('reads MDX and Markdown only when named, and renames a tag in the prose and in a mention', () => {
@@ -1135,7 +1175,7 @@ describe('found in the sixth review', () => {
 
 	it('says nothing about suppressions when no tree was read', async () => {
 		const source = '<template lang="pug">\n<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->\nnldd-tab-bar\n</template>';
-		assert.deepEqual(await rulesIn('<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->', 'a.astro'), []);
+		assert.deepEqual(await rulesIn('<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->', 'a.svelte'), []);
 		assert.equal((await rulesIn(source.replaceAll('template', 'script'), 'a.vue')).length, 0);
 	});
 
@@ -1566,6 +1606,33 @@ describe('nldd command', () => {
 		assert.match(result.stdout, /src\/a\.vue:1:11 {2}error {2}unknown-element/);
 	});
 
+	it('reads Astro in a scan, and says which templates with our markup it cannot read', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'src'));
+		writeFileSync(join(root, 'src/a.astro'), '---\n---\n<nldd-gone />\n');
+		writeFileSync(join(root, 'src/b.svelte'), '<nldd-button text="a" />\n');
+		writeFileSync(join(root, 'src/c.svelte'), '<p>geen component</p>\n');
+		const result = run(root, 'lint');
+		assert.match(result.stdout, /src\/a\.astro:3:1 {2}error {2}unknown-element/);
+		assert.match(result.stdout, /src\/b\.svelte:1:1 {2}warn {2}file-not-read/);
+		assert.doesNotMatch(result.stdout, /c\.svelte/);
+		assert.match(result.stdout, /1 error, 1 warning in 1 file/);
+	});
+
+	it('skips the scripts of a build, whose chunks hold the styles of the components themselves', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'dist/_astro'), { recursive: true });
+		mkdirSync(join(root, 'src'));
+		const chunk = 'var b = r`\n:host {\n\t--_button-gap: 4px;\n}\n`;\nconst t = "<nldd-icon>";\n';
+		writeFileSync(join(root, 'dist/_astro/button.pAKU2ucd.js'), chunk);
+		writeFileSync(join(root, 'dist/index.html'), '<html><body><nldd-gone></nldd-gone></body></html>\n');
+		writeFileSync(join(root, 'src/own.js'), chunk);
+		const built = run(root, 'lint', 'dist');
+		assert.match(built.stdout, /dist\/index\.html:1:13 {2}error {2}unknown-element/);
+		assert.match(built.stdout, /1 error, 0 warnings in 1 file/);
+		assert.match(run(root, 'lint', 'src').stdout, /local-variable-no-override[^]*file-not-read/);
+	});
+
 	it('reports only what is new after accepting a baseline', () => {
 		const root = project();
 		assert.equal(run(root, 'lint', '--update-baseline').status, 0);
@@ -1792,9 +1859,22 @@ describe('markup the linter cannot read', () => {
 	const rulesIn = async (source, file) => (await linter.lintSource(source, file)).findings.map(({ rule }) => rule);
 
 	it('says so for a file type without a parser, and for a script without an html template', async () => {
-		assert.deepEqual(await rulesIn('---\n---\n<nldd-button text="a" foo="b"></nldd-button>', 'a.astro'), ['file-not-read']);
+		assert.deepEqual(await rulesIn('<script>let a;</script>\n<nldd-button text="a" foo="b"></nldd-button>', 'a.svelte'), ['file-not-read']);
 		assert.deepEqual(await rulesIn('export const t = `<nldd-button text="a" foo="b"></nldd-button>`;', 'b.mjs'), ['file-not-read']);
 		assert.deepEqual(await rulesIn('// <nldd-button>\nexport const a = 1;', 'c.js'), []);
+	});
+
+	it('reads Astro, and reports only what is certain there', async () => {
+		const page = (markup) => `---\nimport Layout from './Layout.astro';\n---\n<Layout>\n${markup}\n</Layout>`;
+		assert.deepEqual(await rulesIn(page('<nldd-button text="a" foo="b"></nldd-button>'), 'a.astro'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn(page('{items.map((item) => <nldd-button foo={item} />)}'), 'a.astro'), ['unknown-attribute', 'button-needs-name']);
+		assert.deepEqual(await rulesIn(page('<nldd-button {...rest} /><nldd-button {text} /><nldd-button text={a} />'), 'a.astro'), []);
+		assert.deepEqual(await rulesIn(page('<nldd-text>{body}</nldd-text><nldd-text set:html={body} />'), 'a.astro'), []);
+		assert.deepEqual(await rulesIn(page('<nldd-text>los</nldd-text>'), 'a.astro'), ['text-needs-element']);
+		assert.deepEqual(await rulesIn(page("<nldd-text>{'los'}</nldd-text>"), 'a.astro'), ['text-needs-element']);
+		const suppressed = "{/* nldd-lint-disable-next-line unknown-element -- it's a demo */}\n<nldd-gone></nldd-gone>";
+		assert.deepEqual(await rulesIn(page(suppressed), 'a.astro'), []);
+		assert.deepEqual(await rulesIn('---\nconst t = "<nldd-gone>";\n---\n<p is:raw><nldd-gone></nldd-gone></p>', 'a.astro'), []);
 	});
 
 	it('reads a Go template and Lit in a JavaScript file', async () => {

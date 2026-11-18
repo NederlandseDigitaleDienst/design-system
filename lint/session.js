@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { extname, relative, resolve, sep } from 'node:path';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS } from './rule-data.js';
-import { DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, isBundle, isRelevant, projectTokens, REFERENCE_EXTENSIONS, STYLESHEET_EXTENSIONS } from './project.js';
+import { DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, isBundle, isRelevant, projectTokens, REFERENCE_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
 
 /** Every name `--select`, `--ignore` and .nldd-lint.json may use: rule ids, aliases and groups. */
 export function knownKeys(data) {
@@ -46,9 +46,18 @@ async function fixUntilStable(linter, original, filename) {
 	return { source, fixed, renamedTags, findings: (await linter.lintSource(source, filename)).findings };
 }
 
+/** In a directory a build writes to, such as `dist`: output, not the app's own source. */
+const isBuilt = (file, root) => relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
+
+/**
+ * A script a bundler wrote. Its chunks hold the design system's own component
+ * styles and markup in strings, which read as an app overriding them. The pages
+ * and stylesheets next to it are what a build has to show.
+ */
+const isBuiltScript = (file, root) => /\.[cm]?js$/.test(file) && isBuilt(file, root);
+
 /** The tag is gone from the markup; what still names it would break or stop matching. */
 function fixReferences(renamedTags, paths, root, exclude) {
-	const isBuilt = (file) => relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
 	const inMarkup = findFiles(paths, root, exclude);
 	const elsewhere = findFiles(paths, root, exclude, REFERENCE_EXTENSIONS).filter((file) => REFERENCE_EXTENSIONS.includes(extname(file)) && !inMarkup.includes(file));
 	let fixed = 0;
@@ -58,7 +67,7 @@ function fixReferences(renamedTags, paths, root, exclude) {
 	for (const list of [inMarkup, elsewhere]) {
 		for (const filename of list.filter((file) => !/\.min\.[cm]?js$/.test(file))) {
 			const source = readFileSync(filename, 'utf8');
-			const change = isBuilt(filename) ? { source, fixed: 0 } : renameReferences(source, renamedTags, kindOf(filename));
+			const change = isBuilt(filename, root) ? { source, fixed: 0 } : renameReferences(source, renamedTags, kindOf(filename));
 			if (change.fixed > 0 && isUtf8(filename)) {
 				writeFileSync(filename, change.source);
 				fixed += change.fixed;
@@ -87,7 +96,8 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	const everything = readsEverything(data, severities);
 	const inputs = input
 		? [{ filename: resolve(root, input.filename), source: input.source }]
-		: findFiles(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS])
+		: findFiles(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS])
+				.filter((filename) => !isBuiltScript(filename, root))
 				.map((filename) => ({ filename, source: readFileSync(filename, 'utf8') }))
 				.filter(({ filename, source }) => !isBundle(filename, source));
 
@@ -95,7 +105,9 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	// A stylesheet is still read for the tokens it declares.
 	const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));
 	const relevant = everything ? inputs : inputs.filter((one) => isRelevant(one, { wrappers: config.wrappers, keep }));
-	const files = everything ? inputs.length : inputs.filter(({ filename }) => !isStylesheet(filename)).length + relevant.filter(({ filename }) => isStylesheet(filename)).length;
+	// A file without a parser was opened and not checked, so it does not count as one.
+	const checked = inputs.filter(({ filename }) => !UNREAD_EXTENSIONS.includes(extname(filename)));
+	const files = everything ? checked.length : checked.filter(({ filename }) => !isStylesheet(filename)).length + relevant.filter(({ filename }) => isStylesheet(filename)).length;
 
 	const results = [];
 	const notUtf8 = [];

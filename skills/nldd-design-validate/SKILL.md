@@ -28,9 +28,9 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 | Een baseline die alleen kleiner wordt | `... lint --tighten-baseline`: verlaagt wat geaccepteerd is tot wat er nog staat, en voegt nooit iets toe. Een hernoemd bestand neemt zijn regels mee als er precies hetzelfde in staat; anders `... lint --update-baseline <pad>` |
 | Beginnen in een project met honderden meldingen | `... lint --statistics`: telling per regel, grootste eerst |
 | Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
-| Vue, React, Angular, Django, Jinja, Go, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.js`, `.html`, `.j2` en `.tmpl`. In `.js` leest hij JSX en Lit-templates; een geminificeerde bundel slaat hij over. Een `.mdx` of `.md` leest hij als je hem noemt, met de proza erbij. Een bestand met `nldd-*`-markup dat hij niet kan lezen, meldt hij als `file-not-read` |
+| Vue, React, Astro, Angular, Django, Jinja, Go, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.js`, `.astro`, `.html`, `.j2` en `.tmpl`. In `.js` leest hij JSX en Lit-templates; een geminificeerde bundel slaat hij over. Een `.mdx` of `.md` leest hij als je hem noemt, met de proza erbij. Een bestand met `nldd-*`-markup dat hij niet kan lezen, zoals `.svelte` of `.php`, meldt hij als `file-not-read`, ook in een scan van een map |
 | Tokens die niet bestaan | `... lint`: leest ook `.css`, `.scss`, `.less` en `<style>`-blokken, en meldt een `var(--semantics-…)` die er niet is (`token-not-found`) of een `--_*`-variabele van een component die je zelf zet (`local-variable-no-override`) |
-| Een site die naar HTML bouwt (Astro, MkDocs, Hugo) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
+| Een site die naar HTML bouwt (Astro, MkDocs, Hugo) | `... lint dist`: werkt voor elk framework en ziet hele pagina's. Bij Astro vult dat de bron aan: daar wijst een melding naar het `.astro`-bestand en werkt `--fix` |
 | Zien wat een upgrade breekt | `npx @nldd/design-system@<doelversie> lint` op je huidige code; `--fix` lost de hernoemingen op |
 
 De linter vraagt Node 20.19 of nieuwer. Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @nldd/design-system@<versie> lint`. Zonder pin krijg je de nieuwste.
