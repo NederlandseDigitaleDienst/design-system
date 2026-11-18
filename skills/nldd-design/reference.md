@@ -48,7 +48,6 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 - `sheet-form-max-one-action` (hint): Keep one action under the form. The way out is `dismiss-text` on the title bar.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `title-end-max-one-action` (hint): Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.
-- `toolbar-needs-two-actions` (hint): Use a plain button for a single action.
 - `toolbar-primary-needs-priority` (hint): Give the primary action the highest `priority`, so it is the last to move to the overflow.
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
@@ -192,7 +191,6 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 - `row-action-goes-in-segment` (hint): Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
 - `title-end-max-one-action` (hint): Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.
-- `toolbar-needs-two-actions` (hint): Use a plain button for a single action.
 - `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
