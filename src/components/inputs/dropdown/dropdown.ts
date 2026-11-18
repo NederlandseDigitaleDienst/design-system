@@ -20,7 +20,7 @@
  * @element nldd-dropdown
  * @keywords select, picker, keuzelijst
  * @related nldd-combo-box, nldd-radio-button-group, nldd-segmented-control
- * @attr {string} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
+ * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} disabled - Disabled state; also forwarded to the slotted select

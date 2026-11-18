@@ -317,6 +317,26 @@ function checkSlottedIsAccepted() {
 	}
 }
 
+/**
+ * An attribute with a fixed set of values names them in its type, as
+ * `@attr {'sm'|'md'} size`. Typed `{string}`, with the values only in the
+ * description, the website shows a text field instead of a choice, and the
+ * linter cannot tell a wrong value. A `{string}` that is open (a CSS length,
+ * a list that ends in `...`) keeps its type; a reason in the description
+ * says so, and this check only looks for two quoted values joined by a bar.
+ */
+const OPEN_SET = /CSS length|\.\.\.|display-6' to|or empty/;
+function checkFixedValuesAreTyped() {
+	for (const [file, source] of componentSources) {
+		if (file.endsWith('.test.ts')) continue;
+		source.split('\n').forEach((line, index) => {
+			const match = /@attr \{string\} ([\w-]+) - (.*)$/.exec(line);
+			if (!match || OPEN_SET.test(match[2]) || !/'[^']+'(?:\s*\([^)]*\))?\s*\|\s*'[^']+'/.test(match[2])) return;
+			problems.push(`${relative(repoRoot, file)}:${index + 1}: ${match[1]} lists its values in the description; put them in the type, as {'a'|'b'}.`);
+		});
+	}
+}
+
 for (const rule of data.rules) {
 	for (const selector of selectorsOf(rule)) {
 		for (const tokens of parse(selector)) checkTokens(tokens, rule);
@@ -332,6 +352,7 @@ const patterns = await checkPatterns();
 checkStatesAreRead();
 checkNoWarnings();
 checkSlottedIsAccepted();
+checkFixedValuesAreTyped();
 
 if (problems.length > 0) {
 	console.error(problems.join('\n'));

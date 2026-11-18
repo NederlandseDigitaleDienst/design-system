@@ -75,6 +75,13 @@ test('every page behind the landing page is an application: a toolbar around a s
 	}
 });
 
+test('the title of a page names its section, except on the section itself', () => {
+	const title = (path) => pages[path].match(/<title>([^<]*)<\/title>/)[1];
+	assert.equal(title('componenten/button/index.html'), 'Button · Componenten · NLDD Designsysteem');
+	assert.equal(title('patronen/home-page/index.html'), 'Home · Patronen · NLDD Designsysteem');
+	assert.equal(title('componenten/index.html'), 'Componenten · NLDD Designsysteem');
+});
+
 test('a page marks its section in the first sidebar, itself in the second, and goes back to that list', () => {
 	const button = pages['componenten/button/index.html'];
 	assert.match(button, /<nldd-list-item href="\/componenten\/" current>/);
@@ -203,6 +210,9 @@ test('controlFor reads the values of a named type from the source', () => {
 	const size = controlFor(file, { name: 'size', type: { text: 'Size' }, default: "'md'" });
 	assert.deepEqual(size, { name: 'size', default: 'md', description: '', kind: 'select', values: ['xs', 'sm', 'md', 'lg'], strict: true });
 	assert.equal(controlFor(file, { name: 'disabled', type: { text: 'boolean' } }).kind, 'boolean');
+	// A type the source cannot resolve, such as one imported from a dependency, takes the linter's values.
+	const placement = controlFor(file, { name: 'placement', type: { text: 'Placement' } }, ['bottom', 'top']);
+	assert.deepEqual([placement.kind, placement.strict, placement.values], ['select', true, ['bottom', 'top']]);
 	assert.equal(controlFor(file, { name: 'translations', type: { text: 'Partial<T>' } }), null);
 });
 

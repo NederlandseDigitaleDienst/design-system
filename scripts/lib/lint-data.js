@@ -47,8 +47,10 @@ export function buildContract(elements) {
 			const target = attribute.global ? globalAttrs : attribute.forDescendants ? descendantAttrs : attribute.forChildren ? childAttrs : attrs;
 			if (target[attribute.name]) continue;
 			const entry = {};
-			const literals = attribute.expandedType?.text ?? ((attribute.forChildren || attribute.forDescendants || attribute.global) && attribute.type?.text);
-			if (literals && literals.includes("'")) entry.values = literalValues(literals);
+			// The resolved TypeScript type, or the values the JSDoc names where the
+			// property is a plain string: `@attr {'sm'|'md'} size` on `size: string`.
+			const literals = [attribute.expandedType?.text, attribute.type?.text].find((text) => text?.includes("'"));
+			if (literals) entry.values = literalValues(literals);
 			if (attribute.deprecated) entry.deprecated = attribute.deprecated;
 			target[attribute.name] = entry;
 		}

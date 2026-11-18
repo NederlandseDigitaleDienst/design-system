@@ -68,7 +68,7 @@
  * @attr {boolean} md-title-bar - Keeps an nldd-top-title-bar in the popover on md and up, where it is hidden by default. For a bar whose dismiss button does what nothing else in the popover does.
  * @attr {boolean} sm-full-height - On an sm viewport (where the popover renders as a bottom sheet) fills the whole available height instead of shrinking to its content. No effect on md and up (anchored mode). Opt-in for content-heavy cases such as search results or long detail views; content-sized is the default, following the Apple and Material convention.
  * @attr {string} anchor - ID of the trigger element, used for positioning
- * @attr {string} placement - Floating UI placement (default: 'bottom-start')
+ * @attr {'top'|'top-start'|'top-end'|'bottom'|'bottom-start'|'bottom-end'|'left'|'left-start'|'left-end'|'right'|'right-start'|'right-end'} placement - Side of the anchor it opens on, and how it lines up there (default: 'bottom-start')
  * @attr {string} top - CSS top position. When set (on its own, or together with other edge attributes or `centered`) Floating UI's anchor positioning is skipped and the popover stands free on the screen. The `anchor` is still needed for the ARIA link on the trigger. No effect on sm, where the bottom sheet wins.
  * @attr {string} right - CSS right position. See `top` for the semantics.
  * @attr {string} bottom - CSS bottom position. See `top` for the semantics.

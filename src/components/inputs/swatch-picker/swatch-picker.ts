@@ -18,7 +18,7 @@
  * @element nldd-swatch-picker
  * @keywords color, color picker, kleur, kleurkiezer
  * @related nldd-radio-button-group
- * @attr {string} size - Swatch size, on the control scale: 'xs' (24px) | 'sm' (34px) | 'md' (44px) (default: 'md')
+ * @attr {'xs'|'sm'|'md'} size - Swatch size, on the control scale: 'xs' (24px) | 'sm' (34px) | 'md' (44px) (default: 'md')
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label. In an nldd-form-field the field names it.
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it.
@@ -34,7 +34,7 @@
  * ---
  *
  * @element nldd-swatch-picker-item
- * @attr {string} color - Category color: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. Brings its name along, so `text` is optional.
+ * @attr {'lintblauw'|'donkerblauw'|'hemelblauw'|'lichtblauw'|'paars'|'violet'|'robijnrood'|'roze'|'rood'|'oranje'|'donkergeel'|'geel'|'donkerbruin'|'bruin'|'donkergroen'|'groen'|'mosgroen'|'mintgroen'} color - Category color: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. Brings its name along, so `text` is optional.
  * @attr {string} custom-color - Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`.
  * @attr {string} image - URL of an image that fills the swatch, for a pattern or a material. Needs `text`.
  * @attr {string} image-srcset - Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from.
@@ -42,7 +42,7 @@
  * @attr {boolean} selected - Whether this swatch is chosen (set by the picker)
  * @attr {boolean} disabled - Disabled state
  * @attr {string} value - Value for this swatch
- * @attr {string} size - Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')
+ * @attr {'xs'|'sm'|'md'} size - Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')
  * @attr {object} translations - Override translation keys (the names of the category colors); unset keys fall back to Dutch.
  */
 import { LitElement } from 'lit';

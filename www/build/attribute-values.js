@@ -8,6 +8,10 @@
  * (many components have their own `Size`), which is why an alias is resolved
  * from the file that declares the element, following its imports.
  *
+ * The linter knows the values of more types, such as one imported from a
+ * dependency (`Placement` of Floating UI). Where the source does not say, its
+ * values are used: the same set a wrong value is reported against.
+ *
  * Where the type is just `string` the description often lists the values
  * (`'stack' | 'row' | 'wrap'`). Those are offered as suggestions, not as the
  * only choices, because prose is not a contract.
@@ -108,11 +112,12 @@ function unquote(text) {
 /**
  * @param {string} file - absolute path of the module that declares the element
  * @param {{ name: string, type?: { text: string }, default?: string, description?: string }} attribute
+ * @param {string[]} [known] - the values the linter accepts for the attribute
  * @returns {{ name: string, kind: 'boolean'|'number'|'select'|'text', values?: string[],
  *   strict?: boolean, default?: string, description: string } | null} null for
  *   an attribute a control cannot set, such as an object
  */
-export function controlFor(file, attribute) {
+export function controlFor(file, attribute, known) {
 	const type = (attribute.type?.text ?? 'string').replace(/\s*\|\s*(undefined|null)\b/g, '').trim();
 	const base = {
 		name: attribute.name,
@@ -122,10 +127,9 @@ export function controlFor(file, attribute) {
 	if (type === 'boolean') return { ...base, kind: 'boolean' };
 	if (type === 'number') return { ...base, kind: 'number' };
 	if (/^(object|Function|Partial<|Record<|Array<|\{)/.test(type) || type.endsWith('[]')) return null;
-	if (type !== 'string') {
-		const values = typeValues(file, type);
-		if (values) return { ...base, kind: 'select', values, strict: true };
-	}
+	// The source keeps the order the author wrote (sm, md, lg); the linter sorts.
+	const values = (type !== 'string' && typeValues(file, type)) || (known?.length > 1 ? known : null);
+	if (values) return { ...base, kind: 'select', values, strict: true };
 	const suggested = proseValues(attribute.description);
 	if (suggested) return { ...base, kind: 'select', values: suggested, strict: false };
 	return { ...base, kind: 'text' };

@@ -10,7 +10,7 @@
  * @attr {string} value - The input value
  * @attr {string} placeholder - Placeholder text
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
- * @attr {string} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
+ * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} disabled - Disabled state

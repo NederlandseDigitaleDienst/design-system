@@ -26,7 +26,7 @@
  * @attr {string} mac-keys - Optional override for macOS (iPhone/iPad/iPod included).
  * @attr {string} windows-keys - Optional override for Windows.
  * @attr {string} linux-keys - Optional override for Linux/ChromeOS.
- * @attr {string} size - Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the
+ * @attr {'sm'|'md'|'inherit'} size - Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the
  *   font-size from the container; with keycaps they then scale along in em.
  * @attr {string} appearance - 'keycap' (default) shows each key as a keycap with a fill and a
  *   highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter,

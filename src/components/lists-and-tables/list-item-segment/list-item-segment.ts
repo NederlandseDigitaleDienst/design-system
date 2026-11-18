@@ -53,7 +53,7 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {string} accessible-label - Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action.
  * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
  * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing: an absent attribute emits no aria-expanded.
- * @attr {string} popup-type - Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render.
+ * @attr {'menu'|'listbox'|'dialog'|'tree'|'grid'} popup-type - Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render.
  * @attr {string} popovertarget - ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
  * @attr {boolean} current - Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
  * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value of a `current` segment (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
@@ -132,7 +132,7 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	 * itself from the first render.
 	 */
 	@property({ attribute: 'popup-type', reflect: true })
-	popupType?: string;
+	popupType?: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid';
 
 	/** ID of a popover this segment toggles; forwarded to the inner button. */
 	@property({ reflect: true })

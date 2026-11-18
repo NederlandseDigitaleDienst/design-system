@@ -35,8 +35,8 @@
  * @element nldd-button-group
  * @keywords knoppengroep
  * @related nldd-button-bar, nldd-toolbar
- * @attr {string} size - Button group size, set on every button in it: 'sm' | 'md' (default: 'md')
- * @attr {string} orientation - Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')
+ * @attr {'sm'|'md'} size - Button group size, set on every button in it: 'sm' | 'md' (default: 'md')
+ * @attr {'auto'|'horizontal'|'vertical'} orientation - Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')
  * @attr {string} width - 'full': the buttons fill the row in equal shares, and a button that does not fit moves to a line of its own (default: unset, each button as wide as its label)
  *
  * @slot - Default slot for buttons (max 3)

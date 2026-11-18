@@ -427,7 +427,7 @@ function layout({ title, description, path, main, secondary, empty }) {
 	].filter(Boolean);
 	return `<!doctype html>
 <html lang="nl">
-${head({ title, description, entry: 'main.ts' })}
+${head({ title: secondary && secondary.title !== title ? `${title} · ${secondary.title}` : title, description, entry: 'main.ts' })}
 <body class="site">
 <nldd-shell>
 	<nldd-bar-split-view>
@@ -469,9 +469,10 @@ function controlsOf(component) {
 	const element = component.elements.find((e) => e.tagName === component.tag);
 	if (!element) return undefined;
 	const file = resolve(repoRoot, element.module);
+	const known = loadData().tags[element.tagName]?.attrs ?? {};
 	return {
 		tag: element.tagName,
-		attributes: (element.attributes ?? []).map((a) => controlFor(file, a)).filter(Boolean),
+		attributes: (element.attributes ?? []).map((a) => controlFor(file, a, known[a.name]?.values)).filter(Boolean),
 	};
 }
 

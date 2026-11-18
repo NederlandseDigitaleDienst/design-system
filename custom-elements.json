@@ -37,7 +37,7 @@
               "kind": "field",
               "name": "appearance",
               "type": {
-                "text": "string"
+                "text": "Appearance"
               },
               "default": "'neutral-tinted'",
               "attribute": "appearance",
@@ -70,10 +70,13 @@
             {
               "name": "appearance",
               "type": {
-                "text": "string"
+                "text": "Appearance"
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
+              "expandedType": {
+                "text": "'accent-filled' | 'content-filled' | 'content-tinted' | 'neutral-base' | 'neutral-tinted' | 'primary' | 'secondary'"
+              },
               "description": "Visual style of the buttons: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. The content appearances are for a colored surface."
             },
             {
@@ -3285,7 +3288,7 @@
               "kind": "field",
               "name": "placement",
               "type": {
-                "text": "string"
+                "text": "Placement"
               },
               "default": "'bottom-start'",
               "attribute": "placement",
@@ -3489,12 +3492,15 @@
             },
             {
               "type": {
-                "text": "string"
+                "text": "Placement"
               },
-              "description": "Floating UI placement. Default: 'bottom-start'.",
+              "description": "Side of the anchor it opens on, and how it lines up there (default: 'bottom-start')",
               "name": "placement",
               "default": "'bottom-start'",
-              "fieldName": "placement"
+              "fieldName": "placement",
+              "expandedType": {
+                "text": "'bottom' | 'bottom-end' | 'bottom-start' | 'left' | 'left-end' | 'left-start' | 'right' | 'right-end' | 'right-start' | 'top' | 'top-end' | 'top-start'"
+              }
             },
             {
               "type": {
@@ -9191,11 +9197,17 @@
           "attributes": [
             {
               "name": "text",
-              "description": "Heading text (rendered in the `<legend>`)."
+              "description": "Heading text (rendered in the `<legend>`).",
+              "type": {
+                "text": "string"
+              }
             },
             {
               "name": "supporting-text",
-              "description": "Short description under the heading. Keep it to roughly 80 characters or less (see the a11y note)."
+              "description": "Short description under the heading. Keep it to roughly 80 characters or less (see the a11y note).",
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -9250,7 +9262,10 @@
           "attributes": [
             {
               "name": "label-alignment",
-              "description": "Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade."
+              "description": "Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.",
+              "type": {
+                "text": "'top'|'right'|'left'"
+              }
             },
             {
               "name": "name",
@@ -9263,7 +9278,7 @@
               "name": "autocomplete",
               "description": "'on' | 'off' (form-level autofill toggle)",
               "type": {
-                "text": "string"
+                "text": "'on'|'off'"
               }
             },
             {
@@ -9277,7 +9292,7 @@
               "name": "method",
               "description": "HTTP method ('get' | 'post' | 'dialog')",
               "type": {
-                "text": "string"
+                "text": "'get'|'post'|'dialog'"
               }
             },
             {
@@ -18461,7 +18476,10 @@
               "name": "max",
               "default": "Infinity",
               "fieldName": "max",
-              "description": "Maximum value (default: Infinity)"
+              "description": "Maximum value (default: Infinity)",
+              "type": {
+                "text": "number"
+              }
             },
             {
               "name": "step",
@@ -19288,7 +19306,10 @@
               "name": "length",
               "default": "DEFAULT_LENGTH",
               "fieldName": "length",
-              "description": "How many characters the code has (default: 6)."
+              "description": "How many characters the code has (default: 6).",
+              "type": {
+                "text": "number"
+              }
             },
             {
               "name": "format",
@@ -24902,7 +24923,10 @@
               "name": "max",
               "default": "Infinity",
               "fieldName": "max",
-              "description": "Maximum value (default: Infinity)"
+              "description": "Maximum value (default: Infinity)",
+              "type": {
+                "text": "number"
+              }
             },
             {
               "name": "step",
@@ -42739,7 +42763,7 @@
               "expandedType": {
                 "text": "'bottom' | 'bottom-end' | 'bottom-start' | 'left' | 'left-end' | 'left-start' | 'right' | 'right-end' | 'right-start' | 'top' | 'top-end' | 'top-start'"
               },
-              "description": "Floating UI placement (default: 'bottom-start')"
+              "description": "Side of the anchor it opens on, and how it lines up there (default: 'bottom-start')"
             },
             {
               "name": "top",
@@ -46638,7 +46662,7 @@
               "kind": "field",
               "name": "popupType",
               "type": {
-                "text": "string | undefined"
+                "text": "'menu' | 'listbox' | 'dialog' | 'tree' | 'grid' | undefined"
               },
               "description": "Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' |\n'grid'. Becomes aria-haspopup on the control and makes aria-expanded\npermanent, so a row of identical \"more\" segments announces what it opens\nbefore anything is open. An nldd-menu or nldd-popover anchored here sets it\nitself from the first render.",
               "attribute": "popup-type",
@@ -46852,11 +46876,14 @@
             },
             {
               "type": {
-                "text": "string | undefined"
+                "text": "'menu' | 'listbox' | 'dialog' | 'tree' | 'grid' | undefined"
               },
               "description": "Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical \"more\" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render.",
               "name": "popup-type",
-              "fieldName": "popupType"
+              "fieldName": "popupType",
+              "expandedType": {
+                "text": "'dialog' | 'grid' | 'listbox' | 'menu' | 'tree'"
+              }
             },
             {
               "type": {
@@ -52452,7 +52479,10 @@
               "name": "duration",
               "default": "DEFAULT_DURATION",
               "fieldName": "duration",
-              "description": "Milliseconds before it leaves once it is front of the deck (default: 10000). `0` keeps it until dismissed, which is what `critical` does regardless."
+              "description": "Milliseconds before it leaves once it is front of the deck (default: 10000). `0` keeps it until dismissed, which is what `critical` does regardless.",
+              "type": {
+                "text": "number"
+              }
             },
             {
               "name": "translations",

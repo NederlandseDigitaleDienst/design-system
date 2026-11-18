@@ -57,7 +57,7 @@
  * not modified.
  *
  * @attr {string} query - Query substring to bold-highlight across text fields. Empty = no marking.
- * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive')
+ * @attr {'match'|'predictive'} query-mark-mode - 'match' | 'predictive' (default: 'predictive')
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';

@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { computePosition, flip, shift, offset, size, autoUpdate } from '@floating-ui/dom';
+import { computePosition, flip, shift, offset, size, autoUpdate, type Placement } from '@floating-ui/dom';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { menuStyles } from './menu.styles.js';
 import { menuTemplate, type MenuVariant } from './menu.template.js';
@@ -98,7 +98,7 @@ const HOVER_OPEN_MAX_MS = 150;
  * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
  * @attr {string} accessible-label - Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field.
  * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead. It positions the same way, without the toggle.
- * @attr {string} placement - Floating UI placement. Default: 'bottom-start'.
+ * @attr {'top'|'top-start'|'top-end'|'bottom'|'bottom-start'|'bottom-end'|'left'|'left-start'|'left-end'|'right'|'right-start'|'right-end'} placement - Side of the anchor it opens on, and how it lines up there (default: 'bottom-start')
  * @attr {number} max-items - Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit).
  * @attr {string} empty-text - Text of the default empty-state dialog. Falls back to Dutch i18n "Geen opties beschikbaar".
  * @attr {string} empty-supporting-text - Supporting text of the default empty-state dialog.
@@ -148,7 +148,7 @@ export class NLDDMenu extends LitElement {
 	accessibleLabel = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('bottom-start') })
-	placement: string = 'bottom-start';
+	placement: Placement = 'bottom-start';
 
 	/**
 	 * @internal Distance in px between the anchor and the menu, along the placement
@@ -1441,7 +1441,7 @@ export class NLDDMenu extends LitElement {
 			: this.placement;
 
 		const { x, y } = await computePosition(anchorEl, this, {
-			placement: effectivePlacement as import('@floating-ui/dom').Placement,
+			placement: effectivePlacement as Placement,
 			middleware: [
 				offset({ mainAxis: this.anchorOffset, alignmentAxis: -submenuPadding }),
 				...(drillIn ? [] : [flip({ padding: viewportMargin })]),

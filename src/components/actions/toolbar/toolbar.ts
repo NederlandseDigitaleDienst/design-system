@@ -19,7 +19,7 @@
  * @element nldd-toolbar
  * @keywords werkbalk
  * @related nldd-button-bar, nldd-button-group
- * @attr {string} size - Toolbar size, propagated to all child controls: 'sm' | 'md' | 'lg' (default: 'md'). At 'lg' the overflow button (and lg-capable children like nldd-icon-button) stack their label below the icon.
+ * @attr {'sm'|'md'|'lg'} size - Toolbar size, propagated to all child controls: 'sm' | 'md' | 'lg' (default: 'md'). At 'lg' the overflow button (and lg-capable children like nldd-icon-button) stack their label below the icon.
  * @attr {boolean} show-item-labels - When true, shows a text label below each toolbar item and the overflow button
  * @attr {string} accessible-label - Accessible name of the toolbar. Only needed when multiple toolbars appear on the same page.
  * @attr {object} translations - Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch.

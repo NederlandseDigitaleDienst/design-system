@@ -27,14 +27,14 @@
  * attribute path; slotted content is rendered as-is.
  *
  * @element nldd-text-cell
- * @attr {string} size - Cell size: 'sm' | 'md' (default: 'md')
- * @attr {string} color - Text color variant: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. All variants other than those two apply to all three text fields so the cell reads as a coherent state.
+ * @attr {'sm'|'md'} size - Cell size: 'sm' | 'md' (default: 'md')
+ * @attr {'content'|'secondary'|'accent'|'success'|'warning'|'critical'} color - Text color variant: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. All variants other than those two apply to all three text fields so the cell reads as a coherent state.
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
  * @attr {string} min-width - Minimum width as CSS length (e.g. '80px', '5rem')
  * @attr {string} max-width - Maximum width as CSS length (e.g. '200px', '20rem')
  * @attr {string} min-height - Minimum height as CSS length (e.g. '44px', '3rem')
- * @attr {string} horizontal-alignment - Horizontal alignment: 'left' | 'center' | 'right' (default: 'left')
- * @attr {string} vertical-alignment - Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')
+ * @attr {'left'|'center'|'right'} horizontal-alignment - Horizontal alignment: 'left' | 'center' | 'right' (default: 'left')
+ * @attr {'top'|'center'|'bottom'} vertical-alignment - Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')
  *
  * @attr {string} text - Main text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins.
  * @attr {string} supporting-text - Optional supporting text displayed below the main content. Supports **bold**. Falls back to `supporting-text` slot.
@@ -58,7 +58,7 @@
  * not modified.
  *
  * @attr {string} query - Query substring to bold-highlight across text fields. Empty = no marking.
- * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive')
+ * @attr {'match'|'predictive'} query-mark-mode - 'match' | 'predictive' (default: 'predictive')
  */
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';

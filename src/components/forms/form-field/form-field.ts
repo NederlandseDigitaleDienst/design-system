@@ -20,7 +20,7 @@
  * @element nldd-form-field
  * @keywords veld, label
  *
- * @attr {string} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
+ * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.
  * @attr {boolean} optional - Shows an optional badge next to the label.

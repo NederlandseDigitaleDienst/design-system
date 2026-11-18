@@ -21,7 +21,7 @@
  * @attr {string} value - The selected form value
  * @attr {string} text - The text shown in the input. May differ from `value` (e.g. value="nl" → text="Nederland"). Set this when pre-populating an existing record. If left empty and `value` matches a slotted menu item, the matching item's `text` is used automatically.
  * @attr {string} placeholder - Placeholder text for the input
- * @attr {string} size - Size: 'sm' | 'md' (default: 'md')
+ * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} disabled - Disabled state

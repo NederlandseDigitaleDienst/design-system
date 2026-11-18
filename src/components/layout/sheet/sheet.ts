@@ -28,7 +28,7 @@
  *
  * @attr {string} width - Custom width for side sheets (left/right) as a CSS length (e.g. '480px', '32rem'). Applied from the md breakpoint up; ignored on sm (bottom sheet) and for `placement="bottom"`. Clamped to `100vw - 2 * inset` so the sheet always fits.
  * @attr {string} height - Custom height for bottom sheets (and for any sheet on sm viewports, where all placements collapse to bottom). Accepts: `'full'` (default: viewport minus top-inset, identical to omitting the attribute), `'fit-content'` (collapse to content size), or any CSS length/percentage (e.g. `'50dvh'`, `'480px'`, `'50%'`). Always clamped to `100dvh - top-inset` so the sheet can't extend past the dismiss-tap area. No effect on side sheets at md+.
- * @attr {string} placement - Sheet position: 'left' | 'right' | 'bottom' (default: 'right')
+ * @attr {'left'|'right'|'bottom'} placement - Sheet position: 'left' | 'right' | 'bottom' (default: 'right')
  * @attr {string} accessible-label - Accessible name for the dialog, forwarded as aria-label. Unset, the sheet takes the text of the nldd-top-title-bar inside it, and without one it is called 'Venster'.
  * @attr {boolean} open - Whether the sheet is open. Set it to open or close the sheet, as an alternative to show() and hide(). The sheet clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event.
  *

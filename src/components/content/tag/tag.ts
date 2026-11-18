@@ -12,9 +12,9 @@
  * @element nldd-tag
  * @keywords chip, pill, label, label
  * @related nldd-badge, nldd-token
- * @attr {string} variant - What is visible: 'text' | 'icon' | 'icon-and-text'. Unset → detected from which of text/icon is present.
- * @attr {string} color - Color variant. Semantic: 'neutral' | 'accent' | 'success' | 'warning' | 'critical'. Rijkshuisstijl colors: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. (default: 'neutral')
- * @attr {string} size - Tag size: 'sm' | 'md' (default: 'md')
+ * @attr {'text'|'icon'|'icon-and-text'} variant - What is visible: 'text' | 'icon' | 'icon-and-text'. Unset → detected from which of text/icon is present.
+ * @attr {'neutral'|'accent'|'success'|'warning'|'critical'|'lintblauw'|'donkerblauw'|'hemelblauw'|'lichtblauw'|'paars'|'violet'|'robijnrood'|'roze'|'rood'|'oranje'|'donkergeel'|'geel'|'donkerbruin'|'bruin'|'donkergroen'|'groen'|'mosgroen'|'mintgroen'} color - Color variant. Semantic: 'neutral' | 'accent' | 'success' | 'warning' | 'critical'. Rijkshuisstijl colors: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. (default: 'neutral')
+ * @attr {'sm'|'md'} size - Tag size: 'sm' | 'md' (default: 'md')
  * @attr {string} text - Tag text. Content in the default slot wins.
  * @attr {string} icon - Icon before the text
  * @attr {string} accessible-label - Accessible label for screen readers. Use this on icon-only tags without visible text.

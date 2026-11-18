@@ -100,12 +100,15 @@ export function nlddFileLevelJsdoc() {
 					}
 
 					// The decorator carries the type and the attribute name, the JSDoc the
-					// prose. Neither replaces the other, so only the description is merged.
-					const descriptions = new Map(doc.attrs.map((a) => [a.name, a.description]));
+					// prose. Neither replaces the other, so only the description is merged,
+					// and the JSDoc type only where the source gave none (a name read off
+					// observedAttributes).
+					const ownDocs = new Map(doc.attrs.map((a) => [a.name, a]));
 					for (const attribute of element.attributes ?? []) {
-						const description = descriptions.get(attribute.name);
+						const { description, type } = ownDocs.get(attribute.name) ?? {};
 						if (!description) continue;
 						attribute.description = description;
+						if (type && !attribute.type) attribute.type = { text: type };
 						if (description.startsWith('@deprecated')) attribute.deprecated = deprecationOf(description);
 					}
 

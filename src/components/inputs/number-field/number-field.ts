@@ -10,7 +10,7 @@
  * @attr {number} min - Minimum value (default: -Infinity)
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
- * @attr {string} size - Size: 'sm' | 'md' (default: 'md')
+ * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
  * @attr {boolean} disabled - Disabled state
  * @attr {boolean} required - A value has to be filled in. An empty field is then invalid.
  * @attr {string} name - Name for form submission

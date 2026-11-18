@@ -140,6 +140,31 @@ describe('nldd-document-tab-bar-item – short mode', () => {
 		expect((item as unknown as { _isShort: boolean })._isShort).toBe(false);
 		expect(tooltip.getAttribute('timing')).toBe('never');
 	});
+
+	it('names a short tab by the text it shows, and describes it with the full text', async () => {
+		el = await fixture<NLDDDocumentTabBar>(threeTabBar());
+		await waitForUpdate(el);
+		const item = getItems(el)[0] as NLDDDocumentTabBarItem;
+		item.setAttribute('short-text', 'Art. 1');
+		item.setAttribute('short-supporting-text', 'WA');
+		item.style.setProperty('--_document-tab-bar-short-text-threshold', '100px');
+		const tab = () => item.shadowRoot!.querySelector('.document-tab-bar__item-tab')!;
+
+		setItemWidth(item, 50);
+		(item as unknown as { _updateIsShort: () => void })._updateIsShort();
+		await waitForUpdate(item);
+		expect(tab().hasAttribute('aria-label')).toBe(false);
+		const shown = tab().querySelector('.document-tab-bar__item-short')!;
+		expect(shown.textContent!.replace(/\s+/g, ' ').trim()).toBe('Art. 1 WA');
+		const description = item.shadowRoot!.getElementById(tab().getAttribute('aria-describedby')!)!;
+		expect(description.textContent!.replace(/\s+/g, ' ').trim()).toBe('Artikel 1 Wet A');
+
+		setItemWidth(item, 150);
+		(item as unknown as { _updateIsShort: () => void })._updateIsShort();
+		await waitForUpdate(item);
+		expect(tab().getAttribute('aria-label')).toBe('Artikel 1 · Wet A');
+		expect(tab().hasAttribute('aria-describedby')).toBe(false);
+	});
 });
 
 

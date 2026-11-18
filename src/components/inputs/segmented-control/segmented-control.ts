@@ -8,10 +8,10 @@
  * @related nldd-radio-button-group, nldd-toggle-button-group, nldd-tab-bar
  * @attr {string} value - Selected value for radio type
  * @prop {string[]} values - Selected values for checkbox type (property binding only, not an attribute)
- * @attr {string} appearance - Visual style, color included: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type="radio" and a transparent appearance.
- * @attr {string} size - Control size: 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {string} type - Selection mode: 'radio' | 'checkbox' (default: 'radio').
- * @attr {string} variant - Content type for all items: 'text' | 'icon' | 'icon-and-text' (default: 'text')
+ * @attr {'neutral-tinted'|'neutral-base'} appearance - Visual style, color included: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type="radio" and a transparent appearance.
+ * @attr {'sm'|'md'|'lg'} size - Control size: 'sm' | 'md' | 'lg' (default: 'md')
+ * @attr {'radio'|'checkbox'} type - Selection mode: 'radio' | 'checkbox' (default: 'radio').
+ * @attr {'text'|'icon'|'icon-and-text'} variant - Content type for all items: 'text' | 'icon' | 'icon-and-text' (default: 'text')
  * @attr {boolean} disabled - Disabled state for all items
  * @attr {string} width - Width mode: 'full' (stretches to container), 'fit-content' (per-item content size), or any CSS length (e.g. '240px')
  * @attr {string} name - Name for form submission
@@ -36,10 +36,10 @@
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
- * @attr {string} appearance - Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.
- * @attr {string} size - Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.
- * @attr {string} variant - Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.
- * @attr {string} input-type - Selection mode: 'radio' | 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control.
+ * @attr {'neutral-tinted'|'neutral-base'} appearance - Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.
+ * @attr {'sm'|'md'|'lg'} size - Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.
+ * @attr {'text'|'icon'|'icon-and-text'} variant - Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.
+ * @attr {'radio'|'checkbox'} input-type - Selection mode: 'radio' | 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control.
  * @attr {string} group-name - Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control.
  * @attr {boolean} required - Required state of the native checkbox. In radio mode the group carries the constraint.
  *

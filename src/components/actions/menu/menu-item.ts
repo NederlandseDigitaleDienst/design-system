@@ -37,14 +37,14 @@ export function syncListItemRole(host: HTMLElement, variant: MenuVariant | null)
  * @attr {string} target - Where an item with an `href` opens (e.g. '_blank'); adjusts rel automatically. With '_blank' the item adds a visually hidden "opent in nieuw tabblad" for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply.
  * @attr {string} rel - Link rel of an item with an `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set.
  * @attr {object} translations - Override translation keys (the new-tab and other-website announcements); unset keys fall back to Dutch.
- * @attr {string} type - Item type: 'button' | 'submit' | 'checkbox' | 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.
+ * @attr {'button'|'submit'|'checkbox'|'radio'} type - Item type: 'button' | 'submit' | 'checkbox' | 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.
  * @attr {string} form - Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root.
  * @attr {boolean} selected - Selected state for checkbox and radio types.
  * @attr {boolean} disabled - Disabled state.
  * @attr {string} value - A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated.
  * @attr {string} aliases - Space-separated alternative search terms.
  * @attr {string} query - Query substring to bold-highlight in text. Set by menu's filter(); also settable by consumers.
- * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive'). See text-cell for details.
+ * @attr {'match'|'predictive'} query-mark-mode - 'match' | 'predictive' (default: 'predictive'). See text-cell for details.
  *
  * @slot icon - An icon of your own before the text, such as an `<img>`: one that is not in the icon set. Wins over `icon`.
  *

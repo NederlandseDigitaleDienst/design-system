@@ -8,7 +8,7 @@
  * @attr {string} value - The textarea value
  * @attr {string} placeholder - Placeholder text
  * @attr {string} input-id - Sets the id on the native textarea. Set automatically by nldd-form-field.
- * @attr {string} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
+ * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} disabled - Disabled state
@@ -16,10 +16,10 @@
  * @attr {boolean} readonly - Readonly state
  * @attr {boolean} required - Required state
  * @attr {string} autocomplete - Autocomplete hint
- * @attr {string} keyboard - Which virtual keyboard a phone or tablet raises, forwarded as `inputmode`: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'. It changes nothing about what the field accepts, and nothing at all on a desktop.
- * @attr {string} enter-key - What the Enter key of the virtual keyboard says, forwarded as `enterkeyhint`: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'. In a field where Enter starts a new line, leave it alone.
+ * @attr {'none'|'text'|'decimal'|'numeric'|'tel'|'search'|'email'|'url'} keyboard - Which virtual keyboard a phone or tablet raises, forwarded as `inputmode`: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'. It changes nothing about what the field accepts, and nothing at all on a desktop.
+ * @attr {'enter'|'done'|'go'|'next'|'previous'|'search'|'send'} enter-key - What the Enter key of the virtual keyboard says, forwarded as `enterkeyhint`: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'. In a field where Enter starts a new line, leave it alone.
  * @attr {number} rows - Initial visible rows (minimum height). Default: 3.
- * @attr {string} resize - 'none' | 'vertical' | 'auto' (default). 'auto' grows with content (native field-sizing), no manual handle.
+ * @attr {'none'|'vertical'|'auto'} resize - 'none' | 'vertical' | 'auto' (default). 'auto' grows with content (native field-sizing), no manual handle.
  * @attr {string} accessible-label - Accessible label forwarded to the inner textarea. Set automatically by nldd-form-field.
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner textarea
  * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.

@@ -10,7 +10,7 @@
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
  * @attr {boolean} disabled - Disabled state
- * @attr {string} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
+ * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
  * @attr {string} name - Name for form submission; the value is submitted under this name
  * @attr {string} accessible-label - Accessible name for the spinbutton; falls back to a generic label
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch

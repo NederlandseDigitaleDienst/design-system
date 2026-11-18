@@ -32,15 +32,15 @@
  * @element nldd-split-button
  * @keywords dropdown button, knop
  * @related nldd-button, nldd-menu
- * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {string} appearance - Visual style: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control.
+ * @attr {'xs'|'sm'|'md'|'lg'} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
+ * @attr {'primary'|'secondary'|'accent-filled'|'neutral-tinted'|'neutral-base'|'content-filled'|'content-tinted'} appearance - Visual style: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control.
  * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {boolean} loading - Loading state of the main action, as on nldd-button. The chevron stays available.
  * @attr {string} loading-text - What the screen reader announces while `loading` is on, as on nldd-button.
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space
  * @attr {string} text - Button text for the primary action
  * @attr {string} icon - Icon name shown before the text on the primary action button
- * @attr {string} type - What the main action does in a form: 'button' (default) | 'submit' | 'reset'. Ignored when `href` is set.
+ * @attr {'button'|'submit'|'reset'} type - What the main action does in a form: 'button' (default) | 'submit' | 'reset'. Ignored when `href` is set.
  * @attr {string} form - Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button.
  * @attr {string} href - Turns the main action into a link, as on nldd-button.
  * @attr {string} download - Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`.

@@ -47,11 +47,11 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * @element nldd-form
  * @keywords formulier
  *
- * @attr {string} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.
+ * @attr {'top'|'right'|'left'} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.
  * @attr {string} name - Form name
- * @attr {string} autocomplete - 'on' | 'off' (form-level autofill toggle)
+ * @attr {'on'|'off'} autocomplete - 'on' | 'off' (form-level autofill toggle)
  * @attr {string} target - Submit target ('_self' | '_blank' | ...)
- * @attr {string} method - HTTP method ('get' | 'post' | 'dialog')
+ * @attr {'get'|'post'|'dialog'} method - HTTP method ('get' | 'post' | 'dialog')
  * @attr {string} action - URL endpoint for submission
  * @attr {string} enctype - Encoding type for submission
  * @attr {boolean} novalidate - Skip native browser validation

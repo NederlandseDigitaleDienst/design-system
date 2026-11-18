@@ -41,7 +41,7 @@
  * @attr {string} sm-size - Spacer size at sm breakpoint (max-width: 640px).
  * @attr {string} md-size - Spacer size at md breakpoint (641px–1007px).
  * @attr {string} lg-size - Spacer size at lg breakpoint (min-width: 1008px).
- * @attr {string} direction - Direction: 'horizontal' | 'vertical' | 'both' (default: 'both')
+ * @attr {'horizontal'|'vertical'|'both'} direction - Direction: 'horizontal' | 'vertical' | 'both' (default: 'both')
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';

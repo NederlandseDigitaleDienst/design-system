@@ -12,7 +12,7 @@
  * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
- * @attr {string} size - Switch size: 'xs' | 'sm' (default: 'sm')
+ * @attr {'xs'|'sm'} size - Switch size: 'xs' | 'sm' (default: 'sm')
  * @attr {string} name - Name for form submission; nothing is submitted when the switch is off
  * @attr {string} value - Value submitted with the form when the switch is on (default: 'on')
  * @attr {string} accessible-label - Accessible label forwarded as aria-label to the native input. Required when using nldd-switch without nldd-switch-field.

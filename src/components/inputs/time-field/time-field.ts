@@ -37,7 +37,7 @@
  * @attr {boolean} no-picker - Hides the picker button. It is shown by default.
  * @attr {string} placeholder - Placeholder text. Do not put a format here; use the supporting label of nldd-form-field for that.
  * @attr {string} input-id - Sets the id on the internal input. Set automatically by nldd-form-field.
- * @attr {string} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
+ * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {boolean} invalid - Marks the field as invalid.
  * @attr {boolean} valid - Marks the field as valid.
  * @attr {boolean} disabled - Disabled state.

@@ -15,7 +15,7 @@ here; consult the commit history if you need that level of detail.
 - **Every live example stands on a stage.** The frame around an example has its own switch for light and dark and for the base and tinted surface. An example that needs a whole window, such as a page pattern, runs in one and can be made narrow.
 - **Every attribute has a control.** The controls under the first example of a component come from the component itself, with the values of its type.
 - **`nldd-popover` hides a title bar on md and up.** See Breaking.
-- **2 accessibility fixes:** a popover no longer points its anchor at an id the anchor cannot see, and a page that holds only text scrolls with the keyboard. See Fixed.
+- **3 accessibility fixes:** a popover no longer points its anchor at an id the anchor cannot see, a page that holds only text scrolls with the keyboard, and a narrow document tab is named by the text it shows. See Fixed.
 
 ### Breaking
 
@@ -33,12 +33,14 @@ here; consult the commit history if you need that level of detail.
 
 - **A finding of `nldd lint` links to the website.** The address after a rule that points at a pattern or a guideline is now `https://design.digitaledienst.overheid.nl/patronen/form/` where it was a Storybook address.
 - **The links in the skills and in `reference.md` point to the website.**
+- **Every attribute with a fixed set of values names them in its type.** The website now offers them as a choice everywhere, also where the type comes from a dependency, such as `placement` on `nldd-popover`. `nldd lint` already knew most sets. It now also warns about a value outside the set for `placement` on `nldd-menu`, `appearance` on `nldd-button-bar`, `popup-type` on `nldd-list-item-segment` and `label-alignment`, `method` and `autocomplete` on `nldd-form`. A wrong value already did nothing, so only the warning is new.
 
 ### Fixed
 
 - **`nldd-popover` writes `aria-controls` only where its anchor can resolve it.** An anchor inside a shadow root, such as the button of an `nldd-token`, got the id of a popover in the light DOM, which an id reference cannot reach. A screen reader was pointed at nothing, and axe reported an invalid attribute value.
 - **An `nldd-page` that holds nothing to focus scrolls with the keyboard.** Its scroller takes a tab stop of its own while it scrolls and nothing in it takes focus, such as a page of running text. Safari and Firefox never let Tab land in such a scroller, so the arrow keys could not reach it. A page with a link or a field in it gets no extra tab stop.
 - **A page with an `nldd-shell` gives the document the surface of the shell.** Where the shell does not paint, such as the overscroll at the top and bottom of a page in Safari, the document showed the browser's own color. The `html` element now has the base surface, or the tinted one with `background="tinted"` on the shell.
+- **A narrow `nldd-document-tab-bar-item` is named by the text it shows.** A tab that showed "Art. 2 WZT" was called "Artikel 2 · Wet op de Zorgtoeslag", so someone who says what they see to voice control could not reach it (WCAG 2.5.3). The full text now describes the tab.
 - **`nldd-tooltip` shows in a popover that opens from a bar.** A tooltip in an open popover, menu or dialog counted the ancestors of that overlay as clipping, such as a toolbar with `overflow: hidden`. The trigger seemed out of view, so the tooltip stayed hidden. In the top layer only the overlay itself and what is in it can clip now.
 - **`nldd-icon-button` in running text centers on the capitals beside it.** It sat on the baseline, so an `xs` button after a label stood higher than the words.
 

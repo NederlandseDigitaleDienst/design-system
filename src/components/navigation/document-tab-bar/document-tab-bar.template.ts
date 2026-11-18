@@ -73,9 +73,14 @@ export function documentTabBarItemTemplate(component: NLDDDocumentTabBarItem): T
 	const tooltipText = component.supportingText
 		? `${component.text} · ${component.supportingText}`
 		: component.text;
+	// A short tab takes its name from the text it shows (WCAG 2.5.3), and the
+	// full text, hidden from view, describes it.
+	const name = component._isShort ? nothing : tooltipText;
+	const description = component._isShort ? 'full-text' : nothing;
 
 	const tabContent = html`
 		<span class="document-tab-bar__item-normal"
+			id="full-text"
 			aria-hidden="true"
 		>
 			<span class="document-tab-bar__item-text">${component.text}</span>
@@ -97,7 +102,8 @@ export function documentTabBarItemTemplate(component: NLDDDocumentTabBarItem): T
 				role=${isNavigation ? nothing : 'tab'}
 				aria-current=${isNavigation && component.selected ? 'page' : nothing}
 				aria-selected=${!isNavigation ? (component.selected ? 'true' : 'false') : nothing}
-				aria-label=${tooltipText}
+				aria-label=${name}
+				aria-describedby=${description}
 				tabindex=${tabindex}
 				@click=${component._handleClick}
 			>${tabContent}</a>`
@@ -105,7 +111,8 @@ export function documentTabBarItemTemplate(component: NLDDDocumentTabBarItem): T
 				type="button"
 				role="tab"
 				aria-selected=${component.selected ? 'true' : 'false'}
-				aria-label=${tooltipText}
+				aria-label=${name}
+				aria-describedby=${description}
 				tabindex=${tabindex}
 				@click=${component._handleClick}
 			>${tabContent}</button>`;
