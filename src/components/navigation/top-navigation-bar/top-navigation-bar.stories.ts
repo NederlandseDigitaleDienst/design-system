@@ -4,6 +4,11 @@ import '../menu-bar/menu-bar.js';
 import '../menu-bar-item/menu-bar-item.js';
 import '../../layout/container/container.js';
 
+/**
+ * `nldd-top-navigation-bar` is de bovenbalk van een website, met het Rijkslogo, de
+ * titel van de site en de navigatie. Je zet hem in het `header`-slot van een
+ * `nldd-page`, en nooit boven een split view.
+ */
 export default {
 	title: 'Components/Navigation/Top Navigation Bar',
 	component: 'nldd-top-navigation-bar',

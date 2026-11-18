@@ -19,6 +19,7 @@
  * reaches the form.
  *
  * @element nldd-radio-button-field
+ * @keywords keuzerondje
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.

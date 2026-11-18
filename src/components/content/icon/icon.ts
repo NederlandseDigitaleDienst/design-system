@@ -33,7 +33,7 @@ export type IconColor =
  * If you want the icon to be announced by assistive tech, set `aria-hidden="false"`
  * on the consumer side together with an `aria-label`.
  *
- * Sizing: the icon fills whatever sizes it — an `nldd-icon-cell`, a button, a
+ * Sizing: the icon fills whatever sizes it: an `nldd-icon-cell`, a button, a
  * menu item. `size="full"` names that default explicitly. `size="inherit"` makes
  * it follow the surrounding text (1em), for an icon set inline in a sentence.
  * Any spacer-aligned number (16–96) pins a fixed dimension.
@@ -47,10 +47,11 @@ export type IconColor =
  * `nldd-text` does. A parent of your own that sets `color` sets that context
  * too. Set `color` to one of the other functional semantics (`secondary`, `accent`, `critical`, `warning`, `success`), which
  * follow the surface as well, or a rijkskleur (`lintblauw`, `paars`, `groen`,
- * …). For a color the design system cannot know — the jacket
- * of a cable, a color someone picked — set `custom-color` to any CSS color.
+ * …). For a color the design system cannot know (the jacket
+ * of a cable, a color someone picked), set `custom-color` to any CSS color.
  *
  * @element nldd-icon
+ * @keywords pictogram, icoon
  *
  * @attr {string} icon - The name of the icon to display. The same attribute every other component that renders an icon takes. Prefer an alias that names what the icon means here (`microphone-off`, `info`, `new-account`) over the name of the drawing; both show the same icon.
  * @attr {string} size - `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96).

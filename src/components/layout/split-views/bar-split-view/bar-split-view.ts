@@ -6,8 +6,8 @@
  * Children without order attributes are sorted by DOM order.
  *
  * All bars are in normal flow at every breakpoint and stack vertically. A
- * divider is drawn only where the main pane meets an adjacent bar — directly
- * above and/or below main — at every breakpoint (including sm). Two stacked
+ * divider is drawn only where the main pane meets an adjacent bar (directly
+ * above and/or below main), at every breakpoint including sm. Two stacked
  * bars on the same side never get a divider between them, so a toolbar and a
  * tab-bar read as one visual unit. Consumers never manage dividers themselves.
  *
@@ -20,6 +20,7 @@
  * Sets --context-background-color, which cascades to all descendants.
  *
  * @element nldd-bar-split-view
+ * @related nldd-navigation-split-view, nldd-side-by-side-split-view, nldd-stacked-split-view
  *
  * @attr {'inherit'|'base'|'tinted'} background - Background color variant (default: inherit)
  *

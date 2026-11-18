@@ -41,28 +41,28 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * A container for `nldd-list-item` elements.
  *
  * The `type` attribute switches the list's a11y role and behavior:
- * - `list` (default) — `role="list"`, items `role="listitem"`. Reorderable allowed.
- * - `radiogroup` — `role="radiogroup"`, for a set of `nldd-list-item radio`
+ * - `list` (default): `role="list"`, items `role="listitem"`. Reorderable allowed.
+ * - `radiogroup`: `role="radiogroup"`, for a set of `nldd-list-item radio`
  *   rows: one choice, laid out as rows so each option can carry a count or a
  *   second line. The rows step out of the accessibility tree themselves
  *   (`role="none"`), so the radios are the group's own children. The arrows
  *   move focus here and activation checks, rather than the selection following
  *   focus as it does in `nldd-radio-button-group`.
- * - `tree` — `role="tree"`, items `role="treeitem"`. Branch rows put their child
+ * - `tree`: `role="tree"`, items `role="treeitem"`. Branch rows put their child
  *   rows in their own `slot="children"`, which the item renders as a
  *   `role="group"`. Level, position and set size are NOT authored: the
  *   nesting represents the hierarchy, so assistive technology derives
  *   them. A branch row must carry `expanded`; the group is hidden while
- *   it is false. Visual indentation is the consumer's — repeat a
+ *   it is false. Visual indentation is the consumer's: repeat a
  *   spacer-cell per level. Comes with its own keyboard, see "Tree" below.
- * - `navigation` — host `role="navigation"`, items with `selected` get
+ * - `navigation`: host `role="navigation"`, items with `selected` get
  *   `aria-current="page"` on their inner `<a>` or `<button>`. Sub-pages go
  *   in their parent row's `slot="children"`, which the item renders as a
  *   list inside the list item, so a screen reader hears the level and how
  *   many there are. They are always shown and the arrows walk them like any
  *   other row; a spacer-cell alone indents but says nothing. Visual
  *   indentation is still the consumer's.
- * - `form` — rows that are not actions themselves: the controls inside them
+ * - `form`: rows that are not actions themselves: the controls inside them
  *   are. A row of a label and a field, a switch, a menu button, or a value you
  *   cannot change at all. Semantically the same as `list` (`role="list"`,
  *   `role="listitem"`), and everything visual is unchanged; what falls away is
@@ -72,7 +72,7 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  *   actions (`href`, `button`, `checkbox`, or a segment) contradict that and
  *   warn in development. SwiftUI draws the same line between `List` and
  *   `Form`, for the same reason.
- * - `listbox` — an accessible, filterable listbox (combobox pattern). The
+ * - `listbox`: an accessible, filterable listbox (combobox pattern). The
  *   list renders its OWN search input (`role="combobox"`) pinned
  *   above the options; `.list__items` becomes `role="listbox"`
  *   and items become `role="option"`. Focus stays in the input,
@@ -90,25 +90,25 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * unknowable from the outside. It follows the type, which you can see before you
  * touch a key.
  *
- * - ArrowUp / ArrowDown — move focus between the rows there is something to do
+ * - ArrowUp / ArrowDown: move focus between the rows there is something to do
  *   with. A row of nothing but text is skipped, because focus that leads nowhere
  *   is a dead end.
- * - Home / End — the first / last of those rows.
- * - Tab — the list is ONE tab stop, so Tab moves past it rather than through it.
+ * - Home / End: the first / last of those rows.
+ * - Tab: the list is ONE tab stop, so Tab moves past it rather than through it.
  *   Within the current row Tab walks that row's own controls: a chevron beside a
  *   checkbox, a menu button at the end. The same controls in the other rows are
  *   held out of the tab order (`tabindex="-1"`, or `no-tab` on a design-system
  *   control that keeps its tab stop in its own shadow root), and so are this
  *   row's once focus leaves the list, so tabbing back in lands on the row again.
- * - Escape — out of a control the row holds, back onto the row. One level up,
+ * - Escape: out of a control the row holds, back onto the row. One level up,
  *   where Shift+Tab is one step back. On the row itself the list claims nothing,
  *   so Escape carries on to whatever holds the list, and a control showing a
  *   menu keeps the first press for closing that menu.
  *
  * While focus sits in a control a row holds, the list stands down: those keys
  * are the control's, and a list that took them anyway would pull focus out of a
- * combo box or a text field mid-word. What the row IS — its own link, button or
- * segments — keeps answering here.
+ * combo box or a text field mid-word. What the row IS (its own link, button or
+ * segments) keeps answering here.
  *
  * Arrows move focus only; selection stays consumer-managed. Three types answer
  * differently, and all three say so on screen before you touch a key: a listbox
@@ -120,13 +120,13 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * In `type="listbox"` the list owns a native `<input role="combobox">` (mirroring
  * how `nldd-combo-box` wires an input to a slotted listbox). Keyboard, handled on
  * the input so focus never leaves it:
- * - ArrowDown / ArrowUp — move the active option among the VISIBLE (non-`[hidden]`)
+ * - ArrowDown / ArrowUp: move the active option among the VISIBLE (non-`[hidden]`)
  *   options (wrap around).
- * - Home / End — first / last visible option.
- * - Enter — activate the active option by triggering its inner action (a link
+ * - Home / End: first / last visible option.
+ * - Enter: activate the active option by triggering its inner action (a link
  *   navigates, a button fires the consumer's handler). Selection stays
  *   consumer-managed.
- * - Escape — clear the search value (and refire `input`).
+ * - Escape: clear the search value (and refire `input`).
  *
  * On every active change the input's `aria-activedescendant` is set to the active
  * option's id and the option is scrolled into view. The active option (`_highlighted`
@@ -140,15 +140,15 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  *
  * A tree adds to that keyboard, and counts the rows of an open branch as part of
  * the order the arrows walk:
- * - ArrowRight — opens a closed branch; on an open one it steps to its first child.
- * - ArrowLeft — closes an open branch; on a leaf it steps out to the parent row.
- * - Enter — follows the row: its own link or button, or on a segmented branch the
- *   first action that is not the chevron. A branch with only a chevron folds instead.
- * - Space — open and close, the same as Right and Left. Only while focus
+ * - ArrowRight: opens a closed branch; on an open one it steps to its first child.
+ * - ArrowLeft: closes an open branch; on a leaf it steps out to the parent row.
+ * - Enter: follows the row (its own link or button, or on a segmented branch the
+ *   first action that is not the chevron). A branch with only a chevron folds instead.
+ * - Space: open and close, the same as Right and Left. Only while focus
  *   sits on the row itself: a row that is its own control, and a segmented
  *   action you tabbed into, handle both keys themselves.
  *
- * Opening and closing runs through the row's own disclosure control — the
+ * Opening and closing runs through the row's own disclosure control: the
  * segment marked `disclosure`, or the row itself when it is a button.
  * The list activates that control rather than writing `expanded`, so the state
  * keeps being set in one place: the consumer's handler. A row that is a link is
@@ -161,8 +161,8 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * the list after the last one.
  *
  * A deliberate deviation: strictly speaking a row with several controls is a
- * `treegrid`, not a `tree`. We keep the tree semantics — level and set size are
- * what matters here, not rows and columns — and borrow the "Tab within the row"
+ * `treegrid`, not a `tree`. We keep the tree semantics (level and set size are
+ * what matters here, not rows and columns) and borrow the "Tab within the row"
  * behavior from the grid pattern. Should a tree with real columns come up, that
  * is when `treegrid` earns its own type.
  *
@@ -171,12 +171,14 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * On reorder (type="list" + reorderable), the list dispatches `reorder` with
  * `fromIndex` / `toIndex` and expects the consumer to mutate the DOM (or their
  * data model that renders the DOM). Focus is restored to the moved item's drag
- * handle via a single `requestAnimationFrame` — this assumes the consumer
+ * handle via a single `requestAnimationFrame`. This assumes the consumer
  * reorders **synchronously** in the event handler. Async renderers (React,
  * Vue, …) that update the DOM on a later tick will miss the focus restore and
  * should manage focus themselves after their render commits.
  *
  * @element nldd-list
+ * @keywords disclosure, tree, lijst, uitklappen
+ * @related nldd-table, nldd-collection
  *
  * @attr {'simple'|'box-tinted'|'box-base'} appearance - Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)
  * @attr {'list'|'navigation'|'listbox'|'tree'|'form'|'radiogroup'} type - A11y role and behavior (default 'list'). See the docblock above.
@@ -618,7 +620,7 @@ export class NLDDList extends LitElement {
 	 *  gone (or none was set), push `_highlighted` onto the items, and refresh the
 	 *  input's aria-activedescendant. When nothing is visible the empty state
 	 *  shows and aria-activedescendant is cleared. Deferred to a microtask for the
-	 *  same reason as roving — it can run inside the update lifecycle and would
+	 *  same reason as roving: it can run inside the update lifecycle and would
 	 *  otherwise trip Lit's change-in-update warning. */
 	private _listboxScheduled = false;
 	private _updateListboxOptions() {
@@ -733,7 +735,7 @@ export class NLDDList extends LitElement {
 	};
 
 	/**
-	 * Listbox keyboard, handled on the search input — focus never leaves it.
+	 * Listbox keyboard, handled on the search input, so focus never leaves it.
 	 * Arrows/Home/End move the active option among the visible set; Enter
 	 * activates it by triggering its inner action; Escape clears the value.
 	 */
@@ -804,7 +806,7 @@ export class NLDDList extends LitElement {
 		return !(this.reorderable && this.type === 'list');
 	}
 
-	/** Interactive, painted rows — the roving stops, in the order they appear on
+	/** Interactive, painted rows, the roving stops, in the order they appear on
 	 *  screen. Rows with nothing to operate and hidden ones are skipped.
 	 *  Painted, not top-level: in a tree the rows of an open branch sit between
 	 *  the branch and the next top-level row, and arrows have to walk them too. */
@@ -919,7 +921,7 @@ export class NLDDList extends LitElement {
 	 * you are in the row, and it puts the arrow keys back in reach.
 	 *
 	 * It claims Escape at exactly this one level. On the row it claims nothing,
-	 * so Escape carries on to whatever holds the list — a sheet, a dialog, or
+	 * so Escape carries on to whatever holds the list: a sheet, a dialog, or
 	 * nothing at all. And a control showing a popover keeps it: that menu is the
 	 * topmost thing you opened, so it is what the first Escape closes.
 	 */
@@ -938,7 +940,7 @@ export class NLDDList extends LitElement {
 	/** Tree only: Right opens a closed branch and steps into an open one, Left
 	 *  closes an open branch and steps out of a leaf. Opening and closing runs
 	 *  through the row's own disclosure control, so `expanded` keeps being
-	 *  written in one place — the consumer's handler. */
+	 *  written in one place: the consumer's handler. */
 	private _onTreeHorizontal(event: KeyboardEvent, key: 'ArrowRight' | 'ArrowLeft') {
 		const rows = this._getInteractiveItems();
 		const current = this._roving.current;
@@ -974,7 +976,7 @@ export class NLDDList extends LitElement {
 	 * own control, and a segment you tabbed into, handle both keys
 	 * natively, and acting here as well would fire twice.
 	 *
-	 * Enter does what the row is for — it follows the row's own link or button,
+	 * Enter does what the row is for: it follows the row's own link or button,
 	 * or on a branch cut into segments the first one that is not the chevron.
 	 * Space folds, the same thing Right and Left do, because a chevron is a
 	 * button and Space is what a button answers to. A branch with nothing but a

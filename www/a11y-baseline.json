@@ -1,0 +1,166 @@
+{
+	"/componenten/document-tab-bar/": {
+		"aria-required-children": 1
+	},
+	"/componenten/document-tab-bar/voorbeelden/": {
+		"aria-required-children": 2
+	},
+	"/componenten/list-item-segment/voorbeelden/": {
+		"aria-hidden-focus": 3,
+		"nested-interactive": 13
+	},
+	"/componenten/list/voorbeelden/": {
+		"label": 1,
+		"nested-interactive": 30
+	},
+	"/componenten/multi-line-text-field/voorbeelden/": {
+		"label": 4
+	},
+	"/componenten/number-field/": {
+		"label": 1
+	},
+	"/componenten/number-field/voorbeelden/": {
+		"label": 12
+	},
+	"/componenten/password-field/voorbeelden/": {
+		"label": 4
+	},
+	"/componenten/rich-text/voorbeelden/": {
+		"scrollable-region-focusable": 1
+	},
+	"/componenten/stepper/": {
+		"aria-hidden-focus": 2
+	},
+	"/componenten/stepper/voorbeelden/": {
+		"aria-hidden-focus": 8
+	},
+	"/componenten/text-field/voorbeelden/": {
+		"label": 4
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=AlleToestanden": {
+		"label-content-name-mismatch": 2
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=MetTerugknop": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=MetWoordmerk": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=SmalScherm": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Fnavigation%2Ftop-navigation-bar%2Ftop-navigation-bar.stories.ts&story=VeelGlobaleItems": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Bruin": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Donkerblauw": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Donkerbruin": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Donkergeel": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Donkergroen": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Geel": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Groen": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Hemelblauw": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Lichtblauw": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Lintblauw": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Mintgroen": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Mosgroen": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Oranje": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Paars": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Robijnrood": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Rood": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Roze": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fdocs%2Fthemes.stories.ts&story=Violet": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 4
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fcontent-page%2Fcontent-page.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fcontent-page%2Fcontent-page.stories.ts&story=ZonderInhoudsopgave": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fhome-page%2Fhome-page.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fnavigation-page%2Fnavigation-page.stories.ts&story=Kaarten": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fnavigation-page%2Fnavigation-page.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=Header": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=HeaderAccount": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=HeaderHome": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=HeaderLogin": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=HeaderStatus": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Fpage-structure%2Fpage-structure.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	},
+	"/voorbeeld/?file=src%2Fpatterns%2Ftopic-page%2Ftopic-page.stories.ts&story=Standaard": {
+		"label-content-name-mismatch": 1
+	}
+}

@@ -5,7 +5,7 @@ import '../../layout/container/container.js';
 import { ICONS } from '../icon/icon.js';
 
 /**
- * Een admonition zet een opmerking, tip of waarschuwing apart in lopende
+ * `nldd-admonition` zet een opmerking, tip of waarschuwing apart in lopende
  * tekst, zoals een `:::warning` in een markdownpagina. Het is inhoud, geen
  * melding: hij wordt niet voorgelezen bij het laden en is niet weg te klikken.
  * Voor een melding die reageert op wat de gebruiker doet of wat er verandert,
@@ -20,7 +20,6 @@ export default {
 			file: 'src/components/content/admonition/admonition.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		docs: {
 			// role="note" is set on the host by the component itself.
 			source: {

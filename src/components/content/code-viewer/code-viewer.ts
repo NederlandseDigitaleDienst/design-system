@@ -43,8 +43,10 @@
  * per-instance to swap the theme.
  *
  * @element nldd-code-viewer
+ * @keywords code block, syntax highlighting
+ * @related nldd-code-editor
  *
- * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
+ * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame. Use it when embedding inside a parent surface.
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.
  * @attr {boolean} diff - The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked.
  * @attr {boolean} line-numbers - Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself.
@@ -75,6 +77,7 @@ import '../tooltip/tooltip.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { onAncestorScroll } from '../../../utilities/ancestor-scroll.js';
 
 export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 
@@ -142,6 +145,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 
 	@state()
 	_copyState: CodeViewerCopyState = 'idle';
+
+	private _stopCopyScroll?: () => void;
 
 	private _languageCompartment = new Compartment();
 	private _wrapCompartment = new Compartment();
@@ -249,7 +254,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		}
 		clearTimeout(this._copyResetTimer);
 		this._copyResetTimer = undefined;
-		document.removeEventListener('scroll', this._onCopyScroll, { capture: true });
+		this._stopCopyScroll?.();
+		this._stopCopyScroll = undefined;
 	}
 
 	override firstUpdated(): void {
@@ -305,11 +311,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 
 	override updated(changed: Map<string, unknown>): void {
 		if (changed.has('_copyState')) {
-			if (this._copyState === 'idle') {
-				document.removeEventListener('scroll', this._onCopyScroll, { capture: true });
-			} else {
-				document.addEventListener('scroll', this._onCopyScroll, { capture: true, passive: true });
-			}
+			this._stopCopyScroll?.();
+			this._stopCopyScroll = this._copyState === 'idle' ? undefined : onAncestorScroll(this, this._onCopyScroll);
 		}
 		// Keep the button-suppression flag current when no-copy toggles at runtime.
 		if (changed.has('noCopy')) {
@@ -538,7 +541,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	}
 
 	/* The outcome belongs to the moment of copying: whoever scrolls has
-	 * moved on, and a tooltip fixed to the screen would drift off its button. */
+	 * moved on. */
 	private _onCopyScroll = (): void => {
 		clearTimeout(this._copyResetTimer);
 		this._copyResetTimer = undefined;

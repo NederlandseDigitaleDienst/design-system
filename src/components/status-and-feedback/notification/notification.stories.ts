@@ -1,4 +1,4 @@
-import { html, render } from 'lit';
+import { html, nothing, render, type TemplateResult } from 'lit';
 import './notification.js';
 import { NLDDNotification, type NotificationHandle } from './notification.js';
 import '../modal-dialog/modal-dialog.js';
@@ -6,6 +6,7 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 import '../../content/rich-text/rich-text.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 import '../../layout/page/page.js';
 import '../../layout/page-sections/simple-section/simple-section.js';
 import '../../layout/sheet/sheet.js';
@@ -13,6 +14,12 @@ import '../../layout/window/window.js';
 import '../../navigation/top-title-bar/top-title-bar.js';
 import { ICONS } from '../../content/icon/icon.js';
 
+/**
+ * `nldd-notification` is een korte melding die over de interface verschijnt en
+ * vanzelf weer verdwijnt, bijvoorbeeld na het opslaan of bij een mislukt
+ * verzoek. Anders dan `nldd-banner` staat hij niet in de pagina, maar zweeft hij
+ * erboven.
+ */
 export default {
 	title: 'Components/Status & Feedback/Notification',
 	component: 'nldd-notification',
@@ -22,12 +29,11 @@ export default {
 			file: 'src/components/status-and-feedback/notification/notification.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 		// Every notification leaves the story it was written in and joins the one
 		// region on the page, so stories rendered side by side would land on the
 		// same pile. Its own frame gives each story its own page, and with that
 		// its own region.
-		docs: { story: { inline: false, height: '160px' } },
+		docs: { story: { inline: false, height: '224px' } },
 	},
 	args: {
 		variant: 'neutral',
@@ -72,102 +78,121 @@ export default {
 const weg = (e: Event) => (e.currentTarget as HTMLElement).remove();
 
 /**
- * A notification moves itself out of the story and into the shared region, so a
- * re-render can no longer reach it: lit would keep the element it already has,
- * update it where it now lives, and the controls would look dead. The story
- * therefore does what a consumer does — clear what is there and make a new one.
+ * What an application does on an event: put the notifications of a template on
+ * the page. Where they end up is their own business.
  */
-const Template = ({ variant, icon, text, supportingText, duration }: Record<string, unknown>) => {
-	document.getElementById('nldd-notifications-area')?.remove();
-	const melding = document.createElement('nldd-notification');
-	melding.setAttribute('variant', String(variant));
-	if (icon) melding.setAttribute('icon', String(icon));
-	melding.setAttribute('text', String(text));
-	if (supportingText) melding.setAttribute('supporting-text', String(supportingText));
-	melding.setAttribute('duration', String(duration));
-	melding.addEventListener('dismiss', weg);
-	return html`${melding}`;
+const toon = (template: TemplateResult) => {
+	const houder = document.createElement('div');
+	render(template, houder);
+	document.body.append(...houder.querySelectorAll('nldd-notification'));
 };
 
 /**
- * De melding staat niet in het vlak hieronder maar rechtsboven op de pagina:
- * hij verhuist zichzelf naar de gedeelde regio, net als in een applicatie.
- * Verander een control en er komt een nieuwe.
+ * A notification leaves the story for the shared region the moment it is on the
+ * page, so an example shows a button that puts it there, and the code shows the
+ * notification itself (`docs.source.render`). The button sits in the middle of
+ * the frame, below a notification that takes the full width on a phone.
  */
+const knop = (template: () => TemplateResult, text = 'Toon melding') => html`
+	<nldd-container
+		min-height="208px"
+		horizontal-alignment="center"
+		vertical-alignment="center"
+	>
+		<nldd-button
+			text=${text}
+			@click=${() => toon(template())}
+		></nldd-button>
+	</nldd-container>
+`;
+
+const Template = ({ variant, icon, text, supportingText, duration }: Record<string, unknown>) => html`
+	<nldd-notification
+		variant=${String(variant)}
+		icon=${icon ? String(icon) : nothing}
+		text=${String(text)}
+		supporting-text=${supportingText ? String(supportingText) : nothing}
+		duration=${String(duration)}
+		@dismiss=${weg}
+	></nldd-notification>
+`;
+
 export const Standaard = {
-	render: Template,
-	// A story in a frame of its own never hears about a changed arg, so this one
-	// renders in the docs page itself. It leaves nothing behind in its own block,
-	// hence no reserved height.
-	parameters: { docs: { story: { inline: true, height: 'auto' } } },
+	render: (args: Record<string, unknown>) => knop(() => Template(args)),
+	parameters: { docs: { source: { render: Template } } },
 };
 
-/**
- * Het vlak blijft neutraal en alleen het icoon draagt de kleur: vijf gekleurde
- * vlakken die over de interface zweven schreeuwen, en het icoon zegt al welke
- * soort dit is.
- */
-export const Neutraal = {
-	render: () => html`
+const neutraal = () => html`
 		<nldd-notification
 			text="Dossier D-318 wordt bijgewerkt"
 			duration="0"
 			@dismiss=${weg}
 		></nldd-notification>
-	`,
-	parameters: { controls: { disable: true } },
+	`;
+
+export const Neutraal = {
+	render: () => knop(neutraal),
+	parameters: { controls: { disable: true }, docs: { source: { render: neutraal } } },
 };
 
-export const Accent = {
-	render: () => html`
+const accent = () => html`
 		<nldd-notification
 			variant="accent"
 			text="Dossier D-319 is aan je toegewezen"
 			duration="0"
 			@dismiss=${weg}
 		></nldd-notification>
-	`,
-	parameters: { controls: { disable: true } },
+	`;
+
+export const Accent = {
+	render: () => knop(accent),
+	parameters: { controls: { disable: true }, docs: { source: { render: accent } } },
 };
 
-export const Succes = {
-	render: () => html`
+const succes = () => html`
 		<nldd-notification
 			variant="success"
 			text="Aanvraag A-1043 is afgerond"
 			duration="0"
 			@dismiss=${weg}
 		></nldd-notification>
-	`,
-	parameters: { controls: { disable: true } },
+	`;
+
+export const Succes = {
+	render: () => knop(succes),
+	parameters: { controls: { disable: true }, docs: { source: { render: succes } } },
 };
 
-export const Waarschuwing = {
-	render: () => html`
+const waarschuwing = () => html`
 		<nldd-notification
 			variant="warning"
 			text="Aanvraag A-1042 mist nog een bijlage"
 			duration="0"
 			@dismiss=${weg}
 		></nldd-notification>
-	`,
-	parameters: { controls: { disable: true } },
+	`;
+
+export const Waarschuwing = {
+	render: () => knop(waarschuwing),
+	parameters: { controls: { disable: true }, docs: { source: { render: waarschuwing } } },
 };
 
 /**
  * Een fout vertrekt nooit vanzelf, hoe je `duration` ook zet: die is het lezen
  * waard, en een aftelling zou hem weghalen terwijl je bezig was.
  */
-export const Kritiek = {
-	render: () => html`
+const kritiek = () => html`
 		<nldd-notification
 			variant="critical"
 			text="Aanvraag A-1042 is niet verstuurd"
 			supporting-text="De server weigerde het verzoek."
 			@dismiss=${weg}
 		></nldd-notification>
-	`,
-	parameters: { controls: { disable: true } },
+	`;
+
+export const Kritiek = {
+	render: () => knop(kritiek),
+	parameters: { controls: { disable: true }, docs: { source: { render: kritiek } } },
 };
 
 /**
@@ -175,8 +200,7 @@ export const Kritiek = {
  * de sluitknop om dezelfde hoek, en dan houdt geen van beide ruimte over voor
  * een echt label.
  */
-export const MetActies = {
-	render: () => html`
+const metActies = () => html`
 		<nldd-notification
 			variant="critical"
 			text="Bijlage is niet geüpload"
@@ -194,8 +218,11 @@ export const MetActies = {
 				text="Aanvraag bekijken"
 			></nldd-button>
 		</nldd-notification>
-	`,
-	parameters: { controls: { disable: true } },
+	`;
+
+export const MetActies = {
+	render: () => knop(metActies),
+	parameters: { controls: { disable: true }, docs: { source: { render: metActies } } },
 };
 
 /**
@@ -207,8 +234,7 @@ export const MetActies = {
  * dicht is. Staat er een fout vooraan, dan blijft alles staan tot je hem
  * wegklikt.
  */
-export const Stapel = {
-	render: () => html`
+const stapel = () => html`
 		<nldd-notification
 			text="Dossier D-318 wordt bijgewerkt"
 			@dismiss=${weg}
@@ -223,10 +249,13 @@ export const Stapel = {
 			text="Aanvraag A-1042 is niet verstuurd"
 			@dismiss=${weg}
 		></nldd-notification>
-	`,
+	`;
+
+export const Stapel = {
+	render: () => knop(stapel, 'Toon drie meldingen'),
 	// Hoog genoeg voor de uitgeklapte lijst, anders klapt hij open buiten zijn
 	// eigen frame.
-	parameters: { controls: { disable: true }, docs: { story: { height: '320px' } } },
+	parameters: { controls: { disable: true }, docs: { source: { render: stapel }, story: { height: '320px' } } },
 };
 
 /** The buttons and the overlays are siblings in the story, so the overlay to
@@ -387,10 +416,11 @@ export const BovenEenOverlay = {
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				<nldd-simple-section>
-					<nldd-container gap="16">
+					<nldd-container>
 						<nldd-rich-text>
 							<p>Meld een fout terwijl deze sheet openstaat.</p>
 						</nldd-rich-text>
+						<nldd-spacer size="16"></nldd-spacer>
 						<nldd-button
 							text="Meld een fout"
 							@click=${meldFout}
@@ -407,10 +437,11 @@ export const BovenEenOverlay = {
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				<nldd-simple-section>
-					<nldd-container gap="16">
+					<nldd-container>
 						<nldd-rich-text>
 							<p>Meld een fout terwijl dit venster openstaat.</p>
 						</nldd-rich-text>
+						<nldd-spacer size="16"></nldd-spacer>
 						<nldd-button
 							text="Meld een fout"
 							@click=${meldFout}

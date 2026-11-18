@@ -31,7 +31,7 @@ export function tokenTemplate(component: NLDDToken): TemplateResult {
 						text=${component._menuLabel}
 						accessible-label=${component._menuLabel}
 						tooltip-timing="never"
-						popup-type="menu"
+						popup-type=${component._popupType}
 						?no-tab=${component.roving}
 						?expanded=${component.expanded}
 						?disabled=${component.disabled}

@@ -2,9 +2,10 @@ import { html, nothing } from 'lit';
 import './segmented-control.js';
 import './../../content/icon/icon.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 
 /**
- * De Segmented Control component is een horizontale groep van wederzijds exclusieve (radio)
+ * `nldd-segmented-control` is een horizontale groep van wederzijds exclusieve (radio)
  * of meervoudig selecteerbare (checkbox) opties.
  */
 export default {
@@ -15,9 +16,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/segmented-control/segmented-control.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {
@@ -185,7 +183,6 @@ export const Appearances = {
 export const AlleToestanden = {
 	render: () => html`
 	<nldd-container
-		gap="16"
 		horizontal-alignment="left"
 	>
 		<nldd-segmented-control
@@ -208,6 +205,7 @@ export const AlleToestanden = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-segmented-control
 			value="bold"
 			size="sm"
@@ -228,6 +226,7 @@ export const AlleToestanden = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-segmented-control
 			.values=${["bold", "italic"]}
 			type="checkbox"
@@ -249,6 +248,7 @@ export const AlleToestanden = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-segmented-control
 			value="bold"
 			disabled
@@ -270,6 +270,7 @@ export const AlleToestanden = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-segmented-control
 			value="bold"
 			variant="icon"
@@ -291,6 +292,7 @@ export const AlleToestanden = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-segmented-control
 			value="bold"
 			variant="icon"
@@ -312,6 +314,7 @@ export const AlleToestanden = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-container
 			gap="16"
 			width="400px"
@@ -455,7 +458,6 @@ export const AlleToestanden = {
 export const IcoonEnTekst = {
 	render: () => html`
 	<nldd-container
-		gap="16"
 		horizontal-alignment="left"
 	>
 		<nldd-segmented-control
@@ -480,6 +482,7 @@ export const IcoonEnTekst = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-segmented-control
 			value="bold"
 			variant="icon-and-text"
@@ -502,6 +505,7 @@ export const IcoonEnTekst = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-container width="400px">
 			<nldd-segmented-control
 				value="bold"

@@ -1,0 +1,271 @@
+/**
+ * Reads everything the site renders from: the story files, the Custom Elements
+ * Manifest, the patterns and the package metadata.
+ *
+ * Nothing here is written by hand per component. A component page exists
+ * because a `<name>.stories.ts` exists; its API tables come from
+ * custom-elements.json, which `cem analyze` generates from the source.
+ *
+ * The story files are parsed, not imported: a story module pulls in Lit and the
+ * components, which only run in a browser. The few things the page needs up
+ * front (title, tag, export names, the JSDoc above them) are all static, so the
+ * TypeScript parser is enough. Everything that depends on running the story
+ * (args, the rendered markup) is left to the client.
+ */
+
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { resolve, dirname, join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import ts from 'typescript';
+import { PATTERNS, storybookId } from '../../scripts/lib/skill-patterns.js';
+import { extractComponentBlocks } from '../../scripts/lib/component-jsdoc.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+export const repoRoot = resolve(__dirname, '../..');
+const srcDir = resolve(repoRoot, 'src');
+
+function walk(dir, test, found = []) {
+	for (const entry of readdirSync(dir, { withFileTypes: true })) {
+		const full = join(dir, entry.name);
+		if (entry.isDirectory()) walk(full, test, found);
+		else if (test(entry.name)) found.push(full);
+	}
+	return found;
+}
+
+/** The text of a JSDoc block, without the comment markers. */
+function cleanJsDoc(comment) {
+	return comment
+		.replace(/^\/\*\*+/, '')
+		.replace(/\*+\/$/, '')
+		.split('\n')
+		.map((line) => line.replace(/^\s*\* ?/, ''))
+		.join('\n')
+		.trim();
+}
+
+/** The JSDoc block directly above a node, if there is one. */
+function leadingJsDoc(source, node) {
+	const ranges = ts.getLeadingCommentRanges(source.text, node.getFullStart()) ?? [];
+	const last = ranges[ranges.length - 1];
+	if (!last) return '';
+	const text = source.text.slice(last.pos, last.end);
+	return text.startsWith('/**') ? cleanJsDoc(text) : '';
+}
+
+function property(object, name) {
+	if (!object || !ts.isObjectLiteralExpression(object)) return undefined;
+	return object.properties.find(
+		(p) => ts.isPropertyAssignment(p) && p.name && p.name.getText().replace(/['"]/g, '') === name,
+	)?.initializer;
+}
+
+function stringValue(node) {
+	if (!node) return undefined;
+	if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return node.text;
+	return undefined;
+}
+
+function path(object, ...names) {
+	return names.reduce((node, name) => property(node, name), object);
+}
+
+/** `KlikbareKaart` reads as "Klikbare kaart", the way a Dutch heading is cased. */
+export function storyName(exportName) {
+	const words = exportName.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ');
+	return words.charAt(0) + words.slice(1).toLowerCase();
+}
+
+function kebab(exportName) {
+	return exportName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/_/g, '-').toLowerCase();
+}
+
+/**
+ * @returns {{ file: string, title: string, tag: string|undefined, description: string,
+ *   sourceFile: string|undefined, fullscreen: boolean,
+ *   stories: { exportName: string, id: string, name: string, description: string, hidden: boolean }[] }}
+ */
+export function parseStoryFile(file) {
+	const text = readFileSync(file, 'utf8');
+	const source = ts.createSourceFile(file, text, ts.ScriptTarget.ES2020, true);
+	const result = {
+		file: relative(repoRoot, file),
+		title: '',
+		tag: undefined,
+		description: '',
+		sourceFile: undefined,
+		fullscreen: false,
+		stories: [],
+	};
+	for (const statement of source.statements) {
+		if (ts.isExportAssignment(statement)) {
+			const meta = statement.expression;
+			result.title = stringValue(property(meta, 'title')) ?? '';
+			result.tag = stringValue(property(meta, 'component'));
+			result.description =
+				stringValue(path(meta, 'parameters', 'docs', 'description', 'component')) ??
+				leadingJsDoc(source, statement);
+			result.sourceFile = stringValue(path(meta, 'parameters', 'componentSource', 'file'));
+			result.fullscreen = stringValue(path(meta, 'parameters', 'layout')) === 'fullscreen';
+			continue;
+		}
+		const exported =
+			ts.isVariableStatement(statement) &&
+			statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
+		if (!exported) continue;
+		for (const declaration of statement.declarationList.declarations) {
+			const exportName = declaration.name.getText();
+			const init = declaration.initializer;
+			const tags = property(init, 'tags');
+			const hidden =
+				!!tags &&
+				ts.isArrayLiteralExpression(tags) &&
+				tags.elements.some((e) => stringValue(e) === '!autodocs');
+			result.stories.push({
+				exportName,
+				id: `${storybookId(result.title)}--${kebab(exportName)}`,
+				name: stringValue(property(init, 'name')) ?? storyName(exportName),
+				description:
+					stringValue(path(init, 'parameters', 'docs', 'description', 'story')) ??
+					leadingJsDoc(source, statement),
+				hidden,
+			});
+		}
+	}
+	if (!result.title) throw new Error(`Geen title in ${result.file}`);
+	return result;
+}
+
+/** Storybook's category titles, in Dutch for the navigation. */
+const CATEGORY_LABELS = {
+	Actions: 'Acties',
+	Content: 'Inhoud',
+	Forms: 'Formulieren',
+	Inputs: 'Invoer',
+	Layout: 'Layout',
+	'Lists & Tables': 'Lijsten en tabellen',
+	Navigation: 'Navigatie',
+	'Status & Feedback': 'Status en feedback',
+};
+
+/**
+ * Every component that has a stories file, with its route and category. A
+ * title is `Components/<category>/…/<name>`; a stories file under another root
+ * (the icon gallery under `Docs/`) belongs to a page of its own.
+ */
+export function collectComponents() {
+	const manifest = readManifest();
+	return walk(resolve(srcDir, 'components'), (name) => name.endsWith('.stories.ts'))
+		.map((file) => {
+			const story = parseStoryFile(file);
+			const parts = story.title.split('/');
+			if (parts[0] !== 'Components') return null;
+			const category = parts[1];
+			const name = parts[parts.length - 1];
+			const dir = relative(repoRoot, dirname(file));
+			const slug = story.tag ? story.tag.replace(/^nldd-/, '') : storybookId(name);
+			// The elements declared in this component's own directory: the element
+			// itself first, then the sub-elements that have no page of their own.
+			const elements = manifest
+				.filter((element) => dirname(element.module) === dir)
+				.sort((a, b) => (a.tagName === story.tag ? -1 : b.tagName === story.tag ? 1 : 0));
+			// Without a componentSource of its own, the source is the file next to
+			// the stories that defines the element.
+			const sourceFile = story.sourceFile ?? (elements[0] ? elements[0].module.replace(/\.js$/, '.ts') : undefined);
+			// What the search finds a page by, besides its name, tag and group: the
+			// keywords of its elements and the English name of its group.
+			const keywords = [...new Set([...elements.flatMap((e) => e.keywords ?? []), category.toLowerCase()])];
+			return { ...story, sourceFile, name, slug, category: CATEGORY_LABELS[category] ?? category, dir, elements, keywords };
+		})
+		.filter(Boolean)
+		.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** A drawn line between two elements in a shared file, and the title line of a file. */
+const NOT_PROSE = /^[\s\u2500-\u257F\-=_]+$|^Nederlandse Digitale Dienst\b|^#/;
+
+/**
+ * The prose of an element's JSDoc, with its paragraphs. The manifest and
+ * reference.md read the same blocks through component-jsdoc.js, which joins
+ * them into one line; a page wants them as written. The prose at the top of a
+ * file belongs to its first element, the prose under an @element to that one.
+ */
+function elementDoc(modulePath, tagName, first) {
+	const file = resolve(repoRoot, modulePath.replace(/\.js$/, '.ts'));
+	if (!existsSync(file)) return '';
+	const own = [];
+	const shared = [];
+	for (const block of extractComponentBlocks(readFileSync(file, 'utf8'))) {
+		let target = shared;
+		for (const line of block.split('\n')) {
+			const tag = line.match(/^@(\w+)\s*(.*)$/);
+			if (tag) target = tag[1] === 'element' && tag[2].trim() === tagName ? own : null;
+			else if (target && !NOT_PROSE.test(line)) target.push(line);
+		}
+	}
+	const prose = (lines) => lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+	return [first ? prose(shared) : '', prose(own)].filter(Boolean).join('\n\n');
+}
+
+/** The elements of custom-elements.json, flattened, with their module path. */
+export function readManifest() {
+	const manifest = JSON.parse(readFileSync(resolve(repoRoot, 'custom-elements.json'), 'utf8'));
+	const elements = [];
+	for (const module of manifest.modules) {
+		const declared = (module.declarations ?? []).filter((d) => d.customElement && d.tagName);
+		declared.forEach((declaration, index) => {
+			elements.push({ ...declaration, module: module.path, about: elementDoc(module.path, declaration.tagName, index === 0) });
+		});
+	}
+	return elements;
+}
+
+/**
+ * Every pattern: its page, its stories and where it sits. The order
+ * and the set are those of PATTERNS, the list the skill is generated from, so
+ * the site and the skill show the same patterns in the same order.
+ */
+export function collectPatterns() {
+	const dir = resolve(srcDir, 'patterns');
+	const order = Object.values(PATTERNS);
+	return readdirSync(dir, { withFileTypes: true })
+		.filter((entry) => entry.isDirectory())
+		.map((entry) => {
+			const slug = entry.name;
+			const storiesFile = join(dir, slug, `${slug}.stories.ts`);
+			const proseFile = join(dir, slug, `${slug}.md`);
+			if (!existsSync(storiesFile) || !existsSync(proseFile)) return null;
+			const story = parseStoryFile(storiesFile);
+			const parts = story.title.split('/');
+			const prose = readFileSync(proseFile, 'utf8');
+			return {
+				...story,
+				slug,
+				name: parts[parts.length - 1],
+				group: parts.length > 2 ? parts[1] : '',
+				proseFile,
+				// The paragraph under the title says what the pattern is for.
+				summary: prose.match(/^# .+\n+([^\n<#][^\n]*)/m)?.[1] ?? '',
+			};
+		})
+		.filter(Boolean)
+		.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
+}
+
+/** Version, release date and counts, for the lines that prove the system is alive. */
+export function readFacts() {
+	const pkg = JSON.parse(readFileSync(resolve(repoRoot, 'package.json'), 'utf8'));
+	const changelog = readFileSync(resolve(repoRoot, 'CHANGELOG.md'), 'utf8');
+	const release = changelog.match(/^## \[([\d.]+)\]\([^)]*\) \((\d{4})-(\d{2})-(\d{2})\)/m);
+	const months = [
+		'januari', 'februari', 'maart', 'april', 'mei', 'juni',
+		'juli', 'augustus', 'september', 'oktober', 'november', 'december',
+	];
+	const icons = readdirSync(resolve(srcDir, 'components/content/icon/icons')).filter((f) => f.endsWith('.svg'));
+	return {
+		version: pkg.version,
+		releaseDate: release ? `${Number(release[4])} ${months[Number(release[3]) - 1]} ${release[2]}` : '',
+		iconCount: icons.length,
+		repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
+	};
+}

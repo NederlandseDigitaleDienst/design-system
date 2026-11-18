@@ -2,6 +2,10 @@ import { html, nothing } from 'lit';
 import './description-cell.js';
 import '../../../content/rich-text/rich-text.js';
 
+/**
+ * `nldd-description-cell` is een cel met een titel en een beschrijving eronder,
+ * voor een rij in een `nldd-list`.
+ */
 export default {
 	title: 'Components/Lists & Tables/Cells/Description Cell',
 	component: 'nldd-description-cell',

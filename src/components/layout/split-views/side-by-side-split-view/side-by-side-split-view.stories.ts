@@ -6,10 +6,9 @@ import '../../container/container.js';
 import '../../../content/rich-text/rich-text.js';
 
 /**
- * Use a side-by-side split view to show multiple panes next to each other,
- * each with its own scrollable area. Typically used for editors where
- * the user needs two or more views at the same time.
- * The number of panes is set via the <code>panes</code> attribute.
+ * `nldd-side-by-side-split-view` toont meer panelen naast elkaar, elk met een
+ * eigen scrollgebied. Bijvoorbeeld in een editor waar je twee of meer weergaven
+ * tegelijk nodig hebt. Het aantal panelen zet je met `panes`.
  *
  * ## Gebruik
  * ```html
@@ -29,9 +28,6 @@ export default {
 			file: 'src/components/layout/split-views/side-by-side-split-view/side-by-side-split-view.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		background: 'inherit',
@@ -41,7 +37,7 @@ export default {
 		background: {
 			control: { type: 'select' },
 			options: ['inherit', 'base', 'tinted'],
-			description: 'Tinted achtergrond — cascade van --context-background-color naar alle afstammelingen inclusief nldd-page en de fade overlay',
+			description: 'Tinted achtergrond. Zet --context-background-color, dat doorwerkt naar alle afstammelingen, ook nldd-page en de fade overlay.',
 			table: { defaultValue: { summary: 'inherit' } },
 		},
 		panes: {

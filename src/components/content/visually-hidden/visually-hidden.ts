@@ -5,7 +5,8 @@
  * accessibility tree and in the reading order, and takes no room on the page.
  *
  * For a name that is visually redundant: the header of a column of checkboxes,
- * where the checkboxes say enough to anyone who can see them, or the "(opent in
+ * where the checkboxes say enough to anyone who can see them but a screen
+ * reader needs the column's name to say what each checkbox does, or the "(opent in
  * een nieuw venster)" after a link whose icon already says it.
  *
  * Not for repairing structure that is missing. Hidden text that describes how
@@ -19,6 +20,7 @@
  * and be nowhere on the screen.
  *
  * @element nldd-visually-hidden
+ * @keywords sr-only, screen reader only, verborgen tekst, schermlezer
  *
  * @slot - The text, read by a screen reader and not shown.
  */

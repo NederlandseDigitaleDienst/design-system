@@ -1,0 +1,12 @@
+/* The package keeps a page hidden until its components are defined, and shows
+   it after 200ms regardless (fouc.css). On this site the components of a page
+   take longer than that: measured on the built site, 400 to 800ms. Without
+   this rule the page shows as bare text first and jumps when the components
+   arrive. So it waits longer; a page whose script never arrives still appears.
+
+   Not in a layer, because the rule it adjusts is not in one either and would
+   otherwise win. A file of its own, so the landing page gets it without a
+   change to its stylesheet. */
+body {
+	animation-delay: 3s;
+}

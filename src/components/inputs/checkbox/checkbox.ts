@@ -2,6 +2,8 @@
  * Nederlandse Digitale Dienst Checkbox Component (Lit + TypeScript)
  *
  * @element nldd-checkbox
+ * @keywords selectievakje, vinkje
+ * @related nldd-switch
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.
@@ -48,7 +50,7 @@ export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-	/** Take the control out of the tab order (`tabindex="-1"`) — for a control
+	/** Take the control out of the tab order (`tabindex="-1"`), for a control
 	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
 	 *  not the current one) that manages focus itself. Still mouse- and
 	 *  script-focusable. */

@@ -16,8 +16,8 @@ Of een pagina voldoet, bepaal je per pagina. De componenten zijn daarvoor een vo
 - **Formaat.** Een control is standaard 44 pixels hoog. De kleinere formaten zijn 32 en 24 pixels, dus geen enkele control is kleiner dan de 24 pixels die WCAG 2.2 als minimum voor een aanraakdoel vraagt.
 - **Contrast op een vlak.** Een vlak geeft zijn inhoudskleur door aan wat erin staat, dus tekst op een gekleurd of getint vlak houdt zijn contrast. Zet daarvoor `background` op het component; de tekst erin volgt vanzelf.
 - **Beweging en contrastmodus.** Componenten met een animatie volgen `prefers-reduced-motion`. In de contrastmodus van het besturingssysteem (`forced-colors`) blijven randen, toestanden en de focusring zichtbaar.
-- **Meldingen.** Een [`nldd-status-bar`](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/components-status-feedback-status-bar--docs) en een [`nldd-notification`](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/components-status-feedback-notification--docs) melden zichzelf aan een schermlezer.
-- **Standaardteksten.** Ingebouwde teksten, zoals de naam van een sluitknop, zijn Nederlands en zet je in één keer om naar een andere taal. Zie [Vertalingen](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-vertalingen--docs).
+- **Meldingen.** Een [`nldd-status-bar`](https://design.digitaledienst.overheid.nl/componenten/status-bar/) en een [`nldd-notification`](https://design.digitaledienst.overheid.nl/componenten/notification/) melden zichzelf aan een schermlezer.
+- **Standaardteksten.** Ingebouwde teksten, zoals de naam van een sluitknop, zijn Nederlands en zet je in één keer om naar een andere taal. Zie [Vertalingen](https://design.digitaledienst.overheid.nl/vertalingen/).
 - **Waarschuwingen tijdens het bouwen.** Mist een component iets wat het nodig heeft, zoals een naam op een knop met alleen een icoon, dan zegt het dat in de console. Alleen in development.
 
 ## Wat jij nog moet doen
@@ -34,7 +34,7 @@ Wat een component precies doet en vraagt, staat op zijn eigen pagina. Elk patroo
 ## Hoe we testen
 
 - **Automatisch, bij elke wijziging.** ESLint draait alle regels van `eslint-plugin-lit-a11y` over de templates. De tests draaien in een echte browser en controleren rollen, namen, focus en toetsenbord, op een aantal plekken met axe erbij.
-- **In Storybook.** Elke story heeft een tabblad Accessibility dat axe over het voorbeeld laat lopen.
+- **Op de website.** `npm run test:a11y` laat axe over elke pagina en elk voorbeeld lopen, en draait bij elke wijziging.
 - **Met de hand.** Met het toetsenbord, met VoiceOver in Safari, op 200% tekstgrootte en in de contrastmodus. Dat vinden de automatische controles niet: of een volgorde logisch is, of een melding op het juiste moment komt, of een naam iets zegt.
 
 ## Iets gevonden

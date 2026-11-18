@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import '../../actions/button/button.js';
 import '../../actions/icon-button/icon-button.js';
 import { fixture, cleanup, waitForUpdate, reduceMotion } from '../../../test-utils.js';
@@ -1244,5 +1244,37 @@ describe('nldd-popover vervaagt waar hij scrollt', () => {
 		scroller.scrollTop = scroller.scrollHeight;
 		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 		expect(fade()).toEqual(['24px', '0px']);
+	});
+
+	describe('title bar per breakpoint', () => {
+		afterEach(async () => {
+			await page.viewport(1280, 800);
+		});
+
+		async function bars(attributes = '') {
+			el = await fixture(`
+				<nldd-popover accessible-label="Test" ${attributes}>
+					<nldd-top-title-bar text="Direct" dismiss-text="Sluit"></nldd-top-title-bar>
+					<div><nldd-top-title-bar text="Dieper" dismiss-text="Sluit"></nldd-top-title-bar></div>
+				</nldd-popover>
+			`);
+			await waitForUpdate(el);
+			return [...el.querySelectorAll('nldd-top-title-bar')].map((bar) => getComputedStyle(bar).display);
+		}
+
+		it('hides a title bar anywhere in it on md and up', async () => {
+			await page.viewport(1280, 800);
+			expect(await bars()).toEqual(['none', 'none']);
+		});
+
+		it('keeps it on md and up with md-title-bar', async () => {
+			await page.viewport(1280, 800);
+			expect(await bars('md-title-bar')).toEqual(['block', 'block']);
+		});
+
+		it('shows it as a bottom sheet on sm', async () => {
+			await page.viewport(390, 800);
+			expect(await bars()).toEqual(['block', 'block']);
+		});
 	});
 });

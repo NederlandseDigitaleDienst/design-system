@@ -14,6 +14,8 @@
  * this bar, use an `nldd-sidebar-section` inside that `nldd-page`.
  *
  * @element nldd-top-navigation-bar
+ * @keywords header, navbar, navigatiebalk
+ * @related nldd-top-title-bar, nldd-menu-bar
  *
  * @attr {boolean} no-logo - Hides the whole logo bar, wordmark included.
  * @attr {string} logo-title - Title of the wordmark next to the logo. Without it the logo stands alone.

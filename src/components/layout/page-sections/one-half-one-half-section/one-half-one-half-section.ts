@@ -6,6 +6,7 @@
  * Padding and gap adjust via container queries.
  *
  * @element nldd-one-half-one-half-section
+ * @related nldd-simple-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section
  *
  * @attr {'inherit'|'base'|'tinted'} [background] - Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface).
  * @attr {string} [width] - Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.

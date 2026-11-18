@@ -8,7 +8,15 @@
  * Values are always ISO (yyyy-mm-dd). With `range` the user picks a start and
  * an end date in two steps.
  *
+ * Arrow keys move by day and by week, Home and End to the edges of the week,
+ * PageUp and PageDown by month, and with Shift by year; Enter and Space pick.
+ * The month title is a live region, so a screen reader hears which month has
+ * focus while paging. Dates that `isDateUnavailable` rules out stay reachable
+ * by keyboard, so an arrow key never silently skips a run of them.
+ *
  * @element nldd-date-picker
+ * @keywords calendar, kalender, datum
+ * @related nldd-date-field
  *
  * @attr {string} value - The chosen date as ISO (yyyy-mm-dd). Only without `range`.
  * @attr {string} start - Start of the period as ISO. Only with `range`.

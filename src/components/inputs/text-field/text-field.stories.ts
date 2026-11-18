@@ -10,24 +10,10 @@ import '../../actions/button-group/button-group.js';
 import '../../layout/container/container.js';
 
 /**
- * `nldd-text-field` is a single-line text input.
- *
- * ### Validation
- * Set `valid` or `invalid` boolean attributes to show the corresponding
- * validation icon and border color.
- *
- * ```html
- * <nldd-text-field valid></nldd-text-field>
- * <nldd-text-field invalid></nldd-text-field>
- * ```
- *
- * ### Size
- * Use `size="sm"` for a smaller variant. The parent `nldd-form-field` sets
- * this automatically via its own `size` attribute.
- *
- * ```html
- * <nldd-text-field size="sm"></nldd-text-field>
- * ```
+ * `nldd-text-field` is een tekstveld van één regel, voor bijvoorbeeld een naam,
+ * een e-mailadres of een code. Zet het in een `nldd-form-field`, dat het label
+ * en de maat regelt. Voor tekst over meer regels is er
+ * `nldd-multi-line-text-field`.
  */
 export default {
 	title: 'Components/Inputs/Text Field',
@@ -37,9 +23,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/text-field/text-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {

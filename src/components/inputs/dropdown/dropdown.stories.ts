@@ -3,8 +3,8 @@ import './dropdown.js';
 import '../../layout/container/container.js';
 
 /**
- * De Dropdown component is een visuele wrapper om een native `<select>` element.
- * Geef een native `<select>` als slotted child — de browser behoudt volledige controle
+ * `nldd-dropdown` is een visuele wrapper om een native `<select>` element.
+ * Geef een native `<select>` als slotted child. Zo houdt de browser de volledige controle
  * over formulierverwerking, toegankelijkheid en keyboard navigatie.
  */
 export default {
@@ -15,9 +15,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/dropdown/dropdown.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {

@@ -9,6 +9,8 @@
  * and an inspector or detail in the last pane.
  *
  * @element nldd-side-by-side-split-view
+ * @keywords master-detail
+ * @related nldd-navigation-split-view, nldd-stacked-split-view, nldd-bar-split-view
  *
  * @attr {'inherit'|'base'|'tinted'} background - Use a tinted background color (cascades to descendants)
  * @attr {number} panes - Number of panes (default: 2)
@@ -75,8 +77,8 @@ export class NLDDSideBySideSplitView extends LitElement {
 	}
 
 	/**
-	 * True when only one pane fits. nldd-shell reads this — and listens for the
-	 * `single-column-change` event below — to switch to document-level scroll.
+	 * True when only one pane fits. nldd-shell reads this (and listens for the
+	 * `single-column-change` event below) to switch to document-level scroll.
 	 * @internal
 	 */
 	get isSingleColumn(): boolean {

@@ -15,9 +15,9 @@
  * same size.
  *
  * @element nldd-link-group
- * @attr {string} size - Text size, set on every link in it: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {string} orientation - Layout direction: 'horizontal' (a row that wraps) | 'vertical' (default: 'horizontal')
- * @attr {string} horizontal-alignment - Alignment of the links: 'left' | 'center' (default: 'left')
+ * @attr {'xs'|'sm'|'md'|'lg'} size - Text size, set on every link in it: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
+ * @attr {'horizontal'|'vertical'} orientation - Layout direction: 'horizontal' (a row that wraps) | 'vertical' (default: 'horizontal')
+ * @attr {'left'|'center'} horizontal-alignment - Alignment of the links: 'left' | 'center' (default: 'left')
  * @attr {string} accessible-label - Accessible name of the nav landmark
  *
  * @slot - nldd-link elements

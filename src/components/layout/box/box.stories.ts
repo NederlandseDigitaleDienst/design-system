@@ -7,15 +7,11 @@ import '../spacer/spacer.js';
 import '../../actions/button/button.js';
 
 /**
- * Gebruik een box om gerelateerde componenten visueel te groeperen in een afgebakend gebied.
+ * `nldd-box` groepeert gerelateerde componenten visueel in een afgebakend gebied.
  * Een box trekt de aandacht naar inhoud of acties die bij elkaar horen,
  * zodat gebruikers hun samenhang in één oogopslag begrijpen.
  *
  * ## Gebruik
- * De box tekent alleen het vlak: hij heeft zelf geen padding, net als nldd-card.
- * Zet er een nldd-container in en laat die de inspringing bepalen, zodat één
- * component overal over spacing gaat.
- *
  * ```html
  * <nldd-box>
  *   <nldd-container padding="16">
@@ -34,9 +30,6 @@ export default {
 		componentSource: {
 			file: 'src/components/layout/box/box.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {
@@ -107,24 +100,26 @@ export const AchtergrondCritical = {
 
 export const Vlakken = {
 	render: () => html`
-		<nldd-container gap="24">
+		<nldd-container>
 			<nldd-box background="tinted">
 		<nldd-container padding="16">
-					<nldd-text text="background=&quot;tinted&quot; (default) — getint vlak op een plain pagina"></nldd-text>
+					<nldd-text text="background=&quot;tinted&quot; (default): getint vlak op een plain pagina"></nldd-text>
 
 		</nldd-container>
 	</nldd-box>
+			<nldd-spacer size="24"></nldd-spacer>
 			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px; --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 				<nldd-box background="base">
 		<nldd-container padding="16">
-						<nldd-text text="background=&quot;base&quot; — base-colored box op een al getinte parent. Highlight ring is +2 stappen voor extra contrast."></nldd-text>
+						<nldd-text text="background=&quot;base&quot;: base-colored box op een al getinte parent. Highlight ring is +2 stappen voor extra contrast."></nldd-text>
 
 		</nldd-container>
 	</nldd-box>
 			</div>
+			<nldd-spacer size="24"></nldd-spacer>
 			<nldd-box background="accent-tinted">
 				<nldd-container padding="16">
-					<nldd-text text="background=&quot;accent-tinted&quot; — een tint van de themakleur, met hetzelfde contrast als tinted"></nldd-text>
+					<nldd-text text="background=&quot;accent-tinted&quot;: een tint van de themakleur, met hetzelfde contrast als tinted"></nldd-text>
 				</nldd-container>
 			</nldd-box>
 		</nldd-container>

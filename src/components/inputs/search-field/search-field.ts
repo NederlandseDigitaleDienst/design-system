@@ -5,11 +5,13 @@
  * and an optional search button.
  *
  * @element nldd-search-field
- * @attr {string} size - Field size: 'sm' | 'md' (default: 'md')
+ * @keywords zoeken, zoekveld
+ * @related nldd-combo-box, nldd-text-field
+ * @attr {'sm'|'md'} size - Field size: 'sm' | 'md' (default: 'md')
  * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
  * @attr {string} placeholder - Placeholder text for the input
  * @attr {string} accessible-label - Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen'). Without a visible label the placeholder is the only text on screen, so a name of your own starts with it: someone who works the computer by voice says what they see, and a name that leaves it out does not answer (WCAG 2.5.3).
- * @attr {string} search-button - Shows a search button on the right, in the appearance you name: 'secondary' (also with no value) | 'primary'. Leave it out for no button: Enter searches as well. 'primary' is for a page where searching is the main task, such as a search page; in a header or above a list the quiet one fits.
+ * @attr {'secondary'|'primary'} search-button - Shows a search button on the right, in the appearance you name: 'secondary' (also with no value) | 'primary'. Leave it out for no button: Enter searches as well. 'primary' is for a page where searching is the main task, such as a search page; in a header or above a list the quiet one fits.
  * @attr {string} shortcut - Keyboard shortcut hint shown at the right end of the empty field, e.g. 'Cmd+K' or '/'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up focusing the field in your app. Hidden while the field has focus or a value, and on touch-only devices. Joins the field's description for screen readers.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).

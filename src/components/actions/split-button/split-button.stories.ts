@@ -4,12 +4,13 @@ import './split-button.js';
 import '../../actions/menu/menu.js';
 import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 import '../../content/rich-text/rich-text.js';
 import '../../content/title/title.js';
 import { ICONS } from '../../content/icon/icon.js';
 
 /**
- * De Split Button combineert een primaire actieknop met een dropdown trigger.
+ * `nldd-split-button` combineert een primaire actieknop met een dropdown trigger.
  *
  * ## Gebruik
  * ```html
@@ -26,9 +27,6 @@ export default {
 		componentSource: {
 			file: 'src/components/actions/split-button/split-button.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {
@@ -262,7 +260,7 @@ export const Grootten = {
 	},
 };
 
-// Full width — the main action button fills the available space
+// Full width: the main action button fills the available space
 export const VolleBreedte = {
 	name: 'Volle breedte',
 	render: () => html`
@@ -310,16 +308,17 @@ export const MetPopover = {
 			>
 				<nldd-container
 					padding="16"
-					gap="8"
 				>
 					<nldd-title
 						size="display-6"
 						text="Deel deze pagina"
 						heading-level="2"
 					></nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-rich-text>
 						<p>Kies hoe je deze pagina wilt delen met anderen.</p>
 					</nldd-rich-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-button
 						appearance="primary"
 						text="Kopieer link"

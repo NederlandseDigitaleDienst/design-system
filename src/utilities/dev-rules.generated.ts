@@ -1369,6 +1369,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-button-bar[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-button-bar-appearance",
+		"message": "`appearance` on nldd-button-bar takes: accent-filled, content-filled, content-tinted, neutral-base, neutral-tinted, primary, secondary.",
+		"context": "nldd-button-bar[appearance]:not([appearance=\"accent-filled\"], [appearance=\"content-filled\"], [appearance=\"content-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
 		"id": "invalid-value-button-group-size",
 		"message": "`size` on nldd-button-group takes: md, sm.",
 		"context": "nldd-button-group[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -1654,6 +1659,21 @@ export const devRules: DevRule[] = [
 		"context": "nldd-file-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-form-label-alignment",
+		"message": "`label-alignment` on nldd-form takes: top, right, left.",
+		"context": "nldd-form[label-alignment]:not([label-alignment=\"top\"], [label-alignment=\"right\"], [label-alignment=\"left\"])"
+	},
+	{
+		"id": "invalid-value-form-autocomplete",
+		"message": "`autocomplete` on nldd-form takes: on, off.",
+		"context": "nldd-form[autocomplete]:not([autocomplete=\"on\"], [autocomplete=\"off\"])"
+	},
+	{
+		"id": "invalid-value-form-method",
+		"message": "`method` on nldd-form takes: get, post, dialog.",
+		"context": "nldd-form[method]:not([method=\"get\"], [method=\"post\"], [method=\"dialog\"])"
+	},
+	{
 		"id": "invalid-value-form-actions-label-alignment",
 		"message": "`label-alignment` on nldd-form-actions takes: left, right, top.",
 		"context": "nldd-form-actions[label-alignment]:not([label-alignment=\"left\"], [label-alignment=\"right\"], [label-alignment=\"top\"])"
@@ -1929,6 +1949,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-keyboard-shortcut[color]:not([color=\"content\"], [color=\"neutral\"])"
 	},
 	{
+		"id": "invalid-value-keyboard-shortcut-debug-os",
+		"message": "`debug-os` on nldd-keyboard-shortcut takes: mac, windows, linux, other.",
+		"context": "nldd-keyboard-shortcut[debug-os]:not([debug-os=\"mac\"], [debug-os=\"windows\"], [debug-os=\"linux\"], [debug-os=\"other\"])"
+	},
+	{
 		"id": "invalid-value-link-size",
 		"message": "`size` on nldd-link takes: inherit, lg, md, sm, xs.",
 		"context": "nldd-link[size]:not([size=\"inherit\"], [size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -1979,6 +2004,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-list-item-segment[width]:not([width=\"fit-content\"], [width=\"full\"])"
 	},
 	{
+		"id": "invalid-value-list-item-segment-popup-type",
+		"message": "`popup-type` on nldd-list-item-segment takes: dialog, grid, listbox, menu, tree.",
+		"context": "nldd-list-item-segment[popup-type]:not([popup-type=\"dialog\"], [popup-type=\"grid\"], [popup-type=\"listbox\"], [popup-type=\"menu\"], [popup-type=\"tree\"])"
+	},
+	{
 		"id": "invalid-value-list-item-segment-current-type",
 		"message": "`current-type` on nldd-list-item-segment takes: date, location, page, step, time, true.",
 		"context": "nldd-list-item-segment[current-type]:not([current-type=\"date\"], [current-type=\"location\"], [current-type=\"page\"], [current-type=\"step\"], [current-type=\"time\"], [current-type=\"true\"])"
@@ -1987,6 +2017,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-menu-variant",
 		"message": "`variant` on nldd-menu takes: listbox, menu, navigation.",
 		"context": "nldd-menu[variant]:not([variant=\"listbox\"], [variant=\"menu\"], [variant=\"navigation\"])"
+	},
+	{
+		"id": "invalid-value-menu-placement",
+		"message": "`placement` on nldd-menu takes: bottom, bottom-end, bottom-start, left, left-end, left-start, right, right-end, right-start, top, top-end, top-start.",
+		"context": "nldd-menu[placement]:not([placement=\"bottom\"], [placement=\"bottom-end\"], [placement=\"bottom-start\"], [placement=\"left\"], [placement=\"left-end\"], [placement=\"left-start\"], [placement=\"right\"], [placement=\"right-end\"], [placement=\"right-start\"], [placement=\"top\"], [placement=\"top-end\"], [placement=\"top-start\"])"
 	},
 	{
 		"id": "invalid-value-menu-bar-item-current-type",
@@ -2664,6 +2699,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-tab-bar-item[size]:not([size=\"lg\"], [size=\"md\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-tab-bar-item-variant",
+		"message": "`variant` on nldd-tab-bar-item takes: icon-and-text, text, icon.",
+		"context": "nldd-tab-bar-item[variant]:not([variant=\"icon-and-text\"], [variant=\"text\"], [variant=\"icon\"])"
+	},
+	{
 		"id": "invalid-value-table-background",
 		"message": "`background` on nldd-table takes: base, tinted.",
 		"context": "nldd-table[background]:not([background=\"base\"], [background=\"tinted\"])"
@@ -2849,9 +2889,19 @@ export const devRules: DevRule[] = [
 		"context": "nldd-toolbar[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-toolbar-item-size",
+		"message": "`size` on nldd-toolbar-item takes: sm, md, lg.",
+		"context": "nldd-toolbar-item[size]:not([size=\"sm\"], [size=\"md\"], [size=\"lg\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
 		"id": "invalid-value-toolbar-title-align",
 		"message": "`align` on nldd-toolbar-title takes: center, left.",
 		"context": "nldd-toolbar-title[align]:not([align=\"center\"], [align=\"left\"])"
+	},
+	{
+		"id": "invalid-value-toolbar-title-size",
+		"message": "`size` on nldd-toolbar-title takes: sm, md, lg.",
+		"context": "nldd-toolbar-title[size]:not([size=\"sm\"], [size=\"md\"], [size=\"lg\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-tooltip-placement",

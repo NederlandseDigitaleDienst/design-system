@@ -16,7 +16,7 @@ export const MENTION_HREF_PREFIX = 'user:';
 /** The markdown-compatible token stored for a mention (degrades to a plain link).
  *  The label's link-text delimiters are backslash-escaped and the id is
  *  percent-encoded, so a crafted candidate (e.g. a display name sourced from user
- *  data) can't break out of `[label](user:id)` into arbitrary markdown — a stray
+ *  data) can't break out of `[label](user:id)` into arbitrary markdown. A stray
  *  `]` or `)` would otherwise start a second, attacker-shaped link. The render
  *  layer reverses both via `unescapeMentionLabel` / `decodeMentionId`. */
 export function mentionToken(candidate: TypeaheadCandidate): string {
@@ -182,13 +182,13 @@ export function mentionRangeAt(state: EditorState, pos: number): { from: number;
 	return link ? { from: link.from, to: link.to } : null;
 }
 
-/** A mention token ending exactly at `pos` (cursor just after it — backspace). */
+/** A mention token ending exactly at `pos` (cursor just after it, for Backspace). */
 export function mentionRangeEndingAt(state: EditorState, pos: number): { from: number; to: number } | null {
 	const link = mentionLinkAt(state, pos, -1);
 	return link && link.to === pos ? { from: link.from, to: link.to } : null;
 }
 
-/** A mention token starting exactly at `pos` (cursor just before it — delete). */
+/** A mention token starting exactly at `pos` (cursor just before it, for Delete). */
 export function mentionRangeStartingAt(state: EditorState, pos: number): { from: number; to: number } | null {
 	const link = mentionLinkAt(state, pos, 1);
 	return link && link.from === pos ? { from: link.from, to: link.to } : null;

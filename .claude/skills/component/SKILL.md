@@ -69,7 +69,7 @@ src/components/{categorie}/{naam}/
   {naam}.styles.ts    # Styles
   {naam}.template.ts  # Render template
   {naam}.i18n.ts      # Vertalingen (optioneel, bij gebruikersgerichte tekst)
-  {naam}.stories.ts   # Storybook stories
+  {naam}.stories.ts   # Stories: de voorbeelden op de pagina van het component
   {naam}.test.ts      # Tests
 ```
 
@@ -304,6 +304,8 @@ Zet het component ook in de tabellen in `form-field.test.ts`, die alle invoercom
 
 ### Controls conventies
 
+De website (`npm run www`) leidt de controls onder het eerste voorbeeld af uit de attributen van het component, met de waarden uit het TypeScript-type. `argTypes` vullen alleen aan: een Nederlandse toelichting, een label als `(geen)`, of een control voor iets dat geen attribuut is. De conventies hieronder zijn geschreven toen de stories nog in Storybook stonden; ze gelden nog voor hoe je `argTypes` schrijft, maar waar ze zeggen wat Storybook toont, kijk je op de componentpagina wat de website doet.
+
 - **`args` staat altijd vóór `argTypes`** in de default export
 - **Args keys:** altijd camelCase (bijv. `startIcon`, `fullWidth`)
 - **`name:`** het HTML attribuut in kebab-case (bijv. `name: 'start-icon'`, `name: 'full-width'`)
@@ -379,7 +381,7 @@ Story-namen zijn Nederlands, maar een attribuut vertaal je niet. Een ontwikkelaa
 4. **Een story die alle waarden van een as toont** heet naar de as in het meervoud: "Grootten", "Varianten", "Kleuren". Schrijf "Grootten", niet "Maten" of "Sizes".
 5. **Een story over een situatie** blijft Nederlands proza: "Met hulptekst", "In een formulier", "Met een fout". Attribuut- en componentnamen vertaal je daarin niet: "Met Start Icon", niet "Met starticoon".
 
-Storybook zet elk woord van een exportnaam met een hoofdletter, dus `ToestandChecked` verschijnt als "Toestand Checked". Geef zo'n story daarom een expliciete `name`, zodat het attribuut klein en letterlijk blijft:
+De website leest een exportnaam als een kop: `ToestandChecked` wordt "Toestand checked". Wijkt de naam die je wilt daarvan af, geef de story dan een expliciete `name`:
 
 ```ts
 export const ToestandChecked = {
@@ -873,5 +875,5 @@ Andere regels die hetzelfde slotted element raken (`:hover`, `@media`, een speci
 - [ ] Geen `part` attributen op shadow DOM elementen
 
 **Verificatie:**
-- [ ] Storybook gestart
-- [ ] Component visueel gecontroleerd in Storybook
+- [ ] Website gestart (`npm run www`)
+- [ ] Component visueel gecontroleerd op zijn pagina (`/componenten/<naam>/`)

@@ -4,14 +4,15 @@ import { ICONS } from './../../content/icon/icon.js';
 import '../../layout/container/container.js';
 import '../../content/text/text.js';
 
+const SEMANTIC_COLORS = ['critical', 'accent', 'neutral', 'warning', 'success'];
+const COLORS = [...SEMANTIC_COLORS, 'content'];
+
 /**
- * De Badge toont de toestand van iets, of hoeveel er van iets is. Wat er staat
+ * `nldd-badge` toont de toestand van iets, of hoeveel er van iets is. Wat er staat
  * bepaalt het systeem, niet de gebruiker, en het verandert zonder dat iemand het
- * aanraakt. Een badge is nooit interactief.
- *
- * Met `number` of `text` toont hij een waarde; zonder waarde verschijnt een stip.
- * Gaat het om een kenmerk dat iemand heeft toegekend, dan is het een
- * `nldd-tag`; om zelfstandige data die de gebruiker hanteert, een `nldd-token`.
+ * aanraakt. Een badge is nooit interactief. Gaat het om een kenmerk dat iemand
+ * heeft toegekend, dan is het een `nldd-tag`. Gaat het om zelfstandige data die
+ * de gebruiker hanteert, dan is het een `nldd-token`.
  *
  * ## Gebruik
  * ```html
@@ -23,9 +24,6 @@ import '../../content/text/text.js';
  * ></nldd-badge>
  * ```
  */
-const SEMANTIC_COLORS = ['critical', 'accent', 'neutral', 'warning', 'success'];
-const COLORS = [...SEMANTIC_COLORS, 'content'];
-
 export default {
 	title: 'Components/Status & Feedback/Badge',
 	component: 'nldd-badge',
@@ -34,9 +32,6 @@ export default {
 		componentSource: {
 			file: 'src/components/status-and-feedback/badge/badge.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {
@@ -293,7 +288,7 @@ export const Stip = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zonder text of number verschijnt automatisch een stip — ideaal voor "nieuw/ongelezen" indicatie.',
+				story: 'Zonder text of number verschijnt automatisch een stip, voor een "nieuw" of "ongelezen"-indicatie.',
 			},
 		},
 	},
@@ -377,7 +372,7 @@ export const MetIcoon = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Icon-only badges worden als vierkant gerenderd — nuttig voor status-indicatoren (verified, waarschuwing, geblokkeerd).',
+				story: 'Icon-only badges worden als vierkant gerenderd. Nuttig voor status-indicatoren (verified, waarschuwing, geblokkeerd).',
 			},
 		},
 	},

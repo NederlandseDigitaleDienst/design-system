@@ -17,7 +17,7 @@ type TitleAlign = 'left' | 'center';
  * @attr {string} width - Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width.
  * @attr {string} min-width - Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first.
  * @attr {string} max-width - Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row).
- * @attr {string} align - Text alignment: 'left' | 'center' (default: 'left').
+ * @attr {'left'|'center'} align - Text alignment: 'left' | 'center' (default: 'left').
  * @attr {string} text - Title text.
  * @attr {string} supporting-text - Secondary supporting text shown below the title.
  * @attr {'sm'|'md'|'lg'} size - Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts.

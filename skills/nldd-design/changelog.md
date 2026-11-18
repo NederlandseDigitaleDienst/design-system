@@ -24,6 +24,47 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd lint dist` skips the scripts of a build.** A bundler's chunks hold the styles and markup of the components themselves, which read as an app overriding them: a built site got a `local-variable-no-override` for every component it used, and a `file-not-read` for every chunk. A script in `dist`, `build`, `.next` or `.nuxt` is now left alone, when you run the linter from the root of the project; the pages and stylesheets next to it are read as before.
 
+## [0.26.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.2...v0.26.3) (2026-11-18)
+
+### Highlights
+
+- **The documentation moved to [design.digitaledienst.overheid.nl](https://design.digitaledienst.overheid.nl), behind the landing page.** Every component, pattern and guideline has an address you can share: `/componenten/button/`, `/patronen/form/`, `/richtlijnen/`. The pages are built with the components they document, and Storybook is gone.
+- **Every live example stands on a stage.** The frame around an example has its own switch for light and dark and for the base and tinted surface. An example that needs a whole window, such as a page pattern, runs in one and can be made narrow.
+- **Every attribute has a control.** The controls under the first example of a component come from the component itself, with the values of its type.
+- **`nldd-popover` hides a title bar on md and up.** See Breaking.
+- **3 accessibility fixes:** a popover no longer points its anchor at an id the anchor cannot see, a page that holds only text scrolls with the keyboard, and a narrow document tab is named by the text it shows. See Fixed.
+
+### Breaking
+
+- **`nldd-popover` hides an `nldd-top-title-bar` in it on md and up.** Anchored beside its trigger, a popover closes with Escape or a click outside it, so the bar only matters on sm, where the popover is a bottom sheet. This holds for a bar anywhere in the popover, also in the header of an `nldd-page`. The bar in the pickers of `nldd-date-field` and in the overflow of `nldd-avatar-group` now shows on sm only, as it already did in `nldd-time-field`. Set `md-title-bar` on the popover to keep a bar whose dismiss button does what nothing else in the popover does. `nldd-sheet` always shows its bar.
+
+### Added
+
+- **`@keywords` and `@related` in the JSDoc of a component.** `@keywords` names what someone searches for who does not know the name, such as `toast` for `nldd-notification`. `@related` names the components to weigh against this one, such as the other overlays for `nldd-sheet`. Both are in `custom-elements.json` and in `reference.md`. The website searches the keywords and lists the related components under the first example and under the search results.
+- **Lint hint `container-no-mixed-gap`.** An `nldd-container` that stacks different kinds of components under each other with a `gap` gets a hint to space them with `nldd-spacer`, so each distance can be tuned on its own. A run of one kind (cards, buttons, the fields of a form) and a container that wraps keep their gap. The hint points to the page of `nldd-spacer`: a rule's `see` may now name a component.
+- **`nldd-token` opens a popover as well as a menu.** Put an `nldd-popover` in the `menu` slot for what a menu cannot hold, such as a field to edit the value of the token in. The menu button anchors it and tells assistive technology it opens a dialog.
+- **`nldd-menu` takes `no-blink`.** The menu closes at once after a choice, as a listbox does. Use it where the choice shows next to the menu the moment it is made, such as a token that writes the value it holds. There the blink confirms what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.
+- **`nldd-form-field-help-text` styles inline elements as `nldd-text` does.** `<strong>` and `<b>` are bold, `<em>` and `<i>` italic, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. This works for elements placed directly in the help text, without a global stylesheet.
+
+### Changed
+
+- **A finding of `nldd lint` links to the website.** The address after a rule that points at a pattern or a guideline is now `https://design.digitaledienst.overheid.nl/patronen/form/` where it was a Storybook address.
+- **The links in the skills and in `reference.md` point to the website.**
+- **Every attribute with a fixed set of values names them in its type.** The website now offers them as a choice everywhere, also where the type comes from a dependency, such as `placement` on `nldd-popover`. `nldd lint` already knew most sets. It now also warns about a value outside the set for `placement` on `nldd-menu`, `appearance` on `nldd-button-bar`, `popup-type` on `nldd-list-item-segment` and `label-alignment`, `method` and `autocomplete` on `nldd-form`. A wrong value already did nothing, so only the warning is new.
+
+### Fixed
+
+- **`nldd-popover` writes `aria-controls` only where its anchor can resolve it.** An anchor inside a shadow root, such as the button of an `nldd-token`, got the id of a popover in the light DOM, which an id reference cannot reach. A screen reader was pointed at nothing, and axe reported an invalid attribute value.
+- **An `nldd-page` that holds nothing to focus scrolls with the keyboard.** Its scroller takes a tab stop of its own while it scrolls and nothing in it takes focus, such as a page of running text. Safari and Firefox never let Tab land in such a scroller, so the arrow keys could not reach it. A page with a link or a field in it gets no extra tab stop.
+- **A page with an `nldd-shell` gives the document the surface of the shell.** Where the shell does not paint, such as the overscroll at the top and bottom of a page in Safari, the document showed the browser's own color. The `html` element now has the base surface, or the tinted one with `background="tinted"` on the shell.
+- **A narrow `nldd-document-tab-bar-item` is named by the text it shows.** A tab that showed "Art. 2 WZT" was called "Artikel 2 · Wet op de Zorgtoeslag", so someone who says what they see to voice control could not reach it (WCAG 2.5.3). The full text now describes the tab.
+- **`nldd-tooltip` shows in a popover that opens from a bar.** A tooltip in an open popover, menu or dialog counted the ancestors of that overlay as clipping, such as a toolbar with `overflow: hidden`. The trigger seemed out of view, so the tooltip stayed hidden. In the top layer only the overlay itself and what is in it can clip now.
+- **`nldd-tooltip` and the copy outcome of `nldd-code-viewer` hear a scroll inside a component.** Both listened on the document, and a scroll event does not leave its shadow root. In an `nldd-page`, which scrolls in its own shadow root, a hover tooltip stayed on screen while its trigger scrolled away, and "Gekopieerd" stayed where it was. Both now listen on every scrolling ancestor of their trigger.
+- **`nldd-tooltip` no longer flashes up when you click its trigger.** Chrome focuses a button on the press, before the click, and the tooltip showed for that focus and went again with the click. Any other focus still shows it at once.
+- **`nldd-tooltip` fades out with the text it had, beside its trigger.** Feedback such as "Gekopieerd" on the copy button of `nldd-code-viewer` turned back into "Kopieer" as it went, so the label flashed in the fade. During the fade the tooltip also stood still while the page scrolled on under it.
+- **`nldd lint` takes a page in a sheet or a modal dialog for an overlay, not for a pane.** An `nldd-sheet` or `nldd-modal-dialog` in a pane of `nldd-navigation-split-view` got the hints `pane-page-needs-name`, `pane-title-bar-needs-back` and `pane-title-bar-needs-level`, which are about the panes themselves. The reference, the site and `nldd lint rules` also listed a rule under every tag in its selector, also one it only excludes, such as the components a `:not()` lets through. A tag a rule excludes no longer counts.
+- **`nldd-icon-button` in running text centers on the capitals beside it.** It sat on the baseline, so an `xs` button after a label stood higher than the words.
+
 ## [0.26.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.1...v0.26.2) (2026-11-17)
 
 ### Highlights

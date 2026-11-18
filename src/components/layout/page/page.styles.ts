@@ -11,6 +11,8 @@ export const pageStyles = css`
 
 	:host {
 		--_page-background-color: var(--context-background-color);
+		--_page-focus-ring-outline: var(--semantics-focus-ring-outline);
+		--_page-focus-ring-outline-offset: calc(-2 * var(--primitives-border-width-regular));
 		/* The insets this page arrived with, parked before it adds its own:
 		   republishing --context-inset-top on the element it reads from would be
 		   a cycle. */
@@ -170,6 +172,11 @@ export const pageStyles = css`
 		min-height: 0;
 		flex-direction: column;
 		flex-grow: 1;
+	}
+
+	.page__scroll:focus-visible {
+		outline: var(--_page-focus-ring-outline);
+		outline-offset: var(--_page-focus-ring-outline-offset);
 	}
 
 	/* Nested scrolling: a sticky child is measured against this element, so the

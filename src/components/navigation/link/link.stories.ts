@@ -8,16 +8,10 @@ import '../../layout/spacer/spacer.js';
 import '../../layout/popover/popover.js';
 
 /**
- * De Link component werkt in twee modi:
- *
- * - **Sized** (`size="xs|sm|md|lg"`) — standalone link met vaste tekstgrootte,
- *   ondersteunt icons. Voor menu's, actiegebieden, overzichten.
- * - **Inherit** (geen `size`) — erft font-size, line-height en font-family van
- *   omgeving. Tekst wraps natuurlijk over regels. Voor links in lopende tekst,
- *   custom layouts of cells.
- *
- * Voor links in HTML-content (CMS, markdown) blijft `<nldd-rich-text>` met raw
- * `<a>` de juiste route — die styled `a` selectors via globale CSS.
+ * `nldd-link` is een link naar een andere pagina, los of in lopende tekst. Met
+ * `size` staat hij op zichzelf, in een menu of een overzicht. Zonder `size`
+ * neemt hij de tekst eromheen over. Komt de link als HTML uit een CMS of
+ * markdown, gebruik dan `nldd-rich-text` met een gewone `<a>`.
  *
  * ## Gebruik
  * ```html
@@ -47,9 +41,6 @@ export default {
 		componentSource: {
 			file: 'src/components/navigation/link/link.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {
@@ -205,7 +196,7 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="In een h2 — link erft display-grootte"
+					text="In een h2: de link erft de display-grootte"
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-title size="display-2">
@@ -216,7 +207,7 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="In body-md — link is body-md"
+					text="In body-md: de link is body-md"
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="md">
@@ -227,7 +218,7 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="In body-sm — link is body-sm"
+					text="In body-sm: de link is body-sm"
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="sm">
@@ -251,7 +242,7 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon"
+					text="Met end-icon (externe link), met natuurlijke whitespace tussen tekst en icon"
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="md">
@@ -277,7 +268,7 @@ export const InLopendeTekst = {
 		docs: {
 			description: {
 				story: `
-Zonder \`size\` attribuut (of met \`size="inherit"\`) erft \`<nldd-link>\` font-size, line-height en font-family van de omgeving — gebruik dit voor links in lopende tekst. De link rendert als pure inline-element zodat tekst natuurlijk over regels wrapt.
+Zonder \`size\` attribuut (of met \`size="inherit"\`) erft \`<nldd-link>\` font-size, line-height en font-family van de omgeving. Gebruik dit voor links in lopende tekst. De link rendert als pure inline-element zodat tekst natuurlijk over regels wrapt.
 
 Icons werken ook in inherit mode: de natuurlijke whitespace tussen icon en tekst zorgt voor de spacing.
 				`.trim(),
@@ -392,17 +383,19 @@ export const MetVoorproefjeOpInteresse = {
 export const MetEigenAnker = {
 	render: () => html`
 		<nldd-container
-			gap="8"
 			horizontal-alignment="left"
 		>
 			<nldd-link size="md"><a href="#aanvraag-a-1042">Aanvraag A-1042</a></nldd-link>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-link size="md">
 				<a href="#aanvraag-a-1043">Aanvraag A-1043 <nldd-icon icon="arrow-right"></nldd-icon></a>
 			</nldd-link>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-link
 				size="md"
 				disabled
 			><a href="#dossier-d-318">Dossier D-318</a></nldd-link>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-text>
 				<p>
 					Lees meer over

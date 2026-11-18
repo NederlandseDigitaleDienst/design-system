@@ -4,7 +4,7 @@ Het NLDD Designsysteem geeft je de bouwstenen voor websites en applicaties van d
 
 De componenten zijn web components: gewone HTML-elementen die de browser zelf begrijpt. Daarom werken ze in Angular, React en Vue, en net zo goed zonder framework. Vind je een probleem, dan lossen we het één keer op, in het component zelf. Met de volgende update hebben alle teams de verbetering.
 
-Meer op **https://design.digitaledienst.overheid.nl**. Alle componenten staan in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/).
+Meer op **https://design.digitaledienst.overheid.nl**, met alle [componenten](https://design.digitaledienst.overheid.nl/componenten/) en [patronen](https://design.digitaledienst.overheid.nl/patronen/).
 
 ## Installatie
 
@@ -32,9 +32,9 @@ import { NLDDButton, NLDDCheckbox, NLDDSwitch } from '@nldd/design-system';
 <nldd-switch-field label="Meldingen inschakelen"></nldd-switch-field>
 ```
 
-## Storybook
+## Documentatie
 
-Bekijk de live component documentatie: **https://nederlandsedigitaledienst.github.io/design-system/**
+Bekijk de componenten met live voorbeelden: **https://design.digitaledienst.overheid.nl/componenten/**
 
 ## Plugin voor AI-assistenten
 
@@ -121,10 +121,10 @@ Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwij
 # Dependencies installeren
 npm install
 
-# Storybook starten
-npm run storybook
+# De website met de documentatie starten
+npm run www
 
-# Open http://localhost:6006 voor de component documentatie
+# Open http://localhost:5173 voor de componenten en patronen
 ```
 
 ## Componenten
@@ -143,7 +143,7 @@ Een component zet je neer als een gewoon HTML-element, met attributen voor tekst
 </nldd-button>
 ```
 
-Alle componenten, met hun attributen, slots en events, staan in de [Storybook-documentatie](https://nederlandsedigitaledienst.github.io/design-system/). Dezelfde API staat als tekst in [`skills/nldd-design/reference.md`](./skills/nldd-design/reference.md), dat uit de code wordt gegenereerd en dus altijd klopt.
+Alle componenten, met hun attributen, slots en events, staan op de [website](https://design.digitaledienst.overheid.nl/componenten/). Dezelfde API staat als tekst in [`skills/nldd-design/reference.md`](./skills/nldd-design/reference.md), dat uit de code wordt gegenereerd en dus altijd klopt.
 
 ## Styling structuur
 

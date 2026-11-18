@@ -13,6 +13,7 @@ export function tooltipTemplate(component: NLDDTooltip): TemplateResult {
 		<slot
 			@mouseenter=${component._handleTriggerEnter}
 			@mouseleave=${component._handleTriggerLeave}
+			@pointerdown=${component._handleTriggerPress}
 			@focusin=${component._handleFocusIn}
 			@focusout=${component._handleFocusOut}
 			@click=${component._handleTriggerActivate}
@@ -24,7 +25,7 @@ export function tooltipTemplate(component: NLDDTooltip): TemplateResult {
 			@mouseleave=${component._handleTooltipLeave}
 		>
 			<div class="tooltip__body">
-				${component.text ? html`<span class="tooltip__text">${component.text}</span>` : nothing}
+				${component._shownText ? html`<span class="tooltip__text">${component._shownText}</span>` : nothing}
 				${hasShortcut(component) ? html`
 					<span class="tooltip__shortcut">
 						<nldd-keyboard-shortcut

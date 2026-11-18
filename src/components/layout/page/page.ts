@@ -48,6 +48,8 @@
  * and the page says so in development.
  *
  * @element nldd-page
+ * @keywords pagina
+ * @related nldd-shell, nldd-window
  *
  * @attr {'inherit'|'base'|'tinted'} background - Use a gray background instead of white
  * @attr {string} accessible-label - Name of the landmark this page is: the region it becomes beside another page, or its main landmark
@@ -68,6 +70,28 @@ import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+
+/** Whether an element Tab could land on is one it lands on: an `<a>` without `href` reports a tabIndex of 0. */
+function takesTab(element: HTMLElement): boolean {
+	if (element.tabIndex < 0 || element.matches(':disabled')) return false;
+	if (element.localName === 'a' && !element.hasAttribute('href') && !element.hasAttribute('tabindex')) return false;
+	return element.checkVisibility({ visibilityProperty: true });
+}
+
+/** Whether what scrolls in a page (all but its header) holds anything Tab lands on, in light or shadow DOM. */
+function holdsFocusable(page: Element): boolean {
+	const walk = (parent: Element | ShadowRoot): boolean => {
+		for (const child of parent.children) {
+			if (!(child instanceof HTMLElement) || child.hidden || child.inert) continue;
+			if (parent === page && child.slot === 'header') continue;
+			if (takesTab(child)) return true;
+			if (child.shadowRoot && walk(child.shadowRoot)) return true;
+			if (walk(child)) return true;
+		}
+		return false;
+	};
+	return walk(page);
+}
 
 type Landmarks = 'auto' | 'page' | 'region';
 
@@ -171,8 +195,8 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 
 	/**
 	 * The target to attach scroll LISTENERS to for this page's scrolling. In root
-	 * mode the document is the scroller and its scroll event fires on `window` —
-	 * a listener on `document.scrollingElement` would never fire — so this differs
+	 * mode the document is the scroller and its scroll event fires on `window`
+	 * (a listener on `document.scrollingElement` would never fire), so this differs
 	 * from `scrollTarget` (which is for reading scrollTop). In nested mode the two
 	 * are the same. Components that react to this page's scroll (e.g.
 	 * nldd-top-title-bar's collapse-anchor) must listen here and measure position
@@ -264,7 +288,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	}
 
 	/**
-	 * ScrollModeConsumer — nldd-shell pushes the derived mode here; called with
+	 * ScrollModeConsumer: nldd-shell pushes the derived mode here. Called with
 	 * no argument (resize / no shell) it re-reads the inherited var. @internal
 	 */
 	readScrollMode(mode?: ScrollMode): void {
@@ -333,6 +357,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 			else this._publish('--_page-scroll-height', `${this._scrollEl?.clientHeight ?? 0}px`);
 			// Content that grows or shrinks moves the end without a scroll event.
 			this._onScroll();
+			this._syncScrollerFocus();
 		};
 		publish();
 		this._insetObserver = new ResizeObserver(publish);
@@ -341,6 +366,20 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 		if (this._scrollEl) this._insetObserver.observe(this._scrollEl);
 		const main = this.shadowRoot?.querySelector('.page__main');
 		if (main) this._insetObserver.observe(main);
+	}
+
+	/**
+	 * A scroller that holds nothing to focus cannot be scrolled with the keyboard
+	 * in Safari and Firefox, where Tab never lands in it. It takes a tab stop of
+	 * its own then, and only then: with a link or a field in it, Tab already gets
+	 * there and the arrow keys scroll.
+	 */
+	private _syncScrollerFocus() {
+		const scroller = this._scrollEl;
+		if (!scroller) return;
+		const scrolls = !this._isRoot && scroller.scrollHeight > scroller.clientHeight;
+		if (scrolls && !holdsFocusable(this)) scroller.setAttribute('tabindex', '0');
+		else scroller.removeAttribute('tabindex');
 	}
 
 	private _teardownInsetObserver() {

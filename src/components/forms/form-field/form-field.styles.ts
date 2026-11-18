@@ -185,6 +185,17 @@ export const formFieldHelpTextStyles = css`
 	/* # Host */
 
 	:host {
+		--_form-field-help-text-code-padding: var(--primitives-space-2) var(--primitives-space-4);
+		--_form-field-help-text-code-corner-radius: var(--semantics-controls-xs-corner-radius);
+		--_form-field-help-text-code-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_form-field-help-text-code-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_form-field-help-text-code-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_form-field-help-text-code-font-family: var(--primitives-font-family-monospace);
+		--_form-field-help-text-code-font-size: var(--semantics-code-inline-font-size);
+		--_form-field-help-text-mark-padding: var(--primitives-space-1) var(--primitives-space-2);
+		--_form-field-help-text-mark-corner-radius: var(--semantics-controls-xs-corner-radius);
+		--_form-field-help-text-mark-background-color: var(--semantics-content-mark-background-color);
+		--_form-field-help-text-mark-color: var(--semantics-content-mark-color);
 		${inheritedTextReset}
 		display: contents;
 	}
@@ -238,5 +249,38 @@ export const formFieldHelpTextStyles = css`
 
 	::slotted(a:focus:not(:focus-visible)) {
 		outline: none !important;
+	}
+
+
+	/* # Inline elements */
+
+	::slotted(:is(strong, b, em, i, code, mark)) {
+		${slottedReset}
+		${inheritedTextReset}
+	}
+
+	::slotted(:is(strong, b)) {
+		font-weight: var(--primitives-font-weight-body-bold) !important;
+	}
+
+	::slotted(:is(em, i)) {
+		font-style: italic !important;
+	}
+
+	::slotted(code) {
+		border-radius: var(--_form-field-help-text-code-corner-radius) !important;
+		box-shadow: inset 0 0 0 var(--_form-field-help-text-code-border-width) var(--_form-field-help-text-code-border-color) !important;
+		background-color: var(--_form-field-help-text-code-background-color) !important;
+		padding: var(--_form-field-help-text-code-padding) !important;
+		font-family: var(--_form-field-help-text-code-font-family) !important;
+		font-size: var(--_form-field-help-text-code-font-size) !important;
+	}
+
+	::slotted(mark) {
+		border-radius: var(--_form-field-help-text-mark-corner-radius) !important;
+		background-color: var(--_form-field-help-text-mark-background-color) !important;
+		padding: var(--_form-field-help-text-mark-padding) !important;
+		--context-content-color: var(--_form-field-help-text-mark-color) !important;
+		color: var(--_form-field-help-text-mark-color) !important;
 	}
 `;

@@ -12,28 +12,9 @@ import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * De Table toont data in uitgelijnde kolommen. Het is altijd een box (afgeronde
- * hoeken, rand, base of tinted vulling); de inhoud wordt uitgelijnd via een CSS
- * grid + subgrid. Dividers lopen full-bleed tot de zijkanten; de inline-padding
- * zit op de rijen en springt alleen de cel-inhoud in.
- *
- * ## Kolombreedtes — één keer, zoals een HTML-tabel
- * Definieer de kolommen één keer op de table via het `columns`-attribuut: een
- * CSS grid track list, bv. `columns="minmax(200px,1fr) 120px 80px"`. Elke rij
- * gebruikt `grid-template-columns: subgrid` en lijnt zo uit op die kolommen.
- *
- * ## Rijen en cellen
- * Rijen zijn `<nldd-table-row>`-elementen; de inhoud zijn de bestaande
- * `nldd-cell`-componenten (één per kolom). Een generieke `nldd-cell` krijgt
- * automatisch `width="full"` zodat hij zijn kolom vult.
- *
- * ## Header
- * Zet één `<nldd-table-row slot="header">` in de `header`-slot. De cellen
- * worden kolomkoppen (`role="columnheader"`).
- *
- * ## Selectie & sortering
- * Bewust niet ingebouwd: voeg zelf een kolom met `nldd-cell` + `nldd-checkbox`
- * toe voor selectie, en stuur sortering aan met een externe control.
+ * `nldd-table` toont data in uitgelijnde kolommen, in een afgebakend vlak. Gebruik
+ * hem voor gegevens die je per rij vergelijkt, zoals een overzicht van aanvragen
+ * met hun status. Elke rij is een `nldd-table-row` met een cel per kolom.
  */
 export default {
 	title: 'Components/Lists & Tables/Table',
@@ -44,7 +25,6 @@ export default {
 			file: 'src/components/lists-and-tables/table/table.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		background: 'base',
@@ -128,6 +108,7 @@ const Template = ({ background, columns, smColumns, mdColumns, lgColumns, access
 	</nldd-table>
 `;
 
+/** Elke rij lijnt uit op de kolommen die je één keer met `columns` zet. */
 export const Standaard = {
 	render: Template,
 };
@@ -322,7 +303,7 @@ export const RijSelected = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Markeer een rij met het `selected`-attribuut. De tint loopt full-bleed door tot de tabelranden (hoeken volgen de box) — zelfde behandeling als `nldd-list-item[selected]`.',
+				story: 'Markeer een rij met het `selected`-attribuut. De tint loopt full-bleed door tot de tabelranden (hoeken volgen de box), net als bij `nldd-list-item[selected]`.',
 			},
 		},
 	},
@@ -402,7 +383,7 @@ export const HorizontaalScrollen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Laag 1 — horizontaal scrollen: de tabel is zelf een horizontale scroll-container. Geef kolommen een vaste/min-breedte; past de tabel niet, dan scrollt hij en wordt hij focusbaar (toetsenbord kan pannen). Wil je niet scrollen? Verberg kolommen met `hide-below`.',
+				story: 'Laag 1 is horizontaal scrollen: de tabel is zelf een horizontale scroll-container. Geef kolommen een vaste/min-breedte; past de tabel niet, dan scrollt hij en wordt hij focusbaar (toetsenbord kan pannen). Wil je niet scrollen? Verberg kolommen met `hide-below`.',
 			},
 		},
 	},
@@ -479,13 +460,13 @@ export const ResponsieveKolommen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Laag 2 — kolommen droppen: geef `sm-columns`/`md-columns`/`lg-columns` (kortere track-lijsten) en verberg de gedropte cellen met `hide-below` op dezelfde breakpoints. De tabel kiest zijn track-lijst o.b.v. de eigen breedte (standaard sm/md/lg). Hier op vaste breedtes getoond; in de praktijk reageert het op de container.',
+				story: 'Laag 2 is kolommen droppen: geef `sm-columns`/`md-columns`/`lg-columns` (kortere track-lijsten) en verberg de gedropte cellen met `hide-below` op dezelfde breakpoints. De tabel kiest zijn track-lijst o.b.v. de eigen breedte (standaard sm/md/lg). Hier op vaste breedtes getoond; in de praktijk reageert het op de container.',
 			},
 		},
 	},
 };
 
-// — Empty state ——————————————————————————————————————————————————————————————
+// Empty state
 
 const emptyHeader = () => html`
 	<nldd-table-row slot="header">

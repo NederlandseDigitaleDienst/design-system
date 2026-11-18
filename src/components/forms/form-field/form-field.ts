@@ -7,16 +7,20 @@
  * or `id` yourself. The input is the first one it finds, leaving out what sits
  * in an nldd-toolbar inside the field: a toolbar works on the field, such as
  * the formatting bar above an nldd-text-editor, and is never the field itself.
+ * A native `for` cannot cross a shadow boundary, so a click on the label
+ * focuses the input from script.
  *
  * Mark the optional fields with `optional`, not the required ones; the design
  * guidelines say why. Put the requirements on a value in an
  * nldd-validation-list inside the same field. What only your server knows,
  * such as a password found in a breach, the app names in `unmet` on the input
- * itself: see nldd-validation-list.
+ * itself: see nldd-validation-list. The field hands the list its input and puts
+ * the list in the input's accessible description, before the help text.
  *
  * @element nldd-form-field
+ * @keywords veld, label
  *
- * @attr {string} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
+ * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.
  * @attr {boolean} optional - Shows an optional badge next to the label.
@@ -29,8 +33,8 @@
  *
  * @element nldd-form-field-help-text
  *
- * @slot - Help text content. May contain inline elements including links.
- * @accepts a
+ * @slot - Help text content. Inline elements in it look as they do in nldd-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. Only direct children get that styling: an element inside another (a `<code>` in an `<a>`) is left as it is.
+ * @accepts a, strong, b, em, i, code, mark
  *
  * ─────────────────────────────────────────────────────────────────────────
  *
@@ -196,7 +200,7 @@ export class NLDDFormField extends LitElement {
 	}
 
 	/**
-	 * Called when the label is clicked — focuses the slotted input.
+	 * Called when the label is clicked. Focuses the slotted input.
 	 *
 	 * The label carries no `for` and does not wrap the control, which sits in
 	 * the slot beside it, so it labels nothing as far as the platform is

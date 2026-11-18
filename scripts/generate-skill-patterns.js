@@ -1,9 +1,9 @@
 /**
- * Generates the pattern pages of the nldd-design-build skill from their
- * Storybook pages.
+ * Generates the pattern pages of the nldd-design-build skill from the pages
+ * the website shows.
  *
  * Every directory in src/patterns/ holds one pattern: its example markup as
- * .html, the stories that render it and the .mdx page around it. The
+ * .html, the stories that render it and the .md page around it. The
  * translation itself lives in scripts/lib/skill-patterns.js; this script finds
  * the files, supplies what the links resolve against and writes the result to
  * skills/nldd-design-build/patterns/<slug>.md.
@@ -20,33 +20,15 @@ import { fileURLToPath } from 'node:url';
 import { generatedHeader, readSource, writeGenerated } from './lib/skill-doc.js';
 import { rulesOfPattern } from '../lint/rule-index.js';
 import { loadData } from '../lint/linter.js';
-import { parsePatternStories, patternToMarkdown, referenceTags, storybookId } from './lib/skill-patterns.js';
+import { PATTERNS, parsePatternStories, patternToMarkdown, referenceTags } from './lib/skill-patterns.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const patternsDir = resolve(__dirname, '../src/patterns');
 const outputDir = resolve(__dirname, '../skills/nldd-design-build/patterns');
 const referencePath = resolve(__dirname, '../skills/nldd-design/reference.md');
 
-/** The set of patterns: Storybook title to the file name in the skill. */
-const PATTERNS = {
-	"Patronen/Pagina's/Paginaopbouw": 'page-structure',
-	"Patronen/Pagina's/Home": 'home-page',
-	"Patronen/Pagina's/Onderwerppagina": 'topic-page',
-	"Patronen/Pagina's/Navigatiepagina": 'navigation-page',
-	"Patronen/Pagina's/Contentpagina": 'content-page',
-	'Patronen/Applicatie': 'application',
-	'Patronen/Werkbalk met acties': 'toolbar-with-actions',
-	'Patronen/Lijst': 'list',
-	'Patronen/Filteren': 'filtering',
-	'Patronen/Formulier': 'form',
-	'Patronen/Menu bij een knop': 'menu-from-a-button',
-	'Patronen/Bewerken in een sheet': 'edit-in-a-sheet',
-	'Patronen/Lezen in een sheet': 'read-in-a-sheet',
-	'Patronen/Onomkeerbare actie': 'irreversible-action',
-};
-
 const context = {
-	patterns: Object.fromEntries(Object.entries(PATTERNS).map(([title, slug]) => [storybookId(title), slug])),
+	patterns: new Set(Object.values(PATTERNS)),
 	tags: referenceTags(readSource(referencePath, 'Draai eerst npm run generate:component-reference.')),
 };
 
@@ -74,7 +56,7 @@ for (const slug of slugs) {
 		}),
 	);
 	const rules = rulesOfPattern(lintRules, slug);
-	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context, rules });
-	const header = generatedHeader(`Bron: src/patterns/${slug}/ (de .mdx-pagina en de .html-voorbeelden ernaast).`);
+	const body = patternToMarkdown({ page: readSource(join(dir, `${slug}.md`)), markup, context, rules });
+	const header = generatedHeader(`Bron: src/patterns/${slug}/ (de .md-pagina en de .html-voorbeelden ernaast).`);
 	writeGenerated(join(outputDir, `${slug}.md`), header + body);
 }

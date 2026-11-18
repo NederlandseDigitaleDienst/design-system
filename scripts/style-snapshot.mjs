@@ -8,7 +8,8 @@
  *   node scripts/style-snapshot.mjs record <dir> [--filter <text>] [--missing]
  *   node scripts/style-snapshot.mjs compare <before> <after> [--noise <dir>[,<dir>]]
  *
- * Expects Storybook on http://localhost:6006 (or STORYBOOK_URL). Each story is
+ * Expects the website on http://localhost:5173 (`npm run www`, or SITE_URL).
+ * Each story is shown on its own at /voorbeeld/, the page a stage frames, and
  * recorded at two widths (lg and sm) and in light and dark. Hover, focus and
  * other interaction states are not covered: only what a story renders at rest.
  *
@@ -23,8 +24,21 @@ import { chromium } from 'playwright';
 import { access, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { gzipSync, gunzipSync } from 'node:zlib';
+import { resolve } from 'node:path';
+import { collectComponents, collectPatterns, parseStoryFile, repoRoot } from '../www/build/sources.js';
 
-const BASE = process.env.STORYBOOK_URL ?? 'http://localhost:6006';
+const BASE = process.env.SITE_URL ?? 'http://localhost:5173';
+
+/** Every story of the repository: its id, and the file and export that render it. */
+function allStories() {
+	const files = [
+		...collectComponents(),
+		...collectPatterns(),
+		parseStoryFile(resolve(repoRoot, 'src/docs/themes.stories.ts')),
+		parseStoryFile(resolve(repoRoot, 'src/components/content/icon/icon-gallery.stories.ts')),
+	];
+	return files.flatMap((file) => file.stories.map((story) => ({ id: story.id, file: file.file, story: story.exportName })));
+}
 const VIEWPORTS = [{ name: 'lg', width: 1280, height: 800 }, { name: 'sm', width: 375, height: 800 }];
 const SCHEMES = ['light', 'dark'];
 const CONCURRENCY = 6;
@@ -82,7 +96,7 @@ function collect() {
 }
 
 async function settle(page) {
-	await page.waitForFunction(() => document.querySelector('#storybook-root')?.childElementCount > 0, null, { timeout: 15000 }).catch(() => {});
+	await page.waitForFunction(() => document.querySelector('.site-frame__root')?.childElementCount > 0, null, { timeout: 15000 }).catch(() => {});
 	await page.evaluate(async () => {
 		await document.fonts.ready;
 		const images = [];
@@ -106,10 +120,9 @@ async function settle(page) {
 
 async function record(dir, filter, missingOnly) {
 	await mkdir(dir, { recursive: true });
-	const index = await (await fetch(`${BASE}/index.json`)).json();
-	const ids = Object.values(index.entries)
-		.filter(entry => entry.type === 'story' && (!filter || entry.id.includes(filter)))
-		.map(entry => entry.id);
+	const stories = allStories().filter(entry => !filter || entry.id.includes(filter));
+	const byId = new Map(stories.map(entry => [entry.id, entry]));
+	const ids = [...byId.keys()];
 	const fileFor = ({ id, viewport, scheme }) => join(dir, `${id}.${viewport.name}.${scheme}.json.gz`);
 	let jobs = ids.flatMap(id => VIEWPORTS.flatMap(viewport => SCHEMES.map(scheme => ({ id, viewport, scheme }))));
 	if (missingOnly) {
@@ -130,7 +143,8 @@ async function record(dir, filter, missingOnly) {
 			const { id, viewport, scheme } = current;
 			try {
 				await page.setViewportSize({ width: viewport.width, height: viewport.height });
-				await page.goto(`${BASE}/iframe.html?id=${id}&viewMode=story&globals=theme:${scheme}`, { waitUntil: 'load' });
+				const { file, story } = byId.get(id);
+				await page.goto(`${BASE}/voorbeeld/?file=${encodeURIComponent(file)}&story=${story}&scheme=${scheme}`, { waitUntil: 'load' });
 				await settle(page);
 				// Components that measure themselves (a toolbar filling its overflow
 				// menu, an editor placing its cursor) can still be moving: record

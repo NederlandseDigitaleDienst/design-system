@@ -3,7 +3,7 @@ import './checkbox-field.js';
 import '../../layout/container/container.js';
 
 /**
- * De Checkbox Field component is een checkbox met een inline label voor gebruik in formulieren.
+ * `nldd-checkbox-field` is een checkbox met een inline label voor gebruik in formulieren.
  */
 export default {
 	title: 'Components/Inputs/Checkbox Field',
@@ -13,9 +13,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/checkbox-field/checkbox-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {

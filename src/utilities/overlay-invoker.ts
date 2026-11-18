@@ -286,7 +286,10 @@ export class TriggerAria {
 			this._seededHasPopup = state.popupType;
 		}
 
-		if (attributes && state.controls && !element.hasAttribute('aria-controls')) {
+		// An id only resolves within its own tree: a trigger in a shadow root
+		// (the button of an nldd-token) cannot point at an overlay in the light DOM.
+		const root = element.getRootNode() as Document | ShadowRoot;
+		if (attributes && state.controls && !element.hasAttribute('aria-controls') && root.getElementById?.(state.controls)) {
 			element.setAttribute('aria-controls', state.controls);
 		}
 

@@ -4,6 +4,10 @@ import '../text-cell/text-cell.js';
 import '../../list/list.js';
 import '../../list-item/list-item.js';
 
+/**
+ * `nldd-spacer-cell` is een cel met een vaste horizontale ruimte in een lijstrij.
+ * Je zet hem in een `nldd-list-item` tussen 2 cellen die verder uit elkaar moeten.
+ */
 export default {
 	title: 'Components/Lists & Tables/Cells/Spacer Cell',
 	component: 'nldd-spacer-cell',

@@ -4,7 +4,7 @@
  * A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement):
  * the document stays plain markdown text, but formatting is shown inline (bold
  * is bold, headings are larger, links are colored) while the syntax markers
- * stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree,
+ * stay visible, only dimmed (the iA Writer / Kirby approach). No WYSIWYG tree,
  * so the data stays portable.
  *
  * Framed like the other input fields by default. `embedded` drops the frame,
@@ -94,6 +94,8 @@
  * Cmd/Ctrl+Shift+V pastes it as it is. Nothing changes in a code block.
  *
  * @element nldd-text-editor
+ * @keywords wysiwyg, rich text editor, markdown, teksteditor
+ * @related nldd-multi-line-text-field, nldd-code-editor
  *
  * @attr {string} value - Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history.
  * @attr {string} placeholder - Placeholder text shown while empty
@@ -105,7 +107,7 @@
  * @attr {boolean} no-spellcheck - Turns spellchecking off. It is on by default, like the other text fields, and leaves out what is not running text: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens (the editor lives in a shadow root; Firefox only checks around the caret), and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on.
  * @attr {boolean} wrap - Wrap long lines (default true; prose wraps)
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
- * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
+ * @attr {'none'|'vertical'|'auto'} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
  * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
  * @attr {string} syntax - 'hidden' (default) or 'visible'. 'visible': every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`), for people who write markdown. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
@@ -630,7 +632,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		if (this.view) cmToggleHeading(this.view, level);
 	}
 
-	/** Set the block to a heading level (0 = paragraph) without toggling — for a
+	/** Set the block to a heading level (0 = paragraph) without toggling, for a
 	 *  picker where choosing a level always applies it. */
 	setHeading(level: HeadingLevel): void {
 		if (this.view) cmSetHeading(this.view, level);
@@ -646,7 +648,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		if (this.view) cmToggleTaskList(this.view);
 	}
 
-	/** Set the list type, replacing any existing list ('none' strips it) — for an
+	/** Set the list type, replacing any existing list ('none' strips it), for an
 	 *  exclusive list picker. A task keeps its checkbox only within its own type:
 	 *  switching to bullet or ordered takes the box along with the marker. */
 	setList(type: ListType): void {
@@ -666,13 +668,13 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	}
 
 	/** Nest the selected list item(s) under the preceding item at the same level.
-	 *  Only list items move, and only as far as that parent's content column — so a
+	 *  Only list items move, and only as far as that parent's content column, so a
 	 *  first or standalone item can't be over-indented into an indented code block. */
 	indent(): void {
 		if (this.view) cmIndentListItems(this.view);
 	}
 
-	/** Un-nest the selected list item(s) by one level — the inverse of indent(). */
+	/** Un-nest the selected list item(s) by one level (the inverse of indent()). */
 	outdent(): void {
 		if (this.view) cmOutdentListItems(this.view);
 	}
@@ -869,7 +871,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	}
 
 	/** The current selection in CLEAN (annotation-sentinel-free) coordinates plus
-	 *  the quoted text — the anchor a consumer needs to attach a new annotation to
+	 *  the quoted text: the anchor a consumer needs to attach a new annotation to
 	 *  the selection (e.g. from a toolbar "comment" button). `empty` mirrors
 	 *  getState().empty for gating that button.
 	 *
@@ -903,7 +905,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	}
 
 	/** The annotations currently in the editor, in CLEAN coordinates, each quote
-	 *  re-sliced from the current text — so a consumer can persist positions that
+	 *  re-sliced from the current text, so a consumer can persist positions that
 	 *  moved with edits (read this on save, then write the anchors back). */
 	getAnnotations(): Annotation[] {
 		const view = this.view;

@@ -64,8 +64,7 @@ npm run build
 
 ```bash
 # Check dat alles werkt
-npm run sb:start
-npm run sb:status
+npm run www
 ```
 
 ## Volledige one-liner
@@ -110,7 +109,7 @@ jq -s '.[0] * .[1]' .claude/settings.local.json .worktrees/<branch-name>/.claude
 - [ ] `.claude/` folder gekopieerd (voor lokale permissies)
 - [ ] `npm install` uitgevoerd
 - [ ] `npm run build` geslaagd
-- [ ] Storybook start correct (`npm run sb:start`)
+- [ ] De website start (`npm run www`)
 
 ## Troubleshooting
 
@@ -118,4 +117,4 @@ jq -s '.[0] * .[1]' .claude/settings.local.json .worktrees/<branch-name>/.claude
 |----------|-----------|
 | Permission denied errors | Check of `.claude/settings.local.json` is gekopieerd |
 | Build faalt | Run `npm install` eerst |
-| Port conflict bij Storybook | Gebruik `npm run sb:status` om poorten te checken |
+| Poort 5173 is bezet | Vite kiest zelf de volgende vrije poort en noemt hem in de terminal |

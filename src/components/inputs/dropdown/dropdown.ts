@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst Dropdown Component (Lit + TypeScript)
  *
  * A visual wrapper around a native `<select>` element.
- * The consumer provides a native `<select>` as a slotted child — this way
+ * The consumer provides a native `<select>` as a slotted child. This way
  * the browser retains full control over form submission, accessibility
  * and keyboard navigation, including `<optgroup>`, `data-*` attributes and
  * dynamic changes to options.
@@ -18,7 +18,9 @@
  * design guidelines explain the order.
  *
  * @element nldd-dropdown
- * @attr {string} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
+ * @keywords select, picker, keuzelijst
+ * @related nldd-combo-box, nldd-radio-button-group, nldd-segmented-control
+ * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} disabled - Disabled state; also forwarded to the slotted select
@@ -293,7 +295,7 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	 * Suppress the native `:focus-visible` ring on the wrapper when focus
 	 * came from a pointer. We can't rely on `:focus-visible` alone for
 	 * native <select> because Chrome matches it even on mouse click. The
-	 * inverted "set when known-to-be-pointer" form is failure-safe — if
+	 * inverted "set when known-to-be-pointer" form is failure-safe: if
 	 * input-modality never reports, the attribute stays off and the
 	 * default focus ring shows on every focus (keyboard a11y intact).
 	 */
@@ -306,7 +308,7 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		this.expanded = false;
 	};
 
-	/** Any key press while focused promotes to keyboard mode — drop the marker. */
+	/** Any key press while focused promotes to keyboard mode, so drop the marker. */
 	private _handleSelectKeydown = (): void => {
 		this.toggleAttribute('is-pointer-focus', false);
 	};
@@ -314,7 +316,7 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	/**
 	 * Native <select> dispatches a `toggle` event with `newState` of 'open' or
 	 * 'closed' (Chrome 131+, Firefox 134+, Safari 18+). Older browsers
-	 * silently skip this — the visual expanded state is then a no-op.
+	 * silently skip this, and the visual expanded state is then a no-op.
 	 */
 	private _handleSelectToggle = (e: Event): void => {
 		this.expanded = (e as ToggleEvent).newState === 'open';

@@ -2,16 +2,10 @@ import { html, nothing } from 'lit';
 import './text.js';
 
 /**
- * Eén stuk lopende tekst op een maat uit de typografieschaal. Dit is wat je pakt
- * waar een app anders een kale `<p>` neerzet en de typografie erft van wat de
- * pagina toevallig instelt: een regel onder een titel, een zin in een paneel,
- * een onderschrift.
- *
- * Elke combinatie die je kunt zetten bestaat al als token, dus het component kan
- * geen eigen typografie verzinnen; het benoemt alleen wat de schaal heeft.
- *
- * Niet voor koppen, dat is `nldd-title`, en niet voor een blok proza met eigen
- * ritme, afstanden en breedtes voor media, dat is `nldd-rich-text`.
+ * `nldd-text` is één stuk lopende tekst op een maat uit de typografieschaal. Je
+ * pakt hem waar een app anders een kale `<p>` neerzet: een regel onder een
+ * titel, een zin in een paneel, een onderschrift. Voor koppen is er
+ * `nldd-title`, voor een blok proza `nldd-rich-text`.
  *
  * ## Gebruik
  * ```html
@@ -27,9 +21,6 @@ export default {
 		componentSource: {
 			file: 'src/components/content/text/text.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {
@@ -134,11 +125,11 @@ export const Standaard = {
  */
 export const Grootten = {
 	render: () => html`
-		<nldd-text size="lg" text="lg — een regel op de grootste bodymaat"></nldd-text>
-		<nldd-text size="md" text="md — de standaard"></nldd-text>
-		<nldd-text size="sm" text="sm — een regel iets kleiner"></nldd-text>
-		<nldd-text size="xs" text="xs — voor bijschriften"></nldd-text>
-		<nldd-text size="xxs" text="xxs — het kleinste dat de schaal kent"></nldd-text>
+		<nldd-text size="lg" text="lg: een regel op de grootste bodymaat"></nldd-text>
+		<nldd-text size="md" text="md: de standaard"></nldd-text>
+		<nldd-text size="sm" text="sm: een regel iets kleiner"></nldd-text>
+		<nldd-text size="xs" text="xs: voor bijschriften"></nldd-text>
+		<nldd-text size="xxs" text="xxs: het kleinste dat de schaal kent"></nldd-text>
 	`,
 };
 
@@ -180,13 +171,13 @@ export const EigenGrootte = {
 /**
  * Nadruk binnen de regel komt uit de tekst zelf: `<strong>` en `<b>` krijgen het
  * bold-gewicht uit de schaal. Zet je het component zelf op `weight="bold"`, dan
- * valt die nadruk weg — bolder dan bold bestaat hier niet.
+ * valt die nadruk weg, want bolder dan bold bestaat hier niet.
  */
 export const Gewichten = {
 	render: () => html`
-		<nldd-text weight="regular"><p>regular — met <strong>nadruk</strong> erin</p></nldd-text>
-		<nldd-text weight="medium"><p>medium — met <strong>nadruk</strong> erin</p></nldd-text>
-		<nldd-text weight="bold"><p>bold — met <strong>nadruk</strong> erin</p></nldd-text>
+		<nldd-text weight="regular"><p>regular: met <strong>nadruk</strong> erin</p></nldd-text>
+		<nldd-text weight="medium"><p>medium: met <strong>nadruk</strong> erin</p></nldd-text>
+		<nldd-text weight="bold"><p>bold: met <strong>nadruk</strong> erin</p></nldd-text>
 	`,
 };
 
@@ -197,10 +188,10 @@ export const Gewichten = {
 export const Regelhoogtes = {
 	render: () => html`
 		<div style="display: grid; gap: 16px; max-width: 320px;">
-			<nldd-text line-height="flat" text="flat — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
-			<nldd-text line-height="tight" text="tight — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
-			<nldd-text line-height="snug" text="snug — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
-			<nldd-text line-height="loose" text="loose — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
+			<nldd-text line-height="flat" text="flat: deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
+			<nldd-text line-height="tight" text="tight: deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
+			<nldd-text line-height="snug" text="snug: deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
+			<nldd-text line-height="loose" text="loose: deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet."></nldd-text>
 		</div>
 	`,
 };

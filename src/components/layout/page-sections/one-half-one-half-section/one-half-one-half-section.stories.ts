@@ -5,7 +5,7 @@ import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
 /**
- * Gebruik een one-half one-half section voor twee gelijkwaardige kolommen,
+ * `nldd-one-half-one-half-section` is voor twee gelijkwaardige kolommen,
  * zoals een vergelijking van twee opties, twee formulierblokken naast elkaar
  * of twee inhoudspanelen van gelijk belang.
  * De kolommen wrappen automatisch wanneer de beschikbare breedte kleiner
@@ -28,9 +28,6 @@ export default {
 		componentSource: {
 			file: 'src/components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: { ...pageSectionArgs, verticalAlignment: 'top' },

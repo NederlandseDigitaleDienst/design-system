@@ -9,7 +9,7 @@
  * again. A long name is cut in the middle, so its start and its end stay in
  * view ("Screenshot 20…at 13.12.21.png"); it then shows whole in a tooltip, and
  * a screen reader reads it whole either way. It wraps a hidden native
- * `<input type="file">`, which is what makes the picker open at all — a file
+ * `<input type="file">`, which is what makes the picker open at all: a file
  * dialog only opens from a user gesture on a real input.
  *
  * Files can be dropped on the whole field. A drop goes through the same input,
@@ -76,7 +76,7 @@
  * Several files are summarized, not listed: "3 bestanden" with a single cross
  * that clears all of them. Every pick replaces the whole FileList, and rebuilding
  * it to add or drop one file means going through DataTransfer, which does not
- * deduplicate (even the same File object twice yields two entries) — and a File
+ * deduplicate (even the same File object twice yields two entries), and a File
  * has no id, so deduplicating would come down to guessing from name, size and
  * last-modified. A list with a cross per file would promise an edit the platform
  * does not support. A page that does want to show the files renders its own list
@@ -94,8 +94,9 @@
  * 300px at `size="sm"`, it is one step taller again.
  *
  * @element nldd-file-field
+ * @keywords upload, file input, dropzone, bestand, uploaden
  * @attr {string} variant - 'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height
- * @attr {string} size - Field size: 'md' (default) | 'sm'. Set automatically by nldd-form-field.
+ * @attr {'md'|'sm'} size - Field size: 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {string} accept - Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*")
  * @attr {boolean} multiple - Allows choosing more than one file, and dropping a folder
  * @attr {boolean} directory - Offers a folder beside files, since one dialog picks either: choosing and changing open a menu with both, and an area shows a button for each. Takes several files, as `multiple` does

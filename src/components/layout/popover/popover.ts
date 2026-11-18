@@ -54,18 +54,27 @@
  * with an nldd-top-title-bar and a `dismiss-text`. The popover catches the
  * dismiss of that bar and closes. It draws no bar itself.
  *
+ * On md and up that title bar is hidden: anchored beside its trigger, the
+ * popover closes with Escape or a click outside it and needs no bar to say
+ * what it is. This holds for an nldd-top-title-bar anywhere in the popover,
+ * also in the header of an nldd-page. Set `md-title-bar` to keep it there too.
+ * An nldd-sheet always shows its bar.
+ *
  * @element nldd-popover
+ * @keywords flyout, popup, overlay
+ * @related nldd-sheet, nldd-modal-dialog, nldd-window, nldd-tooltip, nldd-menu
  *
  * @attr {string} width - Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV.
+ * @attr {boolean} md-title-bar - Keeps an nldd-top-title-bar in the popover on md and up, where it is hidden by default. For a bar whose dismiss button does what nothing else in the popover does.
  * @attr {boolean} sm-full-height - On an sm viewport (where the popover renders as a bottom sheet) fills the whole available height instead of shrinking to its content. No effect on md and up (anchored mode). Opt-in for content-heavy cases such as search results or long detail views; content-sized is the default, following the Apple and Material convention.
  * @attr {string} anchor - ID of the trigger element, used for positioning
- * @attr {string} placement - Floating UI placement (default: 'bottom-start')
+ * @attr {'top'|'top-start'|'top-end'|'bottom'|'bottom-start'|'bottom-end'|'left'|'left-start'|'left-end'|'right'|'right-start'|'right-end'} placement - Side of the anchor it opens on, and how it lines up there (default: 'bottom-start')
  * @attr {string} top - CSS top position. When set (on its own, or together with other edge attributes or `centered`) Floating UI's anchor positioning is skipped and the popover stands free on the screen. The `anchor` is still needed for the ARIA link on the trigger. No effect on sm, where the bottom sheet wins.
  * @attr {string} right - CSS right position. See `top` for the semantics.
  * @attr {string} bottom - CSS bottom position. See `top` for the semantics.
  * @attr {string} left - CSS left position. See `top` for the semantics.
  * @attr {boolean} centered - Centers both axes on the viewport. Overridable per axis: `centered top="0"` is centered horizontally, aligned to the top. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides.
- * @attr {string} accessible-label - (required) Accessible name (aria-label). Falls back to the i18n default ('Popover') when unset — always give a unique, describing name.
+ * @attr {string} accessible-label - (required) Accessible name (aria-label). Falls back to the i18n default ('Popover') when unset. Always give a unique, describing name.
  * @attr {string} role - ARIA role (default: 'dialog'). For informational content (a tooltip callout, a rich-text help panel) without a dialog interaction pattern, set `role="region"`. For menu-style triggers, `role="menu"` plus `aria-haspopup="menu"` on the anchor. The popover never overwrites a role that was set explicitly.
  * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.
  * @attr {boolean} open - Whether the popover is open. Set it to open or close the popover, as an alternative to show() and hide(); opening needs an anchor, and without one it stays unset. The popover clears it itself when it closes another way (Escape, a click outside), so bind it together with the close event.
@@ -108,6 +117,9 @@ export class NLDDPopover extends LitElement {
 
 	@property({ type: Boolean, reflect: true, attribute: 'sm-full-height' })
 	smFullHeight = false;
+
+	@property({ type: Boolean, reflect: true, attribute: 'md-title-bar' })
+	mdTitleBar = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	anchor = '';
@@ -404,7 +416,7 @@ export class NLDDPopover extends LitElement {
 	/**
 	 * Restore the inline transition after a breakpoint-suppressed tick. Force
 	 * a layout flush first (`void offsetHeight`) so the just-applied position
-	 * styles commit before transitions resume — otherwise the cleared
+	 * styles commit before transitions resume. Otherwise the cleared
 	 * `transition: ''` would re-enable animations on those exact properties
 	 * and you'd still see the slide we were trying to suppress.
 	 */

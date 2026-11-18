@@ -4,9 +4,11 @@ import '../avatar/avatar.js';
 import '../../layout/container/container.js';
 import { LEYSTER, REMBRANDT, VAN_GOGH } from '../../../docs/story-portraits.js';
 
+const SIZES = ['16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'];
+
 /**
- * De Avatar Group toont meerdere avatars als één groep: overlappend, met een ring
- * in de vlakkleur zodat ze gescheiden blijven.
+ * `nldd-avatar-group` toont meerdere avatars als één groep: overlappend, met een
+ * ring in de vlakkleur zodat ze gescheiden blijven.
  *
  * ## Gebruik
  * ```html
@@ -16,8 +18,6 @@ import { LEYSTER, REMBRANDT, VAN_GOGH } from '../../../docs/story-portraits.js';
  * </nldd-avatar-group>
  * ```
  */
-const SIZES = ['16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'];
-
 export default {
 	title: 'Components/Content/Avatar Group',
 	component: 'nldd-avatar-group',
@@ -26,9 +26,6 @@ export default {
 		componentSource: {
 			file: 'src/components/content/avatar-group/avatar-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {
@@ -210,7 +207,7 @@ export const MetAfbeeldingen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Een avatar met een `src` gedraagt zich in de groep als elke andere: dezelfde maat, ronding en ring, en bij een dode afbeelding valt hij terug op de initialen uit `name`. Slot geen kale `img` — die weet niets van dat alles en kan zijn naam niet als tooltip tonen.',
+				story: 'Een avatar met een `src` gedraagt zich in de groep als elke andere: dezelfde maat, ronding en ring, en bij een dode afbeelding valt hij terug op de initialen uit `name`. Slot geen kale `img`: die weet niets van dat alles en kan zijn naam niet als tooltip tonen.',
 			},
 		},
 	},

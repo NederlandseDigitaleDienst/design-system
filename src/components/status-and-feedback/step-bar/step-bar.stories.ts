@@ -3,13 +3,10 @@ import './step-bar.js';
 import '../../layout/container/container.js';
 
 /**
- * Toont waar je staat in een proces van meerdere stappen. Je zet
- * `status="current"` op de stap waar je bent, en de ouder leidt daaruit af wat
- * ervoor `past` en erna `future` is. Staat die nergens, dan is stap 1 de huidige.
- *
- * Alleen horizontaal. Stappen onder elkaar bouw je als `nldd-list` met per rij
- * een `nldd-step-cell` en een `nldd-title-cell` — verticale stappen
- * dragen meestal meer dan een titel, en dat kan een lijstrij al.
+ * `nldd-step-bar` toont waar je staat in een proces van 3 tot 5 stappen. De
+ * balk is alleen horizontaal. Stappen onder elkaar bouw je als `nldd-list` met
+ * per rij een `nldd-step-cell` en een `nldd-title-cell`, want verticale stappen
+ * dragen meestal meer dan een titel.
  */
 export default {
 	title: 'Components/Status & Feedback/Step Bar',
@@ -42,6 +39,7 @@ export const Standaard = {
 };
 
 /**
+ * Alleen Controle heeft `status="current"`, de rest leidt de balk daaruit af.
  * De drie toestanden naast elkaar: een afgeronde stap toont een vinkje, de
  * huidige zijn cijfer in de accentkleur, en wat nog komt een open bol. De lijn
  * loopt onder de bollen door; een ring in de achtergrondkleur houdt er 2px
@@ -67,7 +65,7 @@ export const Statussen = {
  * Een afgeronde stap kan een link zijn (`href`) of een knop (`button`), zodat je
  * terug kunt bladeren. De knop is er voor flows zonder eigen URL per stap, zoals
  * een werkstroom in één venster. Zonder allebei is een stap geen control, en `href`
- * wint van `button` — dezelfde regel als `nldd-card` en `nldd-avatar`.
+ * wint van `button`, net als bij `nldd-card` en `nldd-avatar`.
  */
 export const Klikbaar = {
 	render: () => html`
@@ -131,7 +129,7 @@ export const MetIconen = {
 
 /**
  * Onder de sm-breakpoint van het designsysteem (gemeten op de container, niet op de
- * viewport — dit kan in een sheet staan) klapt het component om naar één regel
+ * viewport, want dit kan in een sheet staan) klapt het component om naar één regel
  * tekst plus een segmentbalk.
  * Bolletjes en labels kosten daar precies de ruimte die je niet hebt; de balk
  * houdt wel zichtbaar uit hoeveel stappen het proces bestaat. De volledige

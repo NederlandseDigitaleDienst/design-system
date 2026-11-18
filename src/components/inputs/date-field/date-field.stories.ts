@@ -5,18 +5,10 @@ import '../../forms/form-field/form-field.js';
 import '../date-picker/date-picker.js';
 
 /**
- * `nldd-date-field` is een tekstveld voor een datum, met een optionele kalender in
- * een popover. De waarde is altijd ISO (`jjjj-mm-dd`) terwijl op het scherm de
- * Nederlandse notatie (`dd-mm-jjjj`) staat, zodat een formulier een stabiel
- * machineformaat krijgt en de gebruiker een vertrouwde notatie.
- *
- * Er wordt niet gemaskeerd tijdens het typen: invoer wordt royaal geaccepteerd
- * (`31-12-2026`, `31/12/2026`, `31122026`, ook ISO) en pas bij het verlaten van het
- * veld genormaliseerd, want maskeren per toetsaanslag laat de cursor springen, maakt
- * backspace onvoorspelbaar en verwart schermlezers. Zet het verwachte formaat niet in
- * de placeholder maar in de `supporting-label` van `nldd-form-field`, want een
- * placeholder verdwijnt zodra iemand typt, heeft te weinig contrast en wordt
- * wisselend voorgelezen.
+ * `nldd-date-field` is een tekstveld voor een datum, met een optionele kalender
+ * in een popover. Gebruik het in een formulier, voor een datum die iemand typt of
+ * kiest, of voor een periode. Wil je alleen de kalender, op een pagina of in een
+ * filterpaneel, dan is er `nldd-date-picker`.
  */
 export default {
 	title: 'Components/Inputs/Date Field',
@@ -26,9 +18,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/date-field/date-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {
@@ -183,6 +172,12 @@ const Template = ({
 
 export const Standaard = Template.bind({});
 
+/**
+ * Het verwachte formaat staat in de `supporting-label` van `nldd-form-field`,
+ * niet in de placeholder. Een placeholder verdwijnt zodra iemand typt. Je mag
+ * de datum ook als `31/12/2026` of `31122026` typen. Het veld zet hem om zodra
+ * je het verlaat.
+ */
 export const InEenFormulierveld = () => html`
 	<nldd-form-field
 		label="Ophaaldatum"
@@ -226,15 +221,15 @@ export const ZonderKiezer = () => html`
 	</nldd-form-field>
 `;
 
-/**
- * Een eigen kalender in de slot, voor wat alleen een kalender weet: hier
- * weeknummers en geen weekenden. Het veld blijft de waarde en de grenzen zetten.
- */
 const geenWeekend = (iso: string) => {
 	const dag = new Date(`${iso}T00:00:00Z`).getUTCDay();
 	return dag === 0 || dag === 6;
 };
 
+/**
+ * Een eigen kalender in de slot, voor wat alleen een kalender weet: hier
+ * weeknummers en geen weekenden. Het veld blijft de waarde en de grenzen zetten.
+ */
 export const EigenKalender = () => html`
 	<nldd-form-field
 		label="Afspraak"

@@ -18,10 +18,12 @@
  * example only once a real search has been submitted.
  *
  * @element nldd-just-in-time-education
+ * @keywords coach mark, onboarding, tour, uitleg, rondleiding
+ * @related nldd-tooltip, nldd-popover, nldd-inline-dialog
  * @attr {boolean} active - Show the coach mark. Driven by the app; false by default.
  * @attr {string} text - Title of the callout.
  * @attr {string} supporting-text - Supporting text under the title.
- * @attr {string} placement - 'auto' | 'top' | 'bottom' | 'left' | 'right' (default 'auto').
+ * @attr {'auto'|'top'|'bottom'|'left'|'right'} placement - 'auto' | 'top' | 'bottom' | 'left' | 'right' (default 'auto').
  * @attr {boolean} dismissable - Show the dismiss button and allow closing with one click or key press outside the coach mark. False by default: the consumer then manages closing itself.
  * @attr {string} arrow-length - Arrow length, and therefore the distance between card and control, as a CSS length (e.g. `333px`, `30vh`). Empty = the DS default; anything under 40px is clamped.
  * @attr {boolean} no-arrow - Hide the arrow; the card then sits close against the control.
@@ -161,7 +163,7 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 		return slot?.assignedElements({ flatten: true }) ?? [];
 	}
 
-	/** Mirror one host attribute onto the slotted control(s) — or remove it —
+	/** Mirror one host attribute onto the slotted control(s), or remove it,
 	 *  unless the component owns that attribute. */
 	private _forwardAttribute(name: string): void {
 		if (NLDDJustInTimeEducation._ownAttributes.has(name)) return;

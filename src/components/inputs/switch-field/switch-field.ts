@@ -4,6 +4,8 @@
  * A switch toggle with an inline label for use in forms.
  *
  * @element nldd-switch-field
+ * @keywords schakelaar
+ * @related nldd-checkbox-field
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.

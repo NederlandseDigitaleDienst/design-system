@@ -3,6 +3,11 @@ import './button-group.js';
 import '../button/button.js';
 import '../../layout/container/container.js';
 
+/**
+ * `nldd-button-group` is een groep bij elkaar horende knoppen, naast of onder
+ * elkaar. Is de groep zelf 480px of smaller, zoals op een telefoon, dan staan
+ * de knoppen onder elkaar over de volle breedte.
+ */
 export default {
 	title: 'Components/Actions/Button Group',
 	component: 'nldd-button-group',

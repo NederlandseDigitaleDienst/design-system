@@ -2,7 +2,7 @@ import { html } from 'lit';
 import './pagination.js';
 
 /**
- * De Pagination component voor het navigeren tussen pagina's met inhoud.
+ * `nldd-pagination` is voor het navigeren tussen pagina's met inhoud.
  *
  * ## Gebruik
  * ```html
@@ -27,9 +27,6 @@ export default {
 		componentSource: {
 			file: 'src/components/navigation/pagination/pagination.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {

@@ -8,6 +8,11 @@ import '../../content/title/title.js';
 import '../../navigation/link/link.js';
 import '../../navigation/link-group/link-group.js';
 
+/**
+ * `nldd-page-footer` is de footer onderaan een pagina, in het `footer`-slot van
+ * `nldd-page`. Hij heeft drie optionele rijen: een kruimelpad, eigen inhoud en
+ * een juridische balk.
+ */
 export default {
 	title: 'Components/Layout/Page Footer',
 	component: 'nldd-page-footer',
@@ -17,7 +22,6 @@ export default {
 			file: 'src/components/layout/page-footer/page-footer.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		noRibbon: false,
@@ -226,7 +230,7 @@ export const MetKolommen = {
 };
 
 /**
- * Alleen een legal-bar — handig voor pagina's zonder breadcrumbs of
+ * Alleen een legal-bar, voor pagina's zonder breadcrumbs of
  * uitgebreide footer-inhoud.
  */
 export const AlleenLegalBar = {
@@ -254,7 +258,7 @@ export const AlleenLegalBar = {
 };
 
 /**
- * Lege footer — geen breadcrumbs, main of legal-bar. De grijze band valt weg en
+ * Een lege footer, zonder breadcrumbs, main of legal-bar. De grijze band valt weg en
  * alleen het Rijksoverheid-lintje blijft over.
  */
 export const Leeg = {
@@ -265,7 +269,7 @@ export const Leeg = {
 };
 
 /**
- * Breadcrumbs en main zonder legal-bar — bijvoorbeeld in een
+ * Breadcrumbs en main zonder legal-bar, bijvoorbeeld in een
  * applicatie-context waar wettelijke links elders staan.
  */
 export const ZonderLegalBar = {
@@ -291,7 +295,7 @@ export const ZonderLegalBar = {
 
 /**
  * Op een smalle container zakken de body-max-width-constraints terug en
- * past de padding zich aan via container queries — niet via viewport-queries.
+ * past de padding zich aan via container queries, niet via viewport-queries.
  */
 export const Smal = {
 	render: () => html`

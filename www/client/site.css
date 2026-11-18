@@ -1,0 +1,93 @@
+/**
+ * Styles of the site itself. Everything a component can do is left to the
+ * components. What is here is the inside of the stage, where an example and
+ * its frame stand, and the API tables that nldd-rich-text does not fit yet.
+ */
+
+/* ## Code in tables and lists */
+
+/* Outside the layer below: the stylesheet of nldd-rich-text is not in a
+   layer, so a rule in one would lose from it. */
+[data-site-api] td code,
+nldd-rich-text td code {
+	white-space: nowrap;
+	word-break: normal;
+	overflow-wrap: normal;
+}
+
+[data-site-api] th {
+	white-space: nowrap;
+}
+
+[data-site-api] td:nth-child(2) {
+	min-width: 96px;
+	max-width: 280px;
+}
+
+@layer site {
+	/* ## Stage */
+
+	site-stage {
+		display: block;
+	}
+
+	/* Inside the highlight border of the box, which the frame would paint over. */
+	.site-stage__mat {
+		padding-inline: var(--semantics-surfaces-highlight-border-width);
+		overflow-x: auto;
+	}
+
+	.site-stage__mat--frame {
+		display: flex;
+		justify-content: center;
+	}
+
+	/* A frame is square: with nothing under it, it would cut off the rounded corners of the box. */
+	nldd-box:not(:has(.site-stage__quick)) > .site-stage__mat--frame:not(:has(> .site-stage__frame--narrow)) {
+		padding-block-end: var(--semantics-surfaces-corner-radius);
+
+		& .site-stage__frame {
+			border-block-end: var(--semantics-dividers-thickness) solid var(--semantics-dividers-color);
+		}
+	}
+
+	/* The canvas is a surface of the system, set here and nowhere inherited from:
+	   an example reads the surface it stands on, and that must be the one the
+	   stage says it is, not whatever the page happens to have behind it. */
+	.site-stage__canvas {
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
+
+		box-sizing: border-box;
+		padding: 24px;
+		font: var(--primitives-font-body-md-regular-snug);
+		color: var(--semantics-content-color);
+	}
+
+	.site-stage__canvas[data-surface='tinted'] {
+		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
+	}
+
+	.site-stage__frame {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		border: 0;
+		background-color: var(--semantics-surfaces-base-background-color);
+	}
+
+	/* A narrower frame is a window of its own in the stage. */
+	.site-stage__mat--frame:has(> .site-stage__frame--narrow) {
+		padding-block: 24px;
+	}
+
+	.site-stage__frame--narrow {
+		border: var(--semantics-dividers-thickness) solid var(--semantics-dividers-color);
+	}
+
+	/* ## Around the stage */
+
+	[data-site-api] table {
+		display: block;
+		overflow-x: auto;
+	}
+}

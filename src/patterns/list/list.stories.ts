@@ -5,7 +5,7 @@ import empty from './list.empty.html?raw';
 import { patternStory } from '../pattern-story.js';
 
 export default {
-	title: 'Patronen/Lijst',
+	title: 'Patronen/Algemeen/Lijst',
 };
 
 export const Standaard = patternStory(markup);

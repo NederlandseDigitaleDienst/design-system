@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/irreversible-action/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/irreversible-action/ (de .md-pagina en de .html-voorbeelden ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -25,18 +25,17 @@ nldd-modal-dialog            open, variant="alert", text, supporting-text
 ```html
 <nldd-simple-section>
   <nldd-box background="critical">
-    <nldd-container
-      padding="16"
-      gap="8"
-    >
+    <nldd-container padding="16">
       <nldd-title
         size="display-5"
         text="Dossier verwijderen"
         heading-level="2"
       ></nldd-title>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-rich-text>
         <p>Het dossier en alle documenten erin verdwijnen. Collega's die eraan werken raken hun kopie kwijt.</p>
       </nldd-rich-text>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-button
         id="dossier-verwijderen"
         appearance="destructive"

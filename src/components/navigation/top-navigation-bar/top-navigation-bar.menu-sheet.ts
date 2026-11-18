@@ -10,7 +10,7 @@ interface Sheet extends HTMLElement {
 	hide(): void;
 }
 
-/** One entry rendered as a row in the menu sheet — derived from a global
+/** One entry rendered as a row in the menu sheet, derived from a global
  * menu-bar-item (top level) or a submenu's menu-item (deeper levels). */
 interface SheetEntry {
 	text: string;
@@ -22,7 +22,7 @@ interface SheetEntry {
 	currentType?: string;
 	/** Child nldd-menu when this row drills into a deeper level, else null. */
 	submenu: Element | null;
-	/** Triggers the source item's action — only used for button (non-link,
+	/** Triggers the source item's action. Only used for button (non-link,
 	 *  non-submenu) rows. */
 	activate: () => void;
 }

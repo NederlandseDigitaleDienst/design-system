@@ -18,7 +18,8 @@
  * one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the
  * surface color. Identity does not build that group itself, because the avatars
  * are the consumer's light DOM and a group can only style what arrives as its
- * own child. Set the avatars to decorative (or an `img` to `alt=""`) when the
+ * own child. On a colored surface, pass that color on through
+ * `--context-background-color` so the ring follows it. Set the avatars to decorative (or an `img` to `alt=""`) when the
  * names already stand in the text.
  *
  * On narrow widths (an sm container, 640px and under) with more than one avatar
@@ -30,6 +31,8 @@
  * 40px. Slotted avatars take precedence over `avatar-src`.
  *
  * @element nldd-identity
+ * @keywords avatar, auteur, afzender
+ * @related nldd-avatar, nldd-avatar-group
  *
  * @attr {string} text - Name line (e.g. "Jan Jansen and Piet Pietersen"); the fallback when the text slot is empty
  * @attr {string} supporting-text - Supporting text under the name line (a role or a date, for instance); the fallback when the supporting-text slot is empty

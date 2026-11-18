@@ -35,7 +35,7 @@ const patternTitle = (slug) => {
 	return stories.match(/title: (['"])(.+?)\1/)[2];
 };
 const rules = loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.json')).map((rule) => {
-	const url = seeUrl(rule.see, patternTitle);
+	const url = seeUrl(rule.see);
 	return { ...normalizeSelectors(rule, booleans), ...(url && { url }) };
 });
 const tags = buildContract(elements);

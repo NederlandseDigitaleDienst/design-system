@@ -4,7 +4,7 @@
  * Layout placeholder that fills its parent and centers an indeterminate
  * activity indicator. By default the indicator is held back for 1000ms so
  * brief loading states don't flash; once the delay passes it fades in. Set
- * `timing="instant"` to skip the delay (the fade-in still plays) — this is
+ * `timing="instant"` to skip the delay (the fade-in still plays). This is
  * what embedding components such as `nldd-button` use for their loading state.
  *
  * Sizing: fills its parent where the parent lets it (a flex column such as
@@ -30,11 +30,11 @@
  * Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's
  * r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled
  * icon glyph has), so a standalone spinner lines up with an icon or an
- * `icon-aligned` `nldd-avatar` on the same grid — no extra option needed
+ * `icon-aligned` `nldd-avatar` on the same grid, with no extra option needed
  * (unlike `nldd-avatar`, which fills edge-to-edge and opts in via
  * `icon-aligned`).
  *
- * Overlay mode: put content in the default slot and the indicator wraps it — it
+ * Overlay mode: put content in the default slot and the indicator wraps it. It
  * becomes a `position: relative` container, renders the spinner over a dimming
  * backdrop (opt out with `no-backdrop`), and makes the content `inert` so its
  * controls can't be focused or clicked. Toggle loading with `complete`
@@ -49,11 +49,13 @@
  *
  * Accessibility: while connected and not `complete` the host is a polite live
  * region (`role="status"`). The label (`text`, or the translated "Laden"
- * fallback) always renders as the region's content — visually hidden when
- * `show-text` is off (the default) — so assistive tech announces the loading
+ * fallback) always renders as the region's content (visually hidden when
+ * `show-text` is off, the default), so assistive tech announces the loading
  * state when the indicator appears. Set `complete` (or unmount) to clear it.
  *
  * @element nldd-activity-indicator
+ * @keywords spinner, loader, loading, laadindicator, laden
+ * @related nldd-progress-bar, nldd-progress-circle
  *
  * @attr {string} size - Circle diameter on the icon scale: 16,20,24,28,32,40,44,48,56,64,80,96 (default '32')
  * @attr {boolean} show-text - Show the label under the indicator (default false; the label still feeds the accessible name)
@@ -79,7 +81,7 @@ import type { NLDDActivityIndicatorTranslations } from './activity-indicator.i18
 import { translate } from '../../../utilities/translations.js';
 
 /** Delay before the indicator fades in. Brief loading states finish within
- *  this window and the indicator is never shown — avoids a jarring flash. */
+ *  this window and the indicator is never shown, which avoids a jarring flash. */
 const SHOW_DELAY_MS = 1000;
 
 export type ActivityIndicatorSize =
@@ -112,8 +114,8 @@ export class NLDDActivityIndicator extends LitElement {
 	complete = false;
 
 	/** Opt out of the dimming backdrop in overlay mode. With wrapped content the
-	 *  backdrop is on by default — the content is inert, so it should read as
-	 *  inactive — so set `no-backdrop` to show only the indicator panel without
+	 *  backdrop is on by default, because inert content should read as
+	 *  inactive. Set `no-backdrop` to show only the indicator panel without
 	 *  dimming/blurring the content. No effect in standalone mode (no content to
 	 *  dim). */
 	@property({ type: Boolean, reflect: true, attribute: 'no-backdrop' })
@@ -198,7 +200,7 @@ export class NLDDActivityIndicator extends LitElement {
 
 	/** A polite live region (role="status") while loading; cleared when
 	 *  complete. The announced text is the visually-hidden label rendered by
-	 *  the template — not an aria-label, and without aria-busy, since a busy
+	 *  the template, not an aria-label, and without aria-busy, since a busy
 	 *  live region would defer the very announcement we want. */
 	private _syncAria(): void {
 		if (this.complete) {

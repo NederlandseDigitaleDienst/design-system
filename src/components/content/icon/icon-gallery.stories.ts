@@ -14,7 +14,7 @@ import '../text/text.js';
 const aliasSet = new Set(Object.keys(aliases));
 const iconNames = ICONS.filter(name => !aliasSet.has(name));
 
-/** The icon gallery, shown on the Docs/Iconen page (src/docs/icons.mdx). */
+/** The icon gallery, shown on the page Iconen of the website (src/docs/icons.md). */
 export default {
 	title: 'Docs/Iconen',
 	parameters: {

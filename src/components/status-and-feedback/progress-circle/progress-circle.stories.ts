@@ -16,8 +16,8 @@ const RIJKSLEUREN = [
 const ALL_COLORS = [...SEMANTIC_COLORS, ...RIJKSLEUREN];
 
 /**
- * Een circulaire progress indicator met dezelfde mogelijkheden als de
- * progress-bar: single-value of multi-segment, progress en distribution
+ * `nldd-progress-circle` is een ronde voortgangsindicator met dezelfde
+ * mogelijkheden als `nldd-progress-bar`: single-value of multi-segment, progress en distribution
  * varianten, 24 kleuren, indeterminate, en transitions tussen
  * determinate/indeterminate. Label staat onder de cirkel.
  */
@@ -30,7 +30,6 @@ export default {
 			file: 'src/components/status-and-feedback/progress-circle/progress-circle.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	argTypes: {
 		variant: {
@@ -371,7 +370,7 @@ export const ZonderCaption = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `value-display="none"` en geen `text` verschijnt geen caption — alleen de cirkel. Handig voor inline gebruik.',
+				story: 'Met `value-display="none"` en geen `text` verschijnt geen caption, alleen de cirkel. Handig voor inline gebruik.',
 			},
 		},
 	},

@@ -501,4 +501,49 @@ describe('nldd-page – sticky bars and focus', () => {
 		await nextFrames();
 		expect(footer.classList.contains('is-at-end')).toBe(true);
 	});
+
+	describe('a scroller without anything to focus', () => {
+		const scroller = (page: Element) => page.shadowRoot!.querySelector('.page__scroll')!;
+		const settle = () => new Promise(r => setTimeout(r, 100));
+
+		it('takes a tab stop when it scrolls and holds only text', async () => {
+			wrapper = await fixture(`
+				<nldd-page sticky-header style="display:flex;height: 200px;">
+					<button slot="header">Terug</button>
+					<div style="height: 900px;">Tekst</div>
+				</nldd-page>`);
+			await settle();
+			expect(scroller(wrapper).getAttribute('tabindex')).toBe('0');
+		});
+
+		it('takes none when it holds a link', async () => {
+			wrapper = await fixture(`
+				<nldd-page sticky-header style="display:flex;height: 200px;">
+					<div style="height: 900px;"><a href="#x">Link</a></div>
+				</nldd-page>`);
+			await settle();
+			expect(scroller(wrapper).hasAttribute('tabindex')).toBe(false);
+		});
+
+		// An anchor without href reports a tabIndex of 0, and content that is
+		// inert or not shown takes no focus either.
+		it.each([
+			['an anchor without href', '<a>Anker</a>'],
+			['inert content', '<div inert><button>Knop</button></div>'],
+			['content that is not shown', '<div style="display:none"><button>Knop</button></div>'],
+		])('takes one when it holds only %s', async (_, inner) => {
+			wrapper = await fixture(`
+				<nldd-page sticky-header style="display:flex;height: 200px;">
+					<div style="height: 900px;">${inner}</div>
+				</nldd-page>`);
+			await settle();
+			expect(scroller(wrapper).getAttribute('tabindex')).toBe('0');
+		});
+
+		it('takes none when it does not scroll', async () => {
+			wrapper = await fixture('<nldd-page sticky-header style="display:flex;height: 200px;"><div>Tekst</div></nldd-page>');
+			await settle();
+			expect(scroller(wrapper).hasAttribute('tabindex')).toBe(false);
+		});
+	});
 });

@@ -7,9 +7,10 @@ import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 /**
- * De Radio Button Group groepeert `nldd-radio-button-field` elementen, beheert
+ * `nldd-radio-button-group` groepeert `nldd-radio-button-field` elementen, beheert
  * toetsenbordnavigatie en geeft `name` en `disabled` door aan alle velden.
- * Gebruik altijd binnen `nldd-form-field` voor het groepslabel.
+ * In een formulier geeft `nldd-form-field` de groep zijn label; daarbuiten
+ * geef je hem een naam met `accessible-label`.
  *
  * ## Gebruik
  * ```html
@@ -29,9 +30,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/radio-button-group/radio-button-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {
@@ -56,7 +54,7 @@ export default {
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
-			control: false,
+			control: 'text',
 			description: 'Toegankelijk label voor screen readers. In een `nldd-form-field` geeft het veld de groep zijn naam.',
 		},
 		accessibleLabeledBy: {
@@ -70,34 +68,53 @@ export default {
 		required: false,
 		invalid: false,
 		disabled: false,
+		accessibleLabel: 'Kies een optie',
 	},
 };
 
-const Template = ({ name, required, invalid, disabled }: Record<string, any>) => html`
+const fields = html`
+	<nldd-radio-button-field
+		value="1"
+		checked
+		label="Optie 1"
+	></nldd-radio-button-field>
+	<nldd-radio-button-field
+		value="2"
+		label="Optie 2"
+	></nldd-radio-button-field>
+	<nldd-radio-button-field
+		value="3"
+		label="Optie 3"
+	></nldd-radio-button-field>
+`;
+
+const Template = ({ name, required, invalid, disabled, accessibleLabel }: Record<string, unknown>) => html`
+	<nldd-radio-button-group
+		name=${name}
+		?invalid=${invalid}
+		?required=${required}
+		?disabled=${disabled}
+		accessible-label=${accessibleLabel}
+	>
+		${fields}
+	</nldd-radio-button-group>
+`;
+
+export const Standaard = {
+	render: Template,
+};
+
+/** In een formulier geeft het `nldd-form-field` de groep zijn label. */
+export const InEenFormulier = {
+	name: 'In een formulier',
+	render: () => html`
 	<nldd-form
 		label-alignment="right"
 		novalidate
 	>
 		<nldd-form-field label="Kies een optie">
-			<nldd-radio-button-group
-				name=${name}
-				?invalid=${invalid}
-				?required=${required}
-				?disabled=${disabled}
-			>
-				<nldd-radio-button-field
-					value="1"
-					checked
-					label="Optie 1"
-				></nldd-radio-button-field>
-				<nldd-radio-button-field
-					value="2"
-					label="Optie 2"
-				></nldd-radio-button-field>
-				<nldd-radio-button-field
-					value="3"
-					label="Optie 3"
-				></nldd-radio-button-field>
+			<nldd-radio-button-group name="demo">
+				${fields}
 			</nldd-radio-button-group>
 		</nldd-form-field>
 		<nldd-form-actions>
@@ -110,11 +127,8 @@ const Template = ({ name, required, invalid, disabled }: Record<string, any>) =>
 			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>
-`;
-
-export const Standaard = {
-	render: Template,
-	args: {},
+`,
+	parameters: { controls: { disable: true } },
 };
 
 export const ToestandDisabled = {
@@ -126,38 +140,25 @@ export const ToestandDisabled = {
 export const VeldDisabled = {
 	name: 'Veld disabled',
 	render: () => html`
-	<nldd-form
-		label-alignment="right"
-		novalidate
+	<nldd-radio-button-group
+		name="demo"
+		accessible-label="Kies een optie"
 	>
-		<nldd-form-field label="Kies een optie">
-			<nldd-radio-button-group name="demo">
-				<nldd-radio-button-field
-					value="1"
-					checked
-					label="Optie 1"
-				></nldd-radio-button-field>
-				<nldd-radio-button-field
-					value="2"
-					label="Optie 2"
-				></nldd-radio-button-field>
-				<nldd-radio-button-field
-					value="3"
-					label="Optie 3 (uitgeschakeld)"
-					disabled
-				></nldd-radio-button-field>
-			</nldd-radio-button-group>
-		</nldd-form-field>
-		<nldd-form-actions>
-			<nldd-button-group>
-				<nldd-button
-					appearance="primary"
-					type="submit"
-					text="Bewaar"
-				></nldd-button>
-			</nldd-button-group>
-		</nldd-form-actions>
-	</nldd-form>
+		<nldd-radio-button-field
+			value="1"
+			checked
+			label="Optie 1"
+		></nldd-radio-button-field>
+		<nldd-radio-button-field
+			value="2"
+			label="Optie 2"
+		></nldd-radio-button-field>
+		<nldd-radio-button-field
+			value="3"
+			label="Optie 3 (uitgeschakeld)"
+			disabled
+		></nldd-radio-button-field>
+	</nldd-radio-button-group>
 `,
 	parameters: { controls: { disable: true } },
 };

@@ -5,22 +5,12 @@ import '../../forms/form-field/form-field.js';
 import '../number-field/number-field.js';
 import type { NLDDSlider } from './slider.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 
 /**
- * Een waarde kiezen langs een baan: door de knop te slepen, op de baan te
- * klikken of met de pijltjes. Met `range` kies je een bereik, met een knop voor
- * elk uiteinde. De namen volgen die van Apple: de track, de thumb, en de
- * gevulde minimum track tot de thumb, of tussen de thumbs van een range.
- *
- * Een slider is voor een waarde die ongeveer mag kloppen, zoals een filter
- * ("een prijs tussen …"). Moet de waarde precies zijn, gebruik dan een
- * `nldd-number-field`: een thumb op één getal zetten is lastig, zeker met een
- * hand die niet stil is.
- *
- * De waarde staat in een tooltip boven de thumb zolang de pointer boven de
- * slider is, een thumb focus heeft of wordt gesleept. Overlappen de twee
- * tooltips van een range, dan worden ze één ("200 – 1.200"). Met `formatValue`
- * bepaal je de tekst van de tooltip en wat een schermlezer hoort.
+ * `nldd-slider` laat je een waarde kiezen langs een baan, of met `range` een
+ * bereik. Gebruik hem voor een waarde die ongeveer mag kloppen, zoals een filter
+ * op prijs. Moet de waarde precies zijn, gebruik dan een `nldd-number-field`.
  */
 export default {
 	title: 'Components/Inputs/Slider',
@@ -31,7 +21,6 @@ export default {
 			file: 'src/components/inputs/slider/slider.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		// The canvas spacing below is not part of the example, so keep it out
 		// of the code a reader copies.
 		docs: { source: { excludeDecorators: true } },
@@ -255,7 +244,7 @@ export const MetHistogramEnVelden = {
 			else slider.startValue = value;
 		};
 		return html`
-			<nldd-container gap="16">
+			<nldd-container>
 				<nldd-container
 					layout="row"
 					gap="12"
@@ -281,6 +270,7 @@ export const MetHistogramEnVelden = {
 						></nldd-number-field>
 					</nldd-form-field>
 				</nldd-container>
+				<nldd-spacer size="16"></nldd-spacer>
 				<nldd-slider
 					range
 					accessible-label="Prijs"

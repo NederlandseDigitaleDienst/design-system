@@ -47,3 +47,13 @@ test('reads the plain HTML an element styles itself from @accepts', () => {
 test('refuses a description after @accepts, which would read as element names', () => {
 	assert.throws(() => parse(['@element nldd-thing', '@accepts select - the native one'].join('\n')), /takes element names only/);
 });
+
+test('reads search words from @keywords, lower case, and other components from @related', () => {
+	const [component] = parse(['@element nldd-thing', '@keywords Toast, snackbar', '@related nldd-banner, nldd-status-bar'].join('\n'));
+	assert.deepEqual(component.keywords, ['toast', 'snackbar']);
+	assert.deepEqual(component.related, ['nldd-banner', 'nldd-status-bar']);
+});
+
+test('refuses a @related that is not a tag', () => {
+	assert.throws(() => parse(['@element nldd-thing', '@related banner'].join('\n')), /takes element tags only/);
+});

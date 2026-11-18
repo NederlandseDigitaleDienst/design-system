@@ -72,6 +72,11 @@ const trigger = html`
 	></nldd-button>
 `;
 
+/**
+ * `nldd-sidebar-section` is een paginasectie met een zijbalk links naast de
+ * hoofdinhoud, zoals filters of een inhoudsopgave. Is de sectie smal, dan
+ * klapt de zijbalk in achter een sheet.
+ */
 export default {
 	title: 'Components/Layout/Page Sections/Sidebar Section',
 	component: 'nldd-sidebar-section',
@@ -81,7 +86,6 @@ export default {
 			file: 'src/components/layout/page-sections/sidebar-section/sidebar-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		width: '',
@@ -139,7 +143,7 @@ export const Standaard = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Linker zijbalk naast de hoofdinhoud. Is de **sectie** ≥ 1008px breed, dan is de zijbalk een sticky, scrollbare box (max 320px) in de kleur van de sectie, met een scheidingslijn als rand; is-ie smaller, dan verdwijnt-ie in een sheet (een linkerpaneel op md+, een bottom-sheet op mobiel) met automatisch een sticky titelbalk (de `sidebar-label` als titel + een Sluit-knop). De switch volgt de breedte van de sectie zelf, niet de viewport (zie de SmalleContainer-story). De **trigger is van de consument**: hier een `nldd-button` boven de inhoud, alleen getoond als `[collapsed]` (CSS), gekoppeld aan `show()` en met `aria-expanded` via de open/close-events. Verklein het venster om de switch te zien.',
+				story: 'Is de sectie smal, dan opent de knop "Toon filters" de zijbalk in een sheet.',
 			},
 		},
 	},
@@ -163,7 +167,7 @@ export const VolledigeBreedte = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `width="full"` vervalt de body-max-width en pakt de sectie de volledige breedte — main + zijbalk delen die ruimte. De main gebruikt hier `centered` rich text zodat de tekstkolom niet te breed wordt.',
+				story: 'Met `width="full"` vervalt de body-max-width en pakt de sectie de volledige breedte. De main en de zijbalk delen die ruimte. De main gebruikt hier `centered` rich text zodat de tekstkolom niet te breed wordt.',
 			},
 		},
 	},
@@ -222,7 +226,7 @@ export const SmalleContainer = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'De sectie zit in een wrapper van max. 600px. Ook op een breed scherm is de **sectie** smaller dan lg, dus klapt-ie in tot de sheet — de zijbalk stapelt niet boven de main en neemt geen ruimte in. Dit is het container-gestuurde gedrag: de switch volgt de breedte van de sectie zelf (een ResizeObserver), niet de viewport.',
+				story: 'De sectie zit in een wrapper van max. 600px. Ook op een breed scherm is de **sectie** smaller dan lg, dus klapt-ie in tot de sheet. De zijbalk stapelt niet boven de main en neemt geen ruimte in. Dit is het container-gestuurde gedrag: de switch volgt de breedte van de sectie zelf (een ResizeObserver), niet de viewport.',
 			},
 		},
 	},
@@ -244,7 +248,7 @@ export const ZonderInklappen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `no-collapse` klapt de sectie nooit in tot een sheet. Is-ie smaller dan lg (hier in een wrapper van 600px, dus ook op een breed scherm), dan stapelen de zijbalk en de main gewoon boven elkaar — de zijbalk full-width, zonder sticky. Geen trigger nodig.',
+				story: 'Met `no-collapse` klapt de sectie nooit in tot een sheet. Is-ie smaller dan lg (hier in een wrapper van 600px, dus ook op een breed scherm), dan stapelen de zijbalk en de main gewoon boven elkaar: de zijbalk over de volle breedte en niet sticky. Geen trigger nodig.',
 			},
 		},
 	},

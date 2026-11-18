@@ -9,7 +9,7 @@ import '../../layout/container/container.js';
 import { ICONS } from '../../content/icon/icon.js';
 
 /**
- * De Dialog is een inline statuscomponent voor lege toestanden, bevestigingen en feedback.
+ * `nldd-inline-dialog` is een inline statuscomponent voor lege toestanden, bevestigingen en feedback.
  * Hij vult zijn container en heeft geen overlay of backdrop.
  * Gebruik `nldd-modal-dialog` voor een modaal venster met backdrop.
  *
@@ -34,20 +34,19 @@ export default {
 			file: 'src/components/status-and-feedback/inline-dialog/inline-dialog.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	argTypes: {
 		variant: {
 			control: 'select',
 			options: ['(geen)', 'alert', 'success', 'loading'],
 			mapping: { '(geen)': '' },
-			description: 'Semantische variant — dwingt een icoon en kleur af',
+			description: 'Semantische variant. Dwingt een icoon en kleur af',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
 		size: {
 			control: 'select',
 			options: ['md', 'lg'],
-			description: 'Typografische maat — md (default) of lg voor een grotere kop + ondersteuning',
+			description: 'Typografische maat: md (default) of lg voor een grotere kop + ondersteuning',
 			table: { defaultValue: { summary: 'md' } },
 		},
 		text: {
@@ -172,7 +171,7 @@ export const IcoonKleur = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Gebruik `icon-color` om de icoonkleur te zetten naar één van de semantic content kleuren. Werkt ook met `variant="alert"` — `icon-color` overrulet dan de variant-kleur.',
+				story: 'Gebruik `icon-color` om de icoonkleur te zetten naar één van de semantic content kleuren. Werkt ook met `variant="alert"`, en dan overrulet `icon-color` de variant-kleur.',
 			},
 		},
 	},
@@ -215,7 +214,7 @@ export const VariantSuccess = {
 
 /**
  * `variant="loading"` toont een `nldd-activity-indicator` in plaats van een
- * icoon — voor een lege toestand die nog aan het laden is. De spinner is een
+ * icoon, voor een lege toestand die nog aan het laden is. De spinner is een
  * `role="status"`-live-region die "Laden" aankondigt, en verschijnt direct
  * (`timing="instant"`, geen anti-flash-vertraging). Overrulet een expliciet
  * `icon`.

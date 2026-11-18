@@ -17,6 +17,8 @@
  * proportionally to fit and a warning is logged.
  *
  * @element nldd-progress-bar
+ * @keywords progress, loading bar, voortgang, voortgangsbalk
+ * @related nldd-progress-circle, nldd-activity-indicator, nldd-step-bar
  *
  * @attr {'progress'|'distribution'} variant - Semantics for ARIA and visualization (default: 'progress')
  * @attr {number} max - Total value (default: 100)
@@ -95,7 +97,7 @@ export class NLDDProgressBarSegmentIndicator extends LitElement {
 	tooltipText = '';
 
 	/** Set by the parent based on value-format. Internal state, not a public
-	 *  property — consumers use `tooltip-text` to override. */
+	 *  property. Consumers use `tooltip-text` to override. */
 	@state()
 	_autoTooltipText = '';
 
@@ -275,7 +277,7 @@ export class NLDDProgressBar extends LitElement {
 		this._syncSegmentIndicators();
 	}
 
-	/** Indeterminate indicator fades out, segment-indicator grows from 0 to its target — both 300ms
+	/** Indeterminate indicator fades out, segment-indicator grows from 0 to its target, both in 300ms
 	 *  (matches --primitives-transition-duration-slow and nldd-progress-circle). */
 	private _beginIndeterminateExit(): void {
 		this._cancelIndeterminateEnter();
@@ -286,7 +288,7 @@ export class NLDDProgressBar extends LitElement {
 		}, INDETERMINATE_TRANSITION_MS);
 	}
 
-	/** Indeterminate indicator fades in, segment-indicator shrinks from current width to 0 — both 300ms. */
+	/** Indeterminate indicator fades in, segment-indicator shrinks from current width to 0, both in 300ms. */
 	private _beginIndeterminateEnter(): void {
 		this._cancelIndeterminateExit();
 		this._indeterminateEntering = true;

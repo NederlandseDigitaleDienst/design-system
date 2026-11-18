@@ -34,6 +34,18 @@ describe('document-reset.css documenttypografie', () => {
 		shell = null;
 	});
 
+	it('geeft het document de achtergrond van de shell', () => {
+		const html = getComputedStyle(document.documentElement);
+		const before = html.backgroundColor;
+		shell = document.createElement('nldd-shell');
+		document.body.appendChild(shell);
+		const base = getComputedStyle(document.documentElement).backgroundColor;
+		expect(base).not.toBe(before);
+		expect(base).not.toBe('rgba(0, 0, 0, 0)');
+		shell.setAttribute('background', 'tinted');
+		expect(getComputedStyle(document.documentElement).backgroundColor).not.toBe(base);
+	});
+
 	it('laat de body met rust zonder shell', () => {
 		expect(getComputedStyle(document.body).fontFamily).not.toMatch(/RijksSans/);
 	});

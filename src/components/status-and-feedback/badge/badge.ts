@@ -14,7 +14,9 @@
  * as a chosen person or an active filter, use `nldd-token`.
  *
  * @element nldd-badge
- * @attr {string} size - Size: 'sm' | 'md' (default: 'md')
+ * @keywords count, dot, indicator, teller
+ * @related nldd-token, nldd-tag
+ * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
  * @attr {'critical'|'accent'|'neutral'|'warning'|'success'|'content'} color - The meaning of the badge, the same set as nldd-status-bar, or 'content' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development.
  * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it.
  * @attr {boolean} pulse - Grows a ring out of the badge and fades it, for something happening right now (a live connection, an outage). Respects `prefers-reduced-motion`.

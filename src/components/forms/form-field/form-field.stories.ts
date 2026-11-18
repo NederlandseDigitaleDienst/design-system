@@ -8,56 +8,9 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
 /**
- * `nldd-form-field` is een lay-outwrapper voor formulierinvoer.
- *
- * ### Labelkoppeling
- * Omdat het native `for`-attribuut de shadow DOM niet kan oversteken, koppelt
- * `nldd-form-field` het label aan de invoer via twee mechanismen:
- * - Een `@click`-handler op het label focust de invoer programmatisch.
- * - Het `accessible-label`-attribuut wordt automatisch ingesteld op het gesloten
- *   invoerelement (`nldd-text-field`, `nldd-password-field`), dat dit doorgeeft aan
- *   het interne `<input aria-label>`. Bij een native `<input>` wordt `aria-label`
- *   direct op het element gezet.
- *
- * Geen handmatige koppeling nodig.
- *
- * ```html
- * <!-- Automatisch -->
- * <nldd-form-field label="Naam">
- *   <nldd-text-field></nldd-text-field>
- * </nldd-form-field>
- *
- * <!-- Door consument opgegeven -->
- * <nldd-form-field label="Naam">
- *   <nldd-text-field input-id="name-input"></nldd-text-field>
- * </nldd-form-field>
- * ```
- *
- * ### Slots
- * - Standaard slot: de invoer, met daarnaast z'n `nldd-validation-list`.
- * - `nldd-form-field-help-text`: plaatsen naast de invoer — het component
- *   wijst zichzelf automatisch toe aan het help-slot.
- *
- * ### Foutmeldingen
- * Alles waar een waarde aan moet voldoen staat in één `nldd-validation-list`.
- * Zet `invalid` op de invoer en de lijst toont wat niet klopt; een eis die
- * alleen een server kan vaststellen noem je in `unmet` op de invoer.
- *
- * Het formulierveld reikt de lijst z'n control aan en zet hem in de
- * toegankelijke beschrijving van die control, vóór de help-tekst.
- *
- * ```html
- * <nldd-form-field label="Wachtwoord">
- *   <nldd-password-field invalid></nldd-password-field>
- *   <nldd-validation-list>
- *     <nldd-validation-item id="wachtwoord-lengte" minlength="8">Minimaal 8 tekens</nldd-validation-item>
- *     <nldd-validation-item id="wachtwoord-hoofdletter" match="[A-Z]">Een hoofdletter</nldd-validation-item>
- *   </nldd-validation-list>
- *   <nldd-form-field-help-text>
- *     We gebruiken dit alleen om je aan te melden. <a href="/help">Hoe we je wachtwoord bewaren</a>.
- *   </nldd-form-field-help-text>
- * </nldd-form-field>
- * ```
+ * `nldd-form-field` zet het label, een ondersteunend label, de validatie en een
+ * hulptekst om één invoerveld. Gebruik het om elk veld in een formulier. Het
+ * koppelt het label zelf aan de invoer, dus een `for` of `id` schrijf je niet.
  */
 export default {
 	title: 'Components/Forms/Form Field',
@@ -145,6 +98,10 @@ export const Optioneel = () => html`
 	</nldd-form-field>
 `;
 
+/**
+ * Wat een waarde moet halen staat in één `nldd-validation-list` in het veld.
+ * Zet `invalid` op de invoer, dan toont de lijst wat er niet klopt.
+ */
 export const MetEenFout = () => html`
 	<nldd-form-field label="E-mailadres">
 		<nldd-text-field
