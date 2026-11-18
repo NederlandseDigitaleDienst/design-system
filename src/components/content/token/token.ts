@@ -16,11 +16,11 @@
  * @attr {string} menu-text - Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`.
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} roving - Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.
- * @attr {boolean} expanded - Reflects whether the token's menu is open (control="menu"); managed by the token.
+ * @attr {boolean} expanded - Reflects whether the token's menu or popover is open (control="menu"); managed by the token.
  * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  *
  * @slot - Token text. Wins over `text`.
- * @slot menu - An nldd-menu that the token opens from its menu button (control="menu").
+ * @slot menu - An nldd-menu or nldd-popover that the token opens from its menu button (control="menu"). A menu holds actions or a choice of values; a popover holds what a menu cannot, such as a field to edit the value in. The button says which kind it opens.
  *
  * @fires dismiss - When the dismiss button is clicked
  */
@@ -33,6 +33,7 @@ import { tokenStyles } from './token.styles.js';
 import { tokenTemplate } from './token.template.js';
 import { nlddTokenTranslations, type NLDDTokenTranslations } from './token.i18n.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
+import type { NLDDPopover } from '../../layout/popover/popover.js';
 import './../../actions/icon-button/icon-button.js';
 import { translate } from '../../../utilities/translations.js';
 import { OverlayInvoker } from '../../../utilities/overlay-invoker.js';
@@ -74,6 +75,10 @@ export class NLDDToken extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
+
+	/** @internal What the menu button opens, for its aria-haspopup. */
+	@state()
+	_popupType: 'menu' | 'dialog' = 'menu';
 
 	/** Text of the default slot, kept current for the control labels. */
 	@state()
@@ -120,19 +125,20 @@ export class NLDDToken extends LitElement {
 	@query('.token__menu-action nldd-icon-button')
 	private _menuButton?: HTMLElement;
 
-	/** Anchors a slotted nldd-menu to the chevron and opens and closes it. */
+	/** Anchors a slotted nldd-menu or nldd-popover to the chevron and opens and closes it. */
 	private _menu: OverlayInvoker = new OverlayInvoker(this, {
 		anchorFor: (): Element => this._menuButton ?? this,
 		onChange: (menu, previous) => {
 			previous?.removeEventListener('toggle', this._handleMenuToggle);
+			this._popupType = menu?.localName === 'nldd-popover' ? 'dialog' : 'menu';
 			if (!menu) return;
-			(menu as NLDDMenu).variant = 'menu';
-			(menu as NLDDMenu).placement = 'bottom-start';
+			if (menu.localName === 'nldd-menu') (menu as NLDDMenu).variant = 'menu';
+			(menu as NLDDMenu | NLDDPopover).placement = 'bottom-start';
 			menu.addEventListener('toggle', this._handleMenuToggle);
 		},
 	});
 
-	/** Wire a slotted nldd-menu: anchor it to the chevron button and mirror its open
+	/** Wire a slotted menu or popover: anchor it to the chevron button and mirror its open
 	 *  state onto `expanded`. The menu closes itself on select and on light-dismiss. */
 	_onMenuSlotChange(e: Event): void {
 		this._menu.handleSlotChange(e);

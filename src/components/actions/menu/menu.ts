@@ -81,7 +81,9 @@ const HOVER_OPEN_MAX_MS = 150;
  * `prefers-reduced-motion` there is no blink, and the menu closes at once
  * after a click; a tap still holds, since that is no motion. A press on the
  * menu's control during the blink or hold ends it and opens the menu again,
- * since the menu was already on its way out. A menu that scrolls
+ * since the menu was already on its way out. Set `no-blink` where the
+ * choice shows beside the menu the moment it is made, as a listbox's field
+ * shows it. A menu that scrolls
  * fades at the edge where more items wait.
  *
  * Note: Only type="button" items are supported when used inside nldd-combo-box-field.
@@ -90,6 +92,7 @@ const HOVER_OPEN_MAX_MS = 150;
  * @element nldd-menu
  *
  * @attr {'menu'|'listbox'|'navigation'} variant - What the menu is (default 'menu'). `menu` is a menu of actions: `role="menu"` with menu items, for things you do. `listbox` is the popup of a combobox: `role="listbox"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role="list"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role="listitem"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself.
+ * @attr {boolean} no-blink - Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.
  * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
  * @attr {string} accessible-label - Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field.
  * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.
@@ -122,6 +125,9 @@ export class NLDDMenu extends LitElement {
 	 */
 	@property({ type: String })
 	width = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-blink' })
+	noBlink = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	anchor = '';
@@ -830,7 +836,7 @@ export class NLDDMenu extends LitElement {
 	 * closes after it, so you see what you picked. `select` has already gone
 	 * out: the action does not wait for the blink. Every menu in the chain
 	 * hears the event; the first one runs the blink and the rest leave it.
-	 * In a menu that is not open, in a listbox, or after a click or key with
+	 * In a menu that is not open, in a listbox, with `no-blink`, or after a click or key with
 	 * reduced motion, it closes at once; a tap still holds.
 	 */
 	private _handleSelect = (event: Event): void => {
@@ -844,7 +850,8 @@ export class NLDDMenu extends LitElement {
 		// Holding a tapped item lit is no motion, so only the blink gives way to
 		// reduced motion.
 		const reduceMotion = !pressedByTouch && matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (!button || !this._isOpen || this.variant === 'listbox' || reduceMotion) {
+		const noBlink = (this._chainRoot ?? this).noBlink;
+		if (!button || !this._isOpen || this.variant === 'listbox' || noBlink || reduceMotion) {
 			this._collapseChain();
 			return;
 		}

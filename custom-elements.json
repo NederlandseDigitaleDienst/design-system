@@ -3170,7 +3170,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A press on the menu's control during the blink or hold ends it and opens the menu again, since the menu was already on its way out. A menu that scrolls fades at the edge where more items wait. Note: Only type=\"button\" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.",
+          "description": "A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A press on the menu's control during the blink or hold ends it and opens the menu again, since the menu was already on its way out. Set `no-blink` where the choice shows beside the menu the moment it is made, as a listbox's field shows it. A menu that scrolls fades at the edge where more items wait. Note: Only type=\"button\" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.",
           "name": "NLDDMenu",
           "slots": [
             {
@@ -3211,6 +3211,16 @@
               "default": "''",
               "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
               "attribute": "width"
+            },
+            {
+              "kind": "field",
+              "name": "noBlink",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-blink",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3409,6 +3419,15 @@
               "expandedType": {
                 "text": "'listbox' | 'menu' | 'navigation'"
               }
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.",
+              "name": "no-blink",
+              "default": "false",
+              "fieldName": "noBlink"
             },
             {
               "type": {
@@ -8372,7 +8391,7 @@
               },
               "default": "false",
               "fieldName": "expanded",
-              "description": "Reflects whether the token's menu is open (control=\"menu\"); managed by the token."
+              "description": "Reflects whether the token's menu or popover is open (control=\"menu\"); managed by the token."
             },
             {
               "name": "disabled",
@@ -8397,7 +8416,7 @@
             },
             {
               "name": "menu",
-              "description": "An nldd-menu that the token opens from its menu button (control=\"menu\")."
+              "description": "An nldd-menu or nldd-popover that the token opens from its menu button (control=\"menu\"). A menu holds actions or a choice of values; a popover holds what a menu cannot, such as a field to edit the value in. The button says which kind it opens."
             }
           ]
         }

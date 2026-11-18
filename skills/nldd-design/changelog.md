@@ -23,6 +23,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
+- **`nldd-token` opens a popover as well as a menu.** Put an `nldd-popover` in the `menu` slot for what a menu cannot hold, such as a field to edit the value of the token in. The menu button anchors it and tells assistive technology it opens a dialog.
+- **`nldd-menu` takes `no-blink`.** The menu closes at once after a choice, as a listbox does. Use it where the choice shows next to the menu the moment it is made, such as a token that writes the value it holds. There the blink confirms what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.
 - **`nldd-form-field-help-text` styles inline elements as `nldd-text` does.** `<strong>` and `<b>` are bold, `<em>` and `<i>` italic, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. This works for elements placed directly in the help text, without a global stylesheet.
 
 ### Changed

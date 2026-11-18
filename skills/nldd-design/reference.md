@@ -231,7 +231,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 
 ### `<nldd-menu>`
 
-A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A press on the menu's control during the blink or hold ends it and opens the menu again, since the menu was already on its way out. A menu that scrolls fades at the edge where more items wait. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
+A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A press on the menu's control during the blink or hold ends it and opens the menu again, since the menu was already on its way out. Set `no-blink` where the choice shows beside the menu the moment it is made, as a listbox's field shows it. A menu that scrolls fades at the edge where more items wait. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
 
 **Rules** (`nldd lint`)
 
@@ -249,6 +249,7 @@ A floating menu component using the Popover API. Positioned relative to an ancho
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `variant` | `'menu'\|'listbox'\|'navigation'` | What the menu is (default 'menu'). `menu` is a menu of actions: `role="menu"` with menu items, for things you do. `listbox` is the popup of a combobox: `role="listbox"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role="list"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role="listitem"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself. |
+| `no-blink` | `boolean` | Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from. |
 | `width` | `string` | Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)). |
 | `accessible-label` | `string` | Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field. |
 | `anchor` | `string` | ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle. |
@@ -999,7 +1000,7 @@ A self-contained piece of data the user is handling: a person in an address fiel
 | `menu-text` | `string` | Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `roving` | `boolean` | Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable. |
-| `expanded` | `boolean` | Reflects whether the token's menu is open (control="menu"); managed by the token. |
+| `expanded` | `boolean` | Reflects whether the token's menu or popover is open (control="menu"); managed by the token. |
 | `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 
 **Slots**
@@ -1007,7 +1008,7 @@ A self-contained piece of data the user is handling: a person in an address fiel
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Token text. Wins over `text`. |
-| `menu` | An nldd-menu that the token opens from its menu button (control="menu"). |
+| `menu` | An nldd-menu or nldd-popover that the token opens from its menu button (control="menu"). A menu holds actions or a choice of values; a popover holds what a menu cannot, such as a field to edit the value in. The button says which kind it opens. |
 
 **Events**
 

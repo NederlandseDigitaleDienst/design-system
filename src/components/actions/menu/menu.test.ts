@@ -3720,6 +3720,32 @@ describe('nldd-menu confirms a choice', () => {
 		expect(first.hasAttribute('confirming')).toBe(false);
 	});
 
+	it('closes at once with no-blink, also from a submenu', async () => {
+		root = await fixture<HTMLElement>(
+			'<nldd-menu no-blink><nldd-menu-item text="Dakisolatie"></nldd-menu-item><nldd-menu-item text="Meer"><nldd-menu><nldd-menu-item text="Warmtepomp"></nldd-menu-item></nldd-menu></nldd-menu-item></nldd-menu>',
+		);
+		await waitForUpdate(root);
+		root.showPopover();
+		await waitForUpdate(root);
+		const first = root.querySelector('nldd-menu-item')!;
+		let selected = 0;
+		root.addEventListener('select', () => selected++);
+		first.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(selected).toBe(1);
+		expect(first.hasAttribute('confirming')).toBe(false);
+		expect(root.matches(':popover-open')).toBe(false);
+
+		root.showPopover();
+		await waitForUpdate(root);
+		const opener = root.querySelectorAll(':scope > nldd-menu-item')[1] as HTMLElement;
+		const nested = opener.querySelector('nldd-menu-item')!;
+		opener.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		await waitForUpdate(opener);
+		nested.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		expect(nested.hasAttribute('confirming')).toBe(false);
+		expect(root.matches(':popover-open')).toBe(false);
+	});
+
 	it('keeps the highlight on the chosen item while it blinks', async () => {
 		root = await fixture<HTMLElement>('<nldd-menu><nldd-menu-item text="Dakisolatie"></nldd-menu-item><nldd-menu-item text="Warmtepomp"></nldd-menu-item></nldd-menu>');
 		await waitForUpdate(root);

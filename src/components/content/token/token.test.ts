@@ -3,6 +3,7 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDToken } from './token.js';
 import './token.js';
 import '../../actions/menu/menu.js';
+import '../../layout/popover/popover.js';
 
 
 /* ============================================================
@@ -252,6 +253,19 @@ describe('nldd-token – menu', () => {
 		el.shadowRoot!.querySelector<HTMLElement>('.token__menu-action nldd-icon-button')!.click();
 		await waitForUpdate(el);
 		expect(menu.matches(':popover-open')).toBe(true);
+	});
+
+	it('opens a slotted popover from the chevron, which says it opens a dialog', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="menu" text="start-icon"><nldd-popover slot="menu" accessible-label="start-icon"><p>Veld</p></nldd-popover></nldd-token>');
+		await waitForUpdate(el);
+		const popover = el.querySelector('nldd-popover') as HTMLElement & { anchorElement: Element | null };
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.token__menu-action nldd-icon-button')!;
+		expect(button.getAttribute('popup-type')).toBe('dialog');
+		expect(popover.anchorElement).toBe(button);
+		button.click();
+		await waitForUpdate(el);
+		expect(popover.matches(':popover-open')).toBe(true);
+		expect(el.expanded).toBe(true);
 	});
 
 	it('opens the menu on Enter when the host is focused (roving)', async () => {
