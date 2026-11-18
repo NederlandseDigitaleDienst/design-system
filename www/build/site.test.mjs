@@ -102,8 +102,21 @@ test('a page behind the landing page can be shown in another theme, set before t
 	assert.doesNotMatch(pages['index.html'], /data-site-theme|theme\.js/);
 });
 
+test('a component has a page per tab: examples, API and lint rules', () => {
+	const examples = pages['componenten/button/index.html'];
+	const api = pages['componenten/button/api/index.html'];
+	const rules = pages['componenten/button/lintregels/index.html'];
+	assert.match(examples, /<nldd-tab-bar\s+navigation[^]*href="\/componenten\/button\/"\s+text="Voorbeelden"\s+current/);
+	assert.match(api, /href="\/componenten\/button\/api\/"\s+text="API"\s+current/);
+	assert.match(api, /<h2 id="nldd-button">/);
+	assert.doesNotMatch(api, /<site-stage/);
+	assert.match(rules, /text="Lintregels"\s+current[^]*<h2>Lintregels<\/h2>/);
+	// The sidebar marks the component on every tab.
+	for (const page of [examples, api, rules]) assert.match(page, /href="\/componenten\/button\/"\s+current/);
+});
+
 test('a pattern page ends with the lint rules that point at it', () => {
-	assert.match(pages['patronen/form/index.html'], /id="regels"[^]*<h2>Regels<\/h2>[^]*text="form-actions-needs-button-group"/);
+	assert.match(pages['patronen/form/index.html'], /id="regels"[^]*<h2>Lintregels<\/h2>[^]*text="form-actions-needs-button-group"/);
 });
 
 test('a page under a deploy base links within that base', () => {

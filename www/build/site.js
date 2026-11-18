@@ -612,7 +612,7 @@ function groupBy(items, key) {
  */
 function apiList(heading, entries) {
 	if (!entries.length) return '';
-	return `<h4>${heading}</h4>
+	return `<h3>${heading}</h3>
 <dl>
 ${entries
 	.map(
@@ -657,7 +657,7 @@ function elementApi(element) {
 	const lists = [apiList('Attributen', attributes), apiList('Slots', slots), apiList('Events', events)].filter(Boolean);
 	if (!lists.length) return '';
 	return `<nldd-rich-text data-site-api>
-<h3 id="${element.tagName}"><code>&lt;${element.tagName}&gt;</code></h3>
+<h2 id="${element.tagName}"><code>&lt;${element.tagName}&gt;</code></h2>
 ${lists.join('\n')}
 </nldd-rich-text>`;
 }
@@ -732,11 +732,36 @@ ${body}
 		</nldd-simple-section>`;
 }
 
-function componentPage(component, lintRules) {
+/**
+ * The pages of a component: one per tab, each with a URL of its own, so a link
+ * can point at the API or the rules and the browser steps back per tab. Above
+ * the tabs every page has the same header: the title, the introduction, which
+ * starts with the tag, and a link to the source. A tab with nothing on it is left out.
+ */
+function componentPages(component, lintRules) {
+	const base = `/componenten/${component.slug}/`;
 	const visible = component.stories.filter((s) => !s.hidden);
 	const controls = controlsOf(component);
-	const description = component.description ? renderMarkdown(component.description, { href: identity }).html : '';
-	const stories = visible
+	// What the description says before its first heading is about the component
+	// and stands above the tabs; what follows (Gebruik) belongs to the examples.
+	const markdown = component.description ?? '';
+	const split = markdown.search(/^#{1,6} /m);
+	const intro = split === -1 ? markdown : markdown.slice(0, split);
+	const usage = split === -1 ? '' : markdown.slice(split);
+	const description = intro.trim() ? renderMarkdown(intro, { href: identity }).html : '';
+	const usageHtml = usage.trim() ? renderMarkdown(usage, { href: identity }).html : '';
+	const api = component.elements.map(elementApi).filter(Boolean).join('\n');
+	const rules = [...new Set(component.elements.flatMap((element) => rulesAboutTag(lintRules, element.tagName)))];
+	const status = component.status
+		? `\n\t\t\t\t<nldd-tag slot="end" text="${STATUS[component.status] ?? component.status}"></nldd-tag>`
+		: '';
+	const source = component.sourceFile
+		? `<nldd-link
+					href="${REPOSITORY}/blob/main/${component.sourceFile}"
+					text="Bekijk broncode op GitHub"
+				></nldd-link>`
+		: '';
+	const examples = visible
 		.map((story, index) => {
 			const text = story.description ? renderMarkdown(story.description, { href: identity }).html : '';
 			return `<nldd-container gap="12" id="${story.id.split('--')[1]}">
@@ -748,34 +773,48 @@ function componentPage(component, lintRules) {
 				</nldd-container>`;
 		})
 		.join('\n\t\t\t\t');
-	const api = component.elements.map(elementApi).filter(Boolean).join('\n');
-	const rules = [...new Set(component.elements.flatMap((element) => rulesAboutTag(lintRules, element.tagName)))];
-	const status = component.status
-		? `\n\t\t\t\t<nldd-tag slot="end" text="${STATUS[component.status] ?? component.status}"></nldd-tag>`
-		: '';
-	const source = component.sourceFile
-		? `<nldd-link href="${REPOSITORY}/blob/main/${component.sourceFile}" text="Broncode op GitHub"></nldd-link>`
-		: '';
-	return docBody({
-		title: pageTitle(component.name, { overline: component.category, end: status }),
-		body: `				${component.tag ? `<nldd-rich-text><p><code>&lt;${component.tag}&gt;</code></p></nldd-rich-text>` : ''}
-				${description}
-				<nldd-container
-					layout="wrap"
-					gap="16"
-				>
-					<nldd-link
-						href="#${visible[0] ? visible[0].id.split('--')[1] : 'api'}"
-						text="Voorbeelden (${visible.length})"
-					></nldd-link>
-					${api ? '<nldd-link\n\t\t\t\t\t\thref="#api"\n\t\t\t\t\t\ttext="API"\n\t\t\t\t\t></nldd-link>' : ''}
-					${rules.length ? `<nldd-link\n\t\t\t\t\t\thref="#regels"\n\t\t\t\t\t\ttext="Regels (${rules.length})"\n\t\t\t\t\t></nldd-link>` : ''}
+	const tabs = [
+		{
+			path: base,
+			text: 'Voorbeelden',
+			title: component.name,
+			body: `${usageHtml}\n\t\t\t\t${examples}`,
+			shown: true,
+		},
+		{ path: `${base}api/`, text: 'API', title: `${component.name}, API`, body: api, shown: !!api },
+		{
+			path: `${base}lintregels/`,
+			text: 'Lintregels',
+			title: `${component.name}, lintregels`,
+			body: rulesSection(rules),
+			shown: rules.length > 0,
+		},
+	].filter((tab) => tab.shown);
+	return tabs.map((tab) => ({
+		path: tab.path,
+		title: tab.title,
+		main: docBody({
+			title: pageTitle(component.name, { overline: component.category, end: status }),
+			body: `				<nldd-container gap="12">
+					${description}
 					${source}
 				</nldd-container>
-				${stories}
-				${api ? `<nldd-title size="display-4" id="api">\n\t\t\t\t\t<h2>API</h2>\n\t\t\t\t</nldd-title>\n${api}` : ''}
-				${rulesSection(rules)}`,
-	});
+				<nldd-tab-bar
+					navigation
+					accessible-label="Onderdelen van ${escapeHtml(component.name)}"
+				>
+					${tabs
+						.map(
+							(other) => `<nldd-tab-bar-item
+						href="${other.path}"
+						text="${escapeHtml(other.text)}"${other === tab ? '\n\t\t\t\t\t\tcurrent' : ''}
+					></nldd-tab-bar-item>`,
+						)
+						.join('\n\t\t\t\t\t')}
+				</nldd-tab-bar>
+				${tab.body}`,
+		}),
+	}));
 }
 
 /**
@@ -908,9 +947,9 @@ function rulesSection(rules, { link = true } = {}) {
 		size="display-4"
 		supporting-text="Wat nldd lint hier controleert. Een hint laat niets falen."
 	>
-		<h2>Regels</h2>
+		<h2>Lintregels</h2>
 	</nldd-title>
-	${ruleList(rules, { label: 'Regels', link })}
+	${ruleList(rules, { label: 'Lintregels', link })}
 	<nldd-link
 		href="/linter/"
 		text="Over de linter"
@@ -1033,13 +1072,10 @@ export function buildPages({ base = '/' } = {}) {
 	});
 	page('/componenten/', 'Componenten', `${components.length} web components voor de Rijksoverheid.`, undefined, componentList());
 	for (const component of components) {
-		page(
-			`/componenten/${component.slug}/`,
-			component.name,
-			firstSentence(component.description || component.elements[0]?.description || component.name),
-			componentPage(component, lintRules),
-			componentList(component),
-		);
+		const description = firstSentence(component.description || component.elements[0]?.description || component.name);
+		for (const tab of componentPages(component, lintRules)) {
+			page(tab.path, tab.title, description, tab.main, componentList(component));
+		}
 	}
 
 	const patternGroups = groupBy(patterns, 'group');

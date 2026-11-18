@@ -170,7 +170,10 @@ export function collectComponents() {
 			const elements = manifest
 				.filter((element) => dirname(element.module) === dir)
 				.sort((a, b) => (a.tagName === story.tag ? -1 : b.tagName === story.tag ? 1 : 0));
-			return { ...story, name, slug, category: CATEGORY_LABELS[category] ?? category, dir, elements };
+			// Without a componentSource of its own, the source is the file next to
+			// the stories that defines the element.
+			const sourceFile = story.sourceFile ?? (elements[0] ? elements[0].module.replace(/\.js$/, '.ts') : undefined);
+			return { ...story, sourceFile, name, slug, category: CATEGORY_LABELS[category] ?? category, dir, elements };
 		})
 		.filter(Boolean)
 		.sort((a, b) => a.name.localeCompare(b.name));

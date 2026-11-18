@@ -116,14 +116,15 @@ function swap(view: Element, next: Document, nextView: Element): Element {
 /**
  * After the swap: the place on the page the URL names, and focus. A choice in
  * a sidebar keeps its focus there, as in an application, so the item shows
- * as chosen. Otherwise focus was in main, which is gone, and goes to the
+ * as chosen. A tab chosen in main is there again on the new page, and gets
+ * the focus back. Otherwise focus was in main, which is gone, and goes to the
  * title of the new page, so a screen reader hears where it is.
  */
 async function settle(
 	view: Element,
 	main: Element,
 	url: URL,
-	{ restore, keepFocus }: { restore: boolean; keepFocus: boolean },
+	{ restore, keepFocus, tab }: { restore: boolean; keepFocus: boolean; tab: boolean },
 ): Promise<void> {
 	const target = url.hash ? document.getElementById(decodeURIComponent(url.hash.slice(1))) : null;
 	if (target) target.scrollIntoView();
@@ -132,7 +133,9 @@ async function settle(
 	await new Promise((resolve) => setTimeout(resolve));
 	await (view as Element & { updateComplete?: Promise<unknown> }).updateComplete;
 	const focused = document.activeElement?.closest('nldd-split-view-pane');
-	if (keepFocus && focused?.checkVisibility()) {
+	const chosenTab = tab ? main.querySelector<HTMLElement>('nldd-tab-bar-item[current]') : null;
+	if (chosenTab) chosenTab.focus({ preventScroll: true });
+	else if (keepFocus && focused?.checkVisibility()) {
 		// Stays where it is.
 	} else if (main.checkVisibility()) focusTitle(main);
 	else {
@@ -157,7 +160,10 @@ let trimmed = false;
 /** The page on screen, so a step back within it (to an anchor) is left alone. */
 let shown = location.pathname + location.search;
 
-async function go(url: URL, { push, fromSidebar = false }: { push: boolean; fromSidebar?: boolean }): Promise<void> {
+async function go(
+	url: URL,
+	{ push, fromSidebar = false, fromTab = false }: { push: boolean; fromSidebar?: boolean; fromTab?: boolean },
+): Promise<void> {
 	const view = document.querySelector('nldd-navigation-split-view');
 	if (!view) {
 		location.assign(url);
@@ -181,7 +187,7 @@ async function go(url: URL, { push, fromSidebar = false }: { push: boolean; from
 	const scrolled = sidebarScroll(view);
 	const main = swap(view, next, nextView);
 	scrolled.restore();
-	await settle(view, main, url, { restore: !push, keepFocus: fromSidebar });
+	await settle(view, main, url, { restore: !push, keepFocus: fromSidebar, tab: fromTab });
 }
 
 /**
@@ -211,7 +217,8 @@ document.addEventListener('click', (event) => {
 		if (trimmed) void go(url, { push: false, fromSidebar });
 		return;
 	}
-	void go(url, { push: true, fromSidebar });
+	const fromTab = event.composedPath().some((node) => node instanceof Element && node.localName === 'nldd-tab-bar-item');
+	void go(url, { push: true, fromSidebar, fromTab });
 });
 
 document.querySelector('nldd-navigation-split-view')?.addEventListener('back', () => {
