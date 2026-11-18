@@ -334,7 +334,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	/**
 	 * Selected values for checkbox type.
 	 * Use property binding: .values=${['New York', 'Amsterdam']}
-	 * Does not reflect to an attribute — safe for values containing spaces or special characters.
+	 * Does not reflect to an attribute, so it is safe for values containing spaces or special characters.
 	 */
 	@property({ type: Array, attribute: false })
 	values: string[] = [];
@@ -556,8 +556,8 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 
 	/**
 	 * Handles arrow key navigation for radio type.
-	 * For checkbox type, keyboard navigation is intentionally omitted —
-	 * each native checkbox input is individually Tab-focusable and
+	 * For checkbox type, keyboard navigation is intentionally omitted.
+	 * Each native checkbox input is individually Tab-focusable and
 	 * Space-toggleable per the native checkbox interaction pattern.
 	 */
 	private _handleKeydown = (e: KeyboardEvent): void => {

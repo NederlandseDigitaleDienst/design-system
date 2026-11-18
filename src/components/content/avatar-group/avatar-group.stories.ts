@@ -207,7 +207,7 @@ export const MetAfbeeldingen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Een avatar met een `src` gedraagt zich in de groep als elke andere: dezelfde maat, ronding en ring, en bij een dode afbeelding valt hij terug op de initialen uit `name`. Slot geen kale `img` — die weet niets van dat alles en kan zijn naam niet als tooltip tonen.',
+				story: 'Een avatar met een `src` gedraagt zich in de groep als elke andere: dezelfde maat, ronding en ring, en bij een dode afbeelding valt hij terug op de initialen uit `name`. Slot geen kale `img`: die weet niets van dat alles en kan zijn naam niet als tooltip tonen.',
 			},
 		},
 	},

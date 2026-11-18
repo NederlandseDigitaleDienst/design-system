@@ -17,7 +17,7 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
 /**
  * A segment inside an `nldd-list-item`: it groups a run of cells
  * and makes just that run clickable. Use it when a row needs more than one
- * segment — a tree row whose chevron expands while the label toggles a checkbox,
+ * segment: a tree row whose chevron expands while the label toggles a checkbox,
  * or a row that navigates with a separate button beside it.
  *
  * Put it in the row where its cells would go: the item has one flat slot, and a
@@ -32,8 +32,8 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * Unlike the row-wide action this does not bleed outward: a segment sits
  * between siblings, so an outward inset would overlap them. It owns its inline
  * padding and never drops below the row's control size, so an icon-only one still
- * meets the WCAG 2.5.8 target size — do not add spacer cells inside it for room
- * or hit area, that doubles the space.
+ * meets the WCAG 2.5.8 target size. Do not add spacer cells inside it for room
+ * or hit area, because that doubles the space.
  *
  * In a `type="listbox"` list the segment renders as a plain container (no
  * control, not focusable) and DEV-warns: an `option` may not contain
@@ -52,7 +52,7 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {boolean} expandable - The segment opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not.
  * @attr {string} accessible-label - Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action.
  * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
- * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded.
+ * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing: an absent attribute emits no aria-expanded.
  * @attr {string} popup-type - Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render.
  * @attr {string} popovertarget - ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
  * @attr {boolean} current - Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
@@ -97,8 +97,8 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	/**
 	 * Marks this segment as the row's disclosure control: it takes `aria-expanded`
 	 * from the parent item's `expanded` instead of its own. Use it on a tree row's
-	 * chevron, so the open/closed state is written once — on the row, where it also
-	 * drives the children group — rather than kept in step in two places.
+	 * chevron, so the open/closed state is written once (on the row, where it also
+	 * drives the children group) rather than kept in step in two places.
 	 *
 	 * A slotted `nldd-icon-cell` turns a quarter with that state, so a chevron
 	 * points down while the row is open without any consumer CSS.
@@ -301,7 +301,7 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 
 	/** The open state has to reach the styles, and it lives in a property (the
 	 *  row's, for a disclosure segment) that CSS cannot see. A host class is the
-	 *  hook — the same mechanism nldd-list already uses for .is-boxed / .is-first. */
+	 *  hook, the same mechanism nldd-list already uses for .is-boxed / .is-first. */
 	override updated() {
 		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
 		this.classList.toggle('is-expanded', this._resolvedExpanded === true);

@@ -47,7 +47,7 @@
  * `layout="grid"` (overrides auto-fit) and `layout="columns"` (overrides
  * the natural width-driven count). `sm-column-count` / `md-column-count`
  * / `lg-column-count` resolve against this container's OWN width via
- * an `@container (...)` query on the host — not against the viewport.
+ * an `@container (...)` query on the host, not against the viewport.
  * That lets a footer in a narrow sidebar choose its own column count
  * independent of the surrounding page width.
  *

@@ -161,7 +161,7 @@ export const KleuringYaml = {
 	render: Template,
 	args: {
 		language: 'yaml',
-		content: `# wet_op_de_zorgtoeslag — artikel 2
+		content: `# wet_op_de_zorgtoeslag, artikel 2
 $id: zorgtoeslagwet
 articles:
   - number: '2'

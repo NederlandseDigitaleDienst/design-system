@@ -18,7 +18,7 @@
  * content visually, use `nldd-box` or a layout of your own instead.
  *
  * @element nldd-card
- * @keywords tile
+ * @keywords tile, kaart
  * @related nldd-box, nldd-collection
  *
  * @attr {'base'|'tinted'|'accent-tinted'} background - Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface, `accent-tinted` for a tint of the theme's accent with the contrast of `tinted`
@@ -75,7 +75,7 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 
 	/** Makes the whole card a button via an overlay `<button>`: activation (click,
 	 *  Enter, Space) surfaces as a composed `click` on the host, so a listener or
-	 *  htmx attribute on the card just works. Ignored when `href` is set — a card
+	 *  htmx attribute on the card just works. Ignored when `href` is set: a card
 	 *  is one action, and a link outranks a button. */
 	@property({ type: Boolean, reflect: true })
 	button = false;

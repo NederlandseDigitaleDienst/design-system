@@ -55,15 +55,7 @@ control.
 	},
 };
 
-/**
- * Een afgekeurd wachtwoord: wat er nog niet klopt staat eronder. Typ mee en zie
- * de regels uitgaan zodra je ze haalt.
- *
- * Zet `judging` uit en je ziet het veld zoals het eraan toe was vóór de
- * beoordeling: leeg, tenzij `hint` aanstaat en de eisen dus vooraf al worden
- * genoemd. De control loopt hier mee met de schakelaar, want zo staat het in een
- * echte app: het formulier keurt af, en de lijst volgt.
- */
+/** Een afgekeurd wachtwoord: wat er nog niet klopt staat eronder. */
 export const Standaard = ({ hint, judging, for: control }: Record<string, unknown>) => html`
 	<nldd-form-field label="Wachtwoord">
 		<nldd-password-field

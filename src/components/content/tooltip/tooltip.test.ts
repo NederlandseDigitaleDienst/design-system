@@ -539,4 +539,23 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		await settle();
 		expect(tip.hasAttribute('reference-hidden')).toBe(false);
 	});
+	it('blijft zichtbaar in een popover onder een ouder die afsnijdt', async () => {
+		// Like the site's theme menu: an absolute popover in a relative button, in a
+		// 20px bar with overflow: hidden. In the top layer the bar clips nothing.
+		const bar = await fixture<HTMLElement>(`
+			<div style="height:20px;overflow:hidden">
+				<span style="position:relative">
+					<div popover="manual" style="position:absolute;inset:200px auto auto 200px;margin:0;padding:40px">
+						<nldd-tooltip text="Test" open><button>Trigger</button></nldd-tooltip>
+					</div>
+				</span>
+			</div>`);
+		el = bar;
+		const popover = bar.querySelector<HTMLElement>('[popover]')!;
+		popover.showPopover();
+		const tooltip = bar.querySelector<NLDDTooltip>('nldd-tooltip')!;
+		await until(() => isTooltipVisible(tooltip));
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		expect(tooltip.shadowRoot!.querySelector('.tooltip')!.hasAttribute('reference-hidden')).toBe(false);
+	});
 });

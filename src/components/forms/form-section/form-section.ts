@@ -31,6 +31,7 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * `nldd-form-field-help-text` on that field.
  *
  * @element nldd-form-section
+ * @keywords formuliersectie
  *
  * @attr {string} text - Heading text (rendered in the `<legend>`).
  * @attr {string} supporting-text - Short description under the heading. Keep it to roughly 80 characters or less (see the a11y note).

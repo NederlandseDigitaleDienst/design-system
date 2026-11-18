@@ -191,7 +191,7 @@ export const Appearances = {
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: '`appearance="keycap"` (default, keycaps) naast `appearance="text"` (platte tekst — lichter, voor inline gebruik zoals in een menu).' } },
+		docs: { description: { story: '`appearance="keycap"` (default, keycaps) naast `appearance="text"` (platte tekst: lichter, voor inline gebruik zoals in een menu).' } },
 	},
 };
 
@@ -252,7 +252,7 @@ export const Windows = {
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: 'Per-instance `debug-os="windows"` override — toont `windows-keys`.' } },
+		docs: { description: { story: 'Een override per instance met `debug-os="windows"` toont `windows-keys`.' } },
 	},
 };
 
@@ -268,6 +268,6 @@ export const Linux = {
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: 'Per-instance `debug-os="linux"` override — toont `linux-keys`.' } },
+		docs: { description: { story: 'Een override per instance met `debug-os="linux"` toont `linux-keys`.' } },
 	},
 };

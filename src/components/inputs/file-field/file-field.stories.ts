@@ -112,12 +112,7 @@ export default {
 	},
 };
 
-/**
- * Klik op het vlak of sleep er een bestand op. Een drop gaat door dezelfde input
- * als een keuze, dus hij geeft hetzelfde `change`-event. Past hij niet bij
- * `accept` of `multiple`, dan blijft de vorige keuze staan en zegt het veld
- * waarom.
- */
+/** Klik op het vlak of sleep er een bestand op. */
 export const Standaard = ({
 	variant,
 	size,

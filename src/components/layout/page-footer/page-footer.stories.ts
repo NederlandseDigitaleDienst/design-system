@@ -230,7 +230,7 @@ export const MetKolommen = {
 };
 
 /**
- * Alleen een legal-bar — handig voor pagina's zonder breadcrumbs of
+ * Alleen een legal-bar, voor pagina's zonder breadcrumbs of
  * uitgebreide footer-inhoud.
  */
 export const AlleenLegalBar = {
@@ -258,7 +258,7 @@ export const AlleenLegalBar = {
 };
 
 /**
- * Lege footer — geen breadcrumbs, main of legal-bar. De grijze band valt weg en
+ * Een lege footer, zonder breadcrumbs, main of legal-bar. De grijze band valt weg en
  * alleen het Rijksoverheid-lintje blijft over.
  */
 export const Leeg = {
@@ -269,7 +269,7 @@ export const Leeg = {
 };
 
 /**
- * Breadcrumbs en main zonder legal-bar — bijvoorbeeld in een
+ * Breadcrumbs en main zonder legal-bar, bijvoorbeeld in een
  * applicatie-context waar wettelijke links elders staan.
  */
 export const ZonderLegalBar = {
@@ -295,7 +295,7 @@ export const ZonderLegalBar = {
 
 /**
  * Op een smalle container zakken de body-max-width-constraints terug en
- * past de padding zich aan via container queries — niet via viewport-queries.
+ * past de padding zich aan via container queries, niet via viewport-queries.
  */
 export const Smal = {
 	render: () => html`

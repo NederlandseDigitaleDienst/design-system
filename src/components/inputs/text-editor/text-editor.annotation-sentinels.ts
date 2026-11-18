@@ -104,7 +104,7 @@ export interface SentinelChange {
 }
 
 /** Minimal changes (in current-doc coords) to turn `doc` into a document that holds
- *  exactly the sentinels the groups want — touching only sentinel characters, never
+ *  exactly the sentinels the groups want, touching only sentinel characters, never
  *  the real text. One walk over `doc`, comparing the sentinel run at each clean
  *  position with the number wanted there. Building the target document first would
  *  cost a second copy of the text on every edit. */

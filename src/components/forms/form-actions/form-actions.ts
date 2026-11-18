@@ -15,6 +15,7 @@
  * `label-alignment` attribute of the descendant.
  *
  * @element nldd-form-actions
+ * @keywords formulierknoppen
  *
  * @attr {string} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
  * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.

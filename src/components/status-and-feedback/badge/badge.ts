@@ -14,7 +14,7 @@
  * as a chosen person or an active filter, use `nldd-token`.
  *
  * @element nldd-badge
- * @keywords count, dot, indicator
+ * @keywords count, dot, indicator, teller
  * @related nldd-token, nldd-tag
  * @attr {string} size - Size: 'sm' | 'md' (default: 'md')
  * @attr {'critical'|'accent'|'neutral'|'warning'|'success'|'content'} color - The meaning of the badge, the same set as nldd-status-bar, or 'content' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development.

@@ -18,7 +18,7 @@
  * example only once a real search has been submitted.
  *
  * @element nldd-just-in-time-education
- * @keywords coach mark, onboarding, tour
+ * @keywords coach mark, onboarding, tour, uitleg, rondleiding
  * @related nldd-tooltip, nldd-popover, nldd-inline-dialog
  * @attr {boolean} active - Show the coach mark. Driven by the app; false by default.
  * @attr {string} text - Title of the callout.
@@ -163,7 +163,7 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 		return slot?.assignedElements({ flatten: true }) ?? [];
 	}
 
-	/** Mirror one host attribute onto the slotted control(s) — or remove it —
+	/** Mirror one host attribute onto the slotted control(s), or remove it,
 	 *  unless the component owns that attribute. */
 	private _forwardAttribute(name: string): void {
 		if (NLDDJustInTimeEducation._ownAttributes.has(name)) return;

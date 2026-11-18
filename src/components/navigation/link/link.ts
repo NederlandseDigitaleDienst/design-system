@@ -50,6 +50,7 @@
  * component loads, and without script.
  *
  * @element nldd-link
+ * @keywords koppeling
  * @related nldd-button
  * @attr {string} href - Link target
  * @attr {string} target - Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
@@ -126,7 +127,7 @@ export class NLDDLink extends DescribedBy(withTranslations(LitElement, nlddLinkT
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-	/** Take the control out of the tab order (`tabindex="-1"`) — for a control
+	/** Take the control out of the tab order (`tabindex="-1"`), for a control
 	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
 	 *  not the current one) that manages focus itself. Still mouse- and
 	 *  script-focusable. */

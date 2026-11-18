@@ -2,6 +2,7 @@
  * Nederlandse Digitale Dienst Checkbox Component (Lit + TypeScript)
  *
  * @element nldd-checkbox
+ * @keywords selectievakje, vinkje
  * @related nldd-switch
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
@@ -49,7 +50,7 @@ export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-	/** Take the control out of the tab order (`tabindex="-1"`) — for a control
+	/** Take the control out of the tab order (`tabindex="-1"`), for a control
 	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
 	 *  not the current one) that manages focus itself. Still mouse- and
 	 *  script-focusable. */

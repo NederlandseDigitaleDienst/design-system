@@ -14,7 +14,7 @@
  * rather than mounting it when it opens, or the animations are skipped.
  *
  * @element nldd-window
- * @keywords modal, overlay
+ * @keywords modal, overlay, venster
  * @related nldd-modal-dialog, nldd-sheet, nldd-popover, nldd-page
  *
  * @attr {'inherit'|'light'|'dark'} scheme - Color scheme (default 'inherit').

@@ -21,7 +21,7 @@ export default {
 		},
 		docs: {
 			// role / aria-live / aria-atomic are set on the host by the component
-			// itself (based on variant), so strip them from the shown code — a
+			// itself (based on variant), so strip them from the shown code: a
 			// consumer shouldn't think they need to add them by hand.
 			source: {
 				transform: (code: string) => code.replace(/\s+(?:role|aria-live|aria-atomic)="[^"]*"/g, ''),
@@ -191,7 +191,7 @@ export const Sluitbaar = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `dismissible` verschijnt een sluit-knop rechtsboven. Bij klik wordt een `dismiss` event gevuurd — de consumer is verantwoordelijk voor het verbergen of verwijderen van de banner.',
+				story: 'Met `dismissible` verschijnt een sluit-knop rechtsboven. Bij klik wordt een `dismiss` event gevuurd. De consumer is verantwoordelijk voor het verbergen of verwijderen van de banner.',
 			},
 		},
 	},

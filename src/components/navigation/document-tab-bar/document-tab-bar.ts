@@ -6,6 +6,7 @@
  * Exports both NLDDDocumentTabBar and NLDDDocumentTabBarItem.
  *
  * @element nldd-document-tab-bar
+ * @keywords tabbladen
  * @related nldd-tab-bar
  * @attr {string} accessible-label - Accessible name for the navigation landmark
  * @attr {object} translations - Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.show-more-tabs-action' (default: 'Toon meer tabbladen')
@@ -102,7 +103,7 @@ export class NLDDDocumentTabBarItem extends LitElement {
 	/**
 	 * True when the parent bar has compressed the item below the
 	 * `--_document-tab-bar-short-text-threshold` (CSS), so only short-text is visible.
-	 * Used to gate the title-tooltip — in normal mode the full text +
+	 * Used to gate the title-tooltip. In normal mode the full text +
 	 * supporting text is already inline so a tooltip would be redundant.
 	 */
 	@state()
@@ -198,7 +199,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	/** The menu with the tabs that do not fit. */
 	private _overflowMenu = new OverflowMenu(this, { id: 'nldd-document-tab-bar-menu' });
 
-	/** @internal Used by template — drives the overflow button's expanded state. */
+	/** @internal Used by template. Drives the overflow button's expanded state. */
 	get _menuOpen(): boolean {
 		return this._overflowMenu.open;
 	}

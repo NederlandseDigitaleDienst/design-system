@@ -209,7 +209,7 @@ export const VoorafIngevuld = {
 				size="xs"
 				color="secondary"
 			>
-				<p>Auto-derive — alleen <code>value="nl"</code> gezet, de combo-box leest <code>text="Nederland"</code> van het matching menu-item.</p>
+				<p>Auto-derive: alleen <code>value="nl"</code> gezet. De combo-box leest <code>text="Nederland"</code> van het matching menu-item.</p>
 			</nldd-text>
 			<nldd-spacer size="4"></nldd-spacer>
 			<nldd-combo-box
@@ -238,7 +238,7 @@ export const VoorafIngevuld = {
 				size="xs"
 				color="secondary"
 			>
-				<p>Expliciet — <code>value</code> én <code>text</code> beide gezet (consumer bepaalt het label, bv. een custom format zoals <code>"Nederland (NL)"</code>).</p>
+				<p>Expliciet: <code>value</code> én <code>text</code> beide gezet (consumer bepaalt het label, bv. een custom format zoals <code>"Nederland (NL)"</code>).</p>
 			</nldd-text>
 			<nldd-spacer size="4"></nldd-spacer>
 			<nldd-combo-box
@@ -268,7 +268,7 @@ export const VoorafIngevuld = {
 				story: `
 Voor het bewerken van een bestaand record: zet \`value\` op het opgeslagen form-id en de input wordt automatisch gevuld met het label van het matching \`<nldd-menu-item>\`.
 
-Voor een aangepast label-format (bijv. \`"Nederland (NL)"\` in plaats van \`"Nederland"\`) zet je \`text\` expliciet — de auto-derive slaat 'm dan over.
+Voor een aangepast label-format (bijv. \`"Nederland (NL)"\` in plaats van \`"Nederland"\`) zet je \`text\` expliciet. De auto-derive slaat 'm dan over.
 				`.trim(),
 			},
 		},

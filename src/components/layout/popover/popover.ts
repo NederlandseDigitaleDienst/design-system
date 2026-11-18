@@ -74,7 +74,7 @@
  * @attr {string} bottom - CSS bottom position. See `top` for the semantics.
  * @attr {string} left - CSS left position. See `top` for the semantics.
  * @attr {boolean} centered - Centers both axes on the viewport. Overridable per axis: `centered top="0"` is centered horizontally, aligned to the top. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides.
- * @attr {string} accessible-label - (required) Accessible name (aria-label). Falls back to the i18n default ('Popover') when unset — always give a unique, describing name.
+ * @attr {string} accessible-label - (required) Accessible name (aria-label). Falls back to the i18n default ('Popover') when unset. Always give a unique, describing name.
  * @attr {string} role - ARIA role (default: 'dialog'). For informational content (a tooltip callout, a rich-text help panel) without a dialog interaction pattern, set `role="region"`. For menu-style triggers, `role="menu"` plus `aria-haspopup="menu"` on the anchor. The popover never overwrites a role that was set explicitly.
  * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.
  * @attr {boolean} open - Whether the popover is open. Set it to open or close the popover, as an alternative to show() and hide(); opening needs an anchor, and without one it stays unset. The popover clears it itself when it closes another way (Escape, a click outside), so bind it together with the close event.
@@ -416,7 +416,7 @@ export class NLDDPopover extends LitElement {
 	/**
 	 * Restore the inline transition after a breakpoint-suppressed tick. Force
 	 * a layout flush first (`void offsetHeight`) so the just-applied position
-	 * styles commit before transitions resume — otherwise the cleared
+	 * styles commit before transitions resume. Otherwise the cleared
 	 * `transition: ''` would re-enable animations on those exact properties
 	 * and you'd still see the slide we were trying to suppress.
 	 */

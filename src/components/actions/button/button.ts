@@ -2,6 +2,7 @@
  * Nederlandse Digitale Dienst Button Component (Lit + TypeScript)
  *
  * @element nldd-button
+ * @keywords knop
  * @related nldd-icon-button, nldd-link, nldd-split-button, nldd-toggle-button
  * @attr {string} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable.
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). 'lg' uses larger text and 24px start/end icons.
@@ -16,7 +17,7 @@
  * @attr {string} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
  * @attr {string} form - Id of the form this button submits or resets, for a button that sits outside it. Takes an `nldd-form` as well as a plain `<form>`. Without it the button acts on the form it stands in. The id is looked up in the button's own root, as the platform does it: a button inside a shadow tree does not reach a form in the document around it. An id that finds nothing, or an `nldd-form` that has not rendered its form yet, says so in development rather than letting the click do nothing.
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px')
- * @attr {string} max-width - Caps the width at this CSS length (e.g. '320px'). Combines with `width="full"`: the button follows its container up to the cap. A label that doesn't fit is truncated with an ellipsis — a cap only means something if the content respects it.
+ * @attr {string} max-width - Caps the width at this CSS length (e.g. '320px'). Combines with `width="full"`: the button follows its container up to the cap. A label that doesn't fit is truncated with an ellipsis, because a cap only means something if the content respects it.
  * @attr {string} text - Button text
  * @attr {string} supporting-text - Supporting text shown below the text (md/lg) or after it (sm/xs), in a secondary color. Part of the accessible name (unless `accessible-label` is set, which replaces the whole accessible name).
  * @attr {boolean} single-line - When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width.
@@ -110,7 +111,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ reflect: true, attribute: 'max-width', converter: reflectNonDefault<string>('') })
 	maxWidth = '';
 
-	/** Take the button out of the tab order (`tabindex="-1"`) — for a control owned
+	/** Take the button out of the tab order (`tabindex="-1"`), for a control owned
 	 *  by a roving container (an `nldd-list` sets it on the rows that are not the
 	 *  current one) that manages focus itself. Still mouse- and script-focusable. */
 	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
@@ -140,7 +141,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	interestfor: string | undefined = undefined;
 
 	/**
-	 * Direct element reference to the popover this button invokes — IDL-only
+	 * Direct element reference to the popover this button invokes: the IDL-only
 	 * counterpart to `popovertarget` that works across shadow boundaries.
 	 * Use this when the popover lives in a different tree (e.g. an
 	 * `nldd-menu` reparented to `<body>`) so the browser still recognizes
@@ -164,7 +165,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	/**
 	 * Loading state. Shows an activity indicator centered over the (visually
 	 * hidden) content, marks the inner control `aria-busy="true"` and blocks
-	 * activation — without dropping the control from the tab order (unlike
+	 * activation, without dropping the control from the tab order (unlike
 	 * `disabled`). The content stays laid out so the button keeps its width.
 	 *
 	 * Activation is blocked by stopping the click (as `disabled` does), so a

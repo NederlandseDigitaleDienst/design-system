@@ -18,6 +18,7 @@
  * the list in the input's accessible description, before the help text.
  *
  * @element nldd-form-field
+ * @keywords veld, label
  *
  * @attr {string} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
@@ -199,7 +200,7 @@ export class NLDDFormField extends LitElement {
 	}
 
 	/**
-	 * Called when the label is clicked — focuses the slotted input.
+	 * Called when the label is clicked. Focuses the slotted input.
 	 *
 	 * The label carries no `for` and does not wrap the control, which sits in
 	 * the slot beside it, so it labels nothing as far as the platform is

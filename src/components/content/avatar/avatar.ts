@@ -25,7 +25,7 @@
  * falls back to the initials or the icon, never to a broken-image icon.
  *
  * @element nldd-avatar
- * @keywords profile picture
+ * @keywords profile picture, profielfoto
  * @related nldd-identity, nldd-avatar-group, nldd-image
  *
  * @attr {string} type - `person` (circle, person icon) or `organization` (rounded, building icon); default `person`
@@ -148,7 +148,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	href = '';
 
-	/** Take the control out of the tab order (`tabindex="-1"`) — for an avatar
+	/** Take the control out of the tab order (`tabindex="-1"`), for an avatar
 	 *  that is a link or a button inside a roving container (an `nldd-list` sets
 	 *  it on the rows that are not the current one). Still mouse- and
 	 *  script-focusable, and it does nothing on a decorative avatar. */

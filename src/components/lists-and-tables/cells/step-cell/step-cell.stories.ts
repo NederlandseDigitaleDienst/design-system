@@ -15,7 +15,7 @@ import '../title-cell/title-cell.js';
 
 /**
  * `nldd-step-cell` tekent het spoor van een tijdlijn of stappenlijst: een lijn met een
- * punt per rij. Hij hoort altijd in een `nldd-list-item` thuis — de rij levert
+ * punt per rij. Hij hoort altijd in een `nldd-list-item` thuis, want de rij levert
  * de blokpadding waarop de lijn zich uitlijnt (`--context-cell-padding-block`),
  * dus buiten een lijst sluiten opeenvolgende stappen niet op elkaar aan.
  */
@@ -216,7 +216,7 @@ export const EnkeleRij = {
  *
  * Dit is de verticale tegenhanger van `nldd-step-bar`. De semantiek hoort
  * bij de consument: `aria-current="step"` op de rij van de huidige stap, en de
- * status als tekst in de rij — kleur en vinkje alleen dragen hem niet.
+ * status als tekst in de rij. Kleur en vinkje alleen dragen hem niet.
  */
 export const Stappenlijst = {
 	render: () => html`
@@ -271,7 +271,7 @@ export const Stappenlijst = {
 /**
  * `level="minor"` zet een rij onder de vorige: dezelfde baan, een kleinere stip
  * (12px bij `size="md"`, 10px bij `sm`). Inspringen zou het spoor breken, en juist
- * dat spoor verbindt de rijen — de hiërarchie komt van de stipmaat en van gewone
+ * dat spoor verbindt de rijen. De hiërarchie komt van de stipmaat en van gewone
  * tekst in plaats van een titel.
  */
 /**
@@ -599,7 +599,7 @@ export const ZonderStip = {
  * Met scheidingslijnen: die kruisen het spoor, want de rijen sluiten op elkaar
  * aan. Dat kan kloppen wanneer elke rij op zichzelf staat (een logboek dat je
  * per regel leest), maar voor een doorlopende tijdlijn leest `dividers="never"`
- * rustiger — daar hoort de lijn zelf het verband te leggen.
+ * rustiger, want daar hoort de lijn zelf het verband te leggen.
  */
 export const MetDividers = {
 	render: () => html`
@@ -648,7 +648,7 @@ export const MetDividers = {
  * dan ligt het afgelegde deel van het spoor onder de stip in plaats van erboven.
  *
  * Alleen de huidige stap heeft een half spoor, dus alleen daar doet `direction`
- * iets — een afgeronde stap is helemaal accent en een toekomstige helemaal
+ * iets: een afgeronde stap is helemaal accent en een toekomstige helemaal
  * rustig, ongeacht de richting. Meegeven op elke rij mag, maar hoeft niet.
  */
 export const NieuwsteBovenaan = {

@@ -23,10 +23,7 @@ export default {
 };
 
 /**
- * De kop van een kolom met selectievakjes. Wie kijkt, ziet aan de vakjes waar de
- * kolom voor is; een schermlezer heeft de naam van de kolom nodig om bij elke cel
- * te zeggen wat het vakje doet. Er staat niets in beeld en de tekst neemt geen
- * ruimte in.
+ * De kop van een kolom met selectievakjes, alleen voor een schermlezer.
  */
 export const Standaard = {
 	render: () => html`

@@ -453,8 +453,8 @@ export const TerugvalIcoon = {
 /**
  * Met `href` wordt de avatar één link, met `button` een knop. De schijf zelf is
  * de control, dus het klikgebied en de focusring volgen de ronde (of afgeronde)
- * vorm. De naam komt uit `accessible-label`, of anders uit `name` — een avatar
- * bevat immers geen tekst die de control kan benoemen.
+ * vorm. De naam komt uit `accessible-label`, of anders uit `name`, want een avatar
+ * bevat geen tekst die de control kan benoemen.
  */
 export const LinkOfKnop = {
 	render: () => html`

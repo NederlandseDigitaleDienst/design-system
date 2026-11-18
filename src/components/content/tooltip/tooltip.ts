@@ -14,7 +14,7 @@
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
  * @attr {string} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
- * @attr {string} timing - When the tooltip appears on hover: 'instant' — right away, without a show delay or a fade, also on the way out. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant.
+ * @attr {string} timing - When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant.
  *
  * Escape closes a tooltip that hover or focus opened, wherever focus is: the
  * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
@@ -66,6 +66,26 @@ import { InterestIntent } from '../../../utilities/interest-intent.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../keyboard-shortcut/keyboard-shortcut.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+
+/**
+ * What can clip a trigger. Floating UI walks every ancestor, but a trigger in
+ * an open popover, menu or dialog sits in the top layer, where the ancestors
+ * of that overlay clip nothing. Past the overlay the viewport is the boundary.
+ */
+function clippingBoundary(trigger: Element): Element[] | 'clippingAncestors' {
+	const clipping: Element[] = [];
+	let node: Element | null = trigger;
+	while (node) {
+		const parent: Node | null = node.assignedSlot ?? node.parentNode;
+		node = parent instanceof ShadowRoot ? parent.host : parent instanceof Element ? parent : null;
+		if (!node) return 'clippingAncestors';
+		const { overflowX, overflowY } = getComputedStyle(node);
+		if (overflowX !== 'visible' || overflowY !== 'visible') clipping.push(node);
+		if (node.matches(':popover-open, :modal')) return clipping;
+	}
+	return 'clippingAncestors';
+}
+
 
 type Placement = 'top' | 'bottom' | 'left' | 'right';
 type Timing = 'instant' | 'delay' | 'never';
@@ -418,7 +438,7 @@ export class NLDDTooltip extends LitElement {
 				offset(distance),
 				flip(),
 				shift({ padding: parseInt(styles.getPropertyValue('--_tooltip-shift-padding'), 10), limiter: limitShift() }),
-				hide(),
+				hide({ boundary: clippingBoundary(trigger) }),
 			],
 		});
 

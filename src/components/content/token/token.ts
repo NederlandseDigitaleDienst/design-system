@@ -9,7 +9,7 @@
  * `nldd-badge` (a state or a count the system keeps).
  *
  * @element nldd-token
- * @keywords chip, pill, label
+ * @keywords chip, pill, label, label
  * @related nldd-badge, nldd-tag
  *
  * @attr {string} text - Token text. Content in the default slot wins.
@@ -67,7 +67,7 @@ export class NLDDToken extends LitElement {
 
 	/** Inside a roving-focus container (e.g. nldd-token-field): the host carries the
 	 *  single tab stop and manages focus itself, so the trailing control (dismiss or
-	 *  menu) is taken out of the tab order — it stays reachable by mouse and by the
+	 *  menu) is taken out of the tab order. It stays reachable by mouse and by the
 	 *  host's own key handlers. */
 	@property({ type: Boolean, reflect: true })
 	roving = false;

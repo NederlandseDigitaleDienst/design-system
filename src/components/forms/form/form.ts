@@ -45,6 +45,7 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * inner `<form>` element directly (see the last example).
  *
  * @element nldd-form
+ * @keywords formulier
  *
  * @attr {string} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.
  * @attr {string} name - Form name
@@ -268,7 +269,7 @@ export class NLDDForm extends PlainElement {
 
 	/** Controls the platform has judged at least once. */
 	private _judged = new WeakSet<Element>();
-	/** When true, user provided their own <form> child — skip migration. */
+	/** When true, user provided their own <form> child, so skip migration. */
 	private _userProvidedForm = false;
 
 	connectedCallback(): void {
@@ -370,7 +371,7 @@ export class NLDDForm extends PlainElement {
 	 * `'top'` when the form itself has no `label-alignment`. Descendant CSS
 	 * uses `[label-alignment="X"]` first and falls back to
 	 * `[form-label-alignment="X"]` when no own value is set, so a consumer's
-	 * explicit `label-alignment` always wins automatically — without us having
+	 * explicit `label-alignment` always wins automatically, without us having
 	 * to track which elements we previously inherited to.
 	 *
 	 * Always-setting (rather than only when the form has its own value) lets

@@ -2,6 +2,7 @@
  * Nederlandse Digitale Dienst Icon Button Component (Lit + TypeScript)
  *
  * @element nldd-icon-button
+ * @keywords icoonknop, knop
  * @related nldd-button
  * @attr {string} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon.
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
@@ -105,7 +106,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	/**
 	 * Loading state. Shows an activity indicator centered over the (visually
 	 * hidden) icon, marks the inner control `aria-busy="true"` and blocks
-	 * activation — without dropping the control from the tab order (unlike
+	 * activation, without dropping the control from the tab order (unlike
 	 * `disabled`).
 	 *
 	 * Activation is blocked by stopping the click (as `disabled` does), so a
@@ -134,7 +135,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	@property({ type: Boolean, reflect: true })
 	expanded = false;
 
-	/** Take the button out of the tab order (`tabindex="-1"`) — for a control owned by
+	/** Take the button out of the tab order (`tabindex="-1"`), for a control owned by
 	 *  a roving container (e.g. an `nldd-token` in `nldd-token-field`) that manages
 	 *  focus itself. Still mouse- and script-focusable. */
 	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
@@ -159,7 +160,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	interestfor: string | undefined = undefined;
 
 	/**
-	 * Direct element reference to the popover this button invokes — IDL-only
+	 * Direct element reference to the popover this button invokes: the IDL-only
 	 * counterpart to `popovertarget` that works across shadow boundaries.
 	 * Use this when the popover lives in a different tree (e.g. an
 	 * `nldd-menu` reparented to `<body>`) so the browser still recognizes

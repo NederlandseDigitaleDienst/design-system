@@ -8,6 +8,7 @@
  * Within that, it takes the width of its parent.
  *
  * @element nldd-blockquote
+ * @keywords citaat
  * @related nldd-admonition, nldd-rich-text
  * @attr {string} size - Size of the quote: 'md' (default) or 'lg', for a quote that stands out on its own, such as on a landing page. Only the quote grows; the attribution and the border stay as they are
  * @attr {string} cite - URL of the source (forwarded to the <blockquote> element)
@@ -17,7 +18,7 @@
  *
  * @slot - The paragraph or paragraphs of the quote; prefer <p> elements
  * @accepts p
- * @slot attribution - Optional source attribution (author, title, and so on). An nldd-identity is allowed here; the em dash ("— ") is then left out.
+ * @slot attribution - Optional source attribution (author, title, and so on). An nldd-identity is allowed here; the leading em dash is then left out.
  */
 
 import { LitElement, type PropertyValues } from 'lit';

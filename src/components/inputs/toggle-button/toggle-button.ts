@@ -14,7 +14,7 @@
  * be a group of one, counted as "1 of 1" and stopped at by Tab.
  *
  * @element nldd-toggle-button
- * @keywords toggle
+ * @keywords toggle, aan-uitknop
  * @related nldd-switch, nldd-button
  *
  * @attr {'button' | 'checkbox' | 'radio'} type - What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button')
@@ -98,7 +98,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-	/** Take the control out of the tab order (`tabindex="-1"`) — for a control
+	/** Take the control out of the tab order (`tabindex="-1"`), for a control
 	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
 	 *  not the current one) that manages focus itself. Still mouse- and
 	 *  script-focusable. */

@@ -37,7 +37,7 @@ export default {
 		background: {
 			control: { type: 'select' },
 			options: ['inherit', 'base', 'tinted'],
-			description: 'Tinted achtergrond — cascade van --context-background-color naar alle afstammelingen inclusief nldd-page en de fade overlay',
+			description: 'Tinted achtergrond. Zet --context-background-color, dat doorwerkt naar alle afstammelingen, ook nldd-page en de fade overlay.',
 			table: { defaultValue: { summary: 'inherit' } },
 		},
 		panes: {

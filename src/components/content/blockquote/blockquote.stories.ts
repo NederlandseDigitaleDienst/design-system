@@ -147,7 +147,7 @@ export const LangCitaat = {
 
 /**
  * Een `nldd-identity` mag als bronvermelding in de attribution-slot; het
- * kastlijntje ("— ") wordt dan automatisch weggelaten omdat de identity zijn
+ * kastlijntje voor de naam wordt dan automatisch weggelaten omdat de identity zijn
  * eigen opmaak meebrengt (avatar, naam en ondersteunende tekst).
  */
 export const MetIdentity = {

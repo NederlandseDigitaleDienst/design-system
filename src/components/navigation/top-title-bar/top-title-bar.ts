@@ -37,7 +37,7 @@
  * a word or two.
  *
  * @element nldd-top-title-bar
- * @keywords app bar, title bar
+ * @keywords app bar, title bar, titelbalk
  * @related nldd-top-navigation-bar
  *
  * @attr {string} text - Title of the bar, rendered as the heading in the title group. One line, cut off with an ellipsis when it does not fit; see above for a title that can run long.

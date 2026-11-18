@@ -15,7 +15,7 @@ import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-
 /**
  * `nldd-simple-section` is een bouwsteen voor paginainhoud.
  * De sectie past padding en ruimte tussen header, inhoud en footer automatisch
- * aan op basis van de beschikbare breedte via container queries — geen attribuut nodig.
+ * aan op basis van de beschikbare breedte via container queries. Daar is geen attribuut voor nodig.
  *
  * ## Gebruik
  * ```html

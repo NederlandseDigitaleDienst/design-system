@@ -18,6 +18,7 @@
  * later. Only the number it lands on: it waits until the options settle.
  *
  * @element nldd-token-field
+ * @keywords labels
  * @related nldd-combo-box, nldd-checkbox-group
  * @attr {string} values - Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas.
  * @attr {string} placeholder - Placeholder shown in the input
@@ -85,7 +86,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Selected token values. The attribute is a comma-separated string used to seed
 	 *  the initial values (like native `<input value>`); it is not reflected, so the
 	 *  live source is always the `.values` array property. Values can't contain
-	 *  commas — set those via the property. */
+	 *  commas. Set those via the property. */
 	@property({
 		converter: {
 			fromAttribute: (value: string | null): string[] =>
@@ -177,7 +178,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	@state()
 	_highlightedId = '';
 
-	/** Which token carries the roving tabindex — the token group's single tab stop
+	/** Which token carries the roving tabindex: the token group's single tab stop
 	 *  when the input is hidden (all values in, no custom, no options left). */
 	@state()
 	_rovingIndex = 0;
@@ -260,9 +261,9 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/** The index a token was just removed from through a field interaction (its ✕, a
-	 *  menu action the app handled, or Backspace/Delete). Set at the interaction — when
+	 *  menu action the app handled, or Backspace/Delete). Set at the interaction (when
 	 *  focus is still reliably in the field, unlike at willUpdate time after a closing
-	 *  menu has moved it — and consumed in updated() to focus the token that shifted in
+	 *  menu has moved it) and consumed in updated() to focus the token that shifted in
 	 *  (or the input). Null for background/programmatic value changes. */
 	private _removalFocusIndex: number | null = null;
 
@@ -342,14 +343,14 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		return this.shadowRoot?.querySelector<HTMLInputElement>('.token-field__input') ?? null;
 	}
 
-	/** The input + picker wrapper — the menu's anchor, so the menu lines up under
+	/** The input + picker wrapper. It is the menu's anchor, so the menu lines up under
 	 *  the whole area (including the picker), not just the input. */
 	private get _inputArea(): HTMLElement | null {
 		return this.shadowRoot?.querySelector<HTMLElement>('.token-field__input-area') ?? null;
 	}
 
-	/** Programmatic focus goes to the inner input, or — when it is hidden (all values
-	 *  in, no custom, no options left) — to the token holding the roving tabindex. */
+	/** Programmatic focus goes to the inner input, or, when it is hidden (all values
+	 *  in, no custom, no options left), to the token holding the roving tabindex. */
 	override focus(options?: FocusOptions): void {
 		if (deferFocus(this, options)) return;
 		if (this._input) this._input.focus(options);
@@ -370,7 +371,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** A token's display label: the matching slotted menu-item's text, else the
 	 *  raw value (covers values whose option is not currently present). */
-	/** Slotted menu options not yet selected — what the picker could still add. */
+	/** Slotted menu options not yet selected: what the picker could still add. */
 	private get _availableOptionCount(): number {
 		let n = 0;
 		// Scope to the options menu (a direct-child nldd-menu); this deliberately
@@ -389,7 +390,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		return !this.readonly && (this.allowCustom || this._availableOptionCount > 0);
 	}
 
-	/** Whether an options menu is slotted — drives the picker button. Free-text-only
+	/** Whether an options menu is slotted. Drives the picker button. Free-text-only
 	 *  fields (e.g. e-mail addresses) have no menu and get no picker. */
 	public get _hasMenu(): boolean {
 		return this._menu !== null;
@@ -444,8 +445,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** A change to any `[slot="template"]` prototype (its menu items, their attributes,
 	 *  or an added/removed prototype) invalidates the cloned per-token menus, so they
-	 *  re-clone on the next render. The field only ever *reads* the prototypes — it
-	 *  mutates the options menu and its own shadow DOM — so filtering to template-scoped
+	 *  re-clone on the next render. The field only ever *reads* the prototypes (it
+	 *  mutates the options menu and its own shadow DOM), so filtering to template-scoped
 	 *  mutations keeps this from looping with the field's own option hiding. */
 	private _onTemplateMutation(records: MutationRecord[]): void {
 		const touchesTemplate = records.some((r) => {
@@ -655,7 +656,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Arrow keys move between tokens; ArrowRight past the last returns to the
 	 *  input; Backspace/Delete removes the token and steps focus onto the next one.
-	 *  A disabled field is inert — no roving, no keyboard removal. */
+	 *  A disabled field is inert: no roving, no keyboard removal. */
 	public _handleTokenKeydown(e: KeyboardEvent, index: number): void {
 		if (this.disabled) return;
 		switch (e.key) {
@@ -689,7 +690,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/** Clicking empty space in the field (not a token or the picker) focuses the
-	 *  input, or — when it is hidden — the last token, so a click after the tokens
+	 *  input, or, when it is hidden, the last token, so a click after the tokens
 	 *  lets you rove them with the arrow keys. The menu opens deliberately via the
 	 *  picker, typing, or ArrowDown, not by clicking the field. */
 	public _handleFieldClick(e: Event): void {
@@ -817,7 +818,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	/**
 	 * Tab inside the menu (a top-layer popover) would move focus to an arbitrary
 	 * next element in DOM order. Instead close the menu and return focus to the
-	 * input so Tab continues from there — same handling as the combo-box.
+	 * input so Tab continues from there, the same handling as the combo-box.
 	 */
 	private _handleMenuKeydown = (e: KeyboardEvent): void => {
 		if (e.key !== 'Tab') return;
@@ -839,7 +840,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/**
-	 * Add a value, clear the input, and close the menu — focus returns to the empty
+	 * Add a value, clear the input, and close the menu. Focus returns to the empty
 	 * input. The menu only reopens on a deliberate action (typing, ArrowDown, or the
 	 * picker), so a focused empty field behaves the same whether it was just focused
 	 * or a value was just committed.

@@ -31,7 +31,7 @@
  * 40px. Slotted avatars take precedence over `avatar-src`.
  *
  * @element nldd-identity
- * @keywords avatar
+ * @keywords avatar, auteur, afzender
  * @related nldd-avatar, nldd-avatar-group
  *
  * @attr {string} text - Name line (e.g. "Jan Jansen and Piet Pietersen"); the fallback when the text slot is empty

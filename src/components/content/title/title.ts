@@ -41,7 +41,7 @@
  * there; Safari may still pick a syllable of its own.
  *
  * @element nldd-title
- * @keywords heading
+ * @keywords heading, kop, koptekst
  * @related nldd-text, nldd-rich-text
  *
  * @attr {string} size - Visual size of the title, when it should differ from its level: 'display-1' to 'display-6', from large to small (default: the display size of the level). Has no effect without a level

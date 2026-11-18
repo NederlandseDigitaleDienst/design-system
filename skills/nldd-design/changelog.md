@@ -21,7 +21,7 @@ here; consult the commit history if you need that level of detail.
 - **Every live example stands on a stage.** The frame around an example has its own switch for light and dark and for the base and tinted surface. An example that needs a whole window, such as a page pattern, runs in one and can be made narrow.
 - **Every attribute has a control.** The controls under the first example of a component come from the component itself, with the values of its type.
 - **`nldd-popover` hides a title bar on md and up.** See Breaking.
-- **1 accessibility fix:** a popover no longer points its anchor at an id the anchor cannot see. See Fixed.
+- **2 accessibility fixes:** a popover no longer points its anchor at an id the anchor cannot see, and a page that holds only text scrolls with the keyboard. See Fixed.
 
 ### Breaking
 
@@ -43,6 +43,9 @@ here; consult the commit history if you need that level of detail.
 ### Fixed
 
 - **`nldd-popover` writes `aria-controls` only where its anchor can resolve it.** An anchor inside a shadow root, such as the button of an `nldd-token`, got the id of a popover in the light DOM, which an id reference cannot reach. A screen reader was pointed at nothing, and axe reported an invalid attribute value.
+- **An `nldd-page` that holds nothing to focus scrolls with the keyboard.** Its scroller takes a tab stop of its own while it scrolls and nothing in it takes focus, such as a page of running text. Safari and Firefox never let Tab land in such a scroller, so the arrow keys could not reach it. A page with a link or a field in it gets no extra tab stop.
+- **A page with an `nldd-shell` gives the document the surface of the shell.** Where the shell does not paint, such as the overscroll at the top and bottom of a page in Safari, the document showed the browser's own color. The `html` element now has the base surface, or the tinted one with `background="tinted"` on the shell.
+- **`nldd-tooltip` shows in a popover that opens from a bar.** A tooltip in an open popover, menu or dialog counted the ancestors of that overlay as clipping, such as a toolbar with `overflow: hidden`. The trigger seemed out of view, so the tooltip stayed hidden. In the top layer only the overlay itself and what is in it can clip now.
 - **`nldd-icon-button` in running text centers on the capitals beside it.** It sat on the baseline, so an `xs` button after a label stood higher than the words.
 
 ## [0.26.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.1...v0.26.2) (2026-11-17)

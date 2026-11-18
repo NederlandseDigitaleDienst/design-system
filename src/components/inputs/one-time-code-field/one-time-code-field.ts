@@ -26,7 +26,7 @@
  * says where the code comes from ("Code uit de sms").
  *
  * @element nldd-one-time-code-field
- * @keywords otp, pin, verification code
+ * @keywords otp, pin, verification code, eenmalige code, verificatiecode
  * @related nldd-password-field
  *
  * @attr {string} size - 'sm' | 'md' (default) | 'lg'. 'lg' has boxes 56px tall with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Where not even sm fits, the field shows the code in a text field of its own size.

@@ -129,7 +129,7 @@ export const MetIconen = {
 
 /**
  * Onder de sm-breakpoint van het designsysteem (gemeten op de container, niet op de
- * viewport — dit kan in een sheet staan) klapt het component om naar één regel
+ * viewport, want dit kan in een sheet staan) klapt het component om naar één regel
  * tekst plus een segmentbalk.
  * Bolletjes en labels kosten daar precies de ruimte die je niet hebt; de balk
  * houdt wel zichtbaar uit hoeveel stappen het proces bestaat. De volledige

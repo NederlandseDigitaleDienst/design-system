@@ -19,7 +19,7 @@
  * keyboard, screen reader and find-in-page behavior.
  *
  * @element nldd-accordion
- * @keywords disclosure
+ * @keywords disclosure, uitklappen, inklappen
  * @related nldd-list
  *
  * @attr {boolean} exclusive - Only one item is open at a time

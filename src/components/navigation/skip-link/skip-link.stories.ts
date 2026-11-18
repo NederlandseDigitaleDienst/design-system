@@ -32,7 +32,7 @@ export default {
 		href: '',
 	},
 	argTypes: {
-		text: { control: 'text', description: 'Tekst van de skip-link (default: "Sla over")' },
+		text: { control: 'text', description: 'Tekst van de skip-link. Noem wat je overslaat. Valt terug op "Ga naar de hoofdinhoud" rond de kop van een pagina en op "Sla over" elders.' },
 		href: { control: 'text', description: 'Optioneel extern doel-ID' },
 	},
 };

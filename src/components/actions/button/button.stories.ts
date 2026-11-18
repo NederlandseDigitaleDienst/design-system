@@ -633,7 +633,7 @@ export const MetExpandable = {
 /**
  * Slot een enkele `nldd-menu` (of `nldd-popover`) in de `popup`-slot en de
  * button wordt zijn invoker: hij ankert de overlay aan zichzelf en togglet 'm
- * op klik — geen handmatige `id`/`anchor`-koppeling. De overlay synct
+ * op klik, zonder handmatige `id`/`anchor`-koppeling. De overlay synct
  * `expanded` en `aria-haspopup` terug op de button; voeg `expandable` toe voor
  * de chevron. Gespiegeld aan `nldd-split-button`. De bestaande
  * `anchor`/`popovertarget`-route blijft werken wanneer je géén overlay slot.

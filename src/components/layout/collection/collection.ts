@@ -24,7 +24,7 @@
  * the load-more button comes into view.
  *
  * @element nldd-collection
- * @keywords grid, gallery
+ * @keywords grid, gallery, verzameling, raster
  * @related nldd-card, nldd-list, nldd-table
  *
  * @attr {string} layout - Layout mode: 'grid' | 'stack' | 'lanes' | 'horizontal-scroll' (default: 'grid')

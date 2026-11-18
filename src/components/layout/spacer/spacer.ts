@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst Spacer Component (Lit + TypeScript)
  *
  * Add explicit space between elements. Components here have no margins
- * of their own — all whitespace is set by a spacer.
+ * of their own: all whitespace is set by a spacer.
  *
  * A spacer is fixed space between two different things. For padding around an
  * area, or the gaps between the children of one area, use `nldd-container`
@@ -20,9 +20,9 @@
  * ### Sizing
  * Use a single `size` attribute for whitespace that's the same at every
  * viewport. Combine with `sm-size`, `md-size` and/or `lg-size` to override
- * the size at specific breakpoints (mobile-first cascade is intentionally
- * avoided — each breakpoint that needs a different value declares it
- * explicitly):
+ * the size at specific breakpoints. A mobile-first cascade is intentionally
+ * avoided, so each breakpoint that needs a different value declares it
+ * explicitly:
  *
  * - `size` applies at every breakpoint that has no per-viewport override.
  * - `sm-size` overrides at sm (max-width: 640px).
@@ -33,7 +33,7 @@
  * space in a flex container.
  *
  * @element nldd-spacer
- * @keywords gap, whitespace
+ * @keywords gap, whitespace, witruimte, ruimte
  * @related nldd-container, nldd-divider
  *
  * @attr {string} size - Base spacer size. 'flexible' or one of the fixed

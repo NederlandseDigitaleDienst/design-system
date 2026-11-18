@@ -47,9 +47,9 @@
  * ### Query mark
  * Set `query` to a substring to bold-highlight the match across text, overline
  * and supporting-text. `query-mark-mode` selects the strategy:
- * - `'predictive'` (default): bolds the non-matched remainder — the ARIA APG
+ * - `'predictive'` (default): bolds the non-matched remainder, the ARIA APG
  *   pattern for combobox predictive completion.
- * - `'match'`: bolds the matched query — useful for search-result highlighting
+ * - `'match'`: bolds the matched query, useful for search-result highlighting
  *   in longer text.
  *
  * When `query` is set, `**bold**` markdown in the same field is ignored.

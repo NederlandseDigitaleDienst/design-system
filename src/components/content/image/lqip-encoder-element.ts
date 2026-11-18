@@ -4,7 +4,7 @@
  * functions (e.g. a Node build pipeline) don't accidentally register the
  * `nldd-lqip-encoder` custom element into their registry.
  *
- * Intentionally NOT exported from `src/components/index.ts` — this is a
+ * Intentionally NOT exported from `src/components/index.ts`: this is a
  * developer tool, not a design-system component.
  */
 

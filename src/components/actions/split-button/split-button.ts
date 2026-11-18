@@ -30,7 +30,7 @@
  * Its label always stays on one line, without an ellipsis: keep it short.
  *
  * @element nldd-split-button
- * @keywords dropdown button
+ * @keywords dropdown button, knop
  * @related nldd-button, nldd-menu
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {string} appearance - Visual style: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control.

@@ -196,7 +196,7 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="In een h2 — link erft display-grootte"
+					text="In een h2: de link erft de display-grootte"
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-title size="display-2">
@@ -207,7 +207,7 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="In body-md — link is body-md"
+					text="In body-md: de link is body-md"
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="md">
@@ -218,7 +218,7 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="In body-sm — link is body-sm"
+					text="In body-sm: de link is body-sm"
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="sm">
@@ -242,7 +242,7 @@ export const InLopendeTekst = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon"
+					text="Met end-icon (externe link), met natuurlijke whitespace tussen tekst en icon"
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-text size="md">
@@ -268,7 +268,7 @@ export const InLopendeTekst = {
 		docs: {
 			description: {
 				story: `
-Zonder \`size\` attribuut (of met \`size="inherit"\`) erft \`<nldd-link>\` font-size, line-height en font-family van de omgeving — gebruik dit voor links in lopende tekst. De link rendert als pure inline-element zodat tekst natuurlijk over regels wrapt.
+Zonder \`size\` attribuut (of met \`size="inherit"\`) erft \`<nldd-link>\` font-size, line-height en font-family van de omgeving. Gebruik dit voor links in lopende tekst. De link rendert als pure inline-element zodat tekst natuurlijk over regels wrapt.
 
 Icons werken ook in inherit mode: de natuurlijke whitespace tussen icon en tekst zorgt voor de spacing.
 				`.trim(),

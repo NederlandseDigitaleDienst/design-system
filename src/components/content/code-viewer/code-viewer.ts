@@ -46,7 +46,7 @@
  * @keywords code block, syntax highlighting
  * @related nldd-code-editor
  *
- * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
+ * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame. Use it when embedding inside a parent surface.
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.
  * @attr {boolean} diff - The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked.
  * @attr {boolean} line-numbers - Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself.

@@ -25,6 +25,7 @@
  * message of your own in the nldd-form-field.
  *
  * @element nldd-date-field
+ * @keywords datum
  * @related nldd-date-picker
  *
  * @attr {string} value - The date as ISO (yyyy-mm-dd). With `range` an ISO 8601 interval: `yyyy-mm-dd/yyyy-mm-dd`. Empty when there is no valid date.

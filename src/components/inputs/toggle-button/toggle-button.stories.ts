@@ -192,7 +192,7 @@ export const Standaard = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Standaard toggle button met `type="button"` (de default). Gebruikt `aria-pressed` voor de geselecteerde toestand en neemt niet deel aan formulierverwerking.',
+				story: 'Een knop die ingedrukt blijft tot je er nog eens op klikt.',
 			},
 	},
 },
@@ -210,7 +210,7 @@ export const AlleTypes = {
 			<nldd-text
 				size="sm"
 				color="secondary"
-				text="type=&quot;button&quot; (standaard) — aria-pressed, geen formulierparticipatie"
+				text="type=&quot;button&quot; (standaard): aria-pressed, geen formulierparticipatie"
 			></nldd-text>
 			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
@@ -234,7 +234,7 @@ export const AlleTypes = {
 			<nldd-text
 				size="sm"
 				color="secondary"
-				text="type=&quot;checkbox&quot; — native checkbox input, meerdere tegelijk selecteerbaar"
+				text="type=&quot;checkbox&quot;: native checkbox input, meerdere tegelijk selecteerbaar"
 			></nldd-text>
 			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
@@ -269,7 +269,7 @@ export const AlleTypes = {
 			<nldd-text
 				size="sm"
 				color="secondary"
-				text="type=&quot;radio&quot; — native radio input, wederzijdse uitsluiting via name-groep"
+				text="type=&quot;radio&quot;: native radio input, wederzijdse uitsluiting via name-groep"
 			></nldd-text>
 			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
@@ -567,7 +567,7 @@ export const Groot = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'In `size="lg"` bepaalt de `variant` de presentatie: `text` is een grote tekstknop, `icon` een vierkante knop met groot icoon (28px), en `icon-and-text` stapelt een icoon (24px) met klein tekstlabel eronder — een actiebalk-affordance.',
+				story: 'In `size="lg"` bepaalt de `variant` de presentatie: `text` is een grote tekstknop, `icon` een vierkante knop met groot icoon (28px), en `icon-and-text` stapelt een icoon (24px) met klein tekstlabel eronder. Dat is de vorm voor een actiebalk.',
 			},
 	},
 },
@@ -707,7 +707,7 @@ export const TypeButton = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: '`type="button"` (de default) — `aria-pressed` geeft de geselecteerde toestand door aan hulptechnologie.',
+				story: 'Met `type="button"` (de default) geeft `aria-pressed` de geselecteerde toestand door aan hulptechnologie.',
 			},
 	},
 },
@@ -767,7 +767,7 @@ export const TypeCheckbox = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: '`type="checkbox"` — meerdere knoppen kunnen tegelijk geselecteerd zijn.',
+				story: 'Met `type="checkbox"` kunnen meerdere knoppen tegelijk geselecteerd zijn.',
 			},
 	},
 },
@@ -821,7 +821,7 @@ export const TypeRadio = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: '`type="radio"` — native browser-gedrag zorgt voor wederzijdse uitsluiting binnen dezelfde `name`-groep.',
+				story: 'Met `type="radio"` zorgt het native browsergedrag voor wederzijdse uitsluiting binnen dezelfde `name`-groep.',
 			},
 	},
 },

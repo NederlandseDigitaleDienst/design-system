@@ -14,6 +14,7 @@
  * or the help text, or mark the other questions optional.
  *
  * @element nldd-checkbox-group
+ * @keywords selectievakjes
  * @related nldd-radio-button-group, nldd-token-field
  * @attr {string} name - Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had
  * @attr {boolean} disabled - Disables all fields in the group

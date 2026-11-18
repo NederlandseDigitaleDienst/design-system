@@ -17,6 +17,7 @@
  *   the bar's Knight Rider scanner.
  *
  * @element nldd-progress-circle
+ * @keywords voortgang
  * @related nldd-progress-bar, nldd-activity-indicator
  *
  * @attr {'progress'|'distribution'} variant - Semantics for ARIA and gap behavior (default: 'progress')
@@ -199,7 +200,7 @@ export class NLDDProgressCircle extends LitElement {
 		return this._formatValuePart(this._totalValue, Math.round(this._percentage));
 	}
 
-	/** Compact text shown in the tooltip — only in value-display="tooltip" mode
+	/** Compact text shown in the tooltip, only in value-display="tooltip" mode
 	 *  (returns '' otherwise, so the template skips the tooltip wrapper). Follows
 	 *  value-format (matching nldd-progress-bar's per-segment tooltip style) and
 	 *  omits the "voltooid" suffix that aria-valuetext uses for screen readers.
@@ -376,7 +377,7 @@ export class NLDDProgressCircle extends LitElement {
 	 *
 	 *  @internal `public` here is required for the render template to call
 	 *  this method (templates live outside the class). Treat it as private
-	 *  externally — the leading underscore signals "not API". */
+	 *  externally: the leading underscore signals "not API". */
 	public _buildArcs(): Array<{ length: number; offset: number; color: ProgressCircleColor }> {
 		const arcs: Array<{ length: number; offset: number; color: ProgressCircleColor }> = [];
 

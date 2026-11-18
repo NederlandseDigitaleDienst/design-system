@@ -6,7 +6,7 @@
  *
  *   "base,c1,c2,c3,c4,c5,c6"
  *
- * — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L,
+ * That is seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L,
  * 3 bits a, 3 bits b). The first byte is the base color shown behind /
  * outside the cell gradients; the other six are per-cell colors laid out
  * row-major in a 3×2 grid (c1 top-left, c6 bottom-right).
@@ -19,7 +19,7 @@
  * Decoder lives in image.styles.ts and renders 7 background layers
  * (6 radial-gradient cells + base) natively, no JS / blend modes.
  *
- * This module is intentionally pure — no Lit imports, no custom-element
+ * This module is intentionally pure: no Lit imports, no custom-element
  * registration side effects. Consumers (Node build pipelines, Workers,
  * tests) can import just the encoder without dragging in the Storybook
  * UI. The file-picker UI lives in `lqip-encoder-element.ts` and registers
@@ -97,7 +97,7 @@ function clamp(v: number, lo: number, hi: number): number {
  *  to evaluate candidates and by the cell encoder for the cell's own bits.
  *
  *  Per-byte L/a/b decoding matches Lean Rada's reference implementation
- *  exactly — the same formulas produce the same colors. The overall wire
+ *  exactly: the same formulas produce the same colors. The overall wire
  *  format is NOT interchangeable though: Lean packs 6 grayscale cells + a
  *  single base color into one 20-bit integer; we ship 7 independent bytes
  *  in a CSV string. So an individual byte can be decoded with either
@@ -151,7 +151,7 @@ function findOklabBits(targetL: number, targetA: number, targetB: number): { ll:
  *  up the subject's color (sky blue, foliage green, the pier's amber
  *  lights) rather than collapsing foreground and background into a muddy
  *  midpoint. The bucket grid resolution is intentionally coarse so that
- *  perceptually-similar tones share a bucket — fine quantization would
+ *  perceptually-similar tones share a bucket. Fine quantization would
  *  scatter near-identical pixels across many tiny buckets and lose the
  *  dominance signal we want. */
 function findDominantColor(
@@ -196,7 +196,7 @@ function findDominantColor(
 /** Pack a quantized Oklab triplet into a single byte: 2 bits L (high), 3 bits
  *  a, 3 bits b (low). Matches the format Lean uses for his global base
  *  color, so the CSS decoder for each cell uses the same math as Lean's
- *  base decoder — just one byte at a time, seven times. */
+ *  base decoder, one byte at a time, seven times. */
 function packLab(ll: number, aaa: number, bbb: number): number {
 	return (ll << 6) | (aaa << 3) | bbb;
 }
@@ -268,7 +268,7 @@ export function encodePixelDataToLqip(
  * decodes it to pixels via the Canvas API; and forwards to the pure encoder.
  *
  * When passing an HTMLImageElement loaded from a different origin, set
- * `img.crossOrigin = 'anonymous'` BEFORE assigning `src` — otherwise the
+ * `img.crossOrigin = 'anonymous'` BEFORE assigning `src`. Otherwise the
  * underlying canvas read taints and throws a SecurityError. Files and
  * same-origin ImageBitmaps are unaffected.
  */

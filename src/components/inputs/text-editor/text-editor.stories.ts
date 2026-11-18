@@ -318,7 +318,7 @@ export const Links = {
 			.value=${[
 				'Een markdown-link: [Mijn Dienst](https://www.example.nl).',
 				'',
-				'En een plat geplakte URL: https://www.example.nl/aanvragen — die krijgt dezelfde badge.',
+				'En een plat geplakte URL die dezelfde badge krijgt: https://www.example.nl/aanvragen',
 				'',
 				'Ook www.example.nl en info@example.nl worden herkend.',
 			].join('\n')}
@@ -328,7 +328,7 @@ export const Links = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Elke link krijgt een "open in nieuw tabblad"-badge — niet alleen markdown-links (`[tekst](url)`), maar ook plat geplakte URL\'s (GFM-autolinks). Scheme-loze vormen krijgen er een: `www.…` → https, een e-mailadres → mailto. De badge is direct klikbaar zonder eerst de caret te plaatsen.',
+				story: 'Elke link krijgt een "open in nieuw tabblad"-badge, niet alleen markdown-links (`[tekst](url)`) maar ook plat geplakte URL\'s (GFM-autolinks). Scheme-loze vormen krijgen er een: `www.…` → https, een e-mailadres → mailto. De badge is direct klikbaar zonder eerst de caret te plaatsen.',
 			},
 		},
 	},

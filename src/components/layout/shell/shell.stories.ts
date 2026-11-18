@@ -36,7 +36,7 @@ export default {
 		background: {
 			control: { type: 'select' },
 			options: ['base', 'tinted'],
-			description: 'Tinted achtergrond — cascade van --context-background-color naar alle afstammelingen',
+			description: 'Tinted achtergrond. Zet --context-background-color, dat doorwerkt naar alle afstammelingen.',
 			table: { defaultValue: { summary: 'base' } },
 		},
 	},

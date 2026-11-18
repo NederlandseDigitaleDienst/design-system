@@ -149,7 +149,7 @@ export const MetTimeEnLink = {
 /**
  * Op een smalle container (≤ 640px) met meerdere avatars komt de avatarrij
  * boven de namen te staan, zodat de tekst de volle breedte houdt. Met één
- * avatar blijft de identity op één regel — zie het verschil tussen de twee
+ * avatar blijft de identity op één regel. Zie het verschil tussen de twee
  * kaders hieronder. Het schakelpunt is de breedte van de identity zelf
  * (container query), niet die van het scherm.
  */

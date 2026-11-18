@@ -612,7 +612,7 @@ export const EigenIcoonInDeSlot = {
 /**
  * Het klassieke overflow-menu ("kebab"): slot een enkele `nldd-menu` (of
  * `nldd-popover`) in de `popup`-slot en de icon-button ankert en togglet 'm
- * automatisch — geen `id`/`anchor`-koppeling. De overlay synct `expanded` en
+ * automatisch, zonder `id`/`anchor`-koppeling. De overlay synct `expanded` en
  * `aria-haspopup` terug op de knop. Gespiegeld aan `nldd-split-button`.
  */
 export const MetMenu = {

@@ -97,7 +97,7 @@ const HOVER_OPEN_MAX_MS = 150;
  * @attr {boolean} no-blink - Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.
  * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
  * @attr {string} accessible-label - Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field.
- * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.
+ * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead. It positions the same way, without the toggle.
  * @attr {string} placement - Floating UI placement. Default: 'bottom-start'.
  * @attr {number} max-items - Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit).
  * @attr {string} empty-text - Text of the default empty-state dialog. Falls back to Dutch i18n "Geen opties beschikbaar".
@@ -106,7 +106,7 @@ const HOVER_OPEN_MAX_MS = 150;
  * @attr {Function} filterFn - Custom filter function (query, item) => boolean.
  *
  * @slot - nldd-menu-item and nldd-menu-divider elements.
- * @slot header - Free content shown above the items, outside `role="menu"` (so it may hold non-menuitem content such as an avatar + name, buttons or links — reached with Tab, skipped by arrow navigation). The region is unpadded; control spacing with your own content (e.g. an `nldd-container`). Root-only: never rendered in a submenu. Example: an account identity header (nldd-identity).
+ * @slot header - Free content shown above the items, outside `role="menu"` (so it may hold non-menuitem content such as an avatar + name, buttons or links, reached with Tab and skipped by arrow navigation). The region is unpadded; control spacing with your own content (e.g. an `nldd-container`). Root-only: never rendered in a submenu. Example: an account identity header (nldd-identity).
  * @slot footer - Free content shown below the items, outside `role="menu"` (same rules as `header`; also unpadded and root-only). Example: a short note or a link.
  * @slot empty - Shown when no items are visible. Defaults to `nldd-inline-dialog` driven by `empty-text` / `empty-supporting-text`. Slot content overrides the default dialog entirely.
  */
@@ -136,7 +136,7 @@ export class NLDDMenu extends LitElement {
 
 	/**
 	 * The anchor as an element reference. Positions the menu exactly like the
-	 * `anchor` attribute, but does NOT turn the anchor into a toggle — clicking
+	 * `anchor` attribute, but does NOT turn the anchor into a toggle: clicking
 	 * it does not open the menu. Use this whenever you drive open/close yourself
 	 * (`showPopover()` / `hidePopover()`), which is what nldd-combo-box and
 	 * nldd-token-field do: their input must stay an input, not a menu button.
@@ -189,7 +189,7 @@ export class NLDDMenu extends LitElement {
 	filterFn: (query: string, item: NLDDMenuItem) => boolean = defaultFilterFn;
 
 	/**
-	 * @internal — development only.
+	 * @internal Development only.
 	 *
 	 * Renders a translucent SVG overlay showing the safe triangle's current
 	 * shape. Reflected as `debug-safe-triangle` so it can be toggled at
@@ -225,7 +225,7 @@ export class NLDDMenu extends LitElement {
 	/** The level of that submenu. @internal */
 	_activeLevel: SubmenuLevel | null = null;
 	/** Signal that this menu is hiding itself to make room for a deeper drill-in
-	 * level — its parent's onToggle should skip the normal close cleanup
+	 * level. Its parent's onToggle should skip the normal close cleanup
 	 * (re-parent + re-show) so the chain stays in deeper-level state. */
 	_drillInHidingForDeeper = false;
 	/** Root-owned registry of every level open in this chain, in open order.
@@ -243,7 +243,7 @@ export class NLDDMenu extends LitElement {
 	 * @internal */
 	_parentMenu: NLDDMenu | null = null;
 
-	/** The menu-item that triggered this submenu — used to label the back
+	/** The menu-item that triggered this submenu, used to label the back
 	 * button in drill-in mode.
 	 * @internal */
 	@state()
@@ -258,7 +258,7 @@ export class NLDDMenu extends LitElement {
 	 * or confirmed tap) collapsed the chain, or when a pointerdown landed
 	 * on the anchor while the menu was open (covers native light-dismiss).
 	 * The trailing `click` of that same gesture consumes it in
-	 * `_handleDocumentClick` and must NOT reopen — gesture-correlated, so
+	 * `_handleDocumentClick` and must NOT reopen. The flag is gesture-correlated, so
 	 * it's reliable on touch regardless of pointerup→click timing.
 	 * @internal */
 	_collapsedByPointerGesture = false;
@@ -307,7 +307,7 @@ export class NLDDMenu extends LitElement {
 
 	/**
 	 * Write `message` to this menu's polite live region. Clears first, then
-	 * sets on a double rAF — the empty→text transition is what makes screen
+	 * sets on a double rAF: the empty→text transition is what makes screen
 	 * readers reliably re-announce unchanged-looking content across engines.
 	 *
 	 * Spam control without muting real navigation: a doubled event in the
@@ -440,7 +440,7 @@ export class NLDDMenu extends LitElement {
 
 	/**
 	 * Pick the drill-in side (above vs below the anchor) purely from the
-	 * available viewport space around the anchor — never from content
+	 * available viewport space around the anchor, never from content
 	 * size. Content-independent so every level of the chain resolves to
 	 * the same side and a bigger submenu scrolls internally rather than
 	 * flipping the whole stack. Keeps the configured alignment suffix
@@ -460,7 +460,7 @@ export class NLDDMenu extends LitElement {
 	/**
 	 * Reflect this menu's open state on the anchor so an anchor button (or
 	 * any element exposing an `expanded` IDL property) shows the active
-	 * "is-expanded" visual while we're open. Skip menu-items as anchors —
+	 * "is-expanded" visual while we're open. Skip menu-items as anchors:
 	 * they manage their own `_submenuOpen` lifecycle and don't have an
 	 * `expanded` property. Also default `popupType` to 'menu' / 'listbox'
 	 * (matching this menu's variant) when the anchor supports it and the
@@ -470,14 +470,14 @@ export class NLDDMenu extends LitElement {
 	 * Finally, drive the anchor's `popoverTargetAction` so the browser's
 	 * native invoker action always matches the current state explicitly:
 	 * `'hide'` while open, `'show'` while closed. We avoid `'toggle'` on
-	 * purpose — toggle re-evaluates the popover's live state at click time
+	 * purpose: toggle re-evaluates the popover's live state at click time
 	 * and would re-open the menu if it had just been light-dismissed
 	 * milliseconds earlier (the source of the "menu briefly closes and
 	 * reopens" bug). With explicit show/hide, the worst case is a no-op
-	 * (e.g. `'hide'` on an already-closed menu) — never a spurious open.
+	 * (e.g. `'hide'` on an already-closed menu), never a spurious open.
 	 *
 	 * The invoker association (`popoverTargetElement`) is set elsewhere
-	 * — persistently on anchor change rather than per-toggle — so the
+	 * (persistently on anchor change rather than per-toggle), so the
 	 * browser's light-dismiss exclusion is in place from the very first
 	 * click instead of only after the menu has already opened once.
 	 */
@@ -490,7 +490,7 @@ export class NLDDMenu extends LitElement {
 	 * else closes it: opening a modal dialog empties the top layer, and Safari
 	 * does not fire `toggle` for the popovers it drops. The anchor then keeps
 	 * saying "open" while the menu is gone, and its next click asks the browser
-	 * to hide an already-hidden popover — a no-op, so the button looks dead.
+	 * to hide an already-hidden popover. That is a no-op, so the button looks dead.
 	 *
 	 * Called on the anchor's own pointerdown, before the click resolves the
 	 * invoker, so the action is decided on the truth rather than on a state
@@ -578,7 +578,7 @@ export class NLDDMenu extends LitElement {
 	 * Item-activation logic shared between the native `mouseenter` capture
 	 * handler and the safe triangle's `releaseAt` (sideways exit, direction
 	 * reversal, stall dismissal). Those paths know which item is under the
-	 * cursor — they don't need to synthesize a MouseEvent just to re-enter
+	 * cursor, so they don't need to synthesize a MouseEvent just to re-enter
 	 * the handler. Factoring out the body keeps the entry contracts honest:
 	 * the recovery sites pass an already-resolved item rather than relying
 	 * on `event.target` semantics they'd have to fake.
@@ -727,11 +727,11 @@ export class NLDDMenu extends LitElement {
 	 * over the parent) and gets a back-button header. Otherwise (cascade)
 	 * the submenu opens beside its parent item.
 	 *
-	 * Detection is based on pointer type and viewport width — touch devices
+	 * Detection is based on pointer type and viewport width: touch devices
 	 * and narrow viewports drill in, everything else cascades. No consumer
 	 * override; the choice is environment-driven.
 	 *
-	 * Cached MediaQueryList shared across instances — `matchMedia()` returns
+	 * Cached MediaQueryList shared across instances, because `matchMedia()` returns
 	 * a live object and re-evaluating it for every mouseenter/submenu-open
 	 * is wasteful.
 	 */
@@ -751,7 +751,7 @@ export class NLDDMenu extends LitElement {
 	}
 
 	/** Walks the parent-menu chain up to the root (the menu that wasn't
-	 * opened by another menu — has no _parentMenu). */
+	 * opened by another menu and has no _parentMenu). */
 	get _rootMenu(): NLDDMenu {
 		let m: NLDDMenu = this;
 		while (m._parentMenu) m = m._parentMenu;
@@ -792,7 +792,7 @@ export class NLDDMenu extends LitElement {
 		(this as HTMLElement).hidePopover?.();
 	};
 
-	/** Cursor moved onto the drill-in back button — clear any item highlight
+	/** Cursor moved onto the drill-in back button. Clear any item highlight
 	 * so we don't show two "active" elements at once (back button + first
 	 * item that was auto-highlighted on open).
 	 * @internal */
@@ -818,7 +818,7 @@ export class NLDDMenu extends LitElement {
 	/** Close the menu on a window resize. Floating-UI's autoUpdate keeps
 	 * the position in sync with scrolls (where users genuinely expect the
 	 * menu to follow the anchor), but a full window resize is a layout-
-	 * shifting interaction the user isn't currently tracking — better to
+	 * shifting interaction the user isn't currently tracking. It is better to
 	 * dismiss with a clean slate than to chase the anchor across a
 	 * reflow, repaint a flipped placement, or get stuck mid-flight when
 	 * crossing the cascade ↔ drill-in viewport threshold. The window
@@ -920,14 +920,14 @@ export class NLDDMenu extends LitElement {
 	}
 
 	/**
-	 * Collapse the entire menu chain at once — root + every open submenu —
+	 * Collapse the entire menu chain at once (root + every open submenu),
 	 * with no "back one level" re-show. Used when the action is final:
 	 * selecting an item, clicking the anchor, clicking/tapping outside, or
 	 * a viewport resize.
 	 *
 	 * Driven by the root's `_openChain` registry of levels, so it never
 	 * depends on `_activeSubmenu` /
-	 * `_parentMenu` threading being intact at collapse time — real
+	 * `_parentMenu` threading being intact at collapse time. Real
 	 * interaction can leave those stale, which was the source of the
 	 * recurring "anchor click doesn't close after the 2nd navigation"
 	 * bug. Idempotent: every chain level's `select` listener may call it,
@@ -946,7 +946,7 @@ export class NLDDMenu extends LitElement {
 	/**
 	 * Drill-in click-outside: collapse the entire chain.
 	 *
-	 * In drill-in mode only the deepest level is `:popover-open` — popover
+	 * In drill-in mode only the deepest level is `:popover-open`, so popover
 	 * light-dismiss would close just that level, and our onToggle cleanup
 	 * would helpfully re-show the previous level. That's the wrong outcome
 	 * for a click outside the menu: the user is dismissing the whole menu,
@@ -1265,7 +1265,7 @@ export class NLDDMenu extends LitElement {
 	 *
 	 * Matching items are kept visible. Non-matching items are hidden. Matching
 	 * items receive `query=<query>` so their text-cell bolds the non-typed
-	 * remainder (predictive completion — the ARIA APG pattern for combobox).
+	 * remainder (predictive completion, the ARIA APG pattern for combobox).
 	 *
 	 * When the query is empty, all items are shown and `query` is cleared.
 	 *
@@ -1323,7 +1323,7 @@ export class NLDDMenu extends LitElement {
 	}
 
 	/**
-	 * Hide each nldd-menu-group whose items are all filtered out — a labeled
+	 * Hide each nldd-menu-group whose items are all filtered out: a labeled
 	 * heading above an empty section reads as broken. Runs after filter() has
 	 * updated individual item visibility.
 	 */
@@ -1649,7 +1649,7 @@ export class NLDDMenu extends LitElement {
 	private _typeaheadBuffer = '';
 	private _typeaheadTimer: number | null = null;
 	/** Reset the typeahead buffer after this much idle time. 500ms is the
-	 * common ARIA APG / OS convention — long enough to type a 2-3 char prefix
+	 * common ARIA APG / OS convention: long enough to type a 2-3 char prefix
 	 * comfortably, short enough that an unrelated later keystroke starts a
 	 * fresh search. */
 	private static readonly _TYPEAHEAD_RESET_MS = 500;
@@ -1659,8 +1659,8 @@ export class NLDDMenu extends LitElement {
 	 * buffer; the menu jumps to the first item whose text starts with the
 	 * buffer (case-insensitive).
 	 *
-	 * Single-char buffer (first press or after reset) cycles through matches
-	 * — repeated presses of the same letter step through every item starting
+	 * Single-char buffer (first press or after reset) cycles through matches:
+	 * repeated presses of the same letter step through every item starting
 	 * with it. Multi-char buffer matches from the currently-focused item, so
 	 * extending the prefix while the current item still matches keeps focus
 	 * stable instead of jumping forward.

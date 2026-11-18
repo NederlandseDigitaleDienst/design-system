@@ -16,7 +16,7 @@
  * types are not supported in this context.
  *
  * @element nldd-combo-box
- * @keywords autocomplete, typeahead, select
+ * @keywords autocomplete, typeahead, select, keuzelijst, suggesties
  * @related nldd-dropdown, nldd-token-field, nldd-search-field
  * @attr {string} value - The selected form value
  * @attr {string} text - The text shown in the input. May differ from `value` (e.g. value="nl" → text="Nederland"). Set this when pre-populating an existing record. If left empty and `value` matches a slotted menu item, the matching item's `text` is used automatically.
@@ -417,7 +417,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/**
-	 * Open the menu. Focus always stays on the input — highlight moves via
+	 * Open the menu. Focus always stays on the input. The highlight moves via
 	 * aria-activedescendant rather than by moving focus to items.
 	 */
 	public _openMenu(): void {
@@ -505,7 +505,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	// — Handlers ————————————————————————————————————————————————————————————
 
 	/**
-	 * Handles Tab in the menu. The menu is a popover on the top layer — Tab
+	 * Handles Tab in the menu. The menu is a popover on the top layer, so Tab
 	 * would move focus to the next focusable element in DOM order, which may
 	 * not be the next logical element. Instead, close the menu and return
 	 * focus to the input so the user can Tab forward from there.

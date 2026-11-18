@@ -20,12 +20,12 @@ import '../../content/text/text.js';
  * ## Gebruik
  * ```html
  * <nldd-button
- * 	id="trigger"
+ * 	popovertarget="popover"
  * 	text="Open"
  * ></nldd-button>
  *
  * <nldd-popover
- * 	anchor="trigger"
+ * 	id="popover"
  * 	accessible-label="Voorbeeld"
  * >
  *   <nldd-container padding="16">
@@ -118,13 +118,13 @@ const Template = ({ width, smFullHeight, placement, top, right, bottom, left, ce
 	const [, updateArgs] = useArgs();
 	return html`
 		<nldd-button
-			id="trigger-default"
+			popovertarget="popover-default"
 			text="Toelichting bekijken"
 		></nldd-button>
 		<nldd-popover
 			width=${width || nothing}
 			?sm-full-height=${smFullHeight}
-			anchor="trigger-default"
+			id="popover-default"
 			placement=${placement}
 			top=${top || nothing}
 			right=${right || nothing}
@@ -153,12 +153,12 @@ export const Standaard = {
 export const MetFormulier = {
 	render: () => html`
 		<nldd-button
-			id="trigger-form"
+			popovertarget="popover-form"
 			text="Contactgegevens wijzigen"
 		></nldd-button>
 
 		<nldd-popover
-			anchor="trigger-form"
+			id="popover-form"
 			accessible-label="Contactgegevens"
 		>
 			<nldd-container padding="16">
@@ -190,11 +190,11 @@ export const Plaatsingen = {
 	render: () => html`
 		<div style="display: flex; gap: 1rem; align-items: center; justify-content: center; min-height: 320px;">
 			<nldd-button
-				id="trigger-placement-bottom-start"
+				popovertarget="popover-placement-bottom-start"
 				text="Onder, begin"
 			></nldd-button>
 			<nldd-popover
-				anchor="trigger-placement-bottom-start"
+				id="popover-placement-bottom-start"
 				placement="bottom-start"
 				accessible-label="Onder, begin"
 			>
@@ -202,11 +202,11 @@ export const Plaatsingen = {
 			</nldd-popover>
 
 			<nldd-button
-				id="trigger-placement-top-start"
+				popovertarget="popover-placement-top-start"
 				text="Boven, begin"
 			></nldd-button>
 			<nldd-popover
-				anchor="trigger-placement-top-start"
+				id="popover-placement-top-start"
 				placement="top-start"
 				accessible-label="Boven, begin"
 			>
@@ -214,11 +214,11 @@ export const Plaatsingen = {
 			</nldd-popover>
 
 			<nldd-button
-				id="trigger-placement-right"
+				popovertarget="popover-placement-right"
 				text="Rechts"
 			></nldd-button>
 			<nldd-popover
-				anchor="trigger-placement-right"
+				id="popover-placement-right"
 				placement="right"
 				accessible-label="Rechts"
 			>
@@ -226,11 +226,11 @@ export const Plaatsingen = {
 			</nldd-popover>
 
 			<nldd-button
-				id="trigger-placement-left"
+				popovertarget="popover-placement-left"
 				text="Links"
 			></nldd-button>
 			<nldd-popover
-				anchor="trigger-placement-left"
+				id="popover-placement-left"
 				placement="left"
 				accessible-label="Links"
 			>

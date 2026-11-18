@@ -2,11 +2,11 @@
  * Nederlandse Digitale Dienst Switch Component (Lit + TypeScript)
  *
  * A toggle control for on/off settings.
- * Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label.
+ * Prefer nldd-switch-field for labeled usage. It combines the switch with a visible label.
  * Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
  *
  * @element nldd-switch
- * @keywords toggle
+ * @keywords toggle, schakelaar
  * @related nldd-checkbox, nldd-toggle-button
  * @attr {boolean} checked - Whether the switch is on/off
  * @attr {boolean} disabled - Disabled state
@@ -53,7 +53,7 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-	/** Take the control out of the tab order (`tabindex="-1"`) — for a control
+	/** Take the control out of the tab order (`tabindex="-1"`), for a control
 	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
 	 *  not the current one) that manages focus itself. Still mouse- and
 	 *  script-focusable. */

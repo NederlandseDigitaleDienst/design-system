@@ -260,7 +260,7 @@ export const Grootten = {
 	},
 };
 
-// Full width — the main action button fills the available space
+// Full width: the main action button fills the available space
 export const VolleBreedte = {
 	name: 'Volle breedte',
 	render: () => html`

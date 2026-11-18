@@ -165,7 +165,7 @@ export const MetMenu = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Een token met een contextueel menu — bijvoorbeeld een e-mailadres met acties: een e-mail sturen, contactgegevens tonen, het adres kopiëren of de token verwijderen. Klik op de chevron; het menu opent als popover en de menu-items handelen zelf hun `select` af.',
+				story: 'Een token met een contextueel menu, bijvoorbeeld een e-mailadres met acties: een e-mail sturen, contactgegevens tonen, het adres kopiëren of de token verwijderen. Klik op de chevron; het menu opent als popover en de menu-items handelen zelf hun `select` af.',
 			},
 		},
 	},
@@ -215,7 +215,7 @@ export const FilterVoorbeeld = {
 
 	return html`
 		<nldd-container>
-			<nldd-text text="Actieve tokens — klik op × om een waarde te verwijderen:"></nldd-text>
+			<nldd-text text="Actieve tokens. Klik op × om een waarde te verwijderen:"></nldd-text>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-container
 				layout="wrap"

@@ -40,6 +40,7 @@
  * regularly (a counting-down timer, for example).
  *
  * @element nldd-status-bar
+ * @keywords statusbalk, storing
  * @related nldd-banner, nldd-notification
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - Color of the bar (default: 'neutral')

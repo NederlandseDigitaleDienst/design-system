@@ -15,7 +15,7 @@
  * by keyboard, so an arrow key never silently skips a run of them.
  *
  * @element nldd-date-picker
- * @keywords calendar
+ * @keywords calendar, kalender, datum
  * @related nldd-date-field
  *
  * @attr {string} value - The chosen date as ISO (yyyy-mm-dd). Only without `range`.

@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst Text Field Component (Lit + TypeScript)
  *
  * @element nldd-text-field
- * @keywords textbox
+ * @keywords textbox, invoerveld, tekstveld
  * @related nldd-multi-line-text-field, nldd-number-field, nldd-search-field, nldd-combo-box
  *
  * @attr {string} value - The input value

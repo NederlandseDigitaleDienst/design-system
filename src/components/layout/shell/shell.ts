@@ -27,7 +27,7 @@
  * inside its pane (nested mode). The mode is derived from the outermost
  * horizontal split view: one column means the document scrolls, several columns
  * mean the panes do. An app without such a split view is a single column at
- * every width and therefore scrolls the document too — nested scrolling would
+ * every width and therefore scrolls the document too. Nested scrolling would
  * cost it the rubber-band and the collapsing browser toolbar on iOS for nothing.
  * Set `--context-scroll-mode` on the `nldd-shell` itself to override the
  * derived mode; an inherited value loses from it.

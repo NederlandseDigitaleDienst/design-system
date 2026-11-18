@@ -50,6 +50,7 @@
  * under it, the start first.
  *
  * @element nldd-slider
+ * @keywords schuifregelaar
  * @related nldd-number-field
  * @attr {string} size - Slider size: 'xs' | 'sm' | 'md' (default: 'md'), with the height of the other controls of that size. Set automatically by nldd-form-field.
  * @attr {boolean} range - Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value`

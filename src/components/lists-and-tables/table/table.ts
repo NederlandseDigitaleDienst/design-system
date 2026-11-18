@@ -10,7 +10,7 @@
  * Column widths are defined ONCE on the table via the `columns` attribute (a
  * CSS grid track list), like an HTML `<colgroup>`.
  * Rows are `<nldd-table-row>` elements whose children are the existing
- * `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all
+ * `nldd-cell` family. Every row uses `grid-template-columns: subgrid`, so all
  * rows snap to the same columns. A generic `nldd-cell` gets `width="full"`, so
  * it fills its column, unless it sets a length of its own.
  *
@@ -28,7 +28,7 @@
  * columnheader. Headers that span rows or columns are not supported.
  *
  * Responsive: two complementary strategies. (1) Give columns a minimum width
- * (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it
+ * (e.g. `minmax(160px,1fr)`). The table is its own scroll container, so it
  * scrolls horizontally when too narrow (no wrapper needed).
  * (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/
  * `lg-columns` (shorter track lists) and hide the dropped columns' cells with
@@ -40,6 +40,7 @@
  * external control (e.g. a dropdown).
  *
  * @element nldd-table
+ * @keywords tabel
  * @related nldd-list
  *
  * @attr {'base'|'tinted'} background - Surface fill of the box (default 'base')
@@ -47,7 +48,7 @@
  * @attr {string} sm-columns - Track list when the table is sm-wide (≤640px); falls back to `columns`
  * @attr {string} md-columns - Track list when the table is md-wide (641–1007px); falls back to `columns`
  * @attr {string} lg-columns - Track list when the table is lg-wide (≥1008px); falls back to `columns`
- * @attr {string} accessible-label - Accessible name for the table. Strongly recommended — role="table" needs a name. A missing label is DEV-warned and a generic fallback name is used.
+ * @attr {string} accessible-label - Accessible name for the table. Strongly recommended, because role="table" needs a name. A missing label is DEV-warned and a generic fallback name is used.
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} selectable - Opt into row selection: body rows expose aria-selected (true/false). Without it, rows omit aria-selected so a non-selectable table isn't announced as selectable.
  *
@@ -331,7 +332,7 @@ export class NLDDTableRow extends LitElement {
 		return this.getAttribute('slot') === 'header';
 	}
 
-	/** Reflect `selected` to aria-selected — but only when the parent table is
+	/** Reflect `selected` to aria-selected, but only when the parent table is
 	 *  `selectable`, so a non-selectable table doesn't announce a false
 	 *  selection affordance (ARIA 1.2 §6.6.5). Header rows are never selectable.
 	 *  @internal Re-invoked by the parent table when its `selectable` changes. */

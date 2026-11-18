@@ -12,7 +12,7 @@
  * primary sidebar.
  *
  * @element nldd-navigation-split-view
- * @keywords master-detail
+ * @keywords master-detail, zijbalk
  * @related nldd-side-by-side-split-view, nldd-stacked-split-view, nldd-bar-split-view
  *
  * Use <code>nldd-split-view-pane</code> as direct children for automatic
@@ -112,7 +112,7 @@ export class NLDDNavigationSplitView extends LitElement {
 
 	/**
 	 * True when collapsed to a single visible pane (full-stack). nldd-shell
-	 * reads this — and listens for the `single-column-change` event below — to
+	 * reads this (and listens for the `single-column-change` event below) to
 	 * switch the whole app to document-level scroll.
 	 * @internal
 	 */
@@ -327,7 +327,7 @@ export class NLDDNavigationSplitView extends LitElement {
 	// Primary sidebar sheet
 	// ----------------------------------------------------------------
 
-	/** Opens the primary sidebar as a sheet. Awaitable — resolves once the dialog is open. */
+	/** Opens the primary sidebar as a sheet. Awaitable: resolves once the dialog is open. */
 	async showPrimarySidebarSheet(): Promise<void> {
 		if (!this.primarySidebarAsSheet) return;
 		await this.updateComplete;
@@ -366,7 +366,7 @@ export class NLDDNavigationSplitView extends LitElement {
 	// Inspector sheet
 	// ----------------------------------------------------------------
 
-	/** Opens the inspector as a sheet. Awaitable — resolves once the dialog is open. */
+	/** Opens the inspector as a sheet. Awaitable: resolves once the dialog is open. */
 	async showInspectorSheet(): Promise<void> {
 		if (!this.inspectorAutoHidden && !this.inspectorAsSheet) return;
 		await this.updateComplete;

@@ -6,6 +6,7 @@
  * popover menu.
  *
  * @element nldd-menu-bar
+ * @keywords menubalk
  * @related nldd-tab-bar, nldd-top-navigation-bar
  * @attr {string} overflow-text - Text for the overflow button (default through i18n)
  * @attr {string} accessible-label - aria-label for the nav landmark
@@ -64,7 +65,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		},
 	});
 
-	/** @internal Used by template — drives the overflow button's expanded state. */
+	/** @internal Used by template. Drives the overflow button's expanded state. */
 	get _menuOpen(): boolean {
 		return this._overflowMenu.open;
 	}
@@ -191,7 +192,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 	 * Calculate which slotted items overflow and hide them behind an overflow button.
 	 * Tested both ways in menu-bar.test.ts: with real layout for the whole path, and
 	 * with mocked widths for the arithmetic. The space reserved for the button needs
-	 * the mocks — the button is a shrinkable flex item, so the rendered layout
+	 * the mocks: the button is a shrinkable flex item, so the rendered layout
 	 * absorbs whatever the arithmetic leaves over and always looks right.
 	 */
 	private _updateOverflow(): void {

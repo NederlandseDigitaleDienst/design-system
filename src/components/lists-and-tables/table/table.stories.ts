@@ -108,10 +108,7 @@ const Template = ({ background, columns, smColumns, mdColumns, lgColumns, access
 	</nldd-table>
 `;
 
-/**
- * De kolombreedtes zet je één keer op de tabel met `columns`, zoals bij een
- * HTML-tabel. Elke rij lijnt uit op die kolommen.
- */
+/** Elke rij lijnt uit op de kolommen die je één keer met `columns` zet. */
 export const Standaard = {
 	render: Template,
 };
@@ -306,7 +303,7 @@ export const RijSelected = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Markeer een rij met het `selected`-attribuut. De tint loopt full-bleed door tot de tabelranden (hoeken volgen de box) — zelfde behandeling als `nldd-list-item[selected]`.',
+				story: 'Markeer een rij met het `selected`-attribuut. De tint loopt full-bleed door tot de tabelranden (hoeken volgen de box), net als bij `nldd-list-item[selected]`.',
 			},
 		},
 	},
@@ -386,7 +383,7 @@ export const HorizontaalScrollen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Laag 1 — horizontaal scrollen: de tabel is zelf een horizontale scroll-container. Geef kolommen een vaste/min-breedte; past de tabel niet, dan scrollt hij en wordt hij focusbaar (toetsenbord kan pannen). Wil je niet scrollen? Verberg kolommen met `hide-below`.',
+				story: 'Laag 1 is horizontaal scrollen: de tabel is zelf een horizontale scroll-container. Geef kolommen een vaste/min-breedte; past de tabel niet, dan scrollt hij en wordt hij focusbaar (toetsenbord kan pannen). Wil je niet scrollen? Verberg kolommen met `hide-below`.',
 			},
 		},
 	},
@@ -463,13 +460,13 @@ export const ResponsieveKolommen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Laag 2 — kolommen droppen: geef `sm-columns`/`md-columns`/`lg-columns` (kortere track-lijsten) en verberg de gedropte cellen met `hide-below` op dezelfde breakpoints. De tabel kiest zijn track-lijst o.b.v. de eigen breedte (standaard sm/md/lg). Hier op vaste breedtes getoond; in de praktijk reageert het op de container.',
+				story: 'Laag 2 is kolommen droppen: geef `sm-columns`/`md-columns`/`lg-columns` (kortere track-lijsten) en verberg de gedropte cellen met `hide-below` op dezelfde breakpoints. De tabel kiest zijn track-lijst o.b.v. de eigen breedte (standaard sm/md/lg). Hier op vaste breedtes getoond; in de praktijk reageert het op de container.',
 			},
 		},
 	},
 };
 
-// — Empty state ——————————————————————————————————————————————————————————————
+// Empty state
 
 const emptyHeader = () => html`
 	<nldd-table-row slot="header">

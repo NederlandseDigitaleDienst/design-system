@@ -240,7 +240,7 @@ export const Meegroeiend = {
 		<nldd-container gap="16">
 			<nldd-multi-line-text-field
 				accessible-label="Groeit mee, minimaal 2 regels"
-				placeholder="Groeit mee met de inhoud — minimaal 2 regels"
+				placeholder="Groeit mee met de inhoud (minimaal 2 regels)"
 				resize="auto"
 				rows="2"
 			></nldd-multi-line-text-field>

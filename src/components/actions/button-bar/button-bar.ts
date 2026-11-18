@@ -3,7 +3,7 @@
  *
  * A horizontal container for grouping buttons with a neutral background.
  * Automatically propagates its size and appearance to all child nldd-button and nldd-icon-button elements.
- * Renders nldd-button-bar-divider elements as internal dividers — no separate component needed.
+ * Renders nldd-button-bar-divider elements as internal dividers, so no separate component is needed.
  *
  * The bar is one surface for actions; on/off buttons do not go in it. For a row
  * of toggles use nldd-toggle-button-group, and for one choice out of a few
@@ -11,6 +11,7 @@
  * here is shown as it is, and a warning says so in development.
  *
  * @element nldd-button-bar
+ * @keywords knoppenbalk
  * @related nldd-button-group, nldd-toolbar, nldd-toggle-button-group
  * @attr {string} size - Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style).
  * @attr {string} appearance - Visual style of the buttons: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. The content appearances are for a colored surface.
@@ -29,7 +30,7 @@ import { template } from './button-bar.template.js';
 
 /**
  * A vertical rule between groups of buttons in an `nldd-button-bar`. Purely
- * presentational: no attributes, no slots — place it between buttons.
+ * presentational: no attributes, no slots. Place it between buttons.
  *
  * @element nldd-button-bar-divider
  */

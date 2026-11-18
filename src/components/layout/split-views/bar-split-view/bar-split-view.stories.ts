@@ -46,7 +46,7 @@ export default {
 		background: {
 			control: { type: 'select' },
 			options: ['inherit', 'base', 'tinted'],
-			description: 'Achtergrondkleur — cascade van --context-background-color naar alle afstammelingen inclusief nldd-page en de fade-overlays',
+			description: 'Achtergrondkleur. Zet --context-background-color, dat doorwerkt naar alle afstammelingen, ook nldd-page en de fade-overlays.',
 			table: { defaultValue: { summary: 'inherit' } },
 		},
 	},

@@ -9,7 +9,7 @@
  * fit, so it adapts to any width.
  *
  * @element nldd-breadcrumbs
- * @keywords breadcrumb
+ * @keywords breadcrumb, kruimelpad
  *
  * @attr {string} accessible-label - Override the nav's aria-label. Defaults to the i18n value (NL: "Kruimelpad").
  * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.

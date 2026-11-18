@@ -80,12 +80,12 @@ test('a page marks its section in the first sidebar, itself in the second, and g
 	assert.match(button, /<nldd-list-item href="\/componenten\/" current>/);
 	assert.match(button, /<nldd-list-item\s+href="\/componenten\/button\/"\s+current\s/);
 	assert.match(button, /<nldd-search-field\s+data-site-filter\s+placeholder="Component zoeken"/);
-	assert.match(button, /data-site-search="icon button icon-button acties actions"/);
+	assert.match(button, /data-site-search="icon button icon-button acties icoonknop knop actions"/);
 	// Each row names the pages it relates to, which the search lists under its matches.
 	assert.match(button, /data-site-slug="sheet"\s+data-site-related="modal-dialog popover window"/);
 	assert.match(button, /<nldd-container\s+data-site-filter-related\s+hidden\s*>/);
 	// A keyword finds what its name does not: a toast is a notification.
-	assert.match(button, /data-site-search="notification notification status en feedback toast snackbar status &amp; feedback"/);
+	assert.match(button, /data-site-search="notification notification status en feedback toast snackbar melding status &amp; feedback"/);
 	assert.match(button, /slot="main"\s+has-content[^]*back-text="Componenten"\s+back-href="\/componenten\/"/);
 	// A page without a list of its own goes back to the sections.
 	assert.match(pages['iconen/index.html'], /slot="main"\s+has-content[^]*back-text="Documentatie"\s+back-href="\/documentatie\/"/);

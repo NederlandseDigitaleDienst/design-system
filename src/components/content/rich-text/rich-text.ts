@@ -66,7 +66,7 @@
  * away short and additional: see the design guidelines on expand/collapse.
  *
  * @element nldd-rich-text
- * @keywords prose, markdown, typography
+ * @keywords prose, markdown, typography, opgemaakte tekst
  * @related nldd-text, nldd-title
  *
  * @attr {string} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'

@@ -30,7 +30,7 @@
  * other item: a line in the list's shadow root would be out of its reach.
  *
  * @element nldd-validation-list
- * @keywords error message, form validation
+ * @keywords error message, form validation, foutmelding, validatie
  *
  * @attr {string} for - Id of the control this list is about. Not needed inside an nldd-form-field, which hands its own control over.
  * @attr {boolean} hint - Show every item before there is a verdict, as the requirements of the field. Overridable per item.

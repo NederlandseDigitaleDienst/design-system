@@ -4,7 +4,7 @@
  * A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement):
  * the document stays plain markdown text, but formatting is shown inline (bold
  * is bold, headings are larger, links are colored) while the syntax markers
- * stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree,
+ * stay visible, only dimmed (the iA Writer / Kirby approach). No WYSIWYG tree,
  * so the data stays portable.
  *
  * Framed like the other input fields by default. `embedded` drops the frame,
@@ -94,7 +94,7 @@
  * Cmd/Ctrl+Shift+V pastes it as it is. Nothing changes in a code block.
  *
  * @element nldd-text-editor
- * @keywords wysiwyg, rich text editor, markdown
+ * @keywords wysiwyg, rich text editor, markdown, teksteditor
  * @related nldd-multi-line-text-field, nldd-code-editor
  *
  * @attr {string} value - Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history.
@@ -632,7 +632,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		if (this.view) cmToggleHeading(this.view, level);
 	}
 
-	/** Set the block to a heading level (0 = paragraph) without toggling — for a
+	/** Set the block to a heading level (0 = paragraph) without toggling, for a
 	 *  picker where choosing a level always applies it. */
 	setHeading(level: HeadingLevel): void {
 		if (this.view) cmSetHeading(this.view, level);
@@ -648,7 +648,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		if (this.view) cmToggleTaskList(this.view);
 	}
 
-	/** Set the list type, replacing any existing list ('none' strips it) — for an
+	/** Set the list type, replacing any existing list ('none' strips it), for an
 	 *  exclusive list picker. A task keeps its checkbox only within its own type:
 	 *  switching to bullet or ordered takes the box along with the marker. */
 	setList(type: ListType): void {
@@ -668,13 +668,13 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	}
 
 	/** Nest the selected list item(s) under the preceding item at the same level.
-	 *  Only list items move, and only as far as that parent's content column — so a
+	 *  Only list items move, and only as far as that parent's content column, so a
 	 *  first or standalone item can't be over-indented into an indented code block. */
 	indent(): void {
 		if (this.view) cmIndentListItems(this.view);
 	}
 
-	/** Un-nest the selected list item(s) by one level — the inverse of indent(). */
+	/** Un-nest the selected list item(s) by one level (the inverse of indent()). */
 	outdent(): void {
 		if (this.view) cmOutdentListItems(this.view);
 	}
@@ -871,7 +871,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	}
 
 	/** The current selection in CLEAN (annotation-sentinel-free) coordinates plus
-	 *  the quoted text — the anchor a consumer needs to attach a new annotation to
+	 *  the quoted text: the anchor a consumer needs to attach a new annotation to
 	 *  the selection (e.g. from a toolbar "comment" button). `empty` mirrors
 	 *  getState().empty for gating that button.
 	 *
@@ -905,7 +905,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	}
 
 	/** The annotations currently in the editor, in CLEAN coordinates, each quote
-	 *  re-sliced from the current text — so a consumer can persist positions that
+	 *  re-sliced from the current text, so a consumer can persist positions that
 	 *  moved with edits (read this on save, then write the anchors back). */
 	getAnnotations(): Annotation[] {
 		const view = this.view;

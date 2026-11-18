@@ -20,7 +20,7 @@ export default {
 		},
 		docs: {
 			// role / aria-live / aria-atomic are set on the host by the component
-			// itself (based on variant), so strip them from the shown code — a
+			// itself (based on variant), so strip them from the shown code: a
 			// consumer shouldn't think they need to add them by hand.
 			source: {
 				transform: (code: string) => code.replace(/\s+(?:role|aria-live|aria-atomic)="[^"]*"/g, ''),

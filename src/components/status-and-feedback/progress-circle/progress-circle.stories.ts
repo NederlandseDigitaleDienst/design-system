@@ -370,7 +370,7 @@ export const ZonderCaption = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `value-display="none"` en geen `text` verschijnt geen caption — alleen de cirkel. Handig voor inline gebruik.',
+				story: 'Met `value-display="none"` en geen `text` verschijnt geen caption, alleen de cirkel. Handig voor inline gebruik.',
 			},
 		},
 	},

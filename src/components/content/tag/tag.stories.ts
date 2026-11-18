@@ -211,7 +211,7 @@ export const Kleuren = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Semantische varianten (`neutral`, `accent`, `success`, `warning`, `critical`) voor de meest voorkomende statussen — gebruik deze waar mogelijk, ze communiceren betekenis bovenop kleur. Daarnaast alle Rijksleuren voor categorisering waar de semantische varianten niet passen. Combineer kleur altijd met tekst zodat de tag ook zonder kleur leesbaar blijft.',
+				story: 'Semantische varianten (`neutral`, `accent`, `success`, `warning`, `critical`) voor de meest voorkomende statussen. Gebruik deze waar mogelijk, want ze communiceren betekenis bovenop kleur. Daarnaast alle Rijksleuren voor categorisering waar de semantische varianten niet passen. Combineer kleur altijd met tekst zodat de tag ook zonder kleur leesbaar blijft.',
 			},
 		},
 	},

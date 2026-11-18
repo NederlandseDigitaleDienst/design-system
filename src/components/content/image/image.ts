@@ -4,7 +4,7 @@
  * Wraps a native `<img>` with design-system styling: corner radius variants,
  * aspect-ratio reservation, object-fit/position control, optional caption +
  * credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit
- * is set — otherwise just the image, no extra wrapping.
+ * is set. Otherwise it renders just the image, with no extra wrapping.
  *
  * Hybrid source: the `src` attribute renders an internal `<img>`. To use a
  * custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it
@@ -18,6 +18,7 @@
  * icon, and it goes once the image is in.
  *
  * @element nldd-image
+ * @keywords afbeelding, foto
  * @related nldd-avatar
  *
  * @attr {string} src - Image URL
@@ -27,7 +28,7 @@
  * @attr {number|string|'full'} width - Display width, never wider than the parent. `full` (default) fills the parent. A number is pixels and also sets the `<img>` layout-hint width; any other CSS length (`20rem`, `50%`) only sets the width, so reserve space with `height` or `aspect-ratio`. Written as an inline `max-width` on the host, so it holds against a rule from a parent such as `nldd-rich-text`, and against one of your own.
  * @attr {number} height - Intrinsic height (for layout reservation)
  * @attr {'lazy'|'eager'} loading - Loading strategy (default: 'lazy').
- *   Lazy defers fetch until the image is near the viewport — the right
+ *   Lazy defers fetch until the image is near the viewport, the right
  *   choice for below-the-fold content. Set to 'eager' on images that
  *   appear in the initial viewport, especially the LCP candidate (hero
  *   illustration, top-of-list thumbnail); leaving them lazy silently
@@ -45,14 +46,14 @@
  * @attr {string} credit - Smaller credit/attribution text shown beside the caption
  * @attr {boolean} decorative - Decorative image: alt is forced empty + aria-hidden
  * @attr {string} lqip - Loading preview (LQIP, low-quality image placeholder) as a CSV string
- *   `"base,c1,c2,c3,c4,c5,c6"` — seven 0-255 bytes, each packing an 8-bit
+ *   `"base,c1,c2,c3,c4,c5,c6"`: seven 0-255 bytes, each packing an 8-bit
  *   Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base
  *   color shown outside the cell gradients; the other six are per-cell
  *   colors in row-major 3×2 order. Generate via the encoder in
  *   `lqip-encoder.ts` or via the "LQIP encoder tool" Storybook story.
  *   Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/)
- *   with per-cell hue — Lean's original format encodes grayscale cells only;
- *   ours encodes a color per cell so multi-color subjects survive the
+ *   with per-cell hue. Lean's original format encodes grayscale cells only,
+ *   while ours encodes a color per cell so multi-color subjects survive the
  *   preview.
  * @attr {object} translations - Override translation keys (e.g. the message
  *   shown when the image fails to load); unset keys fall back to Dutch.
@@ -133,7 +134,7 @@ export class NLDDImage extends LitElement {
 
 	/** `'full'` (fills the parent) or a numeric pixel string like `'320'`.
 	 *  Typed as `string` because `type: String` means a `width="320"`
-	 *  attribute arrives as the string `"320"`, not the number `320` — the
+	 *  attribute arrives as the string `"320"`, not the number `320`. The
 	 *  `_numericWidth` getter owns all parsing. A consumer setting the
 	 *  property directly should pass a string (`el.width = '320'`). */
 	@property({ reflect: true, converter: reflectNonDefault<string>('full') })
@@ -183,7 +184,7 @@ export class NLDDImage extends LitElement {
 		return translate(this.translations, nlddImageTranslations, key);
 	}
 
-	/** Cache key — the raw lqip attribute string at the time of the last
+	/** Cache key: the raw lqip attribute string at the time of the last
 	 *  parse. Lit dirty-checks by reference, so without caching every render
 	 *  would emit a fresh object + array and force downstream re-evaluation
 	 *  even when the attribute hasn't changed. Matters when many images live
@@ -191,7 +192,7 @@ export class NLDDImage extends LitElement {
 	private _parsedLqipKey?: string;
 	private _parsedLqipValue: { base: number; cells: number[] } | null = null;
 
-	/** Parsed LQIP: 7 numbers in [0, 255] — base + 6 cells — or null when the
+	/** Parsed LQIP: 7 numbers in [0, 255] (base + 6 cells), or null when the
 	 *  attribute is empty or malformed. Memoised against the raw lqip string,
 	 *  so successive reads return the same object reference until the
 	 *  attribute changes. */
@@ -378,7 +379,7 @@ export class NLDDImage extends LitElement {
 
 	/** Recompute _hasSlottedCaption from a caption slot's assigned nodes.
 	 *  Takes the slot directly so both the slotchange handler and the
-	 *  firstUpdated initial-sync can call it — no synthetic Event needed. */
+	 *  firstUpdated initial-sync can call it without a synthetic Event. */
 	_syncSlottedCaption(slot: HTMLSlotElement): void {
 		this._hasSlottedCaption = slot.assignedNodes({ flatten: true })
 			.some(node => {

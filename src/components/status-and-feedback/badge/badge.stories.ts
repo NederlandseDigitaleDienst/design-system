@@ -288,7 +288,7 @@ export const Stip = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zonder text of number verschijnt automatisch een stip — ideaal voor "nieuw/ongelezen" indicatie.',
+				story: 'Zonder text of number verschijnt automatisch een stip, voor een "nieuw" of "ongelezen"-indicatie.',
 			},
 		},
 	},
@@ -372,7 +372,7 @@ export const MetIcoon = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Icon-only badges worden als vierkant gerenderd — nuttig voor status-indicatoren (verified, waarschuwing, geblokkeerd).',
+				story: 'Icon-only badges worden als vierkant gerenderd. Nuttig voor status-indicatoren (verified, waarschuwing, geblokkeerd).',
 			},
 		},
 	},

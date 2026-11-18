@@ -4,7 +4,7 @@ import '../../layout/container/container.js';
 
 /**
  * `nldd-dropdown` is een visuele wrapper om een native `<select>` element.
- * Geef een native `<select>` als slotted child — de browser behoudt volledige controle
+ * Geef een native `<select>` als slotted child. Zo houdt de browser de volledige controle
  * over formulierverwerking, toegankelijkheid en keyboard navigatie.
  */
 export default {

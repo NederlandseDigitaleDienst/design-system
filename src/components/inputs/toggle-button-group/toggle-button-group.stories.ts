@@ -183,7 +183,7 @@ export const TypeButton = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: '`type="button"` — knoppen zijn onafhankelijk van elkaar en kunnen tegelijk actief zijn. De groep biedt layout en synchronisatie van `size` en `disabled`.',
+				story: 'Met `type="button"` zijn de knoppen onafhankelijk van elkaar en kunnen ze tegelijk actief zijn. De groep biedt layout en synchronisatie van `size` en `disabled`.',
 			},
 	},
 },

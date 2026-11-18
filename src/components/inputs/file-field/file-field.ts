@@ -94,7 +94,7 @@
  * 300px at `size="sm"`, it is one step taller again.
  *
  * @element nldd-file-field
- * @keywords upload, file input, dropzone
+ * @keywords upload, file input, dropzone, bestand, uploaden
  * @attr {string} variant - 'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height
  * @attr {string} size - Field size: 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {string} accept - Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*")

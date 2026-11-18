@@ -36,7 +36,7 @@
  * text wants to be written differently.
  *
  * @element nldd-admonition
- * @keywords callout, note
+ * @keywords callout, note, opmerking, let op
  * @related nldd-banner, nldd-inline-dialog, nldd-blockquote
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - Color and default icon (default: 'neutral')

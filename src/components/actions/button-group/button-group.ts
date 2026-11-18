@@ -33,6 +33,7 @@
  * same size. It holds three buttons at most and hides the rest.
  *
  * @element nldd-button-group
+ * @keywords knoppengroep
  * @related nldd-button-bar, nldd-toolbar
  * @attr {string} size - Button group size, set on every button in it: 'sm' | 'md' (default: 'md')
  * @attr {string} orientation - Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')

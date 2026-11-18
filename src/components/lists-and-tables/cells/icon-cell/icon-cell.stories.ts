@@ -171,6 +171,6 @@ export const EigenInhoudInDeSlot = {
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: 'Wanneer `icon` niet is gezet, rendert de default-slot consumer-inhoud — handig voor custom SVG\'s of iconen uit een andere library.' } },
+		docs: { description: { story: 'Wanneer `icon` niet is gezet, rendert de default-slot consumer-inhoud. Handig voor custom SVG\'s of iconen uit een andere library.' } },
 	},
 };

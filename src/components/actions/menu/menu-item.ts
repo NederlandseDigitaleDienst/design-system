@@ -27,11 +27,11 @@ export function syncListItemRole(host: HTMLElement, variant: MenuVariant | null)
  *
  * @element nldd-menu-item
  *
- * @attr {boolean} destructive - Marks the item as destructive (red text; red highlight bg). Use for irreversible actions like "Delete". Color is the only built-in signal, so per WCAG 1.4.1 the item's own label must convey the destructive nature (e.g. "Verwijder") — don't rely on the red alone. Confirming the action (e.g. a follow-up dialog) is the consumer's responsibility.
+ * @attr {boolean} destructive - Marks the item as destructive (red text; red highlight bg). Use for irreversible actions like "Delete". Color is the only built-in signal, so per WCAG 1.4.1 the item's own label must convey the destructive nature (e.g. "Verwijder"). Don't rely on the red alone. Confirming the action (e.g. a follow-up dialog) is the consumer's responsibility.
  * @attr {string} text - Display text. Supports **bold** markdown syntax.
  * @attr {string} details - Secondary label shown on the right side.
  * @attr {string} icon - Icon name rendered before the text. An icon in the `icon` slot takes its place.
- * @attr {string} shortcut - Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable.
+ * @attr {string} shortcut - Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut). It does not bind the key, so wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {string} href - Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Space chooses it like any other item, except in a `navigation` menu, where Space scrolls the page as on any link. Ignored for submenu openers, checkbox/radio items, and while disabled.
  * @attr {string} target - Where an item with an `href` opens (e.g. '_blank'); adjusts rel automatically. With '_blank' the item adds a visually hidden "opent in nieuw tabblad" for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply.

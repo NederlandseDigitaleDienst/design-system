@@ -15,8 +15,8 @@
  *   any chrome (a button, a chosen-filters bar, …) wherever you want, show it only
  *   while collapsed with `sidebar-section-only="collapsed"` on it, and call `show()` /
  *   `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events.
- *   The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a
- *   "Sluit" button — overridable via the `sheet-top-title-bar` slot.
+ *   The sheet gets a sticky title bar by default, with the `sidebar-label` as title
+ *   and a "Sluit" button. Replace it through the `sheet-top-title-bar` slot.
  *
  * A link in the sheet to a place on the page beside it, such as a row of a
  * table of contents, closes the sheet first and then scrolls to that place and
@@ -32,10 +32,10 @@
  *
  * The sidebar content lives in `slot="sidebar"`. Its slot outlet moves between the
  * box (expanded) and the sheet (collapsed) so there is a single, never-duplicated
- * copy — the light DOM (and its state) is preserved across the switch.
+ * copy: the light DOM (and its state) is preserved across the switch.
  *
  * The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the
- * host), not the viewport — so a sidebar-section in a narrow column or a split-view
+ * host), not the viewport. A sidebar-section in a narrow column or a split-view
  * pane collapses to the sheet just like one in a narrow viewport, and the sidebar
  * never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow
  * section then stacks the sidebar (full-width) above the main instead of using a sheet.
@@ -43,6 +43,7 @@
  * Inherits block `padding` and `height` from PageSectionMixin.
  *
  * @element nldd-sidebar-section
+ * @keywords zijbalk
  * @related nldd-simple-section
  * @descendantattr {'collapsed'|'expanded'} sidebar-section-only - Set on anything inside the section, at any depth: shows that element only while the sidebar is a sheet (`collapsed`), such as the button that opens it, or only while it is a box beside the main (`expanded`), such as a heading the sheet's title bar repeats. Put it on an nldd-spacer next to such an element too, so the space goes with it.
  *
@@ -56,7 +57,7 @@
  * @attr {boolean} [collapsed] - Read-only, reflected: true while the sidebar is a sheet (the section is narrower than lg). Target it via CSS to reveal sheet-only chrome.
  *
  * @slot - Main content
- * @slot sidebar - Sidebar content (sticky box when expanded, a left/bottom sheet when collapsed). The box and the sheet add no padding of their own — wrap the content in a padded container (e.g. nldd-container) for inset spacing.
+ * @slot sidebar - Sidebar content (sticky box when expanded, a left/bottom sheet when collapsed). The box and the sheet add no padding of their own, so wrap the content in a padded container (e.g. nldd-container) for inset spacing.
  * @slot sheet-top-title-bar - Replaces the sheet's default title bar (when collapsed). Empty falls back to an `nldd-top-title-bar` with the `sidebar-label` as title and a "Sluit" button.
  * @slot header - Content above the columns
  * @slot footer - Content below the columns

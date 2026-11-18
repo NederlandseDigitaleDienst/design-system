@@ -501,4 +501,34 @@ describe('nldd-page – sticky bars and focus', () => {
 		await nextFrames();
 		expect(footer.classList.contains('is-at-end')).toBe(true);
 	});
+
+	describe('a scroller without anything to focus', () => {
+		const scroller = (page: Element) => page.shadowRoot!.querySelector('.page__scroll')!;
+		const settle = () => new Promise(r => setTimeout(r, 100));
+
+		it('takes a tab stop when it scrolls and holds only text', async () => {
+			wrapper = await fixture(`
+				<nldd-page sticky-header style="display:flex;height: 200px;">
+					<button slot="header">Terug</button>
+					<div style="height: 900px;">Tekst</div>
+				</nldd-page>`);
+			await settle();
+			expect(scroller(wrapper).getAttribute('tabindex')).toBe('0');
+		});
+
+		it('takes none when it holds a link', async () => {
+			wrapper = await fixture(`
+				<nldd-page sticky-header style="display:flex;height: 200px;">
+					<div style="height: 900px;"><a href="#x">Link</a></div>
+				</nldd-page>`);
+			await settle();
+			expect(scroller(wrapper).hasAttribute('tabindex')).toBe(false);
+		});
+
+		it('takes none when it does not scroll', async () => {
+			wrapper = await fixture('<nldd-page sticky-header style="display:flex;height: 200px;"><div>Tekst</div></nldd-page>');
+			await settle();
+			expect(scroller(wrapper).hasAttribute('tabindex')).toBe(false);
+		});
+	});
 });

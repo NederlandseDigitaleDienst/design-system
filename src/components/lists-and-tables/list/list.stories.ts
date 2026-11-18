@@ -83,9 +83,9 @@ export default {
 				component: `
 **Wanneer welk \`type\`:**
 
-- **\`list\`** (default) — semantische lijst (\`role="list"\`) zonder speciaal toetsenbordgedrag. Items kunnen individueel knoppen of links zijn. Gebruik dit voor instellingen-lijsten, data-overzichten en lijsten van kaarten.
-- **\`navigation\`** — way-finding tussen pagina's of app-secties. Items zijn links of knoppen, elk afzonderlijk focusbaar via Tab. Het actieve item krijgt \`aria-current="page"\` op basis van de \`selected\`-prop. Gebruik dit voor sidebars, in-app menu's en master/detail pickers.
-- **\`listbox\`** — een toegankelijke, filterbare listbox (combobox-patroon). De lijst rendert zijn **eigen zoekveld** (\`role="combobox"\`) bovenaan; \`.list__items\` wordt \`role="listbox"\` en items worden \`role="option"\`. Focus blijft in het zoekveld, de actieve optie verschuift via \`aria-activedescendant\` (pijltjes/Home/End), Enter activeert de actieve optie, Escape wist de zoekterm. Filteren is consumer-werk: luister naar het \`input\`-event (\`{ detail: { value } }\`) en zet \`[hidden]\` op items die niet matchen.
+- **\`list\`** (default): een semantische lijst (\`role="list"\`) zonder speciaal toetsenbordgedrag. Items kunnen individueel knoppen of links zijn. Gebruik dit voor instellingen-lijsten, data-overzichten en lijsten van kaarten.
+- **\`navigation\`**: way-finding tussen pagina's of app-secties. Items zijn links of knoppen, elk afzonderlijk focusbaar via Tab. Het actieve item krijgt \`aria-current="page"\` op basis van de \`selected\`-prop. Gebruik dit voor sidebars, in-app menu's en master/detail pickers.
+- **\`listbox\`**: een toegankelijke, filterbare listbox (combobox-patroon). De lijst rendert zijn **eigen zoekveld** (\`role="combobox"\`) bovenaan; \`.list__items\` wordt \`role="listbox"\` en items worden \`role="option"\`. Focus blijft in het zoekveld, de actieve optie verschuift via \`aria-activedescendant\` (pijltjes/Home/End), Enter activeert de actieve optie, Escape wist de zoekterm. Filteren is consumer-werk: luister naar het \`input\`-event (\`{ detail: { value } }\`) en zet \`[hidden]\` op items die niet matchen.
 
 Selectie-state wordt **altijd door de consumer beheerd**: de lijst muteert nooit zelf \`selected\`.
 				`.trim(),
@@ -198,23 +198,23 @@ export const Appearances = {
 	render: () => html`
 		<nldd-container>
 			<nldd-list appearance="simple">
-				<nldd-list-item><nldd-text-cell text="Simple — item 1"></nldd-text-cell></nldd-list-item>
-				<nldd-list-item><nldd-text-cell text="Simple — item 2"></nldd-text-cell></nldd-list-item>
-				<nldd-list-item><nldd-text-cell text="Simple — item 3"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Simple, item 1"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Simple, item 2"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Simple, item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
 
 			<nldd-spacer size="32"></nldd-spacer>
 			<nldd-list appearance="box-tinted">
-				<nldd-list-item><nldd-text-cell text="Box (standaard: getinte achtergrond en rand) — item 1"></nldd-text-cell></nldd-list-item>
-				<nldd-list-item><nldd-text-cell text="Box — item 2"></nldd-text-cell></nldd-list-item>
-				<nldd-list-item><nldd-text-cell text="Box — item 3"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Box (standaard: getinte achtergrond en rand), item 1"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Box, item 2"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Box, item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
 
 			<nldd-spacer size="32"></nldd-spacer>
 			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px; --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 				<nldd-list appearance="box-base">
-					<nldd-list-item><nldd-text-cell text='appearance="box-base" — item 1'></nldd-text-cell></nldd-list-item>
-					<nldd-list-item><nldd-text-cell text="op een al getinte pagina — item 2"></nldd-text-cell></nldd-list-item>
+					<nldd-list-item><nldd-text-cell text='appearance="box-base", item 1'></nldd-text-cell></nldd-list-item>
+					<nldd-list-item><nldd-text-cell text="op een al getinte pagina, item 2"></nldd-text-cell></nldd-list-item>
 					<nldd-list-item><nldd-text-cell text="item 3"></nldd-text-cell></nldd-list-item>
 				</nldd-list>
 			</div>
@@ -308,7 +308,7 @@ export const MetInteractieveRijen = {
 	`,
 };
 
-// — Type: navigation ——————————————————————————————————————————————————————————
+// Type: navigation
 
 export const Navigatie = {
 	render: () => {
@@ -385,7 +385,7 @@ export const NavigatieMetSubpaginas = {
 	},
 };
 
-// — Type: listbox ——————————————————————————————————————————————————————————————
+// Type: listbox
 
 // Shared imperative builder for the listbox stories: the consumer's filter
 // handler toggles [hidden] on items in response to the list's `input` event
@@ -521,7 +521,7 @@ export const ListboxEenvoudig = {
 };
 
 
-// — Reorderable ———————————————————————————————————————————————————————————————
+// Reorderable
 
 export const Herschikbaar = {
 	// Imperative render is intentional: the reorder handler needs to mutate
@@ -568,7 +568,7 @@ export const Herschikbaar = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zet `reorderable` op een lijst van type default om drag-and-keyboard reorder te activeren. De lijst dispatcht `reorder` met `{ fromIndex, toIndex }` — de consumer is verantwoordelijk voor het muteren van de DOM (of het datamodel).',
+				story: 'Zet `reorderable` op een lijst van type default om drag-and-keyboard reorder te activeren. De lijst dispatcht `reorder` met `{ fromIndex, toIndex }`. De consumer is verantwoordelijk voor het muteren van de DOM (of het datamodel).',
 			},
 		},
 	},
@@ -577,7 +577,7 @@ export const Herschikbaar = {
 
 
 
-// — Empty slot ————————————————————————————————————————————————————————————————
+// Empty slot
 
 export const Leeg = {
 	render: () => html`

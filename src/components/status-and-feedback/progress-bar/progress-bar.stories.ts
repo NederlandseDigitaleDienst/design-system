@@ -19,7 +19,7 @@ const ALL_COLORS = [...SEMANTIC_COLORS, ...RIJKSLEUREN];
  * `nldd-progress-bar` toont voortgang of een verdeling. Eén waarde of meerdere
  * segmenten. Twee varianten: `progress` (segmenten tellen op naar `max`, rest is
  * track) en `distribution` (segmenten verdelen het totaal, zoals
- * opslaggebruik). Geef ruwe getallen mee — wij berekenen percentages.
+ * opslaggebruik). Geef ruwe getallen mee. De percentages rekent het component zelf uit.
  */
 export default {
 	title: 'Components/Status & Feedback/Progress Bar',
@@ -231,7 +231,7 @@ export const VariantDistribution = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'In de `distribution`-variant zijn de segmenten categorieën die samen een totaal vormen (bijv. opslaggebruik), geen opeenvolgende voortgang. Ze meten tegen `max` — hier 350 van 500 GB, dus de rest blijft lege track. Gebruik Rijkshuisstijlkleuren om segmenten visueel te onderscheiden. Tooltips zijn per segment expliciet ingesteld om eenheden te tonen (GB) — zonder `tooltip-text` zou auto-tekst alleen `Foto\'s: 40%` tonen.',
+				story: 'In de `distribution`-variant zijn de segmenten categorieën die samen een totaal vormen (bijv. opslaggebruik), geen opeenvolgende voortgang. Ze meten tegen `max`: hier 350 van 500 GB, dus de rest blijft lege track. Gebruik Rijkshuisstijlkleuren om segmenten visueel te onderscheiden. Tooltips zijn per segment expliciet ingesteld om eenheden te tonen (GB). Zonder `tooltip-text` zou de auto-tekst alleen `Foto\'s: 40%` tonen.',
 			},
 		},
 	},
@@ -331,7 +331,7 @@ export const ZonderCaption = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `value-display="none"` verschijnt geen caption — alleen de balk. Handig voor inline gebruik.',
+				story: 'Met `value-display="none"` verschijnt geen caption, alleen de balk. Handig voor inline gebruik.',
 			},
 		},
 	},
