@@ -45,7 +45,10 @@ function hintSummary(results, root, explainRule) {
 	return lines;
 }
 
-export function formatText(results, { root, files, ms, skipped, loose, explainRule }) {
+/** `in 2 files`, and how many with our markup the linter could not read besides. */
+const inFiles = (files, unread) => `in ${plural(files, 'file')}${unread ? ` (${unread} not read)` : ''}`;
+
+export function formatText(results, { root, files, unread, ms, skipped, loose, explainRule }) {
 	const lines = [];
 	for (const { filename, source, findings } of results) {
 		const sourceLines = source.split('\n');
@@ -66,7 +69,7 @@ export function formatText(results, { root, files, ms, skipped, loose, explainRu
 	const warnings = count('warn');
 	const hints = count('hint') ? `, ${plural(count('hint'), 'hint')}` : '';
 	const known = (skipped ? dim(` (${skipped} in baseline)`) : '') + (loose ? dim(` (${loose} accepted no longer found: run --tighten-baseline)`) : '');
-	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')}${hints} in ${plural(files, 'file')} (${ms} ms)`;
+	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')}${hints} ${inFiles(files, unread)} (${ms} ms)`;
 	const fixable = all.filter(({ fix }) => fix).length;
 	const canFix = fixable ? `, ${fixable} fixable with --fix` : '';
 	lines.push(`${errors + warnings ? red('✖') : '✔'} ${summary}${known}${canFix}`);
@@ -74,7 +77,7 @@ export function formatText(results, { root, files, ms, skipped, loose, explainRu
 }
 
 /** A count per rule, most first: where to start when a project has hundreds. */
-export function formatStatistics(results, { files, ms, skipped }) {
+export function formatStatistics(results, { files, unread, ms, skipped }) {
 	const counts = new Map();
 	for (const { rule, severity, fix } of results.flatMap(({ findings }) => findings)) {
 		const entry = counts.get(rule) ?? { rule, severity, count: 0 };
@@ -88,7 +91,7 @@ export function formatStatistics(results, { files, ms, skipped }) {
 	return [
 		...rows.map(({ count, severity, rule, fixable }) => `${String(count).padStart(width)}  ${severity.padEnd(5)}  ${rule}${fixable ? '  [--fix]' : ''}`),
 		...(rows.length > 0 ? [''] : []),
-		`${plural(total, 'finding')} in ${plural(files, 'file')} (${ms} ms)${skipped ? ` (${skipped} in baseline)` : ''}`,
+		`${plural(total, 'finding')} ${inFiles(files, unread)} (${ms} ms)${skipped ? ` (${skipped} in baseline)` : ''}`,
 	].join('\n');
 }
 

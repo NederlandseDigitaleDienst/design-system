@@ -7,7 +7,14 @@ import { declarations, TOKEN_PREFIX } from './css.js';
 
 export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
-export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.tmpl', '.gohtml', '.vue', '.jsx', '.tsx', '.js'];
+export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.tmpl', '.gohtml', '.vue', '.astro', '.jsx', '.tsx', '.js'];
+
+/**
+ * Templates the linter has no parser for. A scan of a directory still opens them:
+ * one with `nldd-*` markup gets `file-not-read`, so a project in such a language
+ * does not read as checked and clean.
+ */
+export const UNREAD_EXTENSIONS = ['.svelte', '.php', '.twig', '.erb', '.ejs', '.hbs', '.handlebars', '.mustache', '.njk', '.liquid', '.cshtml', '.razor'];
 
 /** An app's own stylesheets: read for the tokens they name, and in full when the group pure is on. */
 export const STYLESHEET_EXTENSIONS = ['.css', '.scss', '.sass', '.less'];
