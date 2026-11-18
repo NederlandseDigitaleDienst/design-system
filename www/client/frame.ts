@@ -61,7 +61,8 @@ function draw(): void {
 	if (current.parameters.docs?.source?.code) return;
 	const scratch = document.createElement('div');
 	const silent: StoryContext = { args, updateArgs: () => {}, log: () => {} };
-	mount(withContext(silent, () => current.render(mapArgs(args, current.argTypes))), scratch);
+	const render = current.parameters.docs?.source?.render ?? current.render;
+	mount(withContext(silent, () => render(mapArgs(args, current.argTypes))), scratch);
 	applyOverrides(scratch);
 	tell({ type: 'source', code: sourceOf(scratch) });
 }

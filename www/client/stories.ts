@@ -34,7 +34,13 @@ export interface StoryParameters {
 	layout?: string;
 	controls?: { disable?: boolean; include?: string[] };
 	docs?: {
-		source?: { code?: string; language?: string; transform?: (code: string) => string };
+		source?: {
+			code?: string;
+			language?: string;
+			transform?: (code: string) => string;
+			/** The markup to show as code, when the example shows something else: a button that puts it on the page. */
+			render?: (args: Args) => Rendered;
+		};
 		story?: { inline?: boolean; height?: string | number; iframeHeight?: string | number };
 	};
 }

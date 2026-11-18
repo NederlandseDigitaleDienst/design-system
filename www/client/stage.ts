@@ -558,7 +558,8 @@ export class SiteStage extends HTMLElement {
 		const scratch = document.createElement('div');
 		const story = this.story;
 		const silent: StoryContext = { args: this.args, updateArgs: () => {}, log: () => {} };
-		mount(withContext(silent, () => story.render(mapArgs(this.args, story.argTypes))), scratch);
+		const render = story.parameters.docs?.source?.render ?? story.render;
+		mount(withContext(silent, () => render(mapArgs(this.args, story.argTypes))), scratch);
 		this.applyOverrides(scratch);
 		void this.setSource(sourceOf(scratch));
 	}
