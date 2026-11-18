@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.26.5](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.4...v0.26.5) (2026-11-18)
+
 ### Added
 
 - **`nldd lint` reads `.astro` files.** It reads the template under the frontmatter, with the elements inside `{cond && …}` and `{items.map(…)}`, and `--fix` renames in the source. An Astro site that runs `nldd lint` in CI was always green, because a scan skipped every `.astro` file: it now gets real findings, errors included. Run `npx @nldd/design-system lint --statistics` once to see them, and `--update-baseline` to accept what is there. `nldd lint dist` still adds what only a built page shows.
