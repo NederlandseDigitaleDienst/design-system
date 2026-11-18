@@ -20,6 +20,12 @@ here; consult the commit history if you need that level of detail.
 - **The documentation moved to [design.digitaledienst.overheid.nl](https://design.digitaledienst.overheid.nl), behind the landing page.** Every component, pattern and guideline has an address you can share: `/componenten/button/`, `/patronen/form/`, `/richtlijnen/`. The pages are built with the components they document, and Storybook is gone.
 - **Every live example stands on a stage.** The frame around an example has its own switch for light and dark and for the base and tinted surface. An example that needs a whole window, such as a page pattern, runs in one and can be made narrow.
 - **Every attribute has a control.** The controls under the first example of a component come from the component itself, with the values of its type.
+- **`nldd-popover` hides a title bar on md and up.** See Breaking.
+- **1 accessibility fix:** a popover no longer points its anchor at an id the anchor cannot see. See Fixed.
+
+### Breaking
+
+- **`nldd-popover` hides an `nldd-top-title-bar` in it on md and up.** Anchored beside its trigger, a popover closes with Escape or a click outside it, so the bar only matters on sm, where the popover is a bottom sheet. This holds for a bar anywhere in the popover, also in the header of an `nldd-page`. The bar in the pickers of `nldd-date-field` and in the overflow of `nldd-avatar-group` now shows on sm only, as it already did in `nldd-time-field`. Set `md-title-bar` on the popover to keep a bar whose dismiss button does what nothing else in the popover does. `nldd-sheet` always shows its bar.
 
 ### Added
 
@@ -35,6 +41,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **`nldd-popover` writes `aria-controls` only where its anchor can resolve it.** An anchor inside a shadow root, such as the button of an `nldd-token`, got the id of a popover in the light DOM, which an id reference cannot reach. A screen reader was pointed at nothing, and axe reported an invalid attribute value.
 - **`nldd-icon-button` in running text centers on the capitals beside it.** It sat on the baseline, so an `xs` button after a label stood higher than the words.
 
 ## [0.26.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.1...v0.26.2) (2026-11-17)

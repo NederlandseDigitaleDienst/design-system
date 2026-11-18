@@ -49,6 +49,8 @@ export const popoverStyles = css`
 		}
 
 		@media (min-width: ${mdMin}) {
+			--context-title-bar-display: none;
+
 			position: absolute;
 			inset: unset;
 			border-radius: var(--semantics-overlays-corner-radius);
@@ -68,6 +70,10 @@ export const popoverStyles = css`
 
 	:host([hidden]) {
 		display: none;
+	}
+
+	:host([md-title-bar]) {
+		--context-title-bar-display: initial;
 	}
 
 	/* # Elements */

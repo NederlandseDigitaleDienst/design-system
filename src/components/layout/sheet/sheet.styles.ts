@@ -23,6 +23,7 @@ export const sheetStyles = css`
 		   beside you is the way back. A sheet has no menu beside it, so a bar in
 		   here keeps its back button even when the pane it stands in hides one. */
 		--context-back-button-display: flex;
+		--context-title-bar-display: initial;
 
 		/* contents, not block: the sheet itself is a position:fixed <dialog>, so the
 		   host would only add an empty box. Left as a block it is a flex item like

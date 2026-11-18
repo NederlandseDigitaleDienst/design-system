@@ -54,9 +54,16 @@
  * with an nldd-top-title-bar and a `dismiss-text`. The popover catches the
  * dismiss of that bar and closes. It draws no bar itself.
  *
+ * On md and up that title bar is hidden: anchored beside its trigger, the
+ * popover closes with Escape or a click outside it and needs no bar to say
+ * what it is. This holds for an nldd-top-title-bar anywhere in the popover,
+ * also in the header of an nldd-page. Set `md-title-bar` to keep it there too.
+ * An nldd-sheet always shows its bar.
+ *
  * @element nldd-popover
  *
  * @attr {string} width - Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV.
+ * @attr {boolean} md-title-bar - Keeps an nldd-top-title-bar in the popover on md and up, where it is hidden by default. For a bar whose dismiss button does what nothing else in the popover does.
  * @attr {boolean} sm-full-height - On an sm viewport (where the popover renders as a bottom sheet) fills the whole available height instead of shrinking to its content. No effect on md and up (anchored mode). Opt-in for content-heavy cases such as search results or long detail views; content-sized is the default, following the Apple and Material convention.
  * @attr {string} anchor - ID of the trigger element, used for positioning
  * @attr {string} placement - Floating UI placement (default: 'bottom-start')
@@ -108,6 +115,9 @@ export class NLDDPopover extends LitElement {
 
 	@property({ type: Boolean, reflect: true, attribute: 'sm-full-height' })
 	smFullHeight = false;
+
+	@property({ type: Boolean, reflect: true, attribute: 'md-title-bar' })
+	mdTitleBar = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	anchor = '';
