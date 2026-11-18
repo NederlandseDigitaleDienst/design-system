@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.26.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.2...v0.26.3) (2026-11-18)
+
 ### Highlights
 
 - **The documentation moved to [design.digitaledienst.overheid.nl](https://design.digitaledienst.overheid.nl), behind the landing page.** Every component, pattern and guideline has an address you can share: `/componenten/button/`, `/patronen/form/`, `/richtlijnen/`. The pages are built with the components they document, and Storybook is gone.
