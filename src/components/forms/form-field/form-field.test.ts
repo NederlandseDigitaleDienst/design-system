@@ -1,5 +1,6 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, onTestFinished } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './form-field.js';
 import '../../inputs/text-field/text-field.js';
 import '../../inputs/password-field/password-field.js';
@@ -323,6 +324,18 @@ describe('nldd-form-field-help-text', () => {
 		el = await fixture('<nldd-form-field-help-text>Read <a href="/help">more</a>.</nldd-form-field-help-text>');
 		await waitForUpdate(el);
 		expect(el.querySelector('a')).not.toBeNull();
+	});
+
+	it('styles inline elements as nldd-text does', async () => {
+		const unloadTokens = loadTokens();
+		onTestFinished(unloadTokens);
+		el = await fixture(
+			'<nldd-form-field-help-text>Use <code>role</code>, <strong>never</strong> <em>this</em>.</nldd-form-field-help-text>',
+		);
+		await waitForUpdate(el);
+		expect(getComputedStyle(el.querySelector('code')!).fontFamily).not.toBe(getComputedStyle(el).fontFamily);
+		expect(getComputedStyle(el.querySelector('code')!).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+		expect(getComputedStyle(el.querySelector('em')!).fontStyle).toBe('italic');
 	});
 });
 

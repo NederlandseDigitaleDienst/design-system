@@ -1158,9 +1158,9 @@ A field around one input: its label, supporting label, optional badge, validatio
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Help text content. May contain inline elements including links. |
+| _(default)_ | Help text content. Inline elements in it look as they do in nldd-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. Only direct children get that styling: an element inside another (a `<code>` in an `<a>`) is left as it is. |
 
-**Plain HTML it styles:** `<a>`. `nldd lint --pure` reports plain HTML only where no component styles it.
+**Plain HTML it styles:** `<a>`, `<strong>`, `<b>`, `<em>`, `<i>`, `<code>`, `<mark>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-form-section>`
 

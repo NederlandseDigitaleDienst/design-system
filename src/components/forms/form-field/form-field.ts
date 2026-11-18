@@ -29,8 +29,8 @@
  *
  * @element nldd-form-field-help-text
  *
- * @slot - Help text content. May contain inline elements including links.
- * @accepts a
+ * @slot - Help text content. Inline elements in it look as they do in nldd-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. Only direct children get that styling: an element inside another (a `<code>` in an `<a>`) is left as it is.
+ * @accepts a, strong, b, em, i, code, mark
  *
  * ─────────────────────────────────────────────────────────────────────────
  *

@@ -21,6 +21,10 @@ here; consult the commit history if you need that level of detail.
 - **Every live example stands on a stage.** The frame around an example has its own switch for light and dark and for the base and tinted surface. An example that needs a whole window, such as a page pattern, runs in one and can be made narrow.
 - **Every attribute has a control.** The controls under the first example of a component come from the component itself, with the values of its type.
 
+### Added
+
+- **`nldd-form-field-help-text` styles inline elements as `nldd-text` does.** `<strong>` and `<b>` are bold, `<em>` and `<i>` italic, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. This works for elements placed directly in the help text, without a global stylesheet.
+
 ### Changed
 
 - **A finding of `nldd lint` links to the website.** The address after a rule that points at a pattern or a guideline is now `https://design.digitaledienst.overheid.nl/patronen/form/` where it was a Storybook address.
