@@ -16,17 +16,8 @@ syncToolbarOverflow();
 
 /**
  * `nldd-bar-split-view` is een verticale layout met een main-gebied en een
- * onbeperkt aantal balkpanelen. Geef elke balk een unieke slotnaam (bijv.
- * slot="toolbar", slot="status-bar"). Het main-paneel gebruikt altijd slot="main".
- *
- * Balken staan op elke viewport in de flow en stapelen verticaal. Er komt
- * alleen een scheidingslijn waar het main-paneel aan een balk grenst — direct
- * boven en/of onder main, óók op sm. Tussen twee gestapelde balken aan dezelfde
- * kant komt nooit een lijn, zodat bijv. een toolbar en tab-bar één geheel vormen.
- * De consument hoeft zelf geen dividers te plaatsen of te onderdrukken.
- *
- * Gebruik sm-order, md-order en lg-order om de volgorde per breekpunt te bepalen.
- * Zonder orderattributen wordt DOM-volgorde gebruikt.
+ * onbeperkt aantal balkpanelen erboven en eronder. Gebruik hem voor een scherm
+ * met een werkbalk, tabbalk of statusbalk rond de inhoud.
  *
  * ## Gebruik
  * ```html

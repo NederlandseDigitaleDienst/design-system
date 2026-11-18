@@ -14,13 +14,10 @@ const SAMPLE_SRCSET = [480, 960, 1600].map((width) => `${sampleImage(`butterfly-
 const SAMPLE_LQIP = '28,28,164,164,106,170,99';
 
 /**
- * `nldd-image` is een gestylede wrapper rond `<img>` met de tokens van het designsysteem voor radius,
- * achtergrond en caption. Reserveert ruimte via `aspect-ratio` om layout-shift
- * te voorkomen tijdens het laden. Voor avatars: `shape="circle"` met
- * `aspect-ratio="1/1"`.
- *
- * Slot je eigen `<img>` of `<picture>` (bv. met art-direction sources) in de
- * default slot om de interne fallback te overschrijven.
+ * `nldd-image` toont een afbeelding met de afronding, de achtergrond en het
+ * onderschrift van het designsysteem. Gebruik het voor een foto of illustratie
+ * in een pagina. Met `aspect-ratio` houdt het de ruimte vrij, zodat de pagina
+ * niet verspringt terwijl de afbeelding laadt.
  */
 export default {
 	title: 'Components/Content/Image',
@@ -182,6 +179,11 @@ export const MetCaption = {
 	},
 };
 
+/**
+ * Met `shape="circle"` en `aspect-ratio="1/1"` wordt de afbeelding rond. Gaat het om
+ * een persoon of organisatie, gebruik dan `nldd-avatar`: die valt terug op de
+ * initialen als de afbeelding niet laadt.
+ */
 export const Vormen = {
 	render: () => html`
 		<nldd-container

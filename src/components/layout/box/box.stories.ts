@@ -12,10 +12,6 @@ import '../../actions/button/button.js';
  * zodat gebruikers hun samenhang in één oogopslag begrijpen.
  *
  * ## Gebruik
- * De box tekent alleen het vlak: hij heeft zelf geen padding, net als nldd-card.
- * Zet er een nldd-container in en laat die de inspringing bepalen, zodat één
- * component overal over spacing gaat.
- *
  * ```html
  * <nldd-box>
  *   <nldd-container padding="16">

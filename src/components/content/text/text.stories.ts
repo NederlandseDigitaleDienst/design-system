@@ -2,16 +2,10 @@ import { html, nothing } from 'lit';
 import './text.js';
 
 /**
- * `nldd-text` is één stuk lopende tekst op een maat uit de typografieschaal. Dit is wat je pakt
- * waar een app anders een kale `<p>` neerzet en de typografie erft van wat de
- * pagina toevallig instelt: een regel onder een titel, een zin in een paneel,
- * een onderschrift.
- *
- * Elke combinatie die je kunt zetten bestaat al als token, dus het component kan
- * geen eigen typografie verzinnen; het benoemt alleen wat de schaal heeft.
- *
- * Niet voor koppen, dat is `nldd-title`, en niet voor een blok proza met eigen
- * ritme, afstanden en breedtes voor media, dat is `nldd-rich-text`.
+ * `nldd-text` is één stuk lopende tekst op een maat uit de typografieschaal. Je
+ * pakt hem waar een app anders een kale `<p>` neerzet: een regel onder een
+ * titel, een zin in een paneel, een onderschrift. Voor koppen is er
+ * `nldd-title`, voor een blok proza `nldd-rich-text`.
  *
  * ## Gebruik
  * ```html

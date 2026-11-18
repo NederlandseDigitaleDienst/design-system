@@ -15,17 +15,6 @@ import '../../content/title/title.js';
  * ```html
  * <nldd-top-title-bar text="Paginatitel"></nldd-top-title-bar>
  * ```
- *
- * ## Compact stand
- * De component schakelt automatisch naar de compacte stand (`is-compact`) zodra
- * de bovenkant van het ankerelement de bovenkant van de scrollcontainer bereikt.
- * Stel `collapse-anchor` in op het id van het titelelement in de pagina-inhoud.
- *
- * ## Terugknop
- * In de standaard stand: tekstknop met `back-text`. In de compacte stand: icoonknop.
- *
- * ## Sluitknop
- * Stel `dismiss-text` in op 'Sluit', 'Annuleer' of 'Klaar'.
  */
 export default {
 	title: 'Components/Navigation/Top Title Bar',
@@ -141,6 +130,9 @@ export const Compact = {
 },
 };
 
+/**
+ * De sluitknop zegt wat sluiten doet: "Sluit", "Annuleer" of "Klaar".
+ */
 export const MetSluitknop = {
 	render: Template,
 	args: { text: 'Wijziging doorgeven', dismissText: 'Sluit' },
@@ -230,7 +222,7 @@ export const MetTitelAnker = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Automatische compacte stand via <code>collapse-anchor</code>.',
+				story: 'Met <code>collapse-anchor</code> op het id van de titel in de inhoud schakelt de balk naar de compacte stand zodra die titel onder de balk schuift.',
 			},
 	},
 },

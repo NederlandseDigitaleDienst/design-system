@@ -5,12 +5,9 @@ import '../../layout/spacer/spacer.js';
 import '../../layout/container/container.js';
 
 /**
- * `nldd-title` toont een paginatitel of sectietitel, met een optionele
- * overline, ondertitel en acties. De titel geef je mee met `text`,
- * en `heading-level` bepaalt welke kop het is. Het niveau bepaalt ook de
- * grootte: een h2 is `display-2`. Met `size` kies je een andere grootte, zoals
- * voor een sectiekop die kleiner moet dan zijn plek. Zonder niveau is de titel
- * geen kop en toont hij als gewone tekst, wat `size` ook zegt.
+ * `nldd-title` toont een paginatitel of sectietitel, met een optionele overline,
+ * ondertitel en een actie aan het eind van de regel. Gebruik hem bovenaan een
+ * pagina, een paneel of een sectie.
  *
  * ## Gebruik
  * ```html
@@ -23,11 +20,6 @@ import '../../layout/container/container.js';
  *   <nldd-button slot="end" text="Actie"></nldd-button>
  * </nldd-title>
  * ```
- *
- * Is de titel meer dan tekst, zoals een link, zet hem dan in de standaardslot
- * met een eigen h1–h6. Die neemt de plaats in van `text`, en zijn niveau bepaalt
- * de grootte. Voor `overline` en
- * `supporting-text` werkt het net zo, met een slot van dezelfde naam.
  */
 export default {
 	title: 'Components/Content/Title',

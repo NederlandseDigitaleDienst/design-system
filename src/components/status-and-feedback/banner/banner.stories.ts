@@ -9,10 +9,6 @@ import '../../layout/container/container.js';
  * `nldd-banner` toont een persistente, inline notificatie met een getinte
  * achtergrond per variant. Gebruik voor pagina-niveau feedback zoals
  * een foutmelding aan de bovenkant van een formulier.
- *
- * `role`, `aria-live` en `aria-atomic` worden automatisch op basis van de
- * variant gezet (critical → `role="alert"`, overige → `role="status"` met
- * `aria-live="polite"`). Voeg deze niet zelf toe.
  */
 export default {
 	title: 'Components/Status & Feedback/Banner',

@@ -12,28 +12,9 @@ import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * `nldd-table` toont data in uitgelijnde kolommen. Het is altijd een box (afgeronde
- * hoeken, rand, base of tinted vulling); de inhoud wordt uitgelijnd via een CSS
- * grid + subgrid. Dividers lopen full-bleed tot de zijkanten; de inline-padding
- * zit op de rijen en springt alleen de cel-inhoud in.
- *
- * ## Kolombreedtes — één keer, zoals een HTML-tabel
- * Definieer de kolommen één keer op de table via het `columns`-attribuut: een
- * CSS grid track list, bv. `columns="minmax(200px,1fr) 120px 80px"`. Elke rij
- * gebruikt `grid-template-columns: subgrid` en lijnt zo uit op die kolommen.
- *
- * ## Rijen en cellen
- * Rijen zijn `<nldd-table-row>`-elementen; de inhoud zijn de bestaande
- * `nldd-cell`-componenten (één per kolom). Een generieke `nldd-cell` krijgt
- * automatisch `width="full"` zodat hij zijn kolom vult.
- *
- * ## Header
- * Zet één `<nldd-table-row slot="header">` in de `header`-slot. De cellen
- * worden kolomkoppen (`role="columnheader"`).
- *
- * ## Selectie & sortering
- * Bewust niet ingebouwd: voeg zelf een kolom met `nldd-cell` + `nldd-checkbox`
- * toe voor selectie, en stuur sortering aan met een externe control.
+ * `nldd-table` toont data in uitgelijnde kolommen, in een afgebakend vlak. Gebruik
+ * hem voor gegevens die je per rij vergelijkt, zoals een overzicht van aanvragen
+ * met hun status. Elke rij is een `nldd-table-row` met een cel per kolom.
  */
 export default {
 	title: 'Components/Lists & Tables/Table',
@@ -127,6 +108,10 @@ const Template = ({ background, columns, smColumns, mdColumns, lgColumns, access
 	</nldd-table>
 `;
 
+/**
+ * De kolombreedtes zet je één keer op de tabel met `columns`, zoals bij een
+ * HTML-tabel. Elke rij lijnt uit op die kolommen.
+ */
 export const Standaard = {
 	render: Template,
 };

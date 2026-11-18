@@ -4,12 +4,10 @@ import { ICONS } from './../icon/icon.js';
 import '../../layout/container/container.js';
 
 /**
- * `nldd-tag` is een compact kenmerk dat aan iets is toegekend: een categorie, een type,
- * een rol, een keurmerk. Wat er staat verandert pas als iemand de inhoud wijzigt,
- * en een tag is niet interactief.
- *
- * Een toestand die het systeem bijhoudt ("Actief", "Verlopen") is een `nldd-badge`.
- * Kan de gebruiker het weghalen of erop klikken, dan is het een `nldd-token`.
+ * `nldd-tag` is een kenmerk dat aan iets is toegekend: een categorie, een type,
+ * een rol of een keurmerk. Een tag is niet interactief. Een toestand die het
+ * systeem bijhoudt ("Actief", "Verlopen") is een `nldd-badge`. Kan de gebruiker
+ * het weghalen of erop klikken, dan is het een `nldd-token`.
  *
  * ## Gebruik
  * ```html

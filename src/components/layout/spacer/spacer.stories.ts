@@ -27,19 +27,11 @@ const SIZE_OPTIONS = [
 ];
 
 /**
- * `nldd-spacer` maakt ruimte tussen elementen.
- * Componenten in dit designsysteem hebben geen eigen margins: alle witruimte
- * wordt expliciet bepaald met een spacer. Dat maakt de ruimte zichtbaar en
- * aanpasbaar zonder de componenten zelf te wijzigen.
- *
- * Gebruik een spacer **tussen verschillende types componenten**: tussen een knop
- * en een tekstveld, tussen een titel en een lijst, of tussen secties onderling.
- * Zo houd je componenten herbruikbaar en onafhankelijk van hun context.
- *
- * Kies een **vaste grootte** voor ruimte die altijd gelijk blijft, override per
- * breakpoint met `sm-size` / `md-size` / `lg-size` als de ruimte met de viewport
- * mee moet bewegen, of gebruik **flexible** om een element naar het andere
- * uiteinde van een rij te duwen.
+ * `nldd-spacer` maakt ruimte tussen elementen. Componenten in dit designsysteem
+ * hebben geen eigen margins, dus alle witruimte zet je expliciet. Gebruik een
+ * spacer tussen verschillende soorten componenten: tussen een titel en een lijst,
+ * of tussen secties onderling. Zo houd je componenten herbruikbaar en onafhankelijk
+ * van hun context.
  *
  * ## Gebruik
  * ```html

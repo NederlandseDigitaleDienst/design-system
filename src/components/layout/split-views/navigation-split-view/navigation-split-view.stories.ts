@@ -9,11 +9,9 @@ import '../../../navigation/top-title-bar/top-title-bar.js';
 
 /**
  * `nldd-navigation-split-view` is voor een vierkoloms navigatiepatroon met
- * een zijbalk, secundaire zijbalk, inhoudsgebied en inspecteur.
- *
- * Gebruik <code>nldd-split-view-pane</code> als directe kinderen. De split view stelt
- * automatisch <code>hide-back</code> in op elk paneel op basis van de beschikbare ruimte.
- * Panelen worden automatisch getoond wanneer inhoud in de bijbehorende slot wordt geplaatst.
+ * een zijbalk, secundaire zijbalk, inhoudsgebied en inspecteur. Gebruik hem
+ * voor een app waarin je vanuit navigatie en een lijst een item opent en de
+ * details ervan ernaast bekijkt.
  *
  * ## Gebruik
  * ```html

@@ -8,16 +8,10 @@ import '../../layout/spacer/spacer.js';
 import '../../layout/popover/popover.js';
 
 /**
- * `nldd-link` werkt in twee modi:
- *
- * - **Sized** (`size="xs|sm|md|lg"`) — standalone link met vaste tekstgrootte,
- *   ondersteunt icons. Voor menu's, actiegebieden, overzichten.
- * - **Inherit** (geen `size`) — erft font-size, line-height en font-family van
- *   omgeving. Tekst wraps natuurlijk over regels. Voor links in lopende tekst,
- *   custom layouts of cells.
- *
- * Voor links in HTML-content (CMS, markdown) blijft `<nldd-rich-text>` met raw
- * `<a>` de juiste route — die styled `a` selectors via globale CSS.
+ * `nldd-link` is een link naar een andere pagina, los of in lopende tekst. Met
+ * `size` staat hij op zichzelf, in een menu of een overzicht. Zonder `size`
+ * neemt hij de tekst eromheen over. Komt de link als HTML uit een CMS of
+ * markdown, gebruik dan `nldd-rich-text` met een gewone `<a>`.
  *
  * ## Gebruik
  * ```html

@@ -3,28 +3,11 @@ import './status-bar.js';
 import '../../layout/container/container.js';
 
 /**
- * `nldd-status-bar` is een smalle, paginabrede balk (24px) met een diepe
- * achtergrondkleur per variant. Gebruik voor persistente systeemtoestand:
- * een storing, gepland onderhoud, een conceptweergave of een lopende opname.
- *
- * De balk ondersteunt alleen tekst en toont bewust geen icoon. Laat de tekst
- * zelf de status benoemen ("Storing: …", "Gepland onderhoud …"), zodat de
- * betekenis niet alleen uit kleur volgt.
- *
- * Houd de tekst kort: de balk toont één regel en kapt af met ellipsis, zeker
- * op smallere schermen. Heb je een lang bericht met veel informatie, zet dan
- * alleen de kern in de balk en verwijs naar een losse pagina of sheet waar de
- * gebruiker verder kan lezen (bijvoorbeeld door de balk een `href` of `button`
- * te geven).
- *
- * De hele balk kan klikbaar zijn: zet `href` (link) of `button` (button;
- * luister naar `click`). Er verschijnt dan een chevron als affordance.
- * Maximaal één actie per balk — meer acties of links in lopende tekst horen
- * in een `nldd-banner`.
- *
- * `role`, `aria-live` en `aria-atomic` worden automatisch op basis van de
- * variant gezet (critical → `role="alert"`, overige → `role="status"` met
- * `aria-live="polite"`). Voeg deze niet zelf toe.
+ * `nldd-status-bar` is een smalle balk boven de hele app die de toestand van de
+ * dienst meldt: een storing, gepland onderhoud, een conceptweergave of een
+ * lopende opname. De balk toont alleen tekst, dus die tekst benoemt zelf de
+ * status ("Storing: …"). Heb je meer te zeggen, of meer dan één actie, gebruik
+ * dan een `nldd-banner`.
  */
 export default {
 	title: 'Components/Status & Feedback/Status Bar',
@@ -123,6 +106,10 @@ export const AlleVarianten = {
 	parameters: { controls: { disable: true } },
 };
 
+/**
+ * Met `href` wordt de hele balk een link naar de plek waar de gebruiker verder
+ * leest, met een chevron erachter.
+ */
 export const AlsLink = {
 	render: () => html`
 		<nldd-status-bar

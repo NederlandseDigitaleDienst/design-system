@@ -3,8 +3,9 @@ import './keyboard-shortcut.js';
 import '../../layout/container/container.js';
 
 /**
- * `nldd-keyboard-shortcut` toont een toetsencombinatie in één gecombineerde
- * container, bijvoorbeeld naast een menu-item of als hint bij een actie.
+ * `nldd-keyboard-shortcut` toont een toetsencombinatie, bijvoorbeeld naast een
+ * menu-item of als hint bij een actie. Per besturingssysteem kun je een eigen
+ * combinatie meegeven.
  *
  * ## Gebruik
  * ```html
@@ -18,9 +19,6 @@ import '../../layout/container/container.js';
  *   linux-keys="Ctrl+K"
  * ></nldd-keyboard-shortcut>
  * ```
- *
- * Het component picks zelf de juiste set op basis van de gedetecteerde OS,
- * met `keys` als fallback voor onbekende platforms.
  */
 export default {
 	title: 'Components/Content/Keyboard Shortcut',

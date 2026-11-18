@@ -10,35 +10,10 @@ import '../../actions/button-group/button-group.js';
 import '../../layout/container/container.js';
 
 /**
- * `nldd-multi-line-text-field` is een meerregelig tekstveld op basis van
- * het native `<textarea>` element. Voor enkele regels: zie `nldd-text-field`.
- *
- * ### Validatie
- * Zet `valid` of `invalid` om het bijbehorende validatie-icoon en de
- * randkleur te tonen.
- *
- * ```html
- * <nldd-multi-line-text-field valid></nldd-multi-line-text-field>
- * <nldd-multi-line-text-field invalid></nldd-multi-line-text-field>
- * ```
- *
- * ### Hoogte en resize
- * Met `rows` zet je de initiële (en minimum) hoogte in regels. Het
- * `resize` attribuut bepaalt hoe het veld kan groeien:
- *
- * - `vertical` (default): gebruiker mag verticaal slepen
- * - `auto`: groeit automatisch mee met de inhoud (`field-sizing: content`)
- * - `none`: vaste hoogte, geen handle
- *
- * ```html
- * <nldd-multi-line-text-field resize="vertical"></nldd-multi-line-text-field>
- * <nldd-multi-line-text-field resize="auto"></nldd-multi-line-text-field>
- * <nldd-multi-line-text-field resize="none"></nldd-multi-line-text-field>
- * ```
- *
- * ### Size
- * Gebruik `size="sm"` voor de compacte variant. Wordt automatisch gezet
- * door `nldd-form-field` via diens `size` attribuut.
+ * `nldd-multi-line-text-field` is een tekstveld van meer regels, op basis van
+ * een native `<textarea>`. Gebruik het voor een toelichting, een notitie of een
+ * bericht. Zet het in een `nldd-form-field`, dat het label en de maat regelt.
+ * Voor één regel is er `nldd-text-field`.
  */
 export default {
 	title: 'Components/Inputs/Multi-line Text Field',
@@ -257,7 +232,7 @@ export const Grootten = {
  * `field-sizing: content`), zonder sleep-handvat. Het ingestelde aantal `rows`
  * blijft daarbij de ondergrens: het veld wordt nooit korter dan dat aantal
  * regels, maar groeit er wel voorbij. Hieronder een veld met `rows="2"` naast
- * één met `rows="5"` — beide groeien mee, maar starten op hun eigen minimum.
+ * één met `rows="5"`. Beide groeien mee, maar starten op hun eigen minimum.
  */
 export const Meegroeiend = {
 	name: 'Meegroeiend (resize="auto")',

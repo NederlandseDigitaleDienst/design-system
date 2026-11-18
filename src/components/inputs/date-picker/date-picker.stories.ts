@@ -3,20 +3,9 @@ import { html, nothing } from 'lit';
 import './date-picker.js';
 
 /**
- * `nldd-date-picker` is de kalender waarin een datum of een periode wordt gekozen.
- * Het component staat op zichzelf (inline op een pagina of in een filterpaneel) of
- * wordt door `nldd-date-field` in een popover getoond. Alles is ISO (`jjjj-mm-dd`):
- * zonder `range` in `value`, met `range` in `start` en `end`. `min` en `max` nemen
- * een ISO-datum of `today` met een optionele verschuiving (`d`, `w`, `m`, `y`), zodat
- * een grens niet veroudert zoals een vaste datum, en losse dagen blokkeer je met de
- * property `isDateUnavailable`, bijvoorbeeld voor weekenden of feestdagen; die
- * blijven met het toetsenbord bereikbaar zodat een pijltjestoets geen reeks stil
- * overslaat.
- *
- * Pijltjes verplaatsen per dag en per week, `Home` en `End` naar de weekgrenzen,
- * `PageUp` en `PageDown` per maand en met `Shift` per jaar; `Enter` en spatie kiezen.
- * De maandtitel is een live region, zodat een schermlezer bij het bladeren hoort in
- * welke maand de focus staat.
+ * `nldd-date-picker` is de kalender waarin je een datum of een periode kiest. Hij
+ * staat op zichzelf, inline op een pagina of in een filterpaneel. In een
+ * formulier gebruik je `nldd-date-field`, dat deze kalender in een popover toont.
  */
 export default {
 	title: 'Components/Inputs/Date Picker',
@@ -161,6 +150,11 @@ export const Geboortedatum = () => html`
 	></nldd-date-picker>
 `;
 
+/**
+ * `min` en `max` nemen ook `today`, met een verschuiving in dagen, weken,
+ * maanden of jaren (`d`, `w`, `m`, `y`). Hier kan het vanaf vandaag tot drie
+ * maanden vooruit. Zo'n grens veroudert niet, een vaste datum wel.
+ */
 export const AfspraakPlannen = () => html`
 	<nldd-date-picker
 		accessible-label="Datum van de afspraak"
@@ -170,6 +164,10 @@ export const AfspraakPlannen = () => html`
 	></nldd-date-picker>
 `;
 
+/**
+ * Losse dagen blokkeer je met de property `isDateUnavailable`, hier de
+ * weekenden. Ze blijven zichtbaar en bereikbaar, maar je kunt ze niet kiezen.
+ */
 export const ZonderWeekenden = () => {
 	const picker = document.createElement('nldd-date-picker');
 	picker.accessibleLabel = 'Werkdag';

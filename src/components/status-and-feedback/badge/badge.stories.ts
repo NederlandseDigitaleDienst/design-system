@@ -10,11 +10,9 @@ const COLORS = [...SEMANTIC_COLORS, 'content'];
 /**
  * `nldd-badge` toont de toestand van iets, of hoeveel er van iets is. Wat er staat
  * bepaalt het systeem, niet de gebruiker, en het verandert zonder dat iemand het
- * aanraakt. Een badge is nooit interactief.
- *
- * Met `number` of `text` toont hij een waarde; zonder waarde verschijnt een stip.
- * Gaat het om een kenmerk dat iemand heeft toegekend, dan is het een
- * `nldd-tag`; om zelfstandige data die de gebruiker hanteert, een `nldd-token`.
+ * aanraakt. Een badge is nooit interactief. Gaat het om een kenmerk dat iemand
+ * heeft toegekend, dan is het een `nldd-tag`. Gaat het om zelfstandige data die
+ * de gebruiker hanteert, dan is het een `nldd-token`.
  *
  * ## Gebruik
  * ```html

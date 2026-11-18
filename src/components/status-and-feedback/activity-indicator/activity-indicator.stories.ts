@@ -5,24 +5,10 @@ import '../../layout/container/container.js';
 import '../../content/rich-text/rich-text.js';
 
 /**
- * `nldd-activity-indicator` is een layout placeholder die de beschikbare ruimte
- * vult en een indeterminate activity indicator centreert. Standaard is dat een eenvoudige, icoon-grote
- * cirkel in `--context-content-color`, de tekstkleur die het vlak, de knop of
- * de rij eromheen zet.
- *
- * Standaard verschijnt de indicator pas na 1000ms (`timing="delay"`) zodat
- * korte laad-acties niet onnodig flashen. `timing="instant"` toont hem direct
- * — de fade-in speelt nog steeds. Componenten zoals `nldd-button` gebruiken
- * `instant` voor hun loading-state.
- *
- * Standaard zonder label (`show-text` uit); de tekst voedt wél de accessible
- * name. Weet je hoe ver het laden is, gebruik dan `nldd-progress-bar` of
- * `nldd-progress-circle`.
- *
- * Overlay-modus: zet content in de default slot en de indicator wordt de
- * container eromheen — de spinner (en optionele backdrop) komt erover en de
- * content wordt `inert` (knoppen niet focusbaar of klikbaar) zolang er geladen
- * wordt. Schakel met `complete` (`?complete=${!isLoading}`).
+ * `nldd-activity-indicator` laat zien dat er iets laadt, zonder te zeggen hoe
+ * lang het nog duurt. Hij vult de plek waar straks de inhoud staat, of legt
+ * zich over inhoud die tijdens het laden niet te gebruiken is. Weet je hoe ver
+ * het laden is, gebruik dan `nldd-progress-bar` of `nldd-progress-circle`.
  */
 export default {
 	title: 'Components/Status & Feedback/Activity Indicator',
@@ -158,6 +144,10 @@ export const VolgtDeContext = {
 	},
 };
 
+/**
+ * Standaard wacht de indicator een seconde voor hij verschijnt. Laden dat
+ * korter duurt, laat zo niets flitsen.
+ */
 export const VertraagdTonen = {
 	name: 'Vertraagd tonen (timing="delay")',
 	render: () => html`

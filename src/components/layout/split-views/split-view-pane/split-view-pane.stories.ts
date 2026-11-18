@@ -8,13 +8,8 @@ import '../../../navigation/top-title-bar/top-title-bar.js';
 
 /**
  * `nldd-split-view-pane` is een eenvoudige paneel-container voor gebruik
- * binnen split views. De split view stelt automatisch `mode` en
- * `hide-back` in op basis van de beschikbare ruimte en de paneelconfiguratie.
- *
- * De consumer stelt `has-content` in en plaatst een `nldd-page`
- * met een `nldd-top-title-bar` binnenin. Wanneer `hide-back` actief is,
- * verbergt het paneel automatisch de terugknop via de `--context-back-button-display`
- * CSS-variabele.
+ * binnen split views. Zet er een `nldd-page` met een `nldd-top-title-bar` in.
+ * De split view bepaalt per paneel of de terugknop zichtbaar is.
  *
  * ## Gebruik
  * ```html

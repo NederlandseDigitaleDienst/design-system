@@ -8,12 +8,11 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
 /**
- * `nldd-form-section` groepeert form-velden visueel met een heading en
- * optionele supporting text. Rendert intern als `<fieldset>` + `<legend>`
- * voor semantische correctheid.
- *
- * De heading staat altijd links uitgelijnd over de volledige breedte —
- * ook als form-velden binnenin `label-alignment="right"` gebruiken.
+ * `nldd-form-section` groepeert bij elkaar horende velden in een formulier,
+ * met een kop en een korte toelichting. Gebruik het als een formulier uit
+ * duidelijke delen bestaat, zoals persoonsgegevens en een adres. Het rendert
+ * een echte `<fieldset>` met `<legend>`, zodat een schermlezer de naam van de
+ * groep noemt.
  */
 export default {
 	title: 'Components/Forms/Form Section',
@@ -65,6 +64,10 @@ export const Standaard = {
 	render: Template,
 };
 
+/**
+ * De kop staat altijd links, over de volle breedte. Ook als de velden erin
+ * `label-alignment="right"` hebben.
+ */
 export const InEenFormulier = {
 	render: () => html`
 		<nldd-form

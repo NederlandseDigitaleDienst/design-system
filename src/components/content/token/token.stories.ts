@@ -7,12 +7,10 @@ import '../text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * `nldd-token` is zelfstandige data waar de gebruiker mee werkt: een persoon in een
- * adresveld, een actieve filterwaarde. Als enige van de drie kun je hem bedienen,
- * dus hij is optioneel verwijderbaar of interactief via een contextueel menu.
- *
- * Lees je het alleen maar, kijk dan naar `nldd-tag` voor een toegekend kenmerk of
- * `nldd-badge` voor een toestand of aantal dat het systeem bijhoudt.
+ * `nldd-token` is data waar de gebruiker mee werkt, zoals een persoon in een
+ * adresveld of een actieve filterwaarde. Je kunt hem verwijderen of er een menu
+ * mee openen. Lees je het alleen, dan is het een `nldd-tag` voor een toegekend
+ * kenmerk of een `nldd-badge` voor een toestand.
  *
  * ## Gebruik
  * ```html

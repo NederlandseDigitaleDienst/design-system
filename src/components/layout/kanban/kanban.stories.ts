@@ -16,21 +16,7 @@ import '../../actions/menu/menu.js';
  * verplaatst: een kanbanbord, of elk bord waar de kolom van een kaartje een
  * van zijn waarden is, zoals een status of een team.
  *
- * Een kaartje verplaats je op drie manieren, en alle drie geven hetzelfde
- * `move`-event:
- *
- * - **Slepen.** Pak het hele kaartje. Een klik zonder beweging blijft een klik.
- *   Op een touchscreen hou je het kaartje even vast voor het loskomt, zodat vegen
- *   blijft scrollen.
- * - **Toetsenbord.** Met de focus op een kaartje verplaatst Alt met pijl omhoog
- *   of omlaag het binnen de kolom, en Alt met pijl links of rechts naar de kolom
- *   ernaast.
- * - **`moveItem()`.** Voor wie niet kan slepen (WCAG 2.5.7): geef elk kaartje
- *   een menu "Verplaatsen naar" en roep `moveItem()` aan. Het menu maak je zelf.
- *
- * Het bord verplaatst zelf niets. Je app verplaatst het kaartje in de handler
- * van `move`, in zijn data of in de DOM.
- *
+ * ## Gebruik
  * ```js
  * board.addEventListener('move', (event) => {
  *   const { fromColumn, fromIndex, toColumn, toIndex } = event.detail;

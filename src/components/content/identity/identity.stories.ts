@@ -7,19 +7,10 @@ import '../../layout/container/container.js';
 import { VERMEER } from '../../../docs/story-portraits.js';
 
 /**
- * `nldd-identity` toont auteurs of redacteuren van content: optionele avatar(s),
- * een naamregel en ondersteunende tekst (bijvoorbeeld rol of datum). Alle
- * onderdelen zijn optioneel.
- *
- * Eén avatar slot je als `<nldd-avatar slot="avatars">` (of een `<img>`) en
- * krijgt zijn maat van identity; bij meerdere slot je een
- * `<nldd-avatar-group slot="avatars">` eromheen, die het overlappen en de ring
- * verzorgt. Zonder afbeelding valt een `nldd-avatar`
- * terug op de initialen uit `name`. Staat de identity op een gekleurde
- * ondergrond, geef die kleur dan door via `--context-background-color`
- * zodat de ring
- * meekleurt. Zet `decorative` op de avatars wanneer de namen al in de tekst
- * staan.
+ * `nldd-identity` toont wie iets schreef of bewerkte: een of meer avatars, een
+ * naamregel en ondersteunende tekst, zoals een rol of een datum. Gebruik het
+ * boven of onder een artikel, een notitie of een bericht. Elk onderdeel is
+ * optioneel.
  */
 export default {
 	title: 'Components/Content/Identity',

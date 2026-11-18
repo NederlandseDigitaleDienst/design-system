@@ -9,15 +9,9 @@ import { VERMEER } from '../../../docs/story-portraits.js';
 const SIZES: AvatarSize[] = ['24', '32', '40', '48', '64', '96'];
 
 /**
- * `nldd-avatar` toont één persoon of organisatie. De inhoud volgt een vaste
- * terugvalketen: een afbeelding wanneer `src` laadt, anders de initialen (uit
- * `initials` of afgeleid uit `name`), en anders een terugval-icoon.
- *
- * `type` bepaalt de vorm en het terugval-icoon: `person` geeft een cirkel met
- * een person-icoon, `organization` een afgeronde vierkant met een
- * building-icoon. Zet `decorative` wanneer de naam er al als tekst naast
- * staat (bijvoorbeeld in een identity), zodat de avatar voor hulpsoftware
- * verborgen blijft.
+ * `nldd-avatar` toont één persoon of organisatie in een kleine ronde of
+ * afgeronde vorm, naast een naam, in een lijst of in een `nldd-identity`. Laadt
+ * de afbeelding niet of is er geen, dan toont hij de initialen of een icoon.
  */
 export default {
 	title: 'Components/Content/Avatar',

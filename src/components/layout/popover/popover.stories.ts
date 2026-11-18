@@ -13,8 +13,9 @@ import '../../content/text/text.js';
 
 /**
  * `nldd-popover` is een zwevend paneel dat niet modaal is, verankerd aan een
- * trigger-element.
- * Gebouwd op de native Popover API met Floating UI voor positionering.
+ * trigger-element. Gebruik hem voor korte informatie of een paar keuzes bij een
+ * knop. Inhoud die niet mag sluiten bij een klik ernaast, zoals een formulier,
+ * hoort in een `nldd-sheet`.
  *
  * ## Gebruik
  * ```html
@@ -32,11 +33,6 @@ import '../../content/text/text.js';
  *   </nldd-container>
  * </nldd-popover>
  * ```
- *
- * Klikken op het anchor-element opent of sluit de popover (toggle). Esc en
- * klik buiten sluiten ook (native popover light-dismiss). Voor een custom
- * focus-target binnen de popover: gebruik `autofocus` op het gewenste
- * child-element.
  */
 export default {
 	title: 'Components/Layout/Popover',
