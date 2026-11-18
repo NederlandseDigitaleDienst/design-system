@@ -108,22 +108,23 @@ function homePage() {
 /**
  * What the documentation lists in its first sidebar, by group, each with the
  * name of its list. A group without a title stands on its own above the rest.
- * Every item opens something.
+ * Every item opens something; an item without an icon of its own is a page of
+ * a guide.
  */
 const NAVIGATION = [
-	['', 'Nieuw', [['Changelog', '/changelog/']]],
+	['', 'Nieuw', [['Changelog', '/changelog/', 'history']]],
 	[
 		'Bibliotheek',
 		'Bibliotheek',
 		[
-			['Componenten', '/componenten/'],
-			['Patronen', '/patronen/'],
-			['Iconen', '/iconen/'],
+			['Componenten', '/componenten/', 'blocks-9'],
+			['Patronen', '/patronen/', 'tree-structure'],
+			['Iconen', '/iconen/', 'triangle-square-circle'],
 		],
 	],
 	[
-		'Handleiding',
-		'Handleiding',
+		'Handleidingen',
+		'Handleidingen',
 		[
 			['Aan de slag', '/aan-de-slag/'],
 			['Ontwerprichtlijnen', '/richtlijnen/'],
@@ -171,7 +172,12 @@ function primaryNavigation(path) {
 				>
 					${items
 						.map(
-							([text, href]) => `<nldd-list-item href="${href}"${href === current ? ' current' : ''}>
+							([text, href, icon = 'file-text']) => `<nldd-list-item href="${href}"${href === current ? ' current' : ''}>
+						<nldd-icon-cell
+							size="20"
+							icon="${icon}"
+						></nldd-icon-cell>
+						<nldd-spacer-cell size="8"></nldd-spacer-cell>
 						<nldd-text-cell text="${escapeHtml(text)}"></nldd-text-cell>
 						<nldd-spacer-cell size="12"></nldd-spacer-cell>
 						<nldd-icon-cell
@@ -254,7 +260,7 @@ const themeName = (theme) => `${theme.charAt(0).toUpperCase()}${theme.slice(1)}`
 function themePicker() {
 	return `<nldd-button
 						appearance="secondary"
-						start-icon="display"
+						start-icon="themes"
 						text="${themeName(DEFAULT_THEME)}"
 						expandable
 						data-site-theme-button
@@ -656,40 +662,64 @@ ${lists.join('\n')}
 </nldd-rich-text>`;
 }
 
-/** The sidebar of a component or a pattern: every sibling, by group. */
-function siblingNav(groups, current, hrefOf, label = 'Patronen') {
-	return groups
-		.map(
-			([group, items]) => `${
-				group
-					? `<nldd-title size="display-5">
-					<h3>${escapeHtml(group)}</h3>
-				</nldd-title>
-				<nldd-spacer size="4"></nldd-spacer>
-				`
-					: ''
-			}<nldd-list
-					type="navigation"
-					appearance="simple"
-					dividers="never"
-					accessible-label="${escapeHtml(group || label)}"
-				>
-					${items
-						.map(
-							(item) => `<nldd-list-item href="${hrefOf(item)}"${item === current ? ' current' : ''}>
-						<nldd-text-cell text="${escapeHtml(item.name)}"></nldd-text-cell>
-						<nldd-spacer-cell size="12"></nldd-spacer-cell>
-						<nldd-icon-cell
-							size="20"
-							color="secondary"
-							icon="chevron-right"
-						></nldd-icon-cell>
-					</nldd-list-item>`,
-						)
-						.join('\n\t\t\t\t\t')}
-				</nldd-list>`,
-		)
-		.join('\n\t\t\t\t<nldd-spacer size="16"></nldd-spacer>\n\t\t\t\t');
+/**
+ * The sidebar of a component, a pattern or a version: every sibling, by group.
+ * With `search`, a field above the groups shortens the list as you type; each
+ * row carries what it can be found by: its name, its slug (the tag) and its
+ * group. When nothing is left, a message takes the height of the pane.
+ */
+function siblingNav(groups, current, hrefOf, { label, search } = {}) {
+	const lists = groups.map(
+		([group, items]) => `<nldd-container${search ? ' data-site-filter-group' : ''}>
+					${
+						group
+							? `<nldd-title size="display-5">
+						<h3>${escapeHtml(group)}</h3>
+					</nldd-title>
+					<nldd-spacer size="4"></nldd-spacer>
+					`
+							: ''
+					}<nldd-list
+						type="navigation"
+						appearance="simple"
+						dividers="never"
+						accessible-label="${escapeHtml(group || label)}"
+					>
+						${items
+							.map(
+								(item) => `<nldd-list-item
+							href="${hrefOf(item)}"${item === current ? '\n\t\t\t\t\t\t\tcurrent' : ''}${
+								search ? `\n\t\t\t\t\t\t\tdata-site-search="${escapeHtml(`${item.name} ${item.slug} ${group}`.toLowerCase())}"` : ''
+							}
+						>
+							<nldd-text-cell text="${escapeHtml(item.name)}"></nldd-text-cell>
+							<nldd-spacer-cell size="12"></nldd-spacer-cell>
+							<nldd-icon-cell
+								size="20"
+								color="secondary"
+								icon="chevron-right"
+							></nldd-icon-cell>
+						</nldd-list-item>`,
+							)
+							.join('\n\t\t\t\t\t\t')}
+					</nldd-list>
+				</nldd-container>`,
+	);
+	const groupList = `<nldd-container gap="16">
+				${lists.join('\n\t\t\t\t')}
+			</nldd-container>`;
+	if (!search) return groupList;
+	return `<nldd-search-field
+					data-site-filter
+					placeholder="${escapeHtml(search.placeholder)}"
+				></nldd-search-field>
+				<nldd-spacer size="16"></nldd-spacer>
+				${groupList}
+				<nldd-inline-dialog
+					data-site-filter-empty
+					hidden
+					text="${escapeHtml(search.none)}"
+				></nldd-inline-dialog>`;
 }
 
 /** The body of a page in main: its title, and the content under it. */
@@ -953,7 +983,7 @@ export function buildPages({ base = '/' } = {}) {
 			{
 				title: 'Changelog',
 				path: '/changelog/',
-				nav: siblingNav([['', versions]], entry, (other) => changelogPath(other, versions), 'Changelog'),
+				nav: siblingNav([['', versions]], entry, (other) => changelogPath(other, versions), { label: 'Changelog' }),
 			},
 		);
 	}
@@ -997,7 +1027,9 @@ export function buildPages({ base = '/' } = {}) {
 		title: 'Componenten',
 		path: '/componenten/',
 		empty: 'Kies een component',
-		nav: siblingNav(componentGroups, current, (c) => `/componenten/${c.slug}/`),
+		nav: siblingNav(componentGroups, current, (c) => `/componenten/${c.slug}/`, {
+			search: { placeholder: 'Component zoeken', none: 'Geen component gevonden' },
+		}),
 	});
 	page('/componenten/', 'Componenten', `${components.length} web components voor de Rijksoverheid.`, undefined, componentList());
 	for (const component of components) {
@@ -1015,7 +1047,10 @@ export function buildPages({ base = '/' } = {}) {
 		title: 'Patronen',
 		path: '/patronen/',
 		empty: 'Kies een patroon',
-		nav: siblingNav(patternGroups, current, (p) => `/patronen/${p.slug}/`),
+		nav: siblingNav(patternGroups, current, (p) => `/patronen/${p.slug}/`, {
+			label: 'Patronen',
+			search: { placeholder: 'Patroon zoeken', none: 'Geen patroon gevonden' },
+		}),
 	});
 	page('/patronen/', 'Patronen', 'Hoe je componenten samenstelt.', undefined, patternList());
 	for (const pattern of patterns) {

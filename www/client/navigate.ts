@@ -60,6 +60,28 @@ function syncCurrent(onScreen: Element, next: Element): void {
 const hrefsOf = (pane: Element | null) =>
 	[...(pane?.querySelectorAll('nldd-list-item[href]') ?? [])].map((item) => item.getAttribute('href')).join(' ');
 
+/**
+ * Where each sidebar on screen is scrolled to, to put back after the swap: a
+ * sidebar that comes back as a new element (another list) starts at its top,
+ * one that stays is where it was, whatever the browser did meanwhile.
+ */
+function sidebarScroll(view: Element): { restore(): void } {
+	const scrollerOf = (pane: Element | null) =>
+		pane?.querySelector(':scope > nldd-page')?.shadowRoot?.querySelector<HTMLElement>('.page__scroll') ?? null;
+	const kept = ['primary-sidebar', 'secondary-sidebar'].map((slot) => {
+		const pane = view.querySelector(PANE(slot));
+		return { pane, top: scrollerOf(pane)?.scrollTop ?? 0 };
+	});
+	return {
+		restore() {
+			for (const { pane, top } of kept) {
+				const scroller = pane?.isConnected ? scrollerOf(pane) : null;
+				if (scroller && scroller.scrollTop !== top) scroller.scrollTop = top;
+			}
+		},
+	};
+}
+
 /** Puts the panes of the next page in place. */
 function swap(view: Element, next: Document, nextView: Element): Element {
 	const primary = view.querySelector(PANE('primary-sidebar'));
@@ -78,8 +100,12 @@ function swap(view: Element, next: Document, nextView: Element): Element {
 		secondary?.remove();
 	}
 
-	const main = document.adoptNode(nextView.querySelector(PANE('main'))!);
-	view.querySelector(PANE('main'))?.replaceWith(main);
+	// The pane stays and takes the content of the next one: in WebKit a pane
+	// that leaves its slot resets the scroll of the sidebars beside it.
+	const nextMain = nextView.querySelector(PANE('main'))!;
+	const main = view.querySelector(PANE('main'))!;
+	main.toggleAttribute('has-content', nextMain.hasAttribute('has-content'));
+	main.replaceChildren(...[...nextMain.children].map((child) => document.adoptNode(child)));
 
 	document.title = next.title;
 	const description = next.querySelector('meta[name="description"]')?.getAttribute('content');
@@ -152,7 +178,9 @@ async function go(url: URL, { push, fromSidebar = false }: { push: boolean; from
 	if (push) history.pushState({ site: true }, '', url);
 	shown = url.pathname + url.search;
 	trimmed = false;
+	const scrolled = sidebarScroll(view);
 	const main = swap(view, next, nextView);
+	scrolled.restore();
 	await settle(view, main, url, { restore: !push, keepFocus: fromSidebar });
 }
 

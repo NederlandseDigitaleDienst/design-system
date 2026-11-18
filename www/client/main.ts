@@ -42,6 +42,40 @@ function wireSidebar(root: ParentNode = document): void {
 	}
 }
 
+/**
+ * The field above the components or the patterns shortens the list as you
+ * type: a row stays when every word typed is in its name or its tag, and a
+ * group goes when none of its rows is left. Listened for on the document, so
+ * it works in a sidebar that came in with a page change.
+ */
+function wireFilter(): void {
+	document.addEventListener('input', (event) => {
+		const field = event
+			.composedPath()
+			.find((node): node is Element => node instanceof Element && node.hasAttribute('data-site-filter'));
+		const pane = field?.closest('nldd-split-view-pane');
+		if (!field || !pane) return;
+		const words = String((event as CustomEvent<{ value?: string }>).detail?.value ?? '')
+			.toLowerCase()
+			.split(/[\s-]+/)
+			.filter(Boolean);
+		let shown = 0;
+		for (const group of pane.querySelectorAll<HTMLElement>('[data-site-filter-group]')) {
+			let inGroup = 0;
+			for (const row of group.querySelectorAll<HTMLElement>('[data-site-search]')) {
+				const text = row.dataset.siteSearch ?? '';
+				const match = words.every((word) => text.includes(word));
+				row.hidden = !match;
+				if (match) inGroup += 1;
+			}
+			group.hidden = inGroup === 0;
+			shown += inGroup;
+		}
+		const empty = pane.querySelector<HTMLElement>('[data-site-filter-empty]');
+		if (empty) empty.hidden = shown > 0;
+	});
+}
+
 let contentsWatcher: IntersectionObserver | null = null;
 
 /**
@@ -73,7 +107,7 @@ function wireContents(root: ParentNode = document): void {
 	for (const heading of headings) contentsWatcher.observe(heading);
 }
 
-const SCHEME_ICONS: Record<string, string> = { system: 'display', dark: 'moon', light: 'sun' };
+const SCHEME_ICONS: Record<string, string> = { system: 'themes', dark: 'moon', light: 'sun' };
 
 /**
  * The theme picker in the toolbar: swatches for the theme, toggle buttons for
@@ -128,6 +162,7 @@ wireTheme();
 wireBack();
 wireSidebar();
 wireContents();
+wireFilter();
 document.addEventListener('site-navigate', (event) => {
 	const { main } = (event as CustomEvent<{ main: Element }>).detail;
 	wireSidebar(main);
