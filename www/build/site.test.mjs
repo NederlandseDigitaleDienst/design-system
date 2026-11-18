@@ -115,8 +115,12 @@ test('a component has a page per tab: examples, API and lint rules', () => {
 	for (const page of [examples, api, rules]) assert.match(page, /href="\/componenten\/button\/"\s+current/);
 });
 
-test('a pattern page ends with the lint rules that point at it', () => {
-	assert.match(pages['patronen/form/index.html'], /id="regels"[^]*<h2>Lintregels<\/h2>[^]*text="form-actions-needs-button-group"/);
+test('a pattern has a tab with the lint rules that point at it', () => {
+	const pattern = pages['patronen/form/index.html'];
+	const rules = pages['patronen/form/lintregels/index.html'];
+	assert.match(pattern, /href="\/patronen\/form\/"\s+text="Patroon"\s+current/);
+	assert.doesNotMatch(pattern, /id="regels"/);
+	assert.match(rules, /text="Lintregels"\s+current[^]*id="regels"[^]*<h2>Lintregels<\/h2>[^]*text="form-actions-needs-button-group"/);
 });
 
 test('a page under a deploy base links within that base', () => {

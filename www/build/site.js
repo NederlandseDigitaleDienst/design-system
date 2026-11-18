@@ -514,8 +514,9 @@ function pageTitle(text, { overline = '', end = '' } = {}) {
 /**
  * A page of prose, as the content page pattern has it: the text in the main
  * column and, when the page has more than one heading, a table of contents
- * beside it, so every page of prose has the same columns. A page with a great many headings (the changelog) gets
- * none: a list that long is no shorter than the page.
+ * beside it, so every page of prose has the same columns. A page with a great
+ * many headings (the changelog) gets none: a list that long is no shorter than
+ * the page.
  */
 function prosePage({ title, rendered, extra = '' }) {
 	const headings = rendered.headings;
@@ -732,6 +733,53 @@ ${body}
 		</nldd-simple-section>`;
 }
 
+/** The tabs of a component or a pattern, each a page of its own. */
+function tabBar(name, tabs, current) {
+	return `<nldd-tab-bar
+					navigation
+					accessible-label="Onderdelen van ${escapeHtml(name)}"
+				>
+					${tabs
+						.map(
+							(tab) => `<nldd-tab-bar-item
+						href="${tab.path}"
+						text="${escapeHtml(tab.text)}"${tab === current ? '\n\t\t\t\t\t\tcurrent' : ''}
+					></nldd-tab-bar-item>`,
+						)
+						.join('\n\t\t\t\t\t')}
+				</nldd-tab-bar>`;
+}
+
+/**
+ * The pages of a pattern: the pattern itself and, when lint rules point at it,
+ * the rules on a tab of their own. The examples stay in the text, beside what
+ * they show. The introduction stands above the tabs.
+ */
+function patternPages(pattern, lintRules) {
+	const base = `/patronen/${pattern.slug}/`;
+	const markdown = read(relative(repoRoot, pattern.proseFile));
+	const split = markdown.search(/^## /m);
+	const intro = renderProse(split === -1 ? markdown : markdown.slice(0, split), pattern).html;
+	const rest = split === -1 ? '' : renderProse(markdown.slice(split), pattern).html;
+	const rules = rulesOfPattern(lintRules, pattern.slug);
+	const tabs = [
+		{ path: base, text: 'Patroon', title: pattern.name, body: rest },
+		...(rules.length
+			? [{ path: `${base}lintregels/`, text: 'Lintregels', title: `${pattern.name}, lintregels`, body: rulesSection(rules, { link: false }) }]
+			: []),
+	];
+	return tabs.map((tab) => ({
+		path: tab.path,
+		title: tab.title,
+		main: docBody({
+			title: pageTitle(pattern.name, { overline: pattern.group }),
+			body: `${intro}
+				${tabs.length > 1 ? tabBar(pattern.name, tabs, tab) : ''}
+				${tab.body}`,
+		}),
+	}));
+}
+
 /**
  * The pages of a component: one per tab, each with a URL of its own, so a link
  * can point at the API or the rules and the browser steps back per tab. Above
@@ -799,19 +847,7 @@ function componentPages(component, lintRules) {
 					${description}
 					${source}
 				</nldd-container>
-				<nldd-tab-bar
-					navigation
-					accessible-label="Onderdelen van ${escapeHtml(component.name)}"
-				>
-					${tabs
-						.map(
-							(other) => `<nldd-tab-bar-item
-						href="${other.path}"
-						text="${escapeHtml(other.text)}"${other === tab ? '\n\t\t\t\t\t\tcurrent' : ''}
-					></nldd-tab-bar-item>`,
-						)
-						.join('\n\t\t\t\t\t')}
-				</nldd-tab-bar>
+				${tabBar(component.name, tabs, tab)}
 				${tab.body}`,
 		}),
 	}));
@@ -1090,17 +1126,9 @@ export function buildPages({ base = '/' } = {}) {
 	});
 	page('/patronen/', 'Patronen', 'Hoe je componenten samenstelt.', undefined, patternList());
 	for (const pattern of patterns) {
-		const rendered = renderProse(read(relative(repoRoot, pattern.proseFile)), pattern);
-		page(
-			`/patronen/${pattern.slug}/`,
-			pattern.name,
-			firstSentence(pattern.summary),
-			docBody({
-				title: pageTitle(pattern.name, { overline: pattern.group }),
-				body: `${rendered.html}${rulesSection(rulesOfPattern(lintRules, pattern.slug), { link: false })}`,
-			}),
-			patternList(pattern),
-		);
+		for (const tab of patternPages(pattern, lintRules)) {
+			page(tab.path, tab.title, firstSentence(pattern.summary), tab.main, patternList(pattern));
+		}
 	}
 
 	// One story on a bare page, without the site around it: what a stage shows in
