@@ -525,7 +525,7 @@ export const ListboxEenvoudig = {
 
 export const Herschikbaar = {
 	// Imperative render is intentional: the reorder handler needs to mutate
-	// the DOM in-place to demonstrate actual reordering. A standard Storybook
+	// the DOM in-place to demonstrate actual reordering. A standard story
 	// render function cannot do this because Lit templates are stateless.
 	render: () => {
 		const onReorder = (e: Record<string, any>) => {
