@@ -157,7 +157,7 @@ function primaryNavigation(path) {
 				? `<nldd-title size="display-5">
 					<h3>${escapeHtml(group)}</h3>
 				</nldd-title>
-				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-spacer size="8"></nldd-spacer>
 				`
 				: ''
 		}<nldd-list
@@ -185,7 +185,7 @@ function primaryNavigation(path) {
 						)
 						.join('\n\t\t\t\t\t')}
 				</nldd-list>`,
-	).join('\n\t\t\t\t<nldd-spacer size="16"></nldd-spacer>\n\t\t\t\t');
+	).join('\n\t\t\t\t<nldd-spacer size="24"></nldd-spacer>\n\t\t\t\t');
 }
 
 const aboutLinks = `<nldd-container
@@ -676,7 +676,7 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 							? `<nldd-title size="display-5">
 						<h3>${escapeHtml(group)}</h3>
 					</nldd-title>
-					<nldd-spacer size="4"></nldd-spacer>
+					<nldd-spacer size="8"></nldd-spacer>
 					`
 							: ''
 					}<nldd-list
@@ -705,7 +705,7 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 					</nldd-list>
 				</nldd-container>`,
 	);
-	const groupList = `<nldd-container gap="16">
+	const groupList = `<nldd-container gap="24">
 				${lists.join('\n\t\t\t\t')}
 			</nldd-container>`;
 	if (!search) return groupList;
@@ -713,7 +713,7 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 					data-site-filter
 					placeholder="${escapeHtml(search.placeholder)}"
 				></nldd-search-field>
-				<nldd-spacer size="16"></nldd-spacer>
+				<nldd-spacer size="24"></nldd-spacer>
 				${groupList}
 				<nldd-inline-dialog
 					data-site-filter-empty

@@ -3,7 +3,7 @@ import tabs from './toolbar-with-actions.tabs.html?raw';
 import { patternStory } from '../pattern-story.js';
 
 export default {
-	title: 'Patronen/Werkbalk met acties',
+	title: 'Patronen/Applicaties/Werkbalk met acties',
 };
 
 export const Standaard = patternStory(markup);

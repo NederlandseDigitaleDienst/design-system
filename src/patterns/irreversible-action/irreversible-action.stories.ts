@@ -2,7 +2,7 @@ import markup from './irreversible-action.html?raw';
 import { patternStory } from '../pattern-story.js';
 
 export default {
-	title: 'Patronen/Onomkeerbare actie',
+	title: 'Patronen/Algemeen/Onomkeerbare actie',
 };
 
 export const Standaard = patternStory(markup, (root) => {

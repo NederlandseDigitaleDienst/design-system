@@ -5,7 +5,7 @@ import { syncToolbarOverflow } from '../../components/actions/toolbar/toolbar.st
 syncToolbarOverflow();
 
 export default {
-	title: 'Patronen/Applicatie',
+	title: 'Patronen/Applicaties/Applicatie',
 };
 
 export const Standaard = patternStory(markup, (root) => {
