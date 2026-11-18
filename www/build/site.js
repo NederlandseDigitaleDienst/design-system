@@ -817,7 +817,7 @@ function componentPages(component, lintRules) {
 		: '';
 	const example = (story, options = {}) => {
 		const text = story.description ? renderMarkdown(story.description, { href: identity }).html : '';
-		// The stage names the example, so the one on its own tab needs no heading.
+		// The example on the usage tab is the component itself, so it needs no heading.
 		const heading = options.primary
 			? ''
 			: `<nldd-title size="display-4">

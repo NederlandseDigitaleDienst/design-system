@@ -53,14 +53,9 @@ nldd-rich-text td code {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-end;
 		gap: 8px 16px;
 		padding: 12px 16px;
-	}
-
-	.site-stage__bar > nldd-title {
-		flex: 1 1 160px;
-		width: auto;
 	}
 
 	/* The mat: a dotted field around the canvas that belongs to the frame. */

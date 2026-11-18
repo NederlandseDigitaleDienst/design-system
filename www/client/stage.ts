@@ -258,7 +258,6 @@ export class SiteStage extends HTMLElement {
 	private build({ tools }: { tools: boolean }): void {
 		const name = this.getAttribute('name') ?? '';
 		const bar = element('div', 'site-stage__bar');
-		bar.append(nldd('title', { overline: 'Voorbeeld', text: name }));
 		const toolbar = nldd('container', { layout: 'wrap', gap: '8', width: 'fit-content', 'vertical-alignment': 'center' });
 		if (tools) {
 			toolbar.append(
@@ -346,7 +345,7 @@ export class SiteStage extends HTMLElement {
 		}).observe(this.canvas);
 		this.eventLog.hidden = true;
 		this.events.setAttribute('aria-label', `Events van ${name}`);
-		this.box.replaceChildren(bar, mat, this.eventLog);
+		this.box.replaceChildren(...(toolbar.children.length ? [bar] : []), mat, this.eventLog);
 		this.replaceChildren(this.box);
 	}
 
@@ -412,12 +411,22 @@ export class SiteStage extends HTMLElement {
 		if (!this.code) {
 			this.code = document.createElement('nldd-code-viewer');
 			this.code.setAttribute('language', this.story.parameters.docs?.source?.language ?? 'html');
-			this.code.setAttribute('appearance', 'simple');
 			this.code.setAttribute('max-height', '420px');
+			this.code.classList.add('site-stage__code');
 			// The code comes right after the example, before the controls,
 			// whichever of the two arrives first: a framed example reports its
 			// markup later.
-			this.box.after(nldd('box', {}, [section('site-stage__code', [this.code])]));
+			this.box.after(this.code);
+			this.code.textContent = text;
+			// The code keeps the height it has before any change, scrolling when
+			// it grows, so the controls below it stay where they are.
+			await (this.code as HTMLElement & { updateComplete?: Promise<unknown> }).updateComplete;
+			const height = this.code.offsetHeight;
+			if (height) {
+				this.code.setAttribute('max-height', `${Math.min(height, 420)}px`);
+				this.code.style.minHeight = `${this.code.offsetHeight}px`;
+			}
+			return;
 		}
 		this.code.textContent = text;
 	}
@@ -487,6 +496,7 @@ export class SiteStage extends HTMLElement {
 			import('../../src/components/content/text/text.js'),
 			import('../../src/components/actions/icon-button/icon-button.js'),
 			import('../../src/components/layout/popover/popover.js'),
+			import('../../src/components/navigation/top-title-bar/top-title-bar.js'),
 			import('../../src/components/inputs/switch/switch.js'),
 			import('../../src/components/inputs/dropdown/dropdown.js'),
 			import('../../src/components/inputs/number-field/number-field.js'),
@@ -507,7 +517,7 @@ export class SiteStage extends HTMLElement {
 		const popovers: HTMLElement[] = [];
 		const row = (name: string, input: HTMLElement, description: string) => {
 			const title = element('p', '', `${name} `);
-			const label = nldd('text-cell', {}, [title]);
+			const label = nldd('text-cell', { 'vertical-alignment': 'top' }, [title]);
 			if (description) {
 				const span = element('span', '');
 				span.append(...described(description));
@@ -528,14 +538,15 @@ export class SiteStage extends HTMLElement {
 				const about = span.cloneNode(true);
 				popovers.push(
 					nldd('popover', { id, role: 'region', 'accessible-label': name }, [
-						nldd('container', { padding: '16' }, [nldd('text', {}, [about])]),
+						nldd('top-title-bar', { text: name, 'heading-level': '2', 'dismiss-text': 'Sluit' }),
+						nldd('container', { 'padding-inline': '16', 'padding-bottom': '16' }, [nldd('text', {}, [about])]),
 					]),
 				);
 				infos.push({ label, button, text });
 			}
 			input.setAttribute('accessible-label', name);
 			const fits = ['nldd-switch', 'nldd-segmented-control'].includes(input.localName);
-			const cell = nldd('cell', { 'horizontal-alignment': 'right', ...(fits ? {} : { width: FIELD_WIDTH }) }, [input]);
+			const cell = nldd('cell', { 'horizontal-alignment': 'right', 'vertical-alignment': 'top', ...(fits ? {} : { width: FIELD_WIDTH }) }, [input]);
 			list.append(nldd('list-item', {}, [label, nldd('spacer-cell', { size: '12' }), cell]));
 		};
 
