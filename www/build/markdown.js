@@ -53,7 +53,7 @@ function decodeEntities(html) {
  * @param {object} options
  * @param {(path: string) => string} options.href - turns a site path into a link target
  * @param {(name: string) => string} [options.example] - renders an example marker
- * @returns {{ title: string, html: string, headings: { id: string, text: string }[] }}
+ * @returns {{ title: string, html: string, blocks: string[], headings: { id: string, text: string }[] }}
  */
 export function renderMarkdown(markdown, { href, example }) {
 	let title = '';
@@ -93,14 +93,13 @@ export function renderMarkdown(markdown, { href, example }) {
 			},
 		},
 	});
-	const html = marked
+	const blocks = marked
 		.parse(markdown)
 		.split(BREAK)
 		.map((part, index) => {
 			if (index % 2 === 1) return part;
 			return part.trim() ? `<nldd-rich-text>${part}</nldd-rich-text>` : '';
 		})
-		.filter(Boolean)
-		.join('\n');
-	return { title, html, headings };
+		.filter(Boolean);
+	return { title, html: blocks.join('\n'), blocks, headings };
 }

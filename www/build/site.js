@@ -518,13 +518,16 @@ function pageTitle(text, { overline = '', end = '' } = {}) {
  * many headings (the changelog) gets none: a list that long is no shorter than
  * the page.
  */
-function prosePage({ title, rendered, extra = '' }) {
+function prosePage({ title, rendered, extra = [] }) {
 	const headings = rendered.headings;
-	const body = `${rendered.html}${extra}`;
+	// The blocks are of different kinds (prose, code, an example), so a spacer
+	// stands between each two rather than a gap over all of them.
+	const blocks = [...(rendered.blocks ?? [rendered.html]), ...extra].filter((block) => block.trim());
+	const body = blocks.join('\n<nldd-spacer size="24"></nldd-spacer>\n');
 	if (headings.length < 2 || headings.length > 24) {
 		return `		<nldd-simple-section grow>
 			${pageTitle(title)}
-			<nldd-container gap="24">
+			<nldd-container>
 ${body}
 			</nldd-container>
 		</nldd-simple-section>`;
@@ -580,7 +583,7 @@ ${body}
 						.join('\n\t\t\t\t\t')}
 				</nldd-list>
 			</nldd-container>
-			<nldd-container gap="24">
+			<nldd-container>
 ${body}
 			</nldd-container>
 		</nldd-sidebar-section>`;
@@ -723,14 +726,22 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 				></nldd-inline-dialog>`;
 }
 
-/** The body of a page in main: its title, and the content under it. */
-function docBody({ title, body }) {
+/**
+ * The body of a page in main: its title, and the blocks under it. The blocks
+ * are of different kinds, so a spacer stands between each two.
+ */
+function docBody({ title, blocks }) {
 	return `		<nldd-simple-section grow>
 			${title}
-			<nldd-container gap="32">
-${body}
+			<nldd-container>
+${stack(blocks, 32)}
 			</nldd-container>
 		</nldd-simple-section>`;
+}
+
+/** Blocks under each other, a spacer of `size` between each two. */
+function stack(blocks, size) {
+	return blocks.filter((block) => block?.trim()).join(`\n<nldd-spacer size="${size}"></nldd-spacer>\n`);
 }
 
 /** The tabs of a component or a pattern, each a page of its own. */
@@ -759,13 +770,13 @@ function patternPages(pattern, lintRules) {
 	const base = `/patronen/${pattern.slug}/`;
 	const markdown = read(relative(repoRoot, pattern.proseFile));
 	const split = markdown.search(/^## /m);
-	const intro = renderProse(split === -1 ? markdown : markdown.slice(0, split), pattern).html;
-	const rest = split === -1 ? '' : renderProse(markdown.slice(split), pattern).html;
+	const intro = renderProse(split === -1 ? markdown : markdown.slice(0, split), pattern).blocks;
+	const rest = split === -1 ? [] : renderProse(markdown.slice(split), pattern).blocks;
 	const rules = rulesOfPattern(lintRules, pattern.slug);
 	const tabs = [
 		{ path: base, text: 'Patroon', title: pattern.name, body: rest },
 		...(rules.length
-			? [{ path: `${base}lintregels/`, text: 'Lintregels', title: `${pattern.name}, lintregels`, body: rulesSection(rules, { link: false }) }]
+			? [{ path: `${base}lintregels/`, text: 'Lintregels', title: `${pattern.name}, lintregels`, body: [rulesSection(rules, { link: false })] }]
 			: []),
 	];
 	return tabs.map((tab) => ({
@@ -773,9 +784,7 @@ function patternPages(pattern, lintRules) {
 		title: tab.title,
 		main: docBody({
 			title: pageTitle(pattern.name, { overline: pattern.group }),
-			body: `${intro}
-				${tabs.length > 1 ? tabBar(pattern.name, tabs, tab) : ''}
-				${tab.body}`,
+			blocks: [...intro, tabs.length > 1 ? tabBar(pattern.name, tabs, tab) : '', ...tab.body],
 		}),
 	}));
 }
@@ -803,8 +812,8 @@ function componentPages(component, lintRules) {
 	const usageText = usage.replace(/^#{1,6} Gebruik\s*\n([^]*?)(?=^#{1,6} |$(?![^]))/m, (_, section) =>
 		section.replace(/^```[^]*?^```\s*$/gm, ''),
 	);
-	const usageHtml = usageText.trim() ? renderMarkdown(usageText, { href: identity }).html : '';
-	const api = component.elements.map(elementApi).filter(Boolean).join('\n');
+	const usageBlocks = usageText.trim() ? renderMarkdown(usageText, { href: identity }).blocks : [];
+	const api = component.elements.map(elementApi).filter(Boolean);
 	const rules = [...new Set(component.elements.flatMap((element) => rulesAboutTag(lintRules, element.tagName)))];
 	const status = component.status
 		? `\n\t\t\t\t<nldd-tag slot="end" text="${STATUS[component.status] ?? component.status}"></nldd-tag>`
@@ -823,10 +832,8 @@ function componentPages(component, lintRules) {
 			: `<nldd-title size="display-4">
 						<h2>${escapeHtml(story.name)}</h2>
 					</nldd-title>`;
-		return `<nldd-container gap="12" id="${story.id.split('--')[1]}">
-					${heading}
-					${text}
-					${stage(component, story, options)}
+		return `<nldd-container id="${story.id.split('--')[1]}">
+					${stack([heading, text, stage(component, story, options)], 12)}
 				</nldd-container>`;
 	};
 	// The first story, with the controls, is where you try the component; the
@@ -837,22 +844,22 @@ function componentPages(component, lintRules) {
 			path: base,
 			text: 'Gebruik',
 			title: component.name,
-			body: `${usageHtml}\n\t\t\t\t${first ? example(first, { primary: true, controls }) : ''}`,
+			body: [...usageBlocks, first ? example(first, { primary: true, controls }) : ''],
 			shown: true,
 		},
 		{
 			path: `${base}voorbeelden/`,
 			text: 'Voorbeelden',
 			title: `${component.name}, voorbeelden`,
-			body: others.map((story) => example(story)).join('\n\t\t\t\t'),
+			body: others.map((story) => example(story)),
 			shown: others.length > 0,
 		},
-		{ path: `${base}api/`, text: 'API', title: `${component.name}, API`, body: api, shown: !!api },
+		{ path: `${base}api/`, text: 'API', title: `${component.name}, API`, body: api, shown: api.length > 0 },
 		{
 			path: `${base}lintregels/`,
 			text: 'Lintregels',
 			title: `${component.name}, lintregels`,
-			body: rulesSection(rules),
+			body: [rulesSection(rules)],
 			shown: rules.length > 0,
 		},
 	].filter((tab) => tab.shown);
@@ -861,12 +868,13 @@ function componentPages(component, lintRules) {
 		title: tab.title,
 		main: docBody({
 			title: pageTitle(component.name, { overline: component.category, end: status }),
-			body: `				<nldd-container gap="12">
-					${description}
-					${source}
-				</nldd-container>
-				${tabBar(component.name, tabs, tab)}
-				${tab.body}`,
+			blocks: [
+				`<nldd-container>
+					${stack([description, source], 12)}
+				</nldd-container>`,
+				tabBar(component.name, tabs, tab),
+				...tab.body,
+			],
 		}),
 	}));
 }
@@ -899,7 +907,7 @@ function changelogPage(entry) {
 	const rendered = renderProse(absoluteLinks(entry.body || 'Geen beschrijving bij deze versie.', 'CHANGELOG.md'));
 	return docBody({
 		title: pageTitle(entry.name, { overline: entry.date ? `Changelog, ${entry.date}` : 'Changelog' }),
-		body: rendered.html,
+		blocks: rendered.blocks,
 	});
 }
 
@@ -910,11 +918,12 @@ const SEVERITIES = {
 	hint: { label: 'Hint', color: 'neutral' },
 };
 
-/** Where the reason behind a rule is written down: its pattern or its guideline. */
+/** Where the reason behind a rule is written down: its pattern, its guideline or the component that explains it. */
 function seePath(see) {
 	const [kind, slug] = (see ?? '').split('/');
 	if (kind === 'patronen') return `/patronen/${slug}/`;
 	if (kind === 'ontwerprichtlijnen') return `/richtlijnen/#${slug}`;
+	if (kind === 'componenten') return `/componenten/${slug}/`;
 	return undefined;
 }
 
@@ -962,22 +971,13 @@ function ruleList(rules, { label, anchors = false, link = true, appearance = 'bo
 	</nldd-cell>${
 		href
 			? `
-	<nldd-spacer-cell size="12"></nldd-spacer-cell>
+	<nldd-spacer-cell size="8"></nldd-spacer-cell>
 	<nldd-icon-cell
 		size="20"
 		color="secondary"
 		icon="chevron-right"
 	></nldd-icon-cell>`
-			: // A row without a link keeps the room of the chevron, so the levels line up.
-				`
-	<nldd-spacer-cell
-		size="12"
-		hide-below="md"
-	></nldd-spacer-cell>
-	<nldd-spacer-cell
-		size="20"
-		hide-below="md"
-	></nldd-spacer-cell>`
+			: ''
 	}
 </nldd-list-item>`;
 	});
@@ -996,14 +996,16 @@ ${rows.join('\n')}
 function rulesSection(rules, { link = true } = {}) {
 	if (!rules.length) return '';
 	return `
-<nldd-container gap="12" id="regels">
+<nldd-container id="regels">
 	<nldd-title
 		size="display-4"
 		supporting-text="Wat nldd lint hier controleert. Een hint laat niets falen."
 	>
 		<h2>Lintregels</h2>
 	</nldd-title>
+	<nldd-spacer size="12"></nldd-spacer>
 	${ruleList(rules, { label: 'Lintregels', link })}
+	<nldd-spacer size="12"></nldd-spacer>
 	<nldd-link
 		href="/linter/"
 		text="Over de linter"
@@ -1034,13 +1036,14 @@ ${ruleList(inGroup, { label: `Regels in de groep ${group}`, anchors: true, appea
 </nldd-accordion-item>`;
 	}).join('\n');
 	const html = `
-<nldd-container gap="12" id="alle-regels">
+<nldd-container id="alle-regels">
 	<nldd-title
 		size="display-4"
 		supporting-text="${rules.length} regels in zes groepen. De linter loopt ze in deze volgorde af."
 	>
 		<h2>Alle regels</h2>
 	</nldd-title>
+	<nldd-spacer size="12"></nldd-spacer>
 	<nldd-accordion>
 ${items}
 	</nldd-accordion>
@@ -1097,15 +1100,16 @@ export function buildPages({ base = '/' } = {}) {
 		const ruleIndex = rules ? allRules(lintRules) : undefined;
 		if (ruleIndex) rendered.headings.push(...ruleIndex.headings);
 		const extra = ruleIndex
-			? ruleIndex.html
+			? [ruleIndex.html]
 			: examples
-			? `\n<nldd-rich-text><h2 id="voorbeelden">${escapeHtml(examples)}</h2></nldd-rich-text>\n${storyFile.stories
-					.map(
+			? [
+					`<nldd-rich-text><h2 id="voorbeelden">${escapeHtml(examples)}</h2></nldd-rich-text>`,
+					...storyFile.stories.map(
 						(story) =>
-							`<nldd-container gap="12" id="${story.id.split('--')[1]}">\n<nldd-title size="display-5"><h3>${escapeHtml(story.name)}</h3></nldd-title>\n${stage(storyFile, story)}\n</nldd-container>`,
-					)
-					.join('\n')}`
-			: '';
+							`<nldd-container id="${story.id.split('--')[1]}">\n${stack([`<nldd-title size="display-5"><h3>${escapeHtml(story.name)}</h3></nldd-title>`, stage(storyFile, story)], 12)}\n</nldd-container>`,
+					),
+				]
+			: [];
 		if (examples) rendered.headings.push({ id: 'voorbeelden', text: examples });
 		page(
 			path,

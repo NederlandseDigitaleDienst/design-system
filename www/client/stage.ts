@@ -529,7 +529,9 @@ export class SiteStage extends HTMLElement {
 		if (!this.code) {
 			this.code = document.createElement('nldd-code-viewer');
 			this.code.setAttribute('language', this.story.parameters.docs?.source?.language ?? 'html');
-			this.code.setAttribute('max-height', '420px');
+			// Only the usage tab changes its code, so only there it holds still.
+			const changes = this.hasAttribute('primary');
+			if (changes) this.code.setAttribute('max-height', '420px');
 			this.code.classList.add('site-stage__code');
 			// The code comes right after the example, before the controls,
 			// whichever of the two arrives first: a framed example reports its
@@ -540,7 +542,7 @@ export class SiteStage extends HTMLElement {
 			// it grows, so the controls below it stay where they are.
 			await (this.code as HTMLElement & { updateComplete?: Promise<unknown> }).updateComplete;
 			const height = this.code.offsetHeight;
-			if (height) {
+			if (changes && height) {
 				this.code.setAttribute('max-height', `${Math.min(height, 420)}px`);
 				this.code.style.minHeight = `${this.code.offsetHeight}px`;
 			}
