@@ -268,6 +268,15 @@ describe('nldd-token – menu', () => {
 		expect(el.expanded).toBe(true);
 	});
 
+	it('gives its button no aria-controls for a popover with an id, which its shadow root cannot resolve', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="menu" text="start-icon"><nldd-popover id="veld" slot="menu" accessible-label="start-icon"><p>Veld</p></nldd-popover></nldd-token>');
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector<HTMLElement>('.token__menu-action nldd-icon-button')!;
+		button.click();
+		await waitForUpdate(el);
+		expect(button.hasAttribute('aria-controls')).toBe(false);
+	});
+
 	it('opens the menu on Enter when the host is focused (roving)', async () => {
 		el = await fixture<NLDDToken>('<nldd-token control="menu"><nldd-menu slot="menu"><nldd-menu-item text="A"></nldd-menu-item></nldd-menu></nldd-token>');
 		await waitForUpdate(el);

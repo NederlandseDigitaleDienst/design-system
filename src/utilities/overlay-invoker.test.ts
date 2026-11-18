@@ -215,6 +215,9 @@ describe('TriggerAria', () => {
 		const aria = new TriggerAria({ attributes: true });
 		const first = document.createElement('span');
 		const second = document.createElement('span');
+		const overlay = document.createElement('div');
+		overlay.id = 'uitleg';
+		document.body.append(first, second, overlay);
 		aria.sync(first, { open: true, popupType: 'dialog', controls: 'uitleg' });
 		expect(first.getAttribute('aria-expanded')).toBe('true');
 		expect(first.getAttribute('aria-haspopup')).toBe('dialog');
@@ -223,6 +226,9 @@ describe('TriggerAria', () => {
 		expect(first.hasAttribute('aria-expanded')).toBe(false);
 		expect(first.hasAttribute('aria-controls')).toBe(false);
 		expect(second.getAttribute('aria-expanded')).toBe('false');
+		first.remove();
+		second.remove();
+		overlay.remove();
 	});
 
 	it('writes nothing on a plain element without attributes', () => {
