@@ -55,4 +55,10 @@ describe('stories', () => {
 		scratch.innerHTML = '<p title="A &amp; B">&lt;geen&gt; &amp; meer</p>';
 		expect(sourceOf(scratch)).toBe('<p title="A &amp; B">&lt;geen&gt; &amp; meer</p>');
 	});
+
+	it('keeps the white space in a pre, where it is the content', () => {
+		const scratch = document.createElement('div');
+		scratch.innerHTML = '<nldd-rich-text><pre><code>if (a) {\n  b();\n}</code></pre></nldd-rich-text>';
+		expect(sourceOf(scratch)).toBe('<nldd-rich-text>\n\t<pre><code>if (a) {\n  b();\n}</code></pre>\n</nldd-rich-text>');
+	});
 });

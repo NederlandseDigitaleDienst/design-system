@@ -1193,8 +1193,11 @@ export function buildPages({ base = '/' } = {}) {
 
 	let stories = 0;
 	const versions = changelogEntries(read('CHANGELOG.md'));
-	for (const entry of versions) {
-		const path = changelogPath(entry, versions);
+	// The newest version opens /changelog/, and keeps a link of its own that
+	// stays right once the next version takes its place.
+	const changelogPages = versions.map((entry) => [entry, changelogPath(entry, versions)]);
+	if (versions[0]?.slug) changelogPages.push([versions[0], `/changelog/${versions[0].slug}/`]);
+	for (const [entry, path] of changelogPages) {
 		page(
 			path,
 			`Changelog ${entry.slug ? entry.name : entry.name.toLowerCase()}`,

@@ -161,6 +161,11 @@ export function sourceOf(container: HTMLElement): string {
 				child.nodeType === Node.ELEMENT_NODE ||
 				(child.nodeType === Node.TEXT_NODE && (child.textContent ?? '').trim()),
 		);
+		// Here the white space is the content: a line of code keeps its indent.
+		if (['pre', 'textarea', 'nldd-code-viewer'].includes(tag)) {
+			lines.push(`${indent}${open}${node.innerHTML}</${tag}>`);
+			return;
+		}
 		const voids = ['img', 'input', 'br', 'hr', 'source', 'meta', 'link'];
 		if (voids.includes(tag)) {
 			lines.push(indent + open);

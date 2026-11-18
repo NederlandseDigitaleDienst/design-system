@@ -8796,7 +8796,7 @@
               "expandedType": {
                 "text": "'delay' | 'instant' | 'never'"
               },
-              "description": "When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Keyboard focus shows it at once; the focus a mouse press gives a button shows nothing, so a click does not flash it up."
+              "description": "When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Focus shows it at once, except the focus a press gives a button, so a click does not flash it up."
             }
           ],
           "superclass": {

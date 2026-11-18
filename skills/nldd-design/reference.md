@@ -23,7 +23,6 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 **Rules** (`nldd lint`)
 
 - `action-exit-goes-away-from-primary` (hint): Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.
-- `action-goes-on-button`: Put slot="actions" on each nldd-button, not on an element around them.
 - `button-appearance-renamed`: `inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.
 - `button-form-id-invalid`: The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.
 - `button-form-id-not-found`: Nothing in this root has the id in `form`, so this button submits nothing.
@@ -262,7 +261,6 @@ A floating menu component using the Popover API. Positioned relative to an ancho
 - `menu-no-manual-anchor` (hint): Nest it in the `popup` slot of the button, or point `popovertarget` on the button or list segment at its id: both anchor it and open it. `anchor` is for a trigger that is not an nldd component.
 - `split-button-max-one-popup`: nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.
 - `split-button-needs-popup`: nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.
-- `split-button-no-other-children`: Only an nldd-menu or nldd-popover goes in nldd-split-button; anything else does not render. Set the label with `text` and the icon with `icon`.
 
 **Attributes**
 
@@ -627,7 +625,6 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 **Rules** (`nldd lint`)
 
 - `avatar-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-avatar.
-- `avatar-group-no-other-children`: nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.
 - `avatar-group-no-small-target`: Avatars that are links or buttons overlap, so each keeps too small a target (WCAG 2.5.8). Use size 32 or larger.
 - `avatar-in-menu-bar-needs-decorative` (hint): Set `decorative`: the name and the text of the item are already there.
 - `avatar-in-menu-bar-needs-icon-aligned` (hint): Set `icon-aligned` and `color="content"`, so the avatar lines up with the icons next to it and takes their color.
@@ -1121,7 +1118,7 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `open` | `boolean` | Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior. |
 | `placement` | `'top'\|'bottom'\|'left'\|'right'` | Position: 'top' \| 'bottom' \| 'left' \| 'right' (default: 'bottom'; automatically 'top' on touch devices) |
-| `timing` | `string` | When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Keyboard focus shows it at once; the focus a mouse press gives a button shows nothing, so a click does not flash it up. |
+| `timing` | `string` | When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Focus shows it at once, except the focus a press gives a button, so a click does not flash it up. |
 
 **Slots**
 
@@ -1248,10 +1245,6 @@ A field around one input: its label, supporting label, optional badge, validatio
 | _(default)_ | The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text. |
 
 ### `<nldd-form-field-help-text>`
-
-**Rules** (`nldd lint`)
-
-- `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
 
 **Slots**
 
@@ -2858,7 +2851,6 @@ A section that spans the full width without horizontal padding. Useful for backg
 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
@@ -2911,7 +2903,6 @@ The section that says what a page is for: it names the main goal of what you can
 - `hero-height-no-effect`: `height` is not used on a hero, whose height comes from its image. Use `media-height` for a fixed height, or `media-aspect-ratio`.
 - `hero-main-width-invalid`: `main-width` is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 640px.
 - `hero-overlap-needs-taller-panel`: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout="contained" to keep the panel on the image.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
@@ -3062,7 +3053,6 @@ A section with two equal columns side by side. The columns stand side by side in
 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
@@ -3110,7 +3100,6 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
@@ -3201,7 +3190,6 @@ The footer band at the bottom of a page. Hosts three optional rows in a fixed or
 
 **Rules** (`nldd lint`)
 
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-footer-no-duplicate-id`: Another element already has id="page-footer". Set a unique id on this instance so skip links target the right one.
@@ -3280,13 +3268,11 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 **Rules** (`nldd lint`)
 
 - `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `popover-anchor-not-found`: Anchor element not found. Set `anchor` or `anchorElement` before calling show().
 - `popover-needs-name`: nldd-popover needs `accessible-label`, or a screen reader announces it without a name.
 - `popover-width-invalid`: This `width` is not supported and is ignored: the popover is an inline-size query container, so its width cannot come from its own content. Give it a CSS length instead.
 - `split-button-max-one-popup`: nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.
 - `split-button-needs-popup`: nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.
-- `split-button-no-other-children`: Only an nldd-menu or nldd-popover goes in nldd-split-button; anything else does not render. Set the label with `text` and the icon with `icon`.
 
 **Attributes**
 
@@ -3330,11 +3316,7 @@ An overlay component that slides in from the side or bottom of the screen. Based
 
 **Rules** (`nldd lint`)
 
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
-- `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
-- `pane-title-bar-needs-back` (hint): Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.
-- `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
 - `sheet-form-max-one-action` (hint): Keep one action under the form. The way out is `dismiss-text` on the title bar.
 - `sheet-full-height-no-effect`: A sheet is full height by default and `full-height` does nothing; remove it.
 - `sheet-height-invalid`: Invalid `height`. Falling back to full height. Use "full", "fit-content", or a valid CSS length (such as "50dvh" or "480px").
@@ -3428,7 +3410,6 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 - `filter-sidebar-needs-skip-link` (hint): Put an nldd-skip-link above the filters, with an `href` to the results, so a keyboard user need not pass every filter.
 - `filter-token-needs-dismiss` (hint): Set control="dismiss": each token is its own way back.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
@@ -3495,7 +3476,6 @@ A basic section with responsive padding and gap based on container size. Contain
 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
@@ -3618,7 +3598,6 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
@@ -3666,7 +3645,6 @@ A floating window based on the native <dialog> element, positionable through CSS
 
 **Rules** (`nldd lint`)
 
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `window-needs-name`: No `accessible-label` and no nldd-top-title-bar with text inside. Screen readers will announce this window with a generic name. Give the title bar a text, or set `accessible-label`.
 
@@ -3987,7 +3965,6 @@ Accessibility pattern that lets keyboard users skip past content. Wraps content 
 **Rules** (`nldd lint`)
 
 - `filter-sidebar-needs-skip-link` (hint): Put an nldd-skip-link above the filters, with an `href` to the results, so a keyboard user need not pass every filter.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
 - `skip-link-needs-target`: No rendered element follows the skip link, so it has nothing to move focus to. Put the content it skips to right after it, or point `href` at the id of the target.
 - `skip-link-needs-text` (hint): Name what the skip link skips with `text`, such as "Sla filters over". Its default only says "Sla over".
@@ -4091,7 +4068,6 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 
 - `back-link-no-vague-text` (hint): Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
 - `skip-link-needs-text` (hint): Name what the skip link skips with `text`, such as "Sla filters over". Its default only says "Sla over".
@@ -4137,7 +4113,6 @@ A toolbar for page and container headings with optional navigation and action bu
 **Rules** (`nldd lint`)
 
 - `back-link-no-vague-text` (hint): Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `pane-title-bar-needs-back` (hint): Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.
 - `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
@@ -4343,11 +4318,7 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 - `modal-dialog-exit-needs-primary`: Give the way out appearance="primary": autopilot should end at the safe choice, not at the irreversible one.
 - `modal-dialog-needs-two-actions`: One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.
 - `modal-dialog-no-form` (hint): Do work that needs its context in an nldd-sheet, which keeps the page visible and has room for the fields.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
-- `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
-- `pane-title-bar-needs-back` (hint): Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.
-- `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
 
 **Attributes**
 
@@ -4387,7 +4358,6 @@ A short message that arrives over the interface and leaves on its own: a save th
 **Rules** (`nldd lint`)
 
 - `notification-max-two-actions`: At most 2 actions: a message that needs three choices is a decision, and a decision belongs in a dialog that waits for it.
-- `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 
 **Attributes**
 
@@ -4800,7 +4770,6 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 
 - `download-target-no-effect`: `target` does nothing with `download`, which saves the file instead of opening it. Remove one of the two.
 - `list-form-no-action-rows`: type="form" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments. Use type="list" for rows you activate, and put the action in a cell if it belongs to a form row.
-- `list-item-no-other-children`: A row takes cells and segments. Anything else sits outside its layout.
 - `list-item-segment-disclosure-needs-button`: Add `button`: `disclosure` only marks which control opens the branch, and without it there is no hover, focus or keyboard.
 - `list-item-segment-expanded-no-effect`: `disclosure` takes aria-expanded from the row, so a screen reader never hears the `expanded` on this action. Drop one of the two.
 - `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
@@ -4917,7 +4886,6 @@ Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surfa
 
 **Rules** (`nldd lint`)
 
-- `menu-no-manual-anchor` (hint): Nest it in the `popup` slot of the button, or point `popovertarget` on the button or list segment at its id: both anchor it and open it. `anchor` is for a trigger that is not an nldd component.
 - `table-needs-columns`: nldd-table needs `columns`, a CSS grid track list, or its cells do not line up.
 - `table-needs-empty-slot`: No rows and nothing in [slot="empty"], so the table renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.
 - `table-needs-name`: nldd-table needs `accessible-label`: role="table" takes its name from there.

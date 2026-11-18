@@ -60,6 +60,8 @@ interface QuickEntry {
 	/** What removing the token sets the attribute back to. */
 	unset: string | boolean;
 	set: (value: string | boolean) => void;
+	/** Shows a value in the control without setting it, for a reset that redraws the story. */
+	show?: (value: string | boolean) => void;
 	/** A field for a value that is typed rather than chosen, built like the one in the list. */
 	field?: (change: (value: string | boolean) => void) => HTMLElement;
 }
@@ -200,7 +202,8 @@ export class SiteStage extends HTMLElement {
 	private resetButton?: HTMLElement;
 	private resetItem?: HTMLElement;
 	/** The args the controls show that are not an attribute, such as the text in a slot. */
-	private contentInputs = new Map<string, HTMLElement>();
+	/** The fields for content, and how to build each again as it started. */
+	private contentInputs = new Map<string, { input: HTMLElement; build: () => HTMLElement }>();
 	/** What the stage hangs on the page, let go once the stage leaves it. */
 	private lifetime = new AbortController();
 	private observers: (MutationObserver | ResizeObserver)[] = [];
@@ -712,7 +715,10 @@ export class SiteStage extends HTMLElement {
 				change(value);
 				syncInput(input, value);
 			});
-			if (entry) this.quick.push(entry);
+			if (entry) {
+				entry.show = (value) => syncInput(input, value);
+				this.quick.push(entry);
+			}
 			row(attribute.name, input, fromStory?.argType.description ?? attribute.description);
 		}
 		if (this.quick.length) this.buildQuick();
@@ -726,11 +732,12 @@ export class SiteStage extends HTMLElement {
 				strict: true,
 				description: argType.description ?? '',
 			};
-			const input = this.input(control, story.args[key], (value) => {
+			const build = () => this.input(control, story.args[key], (value) => {
 				this.setArg(key, value);
 				this.showReset();
 			}, argType);
-			this.contentInputs.set(key, input);
+			const input = build();
+			this.contentInputs.set(key, { input, build });
 			row(name, input, control.description);
 		}
 		this.resets.push({
@@ -959,25 +966,39 @@ export class SiteStage extends HTMLElement {
 	private reset(): void {
 		for (const target of this.resets) if (!target.atStart()) target.reset();
 		this.showReset();
-		// The button goes with the click: the focus stays in the bar.
-		this.querySelector<HTMLElement>('nldd-toolbar nldd-segmented-control')?.focus({ preventScroll: true });
+		// The button goes with the click: the focus stays in the bar, on a
+		// control that has not moved into the overflow menu.
+		const controls = this.querySelectorAll<HTMLElement>('nldd-toolbar nldd-segmented-control, nldd-toolbar nldd-icon-button');
+		[...controls].find((control) => control.checkVisibility())?.focus({ preventScroll: true });
 	}
 
-	/** Puts every control back where the story started. */
+	/**
+	 * Puts the story back as it started and the controls with it. The story is
+	 * drawn again rather than undone attribute by attribute: a frame cannot say
+	 * which attributes the story itself set, and taking one away would strip it.
+	 */
 	private resetControls(): void {
 		const story = this.story;
 		if (!story) return;
 		this.quickPending.clear();
+		this.overrides.clear();
+		this.args = { ...story.args };
+		this.argsChanged = false;
 		for (const entry of this.quick) {
-			if (this.atStart(entry)) continue;
 			entry.current = entry.initial;
-			entry.set(entry.initial);
+			entry.show?.(entry.initial);
 		}
-		for (const [key, input] of this.contentInputs) {
-			if (this.args[key] === story.args[key]) continue;
-			this.setArg(key, story.args[key]);
-			syncInput(input, story.args[key] as string | boolean);
+		// A field built again shows the start as it did, also an empty value
+		// or the label of a mapped one.
+		for (const [key, field] of this.contentInputs) {
+			const fresh = field.build();
+			fresh.setAttribute('accessible-label', field.input.getAttribute('accessible-label') ?? '');
+			field.input.replaceWith(fresh);
+			this.contentInputs.set(key, { input: fresh, build: field.build });
 		}
+		if (this.frame) this.frame.contentWindow?.location.reload();
+		else this.draw(this.canvas);
+		this.showSource();
 		this.showQuick();
 	}
 

@@ -12,6 +12,7 @@
  */
 
 import loaders from 'virtual:site-components';
+import { fragmentId } from './fragment.js';
 
 const PANE = (slot: string) => `:scope > nldd-split-view-pane[slot="${slot}"]`;
 
@@ -141,7 +142,7 @@ async function settle(
 	url: URL,
 	{ restore, keepFocus, tab }: { restore: boolean; keepFocus: boolean; tab: boolean },
 ): Promise<void> {
-	const target = url.hash ? document.getElementById(decodeURIComponent(url.hash.slice(1))) : null;
+	const target = url.hash ? document.getElementById(fragmentId(url.hash)) : null;
 	if (target) target.scrollIntoView();
 	else if (!restore) scrollTo(0, 0);
 	// When the panes stack, the sidebar gives way to main: focus goes along.

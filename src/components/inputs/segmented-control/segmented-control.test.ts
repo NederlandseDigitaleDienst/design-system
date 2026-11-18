@@ -471,7 +471,6 @@ describe('nldd-segmented-control-item – tooltip', () => {
 		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip') as HTMLElement;
 		const bubble = tooltip.shadowRoot!.querySelector('.tooltip') as HTMLElement;
 
-		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 		(el as NLDDSegmentedControlItem).focus();
 		await waitForUpdate(tooltip);
 		expect(bubble.matches(':popover-open')).toBe(true);

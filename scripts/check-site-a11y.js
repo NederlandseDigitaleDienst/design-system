@@ -182,7 +182,12 @@ if (onSite.length) {
 	}
 }
 
-if (update && !filters.length) {
+const crashed = all.filter((finding) => finding.rule === 'page-failed');
+if (update && crashed.length) {
+	// A page that did not load reports nothing, and its known findings would
+	// leave the baseline as if they were solved.
+	console.error(`Baseline niet geschreven: ${crashed.length} pagina('s) laadden niet. Los dat eerst op.`);
+} else if (update && !filters.length) {
 	writeFileSync(baselinePath, `${JSON.stringify(inExamples, null, '\t')}\n`);
 	console.log(`Baseline geschreven: ${Object.keys(inExamples).length} pagina's met bekende bevindingen in voorbeelden.`);
 } else {

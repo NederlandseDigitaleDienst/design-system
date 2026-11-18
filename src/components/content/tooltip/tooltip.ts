@@ -14,7 +14,7 @@
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
  * @attr {'top'|'bottom'|'left'|'right'} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
- * @attr {string} timing - When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Keyboard focus shows it at once; the focus a mouse press gives a button shows nothing, so a click does not flash it up.
+ * @attr {string} timing - When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Focus shows it at once, except the focus a press gives a button, so a click does not flash it up.
  *
  * Escape closes a tooltip that hover or focus opened, wherever focus is: the
  * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
@@ -68,7 +68,6 @@ import '../keyboard-shortcut/keyboard-shortcut.js';
 import { carryContext } from '../../../utilities/carried-context.js';
 import { onAncestorScroll } from '../../../utilities/ancestor-scroll.js';
 import { cssTimeToMs } from '../../../utilities/css-time.js';
-import { isKeyboardMode } from '../../../utilities/input-modality.js';
 
 /**
  * What can clip a trigger. Floating UI walks every ancestor, but a trigger in
@@ -150,6 +149,9 @@ export class NLDDTooltip extends LitElement {
 	private _positionVersion = 0;
 	private _stopScroll?: () => void;
 	private _fadeTimer?: ReturnType<typeof setTimeout>;
+	private _pressed = false;
+	/** What can clip the trigger, found once per showing: every scroll repositions. */
+	private _boundary?: Element[] | 'clippingAncestors';
 
 	/** The text it fades out with. Feedback such as "Gekopieerd" turns back
 	 *  into its label as it goes, and the label flashed in the fade. */
@@ -336,8 +338,20 @@ export class NLDDTooltip extends LitElement {
 		this._syncAriaDescribedBy();
 		// Chrome focuses a button on the press, before its click: shown for
 		// that focus, the tooltip flashed up and went again with the click.
-		if (!isKeyboardMode()) return;
+		if (this._pressed) return;
 		this._interest.focus();
+	}
+
+	/** A press on the trigger, until the pointer lets go. */
+	_handleTriggerPress(): void {
+		this._pressed = true;
+		const release = (): void => {
+			this._pressed = false;
+			document.removeEventListener('pointerup', release, true);
+			document.removeEventListener('pointercancel', release, true);
+		};
+		document.addEventListener('pointerup', release, true);
+		document.addEventListener('pointercancel', release, true);
 	}
 
 	_handleTriggerLeave(): void {
@@ -376,6 +390,7 @@ export class NLDDTooltip extends LitElement {
 	}
 
 	private _listenToScroll(): void {
+		this._boundary = undefined;
 		clearTimeout(this._fadeTimer);
 		this._stopScroll?.();
 		this._stopScroll = onAncestorScroll(this, this._handleScroll);
@@ -481,7 +496,7 @@ export class NLDDTooltip extends LitElement {
 				offset(distance),
 				flip(),
 				shift({ padding: parseInt(styles.getPropertyValue('--_tooltip-shift-padding'), 10), limiter: limitShift() }),
-				hide({ boundary: clippingBoundary(trigger) }),
+				hide({ boundary: (this._boundary ??= clippingBoundary(trigger)) }),
 			],
 		});
 

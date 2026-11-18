@@ -122,8 +122,6 @@ describe('nldd-tooltip – show/hide', () => {
 		await waitForUpdate(el);
 
 		const trigger = el.querySelector('button')!;
-		// Keyboard focus: the focus of a press shows nothing.
-		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 		trigger.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
 		await waitForUpdate(el);
 
@@ -508,6 +506,18 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		expect(opened).toBe(false);
 	});
 
+	// Focus without a key the page hears, as from VoiceOver or a dialog that
+	// opens on a click and focuses its first control, still shows it.
+	it('toont zich bij focus na een klik elders', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Kopieer"><button>Trigger</button></nldd-tooltip>');
+		el = tooltip;
+		await waitForUpdate(tooltip);
+		document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse' }));
+		document.body.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerType: 'mouse' }));
+		tooltip.querySelector('button')!.focus();
+		await until(() => isTooltipVisible(tooltip));
+	});
+
 	it('verdwijnt bij scrollen als hover hem toonde', async () => {
 		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
 		el = tooltip;
@@ -522,7 +532,6 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
 		el = tooltip;
 		await waitForUpdate(tooltip);
-		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 		tooltip.querySelector('button')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
 		await until(() => isTooltipVisible(tooltip));
 		window.dispatchEvent(new Event('scroll'));

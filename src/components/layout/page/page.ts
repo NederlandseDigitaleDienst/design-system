@@ -71,13 +71,20 @@ import { pageTemplate } from './page.template.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
+/** Whether an element Tab could land on is one it lands on: an `<a>` without `href` reports a tabIndex of 0. */
+function takesTab(element: HTMLElement): boolean {
+	if (element.tabIndex < 0 || element.matches(':disabled')) return false;
+	if (element.localName === 'a' && !element.hasAttribute('href') && !element.hasAttribute('tabindex')) return false;
+	return element.checkVisibility({ visibilityProperty: true });
+}
+
 /** Whether what scrolls in a page (all but its header) holds anything Tab lands on, in light or shadow DOM. */
 function holdsFocusable(page: Element): boolean {
 	const walk = (parent: Element | ShadowRoot): boolean => {
 		for (const child of parent.children) {
-			if (!(child instanceof HTMLElement) || child.hidden) continue;
+			if (!(child instanceof HTMLElement) || child.hidden || child.inert) continue;
 			if (parent === page && child.slot === 'header') continue;
-			if (child.tabIndex >= 0 && !child.matches(':disabled')) return true;
+			if (takesTab(child)) return true;
 			if (child.shadowRoot && walk(child.shadowRoot)) return true;
 			if (walk(child)) return true;
 		}

@@ -9,6 +9,7 @@ import './autoload.js';
 import { chooseScheme, chooseTheme, chosenScheme, chosenTheme, showTheme } from './theme.js';
 import './stage.js';
 import './navigate.js';
+import { fragmentId } from './fragment.js';
 
 /**
  * A title bar with a back button and no link goes back to the sections, which
@@ -135,7 +136,7 @@ function wireContents(root: ParentNode = document): void {
 		),
 	];
 	const headings = rows
-		.map((row) => document.getElementById(decodeURIComponent(row.getAttribute('href')!.slice(1))))
+		.map((row) => document.getElementById(fragmentId(row.getAttribute('href')!)))
 		.filter((heading): heading is HTMLElement => !!heading);
 	if (!headings.length) return;
 	const mark = () => {
