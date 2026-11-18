@@ -41,6 +41,23 @@ interface ControlsData {
 
 type Args = Record<string, unknown>;
 
+/** An attribute the strip under the example shows while it is set. */
+interface QuickEntry {
+	name: string;
+	kind: 'boolean' | 'select' | 'field';
+	/** The labels of a choice that set the attribute, as the controls list them. */
+	options: string[];
+	/** The attribute as the code writes it, for a value. */
+	written: (value: string) => string;
+	isDefault: (value: string | boolean) => boolean;
+	current: string | boolean;
+	/** What removing the token sets the attribute back to. */
+	unset: string | boolean;
+	set: (value: string | boolean) => void;
+	/** A field for a value that is typed rather than chosen, built like the one in the list. */
+	field?: (change: (value: string | boolean) => void) => HTMLElement;
+}
+
 const WIDTHS: [label: string, width: string][] = [
 	['Smal', '360px'],
 	['Midden', '768px'],
@@ -56,6 +73,33 @@ const SHOWN_WHOLE = { options: 4, characters: 16 };
 /** The width of a field in the controls, and below which width of the list the descriptions fold away. */
 const FIELD_WIDTH = 'min(240px, 50%)';
 const NARROW_CONTROLS = 560;
+
+/** Puts a value chosen elsewhere into a control of the list. */
+function syncInput(input: HTMLElement, value: string | boolean): void {
+	if (input.localName === 'nldd-switch') (input as HTMLElement & { checked: boolean }).checked = value === true;
+	else if (input.localName === 'nldd-segmented-control') (input as HTMLElement & { value: string }).value = String(value);
+	else if (input.localName === 'nldd-dropdown') {
+		const select = input.querySelector('select');
+		if (select) select.value = String(value);
+	} else {
+		(input as HTMLElement & { value: string }).value = String(value);
+		if (input.localName === 'nldd-combo-box') input.setAttribute('text', String(value));
+	}
+}
+
+/**
+ * Whether an attribute is a choice between named values. A text attribute is
+ * one only where the story names a value by something else than itself
+ * (`download="aanvraag-A-1042.pdf"`); otherwise its values are suggestions,
+ * such as the names of the icons.
+ */
+function isChoice(control: AttributeControl, argType?: ArgType): boolean {
+	if (!(argType?.options ?? control.values)) return false;
+	if (control.kind === 'select') return !!(control.strict || argType?.options);
+	return Object.entries(argType?.mapping ?? {}).some(
+		([label, value]) => value !== null && value !== undefined && value !== '' && value !== label,
+	);
+}
 
 /** Numbers the info popovers of the controls, so each id is unique on the page. */
 let infoCount = 0;
@@ -135,6 +179,13 @@ export class SiteStage extends HTMLElement {
 	/** Each value of each choice in the controls: what the example can be set to. */
 	private variants: { name: string; arg?: string; value: string }[] = [];
 	private started = false;
+	private quick: QuickEntry[] = [];
+	private quickTokens = new Map<string, HTMLElement>();
+	private quickStrip?: HTMLElement;
+	/** Fields added from the menu that have no value yet: their token stays while it is filled in. */
+	private quickPending = new Set<string>();
+	private quickFields = new Map<string, HTMLElement>();
+	private quickAdd?: HTMLElement;
 
 	connectedCallback(): void {
 		if (this.started) return;
@@ -504,6 +555,8 @@ export class SiteStage extends HTMLElement {
 			import('../../src/components/inputs/combo-box/combo-box.js'),
 			import('../../src/components/actions/menu/menu.js'),
 			import('../../src/components/actions/menu/menu-item.js'),
+			import('../../src/components/actions/menu/menu-divider.js'),
+			import('../../src/components/content/token/token.js'),
 		]);
 
 		const list = nldd('list', { type: 'form', appearance: 'box-tinted' });
@@ -572,12 +625,26 @@ export class SiteStage extends HTMLElement {
 			if (!fromStory?.argType.mapping) {
 				for (const value of choices ?? []) this.variants.push({ name: attribute.name, arg: fromArg, value });
 			}
-			row(
-				attribute.name,
-				this.input(attribute, start, change, fromStory?.argType),
-				fromStory?.argType.description ?? attribute.description,
+			let entry: QuickEntry | undefined = undefined;
+			const input = this.input(
+				attribute,
+				start,
+				(value) => {
+					change(value);
+					if (!entry) return;
+					entry.current = value;
+					this.showQuick();
+				},
+				fromStory?.argType,
 			);
+			entry = this.quickEntry(attribute, start, fromStory?.argType, !!fromArg, (value) => {
+				change(value);
+				syncInput(input, value);
+			});
+			if (entry) this.quick.push(entry);
+			row(attribute.name, input, fromStory?.argType.description ?? attribute.description);
 		}
+		if (this.quick.length) this.buildQuick();
 		for (const [name, { key, argType }] of content) {
 			const type = typeof argType.control === 'object' ? argType.control.type : argType.control;
 			const kind = type === 'boolean' ? 'boolean' : type === 'number' ? 'number' : argType.options ? 'select' : 'text';
@@ -608,6 +675,232 @@ export class SiteStage extends HTMLElement {
 		void this.reserveHeight();
 	}
 
+	/** The entry in the strip for an attribute, when it is a switch or a choice. */
+	private quickEntry(
+		control: AttributeControl,
+		start: unknown,
+		argType: ArgType | undefined,
+		fromArg: boolean,
+		set: (value: string | boolean) => void,
+	): QuickEntry | undefined {
+		if (control.kind === 'boolean') {
+			return {
+				name: control.name,
+				kind: 'boolean',
+				options: [],
+				written: () => control.name,
+				isDefault: (value) => value !== true,
+				current: start === true || start === 'true',
+				unset: false,
+				set,
+			};
+		}
+		const values = argType?.options?.map(String) ?? control.values;
+		// The story knows a default the manifest leaves out, such as a centered alignment.
+		const fallback = control.default || String(argType?.table?.defaultValue?.summary ?? '');
+		if (!isChoice(control, argType)) {
+			return {
+				name: control.name,
+				kind: 'field',
+				options: [],
+				written: (value) => `${control.name}="${value}"`,
+				isDefault: (value) => [fallback, ''].includes(String(value)),
+				current: start === undefined || start === null ? '' : String(start),
+				unset: '',
+				set,
+				field: (change) => this.input(control, start, change, argType),
+			};
+		}
+		const mapping = argType?.mapping ?? {};
+		const raw = (label: string) => (label in mapping ? mapping[label] : label);
+		// Where a label maps to nothing, an empty value is one of its own: `download` without a name.
+		const empty = Object.values(mapping).some((value) => value === null || value === undefined);
+		const absent = (label: string) => {
+			const value = raw(label);
+			return value === null || value === undefined || (value === '' && !empty);
+		};
+		const isDefault = (label: string | boolean) =>
+			absent(String(label)) || (fallback !== '' && String(raw(String(label))) === fallback);
+		const label = Object.entries(mapping).find(([, value]) => value === start)?.[0];
+		return {
+			name: control.name,
+			kind: 'select',
+			options: values.filter((value) => !absent(value)),
+			written: (value) => (raw(value) === '' ? control.name : `${control.name}="${String(raw(value))}"`),
+			isDefault,
+			current: label ?? (start === undefined || start === null ? '' : String(start)),
+			// An arg goes back to the label of the default; an attribute of its own is taken off.
+			unset: fromArg ? (values.find((value) => isDefault(value)) ?? '') : '',
+			set,
+		};
+	}
+
+	/**
+	 * A strip of tokens under the example, one for each attribute that is set,
+	 * written as in the code: what the example is now, in view while it changes.
+	 */
+	private buildQuick(): void {
+		const tag = this.controls?.tag ?? '';
+		const menu = nldd('menu', { 'no-blink': true });
+		menu.slot = 'popup';
+		menu.addEventListener('beforetoggle', (event) => {
+			if ((event as ToggleEvent).newState !== 'open') return;
+			const unset = this.quick.filter((entry) => entry.isDefault(entry.current) && !this.quickPending.has(entry.name));
+			menu.replaceChildren(...unset.map((entry) => this.addItem(entry)));
+		});
+		this.quickAdd = nldd(
+			'icon-button',
+			{ icon: 'plus', size: 'sm', expandable: true, 'tooltip-timing': 'never', text: 'Attribuut toevoegen' },
+			[menu],
+		);
+		this.quickStrip = nldd(
+			'container',
+			{ padding: '16', gap: '8', layout: 'wrap', 'vertical-alignment': 'center', role: 'group', 'accessible-label': `Attributen van ${tag}` },
+			[this.quickAdd],
+		);
+		this.quickStrip.classList.add('site-stage__quick');
+		this.eventLog.before(this.quickStrip);
+		this.showQuick();
+	}
+
+	/** An item of the add menu: a switch is set at once, a choice opens its values. */
+	private addItem(entry: QuickEntry): HTMLElement {
+		const pick = (item: HTMLElement, value: string | boolean) => {
+			item.addEventListener('select', () => this.quickSet(entry, value));
+			return item;
+		};
+		if (entry.kind === 'boolean') return pick(nldd('menu-item', { text: entry.name }), true);
+		if (entry.kind === 'field') {
+			const item = nldd('menu-item', { text: entry.name });
+			item.addEventListener('select', () => this.quickFill(entry));
+			return item;
+		}
+		const values = entry.options.filter((label) => !entry.isDefault(label));
+		return nldd('menu-item', { text: entry.name }, [
+			nldd(
+				'menu',
+				{},
+				values.map((label) => pick(nldd('menu-item', { text: label }), label)),
+			),
+		]);
+	}
+
+	/** Shows the token of a field without a value yet, with its popover open on the field. */
+	private quickFill(entry: QuickEntry): void {
+		this.quickPending.add(entry.name);
+		this.showQuick();
+		const token = this.quickTokens.get(entry.name);
+		// The menu hands the focus back to its button first; the field takes it after.
+		setTimeout(() => {
+			const popover = token?.querySelector<HTMLElement & { invokerOpen(): void }>('nldd-popover');
+			popover?.invokerOpen();
+		});
+	}
+
+	/** A token for a typed value: its popover holds the field, as the list does, and a way to remove it. */
+	private fieldToken(entry: QuickEntry): HTMLElement {
+		const id = `site-quick-${++infoCount}`;
+		const field = entry.field!((value) => {
+			entry.current = value;
+			entry.set(value);
+			this.showQuick();
+		});
+		syncInput(field, entry.current);
+		field.autofocus = true;
+		this.quickFields.set(entry.name, field);
+		const remove = nldd('button', { size: 'sm', text: 'Verwijder' });
+		const popover = nldd('popover', { id, role: 'region', 'accessible-label': entry.name }, [
+			nldd('top-title-bar', { text: entry.name, 'heading-level': '2', 'dismiss-text': 'Sluit' }),
+			nldd('container', { padding: '16', gap: '12' }, [field, remove]),
+		]);
+		popover.slot = 'menu';
+		popover.classList.add('site-control-info', 'site-stage__quick-field');
+		remove.addEventListener('click', () => {
+			(popover as HTMLElement & { invokerClose(): void }).invokerClose();
+			this.quickSet(entry, entry.unset);
+			syncInput(field, entry.unset);
+		});
+		// Enter is done, as in the field of a form.
+		field.addEventListener('keydown', (event) => {
+			if ((event as KeyboardEvent).key !== 'Enter' || field.localName === 'nldd-combo-box') return;
+			(popover as HTMLElement & { invokerClose(): void }).invokerClose();
+		});
+		popover.addEventListener('toggle', (event) => {
+			if ((event as ToggleEvent).newState === 'open') return;
+			// A field left empty takes its token with it.
+			if (!this.quickPending.delete(entry.name)) return;
+			this.showQuick();
+			setTimeout(() => {
+				const active = document.activeElement;
+				if (!active || active === document.body) this.quickAdd?.focus();
+			});
+		});
+		return nldd('token', { control: 'menu', 'menu-text': `Bewerk ${entry.name}` }, [popover]);
+	}
+
+	private quickToken(entry: QuickEntry): HTMLElement {
+		if (entry.kind === 'field') return this.fieldToken(entry);
+		if (entry.kind === 'boolean') {
+			const token = nldd('token', { control: 'dismiss' });
+			token.addEventListener('dismiss', () => this.quickSet(entry, false));
+			return token;
+		}
+		const items = entry.options.map((label) => {
+				const item = nldd('menu-item', { type: 'radio', text: label, value: label });
+				item.addEventListener('select', () => this.quickSet(entry, label));
+				return item;
+			});
+		const remove = nldd('menu-item', { text: 'Verwijder' });
+		remove.addEventListener('select', () => this.quickSet(entry, entry.unset));
+		const menu = nldd('menu', { 'no-blink': true }, [...items, nldd('menu-divider'), remove]);
+		menu.slot = 'menu';
+		return nldd('token', { control: 'menu' }, [menu]);
+	}
+
+	private quickSet(entry: QuickEntry, value: string | boolean): void {
+		entry.current = value;
+		entry.set(value);
+		this.showQuick();
+		// A token that goes takes the focus with it: it goes to the add button.
+		setTimeout(() => {
+			const active = document.activeElement;
+			if (!active || active === document.body) this.quickAdd?.focus();
+		});
+	}
+
+	/** Puts the tokens in line with the attributes, keeping the ones that stay. */
+	private showQuick(): void {
+		const strip = this.quickStrip;
+		if (!strip || !this.quickAdd) return;
+		let previous: Element | null = null;
+		for (const entry of this.quick) {
+			let token = this.quickTokens.get(entry.name);
+			if (entry.isDefault(entry.current) && !this.quickPending.has(entry.name)) {
+				token?.remove();
+				this.quickTokens.delete(entry.name);
+				this.quickFields.delete(entry.name);
+				continue;
+			}
+			const field = this.quickFields.get(entry.name);
+			if (field && !field.matches(':focus-within')) syncInput(field, entry.current);
+			if (!token) {
+				token = this.quickToken(entry);
+				this.quickTokens.set(entry.name, token);
+			}
+			token.setAttribute('text', entry.written(String(entry.current)));
+			for (const item of token.querySelectorAll('nldd-menu-item[type="radio"]')) {
+				item.toggleAttribute('selected', item.getAttribute('value') === entry.current);
+			}
+			const place: Element | null = previous ? previous.nextElementSibling : strip.firstElementChild;
+			if (place !== token) {
+				if (previous) previous.after(token);
+				else strip.prepend(token);
+			}
+			previous = token;
+		}
+		this.quickAdd.hidden = this.quick.every((entry) => !entry.isDefault(entry.current) || this.quickPending.has(entry.name));
+	}
+
 	private input(
 		control: AttributeControl,
 		start: unknown,
@@ -623,7 +916,7 @@ export class SiteStage extends HTMLElement {
 		// The story's own options win when it has them: they carry the labels a
 		// reader knows from the story, such as "(geen)" for an empty value.
 		const values = argType?.options?.map(String) ?? control.values;
-		if (control.kind === 'select' && values && (control.strict || argType?.options)) {
+		if (values && isChoice(control, argType)) {
 			const options: [label: string, value: string][] = values.map((value) => [value, value]);
 			if (!argType?.options) options.unshift(['(standaard)', '']);
 			// An arg holds the value, the list shows the label: find the label
