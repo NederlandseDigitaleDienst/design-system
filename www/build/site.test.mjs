@@ -102,17 +102,19 @@ test('a page behind the landing page can be shown in another theme, set before t
 	assert.doesNotMatch(pages['index.html'], /data-site-theme|theme\.js/);
 });
 
-test('a component has a page per tab: examples, API and lint rules', () => {
-	const examples = pages['componenten/button/index.html'];
+test('a component has a page per tab: usage, examples, API and lint rules', () => {
+	const usage = pages['componenten/button/index.html'];
+	const examples = pages['componenten/button/voorbeelden/index.html'];
 	const api = pages['componenten/button/api/index.html'];
 	const rules = pages['componenten/button/lintregels/index.html'];
-	assert.match(examples, /<nldd-tab-bar\s+navigation[^]*href="\/componenten\/button\/"\s+text="Voorbeelden"\s+current/);
+	assert.match(usage, /<nldd-tab-bar\s+navigation[^]*href="\/componenten\/button\/"\s+text="Gebruik"\s+current/);
+	assert.match(examples, /href="\/componenten\/button\/voorbeelden\/"\s+text="Voorbeelden"\s+current/);
 	assert.match(api, /href="\/componenten\/button\/api\/"\s+text="API"\s+current/);
 	assert.match(api, /<h2 id="nldd-button">/);
 	assert.doesNotMatch(api, /<site-stage/);
 	assert.match(rules, /text="Lintregels"\s+current[^]*<h2>Lintregels<\/h2>/);
 	// The sidebar marks the component on every tab.
-	for (const page of [examples, api, rules]) assert.match(page, /href="\/componenten\/button\/"\s+current/);
+	for (const page of [usage, examples, api, rules]) assert.match(page, /href="\/componenten\/button\/"\s+current/);
 });
 
 test('a pattern has a tab with the lint rules that point at it', () => {
@@ -135,12 +137,19 @@ test('a page under a deploy base links within that base', () => {
 	assert.doesNotMatch(based['index.html'], /href="\/componenten\//);
 });
 
-test('each example of a component stands on a stage, and the first one carries the controls', () => {
+test('each example of a component stands on a stage, and the first one, on the usage tab, carries the controls', () => {
 	const button = pages['componenten/button/index.html'];
-	const stages = button.match(/<site-stage /g) ?? [];
+	const examples = pages['componenten/button/voorbeelden/index.html'];
 	const component = collectComponents().find((c) => c.slug === 'button');
-	assert.equal(stages.length, component.stories.filter((s) => !s.hidden).length);
+	// The first story is on the usage tab, with the controls; the others are examples.
+	assert.equal((button.match(/<site-stage /g) ?? []).length, 1);
 	assert.equal((button.match(/<site-stage [^>]*primary/g) ?? []).length, 1);
+	assert.equal((examples.match(/<site-stage /g) ?? []).length, component.stories.filter((s) => !s.hidden).length - 1);
+	assert.equal((examples.match(/<site-stage [^>]*primary/g) ?? []).length, 0);
+	// The stage shows the code and names the example, so neither is repeated above it.
+	const usage = button.slice(button.indexOf('</nldd-tab-bar>'), button.indexOf('<site-stage'));
+	assert.doesNotMatch(usage, /<nldd-code-viewer|<h2>/);
+	assert.match(examples, /<h2>[^<]+<\/h2>[^]*<site-stage /);
 	assert.match(button, /"name":"appearance"[^}]*"kind":"select","values":\["primary","secondary"/);
 });
 

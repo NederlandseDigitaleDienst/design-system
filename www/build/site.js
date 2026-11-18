@@ -782,9 +782,10 @@ function patternPages(pattern, lintRules) {
 
 /**
  * The pages of a component: one per tab, each with a URL of its own, so a link
- * can point at the API or the rules and the browser steps back per tab. Above
- * the tabs every page has the same header: the title, the introduction, which
- * starts with the tag, and a link to the source. A tab with nothing on it is left out.
+ * can point at the examples, the API or the rules and the browser steps back
+ * per tab. Above the tabs every page has the same header: the title, the
+ * introduction, which starts with the tag, and a link to the source. A tab
+ * with nothing on it is left out.
  */
 function componentPages(component, lintRules) {
 	const base = `/componenten/${component.slug}/`;
@@ -797,7 +798,12 @@ function componentPages(component, lintRules) {
 	const intro = split === -1 ? markdown : markdown.slice(0, split);
 	const usage = split === -1 ? '' : markdown.slice(split);
 	const description = intro.trim() ? renderMarkdown(intro, { href: identity }).html : '';
-	const usageHtml = usage.trim() ? renderMarkdown(usage, { href: identity }).html : '';
+	// The example with the controls shows the code, so the code under Gebruik
+	// would say the same twice; its prose and the sections after it stay.
+	const usageText = usage.replace(/^#{1,6} Gebruik\s*\n([^]*?)(?=^#{1,6} |$(?![^]))/m, (_, section) =>
+		section.replace(/^```[^]*?^```\s*$/gm, ''),
+	);
+	const usageHtml = usageText.trim() ? renderMarkdown(usageText, { href: identity }).html : '';
 	const api = component.elements.map(elementApi).filter(Boolean).join('\n');
 	const rules = [...new Set(component.elements.flatMap((element) => rulesAboutTag(lintRules, element.tagName)))];
 	const status = component.status
@@ -809,25 +815,37 @@ function componentPages(component, lintRules) {
 					text="Bekijk broncode op GitHub"
 				></nldd-link>`
 		: '';
-	const examples = visible
-		.map((story, index) => {
-			const text = story.description ? renderMarkdown(story.description, { href: identity }).html : '';
-			return `<nldd-container gap="12" id="${story.id.split('--')[1]}">
-					<nldd-title size="display-4">
+	const example = (story, options = {}) => {
+		const text = story.description ? renderMarkdown(story.description, { href: identity }).html : '';
+		// The stage names the example, so the one on its own tab needs no heading.
+		const heading = options.primary
+			? ''
+			: `<nldd-title size="display-4">
 						<h2>${escapeHtml(story.name)}</h2>
-					</nldd-title>
+					</nldd-title>`;
+		return `<nldd-container gap="12" id="${story.id.split('--')[1]}">
+					${heading}
 					${text}
-					${stage(component, story, index === 0 ? { primary: true, controls } : {})}
+					${stage(component, story, options)}
 				</nldd-container>`;
-		})
-		.join('\n\t\t\t\t');
+	};
+	// The first story, with the controls, is where you try the component; the
+	// others each show one case of it, on a tab of their own.
+	const [first, ...others] = visible;
 	const tabs = [
 		{
 			path: base,
-			text: 'Voorbeelden',
+			text: 'Gebruik',
 			title: component.name,
-			body: `${usageHtml}\n\t\t\t\t${examples}`,
+			body: `${usageHtml}\n\t\t\t\t${first ? example(first, { primary: true, controls }) : ''}`,
 			shown: true,
+		},
+		{
+			path: `${base}voorbeelden/`,
+			text: 'Voorbeelden',
+			title: `${component.name}, voorbeelden`,
+			body: others.map((story) => example(story)).join('\n\t\t\t\t'),
+			shown: others.length > 0,
 		},
 		{ path: `${base}api/`, text: 'API', title: `${component.name}, API`, body: api, shown: !!api },
 		{
