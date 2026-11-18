@@ -47,11 +47,18 @@ const WIDTHS: [label: string, width: string][] = [
 	['Vol', '100%'],
 ];
 
-/** The controls start open while they leave the examples below them within reach. */
-const OPEN_UP_TO = 8;
+/**
+ * A choice of a few short options is shown whole, and fits beside its name on
+ * a phone too; a longer one is a dropdown at every width.
+ */
+const SHOWN_WHOLE = { options: 4, characters: 16 };
 
-/** A choice from a handful of options is shown whole; a longer one is a list. */
-const SHOWN_WHOLE = { options: 4, characters: 28 };
+/** The width of a field in the controls, and below which width of the list the descriptions fold away. */
+const FIELD_WIDTH = 'min(240px, 50%)';
+const NARROW_CONTROLS = 560;
+
+/** Numbers the info popovers of the controls, so each id is unique on the page. */
+let infoCount = 0;
 
 const kebab = (name: string) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
@@ -231,10 +238,17 @@ export class SiteStage extends HTMLElement {
 		options: [label: string, value: string][],
 		selected: string,
 		onChange: (value: string) => void,
+		{ size = 'sm', appearance = 'neutral-base' }: { size?: string; appearance?: string } = {},
 	): HTMLElement {
 		const control = nldd(
 			'segmented-control',
-			{ size: 'sm', appearance: 'neutral-base', width: 'fit-content', 'accessible-label': name, value: selected },
+			{
+				size,
+				...(appearance ? { appearance } : {}),
+				width: 'fit-content',
+				'accessible-label': name,
+				value: selected,
+			},
 			options.map(([text, value]) => nldd('segmented-control-item', { text, value })),
 		);
 		control.addEventListener('change', (event) => onChange((event as CustomEvent<{ value: string }>).detail.value));
@@ -400,9 +414,10 @@ export class SiteStage extends HTMLElement {
 			this.code.setAttribute('language', this.story.parameters.docs?.source?.language ?? 'html');
 			this.code.setAttribute('appearance', 'simple');
 			this.code.setAttribute('max-height', '420px');
-			// The code closes the stage, below the controls, whichever of the two
-			// arrives first: a framed example reports its markup later.
-			this.box.append(nldd('divider'), section('site-stage__code', [this.code]));
+			// The code comes right after the example, before the controls,
+			// whichever of the two arrives first: a framed example reports its
+			// markup later.
+			this.box.after(nldd('box', {}, [section('site-stage__code', [this.code])]));
 		}
 		this.code.textContent = text;
 	}
@@ -464,9 +479,14 @@ export class SiteStage extends HTMLElement {
 		// Only the first example of a page has controls, so only that one loads
 		// the form components.
 		await Promise.all([
-			import('../../src/components/content/accordion/accordion.js'),
-			import('../../src/components/forms/form/form.js'),
-			import('../../src/components/forms/form-field/form-field.js'),
+			import('../../src/components/lists-and-tables/list/list.js'),
+			import('../../src/components/lists-and-tables/list-item/list-item.js'),
+			import('../../src/components/lists-and-tables/cells/text-cell/text-cell.js'),
+			import('../../src/components/lists-and-tables/cells/cell/cell.js'),
+			import('../../src/components/lists-and-tables/cells/spacer-cell/spacer-cell.js'),
+			import('../../src/components/content/text/text.js'),
+			import('../../src/components/actions/icon-button/icon-button.js'),
+			import('../../src/components/layout/popover/popover.js'),
 			import('../../src/components/inputs/switch/switch.js'),
 			import('../../src/components/inputs/dropdown/dropdown.js'),
 			import('../../src/components/inputs/number-field/number-field.js'),
@@ -476,13 +496,47 @@ export class SiteStage extends HTMLElement {
 			import('../../src/components/actions/menu/menu-item.js'),
 		]);
 
-		const form = nldd('form', { 'label-alignment': 'left', novalidate: true });
-		form.addEventListener('submit', (event) => event.preventDefault());
+		const list = nldd('list', { type: 'form', appearance: 'box-tinted' });
+		list.classList.add('site-stage__controls');
 
+		// The name and what it does on the left, the control on the right. The
+		// description is in an nldd-text, which styles the code in it.
+		// Where the row is narrow, the description waits behind an info button
+		// after the name, so the name and the control stay side by side.
+		const infos: { label: HTMLElement; button: HTMLElement; text: HTMLElement }[] = [];
+		const popovers: HTMLElement[] = [];
 		const row = (name: string, input: HTMLElement, description: string) => {
-			const field = nldd('form-field', { label: name }, [input]);
-			if (description) field.append(nldd('form-field-help-text', {}, described(description)));
-			form.append(field);
+			const title = element('p', '', `${name} `);
+			const label = nldd('text-cell', {}, [title]);
+			if (description) {
+				const span = element('span', '');
+				span.append(...described(description));
+				const text = element('p', '');
+				text.slot = 'supporting-text';
+				text.append(nldd('text', { size: 'sm' }, [span]));
+				label.append(text);
+				const id = `site-control-info-${++infoCount}`;
+				const button = nldd('icon-button', {
+					size: 'xs',
+					icon: 'info-circle',
+					'tooltip-timing': 'never',
+					text: `Over ${name}`,
+					popovertarget: id,
+					hidden: true,
+				});
+				title.append(button);
+				const about = span.cloneNode(true);
+				popovers.push(
+					nldd('popover', { id, role: 'region', 'accessible-label': name }, [
+						nldd('container', { padding: '16' }, [nldd('text', {}, [about])]),
+					]),
+				);
+				infos.push({ label, button, text });
+			}
+			input.setAttribute('accessible-label', name);
+			const fits = ['nldd-switch', 'nldd-segmented-control'].includes(input.localName);
+			const cell = nldd('cell', { 'horizontal-alignment': 'right', ...(fits ? {} : { width: FIELD_WIDTH }) }, [input]);
+			list.append(nldd('list-item', {}, [label, nldd('spacer-cell', { size: '12' }), cell]));
 		};
 
 		for (const attribute of attributes) {
@@ -522,17 +576,19 @@ export class SiteStage extends HTMLElement {
 			};
 			row(name, this.input(control, story.args[key], (value) => this.setArg(key, value), argType), control.description);
 		}
-		const count = attributes.length + content.length;
-		// Folded in place although it is a form: the example has to stay in view
-		// while an attribute changes, which a sheet over the page would not allow.
-		const panel = section('site-stage__controls', [
-			nldd('accordion', {}, [
-				nldd('accordion-item', { text: `Pas dit voorbeeld aan (${count} attributen)`, open: count <= OPEN_UP_TO }, [form]),
-			]),
-		]);
-		const code = this.box.querySelector(':scope > .site-stage__code');
-		if (code) code.previousElementSibling!.before(nldd('divider'), panel);
-		else this.box.append(nldd('divider'), panel);
+		// In place, not in a sheet: the example has to stay in view while an
+		// attribute changes. The usage tab has no other examples to keep in reach.
+		this.append(list, ...popovers);
+		new ResizeObserver(() => {
+			const narrow = list.offsetWidth < NARROW_CONTROLS;
+			// Out of the cell rather than hidden: the cell's own style on a slotted
+			// paragraph outranks the hidden attribute.
+			for (const { label, button, text } of infos) {
+				button.hidden = !narrow;
+				if (narrow) text.remove();
+				else label.append(text);
+			}
+		}).observe(list);
 		void this.reserveHeight();
 	}
 
@@ -562,7 +618,7 @@ export class SiteStage extends HTMLElement {
 				options.length <= SHOWN_WHOLE.options &&
 				options.reduce((sum, [name]) => sum + name.length, 0) <= SHOWN_WHOLE.characters &&
 				options.every(([, value]) => value !== '');
-			if (fits) return this.choice(control.name, options, selected, change);
+			if (fits) return this.choice(control.name, options, selected, change, { size: 'md', appearance: '' });
 			const select = element('select', '');
 			for (const [name, value] of options) select.append(new Option(name, value));
 			select.value = selected;
@@ -577,7 +633,9 @@ export class SiteStage extends HTMLElement {
 			});
 			return input;
 		}
-		const placeholder: Record<string, string> = control.default ? { placeholder: control.default } : {};
+		// The manifest writes a missing default as the word.
+		const placeholder: Record<string, string> =
+			control.default && control.default !== 'undefined' ? { placeholder: control.default } : {};
 		if (values) {
 			const input = nldd('combo-box', { value: text, text, 'allow-custom': true, ...placeholder }, [
 				nldd(

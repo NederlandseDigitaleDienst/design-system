@@ -43,7 +43,9 @@ nldd-rich-text td code {
 	site-stage {
 		--_stage-line: color-mix(in srgb, var(--semantics-content-color) 28%, transparent);
 
-		display: block;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
 	}
 
 	/* The bar is layout only: a title at the start, the tools at the end. */
