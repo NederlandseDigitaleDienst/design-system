@@ -190,7 +190,7 @@ Dezelfde regels draaien op drie plekken:
 | Waar | Wat het ziet |
 |------|--------------|
 | Bron (`.vue`, `.tsx`, `.jsx`, `.js`, `.astro`, `.html`, `.j2`, ook Angular, Django en htmx; `.mdx` en `.md` als je ze noemt) | Vóór de commit, per bestand, alleen wat zeker fout is |
-| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Scripts in een buildmap (`IGNORED_DIRECTORIES`) slaat hij over: in die chunks staat de CSS van de componenten zelf |
+| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Scripts in een buildmap (`IGNORED_DIRECTORIES`) slaat hij over: in die chunks staat de CSS van de componenten zelf. Dat gaat op het pad vanaf de projectroot, dus `cd dist && nldd lint` leest ze wel |
 | Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen. Alleen met een bundler die `import.meta.env.DEV` zet, zoals Vite; Angular en server-rendered apps hebben de eerste twee rijen |
 
 Wat een template in een tag schrijft (`{% if %}`, `{{ attrs }}`, `*ngIf`) maakt het element onzeker, nooit fout. Wijzig je de parser, draai dan `npm run lint:corpus` op elk soort consument uit de README: Vue, TSX, Astro, Angular, Jinja en gewone HTML.

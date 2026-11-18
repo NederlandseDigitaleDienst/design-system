@@ -402,6 +402,26 @@ const CLOSES = '';
 /** Elements HTML never closes, so they do not nest inside an expression either. */
 const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
 
+/** Stands for an element in the script of an expression, when that script is judged. */
+const ELEMENT = '\uE005';
+
+const ONLY_COMMENTS = /^(\/\*[\s\S]*?\*\/\s*)+$/;
+
+/**
+ * Whether the script around the elements of an expression can render something
+ * else: a branch of `? :`, `||` or `??` that is no element and not nothing.
+ */
+function rendersMore(script) {
+	const parts = script.replace(/[\s()]/g, '').split(/(\?\?|\|\||\?(?!\.)|:)/);
+	const rendersNothingElse = (part) => part.includes(ELEMENT) || /^(null|undefined|false|''|"")?[}\];,]*$/.test(part);
+	for (let at = 1; at < parts.length; at += 2) {
+		// What stands left of `||` and `??` is rendered when it is there.
+		const leftRenders = parts[at] !== '?' && parts[at] !== ':' && !parts[at - 1].includes(ELEMENT);
+		if (leftRenders || !rendersNothingElse(parts[at + 1])) return true;
+	}
+	return false;
+}
+
 /** After these a `<` starts an element; after any other word it compares. */
 const BEFORE_ELEMENT = new Set(['return', 'yield', 'await', 'case', 'default', 'else', 'do', 'typeof', 'void', 'in', 'of']);
 
@@ -430,10 +450,13 @@ function astroAsHtml(source) {
 	const frontmatter = /^\s*---[ \t]*\r?\n(?:[\s\S]*?\n)?---[ \t]*\r?(?:\n|$)/.exec(source);
 	if (frontmatter) clear(0, frontmatter[0].length);
 
-	/** Whether the `<` here opens an element, going by what stands before it. */
-	function opensElement(at, from) {
+	/**
+	 * Whether the `<` here opens an element, going by the script before it: `last` is
+	 * where that ends, past any comment and whitespace, or -1 at the start.
+	 */
+	function opensElement(at, last) {
 		if (!/[a-zA-Z>]/.test(source[at + 1] ?? '')) return false;
-		const before = source.slice(Math.max(from, at - 40), at).trimEnd();
+		const before = source.slice(Math.max(0, last - 20), last + 1);
 		const word = /(?<![\w$.])[a-z]+$/.exec(before)?.[0];
 		if (word) return BEFORE_ELEMENT.has(word);
 		// After a value, a `<` compares: a name, a call, an index or a string.
@@ -458,19 +481,22 @@ function astroAsHtml(source) {
 	function endOfScript(start, elements) {
 		let depth = 0;
 		let at = start;
+		// The last character of script so far: a comment says nothing about what follows it.
+		let last = -1;
 		while (at < length) {
 			const char = source[at];
+			const isComment = source.startsWith('/*', at) || source.startsWith('//', at);
 			if (char === '"' || char === "'") at = endOfString(source, at);
 			else if (char === '`') at = endOfTemplate(at);
-			else if (source.startsWith('/*', at)) at = find('*/', at + 2) + 1;
-			else if (source.startsWith('//', at)) at = find('\n', at);
+			else if (isComment) at = source[at + 1] === '*' ? find('*/', at + 2) + 1 : find('\n', at);
 			else if (char === '{') depth += 1;
 			else if (char === '}' && --depth === 0) return at;
-			else if (char === '<' && elements && opensElement(at, start + 1)) {
+			else if (char === '<' && elements && opensElement(at, last)) {
 				const end = readMarkup(at, true);
 				elements.push([at, end]);
 				at = end - 1;
 			}
+			if (!isComment && /\S/.test(source[at] ?? '') && at > start) last = at;
 			at += 1;
 		}
 		return length - 1;
@@ -482,6 +508,8 @@ function astroAsHtml(source) {
 		// Straight before `/>` an unquoted value would swallow the slash.
 		const room = isValue && source[end + 1] === '/' ? size - 1 : size;
 		clear(start, end + 1);
+		// A comment between the attributes sets nothing.
+		if (!isValue && ONLY_COMMENTS.test(source.slice(start + 1, end).trim())) return;
 		if (!isValue) put(start, size >= 3 ? `:[${'x'.repeat(size - 3)}]` : '');
 		else if (room >= 3) put(start, `\${${'x'.repeat(room - 3)}}`);
 		else put(start, room === 2 && size === 3 ? '{{' : '""');
@@ -525,24 +553,32 @@ function astroAsHtml(source) {
 	function fillExpression(start, end, elements) {
 		const script = [];
 		let from = start;
+		// A place in the script, between the braces, where a mark can stand.
+		let free = -1;
 		for (const [elementStart, elementEnd] of [...elements, [end + 1, end + 1]]) {
 			script.push(source.slice(from, elementStart));
 			clear(from, elementStart);
+			const first = Math.max(from, start + 1);
+			if (free === -1 && first < Math.min(elementStart, end)) free = first;
 			from = elementEnd;
 		}
-		const text = script.join(' ');
 		if (elements.length > 0) {
+			const text = script.join(ELEMENT).replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+			// Only an element between the braces: it is there, as if written without them.
+			if (!/[^\s(){}\uE005]/.test(text)) return;
 			const loop = /=>|\bfunction\b/.test(text);
 			const condition = /&&|\|\||\?/.test(text) || !loop;
 			put(start, loop && condition ? OPENS_BOTH : loop ? OPENS_LOOP : OPENS_CONDITION);
 			put(end, CLOSES);
+			// `a ? 'tekst' : <x />` and `a || <x />` can render something that is no element.
+			if (free !== -1 && rendersMore(text)) put(free, HOLE);
 			return;
 		}
 		const inner = source.slice(start + 1, end).trim();
 		const literal = /^(["'])([^"'<&{}\\\n]*)\1$/.exec(inner);
 		// A string written out is text, and a comment renders nothing.
 		if (literal) put(source.indexOf(literal[2], start), literal[2]);
-		else if (inner !== '' && !/^(\/\*[\s\S]*?\*\/\s*)+$/.test(inner)) put(start, HOLE);
+		else if (inner !== '' && !ONLY_COMMENTS.test(inner)) put(start, HOLE);
 	}
 
 	/**
@@ -634,8 +670,9 @@ function liftAstro(children) {
 		if (node.type === 'tag') {
 			const names = Object.keys(node.attribs);
 			const filled = names.some((name) => name === 'set:html' || name === 'set:text');
-			// An inert template, and a fragment that fills a slot or is filled itself: unknown here.
-			if (node.name === 'template' || (node.name === 'Fragment' && (filled || names.includes('slot')))) {
+			// An inert template, and a fragment that is filled in: unknown here. A fragment
+			// that names a slot of its component renders nothing itself, so it reads through.
+			if (node.name === 'template' || (node.name === 'Fragment' && filled)) {
 				open.at(-1).push(hole(node.startIndex ?? 0));
 				continue;
 			}

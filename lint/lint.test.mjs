@@ -85,6 +85,25 @@ describe('frontends', () => {
 		assert.equal(roots[0].opaque, true);
 	});
 
+	it('tells an element from a comparison in Astro, and what an expression can render besides its elements', () => {
+		const shape = (node) => {
+			const flags = `${node.conditional ? 'c' : ''}${node.repeated ? 'r' : ''}${node.spread ? 's' : ''}`;
+			const children = node.children.length > 0 ? `(${node.children.map(shape).join(' ')})` : '';
+			return `${node.name}${flags ? `[${flags}]` : ''}${children}`;
+		};
+		const read = (source) => parseAstro(source)[0].children.map(shape).join(' ');
+		assert.equal(read('{a < b && <nldd-a/>}'), 'nldd-a[c]');
+		assert.equal(read('{a.b<T>(c) && <nldd-a/>}'), 'nldd-a[c]');
+		assert.equal(read('{a.map((b) => {\n// Geen <nldd-no>, en don\'t stop.\nreturn <nldd-a/>; })}'), 'nldd-a[r]');
+		assert.equal(read('{a.map((b) => (\n// De rij is de link.\n<nldd-a/>))}'), 'nldd-a[r]');
+		assert.equal(read('<ul>{a.map((b) => <li>{b.c ? b.c.map((d) => <i>{d}</i>) : null}</li>)}</ul>'), 'ul(li[r](i[cr](#unknown)))');
+		assert.equal(read('{a ? <nldd-a/> : <nldd-b/>}{c ? <nldd-c/> : null}'), 'nldd-a[c] nldd-b[c] nldd-c[c]');
+		assert.equal(read("{a ? 'tekst' : <nldd-a/>}{b || <nldd-b/>}"), '#unknown nldd-a[c] #unknown nldd-b[c]');
+		assert.equal(read('{<nldd-a/>}{(<nldd-b/>)}'), 'nldd-a nldd-b');
+		assert.equal(read('<nldd-a {/* waarom */} text="a" /><nldd-b {...c} />'), 'nldd-a nldd-b[s]');
+		assert.equal(read('{a && <img src={b}>}<Fragment slot="c"><nldd-a/></Fragment>'), 'img[c] nldd-a');
+	});
+
 	it('reads JSX with conditions, lists, fragments and spreads', async () => {
 		const roots = await parseJsx(
 			'const a = <nldd-list {...p}><>{x && <nldd-a />}{y.map((i) => <nldd-b key={i} />)}{children}</></nldd-list>;',
