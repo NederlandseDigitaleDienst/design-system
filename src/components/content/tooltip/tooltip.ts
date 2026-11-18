@@ -342,17 +342,18 @@ export class NLDDTooltip extends LitElement {
 		this._interest.focus();
 	}
 
-	/** A press on the trigger, until the pointer lets go. */
+	/** A press on the trigger, until the pointer lets go or focus leaves: a release can get lost. */
 	_handleTriggerPress(): void {
 		this._pressed = true;
-		const release = (): void => {
-			this._pressed = false;
-			document.removeEventListener('pointerup', release, true);
-			document.removeEventListener('pointercancel', release, true);
-		};
-		document.addEventListener('pointerup', release, true);
-		document.addEventListener('pointercancel', release, true);
+		document.addEventListener('pointerup', this._release, true);
+		document.addEventListener('pointercancel', this._release, true);
 	}
+
+	private _release = (): void => {
+		this._pressed = false;
+		document.removeEventListener('pointerup', this._release, true);
+		document.removeEventListener('pointercancel', this._release, true);
+	};
 
 	_handleTriggerLeave(): void {
 		this._interest.leave();
@@ -366,7 +367,9 @@ export class NLDDTooltip extends LitElement {
 		const stillInside = related && assigned.some(el =>
 			el.contains(related) || (el as HTMLElement).shadowRoot?.contains(related)
 		);
-		if (!stillInside) this._interest.blur();
+		if (stillInside) return;
+		this._release();
+		this._interest.blur();
 	}
 
 	/* A tooltip is transient help for a control; once you activate that control
@@ -510,6 +513,7 @@ export class NLDDTooltip extends LitElement {
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		document.removeEventListener('keydown', this._handleKeyDown, true);
+		this._release();
 		clearTimeout(this._fadeTimer);
 		this._fadingText = undefined;
 		this._stopScroll?.();

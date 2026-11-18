@@ -147,24 +147,39 @@ export function sitePages() {
 				resolve(repoRoot, 'CHANGELOG.md'),
 				resolve(repoRoot, 'custom-elements.json'),
 			]);
-			const regenerate = async (file) => {
+			// One build at a time, and one more for whatever changed during it: a
+			// branch switch changes many files, and a build that started earlier
+			// could finish later and write older pages.
+			let building = false;
+			let again = false;
+			const build = async () => {
+				building = true;
+				do {
+					again = false;
+					try {
+						// In a worker, which imports every module afresh: a fresh import of
+						// site.js alone kept its helpers as they were. By its place in the
+						// repository: once Vite has restarted, this module runs from a
+						// bundled copy elsewhere and a relative address no longer finds it.
+						const pages = await new Promise((done, fail) => {
+							const worker = new Worker(resolve(repoRoot, 'www/build/build-worker.js'), { workerData: { base } });
+							worker.once('message', done);
+							worker.once('error', fail);
+							worker.once('exit', (code) => fail(new Error(`build stopped with code ${code}`)));
+						});
+						if (again) continue;
+						writePages(pages);
+						server.ws.send({ type: 'full-reload' });
+					} catch (error) {
+						server.config.logger.error(`Site niet bijgewerkt: ${error.message}`);
+					}
+				} while (again);
+				building = false;
+			};
+			const regenerate = (file) => {
 				if (file.startsWith(generatedDir) || !WATCHED.some((pattern) => pattern.test(file))) return;
-				try {
-					// In a worker, which imports every module afresh: a fresh import of
-					// site.js alone kept its helpers as they were. By its place in the
-					// repository: once Vite has restarted, this module runs from a
-					// bundled copy elsewhere and a relative address no longer finds it.
-					const pages = await new Promise((done, fail) => {
-						const worker = new Worker(resolve(repoRoot, 'www/build/build-worker.js'), { workerData: { base } });
-						worker.once('message', done);
-						worker.once('error', fail);
-						worker.once('exit', (code) => fail(new Error(`build stopped with code ${code}`)));
-					});
-					writePages(pages);
-					server.ws.send({ type: 'full-reload' });
-				} catch (error) {
-					server.config.logger.error(`Site niet bijgewerkt: ${error.message}`);
-				}
+				if (building) again = true;
+				else build();
 			};
 			server.watcher.on('change', regenerate);
 			server.watcher.on('add', regenerate);

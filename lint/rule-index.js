@@ -29,7 +29,7 @@ function withoutExclusions(selector) {
 		const end = closing(selector, i + 4);
 		const inner = selector.slice(i + 5, end);
 		for (let at = inner.indexOf(':has('); at !== -1; at = inner.indexOf(':has(', at + 1)) {
-			out += ` ${inner.slice(at, closing(inner, at + 4) + 1)}`;
+			out += ` ${withoutExclusions(inner.slice(at, closing(inner, at + 4) + 1))}`;
 		}
 		i = end;
 	}

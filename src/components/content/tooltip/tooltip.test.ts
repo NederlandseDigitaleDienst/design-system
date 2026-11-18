@@ -518,6 +518,19 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		await until(() => isTooltipVisible(tooltip));
 	});
 
+	// A press whose release never reaches the page, as after a drag off the window.
+	it('toont zich weer bij focus als een druk nooit losliet', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Kopieer"><button>Trigger</button></nldd-tooltip><button id="elders">Elders</button>');
+		el = tooltip;
+		await waitForUpdate(tooltip);
+		const trigger = tooltip.querySelector('button')!;
+		trigger.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, pointerType: 'mouse' }));
+		trigger.focus();
+		document.getElementById('elders')!.focus();
+		trigger.focus();
+		await until(() => isTooltipVisible(tooltip));
+	});
+
 	it('verdwijnt bij scrollen als hover hem toonde', async () => {
 		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
 		el = tooltip;

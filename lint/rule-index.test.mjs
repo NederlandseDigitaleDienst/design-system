@@ -10,4 +10,5 @@ test('a rule is about the tags it names, not the ones it excludes', () => {
 test('what a :not() requires still counts', () => {
 	assert.deepEqual(tagsOf({ context: 'nldd-page:not(:has(nldd-breadcrumbs))' }), ['nldd-page', 'nldd-breadcrumbs']);
 	assert.deepEqual(tagsOf({ context: 'nldd-form', assert: ':has(nldd-form-actions)' }), ['nldd-form', 'nldd-form-actions']);
+	assert.deepEqual(tagsOf({ context: 'nldd-page:not(:has(nldd-list:not(nldd-sheet *)))' }), ['nldd-page', 'nldd-list']);
 });
