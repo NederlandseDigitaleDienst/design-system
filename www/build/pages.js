@@ -9,6 +9,7 @@
 
 import { mkdirSync, writeFileSync, readFileSync, existsSync, copyFileSync, rmSync, readdirSync, statSync } from 'node:fs';
 import { resolve, dirname, join, relative } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { buildPages } from './site.js';
 import { readManifest, repoRoot } from './sources.js';
 
@@ -140,7 +141,10 @@ export function sitePages() {
 				if (file.startsWith(generatedDir) || !WATCHED.some((pattern) => pattern.test(file))) return;
 				try {
 					// The templates are plain modules; a fresh import picks up an edit.
-					const fresh = await import(`./site.js?update=${Date.now()}`);
+					// By its place in the repository: once Vite has restarted, this
+					// module runs from a bundled copy elsewhere and a relative
+					// address no longer finds the templates.
+					const fresh = await import(`${pathToFileURL(resolve(repoRoot, 'www/build/site.js')).href}?update=${Date.now()}`);
 					const { pages } = fresh.buildPages({ base });
 					writePages(pages);
 					server.ws.send({ type: 'full-reload' });
