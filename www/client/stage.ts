@@ -55,6 +55,8 @@ interface QuickEntry {
 	written: (value: string) => string;
 	isDefault: (value: string | boolean) => boolean;
 	current: string | boolean;
+	/** The value the story started with, which the reset button goes back to. */
+	initial: string | boolean;
 	/** What removing the token sets the attribute back to. */
 	unset: string | boolean;
 	set: (value: string | boolean) => void;
@@ -193,6 +195,12 @@ export class SiteStage extends HTMLElement {
 	private quickPending = new Set<string>();
 	private quickFields = new Map<string, HTMLElement>();
 	private quickAdd?: HTMLElement;
+	/** What the reset button puts back: the choices in the bar and the controls. */
+	private resets: { atStart(): boolean; reset(): void }[] = [];
+	private resetButton?: HTMLElement;
+	private resetItem?: HTMLElement;
+	/** The args the controls show that are not an attribute, such as the text in a slot. */
+	private contentInputs = new Map<string, HTMLElement>();
 	/** What the stage hangs on the page, let go once the stage leaves it. */
 	private lifetime = new AbortController();
 	private observers: (MutationObserver | ResizeObserver)[] = [];
@@ -352,7 +360,9 @@ export class SiteStage extends HTMLElement {
 		const items = options.map(([text, value]) =>
 			nldd('menu-item', { type: 'radio', text, value, selected: value === selected }),
 		);
+		let current = selected;
 		const mark = (value: string) => {
+			current = value;
 			for (const item of items) item.toggleAttribute('selected', item.getAttribute('value') === value);
 		};
 		const control = this.choice(
@@ -362,17 +372,18 @@ export class SiteStage extends HTMLElement {
 			(value) => {
 				mark(value);
 				onChange(value);
+				this.showReset();
 			},
 			{ size: '' },
 		);
-		for (const item of items) {
-			item.addEventListener('select', () => {
-				const value = item.getAttribute('value') ?? '';
-				mark(value);
-				(control as HTMLElement & { value: string }).value = value;
-				onChange(value);
-			});
-		}
+		const pick = (value: string) => {
+			mark(value);
+			(control as HTMLElement & { value: string }).value = value;
+			onChange(value);
+			this.showReset();
+		};
+		for (const item of items) item.addEventListener('select', () => pick(item.getAttribute('value') ?? ''));
+		this.resets.push({ atStart: () => current === selected, reset: () => pick(selected) });
 		return this.toolItem(control, nldd('menu-item', { text: title }, [nldd('menu', {}, items)]), priority);
 	}
 
@@ -455,6 +466,11 @@ export class SiteStage extends HTMLElement {
 					),
 				);
 			}
+			this.resetButton = nldd('button', { text: 'Herstel', hidden: true });
+			this.resetItem = nldd('menu-item', { text: 'Herstel', hidden: true });
+			this.resetButton.addEventListener('click', () => this.reset());
+			this.resetItem.addEventListener('select', () => this.reset());
+			toolbar.append(this.toolItem(this.resetButton, this.resetItem, 0, 'end'));
 			const file = this.getAttribute('file');
 			if (file) {
 				const href = `${import.meta.env.BASE_URL}voorbeeld/?file=${encodeURIComponent(file)}&story=${encodeURIComponent(this.getAttribute('story') ?? '')}`;
@@ -709,8 +725,20 @@ export class SiteStage extends HTMLElement {
 				strict: true,
 				description: argType.description ?? '',
 			};
-			row(name, this.input(control, story.args[key], (value) => this.setArg(key, value), argType), control.description);
+			const input = this.input(control, story.args[key], (value) => {
+				this.setArg(key, value);
+				this.showReset();
+			}, argType);
+			this.contentInputs.set(key, input);
+			row(name, input, control.description);
 		}
+		this.resets.push({
+			atStart: () =>
+				this.quick.every((entry) => this.atStart(entry)) &&
+				[...this.contentInputs.keys()].every((key) => this.args[key] === this.story?.args[key]),
+			reset: () => this.resetControls(),
+		});
+
 		// In place, not in a sheet: the example has to stay in view while an
 		// attribute changes. The usage tab has no other examples to keep in reach.
 		this.append(nldd('spacer', { size: '12' }), list, ...popovers);
@@ -744,6 +772,7 @@ export class SiteStage extends HTMLElement {
 				written: () => control.name,
 				isDefault: (value) => value !== true,
 				current: start === true || start === 'true',
+				initial: start === true || start === 'true',
 				unset: false,
 				set,
 			};
@@ -759,6 +788,7 @@ export class SiteStage extends HTMLElement {
 				written: (value) => `${control.name}: ${value}`,
 				isDefault: (value) => [fallback, ''].includes(String(value)),
 				current: start === undefined || start === null ? '' : String(start),
+				initial: start === undefined || start === null ? '' : String(start),
 				unset: '',
 				set,
 				field: (change) => this.input(control, start, change, argType),
@@ -775,13 +805,15 @@ export class SiteStage extends HTMLElement {
 		const isDefault = (label: string | boolean) =>
 			absent(String(label)) || (fallback !== '' && String(raw(String(label))) === fallback);
 		const label = Object.entries(mapping).find(([, value]) => value === start)?.[0];
+		const current = label ?? (start === undefined || start === null ? '' : String(start));
 		return {
 			name: control.name,
 			kind: 'select',
 			options: values.filter((value) => !absent(value)),
 			written: (value) => (raw(value) === '' ? control.name : `${control.name}: ${String(raw(value))}`),
 			isDefault,
-			current: label ?? (start === undefined || start === null ? '' : String(start)),
+			current,
+			initial: current,
 			// An arg goes back to the label of the default; an attribute of its own is taken off.
 			unset: fromArg ? (values.find((value) => isDefault(value)) ?? '') : '',
 			set,
@@ -898,7 +930,8 @@ export class SiteStage extends HTMLElement {
 			return token;
 		}
 		const items = entry.options.map((label) => {
-				const item = nldd('menu-item', { type: 'radio', text: label, value: label });
+				const text = entry.isDefault(label) ? `${label} (standaard)` : label;
+				const item = nldd('menu-item', { type: 'radio', text, value: label });
 				item.addEventListener('select', () => this.quickSet(entry, label));
 				return item;
 			});
@@ -907,6 +940,44 @@ export class SiteStage extends HTMLElement {
 		const menu = nldd('menu', { 'no-blink': true }, [...items, nldd('menu-divider'), remove]);
 		menu.slot = 'menu';
 		return nldd('token', { control: 'menu' }, [menu]);
+	}
+
+	/** Whether an attribute is where the story put it: a default counts as unset. */
+	private atStart(entry: QuickEntry): boolean {
+		return entry.current === entry.initial || (entry.isDefault(entry.current) && entry.isDefault(entry.initial));
+	}
+
+	/** Shows the reset button while anything differs from how the example started. */
+	private showReset(): void {
+		const hidden = this.resets.every((target) => target.atStart());
+		if (this.resetButton) this.resetButton.hidden = hidden;
+		if (this.resetItem) this.resetItem.hidden = hidden;
+	}
+
+	/** Puts the example back as it started: its color scheme, surface or width, and its controls. */
+	private reset(): void {
+		for (const target of this.resets) if (!target.atStart()) target.reset();
+		this.showReset();
+		// The button goes with the click: the focus stays in the bar.
+		this.querySelector<HTMLElement>('nldd-toolbar nldd-segmented-control')?.focus({ preventScroll: true });
+	}
+
+	/** Puts every control back where the story started. */
+	private resetControls(): void {
+		const story = this.story;
+		if (!story) return;
+		this.quickPending.clear();
+		for (const entry of this.quick) {
+			if (this.atStart(entry)) continue;
+			entry.current = entry.initial;
+			entry.set(entry.initial);
+		}
+		for (const [key, input] of this.contentInputs) {
+			if (this.args[key] === story.args[key]) continue;
+			this.setArg(key, story.args[key]);
+			syncInput(input, story.args[key] as string | boolean);
+		}
+		this.showQuick();
 	}
 
 	private quickSet(entry: QuickEntry, value: string | boolean): void {
@@ -951,6 +1022,7 @@ export class SiteStage extends HTMLElement {
 			previous = token;
 		}
 		this.quickAdd.hidden = this.quick.every((entry) => !entry.isDefault(entry.current) || this.quickPending.has(entry.name));
+		this.showReset();
 	}
 
 	private input(
@@ -970,16 +1042,25 @@ export class SiteStage extends HTMLElement {
 		const values = argType?.options?.map(String) ?? control.values;
 		if (values && isChoice(control, argType)) {
 			const options: [label: string, value: string][] = values.map((value) => [value, value]);
-			if (!argType?.options) options.unshift(['(standaard)', '']);
+			// The default is marked where it stands in the list, and choosing it
+			// leaves the attribute out. Without a default the first option is "not set".
+			// A story's own options keep their values: the story maps them itself.
+			const known = control.default || String(argType?.table?.defaultValue?.summary ?? '');
+			const fallback = values.includes(known) ? known : undefined;
+			const own = !!argType?.options;
+			if (fallback !== undefined) options.splice(values.indexOf(fallback), 1, [`${fallback} (standaard)`, own ? fallback : '']);
+			else if (!own) options.unshift(['(standaard)', '']);
 			// An arg holds the value, the list shows the label: find the label
 			// whose mapping gives this value, the way the story expects it back.
 			const label = Object.entries(argType?.mapping ?? {}).find(([, value]) => value === start)?.[0];
-			const selected = label ?? text;
+			const selected = label ?? (text === fallback && !own ? '' : text);
+			// Segments show the selection already, so they go without the mark.
+			const segments = own ? values.map((value): [string, string] => [value, value]) : options;
 			const fits =
-				options.length <= SHOWN_WHOLE.options &&
-				options.reduce((sum, [name]) => sum + name.length, 0) <= SHOWN_WHOLE.characters &&
-				options.every(([, value]) => value !== '');
-			if (fits) return this.choice(control.name, options, selected, change, { size: 'md' });
+				segments.length <= SHOWN_WHOLE.options &&
+				segments.reduce((sum, [name]) => sum + name.length, 0) <= SHOWN_WHOLE.characters &&
+				segments.every(([, value]) => value !== '');
+			if (fits) return this.choice(control.name, segments, selected, change, { size: 'md' });
 			const select = element('select', '');
 			for (const [name, value] of options) select.append(new Option(name, value));
 			select.value = selected;
