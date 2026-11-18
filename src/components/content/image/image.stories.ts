@@ -10,7 +10,7 @@ const SAMPLE_ALT = 'Klein koolwitje op een vlinderstruik';
 const SAMPLE_SRCSET = [480, 960, 1600].map((width) => `${sampleImage(`butterfly-${width}.jpg`)} ${width}w`).join(', ');
 
 /** LQIP CSV string berekend uit de bron (zeven 0-255 Oklab bytes). Regenereer
- *  via de "LQIP encoder tool" story als je de afbeelding vervangt. */
+ *  via de story LQIP-encoder als je de afbeelding vervangt. */
 const SAMPLE_LQIP = '28,28,164,164,106,170,99';
 
 /**
@@ -99,7 +99,7 @@ export default {
 		},
 		lqip: {
 			control: 'text',
-			description: `CSS-only multi-color LQIP. CSV-string van 7 bytes (base + 6 cellen, 3×2 raster). Elke byte is een 8-bit Oklab triplet. Voorbeeld: \`${SAMPLE_LQIP}\`. Genereer eigen waarden via de "LQIP encoder tool" story.`,
+			description: `CSS-only multi-color LQIP. CSV-string van 7 bytes (base + 6 cellen, 3×2 raster). Elke byte is een 8-bit Oklab triplet. Voorbeeld: \`${SAMPLE_LQIP}\`. Genereer eigen waarden via de story LQIP-encoder.`,
 		},
 		caption: {
 			control: 'text',
