@@ -393,11 +393,12 @@ function mdxAsHtml(mdx) {
 }
 
 /** Private-use characters that stand in the text for an expression, one per brace. */
-const HOLE = '';
-const OPENS_CONDITION = '';
-const OPENS_LOOP = '';
-const OPENS_BOTH = '';
-const CLOSES = '';
+const HOLE = '\uE000';
+const OPENS_CONDITION = '\uE001';
+const OPENS_LOOP = '\uE002';
+const OPENS_BOTH = '\uE003';
+const CLOSES = '\uE004';
+const MARKS = new Set([HOLE, OPENS_CONDITION, OPENS_LOOP, OPENS_BOTH, CLOSES]);
 
 /** Elements HTML never closes, so they do not nest inside an expression either. */
 const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
@@ -412,12 +413,29 @@ const ONLY_COMMENTS = /^(\/\*[\s\S]*?\*\/\s*)+$/;
  * else: a branch of `? :`, `||` or `??` that is no element and not nothing.
  */
 function rendersMore(script) {
-	const parts = script.replace(/[\s()]/g, '').split(/(\?\?|\|\||\?(?!\.)|:)/);
+	const parts = [];
+	// The bracket depth of every `?` that waits for its `:`.
+	const ternaries = [];
+	let depth = 0;
+	let glue = false;
+	for (const piece of script.replace(/\s/g, '').split(/(\?\?|\|\||\?(?!\.)|:)/)) {
+		// A `:` at another depth than the open `?` is a type or a key, `(item: Item) =>`: part of the operand.
+		const isType = piece === ':' && ternaries.at(-1) !== depth;
+		const part = piece.replace(/[()]/g, '');
+		if (isType || glue) parts.push(parts.pop() + part);
+		else parts.push(part);
+		glue = isType;
+		if (piece === '?') ternaries.push(depth);
+		else if (piece === ':' && !isType) ternaries.pop();
+		else depth += (piece.match(/[([{]/g)?.length ?? 0) - (piece.match(/[)\]}]/g)?.length ?? 0);
+	}
 	const rendersNothingElse = (part) => part.includes(ELEMENT) || /^(null|undefined|false|''|"")?[}\];,]*$/.test(part);
 	for (let at = 1; at < parts.length; at += 2) {
 		// What stands left of `||` and `??` is rendered when it is there.
 		const leftRenders = parts[at] !== '?' && parts[at] !== ':' && !parts[at - 1].includes(ELEMENT);
-		if (leftRenders || !rendersNothingElse(parts[at + 1])) return true;
+		// Before a `?` stands a condition, `a ? <x /> : b ? <y /> : null`, not a branch.
+		const isCondition = parts[at + 2] === '?';
+		if (leftRenders || (!isCondition && !rendersNothingElse(parts[at + 1]))) return true;
 	}
 	return false;
 }
@@ -446,6 +464,9 @@ function astroAsHtml(source) {
 		const at = source.indexOf(text, from);
 		return at === -1 ? length : at;
 	};
+
+	// The same characters in the file itself are no marks.
+	for (let i = 0; i < length; i += 1) if (MARKS.has(out[i])) out[i] = ' ';
 
 	const frontmatter = /^\s*---[ \t]*\r?\n(?:[\s\S]*?\n)?---[ \t]*\r?(?:\n|$)/.exec(source);
 	if (frontmatter) clear(0, frontmatter[0].length);
@@ -649,7 +670,7 @@ function liftAstro(children) {
 			};
 			for (let at = 0; at < node.data.length; at += 1) {
 				const mark = node.data[at];
-				if (mark < HOLE || mark > CLOSES) continue;
+				if (!MARKS.has(mark)) continue;
 				flush(at);
 				const startIndex = (node.startIndex ?? 0) + at;
 				if (mark === HOLE) open.at(-1).push(hole(startIndex));

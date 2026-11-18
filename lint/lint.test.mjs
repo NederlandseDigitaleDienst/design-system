@@ -99,6 +99,12 @@ describe('frontends', () => {
 		assert.equal(read('<ul>{a.map((b) => <li>{b.c ? b.c.map((d) => <i>{d}</i>) : null}</li>)}</ul>'), 'ul(li[r](i[cr](#unknown)))');
 		assert.equal(read('{a ? <nldd-a/> : <nldd-b/>}{c ? <nldd-c/> : null}'), 'nldd-a[c] nldd-b[c] nldd-c[c]');
 		assert.equal(read("{a ? 'tekst' : <nldd-a/>}{b || <nldd-b/>}"), '#unknown nldd-a[c] #unknown nldd-b[c]');
+		assert.equal(read('{a.map((b: B, i: number) => <nldd-a key={i}/>)}'), 'nldd-a[r]');
+		assert.equal(read('{a.map((b: B) => (b.c ? <nldd-a/> : null))}{d ? e.map((f: F) => <nldd-b/>) : null}'), 'nldd-a[cr] nldd-b[cr]');
+		assert.equal(read("{a.map((b: B) => (b.c ? 'tekst' : <nldd-a/>))}"), '#unknown nldd-a[cr]');
+		assert.equal(read('{(a as Array<string>).length > 0 && <nldd-a/>}{`<nldd-no>${b}` && <nldd-b/>}'), 'nldd-a[c] nldd-b[c]');
+		assert.equal(read('{a ? <nldd-a/> : b ? <nldd-b/> : null}'), 'nldd-a[c] nldd-b[c]');
+		assert.equal(read('<p></p><nldd-a/><nldd-b/>'), 'p nldd-a nldd-b');
 		assert.equal(read('{<nldd-a/>}{(<nldd-b/>)}'), 'nldd-a nldd-b');
 		assert.equal(read('<nldd-a {/* waarom */} text="a" /><nldd-b {...c} />'), 'nldd-a nldd-b[s]');
 		assert.equal(read('{a && <img src={b}>}<Fragment slot="c"><nldd-a/></Fragment>'), 'img[c] nldd-a');

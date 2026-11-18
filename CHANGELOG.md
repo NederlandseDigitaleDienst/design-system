@@ -12,8 +12,11 @@ here; consult the commit history if you need that level of detail.
 ### Added
 
 - **`nldd lint` reads `.astro` files.** It reads the template under the frontmatter, with the elements inside `{cond && …}` and `{items.map(…)}`, and `--fix` renames in the source. An Astro site that runs `nldd lint` in CI was always green, because a scan skipped every `.astro` file: it now gets real findings, errors included. Run `npx @nldd/design-system lint --statistics` once to see them, and `--update-baseline` to accept what is there. `nldd lint dist` still adds what only a built page shows.
-- **`nldd lint dist` skips the scripts of a build.** A bundler's chunks hold the styles and markup of the components themselves, which read as an app overriding them: on an Astro site that gave 1542 times `local-variable-no-override` and 17 times `file-not-read`, around the 134 findings that were real. A script in `dist`, `build`, `.next` or `.nuxt` is now left alone, when you run the linter from the root of the project; the pages and stylesheets next to it are read as before.
 - **A scan says which templates it cannot read.** A `.svelte`, `.php`, `.twig`, `.erb`, `.ejs`, `.hbs`, `.handlebars`, `.mustache`, `.njk`, `.liquid`, `.cshtml` or `.razor` file with `nldd-*` markup now gets `file-not-read` (a warning) in a scan of a directory too. It used to show only for a file you named, so such a project read as "0 files" and clean.
+
+### Fixed
+
+- **`nldd lint dist` skips the scripts of a build.** A bundler's chunks hold the styles and markup of the components themselves, which read as an app overriding them: a built site got a `local-variable-no-override` for every component it used, and a `file-not-read` for every chunk. A script in `dist`, `build`, `.next` or `.nuxt` is now left alone, when you run the linter from the root of the project; the pages and stylesheets next to it are read as before.
 
 ## [0.26.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.1...v0.26.2) (2026-11-17)
 
