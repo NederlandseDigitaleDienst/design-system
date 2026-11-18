@@ -6,7 +6,7 @@
  * corpus measures the linter consumers run.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import { extname, relative, resolve, sep } from 'node:path';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS } from './rule-data.js';
@@ -97,10 +97,12 @@ function fixReferences(renamedTags, paths, root, exclude) {
  */
 export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false }) {
 	const everything = readsEverything(data, severities);
+	// A script named on the command line is read, also in `dist`: only a scan skips it.
+	const named = new Set(paths.map((path) => resolve(root, path)).filter((path) => statSync(path, { throwIfNoEntry: false })?.isFile()));
 	const inputs = input
 		? [{ filename: resolve(root, input.filename), source: input.source }]
 		: findFiles(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS])
-				.filter((filename) => !isBuiltScript(filename, root))
+				.filter((filename) => named.has(resolve(filename)) || !isBuiltScript(filename, root))
 				.map((filename) => ({ filename, source: readFileSync(filename, 'utf8') }))
 				// A template the linter cannot read matters only with our markup; the rest is let go.
 				.filter(({ filename, source }) => !isUnread(filename) || hasOurMarkup(source))

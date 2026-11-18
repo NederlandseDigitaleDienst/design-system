@@ -1661,6 +1661,7 @@ describe('nldd command', () => {
 		assert.match(built.stdout, /dist\/index\.html:1:13 {2}error {2}unknown-element/);
 		assert.match(built.stdout, /1 error, 0 warnings in 1 file/);
 		assert.match(run(root, 'lint', 'src').stdout, /local-variable-no-override[^]*file-not-read/);
+		assert.match(run(root, 'lint', 'dist/_astro/button.pAKU2ucd.js').stdout, /local-variable-no-override[^]*file-not-read/);
 	});
 
 	it('reports only what is new after accepting a baseline', () => {
