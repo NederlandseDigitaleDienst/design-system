@@ -17,7 +17,9 @@
  * the menu at every width.
  *
  * @element nldd-toolbar
- * @attr {string} size - Toolbar size, propagated to all child controls: 'sm' | 'md' | 'lg' (default: 'md'). At 'lg' the overflow button (and lg-capable children like nldd-icon-button) stack their label below the icon.
+ * @keywords werkbalk
+ * @related nldd-button-bar, nldd-button-group
+ * @attr {'sm'|'md'|'lg'} size - Toolbar size, propagated to all child controls: 'sm' | 'md' | 'lg' (default: 'md'). At 'lg' the overflow button (and lg-capable children like nldd-icon-button) stack their label below the icon.
  * @attr {boolean} show-item-labels - When true, shows a text label below each toolbar item and the overflow button
  * @attr {string} accessible-label - Accessible name of the toolbar. Only needed when multiple toolbars appear on the same page.
  * @attr {object} translations - Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch.
@@ -100,8 +102,8 @@ export class NLDDToolbar extends LitElement {
 
 	/** True when nothing is *rendered* in the start/end areas (they may hold
 	 * consumer-hidden `display:none` children), so the center content is the
-	 * only visible group. Drives the centered `.toolbar__center-fill` layout —
-	 * a hidden back button no longer strands a centered title at the left.
+	 * only visible group. Drives the centered `.toolbar__center-fill` layout,
+	 * so a hidden back button no longer strands a centered title at the left.
 	 * Computed from real rendering, not mere child presence. */
 	@state()
 	private _centerOnly = false;
@@ -527,8 +529,8 @@ export class NLDDToolbar extends LitElement {
 	}
 
 	/**
-	 * Promotes a lone remaining fluid item — or a lone title when no items are
-	 * visible — to the solo-fluid state so it grows to fill the row. In
+	 * Promotes a lone remaining fluid item (or a lone title when no items are
+	 * visible) to the solo-fluid state so it grows to fill the row. In
 	 * center-only mode the center-fill wrapper already grows the items, so item
 	 * promotion is skipped there (matching the previous template behavior).
 	 */

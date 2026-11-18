@@ -2,7 +2,7 @@
 
 De website in `www/` draait op ZAD (Zelfservice Applicatie Deployment) op
 `design.digitaledienst.overheid.nl`, als rootless nginx-container met de
-gebouwde pagina erin. Storybook blijft op GitHub Pages.
+gebouwde pagina's erin: de landingspagina en de documentatie erachter.
 
 ## Hoe het werkt
 
@@ -31,8 +31,7 @@ dezelfde CSP als productie. De link komt in een reactie op de PR:
 https://pr-<nummer>-nd-1i5.rig.prd1.gn2.quattro.rijksapps.nl
 ```
 
-Een PR die alleen `src/` raakt krijgt geen preview: dat is bijna elke PR, en
-daarvoor is Storybook er. In het preview-image staat een `robots.txt` die
+In het preview-image staat een `robots.txt` die
 zoekmachines weert.
 
 Een pull request uit een fork of van Dependabot krijgt geen preview: die heeft

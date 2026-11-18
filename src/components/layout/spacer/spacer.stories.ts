@@ -4,20 +4,34 @@ import '../../actions/button/button.js';
 import '../container/container.js';
 import '../../content/text/text.js';
 
+const SIZE_OPTIONS = [
+	'flexible',
+	'2',
+	'4',
+	'6',
+	'8',
+	'10',
+	'12',
+	'16',
+	'20',
+	'24',
+	'28',
+	'32',
+	'40',
+	'44',
+	'48',
+	'56',
+	'64',
+	'80',
+	'96',
+];
+
 /**
- * Gebruik een spacer om ruimte tussen elementen te creëren.
- * Componenten in dit designsysteem hebben geen eigen margins — alle witruimte
- * wordt expliciet bepaald met een spacer. Dat maakt de ruimte zichtbaar en
- * aanpasbaar zonder de componenten zelf te wijzigen.
- *
- * Gebruik een spacer **tussen verschillende types componenten**: tussen een knop
- * en een tekstveld, tussen een titel en een lijst, of tussen secties onderling.
- * Zo houd je componenten herbruikbaar en onafhankelijk van hun context.
- *
- * Kies een **vaste grootte** voor ruimte die altijd gelijk blijft, override per
- * breakpoint met `sm-size` / `md-size` / `lg-size` als de ruimte met de viewport
- * mee moet bewegen, of gebruik **flexible** om een element naar het andere
- * uiteinde van een rij te duwen.
+ * `nldd-spacer` maakt ruimte tussen elementen. Componenten in dit designsysteem
+ * hebben geen eigen margins, dus alle witruimte zet je expliciet. Gebruik een
+ * spacer tussen verschillende soorten componenten: tussen een titel en een lijst,
+ * of tussen secties onderling. Zo houd je componenten herbruikbaar en onafhankelijk
+ * van hun context.
  *
  * ## Gebruik
  * ```html
@@ -41,29 +55,6 @@ import '../../content/text/text.js';
  * <nldd-spacer size="flexible"></nldd-spacer>
  * ```
  */
-
-const SIZE_OPTIONS = [
-	'flexible',
-	'2',
-	'4',
-	'6',
-	'8',
-	'10',
-	'12',
-	'16',
-	'20',
-	'24',
-	'28',
-	'32',
-	'40',
-	'44',
-	'48',
-	'56',
-	'64',
-	'80',
-	'96',
-];
-
 export default {
 	title: 'Components/Layout/Spacer',
 	component: 'nldd-spacer',
@@ -72,9 +63,6 @@ export default {
 		componentSource: {
 			file: 'src/components/layout/spacer/spacer.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {

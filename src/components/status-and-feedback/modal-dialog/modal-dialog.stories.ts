@@ -7,7 +7,7 @@ import '../../forms/form-field/form-field.js';
 import { ICONS } from '../../content/icon/icon.js';
 
 /**
- * De Modal Dialog is een modaal venster met overlay backdrop.
+ * `nldd-modal-dialog` is een modaal venster met een overlay-backdrop.
  * Gebruik `nldd-inline-dialog` voor een inline variant zonder overlay.
  *
  * ## Gebruik
@@ -31,7 +31,6 @@ export default {
 			file: 'src/components/status-and-feedback/modal-dialog/modal-dialog.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		variant: '',

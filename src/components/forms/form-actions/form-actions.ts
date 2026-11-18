@@ -7,28 +7,32 @@
  * gets the same indent as the fields above it, thanks to a `::before`
  * pseudo-element that acts as the spacer column where the label would sit.
  *
- * Inherits `label-alignment` automatically from a wrapping `<nldd-form>`: the
+ * Inherits `label-alignment` automatically from a wrapping `nldd-form`: the
  * form propagates its own `label-alignment` as `form-label-alignment` to
  * descendant `nldd-form-actions` (and `nldd-form-field`) through a
  * MutationObserver. An explicit `label-alignment` on the form-actions itself
  * wins through the CSS cascade, and the form code never touches the
  * `label-alignment` attribute of the descendant.
  *
- *     <nldd-form label-alignment="right">
- *         <nldd-form-field>...</nldd-form-field>
- *         <nldd-form-actions>
- *             <nldd-button-group>
- *                 <nldd-button appearance="primary" type="submit" text="Bewaar"></nldd-button>
- *             </nldd-button-group>
- *         </nldd-form-actions>
- *     </nldd-form>
- *
  * @element nldd-form-actions
+ * @keywords formulierknoppen
  *
- * @attr {string} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
+ * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
  * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
  *
  * @slot - Action elements (button, button-group, and so on)
+ *
+ * @example
+ * ```html
+ * <nldd-form label-alignment="right">
+ *     <nldd-form-field>...</nldd-form-field>
+ *     <nldd-form-actions>
+ *         <nldd-button-group>
+ *             <nldd-button appearance="primary" type="submit" text="Bewaar"></nldd-button>
+ *         </nldd-button-group>
+ *     </nldd-form-actions>
+ * </nldd-form>
+ * ```
  */
 
 import { LitElement } from 'lit';

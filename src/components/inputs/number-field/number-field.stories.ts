@@ -1,9 +1,11 @@
 import { html, nothing } from 'lit';
 import './number-field.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 
 /**
- * De Number Field component is een numeriek invoerveld met decrement en increment knoppen.
+ * `nldd-number-field` is een numeriek invoerveld met knoppen om de waarde te
+ * verlagen en te verhogen.
  */
 export default {
 	title: 'Components/Inputs/Number Field',
@@ -13,9 +15,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/number-field/number-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {
@@ -133,41 +132,47 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<nldd-container gap="16">
+	<nldd-container>
 		<nldd-number-field
 			value="5"
 			min="0"
 			max="10"
 			size="sm"
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="5"
 			min="0"
 			max="10"
 			size="md"
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="0"
 			min="0"
 			max="10"
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="10"
 			min="0"
 			max="10"
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="5"
 			min="0"
 			max="10"
 			disabled
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="5"
 			min="0"
 			max="10"
 			hide-spin-buttons
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="5"
 			min="0"
@@ -175,6 +180,7 @@ export const AlleToestanden = {
 			hide-spin-buttons
 			disabled
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="5"
 			min="0"
@@ -182,12 +188,14 @@ export const AlleToestanden = {
 			size="sm"
 			hide-spin-buttons
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="5"
 			min="0"
 			max="10"
 			width="240px"
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="5"
 			min="0"
@@ -195,6 +203,7 @@ export const AlleToestanden = {
 			hide-spin-buttons
 			width="240px"
 		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-container width="400px">
 			<nldd-number-field
 				value="5"
@@ -203,6 +212,7 @@ export const AlleToestanden = {
 				width="full"
 			></nldd-number-field>
 		</nldd-container>
+		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-container width="400px">
 			<nldd-number-field
 				value="5"

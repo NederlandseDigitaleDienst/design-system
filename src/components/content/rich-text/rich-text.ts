@@ -66,8 +66,10 @@
  * away short and additional: see the design guidelines on expand/collapse.
  *
  * @element nldd-rich-text
+ * @keywords prose, markdown, typography, opgemaakte tekst
+ * @related nldd-text, nldd-title
  *
- * @attr {string} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
+ * @attr {'flat'|'tight'|'snug'|'loose'} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} hyphens - Opt-in automatic hyphenation for running text (p,

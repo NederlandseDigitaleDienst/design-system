@@ -9,6 +9,7 @@
  * For type="checkbox" (multi-select), multiple buttons can be selected simultaneously.
  *
  * @element nldd-toggle-button-group
+ * @related nldd-segmented-control, nldd-button-bar
  *
  * @attr {'button' | 'checkbox' | 'radio'} type - Selection mode (default: 'checkbox')
  * @attr {string} name - Forwarded to all buttons

@@ -17,22 +17,9 @@ const sizeControl = (description: string) => ({
 });
 
 /**
- * Container is een eenvoudige layout-primitive: kies een layout-modus, geef
- * een gap, optioneel uitlijning, en padding. Padding kan per zijde, per as
- * (inline/block) of voor alle zijden tegelijk. Specifiekere instellingen
- * winnen: zijde > as > alle.
- *
- * Responsive padding en gap hebben `sm-` / `md-` / `lg-` varianten. Elke variant
- * werkt binnen een `layout-container` als container query, en valt buiten
- * een layout-container terug op een viewport media query.
- *
- * Layout-modi:
- *  - `stack` (default): items onder elkaar (normale DOM-flow).
- *  - `row`: flex-rij, geen wrap.
- *  - `wrap`: flex-rij die naar volgende regel wraps.
- *  - `grid`: CSS-grid, auto-fit kolommen van min 280px breed.
- *  - `columns`: CSS multicolumn, items flowen verticaal en lopen door naar
- *    de volgende kolom (krant-stijl); breaks binnen items worden vermeden.
+ * `nldd-container` is een eenvoudige layout-primitive: kies een layout-modus, geef
+ * een gap, optioneel uitlijning, en padding. Gebruik hem voor de ruimte rond en
+ * tussen de kinderen van één gebied, zoals een rij knoppen of een raster kaarten.
  *
  * ## Gebruik
  * ```html
@@ -55,9 +42,6 @@ export default {
 		componentSource: {
 			file: 'src/components/layout/container/container.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {

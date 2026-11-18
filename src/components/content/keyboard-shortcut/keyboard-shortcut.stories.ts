@@ -3,8 +3,9 @@ import './keyboard-shortcut.js';
 import '../../layout/container/container.js';
 
 /**
- * De KeyboardShortcut component toont een toetsencombinatie in één gecombineerde
- * container, bijvoorbeeld naast een menu-item of als hint bij een actie.
+ * `nldd-keyboard-shortcut` toont een toetsencombinatie, bijvoorbeeld naast een
+ * menu-item of als hint bij een actie. Per besturingssysteem kun je een eigen
+ * combinatie meegeven.
  *
  * ## Gebruik
  * ```html
@@ -18,9 +19,6 @@ import '../../layout/container/container.js';
  *   linux-keys="Ctrl+K"
  * ></nldd-keyboard-shortcut>
  * ```
- *
- * Het component picks zelf de juiste set op basis van de gedetecteerde OS,
- * met `keys` als fallback voor onbekende platforms.
  */
 export default {
 	title: 'Components/Content/Keyboard Shortcut',
@@ -30,9 +28,6 @@ export default {
 		componentSource: {
 			file: 'src/components/content/keyboard-shortcut/keyboard-shortcut.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {
@@ -196,7 +191,7 @@ export const Appearances = {
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: '`appearance="keycap"` (default, keycaps) naast `appearance="text"` (platte tekst — lichter, voor inline gebruik zoals in een menu).' } },
+		docs: { description: { story: '`appearance="keycap"` (default, keycaps) naast `appearance="text"` (platte tekst: lichter, voor inline gebruik zoals in een menu).' } },
 	},
 };
 
@@ -257,7 +252,7 @@ export const Windows = {
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: 'Per-instance `debug-os="windows"` override — toont `windows-keys`.' } },
+		docs: { description: { story: 'Een override per instance met `debug-os="windows"` toont `windows-keys`.' } },
 	},
 };
 
@@ -273,6 +268,6 @@ export const Linux = {
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: 'Per-instance `debug-os="linux"` override — toont `linux-keys`.' } },
+		docs: { description: { story: 'Een override per instance met `debug-os="linux"` toont `linux-keys`.' } },
 	},
 };

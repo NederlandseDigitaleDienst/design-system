@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, nextFrames, until } from '../../../test-utils.js';
 import type { NLDDCodeViewer } from './code-viewer.js';
 import './code-viewer.js';
 import { loadTokens } from '../../../test-tokens.js';
@@ -378,13 +378,38 @@ describe('nldd-code-viewer', () => {
 			await viewer._onCopyClick({ currentTarget: button } as unknown as Event);
 			await viewer.updateComplete;
 			expect(viewer._copyState).toBe('success');
-			document.dispatchEvent(new Event('scroll'));
+			window.dispatchEvent(new Event('scroll'));
 			await viewer.updateComplete;
 			expect(viewer._copyState).toBe('idle');
 			const iconBtn = el.shadowRoot!.querySelector('nldd-icon-button')!;
 			expect(iconBtn.getAttribute('icon')).toBe('copy');
 			expect(el.shadowRoot!.querySelector('nldd-tooltip')!.hasAttribute('open')).toBe(false);
 		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
+	// The content of nldd-page scrolls in its shadow root, where a scroll
+	// event never reaches the document.
+	it('a scroller in a shadow root clears the outcome too', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });
+		const host = document.createElement('div');
+		host.attachShadow({ mode: 'open' }).innerHTML = '<div style="overflow:auto;height:100px"><div style="height:1000px"><slot></slot></div></div>';
+		host.innerHTML = '<nldd-code-viewer>x</nldd-code-viewer>';
+		document.body.append(host);
+		try {
+			const viewer = host.firstElementChild as NLDDCodeViewer;
+			await viewer.updateComplete;
+			const button = viewer.shadowRoot!.querySelector<HTMLElement>('nldd-icon-button')!;
+			await viewer._onCopyClick({ currentTarget: button } as unknown as Event);
+			await viewer.updateComplete;
+			expect(viewer._copyState).toBe('success');
+			(host.shadowRoot!.firstElementChild as HTMLElement).scrollTop = 20;
+			await until(() => viewer._copyState === 'idle');
+			expect(viewer.shadowRoot!.querySelector('nldd-tooltip')!.hasAttribute('open')).toBe(false);
+		} finally {
+			host.remove();
 			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
 		}
 	});

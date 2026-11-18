@@ -17,16 +17,16 @@ function literalValues(text) {
 	return [...text.matchAll(/'([^']*)'|(-?\d+(?:\.\d+)?)/g)].map((match) => match[1] ?? match[2]);
 }
 
-const STORYBOOK = 'https://nederlandsedigitaledienst.github.io/design-system/?path=/docs';
+const SITE = 'https://design.digitaledienst.overheid.nl';
 
-/** Where `see` opens in the published Storybook, so a finding can be a link in a terminal. */
-export function seeUrl(see, patternTitle) {
+/** Where `see` opens on the website, so a finding can be a link in a terminal. */
+export function seeUrl(see) {
 	if (!see) return undefined;
 	const [kind, slug] = see.split('/');
-	if (kind === 'ontwerprichtlijnen') return `${STORYBOOK}/docs-ontwerprichtlijnen--docs#${slug}`;
-	if (kind !== 'patronen') return undefined;
-	const id = patternTitle(slug).toLowerCase().replace(/[^a-z0-9]+/g, '-');
-	return `${STORYBOOK}/${id}--docs`;
+	if (kind === 'ontwerprichtlijnen') return `${SITE}/richtlijnen/#${slug}`;
+	if (kind === 'patronen') return `${SITE}/patronen/${slug}/`;
+	if (kind === 'componenten') return `${SITE}/componenten/${slug}/`;
+	return undefined;
 }
 
 /** Set on any form control and read by nldd-validation-list, which is its sibling. */
@@ -47,8 +47,10 @@ export function buildContract(elements) {
 			const target = attribute.global ? globalAttrs : attribute.forDescendants ? descendantAttrs : attribute.forChildren ? childAttrs : attrs;
 			if (target[attribute.name]) continue;
 			const entry = {};
-			const literals = attribute.expandedType?.text ?? ((attribute.forChildren || attribute.forDescendants || attribute.global) && attribute.type?.text);
-			if (literals && literals.includes("'")) entry.values = literalValues(literals);
+			// The resolved TypeScript type, or the values the JSDoc names where the
+			// property is a plain string: `@attr {'sm'|'md'} size` on `size: string`.
+			const literals = [attribute.expandedType?.text, attribute.type?.text].find((text) => text?.includes("'"));
+			if (literals) entry.values = literalValues(literals);
 			if (attribute.deprecated) entry.deprecated = attribute.deprecated;
 			target[attribute.name] = entry;
 		}

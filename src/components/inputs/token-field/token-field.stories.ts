@@ -3,7 +3,7 @@ import './token-field.js';
 import '../../actions/menu/menu.js';
 
 /**
- * De Token Field is een multi-select invoerveld: gekozen waarden verschijnen als
+ * `nldd-token-field` is een multi-select invoerveld: gekozen waarden verschijnen als
  * verwijderbare tokens in een wrappende rij, gevolgd door een invoer die
  * meegroeit. Voeg een `nldd-menu` met `nldd-menu-item` elementen toe als opties
  * (net als bij de combo-box). Dit is de eerste bouwfase (frame + tokens + waarde);
@@ -18,7 +18,6 @@ export default {
 			file: 'src/components/inputs/token-field/token-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'wip' },
 	},
 	args: {
 		// Twee tokens om mee te beginnen: de controls hieronder zetten values bij

@@ -46,7 +46,7 @@ Begin daarom bij het probleem en het bewijs, niet bij de code:
 
 - **Welke taak** lost dit op, en waarom lukt dat niet met wat er al staat?
 - **Waar draait het?** Noem de producten of schermen waar deze compositie al in gebruik is. Een compositie die in meerdere producten van verschillende teams terugkomt is een patroon van het designsysteem; iets dat in één app staat is voorlopig een gewoonte van die app. Dat sluit niets uit, maar het bepaalt hoe hard het bewijs is.
-- **Wat is de regel?** Een patroon zonder "waarom zo" is een stuk voorbeeldcode, en dat hoort in Storybook.
+- **Wat is de regel?** Een patroon zonder "waarom zo" is een stuk voorbeeldcode, en dat hoort in een story bij het component.
 
 Let op de grens met de ontwerprichtlijnen: compositie hoort in een patroon, een ontwerpkeuze hoort in de [ontwerprichtlijnen](../nldd-design/design-guidelines.md). Die wijzen sommige dingen expliciet af, wizards en megamenu's bijvoorbeeld, dus daar komt geen patroon voor, ook niet als een product ze heeft.
 
@@ -87,7 +87,6 @@ Wat er dan beschikbaar is:
 | `/translation-keys` | de conventies voor i18n-keys en microcopy |
 | `/rule` | een regel toevoegen aan `nldd lint`, getest op patronen en echte apps |
 | `/worktree` | een worktree opzetten voor een nieuwe branch, met `.env` en `.claude/` erin |
-| `/storybook-manager` | Storybook-instances starten en stoppen over meerdere worktrees |
 
 Die lijst kan met de codebase meebewegen; `ls .claude/skills/` in je checkout is de actuele waarheid.
 

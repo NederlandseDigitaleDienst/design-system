@@ -3,8 +3,10 @@
  *
  * A text field for a date, with an optional calendar in a popover. The value is
  * always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy).
- * Typing is not masked: input is accepted generously and normalized only when
- * the field is left.
+ * Typing is not masked: input is accepted generously (`31-12-2026`,
+ * `31/12/2026`, `31122026`, ISO too) and normalized only when the field is
+ * left. Masking per keystroke makes the caret jump, makes backspace
+ * unpredictable and confuses screen readers.
  *
  * After a choice in the calendar the chosen day stays lit a moment before the
  * calendar closes, so you see what you picked. The value and `change` do not
@@ -23,6 +25,8 @@
  * message of your own in the nldd-form-field.
  *
  * @element nldd-date-field
+ * @keywords datum
+ * @related nldd-date-picker
  *
  * @attr {string} value - The date as ISO (yyyy-mm-dd). With `range` an ISO 8601 interval: `yyyy-mm-dd/yyyy-mm-dd`. Empty when there is no valid date.
  * @attr {boolean} range - Pick a period: two inputs and a calendar in range mode.
@@ -31,7 +35,7 @@
  * @attr {boolean} no-picker - Hides the calendar button. It is shown by default.
  * @attr {string} placeholder - Placeholder text. Do not put a format here; use the supporting label of nldd-form-field for that.
  * @attr {string} input-id - Sets the id on the internal input. Set automatically by nldd-form-field.
- * @attr {string} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
+ * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {boolean} invalid - Marks the field as invalid.
  * @attr {boolean} valid - Marks the field as valid.
  * @attr {boolean} disabled - Disabled state.

@@ -5,7 +5,7 @@ import '../avatar-group/avatar-group.js';
 import '../avatar/avatar.js';
 
 /**
- * De Blockquote component toont een citaat met optionele bronvermelding.
+ * `nldd-blockquote` toont een citaat met optionele bronvermelding.
  *
  * ## Gebruik
  * ```html
@@ -23,9 +23,6 @@ export default {
 		componentSource: {
 			file: 'src/components/content/blockquote/blockquote.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {
@@ -150,7 +147,7 @@ export const LangCitaat = {
 
 /**
  * Een `nldd-identity` mag als bronvermelding in de attribution-slot; het
- * kastlijntje ("— ") wordt dan automatisch weggelaten omdat de identity zijn
+ * kastlijntje voor de naam wordt dan automatisch weggelaten omdat de identity zijn
  * eigen opmaak meebrengt (avatar, naam en ondersteunende tekst).
  */
 export const MetIdentity = {

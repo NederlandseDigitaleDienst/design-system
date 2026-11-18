@@ -4,11 +4,13 @@
  * A numeric input field with decrement and increment buttons.
  *
  * @element nldd-number-field
+ * @keywords getal
+ * @related nldd-slider, nldd-stepper
  * @attr {number} value - Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1).
  * @attr {number} min - Minimum value (default: -Infinity)
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
- * @attr {string} size - Size: 'sm' | 'md' (default: 'md')
+ * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
  * @attr {boolean} disabled - Disabled state
  * @attr {boolean} required - A value has to be filled in. An empty field is then invalid.
  * @attr {string} name - Name for form submission

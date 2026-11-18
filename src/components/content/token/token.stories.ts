@@ -7,12 +7,10 @@ import '../text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * De Token is zelfstandige data waar de gebruiker mee werkt: een persoon in een
- * adresveld, een actieve filterwaarde. Als enige van de drie kun je hem bedienen,
- * dus hij is optioneel verwijderbaar of interactief via een contextueel menu.
- *
- * Lees je het alleen maar, kijk dan naar `nldd-tag` voor een toegekend kenmerk of
- * `nldd-badge` voor een toestand of aantal dat het systeem bijhoudt.
+ * `nldd-token` is data waar de gebruiker mee werkt, zoals een persoon in een
+ * adresveld of een actieve filterwaarde. Je kunt hem verwijderen of er een menu
+ * mee openen. Lees je het alleen, dan is het een `nldd-tag` voor een toegekend
+ * kenmerk of een `nldd-badge` voor een toestand.
  *
  * ## Gebruik
  * ```html
@@ -35,9 +33,6 @@ export default {
 		componentSource: {
 			file: 'src/components/content/token/token.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {
@@ -170,7 +165,7 @@ export const MetMenu = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Een token met een contextueel menu — bijvoorbeeld een e-mailadres met acties: een e-mail sturen, contactgegevens tonen, het adres kopiëren of de token verwijderen. Klik op de chevron; het menu opent als popover en de menu-items handelen zelf hun `select` af.',
+				story: 'Een token met een contextueel menu, bijvoorbeeld een e-mailadres met acties: een e-mail sturen, contactgegevens tonen, het adres kopiëren of de token verwijderen. Klik op de chevron; het menu opent als popover en de menu-items handelen zelf hun `select` af.',
 			},
 		},
 	},
@@ -220,7 +215,7 @@ export const FilterVoorbeeld = {
 
 	return html`
 		<nldd-container>
-			<nldd-text text="Actieve tokens — klik op × om een waarde te verwijderen:"></nldd-text>
+			<nldd-text text="Actieve tokens. Klik op × om een waarde te verwijderen:"></nldd-text>
 			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-container
 				layout="wrap"

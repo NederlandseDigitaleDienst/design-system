@@ -12,6 +12,15 @@
 		height: 100%;
 	}
 
+	/* Where the shell does not paint (the overscroll in Safari), the root shows. */
+	html:has(nldd-shell) {
+		background-color: var(--semantics-surfaces-base-background-color);
+	}
+
+	html:has(nldd-shell[background="tinted"]) {
+		background-color: var(--semantics-surfaces-tinted-background-color);
+	}
+
 	/* Components set their own typography inside their shadow root, but text the
 	   consumer writes in the light DOM fell back to the browser default, so every
 	   app solved it with its own `body { font: … }`, each one slightly different.

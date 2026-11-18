@@ -8,7 +8,7 @@ import '../../actions/button-group/button-group.js';
 import '../../layout/container/container.js';
 
 /**
- * Een visueel afgebakende kaart met optionele header, body en footer secties.
+ * `nldd-card` is een visueel afgebakende kaart met optionele header, body en footer secties.
  * De kaart heeft een elevated look als standaard. Gebruik geneste containers
  * voor padding.
  *
@@ -38,7 +38,6 @@ export default {
 			file: 'src/components/layout/card/card.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		background: 'base',
@@ -208,7 +207,7 @@ export const MetAfbeelding = () => html`
 /**
  * Met `href` wordt de hele kaart een link (overlay-anchor). Klikken waar dan ook
  * volgt de link. Geneste interactieve content blijft klikbaar door 'm op te tillen
- * met `position: relative; z-index: 1` — zoals de "Markeer"-knop hieronder.
+ * met `position: relative; z-index: 1`, zoals de "Markeer"-knop hieronder.
  */
 export const KlikbareKaart = (args: Record<string, any>) => html`
 	<nldd-card
@@ -257,7 +256,7 @@ KlikbareKaart.args = {
 
 /**
  * Met `button` wordt de hele kaart een knop (overlay-button). De activatie komt
- * als gewone, composed `click` op de kaart aan — een listener of htmx-attribuut
+ * als gewone, composed `click` op de kaart aan. Een listener of htmx-attribuut
  * op `nldd-card` zelf werkt dus direct, en Enter/Space doen het native.
  */
 export const KaartAlsKnop = () => html`
@@ -322,7 +321,7 @@ export const Vlakken = {
 			${(['base', 'tinted', 'accent-tinted'] as const).map((background) => html`
 				<nldd-card background=${background} style="max-width: 360px;">
 					<nldd-container padding="16">
-						<nldd-text><p>background="${background}"${background === 'base' ? ' (default)' : ''}${background === 'accent-tinted' ? ' — een tint van de themakleur, met hetzelfde contrast als tinted' : ''}</p></nldd-text>
+						<nldd-text><p>background="${background}"${background === 'base' ? ' (default)' : ''}${background === 'accent-tinted' ? ': een tint van de themakleur, met hetzelfde contrast als tinted' : ''}</p></nldd-text>
 					</nldd-container>
 				</nldd-card>
 			`)}

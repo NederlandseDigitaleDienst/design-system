@@ -6,6 +6,11 @@ import '../../content/text/text.js';
 import '../../layout/container/container.js';
 import '../../content/avatar/avatar.js';
 
+/**
+ * `nldd-menu` is een zwevend menu aan een knop of veld, met `nldd-menu-item` en
+ * `nldd-menu-divider` erin. Het is een menu van acties, de lijst onder een
+ * combobox of een submenu in een navigatie.
+ */
 export default {
 	title: 'Components/Actions/Menu',
 	component: 'nldd-menu',
@@ -24,9 +29,7 @@ export default {
 };
 
 /**
- * Een menu met de acties op één ding. Elk icoon hoort bij zijn actie, de eerste twee
- * tonen hun sneltoets, twee items openen een submenu, en de actie die niet terug
- * te draaien is staat onderaan, los van de rest en `destructive`.
+ * Een menu met de acties op één ding.
  */
 export const Standaard = {
 	render: ({ variant }: Record<string, any>) => html`
@@ -137,7 +140,7 @@ export const VariantNavigation = {
 };
 
 /**
- * `details` toont een secundair label rechts van het item — bijvoorbeeld de
+ * `details` toont een secundair label rechts van het item, bijvoorbeeld de
  * huidige waarde of een aantal. Voor sneltoetsen is er het aparte
  * `shortcut`-attribuut (zie de story Sneltoetsen).
  */
@@ -168,7 +171,7 @@ export const MetDetails = {
 /**
  * Met `shortcut` toont een item zijn sneltoets als nette `<kbd>`-toetsen (via
  * nldd-keyboard-shortcut) in plaats van platte `details`-tekst. Dit is puur ter
- * weergave — het component bindt de toets niet; koppel de afhandeling zelf in je
+ * weergave: het component bindt de toets niet. Koppel de afhandeling zelf in je
  * applicatie. Gebruik `shortcut-mac`/`shortcut-windows`/`shortcut-linux` voor
  * platform-specifieke weergave. Op touch-only apparaten verdwijnt de hint, want
  * daar is hij niet aanroepbaar.
@@ -265,8 +268,8 @@ export const Links = {
 };
 
 /**
- * Het menu groeit standaard mee met de breedste regel — handig voor lange
- * labels — tot een maximum van `min(100vw - inset, 640px)`. Korte menu's houden
+ * Het menu groeit standaard mee met de breedste regel (handig voor lange
+ * labels), tot een maximum van `min(100vw - inset, 640px)`. Korte menu's houden
  * de minimumbreedte aan; met een expliciete `width` zet je een vaste breedte.
  */
 export const BredeInhoud = {
@@ -503,7 +506,7 @@ export const Destructief = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Markeer onomkeerbare acties als `destructive` voor een rode tekstkleur en een rode highlight-achtergrond — zodat de actie visueel afwijkt van veilige items in dezelfde menu.',
+				story: 'Markeer onomkeerbare acties als `destructive` voor een rode tekstkleur en een rode highlight-achtergrond, zodat de actie visueel afwijkt van veilige items in hetzelfde menu. Zet zo\'n actie onderaan, met een divider ervoor.',
 			},
 		},
 	},
@@ -565,7 +568,7 @@ export const MetSubmenuOpMeerdereNiveaus = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Submenus mogen recursief geneste submenus bevatten — geen diepte-limiet. Elk niveau opent z\'n eigen popover (cascade) of stapelt op dezelfde positie (drill-in mobiel). Toetsenbord: ArrowRight opent submenu en focust eerste item, ArrowLeft of Esc gaat één niveau terug.',
+				story: 'Submenus mogen recursief geneste submenus bevatten, zonder diepte-limiet. Elk niveau opent z\'n eigen popover (cascade) of stapelt op dezelfde positie (drill-in mobiel). Toetsenbord: ArrowRight opent submenu en focust eerste item, ArrowLeft of Esc gaat één niveau terug.',
 			},
 		},
 	},
@@ -601,7 +604,7 @@ export const MetSubmenu = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Wrap een `<nldd-menu>` in een `<nldd-menu-item>` om er een submenu van te maken. Het item krijgt automatisch een chevron-rechts indicator en `aria-haspopup="menu"`. Klik op het item opent het submenu naast de parent (cascade). Een item is óf een actie óf een submenu-opener — geen beide. Selectie van een item ergens in de keten sluit alle popovers tegelijk.',
+				story: 'Wrap een `<nldd-menu>` in een `<nldd-menu-item>` om er een submenu van te maken. Het item krijgt automatisch een chevron-rechts indicator en `aria-haspopup="menu"`. Klik op het item opent het submenu naast de parent (cascade). Een item is óf een actie óf een submenu-opener, niet allebei. Selectie van een item ergens in de keten sluit alle popovers tegelijk.',
 			},
 		},
 	},
@@ -635,7 +638,7 @@ export const DebugVeiligeDriehoek = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Schakel het `debug-safe-triangle` attribuut aan om de safe triangle als translucent roze overlay te visualiseren. Handig voor debugging en het tunen van padding-waardes — niet voor productie.',
+				story: 'Schakel het `debug-safe-triangle` attribuut aan om de safe triangle als translucent roze overlay te visualiseren. Handig voor debugging en het tunen van padding-waardes, niet voor productie.',
 			},
 		},
 	},
@@ -667,7 +670,7 @@ export const PlatEnGroepenGemengd = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Flat items en groups kunnen door elkaar gebruikt worden. Een expliciete `<nldd-menu-divider>` direct vóór een groep wordt automatisch verborgen — de groep heeft al z\'n eigen divider boven.',
+				story: 'Flat items en groups kunnen door elkaar gebruikt worden. Een expliciete `<nldd-menu-divider>` direct vóór een groep wordt automatisch verborgen, want de groep heeft al z\'n eigen divider boven.',
 			},
 		},
 	},
@@ -749,15 +752,15 @@ export const MetHeaderEnFooter = {
  * ankert en togglet het menu dan zelf, zonder `id`-boilerplate. Dat is de route
  * die je wilt bij `nldd-button`, `nldd-icon-button` en `nldd-split-button`.
  *
- * Is je anker géén van die drie — een eigen control, of een DS-component zonder
- * `popup`-slot zoals `nldd-list-item-segment` — dan is er nog `anchor`: zet het
+ * Is je anker géén van die drie (een eigen control, of een DS-component zonder
+ * `popup`-slot zoals `nldd-list-item-segment`), dan is er nog `anchor`: zet het
  * op de id van het ankerelement. Het menu positioneert zichzelf ertegen en
  * luistert op document-clicks om zichzelf te openen en te sluiten.
  *
  * Wat je er dan zelf bij moet leveren: het anker moet een echt bedienbaar
  * element zijn (focusbaar, met een toegankelijke naam), en je zet zelf
  * `aria-expanded` bij. Die sync loopt alleen op ankers met een
- * `expanded`-property — dus wel op `nldd-button`, niet op een eigen control.
+ * `expanded`-property: wel op `nldd-button`, niet op een eigen control.
  * Hieronder gebeurt dat via het `toggle`-event van de popover.
  */
 export const AnkerenViaId = {

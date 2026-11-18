@@ -1,6 +1,11 @@
 import { html, nothing } from 'lit';
 import './breadcrumbs.js';
 
+/**
+ * `nldd-breadcrumbs` is een kruimelpad: een rij `nldd-breadcrumbs-item`s,
+ * gescheiden door `›`, die laat zien waar een pagina in de structuur staat.
+ * Past het pad niet op één regel, dan loopt het door op de volgende.
+ */
 export default {
 	title: 'Components/Navigation/Breadcrumbs',
 	component: 'nldd-breadcrumbs',
@@ -10,7 +15,6 @@ export default {
 			file: 'src/components/navigation/breadcrumbs/breadcrumbs.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		accessibleLabel: '',

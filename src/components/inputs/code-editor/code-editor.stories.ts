@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import './code-editor.js';
 import '../../layout/container/container.js';
 
-const SAMPLE_YAML = `# wet_op_de_zorgtoeslag — artikel 2
+const SAMPLE_YAML = `# wet_op_de_zorgtoeslag, artikel 2
 $id: zorgtoeslagwet
 articles:
   - number: '2'
@@ -22,13 +22,18 @@ const SAMPLE_JSON = `{
 const forwardClickToEditor = (event: PointerEvent) => {
 	const container = event.currentTarget as HTMLElement;
 	// Shadow retargeting: padding clicks have target === container; clicks in
-	// the editor have target === the editor — only forward the former.
+	// the editor have target === the editor. Only forward the former.
 	if (event.target !== container) return;
 	event.preventDefault();
 	const editor = container.querySelector('nldd-code-editor') as (HTMLElement & { focusFromPoint(x: number, y: number): void }) | null;
 	editor?.focusFromPoint(event.clientX, event.clientY);
 };
 
+/**
+ * `nldd-code-editor` is een tekstveld in monospace voor code, YAML, JSON en
+ * andere technische inhoud. Hij hoort bij `nldd-code-viewer`, die dezelfde
+ * inhoud alleen toont.
+ */
 export default {
 	title: 'Components/Inputs/Code Editor',
 	component: 'nldd-code-editor',
@@ -38,7 +43,6 @@ export default {
 			file: 'src/components/inputs/code-editor/code-editor.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		embedded: false,
@@ -235,7 +239,7 @@ export const InEenContainer = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Een generieke `nldd-container` bepaalt de (responsive) ruimte; een klein bruggetje stuurt kliks op de container-padding door naar de editor via `focusFromPoint()`. Klik in de rand rond de tekst — de caret springt naar de dichtstbijzijnde regel, zonder dat de editor zelf padding hoeft te beheren.',
+				story: 'Een generieke `nldd-container` bepaalt de (responsive) ruimte; een klein bruggetje stuurt kliks op de container-padding door naar de editor via `focusFromPoint()`. Klik in de rand rond de tekst en de caret springt naar de dichtstbijzijnde regel, zonder dat de editor zelf padding hoeft te beheren.',
 			},
 		},
 	},

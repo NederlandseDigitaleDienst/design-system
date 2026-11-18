@@ -3,7 +3,7 @@ import './switch-field.js';
 import '../../layout/container/container.js';
 
 /**
- * De Switch Field component is een switch toggle met een inline label voor gebruik in formulieren.
+ * `nldd-switch-field` is een switch met een inline label, voor gebruik in formulieren.
  */
 export default {
 	title: 'Components/Inputs/Switch Field',
@@ -13,9 +13,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/switch-field/switch-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {

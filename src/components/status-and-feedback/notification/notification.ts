@@ -3,7 +3,7 @@
  *
  * A short message that arrives over the interface and leaves on its own: a
  * save that worked, a request that failed. Not a banner, which stands in the
- * page and stays there — this one floats, stacks, and goes away.
+ * page and stays there. This one floats, stacks, and goes away.
  *
  * It places itself. Write it wherever it belongs in your code and it moves to
  * one shared area: top right from md, where it slides in from the right, and
@@ -67,6 +67,8 @@
  * removed row leaves its notification on screen.
  *
  * @element nldd-notification
+ * @keywords toast, snackbar, melding
+ * @related nldd-banner, nldd-status-bar, nldd-inline-dialog
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - What kind of message this is; sets the icon color and the ARIA role (default: 'neutral')
  * @attr {string} icon - Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled

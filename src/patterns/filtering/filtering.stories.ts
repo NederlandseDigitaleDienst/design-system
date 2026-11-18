@@ -2,7 +2,7 @@ import markup from './filtering.html?raw';
 import { patternStory } from '../pattern-story.js';
 
 export default {
-	title: 'Patronen/Filteren',
+	title: 'Patronen/Algemeen/Filteren',
 };
 
 export const Standaard = patternStory(markup, (root) => {

@@ -15,18 +15,9 @@ import { syncToolbarOverflow } from '../../../actions/toolbar/toolbar.story-sync
 syncToolbarOverflow();
 
 /**
- * Gebruik een bar split view voor een verticale layout met een main-gebied en een
- * onbeperkt aantal balkpanelen. Geef elke balk een unieke slotnaam (bijv.
- * slot="toolbar", slot="status-bar"). Het main-paneel gebruikt altijd slot="main".
- *
- * Balken staan op elke viewport in de flow en stapelen verticaal. Er komt
- * alleen een scheidingslijn waar het main-paneel aan een balk grenst — direct
- * boven en/of onder main, óók op sm. Tussen twee gestapelde balken aan dezelfde
- * kant komt nooit een lijn, zodat bijv. een toolbar en tab-bar één geheel vormen.
- * De consument hoeft zelf geen dividers te plaatsen of te onderdrukken.
- *
- * Gebruik sm-order, md-order en lg-order om de volgorde per breekpunt te bepalen.
- * Zonder orderattributen wordt DOM-volgorde gebruikt.
+ * `nldd-bar-split-view` is een verticale layout met een main-gebied en een
+ * onbeperkt aantal balkpanelen erboven en eronder. Gebruik hem voor een scherm
+ * met een werkbalk, tabbalk of statusbalk rond de inhoud.
  *
  * ## Gebruik
  * ```html
@@ -47,9 +38,6 @@ export default {
 			file: 'src/components/layout/split-views/bar-split-view/bar-split-view.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		background: 'inherit',
@@ -58,7 +46,7 @@ export default {
 		background: {
 			control: { type: 'select' },
 			options: ['inherit', 'base', 'tinted'],
-			description: 'Achtergrondkleur — cascade van --context-background-color naar alle afstammelingen inclusief nldd-page en de fade-overlays',
+			description: 'Achtergrondkleur. Zet --context-background-color, dat doorwerkt naar alle afstammelingen, ook nldd-page en de fade-overlays.',
 			table: { defaultValue: { summary: 'inherit' } },
 		},
 	},

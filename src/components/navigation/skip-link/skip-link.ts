@@ -26,6 +26,7 @@
  * over", "Sla inhoudsopgave over".
  *
  * @element nldd-skip-link
+ * @keywords overslaan, naar de inhoud
  * @attr {string} text - Text of the skip link. Name what is skipped. Falls back to "Ga naar de hoofdinhoud" around the header of a page, and to "Sla over" elsewhere.
  * @attr {string} href - Optional external target id. Without href it jumps to the first rendered element after the skip link.
  *

@@ -8,7 +8,7 @@
  *
  * @element nldd-split-view-divider
  *
- * @attr {string} orientation - Orientation: 'vertical' | 'horizontal'
+ * @attr {'vertical'|'horizontal'} orientation - Orientation: 'vertical' | 'horizontal'
  * @attr {boolean} has-drag-handle - Show a drag handle
  */
 import { LitElement } from 'lit';

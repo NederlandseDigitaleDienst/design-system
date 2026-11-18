@@ -5,6 +5,11 @@ import { ICONS } from '../../../content/icon/icon.js';
 import '../../list/list.js';
 import '../../list-item/list-item.js';
 
+/**
+ * `nldd-icon-cell` is een cel met een icoon in een rij van een `nldd-list`.
+ * Geef met `icon` een naam uit de iconenset, of zet eigen inhoud in het slot
+ * voor een icoon dat er niet in staat.
+ */
 export default {
 	title: 'Components/Lists & Tables/Cells/Icon Cell',
 	component: 'nldd-icon-cell',
@@ -166,6 +171,6 @@ export const EigenInhoudInDeSlot = {
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: 'Wanneer `icon` niet is gezet, rendert de default-slot consumer-inhoud — handig voor custom SVG\'s of iconen uit een andere library.' } },
+		docs: { description: { story: 'Wanneer `icon` niet is gezet, rendert de default-slot consumer-inhoud. Handig voor custom SVG\'s of iconen uit een andere library.' } },
 	},
 };

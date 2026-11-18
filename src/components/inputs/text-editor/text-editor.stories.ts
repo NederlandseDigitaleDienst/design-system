@@ -155,6 +155,11 @@ function formatToolbar({ slot, editorId }: { slot?: string; editorId?: string } 
 	`;
 }
 
+/**
+ * `nldd-text-editor` is een markdown-editor die de opmaak in de tekst zelf toont:
+ * vet is vet en koppen zijn groter, terwijl de markdown-tekens gedimd zichtbaar
+ * blijven. Het document blijft gewone markdown, dus de inhoud blijft overal bruikbaar.
+ */
 export default {
 	title: 'Components/Inputs/Text Editor',
 	component: 'nldd-text-editor',
@@ -164,7 +169,6 @@ export default {
 			file: 'src/components/inputs/text-editor/text-editor.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		embedded: false,
@@ -314,7 +318,7 @@ export const Links = {
 			.value=${[
 				'Een markdown-link: [Mijn Dienst](https://www.example.nl).',
 				'',
-				'En een plat geplakte URL: https://www.example.nl/aanvragen — die krijgt dezelfde badge.',
+				'En een plat geplakte URL die dezelfde badge krijgt: https://www.example.nl/aanvragen',
 				'',
 				'Ook www.example.nl en info@example.nl worden herkend.',
 			].join('\n')}
@@ -324,7 +328,7 @@ export const Links = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Elke link krijgt een "open in nieuw tabblad"-badge — niet alleen markdown-links (`[tekst](url)`), maar ook plat geplakte URL\'s (GFM-autolinks). Scheme-loze vormen krijgen er een: `www.…` → https, een e-mailadres → mailto. De badge is direct klikbaar zonder eerst de caret te plaatsen.',
+				story: 'Elke link krijgt een "open in nieuw tabblad"-badge, niet alleen markdown-links (`[tekst](url)`) maar ook plat geplakte URL\'s (GFM-autolinks). Scheme-loze vormen krijgen er een: `www.…` → https, een e-mailadres → mailto. De badge is direct klikbaar zonder eerst de caret te plaatsen.',
 			},
 		},
 	},

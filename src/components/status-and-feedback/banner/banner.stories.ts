@@ -6,13 +6,9 @@ import { ICONS } from '../../content/icon/icon.js';
 import '../../layout/container/container.js';
 
 /**
- * Een banner toont een persistente, inline notificatie met een getinte
+ * `nldd-banner` toont een persistente, inline notificatie met een getinte
  * achtergrond per variant. Gebruik voor pagina-niveau feedback zoals
  * een foutmelding aan de bovenkant van een formulier.
- *
- * `role`, `aria-live` en `aria-atomic` worden automatisch op basis van de
- * variant gezet (critical → `role="alert"`, overige → `role="status"` met
- * `aria-live="polite"`). Voeg deze niet zelf toe.
  */
 export default {
 	title: 'Components/Status & Feedback/Banner',
@@ -23,10 +19,9 @@ export default {
 			file: 'src/components/status-and-feedback/banner/banner.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		docs: {
 			// role / aria-live / aria-atomic are set on the host by the component
-			// itself (based on variant), so strip them from the shown code — a
+			// itself (based on variant), so strip them from the shown code: a
 			// consumer shouldn't think they need to add them by hand.
 			source: {
 				transform: (code: string) => code.replace(/\s+(?:role|aria-live|aria-atomic)="[^"]*"/g, ''),
@@ -196,7 +191,7 @@ export const Sluitbaar = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `dismissible` verschijnt een sluit-knop rechtsboven. Bij klik wordt een `dismiss` event gevuurd — de consumer is verantwoordelijk voor het verbergen of verwijderen van de banner.',
+				story: 'Met `dismissible` verschijnt een sluit-knop rechtsboven. Bij klik wordt een `dismiss` event gevuurd. De consumer is verantwoordelijk voor het verbergen of verwijderen van de banner.',
 			},
 		},
 	},

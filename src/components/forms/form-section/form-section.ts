@@ -3,31 +3,17 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * Nederlandse Digitale Dienst Form Section Component
  *
  * Plain custom element (extends HTMLElement, no Lit). The light-DOM render
- * works around an NVDA + Firefox a11y bug where a shadow-DOM <fieldset> +
- * <legend> is not reliably announced as the group label for slotted controls.
+ * works around an NVDA + Firefox a11y bug where a shadow-DOM `<fieldset>` +
+ * `<legend>` is not reliably announced as the group label for slotted controls.
  * A native fieldset/legend in the light DOM works correctly across all
  * AT/browser combinations.
  *
  * **Differs from shadow components:**
  * - No shadowRoot: all children live in the light DOM (inside the rendered
- *   <fieldset>).
+ *   `<fieldset>`).
  * - No Lit: a plain HTMLElement with manual DOM mutation.
  * - **Requires a global stylesheet import**: `dist/css/form-section.css` (or
  *   `global.css`). Form-section has no shadow stylesheet.
- *
- * Renders to:
- *
- *     <nldd-form-section>
- *         <fieldset class="form-section">
- *             <legend class="form-section__header">
- *                 <span class="form-section__title">Title</span>
- *                 <span class="form-section__supporting-text">Supporting text</span>
- *             </legend>
- *             <div class="form-section__main">
- *                 [user's children]
- *             </div>
- *         </fieldset>
- *     </nldd-form-section>
  *
  * **Accessibility note**: the title renders as a `<legend>`. Semantically that
  * is a **group label**, not a heading. Screen readers announce it when the user
@@ -44,25 +30,43 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * detailed instructions. For a longer explanation on one specific field, use
  * `nldd-form-field-help-text` on that field.
  *
- *     <nldd-form>
- *         <nldd-form-section text="Persoonsgegevens" supporting-text="Vul je gegevens in.">
- *             <nldd-form-field label="Voornaam">...</nldd-form-field>
- *             <nldd-form-field label="Achternaam">...</nldd-form-field>
- *         </nldd-form-section>
- *
- *         <nldd-form-section text="Adres">
- *             <nldd-form-field label="Straat">...</nldd-form-field>
- *         </nldd-form-section>
- *
- *         <nldd-form-actions>...</nldd-form-actions>
- *     </nldd-form>
- *
  * @element nldd-form-section
+ * @keywords formuliersectie
  *
  * @attr {string} text - Heading text (rendered in the `<legend>`).
  * @attr {string} supporting-text - Short description under the heading. Keep it to roughly 80 characters or less (see the a11y note).
  *
  * Children of the form-section are placed in `.form-section__main`.
+ *
+ * @example
+ * Renders to:
+ * ```html
+ * <nldd-form-section>
+ *     <fieldset class="form-section">
+ *         <legend class="form-section__header">
+ *             <span class="form-section__title">Title</span>
+ *             <span class="form-section__supporting-text">Supporting text</span>
+ *         </legend>
+ *         <div class="form-section__main">
+ *             [user's children]
+ *         </div>
+ *     </fieldset>
+ * </nldd-form-section>
+ * ```
+ *
+ * Usage:
+ * ```html
+ * <nldd-form>
+ *     <nldd-form-section text="Persoonsgegevens" supporting-text="Vul je gegevens in.">
+ *         <nldd-form-field label="Voornaam">...</nldd-form-field>
+ *         <nldd-form-field label="Achternaam">...</nldd-form-field>
+ *     </nldd-form-section>
+ *     <nldd-form-section text="Adres">
+ *         <nldd-form-field label="Straat">...</nldd-form-field>
+ *     </nldd-form-section>
+ *     <nldd-form-actions>...</nldd-form-actions>
+ * </nldd-form>
+ * ```
  */
 
 

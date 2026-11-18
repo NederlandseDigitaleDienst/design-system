@@ -6,7 +6,7 @@ import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * De Toggle Button Group component groepeert `nldd-toggle-button` elementen en beheert
+ * `nldd-toggle-button-group` groepeert `nldd-toggle-button`-elementen en beheert
  * selectie, toetsenbordnavigatie en de synchronisatie van `type`, `name`, `appearance` en `size`.
  *
  * ## Gebruik
@@ -28,9 +28,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/toggle-button-group/toggle-button-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {
@@ -186,7 +183,7 @@ export const TypeButton = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: '`type="button"` — knoppen zijn onafhankelijk van elkaar en kunnen tegelijk actief zijn. De groep biedt layout en synchronisatie van `size` en `disabled`.',
+				story: 'Met `type="button"` zijn de knoppen onafhankelijk van elkaar en kunnen ze tegelijk actief zijn. De groep biedt layout en synchronisatie van `size` en `disabled`.',
 			},
 	},
 },

@@ -1,0 +1,189 @@
+/**
+ * Vite plugin that writes the site's pages to disk and keeps them current.
+ *
+ * Vite builds a multi-page site from HTML files, so the pages are generated
+ * into www/.generated/ (ignored by git) and Vite takes that directory as its
+ * root. In development the sources are watched: a change to a story, a pattern,
+ * a Markdown page or the manifest regenerates the pages and reloads the browser.
+ */
+
+import { mkdirSync, writeFileSync, readFileSync, existsSync, copyFileSync, rmSync, readdirSync, statSync } from 'node:fs';
+import { resolve, dirname, join, relative } from 'node:path';
+import { Worker } from 'node:worker_threads';
+import { buildPages } from './site.js';
+import { readManifest, repoRoot } from './sources.js';
+
+export const generatedDir = resolve(repoRoot, 'www/.generated');
+
+// What every page loads. The landing page keeps its own script and its own
+// stylesheet; the other pages run the script that knows the stage, and add to
+// the stylesheet what the stories and the stage need. The stylesheet is a file of its own, linked
+// from the head of every page, and not an import of a script: a stylesheet in
+// the head is there before the first paint, where one a script adds arrives
+// after the unstyled page showed.
+const ENTRIES = {
+	'home.ts': "import '../main.ts';\n",
+	'home.css': "@import '../styles.css';\n@import '../client/first-paint.css';\n",
+	'main.ts': "import '../client/main.ts';\n",
+	'frame.ts': "import '../client/frame.ts';\n",
+	'styles.css': [
+		'../styles.css',
+		'../../src/components/inputs/dropdown/dropdown.css',
+		'../../src/components/forms/form-section/form-section.css',
+		'../../src/components/forms/form/form.css',
+		'../client/first-paint.css',
+		'../client/site.css',
+	]
+		.map((path) => `@import '${path}';\n`)
+		.join(''),
+};
+
+// The script that sets the chosen theme before the first paint. Not a module,
+// so Vite does not bundle it: it is copied as it is, in development and in
+// the build.
+const themeScript = resolve(repoRoot, 'www/client/theme-first-paint.js');
+
+const WATCHED = [/\.stories\.ts$/, /\.md$/, /custom-elements\.json$/, /www\/index\.html$/, /www\/build\//, /lint\/data\.generated\.json$/];
+
+function writeIfChanged(file, content) {
+	if (existsSync(file) && readFileSync(file, 'utf8') === content) return false;
+	mkdirSync(dirname(file), { recursive: true });
+	writeFileSync(file, content);
+	return true;
+}
+
+function htmlFiles(dir, found = []) {
+	if (!existsSync(dir)) return found;
+	for (const name of readdirSync(dir)) {
+		const full = join(dir, name);
+		if (statSync(full).isDirectory()) htmlFiles(full, found);
+		else if (name.endsWith('.html')) found.push(full);
+	}
+	return found;
+}
+
+/** The module that defines each element, by tag. */
+function componentModules() {
+	return Object.fromEntries(readManifest().map((element) => [element.tagName, resolve(repoRoot, element.module)]));
+}
+
+/**
+ * Gives a page an entry of its own: the components its markup uses, then the
+ * script every page runs. A page that shows a hero and four cards then loads
+ * those, and not the other hundred components.
+ */
+function withEntry(path, html, modules) {
+	const shared = html.match(/<script type="module" src="\/(\w+\.ts)"><\/script>/)?.[1];
+	if (!shared) throw new Error(`${path} laadt geen script.`);
+	const tags = [...new Set([...html.matchAll(/<(nldd-[a-z0-9-]+)/g)].map((match) => match[1]))].sort();
+	const dir = dirname(join(generatedDir, path));
+	const imports = tags.filter((tag) => modules[tag]).map((tag) => `import '${relative(dir, modules[tag])}';`);
+	const entry = `${[...imports, `import './${relative(dir, join(generatedDir, shared))}';`].join('\n')}\n`;
+	const name = `${dirname(path) === '.' ? '' : `${dirname(path)}/`}entry.ts`;
+	return { html: html.replace(`src="/${shared}"`, `src="/${name}"`), entryPath: name, entry };
+}
+
+function writePages(pages) {
+	const modules = componentModules();
+	for (const [path, source] of Object.entries(pages)) {
+		const { html, entryPath, entry } = withEntry(path, source, modules);
+		writeIfChanged(join(generatedDir, path), html);
+		writeIfChanged(join(generatedDir, entryPath), entry);
+	}
+}
+
+/** Writes every page and removes the ones whose source is gone. */
+export function generate({ base = '/' } = {}) {
+	const { pages, counts } = buildPages({ base });
+	writePages(pages);
+	for (const [name, content] of Object.entries(ENTRIES)) writeIfChanged(join(generatedDir, name), content);
+	for (const file of htmlFiles(generatedDir)) {
+		if (!(relative(generatedDir, file) in pages)) rmSync(file);
+	}
+	copyFileSync(resolve(repoRoot, 'src/assets/favicon/favicon.svg'), join(generatedDir, 'favicon.svg'));
+	copyFileSync(themeScript, join(generatedDir, 'theme.js'));
+	return { inputs: Object.keys(pages).map((path) => join(generatedDir, path)), counts };
+}
+
+export function sitePages() {
+	let base = '/';
+	return {
+		name: 'nldd-site-pages',
+		// Every component by tag, for the loader that catches a tag nobody
+		// imported (site/client/autoload.ts).
+		resolveId(id) {
+			return id === 'virtual:site-components' ? '\0virtual:site-components' : null;
+		},
+		load(id) {
+			if (id !== '\0virtual:site-components') return null;
+			const entries = Object.entries(componentModules()).map(([tag, file]) => `\t'${tag}': () => import('${file}'),`);
+			return `export default {\n${entries.join('\n')}\n};\n`;
+		},
+		generateBundle() {
+			this.emitFile({ type: 'asset', fileName: 'theme.js', source: readFileSync(themeScript, 'utf8') });
+		},
+		config(config) {
+			base = config.base ?? '/';
+			const { inputs } = generate({ base });
+			return { build: { rollupOptions: { input: inputs } } };
+		},
+		configureServer(server) {
+			// A page without its trailing slash goes to the page, as nginx does in
+			// production; without this the dev server answers with an empty page.
+			server.middlewares.use((request, response, next) => {
+				const [path, query] = (request.url ?? '').split(/\?(.*)/s);
+				const page = path.startsWith(base) ? path.slice(base.length) : '';
+				if (!page || path.endsWith('/') || /\.[^/]*$/.test(path) || !existsSync(join(generatedDir, page, 'index.html')))
+					return next();
+				response.writeHead(301, { Location: `${path}/${query ? `?${query}` : ''}` });
+				response.end();
+			});
+			server.watcher.add([
+				resolve(repoRoot, 'src'),
+				resolve(repoRoot, 'www/index.html'),
+				resolve(repoRoot, 'www/content'),
+				resolve(repoRoot, 'www/build'),
+				resolve(repoRoot, 'docs'),
+				resolve(repoRoot, 'CHANGELOG.md'),
+				resolve(repoRoot, 'custom-elements.json'),
+			]);
+			// One build at a time, and one more for whatever changed during it: a
+			// branch switch changes many files, and a build that started earlier
+			// could finish later and write older pages.
+			let building = false;
+			let again = false;
+			const build = async () => {
+				building = true;
+				do {
+					again = false;
+					try {
+						// In a worker, which imports every module afresh: a fresh import of
+						// site.js alone kept its helpers as they were. By its place in the
+						// repository: once Vite has restarted, this module runs from a
+						// bundled copy elsewhere and a relative address no longer finds it.
+						const pages = await new Promise((done, fail) => {
+							const worker = new Worker(resolve(repoRoot, 'www/build/build-worker.js'), { workerData: { base } });
+							worker.once('message', done);
+							worker.once('error', fail);
+							worker.once('exit', (code) => fail(new Error(`build stopped with code ${code}`)));
+						});
+						if (again) continue;
+						writePages(pages);
+						server.ws.send({ type: 'full-reload' });
+					} catch (error) {
+						server.config.logger.error(`Site niet bijgewerkt: ${error.message}`);
+					}
+				} while (again);
+				building = false;
+			};
+			const regenerate = (file) => {
+				if (file.startsWith(generatedDir) || !WATCHED.some((pattern) => pattern.test(file))) return;
+				if (building) again = true;
+				else build();
+			};
+			server.watcher.on('change', regenerate);
+			server.watcher.on('add', regenerate);
+			server.watcher.on('unlink', regenerate);
+		},
+	};
+}

@@ -2,34 +2,22 @@ import { html, nothing } from 'lit';
 import './image.js';
 import './lqip-encoder-element.js';
 import '../../layout/container/container.js';
+import { sampleImage } from '../../../sample-images.js';
 
-// Lokale voorbeeldafbeelding (public/sample-images/), zodat de stories niet
-// afhankelijk zijn van een externe host en consumers van offline Storybook-builds.
-// Foto: Bart van de Biezen — Klein koolwitje op een vlinderstruik.
-// Paden zijn RELATIEF (geen leading slash): de preview-iframe staat op
-// `.../iframe.html`, dus `sample-images/...` resolvet correct onder de
-// GitHub-Pages base-path (`/storybook/`) én op localhost (root). Een absoluut
-// `/sample-images/...` zou op Pages tegen de origin resolven en 404'en.
-const SAMPLE_SRC = 'sample-images/butterfly-1200.jpg';
+const SAMPLE_SRC = sampleImage('butterfly-1200.jpg');
 const SAMPLE_ALT = 'Klein koolwitje op een vlinderstruik';
 
-const SAMPLE_SRCSET =
-	'sample-images/butterfly-480.jpg 480w, ' +
-	'sample-images/butterfly-960.jpg 960w, ' +
-	'sample-images/butterfly-1600.jpg 1600w';
+const SAMPLE_SRCSET = [480, 960, 1600].map((width) => `${sampleImage(`butterfly-${width}.jpg`)} ${width}w`).join(', ');
 
 /** LQIP CSV string berekend uit de bron (zeven 0-255 Oklab bytes). Regenereer
  *  via de "LQIP encoder tool" story als je de afbeelding vervangt. */
 const SAMPLE_LQIP = '28,28,164,164,106,170,99';
 
 /**
- * Een gestylede wrapper rond `<img>` met de tokens van het designsysteem voor radius,
- * achtergrond en caption. Reserveert ruimte via `aspect-ratio` om layout-shift
- * te voorkomen tijdens het laden. Voor avatars: `shape="circle"` met
- * `aspect-ratio="1/1"`.
- *
- * Slot je eigen `<img>` of `<picture>` (bv. met art-direction sources) in de
- * default slot om de interne fallback te overschrijven.
+ * `nldd-image` toont een afbeelding met de afronding, de achtergrond en het
+ * onderschrift van het designsysteem. Gebruik het voor een foto of illustratie
+ * in een pagina. Met `aspect-ratio` houdt het de ruimte vrij, zodat de pagina
+ * niet verspringt terwijl de afbeelding laadt.
  */
 export default {
 	title: 'Components/Content/Image',
@@ -40,7 +28,6 @@ export default {
 			file: 'src/components/content/image/image.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		src: SAMPLE_SRC,
@@ -108,11 +95,11 @@ export default {
 		},
 		sizes: {
 			control: 'text',
-			description: 'Sizes hint voor srcset — bv. `100vw` of `(max-width: 640px) 100vw, 50vw`',
+			description: 'Sizes hint voor srcset, bv. `100vw` of `(max-width: 640px) 100vw, 50vw`',
 		},
 		lqip: {
 			control: 'text',
-			description: `CSS-only multi-color LQIP. CSV-string van 7 bytes (base + 6 cellen, 3×2 raster) — elke byte is een 8-bit Oklab triplet. Voorbeeld: \`${SAMPLE_LQIP}\`. Genereer eigen waarden via de "LQIP encoder tool" story.`,
+			description: `CSS-only multi-color LQIP. CSV-string van 7 bytes (base + 6 cellen, 3×2 raster). Elke byte is een 8-bit Oklab triplet. Voorbeeld: \`${SAMPLE_LQIP}\`. Genereer eigen waarden via de "LQIP encoder tool" story.`,
 		},
 		caption: {
 			control: 'text',
@@ -192,6 +179,11 @@ export const MetCaption = {
 	},
 };
 
+/**
+ * Met `shape="circle"` en `aspect-ratio="1/1"` wordt de afbeelding rond. Gaat het om
+ * een persoon of organisatie, gebruik dan `nldd-avatar`: die valt terug op de
+ * initialen als de afbeelding niet laadt.
+ */
 export const Vormen = {
 	render: () => html`
 		<nldd-container
@@ -397,7 +389,7 @@ export const Laadvoorbeeld = {
  * Wanneer een image niet geladen kan worden (404, netwerk-fout, decode-fout)
  * toont het component een fallback: een icoon + de alt-tekst in een kleine
  * neutrale container, met de neutrale media-achtergrond erachter. Een
- * eventueel gezet `lqip` gradient wordt verborgen in error state — de
+ * eventueel gezet `lqip` gradient wordt verborgen in error state: het
  * laadvoorbeeld dient alleen tijdens het laden, niet ná een mislukking.
  *
  * Een decoratieve afbeelding (`decorative`) toont alleen het icoon, geen tekst.
@@ -431,7 +423,7 @@ export const AfbeeldingLaadtNiet = {
 };
 
 /**
- * Encodeer je eigen afbeelding tot een LQIP integer. Volledig client-side —
+ * Encodeer je eigen afbeelding tot een LQIP integer. Volledig client-side:
  * niets wordt geüpload. De berekende waarde plak je in het `lqip` attribuut
  * van `nldd-image`.
  *

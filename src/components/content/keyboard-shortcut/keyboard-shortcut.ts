@@ -18,6 +18,7 @@
  * reads the name (Command), not the symbol.
  *
  * @element nldd-keyboard-shortcut
+ * @keywords kbd, hotkey, sneltoets
  * @attr {string} keys - Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P').
  *   End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++'
  *   works too). For more complex cases, such as a combo with several '+' keys,
@@ -25,7 +26,7 @@
  * @attr {string} mac-keys - Optional override for macOS (iPhone/iPad/iPod included).
  * @attr {string} windows-keys - Optional override for Windows.
  * @attr {string} linux-keys - Optional override for Linux/ChromeOS.
- * @attr {string} size - Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the
+ * @attr {'sm'|'md'|'inherit'} size - Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the
  *   font-size from the container; with keycaps they then scale along in em.
  * @attr {string} appearance - 'keycap' (default) shows each key as a keycap with a fill and a
  *   highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter,
@@ -87,7 +88,7 @@ export class NLDDKeyboardShortcut extends LitElement {
 	/**
 	 * 'neutral' (default) uses the component's own palette. 'content' makes the
 	 * keys and separators adopt the content color of the context, with a
-	 * translucent contrast fill and highlight border — useful on filled panels or
+	 * translucent contrast fill and highlight border, useful on filled panels or
 	 * highlighted rows.
 	 */
 	@property({ reflect: true, converter: reflectNonDefault<Color>('neutral') })
@@ -97,18 +98,18 @@ export class NLDDKeyboardShortcut extends LitElement {
 	alwaysVisible = false;
 
 	/**
-	 * @internal — development only.
+	 * @internal Development only.
 	 *
 	 * Per-instance OS override that bypasses `detectOS()`. Same pattern as
 	 * `debug-safe-triangle` on `nldd-menu`: useful in Storybook stories or
 	 * documentation comparisons where you need different instances on the
 	 * page to render as different operating systems. Don't ship this in
-	 * production markup — production should rely on real OS detection.
+	 * production markup. Production should rely on real OS detection.
 	 */
 	@property({ type: String, attribute: 'debug-os' })
 	debugOS: OS | '' = '';
 
-	/** @internal Resolved OS — the debug override when set, else detection. */
+	/** @internal Resolved OS: the debug override when set, else detection. */
 	get _resolvedOS(): OS {
 		return this.debugOS || detectOS();
 	}

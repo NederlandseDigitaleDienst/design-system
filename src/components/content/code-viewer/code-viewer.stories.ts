@@ -22,6 +22,11 @@ const LANGUAGE_OPTIONS = [
 const DEFAULT_CONTENT = `const greet = (name) => \`Hallo, \${name}!\`;
 console.log(greet('wereld'));`;
 
+/**
+ * `nldd-code-viewer` is een blok code of tekst dat je alleen leest, met de
+ * witruimte zoals hij is. Met `language` krijgt de code syntax-highlighting,
+ * met `diff` toont hij een unified diff als toegevoegde en verwijderde regels.
+ */
 export default {
 	title: 'Components/Content/Code Viewer',
 	component: 'nldd-code-viewer',
@@ -31,7 +36,6 @@ export default {
 			file: 'src/components/content/code-viewer/code-viewer.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	argTypes: {
 		appearance: {
@@ -157,7 +161,7 @@ export const KleuringYaml = {
 	render: Template,
 	args: {
 		language: 'yaml',
-		content: `# wet_op_de_zorgtoeslag — artikel 2
+		content: `# wet_op_de_zorgtoeslag, artikel 2
 $id: zorgtoeslagwet
 articles:
   - number: '2'

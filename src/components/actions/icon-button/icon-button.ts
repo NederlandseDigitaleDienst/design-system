@@ -2,18 +2,20 @@
  * Nederlandse Digitale Dienst Icon Button Component (Lit + TypeScript)
  *
  * @element nldd-icon-button
- * @attr {string} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon.
- * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
+ * @keywords icoonknop, knop
+ * @related nldd-button
+ * @attr {'primary'|'secondary'|'destructive'|'accent-filled'|'accent-transparent'|'neutral-tinted'|'neutral-base'|'neutral-transparent'|'critical-tinted'|'critical-transparent'|'content-filled'|'content-tinted'} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon.
+ * @attr {'xs'|'sm'|'md'|'lg'} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {boolean} hide-lg-text - In lg size, hides the text label and enlarges the icon by one step (28px)
  * @attr {boolean} no-highlight-border - Removes the per-appearance highlight border (e.g. when a control group draws a single border instead).
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.
  * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {boolean} no-tab - Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable.
- * @attr {string} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
+ * @attr {'button'|'submit'|'reset'} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
  * @attr {boolean} expandable - Whether the button opens a menu or popover and shows chevron next to the icon
  * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
- * @attr {string} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
+ * @attr {'menu'|'listbox'|'dialog'|'tree'|'grid'} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px')
  * @attr {string} text - Button text, used as aria-label and shown below the icon in lg size
  * @attr {string} icon - Icon name for the nldd-icon element. Defaults to a placeholder icon when neither this attribute nor the icon slot is set.
@@ -104,7 +106,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	/**
 	 * Loading state. Shows an activity indicator centered over the (visually
 	 * hidden) icon, marks the inner control `aria-busy="true"` and blocks
-	 * activation — without dropping the control from the tab order (unlike
+	 * activation, without dropping the control from the tab order (unlike
 	 * `disabled`).
 	 *
 	 * Activation is blocked by stopping the click (as `disabled` does), so a
@@ -133,7 +135,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	@property({ type: Boolean, reflect: true })
 	expanded = false;
 
-	/** Take the button out of the tab order (`tabindex="-1"`) — for a control owned by
+	/** Take the button out of the tab order (`tabindex="-1"`), for a control owned by
 	 *  a roving container (e.g. an `nldd-token` in `nldd-token-field`) that manages
 	 *  focus itself. Still mouse- and script-focusable. */
 	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
@@ -158,7 +160,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	interestfor: string | undefined = undefined;
 
 	/**
-	 * Direct element reference to the popover this button invokes — IDL-only
+	 * Direct element reference to the popover this button invokes: the IDL-only
 	 * counterpart to `popovertarget` that works across shadow boundaries.
 	 * Use this when the popover lives in a different tree (e.g. an
 	 * `nldd-menu` reparented to `<body>`) so the browser still recognizes

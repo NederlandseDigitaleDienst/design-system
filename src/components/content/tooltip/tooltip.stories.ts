@@ -6,7 +6,7 @@ import '../rich-text/rich-text.js';
 import '../../layout/container/container.js';
 
 /**
- * De Tooltip toont informatieve tekst bij hover of focus op een child element.
+ * `nldd-tooltip` toont informatieve tekst bij hover of focus op een child element.
  * Gebruikt `display: contents` zodat het de layout niet beïnvloedt.
  *
  * ## Gebruik
@@ -25,7 +25,6 @@ export default {
 			file: 'src/components/content/tooltip/tooltip.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	argTypes: {
 		text: {

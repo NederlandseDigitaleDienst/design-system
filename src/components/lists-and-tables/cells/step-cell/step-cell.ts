@@ -56,7 +56,7 @@ export class NLDDStepCell extends ReorderHandleMixin(VisibilityMixin(LitElement,
 	/**
 	 * What stands in the lane: a whole dot, a smaller one, or nothing.
 	 *
-	 * A rank rather than a measurement — the cell picks the sizes, so the scale
+	 * A rank rather than a measurement: the cell picks the sizes, so the scale
 	 * can change later without every consumer following. `minor` is a row that
 	 * belongs under the one above it, and its dot stays empty: a number would not
 	 * fit and would make the row a step of its own, so carry that hierarchy in
@@ -103,7 +103,7 @@ export class NLDDStepCell extends ReorderHandleMixin(VisibilityMixin(LitElement,
 	 * the other one is still ahead.
 	 *
 	 * This is about fill, not about place. Where you stand in the series is what
-	 * `position` says, and that keeps deciding which halves are drawn — naming a
+	 * `position` says, and that keeps deciding which halves are drawn. Naming a
 	 * fill does not take a half away. It can add one, though: calling a half
 	 * covered draws it, even where the position left it out.
 	 */

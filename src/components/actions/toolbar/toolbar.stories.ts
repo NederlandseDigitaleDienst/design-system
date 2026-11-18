@@ -15,6 +15,10 @@ import '../../layout/spacer/spacer.js';
 
 syncToolbarOverflow();
 
+/**
+ * `nldd-toolbar` is een rij controls die bij een heel scherm of paneel horen.
+ * Wat niet past, schuift naar een overloopmenu, de laagste `priority` eerst.
+ */
 export default {
 	title: 'Components/Actions/Toolbar',
 	component: 'nldd-toolbar',
@@ -28,7 +32,7 @@ export default {
 		size: {
 			control: 'select',
 			options: ['sm', 'md', 'lg'],
-			description: 'Grootte van de toolbar. Bij "lg" stapelen de overflow-knop en lg-controls (zoals nldd-icon-button) hun label onder het icoon — bedoeld als grote icon-button actiebalk.',
+			description: 'Grootte van de toolbar. Bij "lg" stapelen de overflow-knop en lg-controls (zoals nldd-icon-button) hun label onder het icoon. Dat is bedoeld voor een actiebalk met grote icon-buttons.',
 			table: { defaultValue: { summary: 'md' } },
 		},
 		showItemLabels: {
@@ -258,7 +262,7 @@ export const TitelMetMedia = {
 			</nldd-toolbar>
 			<!-- No text: the mark stands alone and is the only thing naming this
 			     window, so it carries the name in its alt. An nldd-icon would not
-			     do here — an icon is decoration and says nothing. -->
+			     do here: an icon is decoration and says nothing. -->
 			<nldd-toolbar
 				accessible-label="Alleen een merkteken"
 				size=${args.size}
@@ -1340,7 +1344,7 @@ export const MetTabBar = {
 
 /**
  * Een `align="center"` titel centreert nu ook wanneer hij het enige zichtbare
- * element is — zowel zonder start/end-items als wanneer een start-item
+ * element is, zowel zonder start/end-items als wanneer een start-item
  * (bijv. een back-knop) `display:none` is. Voorheen sprong de titel dan naar
  * links. De gestreepte rand toont de toolbar-breedte.
  */

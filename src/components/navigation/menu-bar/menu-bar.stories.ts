@@ -1,6 +1,10 @@
 import { html, nothing } from 'lit';
 import './menu-bar.js';
 
+/**
+ * `nldd-menu-bar` is een horizontale rij van `nldd-menu-bar-item`. Wat niet
+ * past, verdwijnt achter een overflowknop met een menu.
+ */
 export default {
 	title: 'Components/Navigation/Menu Bar',
 	component: 'nldd-menu-bar',

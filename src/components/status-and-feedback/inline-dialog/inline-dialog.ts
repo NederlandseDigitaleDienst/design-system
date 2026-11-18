@@ -5,11 +5,13 @@
  * Fills the container and has no minimum width.
  *
  * @element nldd-inline-dialog
+ * @keywords callout, alert, message, melding
+ * @related nldd-banner, nldd-admonition, nldd-modal-dialog
  *
- * @attr {'alert'|'success'|'loading'} variant - Semantic variant. 'alert' / 'success' force a matching icon and color; 'loading' shows an nldd-activity-indicator (a role="status" spinner announcing "Laden") in place of the icon — for an empty state that is still loading.
+ * @attr {'alert'|'success'|'loading'} variant - Semantic variant. 'alert' / 'success' force a matching icon and color; 'loading' shows an nldd-activity-indicator (a role="status" spinner announcing "Laden") in place of the icon, for an empty state that is still loading.
  * @attr {'md'|'lg'} size - Typography size: 'md' (default) keeps body-md text + body-sm supporting; 'lg' bumps both up a step.
  * @attr {string} icon - Name of the nldd-icon icon above the text; absent when not set. Ignored when variant is set.
- * @attr {string} icon-color - 'secondary' | 'accent' | 'critical' | 'warning' | 'success'. Overrides the default and variant icon color.
+ * @attr {'secondary'|'accent'|'critical'|'warning'|'success'} icon-color - 'secondary' | 'accent' | 'critical' | 'warning' | 'success'. Overrides the default and variant icon color.
  * @attr {string} text - Main text (heading or paragraph, depending on heading-level)
  * @attr {string} supporting-text - Supporting text below the heading
  * @attr {1|2|3|4|5|6} heading-level - Renders text as h1–h6; absent renders a p
@@ -76,7 +78,7 @@ export class NLDDInlineDialog extends LitElement {
 
 	/** Anything in the default slot is a task (a form, a list) rather than a
 	 *  message, and a task reads left-aligned. Derived rather than defaulted so
-	 *  the empty state — the other half of this component — stays centered
+	 *  the empty state (the other half of this component) stays centered
 	 *  without every consumer setting an attribute. */
 	get _resolvedHorizontalAlignment(): InlineDialogHorizontalAlignment {
 		if (this.horizontalAlignment) return this.horizontalAlignment;

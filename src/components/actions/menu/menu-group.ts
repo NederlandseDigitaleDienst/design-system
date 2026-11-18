@@ -13,7 +13,7 @@ import '../../../utilities/custom-element.js';
  * can't deliver.
  *
  * The group renders an automatic divider above itself, except when it's
- * the first child of the menu — so consumers don't need to manage
+ * the first child of the menu, so consumers don't need to manage
  * separator placement around groups themselves. Spacing above the title
  * is intentionally larger than below, to bind the title visually to the
  * items it labels.

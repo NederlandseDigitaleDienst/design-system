@@ -3,7 +3,7 @@ import './divider.js';
 import '../../content/text/text.js';
 
 /**
- * Gebruik een scheidingslijn om secties van inhoud visueel van elkaar te scheiden.
+ * `nldd-divider` is een scheidingslijn die secties van inhoud visueel van elkaar scheidt.
  * De scheidingslijn loopt altijd horizontaal en past zich aan de breedte van zijn container aan.
  *
  * ## Gebruik
@@ -19,9 +19,6 @@ export default {
 		componentSource: {
 			file: 'src/components/layout/divider/divider.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 };

@@ -7,12 +7,10 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
 /**
- * `nldd-form-actions` plaatst form-knoppen (typisch een submit-button of
- * button-group) onderaan een formulier. Volgt dezelfde responsive layout als
- * `nldd-form-field`: met `label-alignment="right"` of `"left"` lijnt de
- * inhoud uit met de invoervelden, dankzij een onzichtbaar spacer-kolom.
- *
- * Gebruik dezelfde `label-alignment` als de form-fields in hetzelfde formulier.
+ * `nldd-form-actions` zet de knoppen onderaan een formulier, meestal een
+ * verzendknop of een `nldd-button-group`. Gebruik het als laatste blok in een
+ * `nldd-form`, onder de velden. Het volgt dezelfde lay-out als
+ * `nldd-form-field`, dus de knoppen lijnen uit met de velden erboven.
  */
 export default {
 	title: 'Components/Forms/Form Actions',
@@ -23,7 +21,6 @@ export default {
 			file: 'src/components/forms/form-actions/form-actions.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		labelAlignment: 'top',
@@ -66,6 +63,10 @@ export const Standaard = {
 	render: Template,
 };
 
+/**
+ * Met `label-alignment="right"` staan de labels naast de velden. De knoppen
+ * schuiven dan mee in en beginnen waar de velden beginnen.
+ */
 export const RechtsUitgelijnd = {
 	render: Template,
 	args: {

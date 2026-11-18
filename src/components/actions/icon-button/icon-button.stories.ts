@@ -3,12 +3,13 @@ import './icon-button.js';
 import '../menu/menu.js';
 import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 import '../../content/rich-text/rich-text.js';
 import '../../content/title/title.js';
 import { ICONS } from './../../content/icon/icon.js';
 
 /**
- * De Icon Button component is een vierkante knop voor icoon-only acties.
+ * `nldd-icon-button` is een vierkante knop voor icoon-only acties.
  *
  * ## Gebruik
  * ```html
@@ -26,9 +27,6 @@ export default {
 		componentSource: {
 			file: 'src/components/actions/icon-button/icon-button.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {
@@ -614,7 +612,7 @@ export const EigenIcoonInDeSlot = {
 /**
  * Het klassieke overflow-menu ("kebab"): slot een enkele `nldd-menu` (of
  * `nldd-popover`) in de `popup`-slot en de icon-button ankert en togglet 'm
- * automatisch — geen `id`/`anchor`-koppeling. De overlay synct `expanded` en
+ * automatisch, zonder `id`/`anchor`-koppeling. De overlay synct `expanded` en
  * `aria-haspopup` terug op de knop. Gespiegeld aan `nldd-split-button`.
  */
 export const MetMenu = {
@@ -674,13 +672,13 @@ export const MetPopover = {
 			>
 				<nldd-container
 					padding="16"
-					gap="8"
 				>
 					<nldd-title
 						size="display-6"
 						text="Dakisolatie"
 						heading-level="2"
 					></nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-rich-text>
 						<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
 					</nldd-rich-text>

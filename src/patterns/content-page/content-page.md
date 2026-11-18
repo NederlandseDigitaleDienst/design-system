@@ -1,0 +1,72 @@
+# Contentpagina
+
+Een contentpagina toont de details op het laagste niveau van de website. Hier vindt de bezoeker de uitleg of informatie over een specifiek onderwerp, taak of besluit. Gebruik deze pagina voor de inhoud zelf; een [home](/patronen/home-page/), [onderwerppagina](/patronen/topic-page/) of [navigatiepagina](/patronen/navigation-page/) helpt bezoekers de weg naar die inhoud te vinden.
+
+## Compositie
+
+```
+nldd-shell                            de buitenste schil
+  └─ nldd-page
+       ├─ slot="header"                  de header
+       │    └─ nldd-skip-link            om de balk heen
+       │         └─ nldd-top-navigation-bar   back-text en back-href naar de pagina erboven
+       │              └─ nldd-menu-bar        slot="utility", zoeken en taal
+       ├─ nldd-sidebar-section           met een inhoudsopgave: sidebar-label en grow, breed een kolom, smal een sheet
+       │    ├─ slot="header"             de nldd-title met de h1, en op smal de knop naar de sheet
+       │    ├─ slot="sidebar"            de inhoudsopgave, een nldd-list type="navigation" met current-type="location"
+       │    ├─ nldd-rich-text            de uitleg, met een id op elke h2
+       │    └─ nldd-card                 de actie, na de uitleg
+       ├─ nldd-two-thirds-one-third-section    of, kort met een vervolgactie
+       │    ├─ slot="header"             de nldd-title met de h1
+       │    ├─ slot="left"               de nldd-rich-text met de uitleg
+       │    └─ slot="right"              de nldd-card met de actie
+       ├─ nldd-simple-section            of, kort zonder vervolgactie: de h1 in het header-slot, de nldd-rich-text eronder
+       ├─ nldd-simple-section            background="tinted", waar je hierna heen kunt
+       │    └─ nldd-collection
+       │         └─ nldd-card            href
+       └─ slot="footer"                  nldd-page-footer
+            ├─ slot="breadcrumbs"        waar deze pagina staat
+            └─ slot="legal-bar"
+```
+
+Met een inhoudsopgave:
+
+<!-- voorbeeld: Standaard -->
+
+Zonder inhoudsopgave, voor een korte pagina:
+
+<!-- voorbeeld: ZonderInhoudsopgave -->
+
+## Waarom zo
+
+**De inhoud staat centraal.** Op een contentpagina komt de bezoeker voor de inhoud zelf, ook wie er rechtstreeks vanuit een zoekmachine op landt. Daarom is de titel de kop en begint de uitleg direct eronder, zonder hero of ander onderdeel dat de aandacht eerst van de tekst afleidt.
+
+**Structureer de tekst met koppen.** Gebruik duidelijke tussenkoppen en korte tekstblokken. Een [`nldd-rich-text`](/componenten/rich-text/) met gewone `h2`'s, lijsten en alinea's regelt de leesbreedte en de ruimte ertussen.
+
+**Voeg een inhoudsopgave toe als die helpt.** Een inhoudsopgave laat bezoekers vooruitkijken en direct naar een deel van de tekst gaan. Gebruik er een als de tekst drie of meer `h2`'s heeft, of langer is dan zo'n twee schermen. Bij een kortere pagina is het alleen UI die aandacht vraagt naast een tekst die je in één keer overziet. Op een breed scherm staat de inhoudsopgave naast de tekst, in de sidebar van een [`nldd-sidebar-section`](/componenten/sidebar-section/), en blijft hij staan terwijl je leest. Op een smal scherm opent hij vanuit een knop onder de titel, zodat hij de tekst niet omlaag duwt. Het is een [`nldd-list`](/componenten/list/) met `type="navigation"` en een `nldd-list-item` met `href` per `h2`, met dezelfde tekst als de kop, en de rij van het deel dat je leest is gemarkeerd. Houd hem bij de `h2`'s; een pagina met zoveel koppen dat de lijst zelf gaat scrollen, is eigenlijk meer pagina's.
+
+**Plaats de vervolgactie bij de uitleg.** Een actie die bij de uitleg hoort, zoals een aanvraag starten, moet goed te vinden zijn zonder de tekst te onderbreken. Met een inhoudsopgave staat hij in een kaart onder de tekst, met één primaire knop: wie gelezen heeft, vindt hem daar, en de inhoudsopgave blijft over de tekst gaan. Op een korte pagina zonder inhoudsopgave past een [`nldd-two-thirds-one-third-section`](/componenten/two-thirds-one-third-section/), met de tekst links en de kaart met de actie rechts. Op breed staat de actie dan al in beeld terwijl je leest, en op smal schuift hij onder de tekst. Is er geen vervolgactie, dan is een [`nldd-simple-section`](/componenten/simple-section/) genoeg.
+
+**Zet verwijzingen naar andere pagina's onder de inhoud.** Het is waar je heen kunt als je klaar bent met lezen, en dat is onderaan, op elke breedte. In de sidebar zou het op breed wel meereizen, maar op smal zit de sidebar achter de knop bovenaan, en daar zoekt niemand die net uitgelezen is. Het is een keuze per pagina en geen volledige lijst van de pagina's ernaast: pagina's uit hetzelfde onderdeel, of van elders op de site, zoals de onderwerppagina waar deze uitleg bij hoort. Waar je bent staat al in de titel, dus er is geen huidige kaart.
+
+**De tekst groeit, niet de verwijzingen.** Een [`nldd-page`](/componenten/page/) laat standaard zijn laatste sectie de hoogte opvullen die over is, zodat de footer onderaan staat. Hier is dat de sectie met verwijzingen, en bij een korte tekst op een hoog scherm wordt die getinte strook dan een groot grijs vlak. Zet daarom `grow` op de sectie met de tekst: die rekt op, en de verwijzingen blijven een strook vlak boven de footer.
+
+Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbouw](/patronen/page-structure/).
+
+## Gedrag dat je zelf schrijft
+
+De inhoudsopgave vraagt wat code van jezelf. De markup staat in het voorbeeld hierboven; dit is wat erbij hoort.
+
+**Geef elke `h2` een `id`.** Dan kan de inhoudsopgave ernaar springen.
+
+**Op smal is de inhoudsopgave een knop onder de titel.** Is de sectie te smal voor twee kolommen, dan verhuist de sidebar naar een sheet, en zou hij anders boven de tekst de inhoud omlaag duwen. De knop staat onder de titel in het `header`-slot en verschijnt alleen als de sectie `collapsed` is: zet `sidebar-section-only="collapsed"` op de knop en op de spacer erboven, zodat de ruimte met de knop verdwijnt. Een klik roept `show()` aan. Geef de knop `popup-type="dialog"` en zet `expanded` op de `open`- en `close`-events van de sectie, dan weet een schermlezer of de sheet open is. De sheet heeft een eigen titelbalk met de `sidebar-label`, dus geef de titel in de kolom en de spacer eronder `sidebar-section-only="expanded"`.
+
+**Een keuze in de sheet sluit eerst de sheet, en springt dan pas.** Dat doet de sectie zelf. Een link in de sheet naar een kop op de pagina sluit de sheet, scrolt de kop in beeld en geeft hem de focus. Liet de sectie de link gewoon zijn werk doen, dan scrolde de pagina onder een sheet die nog openstaat, en zette de sheet bij het sluiten de focus terug op de knop, boven aan de pagina en buiten beeld. Je hoeft er dus niets voor te schrijven; een `id` op elke kop is genoeg.
+
+**De rij van de kop die je leest is `current`.** Zet `current-type="location"` op elke rij: de rijen wijzen naar stukken van deze pagina, en zonder dat attribuut meldt een schermlezer de actieve rij als "huidige pagina". Welke rij `current` is, houd jij bij. In het voorbeeld doet een `IntersectionObserver` dat, met een `rootMargin` die alleen het bovenste derde van het venster laat tellen: de laatste kop die daar voorbij is, is de actieve, en zolang er geen voorbij is, de eerste. Eén rij tegelijk, en die staat in de markup al op de eerste, zodat de lijst zonder JS ook klopt.
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: wat bij de [paginaopbouw](/patronen/page-structure/) staat, de breedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, en de inhoudsopgave als eigen navigatie met `aria-current="location"` op de rij die je leest.
+
+Wat jij nog moet doen: wat bij de [paginaopbouw](/patronen/page-structure/) staat, de kop van het juiste niveau in het slot van elke titel, een `accessible-label` op de lijst van de inhoudsopgave, een `id` op elke kop waar die naar springt, en een `accessible-label` op een kaart die een link is. De link ligt als een leeg vlak over de kaart en leest de tekst erin niet voor, dus zonder label heeft hij geen naam. Neem de titel van de kaart.

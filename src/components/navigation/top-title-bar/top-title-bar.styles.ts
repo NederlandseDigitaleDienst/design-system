@@ -13,7 +13,7 @@ export const topTitleBarStyles = css`
 		--_top-title-bar-divider-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-350));
 
 		${inheritedTextReset}
-		display: block;
+		display: var(--context-title-bar-display, block);
 		width: 100%;
 	}
 

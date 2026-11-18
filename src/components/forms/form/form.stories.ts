@@ -9,9 +9,10 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
 /**
- * `nldd-form` is een light-DOM wrapper die een echt `<form>` element rendert
- * rond z'n children. Dit is nodig om browser-autofill (Chrome, Safari) te
- * laten werken met onze shadow-DOM inputs.
+ * `nldd-form` zet een echt `<form>` om de velden van een formulier, buiten de
+ * shadow DOM. Daardoor kan de browser de velden automatisch invullen. Gebruik
+ * het om elk formulier, met een `nldd-form-field` per veld en
+ * `nldd-form-actions` voor de knoppen.
  *
  * ## Gebruik
  * ```html
@@ -25,8 +26,6 @@ import '../../actions/button-group/button-group.js';
  *   <nldd-button type="submit" text="Verstuur"></nldd-button>
  * </nldd-form>
  * ```
- *
- * Importeer `nldd-form.css` globaal in je applicatie voor de default layout.
  */
 export default {
 	title: 'Components/Forms/Form',
@@ -37,7 +36,6 @@ export default {
 			file: 'src/components/forms/form/form.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		labelAlignment: 'right',

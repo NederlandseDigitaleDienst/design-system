@@ -23,10 +23,12 @@
  * rather than mounting it when it opens, or the animations are skipped.
  *
  * @element nldd-sheet
+ * @keywords modal, drawer, side panel, bottom sheet, overlay, paneel, lade
+ * @related nldd-modal-dialog, nldd-popover, nldd-window
  *
  * @attr {string} width - Custom width for side sheets (left/right) as a CSS length (e.g. '480px', '32rem'). Applied from the md breakpoint up; ignored on sm (bottom sheet) and for `placement="bottom"`. Clamped to `100vw - 2 * inset` so the sheet always fits.
- * @attr {string} height - Custom height for bottom sheets (and for any sheet on sm viewports, where all placements collapse to bottom). Accepts: `'full'` (default — viewport minus top-inset, identical to omitting the attribute), `'fit-content'` (collapse to content size), or any CSS length/percentage (e.g. `'50dvh'`, `'480px'`, `'50%'`). Always clamped to `100dvh - top-inset` so the sheet can't extend past the dismiss-tap area. No effect on side sheets at md+.
- * @attr {string} placement - Sheet position: 'left' | 'right' | 'bottom' (default: 'right')
+ * @attr {string} height - Custom height for bottom sheets (and for any sheet on sm viewports, where all placements collapse to bottom). Accepts: `'full'` (default: viewport minus top-inset, identical to omitting the attribute), `'fit-content'` (collapse to content size), or any CSS length/percentage (e.g. `'50dvh'`, `'480px'`, `'50%'`). Always clamped to `100dvh - top-inset` so the sheet can't extend past the dismiss-tap area. No effect on side sheets at md+.
+ * @attr {'left'|'right'|'bottom'} placement - Sheet position: 'left' | 'right' | 'bottom' (default: 'right')
  * @attr {string} accessible-label - Accessible name for the dialog, forwarded as aria-label. Unset, the sheet takes the text of the nldd-top-title-bar inside it, and without one it is called 'Venster'.
  * @attr {boolean} open - Whether the sheet is open. Set it to open or close the sheet, as an alternative to show() and hide(). The sheet clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event.
  *
@@ -66,8 +68,8 @@ export class NLDDSheet extends LitElement {
 
 	/**
 	 * Custom height for bottom sheets (and for any sheet on sm viewports
-	 * where all placements collapse to bottom). Defaults to full-height
-	 * — `'fit-content'` opts back into the content-sized layout, any CSS
+	 * where all placements collapse to bottom). Defaults to full-height.
+	 * `'fit-content'` opts back into the content-sized layout, and any CSS
 	 * length/percentage sets a specific size. Clamped to `100dvh - top-
 	 * inset` via `max-height` so the dismiss-tap area always remains.
 	 */
@@ -77,7 +79,7 @@ export class NLDDSheet extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<Placement>('right') })
 	placement: Placement = 'right';
 
-	/** Accessible name for the dialog — forwarded as aria-label to the dialog element. */
+	/** Accessible name for the dialog, forwarded as aria-label to the dialog element. */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 

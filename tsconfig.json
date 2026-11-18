@@ -16,8 +16,13 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "noEmit": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "types": ["vite/client"],
+    "paths": {
+      "storybook/actions": ["./www/client/shims/actions.ts"],
+      "storybook/preview-api": ["./www/client/shims/preview-api.ts"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.js"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts", "src/**/*.js", "www/*.ts", "www/client/**/*.ts"],
+  "exclude": ["node_modules", "dist", "www/.generated"]
 }

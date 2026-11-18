@@ -5,7 +5,7 @@ import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
 /**
- * Gebruik een two-thirds one-third section wanneer de hoofdinhoud de meeste
+ * `nldd-two-thirds-one-third-section` is voor als de hoofdinhoud de meeste
  * aandacht verdient en de zijkolom ondersteunend is, zoals een artikel met
  * een gerelateerde-inhoudpaneel of een formulier met uitleg rechts.
  * De kolommen wrappen automatisch wanneer de beschikbare breedte kleiner
@@ -28,9 +28,6 @@ export default {
 		componentSource: {
 			file: 'src/components/layout/page-sections/two-thirds-one-third-section/two-thirds-one-third-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: { ...pageSectionArgs, verticalAlignment: 'top' },

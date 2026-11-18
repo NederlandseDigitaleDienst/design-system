@@ -8,6 +8,12 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 import '../../layout/container/container.js';
 
+/**
+ * `nldd-one-time-code-field` is een veld voor een eenmalige code uit een sms,
+ * een e-mail, een authenticator-app of een brief. Het toont een vakje per
+ * teken, maar is één gewoon invoerveld, dus plakken en automatisch invullen
+ * werken zoals overal.
+ */
 export default {
 	title: 'Components/Inputs/One-Time Code Field',
 	component: 'nldd-one-time-code-field',
@@ -17,7 +23,6 @@ export default {
 			file: 'src/components/inputs/one-time-code-field/one-time-code-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		size: 'md',

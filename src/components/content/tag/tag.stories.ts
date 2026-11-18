@@ -4,12 +4,10 @@ import { ICONS } from './../icon/icon.js';
 import '../../layout/container/container.js';
 
 /**
- * De Tag is een compact kenmerk dat aan iets is toegekend: een categorie, een type,
- * een rol, een keurmerk. Wat er staat verandert pas als iemand de inhoud wijzigt,
- * en een tag is niet interactief.
- *
- * Een toestand die het systeem bijhoudt ("Actief", "Verlopen") is een `nldd-badge`.
- * Kan de gebruiker het weghalen of erop klikken, dan is het een `nldd-token`.
+ * `nldd-tag` is een kenmerk dat aan iets is toegekend: een categorie, een type,
+ * een rol of een keurmerk. Een tag is niet interactief. Een toestand die het
+ * systeem bijhoudt ("Actief", "Verlopen") is een `nldd-badge`. Kan de gebruiker
+ * het weghalen of erop klikken, dan is het een `nldd-token`.
  *
  * ## Gebruik
  * ```html
@@ -28,9 +26,6 @@ export default {
 		componentSource: {
 			file: 'src/components/content/tag/tag.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	args: {
@@ -216,7 +211,7 @@ export const Kleuren = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Semantische varianten (`neutral`, `accent`, `success`, `warning`, `critical`) voor de meest voorkomende statussen — gebruik deze waar mogelijk, ze communiceren betekenis bovenop kleur. Daarnaast alle Rijksleuren voor categorisering waar de semantische varianten niet passen. Combineer kleur altijd met tekst zodat de tag ook zonder kleur leesbaar blijft.',
+				story: 'Semantische varianten (`neutral`, `accent`, `success`, `warning`, `critical`) voor de meest voorkomende statussen. Gebruik deze waar mogelijk, want ze communiceren betekenis bovenop kleur. Daarnaast alle Rijksleuren voor categorisering waar de semantische varianten niet passen. Combineer kleur altijd met tekst zodat de tag ook zonder kleur leesbaar blijft.',
 			},
 		},
 	},

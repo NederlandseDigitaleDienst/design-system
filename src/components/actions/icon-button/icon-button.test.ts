@@ -860,3 +860,26 @@ describe('nldd-icon-button – popovertarget positions its overlay', () => {
 		expect(menu.anchorElement).toBeNull();
 	});
 });
+
+describe('nldd-icon-button in running text', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('centers on the middle of the capitals, at every size', async () => {
+		for (const size of ['xs', 'sm', 'md']) {
+			el = await fixture<HTMLElement>(
+				`<p style="font-size: 18px; line-height: 22.5px">width<span class="base" style="display: inline-block; height: 0"></span><span class="cap" style="display: inline-block; height: 1cap"></span> <nldd-icon-button size="${size}" icon="info-circle" text="Over"></nldd-icon-button></p>`,
+			);
+			const button = el.querySelector('nldd-icon-button')!;
+			await (button as NLDDIconButton).updateComplete;
+			const baseline = el.querySelector('.base')!.getBoundingClientRect().bottom;
+			const halfCap = el.querySelector('.cap')!.getBoundingClientRect().height / 2;
+			const box = button.getBoundingClientRect();
+			expect(Math.abs(baseline - (box.top + box.bottom) / 2 - halfCap), size).toBeLessThanOrEqual(0.5);
+			cleanup(el);
+		}
+	});
+});

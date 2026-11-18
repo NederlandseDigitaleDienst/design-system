@@ -7,6 +7,10 @@ import '../../list-item/list-item.js';
 import '../../../content/text/text.js';
 import '../../../layout/spacer/spacer.js';
 
+/**
+ * `nldd-title-cell` is een cel voor een titel in een lijst, met een optionele
+ * overline en ondersteunende tekst.
+ */
 export default {
 	title: 'Components/Lists & Tables/Cells/Title Cell',
 	component: 'nldd-title-cell',
@@ -139,7 +143,7 @@ export const Secundair = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'De secondary-variant maakt de titel rustiger zodat hij aansluit op de gedempte overline/supporting-text — handig voor minder belangrijke rijen.',
+				story: 'De secondary-variant maakt de titel rustiger zodat hij aansluit op de gedempte overline/supporting-text. Handig voor minder belangrijke rijen.',
 			},
 		},
 	},
@@ -196,7 +200,7 @@ export const Statuskleuren = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Status varianten tinten alle drie de tekstvelden zodat de hele titel-cel als de status leest. Combineer altijd met een tekstuele indicator — kleur alleen is geen toegankelijke status-aanduiding.',
+				story: 'Status varianten tinten alle drie de tekstvelden zodat de hele titel-cel als de status leest. Combineer altijd met een tekstuele indicator, want kleur alleen is geen toegankelijke status-aanduiding.',
 			},
 		},
 	},
@@ -302,7 +306,7 @@ export const TagInDeSlot = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="Overline slot — tag als statuslabel boven de titel."
+					text="Overline slot: een tag als statuslabel boven de titel."
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Overline slot">
@@ -326,7 +330,7 @@ export const TagInDeSlot = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="Default slot — inline tag binnen de titel."
+					text="Default slot: een inline tag binnen de titel."
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Default slot">
@@ -349,9 +353,9 @@ export const TagInDeSlot = {
 				story: `
 Elk tekstgebied (overline, default, supporting-text) accepteert óf een attribuut óf slotted DOM. Wanneer een slot gevuld is, vervangt het de attribuut-render voor dat gebied.
 
-Gebruik dit voor zelfdragende custom elementen zoals \`<nldd-tag>\`, \`<nldd-icon>\` of \`<nldd-badge>\` — die hebben hun eigen shadow DOM en zien er overal goed uit. Voor rauwe inline elementen zoals \`<a>\`, \`<strong>\` of \`<code>\` styled een title-cell niets — gebruik \`<nldd-cell>\` met \`<nldd-rich-text>\` voor rijke content.
+Gebruik dit voor zelfdragende custom elementen zoals \`<nldd-tag>\`, \`<nldd-icon>\` of \`<nldd-badge>\`. Die hebben hun eigen shadow DOM en zien er overal goed uit. Voor rauwe inline elementen zoals \`<a>\`, \`<strong>\` of \`<code>\` styled een title-cell niets. Gebruik \`<nldd-cell>\` met \`<nldd-rich-text>\` voor rijke content.
 
-\`query\` highlighting en \`**bold**\` parsing zijn alleen actief op de attribuut-route — slotted content wordt as-is getoond.
+\`query\` highlighting en \`**bold**\` parsing zijn alleen actief op de attribuut-route. Slotted content wordt as-is getoond.
 				`.trim(),
 			},
 		},
@@ -368,7 +372,7 @@ export const ZoektermMarkeren = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="predictive (default) — vet de niet-gematchte rest."
+					text="predictive (default): vet de niet-gematchte rest."
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Predictive">
@@ -384,7 +388,7 @@ export const ZoektermMarkeren = {
 				<nldd-text
 					size="xs"
 					color="secondary"
-					text="match — vet de gematchte query."
+					text="match: vet de gematchte query."
 				></nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
 				<nldd-list accessible-label="Match">
@@ -424,8 +428,8 @@ export const ZoektermMarkeren = {
 				story: `
 Zet \`query\` op een substring en de cel vet automatisch de match in \`text\`, \`overline\` en \`supporting-text\`. Gebruik \`query-mark-mode\` om de strategie te kiezen:
 
-- \`'predictive'\` (default): vet de niet-gematchte rest — het ARIA APG combobox-patroon.
-- \`'match'\`: vet de gematchte query — handig om zoektermen in langere tekst te markeren.
+- \`'predictive'\` (default): vet de niet-gematchte rest, volgens het ARIA APG combobox-patroon.
+- \`'match'\`: vet de gematchte query. Handig om zoektermen in langere tekst te markeren.
 				`.trim(),
 			},
 		},

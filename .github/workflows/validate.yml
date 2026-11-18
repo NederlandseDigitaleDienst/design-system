@@ -74,9 +74,10 @@ jobs:
       - name: Lint the stories
         run: npm run lint:stories
 
-      # The marketing page in www/ is built from the components and goes
-      # online as is, so it holds to the rules consumers get.
-      - name: Lint the marketing page
+      # The website in www/ is built from the components and goes online as
+      # is, so its pages and their Markdown sources hold to the rules consumers
+      # get.
+      - name: Lint the website
         run: npm run lint:www
 
       # Every committed file a script writes, from the table in

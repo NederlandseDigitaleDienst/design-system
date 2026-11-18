@@ -102,7 +102,7 @@ function referenceDefs(state: EditorState): Map<string, string> {
 
 /** Only follow schemes that are safe to put in a clickable anchor. The editor's
  *  value is consumer/document-supplied Markdown, so a `[text](javascript:…)` (or
- *  `data:` / `vbscript:`) link must never become a real, clickable badge —
+ *  `data:` / `vbscript:`) link must never become a real, clickable badge.
  *  `target="_blank"` does NOT neutralise those; they execute in the current
  *  document. A URL with no scheme (relative, `#anchor`, `?query`, `//host`) just
  *  navigates, so it is allowed; a schemed URL must be http(s)/mailto/tel. */
@@ -141,7 +141,7 @@ function hrefOf(state: EditorState, link: SyntaxNode, refs: () => Map<string, st
 
 /** True when a URL node is the destination of a Markdown construct rather than a
  *  bare autolink in prose: an inline/reference link (`[text](url)` / `[ref]: url`)
- *  or an image (`![alt](url)`). Those URLs must not get a second badge — the link
+ *  or an image (`![alt](url)`). Those URLs must not get a second badge. The link
  *  is already badged via its `Link` node, and a definition or image source is not
  *  a link to follow. Skipping them also keeps the badge ranges in document order
  *  for the RangeSetBuilder (a child URL's end precedes its container's end). */

@@ -3,13 +3,13 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * Nederlandse Digitale Dienst Form Component
  *
  * Plain custom element (extends HTMLElement, no Lit), required for light-DOM
- * autofill. Renders a real <form> element in the LIGHT DOM around its
- * children. Chrome's autofill engine looks for native <input> elements that
- * have a <form> ancestor in the light DOM; with shadow-DOM inputs it can't
+ * autofill. Renders a real `<form>` element in the LIGHT DOM around its
+ * children. Chrome's autofill engine looks for native `<input>` elements that
+ * have a `<form>` ancestor in the light DOM; with shadow-DOM inputs it can't
  * find them, so we keep this component shadow-less.
  *
- * **Differs from other nldd-* components:**
- * - No shadowRoot: all children live in the light DOM (inside the inner <form>)
+ * **Differs from other `nldd-*` components:**
+ * - No shadowRoot: all children live in the light DOM (inside the inner `<form>`)
  * - No Lit: a plain HTMLElement with manual attribute mirroring
  * - **Requires a global stylesheet import**: the vertical rhythm rules live in
  *   `dist/css/form.css` (or `global.css`), not in a component-specific shadow
@@ -42,25 +42,22 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * **user-provided form** mode instead.
  *
  * For programmatic manipulation, use the `form` getter so you work with the
- * inner `<form>` element directly:
- *
- *     const inner = document.querySelector('nldd-form').form;
- *     inner.checkValidity();
- *     inner.appendChild(myInput);  // skips the migration overhead
+ * inner `<form>` element directly (see the last example).
  *
  * @element nldd-form
+ * @keywords formulier
  *
- * @attr {string} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.
+ * @attr {'top'|'right'|'left'} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.
  * @attr {string} name - Form name
- * @attr {string} autocomplete - 'on' | 'off' (form-level autofill toggle)
+ * @attr {'on'|'off'} autocomplete - 'on' | 'off' (form-level autofill toggle)
  * @attr {string} target - Submit target ('_self' | '_blank' | ...)
- * @attr {string} method - HTTP method ('get' | 'post' | 'dialog')
+ * @attr {'get'|'post'|'dialog'} method - HTTP method ('get' | 'post' | 'dialog')
  * @attr {string} action - URL endpoint for submission
  * @attr {string} enctype - Encoding type for submission
  * @attr {boolean} novalidate - Skip native browser validation
  * @accepts form
  *
- * @prop {HTMLFormElement | null} form - The inner <form> element (read-only). Use it for `form.checkValidity()`, direct DOM manipulation, or as the target for framework-managed children.
+ * @prop {HTMLFormElement | null} form - The inner `<form>` element (read-only). Use it for `form.checkValidity()`, direct DOM manipulation, or as the target for framework-managed children.
  *
  * Events bubble naturally from the inner <form>:
  * @fires submit
@@ -94,6 +91,13 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  *     <nldd-button type="submit" text="Verstuur"></nldd-button>
  *   </form>
  * </nldd-form>
+ * ```
+ *
+ * Working with the inner form directly:
+ * ```js
+ * const inner = document.querySelector('nldd-form').form;
+ * inner.checkValidity();
+ * inner.appendChild(myInput); // skips the migration overhead
  * ```
  */
 
@@ -265,7 +269,7 @@ export class NLDDForm extends PlainElement {
 
 	/** Controls the platform has judged at least once. */
 	private _judged = new WeakSet<Element>();
-	/** When true, user provided their own <form> child — skip migration. */
+	/** When true, user provided their own <form> child, so skip migration. */
 	private _userProvidedForm = false;
 
 	connectedCallback(): void {
@@ -367,7 +371,7 @@ export class NLDDForm extends PlainElement {
 	 * `'top'` when the form itself has no `label-alignment`. Descendant CSS
 	 * uses `[label-alignment="X"]` first and falls back to
 	 * `[form-label-alignment="X"]` when no own value is set, so a consumer's
-	 * explicit `label-alignment` always wins automatically — without us having
+	 * explicit `label-alignment` always wins automatically, without us having
 	 * to track which elements we previously inherited to.
 	 *
 	 * Always-setting (rather than only when the form has its own value) lets

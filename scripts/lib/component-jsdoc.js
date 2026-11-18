@@ -120,6 +120,8 @@ function parseComponent(block, filePath, fallbackTag) {
 		slots: [],
 		events: [],
 		accepts: [],
+		keywords: [],
+		related: [],
 		category,
 	});
 
@@ -200,6 +202,22 @@ function parseComponent(block, filePath, fallbackTag) {
 				const wrong = names.find((name) => !/^([a-z][a-z0-9]*|\*)$/.test(name));
 				if (wrong) throw new Error(`${filePath}: @accepts on ${current.tag} takes element names only, not "${wrong}".`);
 				current.accepts.push(...names);
+				break;
+			}
+			case 'keywords': {
+				// What someone may search for who does not know the name: another
+				// system's word (toast), the English one (heading), a broader one (modal).
+				if (!current) break;
+				current.keywords.push(...rest.split(',').map((word) => word.trim().toLowerCase()).filter(Boolean));
+				break;
+			}
+			case 'related': {
+				// The components to weigh against this one, written as tags.
+				if (!current) break;
+				const tags = rest.split(/[\s,]+/).filter(Boolean);
+				const wrong = tags.find((tag) => !/^nldd-[a-z0-9-]+$/.test(tag));
+				if (wrong) throw new Error(`${filePath}: @related on ${current.tag} takes element tags only, not "${wrong}".`);
+				current.related.push(...tags);
 				break;
 			}
 			case 'fires': {

@@ -41,6 +41,7 @@
  * after, and a screen reader hears where it landed.
  *
  * @element nldd-kanban
+ * @keywords board, bord
  * @attr {string} accessible-label - Accessible name of the board (default: "Bord")
  * @attr {string} height - Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)
  * @attr {boolean} readonly - Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves

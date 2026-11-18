@@ -4,6 +4,7 @@
  * A pagination control for navigating between pages of content.
  *
  * @element nldd-pagination
+ * @keywords paginering
  * @attr {number} current - Currently active page (1-based)
  * @attr {number} total - Total number of pages (recommended max: 200 for compact select performance)
  * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
@@ -110,7 +111,7 @@ export class NLDDPagination extends LitElement {
 	 * Suppress the native `:focus-visible` ring on the select when focus
 	 * came from a pointer. We can't rely on `:focus-visible` alone for
 	 * native <select> because Chrome matches it even on mouse click. The
-	 * inverted "set when known-to-be-pointer" form is failure-safe — if
+	 * inverted "set when known-to-be-pointer" form is failure-safe: if
 	 * input-modality never reports, the attribute stays off and the
 	 * default focus ring shows on every focus (keyboard a11y intact).
 	 */
@@ -123,7 +124,7 @@ export class NLDDPagination extends LitElement {
 		this.toggleAttribute('select-expanded', false);
 	};
 
-	/** Any key press while focused promotes to keyboard mode — drop the marker. */
+	/** Any key press while focused promotes to keyboard mode, so drop the marker. */
 	_handleSelectKeydown = (): void => {
 		this.toggleAttribute('is-pointer-focus', false);
 	};
@@ -131,7 +132,7 @@ export class NLDDPagination extends LitElement {
 	/**
 	 * Native <select> dispatches a `toggle` event with `newState` of 'open' or
 	 * 'closed' (Chrome 131+, Firefox 134+, Safari 18+). Older browsers silently
-	 * skip this — the visual expanded state is then a no-op. Drives the
+	 * skip this, and the visual expanded state is then a no-op. Drives the
 	 * `select-expanded` host attribute that switches the wrapper to its
 	 * is-expanded surface tokens.
 	 */

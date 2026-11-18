@@ -7,14 +7,9 @@ const sluit = (e: CustomEvent) => (e.detail.item as HTMLElement).remove();
 
 
 /**
- * Een rij tabbladen voor documenten die naast elkaar openstaan, zoals in een
- * browser of een editor. Elk tabblad kun je sluiten. Passen ze niet meer, dan
- * gaan de laatste in een menu achter de knop "Meer".
- *
- * De volgorde kun je altijd aanpassen: sleep een tabblad, of verplaats het
- * tabblad met focus met Shift en een pijltjestoets. Sluit je tabbladen met de
- * muis, dan houden de andere hun breedte tot je de balk verlaat, zodat het
- * kruisje van het volgende tabblad onder je muis schuift.
+ * `nldd-document-tab-bar` is een rij tabbladen voor documenten die naast elkaar
+ * openstaan, zoals in een browser of een editor. Elk tabblad kun je sluiten en
+ * naar een andere plek slepen.
  */
 export default {
 	title: 'Components/Navigation/Document Tab Bar',
@@ -25,7 +20,6 @@ export default {
 			file: 'src/components/navigation/document-tab-bar/document-tab-bar.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	argTypes: {
 		accessibleLabel: {
@@ -77,6 +71,10 @@ export const Standaard = {
 	render: Template,
 };
 
+/**
+ * Passen de tabbladen niet meer, dan gaan de laatste in een menu achter de
+ * knop "Meer".
+ */
 export const VeelTabbladen = {
 	render: () => html`
 	<nldd-document-tab-bar

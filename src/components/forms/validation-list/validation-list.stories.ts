@@ -19,27 +19,14 @@ export default {
 			file: 'src/components/forms/validation-list/validation-list.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		docs: {
 			description: {
 				component: `
-Alles waar een waarde aan moet voldoen, in één lijst.
-
-Een eis die je vooraf kunt noemen is een item met een regel, en die controleert
-zichzelf terwijl je typt. Een eis die alleen een server kan vaststellen is een
-item zonder regel, en de app noemt hem in \`unmet\` op de control.
-
-De lijst heeft twee modi en \`judging\` is de schakelaar. Vóór een oordeel toont
-hij z'n hints: de eisen van het veld. Ná een oordeel toont hij alles waaraan de
-waarde niet voldoet, en zijn de hints weg. De lijst zet die schakelaar zelf om
-zodra z'n control op \`invalid\` staat. Wannéér een veld beoordeeld wordt is dus
-een keuze van de consumer, en het moment daarvoor is bij verzending.
-
-Hints staan standaard uit. Een telefoonnummer hoeft z'n formaat niet uit te
-leggen voordat iemand iets heeft getypt, de regels van een wachtwoord wel.
-
-Er zijn geen vinkjes. De control toont zelf al een validatie-icoon, en dat per
-regel herhalen zegt hetzelfde drie keer.
+\`nldd-validation-list\` zet alles waar een waarde aan moet voldoen in één
+lijst, onder het veld. Gebruik het in een \`nldd-form-field\`, voor elk veld met
+eisen. Een eis die je vooraf kunt noemen, controleert zichzelf terwijl je typt.
+Een eis die alleen een server kan vaststellen, noemt de app in \`unmet\` op de
+control.
 				`,
 			},
 		},
@@ -68,15 +55,7 @@ regel herhalen zegt hetzelfde drie keer.
 	},
 };
 
-/**
- * Een afgekeurd wachtwoord: wat er nog niet klopt staat eronder. Typ mee en zie
- * de regels uitgaan zodra je ze haalt.
- *
- * Zet `judging` uit en je ziet het veld zoals het eraan toe was vóór de
- * beoordeling: leeg, tenzij `hint` aanstaat en de eisen dus vooraf al worden
- * genoemd. De control loopt hier mee met de schakelaar, want zo staat het in een
- * echte app: het formulier keurt af, en de lijst volgt.
- */
+/** Een afgekeurd wachtwoord: wat er nog niet klopt staat eronder. */
 export const Standaard = ({ hint, judging, for: control }: Record<string, unknown>) => html`
 	<nldd-form-field label="Wachtwoord">
 		<nldd-password-field

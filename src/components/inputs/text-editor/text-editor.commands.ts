@@ -61,7 +61,7 @@ function enclosing(view: EditorView, pos: number, nodeName: string, side: -1 | 0
 /** An inline format is "active" for the caret only when the node encloses it on
  *  *both* sides. At the outer edge (just before the opening marker or just after
  *  the closing one) only one side is inside, and text typed there lands outside
- *  the format — so the toolbar must not light up. This mirrors what typing does. */
+ *  the format, so the toolbar must not light up. This mirrors what typing does. */
 function enclosingInline(view: EditorView, pos: number, nodeName: string): SyntaxNode | null {
 	const left = enclosing(view, pos, nodeName, -1);
 	const right = enclosing(view, pos, nodeName, 1);
@@ -132,7 +132,7 @@ export function toggleInlineWrap(view: EditorView, marker: string, nodeName: str
 
 /** Build a change that turns `line.text` into `next` by touching only the span
  *  that differs (shared prefix and suffix are left untouched). Replacing the whole
- *  line would collapse any annotation anchored inside it — its offsets map to the
+ *  line would collapse any annotation anchored inside it, because its offsets map to the
  *  line boundary. Returns null when nothing changed. */
 function minimalLineChange(
 	line: { from: number; text: string },
@@ -304,8 +304,8 @@ function precedingItem(state: EditorState, lineNumber: number, accepts: (indent:
 
 /** Nest the selected list item(s) under the nearest preceding item at the same
  *  level, indenting only as far as that parent's content column. That keeps the
- *  item a valid nested list — 4+ spaces with no parent would parse as an indented
- *  code block — so a first or standalone item (no parent) is left untouched. */
+ *  item a valid nested list (4+ spaces with no parent would parse as an indented
+ *  code block), so a first or standalone item (no parent) is left untouched. */
 export function indentListItems(view: EditorView): void {
 	if (view.state.readOnly) return;
 	const { state } = view;
@@ -331,7 +331,7 @@ export function indentListItems(view: EditorView): void {
 /** Un-nest the selected list item(s) by one level: the inverse of
  *  indentListItems. Each item's leading indent drops to that of the nearest
  *  preceding shallower item (the one it is nested under), or to column 0 when
- *  there is no shallower parent. Keeps indent and outdent symmetric — one
+ *  there is no shallower parent. Keeps indent and outdent symmetric: one
  *  outdent exactly reverses one indent. (CodeMirror's generic indentLess removed
  *  a fixed indent unit instead, so a list indent took two outdents to undo.) */
 export function outdentListItems(view: EditorView): void {

@@ -22,8 +22,8 @@ export type ListItemSize = 'sm' | 'md';
 const OWN_TAB_STOP = 'a[href], button, input, select, textarea, [contenteditable]:not([contenteditable="false"]), [tabindex]';
 
 /** What a control looked like before a roving row took it out of the tab order.
- *  `noTab` is undefined for a control without that property — a native one,
- *  where the tabindex is what moves instead. */
+ *  `noTab` is undefined for a control without that property (a native one,
+ *  where the tabindex is what moves instead). */
 interface AuthoredTabState {
 	noTab?: boolean;
 	tabindex: string | null;
@@ -101,8 +101,8 @@ const NESTED_CONTROLS = [
  *
  * ## Geometry
  * Two rules govern every row:
- * 1. State fills always paint the WIDENED row geometry — the row box extended
- *    by the indicator inline inset on both sides — whether or not the row is
+ * 1. State fills always paint the WIDENED row geometry (the row box extended
+ *    by the indicator inline inset on both sides), whether or not the row is
  *    interactive. Paint never differs between a selected plain row and a
  *    selected interactive row.
  * 2. The widened strip belongs to the ROW, never to a segment. A row with any
@@ -115,7 +115,7 @@ const NESTED_CONTROLS = [
  *
  * ## Divider
  * By default the divider starts at the row's first text or title cell, so the
- * line lands on the words rather than on whatever leads up to them — an icon,
+ * line lands on the words rather than on whatever leads up to them: an icon,
  * an avatar, a checkbox, or the spacers a tree indents with. Rows of different
  * shapes then still line their dividers up with each other, and a tree's
  * dividers step inward with its indentation. Text inside an
@@ -123,10 +123,10 @@ const NESTED_CONTROLS = [
  * text cell rather than the action: the action carries its own inline padding,
  * so its edge sits before the words. A row with no text or title cell keeps the
  * full content width. Mark a cell with `divider-start` and/or `divider-end` to
- * place it yourself instead — an explicit marker replaces the derived one
+ * place it yourself instead. An explicit marker replaces the derived one
  * entirely, so `divider-start` on the leading cell restores the full-width
  * line. Multiple markers resolve as the union: first `divider-start` through
- * last `divider-end`. A start past the last end is an authoring error — the
+ * last `divider-end`. A start past the last end is an authoring error: the
  * item DEV-warns and falls back to the full content width.
  *
  * ## Disclosure
@@ -134,7 +134,7 @@ const NESTED_CONTROLS = [
  * `nldd-list-item-segment[disclosure]` segment (only the chevron is clickable),
  * or the row itself as the control (`button` + `expanded`, the whole row
  * toggles). In the second case, mark the chevron's `nldd-icon-cell` with
- * `disclosure` and the row turns it with `expanded` — the same affordance,
+ * `disclosure` and the row turns it with `expanded`. That is the same affordance,
  * without having to trade a clickable row for a turning chevron.
  *
  * `checkbox` makes the WHOLE row the control: the inner action becomes a
@@ -145,7 +145,7 @@ const NESTED_CONTROLS = [
  * stops. Do NOT nest a real `<input type="checkbox">` in the action: interactive
  * content inside a `<button>` is invalid HTML and AT announces the button, not
  * the checked state. A `<label>` variant is not offered for the same reason it
- * cannot work — label-to-input association walks the DOM tree, and a slotted
+ * cannot work: label-to-input association walks the DOM tree, and a slotted
  * input is not a descendant of a label in the shadow root.
  *
  * When it renders as a link, `target` and `rel`
@@ -165,8 +165,9 @@ const NESTED_CONTROLS = [
  *   at the active option via `_highlighted` (separate from `selected`).
  *
  * @element nldd-list-item
+ * @keywords disclosure, rij, uitklappen
  *
- * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-reorder-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
+ * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-reorder-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else (pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell) are left alone.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
  * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
@@ -179,8 +180,8 @@ const NESTED_CONTROLS = [
  * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
  * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
  * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
- * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
- * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
+ * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded`, to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
+ * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row, including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
  * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
@@ -306,7 +307,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 
 	/**
 	 * Disclosure state of a row that opens something (a tree row's children, a
-	 * details panel). Reflected as `aria-expanded` on the row's own control —
+	 * details panel). Reflected as `aria-expanded` on the row's own control:
 	 * `listitem` does not support the property, a `<button>` / `<a>` does. Leave
 	 * the attribute off entirely when the row discloses nothing.
 	 */
@@ -381,7 +382,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/** Set by the parent nldd-list in `type="listbox"`: marks this option as
-	 *  highlighted — the active descendant the search input's `aria-activedescendant`
+	 *  highlighted: the active descendant the search input's `aria-activedescendant`
 	 *  points at. Kept SEPARATE from `selected`: the highlight moves with the arrow
 	 *  keys, selection stays consumer-managed. Named for the visual state (not
 	 *  `_active`, which would clash with the pressed / `:active` feedback). */
@@ -483,7 +484,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/**
 	 * The controls in this row that own a tab stop: a design-system control that
 	 * carries `no-tab`, or anything natively focusable. Segments are left
-	 * out — they have their own channel (`_tabbable`) — but a control slotted
+	 * out (they have their own channel, `_tabbable`), but a control slotted
 	 * inside one is not, so it is managed here.
 	 *
 	 * Custom elements that have not upgraded yet cannot answer whether they carry
@@ -537,7 +538,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * belongs on the segment that holds the link. Written there, the row would
 	 * stay unpainted and the consumer had to set `current` twice, once for the
 	 * semantics and once for the color, with nothing to catch the two drifting
-	 * apart. The row reads it off its own segments instead — reading, not
+	 * apart. The row reads it off its own segments instead. Reading, not
 	 * writing: the attributes stay the consumer's.
 	 */
 	private _updateCurrentSegment(): void {
@@ -548,7 +549,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/** A checked checkbox-segment reads as "this row is selected", so the fill
-	 *  covers the whole row — including a disclosure segment — instead of
+	 *  covers the whole row (including a disclosure segment) instead of
 	 *  stopping at the segment boundary. Scoped to own descendants: a checked
 	 *  row in a nested branch must not light up its ancestors. */
 	private _updateCheckedSegment(): void {
@@ -556,14 +557,14 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this._ownDescendants('nldd-list-item-segment[checkbox][checked]').length > 0;
 	}
 
-	/** A row with any action — its own href/button/checkbox or a slotted
-	 *  segment — carries the widened geometry: negative host margin plus the
+	/** A row with any action (its own href/button/checkbox or a slotted
+	 *  segment) carries the widened geometry: negative host margin plus the
 	 *  compensating row padding (see the geometry rules in the class doc).
 	 *
 	 *  An segment at a row edge owns the padding for that side itself,
 	 *  so the row drops its own there and the segment lands on the row's edge.
 	 *  Stamped as classes because the CSS cannot ask: `:has()` is not allowed
-	 *  inside `:host()`, and the row's own padding is what has to change — a
+	 *  inside `:host()`, and the row's own padding is what has to change: a
 	 *  `::slotted()` rule could only reach the segment. */
 	private _updateInteractive(): void {
 		const interactive =
@@ -619,7 +620,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	private _ownCellSize = new WeakMap<Element, string | null>();
 
 	/**
-	 * The row's own descendants for `selector` — everything down to and inside
+	 * The row's own descendants for `selector`: everything down to and inside
 	 * its segments, but NOT inside a nested row. In a tree the child rows
 	 * are DOM children of this row, so a plain querySelectorAll would push this
 	 * row's state into theirs (a parent's `expanded` turning every nested
@@ -635,7 +636,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/**
 	 * Records the authored `size` before the cells upgrade. Custom elements
 	 * upgrade in document order, so the item's connectedCallback runs before its
-	 * children's — the only moment an authored `size="md"` is still readable.
+	 * children's, the only moment an authored `size="md"` is still readable.
 	 * After upgrade `reflectNonDefault` strips it, making it indistinguishable
 	 * from no attribute at all.
 	 */
@@ -691,8 +692,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/**
-	 * A row WITH children is a branch, and a branch is either open or closed —
-	 * there is no third state. So an absent `expanded` reads as collapsed there,
+	 * A row WITH children is a branch, and a branch is either open or closed.
+	 * There is no third state. So an absent `expanded` reads as collapsed there,
 	 * and aria-expanded is always emitted. On a row without children an absent
 	 * attribute keeps its other meaning: this row discloses nothing, emit no
 	 * aria-expanded at all. Without this split, `?expanded=\${false}` (which
@@ -721,7 +722,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/** Segments marked `disclosure` announce the row's expanded state, so the
-	 *  consumer writes it once — here, where it also drives the children group. */
+	 *  consumer writes it once, here, where it also drives the children group. */
 	private _relayExpanded(): void {
 		this._ownDescendants<HTMLElement & { _rowExpanded?: boolean }>('nldd-list-item-segment[disclosure]')
 			.forEach(segment => { segment._rowExpanded = this._resolvedExpanded; });
@@ -864,8 +865,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/**
 	 * The cell the divider starts at when nobody said otherwise: the row's first
 	 * text or title cell. The line lands on the words rather than on whatever
-	 * leads up to them — an icon, an avatar, a checkbox, or the spacers a tree
-	 * indents with — so rows of different shapes still line their dividers up
+	 * leads up to them (an icon, an avatar, a checkbox, or the spacers a tree
+	 * indents with), so rows of different shapes still line their dividers up
 	 * with each other. Put `divider-start` on an earlier cell to get the
 	 * full-width line back.
 	 */
@@ -989,7 +990,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		slot?.addEventListener('slotchange', () => this._updateChildren());
 	}
 
-	/** Renders the group only when there is something in it — an empty
+	/** Renders the group only when there is something in it. An empty
 	 *  `role="group"` would be an empty branch in the accessibility tree. */
 	private _updateChildren() {
 		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="children"]');
@@ -1083,7 +1084,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	};
 
 	/** Whether the event started in a row nested inside this one. Only the part
-	 *  of the path BELOW this row counts — everything above it is this row's own
+	 *  of the path BELOW this row counts. Everything above it is this row's own
 	 *  ancestry, which is where the event is heading, not where it came from. */
 	private _isFromNestedRow(e: Event): boolean {
 		const path = e.composedPath();
@@ -1126,7 +1127,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * A row that is not the current one carries NO tabindex at all rather than
 	 * -1. A shadow host with a tabindex is a focus scope of its own, and Chromium
 	 * walks straight past such a scope when tabbing BACKWARDS if the host itself
-	 * isn't tabbable — so a `-1` on a branch made every row inside it
+	 * isn't tabbable. So a `-1` on a branch made every row inside it
 	 * unreachable with Shift+Tab, while forward navigation still found them.
 	 *
 	 * Runs whenever `_roving` is written, so the tab stop is in the DOM before
@@ -1156,7 +1157,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 *
 	 * Tells apart what the row IS from what it HOLDS, and it asks that of the
 	 * light DOM rather than of `_rovingControls`. That set holds what the roving
-	 * can park, which needs `no-tab` or a native tab stop — and a combo box has
+	 * can park, which needs `no-tab` or a native tab stop, and a combo box has
 	 * neither, so the one control most in need of protection is exactly the one
 	 * missing from it.
 	 *
@@ -1206,7 +1207,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/** The control that opens and closes this row: the segment marked
-	 *  `disclosure`, or the row itself when it is a button. Never a link — Left
+	 *  `disclosure`, or the row itself when it is a button. Never a link: Left
 	 *  and Right may not navigate away. */
 	private get _disclosureControl(): HTMLElement | undefined {
 		const action = Array.from(this.children).find(

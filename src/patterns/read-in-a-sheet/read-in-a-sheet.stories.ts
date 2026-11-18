@@ -2,7 +2,7 @@ import markup from './read-in-a-sheet.html?raw';
 import { patternStory } from '../pattern-story.js';
 
 export default {
-	title: 'Patronen/Lezen in een sheet',
+	title: 'Patronen/Algemeen/Lezen in een sheet',
 };
 
 export const Standaard = patternStory(markup, (root) => {

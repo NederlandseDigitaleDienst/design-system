@@ -18,6 +18,7 @@
  * gutter (click a number to move the caret to that line).
  *
  * @element nldd-code-editor
+ * @related nldd-code-viewer, nldd-text-editor
  *
  * @attr {string} value - Editor content
  * @attr {string} placeholder - Placeholder text shown while empty
@@ -28,7 +29,7 @@
  * @attr {boolean} required - Required state
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
- * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
+ * @attr {'none'|'vertical'|'auto'} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
  * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
  * @attr {string} language - Highlight grammar (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python). Empty disables highlighting.
  * @attr {boolean} line-numbers - Show a line-number gutter

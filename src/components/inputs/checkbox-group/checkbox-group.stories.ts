@@ -7,12 +7,12 @@ import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 /**
- * De Checkbox Group groepeert `nldd-checkbox-field` elementen zoals de Radio
- * Button Group dat doet met keuzerondjes: dezelfde opbouw, één `name` voor
+ * `nldd-checkbox-group` groepeert `nldd-checkbox-field` elementen zoals
+ * `nldd-radio-button-group` dat doet met keuzerondjes: dezelfde opbouw, één `name` voor
  * alle velden, en een groep die een schermlezer met het label aankondigt.
  * Elk selectievakje is een eigen stap voor Tab. Met `required` moet er
- * minstens één aangevinkt zijn. Gebruik altijd binnen `nldd-form-field` voor
- * het groepslabel.
+ * minstens één aangevinkt zijn. In een formulier geeft `nldd-form-field` de
+ * groep zijn label; daarbuiten geef je hem een naam met `accessible-label`.
  *
  * ## Gebruik
  * ```html
@@ -33,15 +33,13 @@ export default {
 			file: 'src/components/inputs/checkbox-group/checkbox-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		invalid: false,
 		disabled: false,
 		name: 'maatregel',
 		required: false,
+		accessibleLabel: 'Waarvoor vraag je subsidie aan?',
 	},
 	argTypes: {
 		invalid: {
@@ -65,7 +63,7 @@ export default {
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
-			control: false,
+			control: 'text',
 			description: 'Toegankelijk label voor screen readers. In een `nldd-form-field` geeft het veld de groep zijn naam.',
 		},
 		accessibleLabeledBy: {
@@ -76,31 +74,60 @@ export default {
 	},
 };
 
-const Template = ({ invalid, disabled, name, required }: Record<string, unknown>) => html`
+const fields = html`
+	<nldd-checkbox-field
+		value="isolatie"
+		label="Isolatie"
+	>
+		<nldd-checkbox-field
+			slot="children"
+			value="dakisolatie"
+			checked
+			label="Dakisolatie"
+		></nldd-checkbox-field>
+		<nldd-checkbox-field
+			slot="children"
+			value="vloerisolatie"
+			label="Vloerisolatie"
+		></nldd-checkbox-field>
+	</nldd-checkbox-field>
+	<nldd-checkbox-field
+		value="warmtepomp"
+		label="Warmtepomp"
+	></nldd-checkbox-field>
+	<nldd-checkbox-field
+		value="zonnepanelen"
+		label="Zonnepanelen"
+	></nldd-checkbox-field>
+`;
+
+const Template = ({ invalid, disabled, name, required, accessibleLabel }: Record<string, unknown>) => html`
+	<nldd-checkbox-group
+		?invalid=${invalid}
+		?disabled=${disabled}
+		name=${name}
+		?required=${required}
+		accessible-label=${accessibleLabel}
+	>
+		${fields}
+	</nldd-checkbox-group>
+`;
+
+export const Standaard = {
+	render: Template,
+};
+
+/** In een formulier geeft het `nldd-form-field` de groep zijn label. */
+export const InEenFormulier = {
+	name: 'In een formulier',
+	render: () => html`
 	<nldd-form
 		label-alignment="right"
 		novalidate
 	>
 		<nldd-form-field label="Waarvoor vraag je subsidie aan?">
-			<nldd-checkbox-group
-				?invalid=${invalid}
-				?disabled=${disabled}
-				name=${name}
-				?required=${required}
-			>
-				<nldd-checkbox-field
-					value="dakisolatie"
-					checked
-					label="Dakisolatie"
-				></nldd-checkbox-field>
-				<nldd-checkbox-field
-					value="warmtepomp"
-					label="Warmtepomp"
-				></nldd-checkbox-field>
-				<nldd-checkbox-field
-					value="zonnepanelen"
-					label="Zonnepanelen"
-				></nldd-checkbox-field>
+			<nldd-checkbox-group name="maatregel">
+				${fields}
 			</nldd-checkbox-group>
 		</nldd-form-field>
 		<nldd-form-actions>
@@ -113,10 +140,8 @@ const Template = ({ invalid, disabled, name, required }: Record<string, unknown>
 			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>
-`;
-
-export const Standaard = {
-	render: Template,
+`,
+	parameters: { controls: { disable: true } },
 };
 
 export const ToestandDisabled = {
@@ -128,73 +153,25 @@ export const ToestandDisabled = {
 export const VeldDisabled = {
 	name: 'Veld disabled',
 	render: () => html`
-	<nldd-form
-		label-alignment="right"
-		novalidate
+	<nldd-checkbox-group
+		name="maatregel"
+		accessible-label="Waarvoor vraag je subsidie aan?"
 	>
-		<nldd-form-field label="Waarvoor vraag je subsidie aan?">
-			<nldd-checkbox-group name="maatregel">
-				<nldd-checkbox-field
-					value="dakisolatie"
-					checked
-					label="Dakisolatie"
-				></nldd-checkbox-field>
-				<nldd-checkbox-field
-					value="warmtepomp"
-					label="Warmtepomp"
-				></nldd-checkbox-field>
-				<nldd-checkbox-field
-					value="zonnepanelen"
-					label="Zonnepanelen"
-					disabled
-				></nldd-checkbox-field>
-			</nldd-checkbox-group>
-		</nldd-form-field>
-	</nldd-form>
-`,
-	parameters: { controls: { disable: true } },
-};
-
-export const Genest = {
-	render: () => html`
-	<nldd-form
-		label-alignment="right"
-		novalidate
-	>
-		<nldd-form-field label="Waarvoor vraag je subsidie aan?">
-			<nldd-checkbox-group name="maatregel">
-				<nldd-checkbox-field
-					value="isolatie"
-					label="Isolatie"
-				>
-					<nldd-checkbox-field
-						slot="children"
-						value="dakisolatie"
-						checked
-						label="Dakisolatie"
-					></nldd-checkbox-field>
-					<nldd-checkbox-field
-						slot="children"
-						value="vloerisolatie"
-						label="Vloerisolatie"
-					></nldd-checkbox-field>
-					<nldd-checkbox-field
-						slot="children"
-						value="spouwmuurisolatie"
-						label="Spouwmuurisolatie"
-					></nldd-checkbox-field>
-				</nldd-checkbox-field>
-				<nldd-checkbox-field
-					value="warmtepomp"
-					label="Warmtepomp"
-				></nldd-checkbox-field>
-				<nldd-checkbox-field
-					value="zonnepanelen"
-					label="Zonnepanelen"
-				></nldd-checkbox-field>
-			</nldd-checkbox-group>
-		</nldd-form-field>
-	</nldd-form>
+		<nldd-checkbox-field
+			value="dakisolatie"
+			checked
+			label="Dakisolatie"
+		></nldd-checkbox-field>
+		<nldd-checkbox-field
+			value="warmtepomp"
+			label="Warmtepomp"
+		></nldd-checkbox-field>
+		<nldd-checkbox-field
+			value="zonnepanelen"
+			label="Zonnepanelen"
+			disabled
+		></nldd-checkbox-field>
+	</nldd-checkbox-group>
 `,
 	parameters: { controls: { disable: true } },
 };

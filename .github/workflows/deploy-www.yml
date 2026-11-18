@@ -1,6 +1,6 @@
 name: Deploy website to ZAD
 
-# On every push to main: build the marketing page in www/, put it in an nginx
+# On every push to main: build the website in www/, put it in an nginx
 # image on GHCR and roll that image out on ZAD, at
 # design.digitaledienst.overheid.nl. See deploy/README.md.
 

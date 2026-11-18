@@ -2,6 +2,11 @@ import { html, nothing } from 'lit';
 import './swatch-picker.ts';
 import '../../forms/form-field/form-field.ts';
 
+/**
+ * `nldd-swatch-picker` is een rij stalen waaruit je er één kiest: een kleur, of een
+ * afbeelding van een patroon of materiaal. Het is een radiogroep, dus zet hem in
+ * een `nldd-form-field` dat de groep een naam geeft.
+ */
 export default {
 	title: 'Components/Inputs/Swatch Picker',
 	component: 'nldd-swatch-picker',
@@ -11,7 +16,6 @@ export default {
 			file: 'src/components/inputs/swatch-picker/swatch-picker.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		size: 'md',

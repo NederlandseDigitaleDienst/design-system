@@ -3,7 +3,7 @@ import './checkbox.js';
 import '../../layout/container/container.js';
 
 /**
- * De Checkbox component stelt gebruikers in staat om een of meerdere opties te selecteren.
+ * `nldd-checkbox` laat gebruikers een of meerdere opties selecteren.
  *
  * ## Gebruik
  * ```html
@@ -18,9 +18,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/checkbox/checkbox.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {

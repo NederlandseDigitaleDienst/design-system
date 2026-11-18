@@ -41,6 +41,11 @@ const demoToggle = (e: Event) => {
 	}
 };
 
+/**
+ * `nldd-list-item-segment` groepeert een reeks cells in een `nldd-list-item` en
+ * maakt alleen dat deel klikbaar. Je gebruikt het als een rij meer dan één
+ * actie heeft, zoals een rij die navigeert met een losse knop ernaast.
+ */
 export default {
 	title: 'Components/Lists & Tables/List Item Segment',
 	component: 'nldd-list-item-segment',
@@ -131,7 +136,7 @@ export const Standaard = {
 /**
  * Twee onafhankelijke acties in één rij: de chevron klapt uit, de rest zet de
  * checkbox aan. Een echte `<input>` of een tweede knop binnen één actie zou
- * ongeldige HTML zijn — daarom splitsen we de rij in segmenten.
+ * ongeldige HTML zijn. Daarom splitsen we de rij in segmenten.
  *
  * De divider loopt standaard over de volle contentbreedte; markeer een cel met
  * `divider-start` of `divider-end` als hij later moet beginnen of eerder moet
@@ -455,12 +460,12 @@ export const InEenBoxedList = {
 
 /**
  * Een echte boom: `nldd-list type="tree"` met kindrijen in `slot="children"`.
- * De nesting IS de hiërarchie — `aria-level`, `aria-posinset` en `aria-setsize`
+ * De nesting IS de hiërarchie: `aria-level`, `aria-posinset` en `aria-setsize`
  * worden er door hulpsoftware uit afgeleid en staan dus nergens in de markup.
  *
  * `expanded` staat één keer, op de rij: het stuurt zowel de zichtbaarheid van de
  * groep als de `aria-expanded` van de chevron, doordat die met `disclosure` is
- * gemarkeerd. Inspringen blijft handwerk — herhaal een spacer-cell per niveau.
+ * gemarkeerd. Inspringen blijft handwerk: herhaal een spacer-cell per niveau.
  */
 export const GenesteBoom = {
 	name: 'Geneste boom (type="tree")',

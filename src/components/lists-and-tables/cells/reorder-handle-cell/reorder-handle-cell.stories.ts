@@ -5,6 +5,11 @@ import '../spacer-cell/spacer-cell.js';
 import '../../list/list.js';
 import '../../list-item/list-item.js';
 
+/**
+ * `nldd-reorder-handle-cell` is de greep waarmee je een rij in een
+ * `nldd-list` met `reorderable` verplaatst, door te slepen of met de
+ * pijltjestoetsen. Hij is alleen te zien zolang de lijst te herordenen is.
+ */
 export default {
 	title: 'Components/Lists & Tables/Cells/Reorder Handle Cell',
 	component: 'nldd-reorder-handle-cell',

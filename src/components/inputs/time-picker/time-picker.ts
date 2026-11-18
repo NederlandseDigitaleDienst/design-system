@@ -13,6 +13,8 @@
  * same values are not read out twice.
  *
  * @element nldd-time-picker
+ * @keywords tijd
+ * @related nldd-time-field
  *
  * @attr {string} value - The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it.
  * @attr {string} min - Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from.

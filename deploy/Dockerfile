@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-# Rootless nginx with the built marketing page in it. The workflow runs
+# Rootless nginx with the built website in it. The workflow runs
 # `npm run build:www` first and builds this image from the repository root,
 # so www-dist/ exists. .dockerignore keeps the context to deploy/ and www-dist/.
 FROM nginxinc/nginx-unprivileged:1.31-alpine

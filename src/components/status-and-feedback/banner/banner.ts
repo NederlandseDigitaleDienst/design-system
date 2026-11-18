@@ -3,7 +3,7 @@
  *
  * An inline notification with a tinted background per variant. Use for
  * persistent, page-level feedback (e.g. an error summary at the top of
- * a form). Banner is more visually present than nldd-inline-dialog —
+ * a form). Banner is more visually present than nldd-inline-dialog:
  * the tinted color catches the eye. If you need a quieter component,
  * pick a different one rather than overriding the banner's ARIA.
  *
@@ -16,21 +16,23 @@
  * role and aria-live are set automatically from the variant:
  * - critical → role="alert" (interrupts screen reader)
  * - others   → role="status" aria-live="polite"
- * Not overridable — if you need a less prominent component, use one.
+ * Not overridable. If you need a less prominent component, use one.
  *
  * aria-atomic="true" is also set so that updates to the structured region
  * (icon + heading + supporting-text + actions) are announced as one unit
  * rather than as a partial subtree. Trade-off: any programmatic content
  * mutation re-reads the entire banner. Banners are designed for short,
- * heading-scale copy — if you slot in a paragraph of rich body text and
+ * heading-scale copy. If you slot in a paragraph of rich body text and
  * then toggle variant or supporting-text at runtime, AT will re-announce
  * the whole thing. Keep banner content concise, or render long-form
  * messages in a different surface.
  *
  * @element nldd-banner
+ * @keywords alert, message bar, melding, mededeling
+ * @related nldd-notification, nldd-status-bar, nldd-inline-dialog, nldd-admonition
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - Color and default icon (default: 'neutral')
- * @attr {'sm'|'md'} size - Banner size (default: 'md'). 'sm' tightens the padding to 8px, drops the icon to 24px and uses a smaller dismiss button — for a bar that sits between chrome and content rather than a standalone page-level notice. The typography is unchanged.
+ * @attr {'sm'|'md'} size - Banner size (default: 'md'). 'sm' tightens the padding to 8px, drops the icon to 24px and uses a smaller dismiss button, for a bar that sits between chrome and content rather than a standalone page-level notice. The typography is unchanged.
  * @attr {string} icon - Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled
  * @attr {string} text - Main text (heading or paragraph, depending on heading-level)
  * @attr {string} supporting-text - Supporting text below the heading
@@ -104,7 +106,7 @@ export class NLDDBanner extends LitElement {
 
 	/** Stored slot-change listener references so disconnectedCallback can
 	 *  remove them. Shadow-DOM slots are GC'd with the host, so leakage is
-	 *  cosmetic — but we keep cleanup symmetric with addEventListener. */
+	 *  cosmetic, but we keep cleanup symmetric with addEventListener. */
 	private _syncContent?: () => void;
 	private _syncActions?: () => void;
 

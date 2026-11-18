@@ -2,12 +2,12 @@
  * Copies the canonical design-guidelines doc into the nldd skill as
  * design-guidelines.md.
  *
- * The MDX (src/docs/design-guidelines.mdx, the Storybook "Docs/Ontwerprichtlijnen"
- * page) is the single source of truth. This script strips the MDX-only lines
- * (the JS import and the <Meta> element) and wraps the remaining Markdown in a
- * bundled reference doc inside the nldd consumer skill, so a consumer who builds
- * with @nldd/design-system gets the design principles alongside reference.md and
- * changelog.md.
+ * src/docs/design-guidelines.md, the page the website shows at /richtlijnen/,
+ * is the single source of truth. This script wraps it in a bundled reference
+ * doc inside the nldd consumer skill, so a consumer who builds with
+ * @nldd/design-system gets the design principles alongside reference.md and
+ * changelog.md. A link to another page of the website becomes a full address,
+ * because a path means nothing inside a skill.
  *
  * A symlink would NOT survive: Claude Code copies a plugin into an isolated
  * cache and skips symlinks whose target lies outside the plugin directory, so a
@@ -26,26 +26,21 @@ import { fileURLToPath } from 'node:url';
 import { generatedHeader, readSource, writeGenerated } from './lib/skill-doc.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const sourcePath = resolve(__dirname, '../src/docs/design-guidelines.mdx');
+const sourcePath = resolve(__dirname, '../src/docs/design-guidelines.md');
 const outputPath = resolve(__dirname, '../skills/nldd-design/design-guidelines.md');
 
-const mdx = readSource(
+const source = readSource(
 	sourcePath,
-	'Verwacht de canonieke ontwerprichtlijnen in src/docs/design-guidelines.mdx.',
+	'Verwacht de canonieke ontwerprichtlijnen in src/docs/design-guidelines.md.',
 );
 
-// Keep only the Markdown body: drop the JS import line(s) and the <Meta>
-// element that make this an MDX/Storybook page. Everything else is plain
-// Markdown and is carried over verbatim.
-const body = `${mdx
-	.split('\n')
-	.filter((line) => !/^\s*import\s/.test(line) && !/^\s*<Meta\b/.test(line))
-	.join('\n')
+const body = `${source
+	.replace(/\]\(\/(?!\/)/g, '](https://design.digitaledienst.overheid.nl/')
 	.replace(/^\n+/, '')
 	.trimEnd()}\n`;
 
 const header = generatedHeader(
-	'Kopie van src/docs/design-guidelines.mdx (Storybook "Docs/Ontwerprichtlijnen").',
+	'Kopie van src/docs/design-guidelines.md (de pagina Ontwerprichtlijnen op de website).',
 );
 
 writeGenerated(outputPath, header + body);

@@ -3,15 +3,10 @@ import './radio-button.js';
 import '../../layout/container/container.js';
 
 /**
- * De Radio Button component wordt gebruikt voor exclusieve keuzes binnen een groep opties.
- * Slechts één radio button binnen een groep (met dezelfde `name`) kan tegelijkertijd geselecteerd zijn.
- *
- * Dit component tekent alleen de vorm. Wil je een zichtbaar label ernaast, gebruik
- * dan `nldd-radio-button-field`, en voor een hele groep `nldd-radio-button-group`.
- *
- * Zet de opties van een groep in een container met `role="radiogroup"` en een eigen
- * naam: een schermlezer telt de opties daar. Een kale `<fieldset>` is een group en
- * geen radiogroup, en dan blijven ze ongeteld.
+ * `nldd-radio-button` is één keuze uit een groep opties met dezelfde `name`,
+ * waarvan er maar één tegelijk aan staat. Het component tekent alleen de vorm.
+ * Voor een zichtbaar label ernaast is er `nldd-radio-button-field`, voor een
+ * hele groep `nldd-radio-button-group`.
  *
  * ## Gebruik
  * ```html
@@ -33,9 +28,6 @@ export default {
 		componentSource: {
 			file: 'src/components/inputs/radio-button/radio-button.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
-		},
-		status: {
-			type: 'stable',
 		},
 	},
 	argTypes: {

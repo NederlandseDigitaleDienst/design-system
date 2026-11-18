@@ -4,7 +4,13 @@ import '../../status-and-feedback/banner/banner.js';
 import '../../layout/container/container.js';
 import '../text/text.js';
 import '../../layout/spacer/spacer.js';
+import { sampleImage } from '../../../sample-images.js';
 
+/**
+ * `nldd-rich-text` is een container voor lopende tekst in HTML, zoals een
+ * artikel uit een CMS of een markdown-renderer. Hij geeft koppen, alinea's en
+ * lijsten hun typografie en de ruimte ertussen.
+ */
 export default {
 	title: 'Components/Content/Rich Text',
 	component: 'nldd-rich-text',
@@ -54,12 +60,12 @@ export const Koppen = {
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
-				<h1>Heading 1 — Mijn Dienst</h1>
-				<h2>Heading 2 — Dossier D-318</h2>
-				<h3>Heading 3 — Aanvraag A-1042</h3>
-				<h4>Heading 4 — Dakisolatie</h4>
-				<h5>Heading 5 — Bijlagen</h5>
-				<h6>Heading 6 — Foto van het dak</h6>
+				<h1>Heading 1: Mijn Dienst</h1>
+				<h2>Heading 2: Dossier D-318</h2>
+				<h3>Heading 3: Aanvraag A-1042</h3>
+				<h4>Heading 4: Dakisolatie</h4>
+				<h5>Heading 5: Bijlagen</h5>
+				<h6>Heading 6: Foto van het dak</h6>
 			</nldd-rich-text>
 	`,
 };
@@ -82,7 +88,7 @@ export const Alinea = {
 /**
  * Opt-in via `hyphens`. Automatische woordafbreking voor doorlopende tekst
  * (p, li, dd), handig in smalle kolommen met lange Nederlandse
- * samenstellingen. Vereist een correcte `lang` op de pagina — hier staat
+ * samenstellingen. Vereist een correcte `lang` op de pagina. Hier staat
  * `lang="nl"` op de wrapper, anders breekt de browser niet af. De grens
  * `hyphenate-limit-chars: 6 3 3` voorkomt losse-letterafbrekingen. Een kop
  * breekt nooit met een streepje, alleen als één woord breder is dan de kolom.
@@ -215,7 +221,7 @@ export const Definitielijst = {
 						size="sm"
 						weight="bold"
 						line-height="tight"
-						text="sm (&lt; 641px) — gestapeld"
+						text="sm (&lt; 641px): gestapeld"
 					></nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -227,7 +233,7 @@ export const Definitielijst = {
 						size="sm"
 						weight="bold"
 						line-height="tight"
-						text="md (≥ 641px) — term links (240px), definitie rechts"
+						text="md (≥ 641px): term links (240px), definitie rechts"
 					></nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -239,7 +245,7 @@ export const Definitielijst = {
 						size="sm"
 						weight="bold"
 						line-height="tight"
-						text="lg (≥ 1008px) — term links (240px), definitie rechts"
+						text="lg (≥ 1008px): term links (240px), definitie rechts"
 					></nldd-text>
 					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -341,7 +347,7 @@ export const Figuur = {
 						src="https://placehold.co/800x400"
 						alt="Verdeling van de aanvragen per maatregel"
 					/>
-					<figcaption>Figuur 1 — Verdeling van de aanvragen per maatregel</figcaption>
+					<figcaption>Figuur 1: Verdeling van de aanvragen per maatregel</figcaption>
 				</figure>
 				<p>Uit de afbeelding blijkt dat dakisolatie de meeste aanvragen krijgt.</p>
 			</nldd-rich-text>
@@ -565,7 +571,7 @@ export const VolledigArtikel = {
 						src="https://placehold.co/800x400"
 						alt="Overzicht van de stappen van een aanvraag"
 					/>
-					<figcaption>Figuur 1 — Schematisch overzicht van de stappen van een aanvraag</figcaption>
+					<figcaption>Figuur 1: Schematisch overzicht van de stappen van een aanvraag</figcaption>
 				</figure>
 			</nldd-rich-text>
 	`,
@@ -579,7 +585,7 @@ export const AlleGrootten = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-					text="sm (&lt; 641px) — beperkt tot 393px"
+					text="sm (&lt; 641px): beperkt tot 393px"
 				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -601,7 +607,7 @@ export const AlleGrootten = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-					text="md (≥ 641px) — beperkt tot 834px"
+					text="md (≥ 641px): beperkt tot 834px"
 				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -623,7 +629,7 @@ export const AlleGrootten = {
 					size="sm"
 					weight="bold"
 					line-height="tight"
-					text="lg (≥ 1008px) — beperkt tot 1200px"
+					text="lg (≥ 1008px): beperkt tot 1200px"
 				></nldd-text>
 				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -673,7 +679,7 @@ export const Breedtezones = {
 			</table>
 			<p>Afbeeldingen krijgen het wide-accent: iets breder dan de tekst, zonder de pagina te domineren.</p>
 			<img
-				src="sample-images/butterfly-960.jpg"
+				src=${sampleImage('butterfly-960.jpg')}
 				alt="Vlinder op een bloem"
 			>
 			<p>Componenten zoals een banner horen bij de tekst en worden niet breder dan de main-maat.</p>
@@ -681,7 +687,7 @@ export const Breedtezones = {
 				variant="accent"
 				text="Een component blijft binnen de leesbreedte"
 			></nldd-banner>
-			<p data-rich-text-width="wide">Deze paragraaf staat bewust op <code>data-rich-text-width="wide"</code> en leest dus iets breder dan de main-maat — de per-item override wint van elke default.</p>
+			<p data-rich-text-width="wide">Deze paragraaf staat bewust op <code>data-rich-text-width="wide"</code> en leest dus iets breder dan de main-maat: de per-item override wint van elke default.</p>
 		</nldd-rich-text>
 	`,
 };
@@ -701,10 +707,10 @@ export const OpKleurvlak = {
 					<p>Alle tekst erft de contentkleur van het vlak, inclusief <a href="#">links met hun onderstreping</a> en <strong>nadruk</strong>.</p>
 					<figure>
 						<img
-							src="sample-images/butterfly-480.jpg"
+							src=${sampleImage('butterfly-480.jpg')}
 							alt="Vlinder op een bloem"
 						>
-						<figcaption>Figuur 1 — de figcaption staat op verlaagde dekking</figcaption>
+						<figcaption>Figuur 1: de figcaption staat op verlaagde dekking</figcaption>
 					</figure>
 					<details>
 						<summary>Welke stukken horen bij de aanvraag?</summary>

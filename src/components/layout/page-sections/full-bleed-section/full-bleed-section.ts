@@ -6,6 +6,7 @@
  * edge to edge. Vertical padding and gap adjust via container queries.
  *
  * @element nldd-full-bleed-section
+ * @related nldd-simple-section, nldd-hero
  *
  * @attr {'inherit'|'base'|'tinted'} [background] - Surface background ('inherit' default; 'base' and 'tinted' paint and cascade a surface).
  * @attr {string} [width] - Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.
