@@ -446,6 +446,7 @@ describe('nldd-toggle-button – tooltip', () => {
 		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip') as HTMLElement & { _visible?: boolean };
 		const bubble = tooltip.shadowRoot!.querySelector('.tooltip') as HTMLElement;
 
+		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 		(el as NLDDToggleButton).focus();
 		await waitForUpdate(tooltip);
 		expect(bubble.matches(':popover-open')).toBe(true);
@@ -647,6 +648,7 @@ describe('nldd-toggle-button – selected-icon', () => {
 		it('shows a tooltip with the shortcut for a text-only toggle', async () => {
 			el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Vet" shortcut="Ctrl+B"></nldd-toggle-button>');
 			await waitForUpdate(el);
+			document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 			el.shadowRoot!.querySelector('button')!.focus();
 			const tooltip = el.shadowRoot!.querySelector<NLDDTooltip>('nldd-tooltip')!;
 			await waitForUpdate(tooltip);

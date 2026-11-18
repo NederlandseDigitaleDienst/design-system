@@ -1005,7 +1005,7 @@ function seePath(see) {
  * Lint rules as rows: the id, what is wrong, and the level. A row links to the
  * page with the reason when there is one and the list is not on that page.
  */
-function ruleList(rules, { label, anchors = false, link = true, appearance = 'box-tinted' } = {}) {
+function ruleList(rules, { label, link = true } = {}) {
 	const order = Object.keys(SEVERITIES);
 	const sorted = [...rules].sort(
 		(a, b) => order.indexOf(a.severity) - order.indexOf(b.severity) || a.id.localeCompare(b.id),
@@ -1021,7 +1021,7 @@ function ruleList(rules, { label, anchors = false, link = true, appearance = 'bo
 		></nldd-tag>`;
 		// On a narrow screen the level stands with the name, as in the list
 		// pattern: beside the text it would leave the text half the row.
-		return `<nldd-list-item${anchors ? ` id="${rule.id}"` : ''}${href ? ` href="${href}"` : ''}>
+		return `<nldd-list-item${href ? ` href="${href}"` : ''}>
 	<nldd-text-cell
 		hide-below="md"
 		text="${rule.id}"
@@ -1056,7 +1056,7 @@ function ruleList(rules, { label, anchors = false, link = true, appearance = 'bo
 </nldd-list-item>`;
 	});
 	return `<nldd-list
-	appearance="${appearance}"
+	appearance="box-tinted"
 	accessible-label="${escapeHtml(label)}"
 >
 ${rows.join('\n')}
@@ -1097,18 +1097,54 @@ const RULE_GROUPS = [
 	['pure', 'Komt alles uit het designsysteem?'],
 ];
 
-/** Every rule of the linter, a group per fold, for the page about the linter. */
+/**
+ * Every rule of the linter, for the page about the linter: a row per group,
+ * and the rules of a group in a sheet. Six folds of up to a hundred rows pushed
+ * the rest of the page away, and closing one left the reader somewhere else.
+ */
 function allRules(rules) {
-	const items = RULE_GROUPS.map(([group, question]) => {
-		const inGroup = rules.filter((rule) => rule.group === group);
-		if (!inGroup.length) return '';
-		return `<nldd-accordion-item
+	const groups = RULE_GROUPS.map(([group, question]) => [group, question, rules.filter((rule) => rule.group === group)])
+		.filter(([, , inGroup]) => inGroup.length);
+	const rows = groups.map(([group, question, inGroup]) => `<nldd-list-item
+		button
+		data-site-sheet="regels-${group}"
+	>
+		<nldd-text-cell
+			text="${group}"
+			supporting-text="${escapeHtml(question)} ${inGroup.length} regels."
+		></nldd-text-cell>
+		<nldd-spacer-cell size="12"></nldd-spacer-cell>
+		<nldd-icon-cell
+			size="20"
+			color="secondary"
+			icon="chevron-right"
+		></nldd-icon-cell>
+	</nldd-list-item>`).join('\n');
+	const sheets = groups.map(([group, question, inGroup]) => `<nldd-sheet
 	id="regels-${group}"
-	text="${group}: ${escapeHtml(question.toLowerCase())} (${inGroup.length})"
+	placement="right"
+	width="640px"
 >
-${ruleList(inGroup, { label: `Regels in de groep ${group}`, anchors: true, appearance: 'simple' })}
-</nldd-accordion-item>`;
-	}).join('\n');
+	<nldd-page sticky-header>
+		<nldd-top-title-bar
+			slot="header"
+			text="${group}"
+			dismiss-text="Sluit"
+			collapse-anchor="regels-${group}-titel"
+		></nldd-top-title-bar>
+		<nldd-simple-section>
+			<nldd-title
+				id="regels-${group}-titel"
+				slot="header"
+				size="display-2"
+				text="${group}"
+				supporting-text="${escapeHtml(question)} ${inGroup.length} regels."
+				heading-level="1"
+			></nldd-title>
+			${ruleList(inGroup, { label: `Regels in de groep ${group}` })}
+		</nldd-simple-section>
+	</nldd-page>
+</nldd-sheet>`).join('\n');
 	const html = `
 <nldd-container id="alle-regels">
 	<nldd-title
@@ -1118,10 +1154,14 @@ ${ruleList(inGroup, { label: `Regels in de groep ${group}`, anchors: true, appea
 		<h2>Alle regels</h2>
 	</nldd-title>
 	<nldd-spacer size="12"></nldd-spacer>
-	<nldd-accordion>
-${items}
-	</nldd-accordion>
-</nldd-container>`;
+	<nldd-list
+		appearance="box-tinted"
+		accessible-label="Groepen van regels"
+	>
+	${rows}
+	</nldd-list>
+</nldd-container>
+${sheets}`;
 	return { html, headings: [{ id: 'alle-regels', text: 'Alle regels' }] };
 }
 

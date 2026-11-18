@@ -43,6 +43,20 @@ function wireSidebar(root: ParentNode = document): void {
 }
 
 /**
+ * A row with `data-site-sheet` opens the sheet with that id, as in the pattern
+ * for reading in a sheet: the groups of rules on the page about the linter.
+ * Listened for on the document, so it works on a page that came in with a
+ * page change.
+ */
+function wireSheets(): void {
+	document.addEventListener('click', (event) => {
+		const row = (event.target as Element).closest?.('[data-site-sheet]');
+		const sheet = row && document.getElementById(row.getAttribute('data-site-sheet')!);
+		(sheet as (HTMLElement & { show(): void }) | null)?.show();
+	});
+}
+
+/**
  * The field above the components or the patterns shortens the list as you
  * type: a row stays when every word typed is in its name, its tag, its group
  * or its keywords, and a group goes when none of its rows is left. Listened for on the document, so
@@ -192,6 +206,7 @@ wireBack();
 wireSidebar();
 wireContents();
 wireFilter();
+wireSheets();
 document.addEventListener('site-navigate', (event) => {
 	const { main } = (event as CustomEvent<{ main: Element }>).detail;
 	wireSidebar(main);

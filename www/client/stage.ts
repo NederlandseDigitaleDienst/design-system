@@ -548,10 +548,11 @@ export class SiteStage extends HTMLElement {
 			// The code keeps the height it has before any change, scrolling when
 			// it grows, so the controls below it stay where they are.
 			await (this.code as HTMLElement & { updateComplete?: Promise<unknown> }).updateComplete;
-			const height = this.code.offsetHeight;
+			// Rounded up: offsetHeight rounds, and Chrome scrolls the fraction it cuts off.
+			const height = Math.ceil(this.code.getBoundingClientRect().height);
 			if (changes && height) {
 				this.code.setAttribute('max-height', `${Math.min(height, 420)}px`);
-				this.code.style.minHeight = `${this.code.offsetHeight}px`;
+				this.code.style.minHeight = `${Math.ceil(this.code.getBoundingClientRect().height)}px`;
 			}
 			return;
 		}

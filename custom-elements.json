@@ -8796,7 +8796,7 @@
               "expandedType": {
                 "text": "'delay' | 'instant' | 'never'"
               },
-              "description": "When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant."
+              "description": "When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Keyboard focus shows it at once; the focus a mouse press gives a button shows nothing, so a click does not flash it up."
             }
           ],
           "superclass": {
@@ -53894,6 +53894,46 @@
           "declaration": {
             "name": "NLDDStepBar",
             "module": "src/components/status-and-feedback/step-bar/step-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/ancestor-scroll.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "onAncestorScroll",
+          "return": {
+            "type": {
+              "text": ""
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "handler",
+              "type": {
+                "text": "() => void"
+              }
+            }
+          ],
+          "description": "Calls `handler` whenever something that scrolls `element` scrolls.\n\nA scroll event does not leave its shadow root, so a capturing listener on\nthe document never hears a scroller inside a component, such as the content\nof `nldd-page`. This listens on each scrolling ancestor of `element`\ninstead, across shadow roots and slots, and on the window.\n\nThe ancestors are the ones at the time of the call: listen while something\nshows and stop when it goes."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "onAncestorScroll",
+          "declaration": {
+            "name": "onAncestorScroll",
+            "module": "src/utilities/ancestor-scroll.ts"
           }
         }
       ]

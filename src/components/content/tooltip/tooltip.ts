@@ -14,7 +14,7 @@
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
  * @attr {'top'|'bottom'|'left'|'right'} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
- * @attr {string} timing - When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant.
+ * @attr {string} timing - When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Keyboard focus shows it at once; the focus a mouse press gives a button shows nothing, so a click does not flash it up.
  *
  * Escape closes a tooltip that hover or focus opened, wherever focus is: the
  * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
@@ -66,6 +66,9 @@ import { InterestIntent } from '../../../utilities/interest-intent.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../keyboard-shortcut/keyboard-shortcut.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { onAncestorScroll } from '../../../utilities/ancestor-scroll.js';
+import { cssTimeToMs } from '../../../utilities/css-time.js';
+import { isKeyboardMode } from '../../../utilities/input-modality.js';
 
 /**
  * What can clip a trigger. Floating UI walks every ancestor, but a trigger in
@@ -145,6 +148,18 @@ export class NLDDTooltip extends LitElement {
 	/** Refreshes the description when shortcuts become available or unavailable, for the shortcut in it. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this, () => this._syncAriaDescribedBy());
 	private _positionVersion = 0;
+	private _stopScroll?: () => void;
+	private _fadeTimer?: ReturnType<typeof setTimeout>;
+
+	/** The text it fades out with. Feedback such as "Gekopieerd" turns back
+	 *  into its label as it goes, and the label flashed in the fade. */
+	@state()
+	_fadingText?: string;
+
+	/** The text it shows: the one it had while it fades out. */
+	get _shownText(): string {
+		return this._fadingText ?? this.text;
+	}
 
 	private _interest = new InterestIntent({
 		showDelay: () => this.timing === 'instant' ? 0 : this._delay('--_tooltip-show-delay', DEFAULT_SHOW_DELAY_MS),
@@ -166,7 +181,7 @@ export class NLDDTooltip extends LitElement {
 		super.connectedCallback();
 		if (this._visible) {
 			document.addEventListener('keydown', this._handleKeyDown, true);
-			document.addEventListener('scroll', this._handleScroll, { capture: true, passive: true });
+			this._listenToScroll();
 		}
 		// Re-register slotchange after reconnect (firstUpdated only runs once)
 		if (this.hasUpdated) {
@@ -176,6 +191,13 @@ export class NLDDTooltip extends LitElement {
 
 	override firstUpdated(): void {
 		this.shadowRoot?.querySelector('slot')?.addEventListener('slotchange', this._boundSlotChange);
+	}
+
+	override willUpdate(changed: PropertyValues): void {
+		const hides = (changed.has('open') && !this.open && this._visible)
+			|| (changed.has('_visible') && !this._visible && changed.get('_visible') === true);
+		if (hides) this._fadingText ??= changed.has('text') ? changed.get('text') as string : this.text;
+		else if (this._visible) this._fadingText = undefined;
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -191,10 +213,10 @@ export class NLDDTooltip extends LitElement {
 			// Escape that WCAG 1.4.13 asks for.
 			if (this._visible) {
 				document.addEventListener('keydown', this._handleKeyDown, true);
-				document.addEventListener('scroll', this._handleScroll, { capture: true, passive: true });
+				this._listenToScroll();
 			} else {
 				document.removeEventListener('keydown', this._handleKeyDown, true);
-				document.removeEventListener('scroll', this._handleScroll, { capture: true });
+				if (changed.get('_visible') === true) this._afterFade();
 			}
 			const tooltip = this._getTooltipElement();
 			if (tooltip) {
@@ -312,6 +334,9 @@ export class NLDDTooltip extends LitElement {
 	_handleFocusIn(): void {
 		if (this.timing === 'never') return;
 		this._syncAriaDescribedBy();
+		// Chrome focuses a button on the press, before its click: shown for
+		// that focus, the tooltip flashed up and went again with the click.
+		if (!isKeyboardMode()) return;
 		this._interest.focus();
 	}
 
@@ -350,11 +375,29 @@ export class NLDDTooltip extends LitElement {
 		this._interest.leave();
 	}
 
+	private _listenToScroll(): void {
+		clearTimeout(this._fadeTimer);
+		this._stopScroll?.();
+		this._stopScroll = onAncestorScroll(this, this._handleScroll);
+	}
+
+	/** It fades out beside its trigger, with the text it had. Stopped at once,
+	 *  it stood still on the screen while the page scrolled on under it. */
+	private _afterFade(): void {
+		clearTimeout(this._fadeTimer);
+		this._fadeTimer = setTimeout(() => {
+			this._stopScroll?.();
+			this._stopScroll = undefined;
+			this._fadingText = undefined;
+		}, cssTimeToMs(getComputedStyle(this).getPropertyValue('--_tooltip-hide-duration')));
+	}
+
 	/** A hover tooltip goes when the page scrolls: it is fixed to the screen,
 	 *  and the pointer leaves its trigger without a mouseleave until the
-	 *  scrolling stops. One shown by focus or `open` follows its trigger. */
+	 *  scrolling stops. One shown by focus or `open` follows its trigger, and
+	 *  so does one that is fading out. */
 	private _handleScroll = (): void => {
-		if (this.open || this._interest.focused) {
+		if (!this._visible || this.open || this._interest.focused) {
 			this._updatePosition();
 			return;
 		}
@@ -452,7 +495,10 @@ export class NLDDTooltip extends LitElement {
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		document.removeEventListener('keydown', this._handleKeyDown, true);
-		document.removeEventListener('scroll', this._handleScroll, { capture: true });
+		clearTimeout(this._fadeTimer);
+		this._fadingText = undefined;
+		this._stopScroll?.();
+		this._stopScroll = undefined;
 		this.shadowRoot?.querySelector('slot')?.removeEventListener('slotchange', this._boundSlotChange);
 		this._interest.reset();
 		// Clean up aria-describedby on trigger and remove description span from body

@@ -1121,7 +1121,7 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `open` | `boolean` | Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior. |
 | `placement` | `'top'\|'bottom'\|'left'\|'right'` | Position: 'top' \| 'bottom' \| 'left' \| 'right' (default: 'bottom'; automatically 'top' on touch devices) |
-| `timing` | `string` | When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant. |
+| `timing` | `string` | When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Keyboard focus shows it at once; the focus a mouse press gives a button shows nothing, so a click does not flash it up. |
 
 **Slots**
 
@@ -3332,6 +3332,9 @@ An overlay component that slides in from the side or bottom of the screen. Based
 
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
+- `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
+- `pane-title-bar-needs-back` (hint): Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.
+- `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
 - `sheet-form-max-one-action` (hint): Keep one action under the form. The way out is `dismiss-text` on the title bar.
 - `sheet-full-height-no-effect`: A sheet is full height by default and `full-height` does nothing; remove it.
 - `sheet-height-invalid`: Invalid `height`. Falling back to full height. Use "full", "fit-content", or a valid CSS length (such as "50dvh" or "480px").
@@ -4342,6 +4345,9 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 - `modal-dialog-no-form` (hint): Do work that needs its context in an nldd-sheet, which keeps the page visible and has room for the fields.
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
+- `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
+- `pane-title-bar-needs-back` (hint): Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.
+- `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
 
 **Attributes**
 

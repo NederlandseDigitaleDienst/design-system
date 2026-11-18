@@ -1,5 +1,6 @@
 import { _setOSOverride } from '../../../utilities/os.js';
 import { describe, it, expect, afterEach, onTestFinished, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTooltip } from './tooltip.js';
@@ -121,6 +122,8 @@ describe('nldd-tooltip – show/hide', () => {
 		await waitForUpdate(el);
 
 		const trigger = el.querySelector('button')!;
+		// Keyboard focus: the focus of a press shows nothing.
+		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 		trigger.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
 		await waitForUpdate(el);
 
@@ -482,12 +485,35 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		expect(description.style.colorScheme).toBe('');
 	});
 
+	// Chrome focuses a button on the press, before its click. Shown for that
+	// focus, the tooltip flashed up and went again with the click.
+	it('flitst niet op bij een klik', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Kopieer"><button>Trigger</button></nldd-tooltip>');
+		el = tooltip;
+		await waitForUpdate(tooltip);
+		let opened = false;
+		tooltip.shadowRoot!.querySelector('.tooltip')!.addEventListener('beforetoggle', (event) => {
+			if ((event as ToggleEvent).newState === 'open') opened = true;
+		});
+		// The real pointer stays where it clicked, over the next test's trigger.
+		const corner = document.createElement('div');
+		corner.style.cssText = 'position:fixed;right:0;bottom:0;width:4px;height:4px';
+		document.body.append(corner);
+		onTestFinished(async () => {
+			await userEvent.hover(corner);
+			corner.remove();
+		});
+		await userEvent.click(tooltip.querySelector('button')!);
+		await waitForUpdate(tooltip);
+		expect(opened).toBe(false);
+	});
+
 	it('verdwijnt bij scrollen als hover hem toonde', async () => {
 		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
 		el = tooltip;
 		await waitForUpdate(tooltip);
 		await triggerShow(tooltip, tooltip.querySelector('button')!);
-		document.dispatchEvent(new Event('scroll'));
+		window.dispatchEvent(new Event('scroll'));
 		await until(() => !isTooltipVisible(tooltip));
 		expect(isTooltipVisible(tooltip)).toBe(false);
 	});
@@ -496,9 +522,10 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
 		el = tooltip;
 		await waitForUpdate(tooltip);
+		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 		tooltip.querySelector('button')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
 		await until(() => isTooltipVisible(tooltip));
-		document.dispatchEvent(new Event('scroll'));
+		window.dispatchEvent(new Event('scroll'));
 		await waitForUpdate(tooltip);
 		expect(isTooltipVisible(tooltip)).toBe(true);
 	});
@@ -507,9 +534,62 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test" open><button>Trigger</button></nldd-tooltip>');
 		el = tooltip;
 		await until(() => isTooltipVisible(tooltip));
-		document.dispatchEvent(new Event('scroll'));
+		window.dispatchEvent(new Event('scroll'));
 		await waitForUpdate(tooltip);
 		expect(isTooltipVisible(tooltip)).toBe(true);
+	});
+
+	// Like the content of nldd-page: a scroll event stays in its shadow root,
+	// so a listener on the document never heard it.
+	it('hoort een scroller in een shadow root', async () => {
+		const host = document.createElement('div');
+		host.attachShadow({ mode: 'open' }).innerHTML = '<div style="overflow:auto;height:200px"><div style="height:2000px;padding-top:100px"><slot></slot></div></div>';
+		host.innerHTML = '<nldd-tooltip text="Test" open placement="left" style="display:inline-block;margin-left:400px"><button>Trigger</button></nldd-tooltip><nldd-tooltip text="Hover"><button>Trigger</button></nldd-tooltip>';
+		document.body.append(host);
+		onTestFinished(() => host.remove());
+		const [forced, hovered] = host.querySelectorAll<NLDDTooltip>('nldd-tooltip');
+		const scroller = host.shadowRoot!.firstElementChild as HTMLElement;
+		await waitForUpdate(hovered);
+		await triggerShow(hovered, hovered.querySelector('button')!);
+		await until(() => isTooltipVisible(forced) && isTooltipVisible(hovered));
+		const tip = forced.shadowRoot!.querySelector<HTMLElement>('.tooltip')!;
+		const before = tip.getBoundingClientRect().top;
+
+		scroller.scrollTop = 50;
+		await until(() => !isTooltipVisible(hovered));
+		await until(() => Math.round(before - tip.getBoundingClientRect().top) === 50);
+		expect(isTooltipVisible(forced)).toBe(true);
+	});
+
+	// The copy button of nldd-code-viewer releases "Gekopieerd" and puts its
+	// label back in one go: the label flashed while the tooltip faded out.
+	it('fadet uit met de tekst die hij had', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Gekopieerd" open style="--_tooltip-hide-duration:300ms"><button>Trigger</button></nldd-tooltip>');
+		el = tooltip;
+		await until(() => isTooltipVisible(tooltip));
+		const text = () => tooltip.shadowRoot!.querySelector('.tooltip__text')?.textContent;
+		tooltip.open = false;
+		tooltip.text = 'Kopieer';
+		await until(() => !isTooltipVisible(tooltip));
+		expect(text()).toBe('Gekopieerd');
+		await until(() => text() === 'Kopieer');
+	});
+
+	it('gaat mee met zijn trigger terwijl hij uitfadet', async () => {
+		const host = document.createElement('div');
+		host.attachShadow({ mode: 'open' }).innerHTML = '<div style="overflow:auto;height:200px"><div style="height:2000px;padding-top:100px"><slot></slot></div></div>';
+		host.innerHTML = '<nldd-tooltip text="Gekopieerd" open placement="left" style="display:inline-block;margin-left:400px;--_tooltip-hide-duration:2s"><button>Trigger</button></nldd-tooltip>';
+		document.body.append(host);
+		onTestFinished(() => host.remove());
+		const tooltip = host.querySelector<NLDDTooltip>('nldd-tooltip')!;
+		await until(() => isTooltipVisible(tooltip));
+		const tip = tooltip.shadowRoot!.querySelector<HTMLElement>('.tooltip')!;
+		const before = tip.getBoundingClientRect().top;
+		tooltip.open = false;
+		await until(() => !isTooltipVisible(tooltip));
+
+		(host.shadowRoot!.firstElementChild as HTMLElement).scrollTop = 50;
+		await until(() => Math.round(before - tip.getBoundingClientRect().top) === 50);
 	});
 
 	it('gaat mee met zijn trigger en verbergt zich als die uit beeld scrolt', async () => {
