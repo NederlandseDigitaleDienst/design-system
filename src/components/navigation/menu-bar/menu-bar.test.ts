@@ -320,8 +320,8 @@ describe('nldd-menu-bar – compact propagation', () => {
 });
 
 describe('nldd-menu-bar – overflow detection', () => {
-	// Visual regression via the stories: Menu Bar > NarrowContainer, ManyItems.
-	// See also Top Navigation Bar > ManyGlobalItems and SmallViewport.
+	// Visual regression via the stories: Menu Bar > SmalleContainer, VeelItems.
+	// See also Top Navigation Bar > VeelGlobaleItems and SmalScherm.
 	let el: HTMLElement;
 
 	afterEach(() => {

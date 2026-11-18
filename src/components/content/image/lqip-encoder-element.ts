@@ -1,8 +1,9 @@
 /**
- * UI element for the documentation site, wrapping `encodeLqip()` in a file-picker. Kept in a
- * separate module from the pure encoder so consumers importing just the
- * functions (e.g. a Node build pipeline) don't accidentally register the
- * `nldd-lqip-encoder` custom element into their registry.
+ * UI element for the documentation site, wrapping `encodeLqip()` in a
+ * file-picker. Kept in a separate module from the pure encoder so consumers
+ * importing just the functions (e.g. a Node build pipeline) don't
+ * accidentally register the `nldd-lqip-encoder` custom element into their
+ * registry.
  *
  * Intentionally NOT exported from `src/components/index.ts`: this is a
  * developer tool, not a design-system component.
