@@ -104,6 +104,7 @@ describe('frontends', () => {
 		assert.equal(read("{a.map((b: B) => (b.c ? 'tekst' : <nldd-a/>))}"), '#unknown nldd-a[cr]');
 		assert.equal(read('{(a as Array<string>).length > 0 && <nldd-a/>}{`<nldd-no>${b}` && <nldd-b/>}'), 'nldd-a[c] nldd-b[c]');
 		assert.equal(read('{a ? <nldd-a/> : b ? <nldd-b/> : null}'), 'nldd-a[c] nldd-b[c]');
+		assert.equal(read("{a.map((b) => 'https://x' && <nldd-a/>)}{c ? '' : <nldd-b/>}"), 'nldd-a[cr] nldd-b[c]');
 		assert.equal(read('<p>\uE001</p><nldd-a/>\uE004<nldd-b/>'), 'p nldd-a nldd-b');
 		assert.equal(read("<p>{/it's/.test(a) && <nldd-a/>}{a / 2 > b && <nldd-b/>}</p><nldd-c/>"), 'p(nldd-a[c] nldd-b[c]) nldd-c');
 		assert.equal(read('{<nldd-a/>}{(<nldd-b/>)}'), 'nldd-a nldd-b');

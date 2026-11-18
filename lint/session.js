@@ -46,6 +46,9 @@ async function fixUntilStable(linter, original, filename) {
 	return { source, fixed, renamedTags, findings: (await linter.lintSource(source, filename)).findings };
 }
 
+const isUnread = (filename) => UNREAD_EXTENSIONS.includes(extname(filename));
+const hasOurMarkup = (source) => /<nldd-[a-z]/.test(source);
+
 /** In a directory a build writes to, such as `dist`: output, not the app's own source. */
 const isBuilt = (file, root) => relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
 
@@ -99,6 +102,8 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 		: findFiles(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS])
 				.filter((filename) => !isBuiltScript(filename, root))
 				.map((filename) => ({ filename, source: readFileSync(filename, 'utf8') }))
+				// A template the linter cannot read matters only with our markup; the rest is let go.
+				.filter(({ filename, source }) => !isUnread(filename) || hasOurMarkup(source))
 				.filter(({ filename, source }) => !isBundle(filename, source));
 
 	// Most files in an app use no component at all, and those need no parser either.
@@ -106,7 +111,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));
 	const relevant = everything ? inputs : inputs.filter((one) => isRelevant(one, { wrappers: config.wrappers, keep }));
 	// A file without a parser was opened and not checked, so it does not count as one.
-	const checked = inputs.filter(({ filename }) => !UNREAD_EXTENSIONS.includes(extname(filename)));
+	const checked = inputs.filter(({ filename }) => !isUnread(filename));
 	const files = everything ? checked.length : checked.filter(({ filename }) => !isStylesheet(filename)).length + relevant.filter(({ filename }) => isStylesheet(filename)).length;
 
 	const results = [];
@@ -137,6 +142,6 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	const references = renamedTags.size > 0 ? fixReferences(renamedTags, paths, root, config.exclude) : undefined;
 	// Not in `files`: what has our markup and was not read, so the summary can say so.
 	// Counted on the markup, so a suppressed `file-not-read` does not make it read.
-	const unread = inputs.filter(({ filename, source }) => UNREAD_EXTENSIONS.includes(extname(filename)) && /<nldd-[a-z]/.test(source)).length;
+	const unread = inputs.filter(({ filename, source }) => isUnread(filename) && hasOurMarkup(source)).length;
 	return { results, files, unread, fixed, fixedFiles, notUtf8, references };
 }

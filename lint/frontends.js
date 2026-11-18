@@ -598,7 +598,9 @@ function astroAsHtml(source) {
 			from = elementEnd;
 		}
 		if (elements.length > 0) {
-			const text = script.join(ELEMENT).replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+			// A string goes first, so a `//` in `'https://…'` is no comment that eats the line.
+			const strings = /'(?:\\.|[^'\\\n])+'|"(?:\\.|[^"\\\n])+"|`(?:\\.|[^`\\])+`/g;
+			const text = script.map((part) => part.replace(strings, "'x'")).join(ELEMENT).replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
 			// Only an element between the braces: it is there, as if written without them.
 			if (!/[^\s(){}\uE005]/.test(text)) return;
 			const loop = /=>|\bfunction\b/.test(text);
