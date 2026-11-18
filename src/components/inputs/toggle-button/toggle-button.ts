@@ -58,7 +58,8 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
-import { InterestController } from '../../../utilities/interest-controller.js';
+import { InterestInvoker } from '../../../utilities/interest-invoker.js';
+import { ChoiceGroup } from '../../../utilities/choice-group.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
 export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
@@ -73,12 +74,13 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	required = false;
 	static override styles = toggleButtonStyles;
 
+	static formProperties = ['selected'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
 
-	private _initialSelected = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonType>('button') })
 	type: ToggleButtonType = 'button';
@@ -134,7 +136,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
 	 * and a long press, in place of the tooltip. Not private: the template
 	 * module reads it. */
-	_interest = new InterestController(this);
+	_interest = new InterestInvoker(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	shortcut = '';
@@ -189,16 +191,12 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
-	override firstUpdated(): void {
-		this._initialSelected = this.selected;
-	}
-
 	/** Also when the app sets `selected` or a form resets it: the group moves
 	 *  the stop for Tab along, which it cannot see by itself. */
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
 		if (this.hasUpdated && (changed.has('selected') || changed.has('disabled'))) {
-			(this.closest('nldd-toggle-button-group') as { _optionChanged?: (button: NLDDToggleButton) => void } | null)?._optionChanged?.(this);
+			ChoiceGroup.of(this)?.optionChanged(this);
 		}
 	}
 
@@ -273,15 +271,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 		return submits && this.selected ? this.value : null;
 	}
 
-	formResetCallback(): void {
-		this.selected = this._initialSelected;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		this.selected = state !== null;
-	}
-
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.addEventListener('click', this._onRadioClick);
@@ -344,13 +333,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	 * shows. Returns whether the change stands.
 	 */
 	private _dispatchChange(): boolean {
-		this.commitFormValue();
-		return this.dispatchEvent(new CustomEvent('change', {
-			detail: { selected: this.selected, value: this.value },
-			bubbles: true,
-			composed: true,
-			cancelable: this.type !== 'radio',
-		}));
+		return this.emitFormEvent('change', { selected: this.selected, value: this.value }, { cancelable: this.type !== 'radio' });
 	}
 
 	/**

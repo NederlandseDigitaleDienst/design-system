@@ -568,6 +568,30 @@ describe('nldd-form-field – finds the control', () => {
 		expect(focusIsInside(field)).toBe(true);
 	});
 
+	it('walks past a hidden input to the control', async () => {
+		// #421: a Django formset puts its counters beside the controls.
+		el = await fixture(`
+			<nldd-form-field label="Veldnaam">
+				<div>
+					<input type="hidden" name="org-TOTAL_FORMS" value="1">
+					<nldd-text-field></nldd-text-field>
+				</div>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		const hidden = el.querySelector('input[type="hidden"]')!;
+		expect(hidden.hasAttribute('aria-label')).toBe(false);
+		expect(hidden.hasAttribute('id')).toBe(false);
+		expect(el.querySelector('nldd-text-field')!.getAttribute('accessible-label')).toBe('Veldnaam');
+	});
+
+	it('finds no control in a hidden input alone', async () => {
+		el = await fixture('<nldd-form-field label="Veldnaam"><input type="hidden" name="a" value="1"></nldd-form-field>');
+		await waitForUpdate(el);
+		expect(el.matches(':state(has-input)')).toBe(false);
+		expect(el.querySelector('input')!.hasAttribute('aria-label')).toBe(false);
+	});
+
 	it('digs through more than one layer of wrapping', async () => {
 		el = await fixture('<nldd-form-field label="Veldnaam"><div><div><nldd-number-field></nldd-number-field></div></div></nldd-form-field>');
 		await waitForUpdate(el);

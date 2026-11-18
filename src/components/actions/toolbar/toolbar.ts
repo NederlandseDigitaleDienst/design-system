@@ -38,7 +38,7 @@ import type { NLDDToolbarTranslations } from './toolbar.i18n.js';
 import { translate } from '../../../utilities/translations.js';
 import { NLDDToolbarItem, type Size, type SizingElement } from './toolbar-item.js';
 import { NLDDToolbarTitle } from './toolbar-title.js';
-import { ToolbarOverflowMenu } from './toolbar.overflow-menu.js';
+import { OverflowMenu } from '../../../utilities/overflow-menu.js';
 import {
 	areaWidth,
 	fillsRowAlone,
@@ -78,7 +78,7 @@ export class NLDDToolbar extends LitElement {
 	}
 
 	/** The menu for what does not fit. @internal */
-	readonly _overflowMenu = new ToolbarOverflowMenu(this);
+	readonly _overflowMenu = new OverflowMenu(this, { id: 'nldd-toolbar-overflow-menu' });
 
 	@state()
 	private _startChildren: ToolbarChild[] = [];
@@ -231,12 +231,12 @@ export class NLDDToolbar extends LitElement {
 	/** Fills the overflow menu: the alternatives of the items that did not fit,
 	 *  the last to go first, then the toolbar's own overflow items. A clone does
 	 *  not carry listeners added with addEventListener; its `select` is sent on
-	 *  to the original (see toolbar.overflow-menu.ts). */
+	 *  to the original (see utilities/overflow-menu.ts). */
 	private _syncMenuItems(): void {
 		const overflowed = [...this._getPrioritizedItems()].reverse()
 			.filter(child => this._overflowIds.has(child.id))
 			.flatMap(child => child.overflowItems);
-		this._overflowMenu.fill([...overflowed, ...this._pinnedOverflowItems]);
+		this._overflowMenu.mirror([...overflowed, ...this._pinnedOverflowItems]);
 	}
 
 	/**

@@ -57,6 +57,8 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = searchFieldStyles;
 
+	static formProperties = ['value'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -69,7 +71,6 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	static blocksImplicitSubmission = true;
 
 
-	private _initialValue = '';
 
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
@@ -156,10 +157,6 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
 
-	override firstUpdated(): void {
-		this._initialValue = this.value;
-	}
-
 	override updated(changed: PropertyValues): void {
 		// Runs after the DescribedBy controller, so the shortcut hint is added to
 		// the help and error texts of an nldd-form-field instead of replacing them.
@@ -177,15 +174,6 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override formValue(): FormValue {
 		return this.value;
-	}
-
-	formResetCallback(): void {
-		this.value = this._initialValue;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') this.value = state;
 	}
 
 	// — i18n ——————————————————————————————————————————————————————————————————
@@ -207,24 +195,14 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
 		this.value = input.value;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('input', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('input', { value: this.value });
 	}
 
 	public _handleChange(e: Event): void {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
 		this.value = input.value;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { value: this.value });
 	}
 
 	public _handleKeydown(e: KeyboardEvent): void {
@@ -235,12 +213,7 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 	public _handleClear(): void {
 		this.value = '';
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('input', {
-			detail: { value: '' },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('input', { value: '' });
 		this.dispatchEvent(new CustomEvent('change', {
 			detail: { value: '' },
 			bubbles: true,
@@ -254,12 +227,7 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	private _dispatchSearch(): void {
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('search', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('search', { value: this.value });
 	}
 
 	/**

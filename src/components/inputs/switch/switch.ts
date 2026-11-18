@@ -36,6 +36,8 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = switchStyles;
 
+	static formProperties = ['checked'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -70,7 +72,6 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String })
 	value = 'on';
 
-	private _initialChecked = false;
 
 
 	@property({ type: Boolean, reflect: true })
@@ -89,22 +90,9 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	override firstUpdated(): void {
-		this._initialChecked = this.checked;
-	}
-
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;
-	}
-
-	formResetCallback(): void {
-		this.checked = this._initialChecked;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		this.checked = state !== null;
 	}
 
 	// ## Swipe gesture
@@ -165,24 +153,14 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	public toggle(): void {
 		if (this.disabled) return;
 		this.checked = !this.checked;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { checked: this.checked, value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { checked: this.checked, value: this.value });
 	}
 
 	public _handleChange(e: Event): void {
 		if (this.disabled) return;
 		const input = e.target as HTMLInputElement;
 		this.checked = input.checked;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { checked: this.checked, value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { checked: this.checked, value: this.value });
 	}
 
 	/**

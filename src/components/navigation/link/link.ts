@@ -79,7 +79,7 @@ import { linkStyles } from './link.styles.js';
 import { template } from './link.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddLinkTranslations } from './link.i18n.js';
-import { InterestController } from '../../../utilities/interest-controller.js';
+import { InterestInvoker } from '../../../utilities/interest-invoker.js';
 import { applyDescribedBy, DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { downloadLinkHintKey } from '../../../utilities/link-hint.js';
 import { linkRel } from '../../../utilities/link-rel.js';
@@ -137,7 +137,7 @@ export class NLDDLink extends DescribedBy(withTranslations(LitElement, nlddLinkT
 
 	/** Wiring for the popover `interestfor` names: opens it on hover, focus
 	 *  and long press. */
-	_interest = new InterestController(this);
+	_interest = new InterestInvoker(this);
 
 	/** @internal The `<a>` of the app in the default slot, which takes the place
 	 *  of the link this component draws. */

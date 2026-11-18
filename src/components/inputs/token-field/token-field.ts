@@ -45,7 +45,8 @@
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
+import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
+import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { tokenFieldStyles } from './token-field.styles.js';
 import { tokenFieldTemplate } from './token-field.template.js';
 import { nlddTokenFieldTranslations, type NLDDTokenFieldTranslations } from './token-field.i18n.js';
@@ -64,6 +65,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = tokenFieldStyles;
 
+	static formProperties = ['values'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -74,8 +77,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Counts for the implicit-submission rule: a single-line field where Enter
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
-
-	private _initialValues: string[] = [];
 
 	// Property order matches the story controls (values kept high, above
 	// placeholder, per the text-field convention). No `size` axis yet — the field
@@ -198,9 +199,16 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  per-token menus so they re-clone. These components run on live sites, not just
 	 *  static demos, so the prototypes can change at runtime. */
 	private _templateObserver: MutationObserver | null = null;
-	/** True between a picker pointerdown-while-open and its trailing click, so the
-	 *  click (which follows the native light-dismiss) doesn't reopen the menu. */
-	private _pickerPointerdownWhileOpen = false;
+	/** The picker button opens and closes the list; typing opens it too. */
+	private _picker: OverlayInvoker = new OverlayInvoker(this, {
+		// Where _openMenu anchors it: the invoker must not move it to the host.
+		anchorFor: (): Element => this._inputArea ?? this._input ?? this,
+		open: (): void => {
+			this._syncMenuItems();
+			this._openMenu();
+		},
+		close: (): void => this._closeMenu(),
+	});
 
 	public _t(key: keyof NLDDTokenFieldTranslations): string {
 		return translate(this.translations, nlddTokenFieldTranslations, key);
@@ -241,7 +249,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	override firstUpdated(): void {
-		this._initialValues = [...this.values];
 		this.commitFormValue();
 		// Give the host a lasting accessible name and grouping via ElementInternals.
 		// The input carries aria-label, but it is removed when every value is chosen
@@ -279,7 +286,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 				if (!this._showInput) this._closeMenu();
 			}
 		}
-		if (changed.has('required')) this._updateValidity();
 		if (changed.has('readonly') && this.readonly) this._closeMenu();
 		if (changed.has('accessibleLabel')) this.internals.ariaLabel = this.accessibleLabel || null;
 	}
@@ -312,28 +318,24 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		return data;
 	}
 
-	override commitFormValue(): void {
-		super.commitFormValue();
-		this._updateValidity();
+	/** The text input only takes the next token; the tokens are the value, so
+	 *  the host answers for itself. */
+	override validationTarget(): null {
+		return null;
+	}
+
+	override validationAnchor(): HTMLElement | undefined {
+		return this._input ?? undefined;
 	}
 
 	/** A required field with no tokens is invalid (valueMissing). */
-	private _updateValidity(): void {
-		if (this.required && this.values.length === 0) {
-			this.internals.setValidity(
-				{ valueMissing: true },
-				this._t('components.token-field.required-error-text'),
-				this._input ?? this,
-			);
-		} else {
-			this.internals.setValidity({});
-		}
+	override ownValidity(): OwnValidity | null {
+		if (!this.required || this.values.length > 0) return null;
+		return {
+			flags: { valueMissing: true },
+			message: this._t('components.token-field.required-error-text'),
+		};
 	}
-
-	formResetCallback(): void {
-		this.values = [...this._initialValues];
-	}
-
 
 	private get _input(): HTMLInputElement | null {
 		return this.shadowRoot?.querySelector<HTMLInputElement>('.token-field__input') ?? null;
@@ -727,22 +729,16 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 * pointerdown light-dismisses it; the flag makes the trailing click a no-op so
 	 * it doesn't flicker back open. Mirrors the combo-box picker.
 	 */
-	public _handlePickerPointerdown(): void {
-		if (this._isOpen) this._pickerPointerdownWhileOpen = true;
+	public _handlePickerPointerdown(event?: PointerEvent): void {
+		this._picker.setOverlay(this._menu as InvokableOverlay | null);
+		this._picker.handlePointerdown(event);
 	}
 
-	public _togglePicker(): void {
+	/** Without an event it acts as a keyboard click. */
+	public _togglePicker(event?: MouseEvent): void {
 		this._input?.focus();
-		if (this._pickerPointerdownWhileOpen) {
-			this._pickerPointerdownWhileOpen = false;
-			return;
-		}
-		if (this._isOpen) {
-			this._closeMenu();
-		} else {
-			this._syncMenuItems();
-			this._openMenu();
-		}
+		this._picker.setOverlay(this._menu as InvokableOverlay | null);
+		this._picker.handleClick(event ?? new MouseEvent('click'));
 	}
 
 	// — Menu wiring ——————————————————————————————————————————————————————————

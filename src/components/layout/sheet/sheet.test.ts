@@ -194,16 +194,41 @@ describe('nldd-sheet – backdrop klik', () => {
 		const dialog = el.shadowRoot!.querySelector('dialog')!;
 		const down = new PointerEvent('pointerdown', { bubbles: true });
 		Object.defineProperty(down, 'target', { value: dialog });
-		el._handleDialogPointerDown(down);
+		el._modalOverlay.handlePointerDown(down);
 		const up = new PointerEvent('pointerup', { bubbles: true });
 		Object.defineProperty(up, 'target', { value: dialog });
-		el._handleDialogPointerUp(up);
+		el._modalOverlay.handlePointerUp(up);
 		const event = new MouseEvent('click', { bubbles: true });
 		Object.defineProperty(event, 'target', { value: dialog });
-		el._handleDialogClick(event);
+		el._modalOverlay.handleClick(event);
 
 		expect(hideSpy).toHaveBeenCalledOnce();
 	});
+
+	// The backdrop is what lies outside the dialog's box; the panel fills that box
+	// in every placement, so a press next to the panel closes and one on it does not.
+	for (const [placement, outside] of [
+		['right', (r: DOMRect) => [r.left - 10, r.top + 10]],
+		['left', (r: DOMRect) => [r.right + 10, r.top + 10]],
+		['bottom', (r: DOMRect) => [r.left + 10, r.top - 10]],
+	] as const) {
+		it(`closes on a press beside a ${placement} sheet and not on the sheet's edge`, async () => {
+			el = await fixture<NLDDSheet>(`<nldd-sheet placement="${placement}" accessible-label="Test"><p>Inhoud</p></nldd-sheet>`);
+			await waitForUpdate(el);
+			el.show();
+			await waitForUpdate(el);
+			const dialog = el.shadowRoot!.querySelector('dialog')!;
+			const press = ([clientX, clientY]: number[]) => {
+				for (const type of ['pointerdown', 'pointerup']) dialog.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX, clientY }));
+				dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX, clientY }));
+			};
+			const rect = dialog.getBoundingClientRect();
+			press([rect.left + 2, rect.top + 2]);
+			expect(dialog.open).toBe(true);
+			press(outside(rect));
+			expect(el.open).toBe(false);
+		});
+	}
 
 	it('does not hide() on a click without a press and release of its own after an earlier backdrop gesture', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet></nldd-sheet>');
@@ -215,14 +240,14 @@ describe('nldd-sheet – backdrop klik', () => {
 			Object.defineProperty(event, 'target', { value: dialog });
 			return event;
 		};
-		el._handleDialogPointerDown(onDialog(new PointerEvent('pointerdown', { bubbles: true })));
-		el._handleDialogPointerUp(onDialog(new PointerEvent('pointerup', { bubbles: true })));
-		el._handleDialogClick(onDialog(new MouseEvent('click', { bubbles: true })));
+		el._modalOverlay.handlePointerDown(onDialog(new PointerEvent('pointerdown', { bubbles: true })));
+		el._modalOverlay.handlePointerUp(onDialog(new PointerEvent('pointerup', { bubbles: true })));
+		el._modalOverlay.handleClick(onDialog(new MouseEvent('click', { bubbles: true })));
 
 		el.show();
 		const hideSpy = vi.spyOn(el, 'hide');
 		// A click from code or from assistive technology: no pointer events.
-		el._handleDialogClick(onDialog(new MouseEvent('click', { bubbles: true })));
+		el._modalOverlay.handleClick(onDialog(new MouseEvent('click', { bubbles: true })));
 
 		expect(hideSpy).not.toHaveBeenCalled();
 	});
@@ -237,14 +262,14 @@ describe('nldd-sheet – backdrop klik', () => {
 		const body = el.shadowRoot!.querySelector('.sheet__body')!;
 		const down = new PointerEvent('pointerdown', { bubbles: true });
 		Object.defineProperty(down, 'target', { value: dialog });
-		el._handleDialogPointerDown(down);
+		el._modalOverlay.handlePointerDown(down);
 		// The release lands in the sheet; the click resolves to the dialog they share.
 		const up = new PointerEvent('pointerup', { bubbles: true });
 		Object.defineProperty(up, 'target', { value: body });
-		el._handleDialogPointerUp(up);
+		el._modalOverlay.handlePointerUp(up);
 		const event = new MouseEvent('click', { bubbles: true });
 		Object.defineProperty(event, 'target', { value: dialog });
-		el._handleDialogClick(event);
+		el._modalOverlay.handleClick(event);
 
 		expect(hideSpy).not.toHaveBeenCalled();
 	});
@@ -260,11 +285,11 @@ describe('nldd-sheet – backdrop klik', () => {
 		// Press begins on the content (e.g. selecting text in the input)…
 		const down = new PointerEvent('pointerdown', { bubbles: true });
 		Object.defineProperty(down, 'target', { value: body });
-		el._handleDialogPointerDown(down);
+		el._modalOverlay.handlePointerDown(down);
 		// …and the drag ends on the backdrop, so the click resolves to the dialog.
 		const event = new MouseEvent('click', { bubbles: true });
 		Object.defineProperty(event, 'target', { value: dialog });
-		el._handleDialogClick(event);
+		el._modalOverlay.handleClick(event);
 
 		expect(hideSpy).not.toHaveBeenCalled();
 	});
@@ -295,7 +320,7 @@ describe('nldd-sheet – Escape-toets', () => {
 		const event = new Event('cancel', { cancelable: true });
 		const preventSpy = vi.spyOn(event, 'preventDefault');
 
-		el._handleCancel(event);
+		el._modalOverlay.handleCancel(event);
 
 		expect(preventSpy).toHaveBeenCalled();
 		expect(hideSpy).toHaveBeenCalledOnce();
@@ -870,6 +895,29 @@ describe('nldd-sheet – open attribute', () => {
 		expect(dialog().open).toBe(true);
 		expect(dialog().classList.contains('is-closing')).toBe(false);
 	});
+
+	// #454: the dialog's own close event arrives after the sheet's, and used to
+	// close a sheet that had been opened again in between.
+	for (const [when, reopen] of [
+		['in the close handler', (fn: () => void) => fn()],
+		['right after close', (fn: () => void) => setTimeout(fn, 0)],
+	] as const) {
+		it(`stays open when opened again ${when}`, async () => {
+			el = await fixture<NLDDSheet>('<nldd-sheet accessible-label="Test" open></nldd-sheet>');
+			await waitForUpdate(el);
+			const events: string[] = [];
+			el.addEventListener('open', () => events.push('open'));
+			el.addEventListener('close', () => events.push('close'));
+			el.addEventListener('close', () => reopen(() => { el.open = true; }), { once: true });
+			el.open = false;
+			await el.updateComplete;
+			dialog().dispatchEvent(new Event('animationend'));
+			await new Promise((resolve) => setTimeout(resolve, 100));
+			expect(events).toEqual(['close', 'open']);
+			expect(dialog().open).toBe(true);
+			expect(el.open).toBe(true);
+		});
+	}
 });
 
 describe('nldd-sheet – focus terug na sluiten', () => {

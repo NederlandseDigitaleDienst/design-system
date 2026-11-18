@@ -26,7 +26,53 @@ export const BOUND = Symbol('bound');
  * @property {boolean} templated A template language writes into the tag itself.
  * @property {boolean} text Holds text of its own, not only elements.
  * @property {boolean} [detached] On a root: markup this file builds to place elsewhere, not what it renders itself.
+ * @property {StartTag} [startTag] Where the start tag and its attributes stand in the source, as the parser read them.
  */
+
+/**
+ * @typedef {object} StartTag
+ * @property {number} end The `>` of the start tag.
+ * @property {boolean} selfClosing Written as `<x />`.
+ * @property {AttributeSpan[]} attributes In the order they are written.
+ */
+
+/**
+ * One attribute as it is written. `--fix` edits the source through these, so it
+ * never has to find an attribute in the text again.
+ * @typedef {object} AttributeSpan
+ * @property {string} name The attribute it sets (`variant` for `:variant` and `[variant]`), or undefined for a listener or directive.
+ * @property {string} prefix The binding around the name: `''`, `:`, `v-bind:`, `x-bind:`, `.`, `?`, `[`, `[(`, `[attr.`.
+ * @property {number} start Where the attribute starts, prefix included.
+ * @property {number} end Just past the attribute, value included.
+ * @property {number} nameStart Where the name starts, past the prefix.
+ * @property {number} nameEnd Just past the name.
+ * @property {{ start: number, end: number, quote: string } | undefined} value The value, quotes included; `quote` is `"`, `'`, `''` for a bare value, or `{` for an expression.
+ * @property {boolean} [templated] A template language wrote into it outside the quotes, so the parser saw less than is there.
+ */
+
+/** Vue, Alpine, Lit and Angular write a name with a prefix, JSX and HTML bare. */
+const WRITTEN = /^(:|v-bind:|x-bind:|\.|\?|\[attr\.|\[\(?)?([A-Za-z_][\w-]*)((?:\.(?:prop|attr|camel))?)(\)?\])?$/;
+
+/**
+ * The span of an attribute the parser reported from `start` to just before `end`.
+ * @returns {AttributeSpan}
+ */
+export function attributeSpan(source, written, start, end) {
+	const match = WRITTEN.exec(written);
+	const bracketed = Boolean(match?.[1]?.startsWith('['));
+	const valid = match && bracketed === Boolean(match[4]);
+	const prefix = valid ? (match[1] ?? '') : '';
+	const nameStart = start + prefix.length;
+	const nameEnd = valid ? nameStart + match[2].length : start + written.length;
+	const equals = /^\s*=\s*/.exec(source.slice(start + written.length, end));
+	let value;
+	if (equals) {
+		const at = start + written.length + equals[0].length;
+		const first = source[at];
+		value = { start: at, end, quote: first === '"' || first === "'" || first === '{' ? first : '' };
+	}
+	return { name: valid ? match[2] : undefined, prefix, start, end, nameStart, nameEnd, value };
+}
 
 /** @returns {TreeNode} */
 export function createNode(name, offset = 0) {

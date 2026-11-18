@@ -63,6 +63,7 @@ import { kanbanTemplate } from './kanban.template.js';
 import { NLDDKanbanColumn } from './kanban-column.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { deepActiveElement } from '../../../utilities/deep-active-element.js';
 
 export { NLDDKanbanColumn };
 
@@ -235,7 +236,7 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 	/** Fires move, says where the item landed and puts focus back on what
 	 *  had it, once the app has moved the item in the handler. */
 	private _move(item: HTMLElement, from: NLDDKanbanColumn, fromIndex: number, to: NLDDKanbanColumn, toIndex: number): boolean {
-		const focused = this._deepActiveElement();
+		const focused = deepActiveElement();
 		const hadFocus = !!focused && this._holds(item, focused);
 		this.dispatchEvent(new CustomEvent<NLDDMoveEventDetail>('move', {
 			detail: { item, fromColumn: this._columnKey(from), fromIndex, toColumn: this._columnKey(to), toIndex },
@@ -281,12 +282,6 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 			current = current.parentNode ?? (current instanceof ShadowRoot ? current.host : null);
 		}
 		return false;
-	}
-
-	private _deepActiveElement(): HTMLElement | null {
-		let active: Element | null = document.activeElement;
-		while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
-		return active instanceof HTMLElement ? active : null;
 	}
 
 	private _announce(message: string): void {

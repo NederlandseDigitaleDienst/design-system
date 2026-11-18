@@ -1,6 +1,6 @@
 {
   "name": "@nldd/design-system",
-  "version": "0.26.0",
+  "version": "0.26.2",
   "description": "Designsysteem voor de Nederlandse Digitale Dienst",
   "type": "module",
   "main": "dist/components/index.js",
@@ -611,6 +611,8 @@
     "generate:skill-patterns": "node scripts/generate-skill-patterns.js",
     "generate:plugin-version": "node scripts/sync-plugin-version.js",
     "generate:publiccode": "node scripts/sync-publiccode.js",
+    "generate:all": "node scripts/check-generated.js --write",
+    "check:generated": "node scripts/check-generated.js",
     "generate:skill-docs": "npm run generate:component-reference && npm run generate:skill-changelog && npm run generate:skill-principles && npm run generate:skill-patterns && npm run generate:plugin-version",
     "validate:styles": "node scripts/validate-css-variables.js",
     "check:server-import": "node scripts/check-server-import.js",
@@ -678,7 +680,7 @@
     "svgo": "^4.1.0",
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.58.0",
-    "vite": "8.3.6",
+    "vite": "8.3.8",
     "vitest": "5.1.0",
     "vue": "^3.5.40",
     "vue-tsc": "^3.3.7",
@@ -724,7 +726,7 @@
     "conventional-changelog-conventionalcommits": "10.2.1"
   },
   "optionalDependencies": {
-    "oxc-parser": "^0.157.0"
+    "oxc-parser": "^0.158.0"
   },
   "bin": {
     "nldd": "lint/cli.js"

@@ -7,11 +7,12 @@
  * `nldd-list > template[v-for] > nldd-list-item` would break every child selector.
  */
 
-import { parseDocument } from 'htmlparser2';
+import { DomHandler, Parser } from 'htmlparser2';
 import { cssBlocks } from './css.js';
 import {
 	BOUND,
 	appendChild,
+	attributeSpan,
 	appendUnknown,
 	createNode,
 	createRoot,
@@ -141,6 +142,7 @@ function readHtmlChildren(children, parent, given) {
 		}
 		const element = createNode(name, node.startIndex ?? 0);
 		element.endOffset = node.endIndex ?? undefined;
+		element.startTag = node.startTag;
 		for (const [key, value] of Object.entries(attribs)) {
 			// MDX writes JSX: a handler or a prop for React is no attribute.
 			if (inherited.jsx && (/^on[A-Z]/.test(key) || REACT_ONLY.has(key))) continue;
@@ -154,14 +156,53 @@ function readHtmlChildren(children, parent, given) {
 	}
 }
 
-function parseMarkup(source, { selfClosing }) {
-	return parseDocument(source, {
+/**
+ * The document handler, plus where each attribute stands: the parser knows it
+ * while it reads the tag, and the tree keeps it for `--fix`.
+ */
+class SpanHandler extends DomHandler {
+	constructor(source, original, options) {
+		super(undefined, options);
+		this.source = source;
+		this.original = original;
+		this.pending = [];
+	}
+
+	onattribute(name) {
+		const span = attributeSpan(this.source, name, this.parser.startIndex, this.parser.endIndex);
+		if (this.original !== this.source) span.templated = this.rewritten(span);
+		this.pending.push(span);
+	}
+
+	/** Quieting a template keeps lengths, so a quoted value it filled in still ends where it did. */
+	rewritten({ start, end, value }) {
+		const [read, written] = [this.source, this.original].map((text) => text.slice(start, end));
+		if (read === written) return false;
+		const quote = value?.quote;
+		const quoted = (quote === '"' || quote === "'") && this.original[value.start] === quote && this.original[end - 1] === quote;
+		return !quoted || this.source.slice(start, value.start) !== this.original.slice(start, value.start);
+	}
+
+	onopentag(name, attribs) {
+		super.onopentag(name, attribs);
+		const end = this.parser.endIndex;
+		this.tagStack.at(-1).startTag = { end, selfClosing: this.source[end - 1] === '/', attributes: this.pending };
+		this.pending = [];
+	}
+}
+
+/** `original` is the source before quieting a template, of the same length. */
+function parseMarkup(source, { selfClosing, original = source }) {
+	const options = {
 		lowerCaseTags: false,
 		lowerCaseAttributeNames: false,
 		recognizeSelfClosing: selfClosing,
 		withStartIndices: true,
 		withEndIndices: true,
-	});
+	};
+	const handler = new SpanHandler(source, original, options);
+	new Parser(handler, options).end(source);
+	return handler.root;
 }
 
 const OPENS_BLOCK = /^\{%-?\s*(if|for|with|block|macro|call|filter|autoescape|trans|blocktrans)\b/;
@@ -230,7 +271,7 @@ const quietIfTemplated = (source) => (/\{[%{#]/.test(source) ? quietTemplateTags
 
 export function parseHtml(source) {
 	const root = createRoot({ closed: /<html[\s>]/i.test(source) });
-	readHtmlChildren(parseMarkup(quietIfTemplated(source), { selfClosing: ANGULAR.test(source) }).children, root, { inert: true });
+	readHtmlChildren(parseMarkup(quietIfTemplated(source), { selfClosing: ANGULAR.test(source), original: source }).children, root, { inert: true });
 	return [root];
 }
 
@@ -388,7 +429,7 @@ export function parseMarkdown(source, filename = '') {
 	const read = (text, offset, given = {}) => {
 		const root = createRoot();
 		const padded = ' '.repeat(offset) + quietIfTemplated(text);
-		readHtmlChildren(parseMarkup(padded, { selfClosing: true }).children, root, given);
+		readHtmlChildren(parseMarkup(padded, { selfClosing: true, original: ' '.repeat(offset) + text }).children, root, given);
 		roots.push(root);
 	};
 	const fences = /^( *)(```|~~~)[^\n]*\n([\s\S]*?)^ *\2/gm;
@@ -708,6 +749,26 @@ function readJsxChildren(children, parent, flags, roots) {
 	}
 }
 
+/** What the parser of JSX says about the start tag, in the shape the HTML parsers give. */
+function jsxStartTag(opening) {
+	const attributes = opening.attributes
+		.filter((attribute) => attribute.type === 'JSXAttribute')
+		.map((attribute) => {
+			const { value } = attribute;
+			const quote = !value ? undefined : value.type === 'Literal' ? (value.raw?.[0] ?? '"') : '{';
+			return {
+				name: jsxName(attribute.name),
+				prefix: '',
+				start: attribute.start,
+				end: attribute.end,
+				nameStart: attribute.name.start,
+				nameEnd: attribute.name.end,
+				value: value ? { start: value.start, end: value.end, quote } : undefined,
+			};
+		});
+	return { end: opening.end - 1, selfClosing: opening.selfClosing, attributes };
+}
+
 function readJsxNode(node, parent, flags, roots) {
 	if (node.type === 'JSXFragment') {
 		readJsxChildren(node.children, parent, flags, roots);
@@ -723,6 +784,7 @@ function readJsxNode(node, parent, flags, roots) {
 	element.conditional = Boolean(flags.conditional);
 	element.repeated = Boolean(flags.repeated);
 	element.opaque = isOpaqueTag(name);
+	element.startTag = jsxStartTag(node.openingElement);
 	readJsxAttributes(element, node.openingElement.attributes, roots);
 	appendChild(parent, element);
 	readJsxChildren(node.children, element, {}, roots);

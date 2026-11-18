@@ -14,11 +14,19 @@ import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
+import { deepActiveElement } from '../../../utilities/deep-active-element.js';
+import { ListRoving } from './list.roving.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';
 
 export type ListAppearance = 'simple' | 'box-tinted' | 'box-base';
 export type ListType = 'list' | 'navigation' | 'listbox' | 'tree' | 'form' | 'radiogroup';
+
+/** What a list gives every row in it, and a row passes on to its nested rows and segments. */
+export interface ListContext {
+	appearance: string;
+	type: ListType;
+}
 
 export interface NLDDReorderEventDetail {
 	fromIndex: number;
@@ -387,8 +395,6 @@ export class NLDDList extends LitElement {
 		this.addEventListener('pointerdown', this._onPointerDown);
 		this.addEventListener('keydown', this._onKeyDownCapture, true);
 		this.addEventListener('keydown', this._onKeyDown);
-		this.addEventListener('focusin', this._onFocusIn);
-		this.addEventListener('focusout', this._onFocusOut);
 		this.addEventListener('click', this._onListClick);
 	}
 
@@ -397,8 +403,6 @@ export class NLDDList extends LitElement {
 		this.removeEventListener('pointerdown', this._onPointerDown);
 		this.removeEventListener('keydown', this._onKeyDownCapture, true);
 		this.removeEventListener('keydown', this._onKeyDown);
-		this.removeEventListener('focusin', this._onFocusIn);
-		this.removeEventListener('focusout', this._onFocusOut);
 		this.removeEventListener('click', this._onListClick);
 		this._itemsObserver?.disconnect();
 		this._itemsObserver = null;
@@ -561,10 +565,8 @@ export class NLDDList extends LitElement {
 	 *  means a runtime appearance/type switch, or a freshly added item, always tracks
 	 *  the list. */
 	private _applyItemContext() {
-		this._getItems().forEach((item) => {
-			item._applyAppearance(this.appearance);
-			item._applyParentType(this.type);
-		});
+		const context = { appearance: this.appearance, type: this.type };
+		this._getItems().forEach((item) => { item._listContext = context; });
 	}
 
 	private _updateEmpty() {
@@ -815,8 +817,6 @@ export class NLDDList extends LitElement {
 		return painted.filter((row) => row._isRovingStop);
 	}
 
-	private _rovingScheduled = false;
-
 	/**
 	 * Whether the control the Escape came from had a popover open when the key
 	 * went down. Read on the way in, because a control closes its own menu in its
@@ -836,117 +836,32 @@ export class NLDDList extends LitElement {
 		this._popoverWasOpen = !!origin?.control && !!origin.row.querySelector(':popover-open');
 	};
 
-	/** Push roving state onto the items, deferred to a microtask: _updateItems can
-	 *  run inside the update lifecycle (firstUpdated/updated), and setting the
-	 *  items' reactive state there would trip Lit's change-in-update warning.
-	 *  Coalesced so repeated item updates schedule it only once.
-	 *
-	 *  @internal Also called by a row whose content changed after the stops were
-	 *  picked. */
-	_updateRoving() {
-		if (this._rovingScheduled) return;
-		this._rovingScheduled = true;
-		queueMicrotask(() => {
-			this._rovingScheduled = false;
-			this._applyRoving();
-		});
-	}
-
-	/** Sets the arrow-navigation flag on all items and a single roving entry point
-	 *  (keep the current one if still valid, else the selected item, else the first
-	 *  interactive item). */
-	private _applyRoving() {
-		const active = this._arrowNavActive;
-		const rows = this._getAllRows();
-		rows.forEach((row) => { row._arrowNavigation = active; });
-		const interactive = active ? this._getInteractiveItems() : [];
+	/** The roving tab stop over the rows: which row is current, kept in step with focus. */
+	private _roving = new ListRoving<NLDDListItem>(this, {
+		enabled: () => this._arrowNavActive,
+		rows: () => this._getAllRows(),
+		stops: () => this._getInteractiveItems(),
+		rowOf: (event) => this._origin(event)?.row,
 		// Best-effort AT discoverability: role="list"/"navigation" doesn't imply
-		// arrow-key navigation the way listbox/menu would, so advertise the keys via
-		// aria-keyshortcuts (queryable) and a plain-language aria-description (surfaced
-		// when AT reaches the list). See _arrowNavActive — known limitation.
-		// Only where the keys go somewhere: a list of nothing but text has no stops
-		// to move between, and promising keys that do nothing is worse than silence.
-		if (interactive.length > 0) {
-			this.setAttribute('aria-keyshortcuts', 'ArrowUp ArrowDown Home End');
-			this.setAttribute('aria-description', this._t('components.list.arrow-navigation-description-text'));
-		} else {
-			this.removeAttribute('aria-keyshortcuts');
-			this.removeAttribute('aria-description');
-		}
-		if (!active) {
-			rows.forEach((row) => { row._rovingActive = false; });
-			return;
-		}
-		if (interactive.length === 0) return;
-		const entry = interactive.find((row) => row._rovingActive)
-			?? interactive.find((row) => row.selected)
-			?? interactive[0];
-		rows.forEach((row) => {
-			row._rovingActive = row === entry;
-			row._syncRovingTabStops();
-		});
-	}
+		// arrow-key navigation the way listbox/menu would, so advertise the keys
+		// via aria-keyshortcuts (queryable) and a plain-language aria-description.
+		// Only where the keys go somewhere: a list of nothing but text has no
+		// stops to move between, and promising keys that do nothing is worse than
+		// silence.
+		onStops: (stops) => {
+			if (stops.length > 0) {
+				this.setAttribute('aria-keyshortcuts', 'ArrowUp ArrowDown Home End');
+				this.setAttribute('aria-description', this._t('components.list.arrow-navigation-description-text'));
+			} else {
+				this.removeAttribute('aria-keyshortcuts');
+				this.removeAttribute('aria-description');
+			}
+		},
+	});
 
-	// items defaults to every row, nested ones included. Callers that pass a
-	// narrower set take on clearing whatever is outside it themselves.
-	private _setRovingActive(activeItem: NLDDListItem, items: NLDDListItem[] = this._getAllRows()) {
-		items.forEach((item) => {
-			item._rovingActive = item === activeItem;
-			// Straight away, not on the next render: the caller hands focus to the
-			// row in the same tick, and a row without a tabindex cannot take it.
-			item._syncRovingTabStops();
-		});
-	}
-
-	private _onFocusIn = (event: FocusEvent) => {
-		if (!this._arrowNavActive) return;
-		const item = (event.composedPath() as Element[]).find(
-			(el) => el instanceof Element && el.tagName.toLowerCase() === 'nldd-list-item',
-		) as NLDDListItem | undefined;
-		// Keep the roving entry point wherever focus actually lands (Tab in, a
-		// click, or programmatic focus), so arrows continue from there.
-		if (item && !item._rovingActive && this._getInteractiveItems().includes(item)) {
-			this._setRovingActive(item);
-			return;
-		}
-		// Focus back on the row it was already on: hand its controls their stops
-		// again, since leaving the list parked them.
-		if (item?._rovingActive) item._syncRovingTabStops();
-	};
-
-	/**
-	 * Focus gone from the list: park everything but the row.
-	 *
-	 * The stops a row hands out to its controls last as long as the row is the
-	 * current one, so without this they are still there after you tab away, and
-	 * Shift+Tab back in lands inside the control you left rather than on the row.
-	 * A roving list is one stop from the outside; what is inside opens up once
-	 * you are in. _onFocusIn puts them back.
-	 *
-	 * Deferred: focus moving between two controls of the same row fires focusout
-	 * before focusin, and `relatedTarget` is retargeted at a shadow boundary, so
-	 * the only reliable answer to "did focus leave" is the one you get after it
-	 * has landed.
-	 */
-	private _onFocusOut = () => {
-		if (!this._arrowNavActive) return;
-		queueMicrotask(() => {
-			if (!this.isConnected || this._containsFocus()) return;
-			this._getAllRows().forEach((row) => { row._parkControls(); });
-		});
-	};
-
-	/** Whether focus is anywhere in this list, shadow boundaries included. */
-	private _containsFocus(): boolean {
-		// document.activeElement only ever names the outermost host, so the answer
-		// is a walk down the chain of active elements: at every level, is this the
-		// list or inside it.
-		let node: Element | null = document.activeElement;
-		while (node) {
-			if (node === this || this.contains(node)) return true;
-			node = node.shadowRoot?.activeElement ?? null;
-		}
-		return false;
+	/** @internal Also called by a row whose content changed after the stops were picked. */
+	_updateRoving() {
+		this._roving.update();
 	}
 
 	/** The row an event came from, and the control of that row it started in. */
@@ -978,7 +893,7 @@ export class NLDDList extends LitElement {
 		if (key !== 'ArrowUp' && key !== 'ArrowDown' && key !== 'Home' && key !== 'End') return;
 		const items = this._getInteractiveItems();
 		if (items.length === 0) return;
-		const current = items.findIndex((item) => item._rovingActive);
+		const current = items.findIndex((item) => item._roving === 'stop');
 		let next: number;
 		if (key === 'Home') {
 			next = 0;
@@ -991,10 +906,7 @@ export class NLDDList extends LitElement {
 		}
 		event.preventDefault();
 		const target = items[next];
-		// Every row, not just the interactive ones: Escape can leave the flag on a
-		// row that holds a control but is no stop itself, and clearing only the
-		// stops would leave two rows claiming to be the current one.
-		this._setRovingActive(target);
+		this._roving.moveTo(target);
 		target.focus();
 	}
 
@@ -1019,7 +931,7 @@ export class NLDDList extends LitElement {
 		if (hadPopover) return;
 		event.preventDefault();
 		event.stopPropagation();
-		this._setRovingActive(origin.row);
+		this._roving.moveTo(origin.row);
 		origin.row.focus();
 	}
 
@@ -1029,7 +941,8 @@ export class NLDDList extends LitElement {
 	 *  written in one place — the consumer's handler. */
 	private _onTreeHorizontal(event: KeyboardEvent, key: 'ArrowRight' | 'ArrowLeft') {
 		const rows = this._getInteractiveItems();
-		const current = rows.find((row) => row._rovingActive);
+		const current = this._roving.current;
+		if (current && !rows.includes(current)) return;
 		if (!current) return;
 		const children = current.childRows.filter(row => !row.hasAttribute('hidden'));
 		const isOpen = children.length > 0 && current.expanded === true;
@@ -1080,7 +993,7 @@ export class NLDDList extends LitElement {
 	}
 
 	private _moveRovingTo(row: NLDDListItem) {
-		this._setRovingActive(row);
+		this._roving.moveTo(row);
 		row.focus();
 	}
 
@@ -1261,7 +1174,7 @@ export class NLDDList extends LitElement {
 		// Capture the actual focused element (may live inside the handle's shadow DOM,
 		// e.g. the <button> inside nldd-reorder-handle-cell) so we can restore focus
 		// after the consumer reorders the DOM in response to reorder.
-		const focused = this._getDeepActiveElement() ?? handle;
+		const focused = deepActiveElement() ?? handle;
 
 		// Mirror pointer-drag semantics: don't mutate the DOM ourselves — emit
 		// reorder with from/to indices and let the consumer reorder. toIndex
@@ -1273,14 +1186,6 @@ export class NLDDList extends LitElement {
 		// Wait for the consumer to reorder, then restore focus on the moved item's handle.
 		requestAnimationFrame(() => focused.focus());
 	};
-
-	private _getDeepActiveElement(): HTMLElement | null {
-		let active: Element | null = document.activeElement;
-		while (active?.shadowRoot?.activeElement) {
-			active = active.shadowRoot.activeElement;
-		}
-		return active instanceof HTMLElement ? active : null;
-	}
 
 	// — Drag: core ———————————————————————————————————————————————————————————
 

@@ -33,6 +33,7 @@ import { checkboxGroupTemplate } from './checkbox-group.template.js';
 import type { NLDDCheckboxField } from '../checkbox-field/checkbox-field.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { ChoiceGroup, announceGroupState } from '../../../utilities/choice-group.js';
 
 @customElement('nldd-checkbox-group')
 export class NLDDCheckboxGroup extends LitElement {
@@ -60,7 +61,6 @@ export class NLDDCheckboxGroup extends LitElement {
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
-	private _answerQueued = false;
 
 	/**
 	 * Marks the control as invalid.
@@ -74,25 +74,33 @@ export class NLDDCheckboxGroup extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	private _choices = new ChoiceGroup<NLDDCheckboxField>(this, {
+		options: () => this._getFields(),
+		isSelected: (field) => field.checked,
+		deselect: () => {},
+		single: () => false,
+		// Clearing it leaves the fields the name they had.
+		name: () => this.name || null,
+		required: () => this.required,
+	});
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.setAttribute('role', 'group');
-		this.addEventListener('change', this._handleChange);
+		this.addEventListener('change', this._choices.handleChange);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this.removeEventListener('change', this._handleChange);
+		this.removeEventListener('change', this._choices.handleChange);
 	}
 
 	override updated(changed: Map<PropertyKey, unknown>): void {
 		if (changed.has('name') || changed.has('disabled') || changed.has('required')) {
-			this._syncFields();
+			this._choices.sync();
 		}
-		if (changed.has('invalid')) {
-			if (this.invalid) this.setAttribute('aria-invalid', 'true');
-			else this.removeAttribute('aria-invalid');
-		}
+		// No aria-required: the role group has none. See the note on `required`.
+		if (changed.has('invalid')) announceGroupState(this, { invalid: this.invalid });
 		// Only ever take back a name this group wrote itself, so an aria-label the
 		// consumer put on the host stays.
 		if (changed.has('accessibleLabel')) {
@@ -112,63 +120,15 @@ export class NLDDCheckboxGroup extends LitElement {
 		return Array.from(this.querySelectorAll('nldd-checkbox-field'));
 	}
 
-	private _syncFields(): void {
-		this._getFields().forEach(field => {
-			if (this.name) field.name = this.name;
-			field.required = this.required;
-			if (this.disabled) {
-				if (!field.hasAttribute('disabled')) {
-					field.setAttribute('group-disabled', '');
-					field.disabled = true;
-				}
-			} else if (field.hasAttribute('group-disabled')) {
-				field.removeAttribute('group-disabled');
-				field.disabled = false;
-			}
-		});
-		this._syncAnswered();
-	}
-
-	/** Whether any box is checked: what `required` asks of the group. A field
-	 *  only sees itself, so the group tells each of them. */
-	private _syncAnswered(): void {
-		const fields = this._getFields();
-		const answered = fields.some((field) => field.checked);
-		fields.forEach((field) => {
-			field._groupHasSelection = answered;
-			// Synchronously: a consumer reading validity in its change listener
-			// should see the answer the group just changed.
-			field.commitFormValue?.();
-		});
-	}
-
-	private _handleChange = (): void => {
-		this._syncAnswered();
-	};
-
-	/** Called by a field whose `checked` changed, whoever changed it: the
-	 *  user, the app or a form reset. */
-	_optionChanged(): void {
-		// Once for all of them: checking an option with others under it changes
-		// every one of those, each of which reports here.
-		if (this._answerQueued) return;
-		this._answerQueued = true;
-		queueMicrotask(() => {
-			this._answerQueued = false;
-			this._syncAnswered();
-		});
-	}
-
 	_onSlotChange = (): void => {
-		this._syncFields();
+		this._choices.sync();
 	};
 
 	/** Delegates focus to the first checked box, or else to the first one that
 	 *  is enabled, so a label pointing at the group lands on a box. */
 	override focus(options?: FocusOptions): void {
 		if (deferFocus(this, options)) return;
-		const fields = this._getFields().filter((field) => !field.disabled);
-		(fields.find((field) => field.checked) ?? fields[0])?.focus(options);
+		this._choices.focus(options);
 	}
 
 	override render() {

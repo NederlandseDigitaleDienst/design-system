@@ -1696,7 +1696,8 @@ describe('nldd-menu drill-in chain', () => {
 		await waitForUpdate(root);
 		expect(l2Menu.matches(':popover-open')).toBe(false);
 
-		anch.click();
+		// A pointer click: detail 1, as the browser gives it after a press.
+		anch.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
 		await waitForUpdate(root);
 
 		expect(menu.matches(':popover-open')).toBe(false); // did NOT reopen
@@ -2077,7 +2078,7 @@ describe('nldd-menu drill-in chain', () => {
 		// closed after a single click.
 		anchor.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
 		await waitForUpdate(root);
-		anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+		anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, detail: 1 }));
 		await waitForUpdate(root);
 
 		expect(l2Menu.matches(':popover-open')).toBe(false);
@@ -3953,5 +3954,37 @@ describe('nldd-menu confirms a choice', () => {
 		expect(item.hasAttribute('confirming')).toBe(true);
 		root.remove();
 		expect(item.hasAttribute('confirming')).toBe(false);
+	});
+});
+
+describe('nldd-menu after it closed', () => {
+	let wrap: HTMLElement;
+	afterEach(() => wrap?.remove());
+
+	async function nearBottom(): Promise<HTMLElement & { reposition(): Promise<void> }> {
+		wrap = document.createElement('div');
+		wrap.style.cssText = `position: fixed; left: 20px; top: ${innerHeight - 120}px`;
+		wrap.innerHTML = `<nldd-button text="Acties"><nldd-menu slot="popup">${
+			Array.from({ length: 6 }, (_, i) => `<nldd-menu-item text="Item ${i}"></nldd-menu-item>`).join('')
+		}</nldd-menu></nldd-button>`;
+		document.body.append(wrap);
+		const menu = wrap.querySelector('nldd-menu') as HTMLElement & { reposition(): Promise<void> };
+		await waitForUpdate(menu);
+		return menu;
+	}
+
+	const opened = async (menu: HTMLElement): Promise<void> => {
+		menu.showPopover();
+		await until(() => menu.hasAttribute('positioned'));
+	};
+
+	it('stays put when asked to move after it closed', async () => {
+		const menu = await nearBottom();
+		await opened(menu);
+		// WebKit and Gecko resize the hidden menu before the toggle event says it closed.
+		menu.hidePopover();
+		menu.style.top = '-999px';
+		await menu.reposition();
+		expect(menu.style.top).toBe('-999px');
 	});
 });

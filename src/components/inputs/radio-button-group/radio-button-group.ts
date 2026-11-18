@@ -24,8 +24,8 @@ import { radioButtonGroupStyles } from './radio-button-group.styles.js';
 import { radioButtonGroupTemplate } from './radio-button-group.template.js';
 import type { NLDDRadioButtonField } from '../radio-button-field/radio-button-field.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
-import { radioPositions } from '../../../utilities/radio-position.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { ChoiceGroup, announceGroupState } from '../../../utilities/choice-group.js';
 
 @customElement('nldd-radio-button-group')
 export class NLDDRadioButtonGroup extends LitElement {
@@ -67,30 +67,38 @@ export class NLDDRadioButtonGroup extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	private _choices = new ChoiceGroup<NLDDRadioButtonField>(this, {
+		options: () => this._getFields(),
+		isSelected: (field) => field.checked,
+		deselect: (field) => { field.checked = false; },
+		single: () => true,
+		name: () => this.name,
+		required: () => this.required,
+	});
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.setAttribute('role', 'radiogroup');
 		this.addEventListener('keydown', this._handleKeyDown);
-		this.addEventListener('change', this._handleChange);
+		this.addEventListener('change', this._choices.handleChange);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this.removeEventListener('keydown', this._handleKeyDown);
-		this.removeEventListener('change', this._handleChange);
+		this.removeEventListener('change', this._choices.handleChange);
 	}
 
 	override updated(changed: Map<PropertyKey, unknown>): void {
 		if (changed.has('name') || changed.has('disabled') || changed.has('required')) {
-			this._syncFields();
+			this._choices.sync();
 		}
 		// Only ever take back a name this group wrote itself. Without the guard the
 		// first update would strip an aria-label the consumer put on the host,
 		// because "no accessible-label here" would be read as "remove the name".
 		// Announced, not drawn. See the note on `invalid`.
-		if (changed.has('invalid')) {
-			if (this.invalid) this.setAttribute('aria-invalid', 'true');
-			else this.removeAttribute('aria-invalid');
+		if (changed.has('invalid') || changed.has('required')) {
+			announceGroupState(this, { required: this.required, invalid: this.invalid });
 		}
 		if (changed.has('accessibleLabel')) {
 			this._appliedLabel = setOwnedAttribute(this, 'aria-label', this.accessibleLabel, this._appliedLabel);
@@ -102,13 +110,6 @@ export class NLDDRadioButtonGroup extends LitElement {
 				this.removeAttribute('aria-labelledby');
 			}
 		}
-		if (changed.has('required')) {
-			if (this.required) {
-				this.setAttribute('aria-required', 'true');
-			} else {
-				this.removeAttribute('aria-required');
-			}
-		}
 	}
 
 	private _getFields(): NLDDRadioButtonField[] {
@@ -117,60 +118,6 @@ export class NLDDRadioButtonGroup extends LitElement {
 
 	private _getEnabledFields(): NLDDRadioButtonField[] {
 		return this._getFields().filter(f => !f.disabled);
-	}
-
-	private _syncFields(): void {
-		this._getFields().forEach(field => {
-			field.name = this.name;
-			field.required = this.required;
-			if (this.disabled) {
-				if (!field.hasAttribute('disabled')) {
-					field.setAttribute('group-disabled', '');
-					field.disabled = true;
-				}
-			} else if (field.hasAttribute('group-disabled')) {
-				field.removeAttribute('group-disabled');
-				field.disabled = false;
-			}
-		});
-		this._positionFields();
-	}
-
-	/** Each field its place in the group, and the group one stop for Tab. A
-	 *  field cannot count its siblings: it only sees itself. */
-	private _positionFields(): void {
-		const fields = this._getFields();
-		const answered = fields.some((field) => field.checked);
-		radioPositions(fields, (field) => field.checked, (field) => field.disabled)
-			.forEach((position, index) => {
-				fields[index]._groupPosition = position;
-				fields[index]._groupHasSelection = answered;
-			});
-	}
-
-	/** Called by a field whose `checked` or `disabled` changed, whoever changed
-	 *  it: the user, the app or a form reset. */
-	_optionChanged(changedField: NLDDRadioButtonField): void {
-		if (changedField.checked) this._uncheckOthers(changedField);
-		this._positionFields();
-	}
-
-	private _handleChange = (e: Event): void => {
-		const changedField = e.target as NLDDRadioButtonField;
-		if (!changedField.checked) return;
-		this._uncheckOthers(changedField);
-		this._positionFields();
-	};
-
-	private _uncheckOthers(changedField: NLDDRadioButtonField): void {
-		this._getFields().forEach(field => {
-			if (field === changedField) return;
-			field.checked = false;
-			// Synchronously, not via the field's own update cycle: the change
-			// event is still propagating, and a consumer serializing the form in
-			// its listener would otherwise still see this field's old value.
-			field.commitFormValue?.();
-		});
 	}
 
 	private _handleKeyDown = (e: KeyboardEvent): void => {
@@ -196,7 +143,7 @@ export class NLDDRadioButtonGroup extends LitElement {
 		activeField.commitFormValue?.();
 		nextField.checked = true;
 		nextField.commitFormValue?.();
-		this._positionFields();
+		this._choices.settle();
 
 		nextField.focus();
 
@@ -208,7 +155,7 @@ export class NLDDRadioButtonGroup extends LitElement {
 	};
 
 	_onSlotChange = (): void => {
-		this._syncFields();
+		this._choices.sync();
 	};
 
 	/**
@@ -219,8 +166,7 @@ export class NLDDRadioButtonGroup extends LitElement {
 	 */
 	override focus(options?: FocusOptions): void {
 		if (deferFocus(this, options)) return;
-		const fields = this._getEnabledFields();
-		(fields.find(field => field.checked) ?? fields[0])?.focus(options);
+		this._choices.focus(options);
 	}
 
 	override render() {

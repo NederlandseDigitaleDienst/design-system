@@ -5,7 +5,9 @@
  * entry file for @element, @attr, @slot and @fires tags, and emits one
  * markdown section per component, grouped by category. This keeps the
  * consumer-facing reference in sync with the source: the JSDoc is the
- * single source of truth.
+ * single source of truth. What a mixin or base class brings in comes from
+ * the component model (scripts/lib/component-model.js), so it reads the
+ * manifest: run `npm run generate:cem` first after a change to a mixin.
  *
  * WARNING: this script overwrites skills/nldd-design/reference.md in-place.
  * After changing a component's public API (attributes, slots, events),
@@ -20,6 +22,7 @@ import { fileURLToPath } from 'node:url';
 import { rulesAboutTag } from '../lint/rule-index.js';
 import { generatedHeader, writeGenerated } from './lib/skill-doc.js';
 import { extractComponentBlocks, extractLeadingBlock, parseComponent, parseTypedTag, parseNamedTag } from './lib/component-jsdoc.js';
+import { INTERNAL_TAGS, attributeTypeText, iconCatalog, loadComponentModel } from './lib/component-model.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const componentsDir = resolve(__dirname, '../src/components');
@@ -123,70 +126,9 @@ function renderComponent(c) {
 // The pure parsing helpers (and componentsDir, for path-derived assertions) are
 // exported so they can be unit-tested without triggering the file-walking and
 // file-writing side effects of the main routine.
-/**
- * Attributes a mixin adds, keyed by mixin name. Read from the `@mixin` /
- * `@attr` tags in the mixin's own JSDoc, so they are written once next to the
- * code that implements them instead of copied into every component.
- */
-function collectMixinAttrs() {
-	const dir = join(componentsDir, '..', 'utilities');
-	const found = new Map();
-	for (const entry of readdirSync(dir)) {
-		if (!entry.endsWith('-mixin.ts')) continue;
-		const source = readFileSync(join(dir, entry), 'utf-8');
-		const name = source.match(/@mixin\s+(\w+)/)?.[1];
-		if (!name) continue;
-		const attrs = [];
-		for (const line of source.split('\n')) {
-			const rest = line.match(/^\s*\*\s*@attr\s+(.*)$/)?.[1];
-			if (rest) attrs.push(parseTypedTag(rest));
-		}
-		if (attrs.length) found.set(name, attrs);
-	}
-	return found;
-}
-
 export { parseTypedTag, parseNamedTag, parseComponent, extractLeadingBlock, escapeCell, componentsDir };
 
 // --- Main ---
-
-// Internal helpers that ship a custom element but are not part of the public,
-// consumer-facing surface. Exclude them from the reference.
-const INTERNAL_TAGS = new Set(['nldd-lqip-encoder']);
-
-// --- Icon names ---
-// The valid `icon` values are the SVG filenames in the icon
-// folder plus the aliases. Both are build inputs, so we read them directly to
-// give consumers an offline, in-sync catalog instead of "see the website".
-
-function collectIconNames() {
-	const iconsDir = resolve(componentsDir, 'content/icon/icons');
-	const aliasesFile = resolve(componentsDir, 'content/icon/icon-aliases.js');
-	let entries;
-	try {
-		entries = readdirSync(iconsDir);
-	} catch (err) {
-		if (err.code === 'ENOENT') {
-			throw new Error(`Icon directory not found at ${iconsDir}.`);
-		}
-		throw err;
-	}
-	const names = entries
-		.filter((f) => f.endsWith('.svg'))
-		.map((f) => f.slice(0, -4));
-	let aliases = [];
-	try {
-		const src = readFileSync(aliasesFile, 'utf-8');
-		// Match both single- and double-quoted keys so a formatter rewriting
-		// icon-aliases.js to double quotes does not silently drop every alias.
-		aliases = [...src.matchAll(/^\s*['"]([^'"]+)['"]\s*:/gm)].map((m) => m[1]);
-	} catch (err) {
-		// The aliases file is optional; only a missing file is tolerated.
-		// Surface anything else (permission, read errors) instead of hiding it.
-		if (err.code !== 'ENOENT') throw err;
-	}
-	return { names: names.sort(), aliases: aliases.sort() };
-}
 
 function renderIcons({ names, aliases }) {
 	const out = [
@@ -209,7 +151,7 @@ function renderIcons({ names, aliases }) {
 
 function main() {
 	const entryFiles = collectEntryFiles(componentsDir);
-	const mixinAttrs = collectMixinAttrs();
+	const model = new Map(loadComponentModel().map((element) => [element.tag, element]));
 	const components = [];
 	for (const file of entryFiles) {
 		const source = readFileSync(file, 'utf-8');
@@ -218,15 +160,14 @@ function main() {
 		for (const block of extractComponentBlocks(source)) {
 			for (const parsed of parseComponent(block, file, fallbackTag)) {
 				if (parsed.tag && !INTERNAL_TAGS.has(parsed.tag)) {
-					// A mixin's attributes are as real to a consumer as the
-					// component's own, but they live in another file, so the
-					// component's JSDoc never mentions them and the table left
-					// them out entirely.
-					for (const [name, attrs] of mixinAttrs) {
-						if (!source.includes(`${name}(`)) continue;
-						for (const attr of attrs) {
-							if (!parsed.attrs.some((a) => a.name === attr.name)) parsed.attrs.push(attr);
-						}
+					const element = model.get(parsed.tag);
+					// What a mixin or a base class brings in is as real to a consumer
+					// as the component's own, but it lives in another file, so the
+					// component's JSDoc never mentions it.
+					for (const attribute of element?.attributes ?? []) {
+						if (!attribute.inheritedFrom || parsed.attrs.some((a) => a.name === attribute.name)) continue;
+						const description = (attribute.description ?? '').replace(/\s+/g, ' ').trim();
+						parsed.attrs.push({ name: attribute.name, type: attributeTypeText(attribute), description });
 					}
 					components.push(parsed);
 				}
@@ -249,7 +190,8 @@ function main() {
 	const header = generatedHeader(
 		[
 			'Bron: de JSDoc (@element / @attr / @slot / @fires) van elk component in',
-			'src/components, plus de iconnamen uit content/icon/icons en icon-aliases.',
+			'src/components, de geërfde attributen uit custom-elements.json, en de',
+			'iconnamen uit content/icon/icons en icon-aliases.',
 		],
 		'npm run generate:component-reference',
 	);
@@ -273,7 +215,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 	}
 
 	// Read the icon catalog once and reuse it for both rendering and the summary.
-	const iconInfo = collectIconNames();
+	const iconInfo = iconCatalog();
 	sections.push(renderIcons(iconInfo));
 
 	const body = header + intro + sections.join('\n');

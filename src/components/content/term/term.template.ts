@@ -64,7 +64,7 @@ export function termTemplate(component: NLDDTerm): TemplateResult {
 			role="button"
 			tabindex="0"
 			aria-haspopup="dialog"
-			@pointerdown=${() => component._handlePointerdown()}
+			@pointerdown=${(event: PointerEvent) => component._handlePointerdown(event)}
 			@click=${(event: MouseEvent) => component._handleClick(event)}
 			@keydown=${(event: KeyboardEvent) => component._handleKeydown(event)}
 			@keyup=${(event: KeyboardEvent) => component._handleKeyup(event)}

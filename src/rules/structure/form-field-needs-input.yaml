@@ -5,4 +5,6 @@ message: 'nldd-form-field holds no form input, so the label cannot name anything
 see: patronen/form
 examples:
   passed: ['<nldd-form-field label="Naam"><nldd-text-field></nldd-text-field></nldd-form-field>']
-  failed: ['<nldd-form-field label="Naam"><nldd-button text="Kies"></nldd-button></nldd-form-field>']
+  failed:
+    - '<nldd-form-field label="Naam"><nldd-button text="Kies"></nldd-button></nldd-form-field>'
+    - '<nldd-form-field label="Naam"><div><input type="hidden" name="a" value="1"><nldd-button text="Kies"></nldd-button></div></nldd-form-field>'

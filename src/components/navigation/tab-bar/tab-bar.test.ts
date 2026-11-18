@@ -1044,6 +1044,27 @@ describe('nldd-tab-bar – overloop', () => {
 		expect(items[index].current).toBe(true);
 	});
 
+	it('laat een tab uit het menu knipperen en sluit dan het menu', async () => {
+		const { bar } = await make(320);
+		const menu = bar.shadowRoot!.querySelector('.tab-bar__overflow-button nldd-menu') as HTMLElement;
+		menu.showPopover();
+		await expect.poll(() => menu.hasAttribute('positioned')).toBe(true);
+		const picked = menuItems(bar)[0];
+		const text = picked.getAttribute('text');
+		const escaped: Event[] = [];
+		bar.addEventListener('select', (event) => escaped.push(event));
+		picked.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
+		await bar.updateComplete;
+		// The tab moved into view, but the menu holds its list while the entry blinks.
+		expect(picked.hasAttribute('confirming')).toBe(true);
+		expect(picked.isConnected).toBe(true);
+		expect(picked.getAttribute('text')).toBe(text);
+		expect(escaped).toEqual([]);
+		await expect.poll(() => menu.matches(':popover-open'), { timeout: 2000 }).toBe(false);
+		await bar.updateComplete;
+		expect(menuItems(bar).map(item => item.getAttribute('text'))).not.toContain(text);
+	});
+
 	it('laat de pijltjes alleen langs de tabs in de balk lopen', async () => {
 		const { bar, items } = await make(320);
 		const visible = items.filter(item => !item.hasAttribute('data-overflow'));

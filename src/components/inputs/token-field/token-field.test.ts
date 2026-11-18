@@ -9,6 +9,8 @@ type TokenFieldEl = HTMLElement & {
 	_removeValue(v: string): void;
 	_togglePicker(): void;
 	_handleBlur(e: FocusEvent): void;
+	setCustomValidity(message: string): void;
+	internals: ElementInternals;
 };
 
 describe('nldd-token-field', () => {
@@ -251,6 +253,27 @@ describe('nldd-token-field', () => {
 		el._togglePicker();
 		await waitForUpdate(el);
 		expect(el._isOpen).toBe(false);
+	});
+
+	it('keeps the menu under the input row when the picker opens it', async () => {
+		el = await withMenu();
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as HTMLElement & { anchorElement: Element | null };
+		const anchors: (Element | null)[] = [];
+		const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(menu), 'anchorElement')!;
+		Object.defineProperty(menu, 'anchorElement', {
+			configurable: true,
+			get: () => descriptor.get!.call(menu),
+			set: (value: Element | null) => { anchors.push(value); descriptor.set!.call(menu, value); },
+		});
+		// The second time: the first open already moved it off the host.
+		for (let i = 0; i < 3; i++) {
+			el._togglePicker();
+			await waitForUpdate(el);
+		}
+		expect(el._isOpen).toBe(true);
+		expect(anchors).not.toContain(el);
+		expect(menu.anchorElement).not.toBe(el);
 	});
 
 	it('highlights the first option when the menu opens', async () => {
@@ -661,6 +684,18 @@ describe('nldd-token-field', () => {
 		await waitForUpdate(field);
 		expect(form.checkValidity()).toBe(true);
 		form.remove();
+	});
+
+	it('keeps a custom reason through the next render', async () => {
+		const field = document.createElement('nldd-token-field') as TokenFieldEl;
+		document.body.appendChild(field);
+		await waitForUpdate(field);
+		field.setCustomValidity('Kies een land in de EU.');
+		field.values = ['nl'];
+		await waitForUpdate(field);
+		expect(field.internals.validity.customError).toBe(true);
+		expect(field.internals.validationMessage).toBe('Kies een land in de EU.');
+		field.remove();
 	});
 
 });

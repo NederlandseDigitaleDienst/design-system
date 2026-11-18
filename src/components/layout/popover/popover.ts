@@ -97,6 +97,7 @@ import { translate } from '../../../utilities/translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { setState } from '../../../utilities/element-state.js';
 import { FocusReturn, focusAsLastInput } from '../../../utilities/return-focus.js';
+import { invokesNatively, OverlayInvoker, TriggerAria, watchTrigger, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -158,7 +159,7 @@ export class NLDDPopover extends LitElement {
 
 	/**
 	 * Set by the control this popover opens on interest for, from its
-	 * `interest` slot or `interestfor` (see InterestController). The popover
+	 * `interest` slot or `interestfor` (see InterestInvoker). The popover
 	 * then describes that control: it opens on hover, focus or a long press,
 	 * leaves focus where it is, and puts no disclosure state on the control.
 	 * Not an attribute of its own: it follows from the control.
@@ -179,12 +180,10 @@ export class NLDDPopover extends LitElement {
 	private _closing = false;
 	private _closingTimer: ReturnType<typeof setTimeout> | null = null;
 	private _focusReturn = new FocusReturn();
-	private _pointerdownOnAnchorWhileOpen = false;
 	/** Cleanup function from Floating UI's autoUpdate, only active while open. */
 	private _cleanupAutoUpdate: (() => void) | null = null;
 	private _smQuery: MediaQueryList | null = null;
 	private _wasOnSm = false;
-	private _previousAnchorEl: Element | null = null;
 
 	/** Widths that come from the content instead of from a length. The popover is
 	 *  an inline-size query container so slotted components can adapt to it, and
@@ -214,6 +213,9 @@ export class NLDDPopover extends LitElement {
 		document.addEventListener('pointercancel', this._handlePointerCancel, true);
 		document.addEventListener('click', this._handleDocumentClickCapture, true);
 		document.addEventListener('click', this._handleDocumentClick);
+		this._anchorInvoker.setOverlay(this as unknown as InvokableOverlay);
+		this._stopWatchingAnchor = watchTrigger(this._anchorInvoker, () =>
+			this.anchorElement || !this.anchor ? null : document.getElementById(this.anchor));
 		this._smQuery = window.matchMedia(`(max-width: ${queryBreakpoints.smMax})`);
 		this._wasOnSm = this._smQuery.matches;
 		this._smQuery.addEventListener('change', this._handleViewportChange);
@@ -237,6 +239,8 @@ export class NLDDPopover extends LitElement {
 		document.removeEventListener('pointercancel', this._handlePointerCancel, true);
 		document.removeEventListener('click', this._handleDocumentClickCapture, true);
 		document.removeEventListener('click', this._handleDocumentClick);
+		this._stopWatchingAnchor?.();
+		this._stopWatchingAnchor = null;
 		this._smQuery?.removeEventListener('change', this._handleViewportChange);
 		this._smQuery = null;
 		this._stopClosing();
@@ -244,23 +248,7 @@ export class NLDDPopover extends LitElement {
 		// open, which would otherwise leak memory and leave dangling listeners.
 		this._cleanupAutoUpdate?.();
 		this._cleanupAutoUpdate = null;
-		// Strip ALL aria-* from the anchor, not just aria-expanded. In SPA flows
-		// (v-if, conditional render) the popover can disappear while the anchor
-		// stays. A leftover aria-controls pointing at an element that no longer
-		// exists is a WCAG 4.1.2 failure (Name, Role, Value).
-		const anchorEl = this._getAnchorEl();
-		if (anchorEl) {
-			// Reset the IDL prop too (control anchors), else a popover removed
-			// while open leaves the trigger stuck in its is-expanded state.
-			const control = anchorEl as HTMLElement & { expanded?: boolean };
-			if ('expanded' in control) control.expanded = false;
-			anchorEl.removeAttribute('aria-expanded');
-			anchorEl.removeAttribute('aria-haspopup');
-			if (this.id && anchorEl.getAttribute('aria-controls') === this.id) {
-				anchorEl.removeAttribute('aria-controls');
-			}
-		}
-		this._previousAnchorEl = null;
+		this._triggerAria.clear(this._getAnchorEl(), this.id || undefined);
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -349,6 +337,21 @@ export class NLDDPopover extends LitElement {
 			this.hide();
 		}
 	};
+
+	/** @internal Open for the control that invokes it, unless it is closing. */
+	invokerIsOpen(): boolean {
+		return this.matches(':popover-open') && !this._closing;
+	}
+
+	/** @internal */
+	invokerOpen(): void {
+		this.show();
+	}
+
+	/** @internal */
+	invokerClose(): void {
+		this.hide();
+	}
 
 	hide(): void {
 		// Asked of the popover itself: _isOpen follows the toggle event, which
@@ -520,52 +523,15 @@ export class NLDDPopover extends LitElement {
 		return null;
 	}
 
+	/** Writes expanded, `aria-haspopup="dialog"` and `aria-controls` onto the
+	 *  anchor; as attributes on a plain element such as a term. */
+	private _triggerAria = new TriggerAria({ attributes: true });
+
 	private _updateAnchorAria(open: boolean): void {
 		// A description is no disclosure: the control gets no expanded state and
-		// no haspopup. InterestController links the two instead.
+		// no haspopup. InterestInvoker links the two instead.
 		if (this._interestMode) return;
-		const anchorEl = this._getAnchorEl();
-		// Anchor changed (e.g. anchorElement property switched, or anchor
-		// attribute updated): strip aria-expanded and any aria-controls from the
-		// previous one, so it does not linger as a toggle for a screen reader.
-		if (this._previousAnchorEl && this._previousAnchorEl !== anchorEl) {
-			this._previousAnchorEl.removeAttribute('aria-expanded');
-			if (this._previousAnchorEl.getAttribute('aria-controls') === this.id) {
-				this._previousAnchorEl.removeAttribute('aria-controls');
-			}
-		}
-		if (!anchorEl) {
-			this._previousAnchorEl = null;
-			return;
-		}
-		// Prefer IDL props when the anchor is a control that exposes them (e.g.
-		// nldd-button / nldd-icon-button): the control renders aria-expanded /
-		// aria-haspopup on its real inner <button> from these props, and also
-		// flips its is-expanded visual (chevron). Raw setAttribute on the host
-		// would land on the custom element, not the inner control, and get reset
-		// on the next render. Fall back to attributes for plain element anchors.
-		const control = anchorEl as HTMLElement & { expanded?: boolean; popupType?: string };
-		if ('expanded' in control) {
-			control.expanded = open;
-		} else {
-			anchorEl.setAttribute('aria-expanded', open ? 'true' : 'false');
-		}
-		// aria-haspopup belongs on the trigger from the first render, not only
-		// after the first open. Never overwritten when the host carries its own
-		// value (for example 'menu' instead of 'dialog' for combinations).
-		if ('popupType' in control) {
-			if (!control.popupType) control.popupType = 'dialog';
-		} else if (!anchorEl.hasAttribute('aria-haspopup')) {
-			anchorEl.setAttribute('aria-haspopup', 'dialog');
-		}
-		// aria-controls ties the trigger explicitly to the popover element. The
-		// ARIA Authoring Practices ask for it on dialog triggers and it improves
-		// screen reader context. Only set when this popover has an id and the
-		// anchor does not already point somewhere else.
-		if (this.id && !anchorEl.hasAttribute('aria-controls')) {
-			anchorEl.setAttribute('aria-controls', this.id);
-		}
-		this._previousAnchorEl = anchorEl;
+		this._triggerAria.sync(this._getAnchorEl(), { open, popupType: 'dialog', controls: this.id || undefined });
 	}
 
 	// — Event handlers ————————————————————————————————————————————————————————
@@ -596,11 +562,11 @@ export class NLDDPopover extends LitElement {
 	 */
 	private _syncMode(): void {
 		// Changing the attribute of an open popover closes it, so an open one
-		// keeps its mode and catches up when it closes. InterestController sets
+		// keeps its mode and catches up when it closes. InterestInvoker sets
 		// _interest before it opens the popover, so in practice it never waits.
 		if (!this._managesMode || this.matches(':popover-open')) return;
 		// Interest opens it, so a hover must not close a menu that is open, as
-		// an auto popover would. InterestController closes it instead.
+		// an auto popover would. InterestInvoker closes it instead.
 		this.setAttribute('popover', this._smQuery?.matches || this._interestMode ? 'manual' : '');
 	}
 
@@ -640,13 +606,7 @@ export class NLDDPopover extends LitElement {
 			event.stopPropagation();
 			this._swallowNextClick = true;
 			this.hide();
-			return;
 		}
-		if (!anchorEl) return;
-		if (!event.composedPath().includes(anchorEl)) return;
-		// Only an auto popover is light-dismissed by this pointerdown.
-		if (this._isManual) return;
-		this._pointerdownOnAnchorWhileOpen = true;
 	};
 
 	/** A gesture the browser canceled (a tap that became a scroll or drag) never
@@ -668,12 +628,16 @@ export class NLDDPopover extends LitElement {
 	 *  popovertarget, so the browser toggles it as the click's default action. */
 	private _invokesThis(event: MouseEvent): boolean {
 		const anchorEl = this._getAnchorEl();
-		if (!anchorEl || !event.composedPath().includes(anchorEl)) return false;
-		const target = anchorEl.getAttribute('popovertarget')
-			?? (anchorEl as { popovertarget?: string }).popovertarget;
-		if (target && this.id && target === this.id) return true;
-		return (anchorEl as { popoverTargetElement?: Element | null }).popoverTargetElement === this;
+		return Boolean(anchorEl && event.composedPath().includes(anchorEl) && invokesNatively(anchorEl, this));
 	}
+
+	/** Makes the element named by `anchor` a toggle for this popover, as a
+	 *  design-system control is for a popover in its popup slot. Not for an
+	 *  `anchorElement`: whoever set that (a control, nldd-term) opens it, and
+	 *  with the popover slotted inside its anchor, a toggle here would close it
+	 *  on every click on its own content. */
+	private _anchorInvoker = new OverlayInvoker(this, { anchorFor: () => null });
+	private _stopWatchingAnchor: (() => void) | null = null;
 
 	private _handleDocumentClick = (event: MouseEvent): void => {
 		// A manual sheet that its anchor invokes with popovertarget: the browser
@@ -681,41 +645,6 @@ export class NLDDPopover extends LitElement {
 		if (this._isManual && this._managesMode && this._isOpen && this._invokesThis(event)) {
 			event.preventDefault();
 			this.hide();
-			return;
-		}
-		// Driven mode: when a consumer supplies anchorElement (e.g. a button that
-		// slots this popover) it owns the open/close lifecycle — don't self-toggle.
-		// This also fixes nesting: with the popover slotted inside its anchor, the
-		// anchor is an ancestor of every content click, so self-toggling here would
-		// close the popover on its own interactive content. Native light-dismiss
-		// still handles outside clicks; the driver handles the reopen race. The
-		// recommended id-anchored / popovertarget usage keeps self-toggling.
-		if (this.anchorElement) return;
-		const anchorEl = this._getAnchorEl();
-		if (!anchorEl) return;
-		const path = event.composedPath();
-		if (!path.includes(anchorEl)) return;
-		// If the anchor uses popovertarget pointing at this popover, the
-		// browser's default activation behavior already toggles us. Running
-		// our own toggle here would invert the state right after, leaving
-		// the popover in the wrong final state.
-		const popovertarget = anchorEl.getAttribute('popovertarget')
-			?? (anchorEl as { popovertarget?: string }).popovertarget;
-		if (popovertarget && this.id && popovertarget === this.id) return;
-		// The same when the anchor names this popover by element, as nldd-button
-		// does with popoverTargetElement: the browser toggles it already.
-		if ((anchorEl as { popoverTargetElement?: Element | null }).popoverTargetElement === this) return;
-		// Native light-dismiss fires on pointerdown and closes the popover
-		// before the click arrives. Without this guard the click would
-		// immediately reopen it.
-		if (this._pointerdownOnAnchorWhileOpen) {
-			this._pointerdownOnAnchorWhileOpen = false;
-			return;
-		}
-		if (this._isOpen && !this._closing) {
-			this.hide();
-		} else {
-			this.show();
 		}
 	};
 

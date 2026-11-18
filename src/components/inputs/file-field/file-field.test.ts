@@ -229,6 +229,16 @@ describe('nldd-file-field', () => {
 		expect(el.internals.validity.valueMissing).toBe(false);
 	});
 
+	it('keeps a custom reason through the next render', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
+		await waitForUpdate(el);
+		el.setCustomValidity('Het bestand is te groot.');
+		choose(el, txt('rapport.pdf'));
+		await waitForUpdate(el);
+		expect(el.internals.validity.customError).toBe(true);
+		expect(el.internals.validationMessage).toBe('Het bestand is te groot.');
+	});
+
 	it('submits nothing without a name', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
 		await waitForUpdate(el);

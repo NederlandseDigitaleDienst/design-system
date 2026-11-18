@@ -3,6 +3,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { extname, join, relative, resolve } from 'node:path';
+import { declarations, TOKEN_PREFIX } from './css.js';
 
 export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
@@ -57,6 +58,36 @@ export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENS
 					return statSync(full).isDirectory() ? walkDirectory(full, [], extensions) : [full];
 				});
 	return [...new Set(files)].filter((file) => existsSync(file) && !matchesExclude(relative(root, file), exclude));
+}
+
+/** The average line length above which a script counts as minified. */
+const MINIFIED_LINE_LENGTH = 500;
+
+/** A built or minified script: not the app's own source, and no use to lint. */
+export function isBundle(filename, source) {
+	if (!/\.[cm]?js$/.test(filename)) return false;
+	return /\.min\.[cm]?js$/.test(filename) || source.length / source.split('\n').length > MINIFIED_LINE_LENGTH;
+}
+
+const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));
+const namesTokens = (source) => /var\(\s*--(primitives|semantics|components|context)-|--_[a-z]/.test(source);
+
+/**
+ * Whether a file is worth a parser when the group pure is off: most files in
+ * an app use no component at all. A stylesheet counts for the tokens it names
+ * and the variables it sets, and only then. `keep` says a file has to be read
+ * anyway, as one the baseline names.
+ */
+export function isRelevant({ filename, source }, { wrappers, keep = () => false } = {}) {
+	if (keep(filename)) return true;
+	if (isStylesheet(filename)) return namesTokens(source);
+	return /nldd-|Nldd/.test(source) || namesTokens(source) || Boolean(wrappers);
+}
+
+/** What the project declares itself, in any file read, is its own token and not a typo. */
+export function projectTokens(inputs) {
+	const names = inputs.flatMap(({ source }) => (/--(primitives|semantics|components|context)-/.test(source) ? declarations(source).map(({ name }) => name) : []));
+	return [...new Set(names.filter((name) => TOKEN_PREFIX.test(name)))];
 }
 
 const CONFIG_FILE = '.nldd-lint.json';

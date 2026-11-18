@@ -20,6 +20,43 @@ here; consult the commit history if you need that level of detail.
 - **A finding of `nldd lint` links to the website.** The address after a rule that points at a pattern or a guideline is now `https://design.digitaledienst.overheid.nl/patronen/form/` where it was a Storybook address.
 - **The links in the skills and in `reference.md` point to the website.**
 
+## [0.26.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.1...v0.26.2) (2026-11-17)
+
+### Highlights
+
+- **Components that do the same thing now share how they do it.** Sheet, window and modal dialog open, close and return focus the same way; so do the overflow menus of the toolbar, menu bar and document tab bar, the radio, checkbox and toggle groups, and the reset of every form control. Most fixes below came out of that, and the next fix in one of them reaches all of them. See Fixed.
+- **Custom validation messages stay on `nldd-token-field` and `nldd-file-field`,** and `nldd-time-picker` keeps to the same bounds as `nldd-time-field`. See Fixed.
+- **Menus behave in more places.** The "more" menu of `nldd-menu-bar` and `nldd-document-tab-bar` works inside a modal dialog, `nldd-menu` opens on the side that fits after a choice closed it, and `nldd-avatar-group` needs no `'unsafe-inline'` in your CSP. See Fixed.
+- **4 accessibility fixes:** focus goes back to what opened `nldd-modal-dialog`, and to the overflow button when a sheet or dialog opened from that menu closes. A tooltip shown by keyboard focus no longer vanishes when the pointer crosses its trigger, and the label of `nldd-form-field` reaches the control past a hidden input. See Fixed.
+
+### Added
+
+- **`nldd lint` reports `value`, `min`, `max` or `step` on an `nldd-time-picker` in the `picker` slot of an `nldd-time-field`** (`time-picker-in-field-no-effect`, a warning). The field writes them onto the picker, so they do nothing there: set them on the field.
+
+### Fixed
+
+- **A message from `setCustomValidity()` on `nldd-token-field` and `nldd-file-field` survives the next render.** Both fields wrote their own validity after the shared one, which wiped a reason that an `nldd-validation-list` or a server had set. Their "required and empty" now goes through the same check as every other field.
+- **`nldd-modal-dialog` returns focus the way `nldd-sheet` and `nldd-window` do.** After a mouse click the element that opened it gets focus back without a focus ring, and from the keyboard with one.
+- **`nldd-modal-dialog` clears `open` and fires `close` when the native dialog closes on its own,** such as through a `<form method="dialog">` inside it. A `close` from a component inside the dialog no longer counts as its own.
+- **`nldd-time-picker` reads `min` and `max` as generously as `nldd-time-field` does.** `min="9:00"` was a bound in the field but ignored by the wheel, which then offered times the field refused.
+- **`nldd-time-field` hands `value`, `min`, `max` and `step` to a picker in its `picker` slot,** as its documentation said and `nldd-date-field` already did. A slotted picker showed every time of the day.
+- **`nldd-form-field` walks past an `<input type="hidden">` to the control beside it.** A server-rendered form puts hidden fields next to its controls (the counters of a Django formset), and the label and description went to the hidden input, where no one reaches them. `nldd lint` no longer counts a hidden input as the control either, so `form-field-needs-input` reports a field that holds nothing else. (#421)
+- **Focus goes back to the button of an overflow menu when a sheet or dialog opened from that menu closes,** in `nldd-toolbar` and `nldd-menu-bar`. It fell to the page, because the item that opened it was gone with the menu. (#450)
+- **The "more" menu of `nldd-menu-bar` and `nldd-document-tab-bar` works inside a modal dialog.** It was placed in the page body, which a modal dialog makes inert: you saw it but could not use it. It now also follows the color scheme and language of its bar.
+- **A checkbox or radio item in the overflow menu of `nldd-toolbar` shows its check mark at once and blinks before the menu closes,** like any other item. The menu was rebuilt under the click: no blink, and a group divider that should stay hidden came back.
+- **A tab chosen from the overflow menu of `nldd-tab-bar` blinks and closes the menu.** The menu stayed open.
+- **`nldd-token-field` gets its values back when the browser restores a page from its cache.**
+- **A form reset puts every control back the way a native input does:** to its `value` or `checked` attribute as it is now, else to what it held after its first render. Each control had its own rule, and some, such as `nldd-time-field`, went back to a value they had kept from the first render even after the attribute changed. A value set after the first render, such as data that loads later, counts as an edit: a reset does not go back to it. `nldd-checkbox` and `nldd-checkbox-field` keep `indeterminate` on a reset, as a native checkbox does.
+- **`nldd-menu` opens on the side that fits after a choice closed it.** In Safari and Firefox it then opened below its button, cut short and scrolling, even with room above.
+- **A sheet, window or modal dialog that you open again in its `close` handler, or right after it, stays open,** and fires `close` once. It used to close again by itself. (#454)
+- **The backdrop of `nldd-sheet`, `nldd-window` and `nldd-modal-dialog` closes it only when the press and the release are both on the backdrop,** so a text selection that ends outside no longer closes it.
+- **A tooltip shown by focus stays when the pointer passes over its trigger and leaves.**
+- **`max` and the stacking of `nldd-avatar-group` work with a Content-Security-Policy without `'unsafe-inline'` in `style-src`.** The group set its rules in a `<style>` element and now uses an adopted stylesheet. (#455)
+- **The component reference in the skill lists the attributes a component inherits,** such as `accessible-description`, `accessible-described-by` and `translations`: 130 that were missing. The Vue types now type `nldd-button-bar-divider`, and `nldd-tab-bar-item` no longer shows an internal attribute.
+- **`nldd lint --fix` also fixes an attribute in a JSX tag that holds a block comment.**
+
+## [0.26.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.0...v0.26.1) (2026-11-17)
+
 ## [0.26.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.25.2...v0.26.0) (2026-11-17)
 
 ### Highlights

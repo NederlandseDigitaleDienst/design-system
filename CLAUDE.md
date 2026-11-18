@@ -8,7 +8,10 @@ Web Components voor de Nederlandse Digitale Dienst (Rijksoverheid).
 npm run www              # De website met alle componenten en patronen, op localhost:5173
 npm run build:styles     # Kopieer CSS + fonts naar dist
 npm run build            # Volledige build
+npm run generate:all     # Alle gegenereerde bestanden, in de volgorde van wat ze lezen
 ```
+
+Welk script welk gecommit bestand maakt, staat in `scripts/generated-files.js`. `npm run check:generated` draait ze allemaal en noemt per verouderd bestand het script; `validate.yml` doet hetzelfde.
 
 ## Ontwikkelworkflow
 
@@ -212,7 +215,7 @@ Dezelfde regels draaien op drie plekken:
 
 Wat een template in een tag schrijft (`{% if %}`, `{{ attrs }}`, `*ngIf`) maakt het element onzeker, nooit fout. Wijzig je de parser, draai dan `npm run lint:corpus` op elk soort consument uit de README: Vue, TSX, Angular, Jinja en gewone HTML.
 
-Een component geeft wat niet in de markup staat door met `setState`, alleen in dev. De browser krijgt de regels als gewone CSS in `src/utilities/dev-rules.generated.ts` en evalueert ze met `el.matches()`. Elke regel is een selector. Wat niet in de markup staat, stelt een component beschikbaar als feit met `setState(this, 'feit', conditie)`, een CSS custom state; de regel leest die met `:state(feit)` en krijgt `runtime: true`. Het feit beschrijft wat er is, nooit de fout: `no-width`, `invalid-max-height`. Een component bevat geen meldingstekst en weet niets van regels: `lint:rules` faalt op `console.warn` en op een state die niets zet. Een attribuut in een `assert` geldt in de browser ook als de property is gezet, want een selector ziet die niet. Een `[x]` in een selector betekent "heeft een waarde", behalve bij booleans.
+Een component geeft wat niet in de markup staat door met `setState`, alleen in dev. De browser krijgt de regels als gewone CSS in `src/utilities/dev-rules.generated.ts` en evalueert ze met `el.matches()`. Elke regel is een selector. Wat niet in de markup staat, stelt een component beschikbaar als feit met `setState(this, 'feit', conditie)`, een CSS custom state; de regel leest die met `:state(feit)` en krijgt `runtime: true`. Het feit beschrijft wat er is, nooit de fout: `no-width`, `invalid-max-height`. Een component bevat geen meldingstekst en weet niets van regels: `lint:rules` faalt op `console.warn` en op een state die niets zet. Een attribuut in een `assert` geldt in de browser ook als de property is gezet, want een selector ziet die niet. Een `[x]` in een selector betekent "heeft een waarde", behalve bij booleans. Wat een eigen pseudo-class (`:named-by-field`, `:accepted`, een klasse als `:form-input`) betekent in de bron en wat de browser ervan krijgt, staat op één plek: `lint/rule-compiler.js`. Een nieuwe pseudo komt daar bij, en een selector die de browser niet kan draaien, weigert hij.
 
 De linter hoort bij zijn eigen versie: hij zit in het pakket, dus een project draait de API die het heeft. Met `npx @nldd/design-system@<doelversie> lint` zie je wat een upgrade naar die versie breekt.
 

@@ -13,9 +13,10 @@
  * which are what the code really does, to the `@attr` lines. It reads the JSDoc
  * with the same parser as the reference generator, so the two cannot disagree.
  *
- * Only locally declared properties are required. Attributes a mixin brings in
- * belong to that mixin and are documented there, not copied into every
- * component that uses it.
+ * Only locally declared properties are required. Attributes a mixin or base
+ * class brings in belong there and are documented there, not copied into
+ * every component that uses it. Which ones those are comes from the
+ * component model, so this reads the manifest.
  *
  * Documented-but-absent attributes are reported as a warning rather than an
  * error: some are plain attributes a parent sets on the host, without a
@@ -40,6 +41,7 @@ import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { extractComponentBlocks, extractLeadingBlock, parseComponent } from './lib/component-jsdoc.js';
 import { declaredAttributes } from './lib/declared-attributes.js';
+import { INTERNAL_TAGS, loadComponentModel } from './lib/component-model.js';
 import { templateSlots } from './lib/template-slots.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -47,9 +49,6 @@ const repoRoot = resolve(__dirname, '..');
 const componentsDir = resolve(repoRoot, 'src/components');
 
 const SKIP_SUFFIXES = ['.styles.ts', '.template.ts', '.test.ts', '.stories.ts', '.i18n.ts'];
-
-/** Ships a custom element but is not consumer-facing; the reference skips it too. */
-const INTERNAL_TAGS = new Set(['nldd-lqip-encoder']);
 
 /**
  * Named slots a consumer never fills by name, keyed by the file's first element.
@@ -63,19 +62,14 @@ const INTERNAL_TAGS = new Set(['nldd-lqip-encoder']);
 const INTERNAL_SLOTS = new Map([['nldd-form-field', new Set(['help'])]]);
 
 /**
- * Attributes the shared mixins bring in, read from the mixins themselves so the
- * list cannot go stale when one gains a property. They are documented with the
- * mixin, so a component neither has to repeat them nor is wrong for doing so.
+ * Per tag, the attributes a mixin or base class brings in, from the component
+ * model. They are documented where they come from, so a component neither has
+ * to repeat them nor is wrong for doing so.
  */
-function mixinAttributes() {
-	const utilities = resolve(repoRoot, 'src/utilities');
-	const names = new Set();
-	for (const file of readdirSync(utilities)) {
-		if (!file.endsWith('.ts') || file.endsWith('.test.ts')) continue;
-		for (const name of declaredAttributes(readFileSync(join(utilities, file), 'utf8'))) names.add(name);
-	}
-	return names;
-}
+const INHERITED = new Map(loadComponentModel().map((element) => [
+	element.tag,
+	new Set(element.attributes.filter((attribute) => attribute.inheritedFrom).map((attribute) => attribute.name)),
+]));
 
 function collectFiles(dir) {
 	const found = [];
@@ -100,8 +94,6 @@ function bodiesByTag(source) {
 	});
 	return bodies;
 }
-
-const MIXIN_ATTRIBUTES = mixinAttributes();
 
 const problems = [];
 const slotProblems = [];
@@ -132,7 +124,7 @@ for (const file of collectFiles(componentsDir)) {
 			problems.push({ tag, file: file.replace(`${repoRoot}/`, ''), attributes: undocumented });
 		}
 
-		const absent = [...documented].filter((name) => !declared.has(name) && !MIXIN_ATTRIBUTES.has(name));
+		const absent = [...documented].filter((name) => !declared.has(name) && !INHERITED.get(tag)?.has(name));
 		if (absent.length > 0) warnings.push({ tag, attributes: absent });
 	}
 

@@ -19,6 +19,7 @@ import { applyFixes } from '../lint/fix.js';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
 import { OPT_IN_GROUPS, resolveSeverities } from '../lint/rule-data.js';
 import { selectorsOf } from '../lint/rule-index.js';
+import { ruleProblems } from '../lint/rule-compiler.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const data = loadData();
@@ -235,28 +236,9 @@ function checkNoWarnings() {
 	}
 }
 
-/**
- * Pseudo-classes only the source linter knows. The browser rejects them and then
- * silently skips the rule, and :accepted judges a file by itself, which only an
- * opt-in group may do.
- */
-const SOURCE_ONLY_PSEUDOS = ['accepted', 'written', 'blank', 'within', 'design-system'];
-
-function checkSourceOnlyPseudos(rule) {
-	if (OPT_IN_GROUPS.includes(rule.group)) return;
-	for (const name of SOURCE_ONLY_PSEUDOS) {
-		if (selectorsOf(rule).some((selector) => selector.includes(`:${name}`))) {
-			problems.push(`${rule.id}: :${name} is for the opt-in groups (${OPT_IN_GROUPS.join(', ')}) only.`);
-		}
-	}
-}
-
-/** The browser rejects a pseudo it does not know, and then silently skips the rule. */
-function checkBrowserSelectors() {
-	const generated = readFileSync(join(repoRoot, 'src/utilities/dev-rules.generated.ts'), 'utf8');
-	for (const name of ['named-by-field', ...SOURCE_ONLY_PSEUDOS]) {
-		if (new RegExp(`:${name}\\b`).test(generated)) problems.push(`dev rules hold :${name}, which the browser does not know.`);
-	}
+/** A pseudo-class that does not exist, or one the rule cannot use where it runs. */
+function checkPseudos(rule) {
+	for (const problem of ruleProblems(rule, data.classes)) problems.push(`${rule.id}: ${problem}`);
 }
 
 /** The plain elements a selector reaches below the component it starts with: `nldd-rich-text > p`, `:is(h1, h2)`. */
@@ -336,13 +318,12 @@ for (const rule of data.rules) {
 	checkFix(rule);
 	checkSee(rule);
 	checkStates(rule);
-	checkSourceOnlyPseudos(rule);
+	checkPseudos(rule);
 	if (!rule.runtime) await checkExamples(rule);
 }
 const patterns = await checkPatterns();
 checkStatesAreRead();
 checkNoWarnings();
-checkBrowserSelectors();
 checkSlottedIsAccepted();
 
 if (problems.length > 0) {

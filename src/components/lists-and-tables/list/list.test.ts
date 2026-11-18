@@ -602,10 +602,10 @@ describe('nldd-list', () => {
 
 		// The arrows walk the sub-pages like any other row: the entry point is
 		// the current page, and down from there is its sibling, not row B.
-		expect(first._rovingActive).toBe(true);
+		expect(first._roving).toBe('stop');
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 		await waitForUpdate(el);
-		expect(second._rovingActive).toBe(true);
+		expect(second._roving).toBe('stop');
 	});
 
 	it('navigation: `expanded` on a row with sub-pages is ignored', async () => {
@@ -645,8 +645,8 @@ describe('nldd-list', () => {
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 		await waitForUpdate(el);
 		// Down from the branch lands on its child, not on the next top-level row.
-		expect(child._rovingActive).toBe(true);
-		expect(leaf._rovingActive).toBe(false);
+		expect(child._roving).toBe('stop');
+		expect(leaf._roving).not.toBe('stop');
 	});
 
 	it('tree: arrow navigation works without the attribute', async () => {
@@ -660,7 +660,7 @@ describe('nldd-list', () => {
 		const rows = [...el.querySelectorAll('nldd-list-item')];
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 		await waitForUpdate(el);
-		expect(rows[1]._rovingActive).toBe(true);
+		expect(rows[1]._roving).toBe('stop');
 	});
 
 	it('tree: a row without its own control is a roving stop on the host', async () => {
@@ -811,10 +811,10 @@ describe('nldd-list', () => {
 		const child = branch.querySelector('nldd-list-item')!;
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, composed: true }));
 		await waitForUpdate(el);
-		expect(child._rovingActive).toBe(true);
+		expect(child._roving).toBe('stop');
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, composed: true }));
 		await waitForUpdate(el);
-		expect(branch._rovingActive).toBe(true);
+		expect(branch._roving).toBe('stop');
 	});
 
 	it('search-bar-end slot: hidden when empty (listbox)', async () => {
@@ -1539,7 +1539,7 @@ describe('nldd-list roving and the controls in a row', () => {
 		segment.shadowRoot!.querySelector('button')!
 			.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 		await waitForUpdate(el);
-		expect((rows[1] as unknown as { _rovingActive: boolean })._rovingActive).toBe(true);
+		expect(rows[1]._roving).toBe('stop');
 	});
 
 	it('still answers an arrow key from the row itself', async () => {
@@ -1548,7 +1548,7 @@ describe('nldd-list roving and the controls in a row', () => {
 		const rows = [...el.querySelectorAll('nldd-list-item')];
 		rows[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 		await waitForUpdate(el);
-		expect((rows[1] as unknown as { _rovingActive: boolean })._rovingActive).toBe(true);
+		expect(rows[1]._roving).toBe('stop');
 	});
 
 	it('Escape from a control lands on its row and stops there', async () => {

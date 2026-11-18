@@ -14,6 +14,7 @@ import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { isKeyboardMode, isTouchMode } from '../../../utilities/input-modality.js';
 import { FocusReturn } from '../../../utilities/return-focus.js';
+import { OverlayInvoker, TriggerAria, watchTrigger, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { NLDDMenuItem } from './menu-item.js';
@@ -388,18 +389,37 @@ export class NLDDMenu extends LitElement {
 	 * main level.
 	 * @internal
 	 */
-	_shownForInvoker(): boolean {
+	invokerIsOpen(): boolean {
 		return this.matches(':popover-open') || this._openChain.length > 0 || this._collapsedByPointerGesture;
+	}
+
+	/** @internal A menu confirming a choice is on its way out: a press on its
+	 *  trigger ends the blink and opens it again, rather than closing it. */
+	invokerPressReopens(): boolean {
+		const root = this._chainRoot ?? this;
+		return [root, ...root._openChain.map((level) => level.submenu)].some((menu) => menu._finishBlink);
+	}
+
+	/** @internal Opens the menu for the control that invokes it. */
+	invokerOpen(): void {
+		if (!this.matches(':popover-open')) this.showPopover();
+	}
+
+	/** @internal Closes the menu and every submenu, for the control that
+	 *  invokes it: the control is a toggle for the whole stack. */
+	invokerClose(): void {
+		if (this._drillInMode && this._openChain.length > 0) this._collapseChain();
+		else if (this.matches(':popover-open')) this.hidePopover();
 	}
 
 	/**
 	 * Called by the invoking control once it has handled its click. The gesture
 	 * marker is normally cleared by the document click, but a control that stops
 	 * its click (nldd-split-button) keeps that from ever arriving, and a marker
-	 * left behind makes `_shownForInvoker()` report open on every later press.
+	 * left behind makes `invokerIsOpen()` report open on every later press.
 	 * @internal
 	 */
-	_endInvokerGesture(): void {
+	invokerGestureEnd(): void {
 		this._collapsedByPointerGesture = false;
 	}
 
@@ -475,79 +495,31 @@ export class NLDDMenu extends LitElement {
 		this._syncAnchorPopupState(reallyOpen);
 	};
 
-	/** The popup type this menu gave its anchor, so a later variant can take
-	 *  it back without touching one the consumer chose. */
-	private _seededPopupType: string | null = null;
+	/** Writes the open state, the popup type and the click action onto the
+	 *  anchor. No attributes on a plain anchor: a combo box anchors its listbox
+	 *  to the field, which carries its own combobox ARIA. */
+	private _triggerAria = new TriggerAria({ attributes: false, popoverTargetAction: true });
 
 	private _syncAnchorPopupState(isOpen: boolean): void {
-		const anchor = this._getAnchorEl() as HTMLElement & {
-			expanded?: boolean;
-			popupType?: string;
-			popoverTargetAction?: 'toggle' | 'show' | 'hide';
-		} | null;
-		if (!anchor) return;
-		if ('expanded' in anchor) anchor.expanded = isOpen;
-		// Seed a valid aria-haspopup when the anchor has no usable popup
-		// type. Falsy covers unset (undefined/null) AND `popup-type=""` —
-		// an empty string is not a valid aria-haspopup token, so it must
-		// still be seeded rather than left invalid. An intentional opt-out
-		// is `popup-type="false"`, which is truthy and preserved here.
-		//
-		// Deliberately not gated on `isOpen`: aria-haspopup is a static
-		// property of the trigger ("this button opens a menu"), not state.
-		// Seeding it on first open would leave a screen reader tabbing a row
-		// of identical "more" buttons hearing plain "button" — exactly the
-		// moment the type matters most, since nothing has been opened yet.
-		// nldd-popover already works this way.
 		// A navigation menu is a disclosure: the trigger says expanded or not,
 		// and promises no menu.
-		// One this menu seeded follows the variant when it changes; one the
-		// consumer set is left alone.
-		if ('popupType' in anchor && (!anchor.popupType || anchor.popupType === this._seededPopupType)) {
-			const wanted = this.variant === 'navigation' ? '' : this.variant === 'listbox' ? 'listbox' : 'menu';
-			anchor.popupType = wanted;
-			this._seededPopupType = wanted || null;
-		}
-		if ('popoverTargetAction' in anchor) {
-			anchor.popoverTargetAction = isOpen ? 'hide' : 'show';
-		}
+		const popupType = this.variant === 'navigation' ? '' : this.variant === 'listbox' ? 'listbox' : 'menu';
+		this._triggerAria.sync(this._getAnchorEl(), { open: isOpen, popupType });
 	}
 
 	// — Event handlers ————————————————————————————————————————————————————————
 
-	private _handleDocumentClick = (event: MouseEvent): void => {
-		// Consume the same-gesture collapse marker (set when an outside or
-		// anchor pointer gesture collapsed the chain). Read+clear for every
-		// click so it never leaks past a single gesture.
-		const collapsedByGesture = this._collapsedByPointerGesture;
+	/** A click spends the gesture marker, wherever it lands: it never leaks
+	 *  past a single gesture. */
+	private _handleDocumentClick = (): void => {
 		this._collapsedByPointerGesture = false;
-		if (this.anchorElement) return;
-		const anchorEl = this._getAnchorEl();
-		if (!anchorEl) return;
-		const path = event.composedPath();
-		if (!path.includes(anchorEl)) return;
-		// This click is the tail of the very gesture that just collapsed the
-		// chain (e.g. tapping the anchor from deep in a drill-in submenu:
-		// the submenu's pointerdown/tap already collapsed). It must not
-		// reopen. Gesture-correlated, so reliable even when the
-		// pointerup→click gap exceeds the time-based reopen guard on touch.
-		if (collapsedByGesture) return;
-		// Drill-in: the root is hidden while a submenu shows, so `_isOpen`
-		// is false on the root even though the menu is visibly open. A
-		// plain toggle would `showPopover()` the root — i.e. bounce back
-		// to the main level. The anchor is a toggle: if anything in the
-		// chain is open, clicking it collapses the whole stack (registry-
-		// driven, so it works even if chain links went stale).
-		if (this._drillInMode && (this._isOpen || this._openChain.length > 0)) {
-			this._collapseChain();
-			return;
-		}
-		if (this._isOpen) {
-			(this as HTMLElement).hidePopover();
-		} else {
-			(this as HTMLElement).showPopover();
-		}
 	};
+
+	/** Makes the element named by `anchor` a toggle for this menu, as a
+	 *  design-system control is for a menu in its popup slot. Not for an
+	 *  `anchorElement`: whoever set that opens the menu. */
+	private _anchorInvoker = new OverlayInvoker(this, { anchorFor: () => null });
+	private _stopWatchingAnchor: (() => void) | null = null;
 
 	// — Hover and the safe triangle (cascade only) ——————————————————————————
 	// See menu.safe-triangle.ts for the wedge that keeps a submenu open on a
@@ -1070,6 +1042,11 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('keydown', this._notePress, true);
 		this.addEventListener('pointercancel', this._forgetPress, true);
 		this.addEventListener('click', this._forgetPress);
+		// The anchor's click reads the gesture marker before the document click
+		// below spends it, so this listener goes first.
+		this._anchorInvoker.setOverlay(this as unknown as InvokableOverlay);
+		this._stopWatchingAnchor = watchTrigger(this._anchorInvoker, () =>
+			this.anchorElement || !this.anchor ? null : document.getElementById(this.anchor));
 		document.addEventListener('click', this._handleDocumentClick);
 	}
 
@@ -1131,6 +1108,8 @@ export class NLDDMenu extends LitElement {
 		this.removeEventListener('pointercancel', this._forgetPress, true);
 		this.removeEventListener('click', this._forgetPress);
 		document.removeEventListener('click', this._handleDocumentClick);
+		this._stopWatchingAnchor?.();
+		this._stopWatchingAnchor = null;
 		// Defensive: the pointerdown + resize listeners are added on open
 		// and removed on close, but if the menu is torn down mid-open we'd
 		// otherwise leak the global listeners.
@@ -1423,7 +1402,10 @@ export class NLDDMenu extends LitElement {
 	/** Recalculate position and size relative to the anchor element. */
 	public async reposition(): Promise<void> {
 		const anchorEl = this._getAnchorEl();
-		if (!anchorEl || !this._isOpen) return;
+		// The open state follows the toggle event, which WebKit and Gecko fire
+		// after a last resize of the hidden menu: measured at no height, it fits
+		// below anything, and that pass would leave its max-height behind.
+		if (!anchorEl || !this._isOpen || !this.matches(':popover-open')) return;
 
 		const viewportMargin = this._cssPx('--_menu-viewport-margin');
 
@@ -1783,6 +1765,9 @@ export class NLDDMenu extends LitElement {
 		this._updateEmptyState();
 		this._claimItems();
 
+		// Flip measures the menu as it stands: the height left over from the last
+		// open would make it fit on a side it does not fit on now.
+		this.style.removeProperty('--_menu-max-height');
 		await this.reposition();
 		this.setAttribute('positioned', ''); // placed — reveal it (see _handleBeforeToggle)
 		const anchorEl = this._getAnchorEl();

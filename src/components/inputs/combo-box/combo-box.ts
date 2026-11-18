@@ -71,6 +71,7 @@
 import { LitElement } from 'lit';
 import { property, state, query } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { comboBoxStyles } from './combo-box.styles.js';
@@ -94,6 +95,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 	static override styles = comboBoxStyles;
 
+	static formProperties = ['value', 'text'];
+
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
@@ -106,8 +109,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	static blocksImplicitSubmission = true;
 
 
-	private _initialValue = '';
-	private _initialText = '';
 
 	@property({ type: String })
 	value = '';
@@ -230,11 +231,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 	// — Lifecycle ————————————————————————————————————————————————————————————
 
-	override firstUpdated(): void {
-		this._initialValue = this.value;
-		this._initialText = this.text;
-	}
-
 	override willUpdate(changedProperties: Map<string, unknown>): void {
 		// Auto-derive text from a matching slotted menu item when value changes
 		// alone. If text also changed in the same update cycle the consumer
@@ -277,13 +273,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		return state;
 	}
 
-	formResetCallback(): void {
-		this.value = this._initialValue;
-		this.text = this._initialText;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
+	override formStateRestoreCallback(state: File | string | FormData | null): void {
 		if (state instanceof FormData) {
 			this.value = String(state.get('value') ?? '');
 			this.text = String(state.get('display') ?? '');
@@ -416,12 +406,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		this._highlightedId = '';
 		this._closeMenu();
 		this._menu?.filter('');
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { value: this.value });
 		this._input?.focus();
 	};
 
@@ -492,26 +477,27 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		(this._menu as HTMLElement).hidePopover();
 	}
 
-	private _pickerPointerdownWhileOpen = false;
-
-	public _toggleMenu(): void {
-		if (this._pickerPointerdownWhileOpen) {
-			this._pickerPointerdownWhileOpen = false;
-			return;
-		}
-		if (this._isOpen) {
-			this._closeMenu();
-			this._input?.focus();
-		} else {
+	/** The picker button opens and closes the list; typing opens it too. */
+	private _picker: OverlayInvoker = new OverlayInvoker(this, {
+		open: (): void => {
 			this._openMenu();
 			this._input?.focus();
-		}
+		},
+		close: (): void => {
+			this._closeMenu();
+			this._input?.focus();
+		},
+	});
+
+	/** Without an event it acts as a keyboard click. */
+	public _toggleMenu(event?: MouseEvent): void {
+		this._picker.setOverlay(this._menu as InvokableOverlay | null);
+		this._picker.handleClick(event ?? new MouseEvent('click'));
 	}
 
-	public _handlePickerPointerdown(): void {
-		if (this._isOpen) {
-			this._pickerPointerdownWhileOpen = true;
-		}
+	public _handlePickerPointerdown(event?: PointerEvent): void {
+		this._picker.setOverlay(this._menu as InvokableOverlay | null);
+		this._picker.handlePointerdown(event);
 	}
 
 	// — Handlers ————————————————————————————————————————————————————————————
@@ -544,12 +530,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		if (!this._isOpen) this._openMenu();
 		this._openPending = this.text !== '' && !this._menu?.matches(':popover-open');
 		this._menu?._announceResults();
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('input', {
-			detail: { value: this.text },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('input', { value: this.text });
 	}
 
 	public _handleClear(): void {
@@ -557,18 +538,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		this.value = '';
 		this._menu?.filter('');
 		this._closeMenu();
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('input', {
-			detail: { value: '' },
-			bubbles: true,
-			composed: true,
-		}));
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: '' },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('input', { value: '' });
+		this.emitFormEvent('change', { value: '' });
 		this._input?.focus();
 	}
 
@@ -617,12 +588,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// The label of the option that was already chosen: nothing changed.
 		if (value === this.value) return;
 		this.value = value;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
+		this.emitFormEvent('change', { value: this.value });
 	}
 
 	/** Restore the input text to the current value's display label, discarding any

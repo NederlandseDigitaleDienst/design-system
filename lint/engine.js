@@ -11,7 +11,7 @@
 
 import { compile } from 'css-select';
 import { parse } from 'css-what';
-import { isDesignSystemCss } from './css.js';
+import { favorableName, sourcePseudos } from './rule-compiler.js';
 import { BOUND, adapter, walk } from './tree.js';
 
 /** In W+ a sibling behind a condition might not show, as with `v-if`, `v-else` and tabs on `v-show`. */
@@ -22,97 +22,6 @@ const favorableAdapter = {
 };
 
 const BUILT_IN_PSEUDOS = new Set(['is', 'not', 'has', 'where', 'matches']);
-
-/**
- * Whether a field hands its label to `target`, as _findInput in nldd-form-field does:
- * the first input in document order, helper text left out. The answer is `maybe` when
- * something before it may or may not be an input that renders.
- */
-function findsInput(node, target, isInput, uncertain = false) {
-	let maybe = uncertain;
-	for (const child of node.children) {
-		if (child.name === 'nldd-form-field-help-text') continue;
-		const unsure = maybe || child.conditional || child.repeated;
-		if (child === target) return maybe ? 'maybe' : 'yes';
-		if (isInput(child)) {
-			if (!unsure) return 'no';
-			maybe = true;
-		}
-		if (child.opaque) maybe = true;
-		const inside = findsInput(child, target, isInput, unsure);
-		if (inside !== 'absent') return inside;
-	}
-	return 'absent';
-}
-
-/**
- * On a running page the attribute is simply there, so the browser checks leave this
- * out. In source it has to be worked out.
- */
-function createFieldLabelCheck(isInput, allowMaybe) {
-	return (node) => {
-		for (let parent = node.parent; parent; parent = parent.parent) {
-			if (parent.name === 'nldd-form-field') {
-				const label = parent.attrs.get('label');
-				const unknownLabel = label === BOUND || parent.spread;
-				if (!unknownLabel && !label) return false;
-				const found = findsInput(parent, node, isInput);
-				if (found === 'yes' && !unknownLabel) return true;
-				return allowMaybe && found !== 'no';
-			}
-			if (parent.opaque) return allowMaybe;
-		}
-		return false;
-	};
-}
-
-/**
- * Whether the nearest component around a plain element styles it, as nldd-dropdown
- * does its <select> and nldd-rich-text everything in it. Each component says so
- * with `@accepts` in its JSDoc.
- *
- * What a file renders is judged in that file: that a parent elsewhere might put it
- * inside an nldd-rich-text does not make plain HTML written here the design system's. A
- * tree the file builds under a name (a helper component, a variable) is judged where
- * the file uses that name. Used nowhere here, or under a component of the app, it is
- * unknown.
- */
-function createAcceptedCheck(tags, allowUnknown) {
-	// `chain` holds the plain elements between the node and the component: the
-	// component styles its own children (::slotted) or descendants of what it styles,
-	// so each of them has to be accepted too. `seen` keeps a component that places
-	// itself from going round in circles.
-	const accepted = (node, from, chain, seen) => {
-		for (let parent = from; parent; parent = parent.parent) {
-			if (parent.name === '#root') {
-				if (!parent.detached) return false;
-				if (!parent.placements) return allowUnknown;
-				if (seen.has(parent)) return false;
-				const next = new Set(seen).add(parent);
-				// Accepted in any of the places the file uses it is enough.
-				return parent.placements.some((place) => accepted(node, place.parent, chain, next));
-			}
-			if (parent.opaque) return allowUnknown;
-			if (!parent.name.startsWith('nldd-')) {
-				chain.push(parent.name);
-				continue;
-			}
-			const accepts = tags[parent.name]?.accepts ?? [];
-			return accepts.includes('*') || [node.name, ...chain].every((name) => accepts.includes(name));
-		}
-		return false;
-	};
-	return (node) => accepted(node, node.parent, [], new Set());
-}
-
-function classPseudos(classes) {
-	return Object.fromEntries(
-		Object.entries(classes).map(([name, tags]) => {
-			const members = new Set(tags);
-			return [name, (node) => members.has(node.name)];
-		}),
-	);
-}
 
 /**
  * Rewrites a selector for one world. W+ lets what is unknown match, W- does not, and
@@ -127,8 +36,7 @@ function forWorld(tokens, classes, widen) {
 			return { ...token, data: token.data.map((each) => forWorld(each, classes, inner)) };
 		}
 		if (!widen) return token;
-		if (token.type === 'pseudo' && token.name === 'named-by-field') return { ...token, name: 'may-be-named-by-field' };
-		if (token.type === 'pseudo' && token.name === 'accepted') return { ...token, name: 'may-be-accepted' };
+		if (token.type === 'pseudo' && favorableName(token.name) !== token.name) return { ...token, name: favorableName(token.name) };
 		if (token.type === 'tag' || (token.type === 'pseudo' && token.name in classes)) {
 			return { type: 'pseudo', name: 'is', data: [[token], [unknown]] };
 		}
@@ -143,28 +51,10 @@ function forWorld(tokens, classes, widen) {
 }
 
 export function createEngine({ classes = {}, tags = {}, designSystemCss = {} } = {}) {
-	const shared = classPseudos(classes);
 	const pseudos = {
-		...shared,
-		'named-by-field': createFieldLabelCheck(shared['form-input'] ?? (() => false), false),
-		'may-be-named-by-field': createFieldLabelCheck(shared['form-input'] ?? (() => false), true),
-		accepted: createAcceptedCheck(tags, false),
-		'may-be-accepted': createAcceptedCheck(tags, true),
-		// Inside an element of this name in this file. A drawing's own classes and styles are its business.
-		within: (node, name) => {
-			for (let parent = node.parent; parent; parent = parent.parent) if (parent.name === name) return true;
-			return false;
-		},
-		// CSS the design system ships: a block it recognizes, or a stylesheet with nothing else in it.
-		'design-system': (node) => node.designSystem ?? (node.css !== undefined && isDesignSystemCss(node.css, designSystemCss)),
-		// No element and no text: an empty mount point such as <div id="app"></div>.
-		blank: (node) => node.children.length === 0 && !node.text,
-		// Only exists on a running page, so in source it is never true.
-		state: () => false,
+		...sourcePseudos({ classes, tags, designSystemCss }),
+		// Engine-only: how forWorld lets what is unknown match in W+.
 		unknown: (node) => node.opaque,
-		// The attribute is in the markup, with a value or bound to one. `[class]` asks for a
-		// value we can read, so a bound class would only ever be cantTell.
-		written: (node, name) => node.attrs.has(name),
 		bound: (node, name) => node.opaque || node.spread || node.attrs.get(name) === BOUND,
 	};
 	const cache = new Map();
