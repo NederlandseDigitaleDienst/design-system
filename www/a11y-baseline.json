@@ -1,60 +1,46 @@
 {
-	"/componenten/avatar/": {
-		"label-content-name-mismatch": 3
-	},
-	"/componenten/button/": {
-		"label-content-name-mismatch": 1
-	},
-	"/componenten/checkbox-field/": {
+	"/componenten/checkbox-group/voorbeelden/": {
 		"color-contrast": 3
 	},
-	"/componenten/checkbox-group/": {
-		"color-contrast": 4
-	},
-	"/componenten/code-editor/": {
-		"color-contrast": 2
-	},
 	"/componenten/document-tab-bar/": {
-		"aria-required-children": 3,
-		"label-content-name-mismatch": 11
+		"aria-required-children": 1,
+		"label-content-name-mismatch": 3
 	},
-	"/componenten/list-item-segment/": {
+	"/componenten/document-tab-bar/voorbeelden/": {
+		"aria-required-children": 2,
+		"label-content-name-mismatch": 3
+	},
+	"/componenten/list-item-segment/voorbeelden/": {
 		"aria-hidden-focus": 3,
 		"nested-interactive": 13
 	},
-	"/componenten/list/": {
+	"/componenten/list/voorbeelden/": {
 		"label": 1,
 		"nested-interactive": 30
 	},
-	"/componenten/menu-bar-item/": {
-		"label-content-name-mismatch": 1
-	},
-	"/componenten/menu-bar/": {
-		"label-content-name-mismatch": 2
-	},
-	"/componenten/multi-line-text-field/": {
+	"/componenten/multi-line-text-field/voorbeelden/": {
 		"label": 4
 	},
 	"/componenten/number-field/": {
-		"label": 13
+		"label": 1
 	},
-	"/componenten/password-field/": {
+	"/componenten/number-field/voorbeelden/": {
+		"label": 12
+	},
+	"/componenten/password-field/voorbeelden/": {
 		"label": 4
 	},
-	"/componenten/rich-text/": {
+	"/componenten/rich-text/voorbeelden/": {
 		"scrollable-region-focusable": 1
 	},
 	"/componenten/stepper/": {
-		"aria-hidden-focus": 10
+		"aria-hidden-focus": 2
 	},
-	"/componenten/switch-field/": {
-		"color-contrast": 2
+	"/componenten/stepper/voorbeelden/": {
+		"aria-hidden-focus": 8
 	},
-	"/componenten/text-field/": {
+	"/componenten/text-field/voorbeelden/": {
 		"label": 4
-	},
-	"/componenten/token/": {
-		"color-contrast": 3
 	},
 	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fbar-split-view%2Fbar-split-view.stories.ts&story=MetStatusbalk": {
 		"scrollable-region-focusable": 1
@@ -195,9 +181,6 @@
 		"label-content-name-mismatch": 1
 	},
 	"/voorbeeld/?file=src%2Fpatterns%2Ftopic-page%2Ftopic-page.stories.ts&story=Standaard": {
-		"label-content-name-mismatch": 1
-	},
-	"donker /componenten/button/": {
 		"label-content-name-mismatch": 1
 	}
 }

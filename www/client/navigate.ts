@@ -31,8 +31,8 @@ function linkOf(event: MouseEvent): URL | null {
 	return url;
 }
 
-async function fetchPage(url: URL): Promise<Document | null> {
-	const response = await fetch(url, { headers: { Accept: 'text/html' } });
+async function fetchPage(url: URL, signal: AbortSignal): Promise<Document | null> {
+	const response = await fetch(url, { headers: { Accept: 'text/html' }, signal });
 	if (!response.ok || !response.headers.get('content-type')?.includes('text/html')) return null;
 	return new DOMParser().parseFromString(await response.text(), 'text/html');
 }
@@ -175,7 +175,7 @@ async function go(
 	}
 	pending?.abort();
 	const controller = (pending = new AbortController());
-	const next = await fetchPage(url).catch(() => null);
+	const next = await fetchPage(url, controller.signal).catch(() => null);
 	if (controller.signal.aborted) return;
 	const nextView = next?.querySelector('nldd-navigation-split-view');
 	if (!next || !nextView?.querySelector(PANE('main'))) {

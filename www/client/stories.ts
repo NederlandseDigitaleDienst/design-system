@@ -130,20 +130,22 @@ export function mount(result: Rendered, container: HTMLElement): void {
  * reflect internal state onto their host (a role, an inline style), and that is
  * not what a consumer writes.
  */
+const escapeText = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 export function sourceOf(container: HTMLElement): string {
 	const lines: string[] = [];
 	const walk = (node: Node, depth: number) => {
 		const indent = '\t'.repeat(depth);
 		if (node.nodeType === Node.TEXT_NODE) {
 			const text = (node.textContent ?? '').replace(/\s+/g, ' ').trim();
-			if (text) lines.push(indent + text);
+			if (text) lines.push(indent + escapeText(text));
 			return;
 		}
 		if (!(node instanceof Element)) return;
 		const tag = node.localName;
 		const attributes = [...node.attributes]
 			.filter((a) => !(a.name === 'class' && !a.value) && !(a.name === 'style' && !a.value))
-			.map((a) => (a.value === '' ? a.name : `${a.name}="${a.value.replace(/"/g, '&quot;')}"`));
+			.map((a) => (a.value === '' ? a.name : `${a.name}="${a.value.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"`));
 		const open =
 			attributes.length > 1
 				? `<${tag}\n${attributes.map((a) => `${indent}\t${a}`).join('\n')}\n${indent}>`
@@ -163,7 +165,7 @@ export function sourceOf(container: HTMLElement): string {
 			return;
 		}
 		if (children.length === 1 && children[0].nodeType === Node.TEXT_NODE && attributes.length <= 1) {
-			lines.push(`${indent}${open}${(children[0].textContent ?? '').replace(/\s+/g, ' ').trim()}</${tag}>`);
+			lines.push(`${indent}${open}${escapeText((children[0].textContent ?? '').replace(/\s+/g, ' ').trim())}</${tag}>`);
 			return;
 		}
 		lines.push(indent + open);

@@ -21,6 +21,7 @@ import '../../src/components/inputs/segmented-control/segmented-control.js';
 import '../../src/components/layout/box/box.js';
 import '../../src/components/layout/container/container.js';
 import '../../src/components/layout/divider/divider.js';
+import '../../src/components/layout/spacer/spacer.js';
 import '../../src/components/actions/toolbar/toolbar.js';
 import '../../src/components/actions/toolbar/toolbar-item.js';
 import '../../src/components/actions/menu/menu.js';
@@ -170,6 +171,7 @@ export function keepInPlace(root: HTMLElement): void {
 export class SiteStage extends HTMLElement {
 	private story?: LoadedStory;
 	private args: Args = {};
+	private argsChanged = false;
 	private overrides = new Map<string, string | boolean>();
 	private controls?: ControlsData;
 	private canvas = element('div', 'site-stage__canvas');
@@ -191,6 +193,9 @@ export class SiteStage extends HTMLElement {
 	private quickPending = new Set<string>();
 	private quickFields = new Map<string, HTMLElement>();
 	private quickAdd?: HTMLElement;
+	/** What the stage hangs on the page, let go once the stage leaves it. */
+	private lifetime = new AbortController();
+	private observers: (MutationObserver | ResizeObserver)[] = [];
 
 	connectedCallback(): void {
 		if (this.started) return;
@@ -198,9 +203,28 @@ export class SiteStage extends HTMLElement {
 		const follow = () => {
 			if (this.scheme === 'auto') this.applyScheme();
 		};
-		new MutationObserver(follow).observe(document.documentElement, { attributeFilter: ['data-scheme'] });
-		matchMedia('(prefers-color-scheme: dark)').addEventListener('change', follow);
+		this.observe(new MutationObserver(follow)).observe(document.documentElement, { attributeFilter: ['data-scheme'] });
+		matchMedia('(prefers-color-scheme: dark)').addEventListener('change', follow, { signal: this.lifetime.signal });
 		void this.start();
+	}
+
+	/**
+	 * A page change replaces main, and with it every stage on it. A stage that
+	 * is gone after the current task is done for good: it lets go of the page,
+	 * or each page visited would stay alive behind the next.
+	 */
+	disconnectedCallback(): void {
+		queueMicrotask(() => {
+			if (this.isConnected) return;
+			this.lifetime.abort();
+			for (const observer of this.observers) observer.disconnect();
+			this.observers = [];
+		});
+	}
+
+	private observe<T extends MutationObserver | ResizeObserver>(observer: T): T {
+		this.observers.push(observer);
+		return observer;
 	}
 
 	private async start(): Promise<void> {
@@ -289,7 +313,15 @@ export class SiteStage extends HTMLElement {
 			if (event.data.type === 'event') this.log(event.data.name, event.data.detail);
 			if (event.data.type === 'source') void this.setSource(event.data.code);
 			if (event.data.type === 'height') frame.style.height = `${event.data.height}px`;
-		});
+			if (event.data.type === 'ready') this.resend();
+		}, { signal: this.lifetime.signal });
+	}
+
+	/** Everything the frame should show that differs from the story as it is. */
+	private resend(): void {
+		this.post({ type: 'scheme', scheme: this.dark ? 'dark' : 'light' });
+		if (this.argsChanged) this.post({ type: 'args', args: this.args });
+		for (const [name, value] of this.overrides) this.post({ type: 'attribute', tag: this.controls?.tag, name, value });
 	}
 
 	private applyScheme(): void {
@@ -369,7 +401,6 @@ export class SiteStage extends HTMLElement {
 
 	private build({ tools }: { tools: boolean }): void {
 		const name = this.getAttribute('name') ?? '';
-		const bar = element('div', 'site-stage__bar');
 		const toolbar = nldd('toolbar', { size: 'sm', 'accessible-label': `Weergave van ${name}` });
 		if (tools) {
 			// What gives way first on a narrow stage: opening it on its own, then the
@@ -437,7 +468,7 @@ export class SiteStage extends HTMLElement {
 				);
 			}
 		}
-		bar.append(toolbar);
+		const bar = nldd('container', { 'padding-block': '12', 'padding-inline': '16' }, [toolbar]);
 
 		const mat = this.mat;
 		this.canvas.dataset.surface = 'base';
@@ -451,7 +482,7 @@ export class SiteStage extends HTMLElement {
 		// An example wider than the stage scrolls sideways. A region that scrolls
 		// must be reachable by keyboard, but only then: a tab stop on every
 		// stage of a page would be noise.
-		new ResizeObserver(() => {
+		this.observe(new ResizeObserver(() => {
 			const scrolls = mat.scrollWidth > mat.clientWidth + 1;
 			if (scrolls === mat.hasAttribute('tabindex')) return;
 			if (scrolls) {
@@ -463,7 +494,7 @@ export class SiteStage extends HTMLElement {
 				mat.removeAttribute('role');
 				mat.removeAttribute('aria-label');
 			}
-		}).observe(this.canvas);
+		})).observe(this.canvas);
 		this.eventLog.hidden = true;
 		this.events.setAttribute('aria-label', `Events van ${name}`);
 		this.box.replaceChildren(...(toolbar.children.length ? [bar, nldd('divider')] : []), mat, this.eventLog);
@@ -495,8 +526,8 @@ export class SiteStage extends HTMLElement {
 				await import('../../src/components/content/accordion/accordion-item.js');
 				this.code.setAttribute('appearance', 'simple');
 				const item = nldd('accordion-item', { text: 'Bekijk code' }, [this.code]);
-				this.box.after(nldd('accordion', {}, [item]));
-			} else this.box.after(this.code);
+				this.box.after(nldd('spacer', { size: '12' }), nldd('accordion', {}, [item]));
+			} else this.box.after(nldd('spacer', { size: '12' }), this.code);
 			this.code.textContent = text;
 			// The code keeps the height it has before any change, scrolling when
 			// it grows, so the controls below it stay where they are.
@@ -541,6 +572,7 @@ export class SiteStage extends HTMLElement {
 
 	private setArg(key: string, value: unknown): void {
 		this.args = { ...this.args, [key]: value };
+		this.argsChanged = true;
 		if (this.frame) this.post({ type: 'args', args: this.args });
 		else this.draw(this.canvas);
 		this.showSource();
@@ -586,7 +618,6 @@ export class SiteStage extends HTMLElement {
 			import('../../src/components/actions/menu/menu-item.js'),
 			import('../../src/components/actions/menu/menu-divider.js'),
 			import('../../src/components/content/token/token.js'),
-			import('../../src/components/layout/spacer/spacer.js'),
 		]);
 
 		const list = nldd('list', { type: 'form', appearance: 'box-tinted' });
@@ -620,13 +651,10 @@ export class SiteStage extends HTMLElement {
 				});
 				title.append(button);
 				const about = span.cloneNode(true);
-				// The bar is for the bottom sheet a popover is on a phone; anchored
-				// beside the button it needs none.
 				const popover = nldd('popover', { id, role: 'region', 'accessible-label': name }, [
 					nldd('top-title-bar', { text: name, 'heading-level': '2', 'dismiss-text': 'Sluit' }),
 					nldd('container', { padding: '16' }, [nldd('text', {}, [about])]),
 				]);
-				popover.classList.add('site-control-info');
 				popovers.push(popover);
 				infos.push({ label, button, text });
 			}
@@ -684,8 +712,8 @@ export class SiteStage extends HTMLElement {
 		}
 		// In place, not in a sheet: the example has to stay in view while an
 		// attribute changes. The usage tab has no other examples to keep in reach.
-		this.append(list, ...popovers);
-		new ResizeObserver(() => {
+		this.append(nldd('spacer', { size: '12' }), list, ...popovers);
+		this.observe(new ResizeObserver(() => {
 			const narrow = list.offsetWidth < NARROW_CONTROLS;
 			// Out of the cell rather than hidden: the cell's own style on a slotted
 			// paragraph outranks the hidden attribute.
@@ -696,7 +724,7 @@ export class SiteStage extends HTMLElement {
 			}
 			// A popover open when its button goes would stay without an anchor.
 			if (!narrow) for (const popover of popovers) (popover as HTMLElement & { open: boolean }).open = false;
-		}).observe(list);
+		})).observe(list);
 	}
 
 	/** The entry in the strip for an attribute, when it is a switch or a choice. */
@@ -838,7 +866,6 @@ export class SiteStage extends HTMLElement {
 			nldd('container', { padding: '16' }, [field, nldd('spacer', { size: '12' }), remove]),
 		]);
 		popover.slot = 'menu';
-		popover.classList.add('site-control-info', 'site-stage__quick-field');
 		remove.addEventListener('click', () => {
 			(popover as HTMLElement & { invokerClose(): void }).invokerClose();
 			this.quickSet(entry, entry.unset);

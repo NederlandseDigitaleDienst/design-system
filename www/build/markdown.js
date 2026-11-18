@@ -24,11 +24,10 @@ export function escapeHtml(text) {
 		.replace(/"/g, '&quot;');
 }
 
-/** The anchor of a heading, as GitHub and the former Storybook pages derive it. */
+/** The anchor of a heading's plain text, as GitHub and the former Storybook pages derive it. */
 export function headingId(text) {
 	return text
 		.toLowerCase()
-		.replace(/<[^>]+>/g, '')
 		.replace(/[^\p{L}\p{N}\s-]/gu, '')
 		.trim()
 		.replace(/\s+/g, '-');
@@ -48,6 +47,29 @@ function decodeEntities(html) {
 	return html.replace(/&(?:amp|lt|gt|quot|#39);/g, (entity) => ENTITIES[entity]);
 }
 
+/** Whether a token is an example or a component written in the Markdown. */
+const isComponent = (token) => token.type === 'html' && /^\s*<(?:nldd-|!--\s*voorbeeld:)/.test(token.text ?? token.raw);
+
+/**
+ * A code block, an example and a component are taken out of the prose at the
+ * top of the page. Inside a list or a quote that would cut the element in two:
+ * a code block stays in place there, inside the prose, and an example or a
+ * component is refused, with the place it was found.
+ */
+function markNested(tokens) {
+	const children = (token) => [...(token.tokens ?? []), ...(token.items ?? [])];
+	const search = (token) => {
+		for (const child of children(token)) {
+			if (child.type === 'code') child.nested = true;
+			else if (isComponent(child)) {
+				throw new Error(`Een voorbeeld of component staat in een ${token.type}, waar het de tekst in tweeën knipt: ${child.raw.trim().split('\n')[0]}`);
+			}
+			search(child);
+		}
+	};
+	for (const token of tokens) if (token.type !== 'code' && !isComponent(token)) search(token);
+}
+
 /**
  * @param {string} markdown
  * @param {object} options
@@ -58,6 +80,14 @@ function decodeEntities(html) {
 export function renderMarkdown(markdown, { href, example }) {
 	let title = '';
 	const headings = [];
+	// A heading whose text comes back gets a number, so every id is one of a kind.
+	const seen = new Map();
+	const uniqueId = (text) => {
+		const id = headingId(text);
+		const count = seen.get(id) ?? 0;
+		seen.set(id, count + 1);
+		return count ? `${id}-${count}` : id;
+	};
 	const marked = new Marked({
 		gfm: true,
 		renderer: {
@@ -71,12 +101,13 @@ export function renderMarkdown(markdown, { href, example }) {
 					title = decodeEntities(text);
 					return '';
 				}
-				const id = headingId(text);
+				const id = uniqueId(decodeEntities(text));
 				if (depth === 2) headings.push({ id, text });
 				return `<h${depth} id="${id}">${inner}</h${depth}>\n`;
 			},
-			code({ text, lang }) {
-				return `${BREAK}${codeViewer(text, (lang ?? '').trim())}${BREAK}`;
+			code({ text, lang, nested }) {
+				const viewer = codeViewer(text, (lang ?? '').trim());
+				return nested ? viewer : `${BREAK}${viewer}${BREAK}`;
 			},
 			link({ href: target, tokens }) {
 				const inner = this.parser.parseInline(tokens);
@@ -93,8 +124,10 @@ export function renderMarkdown(markdown, { href, example }) {
 			},
 		},
 	});
+	const tokens = marked.lexer(markdown);
+	markNested(tokens);
 	const blocks = marked
-		.parse(markdown)
+		.parser(tokens)
 		.split(BREAK)
 		.map((part, index) => {
 			if (index % 2 === 1) return part;

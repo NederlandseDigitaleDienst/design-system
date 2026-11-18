@@ -49,4 +49,10 @@ describe('stories', () => {
 			'<nldd-button\n\tappearance="primary"\n\ttext="Bewaar"\n\tdisabled\n></nldd-button>\n<p>Hallo</p>',
 		);
 	});
+
+	it('escapes text and attributes, so the markup it shows can be pasted', () => {
+		const scratch = document.createElement('div');
+		scratch.innerHTML = '<p title="A &amp; B">&lt;geen&gt; &amp; meer</p>';
+		expect(sourceOf(scratch)).toBe('<p title="A &amp; B">&lt;geen&gt; &amp; meer</p>');
+	});
 });

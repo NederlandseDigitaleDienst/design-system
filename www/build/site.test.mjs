@@ -198,6 +198,26 @@ test('headingId matches the anchors the guidelines are linked by', () => {
 	assert.equal(headingId('Feedback en state'), 'feedback-en-state');
 });
 
+test('a code block in a list stays in its item', () => {
+	const { blocks } = renderMarkdown('- Stap een:\n\n  ```html\n  <nldd-tag></nldd-tag>\n  ```\n- Stap twee\n', { href: (path) => path });
+	assert.equal(blocks.length, 1);
+	assert.match(blocks[0], /<li>[^<]*<p>Stap een:<\/p>\s*<nldd-code-viewer[^]*?<\/li>\s*<li>/);
+});
+
+test('an example in a list is refused', () => {
+	assert.throws(
+		() => renderMarkdown('- Stap\n\n  <!-- voorbeeld: Standaard -->\n', { href: (path) => path, example: () => '' }),
+		/in een list_item/,
+	);
+});
+
+test('every heading gets an id of its own, from its text as a reader sees it', () => {
+	const { html } = renderMarkdown('## Voorbeeld\n\n## Voorbeeld\n\n## Op `<html>`\n', { href: (path) => path });
+	assert.match(html, /id="voorbeeld"/);
+	assert.match(html, /id="voorbeeld-1"/);
+	assert.match(html, /id="op-html"/);
+});
+
 test('storyName reads an export name as a heading', () => {
 	assert.equal(storyName('KlikbareKaart'), 'Klikbare kaart');
 	assert.equal(storyName('Standaard'), 'Standaard');

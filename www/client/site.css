@@ -1,19 +1,12 @@
 /**
  * Styles of the site itself. Everything a component can do is left to the
- * components; what is here is the stage, which is deliberately not a component
- * of the system, and the little the page needs around it.
- *
- * The stage speaks another visual language than the system on purpose: square
- * corners where the system rounds, monospace where the system uses Rijks Sans,
- * a dotted mat no component draws. A reader then sees at a glance which part of
- * the page is an example and which part is the site.
+ * components. What is here is the inside of the stage, where an example and
+ * its frame stand, and the API tables that nldd-rich-text does not fit yet.
  */
 
 /* ## Code in tables and lists */
 
-/* A name, a type or a value is one word to a reader and stays whole; a union
-   wraps between its members, which are spans of their own. Outside the layer
-   below, like the rule above: the stylesheet of nldd-rich-text is not in a
+/* Outside the layer below: the stylesheet of nldd-rich-text is not in a
    layer, so a rule in one would lose from it. */
 [data-site-api] td code,
 nldd-rich-text td code {
@@ -26,12 +19,6 @@ nldd-rich-text td code {
 	white-space: nowrap;
 }
 
-/* Outside the layer: the focus ring of the base styles is not in one. The
-   title gets focus from script after a page change, to be announced. */
-#pagina-titel :is(h1, h2):focus {
-	outline: none;
-}
-
 [data-site-api] td:nth-child(2) {
 	min-width: 96px;
 	max-width: 280px;
@@ -41,19 +28,7 @@ nldd-rich-text td code {
 	/* ## Stage */
 
 	site-stage {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.site-stage__bar {
-		padding: 12px 16px;
-	}
-
-	@media (min-width: 40.0625rem) {
-		.site-control-info > nldd-top-title-bar {
-			display: none;
-		}
+		display: block;
 	}
 
 	/* Inside the highlight border of the box, which the frame would paint over. */
@@ -114,9 +89,5 @@ nldd-rich-text td code {
 	[data-site-api] table {
 		display: block;
 		overflow-x: auto;
-	}
-
-	[hidden] {
-		display: none !important;
 	}
 }

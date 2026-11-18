@@ -1101,7 +1101,7 @@ export function buildPages({ base = '/' } = {}) {
 		const path = changelogPath(entry, versions);
 		page(
 			path,
-			path === '/changelog/' ? 'Changelog' : `Changelog ${entry.name}`,
+			`Changelog ${entry.slug ? entry.name : entry.name.toLowerCase()}`,
 			path === '/changelog/' ? 'Wat er per versie is veranderd.' : `Wat er in versie ${entry.name} is veranderd.`,
 			changelogPage(entry),
 			{

@@ -91,6 +91,8 @@ try {
 	if (story.parameters.layout !== 'fullscreen') root.classList.add('site-frame__root--padded');
 	keepInPlace(root);
 	draw();
+	// What the stage changed before this page was there went nowhere: it sends it again.
+	tell({ type: 'ready' });
 	// Without a height of its own the frame is as tall as what is in it.
 	const docs = story.parameters.docs?.story;
 	if (docs?.height === undefined && docs?.iframeHeight === undefined) {
