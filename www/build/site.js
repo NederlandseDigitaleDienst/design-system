@@ -16,7 +16,7 @@ import { dirname, relative, resolve } from 'node:path';
 import { storybookId } from '../../scripts/lib/skill-patterns.js';
 import { rulesAboutTag, rulesOfPattern } from '../../lint/rule-index.js';
 import { loadData } from '../../lint/linter.js';
-import { collectComponents, collectPatterns, parseStoryFile, readFacts, repoRoot } from './sources.js';
+import { collectComponents, collectPatterns, parseStoryFile, repoRoot } from './sources.js';
 import { codeViewer, escapeHtml, renderMarkdown } from './markdown.js';
 import { controlFor } from './attribute-values.js';
 import { MARKDOWN_INSERTS } from './skills.js';
@@ -88,230 +88,345 @@ const THEMES = [
 	...themesByHue(JSON.parse(readFileSync(resolve(repoRoot, 'scripts/reference-colors.json'), 'utf8'))).map((theme) => theme.name),
 ];
 
-/** The sections of the site, as the menu of every page behind the landing page. */
-const SECTIONS = [
-	['Aan de slag', '/aan-de-slag/'],
-	['Componenten', '/componenten/'],
-	['Patronen', '/patronen/'],
-	['Iconen', '/iconen/'],
-	['Richtlijnen', '/richtlijnen/'],
-	['Linter', '/linter/'],
-];
-
 /**
  * The landing page is written by hand in www/index.html and is shown as it is,
- * with two things replaced: its head, so it loads from the same place as every
- * other page, and its bar, so it has the menu every page has. It keeps a
- * stylesheet and a script of its own.
+ * with its head replaced, so it loads from the same place as every other page.
+ * It keeps a stylesheet and a script of its own, and a bar with only the logo
+ * and the name: the page itself leads to the parts of the system, section by
+ * section.
  */
 function homePage() {
 	const html = read('www/index.html');
 	const title = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? SITE_NAME;
 	const description = html.match(/<meta name="description" content="([^"]*)">/)?.[1] ?? '';
-	const bar = /<nldd-skip-link slot="header">[^]*?<\/nldd-skip-link>/;
-	if (!bar.test(html)) throw new Error('www/index.html heeft geen nldd-skip-link in de header.');
-	return html
-		.replace(/<head>[^]*?<\/head>/, head({ title, description, entry: 'home.ts', stylesheet: 'home.css', theme: false }))
-		.replace(bar, header('/', []));
+	return html.replace(
+		/<head>[^]*?<\/head>/,
+		head({ title, description, entry: 'home.ts', stylesheet: 'home.css', theme: false }),
+	);
 }
 
+/** What the documentation lists in its first sidebar, by group. Every item opens something. */
+const NAVIGATION = [
+	[
+		'Het systeem',
+		[
+			['Componenten', '/componenten/'],
+			['Patronen', '/patronen/'],
+			['Iconen', '/iconen/'],
+			["Thema's", '/themas/'],
+			['Ontwerprichtlijnen', '/richtlijnen/'],
+		],
+	],
+	[
+		'Bouwen',
+		[
+			['Aan de slag', '/aan-de-slag/'],
+			['Werken met een AI-assistent', '/aan-de-slag/ai-assistent/'],
+			['Linter', '/linter/'],
+			['Breakpoints', '/breakpoints/'],
+			['Vertalingen', '/vertalingen/'],
+			['Changelog', '/changelog/'],
+		],
+	],
+];
+
+/** About the site, at the foot of the first sidebar. */
+const ABOUT = [
+	['Toegankelijkheid', '/toegankelijkheid/'],
+	['Meld een probleem of idee', `${REPOSITORY}/issues`],
+	['Privacy', 'https://digitaledienst.overheid.nl/over/privacy/'],
+	['GitHub', REPOSITORY],
+];
+
+const DOCS = 'Documentatie';
+
+/** The section a page belongs to: the one whose path is the longest start of it. */
+function currentSection(path) {
+	const paths = NAVIGATION.flatMap(([, items]) => items.map(([, href]) => href));
+	return paths.filter((href) => path.startsWith(href)).sort((a, b) => b.length - a.length)[0];
+}
+
+function primaryNavigation(path) {
+	const current = currentSection(path);
+	return NAVIGATION.map(
+		([group, items]) => `<nldd-title size="display-6">
+					<h3>${escapeHtml(group)}</h3>
+				</nldd-title>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-list
+					type="navigation"
+					appearance="simple"
+					dividers="never"
+					accessible-label="${escapeHtml(group)}"
+				>
+					${items
+						.map(
+							([text, href]) => `<nldd-list-item href="${href}"${href === current ? ' current' : ''}>
+						<nldd-text-cell text="${escapeHtml(text)}"></nldd-text-cell>
+						<nldd-spacer-cell size="12"></nldd-spacer-cell>
+						<nldd-icon-cell
+							size="20"
+							color="secondary"
+							icon="chevron-right"
+						></nldd-icon-cell>
+					</nldd-list-item>`,
+						)
+						.join('\n\t\t\t\t\t')}
+				</nldd-list>`,
+	).join('\n\t\t\t\t<nldd-spacer size="16"></nldd-spacer>\n\t\t\t\t');
+}
+
+const aboutLinks = `<nldd-container
+				slot="footer"
+				padding="16"
+			>
+				<nldd-link-group accessible-label="Over deze site">
+					${ABOUT.map(([text, href]) => `<nldd-link
+						href="${href}"
+						text="${escapeHtml(text)}"
+					></nldd-link>`).join('\n\t\t\t\t\t')}
+				</nldd-link-group>
+			</nldd-container>`;
+
 /**
- * The bar of every page, with the sections as its menu. The item of the
- * section a page is in is the current one, and behind the landing page the
- * name of the site leads back to it. There is no back button: the menu and the
- * breadcrumbs in the footer already say where a page is. Behind the landing
- * page the bar also has the menu that shows the site in
- * another theme; the landing page has a picker of its own for that.
+ * A pane with a page in it: a title bar that takes over the title of the
+ * section once it scrolls away, the content below it, and a footer if any.
  */
-function header(path, trail) {
-	const home = trail.length > 0 ? '\n\t\t\t\twebsite-href="/"' : '';
-	const themeMenu =
-		trail.length > 0
-			? `
-					<nldd-menu-bar-item
-						text="Thema"
-						icon="themes"
-						expandable
-						content-priority="text"
-						data-site-theme
-					>
-						<nldd-menu>
-							${THEMES.map(
-								(theme) => `<nldd-menu-item
-								text="${theme.charAt(0).toUpperCase()}${theme.slice(1)}"
-								type="radio"
-								value="${theme}"${theme === DEFAULT_THEME ? '\n\t\t\t\t\t\t\t\tselected' : ''}
-							></nldd-menu-item>`,
-							).join('\n\t\t\t\t\t\t\t')}
-						</nldd-menu>
-					</nldd-menu-bar-item>`
-			: '';
-	const items = SECTIONS.map(
-		([text, href]) => `<nldd-menu-bar-item
-						text="${text}"
-						href="${href}"${path.startsWith(href) ? '\n\t\t\t\t\t\tcurrent' : ''}
-					></nldd-menu-bar-item>`,
-	).join('\n\t\t\t\t\t');
-	return `<nldd-skip-link slot="header">
-			<nldd-top-navigation-bar
-				logo-title="Nederlandse Digitale Dienst"
-				logo-subtitle="Ministerie van Economische Zaken en Klimaat"
-				website-title="${SITE_NAME}"${home}
-			>
-				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- A reference site with a few fixed sections: a reader goes from a component to a pattern and back, and should not have to pass the landing page each time. -->
-				<nldd-menu-bar slot="global">
-					${items}
-				</nldd-menu-bar>
-				<nldd-menu-bar slot="utility">${themeMenu}
-					<nldd-menu-bar-item
-						text="GitHub"
-						href="${REPOSITORY}"
-					></nldd-menu-bar-item>
-				</nldd-menu-bar>
-			</nldd-top-navigation-bar>
-		</nldd-skip-link>`;
+function pane({ slot, id, title, back, hasContent = true, landmarks = false, body, footer = '' }) {
+	const backAttributes = back
+		? `\n\t\t\t\tback-text="${escapeHtml(back.text)}"${back.href ? `\n\t\t\t\tback-href="${back.href}"` : ''}`
+		: '';
+	return `<nldd-split-view-pane
+		slot="${slot}"${hasContent ? '\n\t\thas-content' : ''}
+	>
+		<nldd-page
+			${landmarks ? 'landmarks="page"' : `accessible-label="${escapeHtml(title)}"`}
+			sticky-header
+		>
+			<nldd-top-title-bar
+				slot="header"
+				text="${escapeHtml(title)}"${landmarks ? '' : '\n\t\t\t\theading-level="2"'}${backAttributes}${id ? `\n\t\t\t\tcollapse-anchor="${id}"` : ''}
+			></nldd-top-title-bar>
+${body}${footer ? `\n\t\t\t${footer}` : ''}
+		</nldd-page>
+	</nldd-split-view-pane>`;
 }
 
-/** The footer of every page behind the landing page: where it is, and the rest of the site. */
-function footer(title, trail, facts) {
-	return `<nldd-page-footer slot="footer">
-			<nldd-breadcrumbs slot="breadcrumbs">
-				${trail.map(([text, href]) => `<nldd-breadcrumbs-item text="${text}" href="${href}"></nldd-breadcrumbs-item>`).join('\n\t\t\t\t')}
-				<nldd-breadcrumbs-item text="${escapeHtml(title)}" current></nldd-breadcrumbs-item>
-			</nldd-breadcrumbs>
-			<nldd-container
-				layout="grid"
-				sm-column-count="2"
-				md-column-count="2"
-				lg-column-count="3"
-				gap="24"
-			>
-				<nldd-container>
-					<nldd-title size="display-5">
-						<h2>Het systeem</h2>
-					</nldd-title>
-					<nldd-spacer size="8"></nldd-spacer>
-					<nldd-link-group
-						orientation="vertical"
-						accessible-label="Het systeem"
+/** A sidebar pane: its title as the header of the section, and the lists under it. */
+function sidebarPane({ slot, id, title, back, nav, footer }) {
+	return pane({
+		slot,
+		id,
+		title,
+		back,
+		footer,
+		body: `			<nldd-simple-section>
+				<nldd-title
+					id="${id}"
+					slot="header"
+					size="display-4"
+					text="${escapeHtml(title)}"
+					heading-level="2"
+				></nldd-title>
+				${nav}
+			</nldd-simple-section>`,
+	});
+}
+
+const themeName = (theme) => `${theme.charAt(0).toUpperCase()}${theme.slice(1)}`;
+
+/**
+ * The theme and the color scheme of the site, as on the landing page: the
+ * colors as swatches, the scheme as three toggle buttons. The button shows the
+ * scheme as its icon and the theme as its text; the script sets both to what
+ * the visitor chose.
+ */
+function themePicker() {
+	return `<nldd-button
+						appearance="secondary"
+						start-icon="display"
+						text="${themeName(DEFAULT_THEME)}"
+						expandable
+						data-site-theme-button
 					>
-						<nldd-link
-							href="/componenten/"
-							text="Componenten"
-						></nldd-link>
-						<nldd-link
-							href="/patronen/"
-							text="Patronen"
-						></nldd-link>
-						<nldd-link
-							href="/iconen/"
-							text="Iconen"
-						></nldd-link>
-						<nldd-link
-							href="/themas/"
-							text="Thema's"
-						></nldd-link>
-						<nldd-link
-							href="/richtlijnen/"
-							text="Ontwerprichtlijnen"
-						></nldd-link>
-					</nldd-link-group>
-				</nldd-container>
-				<nldd-container>
-					<nldd-title size="display-5">
-						<h2>Bouwen</h2>
-					</nldd-title>
-					<nldd-spacer size="8"></nldd-spacer>
-					<nldd-link-group
-						orientation="vertical"
-						accessible-label="Bouwen"
-					>
-						<nldd-link
-							href="/aan-de-slag/"
-							text="Aan de slag"
-						></nldd-link>
-						<nldd-link
-							href="/aan-de-slag/ai-assistent/"
-							text="Werken met een AI-assistent"
-						></nldd-link>
-						<nldd-link
-							href="/linter/"
-							text="Linter"
-						></nldd-link>
-						<nldd-link
-							href="/breakpoints/"
-							text="Breakpoints"
-						></nldd-link>
-						<nldd-link
-							href="/vertalingen/"
-							text="Vertalingen"
-						></nldd-link>
-						<nldd-link
-							href="/changelog/"
-							text="Changelog"
-						></nldd-link>
-					</nldd-link-group>
-				</nldd-container>
-				<nldd-container>
-					<nldd-title size="display-5">
-						<h2>Meedoen</h2>
-					</nldd-title>
-					<nldd-spacer size="8"></nldd-spacer>
-					<nldd-link-group
-						orientation="vertical"
-						accessible-label="Meedoen"
-					>
-						<nldd-link
-							href="${REPOSITORY}/issues"
-							text="Meld een probleem of idee"
-						></nldd-link>
-						<nldd-link
-							href="${REPOSITORY}"
-							text="Broncode op GitHub"
-						></nldd-link>
-					</nldd-link-group>
-				</nldd-container>
-			</nldd-container>
-			<nldd-page-footer-legal-bar slot="legal-bar">
-				<nldd-page-footer-legal-bar-item
-					slot="start"
-					href="https://digitaledienst.overheid.nl/"
-					text="Nederlandse Digitale Dienst"
-				></nldd-page-footer-legal-bar-item>
-				<nldd-page-footer-legal-bar-item
-					slot="end"
-					href="/toegankelijkheid/"
-					text="Toegankelijkheid"
-				></nldd-page-footer-legal-bar-item>
-				<nldd-page-footer-legal-bar-item
-					slot="end"
-					href="https://digitaledienst.overheid.nl/over/privacy/"
-					text="Privacy"
-				></nldd-page-footer-legal-bar-item>
-			</nldd-page-footer-legal-bar>
-		</nldd-page-footer>`;
+						<nldd-popover
+							slot="popup"
+							placement="bottom-end"
+							width="360px"
+							accessible-label="Thema en kleurmodus"
+						>
+							<nldd-container padding="16">
+								<nldd-title
+									id="site-thema-titel"
+									size="display-5"
+								>
+									<h2>Thema</h2>
+								</nldd-title>
+								<nldd-spacer size="8"></nldd-spacer>
+								<nldd-swatch-picker
+									accessible-label="Thema"
+									value="${DEFAULT_THEME}"
+									data-site-theme-picker
+								>
+									${THEMES.map(
+										(theme) => `<nldd-swatch-picker-item
+										custom-color="var(--primitives-color-reference-${theme})"
+										text="${themeName(theme)}"
+										value="${theme}"
+									></nldd-swatch-picker-item>`,
+									).join('\n\t\t\t\t\t\t\t\t\t')}
+								</nldd-swatch-picker>
+								<nldd-spacer size="16"></nldd-spacer>
+								<nldd-title
+									id="site-kleurmodus-titel"
+									size="display-5"
+								>
+									<h2>Kleurmodus</h2>
+								</nldd-title>
+								<nldd-spacer size="8"></nldd-spacer>
+								<nldd-toggle-button-group
+									type="radio"
+									accessible-labeled-by="site-kleurmodus-titel"
+									data-site-scheme
+								>
+									<nldd-toggle-button
+										text="Systeem"
+										icon="display"
+										value="system"
+										selected
+									></nldd-toggle-button>
+									<nldd-toggle-button
+										text="Donker"
+										icon="moon"
+										value="dark"
+									></nldd-toggle-button>
+									<nldd-toggle-button
+										text="Licht"
+										icon="sun"
+										value="light"
+									></nldd-toggle-button>
+								</nldd-toggle-button-group>
+							</nldd-container>
+						</nldd-popover>
+					</nldd-button>`;
 }
 
 /**
- * The page shell around the main content.
+ * The main toolbar, around the panes: back to the landing page and the name
+ * of the site at the start, the theme at the end.
+ */
+function toolbar() {
+	return `<nldd-container padding="8">
+			<nldd-toolbar accessible-label="${SITE_NAME}">
+				<nldd-toolbar-item
+					slot="start"
+					priority="3"
+				>
+					<nldd-icon-button
+						icon="chevron-left"
+						text="Home"
+						href="/"
+					></nldd-icon-button>
+					<nldd-menu-item
+						slot="overflow"
+						icon="chevron-left"
+						text="Home"
+						href="/"
+					></nldd-menu-item>
+				</nldd-toolbar-item>
+				<nldd-toolbar-title
+					slot="start"
+					text="${SITE_NAME}"
+					min-width="0"
+				></nldd-toolbar-title>
+				<nldd-toolbar-item
+					slot="end"
+					priority="2"
+				>
+					${themePicker()}
+					<nldd-menu-group
+						slot="overflow"
+						text="Thema"
+					>
+						${THEMES.map(
+							(theme) => `<nldd-menu-item
+							text="${themeName(theme)}"
+							type="radio"
+							value="${theme}"${theme === DEFAULT_THEME ? '\n\t\t\t\t\t\t\tselected' : ''}
+							data-site-theme-item
+						></nldd-menu-item>`,
+						).join('\n\t\t\t\t\t\t')}
+					</nldd-menu-group>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		</nldd-container>`;
+}
+
+/**
+ * Every page behind the landing page, as an application: the main toolbar
+ * above a navigation split view. The first sidebar has the sections, the
+ * second the pages of a section that has them, and main the page itself.
+ * Where a pane falls away on a narrower screen, its title bar has a way back.
  *
  * @param {object} input
  * @param {string} input.path - where the page lives, `/componenten/button/`
- * @param {[text: string, href: string][]} input.trail - the pages above this one, from the landing page down
+ * @param {string} [input.main] - the content of the page; without it main is empty and says what to pick
+ * @param {{ title: string, path: string, nav: string, empty: string }} [input.secondary] - the pages of the section
  */
-function layout({ title, description, path, trail, main, facts }) {
+function layout({ title, description, path, main, secondary }) {
+	const mainPane = main
+		? pane({
+				slot: 'main',
+				id: 'pagina-titel',
+				title,
+				// Main goes back to the list it was chosen from. Without one, back
+				// shows the sections, which have no page of their own.
+				back: secondary ? { text: secondary.title, href: secondary.path } : { text: DOCS },
+				landmarks: true,
+				body: main,
+			})
+		: // Nothing chosen yet: no title bar, only what to pick.
+			`<nldd-split-view-pane slot="main">
+		<nldd-page landmarks="page">
+			<nldd-simple-section grow>
+				<nldd-inline-dialog text="${escapeHtml(secondary.empty)}"></nldd-inline-dialog>
+			</nldd-simple-section>
+		</nldd-page>
+	</nldd-split-view-pane>`;
+	const panes = [
+		sidebarPane({
+			slot: 'primary-sidebar',
+			id: 'secties-titel',
+			title: DOCS,
+			nav: primaryNavigation(path),
+			footer: aboutLinks,
+		}),
+		secondary
+			? sidebarPane({
+					slot: 'secondary-sidebar',
+					id: 'lijst-titel',
+					title: secondary.title,
+					back: { text: DOCS },
+					nav: secondary.nav,
+				})
+			: '',
+		mainPane,
+	].filter(Boolean);
 	return `<!doctype html>
 <html lang="nl">
 ${head({ title, description, entry: 'main.ts' })}
 <body class="site">
 <nldd-shell>
-	<nldd-page>
-		${header(path, trail)}
-
-${main}
-
-		${footer(title, trail, facts)}
-	</nldd-page>
+	<nldd-bar-split-view>
+		<nldd-split-view-pane slot="toolbar">
+		${toolbar()}
+		</nldd-split-view-pane>
+		<nldd-split-view-pane slot="main">
+			<nldd-navigation-split-view>
+	${panes.join('\n\t')}
+			</nldd-navigation-split-view>
+		</nldd-split-view-pane>
+	</nldd-bar-split-view>
 </nldd-shell>
 </body>
 </html>
@@ -373,7 +488,9 @@ function renderProse(markdown, storyFile) {
 }
 
 function pageTitle(text, { overline = '', end = '' } = {}) {
-	return `<nldd-title slot="header"${overline ? ` overline="${escapeHtml(overline)}"` : ''}>
+	return `<nldd-title
+				id="pagina-titel"
+				slot="header"${overline ? ` overline="${escapeHtml(overline)}"` : ''}>
 				<h1>${escapeHtml(text)}</h1>${end}
 			</nldd-title>`;
 }
@@ -463,29 +580,6 @@ function firstSentence(markdown) {
 	return sentence.length > 160 ? `${sentence.slice(0, 157).trimEnd()}…` : sentence;
 }
 
-function card({ href, title, text, search }) {
-	// A card that is a link takes its name from its content, but that content
-	// is more than the title, so the card is named after the title alone.
-	return `<nldd-card
-					href="${href}"
-					accessible-label="${escapeHtml(title)}"${search ? `\n\t\t\t\t\tdata-search="${escapeHtml(search)}"` : ''}
-				>
-					<nldd-container padding="16">
-						<nldd-title size="display-5">
-							<h3>${escapeHtml(title)}</h3>
-						</nldd-title>${
-							text
-								? `
-						<nldd-spacer size="4"></nldd-spacer>
-						<nldd-rich-text>
-							<p>${escapeHtml(text)}</p>
-						</nldd-rich-text>`
-								: ''
-						}
-					</nldd-container>
-				</nldd-card>`;
-}
-
 function groupBy(items, key) {
 	const groups = new Map();
 	for (const item of items) {
@@ -493,66 +587,6 @@ function groupBy(items, key) {
 		groups.get(item[key]).push(item);
 	}
 	return [...groups];
-}
-
-function overviewIntro(title, text, extra = '') {
-	return `		<nldd-simple-section padding-bottom="0">
-			${pageTitle(title)}
-			<nldd-rich-text>
-				<p>${text}</p>
-			</nldd-rich-text>${extra}
-		</nldd-simple-section>`;
-}
-
-function cardGroup(heading, cards, last) {
-	return `		<nldd-simple-section${last ? ' grow' : ' padding-bottom="0"'} data-filter-group>
-			<nldd-title
-				slot="header"
-				size="display-4"
-			>
-				<h2>${escapeHtml(heading)}</h2>
-			</nldd-title>
-			<nldd-collection
-				layout="grid"
-				item-min-width="240px"
-			>
-				${cards.join('\n\t\t\t\t')}
-			</nldd-collection>
-		</nldd-simple-section>`;
-}
-
-function componentsOverview(components) {
-	const groups = groupBy(components, 'category').sort(([a], [b]) => a.localeCompare(b));
-	const sections = groups.map(([category, items], index) =>
-		cardGroup(
-			category,
-			items.map((c) =>
-				card({
-					href: `/componenten/${c.slug}/`,
-					title: c.name,
-					text: firstSentence(c.description || c.elements[0]?.description || ''),
-					search: `${c.name} ${c.tag ?? ''} ${c.elements.map((e) => e.tagName).join(' ')}`.toLowerCase(),
-				}),
-			),
-			index === groups.length - 1,
-		),
-	);
-	const filter = `
-			<nldd-spacer size="24"></nldd-spacer>
-			<nldd-search-field
-				data-site-filter
-				placeholder="Zoek een component"
-				accessible-label="Zoek een component"
-				width="320px"
-			></nldd-search-field>
-			<nldd-rich-text
-				data-site-filter-empty
-				hidden
-			>
-				<p>Geen component gevonden. Mis je er een? <a href="https://github.com/NederlandseDigitaleDienst/design-system/issues">Stel hem voor</a>.</p>
-			</nldd-rich-text>`;
-	return `${overviewIntro('Componenten', `${components.length} componenten. Elk is een gewoon HTML-element met een <code>nldd-</code>-prefix.`, filter)}
-${sections.join('\n')}`;
 }
 
 /**
@@ -644,41 +678,17 @@ function siblingNav(groups, current, hrefOf) {
 		.join('\n\t\t\t\t<nldd-spacer size="16"></nldd-spacer>\n\t\t\t\t');
 }
 
-/** A page with its siblings beside it: a component among components, a pattern among patterns. */
-function siblingPage({ label, title, nav, body }) {
-	return `		<nldd-sidebar-section
-			sidebar-label="${label}"
-			grow
-		>
+/** The body of a page in main: its title, and the content under it. */
+function docBody({ title, body }) {
+	return `		<nldd-simple-section grow>
 			${title}
-			<nldd-spacer
-				slot="header"
-				sidebar-section-only="collapsed"
-				size="16"
-			></nldd-spacer>
-			<nldd-button
-				slot="header"
-				sidebar-section-only="collapsed"
-				appearance="secondary"
-				start-icon="bullet-list"
-				text="${label}"
-				popup-type="dialog"
-				data-site-sidebar
-			></nldd-button>
-			<nldd-container
-				slot="sidebar"
-				padding="16"
-				padding-bottom="8"
-			>
-				${nav}
-			</nldd-container>
 			<nldd-container gap="32">
 ${body}
 			</nldd-container>
-		</nldd-sidebar-section>`;
+		</nldd-simple-section>`;
 }
 
-function componentPage(component, components, facts, lintRules) {
+function componentPage(component, lintRules) {
 	const visible = component.stories.filter((s) => !s.hidden);
 	const controls = controlsOf(component);
 	const description = component.description ? renderMarkdown(component.description, { href: identity }).html : '';
@@ -702,11 +712,8 @@ function componentPage(component, components, facts, lintRules) {
 	const source = component.sourceFile
 		? `<nldd-link href="${REPOSITORY}/blob/main/${component.sourceFile}" text="Broncode op GitHub"></nldd-link>`
 		: '';
-	const groups = groupBy(components, 'category').sort(([a], [b]) => a.localeCompare(b));
-	return siblingPage({
-		label: 'Componenten',
+	return docBody({
 		title: pageTitle(component.name, { overline: component.category, end: status }),
-		nav: siblingNav(groups, component, (c) => `/componenten/${c.slug}/`),
 		body: `				${component.tag ? `<nldd-rich-text><p><code>&lt;${component.tag}&gt;</code></p></nldd-rich-text>` : ''}
 				${description}
 				<nldd-container
@@ -752,27 +759,12 @@ function changelogEntries(markdown) {
 
 const changelogPath = (entry, entries) => (entry === entries[0] ? '/changelog/' : `/changelog/${entry.slug}/`);
 
-function changelogPage(entry, entries) {
+function changelogPage(entry) {
 	const rendered = renderProse(absoluteLinks(entry.body || 'Geen beschrijving bij deze versie.', 'CHANGELOG.md'));
-	return siblingPage({
-		label: 'Versies',
+	return docBody({
 		title: pageTitle(entry.name, { overline: entry.date ? `Changelog, ${entry.date}` : 'Changelog' }),
-		nav: siblingNav(groupBy(entries, 'group'), entry, (other) => changelogPath(other, entries)),
 		body: rendered.html,
 	});
-}
-
-function patternsOverview(patterns) {
-	const groups = groupBy(patterns, 'group');
-	const sections = groups.map(([group, items], index) =>
-		cardGroup(
-			group || 'Onderdelen van een pagina',
-			items.map((p) => card({ href: `/patronen/${p.slug}/`, title: p.name, text: firstSentence(p.summary) })),
-			index === groups.length - 1,
-		),
-	);
-	return `${overviewIntro('Patronen', 'Een component beschrijft één ding. Een patroon beschrijft hoe je componenten samenstelt tot iets dat een taak afhandelt.')}
-${sections.join('\n')}`;
 }
 
 /** How each level of the linter reads on a rule, strictest first. */
@@ -928,12 +920,10 @@ ${items}
 export function buildPages({ base = '/' } = {}) {
 	const components = collectComponents();
 	const patterns = collectPatterns();
-	const facts = readFacts();
 	const lintRules = loadData().rules;
 	const pages = {};
-	const HOME = ['Home', '/'];
-	const page = (path, title, description, main, trail = [HOME]) => {
-		pages[`${path.slice(1)}index.html`] = withBase(layout({ title, description, path, trail, main, facts }), base);
+	const page = (path, title, description, main, secondary) => {
+		pages[`${path.slice(1)}index.html`] = withBase(layout({ title, description, path, main, secondary }), base);
 	};
 
 	pages['index.html'] = withBase(homePage(), base);
@@ -946,8 +936,12 @@ export function buildPages({ base = '/' } = {}) {
 			path,
 			path === '/changelog/' ? 'Changelog' : `Changelog ${entry.name}`,
 			path === '/changelog/' ? 'Wat er per versie is veranderd.' : `Wat er in versie ${entry.name} is veranderd.`,
-			changelogPage(entry, versions),
-			path === '/changelog/' ? [HOME] : [HOME, ['Changelog', '/changelog/']],
+			changelogPage(entry),
+			{
+				title: 'Versies',
+				path: '/changelog/',
+				nav: siblingNav(groupBy(versions, 'group'), entry, (other) => changelogPath(other, versions)),
+			},
 		);
 	}
 
@@ -982,41 +976,46 @@ export function buildPages({ base = '/' } = {}) {
 			title ?? rendered.title,
 			description,
 			prosePage({ title: title ?? rendered.title, rendered, extra }),
-			path.startsWith('/aan-de-slag/') && path !== '/aan-de-slag/' ? [HOME, ['Aan de slag', '/aan-de-slag/']] : [HOME],
 		);
 	}
 
-	page(
-		'/componenten/',
-		'Componenten',
-		`${components.length} web components voor de Rijksoverheid.`,
-		componentsOverview(components),
-	);
+	const componentGroups = groupBy(components, 'category').sort(([a], [b]) => a.localeCompare(b));
+	const componentList = (current) => ({
+		title: 'Componenten',
+		path: '/componenten/',
+		empty: 'Kies een component',
+		nav: siblingNav(componentGroups, current, (c) => `/componenten/${c.slug}/`),
+	});
+	page('/componenten/', 'Componenten', `${components.length} web components voor de Rijksoverheid.`, undefined, componentList());
 	for (const component of components) {
 		page(
 			`/componenten/${component.slug}/`,
 			component.name,
 			firstSentence(component.description || component.elements[0]?.description || component.name),
-			componentPage(component, components, facts, lintRules),
-			[HOME, ['Componenten', '/componenten/']],
+			componentPage(component, lintRules),
+			componentList(component),
 		);
 	}
 
-	page('/patronen/', 'Patronen', 'Hoe je componenten samenstelt.', patternsOverview(patterns));
 	const patternGroups = groupBy(patterns, 'group');
+	const patternList = (current) => ({
+		title: 'Patronen',
+		path: '/patronen/',
+		empty: 'Kies een patroon',
+		nav: siblingNav(patternGroups, current, (p) => `/patronen/${p.slug}/`),
+	});
+	page('/patronen/', 'Patronen', 'Hoe je componenten samenstelt.', undefined, patternList());
 	for (const pattern of patterns) {
 		const rendered = renderProse(read(relative(repoRoot, pattern.proseFile)), pattern);
 		page(
 			`/patronen/${pattern.slug}/`,
 			pattern.name,
 			firstSentence(pattern.summary),
-			siblingPage({
-				label: 'Patronen',
+			docBody({
 				title: pageTitle(pattern.name, { overline: pattern.group }),
-				nav: siblingNav(patternGroups, pattern, (p) => `/patronen/${p.slug}/`),
 				body: `${rendered.html}${rulesSection(rulesOfPattern(lintRules, pattern.slug), { link: false })}`,
 			}),
-			[HOME, ['Patronen', '/patronen/']],
+			patternList(pattern),
 		);
 	}
 

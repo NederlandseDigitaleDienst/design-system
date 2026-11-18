@@ -51,39 +51,51 @@ test('no page still points into Storybook', () => {
 	assert.deepEqual(stale, []);
 });
 
-test('the landing page is the one written by hand, with the head and the bar every page has', () => {
+test('the landing page is the one written by hand, with the head every page has', () => {
 	const written = readFileSync(resolve(repoRoot, 'www/index.html'), 'utf8');
 	// Everything from the first section on is the file as it was written.
 	const content = (html) => html.slice(html.indexOf('</nldd-skip-link>'));
 	assert.equal(content(pages['index.html']), content(written));
 	assert.match(pages['index.html'], /<link rel="stylesheet" href="\/home\.css">/);
 	assert.match(pages['index.html'], /<script type="module" src="\/home\.ts"><\/script>/);
-	assert.match(pages['index.html'], /<nldd-menu-bar slot="global">/);
-	assert.doesNotMatch(pages['index.html'], /back-text=|website-href=|<nldd-menu-bar-item\b[^>]*\bcurrent\b/);
+	// The page leads to the parts of the system itself: the bar has no menus.
+	assert.doesNotMatch(pages['index.html'], /<nldd-menu-bar\b/);
 });
 
-test('every page behind the landing page has the same bar and footer', () => {
+test('every page behind the landing page is an application: a toolbar around a split view, without the bar of the landing page', () => {
 	for (const path of ['componenten/button/index.html', 'patronen/form/index.html', 'richtlijnen/index.html']) {
-		assert.match(pages[path], /logo-title="Nederlandse Digitale Dienst"/, path);
-		assert.match(pages[path], /<nldd-menu-bar slot="global">/, path);
+		assert.match(pages[path], /<nldd-bar-split-view>[^]*<nldd-navigation-split-view>/, path);
+		assert.match(pages[path], /<nldd-icon-button\s+icon="chevron-left"\s+text="Home"\s+href="\/"/, path);
+		assert.match(pages[path], /<nldd-toolbar-title\s+slot="start"\s+text="NLDD Designsysteem"\s+min-width="0"/, path);
+		assert.match(pages[path], /<nldd-page[^]*?slot="footer"[^]*?<nldd-link-group accessible-label="Over deze site">/, path);
+		assert.doesNotMatch(pages[path], /nldd-top-navigation-bar|nldd-page-footer|nldd-breadcrumbs/, path);
 		for (const href of ['/componenten/', '/patronen/', '/themas/', '/toegankelijkheid/', '/changelog/']) {
 			assert.ok(pages[path].includes(`href="${href}"`), `${path} mist ${href}`);
 		}
 	}
 });
 
-test('a page marks its section in the menu and says where it is in the breadcrumbs', () => {
+test('a page marks its section in the first sidebar, itself in the second, and goes back to that list', () => {
 	const button = pages['componenten/button/index.html'];
-	assert.match(button, /text="Componenten"\s+href="\/componenten\/"\s+current/);
-	assert.equal((button.match(/<nldd-menu-bar-item\b[^>]*\bcurrent\b/g) ?? []).length, 1);
-	assert.match(button, /website-href="\/"/);
-	assert.match(button, /<nldd-breadcrumbs-item text="Home" href="\/"><\/nldd-breadcrumbs-item>\s*<nldd-breadcrumbs-item text="Componenten" href="\/componenten\/">/);
+	assert.match(button, /<nldd-list-item href="\/componenten\/" current>/);
+	assert.match(button, /<nldd-list-item href="\/componenten\/button\/" current>/);
+	assert.match(button, /slot="main"\s+has-content[^]*back-text="Componenten"\s+back-href="\/componenten\/"/);
+	// A page without a list of its own goes back to the sections.
+	assert.match(pages['iconen/index.html'], /slot="main"\s+has-content[^]*back-text="Documentatie"\s+collapse-anchor/);
+});
+
+test('an overview has the list and an empty main, so a phone opens on the list', () => {
+	const overview = pages['componenten/index.html'];
+	assert.match(overview, /slot="secondary-sidebar"\s+has-content/);
+	assert.match(overview, /<nldd-split-view-pane\s+slot="main"\s*>/);
+	assert.match(overview, /<nldd-inline-dialog text="Kies een component">/);
 });
 
 test('a page behind the landing page can be shown in another theme, set before the first paint', () => {
 	const button = pages['componenten/button/index.html'];
 	assert.match(button, /<script vite-ignore src="\/theme\.js"><\/script>\s*<script type="module"/);
-	assert.match(button, /data-site-theme[^]*<nldd-menu-item\s+text="Groen"\s+type="radio"\s+value="groen"/);
+	assert.match(button, /data-site-theme-picker[^]*<nldd-swatch-picker-item[^>]*value="groen"/);
+	assert.match(button, /data-site-scheme[^]*value="dark"/);
 	// The landing page has a picker of its own.
 	assert.doesNotMatch(pages['index.html'], /data-site-theme|theme\.js/);
 });
@@ -95,7 +107,8 @@ test('a pattern page ends with the lint rules that point at it', () => {
 test('a page under a deploy base links within that base', () => {
 	const based = buildPages({ base: '/design-system/' }).pages;
 	assert.match(based['index.html'], /href="\/design-system\/componenten\/"/);
-	assert.match(based['componenten/index.html'], /website-href="\/design-system\/"/);
+	assert.match(based['componenten/button/index.html'], /back-href="\/design-system\/componenten\/"/);
+	assert.match(based['componenten/index.html'], /icon="chevron-left"\s+text="Home"\s+href="\/design-system\/"/);
 	assert.match(based['componenten/button/index.html'], /src="\/design-system\/theme\.js"/);
 	// Vite adds the base to the entry script and the icons itself.
 	assert.match(based['index.html'], /src="\/home\.ts"/);

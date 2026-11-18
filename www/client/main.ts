@@ -6,28 +6,20 @@
  */
 
 import './autoload.js';
-import { chooseTheme, chosenTheme, showTheme } from './theme.js';
+import { chooseScheme, chooseTheme, chosenScheme, chosenTheme, showTheme } from './theme.js';
 import './stage.js';
 
-/** The search field above a set of cards hides the cards that do not match. */
-function wireFilter(): void {
-	const field = document.querySelector('[data-site-filter]');
-	if (!field) return;
-	const empty = document.querySelector<HTMLElement>('[data-site-filter-empty]');
-	field.addEventListener('input', (event) => {
-		const query = String((event as CustomEvent).detail?.value ?? '').trim().toLowerCase();
-		let shown = 0;
-		for (const group of document.querySelectorAll<HTMLElement>('[data-filter-group]')) {
-			let inGroup = 0;
-			for (const card of group.querySelectorAll<HTMLElement>('[data-search]')) {
-				const match = !query || (card.dataset.search ?? '').includes(query);
-				card.hidden = !match;
-				if (match) inGroup += 1;
-			}
-			group.hidden = inGroup === 0;
-			shown += inGroup;
-		}
-		if (empty) empty.hidden = shown > 0;
+/**
+ * A title bar with a back button and no link goes back to the sections, which
+ * have no page of their own. Main empties, or the list of a section goes away,
+ * and the split view shows the pane before it.
+ */
+function wireBack(): void {
+	const view = document.querySelector('nldd-navigation-split-view');
+	view?.addEventListener('back', (event) => {
+		const pane = (event.target as Element).closest('nldd-split-view-pane');
+		if (pane?.getAttribute('slot') === 'secondary-sidebar') pane.remove();
+		else pane?.removeAttribute('has-content');
 	});
 }
 
@@ -49,26 +41,57 @@ function wireSidebar(): void {
 	}
 }
 
+const SCHEME_ICONS: Record<string, string> = { system: 'display', dark: 'moon', light: 'sun' };
+
 /**
- * The menu in the bar shows the site in another theme, and the choice goes
- * along to the next page.
+ * The theme picker in the toolbar: swatches for the theme, toggle buttons for
+ * the color scheme. The button shows the scheme as its icon and the theme as
+ * its text. The overflow menu of the toolbar has the themes as radio items.
+ * Both choices go along to the next page.
  */
 function wireTheme(): void {
-	const items = [...document.querySelectorAll<HTMLElement>('[data-site-theme] nldd-menu-item')];
-	const mark = (theme: string) => {
+	const button = document.querySelector<HTMLElement>('[data-site-theme-button]');
+	const picker = document.querySelector<HTMLElement & { value: string }>('[data-site-theme-picker]');
+	const items = [...document.querySelectorAll<HTMLElement>('[data-site-theme-item]')];
+	const schemes = document.querySelector('[data-site-scheme]');
+
+	const showChosenTheme = (theme: string) => {
+		const name = picker?.querySelector(`nldd-swatch-picker-item[value="${theme}"]`)?.getAttribute('text');
+		if (name) button?.setAttribute('text', name);
+		if (picker && picker.value !== theme) picker.value = theme;
 		for (const item of items) item.toggleAttribute('selected', item.getAttribute('value') === theme);
 	};
+	const showChosenScheme = (scheme: string) => {
+		button?.setAttribute('start-icon', SCHEME_ICONS[scheme] ?? SCHEME_ICONS.system);
+		for (const toggle of schemes?.querySelectorAll('nldd-toggle-button') ?? []) {
+			toggle.toggleAttribute('selected', toggle.getAttribute('value') === scheme);
+		}
+	};
+
 	showTheme(chosenTheme());
-	mark(chosenTheme());
+	showChosenTheme(chosenTheme());
+	showChosenScheme(chosenScheme());
+
+	picker?.addEventListener('change', (event) => {
+		const theme = (event as CustomEvent<{ value: string }>).detail.value;
+		chooseTheme(theme);
+		showChosenTheme(theme);
+	});
 	for (const item of items) {
 		item.addEventListener('select', () => {
 			const theme = item.getAttribute('value') ?? '';
 			chooseTheme(theme);
-			mark(theme);
+			showChosenTheme(theme);
 		});
 	}
+	schemes?.addEventListener('change', (event) => {
+		const { selected, value } = (event as CustomEvent<{ selected: boolean; value: string }>).detail;
+		if (!selected) return;
+		chooseScheme(value);
+		showChosenScheme(value);
+	});
 }
 
 wireTheme();
-wireFilter();
+wireBack();
 wireSidebar();
