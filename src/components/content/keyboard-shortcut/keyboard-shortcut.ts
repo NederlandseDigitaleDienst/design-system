@@ -39,7 +39,7 @@
  *   highlighted row.
  * @attr {'mac'|'windows'|'linux'|'other'} debug-os - Development aid: overrides the OS
  *   detection for this instance, so you can show several platform variants side by side in
- *   Storybook or documentation. Not meant for production use; leave it empty (default) so
+ *   documentation. Not meant for production use; leave it empty (default) so
  *   the real OS detection applies.
  *
  * @slot - Optional custom <kbd> elements. Ignored when keys is set.
@@ -101,7 +101,7 @@ export class NLDDKeyboardShortcut extends LitElement {
 	 * @internal Development only.
 	 *
 	 * Per-instance OS override that bypasses `detectOS()`. Same pattern as
-	 * `debug-safe-triangle` on `nldd-menu`: useful in Storybook stories or
+	 * `debug-safe-triangle` on `nldd-menu`: useful in stories or
 	 * documentation comparisons where you need different instances on the
 	 * page to render as different operating systems. Don't ship this in
 	 * production markup. Production should rely on real OS detection.

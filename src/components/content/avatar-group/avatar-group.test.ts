@@ -134,7 +134,7 @@ describe('nldd-avatar-group', () => {
 
 	// No assertions on the sizes and the overlap: the test document carries no
 	// design tokens, so every --_* that resolves to one computes to nothing
-	// here. Those are checked in Storybook (Sizes and Overlap stories).
+	// here. Those are checked on the website (Sizes and Overlap stories).
 	const groupWith = (size: string, extra: number) => fixture(`
 		<nldd-avatar-group size="${size}" max="1">
 			${Array.from({ length: extra + 1 }, (_, i) => `<nldd-avatar name="Persoon ${i}" decorative></nldd-avatar>`).join('')}

@@ -50,7 +50,7 @@
  *   Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base
  *   color shown outside the cell gradients; the other six are per-cell
  *   colors in row-major 3×2 order. Generate via the encoder in
- *   `lqip-encoder.ts` or via the "LQIP encoder tool" Storybook story.
+ *   `lqip-encoder.ts` or via the "LQIP encoder tool" story on the website.
  *   Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/)
  *   with per-cell hue. Lean's original format encodes grayscale cells only,
  *   while ours encodes a color per cell so multi-color subjects survive the
