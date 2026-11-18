@@ -20,7 +20,6 @@ export default {
 			file: 'src/components/content/admonition/admonition.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		docs: {
 			// role="note" is set on the host by the component itself.
 			source: {

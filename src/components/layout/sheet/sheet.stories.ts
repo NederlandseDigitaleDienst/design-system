@@ -22,7 +22,6 @@ export default {
 			file: 'src/components/layout/sheet/sheet.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		width: '',

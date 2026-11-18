@@ -31,7 +31,6 @@ export default {
 			file: 'src/components/status-and-feedback/modal-dialog/modal-dialog.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		variant: '',

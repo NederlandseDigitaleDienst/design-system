@@ -169,7 +169,6 @@ export default {
 			file: 'src/components/inputs/text-editor/text-editor.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		embedded: false,

@@ -48,7 +48,6 @@ export default {
 			file: 'src/components/layout/kanban/kanban.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		controls: { disable: true },
 	},
 	args: {

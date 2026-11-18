@@ -31,7 +31,6 @@ export default {
 			file: 'src/components/content/image/image.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		src: SAMPLE_SRC,

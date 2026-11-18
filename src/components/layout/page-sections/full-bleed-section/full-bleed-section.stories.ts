@@ -28,9 +28,6 @@ export default {
 			file: 'src/components/layout/page-sections/full-bleed-section/full-bleed-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: pageSectionArgs,
 	argTypes: pageSectionArgTypes,

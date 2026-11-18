@@ -21,7 +21,6 @@ export default {
 			file: 'src/components/content/term/term.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		definition: 'Degene die het doel van en de middelen voor de verwerking van persoonsgegevens vaststelt.',

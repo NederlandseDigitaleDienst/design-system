@@ -32,7 +32,6 @@ export default {
 			file: 'src/components/inputs/slider/slider.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		// The canvas spacing below is not part of the example, so keep it out
 		// of the code a reader copies.
 		docs: { source: { excludeDecorators: true } },

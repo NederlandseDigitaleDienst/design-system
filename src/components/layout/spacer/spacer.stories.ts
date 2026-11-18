@@ -72,9 +72,6 @@ export default {
 			file: 'src/components/layout/spacer/spacer.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		size: '16',

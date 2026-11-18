@@ -19,7 +19,6 @@ export default {
 			file: 'src/components/content/visually-hidden/visually-hidden.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 };
 

@@ -19,9 +19,6 @@ export default {
 			file: 'src/components/inputs/checkbox/checkbox.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		color: {

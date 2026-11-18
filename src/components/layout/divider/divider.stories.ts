@@ -20,9 +20,6 @@ export default {
 			file: 'src/components/layout/divider/divider.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 };
 

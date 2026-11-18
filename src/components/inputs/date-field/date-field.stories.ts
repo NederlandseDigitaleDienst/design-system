@@ -27,9 +27,6 @@ export default {
 			file: 'src/components/inputs/date-field/date-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		range: false,

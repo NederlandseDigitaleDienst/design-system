@@ -28,9 +28,6 @@ export default {
 			file: 'src/components/actions/icon-button/icon-button.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		appearance: {

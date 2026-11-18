@@ -28,9 +28,6 @@ export default {
 			file: 'src/components/actions/split-button/split-button.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		appearance: {

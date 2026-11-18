@@ -29,7 +29,6 @@ export default {
 			file: 'src/components/content/icon/icon.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 		docs: {
 			description: {
 				component: '`nldd-icon` is een icoon uit de iconenset. Zonder instellingen vult hij zijn ouder en neemt hij de tekstkleur van zijn context over. Met `size` krijgt hij een vaste maat, met `color` een functionele kleur of een rijkskleur. Voor een kleur die het designsysteem niet kent, zet je `custom-color` op een CSS-kleur. Alle iconen en aliassen staan onder [Iconen](/iconen/).',

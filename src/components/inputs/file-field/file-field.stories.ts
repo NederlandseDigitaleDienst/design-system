@@ -53,9 +53,6 @@ export default {
 			file: 'src/components/inputs/file-field/file-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		variant: 'control',

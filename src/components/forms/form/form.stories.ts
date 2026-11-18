@@ -37,7 +37,6 @@ export default {
 			file: 'src/components/forms/form/form.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		labelAlignment: 'right',

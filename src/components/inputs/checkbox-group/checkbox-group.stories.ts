@@ -33,9 +33,6 @@ export default {
 			file: 'src/components/inputs/checkbox-group/checkbox-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		invalid: false,

@@ -28,9 +28,6 @@ export default {
 			file: 'src/components/content/text/text.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		size: 'md',

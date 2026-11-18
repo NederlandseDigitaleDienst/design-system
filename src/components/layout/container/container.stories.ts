@@ -56,9 +56,6 @@ export default {
 			file: 'src/components/layout/container/container.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		layout: undefined,

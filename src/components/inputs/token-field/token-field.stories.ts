@@ -18,7 +18,6 @@ export default {
 			file: 'src/components/inputs/token-field/token-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'wip' },
 	},
 	args: {
 		// Twee tokens om mee te beginnen: de controls hieronder zetten values bij

@@ -28,9 +28,6 @@ export default {
 			file: 'src/components/layout/split-views/side-by-side-split-view/side-by-side-split-view.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		background: 'inherit',

@@ -35,7 +35,6 @@ export default {
 			file: 'src/components/layout/window/window.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		scheme: 'inherit',

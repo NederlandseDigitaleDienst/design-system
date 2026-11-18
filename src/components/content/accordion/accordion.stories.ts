@@ -19,7 +19,6 @@ export default {
 			file: 'src/components/content/accordion/accordion.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		exclusive: false,

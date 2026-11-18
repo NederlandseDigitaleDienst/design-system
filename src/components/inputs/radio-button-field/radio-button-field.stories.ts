@@ -15,9 +15,6 @@ export default {
 			file: 'src/components/inputs/radio-button-field/radio-button-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		color: {

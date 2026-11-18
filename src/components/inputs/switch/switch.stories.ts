@@ -14,9 +14,6 @@ export default {
 			file: 'src/components/inputs/switch/switch.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		color: {

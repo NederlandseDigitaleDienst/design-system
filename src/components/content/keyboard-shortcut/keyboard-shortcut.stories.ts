@@ -31,9 +31,6 @@ export default {
 			file: 'src/components/content/keyboard-shortcut/keyboard-shortcut.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		size: {

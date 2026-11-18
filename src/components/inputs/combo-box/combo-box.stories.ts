@@ -17,9 +17,6 @@ export default {
 			file: 'src/components/inputs/combo-box/combo-box.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		size: {

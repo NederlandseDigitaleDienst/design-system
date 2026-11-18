@@ -38,9 +38,6 @@ export default {
 			file: 'src/components/inputs/text-field/text-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		size: {

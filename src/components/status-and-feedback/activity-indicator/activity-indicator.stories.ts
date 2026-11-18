@@ -33,7 +33,6 @@ export default {
 			file: 'src/components/status-and-feedback/activity-indicator/activity-indicator.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		size: '32',

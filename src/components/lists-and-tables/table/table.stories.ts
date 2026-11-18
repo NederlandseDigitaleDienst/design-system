@@ -44,7 +44,6 @@ export default {
 			file: 'src/components/lists-and-tables/table/table.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		background: 'base',

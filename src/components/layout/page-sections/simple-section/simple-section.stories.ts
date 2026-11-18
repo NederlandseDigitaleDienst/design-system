@@ -35,9 +35,6 @@ export default {
 			file: 'src/components/layout/page-sections/simple-section/simple-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		...pageSectionArgs,

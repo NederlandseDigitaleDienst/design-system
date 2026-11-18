@@ -17,9 +17,6 @@ export default {
 			file: 'src/components/inputs/segmented-control/segmented-control.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		variant: {

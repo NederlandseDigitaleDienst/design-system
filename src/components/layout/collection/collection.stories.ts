@@ -44,9 +44,6 @@ export default {
 			file: 'src/components/layout/collection/collection.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		layout: 'grid',

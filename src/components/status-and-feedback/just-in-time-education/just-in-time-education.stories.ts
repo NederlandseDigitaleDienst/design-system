@@ -16,7 +16,6 @@ export default {
 			file: 'src/components/status-and-feedback/just-in-time-education/just-in-time-education.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		text: 'Zoek een aanvraag om te openen',

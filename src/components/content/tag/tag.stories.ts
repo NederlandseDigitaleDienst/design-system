@@ -29,9 +29,6 @@ export default {
 			file: 'src/components/content/tag/tag.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		variant: '',

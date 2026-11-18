@@ -19,7 +19,6 @@ export default {
 			file: 'src/components/forms/validation-list/validation-list.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		docs: {
 			description: {
 				component: `

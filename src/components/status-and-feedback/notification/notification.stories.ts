@@ -29,7 +29,6 @@ export default {
 			file: 'src/components/status-and-feedback/notification/notification.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 		// Every notification leaves the story it was written in and joins the one
 		// region on the page, so stories rendered side by side would land on the
 		// same pile. Its own frame gives each story its own page, and with that

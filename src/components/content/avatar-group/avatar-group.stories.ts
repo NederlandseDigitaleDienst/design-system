@@ -27,9 +27,6 @@ export default {
 			file: 'src/components/content/avatar-group/avatar-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		size: '40',

@@ -35,9 +35,6 @@ export default {
 			file: 'src/components/status-and-feedback/badge/badge.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		size: 'md',

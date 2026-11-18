@@ -18,7 +18,6 @@ export default {
 			file: 'src/components/inputs/time-picker/time-picker.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		rows: 7,

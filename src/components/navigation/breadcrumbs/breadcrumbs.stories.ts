@@ -15,7 +15,6 @@ export default {
 			file: 'src/components/navigation/breadcrumbs/breadcrumbs.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		accessibleLabel: '',

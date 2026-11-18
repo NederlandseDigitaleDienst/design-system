@@ -23,7 +23,6 @@ export default {
 			file: 'src/components/inputs/one-time-code-field/one-time-code-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		size: 'md',

@@ -16,9 +16,6 @@ export default {
 			file: 'src/components/inputs/number-field/number-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		size: {

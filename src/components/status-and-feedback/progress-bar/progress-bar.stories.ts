@@ -30,7 +30,6 @@ export default {
 			file: 'src/components/status-and-feedback/progress-bar/progress-bar.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	argTypes: {
 		variant: {

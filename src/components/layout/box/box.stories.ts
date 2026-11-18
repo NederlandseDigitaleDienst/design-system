@@ -35,9 +35,6 @@ export default {
 			file: 'src/components/layout/box/box.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		background: 'tinted',

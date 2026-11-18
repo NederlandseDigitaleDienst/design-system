@@ -29,9 +29,6 @@ export default {
 			file: 'src/components/inputs/toggle-button-group/toggle-button-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		appearance: {

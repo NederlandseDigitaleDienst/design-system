@@ -36,9 +36,6 @@ export default {
 			file: 'src/components/navigation/top-title-bar/top-title-bar.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		text: {

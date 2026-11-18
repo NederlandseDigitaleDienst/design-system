@@ -86,7 +86,6 @@ export default {
 			file: 'src/components/layout/page-sections/sidebar-section/sidebar-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		width: '',

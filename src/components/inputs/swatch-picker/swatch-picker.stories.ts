@@ -16,7 +16,6 @@ export default {
 			file: 'src/components/inputs/swatch-picker/swatch-picker.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		size: 'md',

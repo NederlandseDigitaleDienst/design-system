@@ -25,7 +25,6 @@ export default {
 			file: 'src/components/content/tooltip/tooltip.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	argTypes: {
 		text: {

@@ -20,9 +20,6 @@ export default {
 			file: 'src/components/inputs/password-field/password-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		size: {

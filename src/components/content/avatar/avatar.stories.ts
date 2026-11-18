@@ -28,7 +28,6 @@ export default {
 			file: 'src/components/content/avatar/avatar.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		name: 'Bart van de Biezen',

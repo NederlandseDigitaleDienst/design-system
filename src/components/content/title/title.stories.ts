@@ -38,9 +38,6 @@ export default {
 			file: 'src/components/content/title/title.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		size: '',

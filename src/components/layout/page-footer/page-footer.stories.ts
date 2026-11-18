@@ -22,7 +22,6 @@ export default {
 			file: 'src/components/layout/page-footer/page-footer.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		noRibbon: false,

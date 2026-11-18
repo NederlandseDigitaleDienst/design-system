@@ -15,9 +15,6 @@ export default {
 			file: 'src/components/inputs/search-field/search-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		size: 'md',

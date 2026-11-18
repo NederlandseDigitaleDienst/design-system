@@ -30,9 +30,6 @@ export default {
 			file: 'src/components/inputs/radio-button-group/radio-button-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		name: {

@@ -43,7 +43,6 @@ export default {
 			file: 'src/components/inputs/code-editor/code-editor.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	args: {
 		embedded: false,

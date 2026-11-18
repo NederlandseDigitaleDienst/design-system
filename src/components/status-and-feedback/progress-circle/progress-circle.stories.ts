@@ -30,7 +30,6 @@ export default {
 			file: 'src/components/status-and-feedback/progress-circle/progress-circle.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	argTypes: {
 		variant: {

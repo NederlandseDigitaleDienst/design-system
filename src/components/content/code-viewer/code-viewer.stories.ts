@@ -36,7 +36,6 @@ export default {
 			file: 'src/components/content/code-viewer/code-viewer.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 	},
 	argTypes: {
 		appearance: {

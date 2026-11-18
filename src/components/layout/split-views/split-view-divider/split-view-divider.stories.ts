@@ -21,9 +21,6 @@ export default {
 			file: 'src/components/layout/split-views/split-view-divider/split-view-divider.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		orientation: 'vertical',

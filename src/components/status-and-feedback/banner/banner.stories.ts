@@ -23,7 +23,6 @@ export default {
 			file: 'src/components/status-and-feedback/banner/banner.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'beta' },
 		docs: {
 			// role / aria-live / aria-atomic are set on the host by the component
 			// itself (based on variant), so strip them from the shown code — a

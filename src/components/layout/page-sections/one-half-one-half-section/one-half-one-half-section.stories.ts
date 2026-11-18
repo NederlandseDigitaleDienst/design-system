@@ -29,9 +29,6 @@ export default {
 			file: 'src/components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: { ...pageSectionArgs, verticalAlignment: 'top' },
 	argTypes: {

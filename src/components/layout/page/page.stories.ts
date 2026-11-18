@@ -39,9 +39,6 @@ export default {
 			file: 'src/components/layout/page/page.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		background: 'inherit',

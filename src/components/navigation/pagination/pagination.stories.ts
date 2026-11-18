@@ -28,9 +28,6 @@ export default {
 			file: 'src/components/navigation/pagination/pagination.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		centered: {

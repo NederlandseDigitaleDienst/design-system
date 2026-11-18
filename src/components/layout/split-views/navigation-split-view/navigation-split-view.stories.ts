@@ -35,9 +35,6 @@ export default {
 			file: 'src/components/layout/split-views/navigation-split-view/navigation-split-view.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		inspectorAsSheet: false,

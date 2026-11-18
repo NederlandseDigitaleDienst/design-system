@@ -24,7 +24,6 @@ export default {
 			file: 'src/components/forms/form-section/form-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		text: 'Persoonsgegevens',

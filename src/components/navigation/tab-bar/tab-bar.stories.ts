@@ -16,7 +16,6 @@ export default {
 			file: 'src/components/navigation/tab-bar/tab-bar.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	argTypes: {
 		variant: {

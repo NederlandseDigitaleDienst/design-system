@@ -17,7 +17,6 @@ export default {
 			file: 'src/components/navigation/link-group/link-group.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	args: {
 		size: 'md',

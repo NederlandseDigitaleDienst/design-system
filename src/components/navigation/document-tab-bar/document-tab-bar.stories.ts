@@ -25,7 +25,6 @@ export default {
 			file: 'src/components/navigation/document-tab-bar/document-tab-bar.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'stable' },
 	},
 	argTypes: {
 		accessibleLabel: {

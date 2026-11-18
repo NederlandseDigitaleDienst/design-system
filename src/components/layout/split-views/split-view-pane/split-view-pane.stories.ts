@@ -39,9 +39,6 @@ export default {
 			file: 'src/components/layout/split-views/split-view-pane/split-view-pane.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		hasContent: true,

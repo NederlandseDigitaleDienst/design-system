@@ -38,7 +38,6 @@ export default {
 			file: 'src/components/layout/card/card.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		background: 'base',

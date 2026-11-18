@@ -23,7 +23,6 @@ export default {
 			file: 'src/components/forms/form-actions/form-actions.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: { type: 'experimental' },
 	},
 	args: {
 		labelAlignment: 'top',

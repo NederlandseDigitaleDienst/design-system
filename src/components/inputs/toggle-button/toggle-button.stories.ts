@@ -31,9 +31,6 @@ export default {
 			file: 'src/components/inputs/toggle-button/toggle-button.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	argTypes: {
 		variant: {

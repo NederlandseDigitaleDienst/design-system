@@ -36,9 +36,6 @@ export default {
 			file: 'src/components/content/token/token.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		text: 'Dossier D-318',

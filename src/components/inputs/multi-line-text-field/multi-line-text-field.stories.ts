@@ -49,9 +49,6 @@ export default {
 			file: 'src/components/inputs/multi-line-text-field/multi-line-text-field.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		size: 'md',

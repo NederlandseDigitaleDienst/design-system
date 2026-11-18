@@ -28,9 +28,6 @@ export default {
 			file: 'src/components/layout/shell/shell.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		status: {
-			type: 'stable',
-		},
 	},
 	args: {
 		background: 'base',
