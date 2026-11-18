@@ -48,13 +48,7 @@ nldd-rich-text td code {
 		gap: 12px;
 	}
 
-	/* The bar is layout only: a title at the start, the tools at the end. */
 	.site-stage__bar {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px 16px;
 		padding: 12px 16px;
 	}
 

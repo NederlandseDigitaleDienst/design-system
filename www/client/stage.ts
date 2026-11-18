@@ -22,6 +22,10 @@ import '../../src/components/inputs/segmented-control/segmented-control.js';
 import '../../src/components/layout/box/box.js';
 import '../../src/components/layout/container/container.js';
 import '../../src/components/layout/divider/divider.js';
+import '../../src/components/actions/toolbar/toolbar.js';
+import '../../src/components/actions/toolbar/toolbar-item.js';
+import '../../src/components/actions/menu/menu.js';
+import '../../src/components/actions/menu/menu-item.js';
 import { loadStory, mapArgs, mount, sourceOf, type ArgType, type LoadedStory } from './stories.js';
 import { withContext, type StoryContext } from './runtime.js';
 
@@ -130,7 +134,7 @@ function nldd(tag: string, attributes: Record<string, string | boolean> = {}, ch
 
 /** A section of the stage below the mat, with the inset every section shares. */
 function section(className: string, children: Node[]): HTMLElement {
-	const container = nldd('container', { padding: '16', gap: '12' }, children);
+	const container = nldd('container', { padding: '16' }, children);
 	container.classList.add(className);
 	return container;
 }
@@ -173,6 +177,8 @@ export class SiteStage extends HTMLElement {
 	private events = nldd('container', { list: true, gap: '4' });
 	private eventLog = section('site-stage__events', [this.events]);
 	private dark = siteIsDark();
+	/** Auto follows the scheme of the site, also when it changes later. */
+	private scheme = 'auto';
 	private tinted = false;
 	private reserved = { width: 0, height: 0 };
 	private reserving = 0;
@@ -190,6 +196,11 @@ export class SiteStage extends HTMLElement {
 	connectedCallback(): void {
 		if (this.started) return;
 		this.started = true;
+		const follow = () => {
+			if (this.scheme === 'auto') this.applyScheme();
+		};
+		new MutationObserver(follow).observe(document.documentElement, { attributeFilter: ['data-scheme'] });
+		matchMedia('(prefers-color-scheme: dark)').addEventListener('change', follow);
 		void this.start();
 	}
 
@@ -279,8 +290,56 @@ export class SiteStage extends HTMLElement {
 		});
 	}
 
+	private applyScheme(): void {
+		this.dark = this.scheme === 'auto' ? siteIsDark() : this.scheme === 'dark';
+		// Auto leaves the canvas to inherit the page; a frame is told.
+		this.canvas.style.colorScheme = this.scheme === 'auto' ? '' : this.scheme;
+		this.post({ type: 'scheme', scheme: this.dark ? 'dark' : 'light' });
+	}
+
 	private post(message: Record<string, unknown>): void {
 		this.frame?.contentWindow?.postMessage({ site: 'stage', ...message }, location.origin);
+	}
+
+	private toolItem(control: HTMLElement, overflow: HTMLElement, priority: number, slot = 'start'): HTMLElement {
+		overflow.slot = 'overflow';
+		return nldd('toolbar-item', { slot, ...(priority ? { priority: String(priority) } : {}) }, [control, overflow]);
+	}
+
+	/** A choice in the bar, with the same choice as a submenu for when it moves into the overflow menu. */
+	private toolChoice(
+		name: string,
+		title: string,
+		options: [label: string, value: string][],
+		selected: string,
+		onChange: (value: string) => void,
+		priority: number,
+	): HTMLElement {
+		const items = options.map(([text, value]) =>
+			nldd('menu-item', { type: 'radio', text, value, selected: value === selected }),
+		);
+		const mark = (value: string) => {
+			for (const item of items) item.toggleAttribute('selected', item.getAttribute('value') === value);
+		};
+		const control = this.choice(
+			name,
+			options,
+			selected,
+			(value) => {
+				mark(value);
+				onChange(value);
+			},
+			{ size: '' },
+		);
+		for (const item of items) {
+			item.addEventListener('select', () => {
+				const value = item.getAttribute('value') ?? '';
+				mark(value);
+				(control as HTMLElement & { value: string }).value = value;
+				onChange(value);
+			});
+		}
+		return this.toolItem(control, nldd('menu-item', { text: title }, [nldd('menu', {}, items)]), priority);
 	}
 
 	/** One choice between a few named options, shown whole. */
@@ -289,12 +348,12 @@ export class SiteStage extends HTMLElement {
 		options: [label: string, value: string][],
 		selected: string,
 		onChange: (value: string) => void,
-		{ size = 'sm', appearance = 'neutral-base' }: { size?: string; appearance?: string } = {},
+		{ size = 'sm', appearance = '' }: { size?: string; appearance?: string } = {},
 	): HTMLElement {
 		const control = nldd(
 			'segmented-control',
 			{
-				size,
+				...(size ? { size } : {}),
 				...(appearance ? { appearance } : {}),
 				width: 'fit-content',
 				'accessible-label': name,
@@ -309,27 +368,32 @@ export class SiteStage extends HTMLElement {
 	private build({ tools }: { tools: boolean }): void {
 		const name = this.getAttribute('name') ?? '';
 		const bar = element('div', 'site-stage__bar');
-		const toolbar = nldd('container', { layout: 'wrap', gap: '8', width: 'fit-content', 'vertical-alignment': 'center' });
+		const toolbar = nldd('toolbar', { size: 'sm', 'accessible-label': `Weergave van ${name}` });
 		if (tools) {
+			// What gives way first on a narrow stage: opening it on its own, then the
+			// surface or width, and the color scheme last.
 			toolbar.append(
-				this.choice(
+				this.toolChoice(
 					`Kleurenschema van ${name}`,
+					'Kleurenschema',
 					[
+						['Auto', 'auto'],
 						['Licht', 'light'],
 						['Donker', 'dark'],
 					],
-					this.dark ? 'dark' : 'light',
+					'auto',
 					(scheme) => {
-						this.dark = scheme === 'dark';
-						this.canvas.style.colorScheme = scheme;
-						this.post({ type: 'scheme', scheme });
+						this.scheme = scheme;
+						this.applyScheme();
 					},
+					2,
 				),
 			);
 			if (!this.frame) {
 				toolbar.append(
-					this.choice(
+					this.toolChoice(
 						`Ondergrond van ${name}`,
+						'Ondergrond',
 						[
 							['Basis', 'base'],
 							['Getint', 'tinted'],
@@ -339,30 +403,33 @@ export class SiteStage extends HTMLElement {
 							this.tinted = surface === 'tinted';
 							this.canvas.dataset.surface = surface;
 						},
+						1,
 					),
 				);
 			} else {
 				toolbar.append(
-					this.choice(
+					this.toolChoice(
 						`Breedte van ${name}`,
+						'Breedte',
 						WIDTHS.map(([label, width]) => [label, width]),
 						'100%',
 						(width) => {
 							this.frame!.style.width = width;
 						},
+						1,
 					),
 				);
 			}
 			const file = this.getAttribute('file');
 			if (file) {
+				const href = `${import.meta.env.BASE_URL}voorbeeld/?file=${encodeURIComponent(file)}&story=${encodeURIComponent(this.getAttribute('story') ?? '')}`;
 				toolbar.append(
-					nldd('button', {
-						size: 'sm',
-						appearance: 'neutral-base',
-						text: 'Open los',
-						href: `${import.meta.env.BASE_URL}voorbeeld/?file=${encodeURIComponent(file)}&story=${encodeURIComponent(this.getAttribute('story') ?? '')}`,
-						target: '_blank',
-					}),
+					this.toolItem(
+						nldd('button', { text: 'Open los', href, target: '_blank' }),
+						nldd('menu-item', { text: 'Open los', href, target: '_blank' }),
+						0,
+						'end',
+					),
 				);
 			}
 		}
@@ -557,6 +624,7 @@ export class SiteStage extends HTMLElement {
 			import('../../src/components/actions/menu/menu-item.js'),
 			import('../../src/components/actions/menu/menu-divider.js'),
 			import('../../src/components/content/token/token.js'),
+			import('../../src/components/layout/spacer/spacer.js'),
 		]);
 
 		const list = nldd('list', { type: 'form', appearance: 'box-tinted' });
@@ -811,7 +879,7 @@ export class SiteStage extends HTMLElement {
 		const remove = nldd('button', { size: 'sm', text: 'Verwijder' });
 		const popover = nldd('popover', { id, role: 'region', 'accessible-label': entry.name }, [
 			nldd('top-title-bar', { text: entry.name, 'heading-level': '2', 'dismiss-text': 'Sluit' }),
-			nldd('container', { padding: '16', gap: '12' }, [field, remove]),
+			nldd('container', { padding: '16' }, [field, nldd('spacer', { size: '12' }), remove]),
 		]);
 		popover.slot = 'menu';
 		popover.classList.add('site-control-info', 'site-stage__quick-field');
@@ -927,7 +995,7 @@ export class SiteStage extends HTMLElement {
 				options.length <= SHOWN_WHOLE.options &&
 				options.reduce((sum, [name]) => sum + name.length, 0) <= SHOWN_WHOLE.characters &&
 				options.every(([, value]) => value !== '');
-			if (fits) return this.choice(control.name, options, selected, change, { size: 'md', appearance: '' });
+			if (fits) return this.choice(control.name, options, selected, change, { size: 'md' });
 			const select = element('select', '');
 			for (const [name, value] of options) select.append(new Option(name, value));
 			select.value = selected;
