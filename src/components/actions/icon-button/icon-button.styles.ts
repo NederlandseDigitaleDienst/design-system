@@ -39,6 +39,10 @@ export const iconButtonStyles = css`
 		display: inline-flex;
 		position: relative;
 		max-width: 100%;
+		/* In running text the center sits on the middle of the capitals. The
+		   control's baseline is its bottom padding edge; middle is the fallback. */
+		vertical-align: middle;
+		vertical-align: calc(0.5cap - (var(--_icon-button-min-size) / 2 - var(--_icon-button-block-padding)));
 		-webkit-user-select: none;
 		user-select: none;
 		-webkit-tap-highlight-color: transparent;

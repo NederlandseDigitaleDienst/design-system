@@ -24,6 +24,11 @@ here; consult the commit history if you need that level of detail.
 - **A finding of `nldd lint` links to the website.** The address after a rule that points at a pattern or a guideline is now `https://design.digitaledienst.overheid.nl/patronen/form/` where it was a Storybook address.
 - **The links in the skills and in `reference.md` point to the website.**
 
+### Fixed
+
+- **`nldd-icon-button` in running text centers on the capitals beside it.** It sat on the baseline, so an `xs` button after a label stood higher than the words.
+- **The open list of `nldd-dropdown` in Safari has the size of the system's menus.** Safari drew it at the size of the select, which made it larger than every other menu on the Mac.
+
 ## [0.26.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.1...v0.26.2) (2026-11-17)
 
 ### Highlights

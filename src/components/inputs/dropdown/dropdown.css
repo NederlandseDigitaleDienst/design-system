@@ -15,3 +15,11 @@ nldd-dropdown > select :is(option, optgroup) {
 	--context-content-color: var(--_dropdown-option-color);
 	color: var(--_dropdown-option-color);
 }
+
+/* Safari draws the open list at the size of the select; this gives it the size
+   of the system's own menus. Only WebKit knows -apple-system-body. */
+@supports (font: -apple-system-body) {
+	nldd-dropdown > select :is(option, optgroup) {
+		font: menu;
+	}
+}
