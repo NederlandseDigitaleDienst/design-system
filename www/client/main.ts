@@ -8,6 +8,7 @@
 import './autoload.js';
 import { chooseScheme, chooseTheme, chosenScheme, chosenTheme, showTheme } from './theme.js';
 import './stage.js';
+import './navigate.js';
 
 /**
  * A title bar with a back button and no link goes back to the sections, which
@@ -27,8 +28,8 @@ function wireBack(): void {
  * Below the width where the sidebar is a sheet, a button opens it. The button
  * says whether the sheet is open, as the content page pattern has it.
  */
-function wireSidebar(): void {
-	for (const trigger of document.querySelectorAll<HTMLElement & { expanded: boolean }>('[data-site-sidebar]')) {
+function wireSidebar(root: ParentNode = document): void {
+	for (const trigger of root.querySelectorAll<HTMLElement & { expanded: boolean }>('[data-site-sidebar]')) {
 		const section = trigger.closest('nldd-sidebar-section') as (HTMLElement & { show(): void }) | null;
 		if (!section) continue;
 		trigger.addEventListener('click', () => section.show());
@@ -39,6 +40,37 @@ function wireSidebar(): void {
 			trigger.expanded = false;
 		});
 	}
+}
+
+let contentsWatcher: IntersectionObserver | null = null;
+
+/**
+ * The row in the table of contents of the heading being read is current: the
+ * last heading past the top third of the window, else the first, as the
+ * content page pattern has it.
+ */
+function wireContents(root: ParentNode = document): void {
+	contentsWatcher?.disconnect();
+	contentsWatcher = null;
+	const rows = [
+		...root.querySelectorAll<HTMLElement & { current: boolean }>(
+			'nldd-sidebar-section > [slot="sidebar"] nldd-list-item[href^="#"]',
+		),
+	];
+	const headings = rows
+		.map((row) => document.getElementById(decodeURIComponent(row.getAttribute('href')!.slice(1))))
+		.filter((heading): heading is HTMLElement => !!heading);
+	if (!headings.length) return;
+	const mark = () => {
+		const line = innerHeight / 3;
+		const passed = headings.filter((heading) => heading.getBoundingClientRect().top <= line).length;
+		const active = Math.max(passed - 1, 0);
+		rows.forEach((row, index) => {
+			row.current = index === active;
+		});
+	};
+	contentsWatcher = new IntersectionObserver(mark, { rootMargin: '0px 0px -67% 0px' });
+	for (const heading of headings) contentsWatcher.observe(heading);
 }
 
 const SCHEME_ICONS: Record<string, string> = { system: 'display', dark: 'moon', light: 'sun' };
@@ -95,3 +127,9 @@ function wireTheme(): void {
 wireTheme();
 wireBack();
 wireSidebar();
+wireContents();
+document.addEventListener('site-navigate', (event) => {
+	const { main } = (event as CustomEvent<{ main: Element }>).detail;
+	wireSidebar(main);
+	wireContents(main);
+});

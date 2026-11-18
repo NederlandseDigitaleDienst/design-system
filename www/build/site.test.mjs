@@ -67,7 +67,7 @@ test('every page behind the landing page is an application: a toolbar around a s
 		assert.match(pages[path], /<nldd-bar-split-view>[^]*<nldd-navigation-split-view>/, path);
 		assert.match(pages[path], /<nldd-icon-button\s+icon="chevron-left"\s+text="Home"\s+href="\/"/, path);
 		assert.match(pages[path], /<nldd-toolbar-title\s+slot="start"\s+text="NLDD Designsysteem"\s+min-width="0"/, path);
-		assert.match(pages[path], /<nldd-page[^]*?slot="footer"[^]*?<nldd-link-group accessible-label="Over deze site">/, path);
+		assert.match(pages[path], /<nldd-page[^]*?slot="footer"[^]*?<nldd-link-group accessible-label="Over deze site" size="sm">/, path);
 		assert.doesNotMatch(pages[path], /nldd-top-navigation-bar|nldd-page-footer|nldd-breadcrumbs/, path);
 		for (const href of ['/componenten/', '/patronen/', '/themas/', '/toegankelijkheid/', '/changelog/']) {
 			assert.ok(pages[path].includes(`href="${href}"`), `${path} mist ${href}`);

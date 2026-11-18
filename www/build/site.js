@@ -105,36 +105,42 @@ function homePage() {
 	);
 }
 
-/** What the documentation lists in its first sidebar, by group. Every item opens something. */
+/**
+ * What the documentation lists in its first sidebar, by group, each with the
+ * name of its list. A group without a title stands on its own above the rest.
+ * Every item opens something.
+ */
 const NAVIGATION = [
+	['', 'Nieuw', [['Changelog', '/changelog/']]],
 	[
-		'Het systeem',
+		'Bibliotheek',
+		'Bibliotheek',
 		[
 			['Componenten', '/componenten/'],
 			['Patronen', '/patronen/'],
 			['Iconen', '/iconen/'],
-			["Thema's", '/themas/'],
-			['Ontwerprichtlijnen', '/richtlijnen/'],
 		],
 	],
 	[
-		'Bouwen',
+		'Handleiding',
+		'Handleiding',
 		[
 			['Aan de slag', '/aan-de-slag/'],
+			['Ontwerprichtlijnen', '/richtlijnen/'],
+			['Toegankelijkheid', '/toegankelijkheid/'],
+			["Thema's", '/themas/'],
 			['Werken met een AI-assistent', '/aan-de-slag/ai-assistent/'],
 			['Linter', '/linter/'],
 			['Breakpoints', '/breakpoints/'],
 			['Vertalingen', '/vertalingen/'],
-			['Changelog', '/changelog/'],
 		],
 	],
 ];
 
 /** About the site, at the foot of the first sidebar. */
 const ABOUT = [
-	['Toegankelijkheid', '/toegankelijkheid/'],
-	['Meld een probleem of idee', `${REPOSITORY}/issues`],
 	['Privacy', 'https://digitaledienst.overheid.nl/over/privacy/'],
+	['Idee of probleem melden', `${REPOSITORY}/issues`],
 	['GitHub', REPOSITORY],
 ];
 
@@ -142,22 +148,26 @@ const DOCS = 'Documentatie';
 
 /** The section a page belongs to: the one whose path is the longest start of it. */
 function currentSection(path) {
-	const paths = NAVIGATION.flatMap(([, items]) => items.map(([, href]) => href));
+	const paths = NAVIGATION.flatMap(([, , items]) => items.map(([, href]) => href));
 	return paths.filter((href) => path.startsWith(href)).sort((a, b) => b.length - a.length)[0];
 }
 
 function primaryNavigation(path) {
 	const current = currentSection(path);
 	return NAVIGATION.map(
-		([group, items]) => `<nldd-title size="display-6">
+		([group, label, items]) => `${
+			group
+				? `<nldd-title size="display-5">
 					<h3>${escapeHtml(group)}</h3>
 				</nldd-title>
 				<nldd-spacer size="4"></nldd-spacer>
-				<nldd-list
+				`
+				: ''
+		}<nldd-list
 					type="navigation"
 					appearance="simple"
 					dividers="never"
-					accessible-label="${escapeHtml(group)}"
+					accessible-label="${escapeHtml(label)}"
 				>
 					${items
 						.map(
@@ -180,7 +190,7 @@ const aboutLinks = `<nldd-container
 				slot="footer"
 				padding="16"
 			>
-				<nldd-link-group accessible-label="Over deze site">
+				<nldd-link-group accessible-label="Over deze site" size="sm">
 					${ABOUT.map(([text, href]) => `<nldd-link
 						href="${href}"
 						text="${escapeHtml(text)}"
@@ -224,7 +234,7 @@ function sidebarPane({ slot, id, title, back, nav, footer }) {
 				<nldd-title
 					id="${id}"
 					slot="header"
-					size="display-4"
+					size="display-3"
 					text="${escapeHtml(title)}"
 					heading-level="2"
 				></nldd-title>
@@ -497,14 +507,14 @@ function pageTitle(text, { overline = '', end = '' } = {}) {
 
 /**
  * A page of prose, as the content page pattern has it: the text in the main
- * column and, when the page has enough headings to get lost in, a table of
- * contents beside it. A page with a great many headings (the changelog) gets
+ * column and, when the page has more than one heading, a table of contents
+ * beside it, so every page of prose has the same columns. A page with a great many headings (the changelog) gets
  * none: a list that long is no shorter than the page.
  */
 function prosePage({ title, rendered, extra = '' }) {
 	const headings = rendered.headings;
 	const body = `${rendered.html}${extra}`;
-	if (headings.length < 3 || headings.length > 24) {
+	if (headings.length < 2 || headings.length > 24) {
 		return `		<nldd-simple-section grow>
 			${pageTitle(title)}
 			<nldd-container gap="24">
@@ -554,7 +564,7 @@ ${body}
 				>
 					${headings
 						.map(
-							(h) => `<nldd-list-item href="#${h.id}" current-type="location">
+							(h, index) => `<nldd-list-item href="#${h.id}" current-type="location"${index === 0 ? ' current' : ''}>
 						<nldd-text-cell>
 							<p>${h.text}</p>
 						</nldd-text-cell>
@@ -647,12 +657,12 @@ ${lists.join('\n')}
 }
 
 /** The sidebar of a component or a pattern: every sibling, by group. */
-function siblingNav(groups, current, hrefOf) {
+function siblingNav(groups, current, hrefOf, label = 'Patronen') {
 	return groups
 		.map(
 			([group, items]) => `${
 				group
-					? `<nldd-title size="display-6">
+					? `<nldd-title size="display-5">
 					<h3>${escapeHtml(group)}</h3>
 				</nldd-title>
 				<nldd-spacer size="4"></nldd-spacer>
@@ -662,14 +672,18 @@ function siblingNav(groups, current, hrefOf) {
 					type="navigation"
 					appearance="simple"
 					dividers="never"
-					accessible-label="${escapeHtml(group || 'Patronen')}"
+					accessible-label="${escapeHtml(group || label)}"
 				>
 					${items
 						.map(
 							(item) => `<nldd-list-item href="${hrefOf(item)}"${item === current ? ' current' : ''}>
-						<nldd-text-cell>
-							<p>${escapeHtml(item.name)}</p>
-						</nldd-text-cell>
+						<nldd-text-cell text="${escapeHtml(item.name)}"></nldd-text-cell>
+						<nldd-spacer-cell size="12"></nldd-spacer-cell>
+						<nldd-icon-cell
+							size="20"
+							color="secondary"
+							icon="chevron-right"
+						></nldd-icon-cell>
 					</nldd-list-item>`,
 						)
 						.join('\n\t\t\t\t\t')}
@@ -749,11 +763,10 @@ function changelogEntries(markdown) {
 			name: version,
 			slug: version,
 			date: heading.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? '',
-			group: version.split('.').slice(0, 2).join('.'),
 			body: body.join('\n').trim(),
 		};
 	});
-	if (coming) entries.unshift({ name: 'Komende versie', slug: '', date: '', group: '', body: coming });
+	if (coming) entries.unshift({ name: 'Komende versie', slug: '', date: '', body: coming });
 	return entries;
 }
 
@@ -938,9 +951,9 @@ export function buildPages({ base = '/' } = {}) {
 			path === '/changelog/' ? 'Wat er per versie is veranderd.' : `Wat er in versie ${entry.name} is veranderd.`,
 			changelogPage(entry),
 			{
-				title: 'Versies',
+				title: 'Changelog',
 				path: '/changelog/',
-				nav: siblingNav(groupBy(versions, 'group'), entry, (other) => changelogPath(other, versions)),
+				nav: siblingNav([['', versions]], entry, (other) => changelogPath(other, versions), 'Changelog'),
 			},
 		);
 	}

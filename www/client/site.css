@@ -26,6 +26,12 @@ nldd-rich-text td code {
 	white-space: nowrap;
 }
 
+/* Outside the layer: the focus ring of the base styles is not in one. The
+   title gets focus from script after a page change, to be announced. */
+#pagina-titel :is(h1, h2):focus {
+	outline: none;
+}
+
 [data-site-api] td:nth-child(2) {
 	min-width: 96px;
 	max-width: 280px;
