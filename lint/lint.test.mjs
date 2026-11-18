@@ -7,10 +7,10 @@ import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { cssRules, isDesignSystemCss } from './css.js';
 import { createEngine } from './engine.js';
-import { parseAstro, parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue } from './frontends.js';
+import { parseAstro, parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue, readerOf } from './frontends.js';
 import { createCanonical, createLinter, loadData } from './linter.js';
 import { resolveSeverities } from './rule-data.js';
-import { readBaseline } from './project.js';
+import { readBaseline, UNREAD_EXTENSIONS } from './project.js';
 import { BOUND, walk } from './tree.js';
 
 const first = (roots, name) => {
@@ -104,7 +104,8 @@ describe('frontends', () => {
 		assert.equal(read("{a.map((b: B) => (b.c ? 'tekst' : <nldd-a/>))}"), '#unknown nldd-a[cr]');
 		assert.equal(read('{(a as Array<string>).length > 0 && <nldd-a/>}{`<nldd-no>${b}` && <nldd-b/>}'), 'nldd-a[c] nldd-b[c]');
 		assert.equal(read('{a ? <nldd-a/> : b ? <nldd-b/> : null}'), 'nldd-a[c] nldd-b[c]');
-		assert.equal(read('<p></p><nldd-a/><nldd-b/>'), 'p nldd-a nldd-b');
+		assert.equal(read('<p>\uE001</p><nldd-a/>\uE004<nldd-b/>'), 'p nldd-a nldd-b');
+		assert.equal(read("<p>{/it's/.test(a) && <nldd-a/>}{a / 2 > b && <nldd-b/>}</p><nldd-c/>"), 'p(nldd-a[c] nldd-b[c]) nldd-c');
 		assert.equal(read('{<nldd-a/>}{(<nldd-b/>)}'), 'nldd-a nldd-b');
 		assert.equal(read('<nldd-a {/* waarom */} text="a" /><nldd-b {...c} />'), 'nldd-a nldd-b[s]');
 		assert.equal(read('{a && <img src={b}>}<Fragment slot="c"><nldd-a/></Fragment>'), 'img[c] nldd-a');
@@ -1641,7 +1642,9 @@ describe('nldd command', () => {
 		assert.match(result.stdout, /src\/a\.astro:3:1 {2}error {2}unknown-element/);
 		assert.match(result.stdout, /src\/b\.svelte:1:1 {2}warn {2}file-not-read/);
 		assert.doesNotMatch(result.stdout, /c\.svelte/);
-		assert.match(result.stdout, /1 error, 1 warning in 1 file/);
+		assert.match(result.stdout, /1 error, 1 warning in 1 file \(1 not read\)/);
+		assert.match(run(root, 'lint', 'src/b.svelte', 'src/c.svelte').stdout, /0 errors, 1 warning in 0 files \(1 not read\)/);
+		assert.match(run(root, 'lint', '--statistics').stdout, /2 findings in 1 file \(1 not read\)/);
 	});
 
 	it('skips the scripts of a build, whose chunks hold the styles of the components themselves', () => {
@@ -1887,6 +1890,10 @@ describe('markup the linter cannot read', () => {
 		assert.deepEqual(await rulesIn('<script>let a;</script>\n<nldd-button text="a" foo="b"></nldd-button>', 'a.svelte'), ['file-not-read']);
 		assert.deepEqual(await rulesIn('export const t = `<nldd-button text="a" foo="b"></nldd-button>`;', 'b.mjs'), ['file-not-read']);
 		assert.deepEqual(await rulesIn('// <nldd-button>\nexport const a = 1;', 'c.js'), []);
+	});
+
+	it('has no parser for a type it lists as not read', () => {
+		assert.deepEqual(UNREAD_EXTENSIONS.filter((extension) => readerOf(`a${extension}`) !== 'none'), []);
 	});
 
 	it('reads Astro, and reports only what is certain there', async () => {

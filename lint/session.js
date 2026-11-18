@@ -89,7 +89,7 @@ function fixReferences(renamedTags, paths, root, exclude) {
  * @param {{ filename: string, source: string }} [options.input] - one snippet instead of files
  * @param {boolean} [options.fix] - write the fixes that are certain
  * @param {(filename: string) => boolean} [options.keep] - read this file even without a component
- * @returns {Promise<{ results: object[], files: number, fixed: number, fixedFiles: number,
+ * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number,
  *   notUtf8: string[], references?: { fixed: number, files: number, remaining: string[] } }>}
  */
 export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false }) {
@@ -135,5 +135,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 		}
 	}
 	const references = renamedTags.size > 0 ? fixReferences(renamedTags, paths, root, config.exclude) : undefined;
-	return { results, files, fixed, fixedFiles, notUtf8, references };
+	// Not in `files`: what has our markup and was not read, so the summary can say so.
+	const unread = results.filter(({ filename, findings }) => UNREAD_EXTENSIONS.includes(extname(filename)) && findings.some(({ rule }) => rule === 'file-not-read')).length;
+	return { results, files, unread, fixed, fixedFiles, notUtf8, references };
 }

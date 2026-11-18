@@ -484,6 +484,18 @@ function astroAsHtml(source) {
 		return !/[\w$)\]'"`.]$/.test(before);
 	}
 
+	/** From the `/` of a regex to the one that closes it, on the same line; else nowhere. */
+	function endOfRegex(start) {
+		let inClass = false;
+		for (let at = start + 1; at < length && source[at] !== '\n'; at += 1) {
+			if (source[at] === '\\') at += 1;
+			else if (source[at] === '[') inClass = true;
+			else if (source[at] === ']') inClass = false;
+			else if (source[at] === '/' && !inClass) return at;
+		}
+		return start;
+	}
+
 	/** From a backtick to the one that closes it, past every `${…}`. */
 	function endOfTemplate(start) {
 		let at = start + 1;
@@ -510,6 +522,8 @@ function astroAsHtml(source) {
 			if (char === '"' || char === "'") at = endOfString(source, at);
 			else if (char === '`') at = endOfTemplate(at);
 			else if (isComment) at = source[at + 1] === '*' ? find('*/', at + 2) + 1 : find('\n', at);
+			// After a value a `/` divides; anywhere else it opens a regex, which may hold a quote.
+			else if (char === '/' && !/[\w$)\]'"`]/.test(source[last] ?? '')) at = endOfRegex(at);
 			else if (char === '{') depth += 1;
 			else if (char === '}' && --depth === 0) return at;
 			else if (char === '<' && elements && opensElement(at, last)) {
@@ -628,8 +642,10 @@ function astroAsHtml(source) {
 				const closes = tag.selfClosing || VOID.has(tag.name.toLowerCase());
 				if (!closes) depth += 1;
 				if (tag.raw && !closes) {
-					const closing = source.toLowerCase().indexOf(`</${tag.name.toLowerCase()}`, at);
-					const end = closing === -1 ? length : closing;
+					// Case-insensitive without lowering the source, which can change its length.
+					const closer = new RegExp(`</${tag.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'gi');
+					closer.lastIndex = at;
+					const end = closer.exec(source)?.index ?? length;
 					// What `is:raw` holds is text as it stands, not elements and not expressions.
 					if (!/^(script|style)$/i.test(tag.name)) for (let i = at; i < end; i += 1) if (/[<{}]/.test(out[i])) out[i] = ' ';
 					at = end;
