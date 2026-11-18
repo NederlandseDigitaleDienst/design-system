@@ -43,6 +43,7 @@
  * whole site, and a hero given one says so in development.
  *
  * @element nldd-hero
+ * @related nldd-full-bleed-section
  *
  * @attr {'inherit'|'base'|'tinted'} background - Surface behind the hero (section API)
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)

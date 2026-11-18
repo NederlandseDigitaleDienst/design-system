@@ -25,6 +25,8 @@
  * falls back to the initials or the icon, never to a broken-image icon.
  *
  * @element nldd-avatar
+ * @keywords profile picture
+ * @related nldd-identity, nldd-avatar-group, nldd-image
  *
  * @attr {string} type - `person` (circle, person icon) or `organization` (rounded, building icon); default `person`
  * @attr {string} size - `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along

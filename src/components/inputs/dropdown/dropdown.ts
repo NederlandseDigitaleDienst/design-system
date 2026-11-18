@@ -18,6 +18,8 @@
  * design guidelines explain the order.
  *
  * @element nldd-dropdown
+ * @keywords select, picker
+ * @related nldd-combo-box, nldd-radio-button-group, nldd-segmented-control
  * @attr {string} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid

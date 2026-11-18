@@ -61,6 +61,8 @@
  * An nldd-sheet always shows its bar.
  *
  * @element nldd-popover
+ * @keywords flyout, popup, overlay
+ * @related nldd-sheet, nldd-modal-dialog, nldd-window, nldd-tooltip, nldd-menu
  *
  * @attr {string} width - Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV.
  * @attr {boolean} md-title-bar - Keeps an nldd-top-title-bar in the popover on md and up, where it is hidden by default. For a bar whose dismiss button does what nothing else in the popover does.

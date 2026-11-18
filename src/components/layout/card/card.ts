@@ -18,6 +18,8 @@
  * content visually, use `nldd-box` or a layout of your own instead.
  *
  * @element nldd-card
+ * @keywords tile
+ * @related nldd-box, nldd-collection
  *
  * @attr {'base'|'tinted'|'accent-tinted'} background - Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface, `accent-tinted` for a tint of the theme's accent with the contrast of `tinted`
  * @attr {string} accessible-label - Accessible name of the card; with `href`/`button` it names the link or button, otherwise the card region

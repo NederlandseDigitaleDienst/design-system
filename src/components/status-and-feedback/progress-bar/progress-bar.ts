@@ -17,6 +17,8 @@
  * proportionally to fit and a warning is logged.
  *
  * @element nldd-progress-bar
+ * @keywords progress, loading bar
+ * @related nldd-progress-circle, nldd-activity-indicator, nldd-step-bar
  *
  * @attr {'progress'|'distribution'} variant - Semantics for ARIA and visualization (default: 'progress')
  * @attr {number} max - Total value (default: 100)

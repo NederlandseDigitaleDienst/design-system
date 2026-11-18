@@ -50,6 +50,7 @@
  * under it, the start first.
  *
  * @element nldd-slider
+ * @related nldd-number-field
  * @attr {string} size - Slider size: 'xs' | 'sm' | 'md' (default: 'md'), with the height of the other controls of that size. Set automatically by nldd-form-field.
  * @attr {boolean} range - Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value`
  * @attr {string} histogram - Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored.

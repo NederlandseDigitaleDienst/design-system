@@ -42,6 +42,7 @@
  * rubber-band happen. Cleared on last disconnect.
  *
  * @element nldd-shell
+ * @related nldd-page
  *
  * @attr {'base'|'tinted'} background - Background color (cascades to descendants)
  *

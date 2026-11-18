@@ -94,6 +94,8 @@
  * Cmd/Ctrl+Shift+V pastes it as it is. Nothing changes in a code block.
  *
  * @element nldd-text-editor
+ * @keywords wysiwyg, rich text editor, markdown
+ * @related nldd-multi-line-text-field, nldd-code-editor
  *
  * @attr {string} value - Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history.
  * @attr {string} placeholder - Placeholder text shown while empty

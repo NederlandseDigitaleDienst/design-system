@@ -43,6 +43,8 @@
  * per-instance to swap the theme.
  *
  * @element nldd-code-viewer
+ * @keywords code block, syntax highlighting
+ * @related nldd-code-editor
  *
  * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.

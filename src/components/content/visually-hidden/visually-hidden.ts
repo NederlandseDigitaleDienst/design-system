@@ -19,6 +19,7 @@
  * and be nowhere on the screen.
  *
  * @element nldd-visually-hidden
+ * @keywords sr-only, screen reader only
  *
  * @slot - The text, read by a screen reader and not shown.
  */

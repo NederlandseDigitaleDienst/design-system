@@ -33,6 +33,8 @@
  * space in a flex container.
  *
  * @element nldd-spacer
+ * @keywords gap, whitespace
+ * @related nldd-container, nldd-divider
  *
  * @attr {string} size - Base spacer size. 'flexible' or one of the fixed
  *   tokens (2–96). Default: '16'.

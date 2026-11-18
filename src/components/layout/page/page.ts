@@ -48,6 +48,7 @@
  * and the page says so in development.
  *
  * @element nldd-page
+ * @related nldd-shell, nldd-window
  *
  * @attr {'inherit'|'base'|'tinted'} background - Use a gray background instead of white
  * @attr {string} accessible-label - Name of the landmark this page is: the region it becomes beside another page, or its main landmark

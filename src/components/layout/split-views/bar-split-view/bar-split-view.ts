@@ -20,6 +20,7 @@
  * Sets --context-background-color, which cascades to all descendants.
  *
  * @element nldd-bar-split-view
+ * @related nldd-navigation-split-view, nldd-side-by-side-split-view, nldd-stacked-split-view
  *
  * @attr {'inherit'|'base'|'tinted'} background - Background color variant (default: inherit)
  *

@@ -4,6 +4,7 @@
  * A password input field with visibility toggle and validation states.
  *
  * @element nldd-password-field
+ * @related nldd-one-time-code-field, nldd-text-field
  *
  * @attr {string} value - The input value
  * @attr {string} placeholder - Placeholder text

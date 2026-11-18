@@ -9,6 +9,8 @@
  * `nldd-badge` (a state or a count the system keeps).
  *
  * @element nldd-token
+ * @keywords chip, pill, label
+ * @related nldd-badge, nldd-tag
  *
  * @attr {string} text - Token text. Content in the default slot wins.
  * @attr {'none' | 'dismiss' | 'menu'} control - Control type (default: 'none')

@@ -44,8 +44,8 @@ function wireSidebar(root: ParentNode = document): void {
 
 /**
  * The field above the components or the patterns shortens the list as you
- * type: a row stays when every word typed is in its name or its tag, and a
- * group goes when none of its rows is left. Listened for on the document, so
+ * type: a row stays when every word typed is in its name, its tag, its group
+ * or its keywords, and a group goes when none of its rows is left. Listened for on the document, so
  * it works in a sidebar that came in with a page change.
  */
 function wireFilter(): void {
@@ -73,7 +73,36 @@ function wireFilter(): void {
 		}
 		const empty = pane.querySelector<HTMLElement>('[data-site-filter-empty]');
 		if (empty) empty.hidden = shown > 0;
+		showRelated(pane, words.length > 0);
 	});
+}
+
+/**
+ * Under the matches, the pages they name as related, once each and never one
+ * that is a match itself. The rows are copies of the ones in the groups, so
+ * they look and lead the same.
+ */
+function showRelated(pane: Element, searching: boolean): void {
+	const group = pane.querySelector<HTMLElement>('[data-site-filter-related]');
+	const list = group?.querySelector('nldd-list');
+	if (!group || !list) return;
+	const rows = [...pane.querySelectorAll<HTMLElement>('[data-site-filter-group] [data-site-search]')];
+	const matches = rows.filter((row) => !row.hidden);
+	const matched = new Set(matches.map((row) => row.dataset.siteSlug));
+	const slugs = searching
+		? [...new Set(matches.flatMap((row) => (row.dataset.siteRelated ?? '').split(' ').filter(Boolean)))].filter((slug) => !matched.has(slug))
+		: [];
+	const copies = slugs
+		.map((slug) => rows.find((row) => row.dataset.siteSlug === slug))
+		.filter((row): row is HTMLElement => Boolean(row))
+		.map((row) => {
+			const copy = row.cloneNode(true) as HTMLElement;
+			copy.hidden = false;
+			delete copy.dataset.siteSearch;
+			return copy;
+		});
+	list.replaceChildren(...copies);
+	group.hidden = copies.length === 0;
 }
 
 let contentsWatcher: IntersectionObserver | null = null;

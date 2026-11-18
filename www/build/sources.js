@@ -18,6 +18,7 @@ import { resolve, dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 import { PATTERNS, storybookId } from '../../scripts/lib/skill-patterns.js';
+import { extractComponentBlocks } from '../../scripts/lib/component-jsdoc.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const repoRoot = resolve(__dirname, '../..');
@@ -171,10 +172,39 @@ export function collectComponents() {
 			// Without a componentSource of its own, the source is the file next to
 			// the stories that defines the element.
 			const sourceFile = story.sourceFile ?? (elements[0] ? elements[0].module.replace(/\.js$/, '.ts') : undefined);
-			return { ...story, sourceFile, name, slug, category: CATEGORY_LABELS[category] ?? category, dir, elements };
+			// What the search finds a page by, besides its name, tag and group: the
+			// keywords of its elements and the English name of its group.
+			const keywords = [...new Set([...elements.flatMap((e) => e.keywords ?? []), category.toLowerCase()])];
+			return { ...story, sourceFile, name, slug, category: CATEGORY_LABELS[category] ?? category, dir, elements, keywords };
 		})
 		.filter(Boolean)
 		.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** A drawn line between two elements in a shared file, and the title line of a file. */
+const NOT_PROSE = /^[\s\u2500-\u257F\-=_]+$|^Nederlandse Digitale Dienst\b|^#/;
+
+/**
+ * The prose of an element's JSDoc, with its paragraphs. The manifest and
+ * reference.md read the same blocks through component-jsdoc.js, which joins
+ * them into one line; a page wants them as written. The prose at the top of a
+ * file belongs to its first element, the prose under an @element to that one.
+ */
+function elementDoc(modulePath, tagName, first) {
+	const file = resolve(repoRoot, modulePath.replace(/\.js$/, '.ts'));
+	if (!existsSync(file)) return '';
+	const own = [];
+	const shared = [];
+	for (const block of extractComponentBlocks(readFileSync(file, 'utf8'))) {
+		let target = shared;
+		for (const line of block.split('\n')) {
+			const tag = line.match(/^@(\w+)\s*(.*)$/);
+			if (tag) target = tag[1] === 'element' && tag[2].trim() === tagName ? own : null;
+			else if (target && !NOT_PROSE.test(line)) target.push(line);
+		}
+	}
+	const prose = (lines) => lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+	return [first ? prose(shared) : '', prose(own)].filter(Boolean).join('\n\n');
 }
 
 /** The elements of custom-elements.json, flattened, with their module path. */
@@ -182,11 +212,10 @@ export function readManifest() {
 	const manifest = JSON.parse(readFileSync(resolve(repoRoot, 'custom-elements.json'), 'utf8'));
 	const elements = [];
 	for (const module of manifest.modules) {
-		for (const declaration of module.declarations ?? []) {
-			if (declaration.customElement && declaration.tagName) {
-				elements.push({ ...declaration, module: module.path });
-			}
-		}
+		const declared = (module.declarations ?? []).filter((d) => d.customElement && d.tagName);
+		declared.forEach((declaration, index) => {
+			elements.push({ ...declaration, module: module.path, about: elementDoc(module.path, declaration.tagName, index === 0) });
+		});
 	}
 	return elements;
 }

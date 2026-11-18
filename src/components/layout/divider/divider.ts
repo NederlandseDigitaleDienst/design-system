@@ -4,6 +4,8 @@
  * A rule that visually separates sections of content.
  *
  * @element nldd-divider
+ * @keywords separator, hr
+ * @related nldd-spacer
  */
 import { LitElement } from 'lit';
 import { customElement } from '../../../utilities/custom-element.js';

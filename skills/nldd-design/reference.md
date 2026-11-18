@@ -16,6 +16,8 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 
 ### `<nldd-button>`
 
+**Related:** `<nldd-icon-button>`, `<nldd-link>`, `<nldd-split-button>`, `<nldd-toggle-button>`.
+
 **Rules** (`nldd lint`)
 
 - `action-exit-goes-away-from-primary` (hint): Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.
@@ -108,6 +110,8 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 
 A horizontal container for grouping buttons with a neutral background. Automatically propagates its size and appearance to all child nldd-button and nldd-icon-button elements. Renders nldd-button-bar-divider elements as internal dividers — no separate component needed. The bar is one surface for actions; on/off buttons do not go in it. For a row of toggles use nldd-toggle-button-group, and for one choice out of a few options on one surface nldd-segmented-control. An nldd-toggle-button placed here is shown as it is, and a warning says so in development.
 
+**Related:** `<nldd-button-group>`, `<nldd-toolbar>`, `<nldd-toggle-button-group>`.
+
 **Rules** (`nldd lint`)
 
 - `button-appearance-renamed`: `inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.
@@ -136,6 +140,8 @@ A vertical rule between groups of buttons in an `nldd-button-bar`. Purely presen
 
 A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row, and a stack over the full width in a container of 30rem (480px) or less, the width of a phone, where two labels beside each other leave no room for either. A card or a dialog between 480px and the sm breakpoint keeps its row. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one. With `width="full"` the buttons fill the row and share it equally. A button whose label does not fit its share takes the width it needs, and the others share what is left. A button that does not fit beside the others moves to the next line and fills it: two buttons stack, three end up as two over one. That replaces the 480px rule of `auto`, and the group is no container then. With `orientation="horizontal"` it stays a row, and a label that does not fit wraps instead. An `nldd-icon-button` takes no share of the row. The group sets its `size` on every button in it: buttons in one group are the same size. It holds three buttons at most and hides the rest.
 
+**Related:** `<nldd-button-bar>`, `<nldd-toolbar>`.
+
 **Rules** (`nldd lint`)
 
 - `action-exit-goes-away-from-primary` (hint): Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.
@@ -161,6 +167,8 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | _(default)_ | Default slot for buttons (max 3) |
 
 ### `<nldd-icon-button>`
+
+**Related:** `<nldd-button>`.
 
 **Rules** (`nldd lint`)
 
@@ -232,6 +240,10 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 ### `<nldd-menu>`
 
 A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. A chosen item blinks once before the menu closes, as a native menu on macOS does, so you see what you picked. After a tap there is no hover to blink from, so the item lights up from the press and holds a moment instead, without going dark in between. `select` fires at once: the action does not wait for the blink. With `prefers-reduced-motion` there is no blink, and the menu closes at once after a click; a tap still holds, since that is no motion. A press on the menu's control during the blink or hold ends it and opens the menu again, since the menu was already on its way out. Set `no-blink` where the choice shows beside the menu the moment it is made, as a listbox's field shows it. A menu that scrolls fades at the edge where more items wait. Note: Only type="button" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.
+
+**Keywords:** context menu, dropdown menu.
+
+**Related:** `<nldd-popover>`, `<nldd-split-button>`, `<nldd-dropdown>`.
 
 **Rules** (`nldd lint`)
 
@@ -353,6 +365,10 @@ A single item within an nldd-menu.
 
 A split button combines a primary action with a chevron that opens its alternatives. The main button performs the default action; the chevron opens a menu or popover of variants of that same action. The overlay is required. Put an `nldd-menu` or `nldd-popover` in the `popup` slot, as on nldd-button and nldd-icon-button: ```html <nldd-split-button text="Bewaar"> <nldd-menu slot="popup"> <nldd-menu-item text="Opslaan als…"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The split button has no other slots, so an overlay without `slot="popup"` works too. When both hold one, the one in `popup` wins. For an overlay that lives elsewhere, point `popovertarget` at it instead. The chevron is the overlay's invoker: it anchors it, opens and closes it, and takes `aria-expanded` and `aria-haspopup` from it, exactly as an nldd-icon-button with a slotted overlay does. Its accessible name says which action it belongs to ("Meer opties voor Bewaar"). The API is narrower than nldd-button on purpose: a split button is an action with variants, so it has no supporting text, no end icon and no link target. Its label always stays on one line, without an ellipsis: keep it short.
 
+**Keywords:** dropdown button.
+
+**Related:** `<nldd-button>`, `<nldd-menu>`.
+
 **Rules** (`nldd lint`)
 
 - `button-appearance-renamed`: `inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.
@@ -402,6 +418,8 @@ A split button combines a primary action with a chevron that opens its alternati
 ### `<nldd-toolbar>`
 
 A row of controls that belong to a whole screen or pane, with an overflow menu for what does not fit. The toolbar measures itself: as the row runs out of room, items move into that menu, the lowest `priority` first, and items that share a priority move together. So the order in the HTML says where an item sits, and `priority` says how long it stays. An item holding a control with its own overflow, such as nldd-tab-bar, first narrows down when its turn comes, so that control moves what does not fit into its own menu, and only then goes into the toolbar's menu. Every item carries its own alternative for the menu, an nldd-menu-item in its `overflow` slot. Without one the action is simply gone once the item overflows, which on a wide screen you never see; the item warns about it in development. The toolbar's own `overflow` slot holds the actions that live in the menu at every width.
+
+**Related:** `<nldd-button-bar>`, `<nldd-button-group>`.
 
 **Rules** (`nldd lint`)
 
@@ -506,6 +524,10 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 A stack of nldd-accordion-item elements, each a title that opens and closes its content in place. Fold away only short, additional content: an answer to a question, a detail most readers skip. Content folded in place costs orientation, since the page grows and shifts under the reader. Content that is long, holds a form or is a task of its own goes in rows of an nldd-list that each open an nldd-sheet; see the design guidelines on expand/collapse. The items join into one block: a border around them, a line between them, each title in a tinted bar and its content on the base surface. It looks like a `details` in nldd-rich-text, so in running text that is the lighter choice. With `exclusive` only one item is open at a time: opening one closes the other. Nothing else differs, so each item stays a native `details` with its keyboard, screen reader and find-in-page behavior.
 
+**Keywords:** disclosure.
+
+**Related:** `<nldd-list>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -551,6 +573,10 @@ One item of an nldd-accordion: a title in a tinted bar that opens and closes the
 
 A note, tip or warning set apart in running text: what a `:::warning` becomes in a markdown page. It is content, not feedback. It says nothing when the page loads and cannot be dismissed, so a screen reader meets it in reading order as a note (`role="note"`), unless the page gives it a role of its own before it connects. For a notice that responds to what the user does or what changes, such as an error summary, use nldd-banner, which is a live region. The title sits in a bar tinted in the color of the variant, with the icon of the variant before it. The content sits below it on the base surface, inside a border of the same color, so the admonition reads as part of the text and not as a message. Without `text` there is no bar, and the icon stands before the content. A warning or a critical note says in its title what it is: the color and the icon are not read out. With `collapsible` the title bar opens and closes the content, as a native `details` does: the keyboard, a screen reader and find in page work as they do there, and find in page opens it. It starts open; add `collapsed` to start closed. Keep what you fold away short and additional: see the design guidelines on expand/collapse. A collapsible admonition needs `text`, and its title is the name of the button that opens it, so `heading-level` does not apply there. A markdown renderer does not make one by itself: `:::tip` is syntax of the parser, so the app maps each type to an admonition. The types of Docusaurus, remark-directive and markdown-it-container map as follows: `note` to `variant="neutral"`, `info` to `variant="accent"`, `tip` to `variant="success" icon="idea"`, `warning` and `caution` to `variant="warning"`, and `danger` to `variant="critical"`. The label of the type, or the title given in the markdown, becomes `text`. One admonition does not hold another: an aside within an aside is a sign the text wants to be written differently.
 
+**Keywords:** callout, note.
+
+**Related:** `<nldd-banner>`, `<nldd-inline-dialog>`, `<nldd-blockquote>`.
+
 **Rules** (`nldd lint`)
 
 - `admonition-collapsed-no-effect`: `collapsed` does nothing unless the admonition is `collapsible` and has `text`.
@@ -583,6 +609,10 @@ A note, tip or warning set apart in running text: what a `:::warning` becomes in
 ### `<nldd-avatar>`
 
 Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role="img"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.
+
+**Keywords:** profile picture.
+
+**Related:** `<nldd-identity>`, `<nldd-avatar-group>`, `<nldd-image>`.
 
 **Rules** (`nldd lint`)
 
@@ -621,6 +651,8 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 
 Shows several avatars as one group: they overlap, and each one gets a ring in the surface color so they stay apart where they meet. The ring uses the same mechanism as the badge, so on a colored surface you hand the color over through `--context-background-color`. Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to do with a dead image, when to fall back to initials, and how to show its name as a tooltip; a loose image would have to reproduce all of that and cannot do the last one. Set `decorative` when the names already stand beside the group as text; otherwise give every avatar a name, because the group itself describes nobody. The size applies to the whole group: it is imposed on the avatars, a slotted `img` included. That keeps the row on one line whatever a consumer hands over. Avatars that are links or buttons need size 32 or larger: they overlap, so each keeps only part of its width as a target (WCAG 2.5.8). On sm the list behind the button is a bottom sheet with a title bar, which names the group (its `accessible-label`) and closes it. The row never overflows its container. Where there is no room for every avatar, the group shows as many as fit and puts the rest behind the "+N" button, as `max` does; `max` is then the most it shows, not a fixed count.
 
+**Related:** `<nldd-avatar>`, `<nldd-identity>`.
+
 **Rules** (`nldd lint`)
 
 - `avatar-group-no-other-children`: nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.
@@ -644,6 +676,8 @@ Shows several avatars as one group: they overlap, and each one gets a ring in th
 ### `<nldd-blockquote>`
 
 Shows a quote with an optional source attribution. The quote is at most 30em wide, measured in its own letters, so a line holds about the same number of characters at every size, custom sizes included. Within that, it takes the width of its parent.
+
+**Related:** `<nldd-admonition>`, `<nldd-rich-text>`.
 
 **Rules** (`nldd lint`)
 
@@ -672,6 +706,10 @@ Shows a quote with an optional source attribution. The quote is at most 30em wid
 ### `<nldd-code-viewer>`
 
 A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. The viewer grows with its content. Set `max-height` to show a long file in a frame of its own: the block grows up to that height and scrolls beyond it. A scroller that overflows, in either direction, is a tab stop with a role and a name, so the keyboard reaches what a pointer can scroll to. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. A value the reader fills in is written in the code itself, as `<org-id>`; the design guidelines say why. The viewer does not mark it. Set `diff` when the content is a unified diff, as git and pull request tools hand it out. The viewer shows the code it changes: an added line green and a removed line red, a column with the old and one with the new line number, a column with the `+` or `−`, and the `@@` header of each hunk between them. Within a removed line that is directly followed by an added one, the words that differ are marked, unless more than half of the line changed. File headers (`diff --git`, `---`, `+++`) are left out: name the file in the page around the viewer, and give each file of a multi-file diff a viewer of its own. `language` still highlights the code. A screen reader hears a summary first ("2 regels toegevoegd, 1 regel verwijderd") and "Toegevoegd" or "Verwijderd" with the line number before each changed line. A selection copies the code; the copy button copies the diff. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.
+
+**Keywords:** code block, syntax highlighting.
+
+**Related:** `<nldd-code-editor>`.
 
 **Rules** (`nldd lint`)
 
@@ -722,7 +760,11 @@ A customizable icon component that renders SVG icons from a predefined library. 
 
 ### `<nldd-identity>`
 
-An editorial line that shows authors or editors: optional avatar or avatars, a name line and supporting text (a role or a date, for instance). Every part is optional. The name line and the supporting text come in as an attribute, which the component draws as a `<p>`, or as a `<p>` of your own in the slot. Use the slot for richer content and put it in that `<p>`: a `<time datetime="…">` for a machine-readable date, or a link to the author's profile. Slotted content replaces the matching attribute. Each of the two chooses for itself, so a `<p>` with a link in `text` can go with plain `supporting-text`. The element in a slot takes the text style of the identity: a font, margin or other style the page sets on it does not apply. One avatar you slot as it is, and identity gives it its size. For more than one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the surface color. Identity does not build that group itself, because the avatars are the consumer's light DOM and a group can only style what arrives as its own child. Set the avatars to decorative (or an `img` to `alt=""`) when the names already stand in the text. On narrow widths (an sm container, 640px and under) with more than one avatar the row of avatars moves above the names, so the text keeps the full width. With one avatar the identity stays on a single line. For a single avatar you can also hand over `avatar-src` (with an optional `avatar-srcset`) as an attribute instead of slotting; its size is fixed at 40px. Slotted avatars take precedence over `avatar-src`.
+An editorial line that shows authors or editors: optional avatar or avatars, a name line and supporting text (a role or a date, for instance). Every part is optional. The name line and the supporting text come in as an attribute, which the component draws as a `<p>`, or as a `<p>` of your own in the slot. Use the slot for richer content and put it in that `<p>`: a `<time datetime="…">` for a machine-readable date, or a link to the author's profile. Slotted content replaces the matching attribute. Each of the two chooses for itself, so a `<p>` with a link in `text` can go with plain `supporting-text`. The element in a slot takes the text style of the identity: a font, margin or other style the page sets on it does not apply. One avatar you slot as it is, and identity gives it its size. For more than one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the surface color. Identity does not build that group itself, because the avatars are the consumer's light DOM and a group can only style what arrives as its own child. On a colored surface, pass that color on through `--context-background-color` so the ring follows it. Set the avatars to decorative (or an `img` to `alt=""`) when the names already stand in the text. On narrow widths (an sm container, 640px and under) with more than one avatar the row of avatars moves above the names, so the text keeps the full width. With one avatar the identity stays on a single line. For a single avatar you can also hand over `avatar-src` (with an optional `avatar-srcset`) as an attribute instead of slotting; its size is fixed at 40px. Slotted avatars take precedence over `avatar-src`.
+
+**Keywords:** avatar.
+
+**Related:** `<nldd-avatar>`, `<nldd-avatar-group>`.
 
 **Rules** (`nldd lint`)
 
@@ -751,6 +793,8 @@ An editorial line that shows authors or editors: optional avatar or avatars, a n
 ### `<nldd-image>`
 
 Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image. Without an image (no `src`, `srcset`, `lqip` or slotted media) it shows a neutral area with an image icon, in the box, shape and caption a real image would get: a place where an image belongs, for a prototype or a pattern, or an image someone forgot. Without `aspect-ratio` that area is 16/9. While the built-in `<img>` loads without an `lqip`, the same area shows without the icon, and it goes once the image is in.
+
+**Related:** `<nldd-avatar>`.
 
 **Rules** (`nldd lint`)
 
@@ -794,6 +838,8 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 
 Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms. On macOS the modifiers show as their symbols, in the order of a macOS menu: `Cmd+Shift+Z` becomes ⇧⌘Z. Write them as Cmd (or Command, Meta), Option (or Alt, Opt), Shift and Ctrl (or Control), or as the symbols. A screen reader reads the name (Command), not the symbol.
 
+**Keywords:** kbd, hotkey.
+
 **Rules** (`nldd lint`)
 
 - `keyboard-shortcut-appearance-renamed`: `appearance="box"` and `appearance="simple"` are now `keycap` and `text`, and the old values do nothing. Rename them here and on every other nldd-keyboard-shortcut.
@@ -824,6 +870,10 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 
 A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-rich-text-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. The content is HTML made of block elements, so whoever produces it, a server, a CMS or a markdown renderer, wraps text in a `p`. Bare text or an inline element such as `strong` or `a` as a direct child lands in a column of 0px, one word per line. Plain text, where a component has no attribute for it, goes in nldd-text. The headings keep one size on every width, the one they have on a phone. A heading in running text sits in a column as wide as a line of reading, on any screen, so its relation to the text beside it does not change and it has no reason to grow. Growing, an h2 on a wide screen was more than twice the size of the text, and an article broke into blocks at every heading. Page and section titles do grow: use nldd-title for those. Children are placed in three zones. A child belongs to the text unless it is listed, so it reads at the `main` size and is never wider than a line: text (headings, paragraphs, lists, blockquote, div/section) and every component that is not named below, such as nldd-box, nldd-card, nldd-banner, nldd-list and a button, and code (pre, nldd-code-viewer), which scrolls inside its block when a line is longer. Media, tables and a step bar (img, figure, video, iframe, table, nldd-table, nldd-image, nldd-step-bar) get the `wide` accent. What needs the room gets the `full` span: hr, nldd-collection and nldd-container. A child takes the room it needs inside its zone (`justify-self: start`), so the room is available without being forced. Overridable per child with `data-rich-text-width="main" | "wide" | "full"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical. An element with `data-mention` reads as a mention: the name in the mention color with the @ icon in front of it. Use `<a href="…" data-mention>` when the person has a page to go to: it becomes the tinted token nldd-text-editor shows, and the tint is what says you can follow it. Use `<span data-mention>` when not: it keeps the color and the icon, without the tint. Write the name without the `@`: the rich text draws it. A mention in the editor's value, `[@Name](user:id)`, comes out of a markdown renderer as a link to `user:id`, which goes nowhere, so turn it into one of these yourself. A `details` is a bordered block with rounded corners. Its `summary` is a tinted bar as high as an md control, with a chevron at the end that points down while it is closed and up once it is open, and the whole bar shows hover and press. Open, the content sits on the base surface below a line, where the browser supports `::details-content`; elsewhere it stays on the tinted surface. Details that follow each other join into one block; give them the same `name` and only one opens at a time. They stay native, so the keyboard, a screen reader and find in page work as they do anywhere, and find in page opens the one it finds in. When printed they are open, where the browser supports `::details-content`; elsewhere a closed one prints closed. Keep what you fold away short and additional: see the design guidelines on expand/collapse.
 
+**Keywords:** prose, markdown, typography.
+
+**Related:** `<nldd-text>`, `<nldd-title>`.
+
 **Rules** (`nldd lint`)
 
 - `rich-text-color-no-effect`: `color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
@@ -844,6 +894,10 @@ A container for rich text content that automatically applies responsive typograp
 ### `<nldd-tag>`
 
 A compact property that has been assigned to something: a category, a type, a role, a certification. What it says changes only when someone edits the content. A tag is not interactive. Do not use it for a state the system keeps itself, such as "Active" or "Expired", because that is `nldd-badge`. If the user can remove the thing or click it, it is `nldd-token`.
+
+**Keywords:** chip, pill, label.
+
+**Related:** `<nldd-badge>`, `<nldd-token>`.
 
 **Rules** (`nldd lint`)
 
@@ -873,6 +927,10 @@ A compact property that has been assigned to something: a category, a type, a ro
 
 A term in running text with an explanation behind it, such as a legal term from a glossary. The term stays part of the sentence, marked with a dotted underline, and opens its definition in a popover on a click, a tap, Enter or Space. On sm the popover is a bottom sheet, which covers the sentence. The popover of `definition` then names the term in a small title, which moves into a top title bar with a "Sluit" button once a long definition scrolls. The term is the control: it carries the button role and its expanded state, so a term injected into content needs no ARIA of your own. Focus moves into the popover when it opens, so its content is read, and returns to the term when it closes. Mark only the first occurrence of a concept in a question or section. The underline is the only sign that the term is a control, so it cannot get lighter or go away. A text that marks every occurrence gets busy. A short definition goes in `definition`, as text: <p>De <nldd-term definition="Degene die het doel van en de middelen voor de verwerking vaststelt." source="Artikel 4 AVG" source-href="…">verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> A `source` shows under the definition, as a link with `source-href`. A definition with more paragraphs or links is an nldd-popover of your own, outside the sentence, that `popovertarget` points at. Every term for the same concept can point at the same popover: it opens against the term you clicked. Markup in the term itself would break: a `<p>` inside a `<p>` closes the paragraph, and the definition would fall out of the term. Give a source in that popover the shape the term gives it: after an `nldd-spacer size="8"`, an nldd-text with `size="sm"` and `color="secondary"`, with "Bron:" and an nldd-link. <p>De <nldd-term popovertarget="verwerkingsverantwoordelijke"> verwerkingsverantwoordelijke</nldd-term> bepaalt of een DPIA nodig is.</p> <nldd-popover id="verwerkingsverantwoordelijke" accessible-label="Verwerkingsverantwoordelijke">…</nldd-popover>
 
+**Keywords:** definition, abbreviation, glossary.
+
+**Related:** `<nldd-tooltip>`.
+
 **Rules** (`nldd lint`)
 
 - `term-max-one-definition`: nldd-term has both `definition` and `popovertarget`, and shows only the popover. Remove one.
@@ -900,6 +958,8 @@ A term in running text with an explanation behind it, such as a legal term from 
 ### `<nldd-text>`
 
 One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography — it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Plain text goes in `text`, and the component draws a `<p>` for it. Text with a link, a `<strong>` or a tag goes in the slot, in a `<p>` of your own, or a `<span>` where the text is no paragraph, such as a label or a number. What is in the slot is in the HTML before any script runs; `text` is drawn in the browser. On a page of a website that has to read without script, use the slot. The element in the slot takes the text style of the component: a font, margin or other style the page sets on it does not apply. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.
+
+**Related:** `<nldd-title>`, `<nldd-rich-text>`.
 
 **Rules** (`nldd lint`)
 
@@ -934,6 +994,10 @@ One run of body text at a size from the type scale. It is what you reach for whe
 ### `<nldd-title>`
 
 A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. The level also sets the size: an h2 looks like `display-2`. Set `size` where the look should differ from the level, such as a section heading that is smaller than its place. A heading of your own in the default slot sets the level the same way, so `<h2>` there looks like `display-2` without a `heading-level`. A title without a level is no heading and shows as body text, whatever its `size`: give it a level, or for large letters that are not a heading use nldd-text with a display size. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text. The slot takes the element the attribute draws: a heading, or a `<p>` for a title that is no heading, and a `<p>` for the overline and the supporting text. Put inline markup inside that element. A filled slot takes the place of the attribute. Each of the three chooses for itself, so a heading in the slot can go with plain `supporting-text`. Both grow and shrink with the size of the title, and keep to the width of a line of reading (40em), with balanced lines. The supporting text is a line or two, not a paragraph. What is in a slot is in the HTML the server sends; what comes from an attribute is drawn in the browser. On a page of a website, which search engines, link previews and reader mode read without script, put the heading in the default slot. In an application `text` with `heading-level` is enough. Inline elements in a slotted heading or `<p>` (a link, strong, em, code, mark, q) look as they do in nldd-text. A shadow root cannot reach inside a slotted element, so that styling comes from a global stylesheet: `dist/css/title.css`, or `global.css`, which includes it. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.
+
+**Keywords:** heading.
+
+**Related:** `<nldd-text>`, `<nldd-rich-text>`.
 
 **Rules** (`nldd lint`)
 
@@ -984,6 +1048,10 @@ A title bar with an optional overline, title, and supporting text on the left, a
 
 A self-contained piece of data the user is handling: a person in an address field, an active filter value. Alone among the three it can be operated, so it is optionally dismissable or interactive through a contextual menu. For something you only read, reach for `nldd-tag` (a trait someone assigned) or `nldd-badge` (a state or a count the system keeps).
 
+**Keywords:** chip, pill, label.
+
+**Related:** `<nldd-badge>`, `<nldd-tag>`.
+
 **Rules** (`nldd lint`)
 
 - `filter-token-needs-dismiss` (hint): Set control="dismiss": each token is its own way back.
@@ -1020,6 +1088,10 @@ A self-contained piece of data the user is handling: a person in an address fiel
 
 A wrapper that shows a tooltip on hover or focus of its child element. It uses `display: contents`, so it does not affect the child's layout.
 
+**Keywords:** hint.
+
+**Related:** `<nldd-popover>`, `<nldd-just-in-time-education>`, `<nldd-term>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1049,6 +1121,8 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 
 Text a screen reader reads and the screen does not show. It stays in the accessibility tree and in the reading order, and takes no room on the page. For a name that is visually redundant: the header of a column of checkboxes, where the checkboxes say enough to anyone who can see them, or the "(opent in een nieuw venster)" after a link whose icon already says it. Not for repairing structure that is missing. Hidden text that describes how something is laid out ("subpagina van Aanvragen") stands in for semantics the markup should carry, and only a screen reader gets the stand-in. Not for a status either: a status that matters to a screen reader matters to anyone, so show it, as text with `role="status"` or as an `nldd-notification`. And not for the name of a component that takes `accessible-label`: give it that. Nothing in it should take focus. A control inside would be reached with Tab and be nowhere on the screen.
 
+**Keywords:** sr-only, screen reader only.
+
 **Slots**
 
 | Slot | Description |
@@ -1059,7 +1133,7 @@ Text a screen reader reads and the screen does not show. It stays in the accessi
 
 ### `<nldd-form>`
 
-Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLElement, no Lit), required for light-DOM autofill. Renders a real <form> element in the LIGHT DOM around its children. Chrome's autofill engine looks for native <input> elements that have a <form> ancestor in the light DOM; with shadow-DOM inputs it can't find them, so we keep this component shadow-less. **Differs from other nldd-* components:** - No shadowRoot: all children live in the light DOM (inside the inner <form>) - No Lit: a plain HTMLElement with manual attribute mirroring - **Requires a global stylesheet import**: the vertical rhythm rules live in `dist/css/form.css` (or `global.css`), not in a component-specific shadow stylesheet. Import it as part of your app's global CSS bundle. **When a field turns red:** on submit the form marks every control the browser rejects with `invalid`, and clears it again once the value passes. Setting `invalid` yourself is fine, but do it on submit, not while someone is still typing, or a field turns red over a value that is not finished yet. **Two usage modes:** 1. **Auto-wrap** (default): write children directly. Component creates a `<form>` element and migrates children into it via MutationObserver. Simplest API. 2. **User-provided form** (framework-friendly): write your own `<form>` as direct child. Component detects it, takes over attribute mirroring, and skips the migration. Children stay where your framework puts them, so there is no DOM shuffling to conflict with React/Vue/Angular reconciliation. **Framework interop:** In auto-wrap mode every direct child is moved into the inner form through a MutationObserver. That works fine for most React/Vue use cases, because frameworks only mutate the DOM when their virtual DOM changes. For edge cases (animation libraries that track DOM position, SSR hydration mismatches, frameworks that actively check sibling positions) use **user-provided form** mode instead. For programmatic manipulation, use the `form` getter so you work with the inner `<form>` element directly: const inner = document.querySelector('nldd-form').form; inner.checkValidity(); inner.appendChild(myInput); // skips the migration overhead
+Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLElement, no Lit), required for light-DOM autofill. Renders a real `<form>` element in the LIGHT DOM around its children. Chrome's autofill engine looks for native `<input>` elements that have a `<form>` ancestor in the light DOM; with shadow-DOM inputs it can't find them, so we keep this component shadow-less. **Differs from other `nldd-*` components:** - No shadowRoot: all children live in the light DOM (inside the inner `<form>`) - No Lit: a plain HTMLElement with manual attribute mirroring - **Requires a global stylesheet import**: the vertical rhythm rules live in `dist/css/form.css` (or `global.css`), not in a component-specific shadow stylesheet. Import it as part of your app's global CSS bundle. **When a field turns red:** on submit the form marks every control the browser rejects with `invalid`, and clears it again once the value passes. Setting `invalid` yourself is fine, but do it on submit, not while someone is still typing, or a field turns red over a value that is not finished yet. **Two usage modes:** 1. **Auto-wrap** (default): write children directly. Component creates a `<form>` element and migrates children into it via MutationObserver. Simplest API. 2. **User-provided form** (framework-friendly): write your own `<form>` as direct child. Component detects it, takes over attribute mirroring, and skips the migration. Children stay where your framework puts them, so there is no DOM shuffling to conflict with React/Vue/Angular reconciliation. **Framework interop:** In auto-wrap mode every direct child is moved into the inner form through a MutationObserver. That works fine for most React/Vue use cases, because frameworks only mutate the DOM when their virtual DOM changes. For edge cases (animation libraries that track DOM position, SSR hydration mismatches, frameworks that actively check sibling positions) use **user-provided form** mode instead. For programmatic manipulation, use the `form` getter so you work with the inner `<form>` element directly (see the last example).
 
 **Rules** (`nldd lint`)
 
@@ -1095,7 +1169,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 
 ### `<nldd-form-actions>`
 
-A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment="right"` or `"left"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `<nldd-form>`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant. <nldd-form label-alignment="right"> <nldd-form-field>...</nldd-form-field> <nldd-form-actions> <nldd-button-group> <nldd-button appearance="primary" type="submit" text="Bewaar"></nldd-button> </nldd-button-group> </nldd-form-actions> </nldd-form>
+A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment="right"` or `"left"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `nldd-form`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant.
 
 **Rules** (`nldd lint`)
 
@@ -1118,7 +1192,7 @@ A layout wrapper for the action buttons at the bottom of a form (typically a sub
 
 ### `<nldd-form-field>`
 
-A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list.
+A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text.
 
 **Rules** (`nldd lint`)
 
@@ -1165,7 +1239,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 
 ### `<nldd-form-section>`
 
-Nederlandse Digitale Dienst Form Section Component Plain custom element (extends HTMLElement, no Lit). The light-DOM render works around an NVDA + Firefox a11y bug where a shadow-DOM <fieldset> + <legend> is not reliably announced as the group label for slotted controls. A native fieldset/legend in the light DOM works correctly across all AT/browser combinations. **Differs from shadow components:** - No shadowRoot: all children live in the light DOM (inside the rendered <fieldset>). - No Lit: a plain HTMLElement with manual DOM mutation. - **Requires a global stylesheet import**: `dist/css/form-section.css` (or `global.css`). Form-section has no shadow stylesheet. Renders to: <nldd-form-section> <fieldset class="form-section"> <legend class="form-section__header"> <span class="form-section__title">Title</span> <span class="form-section__supporting-text">Supporting text</span> </legend> <div class="form-section__main"> [user's children] </div> </fieldset> </nldd-form-section> **Accessibility note**: the title renders as a `<legend>`. Semantically that is a **group label**, not a heading. Screen readers announce it when the user enters the fieldset, but users jumping through headings with the H key skip it. Visually it looks like a heading, so use this component for *form grouping*, not as page structure. For real page headings, use a separate heading element above the form. **Supporting-text length**: the supporting text sits as a `<span>` inside the `<legend>` so a screen reader reads it along as the group label. Side effect: on every field entry within the section, the whole legend (title + supporting text) is spoken again. Keep `supporting-text` short (roughly 80 characters or less) and use it to introduce the group ("Vul je adresgegevens in"), not for detailed instructions. For a longer explanation on one specific field, use `nldd-form-field-help-text` on that field. <nldd-form> <nldd-form-section text="Persoonsgegevens" supporting-text="Vul je gegevens in."> <nldd-form-field label="Voornaam">...</nldd-form-field> <nldd-form-field label="Achternaam">...</nldd-form-field> </nldd-form-section> <nldd-form-section text="Adres"> <nldd-form-field label="Straat">...</nldd-form-field> </nldd-form-section> <nldd-form-actions>...</nldd-form-actions> </nldd-form>
+Nederlandse Digitale Dienst Form Section Component Plain custom element (extends HTMLElement, no Lit). The light-DOM render works around an NVDA + Firefox a11y bug where a shadow-DOM `<fieldset>` + `<legend>` is not reliably announced as the group label for slotted controls. A native fieldset/legend in the light DOM works correctly across all AT/browser combinations. **Differs from shadow components:** - No shadowRoot: all children live in the light DOM (inside the rendered `<fieldset>`). - No Lit: a plain HTMLElement with manual DOM mutation. - **Requires a global stylesheet import**: `dist/css/form-section.css` (or `global.css`). Form-section has no shadow stylesheet. **Accessibility note**: the title renders as a `<legend>`. Semantically that is a **group label**, not a heading. Screen readers announce it when the user enters the fieldset, but users jumping through headings with the H key skip it. Visually it looks like a heading, so use this component for *form grouping*, not as page structure. For real page headings, use a separate heading element above the form. **Supporting-text length**: the supporting text sits as a `<span>` inside the `<legend>` so a screen reader reads it along as the group label. Side effect: on every field entry within the section, the whole legend (title + supporting text) is spoken again. Keep `supporting-text` short (roughly 80 characters or less) and use it to introduce the group ("Vul je adresgegevens in"), not for detailed instructions. For a longer explanation on one specific field, use `nldd-form-field-help-text` on that field.
 
 **Rules** (`nldd lint`)
 
@@ -1204,6 +1278,8 @@ One requirement of a value, with the rule that checks it. Give every item an id 
 
 Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a value has to satisfy, in one list. A requirement you can state up front is an item with a rule, and it checks itself while you type. One only a server can decide is an item without a rule, and the app names it in `unmet` on the control. The list has two modes and `judging` is the switch. Before a verdict it shows its hints, which are the requirements of the field. After one it shows everything the value does not satisfy, and the hints are gone. It throws that switch itself the moment its control turns `invalid`, so when the field is judged is the consumer's decision, and the right moment is on submit. Hints are off by default. A phone number does not need its format spelled out before anyone has typed, while the rules for a password do. There are no checkmarks. The control already shows a validation icon of its own, and repeating that per line says the same thing three times. A field can be `invalid` while no item fails: the browser rejects `naam@` as an e-mail address, and a `match="@"` item passes it. The list then says what it can itself, so a field never turns red without a reason under it. It reads the control's `validity` and names what is wrong (an invalid e-mail or web address, an empty required field, too short, too long, too low, too high), and says "Dit klopt nog niet." when it cannot tell. An item of your own that fails always wins over this line. The line is an nldd-validation-item the list adds to its own children while it is needed, so nldd-form-field reads it to the control as it does every other item: a line in the list's shadow root would be out of its reach.
 
+**Keywords:** error message, form validation.
+
 **Rules** (`nldd lint`)
 
 - `form-field-no-manual-for-id` (hint): Drop `for`: nldd-form-field finds the input among its children and connects the list itself.
@@ -1227,6 +1303,8 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 ## Inputs
 
 ### `<nldd-checkbox>`
+
+**Related:** `<nldd-switch>`.
 
 **Rules** (`nldd lint`)
 
@@ -1260,6 +1338,8 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 ### `<nldd-checkbox-field>`
 
 A checkbox with an inline label for use in forms. Options that belong under this one are nldd-checkbox-fields of their own, each with `slot="children"`, as rows nest in nldd-list-item. They indent to line up with the label, and are a group named after this option. This checkbox then follows them: checked when all of them are, indeterminate when some are, and unchecked when none are. Checking or unchecking it does the same to every option under it that is not disabled, nor under a disabled one; those fire no `change` of their own then, so listen on this one or higher up. When a disabled option keeps it indeterminate and the rest are already checked, a click unchecks them instead. Its own `change` fires when they change its state, so a box further up follows too. In an nldd-checkbox-group, the options under it belong to the group as well. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).
+
+**Related:** `<nldd-switch-field>`.
 
 **Rules** (`nldd lint`)
 
@@ -1301,6 +1381,8 @@ A checkbox with an inline label for use in forms. Options that belong under this
 
 Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio buttons: the same layout, one name for all of them, and a group that a screen reader announces with its label. Each checkbox is a stop of its own for Tab, as checkboxes are; the arrow keys belong to a radio group. Use inside nldd-form-field, which provides the group label. `required` asks for at least one checked box, not for every box: while none is checked, each field reports a missing value, and as soon as one is checked, none does. Nothing announces it per box, since no single box is required, and ARIA has no `aria-required` for a group: say it in the label or the help text, or mark the other questions optional.
 
+**Related:** `<nldd-radio-button-group>`, `<nldd-token-field>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1327,6 +1409,8 @@ Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio butt
 ### `<nldd-code-editor>`
 
 A monospace editor for code, YAML, JSON and other technical content, built on CodeMirror 6 (via NLDDCodeMirrorElement). Visually pairs with nldd-code-viewer for a matching read-only surface. Framed like the other input fields by default: border ring, fill, inner padding, radius and a focus ring. `embedded` drops all of that, for an editor inside a composition that owns its own chrome and focus treatment; the caret is then a prominent accent as the focus cue. Embedded, it has no surrounding space of its own: let a layout container own the spacing and forward clicks with `focusFromPoint()` so clicking the padding still starts editing. Optional `language` enables lazy syntax highlighting; `line-numbers` adds a gutter (click a number to move the caret to that line).
+
+**Related:** `<nldd-code-viewer>`, `<nldd-text-editor>`.
 
 **Rules** (`nldd lint`)
 
@@ -1367,6 +1451,10 @@ A monospace editor for code, YAML, JSON and other technical content, built on Co
 ### `<nldd-combo-box>`
 
 A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu with nldd-menu-item children to provide options. After typing, a screen reader hears how many options are shown ("2 resultaten"), or the empty text when none are, also for options that a server sends in later. Only the number it lands on: it waits until the options settle. The slotted nldd-menu keeps its default focus behavior (menu container receives focus) so that typing keeps focus on the input. The picker button moves focus to the menu explicitly on activation. Note: Only nldd-menu-item type="button" is supported. Radio and checkbox types are not supported in this context.
+
+**Keywords:** autocomplete, typeahead, select.
+
+**Related:** `<nldd-dropdown>`, `<nldd-token-field>`, `<nldd-search-field>`.
 
 **Rules** (`nldd lint`)
 
@@ -1416,7 +1504,9 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 
 ### `<nldd-date-field>`
 
-A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. After a choice in the calendar the chosen day stays lit a moment before the calendar closes, so you see what you picked. The value and `change` do not wait for it. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.
+A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously (`31-12-2026`, `31/12/2026`, `31122026`, ISO too) and normalized only when the field is left. Masking per keystroke makes the caret jump, makes backspace unpredictable and confuses screen readers. After a choice in the calendar the chosen day stays lit a moment before the calendar closes, so you see what you picked. The value and `change` do not wait for it. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.
+
+**Related:** `<nldd-date-picker>`.
 
 **Attributes**
 
@@ -1458,7 +1548,11 @@ A text field for a date, with an optional calendar in a popover. The value is al
 
 ### `<nldd-date-picker>`
 
-A calendar for picking a date or a period. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-date-field. Values are always ISO (yyyy-mm-dd). With `range` the user picks a start and an end date in two steps.
+A calendar for picking a date or a period. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-date-field. Values are always ISO (yyyy-mm-dd). With `range` the user picks a start and an end date in two steps. Arrow keys move by day and by week, Home and End to the edges of the week, PageUp and PageDown by month, and with Shift by year; Enter and Space pick. The month title is a live region, so a screen reader hears which month has focus while paging. Dates that `isDateUnavailable` rules out stay reachable by keyboard, so an arrow key never silently skips a run of them.
+
+**Keywords:** calendar.
+
+**Related:** `<nldd-date-field>`.
 
 **Attributes**
 
@@ -1489,6 +1583,10 @@ A calendar for picking a date or a period. The component works on its own (inlin
 ### `<nldd-dropdown>`
 
 A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options. The browser draws the open list, outside the reach of the component. The colors of its options come from the global stylesheet, `dist/css/dropdown.css` or `global.css`, which includes it, so the list follows light and dark mode. A dropdown hides its options, so it is the last resort for a choice from a fixed set. Show a handful of options with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group, and let the user type in nldd-combo-box when there are many, a list of countries included. The design guidelines explain the order.
+
+**Keywords:** select, picker.
+
+**Related:** `<nldd-combo-box>`, `<nldd-radio-button-group>`, `<nldd-segmented-control>`.
 
 **Rules** (`nldd lint`)
 
@@ -1527,7 +1625,9 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 
 ### `<nldd-file-field>`
 
-A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, "Bestand kiezen of sleep het hierheen", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view ("Screenshot 20…at 13.12.21.png"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type="file">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: "Sleep één bestand", or what `accept` takes, named from it ("Alleen PDF"; "Bestandstype past niet" where a type in it has no name). The message stays for a few seconds and then gives way to the field again. While it shows, the message is a button of its own over the whole field, "Alleen PDF, sluit melding, Bijlage" to a screen reader: a press on it, or Enter, Space or Escape, dismisses it and puts focus on the button of the field again. A field that had focus when the message came gives it to the message, so focus does not fall back to the page. With `multiple`, a dropped folder is read down to the files in it, its subfolders included, and mixed with loose files in one drop if need be. The field then names the folder ("site (124 bestanden)", also "site (1 bestand)" for one), `paths` says where each file sat ("site/css/main.css"), and a form submits each file with its path as its name, as a native folder input does, so two files with one name in different folders stay apart. `accept` holds for every file in it. Without `multiple` a folder is refused ("Sleep bestand, geen map"): one file cannot be a folder. Only a drop tells a folder apart, not the drag. A folder that takes longer than a second to read shows the field empty with an `nldd-activity-indicator` ("Laden" in an area, the circle alone otherwise), as what was chosen gives way to it. An empty or unreadable folder is refused as any other drop, and the previous choice comes back after the message. `directory` offers a folder in the file dialog too. A dialog picks files or a folder, never both, so with it the field says "Bestanden of map kiezen" and a click opens a menu with both where it lands, as a context menu does; the keyboard opens it under the button. An area has room for both, so there it shows "Bestanden kiezen" and "Map kiezen" as two buttons with the drop hint under them, and the surface around them only takes a drop. "Wijzigen" opens the menu under itself. A folder is many files, so `directory` takes several without `multiple`. Safari on iOS picks a folder as well; a browser that cannot opens a dialog for files instead. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. A control reserves the height of every text it can show, so fields of a size are as tall at one width, empty or with a file. Only a field with `directory` reserves the sentence that offers a folder, the longest of them. The name takes the lines that leaves it, and is cut in the middle only once those are full. A narrow field makes more room: below 320px "Wijzigen" and "Wis selectie" go in one menu behind "Toon opties" and a folder is counted as "site (3)", below 240px it leaves out the icon of the format. A refused drop says why in place of the name and the buttons, and an area shows its upload icon in red with it, as it did while the drop was refused. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: "3 bestanden" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event. `variant="area"` lays the same field out as a tall surface, for a page where handing in files is the main task. Empty, it shows an upload icon, the sentence and the types it takes ("Toegestaan: PDF of JPG"), named from `accept`; with a file, the icon of its format (a folder for a folder, a stack for several files), its name and the buttons "Wijzigen" and "Wis selectie" stacked in the middle. Both states have the same height, so the page does not move when a file is chosen: 160px, 120px at `size="sm"`, and a step more with `directory`, whose buttons take a row of their own. Where those buttons no longer fit side by side, below 360px or 300px at `size="sm"`, it is one step taller again.
+A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, "Bestand kiezen of sleep het hierheen", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view ("Screenshot 20…at 13.12.21.png"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type="file">`, which is what makes the picker open at all: a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: "Sleep één bestand", or what `accept` takes, named from it ("Alleen PDF"; "Bestandstype past niet" where a type in it has no name). The message stays for a few seconds and then gives way to the field again. While it shows, the message is a button of its own over the whole field, "Alleen PDF, sluit melding, Bijlage" to a screen reader: a press on it, or Enter, Space or Escape, dismisses it and puts focus on the button of the field again. A field that had focus when the message came gives it to the message, so focus does not fall back to the page. With `multiple`, a dropped folder is read down to the files in it, its subfolders included, and mixed with loose files in one drop if need be. The field then names the folder ("site (124 bestanden)", also "site (1 bestand)" for one), `paths` says where each file sat ("site/css/main.css"), and a form submits each file with its path as its name, as a native folder input does, so two files with one name in different folders stay apart. `accept` holds for every file in it. Without `multiple` a folder is refused ("Sleep bestand, geen map"): one file cannot be a folder. Only a drop tells a folder apart, not the drag. A folder that takes longer than a second to read shows the field empty with an `nldd-activity-indicator` ("Laden" in an area, the circle alone otherwise), as what was chosen gives way to it. An empty or unreadable folder is refused as any other drop, and the previous choice comes back after the message. `directory` offers a folder in the file dialog too. A dialog picks files or a folder, never both, so with it the field says "Bestanden of map kiezen" and a click opens a menu with both where it lands, as a context menu does; the keyboard opens it under the button. An area has room for both, so there it shows "Bestanden kiezen" and "Map kiezen" as two buttons with the drop hint under them, and the surface around them only takes a drop. "Wijzigen" opens the menu under itself. A folder is many files, so `directory` takes several without `multiple`. Safari on iOS picks a folder as well; a browser that cannot opens a dialog for files instead. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. A control reserves the height of every text it can show, so fields of a size are as tall at one width, empty or with a file. Only a field with `directory` reserves the sentence that offers a folder, the longest of them. The name takes the lines that leaves it, and is cut in the middle only once those are full. A narrow field makes more room: below 320px "Wijzigen" and "Wis selectie" go in one menu behind "Toon opties" and a folder is counted as "site (3)", below 240px it leaves out the icon of the format. A refused drop says why in place of the name and the buttons, and an area shows its upload icon in red with it, as it did while the drop was refused. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: "3 bestanden" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries), and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event. `variant="area"` lays the same field out as a tall surface, for a page where handing in files is the main task. Empty, it shows an upload icon, the sentence and the types it takes ("Toegestaan: PDF of JPG"), named from `accept`; with a file, the icon of its format (a folder for a folder, a stack for several files), its name and the buttons "Wijzigen" and "Wis selectie" stacked in the middle. Both states have the same height, so the page does not move when a file is chosen: 160px, 120px at `size="sm"`, and a step more with `directory`, whose buttons take a row of their own. Where those buttons no longer fit side by side, below 360px or 300px at `size="sm"`, it is one step taller again.
+
+**Keywords:** upload, file input, dropzone.
 
 **Attributes**
 
@@ -1556,6 +1656,10 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 | `change` | When the chosen files change, including a clear; detail: { files: File[], paths: string[] } |
 
 ### `<nldd-multi-line-text-field>`
+
+**Keywords:** textarea.
+
+**Related:** `<nldd-text-field>`, `<nldd-text-editor>`.
 
 **Rules** (`nldd lint`)
 
@@ -1606,6 +1710,8 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 
 A numeric input field with decrement and increment buttons.
 
+**Related:** `<nldd-slider>`, `<nldd-stepper>`.
+
 **Rules** (`nldd lint`)
 
 - `number-field-needs-name`: nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.
@@ -1640,6 +1746,10 @@ A numeric input field with decrement and increment buttons.
 ### `<nldd-one-time-code-field>`
 
 A field for a code someone receives once and types over: by text message, by email, from an authenticator app or on a letter. It shows a box per character, but it is one native input underneath, so pasting the whole code, the code a phone offers from a text message (`autocomplete="one-time-code"`), a screen reader and voice control all work as on any other field. The characters are monospace, so 0 and O, or 1, l and I, read apart. Typing fills the boxes from the left. The arrow keys, Home, End and a click move the caret from box to box. In a filled box it stands after the character: Backspace empties that box, without moving the rest up, so you type the right one straight in. A pasted code drops whatever is not part of one, so "123 456" or "123-456" becomes "123456", and a whole code replaces what was there. From a pasted sentence, such as a text message, the field takes the last word that is as long as the code, so "Your code is 123456" fills in "123456". Once every box is full the field fires `complete`, and again after a correction that leaves it full. Submitting then is up to your app: send the form, or wait for a button, but never both, or a correction submits twice. Not for a PIN or a password, which must not be readable on screen: use `nldd-password-field`. Put the field in an `nldd-form-field`, whose label says where the code comes from ("Code uit de sms").
+
+**Keywords:** otp, pin, verification code.
+
+**Related:** `<nldd-password-field>`.
 
 **Rules** (`nldd lint`)
 
@@ -1679,6 +1789,8 @@ A field for a code someone receives once and types over: by text message, by ema
 ### `<nldd-password-field>`
 
 A password input field with visibility toggle and validation states.
+
+**Related:** `<nldd-one-time-code-field>`, `<nldd-text-field>`.
 
 **Attributes**
 
@@ -1778,6 +1890,8 @@ A radio button with an inline label. Use inside nldd-radio-button-group, which s
 
 Groups nldd-radio-button-field elements, handles keyboard navigation, and forwards name and disabled state to all child fields. Use inside nldd-form-field which provides the group label.
 
+**Related:** `<nldd-checkbox-group>`, `<nldd-dropdown>`, `<nldd-segmented-control>`, `<nldd-swatch-picker>`.
+
 **Rules** (`nldd lint`)
 
 - `radio-button-group-needs-name`: nldd-radio-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
@@ -1808,6 +1922,8 @@ Groups nldd-radio-button-field elements, handles keyboard navigation, and forwar
 ### `<nldd-search-field>`
 
 A search input with a leading search icon, an optional dismiss button, and an optional search button.
+
+**Related:** `<nldd-combo-box>`, `<nldd-text-field>`.
 
 **Rules** (`nldd lint`)
 
@@ -1852,6 +1968,8 @@ A search input with a leading search icon, an optional dismiss button, and an op
 ### `<nldd-segmented-control>`
 
 A horizontal group of mutually exclusive (radio) or multi-select (checkbox) options. Exports both NLDDSegmentedControl and NLDDSegmentedControlItem.
+
+**Related:** `<nldd-radio-button-group>`, `<nldd-toggle-button-group>`, `<nldd-tab-bar>`.
 
 **Rules** (`nldd lint`)
 
@@ -1929,6 +2047,8 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter ("a price between …"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader ("Prijs, minimum"), and a press on the track moves the nearer thumb there. A thumb dragged or moved with an arrow key (also with Shift) past the other one becomes that end of the range, and focus goes with it, so its name still says which end it is. Home, End, Page Up and Page Down stop at the other thumb, so they never turn the range around. Where the thumbs lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider or its icons, while a thumb has keyboard focus and while it or an icon is pressed; with `tooltip-timing="never"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one ("200 – 1.200"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \`€ ${value}\``; without it the number is written in the language of the page (`lang`), and in Dutch where none is set. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. A larger step than the arrow keys take is a tenth of the range, and at least one `step`: what Page Up and Page Down do, what Shift with an arrow key does (a Mac keyboard has no Page Up), and what a click on `start-icon` or `end-icon` does. The icons stay out of the tab order and out of the accessibility tree, because the keyboard already has those keys. In a range they only explain the ends, since a click could not say which thumb to move. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.
 
+**Related:** `<nldd-number-field>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1964,6 +2084,8 @@ A value picked along a track, by dragging its thumb, pressing the track or with 
 
 A numeric control with increment and decrement buttons.
 
+**Related:** `<nldd-number-field>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1990,6 +2112,10 @@ A numeric control with increment and decrement buttons.
 ### `<nldd-swatch-picker>`
 
 A row of swatches to choose one from: a color, or an image of a pattern or a material. The row wraps onto the next line when the swatches do not fit. It is a radio group: Tab enters and leaves it in one stop, the arrow keys choose, and the value goes with a form under `name`. The chosen swatch shows a check mark. Put it in an `nldd-form-field`, which names the group. Every swatch needs a name, since a color or an image says nothing to a screen reader. A swatch with a category `color` takes the name of that color from the translations ("Rood"); one with a `custom-color` or an `image` has to say it in `text`. The name shows as a tooltip. Exports both NLDDSwatchPicker and NLDDSwatchPickerItem.
+
+**Keywords:** color, color picker.
+
+**Related:** `<nldd-radio-button-group>`.
 
 **Rules** (`nldd lint`)
 
@@ -2046,6 +2172,10 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 
 A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
 
+**Keywords:** toggle.
+
+**Related:** `<nldd-checkbox>`, `<nldd-toggle-button>`.
+
 **Rules** (`nldd lint`)
 
 - `switch-color-renamed`: `color="inherit"` is now `color="content"`, and the old value does nothing. Rename it here and on every other nldd-switch.
@@ -2078,6 +2208,8 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 
 A switch toggle with an inline label for use in forms.
 
+**Related:** `<nldd-checkbox-field>`.
+
 **Rules** (`nldd lint`)
 
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
@@ -2107,6 +2239,10 @@ A switch toggle with an inline label for use in forms.
 ### `<nldd-text-editor>`
 
 A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Framed like the other input fields by default. `embedded` drops the frame, fill, padding and focus ring, for an editor inside a composition (e.g. a message field) that owns its chrome and focus; the caret is then a prominent accent. A toolbar is markup: put an nldd-toolbar in the `toolbar` slot, or anywhere on the page inside an element with `text-editor-for` set to the editor's id, and give each control a `text-editor-command`. The editor runs the command, gives focus back to the text and keeps the control's state: `selected` on a toggle, a menu item or a segmented-control item, the list type on a segmented control, and `disabled` where the command cannot run. Controls without the attribute, such as a send button, are left alone. There is no built-in toolbar: which controls, in what order, is the app's. A consumer can also drive formatting itself via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style "set" semantics), reads the active formats with getState(), listens to the state-change event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. Enter in a list or a quote puts the next marker down, and Enter on an empty item ends the list, or steps one level out of a nested one. A marker typed where the editor already put one does not stack: `- ` on a fresh `- `, or right after the bullet of an item with text, stays one bullet, `2. ` on `2. ` stays `2. `, `> ` on `> ` one quote. `1. ` on a later number starts a numbered list under the item above, and a marker of the other kind takes the place of the editor's: `1. ` on `- ` makes a numbered list at that level. Spaces typed before a marker nest it one level under the item above, at the indent markdown needs (2 spaces under `- `, 3 under `1. `); Cmd/Ctrl+] does the same. Backspace right after a marker is the way back: a nested item steps one level out, an item on the first level leaves the list. Cmd/Ctrl+Z brings back what was typed. Pasted text and a value the app sets stay as they are. With the marks hidden (the default) a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads "Taak, open" or "Taak, afgerond" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a "Kopieer" button at the right edge that copies the code without its fences and says "Gekopieerd" or "Kopiëren mislukt", as the code viewer does: the outcome stays while the pointer or the focus is on the button, and goes when you leave it, press Escape or go on in the editor. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. applyChanges(changes) takes text from outside, such as what a collaborator types, without moving the caret or entering the user's undo history. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href="…" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint. A line indented four spaces stays text, unlike CommonMark, where it starts a code block: in a field for prose that is pasted or indented text, and code takes a fence. That holds whatever the line starts with, so ` - punt` is no list and ` # kop` no heading; in a list the four spaces count from the text of the item. Turn indented code off in the renderer too, so the page shows what the editor showed: `md.disable('code')` in markdown-it and markdown-it-py, for example. Text pasted at the start of a line becomes the markdown it looks like: the indent all its lines share goes, a bullet from Word or Outlook (`•` and a tab) becomes `- `, and a pasted list nests the way typing does (with indent of its own one level under the item above, without it at the level of the empty item it lands on). A list of several lines pasted at the end of a line with text starts on the next line. Cmd/Ctrl+Z brings back the text as pasted, and Cmd/Ctrl+Shift+V pastes it as it is. Nothing changes in a code block.
+
+**Keywords:** wysiwyg, rich text editor, markdown.
+
+**Related:** `<nldd-multi-line-text-field>`, `<nldd-code-editor>`.
 
 **Rules** (`nldd lint`)
 
@@ -2164,6 +2300,10 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 ### `<nldd-text-field>`
 
+**Keywords:** textbox.
+
+**Related:** `<nldd-multi-line-text-field>`, `<nldd-number-field>`, `<nldd-search-field>`, `<nldd-combo-box>`.
+
 **Rules** (`nldd lint`)
 
 - `text-field-button-size-no-effect`: The button in the `button` slot has a size of its own, but the field sets it: `sm` in a field of `md`, `xs` in one of `sm`. Leave the size off the button.
@@ -2214,6 +2354,8 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid time or nothing, so an empty field and one with text that is no time both read as ''. `validity` tells them apart: `badInput` for text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside `min` / `max`. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. "Klaar" and Enter keep the choice, and so does a click outside once you have picked something. Escape puts the old time back. On sm, where the picker is a bottom sheet, "Klaar" sits in its title bar and the sheet offers no cancel: as with a native wheel, you turn back to change your mind. The built-in wheels show 7 rows, and fewer, down to 3, when the picker would otherwise run off the window; they grow back when the window does. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.
 
+**Related:** `<nldd-time-picker>`.
+
 **Rules** (`nldd lint`)
 
 - `time-picker-in-field-no-effect`: `value`, `min`, `max` and `step` do nothing on a time picker in the `picker` slot of a time field: the field sets them. Set them on the field.
@@ -2260,6 +2402,8 @@ A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch
 
 Two columns, hours and minutes, that slide like a wheel past the selection in the middle. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-time-field. There the field sets `value`, `min`, `max` and `step`; set them on the field. Values are always 24-hour `HH:mm`. Scrolling is choosing: whatever comes to rest in the middle is the value. The keyboard drives that same selection, because that is what a wheel is: hour and minute are each a spinbutton. The columns underneath are aria-hidden, so the same values are not read out twice.
 
+**Related:** `<nldd-time-field>`.
+
 **Rules** (`nldd lint`)
 
 - `time-picker-in-field-no-effect`: `value`, `min`, `max` and `step` do nothing on a time picker in the `picker` slot of a time field: the field sets them. Set them on the field.
@@ -2290,6 +2434,10 @@ Two columns, hours and minutes, that slide like a wheel past the selection in th
 ### `<nldd-toggle-button>`
 
 A selectable button that toggles between selected and unselected. Available as a button (aria-pressed), a checkbox, or a radio. The label stays the same in both states: the state is in aria-pressed (or checked) and in the fill, so a screen reader says "Favoriet, pressed". A label that changes with the state ("Volgen", then "Ontvolgen") says what the button does next; that is an nldd-button whose text you change, not a toggle. In radio mode the button itself is the radio: it carries the role, the state and its place in the group. A native radio in a shadow root of its own would be a group of one, counted as "1 of 1" and stopped at by Tab.
+
+**Keywords:** toggle.
+
+**Related:** `<nldd-switch>`, `<nldd-button>`.
 
 **Rules** (`nldd lint`)
 
@@ -2344,6 +2492,8 @@ A selectable button that toggles between selected and unselected. Available as a
 
 Groups nldd-toggle-button elements and manages selection, keyboard navigation, and forwarding of type, name, appearance, size, and disabled state to all buttons. For type="radio" (single-select), arrow keys navigate between buttons and automatically select the focused one. For type="checkbox" (multi-select), multiple buttons can be selected simultaneously.
 
+**Related:** `<nldd-segmented-control>`, `<nldd-button-bar>`.
+
 **Rules** (`nldd lint`)
 
 - `toggle-button-group-needs-name`: nldd-toggle-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
@@ -2378,6 +2528,8 @@ Groups nldd-toggle-button elements and manages selection, keyboard navigation, a
 ### `<nldd-token-field>`
 
 A multi-select input that looks like a normal input field: chosen values show as dismissible tokens in a wrapping row, followed by an inline text input that stretches to fill the remaining space and wraps to a new line (growing the field) when it no longer fits. Options are supplied as a slotted nldd-menu, exactly like nldd-combo-box; the menu filters as you type, with a chevron picker button, arrow-key roving across the tokens and ElementInternals form participation. Options can arrive after the keystroke, from a server you query per keystroke. Slot them into the menu when they come in: if the user is still in the field and the keystroke found nothing to show, the menu opens then. After Escape, or once the user left the field, it stays shut. After typing, a screen reader hears how many options are shown ("2 resultaten"), or the empty text when none are, also for options that a server sends in later. Only the number it lands on: it waits until the options settle.
+
+**Related:** `<nldd-combo-box>`, `<nldd-checkbox-group>`.
 
 **Attributes**
 
@@ -2423,6 +2575,8 @@ A multi-select input that looks like a normal input field: chosen values show as
 
 A vertical split view with a main area and an unlimited number of bar panels. Each child determines its order per breakpoint via sm-order, md-order, and lg-order. Children without order attributes are sorted by DOM order. All bars are in normal flow at every breakpoint and stack vertically. A divider is drawn only where the main pane meets an adjacent bar — directly above and/or below main — at every breakpoint (including sm). Two stacked bars on the same side never get a divider between them, so a toolbar and a tab-bar read as one visual unit. Consumers never manage dividers themselves. Give each bar a unique slot name (e.g. slot="toolbar", slot="status-bar"). Use slot="bar-1", slot="bar-2" if no meaningful name applies. The main panel always uses slot="main". Sets --context-background-color, which cascades to all descendants.
 
+**Related:** `<nldd-navigation-split-view>`, `<nldd-side-by-side-split-view>`, `<nldd-stacked-split-view>`.
+
 **Rules** (`nldd lint`)
 
 - `bar-split-view-child-needs-slot`: Every child of nldd-bar-split-view needs a `slot`, or it does not render.
@@ -2455,6 +2609,10 @@ A vertical split view with a main area and an unlimited number of bar panels. Ea
 
 Use a box to visually group related components in a distinct, contained region. Boxes draw attention to a set of controls or content that belong together, helping users understand their relationship at a glance.
 
+**Keywords:** surface, panel.
+
+**Related:** `<nldd-container>`, `<nldd-card>`.
+
 **Rules** (`nldd lint`)
 
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
@@ -2474,6 +2632,10 @@ Use a box to visually group related components in a distinct, contained region. 
 ### `<nldd-card>`
 
 A visually bounded card with optional header, body and footer sections. The card is elevated by default. Padding is left to nested containers. With `href` the whole card becomes a link (an overlay anchor across the card), with `button` a button (an overlay button that fires a plain, composed `click`, so a click listener or htmx attribute on the card itself works directly, and Enter/Space work natively). `href` wins when both are set. Nested interactive content, footer buttons for instance, has to be lifted above it with `position: relative; z-index: 1` to stay clickable. A card that is a link or button steps its surface and border one shade up on hover and one more while pressed, as a neutral-base button does; content lifted above the overlay does not set it off. On a touch screen there is no hover, and a touch that turns into a scroll lets go of the pressed shade. Put no card in a card: a card is one thing you go to or choose. To group content visually, use `nldd-box` or a layout of your own instead.
+
+**Keywords:** tile.
+
+**Related:** `<nldd-box>`, `<nldd-collection>`.
 
 **Rules** (`nldd lint`)
 
@@ -2509,6 +2671,10 @@ A visually bounded card with optional header, body and footer sections. The card
 ### `<nldd-collection>`
 
 A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. A grid keeps as many columns as fit, also when there are fewer items, so a page of results lines up with the next. For a fixed set of a few cards without paging, such as three points on a landing page, use `nldd-container layout="grid"` instead: its empty columns collapse, so the cards fill the row. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. Use horizontal scroll for items that together serve one purpose, such as the events of one agenda; it is not a carousel for unrelated highlights, which the design guidelines advise against. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.
+
+**Keywords:** grid, gallery.
+
+**Related:** `<nldd-card>`, `<nldd-list>`, `<nldd-table>`.
 
 **Rules** (`nldd lint`)
 
@@ -2547,6 +2713,10 @@ A container for displaying collections of items. Supports grid, stack, lanes and
 ### `<nldd-container>`
 
 A simple layout primitive: pick a layout mode, give it a gap, optionally align contents, and add padding. Padding can be set for all sides, per axis (inline/block), or per individual side. Specificity: per side > per axis > all sides. The container owns the space around and between its children; use `nldd-spacer` only for a one-off gap between two different things. A block that is placed in more than one context gets no padding of its own: whoever places it wraps it in a container, so the inset is not counted twice. Responsive padding and gap have sm/md/lg variants. Each variant emits both an @media (viewport) and @container (layout-container) query. When inside a layout-container the @container query wins; otherwise the @media query provides the viewport-based fallback. Layout modes: - `stack` (default): block items, stacked vertically. The "what you expect from DOM flow" mode. - `row`: flex row, no wrapping. Items shrink or overflow. - `wrap`: flex row, items wrap to new lines. - `grid`: CSS grid, auto-fit columns at min 280px wide. - `columns`: CSS multi-column flow, 280px minimum column width, items don't split across column breaks. Alignment maps to the layout's natural axis: - `stack`: vertical = main-axis (justify-content), horizontal = cross-axis (align-items) - `row` / `wrap`: horizontal = main-axis, vertical = cross-axis - `grid`: horizontal = justify-items, vertical = align-items (per cell) - `columns`: alignment props have no effect (CSS multicol doesn't expose alignment) Item order is set per-child via attributes on the slotted children themselves: `<child order="3">` for a fixed position, or `<child sm-order="N">` / `<child md-order="N">` / `<child lg-order="N">` to override per breakpoint (resolved against THIS container's width via @container queries, same scope as the responsive padding/gap). The container observes slot changes and child attribute mutations and bridges these to `--_container-slot-order` / `--_container-slot-sm-order` / etc. custom properties on each child's inline style, which the container's CSS then reads via `::slotted(*)` inside @container queries. Cascade: `sm-order` falls back to `order` falls back to `0` at sm (and analogously for md/lg). No-op for `layout="columns"` (CSS multicol has no per-item ordering hook). The `column-count` attribute (1-8) forces an exact column count for `layout="grid"` (overrides auto-fit) and `layout="columns"` (overrides the natural width-driven count). `sm-column-count` / `md-column-count` / `lg-column-count` resolve against this container's OWN width via an `@container (...)` query on the host — not against the viewport. That lets a footer in a narrow sidebar choose its own column count independent of the surrounding page width. `layout="lanes"` packs items into balanced columns using native CSS grid lanes where supported, falling back to CSS multicol (column-order) elsewhere. CSS-only, no JS. Honours `gap` on both axes and `column-count`. Note that nldd-collection's lanes falls back to its own grid rather than to multicol: that component pages, and multicol redistributes the whole set every time load-more adds to it.
+
+**Keywords:** stack, flex, padding.
+
+**Related:** `<nldd-box>`, `<nldd-spacer>`.
 
 **Rules** (`nldd lint`)
 
@@ -2618,9 +2788,15 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 
 A rule that visually separates sections of content.
 
+**Keywords:** separator, hr.
+
+**Related:** `<nldd-spacer>`.
+
 ### `<nldd-full-bleed-section>`
 
 A section that spans the full width without horizontal padding. Useful for background colors, images, or other content that runs edge to edge. Vertical padding and gap adjust via container queries.
+
+**Related:** `<nldd-simple-section>`, `<nldd-hero>`.
 
 **Rules** (`nldd lint`)
 
@@ -2665,6 +2841,8 @@ A section that spans the full width without horizontal padding. Useful for backg
 ### `<nldd-hero>`
 
 The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width="full"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout="overlap"`), so the image keeps its height whatever the content. `layout="contained"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color that it passes on, so the text, links and icons on it keep their contrast. `main-background="base"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.
+
+**Related:** `<nldd-full-bleed-section>`.
 
 **Rules** (`nldd lint`)
 
@@ -2728,6 +2906,8 @@ The section that says what a page is for: it names the main goal of what you can
 
 Columns side by side, with items you move between them. Kanban is Japanese for a visible board, so it is any board where an item's column is one of its values: a status, but also a team or a phase. Put `nldd-kanban-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu "Verplaatsen naar" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows "Dit bord is alleen-lezen" at the item, says it to a screen reader and fires `move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.
 
+**Keywords:** board.
+
 **Rules** (`nldd lint`)
 
 - `kanban-move-item-invalid`: moveItem() needs an item in one of the board's columns and a column of the board.
@@ -2780,7 +2960,11 @@ One column of an `nldd-kanban`: a header and the items under it. The items are w
 
 ### `<nldd-navigation-split-view>`
 
-A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them. When they stop fitting, panes drop in a fixed order: the inspector goes first, then the primary sidebar collapses into the secondary sidebar. If that still does not fit, the view stacks and shows one pane at a time: main when it has content, otherwise the secondary sidebar, otherwise the primary sidebar. Use <code>nldd-split-view-pane</code> as direct children for automatic back button handling.
+A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them. When they stop fitting, panes drop in a fixed order: the inspector goes first, then the primary sidebar collapses into the secondary sidebar. If that still does not fit, the view stacks and shows one pane at a time: main when it has content, otherwise the secondary sidebar, otherwise the primary sidebar.
+
+**Keywords:** master-detail.
+
+**Related:** `<nldd-side-by-side-split-view>`, `<nldd-stacked-split-view>`, `<nldd-bar-split-view>`.
 
 **Rules** (`nldd lint`)
 
@@ -2815,6 +2999,8 @@ A four-column layout with a primary sidebar, secondary sidebar, main content are
 ### `<nldd-one-half-one-half-section>`
 
 A section with two equal columns side by side. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
+
+**Related:** `<nldd-simple-section>`, `<nldd-one-third-two-thirds-section>`, `<nldd-two-thirds-one-third-section>`.
 
 **Rules** (`nldd lint`)
 
@@ -2862,6 +3048,8 @@ A section with two equal columns side by side. The columns stand side by side in
 
 A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
 
+**Related:** `<nldd-simple-section>`, `<nldd-one-half-one-half-section>`, `<nldd-two-thirds-one-third-section>`.
+
 **Rules** (`nldd lint`)
 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
@@ -2908,6 +3096,8 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 
 A page layout with optional sticky header and footer. Without sticky-header, the host is the scroll container and the header is in normal flow. With sticky-header, the header becomes absolute and .page__scroll takes over scrolling, padded by the measured header height. That padding freezes once you scroll, so a collapsing bar cannot drag the content up under the cursor. In root-scroll mode (--context-scroll-mode: root, derived upstream by nldd-shell) the page stops owning a scroller: the document scrolls and the sticky header/footer stick against the document, offset by --context-inset-top/bottom. The mode is read on connect/resize and reflected to [data-scroll] so the CSS can branch. The page passes those insets on to its own content, with its sticky header and footer added: anything sticky inside (an nldd-sidebar-section, a sticky table head) reads --context-inset-top / --context-inset-bottom and clears every bar above and below it without being told a number. The heights are measured, because a top title bar shrinks as you scroll past its anchor. While the page owns the scroller, only its own bars count: the chrome above the page sits outside that scroller and does not push sticky content down. A page carries the landmarks of a document: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so a page that sits beside another one cannot have them. Such a page renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner. With `accessible-label` that section is a named region, so there is still one landmark to jump to; without a name it is no landmark at all, which beats an unnamed one. `landmarks` says which of the two a page is, and `auto` (the default) reads it off where the page sits: - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a region, because the overlay is not the document; - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or nldd-stacked-split-view a region, because those place pages beside each other; - anywhere else the page, including the `main` slot of an nldd-bar-split-view, which stacks bars around a single content area. So an app shell has no main until you say which pane holds the primary content, with `landmarks="page"` on that one page. Only the application knows which pane that is. Two pages that both render a main is invalid HTML, and the page says so in development.
 
+**Related:** `<nldd-shell>`, `<nldd-window>`.
+
 **Rules** (`nldd lint`)
 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
@@ -2948,6 +3138,8 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 ### `<nldd-page-footer>`
 
 The footer band at the bottom of a page. Hosts three optional rows in a fixed order: breadcrumbs (top), consumer-defined main content (middle), and a legal-bar (bottom). Dividers are drawn automatically between non-empty rows. Establishes its own container query (`page-footer-container`) so the responsive padding and gap react to the footer's own width, not the viewport. It goes in the `footer` slot of nldd-page, which makes it the contentinfo landmark, or drops it for a page that does not carry the landmarks of the document. The footer itself has no role, so it never nests a second one. The host has `id="page-footer"` so a skip-link can target it directly. Use the sub-components `nldd-page-footer-legal-bar` and `nldd-page-footer-legal-bar-item` for the bottom row.
+
+**Keywords:** footer.
 
 **Rules** (`nldd lint`)
 
@@ -3023,6 +3215,10 @@ A single entry in an `nldd-page-footer-legal-bar`. Renders as a link when `href`
 
 A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover="auto") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment also positions the popover against itself, so the popover needs no `anchor`: <nldd-button popovertarget="info-popover">Info</nldd-button> <nldd-popover id="info-popover" accessible-label="Info"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. Content taller than the room the window leaves scrolls in the popover, with a fade at the edge where more content waits: at the bottom while you can scroll down, at the top once you have scrolled. On md and up the popover closes with Escape or a click outside it, and that click goes on to what it lands on, as with any native popover: the page has no backdrop and stays in use, so a click on another control does what it says in one go. It needs no close button of its own. Content that does, because a stray click must not close it (a form, a few steps, work you would lose), is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education is the exception, a manual popover that stays until it is dismissed. In the `interest` slot of an nldd-button or nldd-icon-button, or named by `interestfor` on those or on an nldd-link, the popover describes that control instead: it opens when the pointer rests on the control, when the control gets keyboard focus, and on a long press on touch, and the control keeps its own click. Focus stays on the control, the control gets no expanded state, and the popover's content is read as its description. It holds information only, no link or button. In the slot it needs no `accessible-label`; one that `interestfor` names keeps its label, which is left out while it describes. On sm the popover is a bottom sheet with a dimmed backdrop, which closes with Escape or a tap outside it, and slides down as it goes. It is a manual popover there and closes itself, so a close request from the system, such as the back gesture on Android, leaves it open; a `popover` you set yourself is kept. That tap stops at the backdrop, as on every native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself. On md and up that title bar is hidden: anchored beside its trigger, the popover closes with Escape or a click outside it and needs no bar to say what it is. This holds for an nldd-top-title-bar anywhere in the popover, also in the header of an nldd-page. Set `md-title-bar` to keep it there too. An nldd-sheet always shows its bar.
 
+**Keywords:** flyout, popup, overlay.
+
+**Related:** `<nldd-sheet>`, `<nldd-modal-dialog>`, `<nldd-window>`, `<nldd-tooltip>`, `<nldd-menu>`.
+
 **Rules** (`nldd lint`)
 
 - `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
@@ -3070,6 +3266,10 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 
 An overlay component that slides in from the side or bottom of the screen. Based on the native <dialog> element for built-in accessibility, focus management, and Escape key support. On small (sm) viewports the sheet always renders as a bottom sheet, regardless of the configured placement. Render the sheet at the document root (teleport/portal it to `document.body`), never inside a split view's content flow: as a slotted flex child it would steal pane height (see `nldd-split-view-pane`). A sheet holds a whole nldd-page: an nldd-top-title-bar in its header slot, the content, and a footer when there are actions. The page behaves as it does anywhere else, with only the middle scrolling, and the text of the bar is also the sheet's accessible name. Do not build a header of your own. Open and close it with `open`, bound to your state together with the close event: the sheet clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the sheet in the DOM rather than mounting it when it opens, or the animations are skipped.
 
+**Keywords:** modal, drawer, side panel, bottom sheet, overlay.
+
+**Related:** `<nldd-modal-dialog>`, `<nldd-popover>`, `<nldd-window>`.
+
 **Rules** (`nldd lint`)
 
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
@@ -3110,6 +3310,8 @@ An overlay component that slides in from the side or bottom of the screen. Based
 
 The required root shell of a Nederlandse Digitale Dienst application. Always contains a split view or an nldd-page as direct content. The document font comes from the package stylesheet (`@nldd/design-system/styles`), not from this component: it gives `body` the body font and content color as soon as a shell is on the page, inside `@layer reset` so any rule of your own wins. Import only the tokens (`/styles/tokens`) and text you write in the light DOM keeps the browser default. Set background="tinted" to give the whole application a tinted background. All descendants read --context-background-color via --_shell-background-color automatically. Individual components can override locally with their own background attribute. The same background color is forced on `document.body` so that browser- chrome surfaces (iOS overscroll bounce, status bar, page-margin areas) blend with the app instead of revealing the user-agent's default white. Cleared when the shell disconnects. The app scrolls the DOCUMENT (root mode) or lets each `nldd-page` scroll inside its pane (nested mode). The mode is derived from the outermost horizontal split view: one column means the document scrolls, several columns mean the panes do. An app without such a split view is a single column at every width and therefore scrolls the document too — nested scrolling would cost it the rubber-band and the collapsing browser toolbar on iOS for nothing. Set `--context-scroll-mode` on the `nldd-shell` itself to override the derived mode; an inherited value loses from it. In nested scroll mode `overscroll-behavior: none` is set on `document.documentElement` and `document.body` while the shell is connected. Combined with `overscroll-behavior: contain` on `nldd-page`'s scroll target, this prevents iOS rubber-band on the viewport when scroll gestures land outside an `nldd-page` (e.g. on a top-bar). In root scroll mode the document itself is the scroller, so this is lifted to let the native rubber-band happen. Cleared on last disconnect.
 
+**Related:** `<nldd-page>`.
+
 **Rules** (`nldd lint`)
 
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
@@ -3130,6 +3332,10 @@ The required root shell of a Nederlandse Digitale Dienst application. Always con
 
 A horizontal split view with multiple equal panes side by side. The number of panes is set via the `panes` attribute. Each pane automatically gets a numbered slot: pane-1, pane-2, etc. Panes that do not fit the available width are automatically hidden, from right to left: `pane-1` is the last to go. Put the main content in `pane-1` and an inspector or detail in the last pane.
 
+**Keywords:** master-detail.
+
+**Related:** `<nldd-navigation-split-view>`, `<nldd-stacked-split-view>`, `<nldd-bar-split-view>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -3148,6 +3354,8 @@ A horizontal split view with multiple equal panes side by side. The number of pa
 ### `<nldd-sidebar-section>`
 
 A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only="collapsed"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a "Sluit" button — overridable via the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot="sidebar"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.
+
+**Related:** `<nldd-simple-section>`.
 
 **Rules** (`nldd lint`)
 
@@ -3216,6 +3424,8 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 
 A basic section with responsive padding and gap based on container size. Contains optional header and footer slots. The padding and spacing between slots adjust automatically via container queries. Use one section per content block and repeat the section rather than building columns inside one: the section sets the reading width and the padding itself. For two columns there are nldd-one-half-one-half-section, nldd-two-thirds-one-third-section, nldd-one-third-two-thirds-section and nldd-sidebar-section. Give a section its surface with `background` instead of a background color of your own; that is how the components inside know which surface they are on.
 
+**Related:** `<nldd-one-half-one-half-section>`, `<nldd-one-third-two-thirds-section>`, `<nldd-two-thirds-one-third-section>`, `<nldd-full-bleed-section>`, `<nldd-sidebar-section>`.
+
 **Rules** (`nldd lint`)
 
 - `breadcrumbs-goes-in-footer` (hint): Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
@@ -3261,6 +3471,10 @@ A basic section with responsive padding and gap based on container size. Contain
 ### `<nldd-spacer>`
 
 Add explicit space between elements. Components here have no margins of their own — all whitespace is set by a spacer. A spacer is fixed space between two different things. For padding around an area, or the gaps between the children of one area, use `nldd-container` with `padding` and `gap` instead. A `gap` sets one distance for every child, which is right while the children are of one kind: a row of buttons, a set of cards, the fields of a form. Put different kinds under each other and the right distance differs per seam, so set each one where it happens with a spacer. A heading over a list is the common case: the space under the heading should be smaller than the space above it, which keeps the heading with what it labels. A gap cannot tell the two apart, and evening them out reads as a strip of loose lines. Use a single `size` attribute for whitespace that's the same at every viewport. Combine with `sm-size`, `md-size` and/or `lg-size` to override the size at specific breakpoints (mobile-first cascade is intentionally avoided — each breakpoint that needs a different value declares it explicitly): - `size` applies at every breakpoint that has no per-viewport override. - `sm-size` overrides at sm (max-width: 640px). - `md-size` overrides at md (641px–1007px). - `lg-size` overrides at lg (min-width: 1008px). Use `flexible` (in any of the four attributes) to fill the remaining space in a flex container.
+
+**Keywords:** gap, whitespace.
+
+**Related:** `<nldd-container>`, `<nldd-divider>`.
 
 **Attributes**
 
@@ -3310,6 +3524,10 @@ A simple pane container for use inside split views. The split view automatically
 
 A vertical split view with multiple stacked panes. The number of panes is set via the `panes` attribute. Each pane automatically gets a numbered slot: pane-1, pane-2, etc. Panes that do not fit the available height are automatically hidden.
 
+**Keywords:** master-detail.
+
+**Related:** `<nldd-navigation-split-view>`, `<nldd-side-by-side-split-view>`, `<nldd-bar-split-view>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -3328,6 +3546,8 @@ A vertical split view with multiple stacked panes. The number of panes is set vi
 ### `<nldd-two-thirds-one-third-section>`
 
 A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
+
+**Related:** `<nldd-simple-section>`, `<nldd-one-half-one-half-section>`, `<nldd-one-third-two-thirds-section>`.
 
 **Rules** (`nldd lint`)
 
@@ -3375,6 +3595,10 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 
 A floating window based on the native <dialog> element, positionable through CSS values. Always modal. No header of its own: consumers use nldd-page with a sticky header inside for a title bar. The text of the nldd-top-title-bar in that header is also the window's accessible name. Open and close it with `open`, bound to your state together with the close event: the window clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the window in the DOM rather than mounting it when it opens, or the animations are skipped.
 
+**Keywords:** modal, overlay.
+
+**Related:** `<nldd-modal-dialog>`, `<nldd-sheet>`, `<nldd-popover>`, `<nldd-page>`.
+
 **Rules** (`nldd lint`)
 
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
@@ -3417,6 +3641,8 @@ A floating window based on the native <dialog> element, positionable through CSS
 ### `<nldd-breadcrumbs>`
 
 A trail of `nldd-breadcrumbs-item`s separated by `›`, rendered as a `<nav>` landmark wrapping a `<div role="list">` (with each item carrying `role="listitem"`). Explicit ARIA roles travel reliably across the slot boundary where the implicit `<ol>`/`<li>` mapping is inconsistent across AT + browser combos. The trail wraps onto multiple lines when it doesn't fit, so it adapts to any width.
+
+**Keywords:** breadcrumb.
 
 **Rules** (`nldd lint`)
 
@@ -3461,6 +3687,8 @@ A single entry in an `nldd-breadcrumbs` list. Renders as a link when `href` is s
 ### `<nldd-document-tab-bar>`
 
 A horizontal tab bar for document tabs with an automatic overflow button and an end slot for action buttons. Exports both NLDDDocumentTabBar and NLDDDocumentTabBarItem.
+
+**Related:** `<nldd-tab-bar>`.
 
 **Rules** (`nldd lint`)
 
@@ -3513,6 +3741,8 @@ A horizontal tab bar for document tabs with an automatic overflow button and an 
 ### `<nldd-link>`
 
 Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"sm"|"md"|"lg"` for menus, action areas or overviews. Fixed text size, `display: inline-flex` with `gap` for icon spacing. 2. **Inline (inherit)**: leave `size` out or set `size="inherit"` explicitly. The link inherits `font-size`, `line-height` and `font-family` from its surroundings. Text wraps naturally across lines (`display: inline`). Icons work here too; the natural whitespace between icon and text provides the spacing. For links in CMS or markdown output, where the `<a>` arrives as HTML, `<nldd-rich-text>` with a raw `<a>` remains the route to take. Put an `<a>` in the default slot and the component draws no link of its own: it gives yours its look instead. A page then has the link in its HTML before any script runs, for a search engine that does not render the page, a link preview or reader mode, and a router gets the click: put the `<Link>` of React Router or Next in it, which renders an `<a>` and navigates itself. Without that, every click on a link in a shadow root loads the whole page. <nldd-link size="md"><a href="/patronen">Patronen</a></nldd-link> Everything about the link goes on the `<a>`: `href`, `target`, `rel`, `download`, and its text. Those attributes, `text`, `start-icon` and `end-icon` do nothing on `nldd-link` then. An icon goes in the `<a>` as an nldd-icon, so it is part of what you click and inside the focus ring. `size`, `accessible-label`, `accessible-description`, `accessible-described-by`, `interestfor`, `no-tab` and `disabled` keep working: the component sets `aria-label`, the description, `tabindex` and `aria-disabled` on your `<a>`, and leaves an attribute you set yourself alone. With `target="_blank"` it adds `noopener noreferrer` to the `rel` of the `<a>`, as it does to its own. A disabled link ignores a click before your router sees it. The hint about another website, a new tab or a download goes on it as `aria-description`, so a screen reader reads it after the name, after the text of `accessible-description`. `accessible-described-by` points the `<a>` at the elements it names. Not as hidden text in the `<a>`: a framework that renders the `<a>` owns its children, and an extra one breaks hydration. One `<a>` per link. The look of the `<a>` comes from the global stylesheet, `dist/css/link.css` or `global.css`, which includes it, so the link looks right before the component loads, and without script.
+
+**Related:** `<nldd-button>`.
 
 **Rules** (`nldd lint`)
 
@@ -3582,6 +3812,8 @@ A set of related `nldd-link` elements, such as the links under the name of a ser
 ### `<nldd-menu-bar>`
 
 Horizontal row of nldd-menu-bar-item elements with automatic overflow detection. Items that do not fit are hidden behind an overflow button with a popover menu.
+
+**Related:** `<nldd-tab-bar>`, `<nldd-top-navigation-bar>`.
 
 **Rules** (`nldd lint`)
 
@@ -3704,6 +3936,10 @@ Accessibility pattern that lets keyboard users skip past content. Wraps content 
 
 A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBar and NLDDTabBarItem. When the tabs do not fit, the ones that do not fit go behind a "Meer tabs" button at the end, in a menu. The current tab always stays in the bar: if it would fall in the part that does not fit, another tab goes to the menu in its place. While tabs are in the menu, the bar fills its container and the tabs in it share the width in proportion to their own. Choosing a tab in the bar changes nothing about what is shown; choosing one from the menu swaps it with the last tab in the bar, so the bar does not jump. `centered` has no effect then. In an nldd-toolbar the other items go to the toolbar's menu first, by their priority; when it is the bar's turn, it narrows down to the current tab beside its button, and only then moves into the toolbar's menu as a whole. Tabs are hidden, never moved, so a framework that renders them finds them where it put them. Only a tab that does not fit on its own is cut off.
 
+**Keywords:** tabs.
+
+**Related:** `<nldd-document-tab-bar>`, `<nldd-segmented-control>`, `<nldd-menu-bar>`.
+
 **Rules** (`nldd lint`)
 
 - `tab-bar-href-needs-navigation`: Tabs with `href` go to another page: add `navigation`, so the bar is a nav with aria-current="page" instead of a tablist, and set `current` on the tab of the page you are on.
@@ -3772,6 +4008,10 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 
 The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, and below it the main bar with the website title, a back button, the global navigation and the utility navigation. On narrow widths the global navigation moves into a menu sheet behind the menu button. The top bar of a website, and of nothing else: put it in the `header` slot of an `nldd-page`. Do not combine it with a split view. A split view is the layout of an application, whose panes carry a bar of their own, usually an `nldd-toolbar`, and a site header above it gives a second layer of navigation and a second thing that scrolls. Does a page need a sidebar under this bar, use an `nldd-sidebar-section` inside that `nldd-page`.
 
+**Keywords:** header, navbar.
+
+**Related:** `<nldd-top-title-bar>`, `<nldd-menu-bar>`.
+
 **Rules** (`nldd lint`)
 
 - `back-link-no-vague-text` (hint): Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.
@@ -3814,6 +4054,10 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 ### `<nldd-top-title-bar>`
 
 A toolbar for page and container headings with optional navigation and action buttons. The component has two states: - Default: the back button shows the previous page title as a text button - Compact (class `is-compact`): the back button is an icon button, a divider and the toolbar title are visible When `collapse-anchor` is set, the `is-compact` class is automatically applied as soon as the top of the anchor element reaches this bar's own top edge (the sticky header line). Measuring the bar rather than the page keeps it correct in both nested and root scroll modes; it also re-points at the live scroll target when the page switches mode. Without `collapse-anchor` the bar takes a static state: compact when `text` is set (so the title shows in the title-group), non-compact otherwise (so the `back-text` button stays visible). An anchored bar hides its own title from assistive technology. The anchor is the heading the title swaps in for, so both carry the same words: once you scroll past the heading, a screen reader would otherwise find the same title twice. Sighted readers see one at a time, and this makes that true for everyone. Anchor at the heading, then, and not at some other element that happens to sit at the right height: the bar hands its title over to it. An `nldd-title` anchor without a `heading-level` gets the bar's own, so the title it takes over is a heading of the same level. An anchor that is no heading at all, and holds none, would leave the page without one: the bar then keeps its own title for assistive technology and warns in development. The title stays on one line and is cut off with an ellipsis when it does not fit, which on a narrow screen or at 400% zoom is soon. The bar is therefore not the place for the full title: put that in an `nldd-title` at the top of the content, which wraps and always fits, and point `collapse-anchor` at it. A bar without an anchor holds the only copy of its title, so keep that one to a word or two.
+
+**Keywords:** app bar, title bar.
+
+**Related:** `<nldd-top-navigation-bar>`.
 
 **Rules** (`nldd lint`)
 
@@ -3858,6 +4102,10 @@ A toolbar for page and container headings with optional navigation and action bu
 
 Layout placeholder that fills its parent and centers an indeterminate activity indicator. By default the indicator is held back for 1000ms so brief loading states don't flash; once the delay passes it fades in. Set `timing="instant"` to skip the delay (the fade-in still plays) — this is what embedding components such as `nldd-button` use for their loading state. Sizing: fills its parent where the parent lets it (a flex column such as `nldd-container`, a grid, or a fixed height) and centers itself there. Where the parent has no height of its own, give it one: a `min-height` matching the content you expect, such as `<nldd-container min-height="240px">`. As a safety net the host already takes the indicator's size (circle, plus the label with `show-text`) during the delay, so nothing shifts when it fades in; once `complete` is set it gives that space up. Label size follows `size`, not the surrounding text, so the circle and its label keep the same proportion everywhere: body-xs at 16 and 20, body-sm at 24 and 28, body-md from 32. Keep the label short; a longer explanation belongs in the area as regular text. The default indicator is a simple icon-sized circle in the `--context-content-color` that the surface, button or row around it sets, so a spinner in a selected row or a filled button takes that row's or button's color. An optional label sits below (hidden unless `show-text` is set). The indicator is always indeterminate; when you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` instead. Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled icon glyph has), so a standalone spinner lines up with an icon or an `icon-aligned` `nldd-avatar` on the same grid — no extra option needed (unlike `nldd-avatar`, which fills edge-to-edge and opts in via `icon-aligned`). Overlay mode: put content in the default slot and the indicator wraps it — it becomes a `position: relative` container, renders the spinner over a dimming backdrop (opt out with `no-backdrop`), and makes the content `inert` so its controls can't be focused or clicked. Toggle loading with `complete` (`?complete=${!isLoading}`). With no slotted content it stays the standalone placeholder described above. Reconnect behavior: every `connectedCallback` resets the timer and hides the indicator again. If a consumer toggles the element via a conditional render (remove + re-insert) the indicator disappears and re-fades after another delay. Keep the element mounted and toggle visibility / `hidden` instead if you want the timer to run only once. Accessibility: while connected and not `complete` the host is a polite live region (`role="status"`). The label (`text`, or the translated "Laden" fallback) always renders as the region's content — visually hidden when `show-text` is off (the default) — so assistive tech announces the loading state when the indicator appears. Set `complete` (or unmount) to clear it.
 
+**Keywords:** spinner, loader, loading.
+
+**Related:** `<nldd-progress-bar>`, `<nldd-progress-circle>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -3879,6 +4127,10 @@ Layout placeholder that fills its parent and centers an indeterminate activity i
 ### `<nldd-badge>`
 
 Shows the state of something, or how much of it there is: a status, a number of unread messages, a dot saying something is new. What it says is decided by the system, and it changes without anyone touching it. A badge is never interactive. It shows text, a number and/or an icon; with no content it becomes a dot. Put it in a corner of another element (an icon, for instance) or on its own. For a property someone assigns to something, such as a category, a role or a certification, use `nldd-tag`. For standalone data the user works with, such as a chosen person or an active filter, use `nldd-token`.
+
+**Keywords:** count, dot, indicator.
+
+**Related:** `<nldd-token>`, `<nldd-tag>`.
 
 **Rules** (`nldd lint`)
 
@@ -3904,6 +4156,10 @@ Shows the state of something, or how much of it there is: a status, a number of 
 ### `<nldd-banner>`
 
 An inline notification with a tinted background per variant. Use for persistent, page-level feedback (e.g. an error summary at the top of a form). Banner is more visually present than nldd-inline-dialog — the tinted color catches the eye. If you need a quieter component, pick a different one rather than overriding the banner's ARIA. Layout: icon left, text + supporting text + optional rich content + actions in the center, optional dismiss button right. Buttons wrap to a second row on narrow viewports via nldd-button-group's flex wrapping. role and aria-live are set automatically from the variant: - critical → role="alert" (interrupts screen reader) - others → role="status" aria-live="polite" Not overridable — if you need a less prominent component, use one. aria-atomic="true" is also set so that updates to the structured region (icon + heading + supporting-text + actions) are announced as one unit rather than as a partial subtree. Trade-off: any programmatic content mutation re-reads the entire banner. Banners are designed for short, heading-scale copy — if you slot in a paragraph of rich body text and then toggle variant or supporting-text at runtime, AT will re-announce the whole thing. Keep banner content concise, or render long-form messages in a different surface.
+
+**Keywords:** alert, message bar.
+
+**Related:** `<nldd-notification>`, `<nldd-status-bar>`, `<nldd-inline-dialog>`, `<nldd-admonition>`.
 
 **Attributes**
 
@@ -3935,6 +4191,10 @@ An inline notification with a tinted background per variant. Use for persistent,
 
 An inline status component for empty state, confirmations and feedback. Fills the container and has no minimum width.
 
+**Keywords:** callout, alert, message.
+
+**Related:** `<nldd-banner>`, `<nldd-admonition>`, `<nldd-modal-dialog>`.
+
 **Rules** (`nldd lint`)
 
 - `action-goes-on-button`: Put slot="actions" on each nldd-button, not on an element around them.
@@ -3962,6 +4222,10 @@ An inline status component for empty state, confirmations and feedback. Fills th
 ### `<nldd-just-in-time-education>`
 
 A guided-discovery coach mark. Put a control (nldd-search-field, for instance) in the default slot. While `active` is set, the component lifts a callout (title + supporting text + dismiss) into the top layer through the Popover API (`popover="manual"`), anchored to the control with Floating UI. No backdrop, non-modal: the background stays interactive. The control itself stays where it is in the flow. With `dismissable` the component manages closing and fires close: - the user performs the suggested interaction on the control -> close{completed} - the dismiss button -> close{dismissed} - a click or key press OUTSIDE the coach mark -> close{ignored} Without `dismissable` nothing closes by itself (no button, no outside or slot click); the consumer then decides when to close through `active` or `complete()`. `complete()` always works and closes with close{completed}, for example only once a real search has been submitted.
+
+**Keywords:** coach mark, onboarding, tour.
+
+**Related:** `<nldd-tooltip>`, `<nldd-popover>`, `<nldd-inline-dialog>`.
 
 **Attributes**
 
@@ -3991,6 +4255,10 @@ A guided-discovery coach mark. Put a control (nldd-search-field, for instance) i
 ### `<nldd-modal-dialog>`
 
 A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Use it only when there is no way back, and give it a real choice: a dialog with one button offers nothing to decide, so tell the user with an nldd-notification or an inline message instead. In a destructive dialog the safe way out comes first, as the primary button. Work that needs the page as context, such as editing, belongs in an nldd-sheet. The design guidelines say why. A dialog that opens with one action says so in development. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.
+
+**Keywords:** dialog, alert dialog, confirm, overlay.
+
+**Related:** `<nldd-sheet>`, `<nldd-window>`, `<nldd-popover>`, `<nldd-inline-dialog>`.
 
 **Rules** (`nldd lint`)
 
@@ -4034,6 +4302,10 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 
 A short message that arrives over the interface and leaves on its own: a save that worked, a request that failed. Not a banner, which stands in the page and stays there — this one floats, stacks, and goes away. It places itself. Write it wherever it belongs in your code and it moves to one shared area: top right from md, where it slides in from the right, and full width across the top below that, where it drops in from the top. Nothing about the position is settable, so notifications from anywhere in an application land in the same place and stack in the same order. A modal overlay is the one thing that moves it. An nldd-sheet, nldd-window or nldd-modal-dialog paints in the browser's top layer, above the whole page and out of reach of any z-index, and while one is open everything outside it is inert. So the area goes in: into the topmost overlay that is open, and back down as they close. A notification already on screen travels with it, and one raised from inside a sheet is readable and reachable where it is raised. More than one is a deck, not a list: the front one is readable and the older ones peek out below it, so a burst of messages takes the room of roughly one. The newest is in front. Behind it a notification is a bare surface, cut to the height of the one in front; dismiss the front and it slides up into the place that came free while its message fades in, because it was standing there all along. Under the front notification sits a strip as wide as the deck and as tall as the deck is when it fans out. Pointing at it fans the deck out to fill it, which is the only hint that there is more here than the message you can read; clicking it, or moving focus into the area, lays the whole deck out as a list. Clicking or tabbing away puts it back. The notification itself is not a button: a click on the message you are reading does nothing. Only the front of the deck counts down, and only while the deck is closed: open means someone is reading. The rest wait, so nothing disappears from under the one you are reading. `critical` never leaves on its own: a failure is worth reading, and the count-down would take it away while you were. That also keeps this within WCAG 2.2.1, which allows a time limit when what disappears is not essential. The clock pauses while a pointer moves over the notification and while focus is inside it, and resumes where it left off rather than starting over. A pointer that merely happens to rest where the notification appears does not count: it never moved, so nobody is reading. role follows the variant: `critical` becomes role="alert", the rest role="status". Focus never moves on its own. Escape dismisses the notification that focus is in. `NLDDNotification.show({ text, supportingText, variant, icon, duration, actions })` raises a notification without an element to manage: it creates one, shows it, and removes it once it is dismissed. An action is `{ text, onClick }`, at most 2, and a click on one also takes the notification away. It returns a handle with `dismiss()` and `update(options)`. An update changes the message, puts the notification in front and starts its clock over, so a status that changes often is one notification that keeps up instead of a new one sliding in each time; one that has already left arrives again. Use `show()` from a framework. Because a notification places itself, an element that a framework rendered is no longer where that framework left it: a keyed list (`v-for` with a `:key`) then fails on its next render, and a removed row leaves its notification on screen.
 
+**Keywords:** toast, snackbar.
+
+**Related:** `<nldd-banner>`, `<nldd-status-bar>`, `<nldd-inline-dialog>`.
+
 **Rules** (`nldd lint`)
 
 - `notification-max-two-actions`: At most 2 actions: a message that needs three choices is a decision, and a decision belongs in a dialog that waits for it.
@@ -4065,6 +4337,10 @@ A short message that arrives over the interface and leaves on its own: a save th
 ### `<nldd-progress-bar>`
 
 Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar that supports a single value (loading-style) or multiple segments (multi-stage progress, or distribution like storage usage). The consumer provides raw values; the component computes percentages from `max`. Two variants: - `progress` (default): segments sum toward `max`; remaining space is empty track. ARIA reads "X% voltooid". - `distribution`: segments fill the bar; ARIA enumerates segments. If the sum of segment values exceeds `max`, segments are normalized proportionally to fit and a warning is logged.
+
+**Keywords:** progress, loading bar.
+
+**Related:** `<nldd-progress-circle>`, `<nldd-activity-indicator>`, `<nldd-step-bar>`.
 
 **Rules** (`nldd lint`)
 
@@ -4108,6 +4384,8 @@ Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar
 
 Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circular progress indicator that mirrors the API of nldd-progress-bar: single-value or multi-segment, progress or distribution variant, 24 colors, fade transitions between determinate/indeterminate, indeterminate indicator. Visual differences vs the bar: - SVG arcs instead of rectangular bars. - Label below the circle (not above). - No center text; the consumer can wrap the circle if needed. - One combined tooltip on the whole circle showing all segment info (no per-segment tooltips). - Indeterminate uses a rotating elastic arc (Material-style) instead of the bar's Knight Rider scanner.
 
+**Related:** `<nldd-progress-bar>`, `<nldd-activity-indicator>`.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -4145,6 +4423,8 @@ Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circul
 
 A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status ("Storing: …", "Gepland onderhoud …"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. At the top of the page, in Safari, its color carries on above the page when the page is pulled down, and the ribbon of an nldd-top-navigation-bar below it then starts under the bar, as it does at rest. role and aria-live are set automatically from the variant: - critical → role="alert" (implies aria-live="assertive"; interrupts the screen reader) - others → role="status" aria-live="polite" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role="alert" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).
 
+**Related:** `<nldd-banner>`, `<nldd-notification>`.
+
 **Rules** (`nldd lint`)
 
 - `status-bar-goes-above-top-bar`: The status bar sits below a top bar. It belongs above it, as the first thing on the screen.
@@ -4163,6 +4443,8 @@ A narrow, page-wide status bar (24px) with a deep background color per variant. 
 ### `<nldd-step-bar>`
 
 Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status="current"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status="past"` or `status="future"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
+
+**Related:** `<nldd-progress-bar>`.
 
 **Rules** (`nldd lint`)
 
@@ -4302,6 +4584,10 @@ A cell component for displaying icons in lists with configurable alignment and s
 
 A container for `nldd-list-item` elements. The `type` attribute switches the list's a11y role and behavior: - `list` (default) — `role="list"`, items `role="listitem"`. Reorderable allowed. - `radiogroup` — `role="radiogroup"`, for a set of `nldd-list-item radio` rows: one choice, laid out as rows so each option can carry a count or a second line. The rows step out of the accessibility tree themselves (`role="none"`), so the radios are the group's own children. The arrows move focus here and activation checks, rather than the selection following focus as it does in `nldd-radio-button-group`. - `tree` — `role="tree"`, items `role="treeitem"`. Branch rows put their child rows in their own `slot="children"`, which the item renders as a `role="group"`. Level, position and set size are NOT authored: the nesting represents the hierarchy, so assistive technology derives them. A branch row must carry `expanded`; the group is hidden while it is false. Visual indentation is the consumer's — repeat a spacer-cell per level. Comes with its own keyboard, see "Tree" below. - `navigation` — host `role="navigation"`, items with `selected` get `aria-current="page"` on their inner `<a>` or `<button>`. Sub-pages go in their parent row's `slot="children"`, which the item renders as a list inside the list item, so a screen reader hears the level and how many there are. They are always shown and the arrows walk them like any other row; a spacer-cell alone indents but says nothing. Visual indentation is still the consumer's. - `form` — rows that are not actions themselves: the controls inside them are. A row of a label and a field, a switch, a menu button, or a value you cannot change at all. Semantically the same as `list` (`role="list"`, `role="listitem"`), and everything visual is unchanged; what falls away is the keyboard of a list you walk through. No arrow navigation, so no promise of it either, and no tab stop on the row: Tab goes straight to the controls, in source order, the way it does in any form. Rows that ARE actions (`href`, `button`, `checkbox`, or a segment) contradict that and warn in development. SwiftUI draws the same line between `List` and `Form`, for the same reason. - `listbox` — an accessible, filterable listbox (combobox pattern). The list renders its OWN search input (`role="combobox"`) pinned above the options; `.list__items` becomes `role="listbox"` and items become `role="option"`. Focus stays in the input, the active option moves via `aria-activedescendant`, and filtering is consumer-managed via the `input` event (toggle `[hidden]` on items). See "Listbox" below. Selection state is consumer-managed: the list never mutates `selected` itself. A list you walk through answers to the arrow keys, and there is no attribute to switch that on. Whether the keys do something is not a property of one list: it is what a reader may assume about all of them, and a per-list setting made that unknowable from the outside. It follows the type, which you can see before you touch a key. - ArrowUp / ArrowDown — move focus between the rows there is something to do with. A row of nothing but text is skipped, because focus that leads nowhere is a dead end. - Home / End — the first / last of those rows. - Tab — the list is ONE tab stop, so Tab moves past it rather than through it. Within the current row Tab walks that row's own controls: a chevron beside a checkbox, a menu button at the end. The same controls in the other rows are held out of the tab order (`tabindex="-1"`, or `no-tab` on a design-system control that keeps its tab stop in its own shadow root), and so are this row's once focus leaves the list, so tabbing back in lands on the row again. - Escape — out of a control the row holds, back onto the row. One level up, where Shift+Tab is one step back. On the row itself the list claims nothing, so Escape carries on to whatever holds the list, and a control showing a menu keeps the first press for closing that menu. While focus sits in a control a row holds, the list stands down: those keys are the control's, and a list that took them anyway would pull focus out of a combo box or a text field mid-word. What the row IS — its own link, button or segments — keeps answering here. Arrows move focus only; selection stays consumer-managed. Three types answer differently, and all three say so on screen before you touch a key: a listbox runs its keyboard from its search field, a reorderable list moves rows with the arrows, and a form has no rows to move between at all. In `type="listbox"` the list owns a native `<input role="combobox">` (mirroring how `nldd-combo-box` wires an input to a slotted listbox). Keyboard, handled on the input so focus never leaves it: - ArrowDown / ArrowUp — move the active option among the VISIBLE (non-`[hidden]`) options (wrap around). - Home / End — first / last visible option. - Enter — activate the active option by triggering its inner action (a link navigates, a button fires the consumer's handler). Selection stays consumer-managed. - Escape — clear the search value (and refire `input`). On every active change the input's `aria-activedescendant` is set to the active option's id and the option is scrolled into view. The active option (`_highlighted` on the item, a highlight) is distinct from `selected`. Filtering is the consumer's job: listen to `input` (`{ detail: { value } }`) and toggle `[hidden]` on items; after the visible set changes the list resets the active option to the first visible one. `reorderable` and the roving arrow keys are ignored in listbox mode (listbox has its own keyboard). A tree adds to that keyboard, and counts the rows of an open branch as part of the order the arrows walk: - ArrowRight — opens a closed branch; on an open one it steps to its first child. - ArrowLeft — closes an open branch; on a leaf it steps out to the parent row. - Enter — follows the row: its own link or button, or on a segmented branch the first action that is not the chevron. A branch with only a chevron folds instead. - Space — open and close, the same as Right and Left. Only while focus sits on the row itself: a row that is its own control, and a segmented action you tabbed into, handle both keys themselves. Opening and closing runs through the row's own disclosure control — the segment marked `disclosure`, or the row itself when it is a button. The list activates that control rather than writing `expanded`, so the state keeps being set in one place: the consumer's handler. A row that is a link is never activated this way, since that would navigate away. The tree is one tab stop. Focus lands on the row itself when the row has no control of its own, because that is where `treeitem` sits and it makes assistive technology announce the row rather than a button inside it. Tab then walks the controls of THAT row (a chevron beside a checkbox, say) and leaves the list after the last one. A deliberate deviation: strictly speaking a row with several controls is a `treegrid`, not a `tree`. We keep the tree semantics — level and set size are what matters here, not rows and columns — and borrow the "Tab within the row" behavior from the grid pattern. Should a tree with real columns come up, that is when `treegrid` earns its own type. On reorder (type="list" + reorderable), the list dispatches `reorder` with `fromIndex` / `toIndex` and expects the consumer to mutate the DOM (or their data model that renders the DOM). Focus is restored to the moved item's drag handle via a single `requestAnimationFrame` — this assumes the consumer reorders **synchronously** in the event handler. Async renderers (React, Vue, …) that update the DOM on a later tick will miss the focus restore and should manage focus themselves after their render commits.
 
+**Keywords:** disclosure, tree.
+
+**Related:** `<nldd-table>`, `<nldd-collection>`.
+
 **Rules** (`nldd lint`)
 
 - `list-arrow-navigation-no-effect`: `arrow-navigation` is the default now and the attribute does nothing; remove it.
@@ -4356,6 +4642,8 @@ A container for `nldd-list-item` elements. The `type` attribute switches the lis
 ### `<nldd-list-item>`
 
 A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox when `checkbox` is set, as a button when `button` is set, or as a plain container otherwise. All cells and segments share one flat slot, in source order. With one action, make the row itself the control (`href`, `button`, `checkbox` or `radio`): the whole row is then one hit area. With two or more, give each its own `nldd-list-item-segment` and leave the row without an action of its own. Both at once nests a control inside a control, and the item warns about that in development. Two rules govern every row: 1. State fills always paint the WIDENED row geometry — the row box extended by the indicator inline inset on both sides — whether or not the row is interactive. Paint never differs between a selected plain row and a selected interactive row. 2. The widened strip belongs to the ROW, never to a segment. A row with any action (its own `href`/`button`/`checkbox`, or a slotted segment) pulls itself outward (`is-interactive` host class → negative inline margin) and pads the row block back by the same amount, so content stays on the grid. A row-wide action owns that padding itself, making the whole widened box one hit area; slotted segments stay in the grid, so their footprint is position-independent and tree columns line up at any depth. By default the divider starts at the row's first text or title cell, so the line lands on the words rather than on whatever leads up to them — an icon, an avatar, a checkbox, or the spacers a tree indents with. Rows of different shapes then still line their dividers up with each other, and a tree's dividers step inward with its indentation. Text inside an `nldd-list-item-segment` counts as the row's content, and the marker is that text cell rather than the action: the action carries its own inline padding, so its edge sits before the words. A row with no text or title cell keeps the full content width. Mark a cell with `divider-start` and/or `divider-end` to place it yourself instead — an explicit marker replaces the derived one entirely, so `divider-start` on the leading cell restores the full-width line. Multiple markers resolve as the union: first `divider-start` through last `divider-end`. A start past the last end is an authoring error — the item DEV-warns and falls back to the full content width. A branch row can disclose its children in two ways: a dedicated `nldd-list-item-segment[disclosure]` segment (only the chevron is clickable), or the row itself as the control (`button` + `expanded`, the whole row toggles). In the second case, mark the chevron's `nldd-icon-cell` with `disclosure` and the row turns it with `expanded` — the same affordance, without having to trade a clickable row for a turning chevron. `checkbox` makes the WHOLE row the control: the inner action becomes a `role="checkbox"` button carrying `aria-checked`, it toggles `checked` on activation and fires `change`. Slot an `nldd-checkbox decorative` (or any glyph) before the text: it only shows the state, since the row already conveys role and state, and a second focusable control would double the tab stops. Do NOT nest a real `<input type="checkbox">` in the action: interactive content inside a `<button>` is invalid HTML and AT announces the button, not the checked state. A `<label>` variant is not offered for the same reason it cannot work — label-to-input association walks the DOM tree, and a slotted input is not a descendant of a label in the shadow root. When it renders as a link, `target` and `rel` are forwarded to the inner `<a>` (e.g. `target="_blank" rel="noopener noreferrer"`). With `target="_blank"` the item also injects a visually hidden "opens in new tab" announcement for assistive technology (WCAG 2.1 SC 3.2.2), and an `href` to another website a visually hidden "andere website". An `nldd-icon-cell` with `external-link` is only the picture of that; the row says it either way. The item synchronizes its ARIA with its parent `nldd-list`'s `type`: - `list` parent → `role="listitem"` - `navigation` parent → `role="listitem"` + `aria-current` on the inner `<a>` / `<button>` when `current` or `selected`, with `current-type` as its value (`page` unless set) - `listbox` parent → `role="option"` + `aria-selected` reflecting `selected`. The list points its search input's `aria-activedescendant` at the active option via `_highlighted` (separate from `selected`).
+
+**Keywords:** disclosure.
 
 **Rules** (`nldd lint`)
 
@@ -4477,6 +4765,8 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 
 The grip that drags its row in a `reorderable` nldd-list, by pointer or with the arrow keys. Always vertically centered and sized to fit the handle. It carries `reorder-handle` by itself, so it shows only while the row is `reorderable` and needs nothing else: ```html <nldd-list reorderable> <nldd-list-item> <nldd-reorder-handle-cell></nldd-reorder-handle-cell> <nldd-text-cell text="Item"></nldd-text-cell> </nldd-list-item> </nldd-list> ``` Any other cell becomes the grip with `reorder-handle`, such as an nldd-cell with a control of your own.
 
+**Keywords:** drag handle.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -4535,7 +4825,9 @@ A cell that draws steps under each other in an `nldd-list`: a vertical track wit
 
 ### `<nldd-table>`
 
-Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. Header: put one `<nldd-table-row slot="header">` in the `header` slot. Its cells become column headers (role="columnheader"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role="rowheader" instead of "cell", so a screen reader names the row along with every other cell in it, like `<th scope="row">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).
+Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. A generic `nldd-cell` gets `width="full"`, so it fills its column, unless it sets a length of its own. Header: put one `<nldd-table-row slot="header">` in the `header` slot. Its cells become column headers (role="columnheader"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role="rowheader" instead of "cell", so a screen reader names the row along with every other cell in it, like `<th scope="row">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).
+
+**Related:** `<nldd-list>`.
 
 **Rules** (`nldd lint`)
 

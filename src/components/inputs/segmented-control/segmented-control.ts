@@ -5,6 +5,7 @@
  * Exports both NLDDSegmentedControl and NLDDSegmentedControlItem.
  *
  * @element nldd-segmented-control
+ * @related nldd-radio-button-group, nldd-toggle-button-group, nldd-tab-bar
  * @attr {string} value - Selected value for radio type
  * @prop {string[]} values - Selected values for checkbox type (property binding only, not an attribute)
  * @attr {string} appearance - Visual style, color included: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type="radio" and a transparent appearance.

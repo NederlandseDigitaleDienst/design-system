@@ -42,6 +42,8 @@
  *         accessible-label="Verwerkingsverantwoordelijke">…</nldd-popover>
  *
  * @element nldd-term
+ * @keywords definition, abbreviation, glossary
+ * @related nldd-tooltip
  * @attr {string} definition - The definition, as plain text. The term shows it in a popover of its own, named after the term. Ignored when `popovertarget` is set.
  * @attr {string} source - Where the definition comes from, such as a glossary or an article of law, as plain text. Shown under the definition in the term's own popover. Ignored when `popovertarget` is set.
  * @attr {string} source-href - Link for `source`. Without `source` it has no effect.

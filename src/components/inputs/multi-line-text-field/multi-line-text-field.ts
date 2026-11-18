@@ -2,6 +2,8 @@
  * Nederlandse Digitale Dienst Multi-line Text Field Component (Lit + TypeScript)
  *
  * @element nldd-multi-line-text-field
+ * @keywords textarea
+ * @related nldd-text-field, nldd-text-editor
  *
  * @attr {string} value - The textarea value
  * @attr {string} placeholder - Placeholder text

@@ -57,8 +57,23 @@ function syncCurrent(onScreen: Element, next: Element): void {
 	}
 }
 
+/** The pages a sidebar lists, leaving out the copies the search puts under its matches. */
 const hrefsOf = (pane: Element | null) =>
-	[...(pane?.querySelectorAll('nldd-list-item[href]') ?? [])].map((item) => item.getAttribute('href')).join(' ');
+	[...(pane?.querySelectorAll('nldd-list-item[href]:not([data-site-filter-related] *)') ?? [])]
+		.map((item) => item.getAttribute('href'))
+		.join(' ');
+
+/**
+ * A search in the second sidebar stays while you move through its results,
+ * until its own button clears it, the page reloads or its section is opened
+ * again from the first sidebar.
+ */
+function clearSearch(view: Element | null): void {
+	const field = view?.querySelector<HTMLElement & { value: string }>(`${PANE('secondary-sidebar')} [data-site-filter]`);
+	if (!field?.value) return;
+	field.value = '';
+	field.dispatchEvent(new CustomEvent('input', { detail: { value: '' }, bubbles: true, composed: true }));
+}
 
 /**
  * Where each sidebar on screen is scrolled to, to put back after the swap: a
@@ -216,6 +231,10 @@ document.addEventListener('click', (event) => {
 	if (!url) return;
 	event.preventDefault();
 	const fromSidebar = markChosen(event);
+	const section = event
+		.composedPath()
+		.some((node) => node instanceof Element && node.matches('nldd-split-view-pane[slot="primary-sidebar"]'));
+	if (section) clearSearch(document.querySelector('nldd-navigation-split-view'));
 	// The page on screen: nothing to load, unless a back button took a pane away.
 	if (url.pathname + url.search === shown) {
 		if (trimmed) void go(url, { push: false, fromSidebar });

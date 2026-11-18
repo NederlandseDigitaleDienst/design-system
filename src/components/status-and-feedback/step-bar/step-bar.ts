@@ -36,6 +36,7 @@
  * ARIA tokens and travel along as visually hidden text instead.
  *
  * @element nldd-step-bar
+ * @related nldd-progress-bar
  *
  * @attr {string} accessible-label - Name of the nav; defaults to the i18n value ("Voortgang")
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch

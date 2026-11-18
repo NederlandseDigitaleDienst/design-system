@@ -56,18 +56,19 @@ const isComponent = (token) => token.type === 'html' && /^\s*<(?:nldd-|!--\s*voo
  * a code block stays in place there, inside the prose, and an example or a
  * component is refused, with the place it was found.
  */
-function markNested(tokens) {
+function markNested(tokens, { literalHtml }) {
+	const component = (token) => !literalHtml && isComponent(token);
 	const children = (token) => [...(token.tokens ?? []), ...(token.items ?? [])];
 	const search = (token) => {
 		for (const child of children(token)) {
 			if (child.type === 'code') child.nested = true;
-			else if (isComponent(child)) {
+			else if (component(child)) {
 				throw new Error(`Een voorbeeld of component staat in een ${token.type}, waar het de tekst in tweeën knipt: ${child.raw.trim().split('\n')[0]}`);
 			}
 			search(child);
 		}
 	};
-	for (const token of tokens) if (token.type !== 'code' && !isComponent(token)) search(token);
+	for (const token of tokens) if (token.type !== 'code' && !component(token)) search(token);
 }
 
 /**
@@ -75,9 +76,10 @@ function markNested(tokens) {
  * @param {object} options
  * @param {(path: string) => string} options.href - turns a site path into a link target
  * @param {(name: string) => string} [options.example] - renders an example marker
+ * @param {boolean} [options.literalHtml] - shows HTML in the text as text, as a JSDoc means it
  * @returns {{ title: string, html: string, blocks: string[], headings: { id: string, text: string }[] }}
  */
-export function renderMarkdown(markdown, { href, example }) {
+export function renderMarkdown(markdown, { href, example, literalHtml = false }) {
 	let title = '';
 	const headings = [];
 	// A heading whose text comes back gets a number, so every id is one of a kind.
@@ -116,6 +118,7 @@ export function renderMarkdown(markdown, { href, example }) {
 				return `<a href="${escapeHtml(to)}"${external ? ' rel="noopener"' : ''}>${inner}</a>`;
 			},
 			html({ text }) {
+				if (literalHtml) return escapeHtml(text);
 				const marker = text.match(/^<!--\s*voorbeeld:\s*(\w+)\s*-->\s*$/);
 				// A component written in the Markdown stands on its own, outside the prose.
 				if (!marker) return /^<nldd-/.test(text) ? `${BREAK}${text}${BREAK}` : text;
@@ -125,7 +128,7 @@ export function renderMarkdown(markdown, { href, example }) {
 		},
 	});
 	const tokens = marked.lexer(markdown);
-	markNested(tokens);
+	markNested(tokens, { literalHtml });
 	const blocks = marked
 		.parser(tokens)
 		.split(BREAK)

@@ -5,6 +5,7 @@
  * and an optional search button.
  *
  * @element nldd-search-field
+ * @related nldd-combo-box, nldd-text-field
  * @attr {string} size - Field size: 'sm' | 'md' (default: 'md')
  * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
  * @attr {string} placeholder - Placeholder text for the input

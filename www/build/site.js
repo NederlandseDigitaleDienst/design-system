@@ -655,11 +655,14 @@ function elementApi(element) {
 	}));
 	const events = (element.events ?? []).map((e) => ({ name: inlineCode(e.name), text: describe(e.description) }));
 	const lists = [apiList('Attributen', attributes), apiList('Slots', slots), apiList('Events', events)].filter(Boolean);
-	if (!lists.length) return '';
-	return `<nldd-rich-text data-site-api>
+	// How the element works comes from the JSDoc of its class, above the tables.
+	const about = element.about ? renderMarkdown(element.about, { href: identity, literalHtml: true }).blocks : [];
+	if (!lists.length && !about.length) return '';
+	const heading = `<nldd-rich-text>
 <h2 id="${element.tagName}"><code>&lt;${element.tagName}&gt;</code></h2>
-${lists.join('\n')}
 </nldd-rich-text>`;
+	const tables = lists.length ? `<nldd-rich-text data-site-api>\n${lists.join('\n')}\n</nldd-rich-text>` : '';
+	return stack([heading, ...about, tables], 16);
 }
 
 /**
@@ -689,7 +692,9 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 							.map(
 								(item) => `<nldd-list-item
 							href="${hrefOf(item)}"${item === current ? '\n\t\t\t\t\t\t\tcurrent' : ''}${
-								search ? `\n\t\t\t\t\t\t\tdata-site-search="${escapeHtml(`${item.name} ${item.slug} ${group}`.toLowerCase())}"` : ''
+								search ? `\n\t\t\t\t\t\t\tdata-site-search="${escapeHtml([item.name, item.slug, group, ...(item.keywords ?? [])].join(' ').toLowerCase())}"` : ''
+							}${search ? `\n\t\t\t\t\t\t\tdata-site-slug="${item.slug}"` : ''}${
+								search && item.related?.length ? `\n\t\t\t\t\t\t\tdata-site-related="${item.related.join(' ')}"` : ''
 							}
 						>
 							<nldd-text-cell text="${escapeHtml(item.name)}"></nldd-text-cell>
@@ -705,8 +710,27 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 					</nldd-list>
 				</nldd-container>`,
 	);
+	// Under the matches, the search lists what they name as their alternatives,
+	// so a search for one overlay also shows the others to weigh it against.
+	const related = search
+		? `<nldd-container
+					data-site-filter-related
+					hidden
+				>
+					<nldd-title size="display-5">
+						<h3>Gerelateerd</h3>
+					</nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-list
+						type="navigation"
+						appearance="simple"
+						dividers="never"
+						accessible-label="Gerelateerd"
+					></nldd-list>
+				</nldd-container>`
+		: '';
 	const groupList = `<nldd-container gap="24">
-				${lists.join('\n\t\t\t\t')}
+				${[...lists, related].filter(Boolean).join('\n\t\t\t\t')}
 			</nldd-container>`;
 	if (!search) return groupList;
 	return `<nldd-search-field
@@ -815,29 +839,60 @@ function patternPages(pattern, lintRules) {
 }
 
 /**
+ * The components to weigh against this one, from `@related` in its JSDoc,
+ * under the example: each with the first sentence of its introduction, so
+ * the difference reads without opening it.
+ */
+function relatedSection(component, byTag) {
+	const tags = [...new Set(component.elements.flatMap((element) => element.related ?? []))];
+	const related = [...new Set(tags.map((tag) => byTag.get(tag)))].filter((other) => other && other !== component);
+	if (!related.length) return '';
+	return `<nldd-container>
+					<nldd-title size="display-4">
+						<h2>Gerelateerd</h2>
+					</nldd-title>
+					<nldd-spacer size="12"></nldd-spacer>
+					<nldd-list
+						type="navigation"
+						accessible-label="Gerelateerd"
+					>
+						${related
+							.map(
+								(other) => `<nldd-list-item href="/componenten/${other.slug}/">
+							<nldd-text-cell
+								text="${escapeHtml(other.name)}"
+								supporting-text="${escapeHtml(firstSentence(other.description || other.name))}"
+							></nldd-text-cell>
+							<nldd-spacer-cell size="12"></nldd-spacer-cell>
+							<nldd-icon-cell
+								size="20"
+								color="secondary"
+								icon="chevron-right"
+							></nldd-icon-cell>
+						</nldd-list-item>`,
+							)
+							.join('\n\t\t\t\t\t\t')}
+					</nldd-list>
+				</nldd-container>`;
+}
+
+/**
  * The pages of a component: one per tab, each with a URL of its own, so a link
  * can point at the examples, the API or the rules and the browser steps back
  * per tab. Above the tabs every page has the same header: the title, the
  * introduction, which starts with the tag, and a link to the source. A tab
  * with nothing on it is left out.
  */
-function componentPages(component, lintRules) {
+function componentPages(component, lintRules, byTag) {
 	const base = `/componenten/${component.slug}/`;
 	const visible = component.stories.filter((s) => !s.hidden);
 	const controls = controlsOf(component);
-	// What the description says before its first heading is about the component
-	// and stands above the tabs; what follows (Gebruik) belongs to the examples.
+	// The introduction stands above the tabs. What follows its first heading is
+	// the code under Gebruik, which the stage with the controls already shows.
 	const markdown = component.description ?? '';
 	const split = markdown.search(/^#{1,6} /m);
 	const intro = split === -1 ? markdown : markdown.slice(0, split);
-	const usage = split === -1 ? '' : markdown.slice(split);
 	const description = intro.trim() ? renderMarkdown(intro, { href: identity }).html : '';
-	// The example with the controls shows the code, so the code under Gebruik
-	// would say the same twice; its prose and the sections after it stay.
-	const usageText = usage.replace(/^#{1,6} Gebruik\s*\n([^]*?)(?=^#{1,6} |$(?![^]))/m, (_, section) =>
-		section.replace(/^```[^]*?^```\s*$/gm, ''),
-	);
-	const usageBlocks = usageText.trim() ? renderMarkdown(usageText, { href: identity }).blocks : [];
 	const api = component.elements.map(elementApi).filter(Boolean);
 	const rules = [...new Set(component.elements.flatMap((element) => rulesAboutTag(lintRules, element.tagName)))];
 	const source = component.sourceFile
@@ -866,7 +921,7 @@ function componentPages(component, lintRules) {
 			path: base,
 			text: 'Gebruik',
 			title: component.name,
-			body: [...usageBlocks, first ? example(first, { primary: true, controls }) : ''],
+			body: [first ? example(first, { primary: true, controls }) : '', relatedSection(component, byTag)],
 			shown: true,
 		},
 		{
@@ -1147,6 +1202,12 @@ export function buildPages({ base = '/' } = {}) {
 		);
 	}
 
+	const byTag = new Map(components.flatMap((c) => c.elements.map((element) => [element.tagName, c])));
+	// What the search shows under its matches: the pages they name in @related.
+	for (const component of components) {
+		const tags = component.elements.flatMap((element) => element.related ?? []);
+		component.related = [...new Set(tags.map((tag) => byTag.get(tag)?.slug))].filter((slug) => slug && slug !== component.slug);
+	}
 	const componentGroups = groupBy(components, 'category').sort(([a], [b]) => a.localeCompare(b));
 	const componentList = (current) => ({
 		title: 'Componenten',
@@ -1159,7 +1220,7 @@ export function buildPages({ base = '/' } = {}) {
 	page('/componenten/', 'Componenten', `${components.length} web components voor de Rijksoverheid.`, undefined, componentList());
 	for (const component of components) {
 		const description = firstSentence(component.description || component.elements[0]?.description || component.name);
-		for (const tab of componentPages(component, lintRules)) {
+		for (const tab of componentPages(component, lintRules, byTag)) {
 			page(tab.path, tab.title, description, tab.main, componentList(component));
 		}
 	}

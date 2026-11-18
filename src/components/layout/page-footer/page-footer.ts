@@ -18,6 +18,7 @@
  * `nldd-page-footer-legal-bar-item` for the bottom row.
  *
  * @element nldd-page-footer
+ * @keywords footer
  *
  * @attr {boolean} no-ribbon - Leaves out the ribbon under the footer, and the room it takes, as `no-logo` does on nldd-top-navigation-bar. The ribbon belongs to the house style of the Rijksoverheid, so a site outside it, or one anyone may run, turns it off. An empty footer then takes no height at all.
  * @attr {string} [width] - Body max-width, mirroring a page section: 'full' removes the constraint so the content spans the full width; any CSS length (e.g. '480px') overrides the default max-width.

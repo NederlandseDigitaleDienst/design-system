@@ -5,6 +5,8 @@
  * uses `display: contents`, so it does not affect the child's layout.
  *
  * @element nldd-tooltip
+ * @keywords hint
+ * @related nldd-popover, nldd-just-in-time-education, nldd-term
  * @attr {string} text - Tooltip text
  * @attr {string} shortcut - Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).

@@ -27,6 +27,7 @@
  * the field yet.
  *
  * @element nldd-time-field
+ * @related nldd-time-picker
  *
  * @attr {string} value - The time as `HH:mm` (24-hour). Empty when there is no valid time.
  * @attr {string} min - Earliest allowed time as `HH:mm`. Also the base that `step` counts from.

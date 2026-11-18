@@ -17,6 +17,7 @@
  *   the bar's Knight Rider scanner.
  *
  * @element nldd-progress-circle
+ * @related nldd-progress-bar, nldd-activity-indicator
  *
  * @attr {'progress'|'distribution'} variant - Semantics for ARIA and gap behavior (default: 'progress')
  * @attr {number} max - Total value (default: 100)

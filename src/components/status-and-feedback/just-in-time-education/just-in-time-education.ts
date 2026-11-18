@@ -18,6 +18,8 @@
  * example only once a real search has been submitted.
  *
  * @element nldd-just-in-time-education
+ * @keywords coach mark, onboarding, tour
+ * @related nldd-tooltip, nldd-popover, nldd-inline-dialog
  * @attr {boolean} active - Show the coach mark. Driven by the app; false by default.
  * @attr {string} text - Title of the callout.
  * @attr {string} supporting-text - Supporting text under the title.

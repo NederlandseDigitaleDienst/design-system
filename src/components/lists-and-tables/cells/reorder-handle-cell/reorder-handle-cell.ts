@@ -20,6 +20,7 @@
  * with a control of your own.
  *
  * @element nldd-reorder-handle-cell
+ * @keywords drag handle
  * @attr {string} size - Handle size: 'sm' | 'md' (default: 'md')
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch. Sets the handle's accessible label.
  */

@@ -28,6 +28,8 @@
  * messages in a different surface.
  *
  * @element nldd-banner
+ * @keywords alert, message bar
+ * @related nldd-notification, nldd-status-bar, nldd-inline-dialog, nldd-admonition
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - Color and default icon (default: 'neutral')
  * @attr {'sm'|'md'} size - Banner size (default: 'md'). 'sm' tightens the padding to 8px, drops the icon to 24px and uses a smaller dismiss button — for a bar that sits between chrome and content rather than a standalone page-level notice. The typography is unchanged.

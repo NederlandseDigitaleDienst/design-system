@@ -3,13 +3,13 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * Nederlandse Digitale Dienst Form Component
  *
  * Plain custom element (extends HTMLElement, no Lit), required for light-DOM
- * autofill. Renders a real <form> element in the LIGHT DOM around its
- * children. Chrome's autofill engine looks for native <input> elements that
- * have a <form> ancestor in the light DOM; with shadow-DOM inputs it can't
+ * autofill. Renders a real `<form>` element in the LIGHT DOM around its
+ * children. Chrome's autofill engine looks for native `<input>` elements that
+ * have a `<form>` ancestor in the light DOM; with shadow-DOM inputs it can't
  * find them, so we keep this component shadow-less.
  *
- * **Differs from other nldd-* components:**
- * - No shadowRoot: all children live in the light DOM (inside the inner <form>)
+ * **Differs from other `nldd-*` components:**
+ * - No shadowRoot: all children live in the light DOM (inside the inner `<form>`)
  * - No Lit: a plain HTMLElement with manual attribute mirroring
  * - **Requires a global stylesheet import**: the vertical rhythm rules live in
  *   `dist/css/form.css` (or `global.css`), not in a component-specific shadow
@@ -42,11 +42,7 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * **user-provided form** mode instead.
  *
  * For programmatic manipulation, use the `form` getter so you work with the
- * inner `<form>` element directly:
- *
- *     const inner = document.querySelector('nldd-form').form;
- *     inner.checkValidity();
- *     inner.appendChild(myInput);  // skips the migration overhead
+ * inner `<form>` element directly (see the last example).
  *
  * @element nldd-form
  *
@@ -60,7 +56,7 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * @attr {boolean} novalidate - Skip native browser validation
  * @accepts form
  *
- * @prop {HTMLFormElement | null} form - The inner <form> element (read-only). Use it for `form.checkValidity()`, direct DOM manipulation, or as the target for framework-managed children.
+ * @prop {HTMLFormElement | null} form - The inner `<form>` element (read-only). Use it for `form.checkValidity()`, direct DOM manipulation, or as the target for framework-managed children.
  *
  * Events bubble naturally from the inner <form>:
  * @fires submit
@@ -94,6 +90,13 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  *     <nldd-button type="submit" text="Verstuur"></nldd-button>
  *   </form>
  * </nldd-form>
+ * ```
+ *
+ * Working with the inner form directly:
+ * ```js
+ * const inner = document.querySelector('nldd-form').form;
+ * inner.checkValidity();
+ * inner.appendChild(myInput); // skips the migration overhead
  * ```
  */
 

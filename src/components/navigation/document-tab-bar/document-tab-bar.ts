@@ -6,6 +6,7 @@
  * Exports both NLDDDocumentTabBar and NLDDDocumentTabBarItem.
  *
  * @element nldd-document-tab-bar
+ * @related nldd-tab-bar
  * @attr {string} accessible-label - Accessible name for the navigation landmark
  * @attr {object} translations - Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.show-more-tabs-action' (default: 'Toon meer tabbladen')
  *

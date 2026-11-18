@@ -7,6 +7,8 @@
  * Panes that do not fit the available height are automatically hidden.
  *
  * @element nldd-stacked-split-view
+ * @keywords master-detail
+ * @related nldd-navigation-split-view, nldd-side-by-side-split-view, nldd-bar-split-view
  *
  * @attr {'inherit'|'base'|'tinted'} background - Use a tinted background color (cascades to descendants)
  * @attr {number} panes - Number of panes (default: 2)

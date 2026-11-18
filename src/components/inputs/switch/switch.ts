@@ -6,6 +6,8 @@
  * Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
  *
  * @element nldd-switch
+ * @keywords toggle
+ * @related nldd-checkbox, nldd-toggle-button
  * @attr {boolean} checked - Whether the switch is on/off
  * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.

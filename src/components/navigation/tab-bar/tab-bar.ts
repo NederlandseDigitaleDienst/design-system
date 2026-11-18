@@ -18,6 +18,8 @@
  * them where it put them. Only a tab that does not fit on its own is cut off.
  *
  * @element nldd-tab-bar
+ * @keywords tabs
+ * @related nldd-document-tab-bar, nldd-segmented-control, nldd-menu-bar
  * @attr {string} variant - Visual mode: 'icon-and-text' | 'text' | 'icon'. When unset, the variant is inferred from each item's content. Drives the layout at every size.
  * @attr {string} size - Size: 'md' | 'lg' (default: 'md'). 'lg' enlarges the touch target; the per-variant layout is preserved (icon-and-text stacks the icon over the text, text renders large text, icon renders a larger icon-only control).
  * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use for href-based items that navigate between routes

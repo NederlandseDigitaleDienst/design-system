@@ -7,12 +7,15 @@
  * or `id` yourself. The input is the first one it finds, leaving out what sits
  * in an nldd-toolbar inside the field: a toolbar works on the field, such as
  * the formatting bar above an nldd-text-editor, and is never the field itself.
+ * A native `for` cannot cross a shadow boundary, so a click on the label
+ * focuses the input from script.
  *
  * Mark the optional fields with `optional`, not the required ones; the design
  * guidelines say why. Put the requirements on a value in an
  * nldd-validation-list inside the same field. What only your server knows,
  * such as a password found in a breach, the app names in `unmet` on the input
- * itself: see nldd-validation-list.
+ * itself: see nldd-validation-list. The field hands the list its input and puts
+ * the list in the input's accessible description, before the help text.
  *
  * @element nldd-form-field
  *

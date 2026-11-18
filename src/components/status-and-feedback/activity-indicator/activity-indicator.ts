@@ -54,6 +54,8 @@
  * state when the indicator appears. Set `complete` (or unmount) to clear it.
  *
  * @element nldd-activity-indicator
+ * @keywords spinner, loader, loading
+ * @related nldd-progress-bar, nldd-progress-circle
  *
  * @attr {string} size - Circle diameter on the icon scale: 16,20,24,28,32,40,44,48,56,64,80,96 (default '32')
  * @attr {boolean} show-text - Show the label under the indicator (default false; the label still feeds the accessible name)

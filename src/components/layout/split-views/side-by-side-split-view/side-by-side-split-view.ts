@@ -9,6 +9,8 @@
  * and an inspector or detail in the last pane.
  *
  * @element nldd-side-by-side-split-view
+ * @keywords master-detail
+ * @related nldd-navigation-split-view, nldd-stacked-split-view, nldd-bar-split-view
  *
  * @attr {'inherit'|'base'|'tinted'} background - Use a tinted background color (cascades to descendants)
  * @attr {number} panes - Number of panes (default: 2)

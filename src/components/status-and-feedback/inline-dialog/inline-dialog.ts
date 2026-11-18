@@ -5,6 +5,8 @@
  * Fills the container and has no minimum width.
  *
  * @element nldd-inline-dialog
+ * @keywords callout, alert, message
+ * @related nldd-banner, nldd-admonition, nldd-modal-dialog
  *
  * @attr {'alert'|'success'|'loading'} variant - Semantic variant. 'alert' / 'success' force a matching icon and color; 'loading' shows an nldd-activity-indicator (a role="status" spinner announcing "Laden") in place of the icon — for an empty state that is still loading.
  * @attr {'md'|'lg'} size - Typography size: 'md' (default) keeps body-md text + body-sm supporting; 'lg' bumps both up a step.

@@ -18,6 +18,7 @@
  * later. Only the number it lands on: it waits until the options settle.
  *
  * @element nldd-token-field
+ * @related nldd-combo-box, nldd-checkbox-group
  * @attr {string} values - Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas.
  * @attr {string} placeholder - Placeholder shown in the input
  * @attr {string} type - Input type forwarded to the inner input (e.g. 'email')

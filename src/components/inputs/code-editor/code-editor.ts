@@ -18,6 +18,7 @@
  * gutter (click a number to move the caret to that line).
  *
  * @element nldd-code-editor
+ * @related nldd-code-viewer, nldd-text-editor
  *
  * @attr {string} value - Editor content
  * @attr {string} placeholder - Placeholder text shown while empty

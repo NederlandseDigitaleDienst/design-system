@@ -67,6 +67,8 @@
  * removed row leaves its notification on screen.
  *
  * @element nldd-notification
+ * @keywords toast, snackbar
+ * @related nldd-banner, nldd-status-bar, nldd-inline-dialog
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - What kind of message this is; sets the icon color and the ARIA role (default: 'neutral')
  * @attr {string} icon - Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled

@@ -43,6 +43,7 @@
  * Inherits block `padding` and `height` from PageSectionMixin.
  *
  * @element nldd-sidebar-section
+ * @related nldd-simple-section
  * @descendantattr {'collapsed'|'expanded'} sidebar-section-only - Set on anything inside the section, at any depth: shows that element only while the sidebar is a sheet (`collapsed`), such as the button that opens it, or only while it is a box beside the main (`expanded`), such as a heading the sheet's title bar repeats. Put it on an nldd-spacer next to such an element too, so the space goes with it.
  *
  * @attr {string} [width] - Body max-width: 'full' removes the constraint; any CSS length overrides the default.

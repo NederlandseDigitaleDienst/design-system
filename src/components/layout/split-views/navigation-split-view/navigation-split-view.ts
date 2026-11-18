@@ -12,6 +12,8 @@
  * primary sidebar.
  *
  * @element nldd-navigation-split-view
+ * @keywords master-detail
+ * @related nldd-side-by-side-split-view, nldd-stacked-split-view, nldd-bar-split-view
  *
  * Use <code>nldd-split-view-pane</code> as direct children for automatic
  * back button handling.

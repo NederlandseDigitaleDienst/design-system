@@ -59,6 +59,8 @@
  * load-more adds to it.
  *
  * @element nldd-container
+ * @keywords stack, flex, padding
+ * @related nldd-box, nldd-spacer
  *
  * @childattr {number} order - Position of this child in the container
  * @childattr {number} sm-order - Position of this child at sm

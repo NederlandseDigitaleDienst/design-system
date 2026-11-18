@@ -177,6 +177,8 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * should manage focus themselves after their render commits.
  *
  * @element nldd-list
+ * @keywords disclosure, tree
+ * @related nldd-table, nldd-collection
  *
  * @attr {'simple'|'box-tinted'|'box-base'} appearance - Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)
  * @attr {'list'|'navigation'|'listbox'|'tree'|'form'|'radiogroup'} type - A11y role and behavior (default 'list'). See the docblock above.

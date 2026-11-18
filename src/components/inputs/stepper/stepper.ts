@@ -4,6 +4,7 @@
  * A numeric control with increment and decrement buttons.
  *
  * @element nldd-stepper
+ * @related nldd-number-field
  * @attr {number} value - Current value
  * @attr {number} min - Minimum value (default: 0)
  * @attr {number} max - Maximum value (default: Infinity)

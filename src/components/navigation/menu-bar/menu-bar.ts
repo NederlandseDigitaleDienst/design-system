@@ -6,6 +6,7 @@
  * popover menu.
  *
  * @element nldd-menu-bar
+ * @related nldd-tab-bar, nldd-top-navigation-bar
  * @attr {string} overflow-text - Text for the overflow button (default through i18n)
  * @attr {string} accessible-label - aria-label for the nav landmark
  * @attr {boolean} compact - Propagates the compact attribute to slotted items (activates content priority)

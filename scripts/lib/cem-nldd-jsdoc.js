@@ -90,6 +90,11 @@ export function nlddFileLevelJsdoc() {
 					// HTML the component styles from HTML an app styles itself.
 					if (doc.accepts.length > 0) element.accepts = doc.accepts;
 
+					// Not part of the schema either: the website searches the keywords
+					// and links the related components under the example.
+					if (doc.keywords.length > 0) element.keywords = doc.keywords;
+					if (doc.related.length > 0) element.related = doc.related;
+
 					if (doc.slots.length > 0) {
 						element.slots = doc.slots.map((s) => ({ name: s.name, description: s.description }));
 					}

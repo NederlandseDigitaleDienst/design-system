@@ -17,6 +17,8 @@
  * rather than mounting it when it opens, or the animations are skipped.
  *
  * @element nldd-modal-dialog
+ * @keywords dialog, alert dialog, confirm, overlay
+ * @related nldd-sheet, nldd-window, nldd-popover, nldd-inline-dialog
  *
  * @attr {'alert'} variant - Forwarded to nldd-inline-dialog; 'alert' forces icon and color
  * @attr {'left'|'center'} horizontal-alignment - Forwarded to nldd-inline-dialog. Unset derives it there: slotted content aligns left, a bare message stays centered.

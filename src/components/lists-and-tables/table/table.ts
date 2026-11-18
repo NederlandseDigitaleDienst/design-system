@@ -11,7 +11,8 @@
  * CSS grid track list), like an HTML `<colgroup>`.
  * Rows are `<nldd-table-row>` elements whose children are the existing
  * `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all
- * rows snap to the same columns.
+ * rows snap to the same columns. A generic `nldd-cell` gets `width="full"`, so
+ * it fills its column, unless it sets a length of its own.
  *
  * Header: put one `<nldd-table-row slot="header">` in the `header` slot. Its
  * cells become column headers (role="columnheader").
@@ -39,6 +40,7 @@
  * external control (e.g. a dropdown).
  *
  * @element nldd-table
+ * @related nldd-list
  *
  * @attr {'base'|'tinted'} background - Surface fill of the box (default 'base')
  * @attr {string} columns - CSS grid track list defining the columns once, e.g. "minmax(200px,1fr) 120px 80px"

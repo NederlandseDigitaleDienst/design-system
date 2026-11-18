@@ -92,6 +92,11 @@
           },
           "tagName": "nldd-button-bar",
           "customElement": true,
+          "related": [
+            "nldd-button-group",
+            "nldd-toolbar",
+            "nldd-toggle-button-group"
+          ],
           "slots": [
             {
               "name": "",
@@ -211,6 +216,10 @@
           },
           "tagName": "nldd-button-group",
           "customElement": true,
+          "related": [
+            "nldd-button-bar",
+            "nldd-toolbar"
+          ],
           "slots": [
             {
               "name": "",
@@ -1040,6 +1049,12 @@
               "description": "When button is clicked (not fired when disabled)"
             }
           ],
+          "related": [
+            "nldd-icon-button",
+            "nldd-link",
+            "nldd-split-button",
+            "nldd-toggle-button"
+          ],
           "slots": [
             {
               "name": "text",
@@ -1819,6 +1834,9 @@
               "name": "click",
               "description": "When button is clicked (not fired when disabled)"
             }
+          ],
+          "related": [
+            "nldd-button"
           ],
           "slots": [
             {
@@ -3514,7 +3532,16 @@
             "package": "lit"
           },
           "tagName": "nldd-menu",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "context menu",
+            "dropdown menu"
+          ],
+          "related": [
+            "nldd-popover",
+            "nldd-split-button",
+            "nldd-dropdown"
+          ]
         }
       ],
       "exports": [
@@ -3939,6 +3966,13 @@
           },
           "tagName": "nldd-split-button",
           "customElement": true,
+          "keywords": [
+            "dropdown button"
+          ],
+          "related": [
+            "nldd-button",
+            "nldd-menu"
+          ],
           "slots": [
             {
               "name": "popup",
@@ -4736,6 +4770,10 @@
           },
           "tagName": "nldd-toolbar",
           "customElement": true,
+          "related": [
+            "nldd-button-bar",
+            "nldd-button-group"
+          ],
           "slots": [
             {
               "name": "start",
@@ -4925,6 +4963,12 @@
           },
           "tagName": "nldd-accordion",
           "customElement": true,
+          "keywords": [
+            "disclosure"
+          ],
+          "related": [
+            "nldd-list"
+          ],
           "slots": [
             {
               "name": "",
@@ -5096,6 +5140,15 @@
               "description": "When the user opens or closes a collapsible admonition; read `collapsed` for the new state. Setting `collapsed` does not fire it."
             }
           ],
+          "keywords": [
+            "callout",
+            "note"
+          ],
+          "related": [
+            "nldd-banner",
+            "nldd-inline-dialog",
+            "nldd-blockquote"
+          ],
           "slots": [
             {
               "name": "",
@@ -5228,6 +5281,10 @@
           },
           "tagName": "nldd-avatar-group",
           "customElement": true,
+          "related": [
+            "nldd-avatar",
+            "nldd-identity"
+          ],
           "slots": [
             {
               "name": "",
@@ -5663,7 +5720,15 @@
             "package": "lit"
           },
           "tagName": "nldd-avatar",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "profile picture"
+          ],
+          "related": [
+            "nldd-identity",
+            "nldd-avatar-group",
+            "nldd-image"
+          ]
         }
       ],
       "exports": [
@@ -5802,6 +5867,10 @@
           "customElement": true,
           "accepts": [
             "p"
+          ],
+          "related": [
+            "nldd-admonition",
+            "nldd-rich-text"
           ],
           "slots": [
             {
@@ -6164,6 +6233,13 @@
           },
           "tagName": "nldd-code-viewer",
           "customElement": true,
+          "keywords": [
+            "code block",
+            "syntax highlighting"
+          ],
+          "related": [
+            "nldd-code-editor"
+          ],
           "slots": [
             {
               "name": "",
@@ -6361,7 +6437,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "An editorial line that shows authors or editors: optional avatar or avatars, a name line and supporting text (a role or a date, for instance). Every part is optional. The name line and the supporting text come in as an attribute, which the component draws as a `<p>`, or as a `<p>` of your own in the slot. Use the slot for richer content and put it in that `<p>`: a `<time datetime=\"…\">` for a machine-readable date, or a link to the author's profile. Slotted content replaces the matching attribute. Each of the two chooses for itself, so a `<p>` with a link in `text` can go with plain `supporting-text`. The element in a slot takes the text style of the identity: a font, margin or other style the page sets on it does not apply. One avatar you slot as it is, and identity gives it its size. For more than one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the surface color. Identity does not build that group itself, because the avatars are the consumer's light DOM and a group can only style what arrives as its own child. Set the avatars to decorative (or an `img` to `alt=\"\"`) when the names already stand in the text. On narrow widths (an sm container, 640px and under) with more than one avatar the row of avatars moves above the names, so the text keeps the full width. With one avatar the identity stays on a single line. For a single avatar you can also hand over `avatar-src` (with an optional `avatar-srcset`) as an attribute instead of slotting; its size is fixed at 40px. Slotted avatars take precedence over `avatar-src`.",
+          "description": "An editorial line that shows authors or editors: optional avatar or avatars, a name line and supporting text (a role or a date, for instance). Every part is optional. The name line and the supporting text come in as an attribute, which the component draws as a `<p>`, or as a `<p>` of your own in the slot. Use the slot for richer content and put it in that `<p>`: a `<time datetime=\"…\">` for a machine-readable date, or a link to the author's profile. Slotted content replaces the matching attribute. Each of the two chooses for itself, so a `<p>` with a link in `text` can go with plain `supporting-text`. The element in a slot takes the text style of the identity: a font, margin or other style the page sets on it does not apply. One avatar you slot as it is, and identity gives it its size. For more than one, slot an `nldd-avatar-group`: that overlaps them and draws the ring in the surface color. Identity does not build that group itself, because the avatars are the consumer's light DOM and a group can only style what arrives as its own child. On a colored surface, pass that color on through `--context-background-color` so the ring follows it. Set the avatars to decorative (or an `img` to `alt=\"\"`) when the names already stand in the text. On narrow widths (an sm container, 640px and under) with more than one avatar the row of avatars moves above the names, so the text keeps the full width. With one avatar the identity stays on a single line. For a single avatar you can also hand over `avatar-src` (with an optional `avatar-srcset`) as an attribute instead of slotting; its size is fixed at 40px. Slotted avatars take precedence over `avatar-src`.",
           "name": "NLDDIdentity",
           "members": [
             {
@@ -6468,6 +6544,13 @@
           "accepts": [
             "img",
             "p"
+          ],
+          "keywords": [
+            "avatar"
+          ],
+          "related": [
+            "nldd-avatar",
+            "nldd-avatar-group"
           ],
           "slots": [
             {
@@ -6878,6 +6961,9 @@
             "source",
             "svg"
           ],
+          "related": [
+            "nldd-avatar"
+          ],
           "slots": [
             {
               "name": "",
@@ -7209,6 +7295,10 @@
           },
           "tagName": "nldd-keyboard-shortcut",
           "customElement": true,
+          "keywords": [
+            "kbd",
+            "hotkey"
+          ],
           "slots": [
             {
               "name": "",
@@ -7390,6 +7480,15 @@
             "summary",
             "video",
             "iframe"
+          ],
+          "keywords": [
+            "prose",
+            "markdown",
+            "typography"
+          ],
+          "related": [
+            "nldd-text",
+            "nldd-title"
           ]
         }
       ],
@@ -7551,6 +7650,15 @@
           },
           "tagName": "nldd-tag",
           "customElement": true,
+          "keywords": [
+            "chip",
+            "pill",
+            "label"
+          ],
+          "related": [
+            "nldd-badge",
+            "nldd-token"
+          ],
           "slots": [
             {
               "name": "",
@@ -7713,6 +7821,14 @@
           },
           "tagName": "nldd-term",
           "customElement": true,
+          "keywords": [
+            "definition",
+            "abbreviation",
+            "glossary"
+          ],
+          "related": [
+            "nldd-tooltip"
+          ],
           "slots": [
             {
               "name": "",
@@ -7956,6 +8072,10 @@
             "mark",
             "q"
           ],
+          "related": [
+            "nldd-title",
+            "nldd-rich-text"
+          ],
           "slots": [
             {
               "name": "",
@@ -8173,6 +8293,13 @@
             "code",
             "mark",
             "q"
+          ],
+          "keywords": [
+            "heading"
+          ],
+          "related": [
+            "nldd-text",
+            "nldd-rich-text"
           ],
           "slots": [
             {
@@ -8409,6 +8536,15 @@
           },
           "tagName": "nldd-token",
           "customElement": true,
+          "keywords": [
+            "chip",
+            "pill",
+            "label"
+          ],
+          "related": [
+            "nldd-badge",
+            "nldd-tag"
+          ],
           "slots": [
             {
               "name": "",
@@ -8623,6 +8759,14 @@
               "description": "When a user presses Escape while `open=true`. Does not bubble, so a banner or notification around the tooltip does not take it for its own. The consumer owns the open lifecycle from there (we cannot clear `open` on our own), so this event is the consumer's chance to set `open` back to `false`. WCAG 1.4.13: a persistent hover or focus overlay has to be dismissible without moving focus."
             }
           ],
+          "keywords": [
+            "hint"
+          ],
+          "related": [
+            "nldd-popover",
+            "nldd-just-in-time-education",
+            "nldd-term"
+          ],
           "slots": [
             {
               "name": "",
@@ -8665,6 +8809,10 @@
           },
           "tagName": "nldd-visually-hidden",
           "customElement": true,
+          "keywords": [
+            "sr-only",
+            "screen reader only"
+          ],
           "slots": [
             {
               "name": "",
@@ -8698,7 +8846,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment=\"right\"` or `\"left\"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `<nldd-form>`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant. <nldd-form label-alignment=\"right\"> <nldd-form-field>...</nldd-form-field> <nldd-form-actions> <nldd-button-group> <nldd-button appearance=\"primary\" type=\"submit\" text=\"Bewaar\"></nldd-button> </nldd-button-group> </nldd-form-actions> </nldd-form>",
+          "description": "A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment=\"right\"` or `\"left\"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `nldd-form`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant.",
           "name": "NLDDFormActions",
           "members": [
             {
@@ -8773,7 +8921,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list.",
+          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text.",
           "name": "NLDDFormField",
           "members": [
             {
@@ -8967,7 +9115,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Nederlandse Digitale Dienst Form Section Component Plain custom element (extends HTMLElement, no Lit). The light-DOM render works around an NVDA + Firefox a11y bug where a shadow-DOM <fieldset> + <legend> is not reliably announced as the group label for slotted controls. A native fieldset/legend in the light DOM works correctly across all AT/browser combinations. **Differs from shadow components:** - No shadowRoot: all children live in the light DOM (inside the rendered <fieldset>). - No Lit: a plain HTMLElement with manual DOM mutation. - **Requires a global stylesheet import**: `dist/css/form-section.css` (or `global.css`). Form-section has no shadow stylesheet. Renders to: <nldd-form-section> <fieldset class=\"form-section\"> <legend class=\"form-section__header\"> <span class=\"form-section__title\">Title</span> <span class=\"form-section__supporting-text\">Supporting text</span> </legend> <div class=\"form-section__main\"> [user's children] </div> </fieldset> </nldd-form-section> **Accessibility note**: the title renders as a `<legend>`. Semantically that is a **group label**, not a heading. Screen readers announce it when the user enters the fieldset, but users jumping through headings with the H key skip it. Visually it looks like a heading, so use this component for *form grouping*, not as page structure. For real page headings, use a separate heading element above the form. **Supporting-text length**: the supporting text sits as a `<span>` inside the `<legend>` so a screen reader reads it along as the group label. Side effect: on every field entry within the section, the whole legend (title + supporting text) is spoken again. Keep `supporting-text` short (roughly 80 characters or less) and use it to introduce the group (\"Vul je adresgegevens in\"), not for detailed instructions. For a longer explanation on one specific field, use `nldd-form-field-help-text` on that field. <nldd-form> <nldd-form-section text=\"Persoonsgegevens\" supporting-text=\"Vul je gegevens in.\"> <nldd-form-field label=\"Voornaam\">...</nldd-form-field> <nldd-form-field label=\"Achternaam\">...</nldd-form-field> </nldd-form-section> <nldd-form-section text=\"Adres\"> <nldd-form-field label=\"Straat\">...</nldd-form-field> </nldd-form-section> <nldd-form-actions>...</nldd-form-actions> </nldd-form>",
+          "description": "Nederlandse Digitale Dienst Form Section Component Plain custom element (extends HTMLElement, no Lit). The light-DOM render works around an NVDA + Firefox a11y bug where a shadow-DOM `<fieldset>` + `<legend>` is not reliably announced as the group label for slotted controls. A native fieldset/legend in the light DOM works correctly across all AT/browser combinations. **Differs from shadow components:** - No shadowRoot: all children live in the light DOM (inside the rendered `<fieldset>`). - No Lit: a plain HTMLElement with manual DOM mutation. - **Requires a global stylesheet import**: `dist/css/form-section.css` (or `global.css`). Form-section has no shadow stylesheet. **Accessibility note**: the title renders as a `<legend>`. Semantically that is a **group label**, not a heading. Screen readers announce it when the user enters the fieldset, but users jumping through headings with the H key skip it. Visually it looks like a heading, so use this component for *form grouping*, not as page structure. For real page headings, use a separate heading element above the form. **Supporting-text length**: the supporting text sits as a `<span>` inside the `<legend>` so a screen reader reads it along as the group label. Side effect: on every field entry within the section, the whole legend (title + supporting text) is spoken again. Keep `supporting-text` short (roughly 80 characters or less) and use it to introduce the group (\"Vul je adresgegevens in\"), not for detailed instructions. For a longer explanation on one specific field, use `nldd-form-field-help-text` on that field.",
           "name": "NLDDFormSection",
           "members": [
             {
@@ -9028,7 +9176,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLElement, no Lit), required for light-DOM autofill. Renders a real <form> element in the LIGHT DOM around its children. Chrome's autofill engine looks for native <input> elements that have a <form> ancestor in the light DOM; with shadow-DOM inputs it can't find them, so we keep this component shadow-less. **Differs from other nldd-* components:** - No shadowRoot: all children live in the light DOM (inside the inner <form>) - No Lit: a plain HTMLElement with manual attribute mirroring - **Requires a global stylesheet import**: the vertical rhythm rules live in `dist/css/form.css` (or `global.css`), not in a component-specific shadow stylesheet. Import it as part of your app's global CSS bundle. **When a field turns red:** on submit the form marks every control the browser rejects with `invalid`, and clears it again once the value passes. Setting `invalid` yourself is fine, but do it on submit, not while someone is still typing, or a field turns red over a value that is not finished yet. **Two usage modes:** 1. **Auto-wrap** (default): write children directly. Component creates a `<form>` element and migrates children into it via MutationObserver. Simplest API. 2. **User-provided form** (framework-friendly): write your own `<form>` as direct child. Component detects it, takes over attribute mirroring, and skips the migration. Children stay where your framework puts them, so there is no DOM shuffling to conflict with React/Vue/Angular reconciliation. **Framework interop:** In auto-wrap mode every direct child is moved into the inner form through a MutationObserver. That works fine for most React/Vue use cases, because frameworks only mutate the DOM when their virtual DOM changes. For edge cases (animation libraries that track DOM position, SSR hydration mismatches, frameworks that actively check sibling positions) use **user-provided form** mode instead. For programmatic manipulation, use the `form` getter so you work with the inner `<form>` element directly: const inner = document.querySelector('nldd-form').form; inner.checkValidity(); inner.appendChild(myInput); // skips the migration overhead",
+          "description": "Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLElement, no Lit), required for light-DOM autofill. Renders a real `<form>` element in the LIGHT DOM around its children. Chrome's autofill engine looks for native `<input>` elements that have a `<form>` ancestor in the light DOM; with shadow-DOM inputs it can't find them, so we keep this component shadow-less. **Differs from other `nldd-*` components:** - No shadowRoot: all children live in the light DOM (inside the inner `<form>`) - No Lit: a plain HTMLElement with manual attribute mirroring - **Requires a global stylesheet import**: the vertical rhythm rules live in `dist/css/form.css` (or `global.css`), not in a component-specific shadow stylesheet. Import it as part of your app's global CSS bundle. **When a field turns red:** on submit the form marks every control the browser rejects with `invalid`, and clears it again once the value passes. Setting `invalid` yourself is fine, but do it on submit, not while someone is still typing, or a field turns red over a value that is not finished yet. **Two usage modes:** 1. **Auto-wrap** (default): write children directly. Component creates a `<form>` element and migrates children into it via MutationObserver. Simplest API. 2. **User-provided form** (framework-friendly): write your own `<form>` as direct child. Component detects it, takes over attribute mirroring, and skips the migration. Children stay where your framework puts them, so there is no DOM shuffling to conflict with React/Vue/Angular reconciliation. **Framework interop:** In auto-wrap mode every direct child is moved into the inner form through a MutationObserver. That works fine for most React/Vue use cases, because frameworks only mutate the DOM when their virtual DOM changes. For edge cases (animation libraries that track DOM position, SSR hydration mismatches, frameworks that actively check sibling positions) use **user-provided form** mode instead. For programmatic manipulation, use the `form` getter so you work with the inner `<form>` element directly (see the last example).",
           "name": "NLDDForm",
           "members": [
             {
@@ -9423,6 +9571,10 @@
           },
           "tagName": "nldd-validation-list",
           "customElement": true,
+          "keywords": [
+            "error message",
+            "form validation"
+          ],
           "slots": [
             {
               "name": "",
@@ -11123,6 +11275,9 @@
           },
           "tagName": "nldd-checkbox-field",
           "customElement": true,
+          "related": [
+            "nldd-switch-field"
+          ],
           "slots": [
             {
               "name": "children",
@@ -11315,6 +11470,10 @@
               "name": "change",
               "description": "Bubbles up from the field that changed; detail: { checked: boolean, value: string }"
             }
+          ],
+          "related": [
+            "nldd-radio-button-group",
+            "nldd-token-field"
           ],
           "slots": [
             {
@@ -12000,6 +12159,9 @@
               "name": "change",
               "description": "Fired when the checkbox state changes; detail: { checked: boolean, value: string }"
             }
+          ],
+          "related": [
+            "nldd-switch"
           ]
         }
       ],
@@ -12827,6 +12989,10 @@
               "name": "change",
               "description": "When the content is committed on blur (detail: { value })"
             }
+          ],
+          "related": [
+            "nldd-code-viewer",
+            "nldd-text-editor"
           ]
         }
       ],
@@ -13702,6 +13868,16 @@
               "description": "When an option is selected or a custom value is committed; detail: { value: string }"
             }
           ],
+          "keywords": [
+            "autocomplete",
+            "typeahead",
+            "select"
+          ],
+          "related": [
+            "nldd-dropdown",
+            "nldd-token-field",
+            "nldd-search-field"
+          ],
           "slots": [
             {
               "name": "",
@@ -13997,7 +14173,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. After a choice in the calendar the chosen day stays lit a moment before the calendar closes, so you see what you picked. The value and `change` do not wait for it. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.",
+          "description": "A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously (`31-12-2026`, `31/12/2026`, `31122026`, ISO too) and normalized only when the field is left. Masking per keystroke makes the caret jump, makes backspace unpredictable and confuses screen readers. After a choice in the calendar the chosen day stays lit a moment before the calendar closes, so you see what you picked. The value and `change` do not wait for it. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.",
           "name": "NLDDDateField",
           "members": [
             {
@@ -14781,6 +14957,9 @@
               "description": "When the value is committed. detail: { value } with the ISO date, or ''."
             }
           ],
+          "related": [
+            "nldd-date-picker"
+          ],
           "slots": [
             {
               "name": "picker",
@@ -14814,7 +14993,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A calendar for picking a date or a period. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-date-field. Values are always ISO (yyyy-mm-dd). With `range` the user picks a start and an end date in two steps.",
+          "description": "A calendar for picking a date or a period. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-date-field. Values are always ISO (yyyy-mm-dd). With `range` the user picks a start and an end date in two steps. Arrow keys move by day and by week, Home and End to the edges of the week, PageUp and PageDown by month, and with Shift by year; Enter and Space pick. The month title is a live region, so a screen reader hears which month has focus while paging. Dates that `isDateUnavailable` rules out stay reachable by keyboard, so an arrow key never silently skips a run of them.",
           "name": "NLDDDatePicker",
           "members": [
             {
@@ -15209,7 +15388,13 @@
             "package": "lit"
           },
           "tagName": "nldd-date-picker",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "calendar"
+          ],
+          "related": [
+            "nldd-date-field"
+          ]
         }
       ],
       "exports": [
@@ -15555,6 +15740,15 @@
             "select",
             "option",
             "optgroup"
+          ],
+          "keywords": [
+            "select",
+            "picker"
+          ],
+          "related": [
+            "nldd-combo-box",
+            "nldd-radio-button-group",
+            "nldd-segmented-control"
           ],
           "slots": [
             {
@@ -16017,7 +16211,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, \"Bestand kiezen of sleep het hierheen\", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view (\"Screenshot 20…at 13.12.21.png\"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: \"Sleep één bestand\", or what `accept` takes, named from it (\"Alleen PDF\"; \"Bestandstype past niet\" where a type in it has no name). The message stays for a few seconds and then gives way to the field again. While it shows, the message is a button of its own over the whole field, \"Alleen PDF, sluit melding, Bijlage\" to a screen reader: a press on it, or Enter, Space or Escape, dismisses it and puts focus on the button of the field again. A field that had focus when the message came gives it to the message, so focus does not fall back to the page. With `multiple`, a dropped folder is read down to the files in it, its subfolders included, and mixed with loose files in one drop if need be. The field then names the folder (\"site (124 bestanden)\", also \"site (1 bestand)\" for one), `paths` says where each file sat (\"site/css/main.css\"), and a form submits each file with its path as its name, as a native folder input does, so two files with one name in different folders stay apart. `accept` holds for every file in it. Without `multiple` a folder is refused (\"Sleep bestand, geen map\"): one file cannot be a folder. Only a drop tells a folder apart, not the drag. A folder that takes longer than a second to read shows the field empty with an `nldd-activity-indicator` (\"Laden\" in an area, the circle alone otherwise), as what was chosen gives way to it. An empty or unreadable folder is refused as any other drop, and the previous choice comes back after the message. `directory` offers a folder in the file dialog too. A dialog picks files or a folder, never both, so with it the field says \"Bestanden of map kiezen\" and a click opens a menu with both where it lands, as a context menu does; the keyboard opens it under the button. An area has room for both, so there it shows \"Bestanden kiezen\" and \"Map kiezen\" as two buttons with the drop hint under them, and the surface around them only takes a drop. \"Wijzigen\" opens the menu under itself. A folder is many files, so `directory` takes several without `multiple`. Safari on iOS picks a folder as well; a browser that cannot opens a dialog for files instead. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. A control reserves the height of every text it can show, so fields of a size are as tall at one width, empty or with a file. Only a field with `directory` reserves the sentence that offers a folder, the longest of them. The name takes the lines that leaves it, and is cut in the middle only once those are full. A narrow field makes more room: below 320px \"Wijzigen\" and \"Wis selectie\" go in one menu behind \"Toon opties\" and a folder is counted as \"site (3)\", below 240px it leaves out the icon of the format. A refused drop says why in place of the name and the buttons, and an area shows its upload icon in red with it, as it did while the drop was refused. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event. `variant=\"area\"` lays the same field out as a tall surface, for a page where handing in files is the main task. Empty, it shows an upload icon, the sentence and the types it takes (\"Toegestaan: PDF of JPG\"), named from `accept`; with a file, the icon of its format (a folder for a folder, a stack for several files), its name and the buttons \"Wijzigen\" and \"Wis selectie\" stacked in the middle. Both states have the same height, so the page does not move when a file is chosen: 160px, 120px at `size=\"sm\"`, and a step more with `directory`, whose buttons take a row of their own. Where those buttons no longer fit side by side, below 360px or 300px at `size=\"sm\"`, it is one step taller again.",
+          "description": "A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, \"Bestand kiezen of sleep het hierheen\", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view (\"Screenshot 20…at 13.12.21.png\"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all: a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: \"Sleep één bestand\", or what `accept` takes, named from it (\"Alleen PDF\"; \"Bestandstype past niet\" where a type in it has no name). The message stays for a few seconds and then gives way to the field again. While it shows, the message is a button of its own over the whole field, \"Alleen PDF, sluit melding, Bijlage\" to a screen reader: a press on it, or Enter, Space or Escape, dismisses it and puts focus on the button of the field again. A field that had focus when the message came gives it to the message, so focus does not fall back to the page. With `multiple`, a dropped folder is read down to the files in it, its subfolders included, and mixed with loose files in one drop if need be. The field then names the folder (\"site (124 bestanden)\", also \"site (1 bestand)\" for one), `paths` says where each file sat (\"site/css/main.css\"), and a form submits each file with its path as its name, as a native folder input does, so two files with one name in different folders stay apart. `accept` holds for every file in it. Without `multiple` a folder is refused (\"Sleep bestand, geen map\"): one file cannot be a folder. Only a drop tells a folder apart, not the drag. A folder that takes longer than a second to read shows the field empty with an `nldd-activity-indicator` (\"Laden\" in an area, the circle alone otherwise), as what was chosen gives way to it. An empty or unreadable folder is refused as any other drop, and the previous choice comes back after the message. `directory` offers a folder in the file dialog too. A dialog picks files or a folder, never both, so with it the field says \"Bestanden of map kiezen\" and a click opens a menu with both where it lands, as a context menu does; the keyboard opens it under the button. An area has room for both, so there it shows \"Bestanden kiezen\" and \"Map kiezen\" as two buttons with the drop hint under them, and the surface around them only takes a drop. \"Wijzigen\" opens the menu under itself. A folder is many files, so `directory` takes several without `multiple`. Safari on iOS picks a folder as well; a browser that cannot opens a dialog for files instead. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. A control reserves the height of every text it can show, so fields of a size are as tall at one width, empty or with a file. Only a field with `directory` reserves the sentence that offers a folder, the longest of them. The name takes the lines that leaves it, and is cut in the middle only once those are full. A narrow field makes more room: below 320px \"Wijzigen\" and \"Wis selectie\" go in one menu behind \"Toon opties\" and a folder is counted as \"site (3)\", below 240px it leaves out the icon of the format. A refused drop says why in place of the name and the buttons, and an area shows its upload icon in red with it, as it did while the drop was refused. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries), and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event. `variant=\"area\"` lays the same field out as a tall surface, for a page where handing in files is the main task. Empty, it shows an upload icon, the sentence and the types it takes (\"Toegestaan: PDF of JPG\"), named from `accept`; with a file, the icon of its format (a folder for a folder, a stack for several files), its name and the buttons \"Wijzigen\" and \"Wis selectie\" stacked in the middle. Both states have the same height, so the page does not move when a file is chosen: 160px, 120px at `size=\"sm\"`, and a step more with `directory`, whose buttons take a row of their own. Where those buttons no longer fit side by side, below 360px or 300px at `size=\"sm\"`, it is one step taller again.",
           "name": "NLDDFileField",
           "members": [
             {
@@ -16715,6 +16909,11 @@
               "name": "change",
               "description": "When the chosen files change, including a clear; detail: { files: File[], paths: string[] }"
             }
+          ],
+          "keywords": [
+            "upload",
+            "file input",
+            "dropzone"
           ]
         }
       ],
@@ -17561,6 +17760,13 @@
               "description": "When value is committed (blur)"
             }
           ],
+          "keywords": [
+            "textarea"
+          ],
+          "related": [
+            "nldd-text-field",
+            "nldd-text-editor"
+          ],
           "slots": [
             {
               "name": "button",
@@ -18307,7 +18513,11 @@
             "package": "lit"
           },
           "tagName": "nldd-number-field",
-          "customElement": true
+          "customElement": true,
+          "related": [
+            "nldd-slider",
+            "nldd-stepper"
+          ]
         }
       ],
       "exports": [
@@ -19136,7 +19346,15 @@
             "package": "lit"
           },
           "tagName": "nldd-one-time-code-field",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "otp",
+            "pin",
+            "verification code"
+          ],
+          "related": [
+            "nldd-password-field"
+          ]
         }
       ],
       "exports": [
@@ -19976,6 +20194,10 @@
               "name": "change",
               "description": "When the input value is committed ({ detail: { value } })"
             }
+          ],
+          "related": [
+            "nldd-one-time-code-field",
+            "nldd-text-field"
           ]
         }
       ],
@@ -20767,6 +20989,12 @@
               "name": "change",
               "description": "Bubbles up from the checked field; detail: { checked: boolean, value: string }"
             }
+          ],
+          "related": [
+            "nldd-checkbox-group",
+            "nldd-dropdown",
+            "nldd-segmented-control",
+            "nldd-swatch-picker"
           ],
           "slots": [
             {
@@ -22286,7 +22514,11 @@
             "package": "lit"
           },
           "tagName": "nldd-search-field",
-          "customElement": true
+          "customElement": true,
+          "related": [
+            "nldd-combo-box",
+            "nldd-text-field"
+          ]
         }
       ],
       "exports": [
@@ -23236,6 +23468,11 @@
               "description": "When selection changes; detail: { value: string } for radio, detail: { values: string[] } for checkbox"
             }
           ],
+          "related": [
+            "nldd-radio-button-group",
+            "nldd-toggle-button-group",
+            "nldd-tab-bar"
+          ],
           "slots": [
             {
               "name": "",
@@ -24036,7 +24273,10 @@
             "package": "lit"
           },
           "tagName": "nldd-slider",
-          "customElement": true
+          "customElement": true,
+          "related": [
+            "nldd-number-field"
+          ]
         }
       ],
       "exports": [
@@ -24669,6 +24909,9 @@
               "name": "change",
               "description": "When the value changes; detail: { value: number }"
             }
+          ],
+          "related": [
+            "nldd-number-field"
           ]
         }
       ],
@@ -25428,6 +25671,13 @@
               "description": "When the choice changes; detail: { value: string }"
             }
           ],
+          "keywords": [
+            "color",
+            "color picker"
+          ],
+          "related": [
+            "nldd-radio-button-group"
+          ],
           "slots": [
             {
               "name": "",
@@ -26061,6 +26311,9 @@
               "name": "change",
               "description": "When checked state changes; detail: { checked: boolean, value: string }"
             }
+          ],
+          "related": [
+            "nldd-checkbox-field"
           ]
         }
       ],
@@ -26724,6 +26977,13 @@
               "name": "change",
               "description": "When the switch state changes; detail: { checked: boolean, value: string }"
             }
+          ],
+          "keywords": [
+            "toggle"
+          ],
+          "related": [
+            "nldd-checkbox",
+            "nldd-toggle-button"
           ]
         }
       ],
@@ -31035,6 +31295,15 @@
           },
           "tagName": "nldd-text-editor",
           "customElement": true,
+          "keywords": [
+            "wysiwyg",
+            "rich text editor",
+            "markdown"
+          ],
+          "related": [
+            "nldd-multi-line-text-field",
+            "nldd-code-editor"
+          ],
           "slots": [
             {
               "name": "toolbar",
@@ -32054,6 +32323,15 @@
               "name": "change",
               "description": "When input value is committed"
             }
+          ],
+          "keywords": [
+            "textbox"
+          ],
+          "related": [
+            "nldd-multi-line-text-field",
+            "nldd-number-field",
+            "nldd-search-field",
+            "nldd-combo-box"
           ],
           "slots": [
             {
@@ -33184,6 +33462,9 @@
               "description": "When the value is committed: on leaving the field, and on closing the picker in a way that keeps the choice. detail: { value } with `HH:mm`, or ''."
             }
           ],
+          "related": [
+            "nldd-time-picker"
+          ],
           "slots": [
             {
               "name": "picker",
@@ -33569,7 +33850,10 @@
             "package": "lit"
           },
           "tagName": "nldd-time-picker",
-          "customElement": true
+          "customElement": true,
+          "related": [
+            "nldd-time-field"
+          ]
         }
       ],
       "exports": [
@@ -33840,6 +34124,10 @@
               "name": "change",
               "description": "Bubbles up from the changed button; detail: { selected: boolean, value: string }"
             }
+          ],
+          "related": [
+            "nldd-segmented-control",
+            "nldd-button-bar"
           ],
           "slots": [
             {
@@ -34707,6 +34995,13 @@
               "description": "When selection changes; detail: { selected: boolean, value: string }. With `type=\"button\"` or `\"checkbox\"` it is cancelable: `preventDefault()` keeps the old state, so the app decides, for instance once a server has accepted the change. Set `selected` yourself then. A radio is always chosen, since its group has already moved on."
             }
           ],
+          "keywords": [
+            "toggle"
+          ],
+          "related": [
+            "nldd-switch",
+            "nldd-button"
+          ],
           "slots": [
             {
               "name": "icon",
@@ -35504,6 +35799,10 @@
           },
           "tagName": "nldd-token-field",
           "customElement": true,
+          "related": [
+            "nldd-combo-box",
+            "nldd-checkbox-group"
+          ],
           "slots": [
             {
               "name": "",
@@ -35575,6 +35874,14 @@
           },
           "tagName": "nldd-box",
           "customElement": true,
+          "keywords": [
+            "surface",
+            "panel"
+          ],
+          "related": [
+            "nldd-container",
+            "nldd-card"
+          ],
           "slots": [
             {
               "name": "",
@@ -35785,6 +36092,13 @@
           },
           "tagName": "nldd-card",
           "customElement": true,
+          "keywords": [
+            "tile"
+          ],
+          "related": [
+            "nldd-box",
+            "nldd-collection"
+          ],
           "slots": [
             {
               "name": "header",
@@ -36055,6 +36369,15 @@
           },
           "tagName": "nldd-collection",
           "customElement": true,
+          "keywords": [
+            "grid",
+            "gallery"
+          ],
+          "related": [
+            "nldd-card",
+            "nldd-list",
+            "nldd-table"
+          ],
           "slots": [
             {
               "name": "",
@@ -37102,6 +37425,15 @@
           },
           "tagName": "nldd-container",
           "customElement": true,
+          "keywords": [
+            "stack",
+            "flex",
+            "padding"
+          ],
+          "related": [
+            "nldd-box",
+            "nldd-spacer"
+          ],
           "slots": [
             {
               "name": "",
@@ -37143,7 +37475,14 @@
             "package": "lit"
           },
           "tagName": "nldd-divider",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "separator",
+            "hr"
+          ],
+          "related": [
+            "nldd-spacer"
+          ]
         }
       ],
       "exports": [
@@ -37447,6 +37786,9 @@
           },
           "tagName": "nldd-kanban",
           "customElement": true,
+          "keywords": [
+            "board"
+          ],
           "slots": [
             {
               "name": "",
@@ -37657,6 +37999,9 @@
           },
           "tagName": "nldd-page-footer",
           "customElement": true,
+          "keywords": [
+            "footer"
+          ],
           "slots": [
             {
               "name": "breadcrumbs",
@@ -38178,6 +38523,10 @@
           },
           "tagName": "nldd-full-bleed-section",
           "customElement": true,
+          "related": [
+            "nldd-simple-section",
+            "nldd-hero"
+          ],
           "slots": [
             {
               "name": "header",
@@ -38993,6 +39342,9 @@
           "accepts": [
             "img"
           ],
+          "related": [
+            "nldd-full-bleed-section"
+          ],
           "slots": [
             {
               "name": "media",
@@ -39500,6 +39852,11 @@
           },
           "tagName": "nldd-one-half-one-half-section",
           "customElement": true,
+          "related": [
+            "nldd-simple-section",
+            "nldd-one-third-two-thirds-section",
+            "nldd-two-thirds-one-third-section"
+          ],
           "slots": [
             {
               "name": "header",
@@ -40019,6 +40376,11 @@
           },
           "tagName": "nldd-one-third-two-thirds-section",
           "customElement": true,
+          "related": [
+            "nldd-simple-section",
+            "nldd-one-half-one-half-section",
+            "nldd-two-thirds-one-third-section"
+          ],
           "slots": [
             {
               "name": "header",
@@ -40728,6 +41090,9 @@
           },
           "tagName": "nldd-sidebar-section",
           "customElement": true,
+          "related": [
+            "nldd-simple-section"
+          ],
           "slots": [
             {
               "name": "",
@@ -41270,6 +41635,13 @@
           },
           "tagName": "nldd-simple-section",
           "customElement": true,
+          "related": [
+            "nldd-one-half-one-half-section",
+            "nldd-one-third-two-thirds-section",
+            "nldd-two-thirds-one-third-section",
+            "nldd-full-bleed-section",
+            "nldd-sidebar-section"
+          ],
           "slots": [
             {
               "name": "header",
@@ -41781,6 +42153,11 @@
           },
           "tagName": "nldd-two-thirds-one-third-section",
           "customElement": true,
+          "related": [
+            "nldd-simple-section",
+            "nldd-one-half-one-half-section",
+            "nldd-one-third-two-thirds-section"
+          ],
           "slots": [
             {
               "name": "header",
@@ -41950,6 +42327,10 @@
           },
           "tagName": "nldd-page",
           "customElement": true,
+          "related": [
+            "nldd-shell",
+            "nldd-window"
+          ],
           "slots": [
             {
               "name": "header",
@@ -42312,6 +42693,18 @@
               "description": "When the popover closes. Does not bubble: overlays nest, and a listener on the sheet or window around this one should not hear it close."
             }
           ],
+          "keywords": [
+            "flyout",
+            "popup",
+            "overlay"
+          ],
+          "related": [
+            "nldd-sheet",
+            "nldd-modal-dialog",
+            "nldd-window",
+            "nldd-tooltip",
+            "nldd-menu"
+          ],
           "slots": [
             {
               "name": "",
@@ -42485,6 +42878,18 @@
               "description": "Fired when the sheet is fully closed. Does not bubble: overlays nest, and a listener on one sheet asking about that sheet should not also hear the form it opened. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice."
             }
           ],
+          "keywords": [
+            "modal",
+            "drawer",
+            "side panel",
+            "bottom sheet",
+            "overlay"
+          ],
+          "related": [
+            "nldd-modal-dialog",
+            "nldd-popover",
+            "nldd-window"
+          ],
           "slots": [
             {
               "name": "",
@@ -42556,6 +42961,9 @@
           },
           "tagName": "nldd-shell",
           "customElement": true,
+          "related": [
+            "nldd-page"
+          ],
           "slots": [
             {
               "name": "",
@@ -42704,7 +43112,15 @@
             "package": "lit"
           },
           "tagName": "nldd-spacer",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "gap",
+            "whitespace"
+          ],
+          "related": [
+            "nldd-container",
+            "nldd-divider"
+          ]
         }
       ],
       "exports": [
@@ -42814,6 +43230,11 @@
           },
           "tagName": "nldd-bar-split-view",
           "customElement": true,
+          "related": [
+            "nldd-navigation-split-view",
+            "nldd-side-by-side-split-view",
+            "nldd-stacked-split-view"
+          ],
           "slots": [
             {
               "name": "main",
@@ -42851,7 +43272,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them. When they stop fitting, panes drop in a fixed order: the inspector goes first, then the primary sidebar collapses into the secondary sidebar. If that still does not fit, the view stacks and shows one pane at a time: main when it has content, otherwise the secondary sidebar, otherwise the primary sidebar. Use <code>nldd-split-view-pane</code> as direct children for automatic back button handling.",
+          "description": "A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them. When they stop fitting, panes drop in a fixed order: the inspector goes first, then the primary sidebar collapses into the secondary sidebar. If that still does not fit, the view stacks and shows one pane at a time: main when it has content, otherwise the secondary sidebar, otherwise the primary sidebar.",
           "name": "NLDDNavigationSplitView",
           "members": [
             {
@@ -42994,6 +43415,14 @@
           },
           "tagName": "nldd-navigation-split-view",
           "customElement": true,
+          "keywords": [
+            "master-detail"
+          ],
+          "related": [
+            "nldd-side-by-side-split-view",
+            "nldd-stacked-split-view",
+            "nldd-bar-split-view"
+          ],
           "slots": [
             {
               "name": "primary-sidebar",
@@ -43100,6 +43529,14 @@
           },
           "tagName": "nldd-side-by-side-split-view",
           "customElement": true,
+          "keywords": [
+            "master-detail"
+          ],
+          "related": [
+            "nldd-navigation-split-view",
+            "nldd-stacked-split-view",
+            "nldd-bar-split-view"
+          ],
           "slots": [
             {
               "name": "pane-1",
@@ -43379,6 +43816,14 @@
           },
           "tagName": "nldd-stacked-split-view",
           "customElement": true,
+          "keywords": [
+            "master-detail"
+          ],
+          "related": [
+            "nldd-navigation-split-view",
+            "nldd-side-by-side-split-view",
+            "nldd-bar-split-view"
+          ],
           "slots": [
             {
               "name": "pane-1",
@@ -43677,6 +44122,16 @@
               "name": "close",
               "description": "When the window has fully closed. Does not bubble: overlays can sit inside each other, and a listener on one window should not also hear the form that opened it. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice."
             }
+          ],
+          "keywords": [
+            "modal",
+            "overlay"
+          ],
+          "related": [
+            "nldd-modal-dialog",
+            "nldd-sheet",
+            "nldd-popover",
+            "nldd-page"
           ],
           "slots": [
             {
@@ -44525,7 +44980,10 @@
             "package": "lit"
           },
           "tagName": "nldd-reorder-handle-cell",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "drag handle"
+          ]
         }
       ],
       "exports": [
@@ -46792,6 +47250,9 @@
               "description": "On a `checkbox` row after it toggles, and on a `radio` row when it becomes checked; detail: { checked: boolean }"
             }
           ],
+          "keywords": [
+            "disclosure"
+          ],
           "slots": [
             {
               "name": "",
@@ -47129,7 +47590,15 @@
             "package": "lit"
           },
           "tagName": "nldd-list",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "disclosure",
+            "tree"
+          ],
+          "related": [
+            "nldd-table",
+            "nldd-collection"
+          ]
         }
       ],
       "exports": [
@@ -47157,7 +47626,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. Header: put one `<nldd-table-row slot=\"header\">` in the `header` slot. Its cells become column headers (role=\"columnheader\"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role=\"rowheader\" instead of \"cell\", so a screen reader names the row along with every other cell in it, like `<th scope=\"row\">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).",
+          "description": "Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. A generic `nldd-cell` gets `width=\"full\"`, so it fills its column, unless it sets a length of its own. Header: put one `<nldd-table-row slot=\"header\">` in the `header` slot. Its cells become column headers (role=\"columnheader\"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role=\"rowheader\" instead of \"cell\", so a screen reader names the row along with every other cell in it, like `<th scope=\"row\">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).",
           "name": "NLDDTable",
           "members": [
             {
@@ -47328,6 +47797,9 @@
           },
           "tagName": "nldd-table",
           "customElement": true,
+          "related": [
+            "nldd-list"
+          ],
           "slots": [
             {
               "name": "header",
@@ -47554,6 +48026,9 @@
           },
           "tagName": "nldd-breadcrumbs",
           "customElement": true,
+          "keywords": [
+            "breadcrumb"
+          ],
           "slots": [
             {
               "name": "",
@@ -47858,6 +48333,9 @@
           },
           "tagName": "nldd-document-tab-bar",
           "customElement": true,
+          "related": [
+            "nldd-tab-bar"
+          ],
           "slots": [
             {
               "name": "",
@@ -48415,6 +48893,9 @@
           "accepts": [
             "a"
           ],
+          "related": [
+            "nldd-button"
+          ],
           "slots": [
             {
               "name": "",
@@ -48910,6 +49391,10 @@
           },
           "tagName": "nldd-menu-bar",
           "customElement": true,
+          "related": [
+            "nldd-tab-bar",
+            "nldd-top-navigation-bar"
+          ],
           "slots": [
             {
               "name": "",
@@ -49567,6 +50052,14 @@
           },
           "tagName": "nldd-tab-bar",
           "customElement": true,
+          "keywords": [
+            "tabs"
+          ],
+          "related": [
+            "nldd-document-tab-bar",
+            "nldd-segmented-control",
+            "nldd-menu-bar"
+          ],
           "slots": [
             {
               "name": "",
@@ -50003,6 +50496,14 @@
           },
           "tagName": "nldd-top-navigation-bar",
           "customElement": true,
+          "keywords": [
+            "header",
+            "navbar"
+          ],
+          "related": [
+            "nldd-top-title-bar",
+            "nldd-menu-bar"
+          ],
           "slots": [
             {
               "name": "global",
@@ -50196,6 +50697,13 @@
           },
           "tagName": "nldd-top-title-bar",
           "customElement": true,
+          "keywords": [
+            "app bar",
+            "title bar"
+          ],
+          "related": [
+            "nldd-top-navigation-bar"
+          ],
           "slots": [
             {
               "name": "toolbar",
@@ -50383,6 +50891,15 @@
           },
           "tagName": "nldd-activity-indicator",
           "customElement": true,
+          "keywords": [
+            "spinner",
+            "loader",
+            "loading"
+          ],
+          "related": [
+            "nldd-progress-bar",
+            "nldd-progress-circle"
+          ],
           "slots": [
             {
               "name": "",
@@ -50653,7 +51170,16 @@
             "package": "lit"
           },
           "tagName": "nldd-badge",
-          "customElement": true
+          "customElement": true,
+          "keywords": [
+            "count",
+            "dot",
+            "indicator"
+          ],
+          "related": [
+            "nldd-token",
+            "nldd-tag"
+          ]
         }
       ],
       "exports": [
@@ -50860,6 +51386,16 @@
           },
           "tagName": "nldd-banner",
           "customElement": true,
+          "keywords": [
+            "alert",
+            "message bar"
+          ],
+          "related": [
+            "nldd-notification",
+            "nldd-status-bar",
+            "nldd-inline-dialog",
+            "nldd-admonition"
+          ],
           "slots": [
             {
               "name": "",
@@ -51076,6 +51612,16 @@
           },
           "tagName": "nldd-inline-dialog",
           "customElement": true,
+          "keywords": [
+            "callout",
+            "alert",
+            "message"
+          ],
+          "related": [
+            "nldd-banner",
+            "nldd-admonition",
+            "nldd-modal-dialog"
+          ],
           "slots": [
             {
               "name": "",
@@ -51308,6 +51854,16 @@
           },
           "tagName": "nldd-just-in-time-education",
           "customElement": true,
+          "keywords": [
+            "coach mark",
+            "onboarding",
+            "tour"
+          ],
+          "related": [
+            "nldd-tooltip",
+            "nldd-popover",
+            "nldd-inline-dialog"
+          ],
           "slots": [
             {
               "name": "",
@@ -51520,6 +52076,18 @@
               "description": "When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened."
             }
           ],
+          "keywords": [
+            "dialog",
+            "alert dialog",
+            "confirm",
+            "overlay"
+          ],
+          "related": [
+            "nldd-sheet",
+            "nldd-window",
+            "nldd-popover",
+            "nldd-inline-dialog"
+          ],
           "slots": [
             {
               "name": "",
@@ -51725,6 +52293,15 @@
           },
           "tagName": "nldd-notification",
           "customElement": true,
+          "keywords": [
+            "toast",
+            "snackbar"
+          ],
+          "related": [
+            "nldd-banner",
+            "nldd-status-bar",
+            "nldd-inline-dialog"
+          ],
           "slots": [
             {
               "name": "actions",
@@ -52208,6 +52785,15 @@
           },
           "tagName": "nldd-progress-bar",
           "customElement": true,
+          "keywords": [
+            "progress",
+            "loading bar"
+          ],
+          "related": [
+            "nldd-progress-circle",
+            "nldd-activity-indicator",
+            "nldd-step-bar"
+          ],
           "slots": [
             {
               "name": "",
@@ -52603,6 +53189,10 @@
           },
           "tagName": "nldd-progress-circle",
           "customElement": true,
+          "related": [
+            "nldd-progress-bar",
+            "nldd-activity-indicator"
+          ],
           "slots": [
             {
               "name": "",
@@ -52787,7 +53377,11 @@
             "package": "lit"
           },
           "tagName": "nldd-status-bar",
-          "customElement": true
+          "customElement": true,
+          "related": [
+            "nldd-banner",
+            "nldd-notification"
+          ]
         }
       ],
       "exports": [
@@ -53028,6 +53622,9 @@
           },
           "tagName": "nldd-step-bar",
           "customElement": true,
+          "related": [
+            "nldd-progress-bar"
+          ],
           "slots": [
             {
               "name": "",

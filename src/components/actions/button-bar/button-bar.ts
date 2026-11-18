@@ -11,6 +11,7 @@
  * here is shown as it is, and a warning says so in development.
  *
  * @element nldd-button-bar
+ * @related nldd-button-group, nldd-toolbar, nldd-toggle-button-group
  * @attr {string} size - Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style).
  * @attr {string} appearance - Visual style of the buttons: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. The content appearances are for a colored surface.
  * @attr {boolean} disabled - Disabled state

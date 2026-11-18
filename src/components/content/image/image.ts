@@ -18,6 +18,7 @@
  * icon, and it goes once the image is in.
  *
  * @element nldd-image
+ * @related nldd-avatar
  *
  * @attr {string} src - Image URL
  * @attr {string} alt - Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own.

@@ -26,6 +26,7 @@
  * button, as `max` does; `max` is then the most it shows, not a fixed count.
  *
  * @element nldd-avatar-group
+ * @related nldd-avatar, nldd-identity
  *
  * @attr {string} size - Diameter of each avatar in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96); default 40
  * @attr {number} max - Shows at most this many avatars; the rest go behind a "+N" button that opens them as a list of names. A longer number is set smaller, and where it no longer fits the disc the button shows an ellipsis with the count in a tooltip (a number shows from size 24 with one digit, 40 with two, 56 with three and 80 with four)

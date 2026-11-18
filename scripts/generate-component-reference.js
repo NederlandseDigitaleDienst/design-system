@@ -79,6 +79,8 @@ function renderComponent(c) {
 	if (c.summary) {
 		out.push(c.summary, '');
 	}
+	if (c.keywords?.length) out.push(`**Keywords:** ${c.keywords.join(', ')}.`, '');
+	if (c.related?.length) out.push(`**Related:** ${c.related.map((tag) => `\`<${tag}>\``).join(', ')}.`, '');
 	const rules = rulesAboutTag(lintRules, c.tag);
 	if (rules.length) {
 		out.push('**Rules** (`nldd lint`)', '');

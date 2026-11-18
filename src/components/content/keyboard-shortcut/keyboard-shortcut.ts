@@ -18,6 +18,7 @@
  * reads the name (Command), not the symbol.
  *
  * @element nldd-keyboard-shortcut
+ * @keywords kbd, hotkey
  * @attr {string} keys - Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P').
  *   End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++'
  *   works too). For more complex cases, such as a combo with several '+' keys,

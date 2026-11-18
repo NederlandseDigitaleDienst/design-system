@@ -80,7 +80,12 @@ test('a page marks its section in the first sidebar, itself in the second, and g
 	assert.match(button, /<nldd-list-item href="\/componenten\/" current>/);
 	assert.match(button, /<nldd-list-item\s+href="\/componenten\/button\/"\s+current\s/);
 	assert.match(button, /<nldd-search-field\s+data-site-filter\s+placeholder="Component zoeken"/);
-	assert.match(button, /data-site-search="icon button icon-button acties"/);
+	assert.match(button, /data-site-search="icon button icon-button acties actions"/);
+	// Each row names the pages it relates to, which the search lists under its matches.
+	assert.match(button, /data-site-slug="sheet"\s+data-site-related="modal-dialog popover window"/);
+	assert.match(button, /<nldd-container\s+data-site-filter-related\s+hidden\s*>/);
+	// A keyword finds what its name does not: a toast is a notification.
+	assert.match(button, /data-site-search="notification notification status en feedback toast snackbar status &amp; feedback"/);
 	assert.match(button, /slot="main"\s+has-content[^]*back-text="Componenten"\s+back-href="\/componenten\/"/);
 	// A page without a list of its own goes back to the sections.
 	assert.match(pages['iconen/index.html'], /slot="main"\s+has-content[^]*back-text="Documentatie"\s+back-href="\/documentatie\/"/);
@@ -123,6 +128,38 @@ test('a component has a page per tab: usage, examples, API and lint rules', () =
 	assert.match(rules, /text="Lintregels"\s+current[^]*<h2>Lintregels<\/h2>/);
 	// The sidebar marks the component on every tab.
 	for (const page of [usage, examples, api, rules]) assert.match(page, /href="\/componenten\/button\/"\s+current/);
+});
+
+test('a component opens with one paragraph, and the rest lives on a tab', () => {
+	// What an attribute does is on API, how the component works is in the JSDoc
+	// of its class, and a case is a story of its own. Only the code under
+	// Gebruik may follow the introduction, and the stage already shows that.
+	const wrong = [];
+	for (const component of collectComponents()) {
+		const markdown = (component.description ?? '').trim();
+		const split = markdown.search(/^#{1,6} /m);
+		const intro = (split === -1 ? markdown : markdown.slice(0, split)).trim();
+		const rest = split === -1 ? '' : markdown.slice(split);
+		const paragraphs = intro ? intro.split(/\n\s*\n/).length : 0;
+		if (paragraphs > 1) wrong.push(`${component.slug}: ${paragraphs} paragraphs before the tabs`);
+		const sections = [...rest.matchAll(/^#{1,6} (.*)$/gm)].map((m) => m[1].trim());
+		const extra = sections.filter((heading) => heading !== 'Gebruik');
+		if (extra.length) wrong.push(`${component.slug}: sections ${extra.join(', ')}`);
+		const usage = rest.match(/^#{1,6} Gebruik\s*\n([^]*?)(?=^#{1,6} |$(?![^]))/m)?.[1] ?? '';
+		if (usage.replace(/^```[^]*?^```\s*$/gm, '').trim()) wrong.push(`${component.slug}: prose under Gebruik`);
+	}
+	assert.deepEqual(wrong, []);
+});
+
+test('every @related names a component with a page, and that page lists it under the example', () => {
+	const components = collectComponents();
+	const tags = new Set(components.flatMap((c) => c.elements.map((e) => e.tagName)));
+	const wrong = components.flatMap((c) =>
+		c.elements.flatMap((e) => (e.related ?? []).filter((tag) => !tags.has(tag)).map((tag) => `${e.tagName} → ${tag}`)),
+	);
+	assert.deepEqual(wrong, []);
+	const withRelated = components.find((c) => c.elements.some((e) => e.related?.length));
+	if (withRelated) assert.match(pages[`componenten/${withRelated.slug}/index.html`], /<h2>Gerelateerd<\/h2>/);
 });
 
 test('a pattern has a tab with the lint rules that point at it', () => {
@@ -216,6 +253,12 @@ test('every heading gets an id of its own, from its text as a reader sees it', (
 	assert.match(html, /id="voorbeeld"/);
 	assert.match(html, /id="voorbeeld-1"/);
 	assert.match(html, /id="op-html"/);
+});
+
+test('HTML in a JSDoc is shown as text, as its author means it', () => {
+	const { html } = renderMarkdown('Renders a real <form> around\n<nldd-form label-alignment="right">.', { href: (p) => p, literalHtml: true });
+	assert.match(html, /a real &lt;form&gt; around/);
+	assert.match(html, /&lt;nldd-form label-alignment=&quot;right&quot;&gt;/);
 });
 
 test('storyName reads an export name as a heading', () => {

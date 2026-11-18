@@ -24,6 +24,8 @@
  * the load-more button comes into view.
  *
  * @element nldd-collection
+ * @keywords grid, gallery
+ * @related nldd-card, nldd-list, nldd-table
  *
  * @attr {string} layout - Layout mode: 'grid' | 'stack' | 'lanes' | 'horizontal-scroll' (default: 'grid')
  * @attr {string} item-min-width - Smallest width an item takes (e.g. '280px', '20rem'). In grid and lanes the minimum column width: columns are at least this wide and grow to fill the row. In horizontal scroll the flex-basis: items never shrink below it, and grow up to `item-max-width` when they fit. No effect in stack. Never forces horizontal overflow, the value is clamped to the container width.

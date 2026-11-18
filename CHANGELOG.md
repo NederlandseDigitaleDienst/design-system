@@ -23,6 +23,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
+- **`@keywords` and `@related` in the JSDoc of a component.** `@keywords` names what someone searches for who does not know the name, such as `toast` for `nldd-notification`. `@related` names the components to weigh against this one, such as the other overlays for `nldd-sheet`. Both are in `custom-elements.json` and in `reference.md`. The website searches the keywords and lists the related components under the first example and under the search results.
 - **Lint hint `container-no-mixed-gap`.** An `nldd-container` that stacks different kinds of components under each other with a `gap` gets a hint to space them with `nldd-spacer`, so each distance can be tuned on its own. A run of one kind (cards, buttons, the fields of a form) and a container that wraps keep their gap. The hint points to the page of `nldd-spacer`: a rule's `see` may now name a component.
 - **`nldd-token` opens a popover as well as a menu.** Put an `nldd-popover` in the `menu` slot for what a menu cannot hold, such as a field to edit the value of the token in. The menu button anchors it and tells assistive technology it opens a dialog.
 - **`nldd-menu` takes `no-blink`.** The menu closes at once after a choice, as a listbox does. Use it where the choice shows next to the menu the moment it is made, such as a token that writes the value it holds. There the blink confirms what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.

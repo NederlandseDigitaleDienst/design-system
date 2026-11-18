@@ -16,6 +16,8 @@
  * types are not supported in this context.
  *
  * @element nldd-combo-box
+ * @keywords autocomplete, typeahead, select
+ * @related nldd-dropdown, nldd-token-field, nldd-search-field
  * @attr {string} value - The selected form value
  * @attr {string} text - The text shown in the input. May differ from `value` (e.g. value="nl" → text="Nederland"). Set this when pre-populating an existing record. If left empty and `value` matches a slotted menu item, the matching item's `text` is used automatically.
  * @attr {string} placeholder - Placeholder text for the input
