@@ -58,6 +58,12 @@ nldd-rich-text td code {
 		padding: 12px 16px;
 	}
 
+	@media (min-width: 40.0625rem) {
+		.site-control-info > nldd-top-title-bar {
+			display: none;
+		}
+	}
+
 	/* The mat: a dotted field around the canvas that belongs to the frame. */
 	.site-stage__mat {
 		padding: 12px;

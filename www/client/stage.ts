@@ -517,7 +517,7 @@ export class SiteStage extends HTMLElement {
 		const popovers: HTMLElement[] = [];
 		const row = (name: string, input: HTMLElement, description: string) => {
 			const title = element('p', '', `${name} `);
-			const label = nldd('text-cell', { 'vertical-alignment': 'top' }, [title]);
+			const label = nldd('text-cell', {}, [title]);
 			if (description) {
 				const span = element('span', '');
 				span.append(...described(description));
@@ -531,17 +531,20 @@ export class SiteStage extends HTMLElement {
 					icon: 'info-circle',
 					'tooltip-timing': 'never',
 					text: `Over ${name}`,
+					appearance: 'neutral-base',
 					popovertarget: id,
 					hidden: true,
 				});
 				title.append(button);
 				const about = span.cloneNode(true);
-				popovers.push(
-					nldd('popover', { id, role: 'region', 'accessible-label': name }, [
-						nldd('top-title-bar', { text: name, 'heading-level': '2', 'dismiss-text': 'Sluit' }),
-						nldd('container', { 'padding-inline': '16', 'padding-bottom': '16' }, [nldd('text', {}, [about])]),
-					]),
-				);
+				// The bar is for the bottom sheet a popover is on a phone; anchored
+				// beside the button it needs none.
+				const popover = nldd('popover', { id, role: 'region', 'accessible-label': name }, [
+					nldd('top-title-bar', { text: name, 'heading-level': '2', 'dismiss-text': 'Sluit' }),
+					nldd('container', { padding: '16' }, [nldd('text', {}, [about])]),
+				]);
+				popover.classList.add('site-control-info');
+				popovers.push(popover);
 				infos.push({ label, button, text });
 			}
 			input.setAttribute('accessible-label', name);
@@ -599,6 +602,8 @@ export class SiteStage extends HTMLElement {
 				if (narrow) text.remove();
 				else label.append(text);
 			}
+			// A popover open when its button goes would stay without an anchor.
+			if (!narrow) for (const popover of popovers) (popover as HTMLElement & { open: boolean }).open = false;
 		}).observe(list);
 		void this.reserveHeight();
 	}
