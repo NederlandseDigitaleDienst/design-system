@@ -29,6 +29,11 @@ const forwardClickToEditor = (event: PointerEvent) => {
 	editor?.focusFromPoint(event.clientX, event.clientY);
 };
 
+/**
+ * `nldd-code-editor` is een tekstveld in monospace voor code, YAML, JSON en
+ * andere technische inhoud. Hij hoort bij `nldd-code-viewer`, die dezelfde
+ * inhoud alleen toont.
+ */
 export default {
 	title: 'Components/Inputs/Code Editor',
 	component: 'nldd-code-editor',

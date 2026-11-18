@@ -2,7 +2,7 @@ import { html } from 'lit';
 import './split-view-divider.js';
 
 /**
- * Gebruik een split view divider als scheidingslijn tussen panelen in een
+ * `nldd-split-view-divider` is de scheidingslijn tussen panelen in een
  * split view. De verdeler past zich automatisch aan de beschikbare ruimte aan.
  * Met `has-drag-handle` wordt een sleephandvat getoond voor toekomstige
  * sleepfunctionaliteit.

@@ -7,7 +7,7 @@ import '../text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * De Token is zelfstandige data waar de gebruiker mee werkt: een persoon in een
+ * `nldd-token` is zelfstandige data waar de gebruiker mee werkt: een persoon in een
  * adresveld, een actieve filterwaarde. Als enige van de drie kun je hem bedienen,
  * dus hij is optioneel verwijderbaar of interactief via een contextueel menu.
  *

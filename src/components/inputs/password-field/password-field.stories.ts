@@ -3,7 +3,8 @@ import './password-field.js';
 import '../../layout/container/container.js';
 
 /**
- * De Password Field component voor wachtwoordinvoer met zichtbaarheidstoggle.
+ * `nldd-password-field` is een veld voor een wachtwoord, met een knop die het
+ * wachtwoord laat zien of weer verbergt.
  *
  * ## Gebruik
  * ```html

@@ -16,8 +16,8 @@ const RIJKSLEUREN = [
 const ALL_COLORS = [...SEMANTIC_COLORS, ...RIJKSLEUREN];
 
 /**
- * Een circulaire progress indicator met dezelfde mogelijkheden als de
- * progress-bar: single-value of multi-segment, progress en distribution
+ * `nldd-progress-circle` is een ronde voortgangsindicator met dezelfde
+ * mogelijkheden als `nldd-progress-bar`: single-value of multi-segment, progress en distribution
  * varianten, 24 kleuren, indeterminate, en transitions tussen
  * determinate/indeterminate. Label staat onder de cirkel.
  */

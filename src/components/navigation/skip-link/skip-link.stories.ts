@@ -14,7 +14,7 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
 /**
- * Een link waarmee je met het toetsenbord een blok overslaat. Hij is pas te zien
+ * `nldd-skip-link` is een link waarmee je met het toetsenbord een blok overslaat. Hij is pas te zien
  * als hij focus krijgt, en Enter brengt je voorbij het blok dat hij omsluit, of
  * naar het doel van zijn `href`.
  *

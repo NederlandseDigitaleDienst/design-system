@@ -7,6 +7,10 @@ import '../../list-item/list-item.js';
 import '../../../content/text/text.js';
 import '../../../layout/spacer/spacer.js';
 
+/**
+ * `nldd-text-cell` is de basiscel voor tekst in een lijst, met een instelbare
+ * uitlijning, grootte en kleur.
+ */
 export default {
 	title: 'Components/Lists & Tables/Cells/Text Cell',
 	component: 'nldd-text-cell',

@@ -7,6 +7,10 @@ import '../../list-item/list-item.js';
 import '../../../content/text/text.js';
 import '../../../layout/spacer/spacer.js';
 
+/**
+ * `nldd-title-cell` is een cel voor een titel in een lijst, met een optionele
+ * overline en ondersteunende tekst.
+ */
 export default {
 	title: 'Components/Lists & Tables/Cells/Title Cell',
 	component: 'nldd-title-cell',

@@ -3,7 +3,7 @@ import './status-bar.js';
 import '../../layout/container/container.js';
 
 /**
- * Een status bar is een smalle, paginabrede balk (24px) met een diepe
+ * `nldd-status-bar` is een smalle, paginabrede balk (24px) met een diepe
  * achtergrondkleur per variant. Gebruik voor persistente systeemtoestand:
  * een storing, gepland onderhoud, een conceptweergave of een lopende opname.
  *

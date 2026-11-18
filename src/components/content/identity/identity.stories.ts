@@ -7,7 +7,7 @@ import '../../layout/container/container.js';
 import { VERMEER } from '../../../docs/story-portraits.js';
 
 /**
- * Een identity toont auteurs of redacteuren van content: optionele avatar(s),
+ * `nldd-identity` toont auteurs of redacteuren van content: optionele avatar(s),
  * een naamregel en ondersteunende tekst (bijvoorbeeld rol of datum). Alle
  * onderdelen zijn optioneel.
  *

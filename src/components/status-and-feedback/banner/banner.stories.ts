@@ -6,7 +6,7 @@ import { ICONS } from '../../content/icon/icon.js';
 import '../../layout/container/container.js';
 
 /**
- * Een banner toont een persistente, inline notificatie met een getinte
+ * `nldd-banner` toont een persistente, inline notificatie met een getinte
  * achtergrond per variant. Gebruik voor pagina-niveau feedback zoals
  * een foutmelding aan de bovenkant van een formulier.
  *

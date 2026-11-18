@@ -5,7 +5,7 @@ import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
 /**
- * Gebruik een full bleed section voor inhoud die van rand tot rand loopt,
+ * `nldd-full-bleed-section` is voor inhoud die van rand tot rand loopt,
  * zoals achtergrondkleuren, afbeeldingen of uitgelichte blokken.
  * In tegenstelling tot de simple section heeft de full bleed section geen
  * horizontale padding — de inhoud bepaalt zelf zijn breedte.

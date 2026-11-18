@@ -7,7 +7,7 @@ const sluit = (e: CustomEvent) => (e.detail.item as HTMLElement).remove();
 
 
 /**
- * Een rij tabbladen voor documenten die naast elkaar openstaan, zoals in een
+ * `nldd-document-tab-bar` is een rij tabbladen voor documenten die naast elkaar openstaan, zoals in een
  * browser of een editor. Elk tabblad kun je sluiten. Passen ze niet meer, dan
  * gaan de laatste in een menu achter de knop "Meer".
  *

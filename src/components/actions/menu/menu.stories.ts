@@ -6,6 +6,11 @@ import '../../content/text/text.js';
 import '../../layout/container/container.js';
 import '../../content/avatar/avatar.js';
 
+/**
+ * `nldd-menu` is een zwevend menu aan een knop of veld, met `nldd-menu-item` en
+ * `nldd-menu-divider` erin. Het is een menu van acties, de lijst onder een
+ * combobox of een submenu in een navigatie.
+ */
 export default {
 	title: 'Components/Actions/Menu',
 	component: 'nldd-menu',

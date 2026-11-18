@@ -3,7 +3,7 @@ import './step-bar.js';
 import '../../layout/container/container.js';
 
 /**
- * Toont waar je staat in een proces van meerdere stappen. Je zet
+ * `nldd-step-bar` toont waar je staat in een proces van meerdere stappen. Je zet
  * `status="current"` op de stap waar je bent, en de ouder leidt daaruit af wat
  * ervoor `past` en erna `future` is. Staat die nergens, dan is stap 1 de huidige.
  *

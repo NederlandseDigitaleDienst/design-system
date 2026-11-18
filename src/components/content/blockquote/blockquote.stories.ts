@@ -5,7 +5,7 @@ import '../avatar-group/avatar-group.js';
 import '../avatar/avatar.js';
 
 /**
- * De Blockquote component toont een citaat met optionele bronvermelding.
+ * `nldd-blockquote` toont een citaat met optionele bronvermelding.
  *
  * ## Gebruik
  * ```html

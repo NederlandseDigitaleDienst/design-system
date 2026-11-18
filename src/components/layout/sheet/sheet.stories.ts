@@ -10,7 +10,7 @@ import '../../layout/page-sections/simple-section/simple-section.js';
 import '../../layout/container/container.js';
 
 /**
- * De Sheet is een overlay-component die vanuit een zijkant of de onderkant van
+ * `nldd-sheet` is een overlay die vanuit een zijkant of de onderkant van
  * het scherm inschuift. Hij is gebaseerd op het native `<dialog>`-element.
  */
 export default {

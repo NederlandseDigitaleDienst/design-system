@@ -4,7 +4,7 @@ import './accordion-item.js';
 import '../rich-text/rich-text.js';
 
 /**
- * Een accordion stapelt items die elk hun inhoud op hun plek in- en
+ * `nldd-accordion` stapelt items die elk hun inhoud op hun plek in- en
  * uitklappen. Klap alleen korte, aanvullende inhoud uit, zoals het antwoord op
  * een vraag. Is de inhoud lang, staat er een formulier in of is het een taak op
  * zich, zet dan rijen in een `nldd-list` die elk een `nldd-sheet` openen.

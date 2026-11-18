@@ -5,7 +5,7 @@ import '../../forms/form-field/form-field.js';
 import '../../layout/container/container.js';
 
 /**
- * Een bestandskiezer die als één control leest. Leeg is het hele getinte vlak één
+ * `nldd-file-field` is een bestandskiezer die als één control leest. Leeg is het hele getinte vlak één
  * knop, met één zin in het midden: "Bestand kiezen of
  * sleep het hierheen", het eerste deel in de accentkleur. Waar je ook in het vlak
  * klikt, de bestandsdialoog gaat open. Is er een bestand gekozen, dan toont het vlak het icoon van het formaat, de naam, een

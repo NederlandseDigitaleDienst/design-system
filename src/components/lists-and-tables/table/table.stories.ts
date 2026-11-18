@@ -12,7 +12,7 @@ import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * De Table toont data in uitgelijnde kolommen. Het is altijd een box (afgeronde
+ * `nldd-table` toont data in uitgelijnde kolommen. Het is altijd een box (afgeronde
  * hoeken, rand, base of tinted vulling); de inhoud wordt uitgelijnd via een CSS
  * grid + subgrid. Dividers lopen full-bleed tot de zijkanten; de inline-padding
  * zit op de rijen en springt alleen de cel-inhoud in.

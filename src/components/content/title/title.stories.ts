@@ -5,8 +5,8 @@ import '../../layout/spacer/spacer.js';
 import '../../layout/container/container.js';
 
 /**
- * Gebruik een title bar om een paginatitel of sectietitel te tonen met
- * optionele overline, ondertitel en acties. De titel geef je mee met `text`,
+ * `nldd-title` toont een paginatitel of sectietitel, met een optionele
+ * overline, ondertitel en acties. De titel geef je mee met `text`,
  * en `heading-level` bepaalt welke kop het is. Het niveau bepaalt ook de
  * grootte: een h2 is `display-2`. Met `size` kies je een andere grootte, zoals
  * voor een sectiekop die kleiner moet dan zijn plek. Zonder niveau is de titel

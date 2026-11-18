@@ -11,7 +11,7 @@ import '../../navigation/top-title-bar/top-title-bar.js';
 import '../../content/title/title.js';
 
 /**
- * Gebruik de page-component als buitenste wrapper van een pagina.
+ * `nldd-page` is de buitenste wrapper van een pagina.
  * De page biedt een scrollbaar hoofdgebied met optionele sticky header en footer.
  * Sticky secties hebben een doorschijnende achtergrond met een vervagend verloop
  * dat buiten de sectie uitsteekt, zodat inhoud vloeiend achter ze door scrollt.

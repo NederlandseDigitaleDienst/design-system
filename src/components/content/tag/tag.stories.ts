@@ -4,7 +4,7 @@ import { ICONS } from './../icon/icon.js';
 import '../../layout/container/container.js';
 
 /**
- * De Tag is een compact kenmerk dat aan iets is toegekend: een categorie, een type,
+ * `nldd-tag` is een compact kenmerk dat aan iets is toegekend: een categorie, een type,
  * een rol, een keurmerk. Wat er staat verandert pas als iemand de inhoud wijzigt,
  * en een tag is niet interactief.
  *

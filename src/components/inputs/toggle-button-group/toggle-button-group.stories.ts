@@ -6,7 +6,7 @@ import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * De Toggle Button Group component groepeert `nldd-toggle-button` elementen en beheert
+ * `nldd-toggle-button-group` groepeert `nldd-toggle-button`-elementen en beheert
  * selectie, toetsenbordnavigatie en de synchronisatie van `type`, `name`, `appearance` en `size`.
  *
  * ## Gebruik

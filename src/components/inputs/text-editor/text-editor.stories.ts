@@ -155,6 +155,11 @@ function formatToolbar({ slot, editorId }: { slot?: string; editorId?: string } 
 	`;
 }
 
+/**
+ * `nldd-text-editor` is een markdown-editor die de opmaak in de tekst zelf toont:
+ * vet is vet en koppen zijn groter, terwijl de markdown-tekens gedimd zichtbaar
+ * blijven. Het document blijft gewone markdown, dus de inhoud blijft overal bruikbaar.
+ */
 export default {
 	title: 'Components/Inputs/Text Editor',
 	component: 'nldd-text-editor',

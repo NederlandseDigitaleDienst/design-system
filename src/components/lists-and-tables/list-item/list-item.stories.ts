@@ -8,6 +8,11 @@ import '../cells/reorder-handle-cell/reorder-handle-cell.js';
 import '../../content/icon/icon.js';
 import '../list-item-segment/list-item-segment.js';
 
+/**
+ * `nldd-list-item` is een rij in een `nldd-list`. Met `href`, `button`,
+ * `checkbox` of `radio` is de hele rij één control, zonder is hij een gewone
+ * container voor cells.
+ */
 export default {
 	title: 'Components/Lists & Tables/List Item',
 	component: 'nldd-list-item',

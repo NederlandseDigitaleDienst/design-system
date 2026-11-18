@@ -9,7 +9,7 @@ import '../../layout/container/container.js';
 import { ICONS } from '../../content/icon/icon.js';
 
 /**
- * De Dialog is een inline statuscomponent voor lege toestanden, bevestigingen en feedback.
+ * `nldd-inline-dialog` is een inline statuscomponent voor lege toestanden, bevestigingen en feedback.
  * Hij vult zijn container en heeft geen overlay of backdrop.
  * Gebruik `nldd-modal-dialog` voor een modaal venster met backdrop.
  *

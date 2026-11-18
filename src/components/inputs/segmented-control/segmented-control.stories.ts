@@ -4,7 +4,7 @@ import './../../content/icon/icon.js';
 import '../../layout/container/container.js';
 
 /**
- * De Segmented Control component is een horizontale groep van wederzijds exclusieve (radio)
+ * `nldd-segmented-control` is een horizontale groep van wederzijds exclusieve (radio)
  * of meervoudig selecteerbare (checkbox) opties.
  */
 export default {

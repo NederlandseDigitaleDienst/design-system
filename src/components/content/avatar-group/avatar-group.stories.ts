@@ -4,9 +4,11 @@ import '../avatar/avatar.js';
 import '../../layout/container/container.js';
 import { LEYSTER, REMBRANDT, VAN_GOGH } from '../../../docs/story-portraits.js';
 
+const SIZES = ['16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'];
+
 /**
- * De Avatar Group toont meerdere avatars als één groep: overlappend, met een ring
- * in de vlakkleur zodat ze gescheiden blijven.
+ * `nldd-avatar-group` toont meerdere avatars als één groep: overlappend, met een
+ * ring in de vlakkleur zodat ze gescheiden blijven.
  *
  * ## Gebruik
  * ```html
@@ -16,8 +18,6 @@ import { LEYSTER, REMBRANDT, VAN_GOGH } from '../../../docs/story-portraits.js';
  * </nldd-avatar-group>
  * ```
  */
-const SIZES = ['16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'];
-
 export default {
 	title: 'Components/Content/Avatar Group',
 	component: 'nldd-avatar-group',

@@ -16,7 +16,7 @@ const RIJKSLEUREN = [
 const ALL_COLORS = [...SEMANTIC_COLORS, ...RIJKSLEUREN];
 
 /**
- * Een progress bar toont voortgang of een verdeling. Eén waarde of meerdere
+ * `nldd-progress-bar` toont voortgang of een verdeling. Eén waarde of meerdere
  * segmenten. Twee varianten: `progress` (segmenten tellen op naar `max`, rest is
  * track) en `distribution` (segmenten verdelen het totaal, zoals
  * opslaggebruik). Geef ruwe getallen mee — wij berekenen percentages.

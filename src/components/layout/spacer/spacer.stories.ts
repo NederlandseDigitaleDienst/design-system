@@ -4,9 +4,31 @@ import '../../actions/button/button.js';
 import '../container/container.js';
 import '../../content/text/text.js';
 
+const SIZE_OPTIONS = [
+	'flexible',
+	'2',
+	'4',
+	'6',
+	'8',
+	'10',
+	'12',
+	'16',
+	'20',
+	'24',
+	'28',
+	'32',
+	'40',
+	'44',
+	'48',
+	'56',
+	'64',
+	'80',
+	'96',
+];
+
 /**
- * Gebruik een spacer om ruimte tussen elementen te creëren.
- * Componenten in dit designsysteem hebben geen eigen margins — alle witruimte
+ * `nldd-spacer` maakt ruimte tussen elementen.
+ * Componenten in dit designsysteem hebben geen eigen margins: alle witruimte
  * wordt expliciet bepaald met een spacer. Dat maakt de ruimte zichtbaar en
  * aanpasbaar zonder de componenten zelf te wijzigen.
  *
@@ -41,29 +63,6 @@ import '../../content/text/text.js';
  * <nldd-spacer size="flexible"></nldd-spacer>
  * ```
  */
-
-const SIZE_OPTIONS = [
-	'flexible',
-	'2',
-	'4',
-	'6',
-	'8',
-	'10',
-	'12',
-	'16',
-	'20',
-	'24',
-	'28',
-	'32',
-	'40',
-	'44',
-	'48',
-	'56',
-	'64',
-	'80',
-	'96',
-];
-
 export default {
 	title: 'Components/Layout/Spacer',
 	component: 'nldd-spacer',

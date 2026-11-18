@@ -5,8 +5,8 @@ import '../../layout/container/container.js';
 import '../../content/rich-text/rich-text.js';
 
 /**
- * Een layout placeholder die de beschikbare ruimte vult en een indeterminate
- * activity indicator centreert. Standaard is dat een eenvoudige, icoon-grote
+ * `nldd-activity-indicator` is een layout placeholder die de beschikbare ruimte
+ * vult en een indeterminate activity indicator centreert. Standaard is dat een eenvoudige, icoon-grote
  * cirkel in `--context-content-color`, de tekstkleur die het vlak, de knop of
  * de rij eromheen zet.
  *

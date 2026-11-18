@@ -8,7 +8,7 @@ import '../../../actions/button/button.js';
 import '../../../navigation/top-title-bar/top-title-bar.js';
 
 /**
- * Gebruik een navigation split view voor een vierkoloms navigatiepatroon met
+ * `nldd-navigation-split-view` is voor een vierkoloms navigatiepatroon met
  * een zijbalk, secundaire zijbalk, inhoudsgebied en inspecteur.
  *
  * Gebruik <code>nldd-split-view-pane</code> als directe kinderen. De split view stelt

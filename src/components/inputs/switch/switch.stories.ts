@@ -3,7 +3,7 @@ import './switch.js';
 import '../../layout/container/container.js';
 
 /**
- * De Switch component is een toggle control voor aan/uit instellingen.
+ * `nldd-switch` is een schakelaar voor aan/uit-instellingen.
  */
 export default {
 	title: 'Components/Inputs/Switch',

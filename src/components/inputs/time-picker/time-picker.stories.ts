@@ -4,6 +4,11 @@ import '../../layout/container/container.js';
 import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
 
+/**
+ * `nldd-time-picker` is een tijdkiezer met 2 kolommen, uren en minuten, die als
+ * een wieltje langs de selectie in het midden schuiven. Je gebruikt hem los op een
+ * pagina of in een filterpaneel, en hij zit in de popover van `nldd-time-field`.
+ */
 export default {
 	title: 'Components/Inputs/Time Picker',
 	component: 'nldd-time-picker',

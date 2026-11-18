@@ -8,7 +8,7 @@ import '../../content/title/title.js';
 import { ICONS } from './../../content/icon/icon.js';
 
 /**
- * De Icon Button component is een vierkante knop voor icoon-only acties.
+ * `nldd-icon-button` is een vierkante knop voor icoon-only acties.
  *
  * ## Gebruik
  * ```html

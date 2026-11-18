@@ -3,7 +3,7 @@ import './search-field.js';
 import '../../layout/container/container.js';
 
 /**
- * De Search Field component is een zoekveld met zoekicoon, een optionele dismiss knop
+ * `nldd-search-field` is een zoekveld met zoekicoon, een optionele dismiss knop
  * en een optionele zoekknop.
  */
 export default {

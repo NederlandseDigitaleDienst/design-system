@@ -7,8 +7,8 @@ import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 /**
- * De Checkbox Group groepeert `nldd-checkbox-field` elementen zoals de Radio
- * Button Group dat doet met keuzerondjes: dezelfde opbouw, één `name` voor
+ * `nldd-checkbox-group` groepeert `nldd-checkbox-field` elementen zoals
+ * `nldd-radio-button-group` dat doet met keuzerondjes: dezelfde opbouw, één `name` voor
  * alle velden, en een groep die een schermlezer met het label aankondigt.
  * Elk selectievakje is een eigen stap voor Tab. Met `required` moet er
  * minstens één aangevinkt zijn. Gebruik altijd binnen `nldd-form-field` voor

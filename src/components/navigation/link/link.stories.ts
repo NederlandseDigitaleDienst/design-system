@@ -8,7 +8,7 @@ import '../../layout/spacer/spacer.js';
 import '../../layout/popover/popover.js';
 
 /**
- * De Link component werkt in twee modi:
+ * `nldd-link` werkt in twee modi:
  *
  * - **Sized** (`size="xs|sm|md|lg"`) — standalone link met vaste tekstgrootte,
  *   ondersteunt icons. Voor menu's, actiegebieden, overzichten.

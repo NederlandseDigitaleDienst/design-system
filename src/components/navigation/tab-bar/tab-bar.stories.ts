@@ -3,6 +3,10 @@ import './tab-bar.js';
 import './../../content/icon/icon.js';
 import '../../layout/container/container.js';
 
+/**
+ * `nldd-tab-bar` is een horizontale balk met tabs, waarvan er steeds één actief is.
+ * Tabs die niet passen, gaan achter de knop "Meer tabs" in een menu.
+ */
 export default {
 	title: 'Components/Navigation/Tab Bar',
 	component: 'nldd-tab-bar',

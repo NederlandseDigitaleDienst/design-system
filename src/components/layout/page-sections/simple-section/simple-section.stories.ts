@@ -13,7 +13,7 @@ import '../../../inputs/segmented-control/segmented-control.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
 /**
- * Gebruik een simple section als bouwsteen voor paginainhoud.
+ * `nldd-simple-section` is een bouwsteen voor paginainhoud.
  * De sectie past padding en ruimte tussen header, inhoud en footer automatisch
  * aan op basis van de beschikbare breedte via container queries — geen attribuut nodig.
  *

@@ -7,7 +7,7 @@ import type { NLDDSlider } from './slider.js';
 import '../../layout/container/container.js';
 
 /**
- * Een waarde kiezen langs een baan: door de knop te slepen, op de baan te
+ * `nldd-slider` laat je een waarde kiezen langs een baan: door de knop te slepen, op de baan te
  * klikken of met de pijltjes. Met `range` kies je een bereik, met een knop voor
  * elk uiteinde. De namen volgen die van Apple: de track, de thumb, en de
  * gevulde minimum track tot de thumb, of tussen de thumbs van een range.

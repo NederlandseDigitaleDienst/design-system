@@ -10,7 +10,7 @@ import '../../layout/page-sections/simple-section/simple-section.js';
 import '../../layout/container/container.js';
 
 /**
- * Een zwevend venster gebaseerd op het native `<dialog>`-element.
+ * `nldd-window` is een zwevend venster op basis van het native `<dialog>`-element.
  * Kan modaal of niet-modaal worden weergegeven. Positioneerbaar via
  * CSS-waarden.
  *

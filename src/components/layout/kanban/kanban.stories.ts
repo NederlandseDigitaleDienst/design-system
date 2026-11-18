@@ -12,9 +12,9 @@ import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 
 /**
- * Kolommen naast elkaar, met kaartjes die je ertussen verplaatst: een kanbanbord,
- * of elk bord waar de kolom van een kaartje een van zijn waarden is, zoals een
- * status of een team.
+ * `nldd-kanban` zet kolommen naast elkaar, met kaartjes die je ertussen
+ * verplaatst: een kanbanbord, of elk bord waar de kolom van een kaartje een
+ * van zijn waarden is, zoals een status of een team.
  *
  * Een kaartje verplaats je op drie manieren, en alle drie geven hetzelfde
  * `move`-event:

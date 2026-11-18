@@ -8,7 +8,7 @@ import '../../actions/button-group/button-group.js';
 import '../../layout/container/container.js';
 
 /**
- * Een visueel afgebakende kaart met optionele header, body en footer secties.
+ * `nldd-card` is een visueel afgebakende kaart met optionele header, body en footer secties.
  * De kaart heeft een elevated look als standaard. Gebruik geneste containers
  * voor padding.
  *

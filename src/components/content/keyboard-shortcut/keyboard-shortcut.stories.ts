@@ -3,7 +3,7 @@ import './keyboard-shortcut.js';
 import '../../layout/container/container.js';
 
 /**
- * De KeyboardShortcut component toont een toetsencombinatie in één gecombineerde
+ * `nldd-keyboard-shortcut` toont een toetsencombinatie in één gecombineerde
  * container, bijvoorbeeld naast een menu-item of als hint bij een actie.
  *
  * ## Gebruik

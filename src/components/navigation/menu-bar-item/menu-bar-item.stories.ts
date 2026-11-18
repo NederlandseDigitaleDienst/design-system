@@ -4,6 +4,10 @@ import '../../content/avatar/avatar.js';
 import { ICONS } from '../../content/icon/icon.js';
 import '../../layout/container/container.js';
 
+/**
+ * `nldd-menu-bar-item` is een item in een `nldd-menu-bar`: een link met `href`,
+ * anders een button. Met een `nldd-menu` erin opent het een menu.
+ */
 export default {
 	title: 'Components/Navigation/Menu Bar Item',
 	component: 'nldd-menu-bar-item',

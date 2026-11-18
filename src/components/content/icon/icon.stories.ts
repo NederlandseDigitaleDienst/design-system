@@ -32,7 +32,7 @@ export default {
 		status: { type: 'stable' },
 		docs: {
 			description: {
-				component: 'A flexible icon component. By default it fills its parent and takes the content color of its context. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the design system cannot know, set `custom-color` to any CSS color value. Every icon name and alias is listed under [Iconen](/iconen/).',
+				component: '`nldd-icon` is een icoon uit de iconenset. Zonder instellingen vult hij zijn ouder en neemt hij de tekstkleur van zijn context over. Met `size` krijgt hij een vaste maat, met `color` een functionele kleur of een rijkskleur. Voor een kleur die het designsysteem niet kent, zet je `custom-color` op een CSS-kleur. Alle iconen en aliassen staan onder [Iconen](/iconen/).',
 			},
 		},
 	},

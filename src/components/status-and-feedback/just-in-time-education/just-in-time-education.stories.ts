@@ -2,6 +2,11 @@ import { html, nothing } from 'lit';
 import './just-in-time-education.js';
 import '../../inputs/search-field/search-field.js';
 
+/**
+ * `nldd-just-in-time-education` is een coach mark: een kaartje met een tip dat
+ * naar een control wijst, zoals een `nldd-search-field`. De app zet hem aan met
+ * `active`, en de pagina eromheen blijft bruikbaar.
+ */
 export default {
 	title: 'Components/Status & Feedback/Just in Time Education',
 	component: 'nldd-just-in-time-education',

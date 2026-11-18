@@ -3,7 +3,7 @@ import './radio-button-field.js';
 import '../../layout/container/container.js';
 
 /**
- * De Radio Button Field component is een radio button met een inline label.
+ * `nldd-radio-button-field` is een radio button met een inline label.
  * Gebruik binnen `nldd-radio-button-group` voor toetsenbordnavigatie en groepssemantiek.
  */
 export default {

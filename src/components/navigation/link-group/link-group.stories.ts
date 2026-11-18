@@ -2,6 +2,12 @@ import { html, nothing } from 'lit';
 import './link-group.ts';
 import '../link/link.ts';
 
+/**
+ * `nldd-link-group` is een set samenhangende `nldd-link`-elementen, zoals de
+ * links onder de naam van een dienst in een footer. De links staan in een rij
+ * die doorloopt op de volgende regel, of onder elkaar met
+ * `orientation="vertical"`.
+ */
 export default {
 	title: 'Components/Navigation/Link Group',
 	component: 'nldd-link-group',

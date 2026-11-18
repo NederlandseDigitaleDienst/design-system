@@ -14,7 +14,7 @@ import '../text-cell/text-cell.js';
 import '../title-cell/title-cell.js';
 
 /**
- * De cel tekent het spoor van een tijdlijn of stappenlijst: een lijn met een
+ * `nldd-step-cell` tekent het spoor van een tijdlijn of stappenlijst: een lijn met een
  * punt per rij. Hij hoort altijd in een `nldd-list-item` thuis — de rij levert
  * de blokpadding waarop de lijn zich uitlijnt (`--context-cell-padding-block`),
  * dus buiten een lijst sluiten opeenvolgende stappen niet op elkaar aan.

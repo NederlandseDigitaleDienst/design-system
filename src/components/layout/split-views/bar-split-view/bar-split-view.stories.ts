@@ -15,7 +15,7 @@ import { syncToolbarOverflow } from '../../../actions/toolbar/toolbar.story-sync
 syncToolbarOverflow();
 
 /**
- * Gebruik een bar split view voor een verticale layout met een main-gebied en een
+ * `nldd-bar-split-view` is een verticale layout met een main-gebied en een
  * onbeperkt aantal balkpanelen. Geef elke balk een unieke slotnaam (bijv.
  * slot="toolbar", slot="status-bar"). Het main-paneel gebruikt altijd slot="main".
  *

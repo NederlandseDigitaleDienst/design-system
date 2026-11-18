@@ -8,7 +8,7 @@ import '../../content/avatar/avatar.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * De Toggle Button component is een selecteerbare knop die tussen aan/uit kan schakelen.
+ * `nldd-toggle-button` is een selecteerbare knop die tussen aan en uit schakelt.
  * Beschikbaar als `button` (met `aria-pressed`), `checkbox` of `radio` als onderliggend element,
  * zodat de semantiek aansluit bij het gebruik.
  *

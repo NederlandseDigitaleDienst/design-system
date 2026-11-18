@@ -9,7 +9,7 @@ import { VERMEER } from '../../../docs/story-portraits.js';
 const SIZES: AvatarSize[] = ['24', '32', '40', '48', '64', '96'];
 
 /**
- * Een avatar toont één persoon of organisatie. De inhoud volgt een vaste
+ * `nldd-avatar` toont één persoon of organisatie. De inhoud volgt een vaste
  * terugvalketen: een afbeelding wanneer `src` laadt, anders de initialen (uit
  * `initials` of afgeleid uit `name`), en anders een terugval-icoon.
  *

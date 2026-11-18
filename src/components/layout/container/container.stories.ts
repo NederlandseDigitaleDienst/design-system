@@ -17,7 +17,7 @@ const sizeControl = (description: string) => ({
 });
 
 /**
- * Container is een eenvoudige layout-primitive: kies een layout-modus, geef
+ * `nldd-container` is een eenvoudige layout-primitive: kies een layout-modus, geef
  * een gap, optioneel uitlijning, en padding. Padding kan per zijde, per as
  * (inline/block) of voor alle zijden tegelijk. Specifiekere instellingen
  * winnen: zijde > as > alle.

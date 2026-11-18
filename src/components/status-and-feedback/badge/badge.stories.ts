@@ -4,8 +4,11 @@ import { ICONS } from './../../content/icon/icon.js';
 import '../../layout/container/container.js';
 import '../../content/text/text.js';
 
+const SEMANTIC_COLORS = ['critical', 'accent', 'neutral', 'warning', 'success'];
+const COLORS = [...SEMANTIC_COLORS, 'content'];
+
 /**
- * De Badge toont de toestand van iets, of hoeveel er van iets is. Wat er staat
+ * `nldd-badge` toont de toestand van iets, of hoeveel er van iets is. Wat er staat
  * bepaalt het systeem, niet de gebruiker, en het verandert zonder dat iemand het
  * aanraakt. Een badge is nooit interactief.
  *
@@ -23,9 +26,6 @@ import '../../content/text/text.js';
  * ></nldd-badge>
  * ```
  */
-const SEMANTIC_COLORS = ['critical', 'accent', 'neutral', 'warning', 'success'];
-const COLORS = [...SEMANTIC_COLORS, 'content'];
-
 export default {
 	title: 'Components/Status & Feedback/Badge',
 	component: 'nldd-badge',

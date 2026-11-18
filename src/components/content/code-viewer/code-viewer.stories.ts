@@ -22,6 +22,11 @@ const LANGUAGE_OPTIONS = [
 const DEFAULT_CONTENT = `const greet = (name) => \`Hallo, \${name}!\`;
 console.log(greet('wereld'));`;
 
+/**
+ * `nldd-code-viewer` is een blok code of tekst dat je alleen leest, met de
+ * witruimte zoals hij is. Met `language` krijgt de code syntax-highlighting,
+ * met `diff` toont hij een unified diff als toegevoegde en verwijderde regels.
+ */
 export default {
 	title: 'Components/Content/Code Viewer',
 	component: 'nldd-code-viewer',

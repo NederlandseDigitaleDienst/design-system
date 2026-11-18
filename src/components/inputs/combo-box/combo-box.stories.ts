@@ -5,7 +5,7 @@ import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
 
 /**
- * De Combo Box component is een tekstveld met autocomplete/dropdown functionaliteit.
+ * `nldd-combo-box` is een tekstveld met autocomplete/dropdown functionaliteit.
  * Voeg een `nldd-menu` met `nldd-menu-item` elementen toe als child.
  */
 export default {

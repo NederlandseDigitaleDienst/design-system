@@ -7,7 +7,7 @@ import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 /**
- * De Radio Button Group groepeert `nldd-radio-button-field` elementen, beheert
+ * `nldd-radio-button-group` groepeert `nldd-radio-button-field` elementen, beheert
  * toetsenbordnavigatie en geeft `name` en `disabled` door aan alle velden.
  * Gebruik altijd binnen `nldd-form-field` voor het groepslabel.
  *

@@ -3,7 +3,7 @@ import './radio-button.js';
 import '../../layout/container/container.js';
 
 /**
- * De Radio Button component wordt gebruikt voor exclusieve keuzes binnen een groep opties.
+ * `nldd-radio-button` is voor exclusieve keuzes binnen een groep opties.
  * Slechts één radio button binnen een groep (met dezelfde `name`) kan tegelijkertijd geselecteerd zijn.
  *
  * Dit component tekent alleen de vorm. Wil je een zichtbaar label ernaast, gebruik

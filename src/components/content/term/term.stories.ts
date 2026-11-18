@@ -7,6 +7,11 @@ import '../../layout/container/container.js';
 import '../../navigation/link/link.js';
 import '../../layout/spacer/spacer.js';
 
+/**
+ * `nldd-term` is een begrip in lopende tekst met een uitleg erachter, zoals een
+ * juridische term uit een begrippenlijst. Een klik op de term opent de definitie
+ * in een popover.
+ */
 export default {
 	title: 'Components/Content/Term',
 	component: 'nldd-term',

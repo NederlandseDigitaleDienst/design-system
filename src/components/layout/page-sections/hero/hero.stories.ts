@@ -11,7 +11,7 @@ import { sampleImage } from '../../../../sample-images.js';
 const MEDIA = sampleImage('butterfly-1200.jpg');
 
 /**
- * Een paginakop met een afbeelding en een tekstpaneel erop, op acht mogelijke
+ * `nldd-hero` is een paginakop met een afbeelding en een tekstpaneel erop, op acht mogelijke
  * posities. De afbeelding is sfeer en nooit de hoofdzaak, dus het paneel staat
  * er altijd op: op een sectie-gap van de randen, of met `main-width="full"` als
  * strook over de hele afbeelding. Het paneel is zo breed als de inhoud nodig

@@ -15,6 +15,10 @@ import '../../layout/spacer/spacer.js';
 
 syncToolbarOverflow();
 
+/**
+ * `nldd-toolbar` is een rij controls die bij een heel scherm of paneel horen.
+ * Wat niet past, schuift naar een overloopmenu, de laagste `priority` eerst.
+ */
 export default {
 	title: 'Components/Actions/Toolbar',
 	component: 'nldd-toolbar',

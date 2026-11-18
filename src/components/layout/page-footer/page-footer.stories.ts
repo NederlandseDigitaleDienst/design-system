@@ -8,6 +8,11 @@ import '../../content/title/title.js';
 import '../../navigation/link/link.js';
 import '../../navigation/link-group/link-group.js';
 
+/**
+ * `nldd-page-footer` is de footer onderaan een pagina, in het `footer`-slot van
+ * `nldd-page`. Hij heeft drie optionele rijen: een kruimelpad, eigen inhoud en
+ * een juridische balk.
+ */
 export default {
 	title: 'Components/Layout/Page Footer',
 	component: 'nldd-page-footer',

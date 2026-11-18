@@ -4,6 +4,11 @@ import '../../../actions/button/button.js';
 import '../../list/list.js';
 import '../../list-item/list-item.js';
 
+/**
+ * `nldd-cell` is een cel voor willekeurige inhoud in een rij van een
+ * `nldd-list`, zoals een knop of een switch. Hij regelt uitlijning en maat, en
+ * laat de inhoud zelf vrij.
+ */
 export default {
 	title: 'Components/Lists & Tables/Cells/Cell',
 	component: 'nldd-cell',

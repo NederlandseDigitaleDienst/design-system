@@ -2,7 +2,7 @@ import { html } from 'lit';
 import './pagination.js';
 
 /**
- * De Pagination component voor het navigeren tussen pagina's met inhoud.
+ * `nldd-pagination` is voor het navigeren tussen pagina's met inhoud.
  *
  * ## Gebruik
  * ```html

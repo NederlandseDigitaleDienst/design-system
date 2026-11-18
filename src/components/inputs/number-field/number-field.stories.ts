@@ -3,7 +3,8 @@ import './number-field.js';
 import '../../layout/container/container.js';
 
 /**
- * De Number Field component is een numeriek invoerveld met decrement en increment knoppen.
+ * `nldd-number-field` is een numeriek invoerveld met knoppen om de waarde te
+ * verlagen en te verhogen.
  */
 export default {
 	title: 'Components/Inputs/Number Field',

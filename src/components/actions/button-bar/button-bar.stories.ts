@@ -4,6 +4,12 @@ import '../button/button.js';
 import '../icon-button/icon-button.js';
 import '../../layout/container/container.js';
 
+/**
+ * `nldd-button-bar` is een horizontale balk met een neutrale achtergrond voor
+ * een groep acties, en geeft zijn maat en stijl door aan elke `nldd-button` en
+ * `nldd-icon-button` erin. Voor aan/uit-knoppen gebruik je
+ * `nldd-toggle-button-group`.
+ */
 export default {
 	title: 'Components/Actions/Button Bar',
 	component: 'nldd-button-bar',

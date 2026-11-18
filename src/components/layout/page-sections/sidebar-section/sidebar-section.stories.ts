@@ -72,6 +72,11 @@ const trigger = html`
 	></nldd-button>
 `;
 
+/**
+ * `nldd-sidebar-section` is een paginasectie met een zijbalk links naast de
+ * hoofdinhoud, zoals filters of een inhoudsopgave. Is de sectie smal, dan
+ * klapt de zijbalk in achter een sheet.
+ */
 export default {
 	title: 'Components/Layout/Page Sections/Sidebar Section',
 	component: 'nldd-sidebar-section',

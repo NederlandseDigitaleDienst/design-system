@@ -3,7 +3,7 @@ import './dropdown.js';
 import '../../layout/container/container.js';
 
 /**
- * De Dropdown component is een visuele wrapper om een native `<select>` element.
+ * `nldd-dropdown` is een visuele wrapper om een native `<select>` element.
  * Geef een native `<select>` als slotted child — de browser behoudt volledige controle
  * over formulierverwerking, toegankelijkheid en keyboard navigatie.
  */

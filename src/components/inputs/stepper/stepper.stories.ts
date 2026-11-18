@@ -4,7 +4,7 @@ import '../../layout/container/container.js';
 import '../../content/text/text.js';
 
 /**
- * De Stepper component is een numerieke control met increment en decrement knoppen.
+ * `nldd-stepper` is een numerieke control met knoppen om de waarde te verhogen en te verlagen.
  */
 export default {
 	title: 'Components/Inputs/Stepper',

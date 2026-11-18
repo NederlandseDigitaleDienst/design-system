@@ -5,7 +5,7 @@ import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
 /**
- * Gebruik een one-third two-thirds section voor inhoud waarbij een smalle
+ * `nldd-one-third-two-thirds-section` is voor inhoud waarbij een smalle
  * zijkolom (1/3) naast een brede hoofdinhoud (2/3) staat, zoals een
  * navigatiemenu naast een formulier of een inhoudsopgave naast een artikel.
  * De kolommen wrappen automatisch wanneer de beschikbare breedte kleiner

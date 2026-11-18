@@ -23,7 +23,7 @@ export default {
 		docs: {
 			description: {
 				component: `
-Alles waar een waarde aan moet voldoen, in één lijst.
+\`nldd-validation-list\` zet alles waar een waarde aan moet voldoen in één lijst.
 
 Een eis die je vooraf kunt noemen is een item met een regel, en die controleert
 zichzelf terwijl je typt. Een eis die alleen een server kan vaststellen is een

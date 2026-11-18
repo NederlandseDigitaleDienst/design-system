@@ -7,7 +7,8 @@ import '../container/container.js';
 import '../../content/rich-text/rich-text.js';
 
 /**
- * De <code>nldd-shell</code> is de verplichte root shell van elke Nederlandse Digitale Dienst applicatie.
+ * `nldd-shell` is de verplichte root van elke applicatie van de Nederlandse
+ * Digitale Dienst.
  * Hij bevat altijd een split view of een <code>nldd-page</code> als directe inhoud.
  *
  * ## Gebruik

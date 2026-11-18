@@ -5,7 +5,7 @@ import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
 /**
- * Gebruik een one-half one-half section voor twee gelijkwaardige kolommen,
+ * `nldd-one-half-one-half-section` is voor twee gelijkwaardige kolommen,
  * zoals een vergelijking van twee opties, twee formulierblokken naast elkaar
  * of twee inhoudspanelen van gelijk belang.
  * De kolommen wrappen automatisch wanneer de beschikbare breedte kleiner

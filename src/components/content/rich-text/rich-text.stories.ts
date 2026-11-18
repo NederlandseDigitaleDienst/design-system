@@ -6,6 +6,11 @@ import '../text/text.js';
 import '../../layout/spacer/spacer.js';
 import { sampleImage } from '../../../sample-images.js';
 
+/**
+ * `nldd-rich-text` is een container voor lopende tekst in HTML, zoals een
+ * artikel uit een CMS of een markdown-renderer. Hij geeft koppen, alinea's en
+ * lijsten hun typografie en de ruimte ertussen.
+ */
 export default {
 	title: 'Components/Content/Rich Text',
 	component: 'nldd-rich-text',

@@ -8,7 +8,7 @@ import '../../layout/page-sections/simple-section/simple-section.js';
 import '../../content/title/title.js';
 
 /**
- * De Top Title Bar is de werkbalk van een pagina of container.
+ * `nldd-top-title-bar` is de werkbalk van een pagina of container.
  * Hij toont een titel en optionele navigatie- en actieknoppen.
  *
  * ## Gebruik

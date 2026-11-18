@@ -5,6 +5,10 @@ import '../../layout/container/container.js';
 import '../../content/text/text.js';
 import '../../layout/spacer/spacer.js';
 
+/**
+ * `nldd-time-field` is een tekstveld voor een tijd, met een tijdkiezer in een
+ * popover. De waarde is altijd `HH:mm`, in 24 uur.
+ */
 export default {
 	title: 'Components/Inputs/Time Field',
 	component: 'nldd-time-field',

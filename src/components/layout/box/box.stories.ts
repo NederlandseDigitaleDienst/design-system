@@ -7,7 +7,7 @@ import '../spacer/spacer.js';
 import '../../actions/button/button.js';
 
 /**
- * Gebruik een box om gerelateerde componenten visueel te groeperen in een afgebakend gebied.
+ * `nldd-box` groepeert gerelateerde componenten visueel in een afgebakend gebied.
  * Een box trekt de aandacht naar inhoud of acties die bij elkaar horen,
  * zodat gebruikers hun samenhang in één oogopslag begrijpen.
  *

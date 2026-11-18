@@ -11,7 +11,7 @@ import '../../content/text/text.js';
 import { ICONS } from './../../content/icon/icon.js';
 
 /**
- * De Button component is het primaire interactie-element voor gebruikersacties.
+ * `nldd-button` is het primaire interactie-element voor gebruikersacties.
  *
  * ## Gebruik
  * ```html

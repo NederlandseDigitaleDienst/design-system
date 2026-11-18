@@ -10,19 +10,6 @@ import '../spacer/spacer.js';
 import '../page/page.js';
 import '../page-sections/simple-section/simple-section.js';
 
-/**
- * Gebruik een collection om een verzameling items weer te geven in een grid-,
- * lijst- of horizontale scrolllay-out. De koptekst is optioneel. Bij horizontale
- * scroll verschijnen navigatieknoppen (en een fade aan de randen) zodra de items
- * niet meer in de container passen; bij grid en lijst een optionele laad-meer-knop.
- *
- * ## Gebruik
- * ```html
- * <nldd-collection layout="grid">
- *   <nldd-card>...</nldd-card>
- * </nldd-collection>
- * ```
- */
 /* One shape for the four gap controls, so a step added to the scale is added
    once. Mirrors sizeControl in the container stories. */
 const GAP_STEPS = ['0', '4', '8', '12', '16', '24', '32', '48'];
@@ -35,6 +22,19 @@ const gapControl = (description: string) => ({
 	table: { defaultValue: { summary: '(auto)' } },
 });
 
+/**
+ * `nldd-collection` toont een verzameling items in een grid-, lijst- of
+ * horizontale scrolllay-out. De koptekst is optioneel. Bij horizontale
+ * scroll verschijnen navigatieknoppen (en een fade aan de randen) zodra de items
+ * niet meer in de container passen; bij grid en lijst een optionele laad-meer-knop.
+ *
+ * ## Gebruik
+ * ```html
+ * <nldd-collection layout="grid">
+ *   <nldd-card>...</nldd-card>
+ * </nldd-collection>
+ * ```
+ */
 export default {
 	title: 'Components/Layout/Collection',
 	component: 'nldd-collection',

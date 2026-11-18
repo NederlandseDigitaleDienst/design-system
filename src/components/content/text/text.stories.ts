@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import './text.js';
 
 /**
- * Eén stuk lopende tekst op een maat uit de typografieschaal. Dit is wat je pakt
+ * `nldd-text` is één stuk lopende tekst op een maat uit de typografieschaal. Dit is wat je pakt
  * waar een app anders een kale `<p>` neerzet en de typografie erft van wat de
  * pagina toevallig instelt: een regel onder een titel, een zin in een paneel,
  * een onderschrift.

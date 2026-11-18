@@ -23,6 +23,11 @@ import '../../inputs/combo-box/combo-box.js';
 import '../../inputs/radio-button/radio-button.js';
 import '../../layout/container/container.js';
 
+/**
+ * `nldd-list` is de container voor rijen van `nldd-list-item`. Met `type` kies
+ * je wat de lijst is: een gewone lijst, een keuze uit opties, een boom, een
+ * navigatie, een formulier of een filterbare listbox.
+ */
 export default {
 	title: 'Components/Lists & Tables/List',
 	component: 'nldd-list',

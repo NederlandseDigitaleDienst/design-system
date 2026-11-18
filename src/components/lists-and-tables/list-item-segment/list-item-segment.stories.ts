@@ -41,6 +41,11 @@ const demoToggle = (e: Event) => {
 	}
 };
 
+/**
+ * `nldd-list-item-segment` groepeert een reeks cells in een `nldd-list-item` en
+ * maakt alleen dat deel klikbaar. Je gebruikt het als een rij meer dan één
+ * actie heeft, zoals een rij die navigeert met een losse knop ernaast.
+ */
 export default {
 	title: 'Components/Lists & Tables/List Item Segment',
 	component: 'nldd-list-item-segment',

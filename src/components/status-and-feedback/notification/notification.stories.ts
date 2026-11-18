@@ -13,6 +13,12 @@ import '../../layout/window/window.js';
 import '../../navigation/top-title-bar/top-title-bar.js';
 import { ICONS } from '../../content/icon/icon.js';
 
+/**
+ * `nldd-notification` is een korte melding die over de interface verschijnt en
+ * vanzelf weer verdwijnt, bijvoorbeeld na het opslaan of bij een mislukt
+ * verzoek. Anders dan `nldd-banner` staat hij niet in de pagina, maar zweeft hij
+ * erboven.
+ */
 export default {
 	title: 'Components/Status & Feedback/Notification',
 	component: 'nldd-notification',

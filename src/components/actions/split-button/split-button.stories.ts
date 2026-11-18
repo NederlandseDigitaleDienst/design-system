@@ -9,7 +9,7 @@ import '../../content/title/title.js';
 import { ICONS } from '../../content/icon/icon.js';
 
 /**
- * De Split Button combineert een primaire actieknop met een dropdown trigger.
+ * `nldd-split-button` combineert een primaire actieknop met een dropdown trigger.
  *
  * ## Gebruik
  * ```html

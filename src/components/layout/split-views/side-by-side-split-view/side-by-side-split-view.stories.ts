@@ -6,10 +6,9 @@ import '../../container/container.js';
 import '../../../content/rich-text/rich-text.js';
 
 /**
- * Use a side-by-side split view to show multiple panes next to each other,
- * each with its own scrollable area. Typically used for editors where
- * the user needs two or more views at the same time.
- * The number of panes is set via the <code>panes</code> attribute.
+ * `nldd-side-by-side-split-view` toont meer panelen naast elkaar, elk met een
+ * eigen scrollgebied. Bijvoorbeeld in een editor waar je twee of meer weergaven
+ * tegelijk nodig hebt. Het aantal panelen zet je met `panes`.
  *
  * ## Gebruik
  * ```html

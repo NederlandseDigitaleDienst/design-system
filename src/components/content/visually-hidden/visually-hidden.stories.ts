@@ -5,6 +5,11 @@ import '../../lists-and-tables/table/table.js';
 import '../../lists-and-tables/cells/cell/cell.js';
 import '../../lists-and-tables/cells/text-cell/text-cell.js';
 
+/**
+ * `nldd-visually-hidden` is tekst die een screenreader voorleest en die niet op het
+ * scherm staat. Gebruik hem voor een naam die zichtbaar overbodig is, zoals de kop
+ * van een kolom met checkboxes.
+ */
 export default {
 	title: 'Components/Content/Visually Hidden',
 	component: 'nldd-visually-hidden',

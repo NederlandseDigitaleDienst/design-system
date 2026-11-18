@@ -7,13 +7,13 @@ import '../../../content/rich-text/rich-text.js';
 import '../../../navigation/top-title-bar/top-title-bar.js';
 
 /**
- * Het <code>nldd-split-view-pane</code> is een eenvoudige paneel-container voor gebruik
- * binnen split views. De split view stelt automatisch <code>mode</code> en
- * <code>hide-back</code> in op basis van de beschikbare ruimte en de paneelconfiguratie.
+ * `nldd-split-view-pane` is een eenvoudige paneel-container voor gebruik
+ * binnen split views. De split view stelt automatisch `mode` en
+ * `hide-back` in op basis van de beschikbare ruimte en de paneelconfiguratie.
  *
- * De consumer stelt <code>has-content</code> in en plaatst een <code>nldd-page</code>
- * met een <code>nldd-top-title-bar</code> binnenin. Wanneer <code>hide-back</code> actief is,
- * verbergt het paneel automatisch de terugknop via de <code>--context-back-button-display</code>
+ * De consumer stelt `has-content` in en plaatst een `nldd-page`
+ * met een `nldd-top-title-bar` binnenin. Wanneer `hide-back` actief is,
+ * verbergt het paneel automatisch de terugknop via de `--context-back-button-display`
  * CSS-variabele.
  *
  * ## Gebruik

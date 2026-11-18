@@ -12,7 +12,8 @@ import '../../content/rich-text/rich-text.js';
 import '../../content/text/text.js';
 
 /**
- * Een non-modal floating panel verankerd aan een trigger-element.
+ * `nldd-popover` is een zwevend paneel dat niet modaal is, verankerd aan een
+ * trigger-element.
  * Gebouwd op de native Popover API met Floating UI voor positionering.
  *
  * ## Gebruik
