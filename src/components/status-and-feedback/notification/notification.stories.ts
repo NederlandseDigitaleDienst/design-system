@@ -6,6 +6,7 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 import '../../content/rich-text/rich-text.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 import '../../layout/page/page.js';
 import '../../layout/page-sections/simple-section/simple-section.js';
 import '../../layout/sheet/sheet.js';
@@ -393,10 +394,11 @@ export const BovenEenOverlay = {
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				<nldd-simple-section>
-					<nldd-container gap="16">
+					<nldd-container>
 						<nldd-rich-text>
 							<p>Meld een fout terwijl deze sheet openstaat.</p>
 						</nldd-rich-text>
+						<nldd-spacer size="16"></nldd-spacer>
 						<nldd-button
 							text="Meld een fout"
 							@click=${meldFout}
@@ -413,10 +415,11 @@ export const BovenEenOverlay = {
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				<nldd-simple-section>
-					<nldd-container gap="16">
+					<nldd-container>
 						<nldd-rich-text>
 							<p>Meld een fout terwijl dit venster openstaat.</p>
 						</nldd-rich-text>
+						<nldd-spacer size="16"></nldd-spacer>
 						<nldd-button
 							text="Meld een fout"
 							@click=${meldFout}

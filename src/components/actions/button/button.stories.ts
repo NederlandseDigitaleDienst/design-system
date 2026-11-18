@@ -4,6 +4,7 @@ import '../button-group/button-group.js';
 import '../menu/menu.js';
 import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 import '../../content/rich-text/rich-text.js';
 import '../../content/title/title.js';
 import '../../content/avatar/avatar.js';
@@ -715,16 +716,17 @@ export const MetPopover = {
 			>
 				<nldd-container
 					padding="16"
-					gap="8"
 				>
 					<nldd-title
 						size="display-6"
 						text="Dakisolatie"
 						heading-level="2"
 					></nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-rich-text>
 						<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
 					</nldd-rich-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-button
 						appearance="primary"
 						text="Lees meer over dakisolatie"
@@ -757,12 +759,12 @@ export const MetUitlegOpInteresse = {
 			>
 				<nldd-container
 					padding="12"
-					gap="8"
 				>
 					<nldd-text
 						text="Dossier D-318 is gedeeld met"
 						line-height="tight"
 					></nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-container
 						layout="row"
 						gap="8"
@@ -774,6 +776,7 @@ export const MetUitlegOpInteresse = {
 						></nldd-avatar>
 						<nldd-text text="Sam de Vries"></nldd-text>
 					</nldd-container>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-container
 						layout="row"
 						gap="8"

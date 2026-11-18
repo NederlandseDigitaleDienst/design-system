@@ -51,7 +51,7 @@
 			}
 		},
 		"message": { "type": "string", "description": "What is wrong here, in English, for the developer." },
-		"see": { "type": "string", "pattern": "^(patronen|ontwerprichtlijnen)/", "description": "Where the why is explained." },
+		"see": { "type": "string", "pattern": "^(patronen|ontwerprichtlijnen|componenten)/", "description": "Where the why is explained: a pattern, a section of the guidelines, or the page of the component that explains it." },
 		"aliases": { "type": "array", "items": { "type": "string" }, "description": "Former ids, so baselines and suppressions keep working." },
 		"examples": {
 			"type": "object",

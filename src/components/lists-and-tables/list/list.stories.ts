@@ -196,19 +196,21 @@ export const PijltjesnavigatieMetControls = {
 
 export const Appearances = {
 	render: () => html`
-		<nldd-container gap="32">
+		<nldd-container>
 			<nldd-list appearance="simple">
 				<nldd-list-item><nldd-text-cell text="Simple — item 1"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Simple — item 2"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Simple — item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
 
+			<nldd-spacer size="32"></nldd-spacer>
 			<nldd-list appearance="box-tinted">
 				<nldd-list-item><nldd-text-cell text="Box (standaard: getinte achtergrond en rand) — item 1"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Box — item 2"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Box — item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
 
+			<nldd-spacer size="32"></nldd-spacer>
 			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px; --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 				<nldd-list appearance="box-base">
 					<nldd-list-item><nldd-text-cell text='appearance="box-base" — item 1'></nldd-text-cell></nldd-list-item>

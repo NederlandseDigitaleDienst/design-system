@@ -1,0 +1,12 @@
+severity: hint
+context: 'nldd-container:is([gap], [sm-gap], [md-gap], [lg-gap]):is(:not([layout]), [layout="stack"]):mixed'
+message: Space different components under each other with nldd-spacer, not with a gap on their container.
+see: componenten/spacer
+examples:
+  passed:
+    - '<nldd-container gap="12"><nldd-text text="Aanvraag A-1042"></nldd-text><nldd-text text="Aanvraag A-1043"></nldd-text></nldd-container>'
+    - '<nldd-container gap="16"><nldd-text-field accessible-label="Naam"></nldd-text-field><nldd-form-field label="Dossier"><nldd-text-field></nldd-text-field></nldd-form-field></nldd-container>'
+    - '<nldd-container layout="wrap" gap="8"><nldd-token text="Dakisolatie"></nldd-token><nldd-button text="Wis filters"></nldd-button></nldd-container>'
+    - '<nldd-container><nldd-title text="Aanvragen"></nldd-title><nldd-spacer size="12"></nldd-spacer><nldd-list></nldd-list></nldd-container>'
+  failed:
+    - '<nldd-container gap="16"><nldd-title text="Aanvragen"></nldd-title><nldd-list></nldd-list><nldd-button text="Nieuwe aanvraag"></nldd-button></nldd-container>'

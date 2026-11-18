@@ -2550,6 +2550,7 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 
 **Rules** (`nldd lint`)
 
+- `container-no-mixed-gap` (hint): Space different components under each other with nldd-spacer, not with a gap on their container.
 - `filter-token-needs-dismiss` (hint): Set control="dismiss": each token is its own way back.
 - `token-strip-needs-wrap` (hint): Set layout="wrap" on the strip: the default stacks the tokens under each other.
 

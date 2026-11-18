@@ -25,6 +25,7 @@ export function seeUrl(see) {
 	const [kind, slug] = see.split('/');
 	if (kind === 'ontwerprichtlijnen') return `${SITE}/richtlijnen/#${slug}`;
 	if (kind === 'patronen') return `${SITE}/patronen/${slug}/`;
+	if (kind === 'componenten') return `${SITE}/componenten/${slug}/`;
 	return undefined;
 }
 

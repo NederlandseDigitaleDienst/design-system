@@ -133,6 +133,13 @@ function checkSee(rule) {
 	if (kind === 'ontwerprichtlijnen' && !guidelineHeadings.has(slug)) {
 		problems.push(`${rule.id}: see points at section "${slug}" of the guidelines, which does not exist.`);
 	}
+	// A component has a page because it has stories.
+	if (kind === 'componenten' && !readdirSync(join(repoRoot, 'src/components')).some((group) => existsSync(join(repoRoot, 'src/components', group, slug, `${slug}.stories.ts`)))) {
+		problems.push(`${rule.id}: see points at component "${slug}", which has no page.`);
+	}
+	if (!['patronen', 'ontwerprichtlijnen', 'componenten'].includes(kind)) {
+		problems.push(`${rule.id}: see points at "${kind}", which is no pattern, guideline or component.`);
+	}
 }
 
 async function checkExamples(rule) {

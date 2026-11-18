@@ -5,6 +5,7 @@ import '../../forms/form-field/form-field.js';
 import '../number-field/number-field.js';
 import type { NLDDSlider } from './slider.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * `nldd-slider` laat je een waarde kiezen langs een baan: door de knop te slepen, op de baan te
@@ -255,7 +256,7 @@ export const MetHistogramEnVelden = {
 			else slider.startValue = value;
 		};
 		return html`
-			<nldd-container gap="16">
+			<nldd-container>
 				<nldd-container
 					layout="row"
 					gap="12"
@@ -281,6 +282,7 @@ export const MetHistogramEnVelden = {
 						></nldd-number-field>
 					</nldd-form-field>
 				</nldd-container>
+				<nldd-spacer size="16"></nldd-spacer>
 				<nldd-slider
 					range
 					accessible-label="Prijs"

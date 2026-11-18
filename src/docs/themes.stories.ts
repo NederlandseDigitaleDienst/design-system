@@ -280,11 +280,12 @@ const overview = (scheme: 'light' | 'dark') => html`
 		`)}
 
 		${section('Tekst', html`
-			<nldd-container gap="12" max-width="480px">
+			<nldd-container max-width="480px">
 				<nldd-text-editor
 					accessible-label="Notitie"
 					.value=${EDITOR_VALUE}
 				></nldd-text-editor>
+				<nldd-spacer size="12"></nldd-spacer>
 				<nldd-rich-text>
 					<p>Bespreek dit met <a href="#" data-mention>Anouk de Vries</a> en <span data-mention>Bram Jansen</span>, zie de <a href="#">richtlijn</a>.</p>
 				</nldd-rich-text>

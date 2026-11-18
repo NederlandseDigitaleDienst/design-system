@@ -392,17 +392,19 @@ export const MetVoorproefjeOpInteresse = {
 export const MetEigenAnker = {
 	render: () => html`
 		<nldd-container
-			gap="8"
 			horizontal-alignment="left"
 		>
 			<nldd-link size="md"><a href="#aanvraag-a-1042">Aanvraag A-1042</a></nldd-link>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-link size="md">
 				<a href="#aanvraag-a-1043">Aanvraag A-1043 <nldd-icon icon="arrow-right"></nldd-icon></a>
 			</nldd-link>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-link
 				size="md"
 				disabled
 			><a href="#dossier-d-318">Dossier D-318</a></nldd-link>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-text>
 				<p>
 					Lees meer over

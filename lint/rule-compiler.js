@@ -112,6 +112,30 @@ function acceptedCheck(tags, allowUnknown) {
 }
 
 /**
+ * Whether the children of an element are of more than one kind. A kind is a
+ * tag, except that every form input and form field is one kind: the fields of
+ * a form share one rhythm. A spacer is the space itself and counts for none.
+ * In W- only what certainly renders counts; in W+ also what may, and content
+ * this file cannot see may be any kind.
+ */
+function mixedCheck(isInput, favorable) {
+	const kindOf = (child) => (isInput(child) || child.name === 'nldd-form-field' ? 'field' : child.name);
+	return (node) => {
+		const kinds = new Set();
+		for (const child of node.children) {
+			if (child.name === 'nldd-spacer') continue;
+			if (child.opaque) {
+				if (favorable) return true;
+				continue;
+			}
+			if (!favorable && (child.conditional || child.toggled)) continue;
+			kinds.add(kindOf(child));
+		}
+		return kinds.size > 1;
+	};
+}
+
+/**
  * The pseudo-classes a rule may use besides those of CSS and the tag classes.
  *
  * - `source` is what it means in the engine, made from the linter data.
@@ -129,6 +153,11 @@ const VOCABULARY = {
 		source: ({ isInput }) => fieldLabelCheck(isInput, false),
 		favorable: ({ isInput }) => fieldLabelCheck(isInput, true),
 		browser: 'drop',
+	},
+	// Children of more than one kind; source only, so for hints.
+	mixed: {
+		source: ({ isInput }) => mixedCheck(isInput, false),
+		favorable: ({ isInput }) => mixedCheck(isInput, true),
 	},
 	accepted: {
 		source: ({ tags }) => acceptedCheck(tags, false),

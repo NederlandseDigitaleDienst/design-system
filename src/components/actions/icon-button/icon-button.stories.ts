@@ -3,6 +3,7 @@ import './icon-button.js';
 import '../menu/menu.js';
 import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 import '../../content/rich-text/rich-text.js';
 import '../../content/title/title.js';
 import { ICONS } from './../../content/icon/icon.js';
@@ -674,13 +675,13 @@ export const MetPopover = {
 			>
 				<nldd-container
 					padding="16"
-					gap="8"
 				>
 					<nldd-title
 						size="display-6"
 						text="Dakisolatie"
 						heading-level="2"
 					></nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-rich-text>
 						<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
 					</nldd-rich-text>

@@ -4,6 +4,7 @@ import './split-button.js';
 import '../../actions/menu/menu.js';
 import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
+import '../../layout/spacer/spacer.js';
 import '../../content/rich-text/rich-text.js';
 import '../../content/title/title.js';
 import { ICONS } from '../../content/icon/icon.js';
@@ -310,16 +311,17 @@ export const MetPopover = {
 			>
 				<nldd-container
 					padding="16"
-					gap="8"
 				>
 					<nldd-title
 						size="display-6"
 						text="Deel deze pagina"
 						heading-level="2"
 					></nldd-title>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-rich-text>
 						<p>Kies hoe je deze pagina wilt delen met anderen.</p>
 					</nldd-rich-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<nldd-button
 						appearance="primary"
 						text="Kopieer link"
