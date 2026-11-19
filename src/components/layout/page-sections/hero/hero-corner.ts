@@ -133,17 +133,23 @@ export function limitCorner(host: HTMLElement, entries: readonly ResizeObserverE
 	// The radius narrows the panel it rounds, which the observer watches. Written
 	// in its own callback, that is a resize the observer cannot deliver, and the
 	// browser reports a ResizeObserver loop. A frame later it is a new one.
-	requestAnimationFrame(() => {
+	pendingFrames.set(host, requestAnimationFrame(() => {
 		pendingLimits.delete(host);
+		pendingFrames.delete(host);
 		for (const [limit, value] of limits) {
 			if (host.style.getPropertyValue(limit) !== value) host.style.setProperty(limit, value);
 		}
-	});
+	}));
 }
 
-/** Limits measured but not yet written, per hero. */
+/** Limits measured but not yet written, per hero, and the frame that writes them. */
 const pendingLimits = new WeakMap<HTMLElement, Map<string, string>>();
+const pendingFrames = new WeakMap<HTMLElement, number>();
 
 export function clearCornerLimits(host: HTMLElement): void {
+	const frame = pendingFrames.get(host);
+	if (frame !== undefined) cancelAnimationFrame(frame);
+	pendingFrames.delete(host);
+	pendingLimits.delete(host);
 	for (const limit of LIMITS) host.style.removeProperty(limit);
 }

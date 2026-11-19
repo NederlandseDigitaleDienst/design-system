@@ -283,6 +283,9 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this.addEventListener('dismiss', this._handleItemDismiss as EventListener);
 		this.addEventListener('keydown', this._handleKeyDown);
 		this.addEventListener('pointerdown', this._onPointerDown);
+		// A bar that connects again keeps its row, which firstUpdated observed:
+		// observe it again, and measure it where it is now.
+		if (this.hasUpdated) this._observeRow();
 	}
 
 	override disconnectedCallback(): void {
@@ -310,15 +313,16 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	override firstUpdated(): void {
 		this._hasCustomLabel = Boolean(this.accessibleLabel);
 
-		const container = this.shadowRoot?.querySelector('.document-tab-bar__items') as HTMLElement;
-		if (container) {
-			rowObserver.observe(container, this);
-		}
-
 		this._syncMenuAnchor();
 		// Capture: beforetoggle does not bubble. On the render root, which
 		// outlives the menu: a bar that connects again gets a new one.
 		this.renderRoot.addEventListener('beforetoggle', this._onMenuBeforeToggle, true);
+		this._observeRow();
+	}
+
+	private _observeRow(): void {
+		const container = this.shadowRoot?.querySelector('.document-tab-bar__items');
+		if (container) rowObserver.observe(container, this);
 		firstFrame.schedule(this);
 	}
 

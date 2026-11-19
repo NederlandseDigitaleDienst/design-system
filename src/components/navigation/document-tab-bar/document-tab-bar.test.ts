@@ -879,3 +879,29 @@ describe('nldd-document-tab-bar – while the page loads', () => {
 		menu.hidePopover();
 	});
 });
+
+describe('nldd-document-tab-bar – overflow after reconnecting', () => {
+	let el: HTMLElement;
+	afterEach(() => cleanup(el));
+
+	it('volgt de breedte van de rij weer als de balk opnieuw in de pagina komt', async () => {
+		el = await fixture(`
+			<div style="width: 900px">
+				<nldd-document-tab-bar accessible-label="Documenten">
+					<nldd-document-tab-bar-item selected text="Aanvraag A-1042"></nldd-document-tab-bar-item>
+					<nldd-document-tab-bar-item text="Aanvraag A-1043"></nldd-document-tab-bar-item>
+					<nldd-document-tab-bar-item text="Dossier D-318"></nldd-document-tab-bar-item>
+					<nldd-document-tab-bar-item text="Dossier D-319"></nldd-document-tab-bar-item>
+				</nldd-document-tab-bar>
+			</div>
+		`);
+		const bar = el.querySelector('nldd-document-tab-bar') as NLDDDocumentTabBar;
+		await waitForUpdate(bar);
+		await expect.poll(() => bar._overflowCount).toBe(0);
+		bar.remove();
+		el.append(bar);
+		await waitForUpdate(bar);
+		el.style.width = '200px';
+		await expect.poll(() => bar._overflowCount).toBeGreaterThan(0);
+	});
+});
