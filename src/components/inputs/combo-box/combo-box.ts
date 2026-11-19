@@ -286,6 +286,12 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		}
 	}
 
+	override connectedCallback(): void {
+		super.connectedCallback();
+		// Moved in the DOM: the slot keeps its content, so no slotchange comes.
+		if (this.hasUpdated) this._onSlotChange();
+	}
+
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this._unfollowAnchor();

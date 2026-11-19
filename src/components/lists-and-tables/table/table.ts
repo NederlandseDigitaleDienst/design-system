@@ -199,6 +199,7 @@ export class NLDDTable extends LitElement {
 		// overflows) in sync. It is shared by every table, see measureTables.
 		// It watches the sizer in the shadow root, so from the first render on.
 		if (this._sizer) observeSize(this._sizer);
+		if (this.hasUpdated) this._watchRows();
 	}
 
 	private get _sizer(): Element | null {
@@ -219,6 +220,15 @@ export class NLDDTable extends LitElement {
 		// toggled [hidden] (consumer-driven filtering) — mirrors nldd-list.
 		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])');
 		slot?.addEventListener('slotchange', () => this._scheduleEmpty());
+		this._watchRows();
+	}
+
+	/**
+	 * Runs on every connect after the first render: `disconnectedCallback` stops
+	 * the observer, and `firstUpdated` does not come again after a move.
+	 */
+	private _watchRows(): void {
+		this._rowsObserver?.disconnect();
 		this._rowsObserver = new MutationObserver((mutations) => {
 			const relevant = mutations.some((m) => {
 				if (m.type === 'childList') return m.target === this;

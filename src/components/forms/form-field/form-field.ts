@@ -187,6 +187,9 @@ export class NLDDFormField extends LitElement {
 		super.connectedCallback();
 		this._childObserver = new MutationObserver(() => this._onSlotChange());
 		this._childObserver.observe(this, { childList: true });
+		// Moved in the DOM: `firstUpdated` does not come again, and the observer
+		// on the validation lists only starts from here.
+		if (this.hasUpdated) this._onSlotChange();
 	}
 
 	override firstUpdated() {

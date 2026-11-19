@@ -349,13 +349,24 @@ export class NLDDList extends LitElement {
 		const noResultsSlot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="no-results"]');
 		noResultsSlot?.addEventListener('slotchange', () => queueMicrotask(() => this._updateEmpty()));
 
-		// Watch for rows being added or removed, for `hidden` toggles on them
-		// (consumer-driven filtering) and for branches opening and closing, since
-		// all three change which row paints first and last. `subtree: true` is
-		// required: a branch's rows sit inside the branch, not in the list. The
-		// callback filters on the target being a row, so `hidden` toggles on e.g.
-		// cells inside a row (container-query driven, via visibility-mixin) don't
-		// trigger a recalculation.
+		this._watchItems();
+		this._applyHostType();
+	}
+
+	/**
+	 * Watch for rows being added or removed, for `hidden` toggles on them
+	 * (consumer-driven filtering) and for branches opening and closing, since
+	 * all three change which row paints first and last. `subtree: true` is
+	 * required: a branch's rows sit inside the branch, not in the list. The
+	 * callback filters on the target being a row, so `hidden` toggles on e.g.
+	 * cells inside a row (container-query driven, via visibility-mixin) don't
+	 * trigger a recalculation.
+	 *
+	 * Runs on every connect after the first render: `disconnectedCallback` stops
+	 * the observer, and `firstUpdated` does not come again after a move.
+	 */
+	private _watchItems(): void {
+		this._itemsObserver?.disconnect();
 		this._itemsObserver = new MutationObserver((mutations) => {
 			const isRow = (node: Node | null) =>
 				node instanceof Element && node.tagName.toLowerCase() === 'nldd-list-item';
@@ -377,8 +388,6 @@ export class NLDDList extends LitElement {
 			attributes: true,
 			attributeFilter: ['hidden', 'expanded', 'disabled'],
 		});
-
-		this._applyHostType();
 	}
 
 	override connectedCallback() {
@@ -394,6 +403,13 @@ export class NLDDList extends LitElement {
 		this.addEventListener('keydown', this._onKeyDownCapture, true);
 		this.addEventListener('keydown', this._onKeyDown);
 		this.addEventListener('click', this._onListClick);
+		if (this.hasUpdated) {
+			this._watchItems();
+			// Rows that came or went while the list was out of the document.
+			this._updateItems();
+			this._updateEmpty();
+			this._syncUnmanagedControls();
+		}
 	}
 
 	override disconnectedCallback() {

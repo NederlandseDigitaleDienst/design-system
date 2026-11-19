@@ -281,6 +281,9 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 			}
 			whenScrollModeProviderDefined(this, this._adoptScrollProvider);
 		}
+		// Moved in the DOM: `firstUpdated` does not come again, and
+		// `disconnectedCallback` took this listener and observer down.
+		if (this.hasUpdated) this._setupMainSlotListener();
 	}
 
 	/** Switches from stand-alone to push once a shell (or sheet, or modal

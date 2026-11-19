@@ -19,6 +19,8 @@ here; consult the commit history if you need that level of detail.
 
 - **Pages with many components load and resize much faster, above all in Safari.** A component that measured itself while the page was still parsing made the browser lay out the page once per instance, so 500 copies cost quadratically more than 50. Components now measure together, after the parse, with one ResizeObserver per component. With 500 copies in WebKit, a sheet loads in 1.7 s where it took more than a minute, a radio group in 0.4 s instead of 5.7 s, a time picker in 1.5 s instead of 73 s, a toolbar in 4.3 s instead of 27 s and an avatar group in 0.9 s instead of 52 s.
 - **A page section lays out by the `nldd-page` it is in.** A section goes in a page, never on its own or in another section. See Breaking.
+- **A component you move in the DOM keeps working.** Thirteen components went quiet after a move: they no longer followed their children or their own size. An app runs into this when it moves a sheet to `document.body` or lets a user drag a row. See Fixed.
+- **1 accessibility fix:** a moved `nldd-form-field` kept describing its control with a requirement that was no longer on screen. See Fixed.
 
 ### Breaking
 
@@ -37,6 +39,14 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **Thirteen components pick up again after a move in the DOM.** Moving an element disconnects it and connects it again, without a first render and without a `slotchange`. What these components had set up there did not come back.
+  - `nldd-form-field` follows its `nldd-validation-list` again, so the description of the control matches the requirements on screen. Before, an item that hid after the move stayed in the description, and a screen reader read out a requirement that was gone.
+  - `nldd-combo-box` and `nldd-token-field` hear `toggle`, `select` and `keydown` from their menu again.
+  - `nldd-menu` listens on its anchor again, and `nldd-menu-item` notices a submenu that is added late.
+  - `nldd-list` and `nldd-table` see rows that come, go or hide.
+  - `nldd-page` sees `grow` and `hidden` change on its children, and `nldd-container` the `order` attributes of its children.
+  - `nldd-menu-bar`, `nldd-document-tab-bar` and `nldd-kanban` follow their own width again. The document tab bar also finds its overflow menu back.
+  - `nldd-progress-bar` sees a segment indicator change. `nldd-progress-circle` reads the same way and got the same guard.
 - **Faster with many instances:** `nldd-page`, the split views, `nldd-top-title-bar`, `nldd-status-bar`, `nldd-radio-button`, `nldd-toolbar`, `nldd-tab-bar`, `nldd-document-tab-bar`, `nldd-menu-bar`, `nldd-top-navigation-bar`, `nldd-avatar`, `nldd-avatar-group`, `nldd-one-time-code-field`, `nldd-collection`, `nldd-kanban`, `nldd-table`, `nldd-combo-box`, `nldd-time-picker`, `nldd-date-picker`, `nldd-sidebar-section`, `nldd-file-field`, `nldd-code-viewer`, `nldd-text-editor` with a toolbar elsewhere on the page, and the corner of `nldd-hero`. Nothing changes in how they look or behave.
 - **No more "ResizeObserver loop" errors** from `nldd-table`, `nldd-sidebar-section` and the corner of `nldd-hero` when the window resizes. An `nldd-sidebar-section` that collapsed in a page still caused one, because collapsing resized the page in the same round; it now collapses a frame later.
 - **In Safari, only the `nldd-top-navigation-bar` nearest the top of the page draws the ribbon above it.** On a page with more bars, each one drew it in the same place, and its scroll-driven animations made every layout slower with each bar.

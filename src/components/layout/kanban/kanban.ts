@@ -178,6 +178,9 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 		// listeners there are then: one added once the drag begins comes too
 		// late, and the board scrolls and cancels the drag.
 		this.addEventListener('touchmove', this._holdTouch, { passive: false });
+		// Moved in the DOM: `updated` starts the scroll observer again, and
+		// nothing else asks for an update.
+		if (this.hasUpdated) this.requestUpdate();
 	}
 
 	override disconnectedCallback(): void {

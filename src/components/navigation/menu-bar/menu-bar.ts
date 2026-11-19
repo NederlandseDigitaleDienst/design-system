@@ -116,6 +116,13 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 
 	// ## Lifecycle
 
+	override connectedCallback(): void {
+		super.connectedCallback();
+		// Moved in the DOM: `firstUpdated` does not come again, and
+		// `disconnectedCallback` took the overflow detection down.
+		if (this.hasUpdated) this._setupOverflowDetection();
+	}
+
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this._cleanupOverflowDetection();
