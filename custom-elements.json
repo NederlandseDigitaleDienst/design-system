@@ -56740,7 +56740,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Work for many hosts at the next animation frame, in one callback.\n\nA host that asks for its own frame gets its own callback, and the browser\nruns the microtasks between two callbacks: a Lit render of the host before\nlands between them, so each host reads a layout that the one before it has\njust changed. One frame for all of them lets `run` read for every host\nfirst and write after, so the page lays out once.\n\nLike LayoutPass (layout-pass.ts), but at the frame the hosts asked for,\nfor work that waited a frame before it was shared.",
+          "description": "Work for many hosts at the next animation frame, in one callback.\n\nA host that asks for its own frame gets its own callback, and the browser\nruns the microtasks between two callbacks: a Lit render of the host before\nlands between them, so each host reads a layout that the one before it has\njust changed. One frame for all of them lets `run` read for every host\nfirst and write after, so the page lays out once.\n\nLike LayoutPass (layout-pass.ts), but at the frame the hosts asked for,\nfor work that waited a frame before it was shared. A hidden tab runs no\nframes, so the pass waits until the tab shows again.",
           "name": "FramePass",
           "members": [
             {

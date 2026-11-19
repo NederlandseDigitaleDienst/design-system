@@ -2,7 +2,9 @@
  * Nederlandse Digitale Dienst Simple Section Component (Lit + TypeScript)
  *
  * A basic section with responsive padding and gap. Contains optional header
- * and footer slots. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.
+ * and footer slots.
+ * Like every section it goes in an nldd-page, never in another section, and
+ * lays out by the width of that page.
  *
  * Use one section per content block and repeat the section rather than
  * building columns inside one: the section sets the reading width and the

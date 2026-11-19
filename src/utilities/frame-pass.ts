@@ -8,7 +8,8 @@
  * first and write after, so the page lays out once.
  *
  * Like LayoutPass (layout-pass.ts), but at the frame the hosts asked for,
- * for work that waited a frame before it was shared.
+ * for work that waited a frame before it was shared. A hidden tab runs no
+ * frames, so the pass waits until the tab shows again.
  */
 export class FramePass<T> {
 	private _pending = new Set<T>();

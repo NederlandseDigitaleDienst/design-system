@@ -3,7 +3,9 @@
  *
  * A section with two equal columns side by side.
  * The columns stand side by side on a page of 50rem (800px) or wider and stack below that, at the same width for every section with two columns.
- * Padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.
+ * Padding and gap are responsive.
+ * Like every section it goes in an nldd-page, never in another section, and
+ * lays out by the width of that page.
  *
  * @element nldd-one-half-one-half-section
  * @related nldd-simple-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section

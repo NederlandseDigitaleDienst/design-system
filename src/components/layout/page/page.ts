@@ -99,7 +99,6 @@ const insetObserver = sharedResizeObserver<NLDDPage>(measurePages);
  *  then, the values would resize what it watches inside its own callback. */
 const firstMeasurement = new LayoutPass<NLDDPage>(measurePages);
 
-
 /** Whether an element Tab could land on is one it lands on: an `<a>` without `href` reports a tabIndex of 0. */
 function takesTab(element: HTMLElement): boolean {
 	if (element.tabIndex < 0 || element.matches(':disabled')) return false;
@@ -420,6 +419,8 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	 * already gets there and the arrow keys scroll.
 	 */
 	_readScrollState(): { focusable: boolean } {
+		// Read phase: _onScroll reads the scroller and only sets state, so no
+		// writes belong in here.
 		this._onScroll();
 		const scroller = this._scrollEl;
 		const scrolls = !!scroller && !this._isRoot && scroller.scrollHeight > scroller.clientHeight;
