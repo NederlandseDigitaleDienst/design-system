@@ -143,7 +143,7 @@ export class NLDDBarSplitView extends LitElement {
 		});
 		if (this._currentBreakpoint === null) return all;
 		const attr = `${this._currentBreakpoint}-order`;
-		return [...all].sort((a, b) => {
+		return all.toSorted((a, b) => {
 			const aVal = a.hasAttribute(attr) ? parseInt(a.getAttribute(attr)!) : all.indexOf(a);
 			const bVal = b.hasAttribute(attr) ? parseInt(b.getAttribute(attr)!) : all.indexOf(b);
 			return aVal - bVal;

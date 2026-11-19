@@ -376,7 +376,7 @@ export class NLDDToolbar extends LitElement {
 	 *  not carry listeners added with addEventListener; its `select` is sent on
 	 *  to the original (see utilities/overflow-menu.ts). */
 	private _syncMenuItems(): void {
-		const overflowed = [...this._getPrioritizedItems()].reverse()
+		const overflowed = this._getPrioritizedItems().toReversed()
 			.filter(child => this._overflowIds.has(child.id))
 			.flatMap(child => child.overflowItems);
 		this._overflowMenu.mirror([...overflowed, ...this._pinnedOverflowItems]);
