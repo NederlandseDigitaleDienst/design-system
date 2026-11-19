@@ -211,7 +211,8 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	}
 
 	override firstUpdated(): void {
-		sizeObserver.observe(this._sizer!, this);
+		const sizer = this._sizer;
+		if (sizer) sizeObserver.observe(sizer, this);
 		// Seed the collapsed state from the rendered width before the first paint,
 		// so there's no flash of the wrong layout; the ResizeObserver owns it after.
 		// In one pass with every section that renders now, see measureSections.

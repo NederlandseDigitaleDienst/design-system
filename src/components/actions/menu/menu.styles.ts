@@ -343,7 +343,7 @@ export const menuItemStyles = css`
 		--context-content-color: var(--context-content-secondary-color);
 		color: var(--context-content-secondary-color);
 		font: var(--primitives-font-body-md-regular-tight);
-		text-align: right;
+		text-align: end;
 		overflow-wrap: anywhere;
 		text-wrap: pretty;
 		flex: 0 1 auto;
