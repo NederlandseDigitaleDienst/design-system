@@ -56,7 +56,8 @@ export interface SharedResizeObserver<T> {
 }
 
 /**
- * @param onResize gets the hosts with a target that changed size, each once.
+ * @param onResize gets the hosts with a target that changed size, each once,
+ *   and only those still in the page.
  *   Like any ResizeObserver, a target is reported once when it is observed.
  */
 export function sharedResizeObserver<T>(onResize: (hosts: T[]) => void): SharedResizeObserver<T> {
@@ -69,7 +70,9 @@ export function sharedResizeObserver<T>(onResize: (hosts: T[]) => void): SharedR
 			observer ??= new ResizeObserver((entries) => {
 				const hosts = new Set<T>();
 				for (const entry of entries) hostsOf.get(entry.target)?.forEach((of) => hosts.add(of));
-				if (hosts.size) onResize([...hosts]);
+				// A host that left the page in the same tick is not reported.
+				const live = [...hosts].filter((host) => !(host instanceof Node) || host.isConnected);
+				if (live.length) onResize(live);
 			});
 			const hosts = hostsOf.get(target) ?? new Set<T>();
 			hostsOf.set(target, hosts);
