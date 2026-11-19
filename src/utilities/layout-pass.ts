@@ -77,7 +77,7 @@ export function sharedResizeObserver<T extends object>(onResize: (hosts: T[]) =>
 				const hosts = new Set<T>();
 				for (const entry of entries) hostsOf.get(entry.target)?.forEach((of) => hosts.add(of));
 				// A host that left the page in the same tick is not reported.
-				const live = [...hosts].filter((host) => !(host instanceof Node) || host.isConnected);
+				const live = [...hosts].filter((of) => !(of instanceof Node) || of.isConnected);
 				if (live.length) onResize(live);
 			});
 			const hosts = hostsOf.get(target) ?? new Set<T>();
