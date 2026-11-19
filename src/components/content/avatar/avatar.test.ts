@@ -128,6 +128,23 @@ describe('nldd-avatar', () => {
 		unloadTokens();
 	});
 
+	it('measures the same initials again in another font', async () => {
+		const unloadTokens = loadTokens();
+		const wrapper = await fixture(`
+			<div>
+				<nldd-avatar initials="MWM" decorative size="48"></nldd-avatar>
+				<div style="--primitives-font-family-body: monospace"><nldd-avatar initials="MWM" decorative size="48"></nldd-avatar></div>
+			</div>
+		`);
+		el = wrapper as NLDDAvatar;
+		const [body, mono] = [...wrapper.querySelectorAll<NLDDAvatar>('nldd-avatar')];
+		await settle();
+		expect(body._ratioKey()).not.toBe(mono._ratioKey());
+		// Each fit is its own: the monospace M is narrower than a body M.
+		expect(fitOf(mono)).not.toBe(fitOf(body));
+		unloadTokens();
+	});
+
 	it('renders the image when src is set, with an empty alt (host owns the label)', async () => {
 		el = await fixture(`<nldd-avatar name="Jan Jansen" src="${IMAGE}"></nldd-avatar>`);
 		await waitForUpdate(el);

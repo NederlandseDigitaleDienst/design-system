@@ -100,8 +100,8 @@ export type AvatarSize =
 	'full' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
 
 /**
- * How wide initials are against the shape they sit in, per text and per
- * document. The initials take their font size from the width of the shape
+ * How wide initials are against the shape they sit in, per text, font and
+ * document (a themed part of the page can set another font). The initials take their font size from the width of the shape
  * (cqi), so that proportion is the same at every size: one avatar with "JJ"
  * that is laid out says it for every "JJ" on the page, also for one that is
  * hidden or not laid out yet. An avatar then measures nothing at all.
@@ -134,15 +134,16 @@ const connected = new Set<NLDDAvatar>();
  */
 function fitAvatars(avatars: NLDDAvatar[]): void {
 	const live = avatars.filter((avatar) => avatar.isConnected);
-	for (const avatar of live) {
-		const text = avatar._shownInitials;
-		if (!text) continue;
+	const keys = live.map((avatar) => avatar._ratioKey());
+	live.forEach((avatar, i) => {
+		const key = keys[i];
+		if (!key) return;
 		const known = ratiosOf(avatar.ownerDocument);
-		if (known.has(text)) continue;
+		if (known.has(key)) return;
 		const ratio = avatar._measureRatio();
-		if (ratio !== undefined) known.set(text, ratio);
-	}
-	for (const avatar of live) avatar._fitInitials();
+		if (ratio !== undefined) known.set(key, ratio);
+	});
+	live.forEach((avatar, i) => avatar._fitInitials(keys[i]));
 }
 
 /** The avatars that rendered new initials in the same tick. */
@@ -330,6 +331,16 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	 *  out. A read, that writes nothing. Bounding boxes, not scrollWidth: they
 	 *  are not rounded to whole pixels, so the ratio holds at every size. A
 	 *  transform on an ancestor scales both alike. */
+	/** @internal What a ratio is known by: the initials and their font. A
+	 *  style read, no layout; undefined without initials. */
+	_ratioKey(): string | undefined {
+		const text = this._shownInitials;
+		const initials = this.shadowRoot?.querySelector<HTMLElement>('.avatar__initials');
+		if (!text || !initials) return undefined;
+		const { fontStyle, fontWeight, fontFamily } = getComputedStyle(initials);
+		return `${fontStyle} ${fontWeight} ${fontFamily}|${text}`;
+	}
+
 	_measureRatio(): number | undefined {
 		const initials = this.shadowRoot?.querySelector<HTMLElement>('.avatar__initials');
 		const shape = this.shadowRoot?.querySelector<HTMLElement>('.avatar');
@@ -346,13 +357,13 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	 *  initials are never enlarged. Applied via --_avatar-initials-fit (a
 	 *  transform scale), so no reflow and it stays measurable.
 	 *
-	 *  Uses the ratio of its text (see ratiosOf). Without one yet, the avatar
-	 *  waits for its shape to be laid out. */
-	_fitInitials(): void {
-		const text = this._shownInitials;
-		const ratio = text ? ratiosOf(this.ownerDocument).get(text) : undefined;
-		this._waitForShape(Boolean(text) && ratio === undefined);
-		if (!text) {
+	 *  Uses the ratio of its text in its font (see ratiosOf), by the key read
+	 *  with the others. Without one yet, the avatar waits for its shape to be
+	 *  laid out. */
+	_fitInitials(key: string | undefined): void {
+		const ratio = key ? ratiosOf(this.ownerDocument).get(key) : undefined;
+		this._waitForShape(Boolean(key) && ratio === undefined);
+		if (!key) {
 			this.style.removeProperty('--_avatar-initials-fit');
 			return;
 		}

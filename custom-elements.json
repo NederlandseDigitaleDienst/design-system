@@ -57536,7 +57536,7 @@
             {
               "kind": "field",
               "name": "flush",
-              "description": "Runs the pass now, for a caller that cannot wait for it."
+              "description": "Runs the pass now, for a caller that cannot wait for it. The run that\nwas scheduled still comes, and finds nothing, or what asked since."
             },
             {
               "kind": "field",

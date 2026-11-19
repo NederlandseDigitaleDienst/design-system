@@ -37,7 +37,8 @@ export class LayoutPass<T> {
 		this._pending.delete(host);
 	}
 
-	/** Runs the pass now, for a caller that cannot wait for it. */
+	/** Runs the pass now, for a caller that cannot wait for it. The run that
+	 *  was scheduled still comes, and finds nothing, or what asked since. */
 	flush = (): void => this._flush();
 
 	private _flush = (): void => {
@@ -49,7 +50,7 @@ export class LayoutPass<T> {
 }
 
 /** One ResizeObserver for every host of a component. */
-export interface SharedResizeObserver<T> {
+export interface SharedResizeObserver<T extends object> {
 	observe(target: Element, host: T): void;
 	/** Stops watching every target of this host. */
 	unobserveAll(host: T): void;
@@ -60,10 +61,11 @@ export interface SharedResizeObserver<T> {
  *   and only those still in the page.
  *   Like any ResizeObserver, a target is reported once when it is observed.
  */
-export function sharedResizeObserver<T>(onResize: (hosts: T[]) => void): SharedResizeObserver<T> {
+export function sharedResizeObserver<T extends object>(onResize: (hosts: T[]) => void): SharedResizeObserver<T> {
 	// A target can belong to more hosts, such as one anchor for two bars.
 	const hostsOf = new WeakMap<Element, Set<T>>();
-	const targetsOf = new Map<T, Set<Element>>();
+	// Weak, so a host that never calls unobserveAll is not kept alive by it.
+	const targetsOf = new WeakMap<T, Set<Element>>();
 	let observer: ResizeObserver | null = null;
 	return {
 		observe(target, host) {

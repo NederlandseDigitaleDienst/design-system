@@ -91,6 +91,26 @@ describe('nldd-avatar-group', () => {
 		expect(regels).toMatch(/:nth-child\(n ?\+ ?3\)/);
 	});
 
+	it('heeft zijn rijen getekend voordat de popover zich plaatst', async () => {
+		el = await fixture(`
+			<nldd-avatar-group max="1">
+				<nldd-avatar name="Aanvraag A-1042" decorative></nldd-avatar>
+				<nldd-avatar name="Aanvraag A-1043" decorative></nldd-avatar>
+				<nldd-avatar name="Dossier D-318" decorative></nldd-avatar>
+			</nldd-avatar-group>
+		`);
+		await waitForUpdate(el);
+		const popover = el.shadowRoot!.querySelector('nldd-popover') as HTMLElement;
+		// The popover places itself on toggle (see nldd-popover _handleToggle).
+		const atToggle = new Promise<number>((resolve) => popover.addEventListener('toggle', () => {
+			const rows = [...el.shadowRoot!.querySelectorAll('nldd-text-cell')];
+			resolve(rows.filter((cell) => cell.shadowRoot && cell.getBoundingClientRect().height > 0).length);
+		}, { once: true }));
+		popover.showPopover();
+		expect(await atToggle).toBe(2);
+		popover.hidePopover();
+	});
+
 	it('zet zijn regels zonder <style>-element, zodat een CSP zonder unsafe-inline ze laat staan', async () => {
 		// #455: a policy without 'unsafe-inline' refuses a <style> element, in a
 		// shadow root too, and then max and the stacking order were gone.

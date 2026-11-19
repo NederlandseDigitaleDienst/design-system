@@ -51,6 +51,10 @@ describe('LayoutPass', () => {
 	});
 });
 
+type Host = { id: string };
+const hosts = new Map<string, Host>();
+const host = (id: string): Host => hosts.get(id) ?? hosts.set(id, { id }).get(id)!;
+
 describe('sharedResizeObserver', () => {
 	const boxes: HTMLElement[] = [];
 	const box = (width = 100) => {
@@ -65,21 +69,21 @@ describe('sharedResizeObserver', () => {
 
 	it('reports each host once, however many of its targets changed', async () => {
 		const runs: string[][] = [];
-		const observer = sharedResizeObserver<string>((hosts) => runs.push(hosts));
-		observer.observe(box(), 'a');
-		observer.observe(box(), 'a');
-		observer.observe(box(), 'b');
+		const observer = sharedResizeObserver<Host>((hosts) => runs.push(hosts.map((h) => h.id)));
+		observer.observe(box(), host('a'));
+		observer.observe(box(), host('a'));
+		observer.observe(box(), host('b'));
 		await frames();
 		expect(runs).toEqual([['a', 'b']]);
 	});
 
 	it('stops reporting a host after unobserveAll', async () => {
 		const runs: string[][] = [];
-		const observer = sharedResizeObserver<string>((hosts) => runs.push(hosts));
+		const observer = sharedResizeObserver<Host>((hosts) => runs.push(hosts.map((h) => h.id)));
 		const el = box();
-		observer.observe(el, 'a');
+		observer.observe(el, host('a'));
 		await frames();
-		observer.unobserveAll('a');
+		observer.unobserveAll(host('a'));
 		el.style.width = '200px';
 		await frames();
 		expect(runs).toEqual([['a']]);
@@ -87,13 +91,13 @@ describe('sharedResizeObserver', () => {
 
 	it('reports every host of a shared target, and keeps the others when one leaves', async () => {
 		const runs: string[][] = [];
-		const observer = sharedResizeObserver<string>((hosts) => runs.push(hosts));
+		const observer = sharedResizeObserver<Host>((hosts) => runs.push(hosts.map((h) => h.id)));
 		const el = box();
-		observer.observe(el, 'a');
-		observer.observe(el, 'b');
+		observer.observe(el, host('a'));
+		observer.observe(el, host('b'));
 		await frames();
 		expect(runs).toEqual([['a', 'b']]);
-		observer.unobserveAll('a');
+		observer.unobserveAll(host('a'));
 		el.style.width = '200px';
 		await frames();
 		expect(runs).toEqual([['a', 'b'], ['b']]);
