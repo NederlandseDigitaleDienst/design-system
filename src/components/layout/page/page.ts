@@ -484,6 +484,8 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		}
 	}
 
+	// Runs in the read phase of the measurement too (_readScrollState): it
+	// reads and sets state, and writes nothing to the DOM itself.
 	private _onScroll = () => {
 		if (this._isRoot) {
 			const root = document.documentElement;

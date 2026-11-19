@@ -68,7 +68,8 @@ export interface SharedResizeObserver<T extends object> {
 export function sharedResizeObserver<T extends object>(onResize: (hosts: T[]) => void): SharedResizeObserver<T> {
 	// A target can belong to more hosts, such as one anchor for two bars.
 	const hostsOf = new WeakMap<Element, Set<T>>();
-	// Weak, so a host that never calls unobserveAll is not kept alive by it.
+	// Weak, so this map keeps no host alive. hostsOf does, for as long as one
+	// of its targets lives: call unobserveAll when a host leaves.
 	const targetsOf = new WeakMap<T, Set<Element>>();
 	let observer: ResizeObserver | null = null;
 	return {
