@@ -57559,7 +57559,7 @@
               "type": {
                 "text": "(hosts: T[]) => void"
               },
-              "description": "gets the hosts with a target that changed size, each once.\nLike any ResizeObserver, a target is reported once when it is observed."
+              "description": "gets the hosts with a target that changed size, each once,\nand only those still in the page.\nLike any ResizeObserver, a target is reported once when it is observed."
             }
           ]
         }
