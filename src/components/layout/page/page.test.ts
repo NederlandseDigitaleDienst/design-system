@@ -355,6 +355,24 @@ describe('nldd-page', () => {
 			expect(el.shadowRoot!.querySelector('footer.page__footer')).not.toBeNull();
 		});
 
+		it('keeps measuring its header after a switch to region, which renders new chrome', async () => {
+			el = await fixture(`
+				<nldd-page sticky-header style="height: 300px;">
+					<div slot="header" style="height: 40px;">Header</div>
+					<div style="height: 2000px;"></div>
+				</nldd-page>
+			`);
+			await waitForUpdate(el);
+			await nextFrames();
+			el.setAttribute('landmarks', 'region');
+			await waitForUpdate(el);
+			expect(tags(el).outer).toBe('section');
+			el.querySelector<HTMLElement>('[slot="header"]')!.style.height = '90px';
+			await nextFrames();
+			await nextFrames();
+			expect(el.style.getPropertyValue('--_page-header-height')).toBe('90px');
+		});
+
 		it('is a region in a pane, so the second page does not claim the document', async () => {
 			el = await fixture(`
 				<nldd-side-by-side-split-view panes="2">

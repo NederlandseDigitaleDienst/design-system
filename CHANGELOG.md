@@ -33,6 +33,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **`nldd-page` keeps its sticky header and footer clear after `landmarks` changes.** A switch between page and region renders the header, main and footer anew, and the page kept measuring the old ones: sticky content inside lined up with the height the header had before.
 - **Thirteen components pick up again after a move in the DOM.** Moving an element disconnects it and connects it again, without a first render and without a `slotchange`. What these components had set up there did not come back.
   - `nldd-form-field` follows its `nldd-validation-list` again, so the description of the control matches the requirements on screen. Before, an item that hid after the move stayed in the description, and a screen reader read out a requirement that was gone.
   - `nldd-combo-box` and `nldd-token-field` hear `toggle`, `select` and `keydown` from their menu again.

@@ -166,6 +166,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	/** What `landmarks="auto"` reads off the page's surroundings. */
 	@state()
 	private _derived: 'page' | 'region' = 'page';
+	private _renderedRegion: boolean | null = null;
 
 	/** True when this page renders a section instead of the document landmarks. @internal */
 	get _isRegion(): boolean {
@@ -316,7 +317,12 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	}
 
 	override updated(changed: PropertyValues) {
-		if (changed.has('stickyHeader')) this._configureScroll();
+		// A switch between page and region renders new chrome, so the observer
+		// and listeners still hold the old elements.
+		const retagged = this._renderedRegion !== null && this._renderedRegion !== this._isRegion;
+		this._renderedRegion = this._isRegion;
+		if (retagged) this._setupMainSlotListener();
+		if (changed.has('stickyHeader') || (retagged && this._scrollConfigured)) this._configureScroll();
 		this._syncSecondMain();
 	}
 
