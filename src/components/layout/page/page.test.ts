@@ -547,3 +547,28 @@ describe('nldd-page – sticky bars and focus', () => {
 		});
 	});
 });
+
+describe('nldd-page – stand-alone, moved in the DOM', () => {
+	let el: HTMLElement;
+	afterEach(() => cleanup(el));
+
+	it('reads the scroll mode where it lands, and again on a resize', async () => {
+		el = await fixture(`<div>
+			<div id="a" style="--context-scroll-mode: nested"><nldd-page><div>Inhoud</div></nldd-page></div>
+			<div id="b" style="--context-scroll-mode: root"></div>
+		</div>`);
+		const page = el.querySelector('nldd-page') as HTMLElement;
+		await waitForUpdate(page);
+		await nextFrames();
+		// Nested is the default, which the page does not write.
+		expect(page.dataset.scroll ?? 'nested').toBe('nested');
+		const b = el.querySelector('#b') as HTMLElement;
+		b.appendChild(page);
+		await nextFrames();
+		expect(page.dataset.scroll).toBe('root');
+		b.style.setProperty('--context-scroll-mode', 'nested');
+		window.dispatchEvent(new Event('resize'));
+		await nextFrames();
+		expect(page.dataset.scroll).toBe('nested');
+	});
+});

@@ -145,11 +145,9 @@ export class NLDDMenuItem extends withTranslations(LitElement, nlddMenuItemTrans
 
 	private static _idCounter = 0;
 
-	override connectedCallback(): void {
-		super.connectedCallback();
-		if (!this.id) {
-			this.id = `nldd-menu-item-${NLDDMenuItem._idCounter++}`;
-		}
+	constructor() {
+		super();
+		// On the element itself, which outlives a move: added once, not per connect.
 		this.addEventListener('focusin', (e) => {
 			// Only react when focus actually lands on our own shadow content
 			// (the .menu__item button). focusin is composed and bubbles, so it
@@ -173,6 +171,13 @@ export class NLDDMenuItem extends withTranslations(LitElement, nlddMenuItemTrans
 			if (!realTarget || !this.shadowRoot?.contains(realTarget)) return;
 			this.removeAttribute('data-focused');
 		});
+	}
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		if (!this.id) {
+			this.id = `nldd-menu-item-${NLDDMenuItem._idCounter++}`;
+		}
 		if (this.hasUpdated) this._watchForLateSubmenu();
 	}
 

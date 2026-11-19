@@ -113,6 +113,7 @@ const CASES: Record<string, string> = {
 	'nldd-form-field': '<nldd-form-field label="Naam"><input><nldd-validation-list><nldd-validation-item visible>Verplicht</nldd-validation-item></nldd-validation-list></nldd-form-field>',
 	'nldd-banner': '<nldd-banner><span>Tekst</span></nldd-banner>',
 	'nldd-status-bar': '<nldd-status-bar><span>Tekst</span></nldd-status-bar>',
+	'nldd-menu (anchor)': '<div><button id="reconnect-anchor">Open</button><nldd-menu anchor="reconnect-anchor"><nldd-menu-item text="Een"></nldd-menu-item></nldd-menu></div>',
 	'nldd-menu-item': '<nldd-menu><nldd-menu-item text="Een"></nldd-menu-item><nldd-menu-item text="Twee"></nldd-menu-item></nldd-menu>',
 	'nldd-combo-box': '<nldd-combo-box accessible-label="Kies"><nldd-menu><nldd-menu-item text="Een" value="1"></nldd-menu-item></nldd-menu></nldd-combo-box>',
 	'nldd-token-field': '<nldd-token-field accessible-label="Kies"><nldd-menu><nldd-menu-item text="Een" value="1"></nldd-menu-item></nldd-menu></nldd-token-field>',
@@ -155,7 +156,51 @@ describe('a component keeps its observers and listeners when it is moved', () =>
 				const now = after.get(key) ?? 0;
 				if (now < count) lost.push(`${key} (${count} -> ${now})`);
 			}
-			expect(lost).toEqual([]);
+			// And nothing comes twice: a listener added per connect piles up.
+			const doubled: string[] = [];
+			for (const [key, count] of after) {
+				const was = before.get(key) ?? 0;
+				if (count > was) doubled.push(`${key} (${was} -> ${count})`);
+			}
+			expect({ lost, doubled }).toEqual({ lost: [], doubled: [] });
 		});
 	}
+});
+
+describe('a moved component catches up with what changed while it was out of the page', () => {
+	let el: HTMLElement;
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const move = async (subject: HTMLElement, change: () => void) => {
+		subject.remove();
+		change();
+		el.querySelector('#b')!.appendChild(subject);
+		await settle(subject);
+	};
+
+	it('nldd-list: a row hidden while out of the page is no longer the first', async () => {
+		el = await fixture('<div><div id="a"><nldd-list><nldd-list-item><span>A</span></nldd-list-item><nldd-list-item><span>B</span></nldd-list-item></nldd-list></div><div id="b"></div></div>');
+		const list = el.querySelector('nldd-list') as HTMLElement;
+		await settle(list);
+		const [a, b] = [...list.querySelectorAll('nldd-list-item')];
+		expect(a.classList.contains('is-first')).toBe(true);
+		await move(list, () => a.setAttribute('hidden', ''));
+		expect(b.classList.contains('is-first')).toBe(true);
+		// And it follows the rows again after the move.
+		a.removeAttribute('hidden');
+		await settle(list);
+		expect(a.classList.contains('is-first')).toBe(true);
+	});
+
+	it('nldd-table: a table whose last row went while out of the page shows its empty row', async () => {
+		el = await fixture('<div><div id="a"><nldd-table columns="1fr"><nldd-table-row><span>A</span></nldd-table-row></nldd-table></div><div id="b"></div></div>');
+		const table = el.querySelector('nldd-table') as HTMLElement;
+		await settle(table);
+		const empty = () => table.shadowRoot!.querySelector('.table__empty')!;
+		expect(empty().hasAttribute('hidden')).toBe(true);
+		await move(table, () => table.querySelector('nldd-table-row')!.remove());
+		expect(empty().hasAttribute('hidden')).toBe(false);
+	});
 });
