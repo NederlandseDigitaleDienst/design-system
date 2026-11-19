@@ -29,6 +29,32 @@ import { OverflowMenu } from '../../../utilities/overflow-menu.js';
 import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { setState } from '../../../utilities/element-state.js';
 import { markListItems } from '../../../utilities/list-items.js';
+import { sharedResizeObserver } from '../../../utilities/layout-pass.js';
+import { FramePass } from '../../../utilities/frame-pass.js';
+
+/** What a menu bar measures of itself, with every item shown. */
+interface MenuBarMeasurement {
+	items: HTMLElement[];
+	containerWidth: number;
+	itemWidths: number[];
+	overflowButtonWidth: number;
+}
+
+/**
+ * Every menu bar that lays out its overflow at the next frame, in one pass:
+ * all of them shown in full, then all of them measured, then all of them cut.
+ * A pass per bar reads a layout the bar before it has just changed.
+ */
+const overflowFrame = new FramePass<NLDDMenuBar>(bars => updateOverflows(bars.filter(bar => bar.isConnected)));
+
+function updateOverflows(bars: NLDDMenuBar[]): void {
+	const shown = bars.filter(bar => bar._showAllItems());
+	const measured = shown.map(bar => bar._measureItems());
+	shown.forEach((bar, i) => bar._cutOverflow(measured[i]));
+}
+
+/** One ResizeObserver for every menu bar: one callback, one frame pass. */
+const sizeObserver = sharedResizeObserver<NLDDMenuBar>(bars => bars.forEach(bar => bar._scheduleOverflowUpdate()));
 
 @customElement('nldd-menu-bar')
 export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTranslations) {
@@ -72,8 +98,6 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 
 	private _overflowUpdatePending = false;
 
-	private _resizeObserver: ResizeObserver | null = null;
-	private _overflowRAF: number | null = null;
 	private _setupRAF: number | null = null;
 
 	override willUpdate(changed: PropertyValues): void {
@@ -149,10 +173,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		this._setupRAF = requestAnimationFrame(() => {
 			this._setupRAF = null;
 			if (!this.isConnected) return;
-			this._resizeObserver = new ResizeObserver(() => {
-				this._scheduleOverflowUpdate();
-			});
-			this._resizeObserver.observe(this);
+			sizeObserver.observe(this, this);
 			if (this._defaultSlot) {
 				this._defaultSlot.addEventListener('slotchange', this._onSlotChange);
 				// The first slotchange came before this listener did.
@@ -167,25 +188,16 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 			cancelAnimationFrame(this._setupRAF);
 			this._setupRAF = null;
 		}
-		if (this._overflowRAF) {
-			cancelAnimationFrame(this._overflowRAF);
-			this._overflowRAF = null;
-		}
-		if (this._resizeObserver) {
-			this._resizeObserver.disconnect();
-			this._resizeObserver = null;
-		}
+		overflowFrame.cancel(this);
+		sizeObserver.unobserveAll(this);
 		if (this._defaultSlot) {
 			this._defaultSlot.removeEventListener('slotchange', this._onSlotChange);
 		}
 	}
 
-	private _scheduleOverflowUpdate = (): void => {
-		if (this._overflowRAF) cancelAnimationFrame(this._overflowRAF);
-		this._overflowRAF = requestAnimationFrame(() => {
-			this._overflowRAF = null;
-			this._updateOverflow();
-		});
+	/** @internal At the next frame, with the other menu bars. */
+	_scheduleOverflowUpdate = (): void => {
+		overflowFrame.schedule(this);
 	};
 
 	/**
@@ -196,8 +208,17 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 	 * absorbs whatever the arithmetic leaves over and always looks right.
 	 */
 	private _updateOverflow(): void {
+		if (this._showAllItems()) this._cutOverflow(this._measureItems());
+	}
+
+	/**
+	 * @internal The first step of the overflow pass, which writes only: every
+	 * item shown, and the overflow button. False when there is nothing to
+	 * measure.
+	 */
+	_showAllItems(): boolean {
 		const overflowButton = this._overflowButton;
-		if (!overflowButton) return;
+		if (!overflowButton) return false;
 
 		// While the overflow popover is open, do NOT relayout. Selecting an
 		// item re-renders the slotted items, which fires our ResizeObserver
@@ -209,15 +230,14 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		// closes (a genuine window resize closes nldd-menu itself first).
 		if (this._menuOpen) {
 			this._overflowUpdatePending = true;
-			return;
+			return false;
 		}
 
-		const slottedElements = this._defaultSlot?.assignedElements({ flatten: true }) ?? [];
-		const items = slottedElements.filter(el => el.tagName === 'NLDD-MENU-BAR-ITEM') as HTMLElement[];
+		const items = this._overflowCandidates();
 
 		if (items.length === 0) {
 			overflowButton.style.display = 'none';
-			return;
+			return false;
 		}
 
 		// Reset all items to visible
@@ -227,9 +247,29 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		});
 
 		overflowButton.style.display = 'inline-block';
+		return true;
+	}
 
-		const containerWidth = this.clientWidth;
-		const totalItemsWidth = items.reduce((sum, item) => sum + item.offsetWidth, 0);
+	private _overflowCandidates(): HTMLElement[] {
+		const slottedElements = this._defaultSlot?.assignedElements({ flatten: true }) ?? [];
+		return slottedElements.filter(el => el.tagName === 'NLDD-MENU-BAR-ITEM') as HTMLElement[];
+	}
+
+	/** @internal The second step, which reads only. */
+	_measureItems(): MenuBarMeasurement {
+		const items = this._overflowCandidates();
+		return {
+			items,
+			containerWidth: this.clientWidth,
+			itemWidths: items.map(item => item.offsetWidth),
+			overflowButtonWidth: this._overflowButton.offsetWidth,
+		};
+	}
+
+	/** @internal The last step, which writes only: what does not fit is hidden. */
+	_cutOverflow({ items, containerWidth, itemWidths, overflowButtonWidth }: MenuBarMeasurement): void {
+		const overflowButton = this._overflowButton;
+		const totalItemsWidth = itemWidths.reduce((sum, width) => sum + width, 0);
 
 		// All items fit on their own — no overflow button needed, no items hidden.
 		if (totalItemsWidth <= containerWidth) {
@@ -238,13 +278,12 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		}
 
 		// Items don't fit; reserve overflow-button space and find the cutoff.
-		const overflowButtonWidth = overflowButton.offsetWidth;
 		const availableWidth = containerWidth - overflowButtonWidth;
 		let usedWidth = 0;
 		let overflowStartIndex = -1;
 
 		for (let i = 0; i < items.length; i++) {
-			const itemWidth = items[i].offsetWidth;
+			const itemWidth = itemWidths[i];
 			if (usedWidth + itemWidth > availableWidth) {
 				overflowStartIndex = i;
 				break;

@@ -2,8 +2,8 @@
  * Nederlandse Digitale Dienst Two Thirds One Third Section Component (Lit + TypeScript)
  *
  * A section with 2/3 main content on the left and a 1/3 sidebar on the right.
- * The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns.
- * Padding and gap adjust via container queries.
+ * The columns stand side by side on a page of 50rem (800px) or wider and stack below that, at the same width for every section with two columns.
+ * Padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.
  *
  * @element nldd-two-thirds-one-third-section
  * @related nldd-simple-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section

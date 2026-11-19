@@ -11,7 +11,7 @@ export const sideBySideSplitViewStyles = css`
 
 	:host {
 		--_side-by-side-split-view-background-color: var(--context-background-color);
-		/* Pane min-width — read by JS via getComputedStyle in firstUpdated */
+		/* Pane min-width, read by JS via getComputedStyle */
 		--_side-by-side-split-view-pane-min-width: var(--primitives-area-320);
 
 		display: flex;

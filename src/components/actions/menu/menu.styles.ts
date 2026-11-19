@@ -296,15 +296,69 @@ export const menuItemStyles = css`
 		}
 	}
 
-	/* The icon cell gives what it holds display: block; the slot that passes the
-	   icon on must stay out of the layout. */
+	.menu__item-check {
+		display: flex;
+		margin-inline-end: var(--primitives-space-4);
+		width: var(--primitives-space-24);
+		flex-shrink: 0;
+		justify-content: center;
+	}
+
 	.menu__item-icon {
+		display: flex;
+		margin-inline-end: var(--primitives-space-8);
+		width: var(--primitives-space-20);
+		flex-shrink: 0;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.menu__item-icon[hidden] {
+		display: none;
+	}
+
+	.menu__item-icon slot {
 		display: contents;
+	}
+
+	::slotted([slot="icon"]) {
+		display: block;
+		flex-shrink: 0;
+	}
+
+	.menu__item-text {
+		min-width: 0;
+		/* No context: the text is the context the item sets. */
+		color: var(--context-content-color);
+		font: var(--primitives-font-body-md-regular-tight);
+		overflow-wrap: anywhere;
+		text-wrap: pretty;
+		flex: 1 1 0;
+	}
+
+	.menu__item-details,
+	.menu__item-shortcut {
+		margin-inline-start: var(--primitives-space-8);
+		min-width: min-content;
+		--context-content-color: var(--context-content-secondary-color);
+		color: var(--context-content-secondary-color);
+		font: var(--primitives-font-body-md-regular-tight);
+		text-align: right;
+		overflow-wrap: anywhere;
+		text-wrap: pretty;
+		flex: 0 1 auto;
+	}
+
+	.menu__item-chevron {
+		display: flex;
+		margin-inline-start: var(--primitives-space-6);
+		width: var(--primitives-space-20);
+		flex-shrink: 0;
 	}
 
 	/* A link item (href) renders as <a>; strip the UA link color/underline so
 	   it is visually identical to the button variant. The text color is owned
-	   by the inner nldd-text-cell. The control cursor token (default, like the
+	   by .menu__item-text. The control cursor token (default, like the
 	   other controls) replaces the UA link pointer and stays overridable. */
 	a.menu__item {
 		position: relative;
@@ -391,6 +445,12 @@ export const menuItemStyles = css`
 		.menu__item:focus-visible {
 			background-color: Highlight;
 			color: HighlightText;
+		}
+
+		.menu__item-text,
+		.menu__item-details,
+		.menu__item-shortcut {
+			color: inherit;
 		}
 	}
 `;

@@ -83,8 +83,57 @@ import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.j
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
+import { afterParse } from '../../../utilities/after-parse.js';
+import { LayoutPass } from '../../../utilities/layout-pass.js';
 
 export type TableBackground = 'base' | 'tinted';
+
+/**
+ * Every table that changed size, in one pass: all of them take their new
+ * track list, then all of them read whether they scroll, then all of them
+ * write it. A table that reads its scroll width right after another one wrote
+ * its columns lays the page out again, once per table.
+ */
+function measureTables(tables: Map<NLDDTable, number>): void {
+	const fontSize = rootFontSize();
+	const live = [...tables].filter(([table]) => table.isConnected);
+	for (const [table, width] of live) {
+		table._width = width;
+		table._applyColumns(fontSize);
+	}
+	const scrollable = live.map(([table]) => table._readScrollable());
+	live.forEach(([table], i) => table._applyScrollable(scrollable[i]));
+}
+
+/**
+ * One ResizeObserver for every table: one that calls back once per table has
+ * each of them read a layout the previous one just dirtied. It watches the
+ * sizer in each table, a line of no height across it, and not the table
+ * itself: the track list it writes changes the table's height, and resizing
+ * an observed element in the callback ends in a "ResizeObserver loop" error.
+ * The width comes from the entry, so it is the exact width the cells'
+ * `@container` queries see.
+ */
+let sizeObserver: ResizeObserver | null = null;
+function observeSize(sizer: Element): void {
+	sizeObserver ??= new ResizeObserver((entries) => {
+		const tables = new Map<NLDDTable, number>();
+		for (const entry of entries) {
+			const table = (entry.target.getRootNode() as ShadowRoot).host as NLDDTable;
+			tables.set(table, entry.contentRect.width);
+		}
+		measureTables(tables);
+	});
+	sizeObserver.observe(sizer);
+}
+
+/** Rows that came or went can make a table wider than its box without
+ *  changing its width: all of them read that in one pass. */
+const scrollPass = new LayoutPass<NLDDTable>((tables) => {
+	const live = tables.filter((table) => table.isConnected);
+	const scrollable = live.map((table) => table._readScrollable());
+	live.forEach((table, i) => table._applyScrollable(scrollable[i]));
+});
 
 // # nldd-table
 
@@ -124,10 +173,11 @@ export class NLDDTable extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	selectable = false;
 
-	private _resizeObserver?: ResizeObserver;
 	private _rowsObserver?: MutationObserver;
-	/** Last observed content-box width, to resolve the active track list. */
-	private _width = 0;
+	/** @internal Last observed content-box width, to resolve the active track list. */
+	_width = 0;
+	/** An empty-state update waits for the parse; see _scheduleEmpty. */
+	private _emptyPending = false;
 
 	public _t(key: keyof NLDDTableTranslations): string {
 		return translate(this.translations, nlddTableTranslations, key);
@@ -146,28 +196,29 @@ export class NLDDTable extends LitElement {
 		// An element can't query its OWN container, so the responsive track list
 		// is chosen from the observed width (the cells keep their @container).
 		// The same observer keeps the scroll affordance (focusable when the box
-		// overflows) in sync.
-		this._resizeObserver = new ResizeObserver((entries) => {
-			this._width = entries[0].contentRect.width;
-			this._applyColumns();
-			this._syncHostA11y();
-		});
-		this._resizeObserver.observe(this);
+		// overflows) in sync. It is shared by every table, see measureTables.
+		// It watches the sizer in the shadow root, so from the first render on.
+		if (this._sizer) observeSize(this._sizer);
+	}
+
+	private get _sizer(): Element | null {
+		return this.shadowRoot?.querySelector('.table__sizer') ?? null;
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = undefined;
+		if (this._sizer) sizeObserver?.unobserve(this._sizer);
+		scrollPass.cancel(this);
 		this._rowsObserver?.disconnect();
 		this._rowsObserver = undefined;
 	}
 
 	override firstUpdated(): void {
+		observeSize(this._sizer!);
 		// Recompute the empty state when body rows are slotted, added/removed, or
 		// toggled [hidden] (consumer-driven filtering) — mirrors nldd-list.
 		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])');
-		slot?.addEventListener('slotchange', () => this._updateEmpty());
+		slot?.addEventListener('slotchange', () => this._scheduleEmpty());
 		this._rowsObserver = new MutationObserver((mutations) => {
 			const relevant = mutations.some((m) => {
 				if (m.type === 'childList') return m.target === this;
@@ -176,7 +227,7 @@ export class NLDDTable extends LitElement {
 				}
 				return false;
 			});
-			if (relevant) this._updateEmpty();
+			if (relevant) this._scheduleEmpty();
 		});
 		this._rowsObserver.observe(this, {
 			childList: true,
@@ -185,6 +236,23 @@ export class NLDDTable extends LitElement {
 			attributeFilter: ['hidden'],
 		});
 		this._updateEmpty();
+	}
+
+	/**
+	 * While the parser is still adding rows, a slotchange and a mutation come
+	 * once per row, and each would walk every row: the empty state waits for
+	 * the parse then (see afterParse), and is decided once. After the load it
+	 * follows at once, as it always did.
+	 */
+	private _scheduleEmpty(): void {
+		scrollPass.schedule(this, this.ownerDocument);
+		if (this._emptyPending) return;
+		const run = () => {
+			this._emptyPending = false;
+			this._updateEmpty();
+		};
+		this._emptyPending = afterParse(run, this.ownerDocument);
+		if (!this._emptyPending) run();
 	}
 
 	/** Show the empty-state row when there are no visible body rows (header
@@ -216,15 +284,17 @@ export class NLDDTable extends LitElement {
 
 	/** The track list for the current width: a breakpoint override when set,
 	 *  otherwise the base `columns`. */
-	private _activeColumns(): string {
-		const fontSize = rootFontSize();
+	private _activeColumns(fontSize: number): string {
 		if (this._width <= breakpointPx('smMax', fontSize)) return this.smColumns || this.columns;
 		if (this._width <= breakpointPx('mdMax', fontSize)) return this.mdColumns || this.columns;
 		return this.lgColumns || this.columns;
 	}
 
-	private _applyColumns(): void {
-		const cols = this._activeColumns();
+	/** @internal Writes only what changed: a notification for a table whose
+	 *  track list stays the same writes nothing to lay out again. */
+	_applyColumns(fontSize = rootFontSize()): void {
+		const cols = this._activeColumns(fontSize);
+		if (cols === this.style.getPropertyValue('--_table-columns')) return;
 		if (cols) {
 			this.style.setProperty('--_table-columns', cols);
 		} else {
@@ -237,27 +307,35 @@ export class NLDDTable extends LitElement {
 	 *  accessible name in sync. The table is its own scroll container
 	 *  (overflow-x: auto); the overflow-x check (not width alone) is defensive.
 	 *  accessible-label is the name (role="table" needs one); when it is absent a
-	 *  generic fallback keeps the table (and any focusable region) named. */
-	private _syncHostA11y(): void {
-		const overflowX = getComputedStyle(this).overflowX;
-		const scrollableOverflow = overflowX === 'auto' || overflowX === 'scroll';
-		const scrollable = scrollableOverflow && this.scrollWidth > this.clientWidth;
+	 *  generic fallback keeps the table (and any focusable region) named.
+	 *
+	 *  The styles always make the host its own horizontal scroll container
+	 *  (overflow-x: auto), so only the widths are read: a getComputedStyle per
+	 *  table is a style recalc per table.
+	 *  @internal A layout read; writes nothing. */
+	_readScrollable(): boolean {
+		return this.scrollWidth > this.clientWidth;
+	}
+
+	/** @internal */
+	_applyScrollable(scrollable: boolean): void {
 		if (scrollable) {
-			this.setAttribute('tabindex', '0');
+			if (this.getAttribute('tabindex') !== '0') this.setAttribute('tabindex', '0');
 		} else {
 			this.removeAttribute('tabindex');
 		}
 		// accessible-label is the table's name (role="table" requires one). When
 		// it is absent we fall back to a generic name so the table is never
 		// nameless — and any focusable scroll region always has a name (SC 4.1.2).
-		// A missing label is still DEV-warned in updated() to prompt a meaningful
-		// one rather than rely on the fallback.
+		// A missing label is still DEV-warned to prompt a meaningful one rather
+		// than rely on the fallback.
 		this._syncLabel();
 	}
 
 	/** Also on every render, so the fallback follows a language switch. */
 	private _syncLabel(): void {
-		this.setAttribute('aria-label', this.accessibleLabel || this._t('components.table.accessible-label'));
+		const label = this.accessibleLabel || this._t('components.table.accessible-label');
+		if (this.getAttribute('aria-label') !== label) this.setAttribute('aria-label', label);
 	}
 
 	override updated(changed: Map<string, unknown>): void {
@@ -267,11 +345,9 @@ export class NLDDTable extends LitElement {
 		) {
 			this._applyColumns();
 		}
-		if (changed.has('accessibleLabel')) {
-			this._syncHostA11y();
-		} else {
-			this._syncLabel();
-		}
+		// Whether the table scrolls does not depend on its name, and the size
+		// observer reads it as soon as the table is laid out.
+		this._syncLabel();
 		if (changed.has('selectable')) {
 			// Selectability gates each body row's aria-selected; re-sync them.
 			for (const row of this.querySelectorAll<NLDDTableRow>('nldd-table-row')) {
@@ -346,10 +422,25 @@ export class NLDDTableRow extends LitElement {
 		}
 	}
 
-	private _onSlotChange(e: Event): void {
-		const slot = e.target as HTMLSlotElement;
-		const cells = slot.assignedElements();
-		this._syncCellRoles();
+	/** A cell update waits for the parse; see _onSlotChange. */
+	private _cellsPending = false;
+
+	/** While the parser adds the cells, a slotchange comes per cell and each
+	 *  would walk them all: the row waits for the parse then (see afterParse). */
+	private _onSlotChange(): void {
+		if (this._cellsPending) return;
+		const run = () => {
+			this._cellsPending = false;
+			this._syncCells();
+		};
+		this._cellsPending = afterParse(run, this.ownerDocument);
+		if (!this._cellsPending) run();
+	}
+
+	private _syncCells(): void {
+		const slot = this.shadowRoot?.querySelector('slot');
+		const cells = slot?.assignedElements() ?? [];
+		this._syncCellRoles(cells);
 		for (const cell of cells) {
 			// A generic nldd-cell defaults to width="fit-content" (reflected),
 			// which would shrink-wrap inside a grid track. Default it to fill
@@ -377,13 +468,13 @@ export class NLDDTableRow extends LitElement {
 	/** Cells need explicit roles since the grid layout drops native table
 	 *  semantics. A header row's cells are column headers whatever they say,
 	 *  so the cell above a row-header column stays a columnheader. */
-	private _syncCellRoles(): void {
-		const slot = this.shadowRoot?.querySelector('slot');
-		for (const cell of slot?.assignedElements() ?? []) {
+	private _syncCellRoles(cells = this.shadowRoot?.querySelector('slot')?.assignedElements() ?? []): void {
+		const header = this._isHeader;
+		for (const cell of cells) {
 			let role = 'cell';
-			if (this._isHeader) role = 'columnheader';
+			if (header) role = 'columnheader';
 			else if (cell.hasAttribute('row-header')) role = 'rowheader';
-			cell.setAttribute('role', role);
+			if (cell.getAttribute('role') !== role) cell.setAttribute('role', role);
 		}
 	}
 

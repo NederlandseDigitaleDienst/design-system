@@ -286,20 +286,9 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		}
 	}
 
-	override connectedCallback(): void {
-		super.connectedCallback();
-		this._resizeObserver = new ResizeObserver(() => this._updateMenuWidth());
-		this._resizeObserver.observe(this);
-		window.addEventListener('scroll', this._handleScrollOrResize, true);
-		window.addEventListener('resize', this._handleScrollOrResize);
-	}
-
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
-		window.removeEventListener('scroll', this._handleScrollOrResize, true);
-		window.removeEventListener('resize', this._handleScrollOrResize);
+		this._unfollowAnchor();
 		this._menuObserver?.disconnect();
 		this._menuObserver = null;
 		if (this._menu) {
@@ -334,7 +323,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// while typing too; the handler returns early unless there is something to decide.
 		this._menuObserver = new MutationObserver(this._handleMenuItemsChange);
 		this._menuObserver.observe(menu, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
-		this._updateMenuWidth();
 
 		// First time the menu is wired up, derive a missing text from the
 		// matching item. Covers the common case where the consumer renders
@@ -381,13 +369,37 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		this._menu?.reposition();
 	};
 
+	/**
+	 * The menu's width and position only matter while it is open, so the field
+	 * only watches its own size, the scroll and the window then. A closed field
+	 * measures nothing: a page with many of them would otherwise lay out once
+	 * per field on load, and get a scroll listener per field.
+	 */
+	private _followAnchor(): void {
+		if (this._resizeObserver) return;
+		this._resizeObserver = new ResizeObserver(() => this._updateMenuWidth());
+		this._resizeObserver.observe(this);
+		window.addEventListener('scroll', this._handleScrollOrResize, true);
+		window.addEventListener('resize', this._handleScrollOrResize);
+	}
+
+	private _unfollowAnchor(): void {
+		if (!this._resizeObserver) return;
+		this._resizeObserver.disconnect();
+		this._resizeObserver = null;
+		window.removeEventListener('scroll', this._handleScrollOrResize, true);
+		window.removeEventListener('resize', this._handleScrollOrResize);
+	}
+
 	// — Menu management ——————————————————————————————————————————————————————
 
 	private _handleMenuToggle = (e: Event): void => {
 		this._isOpen = (e as ToggleEvent).newState === 'open';
 		if (!this._isOpen) {
+			this._unfollowAnchor();
 			this._highlightedId = '';
 		} else {
+			this._followAnchor();
 			// However it opened, there is nothing left to open later.
 			this._openPending = false;
 			// The menu clears its highlight on open; seat it on the first option by

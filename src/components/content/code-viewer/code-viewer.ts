@@ -78,6 +78,18 @@ import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 import { onAncestorScroll } from '../../../utilities/ancestor-scroll.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
+
+/** Every viewer measures whether it overflows, then they all mark it: one
+ *  layout for all of them, where a viewer at a time lays out once per viewer. */
+function measureViewers(viewers: NLDDCodeViewer[]): void {
+	const live = viewers.filter((viewer) => viewer.isConnected);
+	const scrollable = live.map((viewer) => viewer._measureScrollable());
+	live.forEach((viewer, i) => viewer._applyScrollable(scrollable[i]));
+}
+
+const scrollablePass = new LayoutPass<NLDDCodeViewer>(measureViewers);
+const scrollerObserver = sharedResizeObserver<NLDDCodeViewer>(measureViewers);
 
 export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 
@@ -158,9 +170,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	/** The parsed diff on screen, or null without `diff`. */
 	_parsedDiff: ParsedDiff | null = null;
 	private _unsubscribeScheme?: () => void;
-	private _resizeObserver?: ResizeObserver;
 	private _mutationObserver?: MutationObserver;
-	private _scrollableRaf?: number;
 	private _copyResetTimer?: ReturnType<typeof setTimeout>;
 	/** The pointer of the last press on the copy button, '' for a keyboard. */
 	private _copyPointerType = '';
@@ -244,14 +254,10 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		super.disconnectedCallback();
 		this._unsubscribeScheme?.();
 		this._unsubscribeScheme = undefined;
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = undefined;
+		scrollerObserver.unobserveAll(this);
+		scrollablePass.cancel(this);
 		this._mutationObserver?.disconnect();
 		this._mutationObserver = undefined;
-		if (this._scrollableRaf !== undefined) {
-			cancelAnimationFrame(this._scrollableRaf);
-			this._scrollableRaf = undefined;
-		}
 		clearTimeout(this._copyResetTimer);
 		this._copyResetTimer = undefined;
 		this._stopCopyScroll?.();
@@ -288,17 +294,11 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	protected override onEditorMounted(): void {
 		const scroller = this.view?.scrollDOM;
 		if (scroller) {
-			this._resizeObserver?.disconnect();
-			this._resizeObserver = new ResizeObserver((entries) => {
-				// forceScrollLayerRepaint (color-scheme flip) toggles display:none →
-				// reflow on the scroller, so it briefly reports width 0. Recomputing
-				// then would flip _isScrollable false and strip the scroll region's
-				// tabindex/role/aria-label until the next resize, leaving an
-				// overflowing block unreachable. Ignore those transient 0-width ticks.
-				if (entries.every((e) => e.contentRect.width === 0)) return;
-				this._scheduleUpdateScrollable();
-			});
-			this._resizeObserver.observe(scroller);
+			// One observer for every viewer. A scroller that reports width 0 while
+			// forceScrollLayerRepaint (color-scheme flip) toggles display:none is
+			// left alone by the measurement, so the region keeps its tabindex/role.
+			scrollerObserver.unobserveAll(this);
+			scrollerObserver.observe(scroller, this);
 		}
 		// (Re)establish the light-DOM text observer here too, so in-place text
 		// mutations are still caught after a detach/reattach re-mount (which runs
@@ -306,7 +306,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		this._observeSlotText();
 		if (this.language) this._applyLanguage();
 		this._applyWords();
-		this._updateScrollable();
+		this._scheduleUpdateScrollable();
 	}
 
 	override updated(changed: Map<string, unknown>): void {
@@ -377,7 +377,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			],
 		});
 		this._applyWords();
-		this._updateScrollable();
+		this._scheduleUpdateScrollable();
 		this.requestUpdate();
 	}
 
@@ -461,15 +461,10 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		}
 	}
 
-	/* rAF-debounce the recompute so a burst of ResizeObserver ticks (e.g. from a
-	 * wrap/theme change) collapses into one measure on the next frame, after
-	 * layout has settled. */
+	/* Measures with the other viewers that ask in the same tick, so a page of
+	 * them lays out once. */
 	private _scheduleUpdateScrollable(): void {
-		if (this._scrollableRaf !== undefined) return;
-		this._scrollableRaf = requestAnimationFrame(() => {
-			this._scrollableRaf = undefined;
-			this._updateScrollable();
-		});
+		scrollablePass.schedule(this, this.ownerDocument);
 	}
 
 	/* The scrollable region is CodeMirror's scroller. Mark it focusable +
@@ -477,15 +472,26 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	 * screen-reader users can reach and announce it (WCAG 2.1.1). Wrapping
 	 * rules out the horizontal overflow, not the vertical one. */
 	private _updateScrollable(): void {
+		this._applyScrollable(this._measureScrollable());
+	}
+
+	/** @internal Whether the code overflows, or null when that cannot be told now. Reads, writes nothing. */
+	_measureScrollable(): boolean | null {
 		const scroller = this.view?.scrollDOM;
-		if (!scroller) return;
+		if (!scroller) return null;
 		// A 0-width measure (mid display:none reflow, or before first layout) is never a
 		// trustworthy overflow signal — `scrollWidth > 0` against it would wrongly mark a
 		// hidden viewer scrollable. Bail; a later ResizeObserver/slot tick re-measures
 		// once the width is real.
-		if (scroller.clientWidth === 0) return;
-		const scrollable = scroller.scrollHeight > scroller.clientHeight
+		if (scroller.clientWidth === 0) return null;
+		return scroller.scrollHeight > scroller.clientHeight
 			|| (!this.wrap && scroller.scrollWidth > scroller.clientWidth);
+	}
+
+	/** @internal */
+	_applyScrollable(scrollable: boolean | null): void {
+		const scroller = this.view?.scrollDOM;
+		if (!scroller || scrollable === null) return;
 		this._isScrollable = scrollable;
 		if (scrollable) {
 			scroller.setAttribute('tabindex', '0');

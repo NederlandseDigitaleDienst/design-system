@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDAvatar } from './avatar.js';
 import './avatar.js';
 
@@ -78,29 +79,53 @@ describe('nldd-avatar', () => {
 		expect(el.resolvedInitials).toBe('ABCD');
 	});
 
-	// The test fixture isn't laid out (zero-size shadow elements), so stub the
-	// measured widths to check the fit maths deterministically. The live scaling
-	// (initials always fit) is verified in the browser.
-	const stubAndFit = (a: NLDDAvatar, shapeWidth: number, initialsWidth: number): number => {
-		const shape = a.shadowRoot!.querySelector('.avatar')!;
-		const initials = a.shadowRoot!.querySelector('.avatar__initials')!;
-		Object.defineProperty(shape, 'clientWidth', { value: shapeWidth, configurable: true });
-		Object.defineProperty(initials, 'scrollWidth', { value: initialsWidth, configurable: true });
-		(a as unknown as { _fitInitials(): void })._fitInitials();
-		return parseFloat(a.style.getPropertyValue('--_avatar-initials-fit'));
-	};
+	const fitOf = (a: HTMLElement): number => Number(a.style.getPropertyValue('--_avatar-initials-fit'));
+	const settle = () => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
 
 	it('scales wide initials down to fit the shape width', async () => {
+		const unloadTokens = loadTokens();
 		el = await fixture<NLDDAvatar>('<nldd-avatar initials="WWWW" decorative size="48"></nldd-avatar>');
-		await waitForUpdate(el);
-		// natural 60px wide inside a 48px shape → fit = 48 * 0.75 / 60
-		expect(stubAndFit(el, 48, 60)).toBeCloseTo((48 * 0.75) / 60, 3);
+		await settle();
+		expect(fitOf(el)).toBeLessThan(1);
+		const initials = el.shadowRoot!.querySelector('.avatar__initials')!;
+		expect(initials.getBoundingClientRect().width).toBeLessThanOrEqual(48 * 0.75 + 0.5);
+		unloadTokens();
 	});
 
 	it('keeps narrow initials at full size (fit capped at 1)', async () => {
+		const unloadTokens = loadTokens();
 		el = await fixture<NLDDAvatar>('<nldd-avatar initials="I" decorative size="48"></nldd-avatar>');
-		await waitForUpdate(el);
-		expect(stubAndFit(el, 48, 8)).toBe(1);
+		await settle();
+		expect(fitOf(el)).toBe(1);
+		unloadTokens();
+	});
+
+	// The initials scale with the shape, so one measurement of a text holds for
+	// every avatar with it, at any size, and also for one that is hidden.
+	it('measures a text once and fits every avatar with it, hidden ones too', async () => {
+		const unloadTokens = loadTokens();
+		const wrapper = await fixture(`
+			<div>
+				<nldd-avatar initials="MWM" decorative size="24"></nldd-avatar>
+				<nldd-avatar initials="MWM" decorative size="96"></nldd-avatar>
+				<div hidden><nldd-avatar initials="MWM" decorative size="48"></nldd-avatar></div>
+			</div>
+		`);
+		el = wrapper as NLDDAvatar;
+		const avatars = [...wrapper.querySelectorAll<NLDDAvatar>('nldd-avatar')];
+		await settle();
+		const fits = avatars.map(fitOf);
+		expect(fits[0]).toBeLessThan(1);
+		expect(fits[1]).toBeCloseTo(fits[0], 2);
+		expect(fits[2]).toBe(fits[0]);
+		const measure = avatars.map((avatar) => vi.spyOn(avatar, '_measureRatio'));
+		avatars.forEach((avatar) => {
+			avatar.initials = 'MWMW';
+		});
+		await settle();
+		expect(measure.reduce((calls, spy) => calls + spy.mock.calls.length, 0)).toBe(1);
+		expect(fitOf(avatars[2])).toBeLessThan(fits[0]);
+		unloadTokens();
 	});
 
 	it('renders the image when src is set, with an empty alt (host owns the label)', async () => {
@@ -129,7 +154,7 @@ describe('nldd-avatar', () => {
 	it('re-fits the initials when a failed image falls back to them', async () => {
 		el = await fixture<NLDDAvatar>(`<nldd-avatar initials="WWWW" src="${IMAGE}" size="48" decorative></nldd-avatar>`);
 		await waitForUpdate(el);
-		const fit = vi.spyOn(el as unknown as { _fitInitials(): void }, '_fitInitials');
+		const fit = vi.spyOn(el, '_fitInitials');
 		el.shadowRoot!.querySelector('.avatar__image')!.dispatchEvent(new Event('error'));
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.avatar__initials')).not.toBeNull();

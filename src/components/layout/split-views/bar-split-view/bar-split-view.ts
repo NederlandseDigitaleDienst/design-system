@@ -43,9 +43,21 @@ import { barSplitViewTemplate } from './bar-split-view.template.js';
 import { breakpointPx, rootFontSize } from '../../../../assets/styles/breakpoints.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
+import { LayoutPass, sharedResizeObserver } from '../../../../utilities/layout-pass.js';
 
 export type Breakpoint = 'sm' | 'md' | 'lg';
 type BreakpointOrUnmeasured = Breakpoint | null;
+
+/** Every bar split view that changed size measures, then they all apply: one
+ *  layout for all of them, where an observer each lays out once per view. */
+function measureViews(views: NLDDBarSplitView[]): void {
+	const live = views.filter((view) => view.isConnected);
+	const widths = live.map((view) => view.getBoundingClientRect().width);
+	live.forEach((view, i) => view._applyWidth(widths[i]));
+}
+
+const sizeObserver = sharedResizeObserver<NLDDBarSplitView>(measureViews);
+const firstMeasurement = new LayoutPass<NLDDBarSplitView>(measureViews);
 
 @customElement('nldd-bar-split-view')
 export class NLDDBarSplitView extends LitElement {
@@ -58,42 +70,42 @@ export class NLDDBarSplitView extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<'inherit' | 'base' | 'tinted'>('inherit') })
 	background: 'inherit' | 'base' | 'tinted' = 'inherit';
 
-	// null until connectedCallback measures the viewport. Before measurement the
+	// null until the view is measured, with the others that connect in the same tick. Before measurement the
 	// template falls back to DOM order with dividers — no breakpoint-specific
 	// sorting is applied.
 	@state()
 	_currentBreakpoint: BreakpointOrUnmeasured = null;
 
 	private _observer: MutationObserver | null = null;
-	private _resizeObserver: ResizeObserver | null = null;
 
 	override connectedCallback() {
 		super.connectedCallback();
 
-		this._currentBreakpoint = this._getBreakpoint(this.getBoundingClientRect().width);
-
 		this._observer = new MutationObserver(() => this.requestUpdate());
 		this._observer.observe(this, { childList: true, attributes: true, attributeFilter: ['above', 'below', 'only', 'sm-order', 'md-order', 'lg-order'], subtree: false });
 
-		this._resizeObserver = new ResizeObserver(() => {
-			const bp = this._getBreakpoint(this.getBoundingClientRect().width);
-			if (bp !== this._currentBreakpoint) {
-				this._currentBreakpoint = bp;
-				this.requestUpdate();
-			}
-			// Bar heights (and thus the published insets) can change on any
-			// resize; in root mode the flowing host resizes with them.
-			this._updateInsets();
-		});
-		this._resizeObserver.observe(this);
+		firstMeasurement.schedule(this, this.ownerDocument);
+		sizeObserver.observe(this, this);
 	}
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();
 		this._observer?.disconnect();
 		this._observer = null;
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
+		sizeObserver.unobserveAll(this);
+		firstMeasurement.cancel(this);
+	}
+
+	/** @internal */
+	_applyWidth(width: number): void {
+		const bp = this._getBreakpoint(width);
+		if (bp !== this._currentBreakpoint) {
+			this._currentBreakpoint = bp;
+			this.requestUpdate();
+		}
+		// Bar heights (and thus the published insets) can change on any
+		// resize; in root mode the flowing host resizes with them.
+		this._updateInsets();
 	}
 
 	private _getBreakpoint(width: number): Breakpoint {

@@ -34,10 +34,10 @@
  * box (expanded) and the sheet (collapsed) so there is a single, never-duplicated
  * copy: the light DOM (and its state) is preserved across the switch.
  *
- * The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the
- * host), not the viewport. A sidebar-section in a narrow column or a split-view
- * pane collapses to the sheet just like one in a narrow viewport, and the sidebar
- * never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow
+ * Like every section it goes in an nldd-page, never in another section, and lays
+ * out by the width of that page, not the viewport. A page in a narrow split-view
+ * pane collapses the sidebar to the sheet just like a narrow window, and the
+ * sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow
  * section then stacks the sidebar (full-width) above the main instead of using a sheet.
  *
  * Inherits block `padding` and `height` from PageSectionMixin.
@@ -85,6 +85,42 @@ import '../../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDSheet } from '../../sheet/sheet.js';
 import { translate } from '../../../../utilities/translations.js';
 import { focusTemporarily, hashTarget, samePageHash } from '../../../../utilities/focus-target.js';
+import { LayoutPass, sharedResizeObserver } from '../../../../utilities/layout-pass.js';
+import { FramePass } from '../../../../utilities/frame-pass.js';
+
+/**
+ * Every section reads its width, then every section applies it: one layout for
+ * all of them. A section that reads right after another one collapsed reads a
+ * layout that one just made dirty, and a page full of them lays out once per
+ * section. The same goes for the resize notifications: one observer for all.
+ */
+function measureSections(sections: NLDDSidebarSection[], observed: boolean): void {
+	const live = sections.filter((section) => section.isConnected);
+	const widths = live.map((section) => section.clientWidth);
+	live.forEach((section, i) => {
+		// The observer's first delivery is the initial measurement, not a breakpoint crossing.
+		const announce = observed && section._hasMeasured;
+		if (observed) section._hasMeasured = true;
+		section._applyCollapsed(widths[i], announce);
+	});
+}
+
+/** The first measurement, before the first paint; see firstUpdated. */
+const firstMeasurement = new LayoutPass<NLDDSidebarSection>((sections) => measureSections(sections, false));
+
+/** A resize is applied at the next frame, not in the observer's callback:
+ *  collapsing changes the height of the page around the section, which the
+ *  page's own observer has already been told about in this round, and the
+ *  browser reports that as a "ResizeObserver loop" error. */
+const resizeFrame = new FramePass<NLDDSidebarSection>((sections) => measureSections(sections, true));
+
+/** Like any ResizeObserver it reports a section once when observed: by then
+ *  the first measurement has seeded it, and announces nothing. It watches the
+ *  sizer in each section and not the section, whose height the collapse
+ *  changes. */
+const sizeObserver = sharedResizeObserver<NLDDSidebarSection>((sections) => {
+	for (const section of sections) resizeFrame.schedule(section);
+});
 
 /**
  * `sidebar-section-only` sits on elements in the light DOM, at any depth, which the
@@ -133,8 +169,8 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	@query('.sidebar-section__sheet')
 	private _sheet?: NLDDSheet;
 
-	private _ro?: ResizeObserver;
-	private _hasMeasured = false;
+	/** @internal Whether the observer reported since it connected. */
+	_hasMeasured = false;
 	private _sheetOpen = false;
 
 	get _resolvedSidebarLabel(): string {
@@ -153,38 +189,37 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		adoptOnlyRule(this.getRootNode());
-		// Collapse on the section's OWN width, not the viewport, so it adapts to
-		// whatever space it's placed in (a narrow column, a split-view pane, …).
-		this._ro = new ResizeObserver(this._onResize);
-		this._ro.observe(this);
+		// Collapse on the width of the page, measured on the section, which
+		// spans it. The sizer is in the shadow root, so from the first render on.
+		const sizer = this._sizer;
+		if (sizer) sizeObserver.observe(sizer, this);
 		this.addEventListener('click', this._onClick);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this._ro?.disconnect();
-		this._ro = undefined;
+		sizeObserver.unobserveAll(this);
+		firstMeasurement.cancel(this);
+		resizeFrame.cancel(this);
 		this._hasMeasured = false;
 		this.removeEventListener('click', this._onClick);
 		this._pendingJump?.abort();
 	}
 
-	override firstUpdated(): void {
-		// Seed the collapsed state from the rendered width before the first paint,
-		// so there's no flash of the wrong layout; the ResizeObserver owns it after.
-		this._applyCollapsed(this.clientWidth, false);
+	private get _sizer(): Element | null {
+		return this.shadowRoot?.querySelector('.sidebar-section__sizer') ?? null;
 	}
 
-	private _onResize = (entries: ResizeObserverEntry[]): void => {
-		const entry = entries[0];
-		const width = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
-		// The first delivery is the initial measurement, not a breakpoint crossing.
-		const announce = this._hasMeasured;
-		this._hasMeasured = true;
-		this._applyCollapsed(width, announce);
-	};
+	override firstUpdated(): void {
+		sizeObserver.observe(this._sizer!, this);
+		// Seed the collapsed state from the rendered width before the first paint,
+		// so there's no flash of the wrong layout; the ResizeObserver owns it after.
+		// In one pass with every section that renders now, see measureSections.
+		firstMeasurement.schedule(this, this.ownerDocument);
+	}
 
-	private _applyCollapsed(width: number, announce: boolean): void {
+	/** @internal */
+	_applyCollapsed(width: number, announce: boolean): void {
 		// no-collapse opts out of the sheet entirely — the sidebar stacks instead.
 		const next = width < breakpointPx('lgMin') && !this.noCollapse;
 		if (next === this.collapsed) return;
@@ -212,7 +247,7 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 		if (changed.has('stickyTop')) this._applyInset('--_sidebar-section-sticky-top', this.stickyTop);
 		if (changed.has('stickyBottom')) this._applyInset('--_sidebar-section-sticky-bottom', this.stickyBottom);
 		// Toggling no-collapse flips whether a narrow section collapses — re-evaluate.
-		if (changed.has('noCollapse')) this._applyCollapsed(this.clientWidth, false);
+		if (changed.has('noCollapse')) firstMeasurement.schedule(this, this.ownerDocument);
 		// Expanding to the box (lg) moves the sidebar slot out of the sheet, so close
 		// any open sheet rather than leave an empty modal behind.
 		if (changed.has('collapsed') && !this.collapsed) this._sheet?.hide();

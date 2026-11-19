@@ -7,6 +7,7 @@
  * areas are rectangular; `corner` rounds one corner of each. Use it on pages
  * where a visitor first has to know where they are, such as a home or a topic
  * page; where the title already does that, a section with a title is enough.
+ * Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.
  *
  * The image in a hero sets the mood and is never the main content, so the
  * panel always stands on it. Over an image the panel keeps a section gap from

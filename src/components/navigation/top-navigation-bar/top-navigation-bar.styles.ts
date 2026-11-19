@@ -30,7 +30,6 @@ export const topNavigationBarStyles = css`
 		--_top-navigation-bar-title-lg-font: var(--primitives-font-display-4-sm);
 
 		${inheritedTextReset}
-		container-type: inline-size;
 		display: block;
 		width: 100%;
 	}
@@ -44,19 +43,18 @@ export const topNavigationBarStyles = css`
 
 	.top-navigation-bar {
 		/* The ribbon's width, and with it everything measured against the ribbon:
-		   its own height and the wordmark beside it. Here rather than on :host,
-		   because a container query cannot measure the container it sits on. */
+		   its own height and the wordmark beside it. */
 		--_top-navigation-bar-logo-height: calc(var(--_top-navigation-bar-logo-width) * 2);
 
-		@container (max-width: ${smMax}) {
+		@media (max-width: ${smMax}) {
 			--_top-navigation-bar-logo-width: var(--semantics-brand-ribbon-sm-width);
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_top-navigation-bar-logo-width: var(--semantics-brand-ribbon-md-width);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@media (min-width: ${lgMin}) {
 			--_top-navigation-bar-logo-width: var(--semantics-brand-ribbon-lg-width);
 		}
 
@@ -69,15 +67,15 @@ export const topNavigationBarStyles = css`
 		/* The page-section inline margin lives on the wrapper; each bar caps to
 		   the content width and centers, so bar content lines up with page
 		   sections. width=full drops the cap (bars fill the margin box). */
-		@container (max-width: ${smMax}) {
+		@media (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@media (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
 		}
 	}
@@ -97,7 +95,7 @@ export const topNavigationBarStyles = css`
 		width: 100%;
 
 		/* Off the 4px grid on purpose: puts the wordmark where the printed logo has it. */
-		@container (min-width: ${mdMin}) {
+		@media (min-width: ${mdMin}) {
 			gap: var(--primitives-space-10);
 		}
 		max-width: var(--_top-navigation-bar-max-width);
@@ -169,7 +167,9 @@ export const topNavigationBarStyles = css`
 	}
 
 	:host([data-under-status-bar]) .top-navigation-bar__logo::before,
-	:host([data-under-status-bar]) .top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top {
+	:host([data-under-status-bar]) .top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top,
+	:host(:not([data-ribbon])) .top-navigation-bar__logo::before,
+	:host(:not([data-ribbon])) .top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top {
 		display: none;
 	}
 
@@ -267,7 +267,7 @@ export const topNavigationBarStyles = css`
 		/* The distance the text keeps from the top edge once it outgrows the
 		   ribbon. Only at the top: space under it would raise the bar for
 		   nothing. */
-		@container (max-width: ${smMax}) {
+		@media (max-width: ${smMax}) {
 			align-self: start;
 			padding-block-start: var(--primitives-space-16);
 		}
@@ -278,7 +278,7 @@ export const topNavigationBarStyles = css`
 		flex-grow: 0;
 		flex-shrink: 0;
 
-		@container (max-width: ${smMax}) {
+		@media (max-width: ${smMax}) {
 			display: none;
 		}
 	}
@@ -300,7 +300,7 @@ export const topNavigationBarStyles = css`
 		   auto margin takes positive free space and never negative, so the text
 		   cannot ride up past the top. Growing is the flex item's job here, and
 		   an item that grows leaves nothing for the margin to push with. */
-		@container (max-width: ${smMax}) {
+		@media (max-width: ${smMax}) {
 			flex-grow: 0;
 			flex-basis: auto;
 			margin-block-start: auto;
@@ -333,17 +333,17 @@ export const topNavigationBarStyles = css`
 		width: 100%;
 		max-width: var(--_top-navigation-bar-max-width);
 
-		@container (max-width: ${smMax}) {
+		@media (max-width: ${smMax}) {
 			flex-direction: column;
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			flex-direction: row;
 			align-items: center;
 			gap: var(--semantics-menu-bar-items-inline-padding);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@media (min-width: ${lgMin}) {
 			flex-direction: row;
 			align-items: center;
 			gap: var(--semantics-menu-bar-items-inline-padding);
@@ -357,7 +357,7 @@ export const topNavigationBarStyles = css`
 		align-items: center;
 		justify-content: flex-start;
 
-		@container (min-width: ${mdMin}) {
+		@media (min-width: ${mdMin}) {
 			padding-inline-end: var(--semantics-menu-bar-items-inline-padding);
 		}
 	}
@@ -367,7 +367,7 @@ export const topNavigationBarStyles = css`
 	   offset, two of outline, and the halo that follows it. */
 
 	:host([no-logo]) .top-navigation-bar__website-title-bar {
-		@container (max-width: ${smMax}) {
+		@media (max-width: ${smMax}) {
 			padding-top: var(--primitives-space-6);
 		}
 	}
@@ -385,18 +385,18 @@ export const topNavigationBarStyles = css`
 		color: var(--semantics-content-color);
 		white-space: nowrap;
 
-		@container (max-width: ${smMax}) {
+		@media (max-width: ${smMax}) {
 			padding-top: var(--primitives-space-4);
 			min-width: 0;
 			white-space: normal;
 			overflow-wrap: break-word;
 		}
 
-		@container (min-width: ${mdMin}) {
+		@media (min-width: ${mdMin}) {
 			font: var(--_top-navigation-bar-title-md-font);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@media (min-width: ${lgMin}) {
 			font: var(--_top-navigation-bar-title-lg-font);
 		}
 	}
@@ -432,12 +432,12 @@ export const topNavigationBarStyles = css`
 		min-width: 0;
 		align-items: center;
 
-		@container (max-width: ${mdMax}) {
+		@media (max-width: ${mdMax}) {
 			flex-grow: 0;
 			flex-shrink: 0;
 		}
 
-		@container (min-width: ${lgMin}) {
+		@media (min-width: ${lgMin}) {
 			flex-grow: 1;
 			flex-shrink: 1;
 		}
@@ -450,12 +450,12 @@ export const topNavigationBarStyles = css`
 		min-width: 0;
 		align-items: center;
 
-		@container (max-width: ${mdMax}) {
+		@media (max-width: ${mdMax}) {
 			flex-grow: 1;
 			flex-shrink: 1;
 		}
 
-		@container (min-width: ${lgMin}) {
+		@media (min-width: ${lgMin}) {
 			flex-grow: 0;
 			flex-shrink: 0;
 		}
@@ -468,7 +468,7 @@ export const topNavigationBarStyles = css`
 		min-width: 0;
 		flex-grow: 1;
 		flex-shrink: 1;
-		@container (min-width: ${lgMin}) {
+		@media (min-width: ${lgMin}) {
 			:host(.has-global-items) & {
 				display: flex;
 			}
@@ -480,7 +480,7 @@ export const topNavigationBarStyles = css`
 	.top-navigation-bar__menu-button {
 		display: none;
 
-		@container (max-width: ${mdMax}) {
+		@media (max-width: ${mdMax}) {
 			:host(.has-global-items) & {
 				display: inline-block;
 			}

@@ -15,7 +15,6 @@ export const fullBleedSectionStyles = css`
 	/* # Host */
 
 	:host {
-		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; 'initial' lets the
 		   block fall back to the responsive default until the mixin sets one. */
 		--_full-bleed-section-padding-top: initial;

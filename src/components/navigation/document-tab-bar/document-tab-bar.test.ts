@@ -809,3 +809,73 @@ describe('nldd-document-tab-bar – sluiten met de muis', () => {
 		expect(widths(bar)[0]).toBeGreaterThan(before);
 	});
 });
+
+/* ============================================================
+   While the page loads, and the overflow menu
+
+   The parser sends a slotchange per tab it adds; each would measure the bar
+   and fill its menu again. The bar does that once, after the parse. The menu
+   is filled when it opens.
+   ============================================================ */
+
+describe('nldd-document-tab-bar – while the page loads', () => {
+	let el: HTMLElement;
+	let finishLoading: (() => void) | null = null;
+
+	afterEach(() => {
+		finishLoading?.();
+		finishLoading = null;
+		if (el) cleanup(el);
+	});
+
+	/** The document says it is loading until the returned function. */
+	function pretendLoading(): () => void {
+		Object.defineProperty(document, 'readyState', { configurable: true, get: () => 'loading' });
+		return () => {
+			delete (document as { readyState?: string }).readyState;
+			document.dispatchEvent(new Event('readystatechange'));
+		};
+	}
+
+	const tabs = (count: number) => Array.from({ length: count }, (_, i) =>
+		`<nldd-document-tab-bar-item ${i === 0 ? 'selected' : ''} text="Aanvraag A-${1042 + i}"></nldd-document-tab-bar-item>`).join('');
+
+	it('handles the tabs once after the parse, not per tab', async () => {
+		const bar = await fixture<NLDDDocumentTabBar>('<nldd-document-tab-bar accessible-label="Documenten"></nldd-document-tab-bar>');
+		el = bar;
+		await waitForUpdate(bar);
+		const handled = vi.spyOn(bar as unknown as { _slotChanged: () => void }, '_slotChanged');
+		let slotChanges = 0;
+		bar.shadowRoot!.querySelector('slot:not([name])')!.addEventListener('slotchange', () => slotChanges++);
+		finishLoading = pretendLoading();
+		for (let i = 0; i < 3; i++) {
+			const item = document.createElement('nldd-document-tab-bar-item');
+			item.setAttribute('text', `Dossier D-${318 + i}`);
+			bar.append(item);
+			// Microtasks only, as between two elements of a parse: no frame.
+			for (let j = 0; j < 3; j++) await Promise.resolve();
+		}
+		expect(slotChanges).toBe(3);
+		expect(handled).not.toHaveBeenCalled();
+		finishLoading();
+		finishLoading = null;
+		expect(handled).toHaveBeenCalledTimes(1);
+		expect(getItems(bar)[0]._isFallbackFocusable).toBe(true);
+	});
+
+	it('fills the overflow menu when it opens', async () => {
+		el = await fixture(`<div style="width: 520px"><nldd-document-tab-bar accessible-label="Documenten">${tabs(9)}</nldd-document-tab-bar></div>`);
+		const bar = el.querySelector('nldd-document-tab-bar') as NLDDDocumentTabBar;
+		await waitForUpdate(bar);
+		await new Promise(requestAnimationFrame);
+		await waitForUpdate(bar);
+		const hidden = getItems(bar).filter(item => item.hidden);
+		expect(hidden.length).toBeGreaterThan(0);
+
+		const menu = bar.shadowRoot!.querySelector('nldd-menu') as HTMLElement;
+		expect(menu.children.length).toBe(0);
+		menu.showPopover();
+		expect([...menu.children].map(item => item.getAttribute('text'))).toEqual(hidden.map(item => item.text));
+		menu.hidePopover();
+	});
+});

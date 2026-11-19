@@ -142,6 +142,31 @@ describe('nldd-one-time-code-field', () => {
 		unloadTokens();
 	});
 
+	// The boxes are as wide at a size whatever room the field has: measured
+	// once, a resize only compares, and lays nothing out again.
+	it('steps down on a resize without measuring the boxes again', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field size="lg" style="width: 600px"></nldd-one-time-code-field>');
+		await until(() => el._boxWidths !== null);
+		const measure = vi.spyOn(el, '_fitSizes');
+		el.style.width = '200px';
+		await until(() => el.getAttribute('data-fit') === 'sm');
+		el.style.width = '600px';
+		await until(() => el.getAttribute('data-fit') === null);
+		expect(measure).not.toHaveBeenCalled();
+		unloadTokens();
+	});
+
+	it('measures the boxes again when their size changes', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture('<nldd-one-time-code-field size="lg" style="width: 600px"></nldd-one-time-code-field>');
+		await until(() => el._boxWidths !== null);
+		const lg = el._boxWidths!.widths[0];
+		el.length = 4;
+		await until(() => el._boxWidths !== null && el._boxWidths.widths[0] < lg);
+		unloadTokens();
+	});
+
 	it('puts the boxes in the middle with centered, and still steps down', async () => {
 		const unloadTokens = loadTokens();
 		el = await fixture('<nldd-one-time-code-field centered style="width: 400px"></nldd-one-time-code-field>');

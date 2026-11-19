@@ -17,7 +17,7 @@ export const navigationSplitViewStyles = css`
 
 	:host {
 		--_navigation-split-view-background-color: var(--context-background-color);
-		/* Pane min-widths — read by JS via getComputedStyle in firstUpdated */
+		/* Pane min-widths, read by JS via getComputedStyle */
 		--_navigation-split-view-primary-sidebar-min-width: var(--primitives-area-320);
 		--_navigation-split-view-secondary-sidebar-min-width: var(--primitives-area-320);
 		--_navigation-split-view-main-min-width: var(--primitives-area-480);

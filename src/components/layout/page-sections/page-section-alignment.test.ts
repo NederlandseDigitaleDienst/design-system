@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { cleanup, waitForUpdate, sectionFixture } from '../../../test-utils.js';
 import './one-half-one-half-section/one-half-one-half-section.js';
 import './two-thirds-one-third-section/two-thirds-one-third-section.js';
 import './one-third-two-thirds-section/one-third-two-thirds-section.js';
@@ -15,12 +15,12 @@ describe('page sections with columns: vertical-alignment', () => {
 
 	/** The vertical center of the shorter right column, relative to the columns. */
 	const rightCenter = async (block: string, alignment: string, width: number) => {
-		el = await fixture(`
-			<nldd-${block} vertical-alignment="${alignment}" style="width: ${width}px">
+		el = await sectionFixture(`
+			<nldd-${block} vertical-alignment="${alignment}">
 				<div slot="left" style="height: 300px">Lang</div>
 				<div slot="right" style="height: 100px">Kort</div>
 			</nldd-${block}>
-		`);
+		`, width);
 		await waitForUpdate(el);
 		const columns = el.shadowRoot!.querySelector(`.${block}__columns`)!.getBoundingClientRect();
 		const right = el.querySelector('[slot="right"]')!.getBoundingClientRect();
@@ -55,12 +55,12 @@ describe('page sections with columns: stacking', () => {
 	});
 
 	const sideBySide = async (block: string, width: number) => {
-		el = await fixture(`
-			<nldd-${block} style="width: ${width}px">
+		el = await sectionFixture(`
+			<nldd-${block}>
 				<div slot="left">Links</div>
 				<div slot="right">Rechts</div>
 			</nldd-${block}>
-		`);
+		`, width);
 		await waitForUpdate(el);
 		const left = el.querySelector('[slot="left"]')!.getBoundingClientRect();
 		const right = el.querySelector('[slot="right"]')!.getBoundingClientRect();

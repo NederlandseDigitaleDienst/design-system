@@ -232,6 +232,27 @@ export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerT
 		if (this._monthMenuOpen) await this._openMenuOnSelection('.date-picker__month-menu');
 	}
 
+	/**
+	 * The year menu holds a century and more of items, and the month menu twelve,
+	 * which a calendar that nobody opens the menus of renders for nothing: on a
+	 * page with many date fields, most of the cost of each. The items come in as
+	 * a menu starts to open, before the menu claims and places them (that waits
+	 * for its `toggle`), and stay after.
+	 */
+	@state()
+	_monthMenuRendered = false;
+
+	@state()
+	_yearMenuRendered = false;
+
+	public _handleMonthMenuBeforeToggle = (e: Event): void => {
+		if ((e as ToggleEvent).newState === 'open') this._monthMenuRendered = true;
+	};
+
+	public _handleYearMenuBeforeToggle = (e: Event): void => {
+		if ((e as ToggleEvent).newState === 'open') this._yearMenuRendered = true;
+	};
+
 	public async _handleYearMenuToggle(e: Event): Promise<void> {
 		this._yearMenuOpen = (e as ToggleEvent).newState === 'open';
 		if (this._yearMenuOpen) await this._openMenuOnSelection('.date-picker__year-menu');

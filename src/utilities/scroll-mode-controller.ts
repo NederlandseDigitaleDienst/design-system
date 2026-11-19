@@ -1,4 +1,5 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import { LayoutPass } from './layout-pass.js';
 
 export type ScrollMode = 'nested' | 'root';
 
@@ -28,6 +29,54 @@ export interface ScrollModeProvider {
 }
 
 const PROVIDER_SELECTOR = 'nldd-shell, nldd-sheet, nldd-modal-dialog';
+
+/** A layer without a provider: it reads the mode it inherits from the CSS. */
+export interface StandaloneScrollLayer extends ScrollModeConsumer {
+	/** The inherited `--context-scroll-mode`; a style read, no writes. */
+	inheritedScrollMode(): ScrollMode;
+}
+
+/**
+ * Every stand-alone layer reads, then every one of them applies. A layer that
+ * reads after another one wrote its `data-scroll` recalculates the style of the
+ * page, once per layer.
+ */
+function readAll(layers: StandaloneScrollLayer[]): void {
+	const modes = layers.map((layer) => layer.inheritedScrollMode());
+	layers.forEach((layer, i) => layer.readScrollMode(modes[i]));
+}
+
+const firstReads = new LayoutPass<StandaloneScrollLayer>(readAll);
+const standalone = new Set<StandaloneScrollLayer>();
+let resizeFrame = 0;
+
+/** One listener for all of them, read in one frame: the mode can flip at a
+ *  media-query breakpoint. */
+function onResize(): void {
+	if (resizeFrame) return;
+	resizeFrame = requestAnimationFrame(() => {
+		resizeFrame = 0;
+		readAll([...standalone]);
+	});
+}
+
+/**
+ * A layer without a provider reads its mode once it has connected, with the
+ * other layers that connect in the same tick, and again after a resize.
+ */
+export function addStandaloneScrollLayer(layer: StandaloneScrollLayer, doc: Document): void {
+	if (!standalone.size) window.addEventListener('resize', onResize, { passive: true });
+	standalone.add(layer);
+	firstReads.schedule(layer, doc);
+}
+
+export function removeStandaloneScrollLayer(layer: StandaloneScrollLayer): void {
+	firstReads.cancel(layer);
+	if (!standalone.delete(layer) || standalone.size) return;
+	window.removeEventListener('resize', onResize);
+	cancelAnimationFrame(resizeFrame);
+	resizeFrame = 0;
+}
 
 /** Nearest ancestor shell (light-DOM `closest`; slotted layers stay in the
  *  consumer's light tree so this reaches across the slot boundaries), or null
@@ -85,12 +134,11 @@ export function whenScrollModeProviderDefined(host: Element, adopt: (provider: S
  * so a manual/media-query override still works. `nldd-page` keeps its own inline
  * logic because it also has to re-wire scroll listeners.
  */
-export class ScrollModeController implements ReactiveController, ScrollModeConsumer {
+export class ScrollModeController implements ReactiveController, StandaloneScrollLayer {
 	mode: ScrollMode = 'nested';
 
 	private _host: ReactiveControllerHost & HTMLElement;
 	private _onChange?: (mode: ScrollMode) => void;
-	private _raf = 0;
 	private _provider: ScrollModeProvider | null = null;
 
 	constructor(host: ReactiveControllerHost & HTMLElement, onChange?: (mode: ScrollMode) => void) {
@@ -112,8 +160,7 @@ export class ScrollModeController implements ReactiveController, ScrollModeConsu
 			// Stand-alone (no shell, e.g. docs): the mode comes from the
 			// inherited var; re-read on resize since it can flip at a media-query
 			// breakpoint.
-			window.addEventListener('resize', this._onResize, { passive: true });
-			this.read();
+			addStandaloneScrollLayer(this, this._host.ownerDocument);
 			whenScrollModeProviderDefined(this._host, this._adopt);
 		}
 	}
@@ -122,7 +169,7 @@ export class ScrollModeController implements ReactiveController, ScrollModeConsu
 	 *  defined at connect is. */
 	private _adopt = (provider: ScrollModeProvider): void => {
 		if (this._provider) return;
-		window.removeEventListener('resize', this._onResize);
+		removeStandaloneScrollLayer(this);
 		this._provider = provider;
 		provider.registerScrollConsumer(this);
 	};
@@ -132,9 +179,8 @@ export class ScrollModeController implements ReactiveController, ScrollModeConsu
 			this._provider.unregisterScrollConsumer(this);
 			this._provider = null;
 		} else {
-			window.removeEventListener('resize', this._onResize);
+			removeStandaloneScrollLayer(this);
 		}
-		if (this._raf) cancelAnimationFrame(this._raf);
 	}
 
 	/**
@@ -146,25 +192,17 @@ export class ScrollModeController implements ReactiveController, ScrollModeConsu
 	 * var is re-read instead.
 	 */
 	readScrollMode(mode?: ScrollMode): void {
-		const next = mode ?? this._readVar();
+		const next = mode ?? this.inheritedScrollMode();
 		if (next === this.mode) return;
 		this.mode = next;
 		this._host.dataset.scroll = next;
 		this._onChange?.(next);
 	}
 
-	private _readVar(): ScrollMode {
+	inheritedScrollMode(): ScrollMode {
 		const raw = getComputedStyle(this._host).getPropertyValue('--context-scroll-mode').trim();
 		return raw === 'root' ? 'root' : 'nested';
 	}
-
-	private _onResize = (): void => {
-		if (this._raf) return;
-		this._raf = requestAnimationFrame(() => {
-			this._raf = 0;
-			this.read();
-		});
-	};
 
 	/** Re-read the inherited `--context-scroll-mode` (used on connect + resize). */
 	read(): void {

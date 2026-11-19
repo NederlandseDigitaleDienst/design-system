@@ -58,6 +58,9 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { documentTabBarStyles, documentTabBarItemStyles } from './document-tab-bar.styles.js';
 import { documentTabBarTemplate, documentTabBarItemTemplate } from './document-tab-bar.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
+import { afterParse } from '../../../utilities/after-parse.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
+import { FramePass } from '../../../utilities/frame-pass.js';
 import { nlddDocumentTabBarTranslations } from './document-tab-bar.i18n.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { OverflowMenu } from '../../../utilities/overflow-menu.js';
@@ -74,6 +77,24 @@ export interface NLDDReorderEventDetail {
 
 
 // # nldd-document-tab-bar-item
+
+/**
+ * One ResizeObserver for every tab, so a bar of many tabs reads all of them
+ * before any of them renders. The threshold is the bar's, so it is read once
+ * per bar.
+ */
+const itemObserver = sharedResizeObserver<NLDDDocumentTabBarItem>(items => {
+	const thresholds = new Map<Element | null, number>();
+	const short = items.map(item => {
+		let threshold = thresholds.get(item.parentElement);
+		if (threshold === undefined) {
+			threshold = item._shortThreshold();
+			thresholds.set(item.parentElement, threshold);
+		}
+		return item._readIsShort(threshold);
+	});
+	items.forEach((item, i) => { item._isShort = short[i]; });
+});
 
 @customElement('nldd-document-tab-bar-item')
 export class NLDDDocumentTabBarItem extends LitElement {
@@ -109,22 +130,28 @@ export class NLDDDocumentTabBarItem extends LitElement {
 	@state()
 	_isShort = false;
 
-	private _itemResizeObserver: ResizeObserver | null = null;
-
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.setAttribute('role', 'none');
-		this._itemResizeObserver = new ResizeObserver(() => this._updateIsShort());
-		this._itemResizeObserver.observe(this);
+		itemObserver.observe(this, this);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this._itemResizeObserver?.disconnect();
-		this._itemResizeObserver = null;
+		itemObserver.unobserveAll(this);
 	}
 
 	private _updateIsShort(): void {
+		this._isShort = this._readIsShort();
+	}
+
+	/** @internal Reads only, so the observer reads every tab before any renders. */
+	_readIsShort(threshold = this._shortThreshold()): boolean {
+		return Number.isFinite(threshold) && this.getBoundingClientRect().width < threshold;
+	}
+
+	/** @internal */
+	_shortThreshold(): number {
 		// Read threshold from CSS custom property — single source of truth
 		// shared with the @container query that toggles short-mode visuals.
 		// `--_document-tab-bar-short-text-threshold` is declared on nldd-document-tab-bar's
@@ -132,8 +159,7 @@ export class NLDDDocumentTabBarItem extends LitElement {
 		// Guard against NaN: when the item is used outside a tab bar the
 		// custom property is unset and `width < NaN` would silently resolve to
 		// false (safe fallback, but the explicit guard makes intent clear).
-		const threshold = parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-short-text-threshold'));
-		this._isShort = Number.isFinite(threshold) && this.getBoundingClientRect().width < threshold;
+		return parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-short-text-threshold'));
 	}
 
 	/** Set by nldd-document-tab-bar. Not part of the public API. */
@@ -180,6 +206,25 @@ export class NLDDDocumentTabBarItem extends LitElement {
 
 // # nldd-document-tab-bar
 
+/** Every bar works out how many tabs fit before any of them changes anything. */
+function calculateOverflows(bars: NLDDDocumentTabBar[]): void {
+	const live = bars.filter(bar => bar.isConnected);
+	const counts = live.map(bar => bar._countOverflow());
+	live.forEach((bar, i) => bar._applyOverflowCount(counts[i]));
+}
+
+const overflowPass = new LayoutPass<NLDDDocumentTabBar>(calculateOverflows);
+
+/** One observer for the rows of every bar: one callback, one pass. */
+const rowObserver = sharedResizeObserver<NLDDDocumentTabBar>(bars => {
+	const widths = bars.map(bar => bar.clientWidth);
+	bars.forEach((bar, i) => bar._rowResized(widths[i]));
+	calculateOverflows(bars);
+});
+
+/** The bars that measure at the next frame after their first render. */
+const firstFrame = new FramePass<NLDDDocumentTabBar>(calculateOverflows);
+
 @customElement('nldd-document-tab-bar')
 export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumentTabBarTranslations) {
 	static override styles = documentTabBarStyles;
@@ -203,8 +248,8 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	get _menuOpen(): boolean {
 		return this._overflowMenu.open;
 	}
-	private _resizeObserver: ResizeObserver | null = null;
 	private _hasCustomLabel = false;
+	private _slotChangePending = false;
 
 	/** Whether the tabs keep their width after a close, until the pointer leaves. */
 	private _holding = false;
@@ -212,7 +257,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	 *  has left the row, the others grow into the space straight away. */
 	private _releaseOnRemoval: NLDDDocumentTabBarItem | null = null;
 	/** The width of the bar, to tell a resize from any other change. */
-	private _rowWidth = 0;
+	private _rowWidth: number | null = null;
 	/** Every tab there was when the hold began, overflowed ones included, so
 	 *  a tab coming back out of the overflow is not taken for a new one. */
 	private _itemsAtHold = new Set<NLDDDocumentTabBarItem>();
@@ -255,8 +300,9 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this.style.removeProperty('--_document-tab-bar-held-item-width');
 		this._holding = false;
 
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
+		rowObserver.unobserveAll(this);
+		overflowPass.cancel(this);
+		firstFrame.cancel(this);
 
 		this._cancelDrag();
 	}
@@ -266,23 +312,28 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 		const container = this.shadowRoot?.querySelector('.document-tab-bar__items') as HTMLElement;
 		if (container) {
-			this._rowWidth = this.clientWidth;
-			this._resizeObserver = new ResizeObserver(() => {
-				// A held width is only right for the row it was measured in. A
-				// window that changes size lets go, rather than leaving the tabs
-				// pinned wider than the row or short of it.
-				// The bar's own width and not the row's: the row grows when the
-				// overflow button goes away, and that is no reason to let go.
-				const width = this.clientWidth;
-				if (this._holding && width !== this._rowWidth) this._releaseWidths();
-				this._rowWidth = width;
-				this._calculateOverflow();
-			});
-			this._resizeObserver.observe(container);
+			rowObserver.observe(container, this);
 		}
 
 		this._syncMenuAnchor();
-		requestAnimationFrame(() => this._calculateOverflow());
+		// Capture: beforetoggle does not bubble. On the render root, which
+		// outlives the menu: a bar that connects again gets a new one.
+		this.renderRoot.addEventListener('beforetoggle', this._onMenuBeforeToggle, true);
+		firstFrame.schedule(this);
+	}
+
+	/**
+	 * @internal The row changed size; the shared observer measures the
+	 * overflow right after.
+	 *
+	 * A held width is only right for the row it was measured in. A window that
+	 * changes size lets go, rather than leaving the tabs pinned wider than the
+	 * row or short of it. The bar's own width and not the row's: the row grows
+	 * when the overflow button goes away, and that is no reason to let go.
+	 */
+	_rowResized(width: number): void {
+		if (this._holding && width !== this._rowWidth) this._releaseWidths();
+		this._rowWidth = width;
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
@@ -339,6 +390,17 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	}
 
 	_onSlotChange(): void {
+		// While the parser adds tabs, a slotchange comes per tab, and each would
+		// measure the bar and fill its menu again. One pass after the parse does.
+		if (this._slotChangePending) return;
+		this._slotChangePending = afterParse(() => {
+			this._slotChangePending = false;
+			if (this.isConnected) this._slotChanged();
+		}, this.ownerDocument);
+		if (!this._slotChangePending) this._slotChanged();
+	}
+
+	private _slotChanged(): void {
 		if (this._releaseOnRemoval && !this._getItems().includes(this._releaseOnRemoval)) {
 			this._releaseOnRemoval = null;
 			this._releaseWidths();
@@ -347,7 +409,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		if (this._holding && this._getItems().some(item => !this._itemsAtHold.has(item))) {
 			this._releaseWidths();
 		}
-		this._calculateOverflow();
+		overflowPass.schedule(this, this.ownerDocument);
 		this._propagateDismissLabel();
 		this._syncFallbackFocusable();
 		this._propagateNavigation();
@@ -640,19 +702,25 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	}
 
 	private _calculateOverflow(): void {
+		overflowPass.cancel(this);
+		calculateOverflows([this]);
+	}
+
+	/**
+	 * @internal How many tabs go into the menu, or null to leave it as it is.
+	 * Reads only, so many bars measure before any of them writes.
+	 */
+	_countOverflow(): number | null {
 		const items = this._getItems();
 		const totalItems = items.length;
 
-		if (totalItems === 0) {
-			this._overflowCount = 0;
-			return;
-		}
+		if (totalItems === 0) return 0;
 
 		const container = this.shadowRoot?.querySelector('.document-tab-bar__items') as HTMLElement;
-		if (!container) return;
+		if (!container) return null;
 
 		const containerWidth = container.offsetWidth;
-		if (containerWidth === 0) return;
+		if (containerWidth === 0) return null;
 
 		const gap = parseFloat(getComputedStyle(container).gap) || 8;
 		const firstItem = this._getItems()[0];
@@ -663,8 +731,12 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		const overflowButtonReserve = parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-overflow-button-reserve'));
 		// (containerWidth - overflowButtonWidth + gap) / (minItemWidth + gap)
 		const visible = Math.floor((containerWidth - overflowButtonReserve + gap) / (minItemWidth + gap));
-		const newOverflowCount = Math.max(0, totalItems - Math.max(1, visible));
+		return Math.max(0, totalItems - Math.max(1, visible));
+	}
 
+	/** @internal */
+	_applyOverflowCount(newOverflowCount: number | null): void {
+		if (newOverflowCount === null) return;
 		if (newOverflowCount !== this._overflowCount) {
 			this._overflowCount = newOverflowCount;
 			this._ensureSelectedVisible();
@@ -693,7 +765,26 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 	// — Overflow menu ——————————————————————————————————————————————————————————
 
+	/** Whether the menu lists other tabs than the ones in the overflow now. */
+	private _menuStale = false;
+
+	/**
+	 * The menu is filled when it opens, not on every change in what fits: a
+	 * window that narrows changes that for every bar on the page, and each
+	 * would build a menu nobody opens.
+	 */
 	private _updateMenu(): void {
+		this._menuStale = true;
+		if (this._overflowMenu.open) this._fillMenu();
+	}
+
+	private _onMenuBeforeToggle = (event: Event): void => {
+		if (event.target !== this._overflowMenu.menu || (event as ToggleEvent).newState !== 'open') return;
+		if (this._menuStale) this._fillMenu();
+	};
+
+	private _fillMenu(): void {
+		this._menuStale = false;
 		// Rebuilds menu DOM from scratch on every overflow recalculation.
 		// Any event listeners added directly to nldd-menu-item elements by consumers
 		// will be lost. Consumers should listen on the nldd-document-tab-bar itself
@@ -828,6 +919,9 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		if (this._holding) return;
 		const sample = items.find(item => !item.hidden);
 		if (!sample) return;
+		// The row the width is right for. Read here and not when the bar first
+		// renders, which would lay out the page once for every bar on it.
+		this._rowWidth = this.clientWidth;
 		this.style.setProperty('--_document-tab-bar-held-item-width', `${sample.getBoundingClientRect().width}px`);
 		this.toggleAttribute('data-holding-widths', true);
 		this._holding = true;

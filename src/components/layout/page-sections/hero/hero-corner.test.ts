@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../../test-utils.js';
+import { cleanup, waitForUpdate, nextFrames, sectionFixture } from '../../../../test-utils.js';
 import { loadTokens } from '../../../../test-tokens.js';
 import './hero.js';
 
@@ -20,7 +20,7 @@ describe('nldd-hero – corner', () => {
 	});
 
 	const hero = async (attrs: string, width = 1200, media = MEDIA): Promise<HTMLElement> => {
-		el = await fixture(`<nldd-hero ${attrs} style="width: ${width}px">${media}<p>Aanvraag A-1042</p></nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero ${attrs}>${media}<p>Aanvraag A-1042</p></nldd-hero>`, width);
 		await waitForUpdate(el);
 		return el;
 	};
@@ -164,7 +164,7 @@ describe('nldd-hero – corner', () => {
 	});
 
 	it('takes half the radius without media', async () => {
-		el = await fixture(`<nldd-hero corner style="width: 1200px"><p style="height: 400px">Aanvraag A-1042</p></nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero corner><p style="height: 400px">Aanvraag A-1042</p></nldd-hero>`, 1200);
 		await waitForUpdate(el);
 		await nextFrames();
 		const ribbon = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--semantics-brand-ribbon-lg-width'));

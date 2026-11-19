@@ -173,20 +173,19 @@ describe('nldd-menu-item', () => {
 		expect(el.getAttribute('text')).toBe('Bewerk');
 	});
 
-	it('renders an icon-cell when the icon attribute is set', async () => {
+	it('renders the icon when the icon attribute is set', async () => {
 		el = await fixture('<nldd-menu-item text="Save" icon="file"></nldd-menu-item>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('nldd-icon[icon="file"]');
-		expect(icon?.closest('nldd-icon-cell')?.hidden).toBe(false);
+		expect(icon?.closest<HTMLElement>('.menu__item-icon')?.hidden).toBe(false);
 	});
 
-	it('hides the icon-cell when there is no icon', async () => {
+	it('hides the icon box when there is no icon', async () => {
 		el = await fixture('<nldd-menu-item text="Save"></nldd-menu-item>');
 		await waitForUpdate(el);
-		const cell = el.shadowRoot!.querySelector<HTMLElement>('nldd-icon-cell')!;
+		const cell = el.shadowRoot!.querySelector<HTMLElement>('.menu__item-icon')!;
 		expect(cell.hidden).toBe(true);
 		expect(getComputedStyle(cell).display).toBe('none');
-		expect(getComputedStyle(cell.nextElementSibling!).display).toBe('none');
 	});
 
 	it('shows an icon from the icon slot, over the icon attribute', async () => {
@@ -194,7 +193,7 @@ describe('nldd-menu-item', () => {
 		await waitForUpdate(el);
 		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="icon"]')!;
 		expect(slot.assignedElements()).toEqual([el.querySelector('img')]);
-		expect(slot.closest('nldd-icon-cell')!.hidden).toBe(false);
+		expect(slot.closest<HTMLElement>('.menu__item-icon')!.hidden).toBe(false);
 	});
 
 	it('reflects details attribute', async () => {
@@ -336,7 +335,7 @@ describe('nldd-menu-item href (link items)', () => {
 		expect(a.getAttribute('href')).toBe('/profiel');
 		expect(a.getAttribute('role')).toBe('menuitem');
 		expect(item.shadowRoot!.querySelector('button.menu__item')).toBeNull();
-		expect(a.querySelector('nldd-text-cell')?.getAttribute('text')).toBe('Profiel');
+		expect(a.querySelector('.menu__item-text')?.textContent).toBe('Profiel');
 	});
 
 	const pressSpace = async (variant: string, repeat = false, moveAway = false): Promise<{ selected: number; clicked: number; prevented: boolean }> => {
@@ -973,7 +972,7 @@ describe('nldd-menu-item with submenu', () => {
 			</nldd-menu-item>
 		`);
 		await waitForUpdate(el);
-		const indicator = el.shadowRoot!.querySelector('nldd-icon-cell[icon="chevron-right"]');
+		const indicator = el.shadowRoot!.querySelector('.menu__item-chevron nldd-icon[icon="chevron-right"]');
 		expect(indicator).not.toBeNull();
 	});
 
@@ -2856,8 +2855,8 @@ describe('nldd-menu check-mark column', () => {
 		await waitForUpdate(menu);
 		await Promise.all(Array.from(menu.querySelectorAll('nldd-menu-item'), (item) => (item as unknown as { updateComplete: Promise<unknown> }).updateComplete));
 	};
-	const checkCell = (item: Element) => item.shadowRoot!.querySelector('nldd-icon-cell[horizontal-alignment="center"]');
-	const textLeft = (item: Element) => item.shadowRoot!.querySelector('nldd-text-cell')!.getBoundingClientRect().left;
+	const checkCell = (item: Element) => item.shadowRoot!.querySelector('.menu__item-check');
+	const textLeft = (item: Element) => item.shadowRoot!.querySelector('.menu__item-text')!.getBoundingClientRect().left;
 
 	it('gives every item the column when one is a radio, so the text lines up', async () => {
 		el = await fixture(`
@@ -2875,8 +2874,8 @@ describe('nldd-menu check-mark column', () => {
 		const [nl, en, reset] = Array.from(el.querySelectorAll('nldd-menu-item'));
 
 		expect(checkCell(reset)).not.toBeNull();
-		expect(checkCell(reset)!.getAttribute('icon') || null).toBeNull();
-		expect(checkCell(nl)!.getAttribute('icon')).toBe('check-mark');
+		expect(checkCell(reset)!.querySelector('nldd-icon')).toBeNull();
+		expect(checkCell(nl)!.querySelector('nldd-icon')?.getAttribute('icon')).toBe('check-mark');
 		expect(textLeft(reset)).toBe(textLeft(en));
 		// A plain item stays a plain item: no checked state is announced.
 		expect(reset.shadowRoot!.querySelector('[aria-checked]')).toBeNull();
@@ -3688,7 +3687,7 @@ describe('nldd-menu-item type="submit"', () => {
 		await waitForUpdate(el);
 		const items = [...el.querySelectorAll('nldd-menu-item')] as (HTMLElement & { updateComplete: Promise<unknown> })[];
 		await Promise.all(items.map((item) => item.updateComplete));
-		const checkCell = (item: Element) => item.shadowRoot!.querySelector('nldd-icon-cell[horizontal-alignment="center"]');
+		const checkCell = (item: Element) => item.shadowRoot!.querySelector('.menu__item-check');
 		expect(items.map(checkCell)).toEqual([null, null]);
 	});
 });

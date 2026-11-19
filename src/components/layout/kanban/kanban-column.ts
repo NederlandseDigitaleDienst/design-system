@@ -27,6 +27,17 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { kanbanColumnStyles } from './kanban.styles.js';
 import { kanbanColumnTemplate } from './kanban-column.template.js';
+import { afterParse } from '../../../utilities/after-parse.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
+
+/* The fades are a layout read. Measured per column after each one wrote, a
+ * board lays out once per column; in one pass, once. */
+const scrollPass = new LayoutPass<NLDDKanbanColumn>((columns) => {
+	for (const column of columns) column._updateScroll();
+});
+const scrollObserver = sharedResizeObserver<NLDDKanbanColumn>((columns) => {
+	for (const column of columns) column._updateScroll();
+});
 
 @customElement('nldd-kanban-column')
 export class NLDDKanbanColumn extends LitElement {
@@ -69,7 +80,9 @@ export class NLDDKanbanColumn extends LitElement {
 	@query('.kanban-column__main')
 	private _mainElement!: HTMLElement;
 
-	private _resizeObserver: ResizeObserver | null = null;
+	private _observing = false;
+	private _observedItems: HTMLElement[] | null = null;
+	private _itemsPending = false;
 
 	@query('.kanban-column__drop-indicator')
 	private _indicator!: HTMLElement;
@@ -89,12 +102,22 @@ export class NLDDKanbanColumn extends LitElement {
 		return this._mainElement;
 	}
 
-	/** @internal */
+	/** @internal Each pass walks every item, so while the parser is still
+	 *  adding items it waits for the parse (see afterParse): once per item it
+	 *  is quadratic. */
 	_handleSlotChange(): void {
-		this._count = this.items.length;
-		this._observeItems();
-		this._updateScroll();
+		if (this._itemsPending) return;
+		this._itemsPending = true;
+		if (!afterParse(this._refreshItems, this.ownerDocument)) this._refreshItems();
 	}
+
+	private _refreshItems = (): void => {
+		this._itemsPending = false;
+		const items = this.items;
+		this._count = items.length;
+		this._observeItems(items);
+		scrollPass.schedule(this, this.ownerDocument);
+	};
 
 	/** @internal */
 	_updateScroll = (): void => {
@@ -105,27 +128,33 @@ export class NLDDKanbanColumn extends LitElement {
 	};
 
 	/** The main area changes size with the board, and its content with the items. */
-	private _observeItems(): void {
-		if (!this._resizeObserver || !this._mainElement) return;
-		this._resizeObserver.disconnect();
-		this._resizeObserver.observe(this._mainElement);
-		for (const item of this.items) this._resizeObserver.observe(item);
+	private _observeItems(items = this.items): void {
+		if (!this._observing || !this._mainElement) return;
+		// Observing again reports every item again: skip it when nothing changed.
+		const observed = this._observedItems;
+		if (observed && observed.length === items.length && observed.every((item, i) => item === items[i])) return;
+		this._observedItems = items;
+		scrollObserver.unobserveAll(this);
+		scrollObserver.observe(this._mainElement, this);
+		for (const item of items) scrollObserver.observe(item, this);
 		const footer = this.shadowRoot?.querySelector('.kanban-column__footer');
-		if (footer) this._resizeObserver.observe(footer);
+		if (footer) scrollObserver.observe(footer, this);
 	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		if (this.hasUpdated && !this._resizeObserver) {
-			this._resizeObserver = new ResizeObserver(this._updateScroll);
+		if (this.hasUpdated && !this._observing) {
+			this._observing = true;
 			this._observeItems();
 		}
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
+		scrollObserver.unobserveAll(this);
+		scrollPass.cancel(this);
+		this._observing = false;
+		this._observedItems = null;
 	}
 
 	/** @internal */
@@ -134,7 +163,7 @@ export class NLDDKanbanColumn extends LitElement {
 	}
 
 	protected override firstUpdated(): void {
-		this._resizeObserver = new ResizeObserver(this._updateScroll);
+		this._observing = true;
 		this._observeItems();
 	}
 

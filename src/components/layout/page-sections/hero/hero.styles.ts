@@ -16,7 +16,6 @@ export const heroStyles = css`
 	/* # Host */
 
 	:host {
-		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; 'initial' makes the
 		   var() in .hero fall back to the responsive default until the mixin
 		   sets a value inline on the host. */
@@ -85,9 +84,7 @@ export const heroStyles = css`
 		flex-grow: 1;
 		align-items: center;
 
-		/* The responsive overrides live here, not on :host — a container query
-		   inside :host would match an ancestor container, while these must query
-		   the host's own inline size. */
+		/* The responsive overrides query the page the hero is in. */
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);

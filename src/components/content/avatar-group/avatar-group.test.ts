@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import '../../../assets/styles/variables.css';
 import './avatar-group.js';
@@ -76,6 +76,11 @@ describe('nldd-avatar-group', () => {
 		const knop = el.shadowRoot!.querySelector('.avatar-group__overflow-button')!;
 		expect(knop.textContent!.trim()).toBe('+2');
 
+		// The list holds no rows until it is opened.
+		expect(el.shadowRoot!.querySelector('nldd-text-cell')).toBeNull();
+		(el.shadowRoot!.querySelector('nldd-popover') as HTMLElement).showPopover();
+		await waitForUpdate(el);
+
 		// The names behind the button are exactly those past max, in the same order.
 		const namen = Array.from(el.shadowRoot!.querySelectorAll('nldd-text-cell'))
 			.map(cel => cel.getAttribute('text'));
@@ -99,7 +104,8 @@ describe('nldd-avatar-group', () => {
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('style')).toBeNull();
 		const avatars = Array.from(el.querySelectorAll('nldd-avatar'));
-		expect(avatars.map((avatar) => getComputedStyle(avatar).zIndex)).toEqual(['3', '2', '1']);
+		// Only the avatars that show are stacked.
+		expect(avatars.map((avatar) => getComputedStyle(avatar).zIndex)).toEqual(['3', '2', 'auto']);
 		expect(getComputedStyle(avatars[2]).display).toBe('none');
 	});
 
@@ -255,5 +261,42 @@ describe('nldd-avatar-group', () => {
 		await waitForUpdate(el);
 		expect(button.getAttribute('aria-expanded')).toBe('false');
 		expect(getComputedStyle(button).backgroundColor).toBe(resting);
+	});
+
+	it('maakt een kopie in de lijst alleen opnieuw als het origineel veranderde', async () => {
+		el = await fixture(`
+			<nldd-avatar-group max="1">
+				<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
+				<nldd-avatar name="Piet Pietersen" decorative></nldd-avatar>
+			</nldd-avatar-group>
+		`);
+		await waitForUpdate(el);
+		(el.shadowRoot!.querySelector('nldd-popover') as HTMLElement).showPopover();
+		await waitForUpdate(el);
+		const copy = () => el.shadowRoot!.querySelector('nldd-popover nldd-avatar')!;
+		const first = copy();
+		el.append(document.createElement('span'));
+		await waitForUpdate(el);
+		expect(copy()).toBe(first);
+		el.querySelectorAll('nldd-avatar')[1].setAttribute('name', 'Sanne de Vries');
+		el.lastElementChild!.remove();
+		await waitForUpdate(el);
+		expect(copy()).not.toBe(first);
+		expect(copy().getAttribute('name')).toBe('Sanne de Vries');
+	});
+
+	it('vervangt zijn regels niet als ze hetzelfde blijven', async () => {
+		el = await fixture(`
+			<nldd-avatar-group max="1">
+				<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
+				<nldd-avatar name="Piet Pietersen" decorative></nldd-avatar>
+			</nldd-avatar-group>
+		`);
+		await waitForUpdate(el);
+		const sheets = el.shadowRoot!.adoptedStyleSheets;
+		const replace = vi.spyOn(sheets[sheets.length - 1], 'replaceSync');
+		el.setAttribute('accessible-label', 'Redactie');
+		await waitForUpdate(el);
+		expect(replace).not.toHaveBeenCalled();
 	});
 });

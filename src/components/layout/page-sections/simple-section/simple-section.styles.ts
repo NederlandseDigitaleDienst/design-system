@@ -15,7 +15,6 @@ export const simpleSectionStyles = css`
 	/* # Host */
 
 	:host {
-		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; 'initial' makes the
 		   var() in .simple-section fall back to the responsive default until the
 		   mixin sets a value inline on the host. */

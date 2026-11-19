@@ -14,14 +14,13 @@ export const sidebarSectionStyles = css`
 
 	/* # Host
 
-	   Container queries on the section's OWN width (not the viewport): the row
-	   <-> stacked switch and the padding follow the space the section is given.
+	   Container queries on the width of the page the section is in: the row
+	   <-> stacked switch and the padding follow it.
 	   The collapse-to-sheet is JS-driven — a ResizeObserver on the host sets
 	   [collapsed] (see the .ts) — and only happens when the section is narrow AND
 	   not [no-collapse]; the lg breakpoint (>= ${lgMin}) is the switch. */
 
 	:host {
-		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; resolved per breakpoint
 		   below (scope override -> base override -> responsive default). */
 		--_sidebar-section-padding-top: initial;
@@ -49,6 +48,13 @@ export const sidebarSectionStyles = css`
 
 	:host([hidden]) {
 		display: none;
+	}
+
+	.sidebar-section__sizer {
+		height: 0;
+		flex: none;
+		align-self: stretch;
+		visibility: hidden;
 	}
 
 	:host([width="full"]) {

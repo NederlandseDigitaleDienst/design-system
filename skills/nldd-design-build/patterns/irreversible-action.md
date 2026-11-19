@@ -23,44 +23,46 @@ nldd-modal-dialog            open, variant="alert", text, supporting-text
 ```
 
 ```html
-<nldd-simple-section>
-  <nldd-box background="critical">
-    <nldd-container padding="16">
-      <nldd-title
-        size="display-5"
-        text="Dossier verwijderen"
-        heading-level="2"
-      ></nldd-title>
-      <nldd-spacer size="8"></nldd-spacer>
-      <nldd-rich-text>
-        <p>Het dossier en alle documenten erin verdwijnen. Collega's die eraan werken raken hun kopie kwijt.</p>
-      </nldd-rich-text>
-      <nldd-spacer size="8"></nldd-spacer>
-      <nldd-button
-        id="dossier-verwijderen"
-        appearance="destructive"
-        text="Verwijder dossier"
-      ></nldd-button>
-    </nldd-container>
-  </nldd-box>
-</nldd-simple-section>
+<nldd-page>
+  <nldd-simple-section>
+    <nldd-box background="critical">
+      <nldd-container padding="16">
+        <nldd-title
+          size="display-5"
+          text="Dossier verwijderen"
+          heading-level="2"
+        ></nldd-title>
+        <nldd-spacer size="8"></nldd-spacer>
+        <nldd-rich-text>
+          <p>Het dossier en alle documenten erin verdwijnen. Collega's die eraan werken raken hun kopie kwijt.</p>
+        </nldd-rich-text>
+        <nldd-spacer size="8"></nldd-spacer>
+        <nldd-button
+          id="dossier-verwijderen"
+          appearance="destructive"
+          text="Verwijder dossier"
+        ></nldd-button>
+      </nldd-container>
+    </nldd-box>
+  </nldd-simple-section>
 
-<nldd-modal-dialog
-  variant="alert"
-  text="Verwijder 'Dossier D-318'?"
-  supporting-text="Dit dossier en alle documenten erin worden verwijderd. Dit kan niet ongedaan worden gemaakt."
->
-  <nldd-button
-    slot="actions"
-    appearance="primary"
-    text="Behoud dossier"
-  ></nldd-button>
-  <nldd-button
-    slot="actions"
-    appearance="destructive"
-    text="Verwijder dossier"
-  ></nldd-button>
-</nldd-modal-dialog>
+  <nldd-modal-dialog
+    variant="alert"
+    text="Verwijder 'Dossier D-318'?"
+    supporting-text="Dit dossier en alle documenten erin worden verwijderd. Dit kan niet ongedaan worden gemaakt."
+  >
+    <nldd-button
+      slot="actions"
+      appearance="primary"
+      text="Behoud dossier"
+    ></nldd-button>
+    <nldd-button
+      slot="actions"
+      appearance="destructive"
+      text="Verwijder dossier"
+    ></nldd-button>
+  </nldd-modal-dialog>
+</nldd-page>
 ```
 
 ## Waarom zo

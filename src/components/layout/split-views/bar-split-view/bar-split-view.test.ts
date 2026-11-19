@@ -10,7 +10,8 @@ import type { NLDDBarSplitView } from './bar-split-view.js';
 // the breakpoint back to 'sm' on the next observation cycle.
 
 async function setBreakpoint(el: HTMLElement, bp: 'sm' | 'md' | 'lg') {
-	(el as any)._resizeObserver?.disconnect();
+	// The view measures itself on every resize report; keep it on this breakpoint.
+	(el as any)._applyWidth = () => {};
 	(el as NLDDBarSplitView)._currentBreakpoint = bp;
 	await waitForUpdate(el);
 }

@@ -1061,8 +1061,9 @@ describe('nldd-tab-bar – overloop', () => {
 		expect(picked.getAttribute('text')).toBe(text);
 		expect(escaped).toEqual([]);
 		await expect.poll(() => menu.matches(':popover-open'), { timeout: 2000 }).toBe(false);
-		await bar.updateComplete;
-		expect(menuItems(bar).map(item => item.getAttribute('text'))).not.toContain(text);
+		// The bar takes the new list once the menu's toggle event is in: a task
+		// after the popover closed, which the poll above can come before.
+		await expect.poll(() => menuItems(bar).map(item => item.getAttribute('text'))).not.toContain(text);
 	});
 
 	it('laat de pijltjes alleen langs de tabs in de balk lopen', async () => {
@@ -1173,5 +1174,73 @@ describe('nldd-tab-bar-item – controls', () => {
 		item.controls = 'inhoud-2';
 		await item.updateComplete;
 		expect(set).toHaveBeenCalledWith([host.querySelector('#inhoud-2')]);
+	});
+});
+
+/* ============================================================
+   While the page loads
+
+   The parser sends a slotchange per tab it adds. The bar syncs its tabs once
+   after the parse, and measures every bar in one frame.
+   ============================================================ */
+
+describe('nldd-tab-bar – while the page loads', () => {
+	let el: NLDDTabBar;
+	let finishLoading: (() => void) | null = null;
+
+	afterEach(() => {
+		finishLoading?.();
+		finishLoading = null;
+		if (el) cleanup(el);
+	});
+
+	/** The document says it is loading until the returned function. */
+	function pretendLoading(): () => void {
+		Object.defineProperty(document, 'readyState', { configurable: true, get: () => 'loading' });
+		return () => {
+			delete (document as { readyState?: string }).readyState;
+			document.dispatchEvent(new Event('readystatechange'));
+		};
+	}
+
+	it('syncs the tabs once after the parse, not per tab', async () => {
+		el = await fixture<NLDDTabBar>('<nldd-tab-bar></nldd-tab-bar>');
+		await waitForUpdate(el);
+		const sync = vi.spyOn(el as unknown as { _syncItems: () => void }, '_syncItems');
+		let slotChanges = 0;
+		el.shadowRoot!.querySelector('slot:not([name])')!.addEventListener('slotchange', () => slotChanges++);
+		finishLoading = pretendLoading();
+		for (const text of ['Tab A', 'Tab B', 'Tab C']) {
+			const item = document.createElement('nldd-tab-bar-item');
+			item.setAttribute('text', text);
+			el.append(item);
+			// Microtasks only, as between two elements of a parse: no frame.
+			for (let i = 0; i < 3; i++) await Promise.resolve();
+		}
+		expect(slotChanges).toBe(3);
+		expect(sync).not.toHaveBeenCalled();
+		finishLoading();
+		finishLoading = null;
+		expect(sync).toHaveBeenCalledTimes(1);
+		const items = [...el.querySelectorAll('nldd-tab-bar-item')] as NLDDTabBarItem[];
+		expect(items[0]._isFallbackFocusable).toBe(true);
+	});
+
+	it('measures every bar in the same frame', async () => {
+		el = await fixture<NLDDTabBar>(`<div>${threeTabBar()}${threeTabBar()}</div>`) as unknown as NLDDTabBar;
+		const bars = [...el.querySelectorAll('nldd-tab-bar')] as NLDDTabBar[];
+		await Promise.all(bars.map(bar => bar.updateComplete));
+		await new Promise(requestAnimationFrame);
+		const order: string[] = [];
+		bars.forEach((bar, i) => {
+			const own = bar as unknown as { _readMeasurement: () => unknown; _decideOverflow: (m: unknown) => void };
+			const read = own._readMeasurement.bind(bar);
+			const decide = own._decideOverflow.bind(bar);
+			own._readMeasurement = () => { order.push(`read ${i}`); return read(); };
+			own._decideOverflow = (m) => { order.push(`write ${i}`); decide(m); };
+			bar._scheduleOverflow();
+		});
+		await new Promise(requestAnimationFrame);
+		expect(order).toEqual(['read 0', 'read 1', 'write 0', 'write 1']);
 	});
 });

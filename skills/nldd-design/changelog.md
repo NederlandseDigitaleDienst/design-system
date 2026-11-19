@@ -15,6 +15,32 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Pages with many components load and resize much faster, above all in Safari.** A component that measured itself while the page was still parsing made the browser lay out the page once per instance, so 500 copies cost quadratically more than 50. Components now measure together, after the parse, with one ResizeObserver per component. With 500 copies in WebKit, a sheet loads in 1.7 s instead of not at all, a radio group in 0.4 s instead of 5.7 s, a time picker in 1.5 s instead of 73 s, a toolbar in 4.3 s instead of 27 s and an avatar group in 0.9 s instead of 52 s.
+- **A page section lays out by the `nldd-page` it is in.** A section goes in a page, never on its own or in another section. See Breaking.
+
+### Breaking
+
+- **A page section lays out by the width of the `nldd-page` it is in, and goes nowhere else.** `nldd-simple-section`, `nldd-full-bleed-section`, `nldd-sidebar-section`, the three column sections and `nldd-hero` were each a container of their own. They now query the page, which they always span. A section outside an `nldd-page` loses its responsive padding and columns, and a section in a narrower box inside the page lays out for the page. Put every section directly in a page, next to the other sections; `nldd lint` warns about both (see Added).
+
+### Added
+
+- **Lint rules `section-goes-in-page` and `section-no-section`** (warnings). A page section outside an `nldd-page` misses its layout, the main landmark, the scroller and the insets that keep sticky content clear of the bars. A section inside another section lays out by the page, not by the section around it. A section in a page in an overlay, such as an `nldd-sheet` opened from a section, is fine.
+
+### Changed
+
+- **`nldd-list-item` is no longer a container.** Its cells already lay out by the `nldd-list` around it. A component with container queries of its own in a row, such as `nldd-progress-bar`, now measures the list, which is as wide as the row.
+- **`nldd-menu-item` draws its own text, icon, details and chevron, without cells.** Each item held five to nine `nldd-text-cell`, `nldd-icon-cell` and `nldd-spacer-cell` elements, each with a shadow root of its own. Safari pays for every one of them on each resize, also in a closed menu, so a combo-box with hundreds of options made the whole page slow to resize. The item looks the same. Its styles now belong to the item and no longer follow the cells. Code that looks for a cell in the shadow root of an item no longer finds one.
+- **`nldd-top-navigation-bar` follows the width of the window, not that of its parent.** The bar always spans the page, so the two were the same, and a media query costs the browser nothing per bar where a container query made every resize slower with each bar. A bar in a narrower box, such as a frame in your own docs, now lays out for the window it is in: give it an `iframe` of its own to show it narrow.
+
+### Fixed
+
+- **Faster with many instances:** `nldd-page`, the split views, `nldd-top-title-bar`, `nldd-status-bar`, `nldd-radio-button`, `nldd-toolbar`, `nldd-tab-bar`, `nldd-document-tab-bar`, `nldd-menu-bar`, `nldd-top-navigation-bar`, `nldd-avatar`, `nldd-avatar-group`, `nldd-one-time-code-field`, `nldd-collection`, `nldd-kanban`, `nldd-table`, `nldd-combo-box`, `nldd-time-picker`, `nldd-date-picker`, `nldd-sidebar-section`, `nldd-file-field`, `nldd-code-viewer`, `nldd-text-editor` with a toolbar elsewhere on the page, and the corner of `nldd-hero`. Nothing changes in how they look or behave.
+- **No more "ResizeObserver loop" errors** from `nldd-table`, `nldd-sidebar-section` and the corner of `nldd-hero` when the window resizes. An `nldd-sidebar-section` that collapsed in a page still caused one, because collapsing resized the page in the same round; it now collapses a frame later.
+- **In Safari, only the `nldd-top-navigation-bar` nearest the top of the page draws the ribbon above it.** On a page with more bars, each one drew it in the same place, and its scroll-driven animations made every layout slower with each bar.
+- **The overflow of `nldd-avatar-group` and the year and month menus of `nldd-date-picker` render when they open,** not with the page.
+
 ## [0.26.4](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.3...v0.26.4) (2026-11-18)
 
 ## [0.26.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.2...v0.26.3) (2026-11-18)

@@ -177,45 +177,47 @@ describe('nldd-top-navigation-bar – menu item selection', () => {
 
 describe('nldd-top-navigation-bar – compact breakpoint', () => {
 	let el: NLDDTopNavigationBar;
+	let own: { width: number; height: number };
 
-	afterEach(() => {
+	const compact = () => [...el.querySelectorAll('nldd-menu-bar')].map(bar => bar.hasAttribute('compact'));
+
+	beforeEach(() => { own = { width: window.innerWidth, height: window.innerHeight }; });
+	afterEach(async () => {
 		if (el) cleanup(el);
-		vi.restoreAllMocks();
+		await page.viewport(own.width, own.height);
 	});
 
-	it('sets compact on slotted menu-bars at small breakpoint', async () => {
+	it('sets compact on slotted menu-bars on a narrow screen', async () => {
+		await page.viewport(400, 800);
 		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
 		await waitForUpdate(el);
-
-		// Mock container width below smMax (640px)
-		const container = el.shadowRoot!.querySelector('.top-navigation-bar') as HTMLElement;
-		vi.spyOn(container, 'clientWidth', 'get').mockReturnValue(400);
-
-		(el as any)._syncCompactAttribute();
-		await waitForUpdate(el);
-
-		const menuBars = el.querySelectorAll('nldd-menu-bar');
-		expect(menuBars.length).toBeGreaterThan(0);
-		for (const bar of menuBars) {
-			expect(bar.hasAttribute('compact')).toBe(true);
-		}
+		expect(compact()).toEqual([true]);
 	});
 
-	it('removes compact from slotted menu-bars above small breakpoint', async () => {
+	it('leaves compact off on a wide screen', async () => {
+		await page.viewport(1280, 800);
 		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
 		await waitForUpdate(el);
+		expect(compact()).toEqual([false]);
+	});
 
-		const container = el.shadowRoot!.querySelector('.top-navigation-bar') as HTMLElement;
-		vi.spyOn(container, 'clientWidth', 'get').mockReturnValue(900);
-
-		(el as any)._syncCompactAttribute();
+	it('follows the window when it crosses the breakpoint', async () => {
+		await page.viewport(1280, 800);
+		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
 		await waitForUpdate(el);
+		await page.viewport(400, 800);
+		await expect.poll(compact).toEqual([true]);
+		await page.viewport(1280, 800);
+		await expect.poll(compact).toEqual([false]);
+	});
 
-		const menuBars = el.querySelectorAll('nldd-menu-bar');
-		expect(menuBars.length).toBeGreaterThan(0);
-		for (const bar of menuBars) {
-			expect(bar.hasAttribute('compact')).toBe(false);
-		}
+	it('does not lay out the page to decide', async () => {
+		el = await fixture<NLDDTopNavigationBar>(navWithGlobalItems());
+		await waitForUpdate(el);
+		const container = el.shadowRoot!.querySelector('.top-navigation-bar') as HTMLElement;
+		const width = vi.spyOn(container, 'clientWidth', 'get');
+		el._onGlobalSlotChange();
+		expect(width).not.toHaveBeenCalled();
 	});
 });
 
@@ -592,14 +594,19 @@ describe('nldd-top-navigation-bar – i18n', () => {
 // its first line off the top of the viewport, where the ribbon starts.
 describe('nldd-top-navigation-bar – wordmark beside the ribbon', () => {
 	let el: HTMLElement;
+	let own: { width: number; height: number };
 
-	afterEach(() => {
+	beforeEach(() => { own = { width: window.innerWidth, height: window.innerHeight }; });
+	afterEach(async () => {
 		if (el) cleanup(el);
+		await page.viewport(own.width, own.height);
 	});
 
 	const tokens = '--semantics-brand-ribbon-sm-width: 40px; --semantics-brand-ribbon-lg-width: 48px; --primitives-space-16: 16px;';
 
+	// The bar spans the window, so the window is as wide as the bar.
 	const mount = async (width: string, attrs: string) => {
+		await page.viewport(parseInt(width, 10), 800);
 		el = await fixture(
 			`<div style="width: ${width}; ${tokens}">`
 			+ `<nldd-top-navigation-bar ${attrs.includes('logo-title') ? '' : 'logo-title="Nederlandse Digitale Dienst"'} ${attrs}></nldd-top-navigation-bar></div>`,
@@ -903,6 +910,28 @@ describe('nldd-top-navigation-bar – under a status bar', () => {
 	});
 });
 
+describe('nldd-top-navigation-bar – more bars on a page', () => {
+	let wrap: HTMLElement;
+
+	afterEach(() => { if (wrap) cleanup(wrap); });
+
+	const bars = () => [...wrap.querySelectorAll('nldd-top-navigation-bar')];
+
+	it('draws the ribbon above the page for the bar nearest the top only', async () => {
+		wrap = await fixture('<div><nldd-top-navigation-bar></nldd-top-navigation-bar><nldd-top-navigation-bar></nldd-top-navigation-bar></div>');
+		await nextFrames();
+		expect(bars().map(bar => bar.hasAttribute('data-ribbon'))).toEqual([true, false]);
+	});
+
+	it('hands the ribbon on when the top bar leaves', async () => {
+		wrap = await fixture('<div><nldd-top-navigation-bar></nldd-top-navigation-bar><nldd-top-navigation-bar></nldd-top-navigation-bar></div>');
+		await nextFrames();
+		bars()[0].remove();
+		await nextFrames();
+		expect(bars()[0].hasAttribute('data-ribbon')).toBe(true);
+	});
+});
+
 describe('nldd-top-navigation-bar – moved in the DOM', () => {
 	let wrap: HTMLDivElement;
 	let removeTokens: () => void;
@@ -919,8 +948,10 @@ describe('nldd-top-navigation-bar – moved in the DOM', () => {
 	});
 
 	it('still turns compact on a narrow screen after it is taken out and put back', async () => {
+		const own = { width: window.innerWidth, height: window.innerHeight };
+		await page.viewport(1200, 800);
 		wrap = await fixture<HTMLDivElement>(`
-			<div style="width:1200px">
+			<div>
 				<nldd-top-navigation-bar website-title="Mijn Dienst">
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item text="Aanvragen" href="/aanvragen"></nldd-menu-bar-item>
@@ -939,9 +970,10 @@ describe('nldd-top-navigation-bar – moved in the DOM', () => {
 		wrap.appendChild(bar);
 		await waitForUpdate(bar);
 		await frames();
-		wrap.style.width = '360px';
+		await page.viewport(360, 800);
 		await frames(6);
 		expect(menuBar.hasAttribute('compact')).toBe(true);
+		await page.viewport(own.width, own.height);
 	});
 });
 

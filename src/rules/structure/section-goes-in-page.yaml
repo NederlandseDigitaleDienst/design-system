@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero'
+assert: 'nldd-page *'
+message: 'Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.'
+see: patronen/page-structure
+examples:
+  passed: ['<html><body><nldd-page><nldd-simple-section><nldd-text>Inhoud</nldd-text></nldd-simple-section></nldd-page></body></html>', '<html><body><nldd-page><div slot="header"><nldd-hero></nldd-hero></div></nldd-page></body></html>']
+  failed: ['<html><body><nldd-simple-section><nldd-text>Inhoud</nldd-text></nldd-simple-section></body></html>', '<html><body><nldd-shell><nldd-sidebar-section></nldd-sidebar-section></nldd-shell></body></html>']
+  cantTell: ['<nldd-simple-section></nldd-simple-section>']

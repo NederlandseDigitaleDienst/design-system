@@ -3,8 +3,12 @@
  *
  * The top bar of a page: a logo bar with the Rijkslogo and an optional
  * wordmark, and below it the main bar with the website title, a back button,
- * the global navigation and the utility navigation. On narrow widths the global
- * navigation moves into a menu sheet behind the menu button.
+ * the global navigation and the utility navigation. On a narrow screen the
+ * global navigation moves into a menu sheet behind the menu button.
+ *
+ * The bar spans the window, so it follows the window's width (sm, md, lg) and
+ * not that of its parent: put it in a narrower box and it still lays out for
+ * the window.
  *
  * The top bar of a website, and of nothing else: put it in the `header` slot
  * of an `nldd-page`. Do not combine it with a split view. A split view is the
@@ -47,15 +51,102 @@ import { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import '../menu-bar/menu-bar.js';
 import { NLDDMenuBar } from '../menu-bar/menu-bar.js';
 import '../../content/icon/icon.js';
-import { breakpointPx } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { TopNavigationMenuSheet } from './top-navigation-bar.menu-sheet.js';
 import { setState } from '../../../utilities/element-state.js';
+import { LayoutPass } from '../../../utilities/layout-pass.js';
 
 /** The absolute URL an href goes to; an anchor resolves it without throwing. */
 function resolvedHref(href: string): string {
 	const anchor = document.createElement('a');
 	anchor.href = href;
 	return anchor.href;
+}
+
+// # Measuring every bar at once
+
+/** Where a bar's logo sits; see NLDDTopNavigationBar._logoRect. */
+interface LogoPosition {
+	offset: number;
+	underStatusBar: boolean;
+	/** The bar nearest the top of the page: the only one whose ribbon shows. */
+	ribbon: boolean;
+}
+
+/**
+ * Every bar reads where its logo is before any of them writes it, and the
+ * status bars are read once for all of them. A bar per pass reads a layout the
+ * one before it has just changed.
+ *
+ * Always every bar on the page: only the one nearest the top draws the ribbon
+ * above the page. Its scroll-driven animations cost WebKit a pass over every
+ * scroll timeline on each layout, so a page of bars that all drew it would
+ * grow quadratically.
+ */
+function syncLogoOffsets(): void {
+	if (window.scrollY > 0) return;
+	const live = [...connectedBars].filter(bar => bar.isConnected);
+	let statusBars: DOMRect[] | null = null;
+	const positions = live.map((bar): LogoPosition | null => {
+		const rect = bar._logoRect();
+		if (!rect) return null;
+		statusBars ??= [...document.querySelectorAll('nldd-status-bar')].map(status => status.getBoundingClientRect());
+		return {
+			offset: Math.max(0, Math.round(rect.top + window.scrollY)),
+			underStatusBar: statusBars.some(box =>
+				box.height > 0 && box.bottom <= rect.top + 1 && box.left < rect.right && box.right > rect.left),
+			ribbon: false,
+		};
+	});
+	let top: LogoPosition | null = null;
+	for (const position of positions) if (position && (!top || position.offset < top.offset)) top = position;
+	if (top) top.ribbon = true;
+	live.forEach((bar, i) => {
+		const position = positions[i];
+		if (position) bar._applyLogoPosition(position);
+	});
+}
+
+const logoPass = new LayoutPass<NLDDTopNavigationBar>(syncLogoOffsets);
+
+/** One listener per window event for every bar, so they read together. */
+const connectedBars = new Set<NLDDTopNavigationBar>();
+const onWindowChange = (): void => syncLogoOffsets();
+
+function listenToWindow(bar: NLDDTopNavigationBar): void {
+	if (!connectedBars.size) {
+		window.addEventListener('scroll', onWindowChange, { passive: true });
+		window.addEventListener('resize', onWindowChange, { passive: true });
+		window.addEventListener(STATUS_BAR_CHANGE, onWindowChange);
+	}
+	connectedBars.add(bar);
+}
+
+function stopListeningToWindow(bar: NLDDTopNavigationBar): void {
+	connectedBars.delete(bar);
+	if (connectedBars.size) return;
+	window.removeEventListener('scroll', onWindowChange);
+	window.removeEventListener('resize', onWindowChange);
+	window.removeEventListener(STATUS_BAR_CHANGE, onWindowChange);
+}
+
+/**
+ * Compact follows the same media query as the styles: the bar always spans
+ * the window, so the window's width is the bar's. One query per window for
+ * every bar in it, and no layout to read.
+ */
+const compactQueries = new WeakMap<Window, MediaQueryList>();
+
+function compactQuery(view: Window): MediaQueryList {
+	let query = compactQueries.get(view);
+	if (!query) {
+		query = view.matchMedia(`(max-width: ${queryBreakpoints.smMax})`);
+		query.addEventListener('change', () => {
+			for (const bar of connectedBars) if (bar.ownerDocument.defaultView === view) bar._syncCompactAttribute();
+		});
+		compactQueries.set(view, query);
+	}
+	return query;
 }
 
 // # nldd-top-navigation-bar
@@ -123,9 +214,6 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	/** The menu on a narrow screen (top-navigation-bar.menu-sheet.ts). @internal */
 	readonly _menuSheet = new TopNavigationMenuSheet(this);
 
-	private _resizeObserver: ResizeObserver | null = null;
-	private _compactRAF: number | null = null;
-	private _setupRAF: number | null = null;
 
 	// Tracks the accessible-label we last applied to each slotted menu-bar, so
 	// our default can follow translation changes while a consumer-set label is
@@ -231,29 +319,33 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.addEventListener('select', this._handleItemSelect);
-		window.addEventListener('scroll', this._syncLogoOffset, { passive: true });
-		window.addEventListener('resize', this._syncLogoOffset, { passive: true });
-		window.addEventListener(STATUS_BAR_CHANGE, this._syncLogoOffset);
-		// Here and not in firstUpdated: disconnecting takes it down, and a bar
-		// moved in the DOM or kept by a framework connects again without a first
-		// update, so it would no longer turn compact on a narrow screen.
-		this._setupCompactDetection();
+		listenToWindow(this);
+		// A bar moved in the DOM or kept by a framework connects again without
+		// an update, and the window may have changed in between.
+		if (this.hasUpdated) this._syncCompactAttribute();
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this.removeEventListener('select', this._handleItemSelect);
-		window.removeEventListener('scroll', this._syncLogoOffset);
-		window.removeEventListener('resize', this._syncLogoOffset);
-		window.removeEventListener(STATUS_BAR_CHANGE, this._syncLogoOffset);
-		this._cleanupCompactDetection();
+		stopListeningToWindow(this);
+		logoPass.cancel(this);
+		// The ribbon may move to the bar that is now nearest the top.
+		const [next] = connectedBars;
+		if (next) logoPass.schedule(next, next.ownerDocument);
 		this._menuSheet.remove();
 	}
 
 	override firstUpdated(): void {
 		// Sync has-global-items immediately to prevent layout flash
 		this._syncHasGlobalItems();
-		this._syncLogoOffset();
+		logoPass.schedule(this, this.ownerDocument);
+	}
+
+	override updated(changed: PropertyValues): void {
+		super.updated(changed);
+		// A render can add the bar's own items, such as the back button.
+		this._syncCompactAttribute();
 	}
 
 	/**
@@ -262,21 +354,20 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	 * an nldd-status-bar the ribbon is not drawn above the page at all: the
 	 * status bar carries on there in its own color, and the ribbon starts under
 	 * it, as it does at rest. Only read while the page is at the top, which is
-	 * the only time it shows.
+	 * the only time it shows. Every bar on the page at once: syncLogoOffsets.
+	 * Reads only.
+	 * @internal
 	 */
-	private _syncLogoOffset = (): void => {
-		if (window.scrollY > 0) return;
-		const logo = this.shadowRoot?.querySelector('.top-navigation-bar__logo');
-		if (!logo) return;
-		const rect = logo.getBoundingClientRect();
-		const offset = Math.max(0, Math.round(rect.top + window.scrollY));
+	_logoRect(): DOMRect | null {
+		return this.shadowRoot?.querySelector('.top-navigation-bar__logo')?.getBoundingClientRect() ?? null;
+	}
+
+	/** @internal Writes only. */
+	_applyLogoPosition({ offset, underStatusBar, ribbon }: LogoPosition): void {
 		this.style.setProperty('--_top-navigation-bar-logo-offset', `${offset}px`);
-		const underStatusBar = [...document.querySelectorAll('nldd-status-bar')].some((bar) => {
-			const box = bar.getBoundingClientRect();
-			return box.height > 0 && box.bottom <= rect.top + 1 && box.left < rect.right && box.right > rect.left;
-		});
 		this.toggleAttribute('data-under-status-bar', underStatusBar);
-	};
+		this.toggleAttribute('data-ribbon', ribbon);
+	}
 
 	/**
 	 * Handles selection of global menu items.
@@ -311,34 +402,6 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 
 	// ## Compact attribute propagation
 
-	private _setupCompactDetection(): void {
-		this._cleanupCompactDetection();
-		this._setupRAF = requestAnimationFrame(() => {
-			this._setupRAF = null;
-			if (!this.isConnected) return;
-			this._resizeObserver = new ResizeObserver(() => {
-				this._scheduleCompactUpdate();
-			});
-			this._resizeObserver.observe(this);
-			this._scheduleCompactUpdate();
-		});
-	}
-
-	private _cleanupCompactDetection(): void {
-		if (this._setupRAF) {
-			cancelAnimationFrame(this._setupRAF);
-			this._setupRAF = null;
-		}
-		if (this._compactRAF) {
-			cancelAnimationFrame(this._compactRAF);
-			this._compactRAF = null;
-		}
-		if (this._resizeObserver) {
-			this._resizeObserver.disconnect();
-			this._resizeObserver = null;
-		}
-	}
-
 	/** @internal Used by template */
 	_onGlobalSlotChange = (): void => {
 		this._syncHasGlobalItems();
@@ -352,22 +415,18 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		this._syncCompactAttribute();
 	};
 
-	private _scheduleCompactUpdate = (): void => {
-		if (this._compactRAF) cancelAnimationFrame(this._compactRAF);
-		this._compactRAF = requestAnimationFrame(() => {
-			this._syncCompactAttribute();
-		});
-	};
-
 	/** Update has-global-items class on host based on global slot content. */
 	private _syncHasGlobalItems(): void {
 		this.classList.toggle('has-global-items', this._getSlottedItems(this._globalSlot).length > 0);
 	}
 
-	/** Propagate compact to menu-bars and internal items when container is sm. */
-	private _syncCompactAttribute(): void {
-		const isCompact = this._isSmBreakpoint();
+	/** @internal Propagates compact to the menu-bars and the bar's own items on a narrow screen. */
+	_syncCompactAttribute(): void {
+		const view = this.ownerDocument.defaultView;
+		if (view) this._applyCompact(compactQuery(view).matches);
+	}
 
+	private _applyCompact(isCompact: boolean): void {
 		// Slotted menu-bars (consumer-supplied)
 		const slottedMenuBars = [
 			this._getSlottedMenuBar(this._globalSlot),
@@ -385,13 +444,6 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		}
 
 		this._syncHasGlobalItems();
-	}
-
-	/** Check if the container is at the sm breakpoint (<= smMax). */
-	private _isSmBreakpoint(): boolean {
-		const container = this.shadowRoot?.querySelector('.top-navigation-bar') as HTMLElement;
-		if (!container) return false;
-		return container.clientWidth <= breakpointPx('smMax');
 	}
 
 	// ## Menu sheet

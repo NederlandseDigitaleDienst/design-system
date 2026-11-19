@@ -24,6 +24,18 @@ import { ScrollModeController } from '../../../../utilities/scroll-mode-controll
 import { stackedSplitViewStyles } from './stacked-split-view.styles.js';
 import { stackedSplitViewTemplate } from './stacked-split-view.template.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
+import { LayoutPass, sharedResizeObserver } from '../../../../utilities/layout-pass.js';
+
+/** Every stacked split view that changed size measures, then they all apply:
+ *  one layout for all of them, where an observer each lays out once per view. */
+function measureViews(views: NLDDStackedSplitView[]): void {
+	const live = views.filter((view) => view.isConnected);
+	const fitting = live.map((view) => view._measureFitting());
+	live.forEach((view, i) => view._applyFitting(fitting[i]));
+}
+
+const sizeObserver = sharedResizeObserver<NLDDStackedSplitView>(measureViews);
+const fittingPass = new LayoutPass<NLDDStackedSplitView>(measureViews);
 
 @customElement('nldd-stacked-split-view')
 export class NLDDStackedSplitView extends LitElement {
@@ -41,39 +53,39 @@ export class NLDDStackedSplitView extends LitElement {
 	@state()
 	_visiblePanes = Infinity;
 
-	// Cached pane min-height — read from CSS in firstUpdated
+	// Cached pane min-height, read from CSS once the styles apply
 	private _paneMinHeight = 0;
 
-	private _resizeObserver: ResizeObserver | null = null;
-
+	/** The observer reports every view once when it connects, after its first
+	 *  render, so that is where the first measurement happens too. */
 	override connectedCallback() {
 		super.connectedCallback();
-		this._resizeObserver = new ResizeObserver(() => this._updateVisiblePanes());
-		this._resizeObserver.observe(this);
+		sizeObserver.observe(this, this);
 	}
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
-	}
-
-	override firstUpdated() {
-		// Read pane min-height from CSS after first render — styles are guaranteed applied
-		this._paneMinHeight = parseFloat(getComputedStyle(this).getPropertyValue('--_stacked-split-view-pane-min-height'));
-		this._updateVisiblePanes();
+		sizeObserver.unobserveAll(this);
+		fittingPass.cancel(this);
 	}
 
 	override updated(changed: Map<string, unknown>) {
-		if (changed.has('panes')) {
-			this._updateVisiblePanes();
+		// The first render is measured by the observer's first report.
+		if (changed.has('panes') && changed.get('panes') !== undefined) {
+			fittingPass.schedule(this, this.ownerDocument);
 		}
 	}
 
-	private _updateVisiblePanes() {
-		if (!this._paneMinHeight) return;
-		const height = this.getBoundingClientRect().height;
-		const fitting = Math.floor(height / this._paneMinHeight);
+	/** @internal How many panes fit, or null before the styles apply. Reads, writes nothing. */
+	_measureFitting(): number | null {
+		this._paneMinHeight ||= parseFloat(getComputedStyle(this).getPropertyValue('--_stacked-split-view-pane-min-height'));
+		if (!this._paneMinHeight) return null;
+		return Math.floor(this.getBoundingClientRect().height / this._paneMinHeight);
+	}
+
+	/** @internal */
+	_applyFitting(fitting: number | null): void {
+		if (fitting === null) return;
 		this._visiblePanes = Math.min(this.panes, Math.max(1, fitting));
 	}
 

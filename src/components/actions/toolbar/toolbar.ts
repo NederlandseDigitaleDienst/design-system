@@ -41,6 +41,9 @@ import { translate } from '../../../utilities/translations.js';
 import { NLDDToolbarItem, type Size, type SizingElement } from './toolbar-item.js';
 import { NLDDToolbarTitle } from './toolbar-title.js';
 import { OverflowMenu } from '../../../utilities/overflow-menu.js';
+import { afterParse } from '../../../utilities/after-parse.js';
+import { LayoutPass } from '../../../utilities/layout-pass.js';
+import { runSteps, type Steps } from './toolbar.steps.js';
 import {
 	areaWidth,
 	fillsRowAlone,
@@ -54,6 +57,91 @@ import {
 export { NLDDToolbarItem } from './toolbar-item.js';
 export { NLDDToolbarTitle } from './toolbar-title.js';
 export { groupForOverflow } from './toolbar.layout.js';
+
+// # Measuring many toolbars at once
+
+type ToolbarWidths = { preferred: number; minimum: number };
+
+/** A control with its own overflow, such as nldd-tab-bar. */
+type ShrinkableControl = Element & {
+	_toolbarWidths: () => ToolbarWidths | null;
+	/** Puts the control in the state its widths are read in, so the reads of
+	 *  many toolbars come after one write. */
+	_setMeasuring?: (on: boolean) => void;
+};
+
+function shrinkableControlOf(item: HTMLElement): ShrinkableControl | null {
+	const control = Array.from(item.children).find(el => el.getAttribute('slot') !== 'overflow') as
+		Partial<ShrinkableControl> | undefined;
+	return typeof control?._toolbarWidths === 'function' ? control as ShrinkableControl : null;
+}
+
+/** Every toolbar that asks for a measurement in the same tick, in one pass. */
+const measurePass = new LayoutPass<NLDDToolbar>(toolbars =>
+	runSteps(toolbars.filter(toolbar => toolbar.isConnected).map(toolbar => toolbar._measureSteps())),
+);
+
+/** The area widths before the first measurement, in one pass for the same reason. */
+const areaPass = new LayoutPass<NLDDToolbar>(toolbars =>
+	runSteps(toolbars.filter(toolbar => toolbar.isConnected && !toolbar._hasMeasured).map(toolbar => toolbar._areaSteps())),
+);
+
+/**
+ * One ResizeObserver for every toolbar and its items. One per toolbar calls
+ * back once per toolbar, and each callback measures a layout the previous one
+ * changed; this one measures every toolbar that changed size in one pass.
+ */
+const toolbarOf = new WeakMap<Element, NLDDToolbar>();
+let sizeObserver: ResizeObserver | null = null;
+
+function observeSize(target: Element, toolbar: NLDDToolbar): void {
+	sizeObserver ??= new ResizeObserver(entries => {
+		const resized = new Set<NLDDToolbar>();
+		for (const entry of entries) {
+			const toolbar = toolbarOf.get(entry.target);
+			if (toolbar?._resized(entry)) resized.add(toolbar);
+		}
+		if (!resized.size) return;
+		resized.forEach(toolbar => measurePass.schedule(toolbar, toolbar.ownerDocument));
+		measurePass.flush();
+	});
+	toolbarOf.set(target, toolbar);
+	sizeObserver.observe(target);
+}
+
+function unobserveSize(target: Element): void {
+	sizeObserver?.unobserve(target);
+	toolbarOf.delete(target);
+}
+
+/** The toolbars that build their children at the next task, in one timeout. */
+const toBuild = new Set<NLDDToolbar>();
+let buildTimer: ReturnType<typeof setTimeout> | null = null;
+
+function buildSoon(toolbar: NLDDToolbar): void {
+	toBuild.add(toolbar);
+	buildTimer ??= setTimeout(() => {
+		buildTimer = null;
+		const toolbars = [...toBuild];
+		toBuild.clear();
+		toolbars.forEach(toolbar => toolbar._buildChildren());
+	}, 0);
+}
+
+/**
+ * A web font that finishes loading changes how wide an item is. The child
+ * resize observer sees that for a visible item, but an item already in the
+ * overflow menu has no width to watch: measured with the fallback font it
+ * went into the menu, and would stay there although it fits now. One listener
+ * for every toolbar, so they measure in one pass.
+ */
+const connectedToolbars = new Set<NLDDToolbar>();
+const onFontsLoaded = (): void => {
+	const measured = [...connectedToolbars].filter(toolbar => toolbar._hasMeasured);
+	if (!measured.length) return;
+	measured.forEach(toolbar => measurePass.schedule(toolbar, toolbar.ownerDocument));
+	measurePass.flush();
+};
 
 // # Component
 
@@ -123,12 +211,16 @@ export class NLDDToolbar extends LitElement {
 	private _idCounter = 0;
 	private _itemWidths = new Map<number, number>();
 	private _observer: MutationObserver | null = null;
-	private _resizeObserver: ResizeObserver | null = null;
 	private _isMeasuring = false;
-	private _childResizeObserver: ResizeObserver | null = null;
+	/** The items and title whose size is watched (see _watchChildSizes). */
+	private _sizedChildren = new Set<HTMLElement>();
 	private _lastChildWidths = new WeakMap<HTMLElement, number>();
 	private _isBuilding = false;
-	private _hasMeasured = false;
+	private _rebuildPending = false;
+	private _built = false;
+	private _lastWidth: number | null = null;
+	/** @internal */
+	_hasMeasured = false;
 	private _prioritizedItemsCache: OverflowItem[] | null = null;
 
 	private _getId(el: Element): number {
@@ -164,39 +256,81 @@ export class NLDDToolbar extends LitElement {
 					needsRebuild = true;
 				}
 			}
-			if (needsRebuild) this._buildChildren();
+			if (needsRebuild) this._rebuild();
 			else if (needsMenuResync) this._syncMenuItems();
 		});
 		// Here and not in firstUpdated: disconnecting takes it down, and a toolbar
 		// moved in the DOM or kept by a framework connects again without a first
 		// update, so it would no longer follow its width.
-		this._resizeObserver = new ResizeObserver(() => {
-			if (this._isMeasuring) return;
-			this._overflowMenu.hide();
-			this._measureAndUpdate();
-		});
-		this._resizeObserver.observe(this);
-		setTimeout(() => this._buildChildren(), 0);
-		document.fonts?.addEventListener('loadingdone', this._onFontsLoaded);
+		observeSize(this, this);
+		buildSoon(this);
+		if (!connectedToolbars.size) document.fonts?.addEventListener('loadingdone', onFontsLoaded);
+		connectedToolbars.add(this);
 	}
-
-	/** A web font that finishes loading changes how wide an item is. The child
-	 *  resize observer sees that for a visible item, but an item already in the
-	 *  overflow menu has no width to watch: measured with the fallback font it
-	 *  went into the menu, and would stay there although it fits now. */
-	private _onFontsLoaded = (): void => {
-		if (this._hasMeasured) this._measureAndUpdate();
-	};
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		document.fonts?.removeEventListener('loadingdone', this._onFontsLoaded);
+		connectedToolbars.delete(this);
+		if (!connectedToolbars.size) document.fonts?.removeEventListener('loadingdone', onFontsLoaded);
+		toBuild.delete(this);
+		measurePass.cancel(this);
+		areaPass.cancel(this);
 		this._observer?.disconnect();
 		this._observer = null;
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
-		this._childResizeObserver?.disconnect();
-		this._childResizeObserver = null;
+		unobserveSize(this);
+		this._lastWidth = null;
+		this._sizedChildren.forEach(unobserveSize);
+		this._sizedChildren.clear();
+	}
+
+	/**
+	 * A rebuild for a change in the children. While the parser is still adding
+	 * them, the observer calls back once per child; one rebuild after the parse
+	 * does for all of them.
+	 */
+	private _rebuild(): void {
+		if (this._rebuildPending) return;
+		const run = () => {
+			this._rebuildPending = false;
+			if (this.isConnected) this._buildChildren();
+		};
+		this._rebuildPending = afterParse(run, this.ownerDocument);
+		if (!this._rebuildPending) this._buildChildren();
+	}
+
+	/** A measurement in the next pass, together with the other toolbars. */
+	private _scheduleMeasure(): void {
+		measurePass.schedule(this, this.ownerDocument);
+	}
+
+	/**
+	 * Whether a size change reported by the shared observer calls for a
+	 * measurement. Measuring changes these very sizes, since an item that moves
+	 * into the overflow menu collapses. `_isMeasuring` covers the synchronous
+	 * pass, and the render that follows lands after it, so a child is compared
+	 * against the width it last had and stays quiet when nothing really moved.
+	 * @internal
+	 */
+	_resized(entry: ResizeObserverEntry): boolean {
+		if (this._isMeasuring) return false;
+		if (entry.target === this) {
+			// Only the width decides what fits. The height changes with what the
+			// items render, which their own reports already cover.
+			if (entry.contentRect.width === this._lastWidth) return false;
+			this._lastWidth = entry.contentRect.width;
+			this._overflowMenu.hide();
+			return true;
+		}
+		if (this._isBuilding) return false;
+		const el = entry.target as HTMLElement;
+		// An item in the overflow menu has no width to speak of. It is the
+		// hiding that took it away, not the content, so it says nothing about
+		// whether the layout should change.
+		if (el.hasAttribute('hidden')) return false;
+		const width = entry.contentRect.width;
+		if (Math.abs((this._lastChildWidths.get(el) ?? -1) - width) < 0.5) return false;
+		this._lastChildWidths.set(el, width);
+		return true;
 	}
 
 	override firstUpdated(): void {
@@ -207,12 +341,14 @@ export class NLDDToolbar extends LitElement {
 		if (changedProperties.has('size') || changedProperties.has('showItemLabels')) {
 			this._syncHosts();
 		}
-		if (
+		// Not for the first render: the children are only known once they are
+		// built, which measures anyway.
+		if (this._built && (
 			changedProperties.has('_startChildren') ||
 			changedProperties.has('_centerChildren') ||
 			changedProperties.has('_endChildren')
-		) {
-			this.updateComplete.then(() => this._measureAndUpdate());
+		)) {
+			this.updateComplete.then(() => this._scheduleMeasure());
 		}
 		if (
 			changedProperties.has('_overflowIds') ||
@@ -221,7 +357,7 @@ export class NLDDToolbar extends LitElement {
 			this._syncMenuItems();
 			this._syncMenuAnchor();
 			if (!this._hasMeasured) {
-				this.updateComplete.then(() => this._updateAreaVars());
+				this.updateComplete.then(() => areaPass.schedule(this, this.ownerDocument));
 			}
 		}
 	}
@@ -299,16 +435,27 @@ export class NLDDToolbar extends LitElement {
 			: null;
 	}
 
+	/** Also what the size observer compares with: this measurement has seen
+	 *  these widths, so a report of the same width needs no new one. Items
+	 *  have no padding or border, so their box is their content box. */
 	private _measureItemWidths(): void {
 		this._allHostChildren().forEach(child => {
 			if (child.type === 'item' || child.type === 'title') {
 				const host = child.element as HTMLElement;
-				this._itemWidths.set(child.id, host.getBoundingClientRect().width);
+				const width = host.getBoundingClientRect().width;
+				this._itemWidths.set(child.id, width);
+				if (!host.hidden) this._lastChildWidths.set(host, width);
 			}
 		});
 	}
 
-	private _updateAreaVars(): void {
+	/**
+	 * Publishes how wide each area is, for the spacers that center the center.
+	 * Reads everything first and writes after, so toolbars side by side lay
+	 * out once (see runSteps).
+	 * @internal
+	 */
+	*_areaSteps(): Steps {
 		const itemsEl = this.shadowRoot?.querySelector('.toolbar__items') as HTMLElement | null;
 		if (!itemsEl) return;
 
@@ -321,6 +468,21 @@ export class NLDDToolbar extends LitElement {
 		const overflowButtonWidth = (overflowButtonContainerEl && !overflowButtonContainerEl.classList.contains('is-hidden') && overflowButtonEl)
 			? overflowButtonEl.getBoundingClientRect().width + hostGap
 			: 0;
+
+		// Route to the centered center-fill layout whenever nothing is actually
+		// rendered in start/end — measured by real rendering, not child presence,
+		// so a consumer-hidden (display:none) back button doesn't strand a centered
+		// title at the left (it would otherwise keep centerOnly false and fall into
+		// the spacer path, where startWidth===0 && endWidth===0 suppresses both
+		// balancing spacers). An item the toolbar moved into the overflow menu
+		// still counts: switching layout then changes what fits, so the next
+		// measurement brings it back, and the two layouts take turns forever.
+		const centerOnly = this._isCenterOnly();
+		const rendered = this._allHostChildren().filter(c =>
+			!this._overflowIds.has(c.id) && (c.element as HTMLElement).getClientRects().length > 0
+		);
+
+		yield 'write';
 
 		this.style.setProperty('--_toolbar-overflow-button-width', `${overflowButtonWidth}px`);
 
@@ -347,20 +509,8 @@ export class NLDDToolbar extends LitElement {
 		if (leftZero !== this._leftSpacerZero) this._leftSpacerZero = leftZero;
 		if (rightZero !== this._rightSpacerZero) this._rightSpacerZero = rightZero;
 
-		// Route to the centered center-fill layout whenever nothing is actually
-		// rendered in start/end — measured by real rendering, not child presence,
-		// so a consumer-hidden (display:none) back button doesn't strand a centered
-		// title at the left (it would otherwise keep centerOnly false and fall into
-		// the spacer path, where startWidth===0 && endWidth===0 suppresses both
-		// balancing spacers). An item the toolbar moved into the overflow menu
-		// still counts: switching layout then changes what fits, so the next
-		// measurement brings it back, and the two layouts take turns forever.
-		const centerOnly = this._isCenterOnly();
 		if (centerOnly !== this._centerOnly) this._centerOnly = centerOnly;
 
-		const rendered = this._allHostChildren().filter(c =>
-			!this._overflowIds.has(c.id) && (c.element as HTMLElement).getClientRects().length > 0
-		);
 		const soloFluid = fillsRowAlone(rendered);
 		if (soloFluid !== this._soloFluid) this._soloFluid = soloFluid;
 	}
@@ -386,20 +536,39 @@ export class NLDDToolbar extends LitElement {
 		return children.some(c => this._overflowIds.has(c.id)) || this._hasRenderedChild(children);
 	}
 
+	/** Measures this toolbar now, by itself. */
 	private _measureAndUpdate(): void {
+		measurePass.cancel(this);
+		runSteps([this._measureSteps()]);
+	}
+
+	/**
+	 * Decides what fits, as steps that read or write (see runSteps).
+	 * @internal
+	 */
+	*_measureSteps(): Steps {
 		if (this._isMeasuring) return;
 		const itemsEl = this.shadowRoot?.querySelector('.toolbar__items') as HTMLElement | null;
 		if (!itemsEl) return;
 
 		this._isMeasuring = true;
-		const hostWidth = this.getBoundingClientRect().width;
-		this.style.setProperty('--_toolbar-width', `${hostWidth}px`);
-		this._measureOverflow(itemsEl);
-		this._hasMeasured = true;
-		this._isMeasuring = false;
+		try {
+			const hostWidth = this.getBoundingClientRect().width;
+			// The width this measurement fits the items in; a report of the same
+			// width from the size observer is no resize. With a padding the two
+			// differ, and that only costs a measurement more.
+			this._lastWidth = hostWidth;
+			yield 'write';
+			this.style.setProperty('--_toolbar-width', `${hostWidth}px`);
+			yield* this._overflowSteps(itemsEl);
+			this._hasMeasured = true;
+		} finally {
+			this._isMeasuring = false;
+		}
 	}
 
-	private _measureOverflow(itemsEl: HTMLElement): void {
+	/** Starts in the write phase; ends in the read phase. */
+	private *_overflowSteps(itemsEl: HTMLElement): Steps {
 		const overflowButtonEl = this.shadowRoot?.querySelector('.toolbar__overflow-button') as HTMLElement | null;
 		const allChildren = this._allHostChildren();
 		const itemChildren = itemsOf(allChildren);
@@ -407,11 +576,30 @@ export class NLDDToolbar extends LitElement {
 			(c): c is Extract<ToolbarChild, { type: 'title' }> => c.type === 'title'
 		);
 
-		// Show all items, reset solo-fluid to fluid with min-width restored.
+		// Show all items, and read what a control with its own overflow wants
+		// (see _syncShrinkable) with everything shown.
+		const controls = new Map<HTMLElement, ShrinkableControl>();
 		itemChildren.forEach(child => {
 			const host = child.element as HTMLElement;
 			host.hidden = false;
-			this._syncShrinkable(host);
+			host.removeAttribute('shrunk');
+			const control = shrinkableControlOf(host);
+			if (control) controls.set(host, control);
+		});
+		if (controls.size) {
+			controls.forEach(control => control._setMeasuring?.(true));
+			yield 'read';
+			const widths = new Map([...controls].map(([host, control]) => [host, control._toolbarWidths()]));
+			yield 'write';
+			controls.forEach(control => control._setMeasuring?.(false));
+			itemChildren.forEach(child => this._syncShrinkable(child.element as HTMLElement, widths.get(child.element as HTMLElement) ?? null));
+		} else {
+			itemChildren.forEach(child => this._syncShrinkable(child.element as HTMLElement, null));
+		}
+
+		// Reset solo-fluid to fluid with min-width restored.
+		itemChildren.forEach(child => {
+			const host = child.element as HTMLElement;
 			if (host.hasAttribute('solo-fluid')) {
 				host.removeAttribute('solo-fluid');
 				host.toggleAttribute('fluid', child.isFluid);
@@ -431,7 +619,7 @@ export class NLDDToolbar extends LitElement {
 		} else {
 			overflowButtonEl?.classList.add('is-hidden');
 		}
-		void itemsEl.offsetWidth;
+		yield 'read';
 
 		const centerOnly = this._isCenterOnly();
 
@@ -441,14 +629,15 @@ export class NLDDToolbar extends LitElement {
 			if (this._overflowIds.size > 0) {
 				this._overflowIds = new Set();
 			}
-			this._promoteSoloFluid(itemsEl, itemChildren, titleChildren, centerOnly);
+			yield* this._promoteSoloFluidSteps(itemsEl, itemChildren, titleChildren, centerOnly);
 			this._measureItemWidths();
-			this._updateAreaVars();
+			yield* this._areaSteps();
 			return;
 		}
 
+		yield 'write';
 		overflowButtonEl?.classList.remove('is-hidden');
-		void itemsEl.offsetWidth;
+		yield 'read';
 
 		const prioritized = this._getPrioritizedItems();
 		const newOverflowIds = new Set<number>();
@@ -476,25 +665,29 @@ export class NLDDToolbar extends LitElement {
 				.map(c => c.element as HTMLElement)
 				.filter(host => host.hasAttribute('shrinkable'));
 			if (shrinkable.length > 0) {
+				yield 'write';
 				shrinkable.forEach(host => host.toggleAttribute('shrunk', true));
-				void itemsEl.offsetWidth;
+				yield 'read';
 				if (!isOverflowing()) break;
 			}
 
+			yield 'write';
 			for (const child of group) {
 				newOverflowIds.add(child.id);
 				const host = child.element as HTMLElement;
 				host.hidden = true;
 				host.removeAttribute('shrunk');
 			}
-			void itemsEl.offsetWidth;
+			yield 'read';
 		}
 
 		if (newOverflowIds.size === 0 && this._pinnedOverflowItems.length === 0) {
+			yield 'write';
 			overflowButtonEl?.classList.add('is-hidden');
+			yield 'read';
 		}
 
-		this._promoteSoloFluid(itemsEl, itemChildren, titleChildren, centerOnly);
+		yield* this._promoteSoloFluidSteps(itemsEl, itemChildren, titleChildren, centerOnly);
 
 		const changed =
 			newOverflowIds.size !== this._overflowIds.size ||
@@ -505,19 +698,16 @@ export class NLDDToolbar extends LitElement {
 		}
 
 		this._measureItemWidths();
-		this._updateAreaVars();
+		yield* this._areaSteps();
 	}
 
 	/**
 	 * Gives an item whose control overflows by itself (nldd-tab-bar) the width
 	 * that control wants with everything shown, and remembers how narrow it can
 	 * get. Read on every measurement, because the control's content can change.
+	 * Writes only: the widths were read before, for every toolbar in the pass.
 	 */
-	private _syncShrinkable(host: HTMLElement): void {
-		host.removeAttribute('shrunk');
-		const control = Array.from(host.children).find(el => el.getAttribute('slot') !== 'overflow') as
-			(Element & { _toolbarWidths?: () => { preferred: number; minimum: number } | null }) | undefined;
-		const widths = typeof control?._toolbarWidths === 'function' ? control._toolbarWidths() : null;
+	private _syncShrinkable(host: HTMLElement, widths: ToolbarWidths | null): void {
 		host.toggleAttribute('shrinkable', Boolean(widths));
 		if (widths) {
 			host.style.setProperty('--_toolbar-item-preferred-width', `${widths.preferred}px`);
@@ -534,12 +724,19 @@ export class NLDDToolbar extends LitElement {
 	 * center-only mode the center-fill wrapper already grows the items, so item
 	 * promotion is skipped there (matching the previous template behavior).
 	 */
-	private _promoteSoloFluid(
+	/**
+	 * Promotes a lone remaining fluid item (or a lone title when no items are
+	 * visible) to the solo-fluid state so it grows to fill the row. In
+	 * center-only mode the center-fill wrapper already grows the items, so item
+	 * promotion is skipped there (matching the previous template behavior).
+	 * Starts and ends in the read phase.
+	 */
+	private *_promoteSoloFluidSteps(
 		itemsEl: HTMLElement,
 		itemChildren: OverflowItem[],
 		titleChildren: Extract<ToolbarChild, { type: 'title' }>[],
 		centerOnly: boolean,
-	): void {
+	): Steps {
 		// Real rendering, not the `hidden` property: a consumer-hidden
 		// (display:none) start/end item must not count as a "remaining visible"
 		// item, or it blocks promoting a lone title to solo-fluid (which is what
@@ -547,26 +744,29 @@ export class NLDDToolbar extends LitElement {
 		// display:none too, so this stays equivalent for the overflow flow.
 		const remainingVisible = itemChildren.filter(c => (c.element as HTMLElement).getClientRects().length > 0);
 		if (!centerOnly && remainingVisible.length === 1 && (remainingVisible[0].element as HTMLElement).hasAttribute('fluid')) {
+			yield 'write';
 			const host = remainingVisible[0].element as HTMLElement;
 			host.removeAttribute('fluid');
 			host.setAttribute('solo-fluid', '');
 			host.style.removeProperty('--_toolbar-item-min-width');
-			void itemsEl.offsetWidth;
+			yield 'read';
 		}
 
 		const remainingTitles = titleChildren.filter(c => !(c.element as HTMLElement).hidden);
 		if (remainingVisible.length === 0 && remainingTitles.length === 1) {
+			yield 'write';
 			const host = remainingTitles[0].element as HTMLElement;
 			host.setAttribute('solo-fluid', '');
 			host.style.setProperty('min-width', '0px');
-			void itemsEl.offsetWidth;
+			yield 'read';
 		}
 
 		// A title holds its own width while items can still move into the menu.
 		// When nothing else can go and the row still does not fit, it gives way.
 		if (itemsEl.scrollWidth > itemsEl.clientWidth + 1) {
+			yield 'write';
 			remainingTitles.forEach(c => (c.element as HTMLElement).style.setProperty('min-width', '0px'));
-			void itemsEl.offsetWidth;
+			yield 'read';
 		}
 	}
 
@@ -624,7 +824,8 @@ export class NLDDToolbar extends LitElement {
 		});
 	}
 
-	private _buildChildren(): void {
+	/** @internal */
+	_buildChildren(): void {
 		if (this._isBuilding) return;
 		this._isBuilding = true;
 
@@ -634,6 +835,7 @@ export class NLDDToolbar extends LitElement {
 		this._centerChildren = this._buildChildrenForSlot('center');
 		this._endChildren = this._buildChildrenForSlot('end');
 		this._buildPinnedOverflowItems();
+		this._built = true;
 		this._prioritizedItemsCache = null;
 		this._syncHosts();
 
@@ -654,33 +856,14 @@ export class NLDDToolbar extends LitElement {
 	 * some of those and has no way to tell which of them moved a pixel, so it
 	 * asked the wrong question. This one reads the answer.
 	 *
-	 * Measuring changes these very sizes, since an item that moves into the
-	 * overflow menu collapses. `_isMeasuring` covers the synchronous pass, and
-	 * the render that follows lands after it, so the callback compares against
-	 * the widths it last acted on and stays quiet when nothing really moved.
+	 * The observer is shared by every toolbar; what a report means for this one
+	 * is decided in _resized.
 	 */
 	private _watchChildSizes(): void {
-		this._childResizeObserver?.disconnect();
-		this._childResizeObserver ??= new ResizeObserver(entries => {
-			if (this._isMeasuring || this._isBuilding) return;
-			let moved = false;
-			for (const entry of entries) {
-				const el = entry.target as HTMLElement;
-				// An item in the overflow menu has no width to speak of. It is the
-				// hiding that took it away, not the content, so it says nothing about
-				// whether the layout should change.
-				if (el.hasAttribute('hidden')) continue;
-				const width = entry.contentRect.width;
-				if (Math.abs((this._lastChildWidths.get(el) ?? -1) - width) < 0.5) continue;
-				this._lastChildWidths.set(el, width);
-				moved = true;
-			}
-			if (moved) this._measureAndUpdate();
-		});
+		this._sizedChildren.forEach(unobserveSize);
+		this._sizedChildren = new Set(this._hostChildElements());
 		this._lastChildWidths = new WeakMap();
-		for (const el of this._hostChildElements()) {
-			this._childResizeObserver.observe(el);
-		}
+		this._sizedChildren.forEach(el => observeSize(el, this));
 	}
 
 	/** The elements this toolbar lays out: its items and its title. */
@@ -692,7 +875,7 @@ export class NLDDToolbar extends LitElement {
 	}
 
 	override render() {
-		// Pre-measurement fallback: before the first _updateAreaVars there is no
+		// Pre-measurement fallback: before the first _areaSteps there is no
 		// rendering to read, so fall back to mere DOM presence. _soloFluid takes
 		// over from the first measurement on.
 		const isSoloFluid = this._soloFluid

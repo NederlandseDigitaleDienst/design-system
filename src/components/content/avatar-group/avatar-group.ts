@@ -54,12 +54,31 @@ import '../../lists-and-tables/cells/spacer-cell/spacer-cell.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddAvatarGroupTranslations } from './avatar-group.i18n.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { afterParse } from '../../../utilities/after-parse.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
 
 /** The smallest size at which a count of one, two, three and four digits fits. */
 const MIN_SIZE_FOR_COUNT = [24, 40, 56, 80];
 
 /** The share of a disc the next one covers; matches --_avatar-group-overlap-size. */
 const OVERLAP = 0.2;
+
+/**
+ * Every group in one pass: all of them read their width, then all of them
+ * decide how many avatars fit. A group that read its width as it rendered
+ * would read a layout the previous group had just made dirty.
+ */
+function fitGroups(groups: NLDDAvatarGroup[]): void {
+	const live = groups.filter((group) => group.isConnected);
+	const widths = live.map((group) => group.getBoundingClientRect().width);
+	live.forEach((group, i) => group._measureFit(widths[i]));
+}
+
+/** The groups that rendered in the same tick. */
+const fitPass = new LayoutPass<NLDDAvatarGroup>(fitGroups);
+
+/** One observer for every group. */
+const groupObserver = sharedResizeObserver<NLDDAvatarGroup>(fitGroups);
 
 @customElement('nldd-avatar-group')
 export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGroupTranslations) {
@@ -74,11 +93,17 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	/** The avatars past `max`, each as a copy plus the name it carries. Copies,
-	 *  because the originals are the consumer's light DOM and are already
-	 *  assigned to the slot: a node can only be in one place. */
+	/** The avatars past `max`, as slotted. The list behind the button shows a
+	 *  copy of each (see _copyOf). */
 	@state()
-	_overflow: { avatar: Element; name: string }[] = [];
+	_overflow: Element[] = [];
+
+	/** Whether the list behind the button has been opened. Until then it holds
+	 *  no rows: a group of a hundred would otherwise render a hundred rows,
+	 *  each with a copy of an avatar, that nobody may ever look at. Stays true,
+	 *  so the list is there at once the next time and while it closes. */
+	@state()
+	_overflowOpened = false;
 
 	/** How many avatars are slotted. Kept in state so the generated rules can be
 	 *  written after every render: slotchange can beat the first render, and
@@ -90,8 +115,6 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 	 *  do. Measured, so it works as a second `max` that the container sets. */
 	@state()
 	_fitMax: number | undefined = undefined;
-
-	private _resizeObserver = new ResizeObserver(([entry]) => this._measureFit(entry.contentRect.width));
 
 	/** The trigger and its popover have to agree on an id, and two groups on a
 	 *  page must not open each other's list. */
@@ -118,7 +141,8 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 		return discs * size * (1 - OVERLAP) + size * OVERLAP;
 	}
 
-	private _measureFit(width: number): void {
+	/** @internal Decides how many avatars fit `width`; reads nothing. */
+	_measureFit(width: number): void {
 		// A hidden group measures 0; keep what it had until it shows again.
 		if (width === 0) return;
 		const total = this._assigned.length;
@@ -133,12 +157,13 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		this._resizeObserver.observe(this);
+		groupObserver.observe(this, this);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this._resizeObserver.disconnect();
+		groupObserver.unobserveAll(this);
+		fitPass.cancel(this);
 	}
 
 	/** Whether the overflow count fits its disc, centered and clear of the
@@ -151,9 +176,39 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 
 	/** Not guaranteed: a decorative avatar beside a name in the text carries
 	 *  none, and then the row simply has no name to show. */
-	private _nameOf(el: Element): string {
+	_nameOf(el: Element): string {
 		return el.getAttribute('name') || '';
 	}
+
+	/** The copies in the list, with the markup each was made from. */
+	private _copies = new WeakMap<Element, { source: string; copy: Element }>();
+
+	/** A copy of a hidden avatar for its row in the list. A copy, because the
+	 *  original is the consumer's light DOM and is already assigned to the
+	 *  slot: a node can only be in one place. Made again only when the
+	 *  original changed since. */
+	_copyOf(node: Element): Element {
+		const source = node.outerHTML;
+		const cached = this._copies.get(node);
+		if (cached?.source === source) return cached.copy;
+		const avatar = node.cloneNode(true) as Element;
+		// The copy is a picture beside its own name, so it says nothing on
+		// its own; the row's text is the accessible content. It also gets a
+		// row-sized diameter: outside the group nothing constrains it, and
+		// an avatar without a size fills its container, which in a cell is
+		// nothing at all. Big enough to read the initials, small enough to
+		// keep the row a row.
+		avatar.setAttribute('decorative', '');
+		avatar.setAttribute('tooltip-timing', 'never');
+		avatar.setAttribute('size', '32');
+		avatar.removeAttribute('slot');
+		this._copies.set(node, { source, copy: avatar });
+		return avatar;
+	}
+
+	_onOverflowToggle = (e: Event): void => {
+		if ((e as ToggleEvent).newState === 'open') this._overflowOpened = true;
+	};
 
 	/** The avatars as slotted, kept so a change to `max` can recompute without
 	 *  waiting for a slotchange that will not come. */
@@ -163,9 +218,23 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 		if (changed.has('max') || changed.has('_fitMax') || changed.has('size')) this._recompute();
 	}
 
+	private _slotPending = false;
+
+	/** While the parser adds the avatars, a slotchange comes for every one of
+	 *  them, and each would walk them all: the slot is read once the parse is
+	 *  done (see afterParse). */
 	_onSlotChange = (e: Event): void => {
-		this._assigned = (e.target as HTMLSlotElement).assignedElements();
-		this._recompute();
+		const slot = e.target as HTMLSlotElement;
+		if (this._slotPending) return;
+		const run = () => {
+			this._slotPending = false;
+			this._assigned = slot.assignedElements();
+			this._recompute();
+			// The copies in the list are checked against their originals again.
+			if (this._overflowOpened) this.requestUpdate();
+		};
+		this._slotPending = afterParse(run, this.ownerDocument);
+		if (!this._slotPending) run();
 	};
 
 	private _recompute(): void {
@@ -174,20 +243,10 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 		const hidden = max !== undefined && assigned.length > max
 			? assigned.slice(max)
 			: [];
-		this._overflow = hidden.map(node => {
-			const avatar = node.cloneNode(true) as Element;
-			// The copy is a picture beside its own name, so it says nothing on
-			// its own; the row's text is the accessible content. It also gets a
-			// row-sized diameter: outside the group nothing constrains it, and
-			// an avatar without a size fills its container, which in a cell is
-			// nothing at all. Big enough to read the initials, small enough to
-			// keep the row a row.
-			avatar.setAttribute('decorative', '');
-			avatar.setAttribute('tooltip-timing', 'never');
-			avatar.setAttribute('size', '32');
-			avatar.removeAttribute('slot');
-			return { avatar, name: this._nameOf(node) };
-		});
+		// The same avatars as before render nothing again.
+		if (hidden.length !== this._overflow.length || hidden.some((node, i) => node !== this._overflow[i])) {
+			this._overflow = hidden;
+		}
 		this._total = assigned.length;
 	}
 
@@ -210,6 +269,16 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 		const sheet = this._generatedRules;
 		// Again when the list was replaced since, as style hot reloading does.
 		if (!root.adoptedStyleSheets.includes(sheet)) root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+		const rules = this._rulesText();
+		// Replacing the sheet restyles every avatar, even with the same rules.
+		if (rules === this._generatedText) return;
+		this._generatedText = rules;
+		sheet.replaceSync(rules);
+	}
+
+	private _generatedText = '';
+
+	private _rulesText(): string {
 		const total = this._total;
 		const max = this._effectiveMax;
 		const hide = this._overflow.length > 0 && max !== undefined
@@ -224,9 +293,12 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 		// Descending, so the leftmost avatar is the whole one and each next is
 		// tucked under it — the row reads as a stack you look at from the left,
 		// and the overflow button ends up at the bottom of it.
-		const stack = Array.from({ length: total }, (_, i) =>
+		// Only for the ones that show: every rule is matched against every
+		// avatar, and a hidden avatar has nothing to stack.
+		const shown = hide ? Math.min(total, max!) : total;
+		const stack = Array.from({ length: shown }, (_, i) =>
 			`.avatar-group ::slotted(:nth-child(${i + 1})) { z-index: ${total - i}; }`).join('\n');
-		sheet.replaceSync(`${width}\n${hide}\n${stack}`);
+		return `${width}\n${hide}\n${stack}`;
 	}
 
 	/** The popover resolves its anchor by id against the document, and an id in
@@ -235,8 +307,8 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 		this._syncGeneratedRules();
 		// With the new rules in place. A group that is held to its container's
 		// width keeps that width when the avatars change, and then the observer
-		// stays silent.
-		this._measureFit(this.getBoundingClientRect().width);
+		// stays silent. In one pass with the other groups; see fitGroups.
+		fitPass.schedule(this, this.ownerDocument);
 
 		const popover = this.shadowRoot?.querySelector('nldd-popover') as
 			(HTMLElement & { anchorElement: Element | null }) | null;
