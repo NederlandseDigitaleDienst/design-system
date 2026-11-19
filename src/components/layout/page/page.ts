@@ -419,8 +419,8 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	 * already gets there and the arrow keys scroll.
 	 */
 	_readScrollState(): { focusable: boolean } {
-		// Read phase: _onScroll reads the scroller and only sets state, so no
-		// writes belong in here.
+		// Read phase: _onScroll reads the scroller and sets reactive state, which
+		// Lit renders later. Keep DOM writes out of here.
 		this._onScroll();
 		const scroller = this._scrollEl;
 		const scrolls = !!scroller && !this._isRoot && scroller.scrollHeight > scroller.clientHeight;

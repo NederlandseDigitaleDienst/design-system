@@ -863,6 +863,27 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 		vi.restoreAllMocks();
 	});
 
+	it('measures a toolbar with padding no more often than one without', async () => {
+		const count = async (style: string) => {
+			const proto = customElements.get('nldd-toolbar')!.prototype as { _measureSteps: () => void };
+			const measure = vi.spyOn(proto, '_measureSteps');
+			el = await fixture(`
+				<nldd-toolbar accessible-label="Balk" style="width: 340px; ${style}">
+					<nldd-toolbar-item slot="start"><nldd-button text="Bewaar"></nldd-button></nldd-toolbar-item>
+				</nldd-toolbar>
+			`);
+			await waitForUpdate(el);
+			await frames(10);
+			const calls = measure.mock.calls.length;
+			measure.mockRestore();
+			cleanup(el);
+			return calls;
+		};
+		const plain = await count('');
+		const padded = await count('padding-inline: 24px');
+		expect(padded).toBe(plain);
+	});
+
 	it('measures again when a control inside an item gets narrower', async () => {
 		el = await fixture(`
 			<nldd-toolbar accessible-label="Balk" style="width: 340px">

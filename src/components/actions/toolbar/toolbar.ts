@@ -319,8 +319,10 @@ export class NLDDToolbar extends LitElement {
 		if (entry.target === this) {
 			// Only the width decides what fits. The height changes with what the
 			// items render, which their own reports already cover.
-			if (entry.contentRect.width === this._lastWidth) return false;
-			this._lastWidth = entry.contentRect.width;
+			// The border box, as the measurement reads it with getBoundingClientRect.
+			const width = entry.borderBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
+			if (width === this._lastWidth) return false;
+			this._lastWidth = width;
 			this._overflowMenu.hide();
 			return true;
 		}
@@ -558,8 +560,7 @@ export class NLDDToolbar extends LitElement {
 		try {
 			const hostWidth = this.getBoundingClientRect().width;
 			// The width this measurement fits the items in; a report of the same
-			// width from the size observer is no resize. With a padding the two
-			// differ, and that only costs a measurement more.
+			// width from the size observer is no resize.
 			this._lastWidth = hostWidth;
 			yield 'write';
 			this.style.setProperty('--_toolbar-width', `${hostWidth}px`);

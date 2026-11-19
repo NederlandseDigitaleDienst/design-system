@@ -25,6 +25,8 @@ here; consult the commit history if you need that level of detail.
 ### Breaking
 
 - **A page section lays out by the width of the `nldd-page` it is in, and goes nowhere else.** `nldd-simple-section`, `nldd-full-bleed-section`, `nldd-sidebar-section`, the three column sections and `nldd-hero` were each a container of their own. They now query the page, which they always span. A section outside an `nldd-page` loses its responsive padding and columns, and a section in a narrower box inside the page lays out for the page. An `@container` query in your own CSS for content in a section no longer matches the section: it matches the page now, or the nearest container of your own. Put every section directly in a page, next to the other sections; `nldd lint` warns about both (see Added).
+- **`nldd-list-item` is no longer a container.** Its cells already lay out by the `nldd-list` around it. A component with container queries of its own in a row, such as `nldd-progress-bar`, now measures the list, which is as wide as the row. An `@container` query in your own CSS for content in a row matches the list now, or the nearest container of your own.
+- **`nldd-top-navigation-bar` follows the width of the window, not that of its parent.** The bar always spans the page, so the two were the same, and a media query costs the browser nothing per bar where a container query made every resize slower with each bar. A bar in a narrower box, such as a frame in your own docs, now lays out for the window it is in: give it an `iframe` of its own to show it narrow. An `@container` query in your own CSS for content in the bar no longer matches the bar.
 
 ### Added
 
@@ -32,10 +34,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **`nldd-list-item` is no longer a container.** Its cells already lay out by the `nldd-list` around it. A component with container queries of its own in a row, such as `nldd-progress-bar`, now measures the list, which is as wide as the row.
 - **The overflow menu of `nldd-tab-bar` closes at once after a choice, without the blink.** The chosen tab shows in the bar right next to it, so the blink only repeated it.
 - **`nldd-menu-item` draws its own text, icon, details and chevron, without cells.** Each item held five to nine `nldd-text-cell`, `nldd-icon-cell` and `nldd-spacer-cell` elements, each with a shadow root of its own. Safari pays for every one of them on each resize, also in a closed menu, so a combo-box with hundreds of options made the whole page slow to resize. The item looks the same. Its styles now belong to the item and no longer follow the cells. Code that looks for a cell in the shadow root of an item no longer finds one.
-- **`nldd-top-navigation-bar` follows the width of the window, not that of its parent.** The bar always spans the page, so the two were the same, and a media query costs the browser nothing per bar where a container query made every resize slower with each bar. A bar in a narrower box, such as a frame in your own docs, now lays out for the window it is in: give it an `iframe` of its own to show it narrow.
 
 ### Fixed
 
