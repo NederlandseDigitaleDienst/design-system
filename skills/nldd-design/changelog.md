@@ -41,6 +41,17 @@ here; consult the commit history if you need that level of detail.
 - **In Safari, only the `nldd-top-navigation-bar` nearest the top of the page draws the ribbon above it.** On a page with more bars, each one drew it in the same place, and its scroll-driven animations made every layout slower with each bar.
 - **The overflow of `nldd-avatar-group` and the year and month menus of `nldd-date-picker` render when they open,** not with the page.
 
+## [0.26.5](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.4...v0.26.5) (2026-11-18)
+
+### Added
+
+- **`nldd lint` reads `.astro` files.** It reads the template under the frontmatter, with the elements inside `{cond && …}` and `{items.map(…)}`, and `--fix` renames in the source. An Astro site that runs `nldd lint` in CI was always green, because a scan skipped every `.astro` file: it now gets real findings, errors included. Run `npx @nldd/design-system lint --statistics` once to see them, and `--update-baseline` to accept what is there. `nldd lint dist` still adds what only a built page shows.
+- **A scan says which templates it cannot read.** A `.svelte`, `.php`, `.twig`, `.erb`, `.ejs`, `.hbs`, `.handlebars`, `.mustache`, `.njk`, `.liquid`, `.cshtml` or `.razor` file with `nldd-*` markup now gets `file-not-read` (a warning) in a scan of a directory too. It used to show only for a file you named, so such a project read as "0 files" and clean. The summary counts such a file apart, as `in 3 files (2 not read)`. A project that runs the linter with `--max-warnings 0` fails on these warnings until the template is read some other way, for example through `nldd lint dist`.
+
+### Fixed
+
+- **`nldd lint dist` skips the scripts of a build.** A bundler's chunks hold the styles and markup of the components themselves, which read as an app overriding them: a built site got a `local-variable-no-override` for every component it used, and a `file-not-read` for every chunk. A script in `dist`, `build`, `coverage`, `.next` or `.nuxt` is now left alone, when you run the linter from the root of the project; the pages and stylesheets next to it are read as before. This goes by the name of the directory, so a script in a source directory named `build` or `dist` is skipped too.
+
 ## [0.26.4](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.3...v0.26.4) (2026-11-18)
 
 ## [0.26.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.2...v0.26.3) (2026-11-18)

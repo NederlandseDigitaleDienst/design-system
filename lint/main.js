@@ -164,6 +164,7 @@ async function runLint(data, paths, options) {
 	const context = {
 		root,
 		files: session.files,
+		unread: session.unread,
 		ms: Math.round(performance.now() - started),
 		skipped,
 		loose: looseInBaseline(results, baseline, root, ran),

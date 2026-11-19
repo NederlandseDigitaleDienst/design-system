@@ -115,6 +115,8 @@ function readHtmlChildren(children, parent, given) {
 			for (const block of styleBlocks(node)) appendChild(parent, styleNode(block));
 			continue;
 		}
+		// Content a frontend already knows nobody can read here.
+		if (node.type === 'hole') appendUnknown(parent, node.startIndex);
 		if (node.type !== 'tag') continue;
 		const { name, attribs } = node;
 		// In a document, a template is inert until something stamps it out, here or elsewhere.
@@ -388,6 +390,350 @@ function mdxAsHtml(mdx) {
 		}
 	}
 	return out.join('');
+}
+
+/** Private-use characters that stand in the text for an expression, one per brace. */
+const HOLE = '\uE000';
+const OPENS_CONDITION = '\uE001';
+const OPENS_LOOP = '\uE002';
+const OPENS_BOTH = '\uE003';
+const CLOSES = '\uE004';
+const MARKS = new Set([HOLE, OPENS_CONDITION, OPENS_LOOP, OPENS_BOTH, CLOSES]);
+
+/** Elements HTML never closes, so they do not nest inside an expression either. */
+const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+
+/** Stands for an element in the script of an expression, when that script is judged. */
+const ELEMENT = '\uE005';
+
+const ONLY_COMMENTS = /^(\/\*[\s\S]*?\*\/\s*)+$/;
+
+/**
+ * Whether the script around the elements of an expression can render something
+ * else: a branch of `? :`, `||` or `??` that is no element and not nothing.
+ */
+function rendersMore(script) {
+	const parts = [];
+	// The bracket depth of every `?` that waits for its `:`.
+	const ternaries = [];
+	let depth = 0;
+	let glue = false;
+	for (const piece of script.replace(/\s/g, '').split(/(\?\?|\|\||\?(?!\.)|:)/)) {
+		// A `:` at another depth than the open `?` is a type or a key, `(item: Item) =>`: part of the operand.
+		const isType = piece === ':' && ternaries.at(-1) !== depth;
+		const part = piece.replace(/[()]/g, '');
+		if (isType || glue) parts.push(parts.pop() + part);
+		else parts.push(part);
+		glue = isType;
+		if (piece === '?') ternaries.push(depth);
+		else if (piece === ':' && !isType) ternaries.pop();
+		else depth += (piece.match(/[([{]/g)?.length ?? 0) - (piece.match(/[)\]}]/g)?.length ?? 0);
+	}
+	const rendersNothingElse = (part) => part.includes(ELEMENT) || /^(null|undefined|false|''|"")?[}\];,]*$/.test(part);
+	for (let at = 1; at < parts.length; at += 2) {
+		// What stands left of `||` and `??` is rendered when it is there.
+		const leftRenders = parts[at] !== '?' && parts[at] !== ':' && !parts[at - 1].includes(ELEMENT);
+		// Before a `?` stands a condition, `a ? <x /> : b ? <y /> : null`, not a branch.
+		const isCondition = parts[at + 2] === '?';
+		if (leftRenders || (!isCondition && !rendersNothingElse(parts[at + 1]))) return true;
+	}
+	return false;
+}
+
+/** After these a `<` starts an element; after any other word it compares. */
+const BEFORE_ELEMENT = new Set(['return', 'yield', 'await', 'case', 'default', 'else', 'do', 'typeof', 'void', 'in', 'of']);
+
+/**
+ * Astro as HTML of the same length. The frontmatter goes. An expression in a value
+ * reads as bound, a spread or a shorthand as a spread. An expression between the
+ * tags keeps the elements it holds and loses its script: a mark where it starts
+ * says whether they are behind a condition or in a loop, and one where it ends
+ * closes that. An expression without elements leaves one mark, for content nobody
+ * can read here.
+ */
+function astroAsHtml(source) {
+	const out = source.split('');
+	const { length } = source;
+	const put = (at, text) => {
+		for (let i = 0; i < text.length; i += 1) out[at + i] = text[i];
+	};
+	const clear = (from, to) => {
+		for (let i = from; i < to; i += 1) if (out[i] !== '\n') out[i] = ' ';
+	};
+	const find = (text, from) => {
+		const at = source.indexOf(text, from);
+		return at === -1 ? length : at;
+	};
+
+	// The same characters in the file itself are no marks.
+	for (let i = 0; i < length; i += 1) if (MARKS.has(out[i])) out[i] = ' ';
+
+	const frontmatter = /^\s*---[ \t]*\r?\n(?:[\s\S]*?\n)?---[ \t]*\r?(?:\n|$)/.exec(source);
+	if (frontmatter) clear(0, frontmatter[0].length);
+
+	/**
+	 * Whether the `<` here opens an element, going by the script before it: `last` is
+	 * where that ends, past any comment and whitespace, or -1 at the start.
+	 */
+	function opensElement(at, last) {
+		if (!/[a-zA-Z>]/.test(source[at + 1] ?? '')) return false;
+		const before = source.slice(Math.max(0, last - 20), last + 1);
+		const word = /(?<![\w$.])[a-z]+$/.exec(before)?.[0];
+		if (word) return BEFORE_ELEMENT.has(word);
+		// After a value, a `<` compares: a name, a call, an index or a string.
+		return !/[\w$)\]'"`.]$/.test(before);
+	}
+
+	/** From the `/` of a regex to the one that closes it, on the same line; else nowhere. */
+	function endOfRegex(start) {
+		let inClass = false;
+		for (let at = start + 1; at < length && source[at] !== '\n'; at += 1) {
+			if (source[at] === '\\') at += 1;
+			else if (source[at] === '[') inClass = true;
+			else if (source[at] === ']') inClass = false;
+			else if (source[at] === '/' && !inClass) return at;
+		}
+		return start;
+	}
+
+	/** From a backtick to the one that closes it, past every `${…}`. */
+	function endOfTemplate(start) {
+		let at = start + 1;
+		while (at < length && source[at] !== '`') {
+			if (source[at] === '\\') at += 1;
+			else if (source.startsWith('${', at)) at = endOfScript(at + 1);
+			at += 1;
+		}
+		return at;
+	}
+
+	/**
+	 * From a `{` to the `}` that closes it, past strings, comments and nested braces.
+	 * With `elements`, every element in it is read as markup and listed there.
+	 */
+	function endOfScript(start, elements) {
+		let depth = 0;
+		let at = start;
+		// The last character of script so far: a comment says nothing about what follows it.
+		let last = -1;
+		while (at < length) {
+			const char = source[at];
+			const isComment = source.startsWith('/*', at) || source.startsWith('//', at);
+			if (char === '"' || char === "'") at = endOfString(source, at);
+			else if (char === '`') at = endOfTemplate(at);
+			else if (isComment) at = source[at + 1] === '*' ? find('*/', at + 2) + 1 : find('\n', at);
+			// After a value a `/` divides; anywhere else it opens a regex, which may hold a quote.
+			else if (char === '/' && !/[\w$)\]'"`]/.test(source[last] ?? '')) at = endOfRegex(at);
+			else if (char === '{') depth += 1;
+			else if (char === '}' && --depth === 0) return at;
+			else if (char === '<' && elements && opensElement(at, last)) {
+				const end = readMarkup(at, true);
+				elements.push([at, end]);
+				at = end - 1;
+			}
+			if (!isComment && /\S/.test(source[at] ?? '') && at > start) last = at;
+			at += 1;
+		}
+		return length - 1;
+	}
+
+	/** An expression as a value, or loose in a tag: a filler without spaces, so it stays one attribute. */
+	function fillInTag(start, end, isValue) {
+		const size = end - start + 1;
+		// Straight before `/>` an unquoted value would swallow the slash.
+		const room = isValue && source[end + 1] === '/' ? size - 1 : size;
+		clear(start, end + 1);
+		// A comment between the attributes sets nothing.
+		if (!isValue && ONLY_COMMENTS.test(source.slice(start + 1, end).trim())) return;
+		if (!isValue) put(start, size >= 3 ? `:[${'x'.repeat(size - 3)}]` : '');
+		else if (room >= 3) put(start, `\${${'x'.repeat(room - 3)}}`);
+		else put(start, room === 2 && size === 3 ? '{{' : '""');
+	}
+
+	/** One start tag, from its `<`. Says where it ends and whether its content is raw text. */
+	function readTag(start) {
+		const name = /^[^\s/>]*/.exec(source.slice(start + 1))[0];
+		let at = start + 1 + name.length;
+		let raw = /^(script|style)$/i.test(name);
+		while (at < length && source[at] !== '>') {
+			const char = source[at];
+			if (char === '{') {
+				const end = endOfScript(at);
+				fillInTag(at, end, false);
+				at = end + 1;
+				continue;
+			}
+			if (/[\s/]/.test(char)) {
+				at += 1;
+				continue;
+			}
+			const written = /^[^\s=/>{]+/.exec(source.slice(at))?.[0] ?? char;
+			if (written === 'is:raw') raw = true;
+			at += written.length;
+			const equals = /^\s*=\s*/.exec(source.slice(at));
+			if (!equals) continue;
+			at += equals[0].length;
+			const first = source[at];
+			if (first === '"' || first === "'") at = find(first, at + 1) + 1;
+			else if (first === '{' || first === '`') {
+				const end = first === '{' ? endOfScript(at) : endOfTemplate(at);
+				fillInTag(at, end, true);
+				at = end + 1;
+			} else at += /^[^\s>]*/.exec(source.slice(at))[0].length;
+		}
+		return { name, end: at, selfClosing: source[at - 1] === '/', raw };
+	}
+
+	/** What an expression between the tags leaves behind. */
+	function fillExpression(start, end, elements) {
+		const script = [];
+		let from = start;
+		// A place in the script, between the braces, where a mark can stand.
+		let free = -1;
+		for (const [elementStart, elementEnd] of [...elements, [end + 1, end + 1]]) {
+			script.push(source.slice(from, elementStart));
+			clear(from, elementStart);
+			const first = Math.max(from, start + 1);
+			if (free === -1 && first < Math.min(elementStart, end)) free = first;
+			from = elementEnd;
+		}
+		if (elements.length > 0) {
+			// A string goes first, so a `//` in `'https://…'` is no comment that eats the line.
+			const strings = /'(?:\\.|[^'\\\n])+'|"(?:\\.|[^"\\\n])+"|`(?:\\.|[^`\\])+`/g;
+			const text = script.map((part) => part.replace(strings, "'x'")).join(ELEMENT).replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+			// Only an element between the braces: it is there, as if written without them.
+			if (!/[^\s(){}\uE005]/.test(text)) return;
+			const loop = /=>|\bfunction\b/.test(text);
+			const condition = /&&|\|\||\?/.test(text) || !loop;
+			put(start, loop && condition ? OPENS_BOTH : loop ? OPENS_LOOP : OPENS_CONDITION);
+			put(end, CLOSES);
+			// `a ? 'tekst' : <x />` and `a || <x />` can render something that is no element.
+			if (free !== -1 && rendersMore(text)) put(free, HOLE);
+			return;
+		}
+		const inner = source.slice(start + 1, end).trim();
+		const literal = /^(["'])([^"'<&{}\\\n]*)\1$/.exec(inner);
+		// A string written out is text, and a comment renders nothing.
+		if (literal) put(source.indexOf(literal[2], start), literal[2]);
+		else if (inner !== '' && !ONLY_COMMENTS.test(inner)) put(start, HOLE);
+	}
+
+	/**
+	 * Markup from `at`. Inside an expression it reads one element, or one fragment,
+	 * and returns where that ends, so the script around it can go on.
+	 */
+	function readMarkup(start, oneElement = false) {
+		let at = start;
+		let depth = 0;
+		while (at < length) {
+			if (source.startsWith('<!--', at)) {
+				at = Math.min(find('-->', at + 4) + 3, length);
+			} else if (source.startsWith('</', at)) {
+				const end = find('>', at);
+				if (end === at + 2) clear(at, end + 1);
+				at = end + 1;
+				depth -= 1;
+				if (oneElement && depth <= 0) return at;
+			} else if (source.startsWith('<>', at)) {
+				clear(at, at + 2);
+				at += 2;
+				depth += 1;
+			} else if (source[at] === '<' && /[a-zA-Z]/.test(source[at + 1] ?? '')) {
+				const tag = readTag(at);
+				at = tag.end + 1;
+				const closes = tag.selfClosing || VOID.has(tag.name.toLowerCase());
+				if (!closes) depth += 1;
+				if (tag.raw && !closes) {
+					// Case-insensitive without lowering the source, which can change its length.
+					const closer = new RegExp(`</${tag.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'gi');
+					closer.lastIndex = at;
+					const end = closer.exec(source)?.index ?? length;
+					// What `is:raw` holds is text as it stands, not elements and not expressions.
+					if (!/^(script|style)$/i.test(tag.name)) for (let i = at; i < end; i += 1) if (/[<{}]/.test(out[i])) out[i] = ' ';
+					at = end;
+				}
+				if (oneElement && depth <= 0) return at;
+			} else if (source[at] === '{') {
+				const elements = [];
+				const end = endOfScript(at, elements);
+				fillExpression(at, end, elements);
+				at = end + 1;
+			} else at += 1;
+		}
+		return length;
+	}
+
+	readMarkup(frontmatter ? frontmatter[0].length : 0);
+	return out.join('');
+}
+
+/** Directives of Astro itself: they tell the compiler something and set no attribute. */
+const ASTRO_DIRECTIVE = /^(client|set|is|define|transition|server|class):/;
+
+/**
+ * Turns the marks of `astroAsHtml` into what the tree builder already knows: a
+ * wrapper with a condition or a loop around the elements of an expression, and a
+ * hole for content that is filled in. `set:html` fills an element the same way.
+ */
+function liftAstro(children) {
+	const out = [];
+	const open = [out];
+	const hole = (startIndex) => ({ type: 'hole', startIndex });
+	for (const node of children) {
+		if (node.type === 'text') {
+			let from = 0;
+			const flush = (to) => {
+				if (to > from) open.at(-1).push({ type: 'text', data: node.data.slice(from, to), startIndex: (node.startIndex ?? 0) + from });
+				from = to + 1;
+			};
+			for (let at = 0; at < node.data.length; at += 1) {
+				const mark = node.data[at];
+				if (!MARKS.has(mark)) continue;
+				flush(at);
+				const startIndex = (node.startIndex ?? 0) + at;
+				if (mark === HOLE) open.at(-1).push(hole(startIndex));
+				else if (mark === CLOSES) {
+					if (open.length > 1) open.pop();
+				} else {
+					const attribs = {};
+					if (mark !== OPENS_LOOP) attribs['v-if'] = '';
+					if (mark !== OPENS_CONDITION) attribs['v-for'] = '';
+					const wrapper = { type: 'tag', name: 'Fragment', attribs, children: [], startIndex };
+					open.at(-1).push(wrapper);
+					open.push(wrapper.children);
+				}
+			}
+			flush(node.data.length);
+			continue;
+		}
+		if (node.type === 'tag') {
+			const names = Object.keys(node.attribs);
+			const filled = names.some((name) => name === 'set:html' || name === 'set:text');
+			// An inert template, and a fragment that is filled in: unknown here. A fragment
+			// that names a slot of its component renders nothing itself, so it reads through.
+			if (node.name === 'template' || (node.name === 'Fragment' && filled)) {
+				open.at(-1).push(hole(node.startIndex ?? 0));
+				continue;
+			}
+			if (names.includes('class:list')) node.attribs.class ??= '${}';
+			for (const name of names) if (ASTRO_DIRECTIVE.test(name)) delete node.attribs[name];
+			node.children = filled ? [hole(node.startIndex ?? 0)] : liftAstro(node.children);
+		}
+		open.at(-1).push(node);
+	}
+	return out;
+}
+
+/**
+ * An Astro component: frontmatter, then a template that is HTML with expressions.
+ * Its root stays open, also for a layout with an `<html>`: the page comes in
+ * through a slot.
+ */
+export function parseAstro(source) {
+	const root = createRoot();
+	const document = parseMarkup(astroAsHtml(source), { selfClosing: true, original: source });
+	readHtmlChildren(liftAstro(document.children), root, {});
+	return [root];
 }
 
 /**
@@ -880,6 +1226,7 @@ const PARSERS = {
 	'.jinja': parseHtml,
 	'.jinja2': parseHtml,
 	'.vue': parseVue,
+	'.astro': parseAstro,
 	'.md': parseMarkdown,
 	'.mdx': parseMarkdown,
 	'.jsx': parseJsx,

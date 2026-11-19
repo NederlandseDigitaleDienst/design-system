@@ -193,7 +193,7 @@ function createPositions(source) {
 
 
 /** Files where `//` is no comment: in markup it starts a url, and a built page is one line. */
-const MARKUP_FILE = /\.(html?|j2|jinja2?|tmpl|gohtml|vue|md)$/;
+const MARKUP_FILE = /\.(html?|j2|jinja2?|tmpl|gohtml|vue|astro|md)$/;
 
 /**
  * A stylesheet a page links to, on disk next to it: relative to the page, or from the

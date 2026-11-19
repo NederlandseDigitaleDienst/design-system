@@ -209,11 +209,13 @@ Dezelfde regels draaien op drie plekken:
 
 | Waar | Wat het ziet |
 |------|--------------|
-| Bron (`.vue`, `.tsx`, `.jsx`, `.js`, `.html`, `.j2`, ook Angular, Django en htmx; `.mdx` en `.md` als je ze noemt) | Vóór de commit, per bestand, alleen wat zeker fout is |
-| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Daarom leest de linter geen `.astro`: dat loopt via zijn output |
+| Bron (`.vue`, `.tsx`, `.jsx`, `.js`, `.astro`, `.html`, `.j2`, ook Angular, Django en htmx; `.mdx` en `.md` als je ze noemt) | Vóór de commit, per bestand, alleen wat zeker fout is |
+| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Scripts in een buildmap (`IGNORED_DIRECTORIES`) slaat hij over: in die chunks staat de CSS van de componenten zelf. Dat gaat op het pad vanaf de projectroot, dus `cd dist && nldd lint` leest ze wel |
 | Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen. Alleen met een bundler die `import.meta.env.DEV` zet, zoals Vite; Angular en server-rendered apps hebben de eerste twee rijen |
 
-Wat een template in een tag schrijft (`{% if %}`, `{{ attrs }}`, `*ngIf`) maakt het element onzeker, nooit fout. Wijzig je de parser, draai dan `npm run lint:corpus` op elk soort consument uit de README: Vue, TSX, Angular, Jinja en gewone HTML.
+Wat een template in een tag schrijft (`{% if %}`, `{{ attrs }}`, `*ngIf`) maakt het element onzeker, nooit fout. Wijzig je de parser, draai dan `npm run lint:corpus` op elk soort consument uit de README: Vue, TSX, Astro, Angular, Jinja en gewone HTML.
+
+Een sjabloontaal zonder parser (`UNREAD_EXTENSIONS` in `lint/project.js`, zoals `.svelte` en `.php`) opent een mapscan toch: staat er `nldd-*`-markup in, dan meldt hij `file-not-read`. Zo leest een project in zo'n taal niet als gecontroleerd. Krijgt een taal een parser, haal hem dan uit die lijst.
 
 Een component geeft wat niet in de markup staat door met `setState`, alleen in dev. De browser krijgt de regels als gewone CSS in `src/utilities/dev-rules.generated.ts` en evalueert ze met `el.matches()`. Elke regel is een selector. Wat niet in de markup staat, stelt een component beschikbaar als feit met `setState(this, 'feit', conditie)`, een CSS custom state; de regel leest die met `:state(feit)` en krijgt `runtime: true`. Het feit beschrijft wat er is, nooit de fout: `no-width`, `invalid-max-height`. Een component bevat geen meldingstekst en weet niets van regels: `lint:rules` faalt op `console.warn` en op een state die niets zet. Een attribuut in een `assert` geldt in de browser ook als de property is gezet, want een selector ziet die niet. Een `[x]` in een selector betekent "heeft een waarde", behalve bij booleans. Wat een eigen pseudo-class (`:named-by-field`, `:accepted`, een klasse als `:form-input`) betekent in de bron en wat de browser ervan krijgt, staat op één plek: `lint/rule-compiler.js`. Een nieuwe pseudo komt daar bij, en een selector die de browser niet kan draaien, weigert hij.
 
