@@ -84,6 +84,9 @@ export class NLDDBarSplitView extends LitElement {
 		this._observer = new MutationObserver(() => this.requestUpdate());
 		this._observer.observe(this, { childList: true, attributes: true, attributeFilter: ['above', 'below', 'only', 'sm-order', 'md-order', 'lg-order'], subtree: false });
 
+		// Two measurements, each for its own reason: the first picks the
+		// breakpoint the first render sorts by; the observer's first report comes
+		// after that render, and measures the bars it drew for the insets.
 		firstMeasurement.schedule(this, this.ownerDocument);
 		sizeObserver.observe(this, this);
 	}

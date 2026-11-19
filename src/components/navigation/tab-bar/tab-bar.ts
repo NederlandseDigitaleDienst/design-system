@@ -563,15 +563,18 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	}
 
 	_onSlotChange(): void {
-		this._scheduleOverflow();
 		// While the parser adds tabs, a slotchange comes per tab; one sync after
-		// the parse does for all of them.
+		// the parse does for all of them. The overflow is measured after the
+		// sync, on tabs that have their size and state.
 		if (this._syncPending) return;
 		this._syncPending = afterParse(() => {
 			this._syncPending = false;
 			this._syncItems();
+			this._scheduleOverflow();
 		}, this.ownerDocument);
-		if (!this._syncPending) this._syncItems();
+		if (this._syncPending) return;
+		this._syncItems();
+		this._scheduleOverflow();
 	}
 
 	private _handleItemSelect = (event: CustomEvent): void => {
