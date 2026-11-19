@@ -312,7 +312,8 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	_overflowItems: NLDDTabBarItem[] = [];
 
 	/** @internal What the overflow menu lists. Held while the menu is open: a tab
-	 *  chosen there moves into view, and the list would change under its blink. */
+	 *  chosen there moves into view, and the list would change under it while
+	 *  the menu closes. */
 	@state()
 	_menuItems: NLDDTabBarItem[] = [];
 

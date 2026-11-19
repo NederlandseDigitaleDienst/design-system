@@ -1044,7 +1044,7 @@ describe('nldd-tab-bar – overloop', () => {
 		expect(items[index].current).toBe(true);
 	});
 
-	it('laat een tab uit het menu knipperen en sluit dan het menu', async () => {
+	it('sluit het menu meteen als je een tab uit het menu kiest, zonder knipperen', async () => {
 		const { bar } = await make(320);
 		const menu = bar.shadowRoot!.querySelector('.tab-bar__overflow-button nldd-menu') as HTMLElement;
 		menu.showPopover();
@@ -1055,14 +1055,11 @@ describe('nldd-tab-bar – overloop', () => {
 		bar.addEventListener('select', (event) => escaped.push(event));
 		picked.shadowRoot!.querySelector<HTMLElement>('.menu__item')!.click();
 		await bar.updateComplete;
-		// The tab moved into view, but the menu holds its list while the entry blinks.
-		expect(picked.hasAttribute('confirming')).toBe(true);
-		expect(picked.isConnected).toBe(true);
-		expect(picked.getAttribute('text')).toBe(text);
+		// The chosen tab shows in the bar at once, so a blink would only repeat it.
+		expect(picked.hasAttribute('confirming')).toBe(false);
+		expect(menu.matches(':popover-open')).toBe(false);
 		expect(escaped).toEqual([]);
-		await expect.poll(() => menu.matches(':popover-open'), { timeout: 2000 }).toBe(false);
-		// The bar takes the new list once the menu's toggle event is in: a task
-		// after the popover closed, which the poll above can come before.
+		// The bar takes the new list once the menu's toggle event is in.
 		await expect.poll(() => menuItems(bar).map(item => item.getAttribute('text'))).not.toContain(text);
 	});
 

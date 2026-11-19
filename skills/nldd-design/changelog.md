@@ -17,12 +17,12 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **Pages with many components load and resize much faster, above all in Safari.** A component that measured itself while the page was still parsing made the browser lay out the page once per instance, so 500 copies cost quadratically more than 50. Components now measure together, after the parse, with one ResizeObserver per component. With 500 copies in WebKit, a sheet loads in 1.7 s instead of not at all, a radio group in 0.4 s instead of 5.7 s, a time picker in 1.5 s instead of 73 s, a toolbar in 4.3 s instead of 27 s and an avatar group in 0.9 s instead of 52 s.
+- **Pages with many components load and resize much faster, above all in Safari.** A component that measured itself while the page was still parsing made the browser lay out the page once per instance, so 500 copies cost quadratically more than 50. Components now measure together, after the parse, with one ResizeObserver per component. With 500 copies in WebKit, a sheet loads in 1.7 s where it took more than a minute, a radio group in 0.4 s instead of 5.7 s, a time picker in 1.5 s instead of 73 s, a toolbar in 4.3 s instead of 27 s and an avatar group in 0.9 s instead of 52 s.
 - **A page section lays out by the `nldd-page` it is in.** A section goes in a page, never on its own or in another section. See Breaking.
 
 ### Breaking
 
-- **A page section lays out by the width of the `nldd-page` it is in, and goes nowhere else.** `nldd-simple-section`, `nldd-full-bleed-section`, `nldd-sidebar-section`, the three column sections and `nldd-hero` were each a container of their own. They now query the page, which they always span. A section outside an `nldd-page` loses its responsive padding and columns, and a section in a narrower box inside the page lays out for the page. Put every section directly in a page, next to the other sections; `nldd lint` warns about both (see Added).
+- **A page section lays out by the width of the `nldd-page` it is in, and goes nowhere else.** `nldd-simple-section`, `nldd-full-bleed-section`, `nldd-sidebar-section`, the three column sections and `nldd-hero` were each a container of their own. They now query the page, which they always span. A section outside an `nldd-page` loses its responsive padding and columns, and a section in a narrower box inside the page lays out for the page. An `@container` query in your own CSS for content in a section no longer matches the section: it matches the page now, or the nearest container of your own. Put every section directly in a page, next to the other sections; `nldd lint` warns about both (see Added).
 
 ### Added
 
@@ -31,6 +31,7 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **`nldd-list-item` is no longer a container.** Its cells already lay out by the `nldd-list` around it. A component with container queries of its own in a row, such as `nldd-progress-bar`, now measures the list, which is as wide as the row.
+- **The overflow menu of `nldd-tab-bar` closes at once after a choice, without the blink.** The chosen tab shows in the bar right next to it, so the blink only repeated it.
 - **`nldd-menu-item` draws its own text, icon, details and chevron, without cells.** Each item held five to nine `nldd-text-cell`, `nldd-icon-cell` and `nldd-spacer-cell` elements, each with a shadow root of its own. Safari pays for every one of them on each resize, also in a closed menu, so a combo-box with hundreds of options made the whole page slow to resize. The item looks the same. Its styles now belong to the item and no longer follow the cells. Code that looks for a cell in the shadow root of an item no longer finds one.
 - **`nldd-top-navigation-bar` follows the width of the window, not that of its parent.** The bar always spans the page, so the two were the same, and a media query costs the browser nothing per bar where a container query made every resize slower with each bar. A bar in a narrower box, such as a frame in your own docs, now lays out for the window it is in: give it an `iframe` of its own to show it narrow.
 
