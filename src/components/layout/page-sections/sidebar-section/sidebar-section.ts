@@ -194,9 +194,13 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 		// Collapse on the width of the page, measured on the section, which
 		// spans it. The sizer is in the shadow root, so from the first render on:
 		// on a first connect there is none yet and firstUpdated observes it; this
-		// is for a section that connects again.
+		// is for a section that connects again. That one is measured at once
+		// too, as on a first connect, not at the observer's next frame.
 		const sizer = this._sizer;
-		if (sizer) sizeObserver.observe(sizer, this);
+		if (sizer) {
+			sizeObserver.observe(sizer, this);
+			firstMeasurement.schedule(this, this.ownerDocument);
+		}
 		this.addEventListener('click', this._onClick);
 	}
 
