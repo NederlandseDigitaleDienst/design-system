@@ -24,7 +24,9 @@ export class LayoutPass<T> {
 	 *  drops the rest of that pass. */
 	constructor(private _run: (hosts: T[]) => void) {}
 
-	/** Adds a host to the next pass. */
+	/** Adds a host to the next pass. `doc` only counts for the first host of a
+	 *  pass: a host from another document, such as an iframe, runs when the
+	 *  pass does. */
 	schedule(host: T, doc: Document = document): void {
 		const scheduled = this._pending.size > 0;
 		this._pending.add(host);
