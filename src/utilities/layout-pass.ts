@@ -61,7 +61,9 @@ export interface SharedResizeObserver<T extends object> {
 /**
  * @param onResize gets the hosts with a target that changed size, each once,
  *   and only those still in the page.
- *   Like any ResizeObserver, a target is reported once when it is observed.
+ *   Like any ResizeObserver, a target is reported once when it is observed,
+ *   also for a host that joins a target another host already observes: the
+ *   hosts that were there get that report too.
  */
 export function sharedResizeObserver<T extends object>(onResize: (hosts: T[]) => void): SharedResizeObserver<T> {
 	// A target can belong to more hosts, such as one anchor for two bars.
@@ -80,10 +82,14 @@ export function sharedResizeObserver<T extends object>(onResize: (hosts: T[]) =>
 			});
 			const hosts = hostsOf.get(target) ?? new Set<T>();
 			hostsOf.set(target, hosts);
+			const joins = hosts.size > 0 && !hosts.has(host);
 			hosts.add(host);
 			const targets = targetsOf.get(host) ?? new Set<Element>();
 			targetsOf.set(host, targets);
 			targets.add(target);
+			// Observing a target again reports nothing, so a host that joins one
+			// would wait for the next resize.
+			if (joins) observer.unobserve(target);
 			observer.observe(target);
 		},
 		unobserveAll(host) {

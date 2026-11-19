@@ -57513,7 +57513,7 @@
                   }
                 }
               ],
-              "description": "Adds a host to the next pass."
+              "description": "Adds a host to the next pass. `doc` only counts for the first host of a\npass: a host from another document, such as an iframe, runs when the\npass does."
             },
             {
               "kind": "method",
@@ -57559,7 +57559,7 @@
               "type": {
                 "text": "(hosts: T[]) => void"
               },
-              "description": "gets the hosts with a target that changed size, each once,\nand only those still in the page.\nLike any ResizeObserver, a target is reported once when it is observed."
+              "description": "gets the hosts with a target that changed size, each once,\nand only those still in the page.\nLike any ResizeObserver, a target is reported once when it is observed,\nalso for a host that joins a target another host already observes: the\nhosts that were there get that report too."
             }
           ]
         }

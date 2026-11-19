@@ -103,6 +103,17 @@ describe('sharedResizeObserver', () => {
 		expect(runs).toEqual([['a', 'b'], ['b']]);
 	});
 
+	it('gives a host that joins an observed target a first report of its own', async () => {
+		const runs: string[][] = [];
+		const observer = sharedResizeObserver<Host>((hosts) => runs.push(hosts.map((h) => h.id)));
+		const el = box();
+		observer.observe(el, host('a'));
+		await frames();
+		observer.observe(el, host('b'));
+		await frames();
+		expect(runs).toEqual([['a'], ['a', 'b']]);
+	});
+
 	it('leaves out a host that is no longer in the page', async () => {
 		const runs: Element[][] = [];
 		const observer = sharedResizeObserver<Element>((hosts) => runs.push(hosts));
