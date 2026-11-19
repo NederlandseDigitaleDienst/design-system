@@ -37,8 +37,9 @@
  * Like every section it goes in an nldd-page, never in another section, and lays
  * out by the width of that page, not the viewport. A page in a narrow split-view
  * pane collapses the sidebar to the sheet just like a narrow window, and the
- * sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow
- * section then stacks the sidebar (full-width) above the main instead of using a sheet.
+ * sidebar never stacks above or crowds the main. Set `no-collapse` to opt out:
+ * a narrow section then stacks the sidebar (full-width) above the main instead
+ * of using a sheet.
  *
  * Inherits block `padding` and `height` from PageSectionMixin.
  *
@@ -190,7 +191,9 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 		super.connectedCallback();
 		adoptOnlyRule(this.getRootNode());
 		// Collapse on the width of the page, measured on the section, which
-		// spans it. The sizer is in the shadow root, so from the first render on.
+		// spans it. The sizer is in the shadow root, so from the first render on:
+		// on a first connect there is none yet and firstUpdated observes it; this
+		// is for a section that connects again.
 		const sizer = this._sizer;
 		if (sizer) sizeObserver.observe(sizer, this);
 		this.addEventListener('click', this._onClick);
