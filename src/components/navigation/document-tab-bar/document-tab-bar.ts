@@ -238,6 +238,11 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this.addEventListener('dismiss', this._handleItemDismiss as EventListener);
 		this.addEventListener('keydown', this._handleKeyDown);
 		this.addEventListener('pointerdown', this._onPointerDown);
+		// Moved in the DOM: `firstUpdated` does not come again.
+		if (this.hasUpdated) {
+			this._watchRowWidth();
+			this._syncMenuAnchor();
+		}
 	}
 
 	override disconnectedCallback(): void {
@@ -263,10 +268,16 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 	override firstUpdated(): void {
 		this._hasCustomLabel = Boolean(this.accessibleLabel);
+		this._watchRowWidth();
+		this._syncMenuAnchor();
+	}
 
+	/** Runs on every connect after the first render: `disconnectedCallback` stops the observer. */
+	private _watchRowWidth(): void {
 		const container = this.shadowRoot?.querySelector('.document-tab-bar__items') as HTMLElement;
 		if (container) {
 			this._rowWidth = this.clientWidth;
+			this._resizeObserver?.disconnect();
 			this._resizeObserver = new ResizeObserver(() => {
 				// A held width is only right for the row it was measured in. A
 				// window that changes size lets go, rather than leaving the tabs
@@ -280,8 +291,6 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 			});
 			this._resizeObserver.observe(container);
 		}
-
-		this._syncMenuAnchor();
 		requestAnimationFrame(() => this._calculateOverflow());
 	}
 

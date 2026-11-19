@@ -370,12 +370,21 @@ export class NLDDMenu extends LitElement {
 		// control assigns `anchorElement` on slotchange, which may land after
 		// our firstUpdated) and a runtime `anchor` swap.
 		if (changedProperties.has('anchor') || changedProperties.has('anchorElement')) {
-			this._previousAnchorForResync?.removeEventListener('pointerdown', this._resyncAnchorFromPopoverState, true);
-			const anchor = this._getAnchorEl();
-			anchor?.addEventListener('pointerdown', this._resyncAnchorFromPopoverState, true);
-			this._previousAnchorForResync = anchor;
+			this._watchAnchorPress();
 			this._syncAnchorPopupState(this._isOpen);
 		}
+	}
+
+	/**
+	 * Also on every connect after the first render: `disconnectedCallback` takes
+	 * the listener off the anchor, and a move changes neither `anchor` nor
+	 * `anchorElement`, so `updated` would not put it back.
+	 */
+	private _watchAnchorPress(): void {
+		this._previousAnchorForResync?.removeEventListener('pointerdown', this._resyncAnchorFromPopoverState, true);
+		const anchor = this._getAnchorEl();
+		anchor?.addEventListener('pointerdown', this._resyncAnchorFromPopoverState, true);
+		this._previousAnchorForResync = anchor;
 	}
 
 	/** @internal The name of the element with the menu or listbox role: its
@@ -1057,6 +1066,7 @@ export class NLDDMenu extends LitElement {
 		this._stopWatchingAnchor = watchTrigger(this._anchorInvoker, () =>
 			this.anchorElement || !this.anchor ? null : document.getElementById(this.anchor));
 		document.addEventListener('click', this._handleDocumentClick);
+		if (this.hasUpdated) this._watchAnchorPress();
 	}
 
 	override willUpdate(): void {

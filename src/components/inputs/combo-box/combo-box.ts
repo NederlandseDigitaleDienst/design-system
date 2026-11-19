@@ -292,6 +292,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		this._resizeObserver.observe(this);
 		window.addEventListener('scroll', this._handleScrollOrResize, true);
 		window.addEventListener('resize', this._handleScrollOrResize);
+		// Moved in the DOM: the slot keeps its content, so no slotchange comes.
+		if (this.hasUpdated) this._onSlotChange();
 	}
 
 	override disconnectedCallback(): void {

@@ -173,6 +173,7 @@ export class NLDDMenuItem extends withTranslations(LitElement, nlddMenuItemTrans
 			if (!realTarget || !this.shadowRoot?.contains(realTarget)) return;
 			this.removeAttribute('data-focused');
 		});
+		if (this.hasUpdated) this._watchForLateSubmenu();
 	}
 
 	override focus(options?: FocusOptions): void {
@@ -215,15 +216,28 @@ export class NLDDMenuItem extends withTranslations(LitElement, nlddMenuItemTrans
 	}
 
 	override firstUpdated(): void {
-		// Submenu attachment is one-shot in v1 — a nldd-menu added after this
-		// point would silently miss aria-controls, the chevron indicator, the
-		// hover-open lifecycle, and the close-state sync. Watch for late
-		// additions so consumers don't chase the symptom.
-		this._submenuMutationObserver = new MutationObserver(() => {
+		this._watchForLateSubmenu();
+	}
+
+	/**
+	 * Submenu attachment is one-shot in v1 — a nldd-menu added after this
+	 * point would silently miss aria-controls, the chevron indicator, the
+	 * hover-open lifecycle, and the close-state sync. Watch for late
+	 * additions so consumers don't chase the symptom.
+	 *
+	 * Runs on every connect after the first render: `disconnectedCallback`
+	 * stops the observer, and `firstUpdated` does not come again after a move.
+	 */
+	private _watchForLateSubmenu(): void {
+		const check = () => {
 			const current = this.querySelector(':scope > nldd-menu');
 			setState(this, 'late-submenu', current !== null && current !== this._cachedSubmenuEl);
-		});
+		};
+		this._submenuMutationObserver?.disconnect();
+		this._submenuMutationObserver = new MutationObserver(check);
 		this._submenuMutationObserver.observe(this, { childList: true });
+		// A submenu added while this item was out of the document.
+		check();
 	}
 
 	override disconnectedCallback(): void {

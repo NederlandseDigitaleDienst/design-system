@@ -15,6 +15,22 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A component you move in the DOM keeps working.** Thirteen components went quiet after a move: they no longer followed their children or their own size. An app runs into this when it moves a sheet to `document.body` or lets a user drag a row. See Fixed.
+- **1 accessibility fix:** a moved `nldd-form-field` kept describing its control with a requirement that was no longer on screen. See Fixed.
+
+### Fixed
+
+- **Thirteen components pick up again after a move in the DOM.** Moving an element disconnects it and connects it again, without a first render and without a `slotchange`. What these components had set up there did not come back.
+  - `nldd-form-field` follows its `nldd-validation-list` again, so the description of the control matches the requirements on screen. Before, an item that hid after the move stayed in the description, and a screen reader read out a requirement that was gone.
+  - `nldd-combo-box` and `nldd-token-field` hear `toggle`, `select` and `keydown` from their menu again.
+  - `nldd-menu` listens on its anchor again, and `nldd-menu-item` notices a submenu that is added late.
+  - `nldd-list` and `nldd-table` see rows that come, go or hide.
+  - `nldd-page` sees `grow` and `hidden` change on its children, and `nldd-container` the `order` attributes of its children.
+  - `nldd-menu-bar`, `nldd-document-tab-bar` and `nldd-kanban` follow their own width again. The document tab bar also finds its overflow menu back.
+  - `nldd-progress-bar` sees a segment indicator change. `nldd-progress-circle` reads the same way and got the same guard.
+
 ## [0.26.5](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.4...v0.26.5) (2026-11-18)
 
 ### Added

@@ -153,6 +153,7 @@ export class NLDDTable extends LitElement {
 			this._syncHostA11y();
 		});
 		this._resizeObserver.observe(this);
+		if (this.hasUpdated) this._watchRows();
 	}
 
 	override disconnectedCallback(): void {
@@ -168,6 +169,15 @@ export class NLDDTable extends LitElement {
 		// toggled [hidden] (consumer-driven filtering) — mirrors nldd-list.
 		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])');
 		slot?.addEventListener('slotchange', () => this._updateEmpty());
+		this._watchRows();
+	}
+
+	/**
+	 * Runs on every connect after the first render: `disconnectedCallback` stops
+	 * the observer, and `firstUpdated` does not come again after a move.
+	 */
+	private _watchRows(): void {
+		this._rowsObserver?.disconnect();
 		this._rowsObserver = new MutationObserver((mutations) => {
 			const relevant = mutations.some((m) => {
 				if (m.type === 'childList') return m.target === this;
