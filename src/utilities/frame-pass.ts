@@ -14,7 +14,9 @@ export class FramePass<T> {
 	private _pending = new Set<T>();
 	private _frame: number | null = null;
 
-	/** @param run gets every host that asked, in the order they asked. */
+	/** @param run gets every host that asked, in the order they asked. It must
+	 *  not throw: the pass has already let go of its hosts, so one that throws
+	 *  drops the rest of that pass. */
 	constructor(private _run: (hosts: T[]) => void) {}
 
 	/** Adds a host to the next frame. */

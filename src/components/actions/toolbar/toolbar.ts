@@ -109,7 +109,10 @@ function observeSize(target: Element, toolbar: NLDDToolbar): void {
 	sizeObserver.observe(target);
 }
 
-function unobserveSize(target: Element): void {
+/** Only while the target is still this toolbar's: an item moved to another
+ *  toolbar is that one's to watch. */
+function unobserveSize(target: Element, toolbar: NLDDToolbar): void {
+	if (toolbarOf.get(target) !== toolbar) return;
 	sizeObserver?.unobserve(target);
 	toolbarOf.delete(target);
 }
@@ -277,9 +280,9 @@ export class NLDDToolbar extends LitElement {
 		areaPass.cancel(this);
 		this._observer?.disconnect();
 		this._observer = null;
-		unobserveSize(this);
+		unobserveSize(this, this);
 		this._lastWidth = null;
-		this._sizedChildren.forEach(unobserveSize);
+		this._sizedChildren.forEach(el => unobserveSize(el, this));
 		this._sizedChildren.clear();
 	}
 
@@ -860,7 +863,7 @@ export class NLDDToolbar extends LitElement {
 	 * is decided in _resized.
 	 */
 	private _watchChildSizes(): void {
-		this._sizedChildren.forEach(unobserveSize);
+		this._sizedChildren.forEach(el => unobserveSize(el, this));
 		this._sizedChildren = new Set(this._hostChildElements());
 		this._lastChildWidths = new WeakMap();
 		this._sizedChildren.forEach(el => observeSize(el, this));

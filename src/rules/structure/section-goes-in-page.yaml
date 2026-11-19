@@ -1,5 +1,5 @@
 severity: warn
-context: 'nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero'
+context: ':page-section'
 assert: 'nldd-page *'
 message: 'Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.'
 see: patronen/page-structure

@@ -19,7 +19,9 @@ import { afterParse } from './after-parse.js';
 export class LayoutPass<T> {
 	private _pending = new Set<T>();
 
-	/** @param run gets every host that asked, in the order they asked. */
+	/** @param run gets every host that asked, in the order they asked. It must
+	 *  not throw: the pass has already let go of its hosts, so one that throws
+	 *  drops the rest of that pass. */
 	constructor(private _run: (hosts: T[]) => void) {}
 
 	/** Adds a host to the next pass. */
@@ -58,20 +60,20 @@ export interface SharedResizeObserver<T> {
  *   Like any ResizeObserver, a target is reported once when it is observed.
  */
 export function sharedResizeObserver<T>(onResize: (hosts: T[]) => void): SharedResizeObserver<T> {
-	const hostOf = new WeakMap<Element, T>();
+	// A target can belong to more hosts, such as one anchor for two bars.
+	const hostsOf = new WeakMap<Element, Set<T>>();
 	const targetsOf = new Map<T, Set<Element>>();
 	let observer: ResizeObserver | null = null;
 	return {
 		observe(target, host) {
 			observer ??= new ResizeObserver((entries) => {
 				const hosts = new Set<T>();
-				for (const entry of entries) {
-					const of = hostOf.get(entry.target);
-					if (of !== undefined && targetsOf.get(of)?.has(entry.target)) hosts.add(of);
-				}
+				for (const entry of entries) hostsOf.get(entry.target)?.forEach((of) => hosts.add(of));
 				if (hosts.size) onResize([...hosts]);
 			});
-			hostOf.set(target, host);
+			const hosts = hostsOf.get(target) ?? new Set<T>();
+			hostsOf.set(target, hosts);
+			hosts.add(host);
 			const targets = targetsOf.get(host) ?? new Set<Element>();
 			targetsOf.set(host, targets);
 			targets.add(target);
@@ -79,8 +81,11 @@ export function sharedResizeObserver<T>(onResize: (hosts: T[]) => void): SharedR
 		},
 		unobserveAll(host) {
 			for (const target of targetsOf.get(host) ?? []) {
+				const hosts = hostsOf.get(target);
+				hosts?.delete(host);
+				if (hosts?.size) continue;
 				observer?.unobserve(target);
-				hostOf.delete(target);
+				hostsOf.delete(target);
 			}
 			targetsOf.delete(host);
 		},

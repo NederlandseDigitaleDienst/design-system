@@ -2851,10 +2851,8 @@ A section that spans the full width without horizontal padding. Useful for backg
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
-- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `section-no-own-columns` (hint): Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.
-- `section-no-section`: Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 
 **Attributes**
@@ -2905,9 +2903,7 @@ The section that says what a page is for: it names the main goal of what you can
 - `hero-overlap-needs-taller-panel`: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout="contained" to keep the panel on the image.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
-- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
-- `section-no-section`: Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.
 
 **Attributes**
 
@@ -3057,9 +3053,7 @@ A section with two equal columns side by side. The columns stand side by side on
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
-- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
-- `section-no-section`: Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 
 **Attributes**
@@ -3106,9 +3100,7 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
-- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
-- `section-no-section`: Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 
 **Attributes**
@@ -3419,9 +3411,7 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
-- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
-- `section-no-section`: Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.
 - `sidebar-section-needs-label` (hint): Set `sidebar-label`: it names the sidebar and titles the sheet it becomes.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 - `toc-heading-needs-id` (hint): Give every h2 an `id`, so the table of contents can jump to it.
@@ -3487,10 +3477,8 @@ A basic section with responsive padding and gap. Contains optional header and fo
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
-- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `section-no-own-columns` (hint): Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.
-- `section-no-section`: Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 
 **Attributes**
@@ -3611,9 +3599,7 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 - `hero-goes-first` (hint): Make nldd-hero the first section, which says what the site is for.
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
-- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
-- `section-no-section`: Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 
 **Attributes**

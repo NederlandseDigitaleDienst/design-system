@@ -795,14 +795,14 @@ export const devRules: DevRule[] = [
 	{
 		"id": "section-goes-in-page",
 		"message": "Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.",
-		"context": "nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero",
+		"context": ":is(nldd-full-bleed-section, nldd-hero, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-sidebar-section, nldd-simple-section, nldd-two-thirds-one-third-section)",
 		"assert": "nldd-page *",
 		"properties": []
 	},
 	{
 		"id": "section-no-section",
 		"message": "Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.",
-		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) :is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero):not(:is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-page *)"
+		"context": ":is(nldd-full-bleed-section, nldd-hero, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-sidebar-section, nldd-simple-section, nldd-two-thirds-one-third-section) :is(nldd-full-bleed-section, nldd-hero, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-sidebar-section, nldd-simple-section, nldd-two-thirds-one-third-section):not(:is(nldd-full-bleed-section, nldd-hero, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-sidebar-section, nldd-simple-section, nldd-two-thirds-one-third-section) nldd-page *)"
 	},
 	{
 		"id": "segmented-control-needs-name",
