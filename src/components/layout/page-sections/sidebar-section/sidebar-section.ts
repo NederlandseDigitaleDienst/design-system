@@ -112,7 +112,8 @@ const firstMeasurement = new LayoutPass<NLDDSidebarSection>((sections) => measur
 /** A resize is applied at the next frame, not in the observer's callback:
  *  collapsing changes the height of the page around the section, which the
  *  page's own observer has already been told about in this round, and the
- *  browser reports that as a "ResizeObserver loop" error. */
+ *  browser reports that as a "ResizeObserver loop" error. A resize that
+ *  crosses the breakpoint therefore paints the old layout for one frame. */
 const resizeFrame = new FramePass<NLDDSidebarSection>((sections) => measureSections(sections, true));
 
 /** Like any ResizeObserver it reports a section once when observed: by then
