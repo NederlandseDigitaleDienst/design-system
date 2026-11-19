@@ -406,9 +406,7 @@ export class NLDDList extends LitElement {
 		if (this.hasUpdated) {
 			this._watchItems();
 			// Rows that came or went while the list was out of the document.
-			this._updateItems();
-			this._updateEmpty();
-			this._syncUnmanagedControls();
+			this._refreshItems(true);
 		}
 	}
 
