@@ -296,7 +296,7 @@ export const menuItemStyles = css`
 		}
 	}
 
-	.menu__item-check {
+	.menu__item-check-mark-icon {
 		display: flex;
 		margin-inline-end: var(--primitives-space-4);
 		width: var(--primitives-space-24);
@@ -349,7 +349,7 @@ export const menuItemStyles = css`
 		flex: 0 1 auto;
 	}
 
-	.menu__item-chevron {
+	.menu__item-submenu-icon {
 		display: flex;
 		margin-inline-start: var(--primitives-space-6);
 		width: var(--primitives-space-20);

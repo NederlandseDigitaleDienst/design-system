@@ -146,7 +146,7 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 	// hold hundreds of items, and every cell is a shadow root of its own.
 	const content = html`
 		${hasCheckColumn ? html`
-			<span class="menu__item-check">${hasCheckState && this.selected ? html`<nldd-icon icon="check-mark"></nldd-icon>` : nothing}</span>
+			<span class="menu__item-check-mark-icon">${hasCheckState && this.selected ? html`<nldd-icon icon="check-mark"></nldd-icon>` : nothing}</span>
 		` : nothing}
 		<span class="menu__item-icon"
 			?hidden=${!hasIcon}
@@ -179,7 +179,7 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 			></nldd-keyboard-shortcut></span>
 		` : nothing}
 		${hasSubmenu ? html`
-			<span class="menu__item-chevron"><nldd-icon icon="chevron-right"></nldd-icon></span>
+			<span class="menu__item-submenu-icon"><nldd-icon icon="chevron-right"></nldd-icon></span>
 		` : nothing}
 	`;
 

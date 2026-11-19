@@ -972,7 +972,7 @@ describe('nldd-menu-item with submenu', () => {
 			</nldd-menu-item>
 		`);
 		await waitForUpdate(el);
-		const indicator = el.shadowRoot!.querySelector('.menu__item-chevron nldd-icon[icon="chevron-right"]');
+		const indicator = el.shadowRoot!.querySelector('.menu__item-submenu-icon nldd-icon[icon="chevron-right"]');
 		expect(indicator).not.toBeNull();
 	});
 
@@ -2855,7 +2855,7 @@ describe('nldd-menu check-mark column', () => {
 		await waitForUpdate(menu);
 		await Promise.all(Array.from(menu.querySelectorAll('nldd-menu-item'), (item) => (item as unknown as { updateComplete: Promise<unknown> }).updateComplete));
 	};
-	const checkCell = (item: Element) => item.shadowRoot!.querySelector('.menu__item-check');
+	const checkCell = (item: Element) => item.shadowRoot!.querySelector('.menu__item-check-mark-icon');
 	const textLeft = (item: Element) => item.shadowRoot!.querySelector('.menu__item-text')!.getBoundingClientRect().left;
 
 	it('gives every item the column when one is a radio, so the text lines up', async () => {
@@ -3687,7 +3687,7 @@ describe('nldd-menu-item type="submit"', () => {
 		await waitForUpdate(el);
 		const items = [...el.querySelectorAll('nldd-menu-item')] as (HTMLElement & { updateComplete: Promise<unknown> })[];
 		await Promise.all(items.map((item) => item.updateComplete));
-		const checkCell = (item: Element) => item.shadowRoot!.querySelector('.menu__item-check');
+		const checkCell = (item: Element) => item.shadowRoot!.querySelector('.menu__item-check-mark-icon');
 		expect(items.map(checkCell)).toEqual([null, null]);
 	});
 });
