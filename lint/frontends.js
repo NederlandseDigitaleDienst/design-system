@@ -263,7 +263,10 @@ function endOfBranch(text, from) {
 	return text.length;
 }
 
-/** True when every element the markup opens, it also closes, and it closes none it did not open. */
+/**
+ * True when every element the markup opens, it also closes, and it closes none it did not open.
+ * In doubt it says false: that blanks a branch, which can miss a finding but never make one up.
+ */
 function isBalanced(markup) {
 	const open = [];
 	for (const [tag, slash, name] of markup.matchAll(/<(\/?)([a-zA-Z][\w-]*)(?:"[^"]*"|'[^']*'|[^'">])*>/g)) {
