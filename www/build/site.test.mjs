@@ -6,6 +6,8 @@ import { buildPages } from './site.js';
 import { collectComponents, repoRoot, storyName } from './sources.js';
 import { controlFor } from './attribute-values.js';
 import { headingId, renderMarkdown } from './markdown.js';
+import { WCAG } from '../../lint/wcag.js';
+import { WCAG_NL } from './wcag.js';
 
 function storyFiles(dir, found = []) {
 	for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -189,6 +191,12 @@ test('a rule has a page of its own, which every list of rules links to', () => {
 	assert.match(pages['componenten/link/lintregels/index.html'], /<nldd-list-item href="\/linter\/link-needs-href\/">/);
 	// A rule only the running page can tell has no markup to show.
 	assert.doesNotMatch(pages['linter/sheet-needs-name/index.html'], /<h2 id="goed">/);
+});
+
+test('every success criterion the linter knows has its Dutch name and an anchor of its own', () => {
+	assert.deepEqual(Object.keys(WCAG_NL), Object.keys(WCAG));
+	const anchors = Object.values(WCAG_NL).map((criterion) => criterion.anchor);
+	assert.equal(new Set(anchors).size, anchors.length);
 });
 
 test('the accessibility page lists the rules by success criterion, from every group', () => {
