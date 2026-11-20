@@ -166,7 +166,8 @@ De landingspagina (`www/index.html`, met `www/main.ts` en `www/styles.css`) is m
 | `/componenten/<naam>/` | `<naam>.stories.ts` voor de voorbeelden, `custom-elements.json` voor de API-tabel |
 | `/patronen/<slug>/` | `src/patterns/<slug>/`, met de lintregels die naar het patroon wijzen eronder |
 | `/richtlijnen/`, `/themas/`, `/iconen/`, `/vertalingen/`, `/breakpoints/` | `src/docs/*.md` |
-| `/toegankelijkheid/` | `docs/ACCESSIBILITY.md` |
+| `/toegankelijkheid/` | `docs/ACCESSIBILITY.md`, met eronder de lintregels per succescriterium |
+| `/linter/<regel>/` | `src/rules/<groep>/<regel>.yaml`, een pagina per regel |
 | `/changelog/`, `/changelog/<versie>/` | `CHANGELOG.md`, een pagina per versie |
 | `/aan-de-slag/` | `www/content/*.md` |
 
@@ -244,6 +245,8 @@ Eén regel, één bestand in `src/rules/<groep>/`, ook als hij over meer compone
 `pure` is de enige groep die een project zelf aanzet, met `--pure` of met een niveau in `.nldd-lint.json` (`"rules": { "pure": "error" }`). Zijn regels gaan over de eigen opmaak van een app (een `class`, `style`, kale HTML, een stylesheet), niet over het gebruik van een component, en zonder die keuze vuren ze nooit. Ze draaien daarom ook niet in de browser. Een stylesheet leest de linter als een `<style>`-element, zodat één regel een CSS-bestand, een `<style>`-blok in Vue en een `<style>` in HTML vangt. `:written(class)` matcht een attribuut dat er staat, ook met een gebonden waarde; `[class]` vraagt een waarde die we kunnen lezen. De regels waarmee `pure` begon zijn `error`, want niemand had de groep toen aan; een regel die er later bij komt, komt als `warn`, zoals elke nieuwe regel.
 
 Een naam begint met waar hij over gaat: de tag zonder `nldd-`, of een begrip uit `CONCEPTS` in `scripts/check-lint-rules.js`. Daarna één van vier vormen: `-needs-` (iets ontbreekt), `-no-` (mag niet), `-max-` (te veel), `-goes-` (verkeerde plek). In `api` eindigt hij op `-renamed`, `-invalid`, `-no-effect` of `-not-found`. `lint:rules` bewaakt dit. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.md` hoeft niet mee te veranderen.
+
+Bewaakt een regel een succescriterium van WCAG 2.2 (niveau A of AA), dan noemt hij het met `wcag: ['2.4.4']`, in welke groep hij ook staat. Alleen waar het verband direct is: een regel uit `a11y` die goede praktijk is en geen criterium, krijgt er geen. De toegankelijkheidspagina zet de regels daarmee per criterium onder elkaar, en `nldd explain` noemt het. De namen van de criteria staan in `lint/wcag.js` (Engels, voor de CLI) en `www/build/wcag.js` (de koppen van de geautoriseerde Nederlandse vertaling, letterlijk).
 
 `message` zegt wat hier fout is, in het Engels, zoals een compilerfout. Het waarom staat op de pagina waar `see` naar wijst en wordt niet overgeschreven.
 

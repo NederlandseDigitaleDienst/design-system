@@ -29,6 +29,8 @@ npx @nldd/design-system lint --fix
 npx @nldd/design-system explain button-needs-name
 ```
 
+Je krijgt de melding, het succescriterium van WCAG dat de regel bewaakt, en markup die goed en fout is. Hetzelfde staat op de pagina van de regel, onder [Alle regels](#alle-regels).
+
 ### De regels van een component
 
 ```bash

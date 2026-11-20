@@ -6,6 +6,7 @@ import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, OPT_IN_GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
+import { WCAG } from './wcag.js';
 import { applyBaseline, looseInBaseline, tightenBaseline, readBaseline, readConfig, writeBaseline } from './project.js';
 import { knownKeys, lintProject } from './session.js';
 
@@ -44,6 +45,7 @@ function explain(data, id) {
 		return 2;
 	}
 	const lines = [`${rule.id}  (${rule.group}, ${rule.severity})`, '', rule.message];
+	if (rule.wcag) lines.push('', ...rule.wcag.map((criterion) => `WCAG ${criterion} ${WCAG[criterion].name} (${WCAG[criterion].level})`));
 	if (rule.url) lines.push('', `Why: ${rule.url}`);
 	if (rule.runtime) lines.push('', 'Only the running page can tell, so this runs in the browser while developing.');
 	if (rule.examples) {
