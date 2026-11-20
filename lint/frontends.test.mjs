@@ -70,6 +70,14 @@ describe('frontend edge cases', () => {
 		assert.ok(items.every((item) => item.parent.name === 'nldd-list'));
 	});
 
+	for (const block of ['{% spaceless %}<p>a</p>{% endspaceless %}', '{% set x %}<p>a</p>{% endset %}', '{% raw %}<p>a</p>{% endraw %}']) {
+		it(`reads a branch to its end past ${block.slice(0, 14)}`, async () => {
+			const source = `<nldd-list>{% if x %}<nldd-list-item href="/a">{% else %}${block}{% set y = 1 %}<nldd-list-item>{% endif %}a</nldd-list-item></nldd-list>`;
+			const items = await nodes(source, 'a.html.j2', 'nldd-list-item');
+			assert.ok(items.every((item) => item.parent.name === 'nldd-list'));
+		});
+	}
+
 	it('reads each branch after one that leaves an element open', async () => {
 		const source = '{% if a %}<div class="a">{% elif b %}<div class="b">{% else %}<nldd-bestaat-niet></nldd-bestaat-niet>{% endif %}x</div>';
 		assert.ok((await rules(source, 'a.html.j2')).includes('unknown-element'));

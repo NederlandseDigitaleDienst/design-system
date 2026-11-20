@@ -238,7 +238,9 @@ function parseMarkup(source, { selfClosing, original = source, lowerCase = false
 	return handler.root;
 }
 
-const OPENS_BLOCK = /^\{%-?\s*(if|for|with|block|macro|call|filter|autoescape|trans|blocktrans)\b/;
+// Every tag that has a `{% end… %}`: one missing here would end the `{% if %}` around it too early.
+// `set` only in its block form, without `=`.
+const OPENS_BLOCK = /^\{%-?\s*(?:(if|for|with|block|macro|call|filter|autoescape|trans|blocktrans|blocktranslate|raw|spaceless|verbatim|cache|language|localize|ifchanged)\b|set\b(?![^%]*=))/;
 const CLOSES_BLOCK = /^\{%-?\s*end/;
 
 /** The same for Go templates and Handlebars: `{{if}}…{{end}}`, `{{#if}}…{{/if}}`. */
