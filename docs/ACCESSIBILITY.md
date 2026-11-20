@@ -1,6 +1,6 @@
 # Toegankelijkheid
 
-Een component kan een pagina niet toegankelijk maken. Het kan wel veel werk uit handen nemen, en zeggen wat er nog van jou is. Deze pagina legt die grens vast, per succescriterium van WCAG.
+Een component alleen maakt een pagina niet toegankelijk, het hangt er vaak van af hoe je het gebruikt. Maar een goed component kan veel werk uit handen nemen. Deze pagina legt uit wat je van componenten kunt verwachten, en wat je zelf nog zou moeten doen.
 
 ## Waar we op bouwen
 
@@ -8,9 +8,9 @@ We bouwen voor WCAG 2.2 niveau AA. Dat is een stap verder dan wat DigiToegankeli
 
 Of een pagina voldoet, bepaal je per pagina. De componenten zijn daarvoor een voorwaarde en geen garantie: met de juiste onderdelen kun je nog steeds een pagina bouwen die niet te volgen is.
 
-## Een designsysteem is een auteurstool
+## Een designsysteem is een “authoring tool”
 
-Wie met dit systeem bouwt, maakt webcontent met een hulpmiddel. Daar bestaat een W3C-standaard voor: ATAG 2.0, de Authoring Tool Accessibility Guidelines. Deel B daarvan vraagt dat een hulpmiddel zijn auteurs helpt om toegankelijke content te maken. We claimen geen conformiteit met ATAG, die is geschreven voor een CMS en niet voor een pakket op npm. We gebruiken deel B wel als maatstaf voor wat het systeem hoort te doen.
+Wie met dit systeem bouwt, maakt webcontent met een hulpmiddel. Daar bestaat een W3C-standaard voor: [ATAG 2.0](https://www.w3.org/WAI/standards-guidelines/atag/), de Authoring Tool Accessibility Guidelines. Deel B daarvan vraagt dat een hulpmiddel je helpt om toegankelijke content te maken. We claimen geen conformiteit met ATAG, maar gebruiken deel B van ATAG wel als maatstaf voor wat het systeem hoort te doen.
 
 | ATAG 2.0, deel B | Hier |
 |---|---|
