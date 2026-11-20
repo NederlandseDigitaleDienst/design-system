@@ -46,11 +46,10 @@ function valueEdits(source, startTag, name, values) {
 	);
 }
 
-/** The text of a value written out in the markup, quoted or as a string literal in JSX braces. */
+/** The text of a value written out in the markup, quoted or bare. A value in braces is an expression, and has none. */
 function writtenText(source, found) {
 	const value = found?.value;
-	if (!value || found.prefix || found.templated) return undefined;
-	if (value.quote === '{') return BRACED_LITERAL.exec(source.slice(value.start, value.end))?.slice(2).find((group) => group !== undefined);
+	if (!value || found.prefix || found.templated || value.quote === '{') return undefined;
 	return value.quote ? source.slice(value.start + 1, value.end - 1) : source.slice(value.start, value.end);
 }
 
@@ -95,7 +94,7 @@ function translationEdits(source, finding, translation) {
 		const existing = findAttribute(startTag, 'translations');
 		if (!existing) return [{ from: found.start, to: found.end, text: translationsAttribute([[key, text]]) }];
 		const entries = writtenTranslations(source, existing);
-		if (!entries || entries.some(([name]) => name === key)) return [];
+		if (!entries || entries.some(([existingKey]) => existingKey === key)) return [];
 		const removal = removeEdits(source, finding, name);
 		if (removal.length === 0) return [];
 		return [{ from: existing.start, to: existing.end, text: translationsAttribute([...entries, [key, text]]) }, ...removal];
@@ -324,6 +323,8 @@ const isSameEdit = (a, b) => a.from === b.from && a.to === b.to && a.text === b.
 const overlaps = (a, b) => a.from === b.from || (a.from < b.to && b.from < a.to);
 
 /**
+ * One pass of fixes. An edit that overlaps one already taken is left for the next pass, so a
+ * caller applies this until `fixed` is 0, as fixUntilStable does.
  * @returns {{ source: string, fixed: number, renamedTags: Map<string, string> }}
  */
 export function applyFixes(source, findings) {
