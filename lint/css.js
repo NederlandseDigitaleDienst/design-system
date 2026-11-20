@@ -185,7 +185,12 @@ export function tokenReferences(source, lineComments = true) {
 	const plain = withoutComments(source, lineComments);
 	return [...plain.matchAll(/var\(\s*(--(?:primitives|semantics|components|context)-[\w-]*)(?=\s*[,)])/g)]
 		.filter((match) => !match[1].endsWith('-'))
-		.map((match) => ({ name: match[1], offset: match.index + match[0].indexOf(match[1]) }));
+		.map((match) => ({
+			name: match[1],
+			offset: match.index + match[0].indexOf(match[1]),
+			// `var(--a, red)`: while the token does not exist, the fallback is what shows.
+			fallback: /^\s*,/.test(plain.slice(match.index + match[0].length)),
+		}));
 }
 
 /**

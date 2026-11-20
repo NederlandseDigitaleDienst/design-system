@@ -681,9 +681,17 @@ describe('--fix', () => {
 
 	it('renames a token that got another name, wherever the file reads it', () => {
 		const old = '--context-parent-background-color';
-		assert.equal(fixed('a.css', `.a { background: var(${old}); color: var( ${old}, red ); }`).text, '.a { background: var(--context-background-color); color: var( --context-background-color, red ); }');
+		assert.equal(fixed('a.css', `.a { background: var(${old}); color: var( ${old} ); }`).text, '.a { background: var(--context-background-color); color: var( --context-background-color ); }');
 		assert.equal(fixed('a.tsx', `export const A = () => <div style={{ color: "var(${old})" }} />;`).text, 'export const A = () => <div style={{ color: "var(--context-background-color)" }} />;');
 		assert.equal(fixed('a.html', `<nldd-text text="a" style="color: var(${old})"></nldd-text>`).text, '<nldd-text text="a" style="color: var(--context-background-color)"></nldd-text>');
+	});
+
+	it('leaves a token with a fallback alone, which is what the page shows now, and says so', () => {
+		const source = '.a { color: var(--context-parent-background-color, #fff); gap: var(--context-parent-background-color , 0); }';
+		const { text, stdout } = fixed('a.css', source);
+		assert.equal(text, source);
+		assert.match(stdout, /Use `--context-background-color`\. The fallback shows until you do, so `--fix` leaves this one\./);
+		assert.doesNotMatch(stdout, /fixable with --fix/);
 	});
 
 	it('leaves a token alone that is gone without a successor, or that the file sets itself', () => {
@@ -1855,6 +1863,9 @@ describe('CSS', () => {
 	it('names the endings of a token whose name stops short', async () => {
 		assert.deepEqual(await findingsIn('.a { font: var(--primitives-font-body-sm-regular); }', 'a.css'), [
 			['token-not-found', 'There is no token `--primitives-font-body-sm-regular` in this version. The tokens with this name end in `-flat`, `-loose`, `-snug` or `-tight`.'],
+		]);
+		assert.deepEqual(await findingsIn('.a { font-family: var(--primitives-font-family-mono); }', 'a.css'), [
+			['token-not-found', 'There is no token `--primitives-font-family-mono` in this version. The closest is `--primitives-font-family-monospace`.'],
 		]);
 		assert.deepEqual(await findingsIn('.a { color: var(--semantics); }', 'a.css'), []);
 		assert.match((await findingsIn('.a { color: var(--semantics-buttons); }', 'a.css'))[0][1], /in this version\.$/);

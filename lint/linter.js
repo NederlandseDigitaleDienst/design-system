@@ -272,11 +272,14 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	}
 
 	/**
-	 * The tokens that are this name with one more word, such as the line height a font
-	 * token ends in: the name stops short, and these are what it can be.
+	 * What a name that stops short can be: the tokens that are this name with one more
+	 * word, such as the line height a font token ends in, or the one token that starts with it.
 	 */
 	function longerNames(name) {
 		const longer = [...tokens].filter((token) => token.startsWith(`${name}-`) && !token.slice(name.length + 1).includes('-'));
+		// `--primitives-font-family-mono` for `-monospace`: one token starts with what was written.
+		const starting = [...tokens].filter((token) => token.startsWith(name));
+		if (longer.length < 2 && starting.length === 1) return ` The closest is \`${starting[0]}\`.`;
 		if (longer.length < 2 || longer.length > 6) return '';
 		return ` The tokens with this name end in ${longer.map((token) => `\`${token.slice(name.length)}\``).join(', ').replace(/, ([^,]*)$/, ' or $1')}.`;
 	}
@@ -297,16 +300,18 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		const report = (rule, message, { name, offset }, fix) =>
 			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, tag: name, offset, endOffset: offset + name.length, fix });
 		for (const reference of tokenReferences(source, lineComments)) {
-			const { name, offset } = reference;
+			const { name, offset, fallback } = reference;
 			if (tokens.has(name) || ownTokens.has(name) || inDesignSystemCss(offset)) continue;
 			const removed = removedTokens[name];
 			// A successor that left in a later release is no advice, and no fix.
 			const use = removed?.use && tokens.has(removed.use) ? removed.use : undefined;
-			const instead = use ? ` Use \`${use}\`.` : longerNames(name);
+			// With a fallback the page shows that now, so the new name would change what it looks like.
+			const shown = use && fallback ? ' The fallback shows until you do, so `--fix` leaves this one.' : '';
+			const instead = use ? ` Use \`${use}\`.${shown}` : longerNames(name);
 			const message = removed
 				? `\`${name}\` was removed after ${removed.last}.${instead}`
 				: `There is no token \`${name}\` in this version.${instead}`;
-			report('token-not-found', message, reference, use ? { token: use } : undefined);
+			report('token-not-found', message, reference, use && !fallback ? { token: use } : undefined);
 		}
 		for (const declaration of declared) {
 			if (!declaration.name.startsWith('--_')) continue;
