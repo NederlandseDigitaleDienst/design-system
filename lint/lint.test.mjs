@@ -734,6 +734,8 @@ describe('--fix', () => {
 		for (const attribute of ['size={n}', 'size={5 + n}', 'size={`${n}`}', 'size={n ? 5 : 4}', 'size={7}']) {
 			assert.equal(rename(attribute), `<nldd-title text="a" ${attribute} />`);
 		}
+		// Astro reads any braces as an expression, so there the value stays as written.
+		assert.equal(fixed('a.astro', '---\n---\n<nldd-title text="a" size={5} />').text, '---\n---\n<nldd-title text="a" size={5} />');
 	});
 
 	it('renames a token that got another name, wherever the file reads it', () => {

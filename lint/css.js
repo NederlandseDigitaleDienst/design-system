@@ -22,6 +22,7 @@ const COMMENTS = new Map();
  * markup has apostrophes, so there strings are off unless asked for.
  */
 export const withoutComments = (source, lineComments = true, strings = lineComments) => {
+	// Shared and global: only for replace(), which resets lastIndex; exec() or test() would not.
 	const key = `${lineComments}${strings}`;
 	if (!COMMENTS.has(key)) COMMENTS.set(key, new RegExp([...(strings ? [STRING] : []), BLOCK_COMMENT, ...(lineComments ? [LINE_COMMENT] : [])].join('|'), 'g'));
 	return source.replace(COMMENTS.get(key), (text) => (text[0] === '"' || text[0] === "'" ? text : text.replace(/[^\n]/g, ' ')));

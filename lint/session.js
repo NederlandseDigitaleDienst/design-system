@@ -10,7 +10,7 @@ import { lstatSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { extname, relative, resolve, sep } from 'node:path';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS } from './rule-data.js';
-import { DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, isBundle, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
+import { DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, partialExcludes, isBundle, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
 
 /** Every name `--select`, `--ignore` and .nldd-lint.json may use: rule ids, aliases and groups. */
 export function knownKeys(data) {
@@ -102,7 +102,7 @@ function fixReferences(renamedTags, paths, root, exclude) {
  * @param {boolean} [options.fix] - write the fixes that are certain
  * @param {(filename: string) => boolean} [options.keep] - read this file even without a component
  * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number,
- *   notUtf8: string[], symlinks: string[], unstable: string[], references?: { fixed: number, files: number, remaining: string[] } }>}
+ *   notUtf8: string[], symlinks: string[], unstable: string[], partialExcludes: { entry: string, file: string }[], references?: { fixed: number, files: number, remaining: string[] } }>}
  */
 export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false }) {
 	const everything = readsEverything(data, severities);
@@ -168,5 +168,6 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	// Not in `files`: what has our markup and was not read, so the summary can say so.
 	// Counted on the markup, so a suppressed `file-not-read` does not make it read.
 	const unread = inputs.filter(({ filename, source }) => isUnread(filename) && hasOurMarkup(source)).length;
-	return { results, files, unread, fixed, fixedFiles, notUtf8, symlinks, unstable, references };
+	const partial = input ? [] : partialExcludes(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS]);
+	return { results, files, unread, fixed, fixedFiles, notUtf8, symlinks, unstable, partialExcludes: partial, references };
 }

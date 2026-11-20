@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { describe, it } from 'node:test';
 import { applyFixes } from './fix.js';
 import { formatGithub, formatStatistics } from './format.js';
-import { findFiles, readBaseline, readConfig } from './project.js';
+import { findFiles, partialExcludes, readBaseline, readConfig } from './project.js';
 import { loadData, resolveSeverities } from './rule-data.js';
 import { fixUntilStable, lintProject } from './session.js';
 
@@ -89,6 +89,14 @@ describe('project paths', () => {
 		assert.deepEqual(found(['legacy/a.html']), ['b.html', 'src/legacy-new.html', 'sub/map.html']);
 		assert.deepEqual(found(['src/legacy/']), ['b.html', 'src/legacy-new.html', 'sub/map.html']);
 		assert.deepEqual(found(['./src/legacy', 'b.html']), ['src/legacy-new.html', 'sub/map.html']);
+	});
+
+	it('names an exclude entry that only matched part of a name', () => {
+		const root = project({ 'generated/a.html': '', 'legacy/b.html': '', 'c.test.html': '' });
+		assert.deepEqual(partialExcludes([], root, ['gen', 'legacy', '.test.', 'dist']), [
+			{ entry: 'gen', file: 'generated/a.html' },
+			{ entry: '.test.', file: 'c.test.html' },
+		]);
 	});
 
 	it('takes only paths in exclude', () => {

@@ -128,6 +128,9 @@ async function runLint(data, paths, options) {
 	});
 	const { results } = session;
 	for (const filename of session.notUtf8) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
+	for (const { entry, file } of session.partialExcludes) {
+		console.error(`"exclude" entry "${entry}" no longer leaves out ${file}: an entry is a whole file or directory name now.`);
+	}
 	for (const filename of session.symlinks) console.error(`Skipped ${relative(root, filename)}: it is a symbolic link.`);
 	for (const filename of session.unstable) console.error(`Stopped fixing ${relative(root, filename)}: fixes kept changing it. Run --fix again, or look at the findings.`);
 	if (options.fix) console.error(`Fixed ${session.fixed} in ${session.fixedFiles} of ${session.files} files.`);

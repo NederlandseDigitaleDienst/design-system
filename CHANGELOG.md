@@ -22,7 +22,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **`exclude` in `.nldd-lint.json` matches whole file and directory names.** `"legacy"` and `"src/legacy/"` still leave out `src/legacy/a.html`, wherever it sits, but an entry no longer matches part of a name. `"gen"` also left out `generated/`, and `"a"` left out `sub/map.html`, so the project read as clean while nothing was checked. A file that such an entry skipped is now checked and can bring new findings: write the whole name (`"generated"`) to keep leaving it out. An entry that is not a string is now an error.
+- **`exclude` in `.nldd-lint.json` matches whole file and directory names.** `"legacy"` and `"src/legacy/"` still leave out `src/legacy/a.html`, wherever it sits, but an entry no longer matches part of a name. `"gen"` also left out `generated/`, and `"a"` left out `sub/map.html`, so the project read as clean while nothing was checked. A file that such an entry skipped is now checked and can bring new findings: write the whole name (`"generated"`) to keep leaving it out. `nldd lint` names each entry that no longer leaves out a file it used to skip. An entry that is not a string is now an error.
 
 ### Fixed
 

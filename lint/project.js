@@ -67,7 +67,7 @@ function matchesExclude(path, patterns) {
 	return patterns.map(normalizeEntry).some((entry) => entry !== '' && `/${path}/`.includes(`/${entry}/`));
 }
 
-export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENSIONS) {
+function listFiles(paths, root, extensions) {
 	const files =
 		paths.length === 0
 			? (trackedFiles(root, extensions) ?? walkDirectory(root, [], extensions))
@@ -76,7 +76,24 @@ export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENS
 					if (!existsSync(full)) throw new Error(`No such file or directory: ${path}`);
 					return statSync(full).isDirectory() ? walkDirectory(full, [], extensions) : [full];
 				});
-	return [...new Set(files)].filter((file) => existsSync(file) && !matchesExclude(relativePath(root, file), exclude));
+	return [...new Set(files)].filter((file) => existsSync(file));
+}
+
+export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENSIONS) {
+	return listFiles(paths, root, extensions).filter((file) => !matchesExclude(relativePath(root, file), exclude));
+}
+
+/**
+ * Entries that leave out nothing, while up to 0.27 they matched part of a name in one of
+ * these files: `gen` left out `generated/a.html`. Each with the first such file.
+ */
+export function partialExcludes(paths, root, exclude = [], extensions = DEFAULT_EXTENSIONS) {
+	const files = listFiles(paths, root, extensions).map((file) => relativePath(root, file));
+	return exclude.flatMap((entry) => {
+		if (normalizeEntry(entry) === '' || files.some((file) => matchesExclude(file, [entry]))) return [];
+		const file = files.find((one) => one.includes(entry));
+		return file ? [{ entry, file }] : [];
+	});
 }
 
 /** The average line length above which a script counts as minified. */
