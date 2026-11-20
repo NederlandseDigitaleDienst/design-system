@@ -2213,6 +2213,28 @@ describe('renamed events', () => {
 		assert.equal(finding.fix, undefined);
 	});
 
+	it('finds the old name in a function of the app that is about events, such as a hook', async () => {
+		const find = async (source) => (await linter.lintSource(source, 'a.tsx')).findings.filter(({ rule }) => rule === 'event-renamed');
+		// A plain name may be another library's, so no fix, as with an emitter.
+		const [plain] = await find("useNlddEvent(ref, 'tabchange', show);");
+		assert.equal(plain.message, renamed);
+		assert.equal(plain.fix, undefined);
+		// A name with nldd- can only be ours.
+		const [prefixed] = await find('useEventListener(board, "nldd-move", onMove);');
+		assert.deepEqual(prefixed.fix, { event: 'move' });
+		assert.equal((await find("listen('nldd-close', hide);")).length, 1);
+	});
+
+	it('leaves a function that fires the name, and one that is not about events, alone', async () => {
+		const source = [
+			"el.dispatchEvent(new CustomEvent('nldd-move'));",
+			"fireEvent(el, new CustomEvent('tabchange'));",
+			"track('tabchange');",
+			"const label = t('nldd-close');",
+		].join('\n');
+		assert.deepEqual(await messagesIn(source, 'a.ts'), []);
+	});
+
 	it('takes an arrow function with a parameter of that name for no Angular binding', async () => {
 		assert.deepEqual(await messagesIn('const c = (tabchange) => d;\nconst e = x && (tabchange) => f;', 'a.ts'), []);
 	});

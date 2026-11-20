@@ -23,6 +23,9 @@ here; consult the commit history if you need that level of detail.
 
 - **`compare-builds.mjs` in the `nldd-design-upgrade` skill.** It opens every page of two builds of a static site, at 1280 and at 390 pixels wide, and writes one image per page that differs: before and after side by side, with an outline around each `nldd-*` element that changed size, is no longer drawn, or kept its size and looks different. Content that only moved down the page does not count. It needs Playwright with Chromium.
 
+- **`nldd lint` finds a listener on a renamed event in a function of your own.** A hook such as `useEvent(ref, 'tabchange', show)` took the old name as an argument, where the linter did not look, so the listener went quiet without a finding. It now reports the name in a function whose own name is about events (`event` or `listen` in it). A name with `nldd-`, such as `nldd-move`, can only be the design system's, and `--fix` renames it. A plain name such as `tabchange` gets the finding without a fix.
+- **`collect-dev-findings.mjs` in the `nldd-design-upgrade` skill.** It opens the pages of a running dev build and collects what the components report in the console there: the rules of `nldd lint`, on the elements as they are rendered. That gives what the source cannot, such as text that an expression puts in an `nldd-text`. With `--crawl` it follows links of the same origin.
+
 ### Changed
 
 - **The `nldd-design-upgrade` skill covers what the linter cannot read.** It says where a version can be pinned besides `package.json`, that markup in Markdown and in strings of another language needs a search on the old names, that the built site is worth linting too, and what an upgrade brings to a project that runs `nldd lint` in its own CI. It ends with a list of when an upgrade is done.

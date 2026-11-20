@@ -365,6 +365,11 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			{ pattern: new RegExp(`(?<![\\w-])(?:@|v-on:|x-on:|(?:data-)?hx-on(?::|::|-|--))${name}(?![\\w-])`, 'dg'), fixable: true },
 			// (tabchange)="…" in Angular: an attribute with a quoted value, so `(tabchange) => …` in a script is not one.
 			{ pattern: new RegExp(`(?<=\\s)\\(${name}\\)\\s*=\\s*['"]`, 'dg'), fixable: true },
+			// A function of the app's own that takes the name, such as a hook: useEvent(ref, 'tabchange', show).
+			// Its name says it is about events. `new CustomEvent('tabchange')` fires the name rather than
+			// listening to it, and is the app's own business. A name with `nldd-` can only be ours, so that
+			// one gets the fix; a plain name may be another library's, as with an emitter.
+			{ pattern: new RegExp(`(?<![\\w$])(?<!\\bnew\\s+)(?!(?:add|remove)EventListener\\()[\\w$]*(?:[Ee]vent|[Ll]isten)[\\w$]*\\(\\s*(?:[^()'"\`]*?,\\s*)?(['"\`])${name}\\1`, 'dg'), fixable: 'prefixed' },
 		];
 	})();
 
@@ -382,7 +387,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				const message = use
 					? `\`${name}\` was renamed to \`${use}\` after ${last}, so a listener on the old name is never called.`
 					: `\`${name}\` is no longer fired after ${last}, so this listener is never called.`;
-				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && fixable ? { fix: { event: use } } : {}) });
+				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && (fixable === true || (fixable === 'prefixed' && name.startsWith('nldd-'))) ? { fix: { event: use } } : {}) });
 			}
 		}
 		return findings;
