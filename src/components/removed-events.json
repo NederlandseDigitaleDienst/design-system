@@ -1,0 +1,15 @@
+{
+	"nldd-close": {"last":"0.21.1","use":"close"},
+	"nldd-complete": {"last":"0.21.1","use":"complete"},
+	"nldd-move": {"last":"0.21.1","use":"move"},
+	"nldd-move-denied": {"last":"0.21.1","use":"move-denied"},
+	"nldd-reorder": {"last":"0.21.1","use":"reorder"},
+	"nldd-text-editor-annotation-click": {"last":"0.21.1","use":"annotation-click"},
+	"nldd-text-editor-mention": {"last":"0.21.1","use":"mention"},
+	"nldd-text-editor-state": {"last":"0.21.1","use":"state-change"},
+	"nldd-text-editor-typeahead": {"last":"0.21.1","use":"typeahead"},
+	"nldd-tooltip-dismiss": {"last":"0.21.1","use":"dismiss"},
+	"tabchange": {"last":"0.21.1","use":"tab-change"},
+	"tabdismiss": {"last":"0.21.1","use":"tab-dismiss"},
+	"tabempty": {"last":"0.21.1","use":"tab-empty"}
+}

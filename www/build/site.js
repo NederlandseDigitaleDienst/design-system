@@ -655,7 +655,8 @@ function elementApi(element) {
 		text: describe(s.description),
 	}));
 	const events = (element.events ?? []).map((e) => ({ name: inlineCode(e.name), text: describe(e.description) }));
-	const lists = [apiList('Attributen', attributes), apiList('Slots', slots), apiList('Events', events)].filter(Boolean);
+	const cssProperties = (element.cssProperties ?? []).map((p) => ({ name: inlineCode(p.name), text: describe(p.description) }));
+	const lists = [apiList('Attributen', attributes), apiList('Slots', slots), apiList('Events', events), apiList('CSS-variabelen', cssProperties)].filter(Boolean);
 	// How the element works comes from the JSDoc of its class, above the tables.
 	const about = element.about ? renderMarkdown(element.about, { href: identity, literalHtml: true }).blocks : [];
 	if (!lists.length && !about.length) return '';

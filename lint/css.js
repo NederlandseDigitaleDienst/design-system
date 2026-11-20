@@ -10,17 +10,22 @@
  */
 export const TOKEN_PREFIX = /^--(primitives|semantics|components|context)-/;
 
+const STRING = /"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'/.source;
+const BLOCK_COMMENT = /\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->/.source;
+const LINE_COMMENT = /(?<![:"'(=\\])\/\/[^\n]*/.source;
+const COMMENTS = new Map();
+
 /**
  * Comments blanked out, so every offset still points at the source. Line comments
  * only where they exist: in HTML `//` starts a url, and a built page is one line.
+ * A quoted string is kept, so `"a // b"` or `"/*"` starts no comment. Prose in
+ * markup has apostrophes, so there strings are off unless asked for.
  */
-export const withoutComments = (source, lineComments = true) => {
-	const blanked = source
-		.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '))
-		.replace(/<!--[\s\S]*?-->/g, (comment) => comment.replace(/[^\n]/g, ' '));
-	return lineComments
-		? blanked.replace(/(^|[^:"'(=\\])\/\/[^\n]*/g, (line, before) => before + ' '.repeat(line.length - before.length))
-		: blanked;
+export const withoutComments = (source, lineComments = true, strings = lineComments) => {
+	// Shared and global: only for replace(), which resets lastIndex; exec() or test() would not.
+	const key = `${lineComments}${strings}`;
+	if (!COMMENTS.has(key)) COMMENTS.set(key, new RegExp([...(strings ? [STRING] : []), BLOCK_COMMENT, ...(lineComments ? [LINE_COMMENT] : [])].join('|'), 'g'));
+	return source.replace(COMMENTS.get(key), (text) => (text[0] === '"' || text[0] === "'" ? text : text.replace(/[^\n]/g, ' ')));
 };
 
 /** Strings and url() can hold a brace or a semicolon, so their contents are blanked. */
@@ -165,9 +170,10 @@ export function cssRules(source) {
 /**
  * Whether CSS is the design system's own: every rule in it is one the design system has, with no
  * property the design system does not set there. Values do not count, since a bundler
- * rewrites colors, urls and units; what a rule selects and sets survives.
+ * rewrites colors, urls and units; what a rule selects and sets survives. A token that
+ * `isKnown` does not know is never the design system's, so an app's override with a typo is not either.
  */
-export function isDesignSystemCss(css, designSystemCss) {
+export function isDesignSystemCss(css, designSystemCss, isKnown) {
 	const rules = [...cssRules(css)];
 	return (
 		rules.length > 0 &&
@@ -176,38 +182,56 @@ export function isDesignSystemCss(css, designSystemCss) {
 			// anyone's. An empty one is the app's: a minifier drops the design system's empty rules.
 			if (names.size === 0) return Boolean(names.added);
 			return Boolean(designSystemCss[key]) && [...names].every((name) => designSystemCss[key].includes(name));
-		})
+		}) &&
+		(!isKnown || tokenReferences(css).every(({ name }) => isKnown(name)))
 	);
+}
+
+/** isDesignSystemCss for one set of data, read once per CSS text: a `<style>` is asked more than once. */
+export function designSystemTester(designSystemCss = {}, isKnown = undefined) {
+	const seen = new Map();
+	return (css) => {
+		if (!seen.has(css)) seen.set(css, isDesignSystemCss(css, designSystemCss, isKnown));
+		return seen.get(css);
+	};
 }
 
 /** The design system's tokens a stylesheet names: `var(--semantics-…)`, without names built at runtime. */
 export function tokenReferences(source, lineComments = true) {
-	const plain = withoutComments(source, lineComments);
+	return tokenReferencesIn(withoutComments(source, lineComments));
+}
+
+/** tokenReferences in text whose comments are already blanked. */
+export function tokenReferencesIn(plain) {
 	return [...plain.matchAll(/var\(\s*(--(?:primitives|semantics|components|context)-[\w-]*)(?=\s*[,)])/g)]
 		.filter((match) => !match[1].endsWith('-'))
-		.map((match) => ({ name: match[1], offset: match.index + match[0].indexOf(match[1]) }));
+		.map((match) => ({
+			name: match[1],
+			offset: match.index + match[0].indexOf(match[1]),
+			// `var(--a, red)`: while the token does not exist, the fallback is what shows.
+			fallback: /^\s*,/.test(plain.slice(match.index + match[0].length)),
+		}));
 }
 
 /**
- * Custom properties a stylesheet declares, such as `--semantics-…: red`, `--_button-gap: 0`
- * or `@property --context-…`.
- */
-/**
  * Where the rule, style attribute or style string around an offset starts and ends:
- * the nearest unmatched brace, or the quote that opens it.
+ * the nearest unmatched brace, or the quote that opens it. In a stylesheet or a style
+ * object a quote is part of the rule, so `quotes: false` counts braces only, and
+ * `strings: true` skips the braces in strings between `from` and `to`.
  */
-export function enclosingBlock(plain, offset) {
-	const QUOTES = '"\'`';
+export function enclosingBlock(plain, offset, { quotes = true, strings = false, from = 0, to = plain.length } = {}) {
+	const QUOTES = quotes ? '"\'`' : '';
+	const text = strings ? plain.slice(0, from) + withoutStrings(plain.slice(from, to)) + plain.slice(to) : plain;
 	let start = offset;
-	for (let depth = 0; start > 0; start--) {
-		const char = plain[start - 1];
+	for (let depth = 0; start > from; start--) {
+		const char = text[start - 1];
 		if (char === '}') depth++;
 		else if (char === '{' && depth-- === 0) break;
 		else if (depth === 0 && QUOTES.includes(char)) break;
 	}
 	let end = offset;
-	for (let depth = 0; end < plain.length; end++) {
-		const char = plain[end];
+	for (let depth = 0; end < to; end++) {
+		const char = text[end];
 		if (char === '{') depth++;
 		else if (char === '}' && depth-- === 0) break;
 		else if (depth === 0 && QUOTES.includes(char)) break;
@@ -215,10 +239,18 @@ export function enclosingBlock(plain, offset) {
 	return { start, end };
 }
 
+/**
+ * Custom properties a stylesheet declares, such as `--semantics-…: red`, `--_button-gap: 0`
+ * or `@property --context-…`, also as a quoted key of a style object or through `setProperty()`.
+ */
 export function declarations(source, lineComments = true) {
-	const plain = withoutComments(source, lineComments);
-	return [...plain.matchAll(/(?:^|[;{\s"'`])(--[\w-]+)\s*:(?!:)|@property\s+(--[\w-]+)/g)].map((match) => {
-		const name = match[1] ?? match[2];
+	return declarationsIn(withoutComments(source, lineComments));
+}
+
+/** declarations in text whose comments are already blanked. */
+export function declarationsIn(plain) {
+	return [...plain.matchAll(/(?:^|[;{\s"'`])(--[\w-]+)["'`]?\s*:(?!:)|@property\s+(--[\w-]+)|setProperty\(\s*["'`](--[\w-]+)["'`]/g)].map((match) => {
+		const name = match[1] ?? match[2] ?? match[3];
 		return { name, offset: match.index + match[0].indexOf(name) };
 	});
 }

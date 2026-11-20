@@ -31,10 +31,7 @@
  *   `false`. WCAG 1.4.13: a persistent hover or focus overlay has to be
  *   dismissible without moving focus.
  *
- * @note A parent whose triggers sit close together, such as nldd-swatch-picker,
- * can set `--context-tooltip-pointer-events: none` on the trigger. A click on
- * the tooltip then reaches the control underneath instead of selecting the
- * trigger, and the pointer cannot rest on the tooltip itself.
+ * @cssprop --context-tooltip-pointer-events - Set it to `none` on the trigger when triggers sit close together, as in nldd-swatch-picker: a click on the tooltip then reaches the control underneath instead of selecting the trigger, and the pointer cannot rest on the tooltip itself. Unset, the tooltip takes the pointer as usual
  *
  * @note It renders through the native Popover API (`popover="manual"`) in the
  * top layer. That escapes every ancestor stacking context and `overflow:
