@@ -52,6 +52,8 @@ describe('frontend edge cases', () => {
 		['Jinja empty', 'a.html.j2', '{% for x in y %}', '{% empty %}', '{% endfor %}'],
 		['Go', 'a.gohtml', '{{if .X}}', '{{else}}', '{{end}}'],
 		['Handlebars', 'a.html', '{{#if x}}', '{{else}}', '{{/if}}'],
+		['Handlebars inverse', 'a.html', '{{#if x}}', '{{^}}', '{{/if}}'],
+		['Mustache inverse section', 'a.html', '{{^x}}<p>a</p>{{/x}}{{#if y}}', '{{else}}', '{{/if}}'],
 	]) {
 		it(`reads a balanced later ${language} branch`, async () => {
 			const source = `${open}\n<nldd-button text="V"></nldd-button>\n${otherwise}\n<nldd-bestaat-niet></nldd-bestaat-niet><img src="a.png">\n${close}`;

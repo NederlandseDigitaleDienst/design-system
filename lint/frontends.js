@@ -245,11 +245,11 @@ const CLOSES_BLOCK = /^\{%-?\s*end/;
 
 /** The same for Go templates and Handlebars: `{{if}}…{{end}}`, `{{#if}}…{{/if}}`. */
 // A Go action takes an argument, so `{{ block }}` alone is a value, not a block.
-const OPENS_MUSTACHE = /^\{\{[-~]?\s*(#|(if|range|with|block|define)\s+[^\s}])/;
+const OPENS_MUSTACHE = /^\{\{[-~]?\s*(#|\^\s*[^\s}~-]|(if|range|with|block|define)\s+[^\s}])/;
 const CLOSES_MUSTACHE = /^\{\{[-~]?\s*(\/|end\b)/;
 
-/** Another branch of a block: `{% elif %}`, `{% else %}`, `{% empty %}`, `{{else}}`. */
-const ALTERNATIVE = /^\{%-?\s*(elif|else|empty)\b|^\{\{[-~]?\s*else\b/;
+/** Another branch of a block: `{% elif %}`, `{% else %}`, `{% empty %}`, `{{else}}`, `{{^}}`. */
+const ALTERNATIVE = /^\{%-?\s*(elif|else|empty)\b|^\{\{[-~]?\s*(else\b|\^\s*[-~]?\}\})/;
 
 /** Where the branch ends that starts at `from`: the next `{% else %}` of its block, or the end of the block. */
 function endOfBranch(text, from) {
@@ -271,7 +271,7 @@ const OPTIONAL_END = new Set(['li', 'p', 'dt', 'dd', 'option', 'optgroup', 'tr',
 
 /**
  * True when every element the markup opens, it also closes, and it closes none it did not open.
- * An element whose end tag HTML may leave out (`<li>`) needs none, and `<x />` closes only where the
+ * An element whose end tag HTML may leave out (`<li>`) needs none (not `body`, `head` or `html`, rare in a branch), and `<x />` closes only where the
  * parser reads it so (`selfClosing`); in HTML it stays open. In doubt it says false: that
  * blanks a branch, which can miss a finding but never make one up.
  */
