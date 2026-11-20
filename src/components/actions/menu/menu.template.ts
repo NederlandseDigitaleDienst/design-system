@@ -3,6 +3,7 @@ import type { NLDDMenuItem, NLDDMenu, NLDDMenuGroup } from './menu.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 import { linkRel } from '../../../utilities/link-rel.js';
 import { linkHintKey } from '../../../utilities/link-hint.js';
+import { renderQueryMark } from '../../../utilities/render-marked.js';
 
 export type MenuVariant = 'menu' | 'listbox' | 'navigation';
 
@@ -141,39 +142,21 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 	// The slot is always there, so it can report what lands in it; an icon in
 	// it wins over `icon`, which is its fallback.
 	const hasIcon = Boolean(this.icon) || this._hasIconSlot;
+	// The item draws its own parts rather than holding cells: a combo-box can
+	// hold hundreds of items, and every cell is a shadow root of its own.
 	const content = html`
 		${hasCheckColumn ? html`
-			<nldd-icon-cell
-				horizontal-alignment="center"
-				icon=${hasCheckState && this.selected ? 'check-mark' : nothing}
-			></nldd-icon-cell>
-			<nldd-spacer-cell size="4"></nldd-spacer-cell>
+			<span class="menu__item-check-mark-icon">${hasCheckState && this.selected ? html`<nldd-icon icon="check-mark"></nldd-icon>` : nothing}</span>
 		` : nothing}
-		<nldd-icon-cell
-			size="20"
+		<span class="menu__item-icon"
 			?hidden=${!hasIcon}
 		><slot
 			name="icon"
-			class="menu__item-icon"
 			@slotchange=${this._onIconSlotChange}
-		>${this.icon ? html`<nldd-icon icon=${this.icon}></nldd-icon>` : nothing}</slot></nldd-icon-cell>
-		<nldd-spacer-cell
-			size="8"
-			?hidden=${!hasIcon}
-		></nldd-spacer-cell>
-		<nldd-text-cell
-			text=${this.text}
-			query=${this.query}
-			query-mark-mode=${this.queryMarkMode}
-		></nldd-text-cell>
+		>${this.icon ? html`<nldd-icon icon=${this.icon}></nldd-icon>` : nothing}</slot></span>
+		<span class="menu__item-text">${renderQueryMark(this.text, this.query, this.queryMarkMode)}</span>
 		${this.details ? html`
-			<nldd-spacer-cell size="8"></nldd-spacer-cell>
-			<nldd-text-cell
-				width="fit-content"
-				horizontal-alignment="right"
-				color="secondary"
-				text=${this.details}
-			></nldd-text-cell>
+			<span class="menu__item-details">${this.details}</span>
 		` : nothing}
 		<!--
 			Accessibility (intentional decision): the shortcut is deliberately NOT
@@ -185,30 +168,18 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null
 			the deliberate choice rather than a missing aria-hidden.
 		-->
 		${(this.shortcut || this.shortcutMac || this.shortcutWindows || this.shortcutLinux) ? html`
-			<nldd-spacer-cell size="8"></nldd-spacer-cell>
-			<nldd-text-cell
-				width="fit-content"
-				size="md"
-				color="secondary"
-				horizontal-alignment="right"
-			>
-				<nldd-keyboard-shortcut
-					size="inherit"
-					appearance="text"
-					color="content"
-					keys=${this.shortcut || nothing}
-					mac-keys=${this.shortcutMac || nothing}
-					windows-keys=${this.shortcutWindows || nothing}
-					linux-keys=${this.shortcutLinux || nothing}
-				></nldd-keyboard-shortcut>
-			</nldd-text-cell>
+			<span class="menu__item-shortcut"><nldd-keyboard-shortcut
+				size="inherit"
+				appearance="text"
+				color="content"
+				keys=${this.shortcut || nothing}
+				mac-keys=${this.shortcutMac || nothing}
+				windows-keys=${this.shortcutWindows || nothing}
+				linux-keys=${this.shortcutLinux || nothing}
+			></nldd-keyboard-shortcut></span>
 		` : nothing}
 		${hasSubmenu ? html`
-			<nldd-spacer-cell size="6"></nldd-spacer-cell>
-			<nldd-icon-cell
-				size="20"
-				icon="chevron-right"
-			></nldd-icon-cell>
+			<span class="menu__item-submenu-icon"><nldd-icon icon="chevron-right"></nldd-icon></span>
 		` : nothing}
 	`;
 

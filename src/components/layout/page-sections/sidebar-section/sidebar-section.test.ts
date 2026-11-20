@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, sectionFixture } from '../../../../test-utils.js';
 import './sidebar-section.js';
+import '../../page/page.js';
 import '../../../lists-and-tables/list/list.js';
 import '../../../lists-and-tables/list-item/list-item.js';
 import '../../../status-and-feedback/inline-dialog/inline-dialog.js';
@@ -15,7 +16,7 @@ describe('nldd-sidebar-section', () => {
 	});
 
 	const make = async (attrs = ''): Promise<NLDDSidebarSection> => {
-		el = await fixture<NLDDSidebarSection>(`
+		el = await sectionFixture<NLDDSidebarSection>(`
 			<nldd-sidebar-section ${attrs}>
 				<p>Hoofdinhoud</p>
 				<div slot="sidebar">Zijbalk-inhoud</div>
@@ -27,10 +28,11 @@ describe('nldd-sidebar-section', () => {
 
 	const raf = (): Promise<void> => new Promise(r => requestAnimationFrame(() => r()));
 
-	// Drive the ResizeObserver by setting the host's own width, then wait for the
-	// collapsed state to settle (collapses below 1008px, expands at/above).
+	// Drive the ResizeObserver by setting the width of the page the section sits
+	// in, then wait for the collapsed state to settle (collapses below 1008px,
+	// expands at/above).
 	const setWidth = async (px: number, expectCollapsed = px < 1008): Promise<void> => {
-		el.style.width = `${px}px`;
+		el.parentElement!.style.width = `${px}px`;
 		for (let i = 0; i < 40 && el.collapsed !== expectCollapsed; i++) await raf();
 		await el.updateComplete;
 	};
@@ -68,7 +70,7 @@ describe('nldd-sidebar-section', () => {
 	});
 
 	it('does not grow when it is not the last section', async () => {
-		el = await fixture<NLDDSidebarSection>('<nldd-sidebar-section><p>Kort</p></nldd-sidebar-section><footer>na</footer>');
+		el = await sectionFixture<NLDDSidebarSection>('<nldd-sidebar-section><p>Kort</p></nldd-sidebar-section><footer>na</footer>');
 		const section = (el.tagName.toLowerCase() === 'nldd-sidebar-section' ? el : el.querySelector('nldd-sidebar-section')) as NLDDSidebarSection;
 		await waitForUpdate(section);
 		expect(getComputedStyle(section).flexGrow).toBe('0');
@@ -110,10 +112,11 @@ describe('nldd-sidebar-section', () => {
 	});
 
 	it('the sticky box clears the layers above and below it, and caps its height on what is left', async () => {
-		// What a page with a sticky header publishes: 60px of chrome above the
-		// page plus its own 50px bar, and a 20px sticky footer below.
-		el = await fixture<NLDDSidebarSection>(`
-			<nldd-sidebar-section style="--primitives-space-24: 24px; --context-inset-top: 110px; --context-inset-bottom: 20px;">
+		// What a page with a sticky header publishes when the document scrolls:
+		// 60px of chrome above the page plus its own 50px bar, a 20px sticky
+		// footer below, and no scroller of its own.
+		el = await sectionFixture<NLDDSidebarSection>(`
+			<nldd-sidebar-section style="--primitives-space-24: 24px; --context-inset-top: 110px; --context-inset-bottom: 20px; --context-scroller-height: initial;">
 				<p>Hoofdinhoud</p>
 				<div slot="sidebar">Zijbalk-inhoud</div>
 			</nldd-sidebar-section>
@@ -133,7 +136,7 @@ describe('nldd-sidebar-section', () => {
 		// What a page that owns its scroller publishes: the bars around it are
 		// outside that box, so the height to cap on is the scroller's, not the
 		// viewport's.
-		el = await fixture<NLDDSidebarSection>(`
+		el = await sectionFixture<NLDDSidebarSection>(`
 			<nldd-sidebar-section style="--primitives-space-24: 24px; --context-inset-top: 50px; --context-scroller-height: 700px;">
 				<p>Hoofdinhoud</p>
 				<div slot="sidebar">Zijbalk-inhoud</div>
@@ -178,7 +181,7 @@ describe('nldd-sidebar-section', () => {
 	});
 
 	it('the sheet-top-title-bar slot overrides the default title bar', async () => {
-		el = await fixture<NLDDSidebarSection>(`
+		el = await sectionFixture<NLDDSidebarSection>(`
 			<nldd-sidebar-section>
 				<p>Hoofdinhoud</p>
 				<div slot="sidebar">Zijbalk-inhoud</div>
@@ -260,7 +263,7 @@ describe('nldd-sidebar-section', () => {
 	});
 	describe('a link in the sheet to a place on the page', () => {
 		const makeToc = async (): Promise<void> => {
-			el = await fixture<NLDDSidebarSection>(`
+			el = await sectionFixture<NLDDSidebarSection>(`
 				<nldd-sidebar-section sidebar-label="Op deze pagina">
 					<button id="inhoud-openen">Op deze pagina</button>
 					<div style="height: 3000px"></div>
@@ -406,7 +409,7 @@ describe('nldd-sidebar-section sidebar-section-only', () => {
 	const shown = (selector: string) => getComputedStyle(el.querySelector(selector)!).display !== 'none';
 
 	it('shows an element at any depth only in the state it names', async () => {
-		el = await fixture<NLDDSidebarSection>(`<nldd-sidebar-section no-collapse>
+		el = await sectionFixture<NLDDSidebarSection>(`<nldd-sidebar-section no-collapse>
 			<div><span><button id="open" sidebar-section-only="collapsed">Filters</button></span></div>
 			<p id="kop" slot="sidebar" sidebar-section-only="expanded">Filters</p>
 			<p id="altijd">Resultaten</p>
@@ -427,5 +430,66 @@ describe('nldd-sidebar-section sidebar-section-only', () => {
 		section.removeAttribute('collapsed');
 		expect(getComputedStyle(root.querySelector('button')!).display).toBe('none');
 		host.remove();
+	});
+});
+
+// Collapsing changes the section's height. Observing the section itself then
+// ended every breakpoint crossing in a "ResizeObserver loop" error, which apps
+// report to their error tracking. And every section measures in one pass.
+describe('nldd-sidebar-section meten', () => {
+	let host: HTMLElement;
+
+	afterEach(() => cleanup(host));
+
+	const raf = (): Promise<void> => new Promise(r => requestAnimationFrame(() => r()));
+
+	it('klapt in en uit zonder ResizeObserver-fout, en meldt alleen het kruisen', async () => {
+		const errors: string[] = [];
+		const onError = (e: ErrorEvent) => errors.push(e.message);
+		window.addEventListener('error', onError);
+		host = await fixture(`<nldd-page style="width: 1200px">
+			<nldd-sidebar-section><p>Hoofdinhoud</p><div slot="sidebar">Zijbalk</div></nldd-sidebar-section>
+			<nldd-sidebar-section><p>Hoofdinhoud</p><div slot="sidebar">Zijbalk</div></nldd-sidebar-section>
+		</nldd-page>`);
+		const sections = [...host.querySelectorAll('nldd-sidebar-section')] as NLDDSidebarSection[];
+		await Promise.all(sections.map((section) => section.updateComplete));
+		await raf();
+		await raf();
+		const changes: boolean[] = [];
+		host.addEventListener('collapse-change', (e) => changes.push((e as CustomEvent).detail.collapsed));
+		expect(sections.map((section) => section.collapsed)).toEqual([false, false]);
+
+		host.style.width = '500px';
+		for (let i = 0; i < 20 && !sections.every((section) => section.collapsed); i++) await raf();
+		await raf();
+		await raf();
+		expect(sections.map((section) => section.collapsed)).toEqual([true, true]);
+
+		host.style.width = '1200px';
+		for (let i = 0; i < 20 && sections.some((section) => section.collapsed); i++) await raf();
+		await raf();
+		await raf();
+		window.removeEventListener('error', onError);
+		expect(sections.map((section) => section.collapsed)).toEqual([false, false]);
+		expect(changes).toEqual([true, true, false, false]);
+		expect(errors.filter((message) => message.includes('ResizeObserver'))).toEqual([]);
+	});
+
+	it('begint ingeklapt in een smalle kolom, zonder dat te melden', async () => {
+		const changes: boolean[] = [];
+		const onChange = (e: Event) => changes.push((e as CustomEvent).detail.collapsed);
+		document.addEventListener('collapse-change', onChange);
+		host = await fixture(`<nldd-page style="width: 500px">
+			<nldd-sidebar-section><p>Hoofdinhoud</p><div slot="sidebar">Zijbalk</div></nldd-sidebar-section>
+		</nldd-page>`);
+		const section = host.querySelector('nldd-sidebar-section') as NLDDSidebarSection;
+		await section.updateComplete;
+		await Promise.resolve();
+		await section.updateComplete;
+		expect(section.collapsed).toBe(true);
+		await raf();
+		await raf();
+		document.removeEventListener('collapse-change', onChange);
+		expect(changes).toEqual([]);
 	});
 });

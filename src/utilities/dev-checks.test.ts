@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import '../components/index.js';
 import data from '../../lint/data.generated.json';
 import { devRules } from './dev-rules.generated.js';
-import { checkElementTranslationKeys, createGlobalSheetCheck, createRegistrationCheck, findMissingSheets, findRoots, findUndefined, findViolations, lacksFoucGuard } from './dev-checks.js';
+import { checkElementTranslationKeys, createFoucCheck, createGlobalSheetCheck, createRegistrationCheck, findMissingSheets, findRoots, findUndefined, findViolations, lacksFoucGuard, settleDelay, stateRulesOf } from './dev-checks.js';
 import textCss from '../components/content/text/text.css?inline';
 import titleCss from '../components/content/title/title.css?inline';
 import linkCss from '../components/navigation/link/link.css?inline';
@@ -186,6 +186,43 @@ describe('FOUC guard', () => {
 		document.head.append(style);
 		mount('<nldd-button text="Bewaar"></nldd-button>');
 		expect(lacksFoucGuard(root)).toBe(false);
+	});
+});
+
+describe('when the checks run', () => {
+	it('re-checks every rule that reads a :state(), also in its assert', () => {
+		const ids = stateRulesOf(devRules).map((rule) => rule.id);
+		const inAssert = devRules.filter((rule) => rule.assert?.includes(':state(') && !rule.context.includes(':state('));
+		expect(inAssert.length).toBeGreaterThan(0);
+		for (const rule of inAssert) expect(ids).toContain(rule.id);
+		expect(ids.every((id) => JSON.stringify(devRules.find((rule) => rule.id === id)).includes(':state('))).toBe(true);
+	});
+
+	it('waits for a page to settle, but not longer than a second', () => {
+		expect(settleDelay(0)).toBe(300);
+		expect(settleDelay(999)).toBe(300);
+		expect(settleDelay(1000)).toBe(0);
+	});
+
+	it('checks the FOUC guard once, when the first component appears', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const check = createFoucCheck();
+		const root = document.createElement('div');
+		document.body.append(root);
+		const foucWarnings = () => warn.mock.calls.filter(([message]) => String(message).includes('fouc.css')).length;
+		// Earlier tests may leave components in the body; then the first call already counts.
+		const empty = ![...document.body.querySelectorAll('*')].some((element) => element.localName.startsWith('nldd-'));
+		try {
+			check();
+			if (empty) expect(foucWarnings()).toBe(0);
+			root.innerHTML = '<nldd-button text="Bewaar"></nldd-button>';
+			check();
+			check();
+			expect(foucWarnings()).toBe(1);
+		} finally {
+			root.remove();
+			warn.mockRestore();
+		}
 	});
 });
 

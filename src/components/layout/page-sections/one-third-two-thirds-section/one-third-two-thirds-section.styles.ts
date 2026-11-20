@@ -16,7 +16,6 @@ export const oneThirdTwoThirdsSectionStyles = css`
 	/* # Host */
 
 	:host {
-		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; 'initial' lets the
 		   block fall back to the responsive default until the mixin sets one. */
 		--_one-third-two-thirds-section-padding-top: initial;
@@ -59,19 +58,19 @@ export const oneThirdTwoThirdsSectionStyles = css`
 		align-items: center;
 
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
 			padding-top: var(--_one-third-two-thirds-section-sm-padding-top, var(--_one-third-two-thirds-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
 			padding-bottom: var(--_one-third-two-thirds-section-sm-padding-bottom, var(--_one-third-two-thirds-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
 			padding-top: var(--_one-third-two-thirds-section-md-padding-top, var(--_one-third-two-thirds-section-padding-top, var(--semantics-page-sections-md-margin-block)));
 			padding-bottom: var(--_one-third-two-thirds-section-md-padding-bottom, var(--_one-third-two-thirds-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
 			padding-top: var(--_one-third-two-thirds-section-lg-padding-top, var(--_one-third-two-thirds-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
 			padding-bottom: var(--_one-third-two-thirds-section-lg-padding-bottom, var(--_one-third-two-thirds-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
@@ -87,15 +86,15 @@ export const oneThirdTwoThirdsSectionStyles = css`
 		max-width: var(--_one-third-two-thirds-section-max-width);
 		flex-direction: column;
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			gap: var(--semantics-page-sections-sm-gap);
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			gap: var(--semantics-page-sections-md-gap);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			gap: var(--semantics-page-sections-lg-gap);
 		}
 	}
@@ -111,32 +110,32 @@ export const oneThirdTwoThirdsSectionStyles = css`
 
 		/* nowrap stops the column-direction wrap container from stretching the
 		   shorter column to fill height. */
-		@container (max-width: ${stackedMax}) {
+		@container page-container (max-width: ${stackedMax}) {
 			flex-direction: column;
 			flex-wrap: nowrap;
 		}
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			gap: var(--semantics-page-sections-sm-gap);
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			gap: var(--semantics-page-sections-md-gap);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			gap: var(--semantics-page-sections-lg-gap);
 		}
 	}
 
 	:host([vertical-alignment="center"]) .one-third-two-thirds-section__columns {
-		@container (width > ${stackedMax}) {
+		@container page-container (width > ${stackedMax}) {
 			align-items: center;
 		}
 	}
 
 	:host([vertical-alignment="bottom"]) .one-third-two-thirds-section__columns {
-		@container (width > ${stackedMax}) {
+		@container page-container (width > ${stackedMax}) {
 			align-items: flex-end;
 		}
 	}

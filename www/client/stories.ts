@@ -41,7 +41,7 @@ export interface StoryParameters {
 			/** The markup to show as code, when the example shows something else: a button that puts it on the page. */
 			render?: (args: Args) => Rendered;
 		};
-		story?: { inline?: boolean; height?: string | number; iframeHeight?: string | number };
+		story?: { inline?: boolean; height?: string | number; iframeHeight?: string | number; /** The width a framed example starts at, one of the stage's widths. */ width?: string };
 	};
 }
 

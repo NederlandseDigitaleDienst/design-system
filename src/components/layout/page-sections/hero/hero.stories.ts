@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './hero.js';
+import '../../page/page.js';
 import '../../../content/title/title.js';
 import '../../../content/rich-text/rich-text.js';
 import '../../../actions/button/button.js';
@@ -29,6 +30,7 @@ export default {
 	component: 'nldd-hero',
 	tags: ['autodocs'],
 	parameters: {
+		layout: 'fullscreen',
 		componentSource: {
 			file: 'src/components/layout/page-sections/hero/hero.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
@@ -125,41 +127,43 @@ export default {
 };
 
 const Template = (args: Record<string, any>) => html`
-	<nldd-hero
-		corner=${args.corner ?? nothing}
-		layout=${args.layout === 'overlap' ? nothing : args.layout}
-		main-background=${args.mainBackground}
-		main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
-		main-position=${args.mainPosition}
-		overlap-size=${args.overlapSize || nothing}
-		media-aspect-ratio=${args.mediaAspectRatio || nothing}
-		media-height=${args.mediaHeight || nothing}
-		media-src=${args.mediaSrc || nothing}
-		media-srcset=${args.mediaSrcset || nothing}
-		media-sizes=${args.mediaSizes || nothing}
-		media-alt=${args.mediaAlt || nothing}
-	>
-		<nldd-title
-			size="display-2"
-			text="Regels die voor je werken"
-			heading-level="1"
-		></nldd-title>
-		<nldd-spacer size="8"></nldd-spacer>
-		<nldd-rich-text>
-			<p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar.</p>
-		</nldd-rich-text>
-		<nldd-spacer size="16"></nldd-spacer>
-		<nldd-button-group>
-			<nldd-button
-				appearance="content-filled"
-				text="Bekijk de regels"
-			></nldd-button>
-			<nldd-button
-				appearance="content-tinted"
-				text="Over de Digitale Dienst"
-			></nldd-button>
-		</nldd-button-group>
-	</nldd-hero>
+	<nldd-page>
+		<nldd-hero
+			corner=${args.corner ?? nothing}
+			layout=${args.layout === 'overlap' ? nothing : args.layout}
+			main-background=${args.mainBackground}
+			main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
+			main-position=${args.mainPosition}
+			overlap-size=${args.overlapSize || nothing}
+			media-aspect-ratio=${args.mediaAspectRatio || nothing}
+			media-height=${args.mediaHeight || nothing}
+			media-src=${args.mediaSrc || nothing}
+			media-srcset=${args.mediaSrcset || nothing}
+			media-sizes=${args.mediaSizes || nothing}
+			media-alt=${args.mediaAlt || nothing}
+		>
+			<nldd-title
+				size="display-2"
+				text="Regels die voor je werken"
+				heading-level="1"
+			></nldd-title>
+			<nldd-spacer size="8"></nldd-spacer>
+			<nldd-rich-text>
+				<p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar.</p>
+			</nldd-rich-text>
+			<nldd-spacer size="16"></nldd-spacer>
+			<nldd-button-group>
+				<nldd-button
+					appearance="content-filled"
+					text="Bekijk de regels"
+				></nldd-button>
+				<nldd-button
+					appearance="content-tinted"
+					text="Over de Digitale Dienst"
+				></nldd-button>
+			</nldd-button-group>
+		</nldd-hero>
+	</nldd-page>
 `;
 
 export const Standaard = {
@@ -185,39 +189,42 @@ const cornerContent = (text: string) => html`
 export const MetAfgerondeHoek = {
 	name: 'Met afgeronde hoek',
 	render: () => html`
-		<nldd-container gap="24">
-			${['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'].map((position) => html`
-				<nldd-hero
-					corner
-					layout="contained"
-					main-position=${position}
-				>
-					<img
-						slot="media"
-						src=${MEDIA}
-						alt=""
+		<nldd-page>
+			<!-- nldd-lint-disable-next-line page-content-goes-in-section -- Shows the variants together; a page has one hero. -->
+			<nldd-container gap="24">
+				${['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'].map((position) => html`
+					<nldd-hero
+						corner
+						layout="contained"
+						main-position=${position}
 					>
-					${cornerContent(`main-position="${position}"`)}
-				</nldd-hero>
-			`)}
-			${['33.33%', '50%', '66.67%'].map((width) => html`
-				<nldd-hero
-					corner
-					layout="contained"
-					main-width=${width}
-				>
-					<img
-						slot="media"
-						src=${MEDIA}
-						alt=""
+						<img
+							slot="media"
+							src=${MEDIA}
+							alt=""
+						>
+						${cornerContent(`main-position="${position}"`)}
+					</nldd-hero>
+				`)}
+				${['33.33%', '50%', '66.67%'].map((width) => html`
+					<nldd-hero
+						corner
+						layout="contained"
+						main-width=${width}
 					>
-					${cornerContent(`main-width="${width}"`)}
+						<img
+							slot="media"
+							src=${MEDIA}
+							alt=""
+						>
+						${cornerContent(`main-width="${width}"`)}
+					</nldd-hero>
+				`)}
+				<nldd-hero corner>
+					${cornerContent('Zonder media')}
 				</nldd-hero>
-			`)}
-			<nldd-hero corner>
-				${cornerContent('Zonder media')}
-			</nldd-hero>
-		</nldd-container>
+			</nldd-container>
+		</nldd-page>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -231,31 +238,34 @@ export const MetAfgerondeHoek = {
 export const AfgerondeHoekZonderMedia = {
 	name: 'Afgeronde hoek zonder media',
 	render: () => html`
-		<nldd-container gap="24">
-			${[375, 800, 1200].map((width) => html`
-				<div style="width: min(${width}px, 100%)">
-					<nldd-container gap="24">
-						<nldd-hero corner>
-							<nldd-title
-								size="display-1"
-								text="Mijn Dienst"
-								heading-level="2"
-							></nldd-title>
-						</nldd-hero>
-						<nldd-hero corner>
-							<nldd-title
-								size="display-1"
-								text="Mijn Dienst"
-								heading-level="2"
-							></nldd-title>
-							<nldd-rich-text>
-								<p>Vraag subsidie aan voor dakisolatie of een warmtepomp, en volg je aanvraag tot hij is afgerond.</p>
-							</nldd-rich-text>
-						</nldd-hero>
-					</nldd-container>
-				</div>
-			`)}
-		</nldd-container>
+		<nldd-page>
+			<!-- nldd-lint-disable-next-line page-content-goes-in-section -- Shows the variants together; a page has one hero. -->
+			<nldd-container gap="24">
+				${[375, 800, 1200].map((width) => html`
+					<div style="width: min(${width}px, 100%)">
+						<nldd-container gap="24">
+							<nldd-hero corner>
+								<nldd-title
+									size="display-1"
+									text="Mijn Dienst"
+									heading-level="2"
+								></nldd-title>
+							</nldd-hero>
+							<nldd-hero corner>
+								<nldd-title
+									size="display-1"
+									text="Mijn Dienst"
+									heading-level="2"
+								></nldd-title>
+								<nldd-rich-text>
+									<p>Vraag subsidie aan voor dakisolatie of een warmtepomp, en volg je aanvraag tot hij is afgerond.</p>
+								</nldd-rich-text>
+							</nldd-hero>
+						</nldd-container>
+					</div>
+				`)}
+			</nldd-container>
+		</nldd-page>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -274,47 +284,53 @@ const OPPOSITE_CORNER: Record<string, string> = {
 export const AfgerondeHoekGekozen = {
 	name: 'Afgeronde hoek gekozen',
 	render: () => html`
-		<nldd-container gap="24">
-			${['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((corner) => html`
-				<nldd-hero
-					corner=${corner}
-					layout="contained"
-					main-position=${OPPOSITE_CORNER[corner]}
-				>
-					<img
-						slot="media"
-						src=${MEDIA}
-						alt=""
+		<nldd-page>
+			<!-- nldd-lint-disable-next-line page-content-goes-in-section -- Shows the variants together; a page has one hero. -->
+			<nldd-container gap="24">
+				${['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((corner) => html`
+					<nldd-hero
+						corner=${corner}
+						layout="contained"
+						main-position=${OPPOSITE_CORNER[corner]}
 					>
-					${cornerContent(`corner="${corner}"`)}
-				</nldd-hero>
-			`)}
-		</nldd-container>
+						<img
+							slot="media"
+							src=${MEDIA}
+							alt=""
+						>
+						${cornerContent(`corner="${corner}"`)}
+					</nldd-hero>
+				`)}
+			</nldd-container>
+		</nldd-page>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const AllePosities = {
 	render: () => html`
-		<nldd-container gap="24">
-			${['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'].map((position) => html`
-				<nldd-hero
-					layout="contained"
-					main-position=${position}
-				>
-					<img
-						slot="media"
-						src=${MEDIA}
-						alt=""
+		<nldd-page>
+			<!-- nldd-lint-disable-next-line page-content-goes-in-section -- Shows the variants together; a page has one hero. -->
+			<nldd-container gap="24">
+				${['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'].map((position) => html`
+					<nldd-hero
+						layout="contained"
+						main-position=${position}
 					>
-					<nldd-title
-						size="display-4"
-						text='main-position="${position}"'
-						heading-level="2"
-					></nldd-title>
-				</nldd-hero>
-			`)}
-		</nldd-container>
+						<img
+							slot="media"
+							src=${MEDIA}
+							alt=""
+						>
+						<nldd-title
+							size="display-4"
+							text='main-position="${position}"'
+							heading-level="2"
+						></nldd-title>
+					</nldd-hero>
+				`)}
+			</nldd-container>
+		</nldd-page>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -331,30 +347,33 @@ export const AllePosities = {
 export const Overlap = {
 	args: { overlapSize: '', mainPosition: 'bottom-left', mainWidth: 'auto' },
 	render: (args: Record<string, any>) => html`
-		<nldd-container gap="48">
-			${[
-				['Veel tekst', html`<nldd-rich-text><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p><p>Elke regel krijgt een vorm die mensen en systemen allebei kunnen lezen, zodat de uitvoering volgt wat er bedoeld is. Wie wil weten waarom een besluit zo uitvalt, kan het nalezen.</p></nldd-rich-text><nldd-spacer size="16"></nldd-spacer><nldd-button appearance="content-filled" text="Bekijk de regels"></nldd-button>`],
-				['Gemiddeld', html`<nldd-rich-text><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
-				['Weinig tekst', null],
-			].map(([title, body]) => html`
-				<nldd-hero
-					main-position=${args.mainPosition}
-					main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
-					overlap-size=${args.overlapSize || nothing}
-				>
-					<img
-						slot="media"
-						src=${MEDIA}
-						alt=""
+		<nldd-page>
+			<!-- nldd-lint-disable-next-line page-content-goes-in-section -- Shows the variants together; a page has one hero. -->
+			<nldd-container gap="48">
+				${[
+					['Veel tekst', html`<nldd-rich-text><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p><p>Elke regel krijgt een vorm die mensen en systemen allebei kunnen lezen, zodat de uitvoering volgt wat er bedoeld is. Wie wil weten waarom een besluit zo uitvalt, kan het nalezen.</p></nldd-rich-text><nldd-spacer size="16"></nldd-spacer><nldd-button appearance="content-filled" text="Bekijk de regels"></nldd-button>`],
+					['Gemiddeld', html`<nldd-rich-text><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
+					['Weinig tekst', null],
+				].map(([title, body]) => html`
+					<nldd-hero
+						main-position=${args.mainPosition}
+						main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
+						overlap-size=${args.overlapSize || nothing}
 					>
-					<nldd-title
-						text=${title}
-						heading-level="2"
-					></nldd-title>
-					${body ? html`<nldd-spacer size="16"></nldd-spacer>${body}` : nothing}
-				</nldd-hero>
-			`)}
-		</nldd-container>
+						<img
+							slot="media"
+							src=${MEDIA}
+							alt=""
+						>
+						<nldd-title
+							text=${title}
+							heading-level="2"
+						></nldd-title>
+						${body ? html`<nldd-spacer size="16"></nldd-spacer>${body}` : nothing}
+					</nldd-hero>
+				`)}
+			</nldd-container>
+		</nldd-page>
 	`,
 	argTypes: {
 		overlapSize: {
@@ -373,42 +392,45 @@ export const Overlap = {
  */
 export const VolleStrook = {
 	render: () => html`
-		<nldd-container gap="24">
-			<nldd-hero
-				layout="contained"
-				main-position="bottom-left"
-				main-width="full"
-			>
-				<img
-					slot="media"
-					src=${MEDIA}
-					alt=""
+		<nldd-page>
+			<!-- nldd-lint-disable-next-line page-content-goes-in-section -- Shows the variants together; a page has one hero. -->
+			<nldd-container gap="24">
+				<nldd-hero
+					layout="contained"
+					main-position="bottom-left"
+					main-width="full"
 				>
-				<nldd-title
-					size="display-3"
-					text="Volle onderstrook"
-					supporting-text='main-position="bottom-left"'
-					heading-level="1"
-				></nldd-title>
-			</nldd-hero>
-			<nldd-hero
-				layout="contained"
-				main-position="top-left"
-				main-width="full"
-			>
-				<img
-					slot="media"
-					src=${MEDIA}
-					alt=""
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					<nldd-title
+						size="display-3"
+						text="Volle onderstrook"
+						supporting-text='main-position="bottom-left"'
+						heading-level="1"
+					></nldd-title>
+				</nldd-hero>
+				<nldd-hero
+					layout="contained"
+					main-position="top-left"
+					main-width="full"
 				>
-				<nldd-title
-					size="display-3"
-					text="Volle bovenstrook"
-					supporting-text='main-position="top-left"'
-					heading-level="2"
-				></nldd-title>
-			</nldd-hero>
-		</nldd-container>
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					<nldd-title
+						size="display-3"
+						text="Volle bovenstrook"
+						supporting-text='main-position="top-left"'
+						heading-level="2"
+					></nldd-title>
+				</nldd-hero>
+			</nldd-container>
+		</nldd-page>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -420,23 +442,26 @@ export const VolleStrook = {
  */
 export const ZonderMedia = {
 	render: () => html`
-		<nldd-container gap="24">
-			<nldd-hero>
-				<nldd-title
-					size="display-2"
-					text="Kleurvlak zonder fotografie"
-					supporting-text="De main beslaat de volledige hero"
-					heading-level="1"
-				></nldd-title>
-			</nldd-hero>
-			<nldd-hero main-background="base">
-				<nldd-title
-					text="Base zonder media"
-					supporting-text="Rand zodat de vorm zichtbaar blijft"
-					heading-level="2"
-				></nldd-title>
-			</nldd-hero>
-		</nldd-container>
+		<nldd-page>
+			<!-- nldd-lint-disable-next-line page-content-goes-in-section -- Shows the variants together; a page has one hero. -->
+			<nldd-container gap="24">
+				<nldd-hero>
+					<nldd-title
+						size="display-2"
+						text="Kleurvlak zonder fotografie"
+						supporting-text="De main beslaat de volledige hero"
+						heading-level="1"
+					></nldd-title>
+				</nldd-hero>
+				<nldd-hero main-background="base">
+					<nldd-title
+						text="Base zonder media"
+						supporting-text="Rand zodat de vorm zichtbaar blijft"
+						heading-level="2"
+					></nldd-title>
+				</nldd-hero>
+			</nldd-container>
+		</nldd-page>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -447,27 +472,29 @@ export const ZonderMedia = {
  */
 export const MetRichText = {
 	render: () => html`
-		<nldd-hero main-position="bottom-left">
-			<img
-				slot="media"
-				src=${MEDIA}
-				alt=""
-			>
-			<nldd-title
-				size="display-2"
-				text="Regels die voor je werken"
-				heading-level="1"
-			></nldd-title>
-			<nldd-spacer size="16"></nldd-spacer>
-			<nldd-rich-text>
-				<p>De tekst volgt de contentkleur van de vulling, en <a href="#">links</a> erven die ook.</p>
-			</nldd-rich-text>
-			<nldd-spacer size="24"></nldd-spacer>
-			<nldd-button
-				appearance="content-filled"
-				text="Bekijk de regels"
-			></nldd-button>
-		</nldd-hero>
+		<nldd-page>
+			<nldd-hero main-position="bottom-left">
+				<img
+					slot="media"
+					src=${MEDIA}
+					alt=""
+				>
+				<nldd-title
+					size="display-2"
+					text="Regels die voor je werken"
+					heading-level="1"
+				></nldd-title>
+				<nldd-spacer size="16"></nldd-spacer>
+				<nldd-rich-text>
+					<p>De tekst volgt de contentkleur van de vulling, en <a href="#">links</a> erven die ook.</p>
+				</nldd-rich-text>
+				<nldd-spacer size="24"></nldd-spacer>
+				<nldd-button
+					appearance="content-filled"
+					text="Bekijk de regels"
+				></nldd-button>
+			</nldd-hero>
+		</nldd-page>
 	`,
 	parameters: { controls: { disable: true } },
 };

@@ -16,6 +16,7 @@ import { translate } from '../../../utilities/translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deepActiveElement } from '../../../utilities/deep-active-element.js';
 import { ListRoving } from './list.roving.js';
+import { afterParse } from '../../../utilities/after-parse.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';
 
@@ -331,10 +332,7 @@ export class NLDDList extends LitElement {
 		// that just finished. willUpdate already read these from the light DOM, so
 		// the first event has nothing to add anyway; the later ones do.
 		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])');
-		slot?.addEventListener('slotchange', () => queueMicrotask(() => {
-			this._updateItems();
-			this._updateEmpty();
-		}));
+		slot?.addEventListener('slotchange', () => queueMicrotask(() => this._refreshItems(false)));
 		this._updateItems();
 		this._syncUnmanagedControls();
 
@@ -351,13 +349,24 @@ export class NLDDList extends LitElement {
 		const noResultsSlot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="no-results"]');
 		noResultsSlot?.addEventListener('slotchange', () => queueMicrotask(() => this._updateEmpty()));
 
-		// Watch for rows being added or removed, for `hidden` toggles on them
-		// (consumer-driven filtering) and for branches opening and closing, since
-		// all three change which row paints first and last. `subtree: true` is
-		// required: a branch's rows sit inside the branch, not in the list. The
-		// callback filters on the target being a row, so `hidden` toggles on e.g.
-		// cells inside a row (container-query driven, via visibility-mixin) don't
-		// trigger a recalculation.
+		this._watchItems();
+		this._applyHostType();
+	}
+
+	/**
+	 * Watch for rows being added or removed, for `hidden` toggles on them
+	 * (consumer-driven filtering) and for branches opening and closing, since
+	 * all three change which row paints first and last. `subtree: true` is
+	 * required: a branch's rows sit inside the branch, not in the list. The
+	 * callback filters on the target being a row, so `hidden` toggles on e.g.
+	 * cells inside a row (container-query driven, via visibility-mixin) don't
+	 * trigger a recalculation.
+	 *
+	 * Runs on every connect after the first render: `disconnectedCallback` stops
+	 * the observer, and `firstUpdated` does not come again after a move.
+	 */
+	private _watchItems(): void {
+		this._itemsObserver?.disconnect();
 		this._itemsObserver = new MutationObserver((mutations) => {
 			const isRow = (node: Node | null) =>
 				node instanceof Element && node.tagName.toLowerCase() === 'nldd-list-item';
@@ -371,9 +380,7 @@ export class NLDDList extends LitElement {
 					&& (m.target.parentElement === this || isRow(m.target.parentElement));
 			});
 			if (!relevant) return;
-			this._updateItems();
-			this._updateEmpty();
-			this._syncUnmanagedControls();
+			this._refreshItems(true);
 		});
 		this._itemsObserver.observe(this, {
 			childList: true,
@@ -381,8 +388,6 @@ export class NLDDList extends LitElement {
 			attributes: true,
 			attributeFilter: ['hidden', 'expanded', 'disabled'],
 		});
-
-		this._applyHostType();
 	}
 
 	override connectedCallback() {
@@ -398,6 +403,11 @@ export class NLDDList extends LitElement {
 		this.addEventListener('keydown', this._onKeyDownCapture, true);
 		this.addEventListener('keydown', this._onKeyDown);
 		this.addEventListener('click', this._onListClick);
+		if (this.hasUpdated) {
+			this._watchItems();
+			// Rows that came or went while the list was out of the document.
+			this._refreshItems(true);
+		}
 	}
 
 	override disconnectedCallback() {
@@ -545,6 +555,27 @@ export class NLDDList extends LitElement {
 		this._updateItemContext();
 		this._updateRoving();
 		if (this.type === 'listbox') this._updateListboxOptions();
+	}
+
+	private _refreshPending = false;
+	private _refreshControls = false;
+
+	/** Everything that depends on which rows there are. Each pass walks every
+	 *  row, so while the parser is still adding rows it waits (see afterParse):
+	 *  run once per row, a page with thousands of rows in its HTML is quadratic. */
+	private _refreshItems(controls: boolean) {
+		this._refreshControls ||= controls;
+		if (this._refreshPending) return;
+		this._refreshPending = true;
+		const run = () => {
+			const syncControls = this._refreshControls;
+			this._refreshPending = false;
+			this._refreshControls = false;
+			this._updateItems();
+			this._updateEmpty();
+			if (syncControls) this._syncUnmanagedControls();
+		};
+		if (!afterParse(run, this.ownerDocument)) run();
 	}
 
 	private _contextScheduled = false;

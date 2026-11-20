@@ -58,6 +58,8 @@ import { tabBarTemplate, tabBarItemTemplate } from './tab-bar.template.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddTabBarTranslations } from './tab-bar.i18n.js';
+import { afterParse } from '../../../utilities/after-parse.js';
+import { FramePass } from '../../../utilities/frame-pass.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
@@ -218,6 +220,64 @@ export class NLDDTabBarItem extends LitElement {
 
 // # nldd-tab-bar
 
+/** What a tab bar measures before it decides; see NLDDTabBar._measure. */
+interface TabBarMeasurement {
+	items: NLDDTabBarItem[];
+	available: number;
+	widths: number[];
+	gap: number;
+	budget: number;
+}
+
+/**
+ * The tab bars that decide their overflow at the next frame, all in one
+ * pass: every bar measured, then every bar written. A frame per bar would
+ * read a layout that the bar before it has just changed, once per bar.
+ */
+const overflowFrame = new FramePass<NLDDTabBar>(bars => updateOverflows(bars.filter(bar => bar.isConnected)));
+
+function updateOverflows(bars: NLDDTabBar[]): void {
+	bars.forEach(bar => bar._setMeasuring(true));
+	const measured = bars.map(bar => bar._readMeasurement());
+	bars.forEach(bar => bar._setMeasuring(false));
+	bars.forEach((bar, i) => bar._decideOverflow(measured[i]));
+}
+
+/**
+ * One ResizeObserver for every tab bar and the parent it sits in; one per bar
+ * calls back once per bar. A parent can hold more than one bar.
+ *
+ * Only a change in width counts: what fits depends on nothing else. A parent
+ * also grows in height with everything that is added to it, and while a page
+ * loads that is every frame, for every bar in it.
+ */
+const barsOf = new Map<Element, Set<NLDDTabBar>>();
+const lastWidth = new WeakMap<Element, number>();
+let sizeObserver: ResizeObserver | null = null;
+
+function observeSize(target: Element, bar: NLDDTabBar): void {
+	sizeObserver ??= new ResizeObserver(entries => {
+		for (const entry of entries) {
+			const width = entry.contentRect.width;
+			if (lastWidth.get(entry.target) === width) continue;
+			lastWidth.set(entry.target, width);
+			barsOf.get(entry.target)?.forEach(bar => bar._scheduleOverflow());
+		}
+	});
+	const bars = barsOf.get(target) ?? new Set<NLDDTabBar>();
+	barsOf.set(target, bars);
+	bars.add(bar);
+	sizeObserver.observe(target);
+}
+
+function unobserveSize(target: Element, bar: NLDDTabBar): void {
+	const bars = barsOf.get(target);
+	if (!bars?.delete(bar) || bars.size) return;
+	barsOf.delete(target);
+	lastWidth.delete(target);
+	sizeObserver?.unobserve(target);
+}
+
 @customElement('nldd-tab-bar')
 export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslations) {
 	static override styles = tabBarStyles;
@@ -252,15 +312,17 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	_overflowItems: NLDDTabBarItem[] = [];
 
 	/** @internal What the overflow menu lists. Held while the menu is open: a tab
-	 *  chosen there moves into view, and the list would change under its blink. */
+	 *  chosen there moves into view, and the list would change under it while
+	 *  the menu closes. */
 	@state()
 	_menuItems: NLDDTabBarItem[] = [];
 
 	private _menuOpen = false;
 
-	private _resizeObserver: ResizeObserver | null = null;
 	private _itemObserver: MutationObserver | null = null;
-	private _overflowFrame: number | null = null;
+	/** The elements the shared observer watches for this bar. */
+	private _sized: Element[] = [];
+	private _syncPending = false;
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -268,9 +330,8 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 		this.addEventListener('keydown', this._handleKeyDown);
 		// The bar shrink-wraps its tabs, so it does not grow when its container
 		// does; the parent is watched too, or tabs in the menu never come back.
-		this._resizeObserver = new ResizeObserver(() => this._scheduleOverflow());
-		this._resizeObserver.observe(this);
-		if (this.parentElement) this._resizeObserver.observe(this.parentElement);
+		this._sized = this.parentElement ? [this, this.parentElement] : [this];
+		this._sized.forEach(target => observeSize(target, this));
 		this._itemObserver = new MutationObserver(this._onItemsMutated);
 		this._itemObserver.observe(this, { subtree: true, attributes: true, attributeFilter: ['text', 'icon', 'current', 'variant', 'size'] });
 		document.fonts?.ready.then(() => this._scheduleOverflow());
@@ -280,12 +341,11 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 		super.disconnectedCallback();
 		this.removeEventListener('select', this._handleItemSelect as EventListener);
 		this.removeEventListener('keydown', this._handleKeyDown);
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
+		this._sized.forEach(target => unobserveSize(target, this));
+		this._sized = [];
 		this._itemObserver?.disconnect();
 		this._itemObserver = null;
-		if (this._overflowFrame) cancelAnimationFrame(this._overflowFrame);
-		this._overflowFrame = null;
+		overflowFrame.cancel(this);
 	}
 
 	/** Whether the next pass may only swap the current tab in, rather than
@@ -293,15 +353,10 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	 *  the content. */
 	private _onlyCurrentChanged = true;
 
-	private _scheduleOverflow = (full = true): void => {
+	/** @internal At the next frame, with the other tab bars. */
+	_scheduleOverflow = (full = true): void => {
 		if (full) this._onlyCurrentChanged = false;
-		if (this._overflowFrame) return;
-		this._overflowFrame = requestAnimationFrame(() => {
-			this._overflowFrame = null;
-			const swapOnly = this._onlyCurrentChanged;
-			this._onlyCurrentChanged = true;
-			this._updateOverflow(swapOnly);
-		});
+		overflowFrame.schedule(this);
 	};
 
 	private _onItemsMutated = (records: MutationRecord[]): void => {
@@ -309,19 +364,35 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	};
 
 	/** Widths as the content wants them, and the room there is for them. */
-	private _measure() {
+	private _measure(): TabBarMeasurement | null {
+		const own = !this.hasAttribute('data-measuring');
+		if (own) this._setMeasuring(true);
+		const measured = this._readMeasurement();
+		if (own) this._setMeasuring(false);
+		return measured;
+	}
+
+	/**
+	 * @internal Lays the bar out the way it is measured: every tab at the width
+	 * its content wants. For a caller that measures many bars, so it writes
+	 * once for all of them before it reads (nldd-toolbar, updateOverflows).
+	 */
+	_setMeasuring(on: boolean): void {
+		this.toggleAttribute('data-measuring', on);
+	}
+
+	/** @internal Reads only; the bar is measuring (see _setMeasuring). */
+	_readMeasurement(): TabBarMeasurement | null {
 		const items = this._getItems();
 		const row = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar');
 		const list = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar__items');
 		const button = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar__overflow-button');
 		if (!row || !list || !button || items.length === 0) return null;
 
-		this.toggleAttribute('data-measuring', true);
 		const available = row.clientWidth;
 		const widths = items.map(item => item.getBoundingClientRect().width);
 		const gap = parseFloat(getComputedStyle(list).columnGap) || 0;
 		const buttonWidth = button.getBoundingClientRect().width;
-		this.removeAttribute('data-measuring');
 		return { items, available, widths, gap, budget: available - buttonWidth - gap };
 	}
 
@@ -355,7 +426,17 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	 * overflow button. Tabs stay where they are in the DOM and are only hidden.
 	 */
 	_updateOverflow(swapOnly = false): void {
-		const measured = this._measure();
+		this._applyMeasurement(this._measure(), swapOnly);
+	}
+
+	/** @internal What the frame pass runs, with what it measured for this bar. */
+	_decideOverflow(measured: TabBarMeasurement | null): void {
+		const swapOnly = this._onlyCurrentChanged;
+		this._onlyCurrentChanged = true;
+		this._applyMeasurement(measured, swapOnly);
+	}
+
+	private _applyMeasurement(measured: TabBarMeasurement | null, swapOnly: boolean): void {
 		if (!measured) {
 			this._applyOverflow(this._getItems(), new Set(), []);
 			return;
@@ -482,6 +563,16 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	}
 
 	_onSlotChange(): void {
+		// While the parser adds tabs, a slotchange comes per tab; one sync after
+		// the parse does for all of them. The overflow is measured after the
+		// sync, on tabs that have their size and state.
+		if (this._syncPending) return;
+		this._syncPending = afterParse(() => {
+			this._syncPending = false;
+			this._syncItems();
+			this._scheduleOverflow();
+		}, this.ownerDocument);
+		if (this._syncPending) return;
 		this._syncItems();
 		this._scheduleOverflow();
 	}

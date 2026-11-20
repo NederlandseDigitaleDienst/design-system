@@ -33,6 +33,7 @@ export const GENERATED = [
 			'lint/data.generated.json',
 			'src/assets/styles/removed-tokens.json',
 			'src/translations/removed-keys.json',
+			'src/components/removed-events.json',
 			'src/utilities/dev-rules.generated.ts',
 			'src/utilities/autoloader.generated.ts',
 		],

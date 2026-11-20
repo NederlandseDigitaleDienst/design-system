@@ -849,7 +849,12 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		const dismiss = this.shadowRoot?.querySelector<HTMLElement>('.file-field__dismiss-button');
 		if (dismiss) return dismiss;
 		const buttons = this.shadowRoot?.querySelectorAll<HTMLElement>('.file-field__choose-button, .file-field__choose-button-group nldd-button, .file-field__change-button, .file-field__more-button') ?? [];
-		return Array.from(buttons).find((button) => button.checkVisibility?.() ?? true) ?? buttons[0] ?? null;
+		// Only "Wijzigen" and the menu trade places, at a container width. Asking
+		// any other button whether it shows makes the browser compute the style of
+		// the page, for every field that renders.
+		const visible = (button: HTMLElement) => !button.matches('.file-field__change-button, .file-field__more-button')
+			|| (button.checkVisibility?.() ?? true);
+		return Array.from(buttons).find(visible) ?? buttons[0] ?? null;
 	}
 
 	/**

@@ -1,4 +1,5 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import { afterParse } from './after-parse.js';
 import { radioPositions, type RadioPosition } from './radio-position.js';
 
 /**
@@ -74,21 +75,29 @@ export class RadioGrouping implements ReactiveController {
 
 	hostConnected(): void {
 		// A tick later, once the radios parsed after this one are there too.
-		queueMicrotask(() => this.regroup());
+		queueMicrotask(() => this.regroup(true));
 	}
 
 	hostDisconnected(): void {
-		this.regroup();
+		this.regroup(true);
 	}
 
-	/** Reads which group this radio is in now, and recounts the one it left. */
-	regroup(): void {
+	/**
+	 * Reads which group this radio is in now, and recounts the one it left.
+	 *
+	 * @param batched recount once for every radio that asks in the same tick,
+	 *   or after the parse while the page is still loading. A recount reads the
+	 *   whole tree, so a page of radios that each recount on connect is
+	 *   quadratic.
+	 */
+	regroup(batched = false): void {
 		const was = this._groupedIn;
 		const now = this._key();
 		this._groupedIn = now;
 		const moved = !now || !was || was.root !== now.root || was.name !== now.name || was.form !== now.form;
-		if (was && moved) RadioGrouping._recount(was);
-		if (now) RadioGrouping._recount(now);
+		const recount = batched ? RadioGrouping._schedule : RadioGrouping._recount;
+		if (was && moved) recount(was);
+		if (now) recount(now);
 		else this._apply(null, this.host.checked);
 	}
 
@@ -98,10 +107,21 @@ export class RadioGrouping implements ReactiveController {
 		else this._apply(null, this.host.checked);
 	}
 
-	/** Unchecks the others, as checking a native radio does. */
-	uncheckOthers(): void {
+	/**
+	 * Unchecks the others, as checking a native radio does.
+	 *
+	 * @param batched at the next recount, with the other radios that render for
+	 *   the first time: of the radios that come checked in the markup, the last
+	 *   one wins. Each of them walking its group on its own is quadratic.
+	 */
+	uncheckOthers(batched = false): void {
 		const key = this._key();
 		if (!key) return;
+		if (batched) {
+			RadioGrouping._claims.add(this.host);
+			RadioGrouping._schedule(key);
+			return;
+		}
 		for (const radio of RadioGrouping._radiosIn(key)) {
 			if (radio === this.host || !radio.checked) continue;
 			radio.checked = false;
@@ -152,18 +172,80 @@ export class RadioGrouping implements ReactiveController {
 	}
 
 	private static _radiosIn({ root, name, form }: RadioGroupKey): GroupedRadio[] {
-		const radios = (root as ParentNode).querySelectorAll?.(RADIO_TAGS) ?? [];
-		return Array.from(radios).filter((radio): radio is GroupedRadio =>
-			groupings.has(radio)
-			&& radio.isConnected
-			&& (radio as GroupedRadio).name === name
-			&& isMember(radio)
-			&& (radio as GroupedRadio).internals.form === form);
+		return RadioGrouping._groupsIn(root).get(name)?.get(form) ?? [];
+	}
+
+	/** Every grouped radio in a tree, by name and form, in document order. */
+	private static _groupsIn(root: Node): Map<string, Map<HTMLFormElement | null, GroupedRadio[]>> {
+		const groups = new Map<string, Map<HTMLFormElement | null, GroupedRadio[]>>();
+		for (const radio of (root as ParentNode).querySelectorAll?.(RADIO_TAGS) ?? []) {
+			if (!groupings.has(radio) || !radio.isConnected || !isMember(radio)) continue;
+			const { name, internals } = radio as GroupedRadio;
+			const byForm = groups.get(name) ?? new Map<HTMLFormElement | null, GroupedRadio[]>();
+			groups.set(name, byForm);
+			const radios = byForm.get(internals.form) ?? [];
+			byForm.set(internals.form, radios);
+			radios.push(radio as GroupedRadio);
+		}
+		return groups;
+	}
+
+	/** The groups to recount at the next flush: per tree, the names and forms. */
+	private static _pending = new Map<Node, Map<string, Set<HTMLFormElement | null>>>();
+
+	private static _schedule = (key: RadioGroupKey): void => {
+		const pending = RadioGrouping._pending;
+		const scheduled = pending.size > 0;
+		const names = pending.get(key.root) ?? new Map<string, Set<HTMLFormElement | null>>();
+		pending.set(key.root, names);
+		const forms = names.get(key.name) ?? new Set<HTMLFormElement | null>();
+		names.set(key.name, forms);
+		forms.add(key.form);
+		if (scheduled) return;
+		const doc = key.root.ownerDocument ?? (key.root as Document);
+		if (!afterParse(RadioGrouping._flush, doc)) queueMicrotask(RadioGrouping._flush);
+	};
+
+	/** Checked radios that render for the first time, in the order they did. */
+	private static _claims = new Set<GroupedRadio>();
+
+	/** Recounts every pending group, reading each tree once. */
+	private static _flush = (): void => {
+		const pending = [...RadioGrouping._pending];
+		const claims = [...RadioGrouping._claims].reverse();
+		RadioGrouping._pending.clear();
+		RadioGrouping._claims.clear();
+		for (const [root, names] of pending) {
+			const groups = RadioGrouping._groupsIn(root);
+			for (const [name, forms] of names) {
+				for (const form of forms) {
+					const radios = groups.get(name)?.get(form) ?? [];
+					RadioGrouping._settleClaims(radios, claims);
+					RadioGrouping._place(radios);
+				}
+			}
+		}
+	};
+
+	/** The last radio that came checked keeps it; the others in its group do not. */
+	private static _settleClaims(radios: GroupedRadio[], claims: GroupedRadio[]): void {
+		const members = new Set(radios);
+		const winner = claims.find((radio) => members.has(radio) && radio.checked);
+		if (!winner) return;
+		for (const radio of radios) {
+			if (radio === winner || !radio.checked) continue;
+			radio.checked = false;
+			radio.commitFormValue();
+		}
 	}
 
 	/** A radio on its own keeps the place the browser gives it: none. */
-	private static _recount(key: RadioGroupKey): void {
-		const radios = RadioGrouping._radiosIn(key);
+	private static _recount = (key: RadioGroupKey): void => {
+		RadioGrouping._place(RadioGrouping._radiosIn(key));
+	};
+
+	/** Hands every radio of one group its place, and whether the group is answered. */
+	private static _place(radios: GroupedRadio[]): void {
 		const positions = radios.length > 1
 			? radioPositions(radios, (radio) => radio.checked, (radio) => radio.disabled)
 			: [];

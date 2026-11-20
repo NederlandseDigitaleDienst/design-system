@@ -449,3 +449,104 @@ describe('nldd-table-row onder een universele reset', () => {
 		expect(style.paddingLeft).toBe('16px');
 	});
 });
+
+describe('nldd-table terwijl de pagina geparsed wordt', () => {
+	let frame: HTMLIFrameElement | null = null;
+
+	afterEach(() => {
+		// Disconnected first: the size observer of this document would go on
+		// watching a table left in a document whose frame is gone.
+		frame?.contentDocument?.body?.replaceChildren();
+		frame?.remove();
+		frame = null;
+	});
+
+	/** Rendered in this document first: their styles cannot be adopted in another. */
+	async function rendered<T extends HTMLElement>(tag: string): Promise<T> {
+		const el = document.createElement(tag) as T;
+		document.body.append(el);
+		await (el as T & { updateComplete: Promise<unknown> }).updateComplete;
+		return el;
+	}
+
+	/** A still-loading document: open() keeps it loading until close(). */
+	function loadingDocument(): Document {
+		frame = document.createElement('iframe');
+		document.body.append(frame);
+		const doc = frame.contentDocument!;
+		doc.open();
+		doc.write('<body>');
+		return doc;
+	}
+
+	// The parser runs the microtasks after each element, so a slotchange and a
+	// mutation come per row, and each walked every row.
+	it('beslist de lege staat één keer na de parse, niet per rij', async () => {
+		const table = await rendered<NLDDTable>('nldd-table');
+		const rows = await Promise.all([0, 1, 2].map(() => rendered<NLDDTableRow>('nldd-table-row')));
+		const doc = loadingDocument();
+		doc.body.append(table);
+		let updates = 0;
+		const original = (table as unknown as { _updateEmpty: () => void })._updateEmpty.bind(table);
+		(table as unknown as { _updateEmpty: () => void })._updateEmpty = () => {
+			updates++;
+			original();
+		};
+		for (const row of rows) {
+			table.append(row);
+			for (let tick = 0; tick < 3; tick++) await Promise.resolve();
+		}
+
+		expect(doc.readyState).toBe('loading');
+		expect(updates).toBe(0);
+		expect(table.classList.contains('is-empty')).toBe(true);
+		doc.close();
+		expect(updates).toBe(1);
+		expect(table.classList.contains('is-empty')).toBe(false);
+	});
+
+	it('geeft de cellen van een rij hun rol na de parse', async () => {
+		const row = await rendered<NLDDTableRow>('nldd-table-row');
+		const cells = await Promise.all([0, 1, 2].map(() => rendered<HTMLElement>('nldd-cell')));
+		cells[1].setAttribute('row-header', '');
+		const doc = loadingDocument();
+		doc.body.append(row);
+		for (const cell of cells) {
+			row.append(cell);
+			for (let tick = 0; tick < 3; tick++) await Promise.resolve();
+		}
+
+		expect(cells[0].hasAttribute('role')).toBe(false);
+		doc.close();
+		expect(cells.map((cell) => cell.getAttribute('role'))).toEqual(['cell', 'rowheader', 'cell']);
+		expect(cells[0].getAttribute('width')).toBe('full');
+	});
+});
+
+// The track list the table writes changes its height. Observing the table
+// itself then ended every breakpoint crossing in a "ResizeObserver loop" error,
+// which apps report to their error tracking.
+describe('nldd-table bij een andere breedte', () => {
+	let host: HTMLElement;
+
+	afterEach(() => cleanup(host));
+
+	it('wisselt van kolommen zonder ResizeObserver-fout', async () => {
+		const errors: string[] = [];
+		const onError = (e: ErrorEvent) => errors.push(e.message);
+		window.addEventListener('error', onError);
+		host = await fixture(`<div style="width: 1100px"><nldd-table columns="1fr" sm-columns="1fr" lg-columns="1fr 1fr 1fr 1fr">
+			<nldd-table-row><nldd-text-cell text="A"></nldd-text-cell><nldd-text-cell text="B"></nldd-text-cell><nldd-text-cell text="C"></nldd-text-cell><nldd-text-cell text="D"></nldd-text-cell></nldd-table-row>
+		</nldd-table></div>`);
+		const table = host.querySelector('nldd-table') as HTMLElement;
+		await waitForUpdate(table);
+		await nextFrames();
+		expect(table.style.getPropertyValue('--_table-columns')).toBe('1fr 1fr 1fr 1fr');
+		host.style.width = '400px';
+		await nextFrames();
+		await nextFrames();
+		window.removeEventListener('error', onError);
+		expect(table.style.getPropertyValue('--_table-columns')).toBe('1fr');
+		expect(errors.filter((message) => message.includes('ResizeObserver'))).toEqual([]);
+	});
+});

@@ -557,6 +557,36 @@ describe('nldd-{naam}', () => {
 
 ---
 
+## VERPLAATSEN IN DE DOM
+
+Een element dat verplaatst wordt (een sheet naar `document.body`, een rij die je versleept, een `Teleport` in Vue) krijgt `disconnectedCallback` en daarna `connectedCallback`. `firstUpdated` komt niet opnieuw, en een `slotchange` ook niet, want de slot houdt zijn inhoud.
+
+Wat `disconnectedCallback` afbreekt, zet `connectedCallback` dus weer op. Zet het opzetten in een eigen methode en roep die op twee plekken aan: in `firstUpdated`, en in `connectedCallback` achter `if (this.hasUpdated)`. Laat die methode ook meteen bijwerken wat de observer anders had gemeld, want er kan iets veranderd zijn terwijl het element los was.
+
+```typescript
+override connectedCallback(): void {
+	super.connectedCallback();
+	// Moved in the DOM: `firstUpdated` does not come again.
+	if (this.hasUpdated) this._watchRows();
+}
+
+override firstUpdated(): void {
+	this._watchRows();
+}
+
+override disconnectedCallback(): void {
+	super.disconnectedCallback();
+	this._rowsObserver?.disconnect();
+	this._rowsObserver = null;
+}
+```
+
+Een listener die alleen tijdens een gebaar bestaat (een `pointerup` na een `pointerdown`) valt hierbuiten: die ruim je bij loskoppelen op en hoeft niet terug te komen.
+
+`src/reconnect.test.ts` meet dit. Hij telt welke observers en listeners leven, verplaatst het component en faalt op wat er daarna niet meer is. Zet een component dat iets opzet in `firstUpdated` of vanuit een `slotchange` daar in `CASES`, met markup waarin dat ook echt gebeurt.
+
+---
+
 ## i18n
 
 Zie `/translation-keys` skill voor alle conventies rond translation keys, types en implementatie.
@@ -868,6 +898,7 @@ Andere regels die hetzelfde slotted element raken (`:hover`, `@media`, een speci
 - [ ] `declare global` block
 - [ ] Private methods met underscore
 - [ ] Geen inline styles of templates in de component class
+- [ ] Wat `disconnectedCallback` afbreekt, komt terug vanuit `connectedCallback`, en het component staat in `src/reconnect.test.ts` (zie VERPLAATSEN IN DE DOM)
 
 **Taal:**
 - [ ] Story namen, JSDoc en component docs in het Nederlands

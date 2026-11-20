@@ -1,6 +1,7 @@
 /** Renders findings. `text` is for people, `json` for agents and tools, `github` for CI. */
 
 import { relative } from 'node:path';
+import { relativePath } from './project.js';
 
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
 const paint = (code) => (text) => (useColor ? `\u001b[${code}m${text}\u001b[0m` : text);
@@ -82,7 +83,7 @@ export function formatStatistics(results, { files, unread, ms, skipped }) {
 	for (const { rule, severity, fix } of results.flatMap(({ findings }) => findings)) {
 		const entry = counts.get(rule) ?? { rule, severity, count: 0 };
 		entry.count += 1;
-		entry.fixable = Boolean(fix);
+		entry.fixable ||= Boolean(fix);
 		counts.set(rule, entry);
 	}
 	const rows = [...counts.values()].sort((a, b) => b.count - a.count || a.rule.localeCompare(b.rule));
@@ -101,7 +102,7 @@ export function formatJson(results, { root, explainRule, skipped = 0, loose = 0 
 		list.map((finding) => {
 			const detail = explainRule(finding.rule);
 			return {
-				file: relative(root, filename),
+				file: relativePath(root, filename),
 				line: finding.line,
 				column: finding.column,
 				severity: finding.severity,
@@ -129,7 +130,7 @@ export function formatGithub(results, { root, loose = 0 }) {
 	for (const { filename, findings } of results) {
 		for (const { severity, line, column, rule, message } of findings) {
 			const level = { error: 'error', warn: 'warning', hint: 'notice' }[severity];
-			const file = relative(root, filename);
+			const file = relativePath(root, filename);
 			lines.push(`::${level} file=${escapeProperty(file)},line=${line},col=${column},title=${rule}::${escapeGithub(message)}`);
 		}
 	}

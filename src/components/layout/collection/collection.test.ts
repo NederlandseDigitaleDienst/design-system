@@ -490,3 +490,71 @@ describe('nldd-collection', () => {
 		expect(roles).toEqual(['listitem', 'listitem', null]);
 	});
 });
+
+describe('nldd-collection while the page is parsed', () => {
+	let frame: HTMLIFrameElement | null = null;
+
+	afterEach(() => {
+		frame?.remove();
+		frame = null;
+	});
+
+	it('walks the items once after the parse, not once per item', async () => {
+		// Rendered in this document first: its styles cannot be adopted in another.
+		const collection = document.createElement('nldd-collection');
+		document.body.append(collection);
+		await collection.updateComplete;
+		frame = document.createElement('iframe');
+		document.body.append(frame);
+		const doc = frame.contentDocument!;
+		doc.open();
+		doc.write('<body>');
+		doc.body.append(collection);
+		for (let i = 0; i < 3; i++) {
+			collection.append(doc.createElement('div'));
+			// The parser runs the microtasks after each element.
+			for (let tick = 0; tick < 3; tick++) await Promise.resolve();
+		}
+
+		expect(doc.readyState).toBe('loading');
+		expect(collection.querySelectorAll('[role="listitem"]').length).toBe(0);
+		doc.close();
+		expect(collection.querySelectorAll('[role="listitem"]').length).toBe(3);
+	});
+});
+
+describe('nldd-collection paging while the page is parsed', () => {
+	let frame: HTMLIFrameElement | null = null;
+
+	afterEach(() => {
+		frame?.remove();
+		frame = null;
+	});
+
+	it('hides the items past the page as they come, before the parse is done', async () => {
+		const collection = document.createElement('nldd-collection');
+		collection.setAttribute('max-items', '2');
+		document.body.append(collection);
+		await collection.updateComplete;
+		frame = document.createElement('iframe');
+		document.body.append(frame);
+		const doc = frame.contentDocument!;
+		doc.open();
+		doc.write('<body>');
+		doc.body.append(collection);
+		const footer = doc.createElement('div');
+		footer.slot = 'footer';
+		collection.append(footer);
+		for (let i = 0; i < 4; i++) {
+			collection.append(doc.createElement('div'));
+			for (let tick = 0; tick < 3; tick++) await Promise.resolve();
+		}
+
+		const items = () => [...collection.querySelectorAll(':scope > div:not([slot])')].map((el) => (el as HTMLElement).hidden);
+		expect(doc.readyState).toBe('loading');
+		expect(items()).toEqual([false, false, true, true]);
+		expect(footer.hidden).toBe(false);
+		doc.close();
+		expect(items()).toEqual([false, false, true, true]);
+	});
+});

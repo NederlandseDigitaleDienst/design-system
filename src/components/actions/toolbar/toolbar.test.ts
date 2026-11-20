@@ -863,6 +863,27 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 		vi.restoreAllMocks();
 	});
 
+	it('measures a toolbar with padding no more often than one without', async () => {
+		const count = async (style: string) => {
+			const proto = customElements.get('nldd-toolbar')!.prototype as { _measureSteps: () => void };
+			const measure = vi.spyOn(proto, '_measureSteps');
+			el = await fixture(`
+				<nldd-toolbar accessible-label="Balk" style="width: 340px; ${style}">
+					<nldd-toolbar-item slot="start"><nldd-button text="Bewaar"></nldd-button></nldd-toolbar-item>
+				</nldd-toolbar>
+			`);
+			await waitForUpdate(el);
+			await frames(10);
+			const calls = measure.mock.calls.length;
+			measure.mockRestore();
+			cleanup(el);
+			return calls;
+		};
+		const plain = await count('');
+		const padded = await count('padding-inline: 24px');
+		expect(padded).toBe(plain);
+	});
+
 	it('measures again when a control inside an item gets narrower', async () => {
 		el = await fixture(`
 			<nldd-toolbar accessible-label="Balk" style="width: 340px">
@@ -875,8 +896,8 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 		await waitForUpdate(el);
 		await frames(10);
 
-		const toolbar = el as unknown as { _measureAndUpdate: () => void };
-		const measure = vi.spyOn(toolbar, '_measureAndUpdate');
+		const toolbar = el as unknown as { _measureSteps: () => void };
+		const measure = vi.spyOn(toolbar, '_measureSteps');
 
 		el.querySelector('#name')!.setAttribute('text', 'Kort');
 		await frames(14);
@@ -928,8 +949,8 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 		await waitForUpdate(el);
 		await frames(10);
 
-		const toolbar = el as unknown as { _measureAndUpdate: () => void };
-		const measure = vi.spyOn(toolbar, '_measureAndUpdate');
+		const toolbar = el as unknown as { _measureSteps: () => void };
+		const measure = vi.spyOn(toolbar, '_measureSteps');
 
 		el.querySelector('#name2')!.setAttribute('text', 'Kort');
 		await frames(20);
@@ -1064,5 +1085,86 @@ describe('nldd-toolbar – moved in the DOM', () => {
 		await new Promise(r => setTimeout(r, 100));
 		await frames(5);
 		expect(hidden()).toBe(0);
+	});
+});
+
+/* ============================================================
+   While the page loads
+
+   The mutation observer calls back per item the parser adds. The toolbar
+   builds its children once after the parse, and toolbars measure together.
+   ============================================================ */
+
+describe('nldd-toolbar – while the page loads', () => {
+	let el: HTMLElement;
+	let finishLoading: (() => void) | null = null;
+
+	afterEach(() => {
+		finishLoading?.();
+		finishLoading = null;
+		if (el) cleanup(el);
+	});
+
+	/** The document says it is loading until the returned function. */
+	function pretendLoading(): () => void {
+		Object.defineProperty(document, 'readyState', { configurable: true, get: () => 'loading' });
+		return () => {
+			delete (document as { readyState?: string }).readyState;
+			document.dispatchEvent(new Event('readystatechange'));
+		};
+	}
+
+	const item = (text: string) => {
+		const host = document.createElement('nldd-toolbar-item');
+		host.setAttribute('slot', 'start');
+		host.innerHTML = `<nldd-button text="${text}"></nldd-button><nldd-menu-item slot="overflow" text="${text}"></nldd-menu-item>`;
+		return host;
+	};
+
+	it('builds its children once after the parse, not per item', async () => {
+		el = await fixture('<nldd-toolbar accessible-label="Balk" style="width: 600px"></nldd-toolbar>');
+		await waitForUpdate(el);
+		await new Promise(resolve => setTimeout(resolve, 10));
+		const build = vi.spyOn(el as unknown as { _buildChildren: () => void }, '_buildChildren');
+		finishLoading = pretendLoading();
+		for (const text of ['Vet', 'Cursief', 'Onderstrepen']) {
+			el.append(item(text));
+			// Microtasks only, as between two elements of a parse: no frame.
+			for (let i = 0; i < 3; i++) await Promise.resolve();
+		}
+		expect(build).not.toHaveBeenCalled();
+		finishLoading();
+		finishLoading = null;
+		expect(build).toHaveBeenCalledTimes(1);
+		expect((el as unknown as { _startChildren: unknown[] })._startChildren).toHaveLength(3);
+	});
+
+	it('measures toolbars in one pass, every read before any write', async () => {
+		el = await fixture(`
+			<div>
+				<nldd-toolbar accessible-label="Een" style="width: 300px">
+					<nldd-toolbar-item slot="start"><nldd-button text="Opslaan"></nldd-button><nldd-menu-item slot="overflow" text="Opslaan"></nldd-menu-item></nldd-toolbar-item>
+				</nldd-toolbar>
+				<nldd-toolbar accessible-label="Twee" style="width: 300px">
+					<nldd-toolbar-item slot="start"><nldd-button text="Opslaan"></nldd-button><nldd-menu-item slot="overflow" text="Opslaan"></nldd-menu-item></nldd-toolbar-item>
+				</nldd-toolbar>
+			</div>
+		`);
+		const toolbars = [...el.querySelectorAll('nldd-toolbar')] as HTMLElement[];
+		await Promise.all(toolbars.map(toolbar => waitForUpdate(toolbar)));
+		await new Promise(resolve => setTimeout(resolve, 20));
+		const order: string[] = [];
+		toolbars.forEach((toolbar, i) => {
+			const read = toolbar.getBoundingClientRect.bind(toolbar);
+			toolbar.getBoundingClientRect = () => { order.push(`read ${i}`); return read(); };
+			const style = toolbar.style;
+			const set = style.setProperty.bind(style);
+			style.setProperty = (name: string, value: string | null, priority?: string) => {
+				if (name === '--_toolbar-width') order.push(`write ${i}`);
+				set(name, value, priority);
+			};
+		});
+		document.fonts.dispatchEvent(new Event('loadingdone'));
+		expect(order.slice(0, 4)).toEqual(['read 0', 'read 1', 'write 0', 'write 1']);
 	});
 });

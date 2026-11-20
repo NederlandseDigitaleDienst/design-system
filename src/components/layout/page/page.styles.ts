@@ -164,8 +164,8 @@ export const pageStyles = css`
 	.page__scroll {
 		--context-inset-top: calc(var(--_page-outer-inset-top) + var(--_page-header-height));
 		--context-inset-bottom: calc(var(--_page-outer-inset-bottom) + var(--_page-footer-height));
-		/* The height sticky content can cap itself on. Unset while the document
-		   scrolls, where the viewport is the whole story. */
+		/* The height sticky content can cap itself on: the page's own scroller,
+		   or the viewport while the document scrolls. */
 		--context-scroller-height: var(--_page-scroll-height, 100dvh);
 
 		display: flex;

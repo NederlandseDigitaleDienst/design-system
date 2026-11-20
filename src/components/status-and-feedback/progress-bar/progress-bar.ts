@@ -333,6 +333,12 @@ export class NLDDProgressBar extends LitElement {
 		return seg.name ? `${seg.name}: ${valuePart}` : valuePart;
 	}
 
+	override connectedCallback(): void {
+		super.connectedCallback();
+		// Moved in the DOM: the slot keeps its content, so no slotchange comes.
+		if (this.hasUpdated) this._onSlotChange();
+	}
+
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this._cancelIndeterminateExit();

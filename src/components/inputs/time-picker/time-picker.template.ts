@@ -86,6 +86,7 @@ export function timePickerTemplate(component: NLDDTimePicker): TemplateResult {
 		<div class="time-picker"
 			role="group"
 			aria-label=${component._label}
+			@pointerenter=${component._handlePointerEnter}
 		>
 			<div class="time-picker__selection">
 				${renderSelectionValue(component, 'hours', component._centeredHour, component._t('components.time-picker.hours-label'))}

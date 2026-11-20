@@ -1,7 +1,8 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../../test-utils.js';
+import { cleanup, waitForUpdate, nextFrames, sectionFixture } from '../../../../test-utils.js';
 import { loadTokens } from '../../../../test-tokens.js';
 import './hero.js';
+import { clearCornerLimits, limitCorner } from './hero-corner.js';
 
 const MEDIA = '<img slot="media" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 4 3\'%3E%3Crect width=\'4\' height=\'3\'/%3E%3C/svg%3E" alt="">';
 
@@ -20,7 +21,7 @@ describe('nldd-hero – corner', () => {
 	});
 
 	const hero = async (attrs: string, width = 1200, media = MEDIA): Promise<HTMLElement> => {
-		el = await fixture(`<nldd-hero ${attrs} style="width: ${width}px">${media}<p>Aanvraag A-1042</p></nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero ${attrs}>${media}<p>Aanvraag A-1042</p></nldd-hero>`, width);
 		await waitForUpdate(el);
 		return el;
 	};
@@ -164,7 +165,7 @@ describe('nldd-hero – corner', () => {
 	});
 
 	it('takes half the radius without media', async () => {
-		el = await fixture(`<nldd-hero corner style="width: 1200px"><p style="height: 400px">Aanvraag A-1042</p></nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero corner><p style="height: 400px">Aanvraag A-1042</p></nldd-hero>`, 1200);
 		await waitForUpdate(el);
 		await nextFrames();
 		const ribbon = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--semantics-brand-ribbon-lg-width'));
@@ -269,5 +270,22 @@ describe('nldd-hero – corner', () => {
 		const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
 		const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
 		expect(main.width).toBeCloseTo(media.width * 0.9, 0);
+	});
+});
+
+describe('clearCornerLimits', () => {
+	it('also drops the limits that were measured but not yet written', async () => {
+		const host = document.createElement('div');
+		const media = document.createElement('div');
+		media.className = 'hero__media';
+		const entry = { target: media, borderBoxSize: [{ inlineSize: 300, blockSize: 300 }], contentRect: { width: 300, height: 300 } };
+		limitCorner(host, [entry as unknown as ResizeObserverEntry]);
+		clearCornerLimits(host);
+		await nextFrames();
+		expect(host.style.getPropertyValue('--_hero-media-corner-limit')).toBe('');
+		// A later measurement is written again.
+		limitCorner(host, [entry as unknown as ResizeObserverEntry]);
+		await nextFrames();
+		expect(host.style.getPropertyValue('--_hero-media-corner-limit')).toBe('100px');
 	});
 });

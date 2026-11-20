@@ -775,8 +775,8 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		const doc = view.state.doc.toString();
 		const sentinels = sentinelPositions(doc);
 		const cleanLength = doc.length - sentinels.length;
-		const specs = [...changes]
-			.sort((a, b) => a.from - b.from)
+		const specs = changes
+			.toSorted((a, b) => a.from - b.from)
 			.map((change) => {
 				const from = Math.max(0, Math.min(change.from, cleanLength));
 				const to = Math.max(from, Math.min(change.to ?? from, cleanLength));

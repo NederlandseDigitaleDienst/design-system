@@ -33,6 +33,7 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 					<nldd-menu
 						slot="popup"
 						placement="bottom-end"
+						no-blink
 						@beforetoggle=${(event: ToggleEvent) => { if (event.newState === 'open') component.requestUpdate(); }}
 						@toggle=${(event: ToggleEvent) => component._overflowMenuToggled(event.newState === 'open')}
 						@select=${(event: Event) => event.stopPropagation()}

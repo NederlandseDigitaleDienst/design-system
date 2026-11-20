@@ -80,6 +80,7 @@ import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
 import { nlddAvatarTranslations } from './avatar.i18n.js';
 import { avatarStyles } from './avatar.styles.js';
 import { avatarTemplate } from './avatar.template.js';
@@ -97,6 +98,60 @@ const INITIALS_FIT_RATIO = 0.75;
 /** Empty = scale to the container (like nldd-icon); the rest pin a fixed px size. */
 export type AvatarSize =
 	'full' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
+
+/**
+ * How wide initials are against the shape they sit in, per text, font and
+ * document (a themed part of the page can set another font). The initials take their font size from the width of the shape
+ * (cqi), so that proportion is the same at every size: one avatar with "JJ"
+ * that is laid out says it for every "JJ" on the page, also for one that is
+ * hidden or not laid out yet. An avatar then measures nothing at all.
+ */
+const ratios = new WeakMap<Document, Map<string, number>>();
+
+function ratiosOf(doc: Document): Map<string, number> {
+	let map = ratios.get(doc);
+	if (!map) {
+		map = new Map();
+		ratios.set(doc, map);
+		// A web font that comes in changes the width of every text.
+		doc.fonts?.addEventListener('loadingdone', () => {
+			map!.clear();
+			fitAvatars([...connected].filter((avatar) => avatar.ownerDocument === doc));
+		});
+	}
+	return map;
+}
+
+/** Every avatar on a page, for a font that loads. */
+const connected = new Set<NLDDAvatar>();
+
+/**
+ * Fits the initials of many avatars in one pass: first the texts that have no
+ * ratio yet are measured, on the first avatar with that text that is laid
+ * out, then every avatar writes its fit. An avatar that measured itself as it
+ * rendered would read a layout the previous one had just made dirty, once per
+ * avatar.
+ */
+function fitAvatars(avatars: NLDDAvatar[]): void {
+	const live = avatars.filter((avatar) => avatar.isConnected);
+	const keys = live.map((avatar) => avatar._ratioKey());
+	live.forEach((avatar, i) => {
+		const key = keys[i];
+		if (!key) return;
+		const known = ratiosOf(avatar.ownerDocument);
+		if (known.has(key)) return;
+		const ratio = avatar._measureRatio();
+		if (ratio !== undefined) known.set(key, ratio);
+	});
+	live.forEach((avatar, i) => avatar._fitInitials(keys[i]));
+}
+
+/** The avatars that rendered new initials in the same tick. */
+const fitPass = new LayoutPass<NLDDAvatar>(fitAvatars);
+
+/** One observer for the avatars whose initials could not be measured yet,
+ *  until their shape is laid out. */
+const shapeObserver = sharedResizeObserver<NLDDAvatar>(fitAvatars);
 
 @customElement('nldd-avatar')
 export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslations) {
@@ -197,11 +252,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 		this._imageFailed = true;
 	};
 
-	/** Re-measures the initials fit when the shape lays out or resizes; covers the
-	 *  case where the avatar is only sized after first render (e.g. filling a
-	 *  container that appears later). Content changes are handled in updated(). */
-	private _resizeObserver = new ResizeObserver(() => this._fitInitials());
-
 	override willUpdate(changed: PropertyValues<this>): void {
 		// withTranslations merges a consumer's `translations` override in its own
 		// willUpdate; without this call the override is silently ignored.
@@ -211,20 +261,29 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 		if (changed.has('src') || changed.has('srcset')) this._imageFailed = false;
 	}
 
-	override firstUpdated(): void {
-		const shape = this.shadowRoot?.querySelector('.avatar');
-		if (shape) this._resizeObserver.observe(shape);
+	/** The shape that is observed while the initials wait for a ratio. */
+	private _observedShape: Element | null = null;
+
+	private _waitForShape(wait: boolean): void {
+		const shape = wait ? this.shadowRoot?.querySelector('.avatar') ?? null : null;
+		if (shape === this._observedShape) return;
+		shapeObserver.unobserveAll(this);
+		this._observedShape = shape;
+		if (shape) shapeObserver.observe(shape, this);
 	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		const shape = this.shadowRoot?.querySelector('.avatar');
-		if (this.hasUpdated && shape) this._resizeObserver.observe(shape);
+		connected.add(this);
+		if (this.hasUpdated) fitPass.schedule(this, this.ownerDocument);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this._resizeObserver.disconnect();
+		connected.delete(this);
+		fitPass.cancel(this);
+		shapeObserver.unobserveAll(this);
+		this._observedShape = null;
 	}
 
 	override updated(changed: PropertyValues<this>): void {
@@ -250,34 +309,70 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 			this.removeAttribute('role');
 			this.removeAttribute('aria-label');
 		}
-		// The shape does not resize when only its content does, so the
-		// ResizeObserver won't fire — re-measure here on every change that can
-		// swap the initials in or alter their text. src/_imageFailed matter too:
-		// a dead image falls back to initials that were never measured.
+		// Fit again on every change that can swap the initials in or alter
+		// their text. src/_imageFailed matter too: a dead image falls back to
+		// initials that were never fitted. href and button swap the shape.
 		if (
 			changed.has('name') || changed.has('initials')
 			|| changed.has('src') || changed.has('srcset') || changed.has('_imageFailed')
+			|| changed.has('href') || changed.has('button')
 		) {
-			this._fitInitials();
+			fitPass.schedule(this, this.ownerDocument);
 		}
 	}
 
-	/** Shrink wide initials so they always fit. The fit factor is the shape's
-	 *  usable width over the initials' natural width (scrollWidth ignores
-	 *  the applied transform, so the measurement stays stable); capped at 1 so
-	 *  narrow initials are never enlarged. Applied via --_avatar-initials-fit (a
-	 *  transform scale), so no reflow and it stays measurable. */
-	private _fitInitials(): void {
+	/** @internal The initials the template shows, '' when it shows an image or the icon. */
+	get _shownInitials(): string {
+		return this.src && !this._imageFailed ? '' : this.resolvedInitials;
+	}
+
+	/** @internal How wide the initials are against the shape's content box,
+	 *  without the fit that is applied; undefined while the shape is not laid
+	 *  out. A read, that writes nothing. Bounding boxes, not scrollWidth: they
+	 *  are not rounded to whole pixels, so the ratio holds at every size. A
+	 *  transform on an ancestor scales both alike. */
+	/** @internal What a ratio is known by: the initials and their font. A
+	 *  style read, no layout; undefined without initials. */
+	_ratioKey(): string | undefined {
+		const text = this._shownInitials;
+		const initials = this.shadowRoot?.querySelector<HTMLElement>('.avatar__initials');
+		if (!text || !initials) return undefined;
+		const { fontStyle, fontWeight, fontFamily } = getComputedStyle(initials);
+		return `${fontStyle} ${fontWeight} ${fontFamily}|${text}`;
+	}
+
+	_measureRatio(): number | undefined {
 		const initials = this.shadowRoot?.querySelector<HTMLElement>('.avatar__initials');
 		const shape = this.shadowRoot?.querySelector<HTMLElement>('.avatar');
-		if (!initials || !shape) {
+		if (!initials || !shape || shape.offsetWidth <= 0) return undefined;
+		const content = shape.getBoundingClientRect().width * (shape.clientWidth / shape.offsetWidth);
+		const applied = Number(this.style.getPropertyValue('--_avatar-initials-fit')) || 1;
+		const natural = initials.getBoundingClientRect().width / applied;
+		if (content <= 0 || natural <= 0) return undefined;
+		return natural / content;
+	}
+
+	/** Shrink wide initials so they always fit. The fit factor is the shape's
+	 *  usable width over the initials' natural width, capped at 1 so narrow
+	 *  initials are never enlarged. Applied via --_avatar-initials-fit (a
+	 *  transform scale), so no reflow and it stays measurable.
+	 *
+	 *  Uses the ratio of its text in its font (see ratiosOf), by the key read
+	 *  with the others. Without one yet, the avatar waits for its shape to be
+	 *  laid out. */
+	_fitInitials(key: string | undefined): void {
+		const ratio = key ? ratiosOf(this.ownerDocument).get(key) : undefined;
+		this._waitForShape(Boolean(key) && ratio === undefined);
+		if (!key) {
 			this.style.removeProperty('--_avatar-initials-fit');
 			return;
 		}
-		const available = shape.clientWidth * INITIALS_FIT_RATIO;
-		const actual = initials.scrollWidth;
-		if (available <= 0 || actual <= 0) return; // not laid out yet — leave as is
-		this.style.setProperty('--_avatar-initials-fit', String(Math.min(1, available / actual)));
+		if (ratio === undefined) return;
+		const fit = String(Math.min(1, INITIALS_FIT_RATIO / ratio));
+		// An unchanged fit writes nothing, so no style is recalculated.
+		if (this.style.getPropertyValue('--_avatar-initials-fit') !== fit) {
+			this.style.setProperty('--_avatar-initials-fit', fit);
+		}
 	}
 
 	override render() {
