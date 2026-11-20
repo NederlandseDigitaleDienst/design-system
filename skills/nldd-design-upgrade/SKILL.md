@@ -34,7 +34,7 @@ Een nieuwe minor zegt alleen dát er iets breekt, niet wat. Gebruik daarom de ch
 
 Vuistregel: lees bij elke nieuwe minor de `Breaking` sectie van die versie, en ga onder 0.9.0 niet meer dan een handvol patches in één sprong omhoog zonder de tussenliggende `Breaking` secties te lezen.
 
-Begin bij de `Breaking`-secties en niet bij de linter. Een site ging van 0.16.0 naar 0.27.1 met alleen `lint --fix`, en leek daarna klaar. De koppen waren te groot en twee knoppen grijs, want de markup stond in Markdown en in Python. Alle vijf de oorzaken stonden in de `Breaking`-secties van 0.22.0, 0.23.0 en 0.25.0.
+Begin bij de `Breaking`-secties en niet bij de linter. Een site ging elf minors omhoog met alleen `lint --fix`, en leek daarna klaar. De koppen waren te groot en twee knoppen grijs, want de markup stond in Markdown en in Python. Alle vijf de oorzaken stonden in de `Breaking`-secties van 0.22.0, 0.23.0 en 0.25.0.
 
 ## Waar de versie staat
 
@@ -73,7 +73,7 @@ Wat breekt, zie je alleen door te kijken. Doe dat met twee builds naast elkaar:
 3. Draai [`compare-builds.mjs`](compare-builds.mjs) uit deze skill, vanuit je project:
 
 ```sh
-node <pad naar deze skill>/compare-builds.mjs <oude build> <nieuwe build> <map voor de beelden> --label-before 0.16.0 --label-after 0.27.1
+node <pad naar deze skill>/compare-builds.mjs <oude build> <nieuwe build> <map voor de beelden> --label-before 0.22.0 --label-after 0.27.1
 ```
 
 Het script opent elke pagina van beide builds op 1280 en op 390 pixels breed. Per pagina die verschilt schrijft het één beeld, met voor en na naast elkaar en een omlijning om elk element van het designsysteem dat veranderde:
