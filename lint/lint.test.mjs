@@ -637,6 +637,10 @@ describe('--fix', () => {
 			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
 		);
 		assert.equal(
+			fixed('a.html', field(` show-button-text="Toon" translations='{"components.password-field.hide-action": "Weg"}'`)).text,
+			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
+		);
+		assert.equal(
 			fixed('a.html', field(' show-button-text="Toon >"')).text,
 			field(` translations='{"components.password-field.show-action": "Toon >"}'`),
 		);
