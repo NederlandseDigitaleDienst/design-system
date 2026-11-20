@@ -13,7 +13,7 @@ here; consult the commit history if you need that level of detail.
 
 - **Pages with many components load and resize much faster, above all in Safari.** A component that measured itself while the page was still parsing made the browser lay out the page once per instance, so 500 copies cost quadratically more than 50. Components now measure together, after the parse, with one ResizeObserver per component. With 500 copies in WebKit, a sheet loads in 1.7 s where it took more than a minute, a radio group in 0.4 s instead of 5.7 s, a time picker in 1.5 s instead of 73 s, a toolbar in 4.3 s instead of 27 s and an avatar group in 0.9 s instead of 52 s.
 - **A page section lays out by the `nldd-page` it is in.** A section goes in a page, never on its own or in another section. See Breaking.
-- **A component you move in the DOM keeps working.** Thirteen components went quiet after a move: they no longer followed their children or their own size. An app runs into this when it moves a sheet to `document.body` or lets a user drag a row. See Fixed.
+- **A component you move in the DOM keeps working.** Fourteen components went quiet after a move: they no longer followed their children or their own size. An app runs into this when it moves a sheet to `document.body` or lets a user drag a row. See Fixed.
 - **1 accessibility fix:** a moved `nldd-form-field` kept describing its control with a requirement that was no longer on screen. See Fixed.
 
 ### Breaking
@@ -34,7 +34,7 @@ here; consult the commit history if you need that level of detail.
 ### Fixed
 
 - **`nldd-page` keeps its sticky header and footer clear after `landmarks` changes.** A switch between page and region renders the header, main and footer anew, and the page kept measuring the old ones: sticky content inside lined up with the height the header had before.
-- **Thirteen components pick up again after a move in the DOM.** Moving an element disconnects it and connects it again, without a first render and without a `slotchange`. What these components had set up there did not come back.
+- **Fourteen components pick up again after a move in the DOM.** Moving an element disconnects it and connects it again, without a first render and without a `slotchange`. What these components had set up there did not come back.
   - `nldd-form-field` follows its `nldd-validation-list` again, so the description of the control matches the requirements on screen. Before, an item that hid after the move stayed in the description, and a screen reader read out a requirement that was gone.
   - `nldd-combo-box` and `nldd-token-field` hear `toggle`, `select` and `keydown` from their menu again.
   - `nldd-menu` listens on its anchor again, and `nldd-menu-item` notices a submenu that is added late.

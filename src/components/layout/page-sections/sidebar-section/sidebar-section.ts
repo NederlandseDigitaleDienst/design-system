@@ -39,7 +39,8 @@
  * pane collapses the sidebar to the sheet just like a narrow window, and the
  * sidebar never stacks above or crowds the main. Set `no-collapse` to opt out:
  * a narrow section then stacks the sidebar (full-width) above the main instead
- * of using a sheet.
+ * of using a sheet. A resize across the breakpoint switches a frame after it
+ * paints, so the old layout shows for one frame.
  *
  * Inherits block `padding` and `height` from PageSectionMixin.
  *
