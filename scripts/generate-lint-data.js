@@ -13,7 +13,7 @@
  * Usage: node scripts/generate-lint-data.js
  */
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { cssRules, declarations, TOKEN_PREFIX } from '../lint/css.js';
@@ -69,7 +69,25 @@ const stylesheets = shippedStylesheets().map((file) => readFileSync(file, 'utf8'
 // A context variable is API only where variables.css gives it a default; the rest is wiring between components.
 const contextDefaults = new Set(declarations(readFileSync(resolve(repoRoot, 'src/assets/styles/variables.css'), 'utf8')).map(({ name }) => name).filter((name) => name.startsWith('--context-')));
 const isToken = (name) => TOKEN_PREFIX.test(name) && (!name.startsWith('--context-') || contextDefaults.has(name));
-const tokens = [...new Set(stylesheets.flatMap((css) => declarations(css).map(({ name }) => name)).filter(isToken))].sort();
+// A component documents the context variables an app may read with @cssprop, such as --context-inset-top on nldd-page.
+const documented = elements.flatMap(({ declaration }) => (declaration.cssProperties ?? []).map(({ name }) => name)).filter((name) => TOKEN_PREFIX.test(name));
+const tokens = [...new Set([...stylesheets.flatMap((css) => declarations(css).map(({ name }) => name)).filter(isToken), ...documented])].sort();
+/** Every other --context-* variable a component names is wiring between components, which can change in any release. */
+function contextWiring() {
+	const names = new Set();
+	const walk = (dir) => {
+		for (const entry of readdirSync(dir, { withFileTypes: true })) {
+			const path = resolve(dir, entry.name);
+			if (entry.isDirectory()) walk(path);
+			else if (/\.ts$/.test(entry.name) && !/\.(test|stories)\.ts$/.test(entry.name)) {
+				for (const [name] of readFileSync(path, 'utf8').matchAll(/--context-[a-z0-9-]*[a-z0-9](?![a-z0-9*-])/g)) names.add(name);
+			}
+		}
+	};
+	walk(resolve(repoRoot, 'src'));
+	return [...names].filter((name) => !tokens.includes(name)).sort();
+}
+const internalContext = contextWiring();
 const designSystemRules = new Map();
 for (const css of stylesheets) {
 	for (const [key, names] of cssRules(css)) designSystemRules.set(key, new Set([...(designSystemRules.get(key) ?? []), ...names]));
@@ -101,7 +119,7 @@ const removedTokens = updateLedger('src/assets/styles/removed-tokens.json', prev
 const removedKeys = updateLedger('src/translations/removed-keys.json', Object.values(previous.translations ?? {}).flat(), Object.values(translations).flat());
 
 const sorted = (object) => Object.fromEntries(Object.keys(object).sort().map((name) => [name, object[name]]));
-const data = { tags, classes, icons, rules, tokens, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), designSystemCss };
+const data = { tags, classes, icons, rules, tokens, internalContext, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), designSystemCss };
 
 writeFileSync(resolve(repoRoot, 'lint/data.generated.json'), `${JSON.stringify(data)}\n`);
 writeFileSync(

@@ -47,6 +47,8 @@
  * @attr {'base'|'tinted'} background - Background color (cascades to descendants)
  *
  * @slot - Default slot for the application content
+ *
+ * @cssprop --context-scroll-mode - `root` while the document scrolls, `nested` while each page scrolls in its pane. Set it on the `nldd-shell` itself to override the derived mode
  */
 import { LitElement, PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';

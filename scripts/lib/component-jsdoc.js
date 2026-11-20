@@ -120,6 +120,7 @@ function parseComponent(block, filePath, fallbackTag) {
 		slots: [],
 		events: [],
 		accepts: [],
+		cssProperties: [],
 		keywords: [],
 		related: [],
 		category,
@@ -202,6 +203,17 @@ function parseComponent(block, filePath, fallbackTag) {
 				const wrong = names.find((name) => !/^([a-z][a-z0-9]*|\*)$/.test(name));
 				if (wrong) throw new Error(`${filePath}: @accepts on ${current.tag} takes element names only, not "${wrong}".`);
 				current.accepts.push(...names);
+				break;
+			}
+			case 'cssprop': {
+				// A custom property an app may read or set, such as --context-inset-top,
+				// which nldd-page passes to sticky content. Without this tag a
+				// --context-* variable a component sets is wiring between components.
+				if (!current) break;
+				const entry = parseNamedTag(rest);
+				if (!/^--[a-z][a-z0-9-]*$/.test(entry.name)) throw new Error(`${filePath}: @cssprop on ${current.tag} takes a custom property name, not "${entry.name}".`);
+				current.cssProperties.push(entry);
+				lastEntry = entry;
 				break;
 			}
 			case 'keywords': {

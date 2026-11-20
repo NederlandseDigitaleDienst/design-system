@@ -1935,6 +1935,18 @@ describe('CSS', () => {
 		assert.deepEqual(await rulesIn('.panel { --_panel-gap: 0; gap: var(--_panel-gap); }', 'a.css'), []);
 	});
 
+	it('knows a context variable a component documents, and calls the wiring between components internal', async () => {
+		assert.deepEqual(await rulesIn('.a { position: sticky; top: var(--context-inset-top); max-height: var(--context-scroller-height, 100dvh); }', 'a.css'), []);
+		assert.deepEqual(await rulesIn('nldd-shell { --context-scroll-mode: nested; }', 'a.css'), []);
+		assert.deepEqual(await findingsIn('.a { display: var(--context-back-button-display); }', 'a.css'), [
+			['internal-context-no-use', '`--context-back-button-display` is wiring between design system components, so reading it is not supported.'],
+		]);
+		assert.deepEqual(await findingsIn('.a { --context-back-button-display: none; display: var(--context-back-button-display); }', 'a.css'), [
+			['internal-context-no-use', '`--context-back-button-display` is wiring between design system components, so setting it is not supported.'],
+		]);
+		assert.deepEqual(await rulesIn('.a { color: var(--context-nope); }', 'a.css'), ['token-not-found']);
+	});
+
 	it('reports a surface that sets one link color without the other two', async () => {
 		assert.deepEqual(await findingsIn('.panel { --context-link-color: white; }', 'a.css'), [
 			['link-context-needs-states', 'Set `--context-link-is-hovered-color` and `--context-link-is-active-color` here too, or a link on this surface turns back to the default color.'],

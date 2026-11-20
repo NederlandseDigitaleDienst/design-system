@@ -231,6 +231,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	const isDesignSystemBlock = (css) => isDesignSystemCss(css, data.designSystemCss ?? {});
 	const tokens = new Set([...(data.tokens ?? []), ...projectTokens]);
 	const removedTokens = data.removedTokens ?? {};
+	const internalContext = new Set(data.internalContext ?? []);
+	const internalMessage = (name, verb) => `\`${name}\` is wiring between design system components, so ${verb} it is not supported.`;
 	// Longest first, so --_button-group-gap belongs to button-group and not to button.
 	const components = Object.keys(data.tags)
 		.filter((tag) => tag.startsWith('nldd-'))
@@ -302,6 +304,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		for (const reference of tokenReferences(source, lineComments)) {
 			const { name, offset, fallback } = reference;
 			if (tokens.has(name) || ownTokens.has(name) || inDesignSystemCss(offset)) continue;
+			if (internalContext.has(name)) {
+				report('internal-context-no-use', internalMessage(name, 'reading'), reference);
+				continue;
+			}
 			const removed = removedTokens[name];
 			// A successor that left in a later release is no advice, and no fix.
 			const use = removed?.use && tokens.has(removed.use) ? removed.use : undefined;
@@ -314,6 +320,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			report('token-not-found', message, reference, use && !fallback ? { token: use } : undefined);
 		}
 		for (const declaration of declared) {
+			if (internalContext.has(declaration.name)) report('internal-context-no-use', internalMessage(declaration.name, 'setting'), declaration);
 			if (!declaration.name.startsWith('--_')) continue;
 			const component = components.find((name) => declaration.name.startsWith(`--_${name}-`));
 			if (!component) continue;
@@ -418,6 +425,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			line,
 			column: 1,
 		});
+		const jsx = /\.[jt]sx$/.test(filename) || Boolean(parsed.jsx);
 		const all = findings
 			.map(({ node, severity, covers, attribute, ...finding }) => ({
 				...finding,
@@ -425,9 +433,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				tag: node.name,
 				offset: node.offset,
 				endOffset: node.endOffset,
-		const jsx = /\.[jt]sx$/.test(filename) || Boolean(parsed.jsx);
 				mention: node.mention,
 				startTag: node.startTag,
+				jsx,
 				...position(node.offset),
 			}))
 			.concat(
@@ -435,7 +443,6 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 					.filter(({ rule }) => ranInSource(rule))
 					.map((finding) => ({ ...finding, ...position(finding.offset) })),
 			);
-				jsx,
 		const stuck = stuckTags(source, all, jsx);
 		for (const finding of all) {
 			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;

@@ -42526,6 +42526,20 @@
           },
           "tagName": "nldd-page",
           "customElement": true,
+          "cssProperties": [
+            {
+              "name": "--context-inset-top",
+              "description": "Height of every bar above the content, sticky header included. Read it as `top` of anything sticky inside the page"
+            },
+            {
+              "name": "--context-inset-bottom",
+              "description": "Height of every bar below the content, sticky footer included. Read it as `bottom` of anything sticky inside the page"
+            },
+            {
+              "name": "--context-scroller-height",
+              "description": "Height of the area the content scrolls in, for sticky content that caps its own height. Unset while the document scrolls, so give it a fallback such as `100dvh`"
+            }
+          ],
           "keywords": [
             "pagina"
           ],
@@ -43165,6 +43179,12 @@
           },
           "tagName": "nldd-shell",
           "customElement": true,
+          "cssProperties": [
+            {
+              "name": "--context-scroll-mode",
+              "description": "`root` while the document scrolls, `nested` while each page scrolls in its pane. Set it on the `nldd-shell` itself to override the derived mode"
+            }
+          ],
           "related": [
             "nldd-page"
           ],

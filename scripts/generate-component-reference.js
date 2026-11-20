@@ -109,6 +109,13 @@ function renderComponent(c) {
 		}
 		out.push('');
 	}
+	if (c.cssProperties?.length) {
+		out.push('**CSS properties**', '');
+		out.push('| Property | Description |');
+		out.push('| --- | --- |');
+		for (const p of c.cssProperties) out.push(`| \`${escapeCell(p.name)}\` | ${escapeCell(p.description) || '—'} |`);
+		out.push('');
+	}
 	if (c.accepts?.length) {
 		const elements = c.accepts.includes('*') ? 'anything' : c.accepts.map((name) => `\`<${name}>\``).join(', ');
 		out.push(`**Plain HTML it styles:** ${elements}. \`nldd lint --pure\` reports plain HTML only where no component styles it.`, '');

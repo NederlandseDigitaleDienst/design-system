@@ -48,6 +48,12 @@ test('refuses a description after @accepts, which would read as element names', 
 	assert.throws(() => parse(['@element nldd-thing', '@accepts select - the native one'].join('\n')), /takes element names only/);
 });
 
+test('reads a custom property an app may use from @cssprop, with a description over more lines', () => {
+	const [component] = parse(['@element nldd-thing', '@cssprop --context-inset-top - Height of the bars', 'above the content'].join('\n'));
+	assert.deepEqual(component.cssProperties, [{ name: '--context-inset-top', description: 'Height of the bars above the content' }]);
+	assert.throws(() => parse(['@element nldd-thing', '@cssprop inset-top - no dashes'].join('\n')), /takes a custom property name/);
+});
+
 test('reads search words from @keywords, lower case, and other components from @related', () => {
 	const [component] = parse(['@element nldd-thing', '@keywords Toast, snackbar', '@related nldd-banner, nldd-status-bar'].join('\n'));
 	assert.deepEqual(component.keywords, ['toast', 'snackbar']);

@@ -3189,6 +3189,14 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 | _(default)_ | Main content (scrollable) |
 | `footer` | Footer content |
 
+**CSS properties**
+
+| Property | Description |
+| --- | --- |
+| `--context-inset-top` | Height of every bar above the content, sticky header included. Read it as `top` of anything sticky inside the page |
+| `--context-inset-bottom` | Height of every bar below the content, sticky footer included. Read it as `bottom` of anything sticky inside the page |
+| `--context-scroller-height` | Height of the area the content scrolls in, for sticky content that caps its own height. Unset while the document scrolls, so give it a fallback such as `100dvh` |
+
 ### `<nldd-page-footer>`
 
 The footer band at the bottom of a page. Hosts three optional rows in a fixed order: breadcrumbs (top), consumer-defined main content (middle), and a legal-bar (bottom). Dividers are drawn automatically between non-empty rows. Establishes its own container query (`page-footer-container`) so the responsive padding and gap react to the footer's own width, not the viewport. It goes in the `footer` slot of nldd-page, which makes it the contentinfo landmark, or drops it for a page that does not carry the landmarks of the document. The footer itself has no role, so it never nests a second one. The host has `id="page-footer"` so a skip-link can target it directly. Use the sub-components `nldd-page-footer-legal-bar` and `nldd-page-footer-legal-bar-item` for the bottom row.
@@ -3377,6 +3385,12 @@ The required root shell of a Nederlandse Digitale Dienst application. Always con
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Default slot for the application content |
+
+**CSS properties**
+
+| Property | Description |
+| --- | --- |
+| `--context-scroll-mode` | `root` while the document scrolls, `nested` while each page scrolls in its pane. Set it on the `nldd-shell` itself to override the derived mode |
 
 ### `<nldd-side-by-side-split-view>`
 
