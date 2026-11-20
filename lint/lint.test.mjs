@@ -651,6 +651,9 @@ describe('--fix', () => {
 			// React 18 writes an object as an attribute, React 19 sets a string as the property.
 			['a.tsx', 'const a = <nldd-password-field accessible-label="W" show-button-text="Laat zien" hide-button-text={"Verstop"} />;'],
 			['a.html.j2', '<nldd-password-field accessible-label="W" show-button-text="{{ toon }}"></nldd-password-field>'],
+			// An empty text would win over the default and leave the button blank.
+			['a.html', '<nldd-password-field accessible-label="W" show-button-text=""></nldd-password-field>'],
+			['a.html', '<nldd-password-field accessible-label="W" hide-button-accessible-label="  "></nldd-password-field>'],
 		]) {
 			assert.equal(fixed(name, source).text, source, source);
 		}

@@ -87,7 +87,8 @@ function translationEdits(source, finding, translation) {
 	return Object.entries(translation).flatMap(([name, key]) => {
 		const found = findAttribute(startTag, name);
 		const text = writtenText(source, found);
-		if (text === undefined || UNCERTAIN_TEXT.test(text) || text.includes("'")) return [];
+		// An empty text would win over the default in translate() and leave the button blank.
+		if (text === undefined || text.trim() === '' || UNCERTAIN_TEXT.test(text) || text.includes("'")) return [];
 		const existing = findAttribute(startTag, 'translations');
 		if (!existing) return [{ from: found.start, to: found.end, text: translationsAttribute([[key, text]]) }];
 		const entries = writtenTranslations(source, existing);
@@ -186,7 +187,8 @@ function editsOf(source, finding) {
 		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag) : []),
 		...(fix.wrap ? wrapEdits(source, finding, fix.wrap) : []),
 		...(fix.translation ? translationEdits(source, finding, fix.translation) : []),
-		// A token that got another name: the finding spans the old name in a `var()`.
+		// A token that got another name: the finding spans the old name in a `var()`, and
+		// startsWith checks that the span still holds it.
 		...(fix.token && source.startsWith(tag, offset) ? [{ from: offset, to: finding.endOffset, text: fix.token }] : []),
 		// An event that got another name: the finding spans the old name in a listener.
 		...(fix.event && source.startsWith(tag, offset) ? [{ from: offset, to: finding.endOffset, text: fix.event }] : []),
@@ -312,7 +314,10 @@ export function linesNaming(source, renamedTags) {
 
 const isSameEdit = (a, b) => a.from === b.from && a.to === b.to && a.text === b.text;
 
-/** Two edits at one place, or ranges that share a character, cannot both apply to the original offsets. */
+/**
+ * Two edits at one place, or ranges that share a character, cannot both apply to the original offsets.
+ * Two insertions at the same offset count too: the second waits for the next pass.
+ */
 const overlaps = (a, b) => a.from === b.from || (a.from < b.to && b.from < a.to);
 
 /**
