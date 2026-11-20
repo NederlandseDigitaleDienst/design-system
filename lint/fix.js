@@ -25,6 +25,7 @@ function renameEdits(source, startTag, from, to) {
 /**
  * `{5}`, `{"5"}` and `` {`5`} ``: braces around one number or one string without an escape or a hole.
  * A number is matched as written, so `{05}` or `{5.0}` finds no value and stays a finding.
+ * Only a value the rule names for this attribute is rewritten, so `{"5"}` elsewhere stays as it is.
  */
 const BRACED_LITERAL = /^\{\s*(?:(\d+(?:\.\d+)?)|"([^"\\\n]*)"|'([^'\\\n]*)'|`([^`\\$\n]*)`)\s*\}$/;
 

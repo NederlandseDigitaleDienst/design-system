@@ -61,6 +61,11 @@ describe('frontend edge cases', () => {
 		});
 	}
 
+	it('reads a later branch whose <p> the next block closes, as HTML does', async () => {
+		const source = '{% if a %}<p>a</p>{% else %}<p>b<div><nldd-bestaat-niet></nldd-bestaat-niet></div>{% endif %}';
+		assert.ok((await rules(source, 'a.html.j2')).includes('unknown-element'));
+	});
+
 	it('reads a later branch with an element HTML closes itself, or a script', async () => {
 		const source = '<ul>{% if a %}<li>a{% else %}<li>b<nldd-bestaat-niet></nldd-bestaat-niet><script>if (a < b) c();</script>{% endif %}</ul>';
 		assert.ok((await rules(source, 'a.html.j2')).includes('unknown-element'));
