@@ -78,19 +78,19 @@ export const simpleSectionStyles = css`
 		align-items: center;
 
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
 			padding-top: var(--_simple-section-sm-padding-top, var(--_simple-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
 			padding-bottom: var(--_simple-section-sm-padding-bottom, var(--_simple-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
 			padding-top: var(--_simple-section-md-padding-top, var(--_simple-section-padding-top, var(--semantics-page-sections-md-margin-block)));
 			padding-bottom: var(--_simple-section-md-padding-bottom, var(--_simple-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
 			padding-top: var(--_simple-section-lg-padding-top, var(--_simple-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
 			padding-bottom: var(--_simple-section-lg-padding-bottom, var(--_simple-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
@@ -107,15 +107,15 @@ export const simpleSectionStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			gap: var(--semantics-page-sections-sm-gap);
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			gap: var(--semantics-page-sections-md-gap);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			gap: var(--semantics-page-sections-lg-gap);
 		}
 	}

@@ -58,19 +58,19 @@ export const oneHalfOneHalfSectionStyles = css`
 		align-items: center;
 
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
 			padding-top: var(--_one-half-one-half-section-sm-padding-top, var(--_one-half-one-half-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
 			padding-bottom: var(--_one-half-one-half-section-sm-padding-bottom, var(--_one-half-one-half-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
 			padding-top: var(--_one-half-one-half-section-md-padding-top, var(--_one-half-one-half-section-padding-top, var(--semantics-page-sections-md-margin-block)));
 			padding-bottom: var(--_one-half-one-half-section-md-padding-bottom, var(--_one-half-one-half-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
 			padding-top: var(--_one-half-one-half-section-lg-padding-top, var(--_one-half-one-half-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
 			padding-bottom: var(--_one-half-one-half-section-lg-padding-bottom, var(--_one-half-one-half-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
@@ -86,15 +86,15 @@ export const oneHalfOneHalfSectionStyles = css`
 		max-width: var(--_one-half-one-half-section-max-width);
 		flex-direction: column;
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			gap: var(--semantics-page-sections-sm-gap);
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			gap: var(--semantics-page-sections-md-gap);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			gap: var(--semantics-page-sections-lg-gap);
 		}
 	}
@@ -110,32 +110,32 @@ export const oneHalfOneHalfSectionStyles = css`
 
 		/* nowrap stops the column-direction wrap container from stretching the
 		   shorter column to fill height. */
-		@container (max-width: ${stackedMax}) {
+		@container page-container (max-width: ${stackedMax}) {
 			flex-direction: column;
 			flex-wrap: nowrap;
 		}
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			gap: var(--semantics-page-sections-sm-gap);
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			gap: var(--semantics-page-sections-md-gap);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			gap: var(--semantics-page-sections-lg-gap);
 		}
 	}
 
 	:host([vertical-alignment="center"]) .one-half-one-half-section__columns {
-		@container (width > ${stackedMax}) {
+		@container page-container (width > ${stackedMax}) {
 			align-items: center;
 		}
 	}
 
 	:host([vertical-alignment="bottom"]) .one-half-one-half-section__columns {
-		@container (width > ${stackedMax}) {
+		@container page-container (width > ${stackedMax}) {
 			align-items: flex-end;
 		}
 	}

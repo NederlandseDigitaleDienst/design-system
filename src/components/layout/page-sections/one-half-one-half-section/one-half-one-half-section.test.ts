@@ -28,4 +28,17 @@ describe('nldd-one-half-one-half-section', () => {
 		expect(el.shadowRoot!.querySelector('.one-half-one-half-section__right-column')).not.toBeNull();
 	});
 
+	it('lays out by the page, also in a narrower container between them', async () => {
+		const box = await sectionFixture(`
+			<div style="container: layout-container / inline-size; width: 300px;">
+				<nldd-one-half-one-half-section></nldd-one-half-one-half-section>
+			</div>
+		`, 1400);
+		el = box;
+		const section = box.querySelector('nldd-one-half-one-half-section')!;
+		await waitForUpdate(section);
+		const columns = section.shadowRoot!.querySelector('.one-half-one-half-section__columns')!;
+		expect(getComputedStyle(columns).flexDirection).toBe('row');
+	});
+
 });

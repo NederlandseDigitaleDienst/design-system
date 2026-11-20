@@ -58,17 +58,17 @@ export const fullBleedSectionStyles = css`
 		align-items: center;
 
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			padding-top: var(--_full-bleed-section-sm-padding-top, var(--_full-bleed-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
 			padding-bottom: var(--_full-bleed-section-sm-padding-bottom, var(--_full-bleed-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-top: var(--_full-bleed-section-md-padding-top, var(--_full-bleed-section-padding-top, var(--semantics-page-sections-md-margin-block)));
 			padding-bottom: var(--_full-bleed-section-md-padding-bottom, var(--_full-bleed-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			padding-top: var(--_full-bleed-section-lg-padding-top, var(--_full-bleed-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
 			padding-bottom: var(--_full-bleed-section-lg-padding-bottom, var(--_full-bleed-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
 		}
@@ -84,15 +84,15 @@ export const fullBleedSectionStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			gap: var(--semantics-page-sections-sm-gap);
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			gap: var(--semantics-page-sections-md-gap);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			gap: var(--semantics-page-sections-lg-gap);
 		}
 	}

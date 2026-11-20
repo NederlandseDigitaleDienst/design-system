@@ -86,13 +86,13 @@ export const heroStyles = css`
 
 		/* The responsive overrides query the page the hero is in. */
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
 			padding-top: var(--_hero-sm-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-sm-margin-block) / 2)));
 			padding-bottom: var(--_hero-sm-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_hero-main-padding: var(--primitives-space-24);
 			--_hero-main-inset: var(--semantics-page-sections-md-gap);
 			--_hero-default-overlap-size: var(--primitives-area-160);
@@ -102,7 +102,7 @@ export const heroStyles = css`
 			padding-bottom: var(--_hero-md-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			--_hero-main-padding: var(--primitives-space-32);
 			--_hero-main-inset: var(--semantics-page-sections-lg-gap);
 			--_hero-default-overlap-size: var(--primitives-area-160);
@@ -147,7 +147,7 @@ export const heroStyles = css`
 	   rather than rigidly tied to the width. align-self: start stops the
 	   stretch fit from cancelling the ratio. */
 	:host([data-has-media]) .hero__body::before {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			content: '';
 			height: var(--_hero-media-height);
 			aspect-ratio: var(--_hero-media-aspect-ratio);
@@ -239,7 +239,7 @@ export const heroStyles = css`
 	}
 
 	:host([data-has-media][data-main-width-length]) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			width: var(--_hero-main-width);
 			min-width: 0;
 			max-width: calc(100% - 2 * var(--_hero-main-inset));
@@ -293,7 +293,7 @@ export const heroStyles = css`
 	/* # Overlap (md+) — the media keeps a fixed height; the panel sits in the
 	   row below it, pulled up over it by the overlap size. */
 
-	@container (min-width: ${mdMin}) {
+	@container page-container (min-width: ${mdMin}) {
 		:host([data-has-media]:not([layout="contained"])) .hero__body::before {
 			content: none;
 		}
@@ -323,7 +323,7 @@ export const heroStyles = css`
 	/* # Mobile — the media on top, the panel below it, indented and overlapping
 	   it a little. */
 
-	@container (max-width: ${smMax}) {
+	@container page-container (max-width: ${smMax}) {
 		.hero__body {
 			display: flex;
 			flex-direction: column;

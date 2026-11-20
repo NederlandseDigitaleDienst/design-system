@@ -255,13 +255,13 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		super.connectedCallback();
 		this._deriveLandmarks();
 		_connectedPages.add(this);
-		// Set container-type/name as inline style on the host element. Doing
-		// this from a `:host` rule inside the shadow DOM works in Chromium
-		// but Safari does not always recognize the host as a container for
-		// slotted descendants — a known engine inconsistency. Inline on the
-		// light-DOM host avoids it entirely.
+		// Inline on the light-DOM host: a container name belongs to the tree it
+		// is set in, so a :host rule's name is not found by a query in a
+		// section's own shadow root (Safari holds to that, Chromium does not).
+		// Content follows layout-container in any surface; only the page
+		// sections query page-container, so no container between them counts.
 		this.style.containerType = 'inline-size';
-		this.style.containerName = 'layout-container';
+		this.style.containerName = 'layout-container page-container';
 		this._scrollProvider = findScrollModeProvider(this);
 		if (this._scrollProvider) {
 			// Push-driven inside a shell: it pushes the authoritative mode on

@@ -83,19 +83,19 @@ export const sidebarSectionStyles = css`
 		flex-grow: 1;
 		align-items: center;
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
 			padding-top: var(--_sidebar-section-sm-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
 			padding-bottom: var(--_sidebar-section-sm-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
 			padding-top: var(--_sidebar-section-md-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-md-margin-block)));
 			padding-bottom: var(--_sidebar-section-md-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
 			padding-top: var(--_sidebar-section-lg-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
 			padding-bottom: var(--_sidebar-section-lg-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
@@ -112,9 +112,9 @@ export const sidebarSectionStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 
-		@container (max-width: ${smMax}) { gap: var(--semantics-page-sections-sm-gap); }
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) { gap: var(--semantics-page-sections-md-gap); }
-		@container (min-width: ${lgMin}) { gap: var(--semantics-page-sections-lg-gap); }
+		@container page-container (max-width: ${smMax}) { gap: var(--semantics-page-sections-sm-gap); }
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) { gap: var(--semantics-page-sections-md-gap); }
+		@container page-container (min-width: ${lgMin}) { gap: var(--semantics-page-sections-lg-gap); }
 	}
 
 	.sidebar-section__header[hidden],
@@ -133,9 +133,9 @@ export const sidebarSectionStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 
-		@container (max-width: ${smMax}) { gap: var(--semantics-page-sections-sm-gap); }
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) { gap: var(--semantics-page-sections-md-gap); }
-		@container (min-width: ${lgMin}) {
+		@container page-container (max-width: ${smMax}) { gap: var(--semantics-page-sections-sm-gap); }
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) { gap: var(--semantics-page-sections-md-gap); }
+		@container page-container (min-width: ${lgMin}) {
 			flex-direction: row;
 			gap: var(--semantics-page-sections-lg-gap);
 		}
@@ -157,7 +157,7 @@ export const sidebarSectionStyles = css`
 	.sidebar-section__sidebar {
 		flex-shrink: 0;
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			width: var(--_sidebar-section-width);
 			max-width: var(--_sidebar-section-width);
 		}
@@ -176,7 +176,7 @@ export const sidebarSectionStyles = css`
 		background-color: var(--_sidebar-section-sidebar-box-background-color);
 		box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--_sidebar-section-sidebar-box-border-color);
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			position: sticky;
 			top: var(--_sidebar-section-sticky-top);
 			bottom: var(--_sidebar-section-sticky-bottom);
