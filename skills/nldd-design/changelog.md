@@ -15,6 +15,87 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.27.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.0...v0.27.1) (2026-11-20)
+
+### Added
+
+- **`nldd lint --fix` renames a token that got another name.** `var(--context-parent-background-color)` becomes `var(--context-background-color)`, in a stylesheet, a `style` attribute and a style object in a script. It used to name the new token and leave the edit to you. A token your own CSS declares is yours and stays. So does one with a fallback, `var(--old, #fff)`: the fallback is what your page shows now, and the new name would change that, so the finding names the token and you decide.
+- **`nldd lint` knows every token a release ever had.** The history started at 0.8.77, so a token removed before that read as "There is no token". It now holds 1244 names back to 0.1.11, and 284 of them have the name they got, among them the surface, button, category, list item and code syntax tokens. `--semantics-surfaces-background-color` now gets "Use `--semantics-surfaces-base-background-color`", and `--fix` applies it. Four successors have a value that was adjusted in the same role, so after `--fix` the color can differ slightly: the three `--semantics-controls-is-highlighted-*-contrast-color` tokens, now `is-selected`, and `--semantics-surfaces-border-color`.
+- **A token whose name stops short gets its endings.** `var(--primitives-font-body-sm-regular)` is reported with "The tokens with this name end in `-flat`, `-loose`, `-snug` or `-tight`". Which line height you meant is your choice, so `--fix` leaves it. A name that one token starts with gets that token: `--primitives-font-family-mono` is reported with "The closest is `--primitives-font-family-monospace`".
+- **`nldd lint --fix` renames a value that JSX writes in braces.** `<nldd-title size={5}>` becomes `size="display-5"`, like `size="5"` did. This holds for a number or a string that stands alone in the braces; an expression stays a finding.
+- **Five lint rules for what the generic findings said too little about,** all warnings. `text-color-inherit-no-effect` reports `color="inherit"` on `nldd-text` with what to do, where `invalid-value` listed the colors. `password-field-show-button-text-no-effect`, `password-field-hide-button-text-no-effect`, `password-field-show-button-accessible-label-no-effect` and `password-field-hide-button-accessible-label-no-effect` name the translation key that replaced the attribute, where `unknown-attribute` only said it does not exist. A baseline or a suppression on `invalid-value` or `unknown-attribute` for these needs the new id.
+- **`nldd lint --fix` moves the text of `nldd-password-field` into `translations`.** `show-button-text`, `hide-button-text`, `show-button-accessible-label` and `hide-button-accessible-label` became translation keys, and `--fix` now puts their text under that key: `show-button-text="Laat zien"` becomes `translations='{"components.password-field.show-action": "Laat zien"}'`. A `translations` that is already written out gets the key added. A bound value, a `translations` that is bound or already has the key, and empty text stay a finding. So does text with `&`, a backslash, a newline, a single quote or a template hole (`{{`, `{%`, `${`), which the fix cannot carry over as written. So does JSX, where the right form depends on the React version: React 19 takes `translations={{ … }}`, React 18 a JSON string.
+- **`nldd lint` knows the context variables an app may read or set.** `var(--context-inset-top)` read as "There is no token", while `nldd-page` sets it for sticky content. `--context-inset-top`, `--context-inset-bottom` and `--context-scroller-height` from `nldd-page`, `--context-scroll-mode` from `nldd-shell`, `--context-tooltip-pointer-events` from `nldd-tooltip` and `--context-image-height` from `nldd-image` are now known, and the reference and the component pages list them under CSS properties. The other `--context-` variables are wiring between components and can change in any release. Reading or setting one, such as `--context-back-button-display`, gets the new warning `internal-context-no-use` instead of "There is no token".
+- **`nldd lint` finds a listener on an event that got another name, and `--fix` renames it.** The events renamed in 0.22.0, such as `tabchange` to `tab-change` on `nldd-tab-bar`, broke an app without a word: the listener was never called again. The new warning `event-renamed` names the new event in `addEventListener("…")`, `@…` and `v-on:…` in Vue, Lit and Alpine, `(…)=` in Angular and `hx-on` in htmx. A scan now also reads `.ts`, `.mts`, `.mjs` and `.cjs` files, only for these listeners. A later rename lands in the list by itself.
+
+### Changed
+
+- **`exclude` in `.nldd-lint.json` matches whole file and directory names.** `"legacy"` and `"src/legacy/"` still leave out `src/legacy/a.html`, wherever it sits, but an entry no longer matches part of a name. `"gen"` also left out `generated/`, and `"a"` left out `sub/map.html`, so the project read as clean while nothing was checked. A file that such an entry skipped is now checked and can bring new findings: write the whole name (`"generated"`) to keep leaving it out. `nldd lint` names each entry that no longer leaves out a file it used to skip. An entry that is not a string is now an error.
+
+### Fixed
+
+- **`nldd lint --fix` no longer damages a file where two fixes meet.** An icon with a renamed color inside `nldd-text` that got its `<p>` came out as `…</p>ext>`. Two fixes that touch each other now apply one after the other. The `<p>` that `--fix` adds keeps the line endings of a CRLF file and never spans a blank line. `--fix` no longer writes through a symbolic link, or into a bundled script that the lint itself skips, and it says so when it stops before a file is done.
+- **`nldd lint` no longer stops on a file it cannot read.** A stylesheet link such as `href="100%.css"` and a tag name with a bracket in Markdown, `` `<nldd-x(>` ``, ended the whole run.
+- **Fewer false alarms in templates.** A `ref` rule such as `text-editor-for-needs-editor` no longer reports when the target may be in an include or has a bound id. Two branches of an `if` in Jinja, Django, Go or Handlebars that each open a tag no longer read as nested; a branch that closes what it opens is still checked. One that leaves an element open, other than one HTML closes itself such as `<li>`, is skipped, because which branch renders decides where that element ends. Other false alarms that are gone: self-closing tags in an Angular component template, `:appearance.sync` in Vue, `attr= {expr}` and `{t}` in MDX, an attribute with a capital in plain HTML, a `<` inside `{{ }}`, frontmatter with CRLF, `{false}` or an empty template literal as a JSX child, an input with a bound `type` in a dialog, and a quote between the link colors in a CSS rule.
+- **App CSS that looks like the design system's is checked again.** A rule with a selector and properties the design system also has, such as `:root { --context-link-color: … }`, was taken for its CSS and skipped. Also found now: a token after a string with `//` in it, and a custom property as a quoted key in a style object. A token in commented-out code in the `<script>` or SCSS of a Vue or Astro file, and a templated key in a `translations` value, are no longer reported.
+- **The checks in the browser keep running on a page that keeps changing.** A clock or a progress value restarted the wait on every change, so the checks never ran. They now run at least once a second, also look again at rules that read a component's state, follow changes inside the shadow roots of the app's own components, and check the FOUC guard once the first component appears.
+- **A baseline and `exclude` work the same on Windows and on Linux.** Paths are written with `/`, and a baseline written on Windows is read on Linux CI. A baseline that is no valid JSON is named in the error. `--statistics` marks a rule fixable when any of its findings is.
+
+## [0.27.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.5...v0.27.0) (2026-11-20)
+
+### Highlights
+
+- **Pages with many components load and resize much faster, above all in Safari.** A component that measured itself while the page was still parsing made the browser lay out the page once per instance, so 500 copies cost quadratically more than 50. Components now measure together, after the parse, with one ResizeObserver per component. With 500 copies in WebKit, a sheet loads in 1.7 s where it took more than a minute, a radio group in 0.4 s instead of 5.7 s, a time picker in 1.5 s instead of 73 s, a toolbar in 4.3 s instead of 27 s and an avatar group in 0.9 s instead of 52 s.
+- **A page section lays out by the `nldd-page` it is in.** A section goes in a page, never on its own or in another section. See Breaking.
+- **A component you move in the DOM keeps working.** Fourteen components went quiet after a move: they no longer followed their children or their own size. An app runs into this when it moves a sheet to `document.body` or lets a user drag a row. See Fixed.
+- **1 accessibility fix:** a moved `nldd-form-field` kept describing its control with a requirement that was no longer on screen. See Fixed.
+
+### Breaking
+
+- **A page section lays out by the width of the `nldd-page` it is in, and goes nowhere else.** `nldd-simple-section`, `nldd-full-bleed-section`, `nldd-sidebar-section`, the three column sections and `nldd-hero` were each a container of their own. They now query the page, which they always span, by its container name `page-container`, so a card, container or other container of your own between them does not count. A section outside an `nldd-page` loses its responsive padding and columns, and a section in a narrower box inside the page lays out for the page. An `@container` query in your own CSS for content in a section no longer matches the section: it matches the page now, or the nearest container of your own. Put every section directly in a page, next to the other sections; `nldd lint` warns about both (see Added).
+- **`nldd-list-item` is no longer a container.** Its cells already lay out by the `nldd-list` around it. A component with container queries of its own in a row, such as `nldd-progress-bar`, now measures the list, which is as wide as the row. An `@container` query in your own CSS for content in a row matches the list now, or the nearest container of your own.
+- **`nldd-top-navigation-bar` follows the width of the window, not that of its parent.** The bar always spans the page, so the two were the same, and a media query costs the browser nothing per bar where a container query made every resize slower with each bar. A bar in a narrower box, such as a frame in your own docs, now lays out for the window it is in: give it an `iframe` of its own to show it narrow. An `@container` query in your own CSS for content in the bar no longer matches the bar.
+
+### Added
+
+- **Lint rules `section-goes-in-page` and `section-no-section`** (warnings). A page section outside an `nldd-page` misses its layout, the main landmark, the scroller and the insets that keep sticky content clear of the bars. A section inside another section lays out by the page, not by the section around it. A section in a page in an overlay, such as an `nldd-sheet` opened from a section, is fine.
+
+### Changed
+
+- **The overflow menu of `nldd-tab-bar` closes at once after a choice, without the blink.** The chosen tab shows in the bar right next to it, so the blink only repeated it.
+- **`nldd-menu-item` draws its own text, icon, details and chevron, without cells.** Each item held five to nine `nldd-text-cell`, `nldd-icon-cell` and `nldd-spacer-cell` elements, each with a shadow root of its own. Safari pays for every one of them on each resize, also in a closed menu, so a combo-box with hundreds of options made the whole page slow to resize. The item looks the same. Its styles now belong to the item and no longer follow the cells. Code that looks for a cell in the shadow root of an item no longer finds one.
+
+### Fixed
+
+- **`nldd-page` keeps its sticky header and footer clear after `landmarks` changes.** A switch between page and region renders the header, main and footer anew, and the page kept measuring the old ones: sticky content inside lined up with the height the header had before.
+- **Fourteen components pick up again after a move in the DOM.** Moving an element disconnects it and connects it again, without a first render and without a `slotchange`. What these components had set up there did not come back.
+  - `nldd-form-field` follows its `nldd-validation-list` again, so the description of the control matches the requirements on screen. Before, an item that hid after the move stayed in the description, and a screen reader read out a requirement that was gone.
+  - `nldd-combo-box` and `nldd-token-field` hear `toggle`, `select` and `keydown` from their menu again.
+  - `nldd-menu` listens on its anchor again, and `nldd-menu-item` notices a submenu that is added late.
+  - `nldd-list` and `nldd-table` see rows that come, go or hide.
+  - `nldd-page` sees `grow` and `hidden` change on its children, and `nldd-container` the `order` attributes of its children.
+  - `nldd-menu-bar`, `nldd-document-tab-bar` and `nldd-kanban` follow their own width again. The document tab bar also finds its overflow menu back.
+  - `nldd-progress-bar` sees a segment indicator change. `nldd-progress-circle` reads the same way and got the same guard.
+- **Faster with many instances:** `nldd-page`, the split views, `nldd-top-title-bar`, `nldd-status-bar`, `nldd-radio-button`, `nldd-toolbar`, `nldd-tab-bar`, `nldd-document-tab-bar`, `nldd-menu-bar`, `nldd-top-navigation-bar`, `nldd-avatar`, `nldd-avatar-group`, `nldd-one-time-code-field`, `nldd-collection`, `nldd-kanban`, `nldd-table`, `nldd-combo-box`, `nldd-time-picker`, `nldd-date-picker`, `nldd-sidebar-section`, `nldd-file-field`, `nldd-code-viewer`, `nldd-text-editor` with a toolbar elsewhere on the page, and the corner of `nldd-hero`. Nothing changes in how they look or behave.
+- **No more "ResizeObserver loop" errors** from `nldd-table`, `nldd-sidebar-section` and the corner of `nldd-hero` when the window resizes. An `nldd-sidebar-section` that collapsed in a page still caused one, because collapsing resized the page in the same round; it now collapses a frame later.
+- **In Safari, only the `nldd-top-navigation-bar` nearest the top of the page draws the ribbon above it.** On a page with more bars, each one drew it in the same place, and its scroll-driven animations made every layout slower with each bar.
+- **The overflow of `nldd-avatar-group` and the year and month menus of `nldd-date-picker` render when they open,** not with the page.
+
+## [0.26.5](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.4...v0.26.5) (2026-11-18)
+
+### Added
+
+- **`nldd lint` reads `.astro` files.** It reads the template under the frontmatter, with the elements inside `{cond && …}` and `{items.map(…)}`, and `--fix` renames in the source. An Astro site that runs `nldd lint` in CI was always green, because a scan skipped every `.astro` file: it now gets real findings, errors included. Run `npx @nldd/design-system lint --statistics` once to see them, and `--update-baseline` to accept what is there. `nldd lint dist` still adds what only a built page shows.
+- **A scan says which templates it cannot read.** A `.svelte`, `.php`, `.twig`, `.erb`, `.ejs`, `.hbs`, `.handlebars`, `.mustache`, `.njk`, `.liquid`, `.cshtml` or `.razor` file with `nldd-*` markup now gets `file-not-read` (a warning) in a scan of a directory too. It used to show only for a file you named, so such a project read as "0 files" and clean. The summary counts such a file apart, as `in 3 files (2 not read)`. A project that runs the linter with `--max-warnings 0` fails on these warnings until the template is read some other way, for example through `nldd lint dist`.
+
+### Fixed
+
+- **`nldd lint dist` skips the scripts of a build.** A bundler's chunks hold the styles and markup of the components themselves, which read as an app overriding them: a built site got a `local-variable-no-override` for every component it used, and a `file-not-read` for every chunk. A script in `dist`, `build`, `coverage`, `.next` or `.nuxt` is now left alone, when you run the linter from the root of the project; the pages and stylesheets next to it are read as before. This goes by the name of the directory, so a script in a source directory named `build` or `dist` is skipped too.
+
+## [0.26.4](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.3...v0.26.4) (2026-11-18)
+
+## [0.26.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.26.2...v0.26.3) (2026-11-18)
+
 ### Highlights
 
 - **The documentation moved to [design.digitaledienst.overheid.nl](https://design.digitaledienst.overheid.nl), behind the landing page.** Every component, pattern and guideline has an address you can share: `/componenten/button/`, `/patronen/form/`, `/richtlijnen/`. The pages are built with the components they document, and Storybook is gone.

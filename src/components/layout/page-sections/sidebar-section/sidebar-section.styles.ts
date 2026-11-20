@@ -14,14 +14,13 @@ export const sidebarSectionStyles = css`
 
 	/* # Host
 
-	   Container queries on the section's OWN width (not the viewport): the row
-	   <-> stacked switch and the padding follow the space the section is given.
-	   The collapse-to-sheet is JS-driven — a ResizeObserver on the host sets
-	   [collapsed] (see the .ts) — and only happens when the section is narrow AND
-	   not [no-collapse]; the lg breakpoint (>= ${lgMin}) is the switch. */
+	   Container queries on the width of the page the section is in: the row
+	   <-> stacked switch and the padding follow it.
+	   The collapse-to-sheet is JS-driven: the sizer's width sets [collapsed] a
+	   frame later (see the .ts), only when the section is narrow AND not
+	   [no-collapse]; the lg breakpoint (>= ${lgMin}) is the switch. */
 
 	:host {
-		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; resolved per breakpoint
 		   below (scope override -> base override -> responsive default). */
 		--_sidebar-section-padding-top: initial;
@@ -51,6 +50,13 @@ export const sidebarSectionStyles = css`
 		display: none;
 	}
 
+	.sidebar-section__sizer {
+		height: 0;
+		flex: none;
+		align-self: stretch;
+		visibility: hidden;
+	}
+
 	:host([width="full"]) {
 		--_sidebar-section-max-width: none;
 	}
@@ -77,19 +83,19 @@ export const sidebarSectionStyles = css`
 		flex-grow: 1;
 		align-items: center;
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
 			padding-top: var(--_sidebar-section-sm-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
 			padding-bottom: var(--_sidebar-section-sm-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
 			padding-top: var(--_sidebar-section-md-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-md-margin-block)));
 			padding-bottom: var(--_sidebar-section-md-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
 			padding-top: var(--_sidebar-section-lg-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
 			padding-bottom: var(--_sidebar-section-lg-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
@@ -106,9 +112,9 @@ export const sidebarSectionStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 
-		@container (max-width: ${smMax}) { gap: var(--semantics-page-sections-sm-gap); }
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) { gap: var(--semantics-page-sections-md-gap); }
-		@container (min-width: ${lgMin}) { gap: var(--semantics-page-sections-lg-gap); }
+		@container page-container (max-width: ${smMax}) { gap: var(--semantics-page-sections-sm-gap); }
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) { gap: var(--semantics-page-sections-md-gap); }
+		@container page-container (min-width: ${lgMin}) { gap: var(--semantics-page-sections-lg-gap); }
 	}
 
 	.sidebar-section__header[hidden],
@@ -127,9 +133,9 @@ export const sidebarSectionStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 
-		@container (max-width: ${smMax}) { gap: var(--semantics-page-sections-sm-gap); }
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) { gap: var(--semantics-page-sections-md-gap); }
-		@container (min-width: ${lgMin}) {
+		@container page-container (max-width: ${smMax}) { gap: var(--semantics-page-sections-sm-gap); }
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) { gap: var(--semantics-page-sections-md-gap); }
+		@container page-container (min-width: ${lgMin}) {
 			flex-direction: row;
 			gap: var(--semantics-page-sections-lg-gap);
 		}
@@ -151,7 +157,7 @@ export const sidebarSectionStyles = css`
 	.sidebar-section__sidebar {
 		flex-shrink: 0;
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			width: var(--_sidebar-section-width);
 			max-width: var(--_sidebar-section-width);
 		}
@@ -170,7 +176,7 @@ export const sidebarSectionStyles = css`
 		background-color: var(--_sidebar-section-sidebar-box-background-color);
 		box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--_sidebar-section-sidebar-box-border-color);
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			position: sticky;
 			top: var(--_sidebar-section-sticky-top);
 			bottom: var(--_sidebar-section-sticky-bottom);

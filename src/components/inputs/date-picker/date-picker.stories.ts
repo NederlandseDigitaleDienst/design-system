@@ -181,7 +181,7 @@ export const ZonderWeekenden = () => {
 };
 
 // Via de args en niet als vaste markup, anders doen de controls op deze story
-// niets: Storybook hertekent dan dezelfde hardgecodeerde attributen.
+// niets: de website hertekent dan dezelfde hardgecodeerde attributen.
 export const MetWeeknummers = {
 	render: Template,
 	args: {

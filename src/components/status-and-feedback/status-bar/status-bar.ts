@@ -59,6 +59,31 @@ import { statusBarTemplate } from './status-bar.template.js';
 import '../../content/icon/icon.js';
 import { setState } from '../../../utilities/element-state.js';
 import { STATUS_BAR_CHANGE } from '../../../utilities/status-bar-change.js';
+import { LayoutPass } from '../../../utilities/layout-pass.js';
+
+/** Every bar reads where it is, then they all write it: one layout for all. */
+const atTopPass = new LayoutPass<NLDDStatusBar>((bars) => {
+	if (window.scrollY > 0) return;
+	const live = bars.filter((bar) => bar.isConnected);
+	const atTop = live.map((bar) => {
+		const { top, height } = bar.getBoundingClientRect();
+		return height > 0 && Math.abs(top) < 1;
+	});
+	live.forEach((bar, i) => bar.toggleAttribute('data-at-top', atTop[i]));
+});
+
+let announcing = false;
+
+/** Tells a top navigation bar that a status bar came or went, so it measures
+ *  where its ribbon starts again. Once per tick, however many bars changed. */
+function announce(): void {
+	if (announcing) return;
+	announcing = true;
+	queueMicrotask(() => {
+		announcing = false;
+		window.dispatchEvent(new Event(STATUS_BAR_CHANGE));
+	});
+}
 
 export type StatusBarVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 
@@ -121,14 +146,11 @@ export class NLDDStatusBar extends LitElement {
 	 * color carries on above it. Only read while the page is at the top.
 	 */
 	private _syncAtTop = (): void => {
-		if (window.scrollY > 0) return;
-		const { top, height } = this.getBoundingClientRect();
-		this.toggleAttribute('data-at-top', height > 0 && Math.abs(top) < 1);
+		atTopPass.schedule(this, this.ownerDocument);
 	};
 
-	/** Tells a top navigation bar that a status bar came or went, so it measures where its ribbon starts again. */
 	private _announce(): void {
-		window.dispatchEvent(new Event(STATUS_BAR_CHANGE));
+		announce();
 	}
 
 	/** Whether a top bar comes before the status bar. Top bars in an overlay are left out, since a sheet or dialog has its own. */

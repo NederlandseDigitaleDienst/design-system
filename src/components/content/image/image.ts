@@ -50,17 +50,14 @@
  *   Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base
  *   color shown outside the cell gradients; the other six are per-cell
  *   colors in row-major 3×2 order. Generate via the encoder in
- *   `lqip-encoder.ts` or via the "LQIP encoder tool" Storybook story.
+ *   `lqip-encoder.ts` or via the LQIP-encoder example on `/componenten/image/`.
  *   Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/)
  *   with per-cell hue. Lean's original format encodes grayscale cells only,
  *   while ours encodes a color per cell so multi-color subjects survive the
  *   preview.
  * @attr {object} translations - Override translation keys (e.g. the message
  *   shown when the image fails to load); unset keys fall back to Dutch.
- *
- * A parent that gives the image a fixed box, such as the media area of
- * nldd-hero, sets `--context-image-height: 100%` on it, so the image fills that
- * box instead of taking the height of the photo.
+ * @cssprop --context-image-height - Height of the image. A parent that gives the image a fixed box, such as the media area of nldd-hero, sets it to `100%`, so the image fills that box instead of taking the height of the photo
  *
  * @slot - Custom `<img>`, `<picture>` or inline `<svg>` (overrides the src-based default). An inline svg keeps its own colors and scales by its viewBox, so a drawing gets the same box, ratio and caption as a photo. Slotted media carries its own text alternative: an `alt` on the img (empty when it conveys nothing), or `role="img"` with an `aria-label`, `aria-labelledby` or `<title>` on the svg.
  *   The internal `error` listener is attached only to the built-in `<img>`, so

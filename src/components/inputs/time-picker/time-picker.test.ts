@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, until, nextFrames } from '../../../test-utils.js';
 import type { NLDDTimePicker } from './time-picker.js';
 import './time-picker.js';
 
@@ -677,5 +677,61 @@ describe('nldd-time-picker – wiel', () => {
 		await new Promise((r) => setTimeout(r, 250));
 		expect(events).toEqual([]);
 		expect(el.value).toBe('09:30');
+	});
+});
+
+// Many pickers that render together put their values in the middle in one
+// pass. The columns snap only once the user scrolls them: in WebKit, setting
+// scrollTop with many snapping columns on the page cost time per column.
+describe('nldd-time-picker met meer op een pagina', () => {
+	let host: HTMLElement;
+
+	afterEach(() => cleanup(host));
+
+	it('zet elke gekozen waarde in het midden, en laat de kolommen daarna weer scrollen', async () => {
+		const style = 'style="--semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"';
+		host = await fixture(`<div>
+			<nldd-time-picker value="09:30" ${style}></nldd-time-picker>
+			<nldd-time-picker value="14:15" ${style}></nldd-time-picker>
+			<nldd-time-picker value="20:45" ${style}></nldd-time-picker>
+		</div>`);
+		const pickers = [...host.querySelectorAll('nldd-time-picker')] as NLDDTimePicker[];
+		await Promise.all(pickers.map((picker) => waitForUpdate(picker)));
+		await nextFrames();
+		for (const picker of pickers) {
+			for (const name of ['hours', 'minutes'] as const) {
+				const kolom = column(picker, name);
+				const gekozen = kolom.querySelector<HTMLElement>('[data-selected]')!;
+				expect(Math.abs(gekozen.offsetTop + gekozen.offsetHeight / 2 - kolom.scrollTop - kolom.clientHeight / 2)).toBeLessThan(1);
+				expect(getComputedStyle(kolom).overflowY).toBe('auto');
+			}
+		}
+		expect(pickers.map((picker) => selected(picker, 'hours'))).toEqual(['09', '14', '20']);
+		expect(getComputedStyle(column(pickers[0], 'hours')).scrollSnapType).toBe('none');
+		column(pickers[0], 'hours').dispatchEvent(new WheelEvent('wheel'));
+		expect(getComputedStyle(column(pickers[0], 'hours')).scrollSnapType).not.toBe('none');
+		expect(getComputedStyle(column(pickers[1], 'hours')).scrollSnapType).toBe('none');
+	});
+});
+
+// The columns become scrollable for the user only after the pickers that
+// render together have been placed: a scrollable column makes every placement
+// on the page cost more in WebKit. The pointer on a picker does not wait.
+describe('nldd-time-picker wordt scrollbaar', () => {
+	let el: NLDDTimePicker;
+
+	afterEach(() => cleanup(el));
+
+	it('na de volgende frame', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30"></nldd-time-picker>');
+		expect(getComputedStyle(column(el, 'hours')).overflowY).toBe('hidden');
+		await nextFrames();
+		expect(getComputedStyle(column(el, 'hours')).overflowY).toBe('auto');
+	});
+
+	it('meteen als de aanwijzer erop komt', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="09:30"></nldd-time-picker>');
+		el.shadowRoot!.querySelector('.time-picker')!.dispatchEvent(new PointerEvent('pointerenter'));
+		expect(getComputedStyle(column(el, 'minutes')).overflowY).toBe('auto');
 	});
 });

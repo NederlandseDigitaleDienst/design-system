@@ -151,8 +151,11 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 	 *  given decides what `updated()` writes on it, and a count from there would
 	 *  ask for a second render of what was just drawn. */
 	override willUpdate(changed: PropertyValues<this>): void {
-		if (changed.has('checked') && this.checked) this._grouping.uncheckOthers();
-		if (changed.has('name')) this._grouping.regroup();
+		// The first render is batched with the other radios that render in the
+		// same tick; see RadioGrouping.
+		const first = !this.hasUpdated;
+		if (changed.has('checked') && this.checked) this._grouping.uncheckOthers(first);
+		if (changed.has('name')) this._grouping.regroup(first);
 		else if (changed.has('checked') || changed.has('disabled')) this._grouping.refresh();
 		// Also when the app sets `checked` or a form resets it: the group moves
 		// the stop for Tab along, which it cannot see by itself.

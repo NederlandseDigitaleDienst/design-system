@@ -69,14 +69,31 @@ export const timePickerStyles = css`
 		/* Without this the values of a short list stretch to the full height. */
 		justify-content: flex-start;
 		scrollbar-width: none;
-		/* Not mandatory: then the browser always has to land on a snap point, and a
-		   short list can refuse to scroll. */
-		scroll-snap-type: y proximity;
+		scroll-snap-type: none;
 		mask-image: linear-gradient(to bottom, transparent 0, black var(--_time-picker-list-edge-height), black calc(100% - var(--_time-picker-list-edge-height)), transparent 100%);
 	}
 
+	/* Snaps only once the user scrolls it (see _takeOver): in WebKit, setting
+	   scrollTop with many snapping scrollers on the page costs time per scroller.
+	   Not mandatory: then the browser always has to land on a snap point, and a
+	   short list can refuse to scroll. */
+	:host([data-snap]) .time-picker__list {
+		scroll-snap-type: y proximity;
+	}
+
 	/* Snapping would pull each frame of the glide to the nearest value. */
-	.time-picker__list[data-gliding] {
+	:host([data-snap]) .time-picker__list[data-gliding] {
+		scroll-snap-type: none;
+	}
+
+	/* WebKit: scrollTop written anywhere costs time per scroller on the page
+	   that the user can scroll, and per layer; see goLive and placePass. */
+	:host(:not([data-live])) .time-picker__list,
+	.time-picker__list[data-placing] {
+		overflow-y: hidden;
+	}
+
+	:host([data-snap]) .time-picker__list[data-placing] {
 		scroll-snap-type: none;
 	}
 
@@ -165,8 +182,12 @@ export const timePickerStyles = css`
 		color: var(--_time-picker-selection-content-color);
 		font-variant-numeric: tabular-nums;
 		transform: translateY(-50%);
-		/* iOS Safari puts the masked lists on their own layer while the sheet slides
-		   in, above this one despite the z-index. A layer of its own keeps it on top. */
+	}
+
+	/* iOS Safari puts the masked lists on their own layer while the sheet slides
+	   in, above this one despite the z-index. A layer of its own keeps it on top.
+	   Only once live: in WebKit every layer makes each placement cost more. */
+	:host([data-live]) .time-picker__selection {
 		will-change: transform;
 	}
 

@@ -1,6 +1,9 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { assertProperties, compileForBrowser, favorableName, forBrowser, ruleProblems, runsInBrowser, sourcePseudos } from './rule-compiler.js';
+import { createLinter, loadData } from './linter.js';
+import { resolveSeverities } from './rule-data.js';
+import { BOUND } from './tree.js';
 
 const classes = { 'form-input': ['input', 'nldd-text-field'], cell: ['nldd-text-cell'] };
 
@@ -48,6 +51,10 @@ describe('assertProperties', () => {
 
 	it('leaves out an attribute compared to a value', () => {
 		assert.deepEqual(assertProperties('[href]:not([href=""])'), ['href']);
+	});
+
+	it('leaves out what :has() asks of a descendant', () => {
+		assert.deepEqual(assertProperties(':has([accessible-label]), :is([text])'), ['text']);
 	});
 });
 
@@ -112,5 +119,43 @@ describe('sourcePseudos', () => {
 		assert.equal(pseudos['form-input'](input()), true);
 		assert.equal(pseudos['form-input'](input('text')), true);
 		assert.equal(pseudos['form-input'](input('hidden')), false);
+	});
+
+	it('takes an input with a bound type for a form input only in W+', () => {
+		const pseudos = sourcePseudos({ classes });
+		const input = { name: 'input', attrs: new Map([['type', BOUND]]) };
+		assert.equal(pseudos['form-input'](input), false);
+		assert.equal(pseudos[favorableName('form-input')](input), true);
+	});
+});
+
+describe('the rules in source', () => {
+	const data = loadData();
+	const linter = createLinter(data);
+	const pure = createLinter(data, { severities: resolveSeverities(data, {}, { optIn: ['pure'] }) });
+	const rulesIn = async (source, filename, using = linter) => (await using.lintSource(source, filename)).findings.map(({ rule }) => rule).sort();
+
+	it('cannot tell a reference whose target may be in an include or has a bound id', async () => {
+		const bar = '<nldd-button-bar text-editor-for="ed"></nldd-button-bar>';
+		assert.deepEqual(await rulesIn(`<html><body>{% include "x.html" %}${bar}</body></html>`, 'page.html.j2'), []);
+		assert.deepEqual(await rulesIn(`<html><body><nldd-text-editor accessible-label="a" id="{{ edid }}"></nldd-text-editor>${bar}</body></html>`, 'page.html.j2'), []);
+		assert.deepEqual(await rulesIn(`<html><body>${bar}</body></html>`, 'page.html'), ['text-editor-for-needs-editor']);
+	});
+
+	it('judges a placed tree the same whatever the order of its placements', async () => {
+		const file = (first, second) => `const label = <strong/>;\nexport function A() { return <div>${first}${second}</div>; }`;
+		const inSpan = '<nldd-form-field-help-text><span>{label}</span></nldd-form-field-help-text>';
+		const direct = '<nldd-form-field-help-text>{label}</nldd-form-field-help-text>';
+		const textRules = async (source) => (await rulesIn(source, 'a.tsx', pure)).filter((rule) => rule === 'html-no-text');
+		assert.deepEqual(await textRules(file(inSpan, direct)), await textRules(file(direct, inSpan)));
+	});
+
+	it('gives a bound value of a removed name one finding, not one per value', async () => {
+		assert.deepEqual(await rulesIn('<template><nldd-text-editor accessible-label="a" :appearance="mode"></nldd-text-editor></template>', 'a.vue'), ['unknown-attribute']);
+	});
+
+	it('cannot tell whether an input with a bound type is hidden', async () => {
+		assert.deepEqual(await rulesIn('<template><nldd-modal-dialog text="a"><input :type="t" name="csrf"></nldd-modal-dialog></template>', 'a.vue'), []);
+		assert.deepEqual(await rulesIn('<template><nldd-modal-dialog text="a"><input type="text" name="csrf"></nldd-modal-dialog></template>', 'a.vue'), ['modal-dialog-no-form']);
 	});
 });

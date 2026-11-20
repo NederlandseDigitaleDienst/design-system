@@ -119,16 +119,37 @@ const LIMITS = ['--_hero-media-corner-limit', '--_hero-main-corner-limit'] as co
  * the whole hero. An area that is not shown measures zero and keeps its limit.
  */
 export function limitCorner(host: HTMLElement, entries: readonly ResizeObserverEntry[]): void {
+	const limits = pendingLimits.get(host) ?? new Map<string, string>();
 	for (const entry of entries) {
 		const box = entry.borderBoxSize?.[0];
 		const width = box?.inlineSize ?? entry.contentRect.width;
 		const height = box?.blockSize ?? entry.contentRect.height;
 		if (!width || !height) continue;
 		const limit = entry.target.classList.contains('hero__media') ? LIMITS[0] : LIMITS[1];
-		host.style.setProperty(limit, `${Math.min(width, height) / 3}px`);
+		limits.set(limit, `${Math.min(width, height) / 3}px`);
 	}
+	if (!limits.size || pendingLimits.has(host)) return;
+	pendingLimits.set(host, limits);
+	// The radius narrows the panel it rounds, which the observer watches. Written
+	// in its own callback, that is a resize the observer cannot deliver, and the
+	// browser reports a ResizeObserver loop. A frame later it is a new one.
+	pendingFrames.set(host, requestAnimationFrame(() => {
+		pendingLimits.delete(host);
+		pendingFrames.delete(host);
+		for (const [limit, value] of limits) {
+			if (host.style.getPropertyValue(limit) !== value) host.style.setProperty(limit, value);
+		}
+	}));
 }
 
+/** Limits measured but not yet written, per hero, and the frame that writes them. */
+const pendingLimits = new WeakMap<HTMLElement, Map<string, string>>();
+const pendingFrames = new WeakMap<HTMLElement, number>();
+
 export function clearCornerLimits(host: HTMLElement): void {
+	const frame = pendingFrames.get(host);
+	if (frame !== undefined) cancelAnimationFrame(frame);
+	pendingFrames.delete(host);
+	pendingLimits.delete(host);
 	for (const limit of LIMITS) host.style.removeProperty(limit);
 }

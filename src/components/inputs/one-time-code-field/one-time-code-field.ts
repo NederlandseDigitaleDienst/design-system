@@ -56,6 +56,7 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
 import { oneTimeCodeFieldStyles } from './one-time-code-field.styles.js';
 import { oneTimeCodeFieldTemplate } from './one-time-code-field.template.js';
 
@@ -64,6 +65,73 @@ export type OneTimeCodeType = 'numeric' | 'alphanumeric';
 export type OneTimeCodeSize = 'sm' | 'md' | 'lg';
 
 const DEFAULT_LENGTH = 6;
+
+/** From large to small: the field steps down this ladder until the boxes fit. */
+const FIT_SIZES: OneTimeCodeSize[] = ['lg', 'md', 'sm'];
+
+/** The natural width of the boxes at each size the field may step down to. */
+interface BoxWidths {
+	sizes: OneTimeCodeSize[];
+	widths: number[];
+}
+
+/**
+ * Measures the boxes of every field in one pass. The width of the boxes at a
+ * size does not depend on the room the field has, so it is measured once, at
+ * each size of the ladder, and a resize only compares the room against it.
+ * All fields step through the sizes together: one layout per size, not one per
+ * field per size.
+ */
+function measureFields(fields: NLDDOneTimeCodeField[]): void {
+	const live = fields.filter((field) => field.isConnected && field._boxesElement);
+	const room = live.map((field) => field.clientWidth);
+	// A field that is not laid out keeps what it has; the observer reports it
+	// once it gets a width.
+	const measured = live.filter((_, i) => room[i] > 0);
+	const available = room.filter((width) => width > 0);
+	const ladders = measured.map((field) => field._fitSizes());
+	const widths: number[][] = measured.map(() => []);
+	for (let step = 0; step < FIT_SIZES.length; step++) {
+		if (!ladders.some((ladder) => step < ladder.length)) break;
+		measured.forEach((field, i) => {
+			const size = ladders[i][step];
+			if (size === undefined) return;
+			if (step === 0) field._boxesElement!.style.minWidth = 'max-content';
+			if (size === field.size) field.removeAttribute('data-fit');
+			else field.setAttribute('data-fit', size);
+		});
+		measured.forEach((field, i) => {
+			if (step < ladders[i].length) widths[i].push(field._boxesElement!.getBoundingClientRect().width);
+		});
+	}
+	measured.forEach((field, i) => {
+		field._boxesElement!.style.removeProperty('min-width');
+		field._boxWidths = { sizes: ladders[i], widths: widths[i] };
+		field._applyFit(field._fitFor(available[i]));
+	});
+}
+
+/** The fields whose size, length or format changed in the same tick. */
+const measurePass = new LayoutPass<NLDDOneTimeCodeField>(measureFields);
+
+/** One observer for every field: the room it has changed. */
+const fieldObserver = sharedResizeObserver<NLDDOneTimeCodeField>((fields) => {
+	const live = fields.filter((field) => field.isConnected);
+	const available = live.map((field) => field.clientWidth);
+	// Boxes that show at their natural width, but not at the width they were
+	// measured at, mean the sizes changed since (a theme, a font): measure again.
+	const showing = live.map((field) => field._showingBoxesWidth());
+	live.forEach((field, i) => {
+		if (available[i] === 0) return;
+		const known = field._boxWidths;
+		const shown = showing[i];
+		const expected = field._expectedWidth();
+		const stale = !known
+			|| (shown !== null && expected !== null && shown < available[i] - 0.5 && Math.abs(shown - expected) > 0.5);
+		if (stale) measurePass.schedule(field, field.ownerDocument);
+		else field._applyFit(field._fitFor(available[i]));
+	});
+});
 
 /** A box in the format; any other part is a separator. */
 export const BOX = Symbol('box');
@@ -237,46 +305,78 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 		}
 	}
 
-	private _resizeObserver?: ResizeObserver;
-
 	override connectedCallback(): void {
 		super.connectedCallback();
-		this._resizeObserver = new ResizeObserver(() => this._fit());
-		this._resizeObserver.observe(this);
+		fieldObserver.observe(this, this);
 	}
 
 	override disconnectedCallback(): void {
-		this._resizeObserver?.disconnect();
+		fieldObserver.unobserveAll(this);
+		measurePass.cancel(this);
 		super.disconnectedCallback();
 	}
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
-		if (['size', 'length', 'format'].some((key) => changed.has(key))) this._fit();
+		if (['size', 'length', 'format'].some((key) => changed.has(key))) {
+			this._boxWidths = null;
+			measurePass.schedule(this, this.ownerDocument);
+		}
 	}
 
-	/** Steps down from `size` until the boxes fit the width, so a code never
-	 *  wraps. Where not even sm fits, the input itself shows as a text field in
-	 *  the size of `size`. The boxes are measured at their full width for this. */
-	private _fit(): void {
-		const boxes = this.shadowRoot?.querySelector<HTMLElement>('.one-time-code-field__boxes');
-		const available = this.clientWidth;
-		if (!boxes || available === 0) return;
-		const sizes: OneTimeCodeSize[] = ['lg', 'md', 'sm'];
+	/**
+	 * Steps down from `size` until the boxes fit the width, so a code never
+	 * wraps. Where not even sm fits, the input itself shows as a text field in
+	 * the size of `size`. The boxes are measured at their full width for this,
+	 * in a pass with the other fields (see measureFields).
+	 *
+	 * @internal What the boxes measured at each size, or null before they are.
+	 */
+	_boxWidths: BoxWidths | null = null;
+
+	/** @internal */
+	get _boxesElement(): HTMLElement | null {
+		return this.shadowRoot?.querySelector<HTMLElement>('.one-time-code-field__boxes') ?? null;
+	}
+
+	/** @internal The sizes this field may show, from its own size down. */
+	_fitSizes(): OneTimeCodeSize[] {
 		// An unknown size renders as md, so it steps down from there.
-		const start = sizes.includes(this.size) ? sizes.indexOf(this.size) : sizes.indexOf('md');
-		this.removeAttribute('data-fit');
-		boxes.style.minWidth = 'max-content';
-		let fits = false;
-		for (const size of sizes.slice(start)) {
-			if (size !== this.size) this.setAttribute('data-fit', size);
-			if (boxes.getBoundingClientRect().width <= available + 0.5) {
-				fits = true;
-				break;
-			}
-		}
-		boxes.style.removeProperty('min-width');
-		if (!fits) this.setAttribute('data-fit', 'field');
+		const start = FIT_SIZES.includes(this.size) ? FIT_SIZES.indexOf(this.size) : FIT_SIZES.indexOf('md');
+		return FIT_SIZES.slice(start);
+	}
+
+	/** @internal The `data-fit` for this much room: none at its own size, the
+	 *  first size down that fits, or `field`. */
+	_fitFor(available: number): string | null {
+		const known = this._boxWidths;
+		if (!known) return this.getAttribute('data-fit');
+		const index = known.widths.findIndex((width) => width <= available + 0.5);
+		if (index === -1) return 'field';
+		const size = known.sizes[index];
+		return size === this.size ? null : size;
+	}
+
+	/** @internal */
+	_applyFit(fit: string | null): void {
+		if (this.getAttribute('data-fit') === fit) return;
+		if (fit === null) this.removeAttribute('data-fit');
+		else this.setAttribute('data-fit', fit);
+	}
+
+	/** @internal The width the boxes were measured at, at the size they show now. */
+	_expectedWidth(): number | null {
+		const known = this._boxWidths;
+		if (!known) return null;
+		const fit = this.getAttribute('data-fit');
+		const index = known.sizes.findIndex((size) => (fit === null ? size === this.size : size === fit));
+		return index === -1 ? null : known.widths[index];
+	}
+
+	/** @internal The width of the boxes as they show, or null as a text field. A read. */
+	_showingBoxesWidth(): number | null {
+		if (this.getAttribute('data-fit') === 'field') return null;
+		return this._boxesElement?.getBoundingClientRect().width ?? null;
 	}
 
 	override formValue(): FormValue {

@@ -271,6 +271,35 @@ describe('nldd-form-field description wiring', () => {
 		expect(describedBy(input)).toEqual([length, capital]);
 	});
 
+	// A move disconnects and connects the field without a first update, and the
+	// observer on the lists only started from there.
+	it('follows the items after the field is moved in the DOM', async () => {
+		el = await fixture(`
+			<div>
+				<div id="from">
+					<nldd-form-field label="Wachtwoord">
+						<input invalid>
+						<nldd-validation-list>
+							<nldd-validation-item id="rule-length" minlength="8" visible>Minimaal 8 tekens</nldd-validation-item>
+							<nldd-validation-item id="rule-capital" match="[A-Z]" visible>Een hoofdletter</nldd-validation-item>
+						</nldd-validation-list>
+					</nldd-form-field>
+				</div>
+				<div id="to"></div>
+			</div>
+		`);
+		const field = el.querySelector('nldd-form-field') as HTMLElement;
+		await waitForUpdate(field);
+		const input = el.querySelector('input')!;
+		const length = el.querySelector('#rule-length')!;
+		const capital = el.querySelector('#rule-capital')!;
+		el.querySelector('#to')!.appendChild(field);
+		await waitForUpdate(field);
+		length.removeAttribute('visible');
+		await waitForUpdate(field);
+		expect(describedBy(input)).toEqual([capital]);
+	});
+
 	it('keeps describing the input when the control turns valid again', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">

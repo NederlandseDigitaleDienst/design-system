@@ -2,15 +2,25 @@
 
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
-import { extname, join, relative, resolve } from 'node:path';
+import { extname, join, relative, resolve, sep } from 'node:path';
 import { declarations, TOKEN_PREFIX } from './css.js';
 
 export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
-export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.tmpl', '.gohtml', '.vue', '.jsx', '.tsx', '.js'];
+export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.tmpl', '.gohtml', '.vue', '.astro', '.jsx', '.tsx', '.js'];
+
+/**
+ * Templates the linter has no parser for. A scan of a directory still opens them:
+ * one with `nldd-*` markup gets `file-not-read`, so a project in such a language
+ * does not read as checked and clean.
+ */
+export const UNREAD_EXTENSIONS = ['.svelte', '.php', '.twig', '.erb', '.ejs', '.hbs', '.handlebars', '.mustache', '.njk', '.liquid', '.cshtml', '.razor'];
 
 /** An app's own stylesheets: read for the tokens they name, and in full when the group pure is on. */
 export const STYLESHEET_EXTENSIONS = ['.css', '.scss', '.sass', '.less'];
+
+/** Scripts a scan reads only for the events they listen to: a listener on a renamed event fails silently. */
+export const SCRIPT_EXTENSIONS = ['.ts', '.mts', '.mjs', '.cjs'];
 
 /** Where a tag name stands outside markup: a renamed tag reads these, also a `.js` the linter reads as markup. */
 export const REFERENCE_EXTENSIONS = ['.js', '.mjs', '.cjs', '.ts', '.css', '.scss', '.less'];
@@ -44,11 +54,20 @@ function trackedFiles(root, extensions) {
 	}
 }
 
+/** A path from the root with `/`, as in the config, the baseline and CI annotations, on every platform. */
+export const relativePath = (root, file) => relative(root, file).split(sep).join('/');
+
+const normalizeEntry = (entry) => entry.replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/, '');
+
+/**
+ * An entry is a file or directory name, or a path of them, anywhere in the path: `legacy`
+ * and `src/legacy/` exclude `src/legacy/a.html`, and neither excludes `src/legacy-new.html`.
+ */
 function matchesExclude(path, patterns) {
-	return patterns.some((pattern) => path.includes(pattern));
+	return patterns.map(normalizeEntry).some((entry) => entry !== '' && `/${path}/`.includes(`/${entry}/`));
 }
 
-export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENSIONS) {
+function listFiles(paths, root, extensions) {
 	const files =
 		paths.length === 0
 			? (trackedFiles(root, extensions) ?? walkDirectory(root, [], extensions))
@@ -57,7 +76,24 @@ export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENS
 					if (!existsSync(full)) throw new Error(`No such file or directory: ${path}`);
 					return statSync(full).isDirectory() ? walkDirectory(full, [], extensions) : [full];
 				});
-	return [...new Set(files)].filter((file) => existsSync(file) && !matchesExclude(relative(root, file), exclude));
+	return [...new Set(files)].filter((file) => existsSync(file));
+}
+
+export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENSIONS) {
+	return listFiles(paths, root, extensions).filter((file) => !matchesExclude(relativePath(root, file), exclude));
+}
+
+/**
+ * Entries that leave out nothing, while up to 0.27 they matched part of a name in one of
+ * these files: `gen` left out `generated/a.html`. Each with the first such file.
+ */
+export function partialExcludes(paths, root, exclude = [], extensions = DEFAULT_EXTENSIONS) {
+	const files = listFiles(paths, root, extensions).map((file) => relativePath(root, file));
+	return exclude.flatMap((entry) => {
+		if (normalizeEntry(entry) === '' || files.some((file) => matchesExclude(file, [entry]))) return [];
+		const file = files.find((one) => one.includes(normalizeEntry(entry)));
+		return file ? [{ entry, file }] : [];
+	});
 }
 
 /** The average line length above which a script counts as minified. */
@@ -78,8 +114,9 @@ const namesTokens = (source) => /var\(\s*--(primitives|semantics|components|cont
  * and the variables it sets, and only then. `keep` says a file has to be read
  * anyway, as one the baseline names.
  */
-export function isRelevant({ filename, source }, { wrappers, keep = () => false } = {}) {
+export function isRelevant({ filename, source }, { wrappers, keep = () => false, events } = {}) {
 	if (keep(filename)) return true;
+	if (events?.test(source)) return true;
 	if (isStylesheet(filename)) return namesTokens(source);
 	return /nldd-|Nldd/.test(source) || namesTokens(source) || Boolean(wrappers);
 }
@@ -107,7 +144,9 @@ export function readConfig(root, knownRules) {
 	if (config.wrappers !== undefined && (!isMap(config.wrappers) || !Object.values(config.wrappers).every((tag) => typeof tag === 'string'))) {
 		throw new Error(`${CONFIG_FILE}: "wrappers" maps a component to a tag name.`);
 	}
-	if (config.exclude !== undefined && !Array.isArray(config.exclude)) throw new Error(`${CONFIG_FILE}: "exclude" takes a list.`);
+	if (config.exclude !== undefined && (!Array.isArray(config.exclude) || !config.exclude.every((entry) => typeof entry === 'string'))) {
+		throw new Error(`${CONFIG_FILE}: "exclude" takes a list of paths.`);
+	}
 	for (const [rule, level] of Object.entries(config.rules ?? {})) {
 		if (!knownRules.has(rule)) throw new Error(`${CONFIG_FILE}: unknown rule "${rule}".`);
 		if (!['off', 'hint', 'warn', 'error'].includes(level)) {
@@ -137,10 +176,16 @@ function mergeRenamed(entries, canonical) {
 export function readBaseline(root, canonical = (id) => id) {
 	const path = join(root, BASELINE_FILE);
 	if (!existsSync(path)) return {};
-	const baseline = JSON.parse(readFileSync(path, 'utf8'));
+	let baseline;
+	try {
+		baseline = JSON.parse(readFileSync(path, 'utf8'));
+	} catch (error) {
+		throw new Error(`${BASELINE_FILE}: ${error.message}`);
+	}
+	// A baseline written on Windows by an older version has backslashes in its keys.
 	return Object.fromEntries(
 		Object.entries(baseline).map(([file, entries]) => [
-			file,
+			file.replace(/\\/g, '/'),
 			mergeRenamed(entries, canonical),
 		]),
 	);
@@ -149,7 +194,7 @@ export function readBaseline(root, canonical = (id) => id) {
 const baselineKey = ({ rule, tag }) => `${rule}|${tag}`;
 
 export function applyBaseline(filename, findings, baseline, root) {
-	const accepted = { ...baseline[relative(root, filename)] };
+	const accepted = { ...baseline[relativePath(root, filename)] };
 	return findings.filter((finding) => {
 		const key = baselineKey(finding);
 		// A hint is never in a baseline, so it must not use up a warning of the same rule.
@@ -172,7 +217,7 @@ export function looseInBaseline(results, baseline, root, ran) {
 	let loose = 0;
 	for (const { filename, findings } of results) {
 		const found = countFindings(findings);
-		for (const [entry, count] of Object.entries(baseline[relative(root, filename)] ?? {})) {
+		for (const [entry, count] of Object.entries(baseline[relativePath(root, filename)] ?? {})) {
 			if (ran(entry.split('|')[0])) loose += Math.max(0, count - (found[entry] ?? 0));
 		}
 	}
@@ -186,7 +231,7 @@ export function looseInBaseline(results, baseline, root, ran) {
 export function tightenBaseline(results, root, canonical, ran) {
 	if (!existsSync(join(root, BASELINE_FILE))) return undefined;
 	const baseline = readBaseline(root, canonical);
-	const read = new Map(results.map(({ filename, findings }) => [relative(root, filename), countFindings(findings)]));
+	const read = new Map(results.map(({ filename, findings }) => [relativePath(root, filename), countFindings(findings)]));
 	// Only the rules that ran can be compared; what the others accepted moves along as it is.
 	const ranOnly = (entries) => Object.fromEntries(Object.entries(entries).filter(([entry]) => ran(entry.split('|')[0])));
 	const sameCounts = (a, b) => {
@@ -227,7 +272,7 @@ export function tightenBaseline(results, root, canonical, ran) {
 export function writeBaseline(results, root, canonical, ran = () => true) {
 	const baseline = readBaseline(root, canonical);
 	for (const { filename, findings } of results) {
-		const key = relative(root, filename);
+		const key = relativePath(root, filename);
 		const kept = Object.entries(baseline[key] ?? {}).filter(([entry]) => !ran(entry.split('|')[0]));
 		delete baseline[key];
 		if (kept.length === 0 && findings.every(({ severity }) => severity === 'hint')) continue;

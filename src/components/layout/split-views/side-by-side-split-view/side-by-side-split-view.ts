@@ -23,11 +23,23 @@ import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { SINGLE_COLUMN_CHANGE_EVENT } from '../../../../utilities/scroll-mode-controller.js';
+import { LayoutPass, sharedResizeObserver } from '../../../../utilities/layout-pass.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
 import type { SingleColumnChangeDetail } from '../../../../utilities/scroll-mode-controller.js';
 import { sideBySideSplitViewStyles } from './side-by-side-split-view.styles.js';
 import { sideBySideSplitViewTemplate } from './side-by-side-split-view.template.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
+
+/** Every view that changed size measures, then they all apply: one layout for
+ *  all of them, where an observer each lays out once per view. */
+function measureViews(views: NLDDSideBySideSplitView[]): void {
+	const live = views.filter((view) => view.isConnected);
+	const fitting = live.map((view) => view._measureFitting());
+	live.forEach((view, i) => view._applyFitting(fitting[i]));
+}
+
+const sizeObserver = sharedResizeObserver<NLDDSideBySideSplitView>(measureViews);
+const fittingPass = new LayoutPass<NLDDSideBySideSplitView>(measureViews);
 
 @customElement('nldd-side-by-side-split-view')
 export class NLDDSideBySideSplitView extends LitElement {
@@ -47,32 +59,26 @@ export class NLDDSideBySideSplitView extends LitElement {
 	@state()
 	_visiblePanes = Infinity;
 
-	// Cached pane min-width — read from CSS in firstUpdated
+	// Cached pane min-width, read from CSS once the styles apply
 	private _paneMinWidth = 0;
 
-	private _resizeObserver: ResizeObserver | null = null;
-
+	/** The observer reports every view once when it connects, after its first
+	 *  render, so that is where the first measurement happens too. */
 	override connectedCallback() {
 		super.connectedCallback();
-		this._resizeObserver = new ResizeObserver(() => this._updateVisiblePanes());
-		this._resizeObserver.observe(this);
+		sizeObserver.observe(this, this);
 	}
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
-	}
-
-	override firstUpdated() {
-		// Read pane min-width from CSS after first render — styles are guaranteed applied
-		this._paneMinWidth = parseFloat(getComputedStyle(this).getPropertyValue('--_side-by-side-split-view-pane-min-width'));
-		this._updateVisiblePanes();
+		sizeObserver.unobserveAll(this);
+		fittingPass.cancel(this);
 	}
 
 	override updated(changed: Map<string, unknown>) {
-		if (changed.has('panes')) {
-			this._updateVisiblePanes();
+		// The first render is measured by the observer's first report.
+		if (changed.has('panes') && changed.get('panes') !== undefined) {
+			fittingPass.schedule(this, this.ownerDocument);
 		}
 	}
 
@@ -86,9 +92,19 @@ export class NLDDSideBySideSplitView extends LitElement {
 	}
 
 	private _updateVisiblePanes() {
-		if (!this._paneMinWidth) return;
-		const width = this.getBoundingClientRect().width;
-		const fitting = Math.floor(width / this._paneMinWidth);
+		this._applyFitting(this._measureFitting());
+	}
+
+	/** @internal How many panes fit, or null before the styles apply. Reads, writes nothing. */
+	_measureFitting(): number | null {
+		this._paneMinWidth ||= parseFloat(getComputedStyle(this).getPropertyValue('--_side-by-side-split-view-pane-min-width'));
+		if (!this._paneMinWidth) return null;
+		return Math.floor(this.getBoundingClientRect().width / this._paneMinWidth);
+	}
+
+	/** @internal */
+	_applyFitting(fitting: number | null): void {
+		if (fitting === null) return;
 		const wasSingleColumn = this.isSingleColumn;
 		this._visiblePanes = Math.min(this.panes, Math.max(1, fitting));
 		if (this.isSingleColumn !== wasSingleColumn) {

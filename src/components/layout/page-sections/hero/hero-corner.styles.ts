@@ -23,11 +23,11 @@ export const heroCornerStyles = css`
 		--_hero-media-corner-radius: min(var(--_hero-corner-radius), var(--_hero-media-corner-limit, var(--_hero-corner-radius)));
 		--_hero-main-corner-radius: calc(var(--_hero-media-corner-radius) / 2);
 
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_hero-corner-radius: calc(var(--semantics-brand-ribbon-md-width) * 2);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			--_hero-corner-radius: calc(var(--semantics-brand-ribbon-lg-width) * 2);
 		}
 	}
@@ -39,19 +39,19 @@ export const heroCornerStyles = css`
 	/* ## Contained */
 
 	:host([data-media-corner][data-has-media]) .hero {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			--_hero-main-inset: var(--primitives-space-0);
 		}
 	}
 
 	:host([data-has-media]:is([data-main-corner="top-left"], [data-main-corner="top-right"])) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			margin-top: var(--_hero-corner-radius);
 		}
 	}
 
 	:host([data-has-media]:is([data-main-corner="bottom-left"], [data-main-corner="bottom-right"])) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			margin-bottom: var(--_hero-corner-radius);
 		}
 	}
@@ -59,7 +59,7 @@ export const heroCornerStyles = css`
 	/* On mobile the panel stands under the image instead of over its edge, as
 	   wide as the image, so the rounded corner reads as the corner of one shape. */
 	:host([data-media-corner][data-has-media]) .hero__main {
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			margin: 0;
 		}
 	}
@@ -68,14 +68,14 @@ export const heroCornerStyles = css`
 	   before the curve, with the panel's own padding as the gap. */
 	:host([data-has-media][main-position^="top"][data-media-corner^="top"]) .hero__main,
 	:host([data-has-media]:is([main-position^="bottom"], :not([main-position]))[data-media-corner^="bottom"]) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			max-width: min(var(--_hero-main-max-width), 100% - var(--_hero-media-corner-radius) - var(--_hero-main-padding));
 		}
 	}
 
 	:host([data-has-media][data-main-width-length][main-position^="top"][data-media-corner^="top"]) .hero__main,
 	:host([data-has-media][data-main-width-length]:is([main-position^="bottom"], :not([main-position]))[data-media-corner^="bottom"]) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			max-width: calc(100% - var(--_hero-media-corner-radius) - var(--_hero-main-padding));
 		}
 	}
@@ -91,21 +91,21 @@ export const heroCornerStyles = css`
 	}
 
 	:host([data-has-media][data-media-corner="bottom-left"]) .hero__media {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			border-bottom-left-radius: var(--_hero-media-corner-radius);
 		}
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			border-top-left-radius: var(--_hero-media-corner-radius);
 		}
 	}
 
 	:host([data-has-media][data-media-corner="bottom-right"]) .hero__media {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			border-bottom-right-radius: var(--_hero-media-corner-radius);
 		}
 
-		@container (max-width: ${smMax}) {
+		@container page-container (max-width: ${smMax}) {
 			border-top-right-radius: var(--_hero-media-corner-radius);
 		}
 	}
@@ -113,25 +113,25 @@ export const heroCornerStyles = css`
 	/* ## Main */
 
 	:host([data-main-corner="top-left"]) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			border-top-left-radius: var(--_hero-main-corner-radius);
 		}
 	}
 
 	:host([data-main-corner="top-right"]) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			border-top-right-radius: var(--_hero-main-corner-radius);
 		}
 	}
 
 	:host([data-main-corner="bottom-left"]) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			border-bottom-left-radius: var(--_hero-main-corner-radius);
 		}
 	}
 
 	:host([data-main-corner="bottom-right"]) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			border-bottom-right-radius: var(--_hero-main-corner-radius);
 		}
 	}
@@ -140,35 +140,35 @@ export const heroCornerStyles = css`
 	   the content keeps the usual padding to the curve as well:
 	   r - (r - p) / sqrt(2), rounded up to a step of the scale. */
 	:host([data-main-corner]) .hero {
-		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+		@container page-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_hero-main-corner-padding: var(--primitives-space-32);
 		}
 
-		@container (min-width: ${lgMin}) {
+		@container page-container (min-width: ${lgMin}) {
 			--_hero-main-corner-padding: var(--primitives-space-40);
 		}
 	}
 
 	:host(:is([data-main-corner="top-left"], [data-main-corner="top-right"])) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			padding-top: var(--_hero-main-corner-padding);
 		}
 	}
 
 	:host(:is([data-main-corner="bottom-left"], [data-main-corner="bottom-right"])) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			padding-bottom: var(--_hero-main-corner-padding);
 		}
 	}
 
 	:host(:is([data-main-corner="top-left"], [data-main-corner="bottom-left"])) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			padding-left: var(--_hero-main-corner-padding);
 		}
 	}
 
 	:host(:is([data-main-corner="top-right"], [data-main-corner="bottom-right"])) .hero__main {
-		@container (min-width: ${mdMin}) {
+		@container page-container (min-width: ${mdMin}) {
 			padding-right: var(--_hero-main-corner-padding);
 		}
 	}

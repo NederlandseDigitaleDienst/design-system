@@ -719,6 +719,26 @@ export const devRules: DevRule[] = [
 		"context": "nldd-page:state(second-main)"
 	},
 	{
+		"id": "password-field-hide-button-accessible-label-no-effect",
+		"message": "`hide-button-accessible-label` is gone. The accessible name of the button that hides the password is the translation key `components.password-field.hide-accessible-label` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-password-field[hide-button-accessible-label]"
+	},
+	{
+		"id": "password-field-hide-button-text-no-effect",
+		"message": "`hide-button-text` is gone. The text of the button that hides the password is the translation key `components.password-field.hide-action` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-password-field[hide-button-text]"
+	},
+	{
+		"id": "password-field-show-button-accessible-label-no-effect",
+		"message": "`show-button-accessible-label` is gone. The accessible name of the button that shows the password is the translation key `components.password-field.show-accessible-label` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-password-field[show-button-accessible-label]"
+	},
+	{
+		"id": "password-field-show-button-text-no-effect",
+		"message": "`show-button-text` is gone. The text of the button that shows the password is the translation key `components.password-field.show-action` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-password-field[show-button-text]"
+	},
+	{
 		"id": "popover-anchor-not-found",
 		"message": "Anchor element not found. Set `anchor` or `anchorElement` before calling show().",
 		"context": "nldd-popover:state(no-anchor)"
@@ -764,7 +784,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "rich-text-color-no-effect",
-		"message": "`color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.",
+		"message": "`color` is gone. `color=\"content\"` was the default, so remove it. `color=\"inherit\"` took the CSS `color` around it, so this text may have changed color: where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.",
 		"context": "nldd-rich-text[color]"
 	},
 	{
@@ -791,6 +811,18 @@ export const devRules: DevRule[] = [
 		"id": "search-field-show-search-button-renamed",
 		"message": "The `show-search-button` attribute is now `search-button`, which also takes the appearance of the button. Rename it here and on every other nldd-search-field.",
 		"context": "nldd-search-field[show-search-button]"
+	},
+	{
+		"id": "section-goes-in-page",
+		"message": "Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.",
+		"context": ":is(nldd-full-bleed-section, nldd-hero, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-sidebar-section, nldd-simple-section, nldd-two-thirds-one-third-section)",
+		"assert": "nldd-page *",
+		"properties": []
+	},
+	{
+		"id": "section-no-section",
+		"message": "Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.",
+		"context": ":is(nldd-full-bleed-section, nldd-hero, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-sidebar-section, nldd-simple-section, nldd-two-thirds-one-third-section) :is(nldd-full-bleed-section, nldd-hero, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-sidebar-section, nldd-simple-section, nldd-two-thirds-one-third-section):not(:is(nldd-full-bleed-section, nldd-hero, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-sidebar-section, nldd-simple-section, nldd-two-thirds-one-third-section) nldd-page *)"
 	},
 	{
 		"id": "segmented-control-needs-name",
@@ -1073,6 +1105,11 @@ export const devRules: DevRule[] = [
 		"properties": []
 	},
 	{
+		"id": "text-color-inherit-no-effect",
+		"message": "`color=\"inherit\"` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.",
+		"context": "nldd-text[color=\"inherit\"]"
+	},
+	{
 		"id": "text-custom-size-invalid",
 		"message": "This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as \"96px\" or \"6rem\", not a keyword.",
 		"context": "nldd-text:state(invalid-custom-size)"
@@ -1143,7 +1180,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "title-color-no-effect",
-		"message": "`color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.",
+		"message": "`color` is gone. `color=\"content\"` was the default, so remove it. `color=\"inherit\"` took the CSS `color` around it, so this text may have changed color: where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.",
 		"context": "nldd-title[color]"
 	},
 	{

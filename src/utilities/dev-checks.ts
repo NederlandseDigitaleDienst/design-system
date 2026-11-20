@@ -27,6 +27,9 @@ export interface DevRule {
 /** Long enough for a framework to finish a render, and for most first data. */
 const SETTLE_MS = 300;
 
+/** A page that keeps changing still gets checked this often. */
+const MAX_WAIT_MS = 1000;
+
 /** A `:state()` changes nothing a MutationObserver sees, so also look regularly. */
 const RECHECK_MS = 2000;
 
@@ -119,6 +122,8 @@ export function checkElementTranslationKeys(keys: string[], known: string[]): vo
 	console.warn(`[nldd] translations: the element has no key ${unknown.join(', ')}, so that text stays Dutch.`);
 }
 
+const hasComponents = (root: ParentNode) => [...root.querySelectorAll('*')].some((element) => element.localName.startsWith('nldd-'));
+
 /** The keyframes of fouc.css, which only that stylesheet puts on the body. */
 const FOUC_GUARD = 'nldd-fouc-reveal';
 
@@ -128,9 +133,7 @@ const FOUC_GUARD = 'nldd-fouc-reveal';
  */
 export function lacksFoucGuard(root: ParentNode | null = document.body): boolean {
 	const { body } = document;
-	if (!body || !root) return false;
-	const hasComponents = [...root.querySelectorAll('*')].some((element) => element.localName.startsWith('nldd-'));
-	if (!hasComponents) return false;
+	if (!body || !root || !hasComponents(root)) return false;
 	const names = getComputedStyle(body).animationName.split(',').map((name) => name.trim());
 	return !names.includes(FOUC_GUARD);
 }
@@ -141,6 +144,22 @@ export function checkFoucGuard(): void {
 		console.warn("[nldd] fouc.css: this page has no FOUC guard, so components show unstyled until they load. Import '@nldd/design-system/styles', which includes it, or '@nldd/design-system/styles/fouc' on its own.");
 	}
 }
+
+/** Checks the guard once, on the first run that finds components: an app may add them only after its first route. */
+export function createFoucCheck(): () => void {
+	let checked = false;
+	return () => {
+		if (checked || !document.body || !hasComponents(document.body)) return;
+		checked = true;
+		checkFoucGuard();
+	};
+}
+
+/** The rules a MutationObserver cannot see change, because they read a `:state()` anywhere. */
+export const stateRulesOf = (rules: DevRule[]) => rules.filter((rule) => [rule.context, rule.assert, rule.report, rule.count?.of].some((selector) => selector?.includes(':state(')));
+
+/** How long to wait after a change: settle, unless the page has kept changing for longer than the maximum wait. */
+export const settleDelay = (sinceLastRun: number) => (sinceLastRun >= MAX_WAIT_MS ? 0 : SETTLE_MS);
 
 /**
  * What a component holds in light DOM gets its look from a global stylesheet,
@@ -223,26 +242,37 @@ export function startDevChecks(): void {
 	const report = createReporter();
 	const checkRegistrations = createRegistrationCheck();
 	const checkGlobalSheets = createGlobalSheetCheck();
-	const stateRules = devRules.filter((rule) => rule.context.includes(':state('));
+	const checkFouc = createFoucCheck();
+	const stateRules = stateRulesOf(devRules);
 	let timer: ReturnType<typeof setTimeout> | undefined;
+	let lastRun = Date.now();
+	const observer = new MutationObserver(() => schedule());
+	// The checks also search open shadow roots, and a change there reaches no observer on the document.
+	const observed = new WeakSet<Node>();
+	const observeRoots = (roots: ParentNode[]) => {
+		for (const root of roots) {
+			if (observed.has(root as Node)) continue;
+			observed.add(root as Node);
+			observer.observe(root as Node, { subtree: true, childList: true, attributes: true });
+		}
+	};
+	const run = () => {
+		lastRun = Date.now();
+		report();
+		checkRegistrations();
+		checkGlobalSheets();
+		observeRoots(findRoots());
+		checkFouc();
+	};
 	const schedule = () => {
 		clearTimeout(timer);
-		timer = setTimeout(() => {
-			report();
-			checkRegistrations();
-			checkGlobalSheets();
-		}, SETTLE_MS);
+		timer = setTimeout(run, settleDelay(Date.now() - lastRun));
 	};
-	new MutationObserver(schedule).observe(document.documentElement, {
-		subtree: true,
-		childList: true,
-		attributes: true,
-	});
+	observeRoots([document.documentElement]);
 	setInterval(() => {
 		if (document.hidden) return;
 		report(stateRules);
 		checkRegistrations();
 	}, RECHECK_MS);
 	schedule();
-	setTimeout(checkFoucGuard, SETTLE_MS);
 }

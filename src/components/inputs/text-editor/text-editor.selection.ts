@@ -62,7 +62,7 @@ interface Placed {
 }
 
 function closeSeams(placed: Placed[], height: number): void {
-	const pieces = [...placed].sort((a, b) => a.top - b.top);
+	const pieces = placed.toSorted((a, b) => a.top - b.top);
 	for (let i = 1; i < pieces.length; i++) {
 		const above = pieces[i - 1];
 		const gap = pieces[i].top - (above.top + above.height);

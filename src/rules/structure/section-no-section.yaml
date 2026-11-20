@@ -1,0 +1,7 @@
+severity: warn
+context: ':page-section :page-section:not(:page-section nldd-page *)'
+message: 'Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.'
+see: patronen/page-structure
+examples:
+  passed: ['<html><body><nldd-page><nldd-simple-section></nldd-simple-section><nldd-sidebar-section></nldd-sidebar-section></nldd-page></body></html>', '<html><body><nldd-page><nldd-simple-section><nldd-sheet><nldd-page><nldd-simple-section></nldd-simple-section></nldd-page></nldd-sheet></nldd-simple-section></nldd-page></body></html>']
+  failed: ['<html><body><nldd-page><nldd-simple-section><nldd-simple-section></nldd-simple-section></nldd-simple-section></nldd-page></body></html>', '<html><body><nldd-page><nldd-one-half-one-half-section><div slot="left"><nldd-hero></nldd-hero></div></nldd-one-half-one-half-section></nldd-page></body></html>', '<html><body><nldd-page><nldd-simple-section><nldd-sheet><nldd-simple-section></nldd-simple-section></nldd-sheet></nldd-simple-section></nldd-page></body></html>']

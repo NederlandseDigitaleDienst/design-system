@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
+import { cleanup, waitForUpdate, sectionFixture } from '../../../../test-utils.js';
 import './hero.js';
 import { loadTokens } from '../../../../test-tokens.js';
 import '../../../content/image/image.js';
@@ -14,13 +14,13 @@ describe('nldd-hero', () => {
 	});
 
 	it('rendert zonder fouten', async () => {
-		el = await fixture('<nldd-hero></nldd-hero>');
+		el = await sectionFixture('<nldd-hero></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
 	it('defaults to main-position="bottom-left" and main-width="auto"', async () => {
-		el = await fixture('<nldd-hero></nldd-hero>');
+		el = await sectionFixture('<nldd-hero></nldd-hero>');
 		await waitForUpdate(el);
 		const h = el as unknown as { mainPosition: string; mainWidth: string; mainBackground: string };
 		expect(h.mainPosition).toBe('bottom-left');
@@ -34,7 +34,7 @@ describe('nldd-hero', () => {
 	});
 
 	it('is rectangular — sets no corner data attributes', async () => {
-		el = await fixture(`<nldd-hero main-position="top-left">${MEDIA}</nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero main-position="top-left">${MEDIA}</nldd-hero>`);
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-media-corner')).toBe(false);
 		expect(el.hasAttribute('data-main-corner')).toBe(false);
@@ -46,21 +46,21 @@ describe('nldd-hero', () => {
 	   ============================================================ */
 
 	it('hides the media area and marks the host without media', async () => {
-		el = await fixture('<nldd-hero></nldd-hero>');
+		el = await sectionFixture('<nldd-hero></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-has-media')).toBe(false);
 		expect(el.shadowRoot!.querySelector('.hero__media')!.hasAttribute('hidden')).toBe(true);
 	});
 
 	it('shows the media area with slotted media', async () => {
-		el = await fixture(`<nldd-hero>${MEDIA}</nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero>${MEDIA}</nldd-hero>`);
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-has-media')).toBe(true);
 		expect(el.shadowRoot!.querySelector('.hero__media')!.hasAttribute('hidden')).toBe(false);
 	});
 
 	it('updates when media is added at runtime', async () => {
-		el = await fixture('<nldd-hero></nldd-hero>');
+		el = await sectionFixture('<nldd-hero></nldd-hero>');
 		await waitForUpdate(el);
 		const img = document.createElement('img');
 		img.setAttribute('slot', 'media');
@@ -72,7 +72,7 @@ describe('nldd-hero', () => {
 	});
 
 	it('removes data-has-media when the slotted media is removed', async () => {
-		el = await fixture(`<nldd-hero>${MEDIA}</nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero>${MEDIA}</nldd-hero>`);
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-has-media')).toBe(true);
 		el.querySelector('img[slot="media"]')!.remove();
@@ -91,7 +91,7 @@ describe('nldd-hero', () => {
 		// The geometry of a panel on the image is that of `contained`; the overlap
 		// has its own tests below and names its layout.
 		const layout = attrs.includes('layout=') ? '' : 'layout="contained"';
-		el = await fixture(`<nldd-hero ${layout} ${attrs} style="width: ${width}px">${IMG}<p>Tekst</p></nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero ${layout} ${attrs}>${IMG}<p>Tekst</p></nldd-hero>`, width);
 		await waitForUpdate(el);
 		await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
 		const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
@@ -115,7 +115,7 @@ describe('nldd-hero', () => {
 		try {
 			let { main } = await geometry('', 1200);
 			expect(Math.round(main.width)).toBe(480);
-			el = await fixture(`<nldd-hero style="width: 1200px">${IMG}<p>${'Een lange zin die doorloopt. '.repeat(20)}</p></nldd-hero>`);
+			el = await sectionFixture(`<nldd-hero>${IMG}<p>${'Een lange zin die doorloopt. '.repeat(20)}</p></nldd-hero>`, 1200);
 			await waitForUpdate(el);
 			await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
 			main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
@@ -128,7 +128,7 @@ describe('nldd-hero', () => {
 	it('never makes the panel wider than the image allows', async () => {
 		const unloadTokens = loadTokens();
 		try {
-			el = await fixture(`<nldd-hero style="width: 700px">${IMG}<p>${'Een lange zin die doorloopt. '.repeat(20)}</p></nldd-hero>`);
+			el = await sectionFixture(`<nldd-hero>${IMG}<p>${'Een lange zin die doorloopt. '.repeat(20)}</p></nldd-hero>`, 700);
 			await waitForUpdate(el);
 			await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
 			const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
@@ -154,7 +154,7 @@ describe('nldd-hero', () => {
 	});
 
 	it('falls back to auto for a fraction', async () => {
-		el = await fixture('<nldd-hero main-width="1/2"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero main-width="1/2"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.matches(':state(invalid-main-width)')).toBe(true);
 	});
@@ -209,7 +209,7 @@ describe('nldd-hero', () => {
 
 	it('does not take a CSS-wide keyword for a length, which CSS.supports would let through', async () => {
 		for (const keyword of ['inherit', 'initial', 'unset', 'revert']) {
-			el = await fixture(`<nldd-hero main-width="${keyword}" overlap-size="${keyword}" media-height="${keyword}" media-aspect-ratio="${keyword}" width="${keyword}"></nldd-hero>`);
+			el = await sectionFixture(`<nldd-hero main-width="${keyword}" overlap-size="${keyword}" media-height="${keyword}" media-aspect-ratio="${keyword}" width="${keyword}"></nldd-hero>`);
 			await waitForUpdate(el);
 			for (const name of ['--_hero-main-width', '--_hero-overlap-size', '--_hero-media-height', '--_hero-media-aspect-ratio', '--_hero-max-width']) {
 				expect(el.style.getPropertyValue(name), `${name} for ${keyword}`).toBe('');
@@ -221,13 +221,13 @@ describe('nldd-hero', () => {
 	});
 
 	it('falls back to the aspect ratio for an invalid media-height', async () => {
-		el = await fixture('<nldd-hero media-height="nogal hoog"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero media-height="nogal hoog"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_hero-media-height')).toBe('');
 	});
 
 	it('ignores height, which would stretch the hero', async () => {
-		el = await fixture('<nldd-hero height="900px"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero height="900px"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.minHeight).toBe('');
 	});
@@ -236,7 +236,7 @@ describe('nldd-hero', () => {
 		const unloadTokens = loadTokens();
 		try {
 			const panelColor = async (attributes: string) => {
-				el = await fixture(`<nldd-hero ${attributes}></nldd-hero>`);
+				el = await sectionFixture(`<nldd-hero ${attributes}></nldd-hero>`);
 				await waitForUpdate(el);
 				const color = getComputedStyle(el).getPropertyValue('--_hero-main-background-color');
 				cleanup(el);
@@ -254,7 +254,7 @@ describe('nldd-hero', () => {
 		it('is the layout of a hero that names none', async () => {
 			const unloadTokens = loadTokens();
 			try {
-				el = await fixture(`<nldd-hero style="width: 1200px">${IMG}<p style="height: 300px">Tekst</p></nldd-hero>`);
+				el = await sectionFixture(`<nldd-hero>${IMG}<p style="height: 300px">Tekst</p></nldd-hero>`, 1200);
 				await waitForUpdate(el);
 				await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
 				const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
@@ -270,7 +270,7 @@ describe('nldd-hero', () => {
 			const unloadTokens = loadTokens();
 			try {
 				const tall = '<p style="height: 300px">Tekst</p>';
-				el = await fixture(`<nldd-hero layout="overlap" style="width: 1200px">${IMG}${tall}</nldd-hero>`);
+				el = await sectionFixture(`<nldd-hero layout="overlap">${IMG}${tall}</nldd-hero>`, 1200);
 				await waitForUpdate(el);
 				await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
 				const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
@@ -321,7 +321,7 @@ describe('nldd-hero', () => {
 	});
 
 	it('makes an nldd-image in the media slot fill the media area, before the photo has loaded', async () => {
-		el = await fixture('<nldd-hero style="width: 1200px"><nldd-image slot="media" src="/never.jpg" alt="Foto"></nldd-image><p>Tekst</p></nldd-hero>');
+		el = await sectionFixture('<nldd-hero><nldd-image slot="media" src="/never.jpg" alt="Foto"></nldd-image><p>Tekst</p></nldd-hero>', 1200);
 		await waitForUpdate(el);
 		const image = el.querySelector('nldd-image')!;
 		await waitForUpdate(image as HTMLElement);
@@ -334,7 +334,7 @@ describe('nldd-hero', () => {
 	it('has half the section padding on top and the full padding below, unless padding-top is set', async () => {
 		const unloadTokens = loadTokens();
 		try {
-			el = await fixture('<nldd-hero style="width: 1200px"></nldd-hero>');
+			el = await sectionFixture('<nldd-hero></nldd-hero>', 1200);
 			await waitForUpdate(el);
 			const hero = el.shadowRoot!.querySelector('.hero')!;
 			const top = parseFloat(getComputedStyle(hero).paddingTop);
@@ -349,26 +349,26 @@ describe('nldd-hero', () => {
 	});
 
 	it('width="full" sets no --_hero-max-width inline style', async () => {
-		el = await fixture('<nldd-hero width="full"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero width="full"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_hero-max-width')).toBe('');
 	});
 
 	it('a CSS-length width feeds --_hero-max-width inline', async () => {
-		el = await fixture('<nldd-hero width="600px"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero width="600px"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_hero-max-width')).toBe('600px');
 	});
 
 	it('an invalid width sets no --_hero-max-width', async () => {
-		el = await fixture('<nldd-hero width="not-a-length"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero width="not-a-length"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_hero-max-width')).toBe('');
 	});
 
 	it.each(['clamp(300px, 50%, 600px)', 'min(600px, 100%)', 'max(320px, 40vw)'])(
 		'accepts the CSS math function width "%s"', async (value) => {
-			el = await fixture(`<nldd-hero width="${value}"></nldd-hero>`);
+			el = await sectionFixture(`<nldd-hero width="${value}"></nldd-hero>`);
 			await waitForUpdate(el);
 			expect(el.style.getPropertyValue('--_hero-max-width')).not.toBe('');
 		});
@@ -379,7 +379,7 @@ describe('nldd-hero', () => {
 	   ============================================================ */
 
 	it('media-src renders an internal img and marks the host with media', async () => {
-		el = await fixture('<nldd-hero media-src="data:," media-alt=""></nldd-hero>');
+		el = await sectionFixture('<nldd-hero media-src="data:," media-alt=""></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-has-media')).toBe(true);
 		const img = el.shadowRoot!.querySelector('.hero__media img');
@@ -388,32 +388,32 @@ describe('nldd-hero', () => {
 	});
 
 	it('slotted media wins over media-src (no internal img)', async () => {
-		el = await fixture(`<nldd-hero media-src="data:,">${MEDIA}</nldd-hero>`);
+		el = await sectionFixture(`<nldd-hero media-src="data:,">${MEDIA}</nldd-hero>`);
 		await waitForUpdate(el);
 		expect(el.hasAttribute('data-has-media')).toBe(true);
 		expect(el.shadowRoot!.querySelector('.hero__media img')).toBeNull();
 	});
 
 	it('media-aspect-ratio feeds --_hero-media-aspect-ratio inline', async () => {
-		el = await fixture('<nldd-hero media-aspect-ratio="16/9"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero media-aspect-ratio="16/9"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('16/9');
 	});
 
 	it('media-aspect-ratio accepts colon notation', async () => {
-		el = await fixture('<nldd-hero media-aspect-ratio="16:9"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero media-aspect-ratio="16:9"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('16/9');
 	});
 
 	it('an invalid media-aspect-ratio sets no inline var', async () => {
-		el = await fixture('<nldd-hero media-aspect-ratio="not-a-ratio"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero media-aspect-ratio="not-a-ratio"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('');
 	});
 
 	it('clearing media-aspect-ratio reverts to the default ratio', async () => {
-		el = await fixture('<nldd-hero media-aspect-ratio="16/9"></nldd-hero>');
+		el = await sectionFixture('<nldd-hero media-aspect-ratio="16/9"></nldd-hero>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('16/9');
 		el.removeAttribute('media-aspect-ratio');

@@ -4,7 +4,12 @@ import type { NLDDSidebarSection } from './sidebar-section.js';
 export function sidebarSectionTemplate(component: NLDDSidebarSection): TemplateResult {
 	const collapsed = component.collapsed;
 	const sidebarLabel = component._resolvedSidebarLabel;
+	// The sizer is what the section watches for its width: a line of no
+	// height across it, so that collapsing, which changes the section's
+	// height, never resizes what is being observed (that ends in a
+	// "ResizeObserver loop" error).
 	return html`
+		<div class="sidebar-section__sizer" aria-hidden="true"></div>
 		<section class="sidebar-section">
 			<div class="sidebar-section__body">
 				<header class="sidebar-section__header"

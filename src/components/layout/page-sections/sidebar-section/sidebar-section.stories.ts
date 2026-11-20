@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './sidebar-section.js';
+import '../../page/page.js';
 import type { NLDDSidebarSection } from './sidebar-section.js';
 import { pageSectionArgTypes } from '../page-section-controls.js';
 import '../../../content/title/title.js';
@@ -82,6 +83,7 @@ export default {
 	component: 'nldd-sidebar-section',
 	tags: ['autodocs'],
 	parameters: {
+		layout: 'fullscreen',
 		componentSource: {
 			file: 'src/components/layout/page-sections/sidebar-section/sidebar-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
@@ -125,20 +127,22 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		${triggerStyle}
-		<nldd-sidebar-section
-			width=${args.width || nothing}
-			sidebar-label=${args.sidebarLabel || nothing}
-			?no-collapse=${args.noCollapse}
-			sticky-top=${args.stickyTop || nothing}
-			sticky-bottom=${args.stickyBottom || nothing}
-			@open=${reflectExpanded(true)}
-			@close=${reflectExpanded(false)}
-		>
-			<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
-			${trigger}
-			${main}
-		</nldd-sidebar-section>
+		<nldd-page>
+			${triggerStyle}
+			<nldd-sidebar-section
+				width=${args.width || nothing}
+				sidebar-label=${args.sidebarLabel || nothing}
+				?no-collapse=${args.noCollapse}
+				sticky-top=${args.stickyTop || nothing}
+				sticky-bottom=${args.stickyBottom || nothing}
+				@open=${reflectExpanded(true)}
+				@close=${reflectExpanded(false)}
+			>
+				<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
+				${trigger}
+				${main}
+			</nldd-sidebar-section>
+		</nldd-page>
 	`,
 	parameters: {
 		docs: {
@@ -151,17 +155,19 @@ export const Standaard = {
 
 export const VolledigeBreedte = {
 	render: () => html`
-		${triggerStyle}
-		<nldd-sidebar-section
-			sidebar-label="Filters"
-			width="full"
-			@open=${reflectExpanded(true)}
-			@close=${reflectExpanded(false)}
-		>
-			<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
-			${trigger}
-			${mainCentered}
-		</nldd-sidebar-section>
+		<nldd-page>
+			${triggerStyle}
+			<nldd-sidebar-section
+				sidebar-label="Filters"
+				width="full"
+				@open=${reflectExpanded(true)}
+				@close=${reflectExpanded(false)}
+			>
+				<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
+				${trigger}
+				${mainCentered}
+			</nldd-sidebar-section>
+		</nldd-page>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -175,27 +181,29 @@ export const VolledigeBreedte = {
 
 export const EigenSheetTitelbalk = {
 	render: () => html`
-		${triggerStyle}
-		<nldd-sidebar-section
-			sidebar-label="Filters"
-			@open=${reflectExpanded(true)}
-			@close=${reflectExpanded(false)}
-		>
-			<nldd-top-title-bar
-				slot="sheet-top-title-bar"
-				text="Filters"
-				dismiss-text="Klaar"
+		<nldd-page>
+			${triggerStyle}
+			<nldd-sidebar-section
+				sidebar-label="Filters"
+				@open=${reflectExpanded(true)}
+				@close=${reflectExpanded(false)}
 			>
-				<nldd-button
-					slot="toolbar"
-					appearance="critical-transparent"
-					text="Reset"
-				></nldd-button>
-			</nldd-top-title-bar>
-			<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
-			${trigger}
-			${main}
-		</nldd-sidebar-section>
+				<nldd-top-title-bar
+					slot="sheet-top-title-bar"
+					text="Filters"
+					dismiss-text="Klaar"
+				>
+					<nldd-button
+						slot="toolbar"
+						appearance="critical-transparent"
+						text="Reset"
+					></nldd-button>
+				</nldd-top-title-bar>
+				<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
+				${trigger}
+				${main}
+			</nldd-sidebar-section>
+		</nldd-page>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -207,10 +215,10 @@ export const EigenSheetTitelbalk = {
 	},
 };
 
-export const SmalleContainer = {
+export const SmallePagina = {
 	render: () => html`
-		${triggerStyle}
-		<div style="max-width: 600px; margin-inline: auto; padding: 16px; outline: 1px dashed var(--semantics-surfaces-tinted-highlight-border-color);">
+		<nldd-page>
+			${triggerStyle}
 			<nldd-sidebar-section
 				sidebar-label="Filters"
 				@open=${reflectExpanded(true)}
@@ -220,13 +228,14 @@ export const SmalleContainer = {
 				${trigger}
 				${main}
 			</nldd-sidebar-section>
-		</div>
+		</nldd-page>
 	`,
 	parameters: {
 		controls: { disable: true },
 		docs: {
+			story: { width: '768px' },
 			description: {
-				story: 'De sectie zit in een wrapper van max. 600px. Ook op een breed scherm is de **sectie** smaller dan lg, dus klapt-ie in tot de sheet. De zijbalk stapelt niet boven de main en neemt geen ruimte in. Dit is het container-gestuurde gedrag: de switch volgt de breedte van de sectie zelf (een ResizeObserver), niet de viewport.',
+				story: 'Op een pagina smaller dan lg (hier 768px) klapt de zijbalk in tot de sheet. Hij stapelt niet boven de main en neemt geen ruimte in. Een pagina in een smal paneel klapt net zo in als een smal scherm, want de sectie volgt de breedte van de pagina, niet het venster.',
 			},
 		},
 	},
@@ -234,7 +243,7 @@ export const SmalleContainer = {
 
 export const ZonderInklappen = {
 	render: () => html`
-		<div style="max-width: 600px; margin-inline: auto; padding: 16px; outline: 1px dashed var(--semantics-surfaces-tinted-highlight-border-color);">
+		<nldd-page>
 			<nldd-sidebar-section
 				no-collapse
 				sidebar-label="Filters"
@@ -242,13 +251,14 @@ export const ZonderInklappen = {
 				<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
 				${main}
 			</nldd-sidebar-section>
-		</div>
+		</nldd-page>
 	`,
 	parameters: {
 		controls: { disable: true },
 		docs: {
+			story: { width: '768px' },
 			description: {
-				story: 'Met `no-collapse` klapt de sectie nooit in tot een sheet. Is-ie smaller dan lg (hier in een wrapper van 600px, dus ook op een breed scherm), dan stapelen de zijbalk en de main gewoon boven elkaar: de zijbalk over de volle breedte en niet sticky. Geen trigger nodig.',
+				story: 'Met `no-collapse` klapt de sectie nooit in tot een sheet. Is de pagina smaller dan lg (hier 768px), dan stapelen de zijbalk en de main gewoon boven elkaar: de zijbalk over de volle breedte en niet sticky. Geen trigger nodig.',
 			},
 		},
 	},

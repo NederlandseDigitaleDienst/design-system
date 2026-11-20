@@ -7,10 +7,10 @@ import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { cssRules, isDesignSystemCss } from './css.js';
 import { createEngine } from './engine.js';
-import { parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue } from './frontends.js';
+import { parseAstro, parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue, readerOf } from './frontends.js';
 import { createCanonical, createLinter, loadData } from './linter.js';
 import { resolveSeverities } from './rule-data.js';
-import { readBaseline } from './project.js';
+import { readBaseline, UNREAD_EXTENSIONS } from './project.js';
 import { BOUND, walk } from './tree.js';
 
 const first = (roots, name) => {
@@ -51,6 +51,65 @@ describe('frontends', () => {
 	it('closes only a full document', () => {
 		assert.equal(parseHtml('<html><body></body></html>')[0].opaque, false);
 		assert.equal(parseHtml('<nldd-a></nldd-a>')[0].opaque, true);
+	});
+
+	it('reads Astro: frontmatter gone, elements in an expression kept with what is around them', () => {
+		const source = [
+			'---',
+			"const html = '<nldd-in-frontmatter>';",
+			'---',
+			'<nldd-list {...rest} {id}>',
+			'\t{items.map((item) => <nldd-a text={item.title} size={`${a}`}/>)}',
+			'\t{show && <nldd-b text="a" />}',
+			'\t{a < b ? <nldd-c /> : <><nldd-d></nldd-d><br></>}',
+			"\t{/* it's a comment with a } and <nldd-e> */}",
+			'\t{children}',
+			'\t<nldd-f set:html={body} class:list={[a]} client:load />',
+			'</nldd-list>',
+			"<script>const t = '<nldd-in-script>{';</script>",
+		].join('\n');
+		const roots = parseAstro(source);
+		const list = first(roots, 'nldd-list');
+		assert.equal(list.spread, true);
+		assert.equal(list.templated, false);
+		assert.deepEqual(list.children.map((node) => node.name), ['nldd-a', 'nldd-b', 'nldd-c', 'nldd-d', 'br', '#unknown', 'nldd-f']);
+		const [a, b, c, d] = list.children;
+		assert.deepEqual([a.repeated, a.conditional], [true, false]);
+		assert.deepEqual([...a.attrs], [['text', BOUND], ['size', BOUND]]);
+		assert.deepEqual([b.repeated, b.conditional, b.attrs.get('text')], [false, true, 'a']);
+		assert.equal(c.conditional && d.conditional, true);
+		const filled = first(roots, 'nldd-f');
+		assert.deepEqual([...filled.attrs], [['class', BOUND]]);
+		assert.deepEqual(filled.children.map((node) => node.name), ['#unknown']);
+		assert.equal(source.slice(a.offset, a.offset + 7), '<nldd-a');
+		assert.equal(roots[0].opaque, true);
+	});
+
+	it('tells an element from a comparison in Astro, and what an expression can render besides its elements', () => {
+		const shape = (node) => {
+			const flags = `${node.conditional ? 'c' : ''}${node.repeated ? 'r' : ''}${node.spread ? 's' : ''}`;
+			const children = node.children.length > 0 ? `(${node.children.map(shape).join(' ')})` : '';
+			return `${node.name}${flags ? `[${flags}]` : ''}${children}`;
+		};
+		const read = (source) => parseAstro(source)[0].children.map(shape).join(' ');
+		assert.equal(read('{a < b && <nldd-a/>}'), 'nldd-a[c]');
+		assert.equal(read('{a.b<T>(c) && <nldd-a/>}'), 'nldd-a[c]');
+		assert.equal(read('{a.map((b) => {\n// Geen <nldd-no>, en don\'t stop.\nreturn <nldd-a/>; })}'), 'nldd-a[r]');
+		assert.equal(read('{a.map((b) => (\n// De rij is de link.\n<nldd-a/>))}'), 'nldd-a[r]');
+		assert.equal(read('<ul>{a.map((b) => <li>{b.c ? b.c.map((d) => <i>{d}</i>) : null}</li>)}</ul>'), 'ul(li[r](i[cr](#unknown)))');
+		assert.equal(read('{a ? <nldd-a/> : <nldd-b/>}{c ? <nldd-c/> : null}'), 'nldd-a[c] nldd-b[c] nldd-c[c]');
+		assert.equal(read("{a ? 'tekst' : <nldd-a/>}{b || <nldd-b/>}"), '#unknown nldd-a[c] #unknown nldd-b[c]');
+		assert.equal(read('{a.map((b: B, i: number) => <nldd-a key={i}/>)}'), 'nldd-a[r]');
+		assert.equal(read('{a.map((b: B) => (b.c ? <nldd-a/> : null))}{d ? e.map((f: F) => <nldd-b/>) : null}'), 'nldd-a[cr] nldd-b[cr]');
+		assert.equal(read("{a.map((b: B) => (b.c ? 'tekst' : <nldd-a/>))}"), '#unknown nldd-a[cr]');
+		assert.equal(read('{(a as Array<string>).length > 0 && <nldd-a/>}{`<nldd-no>${b}` && <nldd-b/>}'), 'nldd-a[c] nldd-b[c]');
+		assert.equal(read('{a ? <nldd-a/> : b ? <nldd-b/> : null}'), 'nldd-a[c] nldd-b[c]');
+		assert.equal(read("{a.map((b) => 'https://x' && <nldd-a/>)}{c ? '' : <nldd-b/>}"), 'nldd-a[cr] nldd-b[c]');
+		assert.equal(read('<p>\uE001</p><nldd-a/>\uE004<nldd-b/>'), 'p nldd-a nldd-b');
+		assert.equal(read("<p>{/it's/.test(a) && <nldd-a/>}{a / 2 > b && <nldd-b/>}</p><nldd-c/>"), 'p(nldd-a[c] nldd-b[c]) nldd-c');
+		assert.equal(read('{<nldd-a/>}{(<nldd-b/>)}'), 'nldd-a nldd-b');
+		assert.equal(read('<nldd-a {/* waarom */} text="a" /><nldd-b {...c} />'), 'nldd-a nldd-b[s]');
+		assert.equal(read('{a && <img src={b}>}<Fragment slot="c"><nldd-a/></Fragment>'), 'img[c] nldd-a');
 	});
 
 	it('reads JSX with conditions, lists, fragments and spreads', async () => {
@@ -174,6 +233,18 @@ describe('built-in rules', () => {
 	it('flags a value outside the type, and not a bound one', async () => {
 		assert.deepEqual(await rulesIn('<nldd-button appearance="nope" />'), ['invalid-value']);
 		assert.deepEqual(await rulesIn('<nldd-button :appearance="a" />'), []);
+	});
+
+	it('lets a rule about a value or a name that is gone speak for the generic finding', async () => {
+		const linter = createLinter(loadData());
+		const rules = async (source) => (await linter.lintSource(`<template>${source}</template>`, 'a.vue')).findings.map(({ rule }) => rule);
+		assert.deepEqual(await rules('<nldd-text text="a" color="inherit" />'), ['text-color-inherit-no-effect']);
+		assert.deepEqual(await rules('<nldd-text text="a" color="blue" />'), ['invalid-value']);
+		assert.deepEqual(await rules('<nldd-text text="a" :color="b" />'), []);
+		assert.deepEqual(await rules('<nldd-password-field accessible-label="a" show-button-text="b" :hide-button-text="c" />'), [
+			'password-field-hide-button-text-no-effect',
+			'password-field-show-button-text-no-effect',
+		]);
 	});
 
 	it('flags an unknown icon', async () => {
@@ -555,6 +626,70 @@ describe('--fix', () => {
 		assert.equal(text, '<nldd-button text=" variant=x" appearance="primary"></nldd-button><div variant="a"></div><nldd-progress-bar variant="b"></nldd-progress-bar>');
 	});
 
+	it('moves all four text attributes of one field into one translations', () => {
+		const { text } = fixed('a.html', '<nldd-password-field accessible-label="W" show-button-text="A" hide-button-text="B" show-button-accessible-label="C" hide-button-accessible-label="D"></nldd-password-field>');
+		const [, json] = /translations='([^']*)'/.exec(text);
+		assert.equal(Object.keys(JSON.parse(json)).length, 4);
+		assert.doesNotMatch(text, /button-(text|accessible-label)=/);
+	});
+
+	it('moves a text attribute that became a translation key into translations, one key at a time', () => {
+		const field = (attributes) => `<nldd-password-field accessible-label="W"${attributes}></nldd-password-field>`;
+		assert.equal(
+			fixed('a.html', field(' show-button-text="Laat zien" hide-button-text="Verstop"')).text,
+			field(` translations='{"components.password-field.hide-action": "Verstop", "components.password-field.show-action": "Laat zien"}'`),
+		);
+		assert.equal(
+			fixed('a.html', field(` translations='{"components.password-field.hide-action": "Weg"}' show-button-text="Toon"`)).text,
+			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
+		);
+		assert.equal(
+			fixed('a.html', field(` show-button-text="Toon" translations='{"components.password-field.hide-action": "Weg"}'`)).text,
+			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
+		);
+		assert.equal(
+			fixed('a.html', field(' show-button-text="Toon &quot;x&quot;"')).text,
+			field(' show-button-text="Toon &quot;x&quot;"'),
+		);
+		assert.equal(
+			fixed('a.vue', '<template><nldd-password-field accessible-label="W" show-button-text=\'Toon "x"\' /></template>').text,
+			`<template><nldd-password-field accessible-label="W" translations='{"components.password-field.show-action": "Toon \\"x\\""}' /></template>`,
+		);
+		assert.equal(
+			fixed('a.html', field(' show-button-text="Toon >"')).text,
+			field(` translations='{"components.password-field.show-action": "Toon >"}'`),
+		);
+		assert.equal(
+			fixed('a.html', field(' show-button-text="a < b"')).text,
+			field(` translations='{"components.password-field.show-action": "a < b"}'`),
+		);
+		assert.equal(
+			fixed('a.html', field(` translations='{"components.password-field.show-accessible-label": "Laat het wachtwoord zien"}' show-button-text="Toon" hide-button-text="Verstop"`)).text,
+			field(` translations='{"components.password-field.show-accessible-label": "Laat het wachtwoord zien", "components.password-field.hide-action": "Verstop", "components.password-field.show-action": "Toon"}'`),
+		);
+		assert.equal(
+			fixed('a.vue', '<template><nldd-password-field accessible-label="W" :show-button-text="t(1)" hide-button-text="Verstop" /></template>').text,
+			`<template><nldd-password-field accessible-label="W" :show-button-text="t(1)" translations='{"components.password-field.hide-action": "Verstop"}' /></template>`,
+		);
+	});
+
+	it('leaves a translation in place in JSX, and where the text or translations is not certain', () => {
+		for (const [name, source] of [
+			['a.html', `<nldd-password-field accessible-label="W" show-button-text="It's"></nldd-password-field>`],
+			['a.html', '<nldd-password-field accessible-label="W" show-button-text="Laat &amp; zien"></nldd-password-field>'],
+			['a.html', `<nldd-password-field accessible-label="W" translations='{"components.password-field.show-action": "Toon"}' show-button-text="Laat zien"></nldd-password-field>`],
+			['a.vue', '<template><nldd-password-field accessible-label="W" :translations="t" show-button-text="Laat zien" /></template>'],
+			// React 18 writes an object as an attribute, React 19 sets a string as the property.
+			['a.tsx', 'const a = <nldd-password-field accessible-label="W" show-button-text="Laat zien" hide-button-text={"Verstop"} />;'],
+			['a.html.j2', '<nldd-password-field accessible-label="W" show-button-text="{{ toon }}"></nldd-password-field>'],
+			// An empty text would win over the default and leave the button blank.
+			['a.html', '<nldd-password-field accessible-label="W" show-button-text=""></nldd-password-field>'],
+			['a.html', '<nldd-password-field accessible-label="W" hide-button-accessible-label="  "></nldd-password-field>'],
+		]) {
+			assert.equal(fixed(name, source).text, source, source);
+		}
+	});
+
 	it('wraps text in a <p>, with inline elements or without, and leaves a block or a template alone', () => {
 		assert.equal(fixed('a.html', '<nldd-text>Dakisolatie, in behandeling</nldd-text>').text, '<nldd-text><p>Dakisolatie, in behandeling</p></nldd-text>');
 		assert.equal(fixed('a.tsx', 'export const A = () => <nldd-text>Dakisolatie</nldd-text>;').text, 'export const A = () => <nldd-text><p>Dakisolatie</p></nldd-text>;');
@@ -587,6 +722,48 @@ describe('--fix', () => {
 		writeFileSync(join(root, 'logo.js'), `${lines}\nconst d = '${'M0 0'.repeat(800)}';\nexport const Logo = () => <nldd-button foo="b"></nldd-button>;\n`);
 		const { stdout } = run(root, 'lint', '.');
 		assert.match(stdout, /foo/);
+	});
+
+	it('fixes Astro where the name or the value is written out, and leaves an expression alone', () => {
+		const rename = (attribute) => fixed('a.astro', `---\nconst b = 1;\n---\n${attribute}`).text.split('\n').at(-1);
+		assert.equal(rename('<nldd-button text="a" variant={b} />'), '<nldd-button text="a" appearance={b} />');
+		assert.equal(rename('{list.map((b) => <nldd-title text={b} size="3" />)}'), '{list.map((b) => <nldd-title text={b} size="display-3" />)}');
+		assert.equal(rename('<nldd-app-view>{b && <nldd-app-view></nldd-app-view>}</nldd-app-view>'), '<nldd-shell>{b && <nldd-shell></nldd-shell>}</nldd-shell>');
+		assert.equal(rename('<nldd-button text="a" {variant} />'), '<nldd-button text="a" {variant} />');
+	});
+
+	it('renames a value that JSX writes as a literal in braces, and leaves an expression alone', () => {
+		const rename = (attribute) => /<nldd-title [^/]*\/>/.exec(fixed('a.tsx', `export const A = ({ n }) => <nldd-title text="a" ${attribute} />;`).text)[0];
+		assert.equal(rename('size={5}'), '<nldd-title text="a" size="display-5" />');
+		assert.equal(rename('size={"3"}'), '<nldd-title text="a" size="display-3" />');
+		assert.equal(rename("size={ '2' }"), '<nldd-title text="a" size="display-2" />');
+		assert.equal(rename('size={`1`}'), '<nldd-title text="a" size="display-1" />');
+		for (const attribute of ['size={n}', 'size={5 + n}', 'size={`${n}`}', 'size={n ? 5 : 4}', 'size={7}']) {
+			assert.equal(rename(attribute), `<nldd-title text="a" ${attribute} />`);
+		}
+		// Astro reads any braces as an expression, so there the value stays as written.
+		assert.equal(fixed('a.astro', '---\n---\n<nldd-title text="a" size={5} />').text, '---\n---\n<nldd-title text="a" size={5} />');
+	});
+
+	it('renames a token that got another name, wherever the file reads it', () => {
+		const old = '--context-parent-background-color';
+		assert.equal(fixed('a.css', `.a { background: var(${old}); color: var( ${old} ); }`).text, '.a { background: var(--context-background-color); color: var( --context-background-color ); }');
+		assert.equal(fixed('a.tsx', `export const A = () => <div style={{ color: "var(${old})" }} />;`).text, 'export const A = () => <div style={{ color: "var(--context-background-color)" }} />;');
+		assert.equal(fixed('a.html', `<nldd-text text="a" style="color: var(${old})"></nldd-text>`).text, '<nldd-text text="a" style="color: var(--context-background-color)"></nldd-text>');
+	});
+
+	it('leaves a token with a fallback alone, which is what the page shows now, and says so', () => {
+		const source = '.a { color: var(--context-parent-background-color, #fff); gap: var(--context-parent-background-color , 0); }';
+		const { text, stdout } = fixed('a.css', source);
+		assert.equal(text, source);
+		assert.match(stdout, /Use `--context-background-color`\. The fallback shows until you do, so `--fix` leaves this one\./);
+		assert.doesNotMatch(stdout, /fixable with --fix/);
+	});
+
+	it('leaves a token alone that is gone without a successor, or that the file sets itself', () => {
+		for (const source of ['.a { color: var(--components-avatar-background-color); }', '.a { --context-parent-background-color: red; color: var(--context-parent-background-color); }', '/* var(--context-parent-background-color) */ .a {}']) {
+			assert.equal(fixed('a.css', source).text, source);
+		}
 	});
 
 	it('reads MDX and Markdown only when named, and renames a tag in the prose and in a mention', () => {
@@ -887,6 +1064,12 @@ describe('--fix', () => {
 		assert.equal(flag('a.vue', bound), bound);
 	});
 
+	it('names the rules about the values of a bound attribute that is gone', async () => {
+		const findings = (await createLinter(loadData()).lintSource("const a = <nldd-text-editor accessible-label=\"a\" appearance={b ? 'simple' : 'input-field'} />;", 'a.tsx')).findings;
+		const [finding] = findings.filter(({ rule }) => rule === 'unknown-attribute');
+		assert.match(finding.message, /nldd explain editor-appearance-no-effect`.*nldd explain editor-appearance-renamed`/);
+	});
+
 	it('replaces a deprecated attribute, and the rule takes over its finding', () => {
 		const { text, stdout } = fixed('a.html', '<nldd-navigation-split-view sidebar-accessible-label="a"></nldd-navigation-split-view>');
 		assert.equal(text, '<nldd-navigation-split-view primary-sidebar-accessible-label="a"></nldd-navigation-split-view>');
@@ -1135,7 +1318,7 @@ describe('found in the sixth review', () => {
 
 	it('says nothing about suppressions when no tree was read', async () => {
 		const source = '<template lang="pug">\n<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->\nnldd-tab-bar\n</template>';
-		assert.deepEqual(await rulesIn('<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->', 'a.astro'), []);
+		assert.deepEqual(await rulesIn('<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->', 'a.svelte'), []);
 		assert.equal((await rulesIn(source.replaceAll('template', 'script'), 'a.vue')).length, 0);
 	});
 
@@ -1566,6 +1749,37 @@ describe('nldd command', () => {
 		assert.match(result.stdout, /src\/a\.vue:1:11 {2}error {2}unknown-element/);
 	});
 
+	it('reads Astro in a scan, and says which templates with our markup it cannot read', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'src'));
+		writeFileSync(join(root, 'src/a.astro'), '---\n---\n<nldd-gone />\n');
+		writeFileSync(join(root, 'src/b.svelte'), '<nldd-button text="a" />\n');
+		writeFileSync(join(root, 'src/c.svelte'), '<p>geen component</p>\n');
+		const result = run(root, 'lint');
+		assert.match(result.stdout, /src\/a\.astro:3:1 {2}error {2}unknown-element/);
+		assert.match(result.stdout, /src\/b\.svelte:1:1 {2}warn {2}file-not-read/);
+		assert.doesNotMatch(result.stdout, /c\.svelte/);
+		assert.match(result.stdout, /1 error, 1 warning in 1 file \(1 not read\)/);
+		assert.match(run(root, 'lint', 'src/b.svelte', 'src/c.svelte').stdout, /0 errors, 1 warning in 0 files \(1 not read\)/);
+		assert.match(run(root, 'lint', '--statistics').stdout, /2 findings in 1 file \(1 not read\)/);
+		assert.match(run(root, 'lint', '--ignore', 'file-not-read').stdout, /1 error, 0 warnings in 1 file \(1 not read\)/);
+	});
+
+	it('skips the scripts of a build, whose chunks hold the styles of the components themselves', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'dist/_astro'), { recursive: true });
+		mkdirSync(join(root, 'src'));
+		const chunk = 'var b = r`\n:host {\n\t--_button-gap: 4px;\n}\n`;\nconst t = "<nldd-icon>";\n';
+		writeFileSync(join(root, 'dist/_astro/button.pAKU2ucd.js'), chunk);
+		writeFileSync(join(root, 'dist/index.html'), '<html><body><nldd-gone></nldd-gone></body></html>\n');
+		writeFileSync(join(root, 'src/own.js'), chunk);
+		const built = run(root, 'lint', 'dist');
+		assert.match(built.stdout, /dist\/index\.html:1:13 {2}error {2}unknown-element/);
+		assert.match(built.stdout, /1 error, 0 warnings in 1 file/);
+		assert.match(run(root, 'lint', 'src').stdout, /local-variable-no-override[^]*file-not-read/);
+		assert.match(run(root, 'lint', 'dist/_astro/button.pAKU2ucd.js').stdout, /local-variable-no-override[^]*file-not-read/);
+	});
+
 	it('reports only what is new after accepting a baseline', () => {
 		const root = project();
 		assert.equal(run(root, 'lint', '--update-baseline').status, 0);
@@ -1704,6 +1918,34 @@ describe('CSS', () => {
 		]);
 	});
 
+	it('names a successor only while it exists, and every successor in the history does', async () => {
+		const data = { ...real, removedTokens: { '--semantics-old-color': { last: '0.1.0', use: '--semantics-older-color' } } };
+		const { findings } = await createLinter(data).lintSource('.a { color: var(--semantics-old-color); }', 'a.css');
+		assert.deepEqual(findings.map(({ message, fix }) => [message, fix]), [['`--semantics-old-color` was removed after 0.1.0.', undefined]]);
+		const stale = Object.entries(real.removedTokens).filter(([, { use }]) => use && !real.tokens.includes(use));
+		assert.deepEqual(stale, []);
+	});
+
+	it('knows a token from before the history was kept, with the name it has now', async () => {
+		assert.deepEqual(await findingsIn('.a { color: var(--semantics-surfaces-background-color); }', 'a.css'), [
+			['token-not-found', '`--semantics-surfaces-background-color` was removed after 0.8.53. Use `--semantics-surfaces-base-background-color`.'],
+		]);
+	});
+
+	it('names the endings of a token whose name stops short', async () => {
+		assert.deepEqual(await findingsIn('.a { font: var(--primitives-font-body-sm-regular); }', 'a.css'), [
+			['token-not-found', 'There is no token `--primitives-font-body-sm-regular` in this version. The tokens with this name end in `-flat`, `-loose`, `-snug` or `-tight`.'],
+		]);
+		assert.deepEqual(await findingsIn('.a { font-family: var(--primitives-font-family-mono); }', 'a.css'), [
+			['token-not-found', 'There is no token `--primitives-font-family-mono` in this version. The closest is `--primitives-font-family-monospace`.'],
+		]);
+		assert.deepEqual(await findingsIn('.a { width: var(--primitives-area-16); }', 'a.css'), [
+			['token-not-found', 'There is no token `--primitives-area-16` in this version.'],
+		]);
+		assert.deepEqual(await findingsIn('.a { color: var(--semantics); }', 'a.css'), []);
+		assert.match((await findingsIn('.a { color: var(--semantics-buttons); }', 'a.css'))[0][1], /in this version\.$/);
+	});
+
 	it('accepts a real token, also with a fallback, and leaves a name built at runtime alone', async () => {
 		assert.deepEqual(await rulesIn('.a { color: var(--semantics-content-color, red); gap: var( --primitives-space-8 ); }', 'a.css'), []);
 		assert.deepEqual(await rulesIn('.a { color: var(--primitives-color-#{$name}); }', 'a.scss'), []);
@@ -1733,6 +1975,35 @@ describe('CSS', () => {
 		]);
 		assert.deepEqual(await rulesIn('.card { --_card-list-gap: 0; --_gap: 0; }', 'a.css'), ['local-variable-no-override']);
 		assert.deepEqual(await rulesIn('.panel { --_panel-gap: 0; gap: var(--_panel-gap); }', 'a.css'), []);
+	});
+
+	it('knows a context variable a component documents, and calls the wiring between components internal', async () => {
+		assert.deepEqual(await rulesIn('.a { position: sticky; top: var(--context-inset-top); max-height: var(--context-scroller-height, 100dvh); }', 'a.css'), []);
+		assert.deepEqual(await rulesIn('nldd-shell { --context-scroll-mode: nested; }', 'a.css'), []);
+		assert.deepEqual(await findingsIn('.a { display: var(--context-back-button-display); }', 'a.css'), [
+			['internal-context-no-use', '`--context-back-button-display` is wiring between design system components, so reading it is not supported.'],
+		]);
+		assert.deepEqual(await findingsIn('.a { --context-back-button-display: none; display: var(--context-back-button-display); }', 'a.css'), [
+			['internal-context-no-use', '`--context-back-button-display` is wiring between design system components, so setting it is not supported.'],
+		]);
+		assert.deepEqual(await rulesIn('.a { color: var(--context-nope); }', 'a.css'), ['token-not-found']);
+	});
+
+	it('knows the context variables an app sets on a component, as the tooltip and the image document them', async () => {
+		assert.deepEqual(await rulesIn('.swatch { --context-tooltip-pointer-events: none; }', 'a.css'), []);
+		assert.deepEqual(await rulesIn('.media nldd-image { --context-image-height: 100%; }', 'a.css'), []);
+	});
+
+	it('keeps naming a removed context variable as removed, with its successor, and never as wiring', async () => {
+		assert.deepEqual(real.internalContext.filter((name) => real.removedTokens[name]), []);
+		assert.deepEqual(await findingsIn('.a { color: var(--context-parent-background-color); }', 'a.css'), [
+			['token-not-found', `\`--context-parent-background-color\` was removed after ${real.removedTokens['--context-parent-background-color'].last}. Use \`--context-background-color\`.`],
+		]);
+	});
+
+	it('names no successor for a removed text color that only a surface color replaced', async () => {
+		const { findings } = await createLinter(real).lintSource('.a { color: var(--semantics-buttons-inherit-filled-content-color); }', 'a.css');
+		assert.deepEqual(findings.map(({ message, fix }) => [message, fix]), [['`--semantics-buttons-inherit-filled-content-color` was removed after 0.22.0.', undefined]]);
 	});
 
 	it('reports a surface that sets one link color without the other two', async () => {
@@ -1792,9 +2063,26 @@ describe('markup the linter cannot read', () => {
 	const rulesIn = async (source, file) => (await linter.lintSource(source, file)).findings.map(({ rule }) => rule);
 
 	it('says so for a file type without a parser, and for a script without an html template', async () => {
-		assert.deepEqual(await rulesIn('---\n---\n<nldd-button text="a" foo="b"></nldd-button>', 'a.astro'), ['file-not-read']);
+		assert.deepEqual(await rulesIn('<script>let a;</script>\n<nldd-button text="a" foo="b"></nldd-button>', 'a.svelte'), ['file-not-read']);
 		assert.deepEqual(await rulesIn('export const t = `<nldd-button text="a" foo="b"></nldd-button>`;', 'b.mjs'), ['file-not-read']);
 		assert.deepEqual(await rulesIn('// <nldd-button>\nexport const a = 1;', 'c.js'), []);
+	});
+
+	it('has no parser for a type it lists as not read', () => {
+		assert.deepEqual(UNREAD_EXTENSIONS.filter((extension) => readerOf(`a${extension}`) !== 'none'), []);
+	});
+
+	it('reads Astro, and reports only what is certain there', async () => {
+		const page = (markup) => `---\nimport Layout from './Layout.astro';\n---\n<Layout>\n${markup}\n</Layout>`;
+		assert.deepEqual(await rulesIn(page('<nldd-button text="a" foo="b"></nldd-button>'), 'a.astro'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn(page('{items.map((item) => <nldd-button foo={item} />)}'), 'a.astro'), ['unknown-attribute', 'button-needs-name']);
+		assert.deepEqual(await rulesIn(page('<nldd-button {...rest} /><nldd-button {text} /><nldd-button text={a} />'), 'a.astro'), []);
+		assert.deepEqual(await rulesIn(page('<nldd-text>{body}</nldd-text><nldd-text set:html={body} />'), 'a.astro'), []);
+		assert.deepEqual(await rulesIn(page('<nldd-text>los</nldd-text>'), 'a.astro'), ['text-needs-element']);
+		assert.deepEqual(await rulesIn(page("<nldd-text>{'los'}</nldd-text>"), 'a.astro'), ['text-needs-element']);
+		const suppressed = "{/* nldd-lint-disable-next-line unknown-element -- it's a demo */}\n<nldd-gone></nldd-gone>";
+		assert.deepEqual(await rulesIn(page(suppressed), 'a.astro'), []);
+		assert.deepEqual(await rulesIn('---\nconst t = "<nldd-gone>";\n---\n<p is:raw><nldd-gone></nldd-gone></p>', 'a.astro'), []);
 	});
 
 	it('reads a Go template and Lit in a JavaScript file', async () => {
@@ -1893,5 +2181,71 @@ describe('attributes a component reads at any depth', () => {
 
 	it('cannot tell in a fragment, whose section may be in another file', async () => {
 		assert.deepEqual(await linter.lintSource('<nldd-button text="Filters" sidebar-section-only="collapsed"></nldd-button>', 'a.html').then(({ findings }) => findings.filter(({ rule }) => rule === 'unknown-attribute')), []);
+	});
+});
+
+describe('renamed events', () => {
+	const real = loadData();
+	const linter = createLinter(real);
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const messagesIn = async (source, file) =>
+		(await linter.lintSource(source, file)).findings.filter(({ rule }) => rule === 'event-renamed').map(({ message }) => message);
+	const renamed = '`tabchange` was renamed to `tab-change` after 0.21.1, so a listener on the old name is never called.';
+
+	it('names the new event wherever an app listens to the old one', async () => {
+		for (const [source, file] of [
+			['bar.addEventListener("tabchange", show);', 'a.js'],
+			["bar.removeEventListener('tabchange', show);", 'a.js'],
+			['<nldd-tab-bar id="b"></nldd-tab-bar><script>b.addEventListener(`tabchange`, show);</script>', 'a.html'],
+			['<template><nldd-tab-bar @tabchange="show" /></template>', 'a.vue'],
+			['<template><nldd-tab-bar v-on:tabchange="show" /></template>', 'a.vue'],
+			['<nldd-tab-bar (tabchange)="show($event)"></nldd-tab-bar>', 'a.component.html'],
+			['<nldd-tab-bar hx-on::tabchange="show()"></nldd-tab-bar>', 'a.html'],
+			['export const A = () => { useEffect(() => bar.addEventListener("tabchange", show)); return <nldd-tab-bar />; };', 'a.tsx'],
+		]) {
+			assert.deepEqual(await messagesIn(source, file), [renamed], `${file}: ${source}`);
+		}
+	});
+
+	it('reports an emitter listener on an old name without a fix, since the name may be of another library', async () => {
+		const [finding] = (await linter.lintSource('bus.on("tabchange", show);', 'a.js')).findings.filter(({ rule }) => rule === 'event-renamed');
+		assert.equal(finding.message, renamed);
+		assert.equal(finding.fix, undefined);
+	});
+
+	it('takes an arrow function with a parameter of that name for no Angular binding', async () => {
+		assert.deepEqual(await messagesIn('const c = (tabchange) => d;\nconst e = x && (tabchange) => f;', 'a.ts'), []);
+	});
+
+	it('finds the old name with nldd-, and leaves the plain name it became alone', async () => {
+		const source = 'note.addEventListener("close", hide);\nfield.addEventListener("complete", send);\nnote.addEventListener("nldd-close", hide);';
+		assert.deepEqual(await messagesIn(source, 'a.js'), ['`nldd-close` was renamed to `close` after 0.21.1, so a listener on the old name is never called.']);
+	});
+
+	it('leaves the new name, a longer name, a variable and a comment alone', async () => {
+		const source = 'bar.addEventListener("tab-change", show);\nbar.addEventListener("tabchanged", show);\nconst tabchange = 1;\n// bar.addEventListener("tabchange", show);';
+		assert.deepEqual(await messagesIn(source, 'a.js'), []);
+	});
+
+	it('renames the event with --fix, and reads a .ts file of a scan only for its events', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'src'));
+		writeFileSync(join(root, 'src/tabs.ts'), 'bar.addEventListener("nldd-text-editor-state", sync);\nconst el = html`<nldd-button></nldd-button>`;\n');
+		writeFileSync(join(root, 'src/A.vue'), '<template><nldd-kanban @nldd-move-denied="deny" /></template>\n');
+		const before = spawnSync(process.execPath, [cli, 'lint', '--format', 'json'], { cwd: root, encoding: 'utf8' });
+		const rules = JSON.parse(before.stdout).findings.map((finding) => finding.rule);
+		assert.ok(rules.includes('event-renamed'), before.stdout);
+		// The Lit template in the .ts file is not read in a scan, so the button without a name says nothing.
+		assert.ok(!rules.includes('button-needs-name'), before.stdout);
+		spawnSync(process.execPath, [cli, 'lint', '--fix'], { cwd: root, encoding: 'utf8' });
+		assert.equal(readFileSync(join(root, 'src/tabs.ts'), 'utf8'), 'bar.addEventListener("state-change", sync);\nconst el = html`<nldd-button></nldd-button>`;\n');
+		assert.equal(readFileSync(join(root, 'src/A.vue'), 'utf8'), '<template><nldd-kanban @move-denied="deny" /></template>\n');
+	});
+
+	it('has a successor for each removed event that the components still fire', () => {
+		for (const [name, { use }] of Object.entries(real.removedEvents)) {
+			if (use) assert.ok(real.events.includes(use), `${name} → ${use}`);
+		}
+		assert.equal(real.removedEvents.tabchange?.use, 'tab-change');
 	});
 });

@@ -355,6 +355,24 @@ describe('nldd-page', () => {
 			expect(el.shadowRoot!.querySelector('footer.page__footer')).not.toBeNull();
 		});
 
+		it('keeps measuring its header after a switch to region, which renders new chrome', async () => {
+			el = await fixture(`
+				<nldd-page sticky-header style="height: 300px;">
+					<div slot="header" style="height: 40px;">Header</div>
+					<div style="height: 2000px;"></div>
+				</nldd-page>
+			`);
+			await waitForUpdate(el);
+			await nextFrames();
+			el.setAttribute('landmarks', 'region');
+			await waitForUpdate(el);
+			expect(tags(el).outer).toBe('section');
+			el.querySelector<HTMLElement>('[slot="header"]')!.style.height = '90px';
+			await nextFrames();
+			await nextFrames();
+			expect(el.style.getPropertyValue('--_page-header-height')).toBe('90px');
+		});
+
 		it('is a region in a pane, so the second page does not claim the document', async () => {
 			el = await fixture(`
 				<nldd-side-by-side-split-view panes="2">
@@ -545,5 +563,30 @@ describe('nldd-page – sticky bars and focus', () => {
 			await settle();
 			expect(scroller(wrapper).hasAttribute('tabindex')).toBe(false);
 		});
+	});
+});
+
+describe('nldd-page – stand-alone, moved in the DOM', () => {
+	let el: HTMLElement;
+	afterEach(() => cleanup(el));
+
+	it('reads the scroll mode where it lands, and again on a resize', async () => {
+		el = await fixture(`<div>
+			<div id="a" style="--context-scroll-mode: nested"><nldd-page><div>Inhoud</div></nldd-page></div>
+			<div id="b" style="--context-scroll-mode: root"></div>
+		</div>`);
+		const page = el.querySelector('nldd-page') as HTMLElement;
+		await waitForUpdate(page);
+		await nextFrames();
+		// Nested is the default, which the page does not write.
+		expect(page.dataset.scroll ?? 'nested').toBe('nested');
+		const b = el.querySelector('#b') as HTMLElement;
+		b.appendChild(page);
+		await nextFrames();
+		expect(page.dataset.scroll).toBe('root');
+		b.style.setProperty('--context-scroll-mode', 'nested');
+		window.dispatchEvent(new Event('resize'));
+		await nextFrames();
+		expect(page.dataset.scroll).toBe('nested');
 	});
 });

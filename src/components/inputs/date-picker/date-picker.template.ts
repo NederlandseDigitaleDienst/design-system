@@ -61,9 +61,10 @@ function renderHeader(component: NLDDDatePicker): TemplateResult {
 				<nldd-menu class="date-picker__month-menu"
 					accessible-label=${component._t('components.date-picker.to-choose-month-action')}
 					width="176px"
+					@beforetoggle=${component._handleMonthMenuBeforeToggle}
 					@toggle=${component._handleMonthMenuToggle}
 				>
-					${months.map((month) => html`
+					${!component._monthMenuRendered ? nothing : months.map((month) => html`
 						<nldd-menu-item
 							type="radio"
 							text=${component._t(`components.date-picker.${MONTH_KEYS[month - 1]}-capitalize` as keyof NLDDDatePickerTranslations)}
@@ -78,9 +79,10 @@ function renderHeader(component: NLDDDatePicker): TemplateResult {
 					accessible-label=${component._t('components.date-picker.to-choose-year-action')}
 					max-items="8"
 					width="136px"
+					@beforetoggle=${component._handleYearMenuBeforeToggle}
 					@toggle=${component._handleYearMenuToggle}
 				>
-					${years.map((year) => html`
+					${!component._yearMenuRendered ? nothing : years.map((year) => html`
 						<nldd-menu-item
 							type="radio"
 							text=${String(year)}

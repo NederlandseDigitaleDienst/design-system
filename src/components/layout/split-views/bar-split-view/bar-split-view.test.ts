@@ -10,7 +10,8 @@ import type { NLDDBarSplitView } from './bar-split-view.js';
 // the breakpoint back to 'sm' on the next observation cycle.
 
 async function setBreakpoint(el: HTMLElement, bp: 'sm' | 'md' | 'lg') {
-	(el as any)._resizeObserver?.disconnect();
+	// The view measures itself on every resize report; keep it on this breakpoint.
+	(el as any)._applyWidth = () => {};
 	(el as NLDDBarSplitView)._currentBreakpoint = bp;
 	await waitForUpdate(el);
 }
@@ -280,7 +281,7 @@ describe('nldd-bar-split-view – root-scroll sticky insets', () => {
 	// (_updateInsets). In root mode the bars become stacked sticky bars.
 	async function setRootScroll(host: NLDDBarSplitView, on: boolean) {
 		host.style.setProperty('--context-scroll-mode', on ? 'root' : 'nested');
-		(host as unknown as { _scrollMode: { read(): void } })._scrollMode.read();
+		(host as unknown as { _scrollMode: { readScrollMode(): void } })._scrollMode.readScrollMode();
 		await waitForUpdate(host);
 	}
 
