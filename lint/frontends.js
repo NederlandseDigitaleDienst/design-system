@@ -268,10 +268,11 @@ const OPTIONAL_END = new Set(['li', 'p', 'dt', 'dd', 'option', 'optgroup', 'tr',
 
 /**
  * True when every element the markup opens, it also closes, and it closes none it did not open.
- * An element whose end tag HTML may leave out (`<li>`) needs none. In doubt it says false: that
+ * An element whose end tag HTML may leave out (`<li>`) needs none, and `<x />` closes only where the
+ * parser reads it so (`selfClosing`); in HTML it stays open. In doubt it says false: that
  * blanks a branch, which can miss a finding but never make one up.
  */
-function isBalanced(markup) {
+function isBalanced(markup, selfClosing = false) {
 	const open = [];
 	const tags = markup.replace(/<!--[\s\S]*?-->|<(script|style)\b[\s\S]*?<\/\1\s*>/gi, '');
 	for (const [tag, slash, name] of tags.matchAll(/<(\/?)([a-zA-Z][\w-]*)(?:"[^"]*"|'[^']*'|[^'">])*>/g)) {
@@ -279,7 +280,7 @@ function isBalanced(markup) {
 		if (slash) {
 			while (open.length > 0 && open.at(-1) !== lower && OPTIONAL_END.has(open.at(-1))) open.pop();
 			if (open.pop() !== lower) return false;
-		} else if (!VOID.has(lower) && !tag.endsWith('/>')) open.push(lower);
+		} else if (!VOID.has(lower) && !(selfClosing && tag.endsWith('/>'))) open.push(lower);
 	}
 	return open.every((name) => OPTIONAL_END.has(name));
 }
@@ -297,7 +298,7 @@ const withoutTemplateTags = (text) => text.replace(/\{%[\s\S]*?%\}|\{\{[\s\S]*?\
  * in a tag it leaves a name that cannot be an attribute, so the element counts as
  * spread, and a whole `{% if %}` block goes: what is in it may not be there.
  */
-function quietTemplateTags(source, blanked = new Set()) {
+function quietTemplateTags(source, blanked = new Set(), selfClosing = false) {
 	const text = source
 		.replace(/\{#[\s\S]*?#\}|\{%-?\s*comment\b[\s\S]*?\{%-?\s*endcomment\s*-?%\}/g, blank)
 		// A name the template fills in is a tag nobody can check.
@@ -319,7 +320,7 @@ function quietTemplateTags(source, blanked = new Set()) {
 				const branch = text.slice(end + 2, stop);
 				out += piece.replace(/[<>]/g, ' ');
 				at = end + 2;
-				if (isBalanced(withoutTemplateTags(branch))) continue;
+				if (isBalanced(withoutTemplateTags(branch), selfClosing)) continue;
 				for (const [, name] of branch.matchAll(/<([a-zA-Z][\w-]*)/g)) blanked.add(name.toLowerCase());
 				out += blank(branch);
 				at = stop;
@@ -364,7 +365,7 @@ function quietTemplateTags(source, blanked = new Set()) {
 	return out;
 }
 
-const quietIfTemplated = (source, blanked) => (/\{[%{#]/.test(source) ? quietTemplateTags(source, blanked) : source);
+const quietIfTemplated = (source, blanked, selfClosing) => (/\{[%{#]/.test(source) ? quietTemplateTags(source, blanked, selfClosing) : source);
 
 /**
  * A tag that also opens in a branch that went: which start tag its closing tag
@@ -380,7 +381,7 @@ export function parseHtml(source, filename = '') {
 	// A browser lowers the names in HTML; Angular's compiler keeps their case.
 	const options = { selfClosing: angular, original: source, lowerCase: !angular };
 	const blanked = new Set();
-	readHtmlChildren(parseMarkup(quietIfTemplated(source, blanked), options).children, root, { inert: true });
+	readHtmlChildren(parseMarkup(quietIfTemplated(source, blanked, options.selfClosing), options).children, root, { inert: true });
 	forgetEnds(root, blanked);
 	return [root];
 }
@@ -891,7 +892,7 @@ export function parseMarkdown(source, filename = '') {
 	const read = (text, offset, given = {}) => {
 		const root = createRoot();
 		const blanked = new Set();
-		const padded = ' '.repeat(offset) + quietIfTemplated(text, blanked);
+		const padded = ' '.repeat(offset) + quietIfTemplated(text, blanked, true);
 		readHtmlChildren(parseMarkup(padded, { selfClosing: true, original: ' '.repeat(offset) + text }).children, root, given);
 		forgetEnds(root, blanked);
 		roots.push(root);

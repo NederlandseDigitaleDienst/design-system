@@ -64,6 +64,12 @@ describe('frontend edge cases', () => {
 		assert.ok((await rules(source, 'a.html.j2')).includes('unknown-element'));
 	});
 
+	it('takes `/>` on a custom element in HTML for an open element, as the parser does', async () => {
+		const source = '<nldd-list>{% if x %}<nldd-list-item href="/a">{% else %}<nldd-list-item />{% endif %}a</nldd-list-item></nldd-list>';
+		const items = await nodes(source, 'a.html.j2', 'nldd-list-item');
+		assert.ok(items.every((item) => item.parent.name === 'nldd-list'));
+	});
+
 	it('reads each branch after one that leaves an element open', async () => {
 		const source = '{% if a %}<div class="a">{% elif b %}<div class="b">{% else %}<nldd-bestaat-niet></nldd-bestaat-niet>{% endif %}x</div>';
 		assert.ok((await rules(source, 'a.html.j2')).includes('unknown-element'));
