@@ -73,10 +73,12 @@ describe('--fix', () => {
 });
 
 describe('project paths', () => {
-	it('excludes a path from the root, not every path that contains the text', () => {
+	it('excludes a name or a path of names, not every path that contains the text', () => {
 		const root = project({ 'sub/map.html': '', 'src/legacy/a.html': '', 'src/legacy-new.html': '', 'b.html': '' });
 		const found = (exclude) => findFiles([root], root, exclude).map((file) => file.slice(root.length + 1)).sort();
 		assert.deepEqual(found(['a']), ['b.html', 'src/legacy-new.html', 'src/legacy/a.html', 'sub/map.html']);
+		assert.deepEqual(found(['legacy']), ['b.html', 'src/legacy-new.html', 'sub/map.html']);
+		assert.deepEqual(found(['legacy/a.html']), ['b.html', 'src/legacy-new.html', 'sub/map.html']);
 		assert.deepEqual(found(['src/legacy/']), ['b.html', 'src/legacy-new.html', 'sub/map.html']);
 		assert.deepEqual(found(['./src/legacy', 'b.html']), ['src/legacy-new.html', 'sub/map.html']);
 	});

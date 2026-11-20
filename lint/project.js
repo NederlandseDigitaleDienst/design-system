@@ -59,9 +59,12 @@ export const relativePath = (root, file) => relative(root, file).split(sep).join
 
 const normalizeEntry = (entry) => entry.replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/, '');
 
-/** An entry is a file or a directory from the root: `src/legacy/` excludes what is in it, not `src/legacy-new.html`. */
+/**
+ * An entry is a file or directory name, or a path of them, anywhere in the path: `legacy`
+ * and `src/legacy/` exclude `src/legacy/a.html`, and neither excludes `src/legacy-new.html`.
+ */
 function matchesExclude(path, patterns) {
-	return patterns.map(normalizeEntry).some((entry) => entry !== '' && (path === entry || path.startsWith(`${entry}/`)));
+	return patterns.map(normalizeEntry).some((entry) => entry !== '' && `/${path}/`.includes(`/${entry}/`));
 }
 
 export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENSIONS) {
