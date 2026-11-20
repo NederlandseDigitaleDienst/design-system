@@ -51,7 +51,8 @@ const standalone = new Set<StandaloneScrollLayer>();
 let resizeFrame = 0;
 
 /** One listener for all of them, read in one frame: the mode can flip at a
- *  media-query breakpoint. */
+ *  media-query breakpoint. The frame reads every layer connected by then,
+ *  also one that came after the resize. */
 function onResize(): void {
 	if (resizeFrame) return;
 	resizeFrame = requestAnimationFrame(() => {
