@@ -784,7 +784,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "rich-text-color-no-effect",
-		"message": "`color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.",
+		"message": "`color` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.",
 		"context": "nldd-rich-text[color]"
 	},
 	{
@@ -1094,7 +1094,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "text-color-inherit-no-effect",
-		"message": "`color=\"inherit\"` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.",
+		"message": "`color=\"inherit\"` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.",
 		"context": "nldd-text[color=\"inherit\"]"
 	},
 	{
@@ -1168,7 +1168,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "title-color-no-effect",
-		"message": "`color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.",
+		"message": "`color` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.",
 		"context": "nldd-title[color]"
 	},
 	{

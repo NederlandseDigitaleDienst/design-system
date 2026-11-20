@@ -887,7 +887,7 @@ A container for rich text content that automatically applies responsive typograp
 
 **Rules** (`nldd lint`)
 
-- `rich-text-color-no-effect`: `color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
+- `rich-text-color-no-effect`: `color` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `rich-text-no-inline-content`: Bare text or an inline element is a direct child, and each one lands in a column of 0px. Wrap it in a block element such as `p` where the content is made, or put plain text in nldd-text.
 - `toc-heading-needs-id` (hint): Give every h2 an `id`, so the table of contents can jump to it.
 
@@ -976,7 +976,7 @@ One run of body text at a size from the type scale. It is what you reach for whe
 
 **Rules** (`nldd lint`)
 
-- `text-color-inherit-no-effect`: `color="inherit"` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
+- `text-color-inherit-no-effect`: `color="inherit"` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `text-custom-size-invalid`: This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `text-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `size` for text up to `display-1`.
 - `text-line-height-no-effect`: `line-height` belongs to the body sizes; a display size has its own line height. Remove it.
@@ -1023,7 +1023,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 - `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
 - `slot-text-needs-element`: Text straight in a slot is what the attribute is for. Put it in `text`, or in a `<p>` or heading in the slot.
 - `tag-goes-below-title` (hint): Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.
-- `title-color-no-effect`: `color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
+- `title-color-no-effect`: `color` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `title-custom-size-invalid`: This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `title-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `heading-level` or `size` for headings up to `display-1`.
 - `title-end-max-one-action` (hint): Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.
