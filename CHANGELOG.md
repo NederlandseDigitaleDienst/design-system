@@ -9,6 +9,18 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The upgrade skill shows what an upgrade changes on screen.** `nldd-design-upgrade` now comes with a script that screenshots a site before and after and outlines each component that changed. See Added.
+
+### Added
+
+- **`compare-builds.mjs` in the `nldd-design-upgrade` skill.** It opens every page of two builds of a static site, at 1280 and at 390 pixels wide, and writes one image per page that differs: before and after side by side, with an outline around each `nldd-*` element that changed size, is no longer drawn, or kept its size and looks different. Content that only moved down the page does not count. It needs Playwright with Chromium.
+
+### Changed
+
+- **The `nldd-design-upgrade` skill covers what the linter cannot read.** It says where a version can be pinned besides `package.json`, that markup in Markdown and in strings of another language needs a search on the old names, that the built site is worth linting too, and what an upgrade brings to a project that runs `nldd lint` in its own CI. It ends with a list of when an upgrade is done.
+
 ## [0.27.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.0...v0.27.1) (2026-11-20)
 
 ### Added

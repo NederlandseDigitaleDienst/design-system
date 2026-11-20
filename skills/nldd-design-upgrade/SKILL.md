@@ -26,13 +26,82 @@ Een nieuwe minor zegt alleen dát er iets breekt, niet wat. Gebruik daarom de ch
 
 1. **Lees elke versie tussen jouw huidige en de doelversie.** De entries staan nieuwste eerst, met een kop per release (versienummer + datum). Sla niets over: een breaking change kan in een tussenliggende patch zitten.
 2. **Scan de `Breaking` / `Breaking Changes` secties eerst.** Die bevatten concrete migratie-instructies: een verwijderd attribuut met zijn vervanger, hernoemde variabelen, gewijzigd gedrag, en wat de layout van je pagina's verschuift zonder dat je code verandert, zoals een andere hoogte of maat. Een echt voorbeeld uit de changelog: `variant` op `nldd-button` en acht andere componenten heet nu `appearance`, met dezelfde waarden, dus `variant="primary"` wordt `<nldd-button appearance="primary" text="Bewaar">`.
-3. **Pas de migraties toe in je code** voordat je de nieuwe versie in gebruik neemt. Zoek je app door op de verwijderde attributen, variabelenamen of componenten uit de breaking entries.
+3. **Pas de migraties toe in je code** voordat je de nieuwe versie in gebruik neemt. Zoek de hele repository door op de verwijderde attributen, variabelenamen of componenten uit de breaking entries, ook de bestanden die de linter niet leest. Zie [Waar de linter niet komt](#waar-de-linter-niet-komt).
 4. **Lees `Highlights`, `Added` en `Changed`** voor nieuwe componenten of attributen die je oudere, omslachtigere code kunnen vervangen.
 5. **Verifieer tegen [`reference.md`](../nldd-design/reference.md)** of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij exact deze release.
 
 6. **Draai `npx @nldd/design-system@<doelversie> lint`, nog vóór je de versie verhoogt, en daarna met `--fix` voor wat alleen een andere naam kreeg.** Kies de doelversie één keer, bijvoorbeeld `0.23.0`, en gebruik die in elke stap. Met `@latest` lint je tegen wat vandaag de nieuwste is, en dat kan een andere versie zijn dan je installeert. Dat is de linter van de doelversie op je huidige code: elke bevinding is iets dat in de nieuwe versie niet meer klopt, en een baseline blijft geldig, dus wat erbij komt is je werklijst. Zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md).
 
 Vuistregel: lees bij elke nieuwe minor de `Breaking` sectie van die versie, en ga onder 0.9.0 niet meer dan een handvol patches in één sprong omhoog zonder de tussenliggende `Breaking` secties te lezen.
+
+Begin bij de `Breaking`-secties en niet bij de linter. Een site ging van 0.16.0 naar 0.27.1 met alleen `lint --fix`, en leek daarna klaar. De koppen waren te groot en twee knoppen grijs, want de markup stond in Markdown en in Python. Alle vijf de oorzaken stonden in de `Breaking`-secties van 0.22.0, 0.23.0 en 0.25.0.
+
+## Waar de versie staat
+
+Zoek elke plek voordat je er één ophoogt. `package.json` en de lockfile zijn er twee. Daarnaast komt voor:
+
+- een eigen bestand dat de versie vastpint, soms met een hash van het pakket, voor een build die het pakket zelf ophaalt;
+- een adres van een CDN met de versie erin, in een template of een HTML-bestand;
+- een tweede `package.json` in een map met bouwgereedschap, of meer dan één in een monorepo.
+
+Zoek op het oude versienummer door de hele repository. Staat de versie op meer plekken, dan vergelijkt de build ze vaak en weigert hij als ze verschillen.
+
+Zet de versie en de aanpassingen in één commit als een hook of de CI de site bouwt. Een commit met alleen de nieuwe versie is een kapotte stand, en faalt daar.
+
+## Waar de linter niet komt
+
+De linter leest sjablonen en componenten. Drie plekken slaat hij over:
+
+- **Markdown**, tenzij je de bestanden noemt: `nldd lint docs/index.md`. Een scan van een map leest ze niet, omdat documentatie vol staat met voorbeelden die bewust fout zijn.
+- **Markup in een string van een andere taal**, zoals Python of PHP dat HTML samenstelt. Die vind je alleen door te zoeken op de oude namen uit de changelog.
+- **Wat pas bij het bouwen ontstaat.** Lint daarom ook de gebouwde site: `nldd lint <buildmap>`. Daar staat alle markup bij elkaar, waar hij ook vandaan kwam.
+
+Een bevinding in de gebouwde site wijst naar een pagina, niet naar de bron. Zoek het element terug in de repository en herstel het daar.
+
+## De linter in je eigen CI
+
+Draait je project `nldd lint` van de vastgepinde versie, dan krijg je met de upgrade ook de regels van elke versie ertussen. Dat zijn bevindingen over markup die al zo stond, naast wat de upgrade breekt. Los ze op, of neem ze bewust op in de baseline met `--update-baseline`. Een fout (`error`) los je op: die zegt dat iets niet werkt.
+
+Lint je in de buildmap zelf, of heet die map anders dan `dist` of `build`, dan leest de linter ook de gebundelde scripts van het designsysteem en meldt hij de stijlen van de componenten als overschrijvingen van jou. Sluit de map met de bundel dan uit, met `"exclude"` in `.nldd-lint.json`.
+
+## Voor en na vergelijken
+
+Wat breekt, zie je alleen door te kijken. Doe dat met twee builds naast elkaar:
+
+1. Bouw de site op de oude stand en bewaar de uitvoer.
+2. Bouw hem op de nieuwe stand.
+3. Draai [`compare-builds.mjs`](compare-builds.mjs) uit deze skill, vanuit je project:
+
+```sh
+node <pad naar deze skill>/compare-builds.mjs <oude build> <nieuwe build> <map voor de beelden> --label-before 0.16.0 --label-after 0.27.1
+```
+
+Het script opent elke pagina van beide builds op 1280 en op 390 pixels breed. Per pagina die verschilt schrijft het één beeld, met voor en na naast elkaar en een omlijning om elk element van het designsysteem dat veranderde:
+
+| Kleur | Betekenis |
+|---|---|
+| Roze | het element heeft een andere maat |
+| Blauw | het element is even groot en ziet er anders uit, zoals een andere kleur |
+| Rood | het element wordt niet meer getekend |
+| Groen | het element is er nieuw |
+| Grijs | andere pixels buiten een element, op een pagina die even hoog bleef |
+
+Inhoud die alleen lager op de pagina kwam te staan, telt niet. Een pagina is pas gelijk als de twee schermafdrukken pixel voor pixel gelijk zijn. Het script heeft Playwright met Chromium nodig, in je project of met `--playwright <module>`.
+
+Rood en blauw zijn bijna altijd een fout uit de upgrade. Roze is vaak een bewuste wijziging in het designsysteem, en dan staat ze in de changelog. Zet de beelden in de pull request, met wat je erop ziet.
+
+Het script werkt op een site die naar statische HTML bouwt. Heeft je app een server of een inlog nodig, dan bekijk je de schermen met de hand, op de oude en op de nieuwe stand.
+
+## Klaar
+
+Een upgrade is klaar als dit allemaal waar is:
+
+- de `Breaking`-secties tussen de twee versies zijn gelezen, en elk punt dat de app raakt is verwerkt;
+- de versie is op elke plek gelijk;
+- `nldd lint` van de doelversie vindt niets nieuws in de bron en in de gebouwde site;
+- de beelden van voor en na zijn bekeken, en wat verschilt is verklaard;
+- de eigen controles van het project slagen: de build, de tests en wat er in de CI draait;
+- een keuze die niet uit de changelog volgt, staat apart in de pull request.
 
 ## Wat er stil misgaat
 
@@ -41,7 +110,7 @@ Wat een upgrade breekt, faalt zonder foutmelding. Een onbekend attribuut, een ve
 - **Hernoemde CSS-variabelen zijn de meest gemiste val.** Je eigen CSS verwijst dan naar een naam die niet meer bestaat, zonder foutmelding: de declaratie valt gewoon weg. `nldd lint` vangt dit voor `--primitives-*`, `--semantics-*`, `--components-*` en de `--context-*`-variabelen met een default (`token-not-found`) en noemt de opvolger als die er is. De changelog zet zo'n token onder `Breaking`. Een `--_*` of `--components-*` hoort niet in je eigen CSS: die zijn van één component en bewegen met dat component mee.
 - **Een hernoemd event breekt ook stil.** De listener op de oude naam wordt nooit meer aangeroepen, terwijl het component zijn eigen deel nog doet: een tabbalk kiest zijn tab, maar het paneel wisselt niet. `nldd lint` vangt dit (`event-renamed`) in `addEventListener`, in `@…` en `v-on:` van Vue, Lit en Alpine, in `(…)=` van Angular en in `hx-on`, en `--fix` hernoemt het waar de naam letterlijk staat. Een naam die je zelf samenstelt (`addEventListener(prefix + 'change')`) ziet hij niet; zoek daarvoor op de oude namen uit de changelog.
 - **Controleer de versie die je echt draait**, niet de versie in `package.json`. Een `^0.8.44` in `package.json` met een lockfile van maanden oud draait iets anders dan je denkt. `npm ls @nldd/design-system` geeft het antwoord.
-- **Verifieer in een browser, niet in de code.** Bouw het en kijk. Dat kost een paar minuten en het is de enige manier om een stille terugval te zien.
+- **Verifieer in een browser, niet in de code.** Bouw het en kijk. Dat is de enige manier om een stille terugval te zien. Zie [Voor en na vergelijken](#voor-en-na-vergelijken).
 
 ## Verder
 
