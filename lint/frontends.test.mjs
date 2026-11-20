@@ -46,6 +46,24 @@ describe('frontend edge cases', () => {
 		});
 	}
 
+	for (const [language, filename, open, otherwise, close] of [
+		['Jinja else', 'a.html.j2', '{% if x %}', '{% else %}', '{% endif %}'],
+		['Jinja elif', 'a.html.j2', '{% if x %}', '{% elif y %}', '{% endif %}'],
+		['Jinja empty', 'a.html.j2', '{% for x in y %}', '{% empty %}', '{% endfor %}'],
+		['Go', 'a.gohtml', '{{if .X}}', '{{else}}', '{{end}}'],
+		['Handlebars', 'a.html', '{{#if x}}', '{{else}}', '{{/if}}'],
+	]) {
+		it(`reads a balanced later ${language} branch`, async () => {
+			const source = `${open}\n<nldd-button text="V"></nldd-button>\n${otherwise}\n<nldd-bestaat-niet></nldd-bestaat-niet><img src="a.png">\n${close}`;
+			assert.ok((await rules(source, filename)).includes('unknown-element'));
+		});
+	}
+
+	it('reads each branch after one that leaves an element open', async () => {
+		const source = '{% if a %}<div class="a">{% elif b %}<div class="b">{% else %}<nldd-bestaat-niet></nldd-bestaat-niet>{% endif %}x</div>';
+		assert.ok((await rules(source, 'a.html.j2')).includes('unknown-element'));
+	});
+
 	it('keeps a block nested in a blanked branch from ending it early', async () => {
 		const source = '<nldd-list>{% if x %}<nldd-list-item href="/a">{% else %}{% if y %}<nldd-list-item>{% endif %}{% endif %}a</nldd-list-item></nldd-list>';
 		const items = await nodes(source, 'a.html.j2', 'nldd-list-item');

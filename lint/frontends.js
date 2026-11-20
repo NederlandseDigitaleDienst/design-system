@@ -248,8 +248,8 @@ const CLOSES_MUSTACHE = /^\{\{[-~]?\s*(\/|end\b)/;
 /** Another branch of a block: `{% elif %}`, `{% else %}`, `{% empty %}`, `{{else}}`. */
 const ALTERNATIVE = /^\{%-?\s*(elif|else|empty)\b|^\{\{[-~]?\s*else\b/;
 
-/** Where the block ends that holds `from`: the start of its `{% end… %}`, `{{end}}` or `{{/…}}`. */
-function endOfBlock(text, from) {
+/** Where the branch ends that starts at `from`: the next `{% else %}` of its block, or the end of the block. */
+function endOfBranch(text, from) {
 	const tags = /\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}/g;
 	tags.lastIndex = from;
 	let depth = 0;
@@ -258,13 +258,28 @@ function endOfBlock(text, from) {
 		else if (CLOSES_BLOCK.test(match[0]) || CLOSES_MUSTACHE.test(match[0])) {
 			if (depth === 0) return match.index;
 			depth -= 1;
-		}
+		} else if (depth === 0 && ALTERNATIVE.test(match[0])) return match.index;
 	}
 	return text.length;
 }
 
+/** True when every element the markup opens, it also closes, and it closes none it did not open. */
+function isBalanced(markup) {
+	const open = [];
+	for (const [tag, slash, name] of markup.matchAll(/<(\/?)([a-zA-Z][\w-]*)(?:"[^"]*"|'[^']*'|[^'">])*>/g)) {
+		const lower = name.toLowerCase();
+		if (slash) {
+			if (open.pop() !== lower) return false;
+		} else if (!VOID.has(lower) && !tag.endsWith('/>')) open.push(lower);
+	}
+	return open.length === 0;
+}
+
 /** Same length, so positions stay right. */
 const blank = (text) => text.replace(/[^\n]/g, ' ');
+
+/** Markup without its template tags, so `{% if a %}>{% endif %}` in a tag does not end it. */
+const withoutTemplateTags = (text) => text.replace(/\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\}/g, '');
 
 /**
  * Jinja and Django write into a tag, where an HTML parser reads them as markup:
@@ -289,10 +304,15 @@ function quietTemplateTags(source, blanked = new Set()) {
 		if (end !== -1) {
 			const piece = text.slice(at, end + 2);
 			if (!inTag && ALTERNATIVE.test(piece)) {
-				// One branch renders. The others go, so an element in each does not nest in the other.
-				const stop = endOfBlock(text, end + 2);
-				for (const [, name] of text.slice(end + 2, stop).matchAll(/<([a-zA-Z][\w-]*)/g)) blanked.add(name.toLowerCase());
-				out += piece.replace(/[<>]/g, ' ') + blank(text.slice(end + 2, stop));
+				// One branch renders. A branch that leaves an element open, as the first one may too,
+				// goes, so the element in each does not nest in the other. A balanced branch stays.
+				const stop = endOfBranch(text, end + 2);
+				const branch = text.slice(end + 2, stop);
+				out += piece.replace(/[<>]/g, ' ');
+				at = end + 2;
+				if (isBalanced(withoutTemplateTags(branch))) continue;
+				for (const [, name] of branch.matchAll(/<([a-zA-Z][\w-]*)/g)) blanked.add(name.toLowerCase());
+				out += blank(branch);
 				at = stop;
 				continue;
 			}

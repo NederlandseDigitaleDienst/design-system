@@ -1057,6 +1057,12 @@ describe('--fix', () => {
 		assert.equal(flag('a.vue', bound), bound);
 	});
 
+	it('names the rules about the values of a bound attribute that is gone', async () => {
+		const findings = (await createLinter(loadData()).lintSource("const a = <nldd-text-editor accessible-label=\"a\" appearance={b ? 'simple' : 'input-field'} />;", 'a.tsx')).findings;
+		const [finding] = findings.filter(({ rule }) => rule === 'unknown-attribute');
+		assert.match(finding.message, /nldd explain editor-appearance-no-effect`.*nldd explain editor-appearance-renamed`/);
+	});
+
 	it('replaces a deprecated attribute, and the rule takes over its finding', () => {
 		const { text, stdout } = fixed('a.html', '<nldd-navigation-split-view sidebar-accessible-label="a"></nldd-navigation-split-view>');
 		assert.equal(text, '<nldd-navigation-split-view primary-sidebar-accessible-label="a"></nldd-navigation-split-view>');

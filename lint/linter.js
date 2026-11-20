@@ -58,7 +58,19 @@ function fromAncestors(node, tags, anyDescendantAttrs) {
 	return attrs;
 }
 
-function checkAttributes(node, { tags, icons, anyChildAttrs, anyDescendantAttrs, globalAttrs, isPlainHtml }, report) {
+/** Per tag and attribute, the rules in `api` about a name that is gone: `nldd-text-editor` → `appearance` → its two rules. */
+function removedAttributeRules(rules) {
+	const by = {};
+	for (const rule of rules) {
+		if (rule.group !== 'api' || !rule.removed) continue;
+		for (const [tag] of rule.context.matchAll(/\bnldd-[\w-]+/g)) {
+			for (const name of rule.removed) ((by[tag] ??= {})[name] ??= new Set()).add(rule.id);
+		}
+	}
+	return by;
+}
+
+function checkAttributes(node, { tags, icons, anyChildAttrs, anyDescendantAttrs, globalAttrs, isPlainHtml, removedBy = {} }, report) {
 	if (node.templated) return;
 	const contract = tags[node.name];
 	// A parent in another file may be the one reading it, so any child attribute goes.
@@ -93,7 +105,12 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, anyDescendantAttrs,
 			// `[show]` next to `appSheetSync` may be an input of that directive, or a typo.
 			const maybeInput = isPlainHtml && value === BOUND && hasAppDirective(node);
 			if (maybeInput) report('unknown-attribute', `${node.name} has no attribute \`${name}\`. That is fine if a directive on this element takes it.`, name, 'hint');
-			else report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
+			else {
+				// A bound value of a name that is gone: the rules about its values say what took its place.
+				const gone = [...(removedBy[node.name]?.[name] ?? [])];
+				const see = gone.length > 0 ? ` It was removed: see ${gone.map((id) => `\`nldd explain ${id}\``).join(' and ')}.` : '';
+				report('unknown-attribute', `${node.name} has no attribute \`${name}\`.${see}`, name);
+			}
 		}
 	}
 }
@@ -269,6 +286,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		globalAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.globalAttrs ?? {})),
 		translations: data.translations ?? {},
 		removedKeys: data.removedKeys ?? {},
+		removedBy: removedAttributeRules(data.rules),
 	};
 	const tokens = new Set([...(data.tokens ?? []), ...projectTokens]);
 	const tokenList = [...tokens];
