@@ -2215,20 +2215,31 @@ describe('renamed events', () => {
 
 	it('finds the old name in a function of the app that is about events, such as a hook', async () => {
 		const find = async (source) => (await linter.lintSource(source, 'a.tsx')).findings.filter(({ rule }) => rule === 'event-renamed');
-		// A plain name may be another library's, so no fix, as with an emitter.
 		const [plain] = await find("useNlddEvent(ref, 'tabchange', show);");
 		assert.equal(plain.message, renamed);
-		assert.equal(plain.fix, undefined);
-		// A name with nldd- can only be ours.
-		const [prefixed] = await find('useEventListener(board, "nldd-move", onMove);');
-		assert.deepEqual(prefixed.fix, { event: 'move' });
+		assert.equal((await find('useEventListener(board, "nldd-move", onMove);')).length, 1);
 		assert.equal((await find("listen('nldd-close', hide);")).length, 1);
 	});
 
-	it('leaves a function that fires the name, and one that is not about events, alone', async () => {
+	it('gives no fix for a name in a function of the app, also not one with nldd-', async () => {
+		// The name of a function does not say which way the name goes: it may be sent
+		// on a bus of the app's own, and a fix on one end would break the other.
+		for (const source of ["useNlddEvent(ref, 'tabchange', show);", 'useEventListener(board, "nldd-move", onMove);', "onEvent('nldd-close', hide);"]) {
+			const [finding] = (await linter.lintSource(source, 'a.ts')).findings.filter(({ rule }) => rule === 'event-renamed');
+			assert.ok(finding, source);
+			assert.equal(finding.fix, undefined, source);
+		}
+	});
+
+	it('leaves a function that sends, logs or builds the name, and one that is not about events, alone', async () => {
 		const source = [
 			"el.dispatchEvent(new CustomEvent('nldd-move'));",
 			"fireEvent(el, new CustomEvent('tabchange'));",
+			"trackEvent('nldd-move');",
+			"emitEvent('nldd-move', detail);",
+			"logEvent('tabchange');",
+			"sendEvent(channel, 'nldd-close');",
+			"const event = createEvent('nldd-move');",
 			"track('tabchange');",
 			"const label = t('nldd-close');",
 		].join('\n');

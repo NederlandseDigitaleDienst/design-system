@@ -366,20 +366,24 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			// (tabchange)="…" in Angular: an attribute with a quoted value, so `(tabchange) => …` in a script is not one.
 			{ pattern: new RegExp(`(?<=\\s)\\(${name}\\)\\s*=\\s*['"]`, 'dg'), fixable: true },
 			// A function of the app's own that takes the name, such as a hook: useEvent(ref, 'tabchange', show).
-			// Its name says it is about events. `new CustomEvent('tabchange')` fires the name rather than
-			// listening to it, and is the app's own business. A name with `nldd-` can only be ours, so that
-			// one gets the fix; a plain name may be another library's, as with an emitter.
-			{ pattern: new RegExp(`(?<![\\w$])(?<!\\bnew\\s+)(?!(?:add|remove)EventListener\\()[\\w$]*(?:[Ee]vent|[Ll]isten)[\\w$]*\\(\\s*(?:[^()'"\`]*?,\\s*)?(['"\`])${name}\\1`, 'dg'), fixable: 'prefixed' },
+			// Its name says it is about events. That is not enough for a fix: the function may send the name
+			// on a bus of the app's own, or log it, and renaming one end of that breaks it. So this reports,
+			// and leaves out a function whose name says it sends, logs or builds (see SENDS below).
+			{ pattern: new RegExp(`(?<![\\w$])(?<!\\bnew\\s+)(?!(?:add|remove)EventListener\\()([\\w$]*(?:[Ee]vent|[Ll]isten)[\\w$]*)\\(\\s*(?:[^()'"\`]*?,\\s*)?(['"\`])${name}\\2`, 'dg'), fixable: false, callee: 1 },
 		];
 	})();
+
+	/** A function of the app that sends, logs or builds an event rather than listening to one: emitEvent, trackEvent, createEvent. */
+	const SENDS = /^(?:emit|dispatch|fire|trigger|raise|send|publish|post|notify|track|log|record|report|create|make|build)/i;
 
 	/** A listener on the name of an event a component no longer fires: it is never called, and nothing says so. */
 	function eventFindings(source, filename) {
 		if (eventPatterns.length === 0) return [];
 		const { plain } = codeRegions(source, filename);
 		const findings = [];
-		for (const { pattern, fixable } of eventPatterns) {
+		for (const { pattern, fixable, callee } of eventPatterns) {
 			for (const match of plain.matchAll(pattern)) {
+				if (callee && SENDS.test(match[callee])) continue;
 				const group = match.length - 1;
 				const name = match[group];
 				const [offset, endOffset] = match.indices[group];
@@ -387,7 +391,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				const message = use
 					? `\`${name}\` was renamed to \`${use}\` after ${last}, so a listener on the old name is never called.`
 					: `\`${name}\` is no longer fired after ${last}, so this listener is never called.`;
-				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && (fixable === true || (fixable === 'prefixed' && name.startsWith('nldd-'))) ? { fix: { event: use } } : {}) });
+				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && fixable ? { fix: { event: use } } : {}) });
 			}
 		}
 		return findings;

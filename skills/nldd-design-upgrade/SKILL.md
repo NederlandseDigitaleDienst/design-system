@@ -68,9 +68,9 @@ In een app met React, Vue of een ander framework komt er een vierde plek bij: **
 node <pad naar deze skill>/collect-dev-findings.mjs http://localhost:5173 / /aanvragen /instellingen --out bevindingen.json
 ```
 
-Met `--crawl` volgt het ook de links naar pagina's van dezelfde herkomst. Per regel krijg je het aantal, de pagina's en een paar elementen met hun tekst, genoeg om ze in de bron terug te vinden. Staat je app achter een inlog, geef dan een opgeslagen sessie mee met `--storage-state`. Dit werkt alleen op een dev-build van een bundler die `import.meta.env.DEV` zet, zoals Vite. In een productiebuild zitten de controles niet.
+Met `--crawl` volgt het ook de links naar pagina's van dezelfde herkomst. Per regel krijg je het aantal, de pagina's en een paar elementen met hun tekst. In een dev-build van React of Vue staat erbij welk onderdeel van je app het element tekende, en daar zoek je in de bron. Het aantal telt wat er getekend is: één regel in een rij van een lijst telt voor elke rij mee. Staat je app achter een inlog, geef dan een opgeslagen sessie mee met `--storage-state`. Dit werkt alleen op een dev-build van een bundler die `import.meta.env.DEV` zet, zoals Vite. In een productiebuild zitten de controles niet.
 
-Een eventnaam die via een eigen functie loopt, zoals een hook `useEvent(ref, naam, toon)` met de naam als tekst, vindt de linter als de naam van die functie over events gaat. Heet je functie anders, zoek dan zelf op de oude namen.
+Een eventnaam die via een eigen functie loopt, zoals een hook `useEvent(ref, naam, toon)` met de naam als tekst, vindt de linter als de naam van die functie over events gaat. Hij meldt het en herstelt het niet, want hij kan niet zien of je functie luistert of verstuurt. Heet je functie anders, zoek dan zelf op de oude namen.
 
 ## De linter in je eigen CI
 

@@ -85,8 +85,20 @@ function describe(element) {
 	for (let node = element; node && node !== document.documentElement && trail.length < 5; node = node.parentElement ?? node.getRootNode().host) {
 		trail.unshift(node.localName + (node.id ? `#${node.id}` : ''));
 	}
+	// Which component of the app rendered it, where a dev build of the framework
+	// keeps that: the owners in React, the file of the component in Vue.
+	const owners = [];
+	const fiberKey = Object.keys(element).find((key) => key.startsWith('__reactFiber$'));
+	for (let owner = fiberKey ? element[fiberKey]?._debugOwner : null; owner && owners.length < 3; owner = owner._debugOwner ?? owner.owner) {
+		const type = owner.type ?? owner.elementType;
+		const name = owner.name ?? type?.displayName ?? type?.name;
+		if (typeof name === 'string' && name && !owners.includes(name)) owners.push(name);
+	}
+	const vue = element.__vueParentComponent?.type;
+	if (vue) owners.push(vue.__file ?? vue.__name ?? vue.name ?? '');
 	return {
 		tag: element.localName,
+		owner: owners.filter(Boolean).join(' < '),
 		html: open.length > 240 ? `${open.slice(0, 240)}…` : open,
 		text: (element.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 80),
 		within: trail.join(' > '),
@@ -141,9 +153,10 @@ await browser.close();
 // One line per rule, with where it shows and what it looks like.
 const perRule = new Map();
 for (const finding of findings) {
-	const entry = perRule.get(finding.rule) ?? { rule: finding.rule, message: finding.message, count: 0, pages: new Set(), examples: [] };
+	const entry = perRule.get(finding.rule) ?? { rule: finding.rule, message: finding.message, count: 0, pages: new Set(), owners: {}, examples: [] };
 	entry.count++;
 	entry.pages.add(finding.page);
+	if (finding.element?.owner) entry.owners[finding.element.owner] = (entry.owners[finding.element.owner] ?? 0) + 1;
 	if (finding.element && entry.examples.length < 5 && !entry.examples.some((example) => example.html === finding.element.html)) entry.examples.push(finding.element);
 	perRule.set(finding.rule, entry);
 }
@@ -153,6 +166,10 @@ print(`${visited.size} pages, ${findings.length} findings in ${summary.length} r
 for (const entry of summary) {
 	print(`\n${String(entry.count).padStart(4)}  ${entry.rule}  on ${entry.pages.length} page${entry.pages.length === 1 ? '' : 's'}`);
 	print(`      ${entry.message}`);
+	// Rendered by which components of the app: where to look in the source.
+	const owners = Object.entries(entry.owners).sort((a, b) => b[1] - a[1]);
+	for (const [owner, count] of owners.slice(0, 12)) print(`      ${String(count).padStart(4)}× in ${owner}`);
+	if (owners.length > 12) print(`      and ${owners.length - 12} more components, in the JSON`);
 	for (const example of entry.examples) print(`      ${example.html}${example.text ? `  "${example.text}"` : ''}`);
 }
 for (const failure of failed) print(`\nfailed: ${failure.page}  ${failure.error}`);
