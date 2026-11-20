@@ -192,7 +192,7 @@ export const Grootten = {
 			gap="16"
 			vertical-alignment="center"
 		>
-			${[...SIZES].reverse().map(size => html`
+			${SIZES.toReversed().map(size => html`
 				<nldd-avatar
 					name="Bart van de Biezen"
 					size=${size}

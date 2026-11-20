@@ -685,3 +685,36 @@ describe('nldd-kanban', () => {
 		});
 	});
 });
+
+describe('nldd-kanban-column while the page is parsed', () => {
+	let frame: HTMLIFrameElement | null = null;
+
+	afterEach(() => {
+		frame?.remove();
+		frame = null;
+	});
+
+	it('counts the items once after the parse, not once per item', async () => {
+		// Rendered in this document first: its styles cannot be adopted in another.
+		const column = document.createElement('nldd-kanban-column');
+		document.body.append(column);
+		await column.updateComplete;
+		frame = document.createElement('iframe');
+		document.body.append(frame);
+		const doc = frame.contentDocument!;
+		doc.open();
+		doc.write('<body>');
+		doc.body.append(column);
+		for (let i = 0; i < 3; i++) {
+			// From this document: `items` checks for this realm's HTMLElement.
+			column.append(document.createElement('div'));
+			// The parser runs the microtasks after each element.
+			for (let tick = 0; tick < 3; tick++) await Promise.resolve();
+		}
+
+		expect(doc.readyState).toBe('loading');
+		expect(column._count).toBe(0);
+		doc.close();
+		expect(column._count).toBe(3);
+	});
+});

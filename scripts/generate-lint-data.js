@@ -8,15 +8,16 @@
  * src/assets/styles/removed-tokens.json, with the last version that had it. That
  * file is the history the linter names a removed token from, and the changelog
  * check reads it. A translation key that disappears goes the same way, into
- * src/translations/removed-keys.json.
+ * src/translations/removed-keys.json, and an event a component no longer fires
+ * into src/components/removed-events.json.
  *
  * Usage: node scripts/generate-lint-data.js
  */
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { cssRules, declarations, TOKEN_PREFIX } from '../lint/css.js';
+import { cssRules, declarations, TOKEN_PREFIX, withoutComments } from '../lint/css.js';
 import { shippedStylesheets } from './build-styles.js';
 import { booleanAttributes, buildClasses, buildContract, buildDevRules, loadRules, normalizeSelectors, seeUrl } from './lib/lint-data.js';
 import { iconCatalog, loadComponentModel } from './lib/component-model.js';
@@ -66,10 +67,36 @@ const translations = translationKeys();
 
 const pkg = read('package.json');
 const stylesheets = shippedStylesheets().map((file) => readFileSync(file, 'utf8'));
-// A context variable is API only where variables.css gives it a default; the rest is wiring between components.
+// A context variable is API where variables.css gives it a default, or where a component documents it
+// with @cssprop; the rest is wiring between components.
 const contextDefaults = new Set(declarations(readFileSync(resolve(repoRoot, 'src/assets/styles/variables.css'), 'utf8')).map(({ name }) => name).filter((name) => name.startsWith('--context-')));
 const isToken = (name) => TOKEN_PREFIX.test(name) && (!name.startsWith('--context-') || contextDefaults.has(name));
-const tokens = [...new Set(stylesheets.flatMap((css) => declarations(css).map(({ name }) => name)).filter(isToken))].sort();
+const stylesheetNames = new Set(stylesheets.flatMap((css) => declarations(css).map(({ name }) => name)));
+
+/** Every custom property a component's source names outside a comment, skipping tests, stories and generated files. */
+function sourceNames() {
+	const names = new Set();
+	const walk = (dir) => {
+		for (const entry of readdirSync(dir, { withFileTypes: true })) {
+			const path = resolve(dir, entry.name);
+			if (entry.isDirectory()) walk(path);
+			// dev-rules.generated.ts holds rule messages and is written below: reading it would make this run depend on the last one.
+			else if (/\.ts$/.test(entry.name) && !/\.(test|stories|generated)\.ts$/.test(entry.name)) {
+				for (const [name] of withoutComments(readFileSync(path, 'utf8')).matchAll(/--[a-z][a-z0-9-]*[a-z0-9](?![a-z0-9*-])/g)) names.add(name);
+			}
+		}
+	};
+	walk(resolve(repoRoot, 'src'));
+	return names;
+}
+const inSource = sourceNames();
+
+// A component documents the context variables an app may read with @cssprop, such as --context-inset-top on nldd-page.
+const documented = elements.flatMap(({ tag, declaration }) => (declaration.cssProperties ?? []).map(({ name }) => ({ tag, name }))).filter(({ name }) => TOKEN_PREFIX.test(name));
+const unused = documented.filter(({ name }) => !stylesheetNames.has(name) && !inSource.has(name));
+if (unused.length > 0) throw new Error(`@cssprop names a custom property no stylesheet or component uses: ${unused.map(({ tag, name }) => `${name} on ${tag}`).join(', ')}`);
+const tokens = [...new Set([...[...stylesheetNames].filter(isToken), ...documented.map(({ name }) => name)])].sort();
+const tokenSet = new Set(tokens);
 const designSystemRules = new Map();
 for (const css of stylesheets) {
 	for (const [key, names] of cssRules(css)) designSystemRules.set(key, new Set([...(designSystemRules.get(key) ?? []), ...names]));
@@ -87,8 +114,11 @@ function updateLedger(path, before, now) {
 	const file = resolve(repoRoot, path);
 	const ledger = existsSync(file) ? read(path) : {};
 	const current = new Set(now);
-	for (const name of before) if (!current.has(name) && !ledger[name]) ledger[name] = { last: pkg.version };
+	const added = before.filter((name) => !current.has(name) && !ledger[name]);
+	for (const name of added) ledger[name] = { last: pkg.version };
 	for (const name of current) delete ledger[name];
+	// Only a person knows whether a name that left got another one, and `--fix` renames on it.
+	if (added.length > 0) console.log(`${path}: added ${added.join(', ')}. Add "use" to each that got another name with the same meaning.`);
 	const lines = Object.keys(ledger).sort().map((name) => `\t${JSON.stringify(name)}: ${JSON.stringify(ledger[name])}`);
 	writeFileSync(file, `{\n${lines.join(',\n')}\n}\n`);
 	return ledger;
@@ -96,9 +126,17 @@ function updateLedger(path, before, now) {
 
 const removedTokens = updateLedger('src/assets/styles/removed-tokens.json', previous.tokens ?? [], tokens);
 const removedKeys = updateLedger('src/translations/removed-keys.json', Object.values(previous.translations ?? {}).flat(), Object.values(translations).flat());
+// The events a component fires, from its @fires. An app listens by name, so a renamed event fails silently.
+const events = [...new Set(elements.flatMap(({ declaration }) => (declaration.events ?? []).map(({ name }) => name)).filter((name) => /^[a-z][a-z0-9-]*$/.test(name)))].sort();
+const removedEvents = updateLedger('src/components/removed-events.json', previous.events ?? [], events);
+/**
+ * Every other --context-* variable a component names outside a comment is wiring between components, which can
+ * change in any release. A removed token stays out, so the linter keeps naming it as removed, with its successor.
+ */
+const internalContext = [...inSource].filter((name) => name.startsWith('--context-') && !tokenSet.has(name) && !removedTokens[name]).sort();
 
 const sorted = (object) => Object.fromEntries(Object.keys(object).sort().map((name) => [name, object[name]]));
-const data = { tags, classes, icons, rules, tokens, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), designSystemCss };
+const data = { tags, classes, icons, rules, tokens, internalContext, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), events, removedEvents: sorted(removedEvents), designSystemCss };
 
 writeFileSync(resolve(repoRoot, 'lint/data.generated.json'), `${JSON.stringify(data)}\n`);
 writeFileSync(

@@ -41,6 +41,7 @@ export function avatarGroupTemplate(component: NLDDAvatarGroup) {
 				anchor=${component._triggerId}
 				placement="bottom-end"
 				accessible-label=${title}
+				@beforetoggle=${component._onOverflowToggle}
 			>
 				<nldd-page
 					landmarks="region"
@@ -58,18 +59,18 @@ export function avatarGroupTemplate(component: NLDDAvatarGroup) {
 						padding-block="8"
 					>
 						<nldd-list dividers="never">
-							${overflow.map(entry => html`
+							${component._overflowOpened ? overflow.map(node => html`
 								<nldd-list-item size="sm">
 									<nldd-cell width="fit-content">
-										${entry.avatar}
+										${component._copyOf(node)}
 									</nldd-cell>
 									<nldd-spacer-cell size="8"></nldd-spacer-cell>
 									<nldd-text-cell
 										width="full"
-										text=${entry.name}
+										text=${component._nameOf(node)}
 									></nldd-text-cell>
 								</nldd-list-item>
-							`)}
+							`) : nothing}
 						</nldd-list>
 					</nldd-container>
 				</nldd-page>

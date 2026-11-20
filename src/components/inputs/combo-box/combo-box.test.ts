@@ -1175,3 +1175,41 @@ describe('nldd-combo-box allow-custom keeps a chosen value', () => {
 		expect(changes).toEqual([]);
 	});
 });
+
+// A closed field measures nothing: on a page with many of them, each reading
+// its own width after the previous one wrote laid the page out once per field.
+describe('nldd-combo-box menubreedte', () => {
+	let el: NLDDComboBox;
+
+	afterEach(() => cleanup(el));
+
+	it('meet de breedte pas als het menu opengaat, en volgt het veld zolang het open is', async () => {
+		el = await fixture<NLDDComboBox>(`
+			<nldd-combo-box width="240px">
+				<nldd-menu>
+					<nldd-menu-item text="Nederland" value="nl"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-combo-box>
+		`);
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as HTMLElement & { width: string };
+		await nextFrames();
+		expect(menu.width).toBe('');
+
+		el._openMenu();
+		await waitForUpdate(el);
+		expect(menu.width).toBe('240px');
+
+		el.width = '300px';
+		await waitForUpdate(el);
+		await nextFrames();
+		expect(menu.width).toBe('300px');
+
+		el._closeMenu();
+		await waitForUpdate(el);
+		el.width = '200px';
+		await waitForUpdate(el);
+		await nextFrames();
+		expect(menu.width).toBe('300px');
+	});
+});

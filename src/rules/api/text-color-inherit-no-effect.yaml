@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-text[color="inherit"]'
+message: '`color="inherit"` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.'
+examples:
+  passed: ['<nldd-text text="Dakisolatie, in behandeling"></nldd-text>', '<nldd-text text="Dakisolatie, in behandeling" color="secondary"></nldd-text>']
+  failed: ['<nldd-text text="Dakisolatie, in behandeling" color="inherit"></nldd-text>']
+  cantTell: ['<nldd-text text="Dakisolatie, in behandeling" :color="kleur"></nldd-text>']

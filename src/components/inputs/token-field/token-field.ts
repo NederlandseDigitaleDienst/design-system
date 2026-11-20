@@ -229,6 +229,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		this._templateObserver.observe(this, {
 			childList: true, subtree: true, attributes: true, characterData: true,
 		});
+		// Moved in the DOM: the slot keeps its content, so no slotchange comes.
+		if (this.hasUpdated) this._onSlotChange();
 	}
 
 	override disconnectedCallback(): void {

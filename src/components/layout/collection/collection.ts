@@ -66,8 +66,19 @@ import '../../content/icon/icon.js';
 import { spacingToValue, type SpacingSize } from '../../../utilities/spacing-scale.js';
 import { translate } from '../../../utilities/translations.js';
 import { markListItems } from '../../../utilities/list-items.js';
+import { afterParse } from '../../../utilities/after-parse.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
 
 type Layout = 'grid' | 'stack' | 'lanes' | 'horizontal-scroll';
+
+/* Overflow is a layout read. Measured per collection after each one wrote, a
+ * page of collections lays out once per collection; in one pass, once. */
+const overflowPass = new LayoutPass<NLDDCollection>((hosts) => {
+	for (const host of hosts) host._measureOverflow();
+});
+const overflowObserver = sharedResizeObserver<NLDDCollection>((hosts) => {
+	for (const host of hosts) host._measureOverflow();
+});
 
 @customElement('nldd-collection')
 export class NLDDCollection extends LitElement {
@@ -140,9 +151,12 @@ export class NLDDCollection extends LitElement {
 	@query('.collection__items')
 	private _itemsEl!: HTMLElement;
 
-	private _scrollListener = (): void => {
+	private _scrollListener = (): void => this._measureOverflow();
+
+	/** @internal Reads the scroll position and overflow of the items. */
+	_measureOverflow(): void {
 		const el = this._itemsEl;
-		if (!el) return;
+		if (!el || !this._scrollListenerAttached) return;
 		const wasAtStart = this._atStart;
 		const wasAtEnd = this._atEnd;
 		this._atStart = el.scrollLeft < 1;
@@ -154,7 +168,7 @@ export class NLDDCollection extends LitElement {
 
 		if (!wasAtStart && this._atStart) this._handOffControlFocus('previous');
 		if (!wasAtEnd && this._atEnd) this._handOffControlFocus('next');
-	};
+	}
 
 	/* A keyboard user who scrolls to an end disables the control they are
 	 * standing on, and a disabled control cannot hold focus: the browser drops
@@ -180,7 +194,6 @@ export class NLDDCollection extends LitElement {
 	private _loadMoreBtn!: HTMLElement | null;
 
 	private _intersectionObserver: IntersectionObserver | undefined;
-	private _resizeObserver: ResizeObserver | undefined;
 	private _scrollListenerAttached = false;
 
 	override connectedCallback(): void {
@@ -259,21 +272,19 @@ export class NLDDCollection extends LitElement {
 
 		if (this.layout === 'horizontal-scroll' && this._itemsEl) {
 			this._itemsEl.addEventListener('scroll', this._scrollListener, { passive: true });
-			this._resizeObserver = new ResizeObserver(() => this._scrollListener());
-			this._resizeObserver.observe(this._itemsEl);
+			overflowObserver.observe(this._itemsEl, this);
 			this._scrollListenerAttached = true;
-			// Compute initial overflow synchronously. The ResizeObserver only
-			// fires on the next animation frame, so without this the first
-			// render shows tabindex/aria-label missing until the observer
-			// catches up — flaky in tests and a brief flash in real use.
-			this._scrollListener();
+			// Measure before the next frame, where the ResizeObserver first
+			// reports: without this the first render shows tabindex/aria-label
+			// missing until the observer catches up.
+			overflowPass.schedule(this, this.ownerDocument);
 		}
 	}
 
 	private _teardownScrollListeners(): void {
 		this._itemsEl?.removeEventListener('scroll', this._scrollListener);
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = undefined;
+		overflowObserver.unobserveAll(this);
+		overflowPass.cancel(this);
 		this._scrollListenerAttached = false;
 		this._isScrollable = false;
 	}
@@ -282,9 +293,51 @@ export class NLDDCollection extends LitElement {
 	// count is set in a microtask: state written there would otherwise schedule a
 	// second update on top of the one that just finished, which Lit reports on
 	// every page that holds a collection.
+	//
+	// Each pass walks every item, so while the parser is still adding items it
+	// waits for the parse (see afterParse): once per item it is quadratic.
 	_onSlotChange(e: Event): void {
-		const slot = e.target as HTMLSlotElement;
-		const items = slot.assignedElements() as HTMLElement[];
+		this._itemsSlot = e.target as HTMLSlotElement;
+		if (this._itemsPending) {
+			this._hideParsedItems();
+			return;
+		}
+		this._itemsPending = true;
+		if (afterParse(this._refreshItems, this.ownerDocument)) this._hideParsedItems();
+		else this._refreshItems();
+	}
+
+	private _itemsSlot: HTMLSlotElement | null = null;
+	private _itemsPending = false;
+	/** While the page is parsed: the children seen so far, and how many of them are items. */
+	private _parsedChildren: WeakSet<Element> | null = null;
+	private _parsedItems = 0;
+
+	/* Items past the page stay hidden while the parser adds them, or the page
+	 * lays out every one of them until the parse is done. The parser only
+	 * appends, so the children not seen yet are the last ones. */
+	private _hideParsedItems(): void {
+		if (this.layout === 'horizontal-scroll') return;
+		const seen = this._parsedChildren ??= new WeakSet();
+		const added: Element[] = [];
+		for (let el = this.lastElementChild; el && !seen.has(el); el = el.previousElementSibling) added.push(el);
+		for (let i = added.length - 1; i >= 0; i--) {
+			const el = added[i];
+			seen.add(el);
+			if (el.slot) continue;
+			if (this._parsedItems++ >= this._visibleCount) (el as HTMLElement).hidden = true;
+		}
+	}
+
+	private _refreshItems = (): void => {
+		this._itemsPending = false;
+		const items = (this._itemsSlot?.assignedElements() ?? []) as HTMLElement[];
+		if (this.ownerDocument.readyState === 'loading') {
+			this._parsedChildren = new WeakSet(this.children);
+			this._parsedItems = items.length;
+		} else {
+			this._parsedChildren = null;
+		}
 		markListItems(items);
 		queueMicrotask(() => { this._totalCount = items.length; });
 		if (this.layout === 'horizontal-scroll') {
@@ -292,11 +345,11 @@ export class NLDDCollection extends LitElement {
 			// the scroll container's own box, so the ResizeObserver never fires.
 			// Recompute overflow here so the fade + controls react to a content
 			// change right away, not only on the next resize.
-			this._scrollListener();
+			overflowPass.schedule(this, this.ownerDocument);
 		} else {
 			this._applyVisibility(items);
 		}
-	}
+	};
 
 	private _applyVisibility(items?: HTMLElement[]): void {
 		const slot = this._itemsEl?.querySelector('slot') as HTMLSlotElement | null;

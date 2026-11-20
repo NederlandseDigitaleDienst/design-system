@@ -6,7 +6,7 @@ import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, OPT_IN_GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
-import { applyBaseline, looseInBaseline, tightenBaseline, readBaseline, readConfig, writeBaseline } from './project.js';
+import { applyBaseline, looseInBaseline, tightenBaseline, readBaseline, readConfig, relativePath, writeBaseline } from './project.js';
 import { knownKeys, lintProject } from './session.js';
 
 const USAGE = `Usage:
@@ -124,10 +124,15 @@ async function runLint(data, paths, options) {
 		severities,
 		input: options.stdin ? { filename: options.filename ?? 'stdin.html', source: readFileSync(0, 'utf8') } : undefined,
 		fix: options.fix,
-		keep: (filename) => inBaseline.has(relative(root, filename)),
+		keep: (filename) => inBaseline.has(relativePath(root, filename)),
 	});
 	const { results } = session;
 	for (const filename of session.notUtf8) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
+	for (const { entry, file } of session.partialExcludes) {
+		console.error(`"exclude" entry "${entry}" no longer leaves out ${file}: an entry is a whole file or directory name now.`);
+	}
+	for (const filename of session.symlinks) console.error(`Skipped ${relative(root, filename)}: it is a symbolic link.`);
+	for (const filename of session.unstable) console.error(`Stopped fixing ${relative(root, filename)}: fixes kept changing it. Run --fix again, or look at the findings.`);
 	if (options.fix) console.error(`Fixed ${session.fixed} in ${session.fixedFiles} of ${session.files} files.`);
 	if (session.references) {
 		const { references } = session;

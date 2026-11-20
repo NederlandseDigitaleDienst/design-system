@@ -60,16 +60,48 @@
  * @slot header - Header content
  * @slot - Main content (scrollable)
  * @slot footer - Footer content
+ *
+ * @cssprop --context-inset-top - Height of every bar above the content, sticky header included. Read it as `top` of anything sticky inside the page
+ * @cssprop --context-inset-bottom - Height of every bar below the content, sticky footer included. Read it as `bottom` of anything sticky inside the page
+ * @cssprop --context-scroller-height - Height of the area the content scrolls in, for sticky content that caps its own height. The height of the page's own scroller while it scrolls in its pane, and `100dvh` while the document scrolls
  */
 import { LitElement, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { findScrollModeProvider, whenScrollModeProviderDefined } from '../../../utilities/scroll-mode-controller.js';
-import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
+import { addStandaloneScrollLayer, findScrollModeProvider, removeStandaloneScrollLayer, whenScrollModeProviderDefined } from '../../../utilities/scroll-mode-controller.js';
+import type { ScrollMode, ScrollModeProvider, StandaloneScrollLayer } from '../../../utilities/scroll-mode-controller.js';
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
+
+/** What a page measures of its bars and its scroller, before it writes any of it. */
+interface PageInsets {
+	header: number;
+	footer: number;
+	headerFull: number;
+	scroll: number | null;
+}
+
+/**
+ * Every page in one pass: all of them read, then all of them write. A page per
+ * pass reads a layout that the previous page has just made dirty.
+ */
+function measurePages(pages: NLDDPage[]): void {
+	const live = pages.filter((page) => page.isConnected);
+	const measured = live.filter((page) => page._insetsReady);
+	const insets = measured.map((page) => page._measureInsets());
+	measured.forEach((page, i) => page._applyInsets(insets[i]));
+	const scroll = live.map((page) => page._readScrollState());
+	live.forEach((page, i) => page._applyScrollState(scroll[i]));
+}
+
+const insetObserver = sharedResizeObserver<NLDDPage>(measurePages);
+
+/** The first measurement, before the observer's own first report: written
+ *  then, the values would resize what it watches inside its own callback. */
+const firstMeasurement = new LayoutPass<NLDDPage>(measurePages);
 
 /** Whether an element Tab could land on is one it lands on: an `<a>` without `href` reports a tabIndex of 0. */
 function takesTab(element: HTMLElement): boolean {
@@ -109,7 +141,7 @@ const PANED_SPLIT_VIEWS = [
 const _connectedPages = new Set<NLDDPage>();
 
 @customElement('nldd-page')
-export class NLDDPage extends LitElement implements ScrollModeConsumer {
+export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	static override styles = pageStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<'inherit' | 'base' | 'tinted'>('inherit') })
@@ -138,6 +170,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	/** What `landmarks="auto"` reads off the page's surroundings. */
 	@state()
 	private _derived: 'page' | 'region' = 'page';
+	private _renderedRegion: boolean | null = null;
 
 	/** True when this page renders a section instead of the document landmarks. @internal */
 	get _isRegion(): boolean {
@@ -176,13 +209,15 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	private _scrollMode: 'nested' | 'root' = 'nested';
 	private _scrollTarget: EventTarget | null = null;
 	private _scrollProvider: ScrollModeProvider | null = null;
-	private _insetObserver: ResizeObserver | null = null;
+	/** @internal Whether the bars are observed, and so can be measured. */
+	_insetsReady = false;
 	private _headerFullHeight = 0;
 	private _mainSlot: HTMLSlotElement | null = null;
 	/** Watches the main children for a `grow` or `hidden` set after they were
 	 *  slotted, since that changes which section grows. */
 	private _mainAttrObserver: MutationObserver | null = null;
-	private _resizeRaf = 0;
+	/** Whether the scroll listener and observer are wired, for the first read. */
+	private _scrollConfigured = false;
 
 	private get _isRoot(): boolean {
 		return this._scrollMode === 'root';
@@ -224,13 +259,13 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 		super.connectedCallback();
 		this._deriveLandmarks();
 		_connectedPages.add(this);
-		// Set container-type/name as inline style on the host element. Doing
-		// this from a `:host` rule inside the shadow DOM works in Chromium
-		// but Safari does not always recognize the host as a container for
-		// slotted descendants — a known engine inconsistency. Inline on the
-		// light-DOM host avoids it entirely.
+		// Inline on the light-DOM host: a container name belongs to the tree it
+		// is set in, so a :host rule's name is not found by a query in a
+		// section's own shadow root (Safari holds to that, Chromium does not).
+		// Content follows layout-container in any surface; only the page
+		// sections query page-container, so no container between them counts.
 		this.style.containerType = 'inline-size';
-		this.style.containerName = 'layout-container';
+		this.style.containerName = 'layout-container page-container';
 		this._scrollProvider = findScrollModeProvider(this);
 		if (this._scrollProvider) {
 			// Push-driven inside a shell: it pushes the authoritative mode on
@@ -242,21 +277,24 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 			if (this.hasUpdated) this._configureScroll();
 		} else {
 			// Stand-alone (docs): the scroll mode flips at a media-query breakpoint,
-			// so read the inherited var and re-read on resize.
-			window.addEventListener('resize', this._onResize, { passive: true });
+			// so read the inherited var and re-read on resize. The first read waits
+			// for the first render, which has the elements it wires up.
 			if (this.hasUpdated) {
-				this._readScrollMode();
-				this._configureScroll();
+				this._scrollConfigured = false;
+				addStandaloneScrollLayer(this, this.ownerDocument);
 			}
 			whenScrollModeProviderDefined(this, this._adoptScrollProvider);
 		}
+		// Moved in the DOM: `firstUpdated` does not come again, and
+		// `disconnectedCallback` took this listener and observer down.
+		if (this.hasUpdated) this._setupMainSlotListener();
 	}
 
 	/** Switches from stand-alone to push once a shell (or sheet, or modal
 	 *  dialog) that was not yet defined when this page connected, is. */
 	private _adoptScrollProvider = (provider: ScrollModeProvider): void => {
 		if (this._scrollProvider) return;
-		window.removeEventListener('resize', this._onResize);
+		removeStandaloneScrollLayer(this);
 		this._scrollProvider = provider;
 		provider.registerScrollConsumer(this);
 		if (this.hasUpdated) this._configureScroll();
@@ -265,10 +303,10 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	override disconnectedCallback() {
 		super.disconnectedCallback();
 		_connectedPages.delete(this);
-		window.removeEventListener('resize', this._onResize);
+		firstMeasurement.cancel(this);
+		removeStandaloneScrollLayer(this);
 		this._scrollProvider?.unregisterScrollConsumer(this);
 		this._scrollProvider = null;
-		if (this._resizeRaf) cancelAnimationFrame(this._resizeRaf);
 		this._teardownScrollListener();
 		this._teardownInsetObserver();
 		this._teardownMainSlotListener();
@@ -277,13 +315,18 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	override firstUpdated() {
 		// With a provider the mode was already pushed on register (see
 		// connectedCallback); only a stand-alone page self-reads the inherited var.
-		if (!this._scrollProvider) this._readScrollMode();
-		this._configureScroll();
+		if (this._scrollProvider) this._configureScroll();
+		else addStandaloneScrollLayer(this, this.ownerDocument);
 		this._setupMainSlotListener();
 	}
 
 	override updated(changed: PropertyValues) {
-		if (changed.has('stickyHeader')) this._configureScroll();
+		// A switch between page and region renders new chrome, so the observer
+		// and listeners still hold the old elements.
+		const retagged = this._renderedRegion !== null && this._renderedRegion !== this._isRegion;
+		this._renderedRegion = this._isRegion;
+		if (retagged) this._setupMainSlotListener();
+		if (changed.has('stickyHeader') || (retagged && this._scrollConfigured)) this._configureScroll();
 		this._syncSecondMain();
 	}
 
@@ -292,37 +335,36 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	 * no argument (resize / no shell) it re-reads the inherited var. @internal
 	 */
 	readScrollMode(mode?: ScrollMode): void {
-		if (this._readScrollMode(mode)) this._configureScroll();
+		if (this._readScrollMode(mode) || !this._scrollConfigured) this._configureScroll();
 	}
 
 	// Apply the scroll mode; returns true when it changed so callers can
 	// reconfigure. With an explicit mode (shell's push) it is applied directly
 	// — race-free, unlike a getComputedStyle read mid-propagation. Otherwise the
 	// inherited --context-scroll-mode is read (anything but 'root' means nested).
-	private _readScrollMode(mode?: ScrollMode): boolean {
-		const next: ScrollMode = mode
-			?? (getComputedStyle(this).getPropertyValue('--context-scroll-mode').trim() === 'root' ? 'root' : 'nested');
+	/** @internal */
+	_readScrollMode(mode?: ScrollMode): boolean {
+		const next: ScrollMode = mode ?? this.inheritedScrollMode();
 		if (next === this._scrollMode) return false;
 		this._scrollMode = next;
 		this.dataset.scroll = next;
 		return true;
 	}
 
-	private _onResize = () => {
-		if (this._resizeRaf) return;
-		this._resizeRaf = requestAnimationFrame(() => {
-			this._resizeRaf = 0;
-			if (this._readScrollMode()) this._configureScroll();
-		});
-	};
+	/** @internal The mode the CSS hands down; a style read. */
+	inheritedScrollMode(): ScrollMode {
+		return getComputedStyle(this).getPropertyValue('--context-scroll-mode').trim() === 'root' ? 'root' : 'nested';
+	}
 
-	// (Re)wire the scroll listener + inset observer for the current mode.
-	private _configureScroll() {
+	/** @internal (Re)wires the scroll listener and inset observer for the current mode. */
+	_configureScroll() {
+		this._scrollConfigured = true;
 		this._teardownScrollListener();
 		this._setupScrollListener();
 		this._headerFullHeight = 0;
 		this._setupInsetObserver();
-		this._onScroll();
+		// The scroll state is read in the first measurement, with the other pages.
+		firstMeasurement.schedule(this, this.ownerDocument);
 	}
 
 	/**
@@ -338,55 +380,74 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	 * sticky header. One observer owns both, because two of them writing styles
 	 * that resize what the other watches is what leaves ResizeObserver
 	 * notifications undelivered.
+	 *
+	 * The observer is shared by every page, and the first measurement is one
+	 * pass for every page that renders in the same tick; see measurePages.
 	 */
 	private _setupInsetObserver() {
 		this._teardownInsetObserver();
 		const header = this._headerEl;
 		const footer = this._footerEl;
 		if (!header || !footer) return;
+		this._insetsReady = true;
+		insetObserver.observe(header, this);
+		insetObserver.observe(footer, this);
+		if (this._scrollEl) insetObserver.observe(this._scrollEl, this);
+		const main = this.shadowRoot?.querySelector('.page__main');
+		if (main) insetObserver.observe(main, this);
+	}
 
-		const publish = () => {
-			this._publish('--_page-header-height', `${this.stickyHeader ? header.offsetHeight : 0}px`);
-			this._publish('--_page-footer-height', `${this.stickyFooter ? footer.offsetHeight : 0}px`);
-			this._publish('--_page-header-full-height', `${this._measureHeaderFullHeight(header)}px`);
+	/** @internal Reads the bars and the scroller; writes nothing. */
+	_measureInsets(): PageInsets {
+		const header = this._headerEl!;
+		return {
+			header: this.stickyHeader ? header.offsetHeight : 0,
+			footer: this.stickyFooter ? this._footerEl!.offsetHeight : 0,
+			headerFull: this._measureHeaderFullHeight(header),
 			// How tall the scroller actually is. Sticky content inside it caps its
 			// height on what it can see, and while the page owns the scroller that
 			// is not the viewport: the chrome around the page eats into it. In root
 			// mode the document scrolls, so nothing is published and 100dvh stands.
-			if (this._isRoot) this.style.removeProperty('--_page-scroll-height');
-			else this._publish('--_page-scroll-height', `${this._scrollEl?.clientHeight ?? 0}px`);
-			// Content that grows or shrinks moves the end without a scroll event.
-			this._onScroll();
-			this._syncScrollerFocus();
+			scroll: this._isRoot ? null : this._scrollEl?.clientHeight ?? 0,
 		};
-		publish();
-		this._insetObserver = new ResizeObserver(publish);
-		this._insetObserver.observe(header);
-		this._insetObserver.observe(footer);
-		if (this._scrollEl) this._insetObserver.observe(this._scrollEl);
-		const main = this.shadowRoot?.querySelector('.page__main');
-		if (main) this._insetObserver.observe(main);
+	}
+
+	/** @internal */
+	_applyInsets(insets: PageInsets): void {
+		this._publish('--_page-header-height', `${insets.header}px`);
+		this._publish('--_page-footer-height', `${insets.footer}px`);
+		this._publish('--_page-header-full-height', `${insets.headerFull}px`);
+		if (insets.scroll === null) this.style.removeProperty('--_page-scroll-height');
+		else this._publish('--_page-scroll-height', `${insets.scroll}px`);
 	}
 
 	/**
-	 * A scroller that holds nothing to focus cannot be scrolled with the keyboard
-	 * in Safari and Firefox, where Tab never lands in it. It takes a tab stop of
-	 * its own then, and only then: with a link or a field in it, Tab already gets
-	 * there and the arrow keys scroll.
+	 * @internal Content that grows or shrinks moves the end without a scroll
+	 * event. And a scroller that holds nothing to focus cannot be scrolled with
+	 * the keyboard in Safari and Firefox, where Tab never lands in it. It takes a
+	 * tab stop of its own then, and only then: with a link or a field in it, Tab
+	 * already gets there and the arrow keys scroll.
 	 */
-	private _syncScrollerFocus() {
+	_readScrollState(): { focusable: boolean } {
+		// Read phase: _onScroll reads the scroller and sets reactive state, which
+		// Lit renders later. Keep DOM writes out of here.
+		this._onScroll();
+		const scroller = this._scrollEl;
+		const scrolls = !!scroller && !this._isRoot && scroller.scrollHeight > scroller.clientHeight;
+		return { focusable: scrolls && !holdsFocusable(this) };
+	}
+
+	/** @internal */
+	_applyScrollState({ focusable }: { focusable: boolean }): void {
 		const scroller = this._scrollEl;
 		if (!scroller) return;
-		const scrolls = !this._isRoot && scroller.scrollHeight > scroller.clientHeight;
-		if (scrolls && !holdsFocusable(this)) scroller.setAttribute('tabindex', '0');
+		if (focusable) scroller.setAttribute('tabindex', '0');
 		else scroller.removeAttribute('tabindex');
 	}
 
 	private _teardownInsetObserver() {
-		if (this._insetObserver) {
-			this._insetObserver.disconnect();
-			this._insetObserver = null;
-		}
+		this._insetsReady = false;
+		insetObserver.unobserveAll(this);
 	}
 
 	/**
@@ -427,6 +488,8 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 		}
 	}
 
+	// Runs in the read phase of the measurement too (_readScrollState): it
+	// reads and sets state, and writes nothing to the DOM itself.
 	private _onScroll = () => {
 		if (this._isRoot) {
 			const root = document.documentElement;

@@ -160,7 +160,7 @@ export const Grootten = {
 			gap="24"
 			vertical-alignment="bottom"
 		>
-			${[...FIXED_SIZES].reverse().map(size => html`
+			${FIXED_SIZES.toReversed().map(size => html`
 				<div style="text-align: center;">
 					<nldd-icon
 						icon="heart"

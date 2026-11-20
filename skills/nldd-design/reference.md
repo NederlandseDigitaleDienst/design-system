@@ -843,6 +843,12 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 | _(default)_ | Custom `<img>`, `<picture>` or inline `<svg>` (overrides the src-based default). An inline svg keeps its own colors and scales by its viewBox, so a drawing gets the same box, ratio and caption as a photo. Slotted media carries its own text alternative: an `alt` on the img (empty when it conveys nothing), or `role="img"` with an `aria-label`, `aria-labelledby` or `<title>` on the svg. The internal `error` listener is attached only to the built-in `<img>`, so slotted content does not trigger the error-state overlay automatically. Consumers slotting their own image are responsible for handling its error state (e.g. swapping the slot content or styling a fallback). |
 | `caption` | Rich caption content (overrides the `caption` attribute) |
 
+**CSS properties**
+
+| Property | Description |
+| --- | --- |
+| `--context-image-height` | Height of the image. A parent that gives the image a fixed box, such as the media area of nldd-hero, sets it to `100%`, so the image fills that box instead of taking the height of the photo |
+
 **Plain HTML it styles:** `<img>`, `<picture>`, `<source>`, `<svg>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-keyboard-shortcut>`
@@ -887,7 +893,7 @@ A container for rich text content that automatically applies responsive typograp
 
 **Rules** (`nldd lint`)
 
-- `rich-text-color-no-effect`: `color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
+- `rich-text-color-no-effect`: `color` is gone. `color="content"` was the default, so remove it. `color="inherit"` took the CSS `color` around it, so this text may have changed color: where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `rich-text-no-inline-content`: Bare text or an inline element is a direct child, and each one lands in a column of 0px. Wrap it in a block element such as `p` where the content is made, or put plain text in nldd-text.
 - `toc-heading-needs-id` (hint): Give every h2 an `id`, so the table of contents can jump to it.
 
@@ -976,6 +982,7 @@ One run of body text at a size from the type scale. It is what you reach for whe
 
 **Rules** (`nldd lint`)
 
+- `text-color-inherit-no-effect`: `color="inherit"` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `text-custom-size-invalid`: This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `text-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `size` for text up to `display-1`.
 - `text-line-height-no-effect`: `line-height` belongs to the body sizes; a display size has its own line height. Remove it.
@@ -1022,7 +1029,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 - `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
 - `slot-text-needs-element`: Text straight in a slot is what the attribute is for. Put it in `text`, or in a `<p>` or heading in the slot.
 - `tag-goes-below-title` (hint): Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.
-- `title-color-no-effect`: `color` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
+- `title-color-no-effect`: `color` is gone. `color="content"` was the default, so remove it. `color="inherit"` took the CSS `color` around it, so this text may have changed color: where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `title-custom-size-invalid`: This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `title-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `heading-level` or `size` for headings up to `display-1`.
 - `title-end-max-one-action` (hint): Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.
@@ -1123,6 +1130,12 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | Slot | Description |
 | --- | --- |
 | _(default)_ | The element the tooltip is shown for |
+
+**CSS properties**
+
+| Property | Description |
+| --- | --- |
+| `--context-tooltip-pointer-events` | Set it to `none` on the trigger when triggers sit close together, as in nldd-swatch-picker: a click on the tooltip then reaches the control underneath instead of selecting the trigger, and the pointer cannot rest on the tooltip itself. Unset, the tooltip takes the pointer as usual |
 
 **Events**
 
@@ -1820,6 +1833,13 @@ A password input field with visibility toggle and validation states.
 **Keywords:** wachtwoord.
 
 **Related:** `<nldd-one-time-code-field>`, `<nldd-text-field>`.
+
+**Rules** (`nldd lint`)
+
+- `password-field-hide-button-accessible-label-no-effect`: `hide-button-accessible-label` is gone. The accessible name of the button that hides the password is the translation key `components.password-field.hide-accessible-label` now. Set it in `translations` or with `setTranslations()`.
+- `password-field-hide-button-text-no-effect`: `hide-button-text` is gone. The text of the button that hides the password is the translation key `components.password-field.hide-action` now. Set it in `translations` or with `setTranslations()`.
+- `password-field-show-button-accessible-label-no-effect`: `show-button-accessible-label` is gone. The accessible name of the button that shows the password is the translation key `components.password-field.show-accessible-label` now. Set it in `translations` or with `setTranslations()`.
+- `password-field-show-button-text-no-effect`: `show-button-text` is gone. The text of the button that shows the password is the translation key `components.password-field.show-action` now. Set it in `translations` or with `setTranslations()`.
 
 **Attributes**
 
@@ -2841,7 +2861,7 @@ A rule that visually separates sections of content.
 
 ### `<nldd-full-bleed-section>`
 
-A section that spans the full width without horizontal padding. Useful for background colors, images, or other content that runs edge to edge. Vertical padding and gap adjust via container queries.
+A section that spans the full width without horizontal padding. Useful for background colors, images, or other content that runs edge to edge. Vertical padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.
 
 **Related:** `<nldd-simple-section>`, `<nldd-hero>`.
 
@@ -2886,7 +2906,7 @@ A section that spans the full width without horizontal padding. Useful for backg
 
 ### `<nldd-hero>`
 
-The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width="full"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout="overlap"`), so the image keeps its height whatever the content. `layout="contained"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color that it passes on, so the text, links and icons on it keep their contrast. `main-background="base"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.
+The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width="full"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout="overlap"`), so the image keeps its height whatever the content. `layout="contained"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color that it passes on, so the text, links and icons on it keep their contrast. `main-background="base"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.
 
 **Related:** `<nldd-full-bleed-section>`.
 
@@ -3043,7 +3063,7 @@ A four-column layout with a primary sidebar, secondary sidebar, main content are
 
 ### `<nldd-one-half-one-half-section>`
 
-A section with two equal columns side by side. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
+A section with two equal columns side by side. The columns stand side by side on a page of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.
 
 **Related:** `<nldd-simple-section>`, `<nldd-one-third-two-thirds-section>`, `<nldd-two-thirds-one-third-section>`.
 
@@ -3090,7 +3110,7 @@ A section with two equal columns side by side. The columns stand side by side in
 
 ### `<nldd-one-third-two-thirds-section>`
 
-A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
+A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns stand side by side on a page of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.
 
 **Related:** `<nldd-simple-section>`, `<nldd-one-half-one-half-section>`, `<nldd-two-thirds-one-third-section>`.
 
@@ -3154,6 +3174,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 - `page-no-second-main`: A second page renders a main landmark, which a document may have only one of. Leave `landmarks` at "auto" on pages in a pane or an overlay, or set landmarks="region" on the ones that are not the document's page.
 - `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
 - `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
+- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
@@ -3179,6 +3200,14 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 | `header` | Header content |
 | _(default)_ | Main content (scrollable) |
 | `footer` | Footer content |
+
+**CSS properties**
+
+| Property | Description |
+| --- | --- |
+| `--context-inset-top` | Height of every bar above the content, sticky header included. Read it as `top` of anything sticky inside the page |
+| `--context-inset-bottom` | Height of every bar below the content, sticky footer included. Read it as `bottom` of anything sticky inside the page |
+| `--context-scroller-height` | Height of the area the content scrolls in, for sticky content that caps its own height. The height of the page's own scroller while it scrolls in its pane, and `100dvh` while the document scrolls |
 
 ### `<nldd-page-footer>`
 
@@ -3369,6 +3398,12 @@ The required root shell of a Nederlandse Digitale Dienst application. Always con
 | --- | --- |
 | _(default)_ | Default slot for the application content |
 
+**CSS properties**
+
+| Property | Description |
+| --- | --- |
+| `--context-scroll-mode` | `root` while the document scrolls, `nested` while each page scrolls in its pane. Set it on the `nldd-shell` itself to override the derived mode |
+
 ### `<nldd-side-by-side-split-view>`
 
 A horizontal split view with multiple equal panes side by side. The number of panes is set via the `panes` attribute. Each pane automatically gets a numbered slot: pane-1, pane-2, etc. Panes that do not fit the available width are automatically hidden, from right to left: `pane-1` is the last to go. Put the main content in `pane-1` and an inspector or detail in the last pane.
@@ -3394,7 +3429,7 @@ A horizontal split view with multiple equal panes side by side. The number of pa
 
 ### `<nldd-sidebar-section>`
 
-A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only="collapsed"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default, with the `sidebar-label` as title and a "Sluit" button. Replace it through the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot="sidebar"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy: the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport. A sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.
+A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only="collapsed"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default, with the `sidebar-label` as title and a "Sluit" button. Replace it through the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot="sidebar"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy: the light DOM (and its state) is preserved across the switch. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page, not the viewport. A page in a narrow split-view pane collapses the sidebar to the sheet just like a narrow window, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. A resize across the breakpoint switches a frame after it paints, so the old layout shows for one frame. Inherits block `padding` and `height` from PageSectionMixin.
 
 **Keywords:** zijbalk.
 
@@ -3464,7 +3499,7 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 
 ### `<nldd-simple-section>`
 
-A basic section with responsive padding and gap based on container size. Contains optional header and footer slots. The padding and spacing between slots adjust automatically via container queries. Use one section per content block and repeat the section rather than building columns inside one: the section sets the reading width and the padding itself. For two columns there are nldd-one-half-one-half-section, nldd-two-thirds-one-third-section, nldd-one-third-two-thirds-section and nldd-sidebar-section. Give a section its surface with `background` instead of a background color of your own; that is how the components inside know which surface they are on.
+A basic section with responsive padding and gap. Contains optional header and footer slots. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page. Use one section per content block and repeat the section rather than building columns inside one: the section sets the reading width and the padding itself. For two columns there are nldd-one-half-one-half-section, nldd-two-thirds-one-third-section, nldd-one-third-two-thirds-section and nldd-sidebar-section. Give a section its surface with `background` instead of a background color of your own; that is how the components inside know which surface they are on.
 
 **Keywords:** sectie.
 
@@ -3588,7 +3623,7 @@ A vertical split view with multiple stacked panes. The number of panes is set vi
 
 ### `<nldd-two-thirds-one-third-section>`
 
-A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.
+A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns stand side by side on a page of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.
 
 **Related:** `<nldd-simple-section>`, `<nldd-one-half-one-half-section>`, `<nldd-one-third-two-thirds-section>`.
 
@@ -4056,7 +4091,7 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 
 ### `<nldd-top-navigation-bar>`
 
-The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, and below it the main bar with the website title, a back button, the global navigation and the utility navigation. On narrow widths the global navigation moves into a menu sheet behind the menu button. The top bar of a website, and of nothing else: put it in the `header` slot of an `nldd-page`. Do not combine it with a split view. A split view is the layout of an application, whose panes carry a bar of their own, usually an `nldd-toolbar`, and a site header above it gives a second layer of navigation and a second thing that scrolls. Does a page need a sidebar under this bar, use an `nldd-sidebar-section` inside that `nldd-page`.
+The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, and below it the main bar with the website title, a back button, the global navigation and the utility navigation. On a narrow screen the global navigation moves into a menu sheet behind the menu button. The bar spans the window, so it follows the window's width (sm, md, lg) and not that of its parent: put it in a narrower box and it still lays out for the window. The top bar of a website, and of nothing else: put it in the `header` slot of an `nldd-page`. Do not combine it with a split view. A split view is the layout of an application, whose panes carry a bar of their own, usually an `nldd-toolbar`, and a site header above it gives a second layer of navigation and a second thing that scrolls. Does a page need a sidebar under this bar, use an `nldd-sidebar-section` inside that `nldd-page`.
 
 **Keywords:** header, navbar, navigatiebalk.
 

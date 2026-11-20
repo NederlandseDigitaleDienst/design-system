@@ -14,7 +14,13 @@ export function tableTemplate() {
 	// show the no-results slot instead, when one is given.
 	// Starts hidden — the table toggles `hidden` imperatively from _updateEmpty
 	// (avoids a reactive re-render scheduled out of firstUpdated).
+	//
+	// The sizer is what the table watches for its width: a line of no height
+	// across the table, so that the track list it writes, which changes the
+	// table's height, never resizes what is being observed (that ends in a
+	// "ResizeObserver loop" error).
 	return html`
+		<div class="table__sizer" aria-hidden="true"></div>
 		<slot name="header"></slot>
 		<slot></slot>
 		<div class="table__empty"

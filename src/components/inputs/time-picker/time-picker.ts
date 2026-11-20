@@ -42,6 +42,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { translate } from '../../../utilities/translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 import { fromMinutes, resolveRules, toMinutes, type TimeRules } from '../time-field/time-field.times.js';
+import { LayoutPass } from '../../../utilities/layout-pass.js';
 
 export { fromMinutes, toMinutes };
 
@@ -56,6 +57,55 @@ const HAS_SCROLLEND = typeof window !== 'undefined' && 'onscrollend' in window;
 
 function isTime(value: string): boolean {
 	return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
+/**
+ * Every picker that puts its value in the middle in the same tick, in one
+ * pass: all of them read where their options are, then all of them scroll.
+ * One picker at a time reads a layout the previous one just dirtied, and a
+ * page full of them lays out once per picker.
+ *
+ * In WebKit a scrollTop written to a scroller costs time in proportion to
+ * every scroller on the page, and far more while they snap: a page with many
+ * pickers took minutes to load. So the columns only snap once the user
+ * scrolls them (see _takeOver), and the pass writes while they are marked
+ * `data-placing`, which stops them scrolling for the user for that moment:
+ * then a write costs nothing. The position stays when the mark goes.
+ */
+const placePass = new LayoutPass<NLDDTimePicker>((pickers) => {
+	const live = pickers.filter((picker) => picker.isConnected);
+	const placements = live.map((picker) => picker._measurePlacement());
+	const columns = placements.flat().map(([column]) => column);
+	for (const column of columns) column.toggleAttribute('data-placing', true);
+	live.forEach((picker, i) => picker._scrollTo(placements[i]));
+	for (const column of columns) column.removeAttribute('data-placing');
+	live.forEach((picker, i) => picker._recordPlacement(placements[i]));
+});
+
+/**
+ * A column the user can scroll, and the layer of the selection over it, make
+ * every scrollTop written anywhere on the page cost more in WebKit, so the
+ * columns start out scrolling from script only, without that layer, and
+ * become scrollable for the user (`data-live`) after the pickers
+ * that render together have been placed: at the next frame, or once the parse
+ * is done while the page is still loading. A picker that the pointer reaches
+ * before then goes live at once.
+ */
+const goingLive = new Set<NLDDTimePicker>();
+let liveScheduled = false;
+
+function goLive(picker: NLDDTimePicker): void {
+	goingLive.add(picker);
+	if (liveScheduled) return;
+	liveScheduled = true;
+	const run = (): void => {
+		liveScheduled = false;
+		for (const each of goingLive) each._goLive();
+		goingLive.clear();
+	};
+	const doc = picker.ownerDocument;
+	if (doc.readyState === 'loading') doc.addEventListener('readystatechange', run, { once: true });
+	else (doc.defaultView ?? window).requestAnimationFrame(run);
 }
 
 @customElement('nldd-time-picker')
@@ -149,14 +199,22 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	 *  it. That way an hour can never appear in its column without a valid minute
 	 *  to go with it. */
 	private get _slots(): number[] {
+		const rules = this._rules;
+		if (this._slotsFor?.rules === rules) return this._slotsFor.slots;
 		const out: number[] = [];
 		for (let m = this._minMinutes; m <= this._maxMinutes; m += this._stepMinutes) out.push(m);
+		this._slotsFor = { rules, slots: out, hours: [...new Set(out.map((m) => Math.floor(m / 60)))] };
 		return out;
 	}
 
+	/** The slots and hours for the rules they were made for: a render asks for
+	 *  them several times, and with a step of 1 that is 1440 slots each time. */
+	private _slotsFor: { rules: TimeRules; slots: number[]; hours: number[] } | null = null;
+
 	/** The hours for which at least one valid minute exists. */
 	public get _hours(): number[] {
-		return [...new Set(this._slots.map((m) => Math.floor(m / 60)))];
+		void this._slots;
+		return this._slotsFor!.hours;
 	}
 
 	/** The minutes within the chosen hour. Without a chosen hour, those of the
@@ -316,6 +374,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		clearTimeout(this._scrollTimers.hours);
 		clearTimeout(this._scrollTimers.minutes);
 		for (const column of [...this._glides.keys()]) this._stopGlide(column);
+		placePass.cancel(this);
 		super.disconnectedCallback();
 	}
 
@@ -404,22 +463,60 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	 */
 	public scrollSelectedIntoView(smooth = false): void {
 		const glide = smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+		placePass.cancel(this);
+		if (!glide) {
+			this._applyPlacement(this._measurePlacement());
+			return;
+		}
+		for (const [column, top] of this._measurePlacement()) this._glide(column, top);
+	}
+
+	/** The same as scrollSelectedIntoView(), in the next pass with every other picker. */
+	private _placeLater(): void {
+		placePass.schedule(this, this.ownerDocument);
+	}
+
+	/**
+	 * @internal Where each column has to scroll to put its chosen value in the
+	 * middle; reads, writes nothing. A column that is not rendered (the picker
+	 * in a closed popover) has nothing to read and is left out.
+	 */
+	_measurePlacement(): Array<[HTMLElement, number]> {
+		const out: Array<[HTMLElement, number]> = [];
 		for (const name of ['hours', 'minutes'] as const) {
 			const column = this.shadowRoot?.querySelector<HTMLElement>(`[data-column="${name}"]`);
 			const option = column?.querySelector<HTMLElement>('[data-selected]');
-			if (!column || !option) continue;
+			// Not rendered, as in a closed popover: nothing to put anywhere yet.
+			if (!column || !option || !column.clientHeight) continue;
 			// Doing the math ourselves instead of scrollIntoView: that negotiates with
 			// the snap points and with every scrollable ancestor, and does so
 			// differently per browser. This is the exact inverse of _centeredOption, so
 			// what we put down is also what we read back later.
-			const top = option.offsetTop + option.offsetHeight / 2 - column.clientHeight / 2;
-			if (glide) this._glide(column, top);
-			else {
-				this._stopGlide(column);
-				column.scrollTop = top;
-				this._placed.set(column, column.scrollTop);
-			}
+			out.push([column, option.offsetTop + option.offsetHeight / 2 - column.clientHeight / 2]);
 		}
+		return out;
+	}
+
+	/** Scrolls the columns to what _measurePlacement found, at once. */
+	private _applyPlacement(placement: Array<[HTMLElement, number]>): void {
+		for (const [column] of placement) column.toggleAttribute('data-placing', true);
+		this._scrollTo(placement);
+		for (const [column] of placement) column.removeAttribute('data-placing');
+		this._recordPlacement(placement);
+	}
+
+	/** @internal Writes the positions, on columns marked `data-placing`; see placePass. */
+	_scrollTo(placement: Array<[HTMLElement, number]>): void {
+		for (const [column, top] of placement) {
+			this._stopGlide(column);
+			column.scrollTop = top;
+		}
+	}
+
+	/** @internal Reads back where the columns landed, after every picker in
+	 *  the pass has written: a read between two writes lays the page out again. */
+	_recordPlacement(placement: Array<[HTMLElement, number]>): void {
+		for (const [column] of placement) this._placed.set(column, column.scrollTop);
 	}
 
 	private _glides = new Map<HTMLElement, number>();
@@ -470,7 +567,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	private _stopGlide(column: HTMLElement): void {
 		cancelAnimationFrame(this._glides.get(column) ?? 0);
 		this._glides.delete(column);
-		column.removeAttribute('data-gliding');
+		if (column.hasAttribute('data-gliding')) column.removeAttribute('data-gliding');
 	}
 
 	/**
@@ -482,6 +579,10 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	public _takeOver = {
 		passive: true,
 		handleEvent: (e: Event): void => {
+			this._goLive();
+			// The columns snap from the user's first scroll on; see placePass.
+			// Snapping is decided where a scroll ends, so this is in time for it.
+			if (!this.hasAttribute('data-snap')) this.toggleAttribute('data-snap', true);
 			// From here on a scroll of this column is the user's, wherever it lands.
 			this._placed.delete(e.currentTarget as HTMLElement);
 			// Both columns, or the other one would stand still halfway.
@@ -491,6 +592,18 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			}
 		},
 	};
+
+	override firstUpdated(): void {
+		goLive(this);
+	}
+
+	/** @internal Makes the columns scrollable for the user; see goLive. */
+	_goLive(): void {
+		if (!this.hasAttribute('data-live')) this.toggleAttribute('data-live', true);
+	}
+
+	/** The pointer on a picker that is not live yet, while the page loads. */
+	public _handlePointerEnter = (): void => this._goLive();
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('rows')) {
@@ -510,7 +623,11 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			// The selection follows the value again: it was just set from outside or
 			// recorded, and in both cases it lines up with the middle.
 			this._scrolledTo = { hours: null, minutes: null };
-			this.scrollSelectedIntoView(this._chosenHere);
+			// A value set from outside stands in the middle at once, but in one pass
+			// with every other picker that renders now: on a page with many of them,
+			// each measuring right away would lay the page out once per picker.
+			if (this._chosenHere) this.scrollSelectedIntoView(true);
+			else this._placeLater();
 			this._chosenHere = false;
 		}
 	}

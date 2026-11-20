@@ -37,18 +37,28 @@ const TRANSPARENT = new Set([
 const CONDITIONAL = new Set(['v-if', 'v-else', 'v-else-if', '*ngIf']);
 const REPEATED = new Set(['v-for', '*ngFor']);
 
-/** A value a template language fills in: `{{ x }}`, `{% x %}`, `${x}`, `<%= x %>` or `{x}`. */
-const TEMPLATE_VALUE = /\{\{|\{%|\$\{|<%|^\{.*\}$/;
+/** What a template language writes to fill something in: `{{ x }}`, `{% x %}`, `${x}` or `<%= x %>`. */
+const TEMPLATE_SYNTAX = /\{\{|\{%|\$\{|<%/;
+
+/** A value a template language fills in, also a whole `{x}`. */
+const TEMPLATE_VALUE = new RegExp(`${TEMPLATE_SYNTAX.source}|^\\{.*\\}$`);
 
 /** A JSON object, such as a `translations` attribute, is written out and not filled in. */
 const isJsonObject = (value) => {
 	if (!/^\{\s*("|\})/.test(value)) return false;
 	try {
-		return JSON.parse(value) !== null;
+		const parsed = JSON.parse(value);
+		// A key the template fills in is no key anyone can check.
+		return parsed !== null && !Object.keys(parsed).some((key) => TEMPLATE_SYNTAX.test(key));
 	} catch {
 		return false;
 	}
 };
+
+/** A filler of `length` characters without spaces that reads as a bound value: `${xxx}`. */
+const boundFiller = (length) => `\${${'x'.repeat(length - 3)}}`;
+
+const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** Jinja, Django, Handlebars and Angular control flow, written between the tags. */
 const TEMPLATE_TEXT = /\{%|\{\{|@(if|else|for|switch|defer)\b/;
@@ -67,7 +77,9 @@ function readAttribute(element, name, value) {
 	else if (name === 'v-model') element.attrs.set('value', BOUND);
 	else if (name.startsWith('v-model:')) element.attrs.set(name.slice(8), BOUND);
 	else if (/^(:|v-bind:|x-bind:|\.|\?)/.test(name)) {
-		const bare = name.replace(/^(v-bind|x-bind)?[:.?]/, '').replace(/\.(prop|attr|camel)$/, '');
+		// Vue and Alpine take any modifier after the name, `:value.sync`; Lit takes none.
+		const modifiers = /^(v-bind:|x-bind:|:)/.test(name) ? /(\.[a-zA-Z]+)+$/ : /\.(prop|attr|camel)$/;
+		const bare = name.replace(/^(v-bind|x-bind)?[:.?]/, '').replace(modifiers, '');
 		element.attrs.set(bare, BOUND);
 	} else if (/^\[(class\.|style\.)/.test(name) || /^\[(ngClass|ngStyle|className)\]$/.test(name)) {
 		// Angular's way to set one class or style, or a set of them. Not an attribute of
@@ -101,8 +113,12 @@ function readHtmlChildren(children, parent, given) {
 	// In Markdown, text in an element can be a paragraph the renderer writes around it.
 	const paragraphs = given.markdown && parent.name !== '#root' ? given.markdown(children) : null;
 	for (const node of children) {
-		if (node.type === 'text' && node.data.trim()) {
-			const paragraph = paragraphs?.(node.data);
+		// MDX marks an expression too short to stand as an element with a hole.
+		const holeAt = given.jsx && node.type === 'text' ? node.data.indexOf(HOLE) : -1;
+		if (holeAt !== -1) appendUnknown(parent, (node.startIndex ?? 0) + holeAt);
+		const data = holeAt === -1 ? node.data : node.data.replaceAll(HOLE, ' ');
+		if (node.type === 'text' && data.trim()) {
+			const paragraph = paragraphs?.(data);
 			if (paragraph?.loose !== false) parent.text = true;
 			if (paragraph?.at >= 0) {
 				const p = createNode('p', (node.startIndex ?? 0) + paragraph.at);
@@ -159,19 +175,30 @@ function readHtmlChildren(children, parent, given) {
 }
 
 /**
+ * A browser lowers every name in HTML. Only a name that is certainly the same in
+ * lowercase is lowered here: a camelCase one may be an Angular directive, and a
+ * PascalCase tag stays a component nobody can see into.
+ */
+const htmlName = (name, isTag) => {
+	const same = isTag ? /^nldd-/i.test(name) || !/[a-z]/.test(name) : /^[A-Z]/.test(name);
+	return same ? name.toLowerCase() : name;
+};
+
+/**
  * The document handler, plus where each attribute stands: the parser knows it
  * while it reads the tag, and the tree keeps it for `--fix`.
  */
 class SpanHandler extends DomHandler {
-	constructor(source, original, options) {
+	constructor(source, original, options, lowerCase) {
 		super(undefined, options);
 		this.source = source;
 		this.original = original;
+		this.lowerCase = lowerCase;
 		this.pending = [];
 	}
 
 	onattribute(name) {
-		const span = attributeSpan(this.source, name, this.parser.startIndex, this.parser.endIndex);
+		const span = attributeSpan(this.source, this.lowerCase ? htmlName(name, false) : name, this.parser.startIndex, this.parser.endIndex);
 		if (this.original !== this.source) span.templated = this.rewritten(span);
 		this.pending.push(span);
 	}
@@ -186,6 +213,10 @@ class SpanHandler extends DomHandler {
 	}
 
 	onopentag(name, attribs) {
+		if (this.lowerCase) {
+			name = htmlName(name, true);
+			attribs = Object.fromEntries(Object.entries(attribs).map(([key, value]) => [htmlName(key, false), value]));
+		}
 		super.onopentag(name, attribs);
 		const end = this.parser.endIndex;
 		this.tagStack.at(-1).startTag = { end, selfClosing: this.source[end - 1] === '/', attributes: this.pending };
@@ -194,7 +225,7 @@ class SpanHandler extends DomHandler {
 }
 
 /** `original` is the source before quieting a template, of the same length. */
-function parseMarkup(source, { selfClosing, original = source }) {
+function parseMarkup(source, { selfClosing, original = source, lowerCase = false }) {
 	const options = {
 		lowerCaseTags: false,
 		lowerCaseAttributeNames: false,
@@ -202,16 +233,66 @@ function parseMarkup(source, { selfClosing, original = source }) {
 		withStartIndices: true,
 		withEndIndices: true,
 	};
-	const handler = new SpanHandler(source, original, options);
+	const handler = new SpanHandler(source, original, options, lowerCase);
 	new Parser(handler, options).end(source);
 	return handler.root;
 }
 
-const OPENS_BLOCK = /^\{%-?\s*(if|for|with|block|macro|call|filter|autoescape|trans|blocktrans)\b/;
+// Every tag that has a `{% end… %}`: one missing here would end the `{% if %}` around it too early.
+// `set` only in its block form, without `=`.
+const OPENS_BLOCK = /^\{%-?\s*(?:(if|for|with|block|macro|call|filter|autoescape|trans|blocktrans|blocktranslate|raw|spaceless|verbatim|cache|language|localize|ifchanged)\b|set\b(?![^%]*=))/;
 const CLOSES_BLOCK = /^\{%-?\s*end/;
+
+/** The same for Go templates and Handlebars: `{{if}}…{{end}}`, `{{#if}}…{{/if}}`. */
+// A Go action takes an argument, so `{{ block }}` alone is a value, not a block.
+const OPENS_MUSTACHE = /^\{\{[-~]?\s*(#|\^\s*[^\s}~-]|(if|range|with|block|define)\s+[^\s}])/;
+const CLOSES_MUSTACHE = /^\{\{[-~]?\s*(\/|end\b)/;
+
+/** Another branch of a block: `{% elif %}`, `{% else %}`, `{% empty %}`, `{{else}}`, `{{^}}`. */
+const ALTERNATIVE = /^\{%-?\s*(elif|else|empty)\b|^\{\{[-~]?\s*(else(?![\w.-])|\^\s*[-~]?\}\})/;
+
+/** Where the branch ends that starts at `from`: the next `{% else %}` of its block, or the end of the block. */
+function endOfBranch(text, from) {
+	const tags = /\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}/g;
+	tags.lastIndex = from;
+	let depth = 0;
+	for (let match = tags.exec(text); match; match = tags.exec(text)) {
+		if (OPENS_BLOCK.test(match[0]) || OPENS_MUSTACHE.test(match[0])) depth += 1;
+		else if (CLOSES_BLOCK.test(match[0]) || CLOSES_MUSTACHE.test(match[0])) {
+			if (depth === 0) return match.index;
+			depth -= 1;
+		} else if (depth === 0 && ALTERNATIVE.test(match[0])) return match.index;
+	}
+	return text.length;
+}
+
+/** Elements whose end tag HTML may leave out: the next one of the kind closes them. */
+const OPTIONAL_END = new Set(['li', 'p', 'dt', 'dd', 'option', 'optgroup', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot', 'rt', 'rp', 'colgroup', 'caption']);
+
+/**
+ * True when every element the markup opens, it also closes, and it closes none it did not open.
+ * An element whose end tag HTML may leave out (`<li>`) needs none (not `body`, `head` or `html`, rare in a branch), and `<x />` closes only where the
+ * parser reads it so (`selfClosing`); in HTML it stays open. In doubt it says false: that
+ * blanks a branch, which can miss a finding but never make one up.
+ */
+function isBalanced(markup, selfClosing = false) {
+	const open = [];
+	const tags = markup.replace(/<!--[\s\S]*?-->|<(script|style)\b[\s\S]*?<\/\1\s*>/gi, '');
+	for (const [tag, slash, name] of tags.matchAll(/<(\/?)([a-zA-Z][\w-]*)(?:"[^"]*"|'[^']*'|[^'">])*>/g)) {
+		const lower = name.toLowerCase();
+		if (slash) {
+			while (open.length > 0 && open.at(-1) !== lower && OPTIONAL_END.has(open.at(-1))) open.pop();
+			if (open.pop() !== lower) return false;
+		} else if (!VOID.has(lower) && !(selfClosing && tag.endsWith('/>'))) open.push(lower);
+	}
+	return open.every((name) => OPTIONAL_END.has(name));
+}
 
 /** Same length, so positions stay right. */
 const blank = (text) => text.replace(/[^\n]/g, ' ');
+
+/** Markup without its template tags, so `{% if a %}>{% endif %}` in a tag does not end it. */
+const withoutTemplateTags = (text) => text.replace(/\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\}/g, '');
 
 /**
  * Jinja and Django write into a tag, where an HTML parser reads them as markup:
@@ -220,7 +301,7 @@ const blank = (text) => text.replace(/[^\n]/g, ' ');
  * in a tag it leaves a name that cannot be an attribute, so the element counts as
  * spread, and a whole `{% if %}` block goes: what is in it may not be there.
  */
-function quietTemplateTags(source) {
+function quietTemplateTags(source, blanked = new Set(), selfClosing = false) {
 	const text = source
 		.replace(/\{#[\s\S]*?#\}|\{%-?\s*comment\b[\s\S]*?\{%-?\s*endcomment\s*-?%\}/g, blank)
 		// A name the template fills in is a tag nobody can check.
@@ -235,6 +316,19 @@ function quietTemplateTags(source) {
 		const end = close ? text.indexOf(close, at) : -1;
 		if (end !== -1) {
 			const piece = text.slice(at, end + 2);
+			if (!inTag && ALTERNATIVE.test(piece)) {
+				// One branch renders. A branch that leaves an element open, as the first one may too,
+				// goes, so the element in each does not nest in the other. A balanced branch stays.
+				const stop = endOfBranch(text, end + 2);
+				const branch = text.slice(end + 2, stop);
+				out += piece.replace(/[<>]/g, ' ');
+				at = end + 2;
+				if (isBalanced(withoutTemplateTags(branch), selfClosing)) continue;
+				for (const [, name] of branch.matchAll(/<([a-zA-Z][\w-]*)/g)) blanked.add(name.toLowerCase());
+				out += blank(branch);
+				at = stop;
+				continue;
+			}
 			if (!inTag) out += piece.replace(/[<>]/g, ' ');
 			else if (quote) out += `{{${'x'.repeat(piece.length - 4)}}}`;
 			else {
@@ -248,7 +342,12 @@ function quietTemplateTags(source) {
 		const char = text[at];
 		if (!inTag) {
 			const raw = char === '<' && /^<(script|style)[\s>]/i.exec(text.slice(at, at + 8));
-			const skip = raw ? text.toLowerCase().indexOf(`</${raw[1].toLowerCase()}`, at) : text.startsWith('<!--', at) ? text.indexOf('-->', at) : -1;
+			let skip = text.startsWith('<!--', at) ? text.indexOf('-->', at) : -1;
+			if (raw) {
+				const closer = new RegExp(`</${raw[1]}`, 'gi');
+				closer.lastIndex = at;
+				skip = closer.exec(text)?.index ?? -1;
+			}
 			if (skip !== -1) {
 				out += text.slice(at, skip);
 				at = skip;
@@ -269,16 +368,32 @@ function quietTemplateTags(source) {
 	return out;
 }
 
-const quietIfTemplated = (source) => (/\{[%{#]/.test(source) ? quietTemplateTags(source) : source);
+const quietIfTemplated = (source, blanked, selfClosing) => (/\{[%{#]/.test(source) ? quietTemplateTags(source, blanked, selfClosing) : source);
 
-export function parseHtml(source) {
+/**
+ * A tag that also opens in a branch that went: which start tag its closing tag
+ * belongs to is unknown, so its end is too, and `--fix` leaves it as it is.
+ */
+function forgetEnds(root, blanked) {
+	if (blanked.size > 0) walk(root, (node) => blanked.has(node.name.toLowerCase()) && (node.endOffset = undefined));
+}
+
+export function parseHtml(source, filename = '') {
 	const root = createRoot({ closed: /<html[\s>]/i.test(source) });
-	readHtmlChildren(parseMarkup(quietIfTemplated(source), { selfClosing: ANGULAR.test(source), original: source }).children, root, { inert: true });
+	const angular = ANGULAR.test(source) || filename.endsWith('.component.html');
+	// A browser lowers the names in HTML; Angular's compiler keeps their case.
+	const options = { selfClosing: angular, original: source, lowerCase: !angular };
+	const blanked = new Set();
+	readHtmlChildren(parseMarkup(quietIfTemplated(source, blanked, options.selfClosing), options).children, root, { inert: true });
+	forgetEnds(root, blanked);
 	return [root];
 }
 
+/** A `<` or `>` in an interpolation between the tags compares, and opens no element. */
+const quietInterpolations = (source) => source.replace(/\{\{[\s\S]*?\}\}/g, (piece) => piece.replace(/[<>]/g, ' '));
+
 export function parseVue(source) {
-	const documentNode = parseMarkup(source, { selfClosing: true });
+	const documentNode = parseMarkup(quietInterpolations(source), { selfClosing: true, original: source });
 	const template = documentNode.children.find(
 		(node) => node.type === 'tag' && node.name === 'template',
 	);
@@ -368,7 +483,7 @@ function endOfExpression(source, start) {
  * comment as nothing. ESM goes, so `import` and `export` are not prose.
  */
 function mdxAsHtml(mdx) {
-	const source = mdx.replace(/^(?:import|export)\s.*(?:\n.*\S.*)*/gm, blank);
+	const source = mdx.replace(/^(?:import|export)\s.*(?:\n.*\S.*)*/gm, blank).replaceAll(HOLE, ' ');
 	const out = source.split('');
 	let inTag = false;
 	for (let at = 0; at < out.length; at += 1) {
@@ -380,10 +495,15 @@ function mdxAsHtml(mdx) {
 			const end = endOfExpression(source, at);
 			const length = end - at + 1;
 			let fill;
+			let before = at - 1;
+			while (/[ \t\n]/.test(source[before] ?? '')) before -= 1;
+			const isComment = /^\{\s*\/\*/.test(source.slice(at, end));
 			// An empty `{}` is no expression MDX accepts; it reads as an empty value.
-			if (inTag && out[at - 1] === '=') fill = length >= 3 ? `\${${'x'.repeat(length - 3)}}` : '""';
+			if (inTag && source[before] === '=') fill = length >= 3 ? boundFiller(length) : '""';
 			else if (inTag) fill = length >= 6 ? 'v-bind'.padEnd(length) : `{${'x'.repeat(Math.max(length - 2, 0))}}`.slice(0, length);
-			else if (length >= 4 && !/^\{\s*\/\*/.test(source.slice(at, end))) fill = `<X${' '.repeat(length - 4)}/>`;
+			else if (length >= 4 && !isComment) fill = `<X${' '.repeat(length - 4)}/>`;
+			// Too short for an element, `{t}`: a mark the tree reads as content nobody can see here.
+			else if (!isComment && /\S/.test(source.slice(at + 1, end))) fill = HOLE.padEnd(length);
 			else fill = blank(source.slice(at, end + 1));
 			out.splice(at, length, ...fill);
 			at = end;
@@ -546,7 +666,7 @@ function astroAsHtml(source) {
 		// A comment between the attributes sets nothing.
 		if (!isValue && ONLY_COMMENTS.test(source.slice(start + 1, end).trim())) return;
 		if (!isValue) put(start, size >= 3 ? `:[${'x'.repeat(size - 3)}]` : '');
-		else if (room >= 3) put(start, `\${${'x'.repeat(room - 3)}}`);
+		else if (room >= 3) put(start, boundFiller(room));
 		else put(start, room === 2 && size === 3 ? '{{' : '""');
 	}
 
@@ -645,7 +765,7 @@ function astroAsHtml(source) {
 				if (!closes) depth += 1;
 				if (tag.raw && !closes) {
 					// Case-insensitive without lowering the source, which can change its length.
-					const closer = new RegExp(`</${tag.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'gi');
+					const closer = new RegExp(`</${escapeRegExp(tag.name)}`, 'gi');
 					closer.lastIndex = at;
 					const end = closer.exec(source)?.index ?? length;
 					// What `is:raw` holds is text as it stands, not elements and not expressions.
@@ -757,7 +877,7 @@ const markdownParagraphs = (mdx) => (children) => {
 function markMentions(node, source) {
 	for (const child of node.children) {
 		const written = source.slice(child.offset, (child.endOffset ?? 0) + 1);
-		if (child.name.startsWith('nldd-') && !new RegExp(`</${child.name}\\s*>$`).test(written)) {
+		if (child.name.startsWith('nldd-') && !new RegExp(`</${escapeRegExp(child.name)}\\s*>$`).test(written)) {
 			child.mention = true;
 			child.endOffset = undefined;
 		}
@@ -774,15 +894,17 @@ export function parseMarkdown(source, filename = '') {
 	const roots = [];
 	const read = (text, offset, given = {}) => {
 		const root = createRoot();
-		const padded = ' '.repeat(offset) + quietIfTemplated(text);
+		const blanked = new Set();
+		const padded = ' '.repeat(offset) + quietIfTemplated(text, blanked, true);
 		readHtmlChildren(parseMarkup(padded, { selfClosing: true, original: ' '.repeat(offset) + text }).children, root, given);
+		forgetEnds(root, blanked);
 		roots.push(root);
 	};
 	const fences = /^( *)(```|~~~)[^\n]*\n([\s\S]*?)^ *\2/gm;
 	for (const match of source.matchAll(fences)) {
 		if (match[3].includes('<nldd-')) read(match[3], match.index + match[0].indexOf('\n') + 1);
 	}
-	let prose = source.replace(fences, blank).replace(/^---\n[\s\S]*?\n---(?=\n)/, blank);
+	let prose = source.replace(fences, blank).replace(/^---\r?\n[\s\S]*?\r?\n---(?=\r?\n|$)/, blank);
 	// A bare `<nldd-button>` in a sentence names the tag and says nothing about its attributes.
 	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) {
 		read(match[1].replace(/^<([a-z-]+)\s*\/?>$/, '<$1 v-bind="x"><Mention /></$1>'), match.index + 1);
@@ -801,13 +923,6 @@ export function parseMarkdown(source, filename = '') {
  */
 function litTemplates(source) {
 	const templates = [];
-	const skipString = (start) => {
-		let at = start + 1;
-		while (at < source.length && source[at] !== source[start] && source[at] !== '\n') {
-			at += source[at] === '\\' ? 2 : 1;
-		}
-		return at;
-	};
 	const readTemplate = (start, isHtml) => {
 		const holes = [];
 		let at = start;
@@ -827,7 +942,7 @@ function litTemplates(source) {
 		let at = start;
 		while (at < source.length) {
 			const char = source[at];
-			if (char === "'" || char === '"') at = skipString(at);
+			if (char === "'" || char === '"') at = endOfString(source, at);
 			else if (source.startsWith('//', at)) at = source.indexOf('\n', at) >>> 0;
 			else if (source.startsWith('/*', at)) at = source.indexOf('*/', at) >>> 0;
 			else if (char === '`') at = readTemplate(at + 1, source.slice(at - 4, at) === 'html');
@@ -853,7 +968,7 @@ export function parseLit(source) {
 		let text = source.slice(start, end);
 		if (!text.includes('<nldd-')) return [];
 		for (const [from, to] of holes) {
-			const filler = `\${${'x'.repeat(to - from - 3)}}`;
+			const filler = boundFiller(to - from);
 			text = text.slice(0, from - start) + filler + text.slice(to - start);
 		}
 		const root = createRoot();
@@ -1049,8 +1164,11 @@ function readJsxExpression(expression, parent, flags, roots) {
 		case 'JSXEmptyExpression':
 			break;
 		case 'Literal':
+			// `{true}`, `{false}` and `{null}` render nothing; a string or a number is text.
+			if ((typeof expression.value === 'string' && expression.value.trim()) || typeof expression.value === 'number') parent.text = true;
+			break;
 		case 'TemplateLiteral':
-			if (expression.value !== '' && expression.value !== null) parent.text = true;
+			if (expression.expressions.length > 0 || expression.quasis.some((quasi) => (quasi.value.cooked ?? quasi.value.raw).trim())) parent.text = true;
 			break;
 		case 'LogicalExpression':
 			// The left of `a && <x />` renders nothing worth counting.

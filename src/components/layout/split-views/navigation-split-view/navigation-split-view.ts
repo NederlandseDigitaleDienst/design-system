@@ -39,9 +39,24 @@ import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../../utilities/custom-element.js';
 import { isPointerMode } from '../../../../utilities/input-modality.js';
 import { ScrollModeController, SINGLE_COLUMN_CHANGE_EVENT } from '../../../../utilities/scroll-mode-controller.js';
+import { LayoutPass, sharedResizeObserver } from '../../../../utilities/layout-pass.js';
 import type { SingleColumnChangeDetail } from '../../../../utilities/scroll-mode-controller.js';
 import { navigationSplitViewStyles } from './navigation-split-view.styles.js';
 import { navigationSplitViewTemplate } from './navigation-split-view.template.js';
+
+/**
+ * Every split view that has to lay out measures its width first, and only then
+ * do they apply: one that measures after another one applied lays out the page
+ * again, once per view.
+ */
+function layOut(views: NLDDNavigationSplitView[]): void {
+	const live = views.filter((view) => view.isConnected);
+	const widths = live.map((view) => view._measureWidth());
+	live.forEach((view, i) => view._applyLayout(widths[i]));
+}
+
+const layoutPass = new LayoutPass<NLDDNavigationSplitView>(layOut);
+const sizeObserver = sharedResizeObserver<NLDDNavigationSplitView>(layOut);
 
 @customElement('nldd-navigation-split-view')
 export class NLDDNavigationSplitView extends LitElement {
@@ -82,7 +97,6 @@ export class NLDDNavigationSplitView extends LitElement {
 	_showInspector = true;
 
 	private _mode: 'spatial' | 'primary-sidebar-stack' | 'full-stack' = 'spatial';
-	private _resizeObserver: ResizeObserver | null = null;
 	private _paneObserver: MutationObserver | null = null;
 	private _hostObserver: MutationObserver | null = null;
 
@@ -126,14 +140,13 @@ export class NLDDNavigationSplitView extends LitElement {
 
 	override connectedCallback() {
 		super.connectedCallback();
-		this._resizeObserver = new ResizeObserver(() => this._updateLayout());
-		this._resizeObserver.observe(this);
+		sizeObserver.observe(this, this);
 		this.addEventListener('dismiss', this._handleDismiss);
 
-		this._paneObserver = new MutationObserver(() => this._updateLayout());
+		this._paneObserver = new MutationObserver(() => this._scheduleLayout());
 		this._hostObserver = new MutationObserver(() => {
 			this._observePanes();
-			this._updateLayout();
+			this._scheduleLayout();
 		});
 		this._hostObserver.observe(this, { childList: true });
 		this._observePanes();
@@ -141,8 +154,8 @@ export class NLDDNavigationSplitView extends LitElement {
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();
-		this._resizeObserver?.disconnect();
-		this._resizeObserver = null;
+		sizeObserver.unobserveAll(this);
+		layoutPass.cancel(this);
 		this._paneObserver?.disconnect();
 		this._paneObserver = null;
 		this._hostObserver?.disconnect();
@@ -160,26 +173,29 @@ export class NLDDNavigationSplitView extends LitElement {
 		});
 	}
 
-	private _layoutScheduled = false;
-
 	/**
 	 * The layout is measured, so it runs after a render, and what it decides is
 	 * state, so it must not be set from inside one: that schedules a second
 	 * update on top of the one that just finished, which Lit reports. Coalesced,
-	 * because a resize and a pane change often land together.
+	 * because a resize and a pane change often land together, and run with the
+	 * other split views that lay out in the same tick (see layOut).
 	 */
 	private _scheduleLayout() {
-		if (this._layoutScheduled) return;
-		this._layoutScheduled = true;
-		queueMicrotask(() => {
-			this._layoutScheduled = false;
-			this._updateLayout();
-		});
+		layoutPass.schedule(this, this.ownerDocument);
 	}
+
+	/** Whether the min-widths have been read from the CSS. */
+	private _minWidthsRead = false;
 
 	override firstUpdated() {
 		// The min-widths come from CSS, so they need the first render behind them.
-		queueMicrotask(() => {
+		this._scheduleLayout();
+	}
+
+	/** @internal The width to lay out in; the first time also the min-widths. Reads, writes nothing. */
+	_measureWidth(): number {
+		if (!this._minWidthsRead && this.hasUpdated) {
+			this._minWidthsRead = true;
 			const style = getComputedStyle(this);
 			const read = (prop: string) => parseFloat(style.getPropertyValue(prop));
 			this._paneMinWidths = {
@@ -188,8 +204,8 @@ export class NLDDNavigationSplitView extends LitElement {
 				main: read('--_navigation-split-view-main-min-width') || this._paneMinWidths.main,
 				inspector: read('--_navigation-split-view-inspector-min-width') || this._paneMinWidths.inspector,
 			};
-			this._updateLayout();
-		});
+		}
+		return this.getBoundingClientRect().width;
 	}
 
 	override updated(changed: Map<string, unknown>) {
@@ -203,7 +219,11 @@ export class NLDDNavigationSplitView extends LitElement {
 	}
 
 	_updateLayout() {
-		const width = this.getBoundingClientRect().width;
+		this._applyLayout(this._measureWidth());
+	}
+
+	/** @internal Chooses the panes that fit in `width`. */
+	_applyLayout(width: number) {
 		const { primarySidebar: primarySidebarMin, secondarySidebar: secondarySidebarMin, main: mainMin, inspector: inspectorMin } = this._paneMinWidths;
 
 		// When primary-sidebar-as-sheet, sidebars never render inline — main always fills full width

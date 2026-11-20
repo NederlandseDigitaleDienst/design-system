@@ -13,7 +13,7 @@
 
 import { parse, stringify } from 'css-what';
 import { OPT_IN_GROUPS } from './rule-data.js';
-import { isDesignSystemCss } from './css.js';
+import { designSystemTester } from './css.js';
 import { BOUND } from './tree.js';
 
 /**
@@ -25,9 +25,13 @@ const CLASS_EXCEPTIONS = {
 	'form-input': { input: { attribute: 'type', value: 'hidden' } },
 };
 
-function excepted(className, node) {
+/** In W- a bound or spread value may be the excepted one; in W+ (`favorable`) it may be any other. */
+function excepted(className, node, favorable = true) {
 	const exception = CLASS_EXCEPTIONS[className]?.[node.name];
-	return Boolean(exception) && node.attrs.get(exception.attribute) === exception.value;
+	if (!exception) return false;
+	const value = node.attrs.get(exception.attribute);
+	if (!favorable && (value === BOUND || (node.spread && value === undefined))) return true;
+	return value === exception.value;
 }
 
 /** Pseudo-classes of CSS itself, which mean the same everywhere. */
@@ -96,7 +100,7 @@ function acceptedCheck(tags, allowUnknown) {
 				if (seen.has(parent)) return false;
 				const next = new Set(seen).add(parent);
 				// Accepted in any of the places the file uses it is enough.
-				return parent.placements.some((place) => accepted(node, place.parent, chain, next));
+				return parent.placements.some((place) => accepted(node, place.parent, [...chain], next));
 			}
 			if (parent.opaque) return allowUnknown;
 			if (!parent.name.startsWith('nldd-')) {
@@ -179,25 +183,27 @@ const VOCABULARY = {
 	},
 	// CSS the design system ships: a block it recognizes, or a stylesheet with nothing else in it.
 	'design-system': {
-		source: ({ designSystemCss }) => (node) => node.designSystem ?? (node.css !== undefined && isDesignSystemCss(node.css, designSystemCss)),
+		source: ({ isDesignSystemCss }) => (node) => node.designSystem ?? (node.css !== undefined && isDesignSystemCss(node.css)),
 		optIn: true,
 	},
 };
 
 /** The name a pseudo-class goes by in W+, or the name itself when unknown changes nothing. */
 export function favorableName(name) {
-	return VOCABULARY[name]?.favorable ? `may-be-${name}` : name;
+	return VOCABULARY[name]?.favorable || CLASS_EXCEPTIONS[name] ? `may-be-${name}` : name;
 }
 
 /** What each pseudo-class means in source, for css-select. */
-export function sourcePseudos({ classes = {}, tags = {}, designSystemCss = {} } = {}) {
+export function sourcePseudos({ classes = {}, tags = {}, designSystemCss = {}, isDesignSystemCss = designSystemTester(designSystemCss) } = {}) {
 	const shared = Object.fromEntries(
-		Object.entries(classes).map(([name, members]) => {
+		Object.entries(classes).flatMap(([name, members]) => {
 			const set = new Set(members);
-			return [name, (node) => set.has(node.name) && !excepted(name, node)];
+			const strict = [name, (node) => set.has(node.name) && !excepted(name, node, false)];
+			return CLASS_EXCEPTIONS[name] ? [strict, [favorableName(name), (node) => set.has(node.name) && !excepted(name, node)]] : [strict];
 		}),
 	);
-	const context = { tags, designSystemCss, isInput: shared['form-input'] ?? (() => false) };
+	const isInput = classes['form-input'] ? shared[favorableName('form-input')] : () => false;
+	const context = { tags, isDesignSystemCss, isInput };
 	const own = Object.entries(VOCABULARY).flatMap(([name, entry]) => [
 		[name, entry.source(context)],
 		...(entry.favorable ? [[favorableName(name), entry.favorable(context)]] : []),
@@ -259,6 +265,8 @@ export function forBrowser(selector, classes = {}) {
 	return stringify(compileList(parse(selector), classes, selector));
 }
 
+const LOGICAL_PSEUDOS = new Set(['is', 'where', 'matches', 'not']);
+
 const toProperty = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 
 /**
@@ -271,7 +279,8 @@ export function assertProperties(assert) {
 	const visit = (tokens, negated) => {
 		for (const token of tokens) {
 			if (token.type === 'attribute' && token.action === 'exists' && !negated) names.push(toProperty(token.name));
-			if (token.type === 'pseudo' && Array.isArray(token.data)) {
+			// `:has([x])` asks about a descendant, so a property on this element does not answer it.
+			if (token.type === 'pseudo' && Array.isArray(token.data) && LOGICAL_PSEUDOS.has(token.name)) {
 				for (const inner of token.data) visit(inner, token.name === 'not' ? !negated : negated);
 			}
 		}

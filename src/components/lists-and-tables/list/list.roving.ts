@@ -1,4 +1,5 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import { afterParse } from '../../../utilities/after-parse.js';
 
 /**
  * Where a row stands in the roving tab stop of its list.
@@ -66,15 +67,17 @@ export class ListRoving<Row extends RovingRow> implements ReactiveController {
 	/**
 	 * Pick the stops again, in a microtask: the list asks for this from inside
 	 * its update, and setting a row's reactive state there would trip Lit's
-	 * change-in-update warning. Coalesced, so many asks make one pass.
+	 * change-in-update warning. Coalesced, so many asks make one pass, also
+	 * while the parser is still adding rows (see afterParse).
 	 */
 	update(): void {
 		if (this._scheduled) return;
 		this._scheduled = true;
-		queueMicrotask(() => {
+		const run = () => {
 			this._scheduled = false;
 			this._apply();
-		});
+		};
+		if (!afterParse(run, this._host.ownerDocument)) queueMicrotask(run);
 	}
 
 	/**
