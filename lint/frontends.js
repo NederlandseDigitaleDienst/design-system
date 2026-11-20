@@ -244,7 +244,8 @@ const OPENS_BLOCK = /^\{%-?\s*(?:(if|for|with|block|macro|call|filter|autoescape
 const CLOSES_BLOCK = /^\{%-?\s*end/;
 
 /** The same for Go templates and Handlebars: `{{if}}…{{end}}`, `{{#if}}…{{/if}}`. */
-const OPENS_MUSTACHE = /^\{\{[-~]?\s*(#|(if|range|with|block|define)\b)/;
+// A Go action takes an argument, so `{{ block }}` alone is a value, not a block.
+const OPENS_MUSTACHE = /^\{\{[-~]?\s*(#|(if|range|with|block|define)\s+[^\s}])/;
 const CLOSES_MUSTACHE = /^\{\{[-~]?\s*(\/|end\b)/;
 
 /** Another branch of a block: `{% elif %}`, `{% else %}`, `{% empty %}`, `{{else}}`. */

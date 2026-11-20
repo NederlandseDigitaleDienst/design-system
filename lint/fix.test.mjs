@@ -93,6 +93,7 @@ describe('project paths', () => {
 
 	it('names an exclude entry that only matched part of a name', () => {
 		const root = project({ 'generated/a.html': '', 'legacy/b.html': '', 'c.test.html': '' });
+		assert.deepEqual(partialExcludes([], root, ['./gen/']), [{ entry: './gen/', file: 'generated/a.html' }]);
 		assert.deepEqual(partialExcludes([], root, ['gen', 'legacy', '.test.', 'dist']), [
 			{ entry: 'gen', file: 'generated/a.html' },
 			{ entry: '.test.', file: 'c.test.html' },

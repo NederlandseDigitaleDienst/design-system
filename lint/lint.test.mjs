@@ -626,6 +626,13 @@ describe('--fix', () => {
 		assert.equal(text, '<nldd-button text=" variant=x" appearance="primary"></nldd-button><div variant="a"></div><nldd-progress-bar variant="b"></nldd-progress-bar>');
 	});
 
+	it('moves all four text attributes of one field into one translations', () => {
+		const { text } = fixed('a.html', '<nldd-password-field accessible-label="W" show-button-text="A" hide-button-text="B" show-button-accessible-label="C" hide-button-accessible-label="D"></nldd-password-field>');
+		const [, json] = /translations='([^']*)'/.exec(text);
+		assert.equal(Object.keys(JSON.parse(json)).length, 4);
+		assert.doesNotMatch(text, /button-(text|accessible-label)=/);
+	});
+
 	it('moves a text attribute that became a translation key into translations, one key at a time', () => {
 		const field = (attributes) => `<nldd-password-field accessible-label="W"${attributes}></nldd-password-field>`;
 		assert.equal(

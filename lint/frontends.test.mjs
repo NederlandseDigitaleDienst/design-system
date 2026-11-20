@@ -78,6 +78,11 @@ describe('frontend edge cases', () => {
 		});
 	}
 
+	it('takes `{{ block }}` without an argument for a value, not a Go block', async () => {
+		const source = '{{if .X}}<p>a</p>{{else}}{{ block }}<nldd-bestaat-niet></nldd-bestaat-niet>{{end}}';
+		assert.ok((await rules(source, 'a.gohtml')).includes('unknown-element'));
+	});
+
 	it('reads each branch after one that leaves an element open', async () => {
 		const source = '{% if a %}<div class="a">{% elif b %}<div class="b">{% else %}<nldd-bestaat-niet></nldd-bestaat-niet>{% endif %}x</div>';
 		assert.ok((await rules(source, 'a.html.j2')).includes('unknown-element'));

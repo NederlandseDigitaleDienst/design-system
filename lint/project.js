@@ -91,7 +91,7 @@ export function partialExcludes(paths, root, exclude = [], extensions = DEFAULT_
 	const files = listFiles(paths, root, extensions).map((file) => relativePath(root, file));
 	return exclude.flatMap((entry) => {
 		if (normalizeEntry(entry) === '' || files.some((file) => matchesExclude(file, [entry]))) return [];
-		const file = files.find((one) => one.includes(entry));
+		const file = files.find((one) => one.includes(normalizeEntry(entry)));
 		return file ? [{ entry, file }] : [];
 	});
 }
