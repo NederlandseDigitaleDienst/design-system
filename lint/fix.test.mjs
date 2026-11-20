@@ -3,6 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { describe, it } from 'node:test';
+import { applyFixes } from './fix.js';
 import { formatGithub, formatStatistics } from './format.js';
 import { findFiles, readBaseline, readConfig } from './project.js';
 import { loadData, resolveSeverities } from './rule-data.js';
@@ -30,6 +31,13 @@ describe('--fix', () => {
 	it('applies an edit inside another edit in the next pass, not over it', async () => {
 		const { text } = await fixed('<nldd-text>Hallo <nldd-icon icon="check" color="primary-content"></nldd-icon> wereld</nldd-text>');
 		assert.equal(text, '<nldd-text><p>Hallo <nldd-icon icon="check" color="content"></nldd-icon> wereld</p></nldd-text>');
+	});
+
+	it('makes no fix whose own edits overlap each other', () => {
+		const source = 'a { color: var(--old); }';
+		const offset = source.indexOf('--old');
+		const finding = { tag: '--old', offset, endOffset: offset + 5, fix: { token: '--new', event: '--other' } };
+		assert.deepEqual(applyFixes(source, [finding]), { source, fixed: 0, renamedTags: new Map() });
 	});
 
 	it('wraps text with the line endings of the file', async () => {

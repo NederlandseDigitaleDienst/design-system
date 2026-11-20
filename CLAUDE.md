@@ -67,7 +67,8 @@ Een custom property erft door shadow boundaries heen, naar alles wat in de flat 
 
 CSS variabelen worden gevalideerd tijdens de build (`npm run validate:styles`):
 
-- `--context-*` — Niet gevalideerd. De tien met een default in variables.css en die een component documenteert met `@cssprop` (`--context-inset-top` op `nldd-page`) zijn tokens voor `nldd lint`. Elke andere die in `src/` staat is bedrading, en een app die hem leest of zet krijgt `internal-context-no-use`. Een nieuwe context-variabele die apps mogen lezen krijgt dus een `@cssprop` bij het component dat hem zet
+- `--context-*` — Niet gevalideerd. De tien met een default in variables.css en die een component documenteert met `@cssprop` (`--context-inset-top` op `nldd-page`) zijn tokens voor `nldd lint`; elke andere in `src/` is bedrading.
+  - Een app die bedrading leest of zet, krijgt `internal-context-no-use`. Een nieuwe context-variabele die apps mogen lezen of zetten, krijgt dus een `@cssprop` bij het component dat hem leest of zet, en een regel in de changelog
 - `--_*` — Gevalideerd binnen dezelfde componentmap, en het voorvoegsel moet van een component in die map zijn
 - `--components-*` — Gevalideerd tegen variables.css, en het voorvoegsel moet van een component in die map zijn
 - `--primitives-*`, `--semantics-*` — Gevalideerd tegen variables.css

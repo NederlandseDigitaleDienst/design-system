@@ -653,6 +653,10 @@ describe('--fix', () => {
 			field(` translations='{"components.password-field.show-action": "Toon >"}'`),
 		);
 		assert.equal(
+			fixed('a.html', field(' show-button-text="a < b"')).text,
+			field(` translations='{"components.password-field.show-action": "a < b"}'`),
+		);
+		assert.equal(
 			fixed('a.html', field(` translations='{"components.password-field.show-accessible-label": "Laat het wachtwoord zien"}' show-button-text="Toon" hide-button-text="Verstop"`)).text,
 			field(` translations='{"components.password-field.show-accessible-label": "Laat het wachtwoord zien", "components.password-field.hide-action": "Verstop", "components.password-field.show-action": "Toon"}'`),
 		);
