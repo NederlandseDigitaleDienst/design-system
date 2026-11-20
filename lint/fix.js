@@ -53,38 +53,17 @@ function writtenText(source, found) {
 
 const UNCERTAIN_TEXT = /[&\\\n]|\{\{|\{%|\$\{/;
 
-/** `translations` as JSON in single quotes, or in JSX as an object. */
-function translationsAttribute(entries, jsx) {
-	const pairs = entries.map(([key, text]) => `${JSON.stringify(key)}: ${JSON.stringify(text)}`).join(', ');
-	return jsx ? `translations={{ ${pairs} }}` : `translations='{${pairs}}'`;
+/** `translations` as JSON in single quotes. */
+function translationsAttribute(entries) {
+	return `translations='{${entries.map(([key, text]) => `${JSON.stringify(key)}: ${JSON.stringify(text)}`).join(', ')}}'`;
 }
 
-/** The keys a `translations` holds, when it is written out: JSON in single quotes, or a JSX object of strings. */
-function writtenTranslations(source, found, jsx) {
+/** The keys a `translations` holds, when it is written out as JSON in single quotes. */
+function writtenTranslations(source, found) {
 	const value = found.value;
-	if (!value || found.prefix || found.templated) return undefined;
-	const raw = source.slice(value.start, value.end);
-	if (jsx) {
-		const body = /^\{\{\s*([^]*?)\s*,?\s*\}\}$/.exec(raw)?.[1];
-		if (body === undefined) return undefined;
-		const pair = /"([^"\\\n]*)"\s*:\s*"([^"\\\n]*)"/y;
-		const entries = [];
-		for (let at = 0; at < body.length; ) {
-			pair.lastIndex = at;
-			const match = pair.exec(body);
-			if (!match) return undefined;
-			entries.push([match[1], match[2]]);
-			at = pair.lastIndex;
-			const comma = /\s*,\s*/y;
-			comma.lastIndex = at;
-			if (at < body.length && !comma.exec(body)) return undefined;
-			at = at < body.length ? comma.lastIndex : at;
-		}
-		return entries;
-	}
-	if (value.quote !== "'") return undefined;
-	const json = raw.slice(1, -1);
-	if (/[&\\]|\{\{|\{%|\$\{/.test(json)) return undefined;
+	if (!value || found.prefix || found.templated || value.quote !== "'") return undefined;
+	const json = source.slice(value.start + 1, value.end - 1);
+	if (UNCERTAIN_TEXT.test(json)) return undefined;
 	try {
 		const parsed = JSON.parse(json);
 		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.values(parsed).some((text) => typeof text !== 'string')) return undefined;
@@ -96,24 +75,26 @@ function writtenTranslations(source, found, jsx) {
 
 /**
  * A text attribute that became a translation key: the attribute goes, and its text
- * goes in `translations` under that key. In JSX that is an object, elsewhere JSON in
- * single quotes. An entity, a backslash, a template hole or a quote that the JSON
- * cannot hold makes it uncertain, and so does a `translations` that is bound or
- * already has the key. One per element per pass: the next pass adds the next key.
+ * goes in `translations` under that key, as JSON in single quotes. Not in JSX: React 18
+ * writes an object as `[object Object]`, and React 19 sets a string as the property,
+ * which the component does not parse. An entity, a backslash, a template hole or a quote
+ * that the JSON cannot hold makes it uncertain, and so does a `translations` that is
+ * bound or already has the key. One per element per pass: the next pass adds the next key.
  */
 function translationEdits(source, finding, translation) {
 	const { startTag, jsx } = finding;
+	if (jsx) return [];
 	return Object.entries(translation).flatMap(([name, key]) => {
 		const found = findAttribute(startTag, name);
 		const text = writtenText(source, found);
-		if (text === undefined || UNCERTAIN_TEXT.test(text) || (!jsx && text.includes("'"))) return [];
+		if (text === undefined || UNCERTAIN_TEXT.test(text) || text.includes("'")) return [];
 		const existing = findAttribute(startTag, 'translations');
-		if (!existing) return [{ from: found.start, to: found.end, text: translationsAttribute([[key, text]], jsx) }];
-		const entries = writtenTranslations(source, existing, jsx);
+		if (!existing) return [{ from: found.start, to: found.end, text: translationsAttribute([[key, text]]) }];
+		const entries = writtenTranslations(source, existing);
 		if (!entries || entries.some(([name]) => name === key)) return [];
 		const removal = removeEdits(source, finding, name);
 		if (removal.length === 0) return [];
-		return [{ from: existing.start, to: existing.end, text: translationsAttribute([...entries, [key, text]], jsx) }, ...removal];
+		return [{ from: existing.start, to: existing.end, text: translationsAttribute([...entries, [key, text]]) }, ...removal];
 	});
 }
 
@@ -178,7 +159,7 @@ function wrapEdits(source, finding, wrapper) {
 	const content = contentOf(source, finding);
 	const inner = content?.text.trim();
 	// A blank line ends raw HTML in Markdown, and indenting it leaves trailing space.
-	if (!inner || /\n[ \t]*\n/.test(inner)) return [];
+	if (!inner || /\r?\n[ \t]*\r?\n/.test(inner)) return [];
 	const tags = [...inner.matchAll(/<\/?([a-zA-Z][\w-]*)/g)].map((match) => match[1].toLowerCase());
 	if (tags.some((name) => !INLINE.has(name))) return [];
 	const leading = /^\s*/.exec(content.text)[0];
@@ -187,7 +168,8 @@ function wrapEdits(source, finding, wrapper) {
 	let wrapped = `<${wrapper}>${inner}</${wrapper}>`;
 	if (base !== undefined && inner.includes('\n')) {
 		const unit = base.includes('\t') || !base ? '\t' : '  ';
-		wrapped = `<${wrapper}>\n${base}${unit}${inner.replace(/\n/g, `\n${unit}`)}\n${base}</${wrapper}>`;
+		const eol = leading.includes('\r\n') ? '\r\n' : '\n';
+		wrapped = `<${wrapper}>${eol}${base}${unit}${inner.replace(/\n/g, `\n${unit}`)}${eol}${base}</${wrapper}>`;
 	}
 	return [{ from: content.start, to: content.end, text: leading + wrapped + trailing }];
 }
@@ -206,6 +188,8 @@ function editsOf(source, finding) {
 		...(fix.translation ? translationEdits(source, finding, fix.translation) : []),
 		// A token that got another name: the finding spans the old name in a `var()`.
 		...(fix.token && source.startsWith(tag, offset) ? [{ from: offset, to: finding.endOffset, text: fix.token }] : []),
+		// An event that got another name: the finding spans the old name in a listener.
+		...(fix.event && source.startsWith(tag, offset) ? [{ from: offset, to: finding.endOffset, text: fix.event }] : []),
 	];
 }
 
@@ -326,24 +310,29 @@ export function linesNaming(source, renamedTags) {
 	return source.split('\n').flatMap((line, index) => (names.some((name) => line.search(name) !== -1) ? [index + 1] : []));
 }
 
+const isSameEdit = (a, b) => a.from === b.from && a.to === b.to && a.text === b.text;
+
+/** Two edits at one place, or ranges that share a character, cannot both apply to the original offsets. */
+const overlaps = (a, b) => a.from === b.from || (a.from < b.to && b.from < a.to);
+
 /**
  * @returns {{ source: string, fixed: number, renamedTags: Map<string, string> }}
  */
 export function applyFixes(source, findings) {
 	const renamedTags = new Map();
-	const seen = new Set();
 	const translated = new Set();
-	const unique = findings
-		.filter(({ fix }) => fix)
-		.flatMap((finding) => {
-			// Two keys for one element would each write `translations`: the next pass adds the second.
-			if (finding.fix.translation && translated.has(finding.offset)) return [];
-			const found = editsOf(source, finding);
-			if (found.length > 0 && finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
-			if (found.length > 0 && finding.fix.translation) translated.add(finding.offset);
-			return found;
-		})
-		.filter(({ from }) => !seen.has(from) && seen.add(from));
+	const unique = [];
+	for (const finding of findings.filter(({ fix }) => fix)) {
+		// Two keys for one element would each write `translations`: the next pass adds the second.
+		if (finding.fix.translation && translated.has(finding.offset)) continue;
+		const found = editsOf(source, finding).filter((edit) => !unique.some((other) => isSameEdit(edit, other)));
+		// The edits of one finding go together or not at all, such as both tags of a rename.
+		// One that overlaps an edit already taken, such as a wrap around this element, waits for the next pass.
+		if (found.length === 0 || found.some((edit) => unique.some((other) => overlaps(edit, other)))) continue;
+		unique.push(...found);
+		if (finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
+		if (finding.fix.translation) translated.add(finding.offset);
+	}
 	let fixed = source;
 	for (const { from, to, text } of unique.sort((a, b) => b.from - a.from)) {
 		fixed = fixed.slice(0, from) + text + fixed.slice(to);

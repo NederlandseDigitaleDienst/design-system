@@ -637,22 +637,19 @@ describe('--fix', () => {
 			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
 		);
 		assert.equal(
-			fixed('a.tsx', 'const a = <nldd-password-field accessible-label="W" show-button-text="Laat zien" hide-button-text={"Verstop"} />;').text,
-			'const a = <nldd-password-field accessible-label="W" translations={{ "components.password-field.hide-action": "Verstop", "components.password-field.show-action": "Laat zien" }} />;',
-		);
-		assert.equal(
 			fixed('a.vue', '<template><nldd-password-field accessible-label="W" :show-button-text="t(1)" hide-button-text="Verstop" /></template>').text,
 			`<template><nldd-password-field accessible-label="W" :show-button-text="t(1)" translations='{"components.password-field.hide-action": "Verstop"}' /></template>`,
 		);
 	});
 
-	it('leaves a translation in place where the text or translations is not certain', () => {
+	it('leaves a translation in place in JSX, and where the text or translations is not certain', () => {
 		for (const [name, source] of [
 			['a.html', `<nldd-password-field accessible-label="W" show-button-text="It's"></nldd-password-field>`],
 			['a.html', '<nldd-password-field accessible-label="W" show-button-text="Laat &amp; zien"></nldd-password-field>'],
 			['a.html', `<nldd-password-field accessible-label="W" translations='{"components.password-field.show-action": "Toon"}' show-button-text="Laat zien"></nldd-password-field>`],
 			['a.vue', '<template><nldd-password-field accessible-label="W" :translations="t" show-button-text="Laat zien" /></template>'],
-			['a.tsx', 'const a = <nldd-password-field accessible-label="W" translations={t} show-button-text="Laat zien" />;'],
+			// React 18 writes an object as an attribute, React 19 sets a string as the property.
+			['a.tsx', 'const a = <nldd-password-field accessible-label="W" show-button-text="Laat zien" hide-button-text={"Verstop"} />;'],
 			['a.html.j2', '<nldd-password-field accessible-label="W" show-button-text="{{ toon }}"></nldd-password-field>'],
 		]) {
 			assert.equal(fixed(name, source).text, source, source);
@@ -1900,6 +1897,9 @@ describe('CSS', () => {
 		assert.deepEqual(await findingsIn('.a { font-family: var(--primitives-font-family-mono); }', 'a.css'), [
 			['token-not-found', 'There is no token `--primitives-font-family-mono` in this version. The closest is `--primitives-font-family-monospace`.'],
 		]);
+		assert.deepEqual(await findingsIn('.a { width: var(--primitives-area-16); }', 'a.css'), [
+			['token-not-found', 'There is no token `--primitives-area-16` in this version.'],
+		]);
 		assert.deepEqual(await findingsIn('.a { color: var(--semantics); }', 'a.css'), []);
 		assert.match((await findingsIn('.a { color: var(--semantics-buttons); }', 'a.css'))[0][1], /in this version\.$/);
 	});
@@ -1945,6 +1945,23 @@ describe('CSS', () => {
 			['internal-context-no-use', '`--context-back-button-display` is wiring between design system components, so setting it is not supported.'],
 		]);
 		assert.deepEqual(await rulesIn('.a { color: var(--context-nope); }', 'a.css'), ['token-not-found']);
+	});
+
+	it('knows the context variables an app sets on a component, as the tooltip and the image document them', async () => {
+		assert.deepEqual(await rulesIn('.swatch { --context-tooltip-pointer-events: none; }', 'a.css'), []);
+		assert.deepEqual(await rulesIn('.media nldd-image { --context-image-height: 100%; }', 'a.css'), []);
+	});
+
+	it('keeps naming a removed context variable as removed, with its successor, and never as wiring', async () => {
+		assert.deepEqual(real.internalContext.filter((name) => real.removedTokens[name]), []);
+		assert.deepEqual(await findingsIn('.a { color: var(--context-parent-background-color); }', 'a.css'), [
+			['token-not-found', `\`--context-parent-background-color\` was removed after ${real.removedTokens['--context-parent-background-color'].last}. Use \`--context-background-color\`.`],
+		]);
+	});
+
+	it('names no successor for a removed text color that only a surface color replaced', async () => {
+		const { findings } = await createLinter(real).lintSource('.a { color: var(--semantics-buttons-inherit-filled-content-color); }', 'a.css');
+		assert.deepEqual(findings.map(({ message, fix }) => [message, fix]), [['`--semantics-buttons-inherit-filled-content-color` was removed after 0.22.0.', undefined]]);
 	});
 
 	it('reports a surface that sets one link color without the other two', async () => {
@@ -2122,5 +2139,56 @@ describe('attributes a component reads at any depth', () => {
 
 	it('cannot tell in a fragment, whose section may be in another file', async () => {
 		assert.deepEqual(await linter.lintSource('<nldd-button text="Filters" sidebar-section-only="collapsed"></nldd-button>', 'a.html').then(({ findings }) => findings.filter(({ rule }) => rule === 'unknown-attribute')), []);
+	});
+});
+
+describe('renamed events', () => {
+	const real = loadData();
+	const linter = createLinter(real);
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const messagesIn = async (source, file) =>
+		(await linter.lintSource(source, file)).findings.filter(({ rule }) => rule === 'event-renamed').map(({ message }) => message);
+	const renamed = '`tabchange` was renamed to `tab-change` after 0.21.1, so a listener on the old name is never called.';
+
+	it('names the new event wherever an app listens to the old one', async () => {
+		for (const [source, file] of [
+			['bar.addEventListener("tabchange", show);', 'a.js'],
+			["bar.removeEventListener('tabchange', show);", 'a.js'],
+			['<nldd-tab-bar id="b"></nldd-tab-bar><script>b.addEventListener(`tabchange`, show);</script>', 'a.html'],
+			['<template><nldd-tab-bar @tabchange="show" /></template>', 'a.vue'],
+			['<template><nldd-tab-bar v-on:tabchange="show" /></template>', 'a.vue'],
+			['<nldd-tab-bar (tabchange)="show($event)"></nldd-tab-bar>', 'a.component.html'],
+			['<nldd-tab-bar hx-on::tabchange="show()"></nldd-tab-bar>', 'a.html'],
+			['export const A = () => { useEffect(() => bar.addEventListener("tabchange", show)); return <nldd-tab-bar />; };', 'a.tsx'],
+		]) {
+			assert.deepEqual(await messagesIn(source, file), [renamed], `${file}: ${source}`);
+		}
+	});
+
+	it('leaves the new name, a longer name, a variable and a comment alone', async () => {
+		const source = 'bar.addEventListener("tab-change", show);\nbar.addEventListener("tabchanged", show);\nconst tabchange = 1;\n// bar.addEventListener("tabchange", show);';
+		assert.deepEqual(await messagesIn(source, 'a.js'), []);
+	});
+
+	it('renames the event with --fix, and reads a .ts file of a scan only for its events', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'src'));
+		writeFileSync(join(root, 'src/tabs.ts'), 'bar.addEventListener("nldd-text-editor-state", sync);\nconst el = html`<nldd-button></nldd-button>`;\n');
+		writeFileSync(join(root, 'src/A.vue'), '<template><nldd-kanban @nldd-move-denied="deny" /></template>\n');
+		const before = spawnSync(process.execPath, [cli, 'lint', '--format', 'json'], { cwd: root, encoding: 'utf8' });
+		const rules = JSON.parse(before.stdout).findings.map((finding) => finding.rule);
+		assert.ok(rules.includes('event-renamed'), before.stdout);
+		// The Lit template in the .ts file is not read in a scan, so the button without a name says nothing.
+		assert.ok(!rules.includes('button-needs-name'), before.stdout);
+		spawnSync(process.execPath, [cli, 'lint', '--fix'], { cwd: root, encoding: 'utf8' });
+		assert.equal(readFileSync(join(root, 'src/tabs.ts'), 'utf8'), 'bar.addEventListener("state-change", sync);\nconst el = html`<nldd-button></nldd-button>`;\n');
+		assert.equal(readFileSync(join(root, 'src/A.vue'), 'utf8'), '<template><nldd-kanban @move-denied="deny" /></template>\n');
+	});
+
+	it('has a successor for each removed event that the components still fire', () => {
+		for (const [name, { use }] of Object.entries(real.removedEvents)) {
+			if (use) assert.ok(real.events.includes(use), `${name} → ${use}`);
+		}
+		assert.equal(real.removedEvents.tabchange?.use, 'tab-change');
 	});
 });

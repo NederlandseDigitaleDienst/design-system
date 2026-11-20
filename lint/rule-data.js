@@ -81,6 +81,10 @@ export const BUILT_IN_RULES = {
 		severity: 'warn',
 		description: 'The design system has no token with this name, so the declaration that uses it does nothing.',
 	},
+	'event-renamed': {
+		severity: 'warn',
+		description: 'The component no longer fires an event with this name, so a listener on it is never called.',
+	},
 	'translation-key-not-found': {
 		severity: 'warn',
 		description: 'The element has no translation key with this name, so the text stays Dutch.',

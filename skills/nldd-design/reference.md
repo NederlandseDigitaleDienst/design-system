@@ -843,6 +843,12 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 | _(default)_ | Custom `<img>`, `<picture>` or inline `<svg>` (overrides the src-based default). An inline svg keeps its own colors and scales by its viewBox, so a drawing gets the same box, ratio and caption as a photo. Slotted media carries its own text alternative: an `alt` on the img (empty when it conveys nothing), or `role="img"` with an `aria-label`, `aria-labelledby` or `<title>` on the svg. The internal `error` listener is attached only to the built-in `<img>`, so slotted content does not trigger the error-state overlay automatically. Consumers slotting their own image are responsible for handling its error state (e.g. swapping the slot content or styling a fallback). |
 | `caption` | Rich caption content (overrides the `caption` attribute) |
 
+**CSS properties**
+
+| Property | Description |
+| --- | --- |
+| `--context-image-height` | Height of the image. A parent that gives the image a fixed box, such as the media area of nldd-hero, sets it to `100%`, so the image fills that box instead of taking the height of the photo |
+
 **Plain HTML it styles:** `<img>`, `<picture>`, `<source>`, `<svg>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
 ### `<nldd-keyboard-shortcut>`
@@ -887,7 +893,7 @@ A container for rich text content that automatically applies responsive typograp
 
 **Rules** (`nldd lint`)
 
-- `rich-text-color-no-effect`: `color` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
+- `rich-text-color-no-effect`: `color` is gone. `color="content"` was the default, so remove it. `color="inherit"` took the CSS `color` around it, so this text may have changed color: where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `rich-text-no-inline-content`: Bare text or an inline element is a direct child, and each one lands in a column of 0px. Wrap it in a block element such as `p` where the content is made, or put plain text in nldd-text.
 - `toc-heading-needs-id` (hint): Give every h2 an `id`, so the table of contents can jump to it.
 
@@ -1023,7 +1029,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 - `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
 - `slot-text-needs-element`: Text straight in a slot is what the attribute is for. Put it in `text`, or in a `<p>` or heading in the slot.
 - `tag-goes-below-title` (hint): Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.
-- `title-color-no-effect`: `color` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
+- `title-color-no-effect`: `color` is gone. `color="content"` was the default, so remove it. `color="inherit"` took the CSS `color` around it, so this text may have changed color: where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `title-custom-size-invalid`: This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `title-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `heading-level` or `size` for headings up to `display-1`.
 - `title-end-max-one-action` (hint): Keep one action at the end of the title. Put more actions in an nldd-toolbar below the title, not in this slot.
@@ -1124,6 +1130,12 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | Slot | Description |
 | --- | --- |
 | _(default)_ | The element the tooltip is shown for |
+
+**CSS properties**
+
+| Property | Description |
+| --- | --- |
+| `--context-tooltip-pointer-events` | Set it to `none` on the trigger when triggers sit close together, as in nldd-swatch-picker: a click on the tooltip then reaches the control underneath instead of selecting the trigger, and the pointer cannot rest on the tooltip itself. Unset, the tooltip takes the pointer as usual |
 
 **Events**
 
@@ -3195,7 +3207,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 | --- | --- |
 | `--context-inset-top` | Height of every bar above the content, sticky header included. Read it as `top` of anything sticky inside the page |
 | `--context-inset-bottom` | Height of every bar below the content, sticky footer included. Read it as `bottom` of anything sticky inside the page |
-| `--context-scroller-height` | Height of the area the content scrolls in, for sticky content that caps its own height. Unset while the document scrolls, so give it a fallback such as `100dvh` |
+| `--context-scroller-height` | Height of the area the content scrolls in, for sticky content that caps its own height. The height of the page's own scroller while it scrolls in its pane, and `100dvh` while the document scrolls |
 
 ### `<nldd-page-footer>`
 

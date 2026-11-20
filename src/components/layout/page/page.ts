@@ -63,7 +63,7 @@
  *
  * @cssprop --context-inset-top - Height of every bar above the content, sticky header included. Read it as `top` of anything sticky inside the page
  * @cssprop --context-inset-bottom - Height of every bar below the content, sticky footer included. Read it as `bottom` of anything sticky inside the page
- * @cssprop --context-scroller-height - Height of the area the content scrolls in, for sticky content that caps its own height. Unset while the document scrolls, so give it a fallback such as `100dvh`
+ * @cssprop --context-scroller-height - Height of the area the content scrolls in, for sticky content that caps its own height. The height of the page's own scroller while it scrolls in its pane, and `100dvh` while the document scrolls
  */
 import { LitElement, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';

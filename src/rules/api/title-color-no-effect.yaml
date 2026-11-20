@@ -1,7 +1,7 @@
 severity: warn
 context: 'nldd-title[color]'
 removed: ['color']
-message: '`color` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.'
+message: '`color` is gone. `color="content"` was the default, so remove it. `color="inherit"` took the CSS `color` around it, so this text may have changed color: where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.'
 examples:
   passed: ['<nldd-title></nldd-title>']
   failed: ['<nldd-title color="inherit"></nldd-title>', '<nldd-title color="content"></nldd-title>']

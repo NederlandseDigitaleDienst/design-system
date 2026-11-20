@@ -5,7 +5,7 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
-import { declarations, enclosingBlock, isDesignSystemCss, TOKEN_PREFIX, tokenReferences, withoutComments } from './css.js';
+import { declarationsIn, designSystemTester, enclosingBlock, TOKEN_PREFIX, tokenReferencesIn, withoutComments } from './css.js';
 import { createEngine } from './engine.js';
 import { canFix, stuckTags } from './fix.js';
 import { applyWrappers, parseSource, parseStylesheet, readerOf } from './frontends.js';
@@ -195,13 +195,56 @@ function createPositions(source) {
 /** Files where `//` is no comment: in markup it starts a url, and a built page is one line. */
 const MARKUP_FILE = /\.(html?|j2|jinja2?|tmpl|gohtml|vue|astro|md)$/;
 
+const STYLESHEET_FILE = /\.(css|scss|sass|less|styl|pcss)$/;
+
+/** Inside markup, `//` is a comment again in the script of a component and in Sass, Less and Stylus. */
+const LINE_COMMENT_STYLE = /\blang\s*=\s*["']?(scss|sass|less|stylus)\b/i;
+
+/**
+ * The source with its comments blanked, region by region, and where its stylesheets are:
+ * a whole stylesheet file, or each `<style>` in markup.
+ * @returns {{ plain: string, sheets: [number, number][] }}
+ */
+function codeRegions(source, filename) {
+	if (STYLESHEET_FILE.test(filename)) return { plain: withoutComments(source), sheets: [[0, source.length]] };
+	if (!MARKUP_FILE.test(filename)) return { plain: withoutComments(source), sheets: [] };
+	const markup = withoutComments(source, false);
+	const component = /\.(vue|astro)$/.test(filename);
+	const sheets = [];
+	const parts = [];
+	let at = 0;
+	const region = (start, end, lineComments) => {
+		parts.push(markup.slice(at, start), withoutComments(source.slice(start, end), lineComments, true));
+		at = end;
+	};
+	const frontmatter = /\.astro$/.test(filename) && /^---\r?\n[\s\S]*?\n---/.exec(source);
+	if (frontmatter) region(4, frontmatter[0].length - 3, true);
+	for (const match of source.matchAll(/<(script|style)\b([^>]*)>([\s\S]*?)<\/\1\s*>/gi)) {
+		// A tag inside an HTML comment is blanked in the markup.
+		if (match.index < at || markup[match.index] !== '<') continue;
+		const start = match.index + match[1].length + match[2].length + 2;
+		const end = start + match[3].length;
+		if (match[1].toLowerCase() === 'style') {
+			sheets.push([start, end]);
+			region(start, end, LINE_COMMENT_STYLE.test(match[2]));
+		} else if (component) region(start, end, true);
+	}
+	parts.push(markup.slice(at));
+	return { plain: parts.join(''), sheets };
+}
+
 /**
  * A stylesheet a page links to, on disk next to it: relative to the page, or from the
  * root of the site for a path that starts with a slash, as in a built site.
  */
 function linkedFile(href, filename) {
 	if (typeof href !== 'string' || !href || /^([a-z]+:|\/\/)/i.test(href)) return undefined;
-	const path = decodeURI(href.replace(/[?#].*$/, ''));
+	let path;
+	try {
+		path = decodeURI(href.replace(/[?#].*$/, ''));
+	} catch {
+		return undefined;
+	}
 	if (extname(path) !== '.css') return undefined;
 	if (!path.startsWith('/')) {
 		const file = join(dirname(filename), path);
@@ -227,11 +270,12 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		translations: data.translations ?? {},
 		removedKeys: data.removedKeys ?? {},
 	};
-	const engine = createEngine({ classes: data.classes, tags: data.tags, designSystemCss: data.designSystemCss });
-	const isDesignSystemBlock = (css) => isDesignSystemCss(css, data.designSystemCss ?? {});
 	const tokens = new Set([...(data.tokens ?? []), ...projectTokens]);
+	const tokenList = [...tokens];
 	const removedTokens = data.removedTokens ?? {};
 	const internalContext = new Set(data.internalContext ?? []);
+	const isDesignSystemBlock = designSystemTester(data.designSystemCss ?? {}, (name) => tokens.has(name) || internalContext.has(name));
+	const engine = createEngine({ classes: data.classes, tags: data.tags, designSystemCss: data.designSystemCss, isDesignSystemCss: isDesignSystemBlock });
 	const internalMessage = (name, verb) => `\`${name}\` is wiring between design system components, so ${verb} it is not supported.`;
 	// Longest first, so --_button-group-gap belongs to button-group and not to button.
 	const components = Object.keys(data.tags)
@@ -278,9 +322,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	 * word, such as the line height a font token ends in, or the one token that starts with it.
 	 */
 	function longerNames(name) {
-		const longer = [...tokens].filter((token) => token.startsWith(`${name}-`) && !token.slice(name.length + 1).includes('-'));
+		const longer = tokenList.filter((token) => token.startsWith(`${name}-`) && !token.slice(name.length + 1).includes('-'));
 		// `--primitives-font-family-mono` for `-monospace`: one token starts with what was written.
-		const starting = [...tokens].filter((token) => token.startsWith(name));
+		// Not after a number: `--primitives-area-16` is no short `--primitives-area-160`.
+		const starting = /\d$/.test(name) ? [] : tokenList.filter((token) => token.startsWith(name));
 		if (longer.length < 2 && starting.length === 1) return ` The closest is \`${starting[0]}\`.`;
 		if (longer.length < 2 || longer.length > 6) return '';
 		return ` The tokens with this name end in ${longer.map((token) => `\`${token.slice(name.length)}\``).join(', ').replace(/, ([^,]*)$/, ' or $1')}.`;
@@ -288,20 +333,57 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 
 	const LINK_CONTEXT = ['--context-link-color', '--context-link-is-hovered-color', '--context-link-is-active-color'];
 
+	const removedEvents = data.removedEvents ?? {};
+	const eventPatterns = (() => {
+		const names = Object.keys(removedEvents).sort((a, b) => b.length - a.length).map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+		if (names.length === 0) return [];
+		const name = `(${names.join('|')})`;
+		return [
+			// addEventListener('tabchange'), and an emitter's on('tabchange') or once(…).
+			new RegExp(`(?:\\b(?:add|remove)EventListener|(?<![\\w$])(?:on|once|off))\\(\\s*(['"\`])${name}\\1`, 'dg'),
+			// @tabchange and v-on: in Vue, Lit and Alpine, hx-on in htmx.
+			new RegExp(`(?<![\\w-])(?:@|v-on:|x-on:|(?:data-)?hx-on(?::|::|-|--))${name}(?![\\w-])`, 'dg'),
+			// (tabchange)="…" in Angular.
+			new RegExp(`\\(${name}\\)\\s*=`, 'dg'),
+		];
+	})();
+
+	/** A listener on the name of an event a component no longer fires: it is never called, and nothing says so. */
+	function eventFindings(source, filename) {
+		if (eventPatterns.length === 0) return [];
+		const { plain } = codeRegions(source, filename);
+		const findings = [];
+		for (const pattern of eventPatterns) {
+			pattern.lastIndex = 0;
+			for (const match of plain.matchAll(pattern)) {
+				const group = match.length - 1;
+				const name = match[group];
+				const [offset, endOffset] = match.indices[group];
+				const { last, use } = removedEvents[name];
+				const message = use
+					? `\`${name}\` was renamed to \`${use}\` after ${last}, so a listener on the old name is never called.`
+					: `\`${name}\` is no longer fired after ${last}, so this listener is never called.`;
+				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use ? { fix: { event: use } } : {}) });
+			}
+		}
+		return findings;
+	}
+
 	/**
 	 * The design system's tokens the app names, and the internal variables of a component it
 	 * sets. Read from the text, so a stylesheet, a style attribute and a style object
 	 * in a script all count. A token the file or the project declares itself is its own.
 	 */
 	function cssFindings(source, filename, roots) {
-		const lineComments = !MARKUP_FILE.test(filename);
+		const { plain, sheets } = codeRegions(source, filename);
 		const inDesignSystemCss = designSystemRanges(roots);
-		const declared = declarations(source, lineComments).filter((each) => !inDesignSystemCss(each.offset));
+		const allDeclared = declarationsIn(plain);
+		const declared = allDeclared.filter((each) => !inDesignSystemCss(each.offset));
 		const ownTokens = new Set(declared.map(({ name }) => name).filter((name) => TOKEN_PREFIX.test(name)));
 		const findings = [];
 		const report = (rule, message, { name, offset }, fix) =>
 			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, tag: name, offset, endOffset: offset + name.length, fix });
-		for (const reference of tokenReferences(source, lineComments)) {
+		for (const reference of tokenReferencesIn(plain)) {
 			const { name, offset, fallback } = reference;
 			if (tokens.has(name) || ownTokens.has(name) || inDesignSystemCss(offset)) continue;
 			if (internalContext.has(name)) {
@@ -326,14 +408,18 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			if (!component) continue;
 			report('local-variable-no-override', `\`${declaration.name}\` is internal to nldd-${component}, so setting it is not supported.`, declaration);
 		}
-		const plain = withoutComments(source, lineComments);
 		const linkBlocks = new Set();
-		for (const declaration of declared) {
+		// Also in a block that looks like the design system's: it sets all three, so `:root { --context-link-color: red }` is the app's.
+		for (const declaration of allDeclared) {
 			if (!LINK_CONTEXT.includes(declaration.name)) continue;
-			const { start, end } = enclosingBlock(plain, declaration.offset);
+			const { offset, name } = declaration;
+			const sheet = sheets.find(([from, to]) => offset >= from && offset < to);
+			const quotedKey = /["'`]/.test(plain[offset - 1] ?? '') && /["'`]/.test(plain[offset + name.length] ?? '');
+			const scope = sheet ? { quotes: false, strings: true, from: sheet[0], to: sheet[1] } : quotedKey ? { quotes: false } : {};
+			const { start, end } = enclosingBlock(plain, offset, scope);
 			if (linkBlocks.has(start)) continue;
 			linkBlocks.add(start);
-			const set = new Set(declared.filter(({ offset }) => offset >= start && offset < end).map(({ name }) => name));
+			const set = new Set(allDeclared.filter(({ offset }) => offset >= start && offset < end).map(({ name }) => name));
 			const missing = LINK_CONTEXT.filter((name) => !set.has(name));
 			if (missing.length === 0) continue;
 			report('link-context-needs-states', `Set ${missing.map((name) => `\`${name}\``).join(' and ')} here too, or a link on this surface turns back to the default color.`, declaration);
@@ -391,8 +477,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			for (const rule of rules) {
 				for (const { node, outcome } of engine.evaluate(rule, root)) {
 					counts[outcome]++;
-					// A name that is gone is wrong whatever the binding holds.
-					const namesRemoved = rule.removed?.some((name) => node.attrs.get(name) === BOUND);
+					// A name that is gone is wrong whatever the binding holds, but not for a rule about one of its values.
+					const namesRemoved = !testsRemovedValue(rule) && rule.removed?.some((name) => node.attrs.get(name) === BOUND);
 					if (outcome !== 'failed' && !(outcome === 'cantTell' && namesRemoved)) continue;
 					findings.push({
 						rule: rule.id,
@@ -409,7 +495,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	}
 
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
-	async function lintSource(source, filename) {
+	async function lintSource(source, filename, { only } = {}) {
+		if (only === 'events') return lintEvents(source, filename);
 		const parsed = applyWrappers(await parseSource(source, filename), wrappers);
 		const isPlainHtml = /\.(html?|j2|jinja2?|tmpl|gohtml)$/.test(filename);
 		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
@@ -439,7 +526,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				...position(node.offset),
 			}))
 			.concat(
-				[...cssFindings(source, filename, roots), ...unreadMarkup(source, filename, parsed)]
+				[...cssFindings(source, filename, roots), ...eventFindings(source, filename), ...unreadMarkup(source, filename, parsed)]
 					.filter(({ rule }) => ranInSource(rule))
 					.map((finding) => ({ ...finding, ...position(finding.offset) })),
 			);
@@ -467,6 +554,19 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			.filter((finding) => finding.severity !== 'off');
 		located.sort((a, b) => a.line - b.line || a.column - b.column);
 		return { findings: located, counts };
+	}
+
+	/** A script the scan reads only for the events it listens to, such as a `.ts` file. */
+	function lintEvents(source, filename) {
+		const { suppressed } = readSuppressions(source, canonical);
+		const position = createPositions(source);
+		const findings = eventFindings(source, filename)
+			.map((finding) => ({ ...finding, ...position(finding.offset) }))
+			.filter((finding) => !suppressed.get(finding.line)?.has(finding.rule))
+			.map((finding) => ({ ...finding, severity: severities[finding.rule] ?? finding.severity }))
+			.filter((finding) => finding.severity !== 'off');
+		for (const finding of findings) if (finding.fix && !canFix(source, finding)) finding.fix = undefined;
+		return { findings, counts: {} };
 	}
 
 	/** Evaluates one rule on a snippet, for the examples of that rule. */

@@ -781,7 +781,7 @@
 	"--semantics-buttons-danger-tinted-is-hovered-background-color": {"last":"0.8.35"},
 	"--semantics-buttons-danger-tinted-is-hovered-content-color": {"last":"0.8.35"},
 	"--semantics-buttons-inherit-filled-background-color": {"last":"0.22.0","use":"--semantics-buttons-content-filled-background-color"},
-	"--semantics-buttons-inherit-filled-content-color": {"last":"0.22.0","use":"--context-background-color"},
+	"--semantics-buttons-inherit-filled-content-color": {"last":"0.22.0"},
 	"--semantics-buttons-inherit-filled-content-secondary-color": {"last":"0.22.0","use":"--semantics-buttons-content-filled-content-secondary-color"},
 	"--semantics-buttons-inherit-filled-divider-color": {"last":"0.22.0","use":"--semantics-buttons-content-filled-divider-color"},
 	"--semantics-buttons-inherit-filled-highlight-border-color": {"last":"0.22.0","use":"--semantics-buttons-content-filled-highlight-border-color"},

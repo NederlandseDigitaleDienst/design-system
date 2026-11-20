@@ -7032,6 +7032,12 @@
             "source",
             "svg"
           ],
+          "cssProperties": [
+            {
+              "name": "--context-image-height",
+              "description": "Height of the image. A parent that gives the image a fixed box, such as the media area of nldd-hero, sets it to `100%`, so the image fills that box instead of taking the height of the photo"
+            }
+          ],
           "keywords": [
             "afbeelding",
             "foto"
@@ -8843,6 +8849,12 @@
             {
               "name": "dismiss",
               "description": "When a user presses Escape while `open=true`. Does not bubble, so a banner or notification around the tooltip does not take it for its own. The consumer owns the open lifecycle from there (we cannot clear `open` on our own), so this event is the consumer's chance to set `open` back to `false`. WCAG 1.4.13: a persistent hover or focus overlay has to be dismissible without moving focus."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--context-tooltip-pointer-events",
+              "description": "Set it to `none` on the trigger when triggers sit close together, as in nldd-swatch-picker: a click on the tooltip then reaches the control underneath instead of selecting the trigger, and the pointer cannot rest on the tooltip itself. Unset, the tooltip takes the pointer as usual"
             }
           ],
           "keywords": [
@@ -42537,7 +42549,7 @@
             },
             {
               "name": "--context-scroller-height",
-              "description": "Height of the area the content scrolls in, for sticky content that caps its own height. Unset while the document scrolls, so give it a fallback such as `100dvh`"
+              "description": "Height of the area the content scrolls in, for sticky content that caps its own height. The height of the page's own scroller while it scrolls in its pane, and `100dvh` while the document scrolls"
             }
           ],
           "keywords": [
