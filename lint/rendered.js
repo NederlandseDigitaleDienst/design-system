@@ -67,6 +67,15 @@ export function snapshotInPage({ properties }) {
 		return names.filter(Boolean).join(' < ');
 	};
 
+	// A component keeps its own state in `--_*` variables on its host and on its
+	// children, in the style attribute. Those are not the app's. An app that sets
+	// one itself wrote that in its source, where the linter reads it.
+	const ownStyle = (element) =>
+		[...element.style]
+			.filter((property) => !property.startsWith('--_'))
+			.map((property) => `${property}: ${element.style.getPropertyValue(property)}${element.style.getPropertyPriority(property) ? ' !important' : ''}`)
+			.join('; ');
+
 	const defaults = new Map();
 	const defaultsOf = (tag) => {
 		if (!defaults.has(tag)) {
@@ -89,7 +98,10 @@ export function snapshotInPage({ properties }) {
 			}
 			if (node.nodeType !== Node.ELEMENT_NODE || LEFT_OUT.has(node.localName)) return;
 			const ours = node.localName.startsWith('nldd-');
-			const attributes = [...node.attributes].map(({ name, value }) => (value === '' ? name : `${name}="${escapeValue(value)}"`));
+			const attributes = [...node.attributes]
+				.map(({ name, value }) => [name, name === 'style' ? ownStyle(node) : value])
+				.filter(([name, value]) => name !== 'style' || value !== '')
+				.map(([name, value]) => (value === '' ? name : `${name}="${escapeValue(value)}"`));
 			if (ours) {
 				for (const property of properties) {
 					const name = kebab(property);
@@ -127,6 +139,9 @@ export function snapshotInPage({ properties }) {
 	const links = [...document.querySelectorAll('a[href]')].map((link) => link.href);
 	return { documents, links };
 }
+
+/** The rules about a name the linter does not know. On a running page a component may have written it. */
+const WRITTEN_BY_COMPONENTS = ['unknown-attribute', 'unknown-slot'];
 
 /** `/aanvragen/A-1042?tab=2` as a file name: `aanvragen/A-1042_tab=2`. */
 const slugOf = (url) => {
@@ -185,6 +200,10 @@ export async function lintRendered(data, { root, url, paths = [], crawl = false,
 							// A hint is advice for whoever writes the source. On a running page
 							// components write `style`, `id` and more, which it would take for the app's.
 							.filter(({ severity }) => severity !== 'hint')
+							// A component notes its state in attributes of its own, on itself and on what
+							// it holds: `loaded` on an image, `slot="help"` on a help text. In the document
+							// those cannot be told from one the app wrote, and what the app wrote is in its source.
+							.filter(({ rule }) => !WRITTEN_BY_COMPONENTS.includes(rule))
 							// No fix: the line is in what the browser built, and the source is elsewhere.
 							.map(({ fix: _fix, ...finding }) => (owners[finding.line] ? { ...finding, renderedBy: owners[finding.line] } : finding)),
 					});

@@ -40,6 +40,7 @@ describe('nldd lint --url', () => {
 			'': `
 				<nldd-text id="filled"></nldd-text>
 				<nldd-text><p>Dakisolatie</p></nldd-text>
+				<nldd-text id="stateful" style="color: red"><p>Warmtepomp</p></nldd-text>
 				<nldd-accordion><nldd-accordion-item id="named"></nldd-accordion-item></nldd-accordion>
 				<a href="/tweede/">Tweede</a>
 				<style>nldd-text { --_text-color: red; }</style>
@@ -48,6 +49,11 @@ describe('nldd lint --url', () => {
 					document.getElementById('filled').textContent = 'In behandeling';
 					// As a framework may set it: a property, and no attribute in the document.
 					document.getElementById('named').text = 'Hoe lang duurt het?';
+					// As a component keeps its own state: a variable of its own in the style attribute,
+					// and an attribute that is not in its API.
+					document.getElementById('stateful').style.setProperty('--_text-color', 'blue');
+					document.getElementById('stateful').setAttribute('measured', '');
+					document.getElementById('stateful').setAttribute('slot', 'internal');
 				</script>`,
 			tweede: '<nldd-text><p>Goed</p></nldd-text>',
 		}));
@@ -75,6 +81,17 @@ describe('nldd lint --url', () => {
 	it('leaves the stylesheets of the page alone: those are read from the source', async () => {
 		const session = await lint({});
 		assert.ok(!rulesOf(session).includes('local-variable-no-override'));
+	});
+
+	it('leaves out the variables a component keeps in a style attribute, and keeps the rest of it', async () => {
+		const [{ source }] = (await lint({})).results;
+		assert.match(source, /<nldd-text id="stateful" style="color: red" measured slot="internal">/);
+	});
+
+	it('does not report an attribute or a slot it does not know: a component may have written it', async () => {
+		const rules = rulesOf(await lint({}));
+		assert.ok(!rules.includes('unknown-attribute'));
+		assert.ok(!rules.includes('unknown-slot'));
 	});
 
 	it('opens the pages it is given, and with crawl the ones they link to', async () => {
