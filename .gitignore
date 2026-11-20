@@ -50,3 +50,4 @@ www-dist
 # ZAD CLI: project and API key of the active project (secret)
 .env.zadctl
 www/.generated
+scripts/perf/out/

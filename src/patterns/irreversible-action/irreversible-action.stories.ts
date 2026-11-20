@@ -15,4 +15,4 @@ export const Standaard = patternStory(markup, (root) => {
 			dialog.open = false;
 		});
 	});
-});
+}, 480);

@@ -243,11 +243,14 @@ describe('nldd-status-bar – at the top of the page', () => {
 
 	it('carries its color on above the page only when it touches the top', async () => {
 		wrap = await fixture('<div style="position: absolute; inset: 0 0 auto 0;"><nldd-status-bar text="Gepland onderhoud"></nldd-status-bar></div>');
+		// Measured in one pass with the other bars, a microtask after the render.
+		await new Promise((resolve) => setTimeout(resolve));
 		expect(wrap.querySelector('nldd-status-bar')!.hasAttribute('data-at-top')).toBe(true);
 	});
 
 	it('leaves it out lower on the page, where it would cover what is above', async () => {
 		wrap = await fixture('<div style="position: absolute; inset: 40px 0 auto 0;"><nldd-status-bar text="Gepland onderhoud"></nldd-status-bar></div>');
+		await new Promise((resolve) => setTimeout(resolve));
 		expect(wrap.querySelector('nldd-status-bar')!.hasAttribute('data-at-top')).toBe(false);
 	});
 });

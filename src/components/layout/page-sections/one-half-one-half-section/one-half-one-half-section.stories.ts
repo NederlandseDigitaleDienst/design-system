@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './one-half-one-half-section.js';
+import '../../page/page.js';
 import '../../../content/title/title.js';
 import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
@@ -25,6 +26,7 @@ export default {
 	component: 'nldd-one-half-one-half-section',
 	tags: ['autodocs'],
 	parameters: {
+		layout: 'fullscreen',
 		componentSource: {
 			file: 'src/components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
@@ -45,43 +47,47 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-one-half-one-half-section
-			${pageSectionAttrs(args)}
-			vertical-alignment=${args.verticalAlignment === 'top' ? nothing : args.verticalAlignment}
-		>
-			<nldd-title
-				slot="header"
-				text="Sectietitel"
-				heading-level="2"
-			></nldd-title>
-			<nldd-rich-text>
-				<h3>Linkerkolom</h3>
-				<p>Dit is de linkerkolom. Beide kolommen nemen de helft van de beschikbare breedte in.</p>
-				<p>De kolommen wrappen automatisch wanneer de beschikbare breedte te klein wordt.</p>
-			</nldd-rich-text>
-			<nldd-rich-text slot="right">
-				<h3>Rechterkolom</h3>
-				<p>Dit is de rechterkolom. Gebruik beide kolommen voor gelijkwaardige inhoud.</p>
-			</nldd-rich-text>
-			<nldd-rich-text slot="footer">
-				<p>Voetnoot of aanvullende informatie.</p>
-			</nldd-rich-text>
-		</nldd-one-half-one-half-section>
+		<nldd-page>
+			<nldd-one-half-one-half-section
+				${pageSectionAttrs(args)}
+				vertical-alignment=${args.verticalAlignment === 'top' ? nothing : args.verticalAlignment}
+			>
+				<nldd-title
+					slot="header"
+					text="Sectietitel"
+					heading-level="2"
+				></nldd-title>
+				<nldd-rich-text>
+					<h3>Linkerkolom</h3>
+					<p>Dit is de linkerkolom. Beide kolommen nemen de helft van de beschikbare breedte in.</p>
+					<p>De kolommen wrappen automatisch wanneer de beschikbare breedte te klein wordt.</p>
+				</nldd-rich-text>
+				<nldd-rich-text slot="right">
+					<h3>Rechterkolom</h3>
+					<p>Dit is de rechterkolom. Gebruik beide kolommen voor gelijkwaardige inhoud.</p>
+				</nldd-rich-text>
+				<nldd-rich-text slot="footer">
+					<p>Voetnoot of aanvullende informatie.</p>
+				</nldd-rich-text>
+			</nldd-one-half-one-half-section>
+		</nldd-page>
 	`,
 };
 
 export const ZonderHeaderEnFooter = {
 	render: () => html`
-	<nldd-one-half-one-half-section>
-		<nldd-rich-text>
-			<h3>Linkerkolom</h3>
-			<p>De linkerkolom zonder header en footer.</p>
-		</nldd-rich-text>
-		<nldd-rich-text slot="right">
-			<h3>Rechterkolom</h3>
-			<p>De rechterkolom zonder header en footer.</p>
-		</nldd-rich-text>
-	</nldd-one-half-one-half-section>
+	<nldd-page>
+		<nldd-one-half-one-half-section>
+			<nldd-rich-text>
+				<h3>Linkerkolom</h3>
+				<p>De linkerkolom zonder header en footer.</p>
+			</nldd-rich-text>
+			<nldd-rich-text slot="right">
+				<h3>Rechterkolom</h3>
+				<p>De rechterkolom zonder header en footer.</p>
+			</nldd-rich-text>
+		</nldd-one-half-one-half-section>
+	</nldd-page>
 `,
 	parameters: { controls: { disable: true } },
 };

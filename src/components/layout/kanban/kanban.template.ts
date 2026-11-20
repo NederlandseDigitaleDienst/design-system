@@ -15,7 +15,7 @@ export function kanbanTemplate(component: NLDDKanban) {
 			tabindex=${component._canScrollLeft || component._canScrollRight ? '0' : nothing}
 			@scroll=${component._updateScroll}
 		>
-			<slot @slotchange=${component._updateScroll}></slot>
+			<slot @slotchange=${component._handleSlotChange}></slot>
 		</div>
 		<div class="kanban__announcer"
 			role="status"

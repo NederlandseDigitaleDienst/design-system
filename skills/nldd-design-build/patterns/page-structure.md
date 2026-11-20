@@ -855,6 +855,8 @@ Zet zelf in elke titel de kop van het juiste niveau en zorg voor één `h1` per 
 - `page-footer-goes-in-page`: Put nldd-page-footer in the `footer` slot of nldd-page, which makes it the contentinfo landmark and sets its width and spacing.
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
+- `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
+- `section-no-section`: Put this section next to the other one in nldd-page, not inside it: a section lays out by the width of the page.
 - `website-no-sticky-header`: A website lets its header scroll away: a fixed one takes room from the content.
 
 Hints: zo is het bedoeld. Die laten niets falen.

@@ -101,7 +101,7 @@ interface Group {
 
 function groupOverlapping(anns: CleanAnn[]): Group[] {
 	const groups: Group[] = [];
-	for (const a of [...anns].sort((x, y) => x.from - y.from || x.to - y.to)) {
+	for (const a of anns.toSorted((x, y) => x.from - y.from || x.to - y.to)) {
 		const last = groups[groups.length - 1];
 		// Strict overlap only: two ranges that merely touch (one ends where the next
 		// begins, e.g. [0,3] and [3,6]) stay separate tints/badges. The sentinel

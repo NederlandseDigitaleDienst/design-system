@@ -3,7 +3,9 @@
  *
  * A section that spans the full width without horizontal padding.
  * Useful for background colors, images, or other content that runs
- * edge to edge. Vertical padding and gap adjust via container queries.
+ * edge to edge. Vertical padding and gap are responsive.
+ * Like every section it goes in an nldd-page, never in another section, and
+ * lays out by the width of that page.
  *
  * @element nldd-full-bleed-section
  * @related nldd-simple-section, nldd-hero

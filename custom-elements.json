@@ -4671,6 +4671,40 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.steps.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "runSteps",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "all",
+              "type": {
+                "text": "Steps[]"
+              }
+            }
+          ],
+          "description": "Runs the steps of many toolbars side by side: every read of a round before\nany write of it. A toolbar that measures by itself writes, reads, writes\nagain, and the next toolbar's read lays out the page that write made dirty:\na layout per toolbar per step, of a page that grows with every toolbar. Side\nby side it is a layout per step, however many toolbars there are."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "runSteps",
+          "declaration": {
+            "name": "runSteps",
+            "module": "src/components/actions/toolbar/toolbar.steps.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/actions/toolbar/toolbar.story-sync.ts",
       "declarations": [
         {
@@ -38234,7 +38268,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A section that spans the full width without horizontal padding. Useful for background colors, images, or other content that runs edge to edge. Vertical padding and gap adjust via container queries.",
+          "description": "A section that spans the full width without horizontal padding. Useful for background colors, images, or other content that runs edge to edge. Vertical padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.",
           "name": "NLDDFullBleedSection",
           "members": [
             {
@@ -38818,7 +38852,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color that it passes on, so the text, links and icons on it keep their contrast. `main-background=\"base\"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.",
+          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color that it passes on, so the text, links and icons on it keep their contrast. `main-background=\"base\"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.",
           "name": "NLDDHero",
           "members": [
             {
@@ -39541,7 +39575,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A section with two equal columns side by side. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.",
+          "description": "A section with two equal columns side by side. The columns stand side by side on a page of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.",
           "name": "NLDDOneHalfOneHalfSection",
           "members": [
             {
@@ -40065,7 +40099,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.",
+          "description": "A section with a 1/3 sidebar on the left and 2/3 main content on the right. The columns stand side by side on a page of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.",
           "name": "NLDDOneThirdTwoThirdsSection",
           "members": [
             {
@@ -40643,7 +40677,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only=\"collapsed\"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default, with the `sidebar-label` as title and a \"Sluit\" button. Replace it through the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy: the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport. A sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
+          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only=\"collapsed\"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default, with the `sidebar-label` as title and a \"Sluit\" button. Replace it through the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy: the light DOM (and its state) is preserved across the switch. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page, not the viewport. A page in a narrow split-view pane collapses the sidebar to the sheet just like a narrow window, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. A resize across the breakpoint switches a frame after it paints, so the old layout shows for one frame. Inherits block `padding` and `height` from PageSectionMixin.",
           "name": "NLDDSidebarSection",
           "members": [
             {
@@ -41304,7 +41338,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A basic section with responsive padding and gap based on container size. Contains optional header and footer slots. The padding and spacing between slots adjust automatically via container queries. Use one section per content block and repeat the section rather than building columns inside one: the section sets the reading width and the padding itself. For two columns there are nldd-one-half-one-half-section, nldd-two-thirds-one-third-section, nldd-one-third-two-thirds-section and nldd-sidebar-section. Give a section its surface with `background` instead of a background color of your own; that is how the components inside know which surface they are on.",
+          "description": "A basic section with responsive padding and gap. Contains optional header and footer slots. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page. Use one section per content block and repeat the section rather than building columns inside one: the section sets the reading width and the padding itself. For two columns there are nldd-one-half-one-half-section, nldd-two-thirds-one-third-section, nldd-one-third-two-thirds-section and nldd-sidebar-section. Give a section its surface with `background` instead of a background color of your own; that is how the components inside know which surface they are on.",
           "name": "NLDDSimpleSection",
           "members": [
             {
@@ -41848,7 +41882,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns stand side by side in a section of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap adjust via container queries.",
+          "description": "A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns stand side by side on a page of 50rem (800px) or wider and stack below that, at the same width for every section with two columns. Padding and gap are responsive. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page.",
           "name": "NLDDTwoThirdsOneThirdSection",
           "members": [
             {
@@ -50448,7 +50482,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, and below it the main bar with the website title, a back button, the global navigation and the utility navigation. On narrow widths the global navigation moves into a menu sheet behind the menu button. The top bar of a website, and of nothing else: put it in the `header` slot of an `nldd-page`. Do not combine it with a split view. A split view is the layout of an application, whose panes carry a bar of their own, usually an `nldd-toolbar`, and a site header above it gives a second layer of navigation and a second thing that scrolls. Does a page need a sidebar under this bar, use an `nldd-sidebar-section` inside that `nldd-page`.",
+          "description": "The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, and below it the main bar with the website title, a back button, the global navigation and the utility navigation. On a narrow screen the global navigation moves into a menu sheet behind the menu button. The bar spans the window, so it follows the window's width (sm, md, lg) and not that of its parent: put it in a narrower box and it still lays out for the window. The top bar of a website, and of nothing else: put it in the `header` slot of an `nldd-page`. Do not combine it with a split view. A split view is the layout of an application, whose panes carry a bar of their own, usually an `nldd-toolbar`, and a site header above it gives a second layer of navigation and a second thing that scrolls. Does a page need a sidebar under this bar, use an `nldd-sidebar-section` inside that `nldd-page`.",
           "name": "NLDDTopNavigationBar",
           "members": [
             {
@@ -53900,6 +53934,48 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/after-parse.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "afterParse",
+          "return": {
+            "type": {
+              "text": ""
+            }
+          },
+          "parameters": [
+            {
+              "name": "task",
+              "type": {
+                "text": "() => void"
+              }
+            },
+            {
+              "name": "doc",
+              "default": "document",
+              "type": {
+                "text": "Document"
+              },
+              "description": "the document the work is in, the host's `ownerDocument`"
+            }
+          ],
+          "description": "Holds on to work over a whole parent, such as the rows of a list, while the\nHTML parser is still putting children in it.\n\nThe parser runs the microtasks after every custom element it creates, so a\nMutationObserver, a `slotchange` and a `queueMicrotask` all come once per\nchild while the page loads, and none of them coalesce anything. Work that\nwalks every child then runs once per child, and a page with 6000 rows in its\nHTML takes minutes instead of a second.\n\nWhile the document is loading, this runs `task` at the next frame or when\nthe parse is done, whichever comes first, and only once. A frame comes\nbefore every paint, so the page never shows the state before the task. Once\nthe document has been parsed it returns false and leaves the timing to the\ncaller, so what happens after the load stays as it was.\n\nCoalescing is the caller's: keep a flag, and let `task` clear it.\n\n```ts\nif (this._pending) return;\nthis._pending = true;\nconst run = () => { this._pending = false; this._refresh(); };\nif (!afterParse(run, this.ownerDocument)) queueMicrotask(run);\n```"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "afterParse",
+          "declaration": {
+            "name": "afterParse",
+            "module": "src/utilities/after-parse.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/ancestor-scroll.ts",
       "declarations": [
         {
@@ -56660,6 +56736,85 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/frame-pass.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Work for many hosts at the next animation frame, in one callback.\n\nA host that asks for its own frame gets its own callback, and the browser\nruns the microtasks between two callbacks: a Lit render of the host before\nlands between them, so each host reads a layout that the one before it has\njust changed. One frame for all of them lets `run` read for every host\nfirst and write after, so the page lays out once.\n\nLike LayoutPass (layout-pass.ts), but at the frame the hosts asked for,\nfor work that waited a frame before it was shared. A hidden tab runs no\nframes, so the pass waits until the tab shows again.",
+          "name": "FramePass",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_pending",
+              "privacy": "private",
+              "default": "new Set<T>()"
+            },
+            {
+              "kind": "field",
+              "name": "_frame",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "schedule",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "host",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "Adds a host to the next frame."
+            },
+            {
+              "kind": "method",
+              "name": "cancel",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "host",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "Takes a host out of the next frame, when it left the page."
+            },
+            {
+              "kind": "field",
+              "name": "_flush",
+              "privacy": "private"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FramePass",
+          "declaration": {
+            "name": "FramePass",
+            "module": "src/utilities/frame-pass.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/implicit-submission.ts",
       "declarations": [
         {
@@ -57316,6 +57471,114 @@
           "declaration": {
             "name": "InterestInvoker",
             "module": "src/utilities/interest-invoker.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/layout-pass.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Layout reads for many hosts, in one pass.\n\nA host that measures itself when it renders (an offsetHeight, a\ngetComputedStyle) forces the browser to lay out the page as it is at that\nmoment. A page with many of them, each reading after the previous one wrote,\nlays out once per host, and each of those layouts is of a page that has\ngrown: quadratic. Reading for all of them first and writing after is one\nlayout.\n\n`LayoutPass` collects the hosts that ask in the same tick, and runs them\ntogether: at the next microtask, or after the parse while the page is still\nloading (see afterParse). `sharedResizeObserver` does the same for resize\nnotifications: one observer for every host of a component, so its callback\ngets them all at once, where an observer per host calls back once per host.",
+          "name": "LayoutPass",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_pending",
+              "privacy": "private",
+              "default": "new Set<T>()"
+            },
+            {
+              "kind": "method",
+              "name": "schedule",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "host",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "doc",
+                  "default": "document",
+                  "type": {
+                    "text": "Document"
+                  }
+                }
+              ],
+              "description": "Adds a host to the next pass. `doc` only counts for the first host of a\npass: a host from another document, such as an iframe, runs when the\npass does."
+            },
+            {
+              "kind": "method",
+              "name": "cancel",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "host",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "Takes a host out of the next pass, when it left the page."
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "description": "Runs the pass now, for a caller that cannot wait for it. The run that\nwas scheduled still comes, and finds nothing, or what asked since."
+            },
+            {
+              "kind": "field",
+              "name": "_flush",
+              "privacy": "private"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "sharedResizeObserver",
+          "return": {
+            "type": {
+              "text": "SharedResizeObserver<T>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "onResize",
+              "type": {
+                "text": "(hosts: T[]) => void"
+              },
+              "description": "gets the hosts with a target that changed size, each once,\nand only those still in the page.\nLike any ResizeObserver, a target is reported once when it is observed,\nalso for a host that joins a target another host already observes: the\nhosts that were there get that report too."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LayoutPass",
+          "declaration": {
+            "name": "LayoutPass",
+            "module": "src/utilities/layout-pass.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sharedResizeObserver",
+          "declaration": {
+            "name": "sharedResizeObserver",
+            "module": "src/utilities/layout-pass.ts"
           }
         }
       ]
@@ -59105,6 +59368,13 @@
                   "text": "void"
                 }
               },
+              "parameters": [
+                {
+                  "name": "batched",
+                  "default": "false",
+                  "description": "recount once for every radio that asks in the same tick,\nor after the parse while the page is still loading. A recount reads the\nwhole tree, so a page of radios that each recount on connect is\nquadratic."
+                }
+              ],
               "description": "Reads which group this radio is in now, and recounts the one it left."
             },
             {
@@ -59125,6 +59395,13 @@
                   "text": "void"
                 }
               },
+              "parameters": [
+                {
+                  "name": "batched",
+                  "default": "false",
+                  "description": "at the next recount, with the other radios that render for\nthe first time: of the radios that come checked in the markup, the last\none wins. Each of them walking its group on its own is quadratic."
+                }
+              ],
               "description": "Unchecks the others, as checking a native radio does."
             },
             {
@@ -59201,7 +59478,56 @@
             },
             {
               "kind": "method",
-              "name": "_recount",
+              "name": "_groupsIn",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "Map<string, Map<HTMLFormElement | null, GroupedRadio[]>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ],
+              "description": "Every grouped radio in a tree, by name and form, in document order."
+            },
+            {
+              "kind": "field",
+              "name": "_pending",
+              "privacy": "private",
+              "static": true,
+              "default": "new Map<Node, Map<string, Set<HTMLFormElement | null>>>()",
+              "description": "The groups to recount at the next flush: per tree, the names and forms."
+            },
+            {
+              "kind": "field",
+              "name": "_schedule",
+              "privacy": "private",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "_claims",
+              "privacy": "private",
+              "static": true,
+              "default": "new Set<GroupedRadio>()",
+              "description": "Checked radios that render for the first time, in the order they did."
+            },
+            {
+              "kind": "field",
+              "name": "_flush",
+              "privacy": "private",
+              "static": true,
+              "description": "Recounts every pending group, reading each tree once."
+            },
+            {
+              "kind": "method",
+              "name": "_settleClaims",
               "privacy": "private",
               "static": true,
               "return": {
@@ -59211,13 +59537,46 @@
               },
               "parameters": [
                 {
-                  "name": "key",
+                  "name": "radios",
                   "type": {
-                    "text": "RadioGroupKey"
+                    "text": "GroupedRadio[]"
+                  }
+                },
+                {
+                  "name": "claims",
+                  "type": {
+                    "text": "GroupedRadio[]"
                   }
                 }
               ],
+              "description": "The last radio that came checked keeps it; the others in its group do not."
+            },
+            {
+              "kind": "field",
+              "name": "_recount",
+              "privacy": "private",
+              "static": true,
               "description": "A radio on its own keeps the place the browser gives it: none."
+            },
+            {
+              "kind": "method",
+              "name": "_place",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "radios",
+                  "type": {
+                    "text": "GroupedRadio[]"
+                  }
+                }
+              ],
+              "description": "Hands every radio of one group its place, and whether the group is answered."
             }
           ]
         }
@@ -59838,6 +60197,47 @@
         },
         {
           "kind": "function",
+          "name": "addStandaloneScrollLayer",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "layer",
+              "type": {
+                "text": "StandaloneScrollLayer"
+              }
+            },
+            {
+              "name": "doc",
+              "type": {
+                "text": "Document"
+              }
+            }
+          ],
+          "description": "A layer without a provider reads its mode once it has connected, with the\nother layers that connect in the same tick, and again after a resize."
+        },
+        {
+          "kind": "function",
+          "name": "removeStandaloneScrollLayer",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "layer",
+              "type": {
+                "text": "StandaloneScrollLayer"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
           "name": "findScrollModeProvider",
           "return": {
             "type": {
@@ -59911,15 +60311,6 @@
             },
             {
               "kind": "field",
-              "name": "_raf",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
               "name": "_provider",
               "type": {
                 "text": "ScrollModeProvider | null"
@@ -59972,28 +60363,12 @@
             },
             {
               "kind": "method",
-              "name": "_readVar",
-              "privacy": "private",
+              "name": "inheritedScrollMode",
               "return": {
                 "type": {
                   "text": "ScrollMode"
                 }
               }
-            },
-            {
-              "kind": "field",
-              "name": "_onResize",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "read",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Re-read the inherited `--context-scroll-mode` (used on connect + resize)."
             }
           ]
         }
@@ -60004,6 +60379,22 @@
           "name": "SINGLE_COLUMN_CHANGE_EVENT",
           "declaration": {
             "name": "SINGLE_COLUMN_CHANGE_EVENT",
+            "module": "src/utilities/scroll-mode-controller.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "addStandaloneScrollLayer",
+          "declaration": {
+            "name": "addStandaloneScrollLayer",
+            "module": "src/utilities/scroll-mode-controller.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "removeStandaloneScrollLayer",
+          "declaration": {
+            "name": "removeStandaloneScrollLayer",
             "module": "src/utilities/scroll-mode-controller.ts"
           }
         },
