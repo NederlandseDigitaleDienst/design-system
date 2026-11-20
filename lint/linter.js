@@ -345,8 +345,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			{ pattern: new RegExp(`(?<![\\w$])(?:on|once|off)\\(\\s*(['"\`])${name}\\1`, 'dg'), fixable: false },
 			// @tabchange and v-on: in Vue, Lit and Alpine, hx-on in htmx.
 			{ pattern: new RegExp(`(?<![\\w-])(?:@|v-on:|x-on:|(?:data-)?hx-on(?::|::|-|--))${name}(?![\\w-])`, 'dg'), fixable: true },
-			// (tabchange)="…" in Angular.
-			{ pattern: new RegExp(`\\(${name}\\)\\s*=`, 'dg'), fixable: true },
+			// (tabchange)="…" in Angular: an attribute with a quoted value, so `(tabchange) => …` in a script is not one.
+			{ pattern: new RegExp(`(?<=\\s)\\(${name}\\)\\s*=\\s*['"]`, 'dg'), fixable: true },
 		];
 	})();
 

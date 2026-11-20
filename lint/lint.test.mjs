@@ -2200,6 +2200,10 @@ describe('renamed events', () => {
 		assert.equal(finding.fix, undefined);
 	});
 
+	it('takes an arrow function with a parameter of that name for no Angular binding', async () => {
+		assert.deepEqual(await messagesIn('const c = (tabchange) => d;\nconst e = x && (tabchange) => f;', 'a.ts'), []);
+	});
+
 	it('finds the old name with nldd-, and leaves the plain name it became alone', async () => {
 		const source = 'note.addEventListener("close", hide);\nfield.addEventListener("complete", send);\nnote.addEventListener("nldd-close", hide);';
 		assert.deepEqual(await messagesIn(source, 'a.js'), ['`nldd-close` was renamed to `close` after 0.21.1, so a listener on the old name is never called.']);
