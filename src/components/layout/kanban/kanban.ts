@@ -65,6 +65,7 @@ import { NLDDKanbanColumn } from './kanban-column.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { deepActiveElement } from '../../../utilities/deep-active-element.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
 
 export { NLDDKanbanColumn };
 
@@ -122,6 +123,14 @@ interface Drag {
 	columnRevealTimer: number;
 }
 
+/* Which sides scroll is a layout read: one pass for every board that asks. */
+const scrollPass = new LayoutPass<NLDDKanban>((boards) => {
+	for (const board of boards) board._updateScroll();
+});
+const scrollObserver = sharedResizeObserver<NLDDKanban>((boards) => {
+	for (const board of boards) board._updateScroll();
+});
+
 @customElement('nldd-kanban')
 export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslations) {
 	static override styles = kanbanStyles;
@@ -145,7 +154,7 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 	/** @internal While an item is dragged. */
 	@state() _dragging = false;
 
-	private _scrollObserver: ResizeObserver | null = null;
+	private _observing = false;
 
 	private _press: Press | null = null;
 	private _drag: Drag | null = null;
@@ -169,6 +178,9 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 		// listeners there are then: one added once the drag begins comes too
 		// late, and the board scrolls and cancels the drag.
 		this.addEventListener('touchmove', this._holdTouch, { passive: false });
+		// Moved in the DOM: `updated` starts the scroll observer again, and
+		// nothing else asks for an update.
+		if (this.hasUpdated) this.requestUpdate();
 	}
 
 	override disconnectedCallback(): void {
@@ -176,8 +188,9 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 		this.removeEventListener('pointerdown', this._onPointerDown);
 		this.removeEventListener('keydown', this._onKeyDown);
 		this.removeEventListener('touchmove', this._holdTouch);
-		this._scrollObserver?.disconnect();
-		this._scrollObserver = null;
+		scrollObserver.unobserveAll(this);
+		scrollPass.cancel(this);
+		this._observing = false;
 		this._endPress();
 		this._endDrag();
 		this._hideDenied();
@@ -194,12 +207,16 @@ export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslati
 			this._cancelDrag();
 			this._hideDenied();
 		}
-		if (!this._scrollObserver && this._scroller) {
-			this._scrollObserver = new ResizeObserver(() => this._updateScroll());
-			this._scrollObserver.observe(this._scroller);
-			for (const column of this.columns) this._scrollObserver.observe(column);
+		if (!this._observing && this._scroller) {
+			this._observing = true;
+			scrollObserver.observe(this._scroller, this);
+			for (const column of this.columns) scrollObserver.observe(column, this);
 		}
 	}
+
+	/** @internal A column came or went: measure with the other boards, in one
+	 *  layout, instead of once per column while the page is parsed. */
+	_handleSlotChange = (): void => scrollPass.schedule(this, this.ownerDocument);
 
 	/** @internal Which sides have more to scroll to, by the physical side, so a
 	 *  right-to-left page fades the right one first. */

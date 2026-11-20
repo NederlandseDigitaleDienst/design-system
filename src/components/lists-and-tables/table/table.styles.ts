@@ -37,6 +37,19 @@ export const tableStyles = css`
 		display: none;
 	}
 
+	:host {
+		position: relative;
+	}
+
+	.table__sizer {
+		position: absolute;
+		inset-inline: 0;
+		top: 0;
+		height: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
 	/* Default surface is base; tinted is opt-in. */
 	:host([background="tinted"]) {
 		--_table-background-color: var(--semantics-surfaces-tinted-background-color);

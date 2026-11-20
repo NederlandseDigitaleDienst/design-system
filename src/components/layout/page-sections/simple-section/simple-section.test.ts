@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, sectionFixture } from '../../../../test-utils.js';
 import './simple-section.js';
 
 describe('nldd-simple-section', () => {
@@ -10,19 +10,19 @@ describe('nldd-simple-section', () => {
 	});
 
 	it('renders without error', async () => {
-		el = await fixture('<nldd-simple-section></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
 	it('renders a section element in the shadow DOM', async () => {
-		el = await fixture('<nldd-simple-section></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.simple-section')).not.toBeNull();
 	});
 
 	it('reflects width property to attribute', async () => {
-		el = await fixture('<nldd-simple-section></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section></nldd-simple-section>');
 		await waitForUpdate(el);
 		(el as any).width = 'full';
 		await waitForUpdate(el);
@@ -30,7 +30,7 @@ describe('nldd-simple-section', () => {
 	});
 
 	it('reflects the alignment attributes and leaves the defaults out of the DOM', async () => {
-		el = await fixture('<nldd-simple-section></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.hasAttribute('horizontal-alignment')).toBe(false);
 		expect(el.hasAttribute('vertical-alignment')).toBe(false);
@@ -43,7 +43,7 @@ describe('nldd-simple-section', () => {
 	});
 
 	it('lines the children up in the main, where they land', async () => {
-		el = await fixture('<nldd-simple-section horizontal-alignment="center" vertical-alignment="center"></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section horizontal-alignment="center" vertical-alignment="center"></nldd-simple-section>');
 		await waitForUpdate(el);
 		const main = el.shadowRoot!.querySelector('.simple-section__main') as HTMLElement;
 		const stijl = getComputedStyle(main);
@@ -62,7 +62,7 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 	});
 
 	it('paints no background by default (inherit)', async () => {
-		el = await fixture('<nldd-simple-section></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.style.backgroundColor).toBe('');
 		expect(
@@ -94,20 +94,20 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 	});
 
 	it('paints nothing for inherit', async () => {
-		el = await fixture('<nldd-simple-section></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(getComputedStyle(el).backgroundColor).toBe('rgba(0, 0, 0, 0)');
 	});
 
 	it('strips block padding with padding-block="0"', async () => {
-		el = await fixture('<nldd-simple-section padding-block="0"></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section padding-block="0"></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_simple-section-padding-top')).toBe('0');
 		expect(el.style.getPropertyValue('--_simple-section-padding-bottom')).toBe('0');
 	});
 
 	it('maps a numeric padding-block to the space token', async () => {
-		el = await fixture('<nldd-simple-section padding-block="24"></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section padding-block="24"></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_simple-section-padding-top')).toBe(
 			'var(--primitives-space-24)',
@@ -129,19 +129,19 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 	});
 
 	it('applies height as the host min-height', async () => {
-		el = await fixture('<nldd-simple-section height="400px"></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section height="400px"></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.style.minHeight).toBe('400px');
 	});
 
 	it('ignores an invalid height', async () => {
-		el = await fixture('<nldd-simple-section height="not-a-length"></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section height="not-a-length"></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.style.minHeight).toBe('');
 	});
 
 	it('maps responsive sm-padding-block to the sm scope vars only', async () => {
-		el = await fixture('<nldd-simple-section sm-padding-block="0"></nldd-simple-section>');
+		el = await sectionFixture('<nldd-simple-section sm-padding-block="0"></nldd-simple-section>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_simple-section-sm-padding-top')).toBe('0');
 		expect(el.style.getPropertyValue('--_simple-section-sm-padding-bottom')).toBe('0');

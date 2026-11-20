@@ -315,10 +315,11 @@ export class SiteStage extends HTMLElement {
 		// of what is in it, which the frame reports.
 		const height = this.story?.parameters.docs?.story?.height ?? this.story?.parameters.docs?.story?.iframeHeight ?? 160;
 		frame.style.height = typeof height === 'number' ? `${height}px` : height;
+		this.frame = frame;
+		this.setFrameWidth(this.startWidth());
 		frame.title = `Voorbeeld: ${this.getAttribute('name') ?? name}`;
 		frame.loading = 'lazy';
 		frame.src = `${base}voorbeeld/?file=${encodeURIComponent(file)}&story=${encodeURIComponent(name)}&scheme=${this.dark ? 'dark' : 'light'}`;
-		this.frame = frame;
 		addEventListener('message', (event) => {
 			if (event.source !== frame.contentWindow || event.data?.site !== 'stage') return;
 			if (event.data.type === 'event') this.log(event.data.name, event.data.detail);
@@ -326,6 +327,17 @@ export class SiteStage extends HTMLElement {
 			if (event.data.type === 'height') frame.style.height = `${event.data.height}px`;
 			if (event.data.type === 'ready') this.resend();
 		}, { signal: this.lifetime.signal });
+	}
+
+	/** The width a framed example starts at: its own, or the whole stage. */
+	private startWidth(): string {
+		const width = this.story?.parameters.docs?.story?.width;
+		return WIDTHS.some(([, value]) => value === width) ? width! : '100%';
+	}
+
+	private setFrameWidth(width: string): void {
+		this.frame!.style.width = width;
+		this.frame!.classList.toggle('site-stage__frame--narrow', width !== '100%');
 	}
 
 	/** Everything the frame should show that differs from the story as it is. */
@@ -460,11 +472,8 @@ export class SiteStage extends HTMLElement {
 						`Breedte van ${name}`,
 						'Breedte',
 						WIDTHS.map(([label, width]) => [label, width]),
-						'100%',
-						(width) => {
-							this.frame!.style.width = width;
-							this.frame!.classList.toggle('site-stage__frame--narrow', width !== '100%');
-						},
+						this.startWidth(),
+						(width) => this.setFrameWidth(width),
 						1,
 					),
 				);

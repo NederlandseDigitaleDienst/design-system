@@ -80,6 +80,7 @@ export function buildClasses(elements) {
 		// Native controls count too, as in nldd-form-field. Natives have no manifest entry.
 		'form-input': [...tags((element) => element.declaration.members?.some((member) => member.name === 'isFormInput')), 'input', 'select', 'textarea'].sort(),
 		cell: tags((element) => element.tag.endsWith('-cell')),
+		'page-section': tags((element) => element.declaration.mixins?.some((mixin) => mixin.name === 'PageSectionMixin')),
 	};
 }
 

@@ -11,7 +11,7 @@ export const stackedSplitViewStyles = css`
 
 	:host {
 		--_stacked-split-view-background-color: var(--context-background-color);
-		/* Pane min-height — read by JS via getComputedStyle in firstUpdated */
+		/* Pane min-height, read by JS via getComputedStyle */
 		--_stacked-split-view-pane-min-height: var(--primitives-area-200);
 
 		display: flex;

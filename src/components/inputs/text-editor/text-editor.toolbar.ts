@@ -93,6 +93,14 @@ function isOverflowCopy(el: Element): boolean {
 /* One set of listeners on the document for every editor: an event finds its
  * control once, and only the editor that owns it answers. */
 const bindings = new Set<ToolbarBinding>();
+const bindingOf = new WeakMap<Element, ToolbarBinding>();
+
+/** The editor a container's `text-editor-for` names: the first one with that
+ *  id, as getElementById would have it. */
+function bindingForId(id: string): ToolbarBinding | undefined {
+	for (const binding of bindings) if (binding.target.id === id) return binding;
+	return undefined;
+}
 
 /** The nearest element with a command along the event's path. An editor on the
  *  way ends the search: what is inside it is not a control of an editor above. */
@@ -110,12 +118,9 @@ function controlOf(event: Event): Element | null {
 function ownerOf(el: Element): ToolbarBinding | undefined {
 	for (const node of ancestry(el)) {
 		const id = node.getAttribute(FOR_ATTR);
-		if (id !== null) {
-			if (id === '') return undefined;
-			for (const binding of bindings) if (binding.target.id === id) return binding;
-			return undefined;
-		}
-		for (const binding of bindings) if (binding.target === node) return binding;
+		if (id !== null) return id === '' ? undefined : bindingForId(id);
+		const binding = bindingOf.get(node);
+		if (binding) return binding;
 	}
 	return undefined;
 }
@@ -145,10 +150,12 @@ export class ToolbarBinding {
 			for (const [type, listener] of LISTENERS) document.addEventListener(type, listener, CAPTURE.has(type));
 		}
 		bindings.add(this);
+		bindingOf.set(this.target, this);
 	}
 
 	disconnect(): void {
 		bindings.delete(this);
+		bindingOf.delete(this.target);
 		if (bindings.size === 0) {
 			for (const [type, listener] of LISTENERS) document.removeEventListener(type, listener, CAPTURE.has(type));
 		}
@@ -158,7 +165,8 @@ export class ToolbarBinding {
 	controls(): Element[] {
 		const own = [...this.target.querySelectorAll(`[${COMMAND_ATTR}]`)];
 		const id = this.target.id;
-		const elsewhere = id
+		// Another editor with the same id owns those containers: no need to look.
+		const elsewhere = id && bindingForId(id) === this
 			? [...document.querySelectorAll(`[${FOR_ATTR}="${CSS.escape(id)}"]`)].flatMap((box) => [
 				...(box.hasAttribute(COMMAND_ATTR) ? [box] : []),
 				...box.querySelectorAll(`[${COMMAND_ATTR}]`),

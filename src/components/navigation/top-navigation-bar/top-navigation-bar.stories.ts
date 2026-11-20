@@ -187,7 +187,7 @@ export const MetTerugknop = {
 
 export const SmalScherm = {
 	render: () => html`
-		<div style="${layoutArea} max-width: 400px;">
+		<div style=${layoutArea}>
 			<nldd-top-navigation-bar website-title="Mijn Dienst">
 				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Shows how the global items move into the menu sheet on a narrow screen. -->
 				<nldd-menu-bar slot="global">
@@ -264,7 +264,7 @@ export const SmalScherm = {
 			</nldd-top-navigation-bar>
 		</div>
 	`,
-	parameters: { controls: { disable: true } },
+	parameters: { controls: { disable: true }, docs: { story: { width: '360px' } } },
 };
 
 /**
@@ -281,7 +281,7 @@ export const SmalScherm = {
  */
 export const MeerlaagsMenu = {
 	render: () => html`
-		<div style="${layoutArea} max-width: 400px;">
+		<div style=${layoutArea}>
 			<nldd-top-navigation-bar website-title="Mijn Dienst">
 				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Shows the levels of the menu sheet, which only global items open. -->
 				<nldd-menu-bar slot="global">
@@ -326,7 +326,7 @@ export const MeerlaagsMenu = {
 			</nldd-top-navigation-bar>
 		</div>
 	`,
-	parameters: { controls: { disable: true } },
+	parameters: { controls: { disable: true }, docs: { story: { width: '360px' } } },
 };
 
 export const VeelGlobaleItems = {
@@ -432,7 +432,7 @@ export const AlleToestanden = {
 	render: () => html`
 		<nldd-container gap="32">
 			<div style=${layoutArea}>
-				<nldd-top-navigation-bar website-title="Mijn Dienst (volle breedte)">
+				<nldd-top-navigation-bar website-title="Mijn Dienst">
 					<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Overview of the states of the bar, the documented global slot included. -->
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
@@ -443,63 +443,6 @@ export const AlleToestanden = {
 						<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Isoleren"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Over ons"></nldd-menu-bar-item>
-					</nldd-menu-bar>
-					<nldd-menu-bar slot="utility">
-						<nldd-menu-bar-item
-							accessible-label="Taal: Nederlands (NL)"
-							text="NL"
-							expandable
-							content-priority="icon"
-						>
-							<nldd-menu>
-								<nldd-menu-item
-									text="Nederlands"
-									type="radio"
-									selected
-								></nldd-menu-item>
-								<nldd-menu-item
-									lang="en"
-									text="English"
-									type="radio"
-								></nldd-menu-item>
-							</nldd-menu>
-						</nldd-menu-bar-item>
-						<nldd-menu-bar-item
-							text="Zoeken"
-							icon="magnifier"
-							content-priority="icon"
-						></nldd-menu-bar-item>
-						<nldd-menu-bar-item
-							text="Mijn account"
-							icon="account"
-							expandable
-							content-priority="text"
-						>
-							<nldd-menu>
-								<nldd-menu-item
-									text="Mijn gegevens"
-									icon="profile"
-								></nldd-menu-item>
-								<nldd-menu-divider></nldd-menu-divider>
-								<nldd-menu-item
-									text="Log uit"
-									icon="logout"
-								></nldd-menu-item>
-							</nldd-menu>
-						</nldd-menu-bar-item>
-					</nldd-menu-bar>
-				</nldd-top-navigation-bar>
-			</div>
-			<div style="${layoutArea} max-width: 400px;">
-				<nldd-top-navigation-bar website-title="Mijn Dienst (smal scherm)">
-					<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Overview of the states of the bar, the documented global slot included. -->
-					<nldd-menu-bar slot="global">
-						<nldd-menu-bar-item
-							text="Home"
-							current
-						></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
 						<nldd-menu-bar-item

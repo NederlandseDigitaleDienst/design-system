@@ -9,6 +9,7 @@ export { deepActiveElement } from './utilities/deep-active-element.js';
  */
 export async function fixture<T extends HTMLElement = HTMLElement>(html: string): Promise<T> {
 	const wrapper = document.createElement('div');
+	wrapper.dataset.fixture = '';
 	wrapper.innerHTML = html;
 	document.body.appendChild(wrapper);
 
@@ -27,7 +28,22 @@ export async function fixture<T extends HTMLElement = HTMLElement>(html: string)
  * Call this in `afterEach` to clean up.
  */
 export function cleanup(el: Element): void {
-	el.parentElement?.remove();
+	(el.closest('[data-fixture]') ?? el.parentElement)?.remove();
+}
+
+/**
+ * Mounts a page section in an nldd-page, the only place a section goes: it lays
+ * out by the width of the page. Returns the section; `cleanup` removes both.
+ */
+export async function sectionFixture<T extends HTMLElement = HTMLElement>(html: string, width?: number): Promise<T> {
+	await import('./components/layout/page/page.js');
+	const page = await fixture(`<nldd-page${width ? ` style="width: ${width}px"` : ''}>${html}</nldd-page>`);
+	const el = page.firstElementChild as T;
+	if ('updateComplete' in el) await (el as T & { updateComplete: Promise<boolean> }).updateComplete;
+	// The page lays out its content a frame later, and what the section
+	// measures from that layout lands in the frame after.
+	await nextFrames();
+	return el;
 }
 
 /**

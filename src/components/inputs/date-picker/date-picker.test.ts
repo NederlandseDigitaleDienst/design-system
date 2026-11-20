@@ -32,6 +32,13 @@ async function press(el: NLDDDatePicker, key: string, shiftKey = false): Promise
 	await waitForUpdate(el);
 }
 
+/** The month menu renders its items once it opens, so open it first. */
+async function monthItems(el: NLDDDatePicker): Promise<NodeListOf<Element>> {
+	el.shadowRoot!.querySelector<HTMLButtonElement>('.date-picker__title-month-button')!.click();
+	await waitForUpdate(el);
+	return el.shadowRoot!.querySelectorAll('.date-picker__month-menu nldd-menu-item');
+}
+
 function todayIso(): string {
 	const now = new Date();
 	return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -732,7 +739,7 @@ describe('nldd-date-picker', () => {
 		);
 		await waitForUpdate(el);
 		expect(el._months).toEqual([5, 6, 7, 8, 9, 10]);
-		expect(el.shadowRoot!.querySelectorAll('.date-picker__month-menu nldd-menu-item').length).toBe(6);
+		expect((await monthItems(el)).length).toBe(6);
 	});
 
 	// Outside the bound's own year that bound does not count: with max in 2026,
@@ -757,7 +764,7 @@ describe('nldd-date-picker', () => {
 
 		expect(el._view.slice(0, 7)).toBe('2026-06');
 		expect(el._months).toEqual([8, 9, 10, 11]);
-		const items = el.shadowRoot!.querySelectorAll('.date-picker__month-menu nldd-menu-item');
+		const items = (await monthItems(el));
 		expect([...items].map((item) => item.getAttribute('text'))).toEqual([
 			'Augustus', 'September', 'Oktober', 'November',
 		]);
@@ -797,7 +804,7 @@ describe('nldd-date-picker', () => {
 	it('kiest een maand uit het maandmenu', async () => {
 		el = await fixture<NLDDDatePicker>('<nldd-date-picker value="2026-07-15"></nldd-date-picker>');
 		await waitForUpdate(el);
-		const items = el.shadowRoot!.querySelectorAll('.date-picker__month-menu nldd-menu-item');
+		const items = (await monthItems(el));
 		expect(items.length).toBe(12);
 		expect(items[6].hasAttribute('selected')).toBe(true);
 
@@ -813,7 +820,7 @@ describe('nldd-date-picker', () => {
 	it('klemt de dag als de gekozen maand korter is', async () => {
 		el = await fixture<NLDDDatePicker>('<nldd-date-picker value="2026-03-31"></nldd-date-picker>');
 		await waitForUpdate(el);
-		const items = el.shadowRoot!.querySelectorAll('.date-picker__month-menu nldd-menu-item');
+		const items = (await monthItems(el));
 
 		(items[1] as HTMLElement).click();
 		await waitForUpdate(el);
@@ -837,6 +844,18 @@ describe('nldd-date-picker', () => {
 		}
 		expect(active?.tagName).toBe('NLDD-MENU-ITEM');
 		expect(active?.getAttribute('text')).toBe('2026');
+	});
+
+	// A century of menu items in every calendar that nobody opens the year
+	// menu of was most of what a date field cost on a page.
+	it('maakt de items van de menu\'s pas als ze opengaan', async () => {
+		el = await fixture<NLDDDatePicker>('<nldd-date-picker value="2026-07-15"></nldd-date-picker>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelectorAll('nldd-menu-item').length).toBe(0);
+		el.shadowRoot!.querySelector<HTMLButtonElement>('.date-picker__title-year-button')!.click();
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelectorAll('.date-picker__year-menu nldd-menu-item').length).toBe(el._years.length);
+		expect(el.shadowRoot!.querySelectorAll('.date-picker__month-menu nldd-menu-item').length).toBe(0);
 	});
 
 	it('begrenst de jaarlijst met min en max', async () => {

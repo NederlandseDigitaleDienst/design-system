@@ -329,6 +329,9 @@ export class NLDDContainer extends LitElement {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._syncSizedByContent();
+		// Moved in the DOM: the slot keeps its content, so no slotchange comes.
+		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot');
+		if (this.hasUpdated && slot) this._watchChildren(slot);
 	}
 
 	/** The list role on the host, and `listitem` on each child without a role of its own. */
@@ -473,7 +476,10 @@ export class NLDDContainer extends LitElement {
 	}
 
 	_onSlotChange = (e: Event): void => {
-		const slot = e.target as HTMLSlotElement;
+		this._watchChildren(e.target as HTMLSlotElement);
+	};
+
+	private _watchChildren(slot: HTMLSlotElement): void {
 		if (this.list) this._applyListRoles();
 		this._childObserver?.disconnect();
 		this._childObserver = new MutationObserver(muts => {
@@ -486,7 +492,7 @@ export class NLDDContainer extends LitElement {
 			this._applyOrderProps(el);
 			this._childObserver.observe(el, { attributes: true, attributeFilter: [...ORDER_ATTRS] });
 		}
-	};
+	}
 
 	private _applyOrderProps(el: HTMLElement): void {
 		for (const attr of ORDER_ATTRS) {

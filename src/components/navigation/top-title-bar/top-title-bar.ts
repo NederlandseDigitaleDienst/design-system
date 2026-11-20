@@ -62,6 +62,22 @@ import { topTitleBarStyles } from './top-title-bar.styles.js';
 import { topTitleBarTemplate } from './top-title-bar.template.js';
 import type { NLDDPage } from '../../layout/page/page.js';
 import { setState } from '../../../utilities/element-state.js';
+import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
+
+/**
+ * Every bar that has to check its anchor measures in one pass, and only then
+ * toggles: a bar that measures after another one toggled lays out the page
+ * again, once per bar.
+ */
+function checkAnchors(bars: NLDDTopTitleBar[]): void {
+	const compact = bars.map((bar) => bar._measureCompact());
+	bars.forEach((bar, i) => {
+		if (compact[i] !== null) bar.classList.toggle('is-compact', compact[i]);
+	});
+}
+
+const anchorPass = new LayoutPass<NLDDTopTitleBar>(checkAnchors);
+const anchorObserver = sharedResizeObserver<NLDDTopTitleBar>(checkAnchors);
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -104,7 +120,6 @@ export class NLDDTopTitleBar extends LitElement {
 	private _activeScrollTarget: EventTarget | null = null;
 	private _scrollTargetStyleObserver: MutationObserver | null = null;
 	private _pageModeObserver: MutationObserver | null = null;
-	private _anchorLayoutObserver: ResizeObserver | null = null;
 	private _anchorAppearObserver: MutationObserver | null = null;
 	private _boundOnScroll = this._onScroll.bind(this);
 	private _pageWait = 0;
@@ -240,11 +255,10 @@ export class NLDDTopTitleBar extends LitElement {
 		// A pane pushed by the app can still be laying out, or mid-transition, so
 		// the first measurement can land on an anchor without a box. Re-measure the
 		// moment it gets one.
-		this._anchorLayoutObserver = new ResizeObserver(() => this._onScroll());
-		this._anchorLayoutObserver.observe(this._anchorElement);
+		anchorObserver.observe(this._anchorElement, this);
 
 		// Initial check after layout is complete
-		this.updateComplete.then(() => this._onScroll());
+		this.updateComplete.then(() => this._checkAnchor());
 	}
 
 	// A page that renders its title only once its data has loaded has no anchor
@@ -285,14 +299,19 @@ export class NLDDTopTitleBar extends LitElement {
 		// style changes on the scroll target so we re-check the moment
 		// padding-top lands.
 		if (this._activeScrollTarget instanceof Element) {
-			this._scrollTargetStyleObserver = new MutationObserver(() => this._onScroll());
+			this._scrollTargetStyleObserver = new MutationObserver(() => this._checkAnchor());
 			this._scrollTargetStyleObserver.observe(this._activeScrollTarget, {
 				attributes: true,
 				attributeFilter: ['style'],
 			});
 		}
 
-		this._onScroll();
+		this._checkAnchor();
+	}
+
+	/** Checks the anchor in the next pass, with the other bars. */
+	private _checkAnchor(): void {
+		anchorPass.schedule(this, this.ownerDocument);
 	}
 
 	private _teardownAnchor(): void {
@@ -306,14 +325,21 @@ export class NLDDTopTitleBar extends LitElement {
 		this._scrollTargetStyleObserver = null;
 		this._pageModeObserver?.disconnect();
 		this._pageModeObserver = null;
-		this._anchorLayoutObserver?.disconnect();
-		this._anchorLayoutObserver = null;
+		anchorObserver.unobserveAll(this);
+		anchorPass.cancel(this);
 		this._anchorAppearObserver?.disconnect();
 		this._anchorAppearObserver = null;
 	}
 
 	private _onScroll(): void {
-		if (!this._anchorElement || !this._pageElement) return;
+		const compact = this._measureCompact();
+		if (compact !== null) this.classList.toggle('is-compact', compact);
+	}
+
+	/** @internal Whether the bar is compact now, or null to leave it as it is.
+	 *  Reads layout, writes nothing. */
+	_measureCompact(): boolean | null {
+		if (!this._anchorElement || !this._pageElement || !this.isConnected) return null;
 		// Collapse once the anchor reaches this bar's own top edge. Measuring the
 		// bar (not the page) keeps this correct in both scroll modes: in nested
 		// scroll the bar is pinned at the page top, so its top equals the page top
@@ -326,9 +352,8 @@ export class NLDDTopTitleBar extends LitElement {
 		// past" and collapse the bar. The title then shows twice: once here and
 		// once in the pane, as soon as that does lay out. Leaving the class alone
 		// keeps the last known good state until the anchor is real.
-		if (anchor.width === 0 && anchor.height === 0) return;
-		const barTop = this.getBoundingClientRect().top;
-		this.classList.toggle('is-compact', anchor.top <= barTop);
+		if (anchor.width === 0 && anchor.height === 0) return null;
+		return anchor.top <= this.getBoundingClientRect().top;
 	}
 
 	_onToolbarSlotChange = (e: Event) => {
