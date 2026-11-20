@@ -626,6 +626,39 @@ describe('--fix', () => {
 		assert.equal(text, '<nldd-button text=" variant=x" appearance="primary"></nldd-button><div variant="a"></div><nldd-progress-bar variant="b"></nldd-progress-bar>');
 	});
 
+	it('moves a text attribute that became a translation key into translations, one key at a time', () => {
+		const field = (attributes) => `<nldd-password-field accessible-label="W"${attributes}></nldd-password-field>`;
+		assert.equal(
+			fixed('a.html', field(' show-button-text="Laat zien" hide-button-text="Verstop"')).text,
+			field(` translations='{"components.password-field.hide-action": "Verstop", "components.password-field.show-action": "Laat zien"}'`),
+		);
+		assert.equal(
+			fixed('a.html', field(` translations='{"components.password-field.hide-action": "Weg"}' show-button-text="Toon"`)).text,
+			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
+		);
+		assert.equal(
+			fixed('a.tsx', 'const a = <nldd-password-field accessible-label="W" show-button-text="Laat zien" hide-button-text={"Verstop"} />;').text,
+			'const a = <nldd-password-field accessible-label="W" translations={{ "components.password-field.hide-action": "Verstop", "components.password-field.show-action": "Laat zien" }} />;',
+		);
+		assert.equal(
+			fixed('a.vue', '<template><nldd-password-field accessible-label="W" :show-button-text="t(1)" hide-button-text="Verstop" /></template>').text,
+			`<template><nldd-password-field accessible-label="W" :show-button-text="t(1)" translations='{"components.password-field.hide-action": "Verstop"}' /></template>`,
+		);
+	});
+
+	it('leaves a translation in place where the text or translations is not certain', () => {
+		for (const [name, source] of [
+			['a.html', `<nldd-password-field accessible-label="W" show-button-text="It's"></nldd-password-field>`],
+			['a.html', '<nldd-password-field accessible-label="W" show-button-text="Laat &amp; zien"></nldd-password-field>'],
+			['a.html', `<nldd-password-field accessible-label="W" translations='{"components.password-field.show-action": "Toon"}' show-button-text="Laat zien"></nldd-password-field>`],
+			['a.vue', '<template><nldd-password-field accessible-label="W" :translations="t" show-button-text="Laat zien" /></template>'],
+			['a.tsx', 'const a = <nldd-password-field accessible-label="W" translations={t} show-button-text="Laat zien" />;'],
+			['a.html.j2', '<nldd-password-field accessible-label="W" show-button-text="{{ toon }}"></nldd-password-field>'],
+		]) {
+			assert.equal(fixed(name, source).text, source, source);
+		}
+	});
+
 	it('wraps text in a <p>, with inline elements or without, and leaves a block or a template alone', () => {
 		assert.equal(fixed('a.html', '<nldd-text>Dakisolatie, in behandeling</nldd-text>').text, '<nldd-text><p>Dakisolatie, in behandeling</p></nldd-text>');
 		assert.equal(fixed('a.tsx', 'export const A = () => <nldd-text>Dakisolatie</nldd-text>;').text, 'export const A = () => <nldd-text><p>Dakisolatie</p></nldd-text>;');

@@ -425,6 +425,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				tag: node.name,
 				offset: node.offset,
 				endOffset: node.endOffset,
+		const jsx = /\.[jt]sx$/.test(filename) || Boolean(parsed.jsx);
 				mention: node.mention,
 				startTag: node.startTag,
 				...position(node.offset),
@@ -434,7 +435,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 					.filter(({ rule }) => ranInSource(rule))
 					.map((finding) => ({ ...finding, ...position(finding.offset) })),
 			);
-		const stuck = stuckTags(source, all, /\.[jt]sx$/.test(filename) || Boolean(parsed.jsx));
+				jsx,
+		const stuck = stuckTags(source, all, jsx);
 		for (const finding of all) {
 			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;
 		}

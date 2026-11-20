@@ -43,6 +43,80 @@ function valueEdits(source, startTag, name, values) {
 	);
 }
 
+/** The text of a value written out in the markup, quoted or as a string literal in JSX braces. */
+function writtenText(source, found) {
+	const value = found?.value;
+	if (!value || found.prefix || found.templated) return undefined;
+	if (value.quote === '{') return BRACED_LITERAL.exec(source.slice(value.start, value.end))?.slice(2).find((group) => group !== undefined);
+	return value.quote ? source.slice(value.start + 1, value.end - 1) : source.slice(value.start, value.end);
+}
+
+const UNCERTAIN_TEXT = /[&\\\n]|\{\{|\{%|\$\{/;
+
+/** `translations` as JSON in single quotes, or in JSX as an object. */
+function translationsAttribute(entries, jsx) {
+	const pairs = entries.map(([key, text]) => `${JSON.stringify(key)}: ${JSON.stringify(text)}`).join(', ');
+	return jsx ? `translations={{ ${pairs} }}` : `translations='{${pairs}}'`;
+}
+
+/** The keys a `translations` holds, when it is written out: JSON in single quotes, or a JSX object of strings. */
+function writtenTranslations(source, found, jsx) {
+	const value = found.value;
+	if (!value || found.prefix || found.templated) return undefined;
+	const raw = source.slice(value.start, value.end);
+	if (jsx) {
+		const body = /^\{\{\s*([^]*?)\s*,?\s*\}\}$/.exec(raw)?.[1];
+		if (body === undefined) return undefined;
+		const pair = /"([^"\\\n]*)"\s*:\s*"([^"\\\n]*)"/y;
+		const entries = [];
+		for (let at = 0; at < body.length; ) {
+			pair.lastIndex = at;
+			const match = pair.exec(body);
+			if (!match) return undefined;
+			entries.push([match[1], match[2]]);
+			at = pair.lastIndex;
+			const comma = /\s*,\s*/y;
+			comma.lastIndex = at;
+			if (at < body.length && !comma.exec(body)) return undefined;
+			at = at < body.length ? comma.lastIndex : at;
+		}
+		return entries;
+	}
+	if (value.quote !== "'") return undefined;
+	const json = raw.slice(1, -1);
+	if (/[&\\]|\{\{|\{%|\$\{/.test(json)) return undefined;
+	try {
+		const parsed = JSON.parse(json);
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.values(parsed).some((text) => typeof text !== 'string')) return undefined;
+		return Object.entries(parsed);
+	} catch {
+		return undefined;
+	}
+}
+
+/**
+ * A text attribute that became a translation key: the attribute goes, and its text
+ * goes in `translations` under that key. In JSX that is an object, elsewhere JSON in
+ * single quotes. An entity, a backslash, a template hole or a quote that the JSON
+ * cannot hold makes it uncertain, and so does a `translations` that is bound or
+ * already has the key. One per element per pass: the next pass adds the next key.
+ */
+function translationEdits(source, finding, translation) {
+	const { startTag, jsx } = finding;
+	return Object.entries(translation).flatMap(([name, key]) => {
+		const found = findAttribute(startTag, name);
+		const text = writtenText(source, found);
+		if (text === undefined || UNCERTAIN_TEXT.test(text) || (!jsx && text.includes("'"))) return [];
+		const existing = findAttribute(startTag, 'translations');
+		if (!existing) return [{ from: found.start, to: found.end, text: translationsAttribute([[key, text]], jsx) }];
+		const entries = writtenTranslations(source, existing, jsx);
+		if (!entries || entries.some(([name]) => name === key)) return [];
+		const removal = removeEdits(source, finding, name);
+		if (removal.length === 0) return [];
+		return [{ from: existing.start, to: existing.end, text: translationsAttribute([...entries, [key, text]], jsx) }, ...removal];
+	});
+}
+
 /** What stands before an attribute, back to the one before it or the tag name. */
 function gapBefore(source, { offset, tag, startTag }, found) {
 	const previous = startTag.attributes.filter((attribute) => attribute.end <= found.start).at(-1);
@@ -129,6 +203,7 @@ function editsOf(source, finding) {
 		...(fix.tag && mention ? [{ from: offset + 1, to: offset + 1 + tag.length, text: fix.tag }] : []),
 		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag) : []),
 		...(fix.wrap ? wrapEdits(source, finding, fix.wrap) : []),
+		...(fix.translation ? translationEdits(source, finding, fix.translation) : []),
 		// A token that got another name: the finding spans the old name in a `var()`.
 		...(fix.token && source.startsWith(tag, offset) ? [{ from: offset, to: finding.endOffset, text: fix.token }] : []),
 	];
@@ -256,15 +331,19 @@ export function linesNaming(source, renamedTags) {
  */
 export function applyFixes(source, findings) {
 	const renamedTags = new Map();
-	const edits = findings
+	const seen = new Set();
+	const translated = new Set();
+	const unique = findings
 		.filter(({ fix }) => fix)
 		.flatMap((finding) => {
+			// Two keys for one element would each write `translations`: the next pass adds the second.
+			if (finding.fix.translation && translated.has(finding.offset)) return [];
 			const found = editsOf(source, finding);
 			if (found.length > 0 && finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
+			if (found.length > 0 && finding.fix.translation) translated.add(finding.offset);
 			return found;
-		});
-	const seen = new Set();
-	const unique = edits.filter(({ from }) => !seen.has(from) && seen.add(from));
+		})
+		.filter(({ from }) => !seen.has(from) && seen.add(from));
 	let fixed = source;
 	for (const { from, to, text } of unique.sort((a, b) => b.from - a.from)) {
 		fixed = fixed.slice(0, from) + text + fixed.slice(to);
