@@ -637,6 +637,10 @@ describe('--fix', () => {
 			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
 		);
 		assert.equal(
+			fixed('a.html', field(` translations='{"components.password-field.show-accessible-label": "Laat het wachtwoord zien"}' show-button-text="Toon" hide-button-text="Verstop"`)).text,
+			field(` translations='{"components.password-field.show-accessible-label": "Laat het wachtwoord zien", "components.password-field.hide-action": "Verstop", "components.password-field.show-action": "Toon"}'`),
+		);
+		assert.equal(
 			fixed('a.vue', '<template><nldd-password-field accessible-label="W" :show-button-text="t(1)" hide-button-text="Verstop" /></template>').text,
 			`<template><nldd-password-field accessible-label="W" :show-button-text="t(1)" translations='{"components.password-field.hide-action": "Verstop"}' /></template>`,
 		);

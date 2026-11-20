@@ -22,7 +22,10 @@ function renameEdits(source, startTag, from, to) {
 	return [{ from: nameStart, to: nameEnd, text: isProperty || name !== from ? toCamelCase(to) : to }];
 }
 
-/** `{5}`, `{"5"}` and `` {`5`} ``: braces around one number or one string without an escape or a hole. */
+/**
+ * `{5}`, `{"5"}` and `` {`5`} ``: braces around one number or one string without an escape or a hole.
+ * A number is matched as written, so `{05}` or `{5.0}` finds no value and stays a finding.
+ */
 const BRACED_LITERAL = /^\{\s*(?:(\d+(?:\.\d+)?)|"([^"\\\n]*)"|'([^'\\\n]*)'|`([^`\\$\n]*)`)\s*\}$/;
 
 /** Only a value written out in the markup: a bound one can hold anything. */
