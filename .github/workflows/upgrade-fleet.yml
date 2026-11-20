@@ -1,0 +1,43 @@
+name: Upgrade the fleet
+
+# After a release is on npm, brings every repository on the list to it, each
+# with a pull request of its own. The work per repository is upgrade.yml.
+#
+# The list is not in this repository: which apps use the design system is
+# theirs to tell. It is the repository variable NLDD_FLEET, a JSON array of
+# owner/name, and the secret NLDD_FLEET_TOKEN is a token of a bot account or an
+# app that may push a branch and open a pull request in each of them. Without
+# the variable this workflow does nothing.
+
+on:
+  workflow_run:
+    workflows: ['Publish to npmjs']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version to upgrade to. Default: the latest on npm.'
+        type: string
+        default: latest
+
+permissions:
+  contents: read
+
+jobs:
+  upgrade:
+    if: vars.NLDD_FLEET != '' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    strategy:
+      fail-fast: false
+      # A few at a time: a release that breaks something shows in the first pull requests.
+      max-parallel: 3
+      matrix:
+        repository: ${{ fromJSON(vars.NLDD_FLEET) }}
+    uses: ./.github/workflows/upgrade.yml
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      repository: ${{ matrix.repository }}
+      version: ${{ inputs.version || 'latest' }}
+    secrets:
+      token: ${{ secrets.NLDD_FLEET_TOKEN }}

@@ -1,6 +1,6 @@
 /** The `nldd` command, started from cli.js: arguments in, formatted findings out. What it checks is lint/session.js. */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
@@ -36,6 +36,15 @@ const USAGE = `Usage:
     --label-before <text>           what stands above the left half (default: Voor)
     --label-after <text>            and above the right half (default: Na)
     --storage-state, --playwright   as with lint --url
+  nldd upgrade                      bring this project to the version of this command: raise the version
+                                    wherever the project names it, rewrite the lockfile, apply every fix
+                                    that is certain, and report what is left. Run the version you want:
+                                    npx @nldd/design-system@latest upgrade
+    --report <file>                 write the report there, as Markdown for a pull request
+    --format json                   the same as data, for a script or an agent
+    --no-install                    leave the lockfile to you
+    --url <url> [--crawl]           also read the running app, as lint --url does, and add what it
+                                    shows to the report
   nldd explain <rule>               what a rule checks, and why
   nldd rules [--for <tag>] [--group <group>] [--json]
                                     list the rules, or those about one component or group
@@ -145,6 +154,38 @@ async function runCompare([before, after, ...paths], options) {
 	const identical = results.filter((result) => result.identical).length;
 	const images = results.filter((result) => result.file).length;
 	console.log(`\n${results.length} comparisons, ${identical} identical, ${images} with an image in ${options.out}${failed ? `, ${failed} that could not be made` : ''}`);
+	return 0;
+}
+
+/**
+ * The whole project, to the version of this package. Always the whole project:
+ * an upgrade that leaves a directory behind is not one.
+ */
+async function runUpgrade(data, paths, options) {
+	if (paths.length > 0) throw new Error('nldd upgrade takes no paths: it upgrades the whole project.');
+	if (options.format && options.format !== 'json') throw new Error('nldd upgrade writes Markdown, or JSON with --format json.');
+	const root = process.cwd();
+	const { upgradeProject, withRendered } = await import('./upgrade.js');
+	const { formatReport, formatSummary } = await import('./upgrade-report.js');
+	const config = readConfig(root, knownKeys(data));
+	const severities = resolveSeverities(data, config.rules, {});
+	const upgraded = await upgradeProject(data, {
+		root,
+		target: pkg.version,
+		breaking: JSON.parse(readFileSync(new URL('./breaking.generated.json', import.meta.url), 'utf8')),
+		config,
+		severities,
+		canonical: createCanonical(data),
+		install: !options['no-install'],
+	});
+	// The running app, where the project has one up: the places the source left undecided.
+	const result = options.url ? withRendered(upgraded, await lintPages(data, [], options, { root, config, severities }), root) : upgraded;
+	if (options.report) {
+		writeFileSync(resolve(root, options.report), formatReport(result));
+		console.error(formatSummary(result));
+	}
+	if (options.format === 'json') console.log(JSON.stringify(result, null, 2));
+	else if (!options.report) console.log(formatReport(result));
 	return 0;
 }
 
@@ -266,6 +307,8 @@ async function main() {
 			'storage-state': { type: 'string' },
 			playwright: { type: 'string' },
 			out: { type: 'string' },
+			report: { type: 'string' },
+			'no-install': { type: 'boolean' },
 			'label-before': { type: 'string' },
 			'label-after': { type: 'string' },
 			for: { type: 'string' },
@@ -292,6 +335,7 @@ async function main() {
 	if (command === 'compare') return runCompare(rest, values);
 	const data = loadData();
 	if (command === 'lint') return runLint(data, rest, values);
+	if (command === 'upgrade') return runUpgrade(data, rest, values);
 	if (command === 'explain' && rest[0]) return explain(data, rest[0]);
 	if (command === 'rules') return listRules(data, { tag: values.for, group: values.group, json: values.json });
 	console.error(USAGE);

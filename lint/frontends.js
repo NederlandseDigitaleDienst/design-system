@@ -114,7 +114,7 @@ function readHtmlChildren(children, parent, given) {
 	const paragraphs = given.markdown && parent.name !== '#root' ? given.markdown(children) : null;
 	for (const node of children) {
 		// MDX marks an expression too short to stand as an element with a hole.
-		const holeAt = given.jsx && node.type === 'text' ? node.data.indexOf(HOLE) : -1;
+		const holeAt = (given.jsx || given.lit) && node.type === 'text' ? node.data.indexOf(HOLE) : -1;
 		if (holeAt !== -1) appendUnknown(parent, (node.startIndex ?? 0) + holeAt);
 		const data = holeAt === -1 ? node.data : node.data.replaceAll(HOLE, ' ');
 		if (node.type === 'text' && data.trim()) {
@@ -979,6 +979,117 @@ export function parseLit(source) {
 }
 
 /**
+ * Where the string literals of a Python file stand, each with the holes of an
+ * f-string. A small scanner: it only tells strings, comments and brackets apart.
+ * `statement` says the literal is a line of its own, so a docstring and not markup.
+ */
+function pythonStrings(source) {
+	const strings = [];
+	let depth = 0;
+	let at = 0;
+	const endOfHole = (from) => {
+		let nested = 0;
+		for (let index = from; index < source.length; index++) {
+			const char = source[index];
+			if (char === '"' || char === "'") index = endOfString(source, index);
+			else if (char === '{' || char === '[' || char === '(') nested += 1;
+			else if (char === '}' && nested === 0) return index;
+			else if (char === '}' || char === ']' || char === ')') nested -= 1;
+		}
+		return source.length;
+	};
+	while (at < source.length) {
+		const char = source[at];
+		if (char === '#') at = source.indexOf('\n', at) >>> 0;
+		else if ('([{'.includes(char)) depth += 1;
+		else if (')]}'.includes(char)) depth -= 1;
+		else if (char === '"' || char === "'") {
+			const prefix = /[a-zA-Z]{0,2}$/.exec(source.slice(Math.max(0, at - 2), at))[0];
+			const formatted = /f/i.test(prefix);
+			const delimiter = source.startsWith(char.repeat(3), at) ? char.repeat(3) : char;
+			const start = at + delimiter.length;
+			const holes = [];
+			let escapedQuote = false;
+			let end = start;
+			while (end < source.length && !source.startsWith(delimiter, end)) {
+				if (source[end] === '\\') {
+					escapedQuote ||= source[end + 1] === '"' || source[end + 1] === "'";
+					end += 2;
+				} else if (source[end] === '{' && source[end + 1] === '{') end += 2;
+				else if (formatted && source[end] === '{') {
+					const close = endOfHole(end + 1);
+					holes.push([end, close + 1]);
+					end = close + 1;
+				} else if (delimiter.length === 1 && source[end] === '\n') break;
+				else end += 1;
+			}
+			const lineStart = source.lastIndexOf('\n', at) + 1;
+			const lineEnd = source.indexOf('\n', end + delimiter.length) >>> 0;
+			const alone = source.slice(lineStart, at - prefix.length).trim() === '' && /^\s*(#.*)?$/.test(source.slice(end + delimiter.length, lineEnd));
+			strings.push({ start, end, holes, escapedQuote, formatted, statement: depth === 0 && alone });
+			at = end + delimiter.length - 1;
+		}
+		at += 1;
+	}
+	return strings;
+}
+
+/** What `%` formatting fills in: `%s`, `%(name)s`, `%5.2f`. */
+const PERCENT_FORMAT = /%(\([^)]*\))?[-#0 +]*\d*(\.\d+)?[sdrifgx]/;
+
+/**
+ * Markup in the string literals of a Python file, as a server-side app or a site
+ * generator puts it together. Each literal is a tree of its own, and holds only
+ * part of what is rendered: a hole (`{name}` in an f-string or for `.format()`,
+ * `%s`) is a bound value, and an element the literal does not close has children
+ * nobody can see here. A docstring names markup and renders none, so it is left out.
+ *
+ * `unread` on the result is where markup stands that this could not read, or -1:
+ * a literal with an escaped quote, where an attribute's value is not what it seems.
+ */
+export function parsePython(source) {
+	const roots = [];
+	roots.unread = -1;
+	roots.strings = true;
+	for (const { start, end, holes, escapedQuote, formatted, statement } of pythonStrings(source)) {
+		let text = source.slice(start, end);
+		if (statement || !/<nldd-[a-z]/.test(text)) continue;
+		if (escapedQuote) {
+			if (roots.unread < 0) roots.unread = start + text.search(/<nldd-[a-z]/);
+			continue;
+		}
+		const spans = formatted ? holes : [...text.matchAll(/\{[^{}\n]*\}/g)].map((match) => [start + match.index, start + match.index + match[0].length]);
+		for (const [from, to] of spans) {
+			// Right after a name, as in `<nldd-x{attrs}>`, the hole is not part of that name.
+			const afterName = /[\w-]/.test(text[from - start - 1] ?? '');
+			const room = to - from - (afterName ? 1 : 0);
+			const filler = (afterName ? ' ' : '') + (room >= 3 ? boundFiller(room) : HOLE.repeat(room));
+			text = text.slice(0, from - start) + filler + text.slice(to - start);
+		}
+		// A start tag the next literal finishes: nothing certain about it here.
+		text = text.replace(/<[a-zA-Z][^<>]*$/, blank);
+		const root = createRoot();
+		const padded = ' '.repeat(start) + text;
+		readHtmlChildren(parseMarkup(padded, { selfClosing: false }).children, root, { lit: true });
+		const settle = (node) => {
+			for (const [name, value] of node.attrs) {
+				if (typeof value === 'string' && (value.includes(HOLE) || PERCENT_FORMAT.test(value))) node.attrs.set(name, BOUND);
+			}
+			const written = padded.slice(node.offset, (node.endOffset ?? 0) + 1);
+			if (node.startTag && !new RegExp(`</${escapeRegExp(node.name)}\\s*>$`).test(written)) {
+				// Closed in another literal, or never: what it holds is put together elsewhere.
+				appendUnknown(node, node.offset);
+				node.endOffset = undefined;
+			}
+			node.children.forEach(settle);
+		};
+		root.children.forEach(settle);
+		roots.push(root);
+	}
+	return roots;
+}
+
+/**
  * A script holds `html` templates, or JSX, as a React app writes in a `.js` file.
  * JSX is read only where no template holds our markup and the file parses as
  * JSX: anything else stays unread, and says so.
@@ -1350,6 +1461,7 @@ const PARSERS = {
 	'.jsx': parseJsx,
 	'.tsx': parseJsx,
 	'.ts': parseLit,
+	'.py': parsePython,
 	'.js': parseScript,
 	'.mjs': parseScript,
 	'.css': parseStylesheet,
@@ -1366,7 +1478,7 @@ const PARSERS = {
 export function readerOf(filename) {
 	const parser = PARSERS[filename.slice(filename.lastIndexOf('.'))];
 	if (!parser) return 'none';
-	return parser === parseLit || parser === parseScript ? 'templates' : 'markup';
+	return parser === parseLit || parser === parseScript || parser === parsePython ? 'templates' : 'markup';
 }
 
 /** @returns {Promise<import('./tree.js').TreeNode[]>} */

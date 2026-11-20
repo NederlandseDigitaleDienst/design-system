@@ -24,36 +24,71 @@ Een nieuwe minor zegt alleen dát er iets breekt, niet wat. Gebruik daarom de ch
 
 ## Werkwijze
 
-1. **Lees elke versie tussen jouw huidige en de doelversie.** De entries staan nieuwste eerst, met een kop per release (versienummer + datum). Sla niets over: een breaking change kan in een tussenliggende patch zitten.
-2. **Scan de `Breaking` / `Breaking Changes` secties eerst.** Die bevatten concrete migratie-instructies: een verwijderd attribuut met zijn vervanger, hernoemde variabelen, gewijzigd gedrag, en wat de layout van je pagina's verschuift zonder dat je code verandert, zoals een andere hoogte of maat. Een echt voorbeeld uit de changelog: `variant` op `nldd-button` en acht andere componenten heet nu `appearance`, met dezelfde waarden, dus `variant="primary"` wordt `<nldd-button appearance="primary" text="Bewaar">`.
-3. **Pas de migraties toe in je code** voordat je de nieuwe versie in gebruik neemt. Zoek de hele repository door op de verwijderde attributen, variabelenamen of componenten uit de breaking entries, ook de bestanden die de linter niet leest. Zie [Waar de linter niet komt](#waar-de-linter-niet-komt).
-4. **Lees `Highlights`, `Added` en `Changed`** voor nieuwe componenten of attributen die je oudere, omslachtigere code kunnen vervangen.
-5. **Verifieer tegen [`reference.md`](../nldd-design/reference.md)** of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij exact deze release.
+Een upgrade heeft twee delen. Wat zeker is, doet een opdracht. Wat een keuze vraagt, doe jij, met de lijst die de opdracht achterlaat.
 
-6. **Draai `npx @nldd/design-system@<doelversie> lint`, nog vóór je de versie verhoogt, en daarna met `--fix` voor wat alleen een andere naam kreeg.** Kies de doelversie één keer, bijvoorbeeld `0.23.0`, en gebruik die in elke stap. Met `@latest` lint je tegen wat vandaag de nieuwste is, en dat kan een andere versie zijn dan je installeert. Dat is de linter van de doelversie op je huidige code: elke bevinding is iets dat in de nieuwe versie niet meer klopt, en een baseline blijft geldig, dus wat erbij komt is je werklijst. Zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md).
+### 1. Laat de opdracht het zekere deel doen
 
-Vuistregel: lees bij elke nieuwe minor de `Breaking` sectie van die versie, en ga onder 0.9.0 niet meer dan een handvol patches in één sprong omhoog zonder de tussenliggende `Breaking` secties te lezen.
+```sh
+npx @nldd/design-system@<doelversie> upgrade --report upgrade.md
+```
 
-Begin bij de `Breaking`-secties en niet bij de linter. Een site ging elf minors omhoog met alleen `lint --fix`, en leek daarna klaar. De koppen waren te groot en twee knoppen grijs, want de markup stond in Markdown en in Python. Alle vijf de oorzaken stonden in de `Breaking`-secties van 0.22.0, 0.23.0 en 0.25.0.
+Kies de doelversie één keer, bijvoorbeeld `0.27.1`, en gebruik die in elke stap. Met `@latest` krijg je wat vandaag de nieuwste is. De opdracht upgradet naar zijn eigen versie, want een linter kent de API van de versie waar hij bij hoort.
+
+Hij doet vier dingen, in het hele project:
+
+- **De versie ophogen op elke plek die hij kent**: een `package.json`, ook in een submap of een monorepo, een adres of opdracht met `@nldd/design-system@<versie>` erin, en een eigen JSON-bestand dat de versie vastlegt, met de hash van het pakket als die erbij staat. Het bereik dat je koos (`^`, `~` of exact) blijft.
+- **De lockfile herschrijven**, met npm, pnpm, yarn of bun. Alleen de lockfile: `node_modules` installeer je zelf.
+- **Elke fix toepassen die zeker is**: een naam of waarde die anders heet en hetzelfde betekent. Ook in Markdown en in Python.
+- **Opschrijven wat overblijft**, in `upgrade.md`.
+
+`--format json` geeft hetzelfde als gegevens, voor een script. Draai de opdracht gerust nog een keer: wat al gedaan is, laat hij staan.
+
+### 2. Werk de lijst af
+
+Het verslag is je werklijst. Het heeft deze delen:
+
+| Deel | Wat je ermee doet |
+|---|---|
+| Nog te doen | Elke plek is een keuze die de linter niet voor je kan maken. De melding zegt wat er veranderde. Los ze allemaal op |
+| Niet gelezen | Bestanden met componenten die de linter niet kan lezen. Loop ze zelf na op de oude namen uit de changelog |
+| Brekende wijzigingen onderweg | Lees ze. Niet elke wijziging heeft een lintregel: een andere maat of een ander gedrag vind je alleen hier |
+| Wat de linter verder vindt | Waarschuwingen van regels die nieuw kunnen zijn in deze versie. Zie [De linter in je eigen CI](#de-linter-in-je-eigen-ci) |
+
+Verifieer bij twijfel tegen [`reference.md`](../nldd-design/reference.md) of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij de versie van de plugin, en die kan ouder zijn dan je doel.
+
+Waar je kiest, kies je voor wat de pagina deed voor de upgrade. Een titel die als gewone tekst bedoeld was, blijft gewone tekst. Een keuze die niet uit de changelog volgt, zet je apart in de pull request.
+
+### 3. Lees de draaiende app
+
+In een app met React, Vue of een ander framework is de lijst uit de bron niet compleet. Zie [Waar de linter niet komt](#waar-de-linter-niet-komt). Start de app en geef het adres mee:
+
+```sh
+npx @nldd/design-system@<doelversie> upgrade --url http://localhost:5173 --crawl --report upgrade.md
+```
+
+Het verslag krijgt dan een deel "Op de draaiende pagina", per regel en per onderdeel van je app. Eén onderdeel dat in elke rij van een lijst staat, is daar één regel met een hoog aantal: daar begin je.
+
+### 4. Kijk
+
+Vergelijk voor en na, zoals hieronder staat, en draai de eigen controles van het project.
+
+Een site ging elf minors omhoog met alleen `lint --fix`, en leek daarna klaar. De koppen waren te groot en twee knoppen grijs. Alle vijf de oorzaken stonden in de `Breaking`-secties van 0.22.0, 0.23.0 en 0.25.0. Daarom staat het lezen daarvan in de lijst, en niet alleen de linter.
 
 ## Waar de versie staat
 
-Zoek elke plek voordat je er één ophoogt. `package.json` en de lockfile zijn er twee. Daarnaast komt voor:
+De opdracht hoogt de versie op waar hij zeker weet dat het de versie van het pakket is. Onder "De versie" in het verslag staat elke plek, en ook wat hij liet staan: een bereik als `>=0.13`, `workspace:*` of een tag is een keuze van het project.
 
-- een eigen bestand dat de versie vastpint, soms met een hash van het pakket, voor een build die het pakket zelf ophaalt;
-- een adres van een CDN met de versie erin, in een template of een HTML-bestand;
-- een tweede `package.json` in een map met bouwgereedschap, of meer dan één in een monorepo.
-
-Zoek op het oude versienummer door de hele repository. Staat de versie op meer plekken, dan vergelijkt de build ze vaak en weigert hij als ze verschillen.
+Zoek daarna zelf nog één keer op het oude versienummer door de repository. Een versie in een Dockerfile, in een variabele van een workflow of in lopende tekst herkent de opdracht niet. Staat de versie op meer plekken, dan vergelijkt de build ze vaak en weigert hij als ze verschillen.
 
 Zet de versie en de aanpassingen in één commit als een hook of de CI de site bouwt. Een commit met alleen de nieuwe versie is een kapotte stand, en faalt daar.
 
 ## Waar de linter niet komt
 
-De linter leest sjablonen en componenten. Drie plekken slaat hij over:
+De linter leest sjablonen, componenten en Python. Dit ziet hij niet of maar half:
 
-- **Markdown**, tenzij je de bestanden noemt: `nldd lint docs/index.md`. Een scan van een map leest ze niet, omdat documentatie vol staat met voorbeelden die bewust fout zijn.
-- **Markup in een string van een andere taal**, zoals Python of PHP dat HTML samenstelt. Die vind je alleen door te zoeken op de oude namen uit de changelog.
+- **Markdown in een gewone scan.** `nldd lint` leest een Markdown-bestand alleen als je het noemt, omdat documentatie vol staat met voorbeelden die bewust fout zijn. `nldd upgrade` leest ze wel allemaal.
+- **Markup in een string van een taal zonder lezer**, zoals PHP, Ruby of Go. Python leest hij: elke string met een component erin, met `{naam}` en `%s` als ingevulde waarde. Een string met een quote achter een backslash slaat hij over, en dat meldt hij als `file-not-read`.
+- **Wat over meer strings of bestanden verdeeld is.** Van een element dat in de ene string opent en in de andere sluit, beoordeelt hij alleen de attributen.
 - **Wat pas bij het bouwen ontstaat.** Lint daarom ook de gebouwde site: `nldd lint <buildmap>`. Daar staat alle markup bij elkaar, waar hij ook vandaan kwam.
 
 Een bevinding in de gebouwde site wijst naar een pagina, niet naar de bron. Zoek het element terug in de repository en herstel het daar.
@@ -70,7 +105,7 @@ npx @nldd/design-system@<doelversie> lint --url http://localhost:5173 / /aanvrag
 
 Met `--crawl` volgt hij ook de links naar pagina's van dezelfde site. Een bevinding wijst naar een regel in wat de browser heeft gebouwd, met het element erbij. In een dev-build van React of Vue staat er ook welk onderdeel van je app het tekende, en daar zoek je in de bron. `--statistics` geeft een telling per regel. Die telt wat er getekend is: één regel in een rij van een lijst telt voor elke rij mee. Staat je app achter een inlog, geef dan een opgeslagen sessie mee met `--storage-state`. De opdracht heeft Playwright met Chromium nodig, in je project of met `--playwright <module>`.
 
-Draai dit op de oude stand met de linter van de doelversie, net als de scan van de bron. Dan heb je de werklijst voordat je de versie ophoogt.
+`nldd upgrade --url` doet hetzelfde en zet de uitkomst in het verslag.
 
 Een eventnaam die via een eigen functie loopt, zoals een hook `useEvent(ref, naam, toon)` met de naam als tekst, vindt de linter als de naam van die functie over events gaat. Hij meldt het en herstelt het niet, want hij kan niet zien of je functie luistert of verstuurt. Heet je functie anders, zoek dan zelf op de oude namen.
 
@@ -108,9 +143,10 @@ Rood en blauw zijn bijna altijd een fout uit de upgrade. Roze is vaak een bewust
 
 Een upgrade is klaar als dit allemaal waar is:
 
-- de `Breaking`-secties tussen de twee versies zijn gelezen, en elk punt dat de app raakt is verwerkt;
+- `nldd upgrade` heeft onder "Nog te doen" en "Niet gelezen" niets meer staan;
+- de brekende wijzigingen uit het verslag zijn gelezen, en elk punt dat de app raakt is verwerkt;
 - de versie is op elke plek gelijk;
-- `nldd lint` van de doelversie vindt niets nieuws in de bron en in de gebouwde site;
+- `nldd lint` van de doelversie vindt niets nieuws in de gebouwde site;
 - de typecontrole slaagt, en `nldd lint --url` vindt niets nieuws op de draaiende pagina's;
 - de beelden van voor en na zijn bekeken, en wat verschilt is verklaard;
 - de eigen controles van het project slagen: de build, de tests en wat er in de CI draait;

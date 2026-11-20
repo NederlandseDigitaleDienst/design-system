@@ -10,7 +10,7 @@ import { lstatSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { extname, relative, resolve, sep } from 'node:path';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS } from './rule-data.js';
-import { DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, partialExcludes, isBundle, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
+import { DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, MARKDOWN_EXTENSIONS, STRING_EXTENSIONS, partialExcludes, isBundle, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
 
 /** Every name `--select`, `--ignore` and .nldd-lint.json may use: rule ids, aliases and groups. */
 export function knownKeys(data) {
@@ -101,20 +101,23 @@ function fixReferences(renamedTags, paths, root, exclude) {
  * @param {{ filename: string, source: string }} [options.input] - one snippet instead of files
  * @param {boolean} [options.fix] - write the fixes that are certain
  * @param {(filename: string) => boolean} [options.keep] - read this file even without a component
+ * @param {boolean} [options.markdown] - a scan also reads Markdown and MDX
  * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number,
  *   notUtf8: string[], symlinks: string[], unstable: string[], partialExcludes: { entry: string, file: string }[], references?: { fixed: number, files: number, remaining: string[] } }>}
  */
-export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false }) {
+export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false, markdown = false }) {
 	const everything = readsEverything(data, severities);
+	const scanned = [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS, ...STRING_EXTENSIONS, ...(markdown ? MARKDOWN_EXTENSIONS : [])];
+	const inStrings = (filename) => STRING_EXTENSIONS.includes(extname(filename));
 	// A script named on the command line is read, also in `dist`: only a scan skips it.
 	const named = new Set(paths.map((path) => resolve(root, path)).filter((path) => statSync(path, { throwIfNoEntry: false })?.isFile()));
 	const inputs = input
 		? [{ filename: resolve(root, input.filename), source: input.source }]
-		: findFiles(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS])
+		: findFiles(paths, root, config.exclude, scanned)
 				.filter((filename) => named.has(resolve(filename)) || !isBuiltScript(filename, root))
 				.map((filename) => ({ filename, source: readFileSync(filename, 'utf8') }))
 				// A template the linter cannot read matters only with our markup; the rest is let go.
-				.filter(({ filename, source }) => !isUnread(filename) || hasOurMarkup(source))
+				.filter(({ filename, source }) => !(isUnread(filename) || inStrings(filename)) || hasOurMarkup(source))
 				.filter(({ filename, source }) => !isBundle(filename, source));
 
 	// Most files in an app use no component at all, and those need no parser either.
@@ -168,6 +171,6 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	// Not in `files`: what has our markup and was not read, so the summary can say so.
 	// Counted on the markup, so a suppressed `file-not-read` does not make it read.
 	const unread = inputs.filter(({ filename, source }) => isUnread(filename) && hasOurMarkup(source)).length;
-	const partial = input ? [] : partialExcludes(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS]);
+	const partial = input ? [] : partialExcludes(paths, root, config.exclude, scanned);
 	return { results, files, unread, fixed, fixedFiles, notUtf8, symlinks, unstable, partialExcludes: partial, references };
 }

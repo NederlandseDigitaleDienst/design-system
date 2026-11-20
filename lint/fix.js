@@ -85,8 +85,9 @@ function writtenTranslations(source, found) {
  * bound or already has the key. One per element per pass: the next pass adds the next key.
  */
 function translationEdits(source, finding, translation) {
-	const { startTag, jsx } = finding;
-	if (jsx) return [];
+	const { startTag, jsx, inString } = finding;
+	// In a string literal of another language, a quote of ours could end the literal.
+	if (jsx || inString) return [];
 	return Object.entries(translation).flatMap(([name, key]) => {
 		const found = findAttribute(startTag, name);
 		const text = writtenText(source, found);

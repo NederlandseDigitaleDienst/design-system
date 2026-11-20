@@ -78,6 +78,13 @@ export const GENERATED = [
 		check: 'release',
 	},
 	{
+		// The breaking entries per version, for `nldd upgrade`. As the copy above:
+		// an entry has a version only once the release has written its heading.
+		script: 'generate:lint-breaking',
+		files: ['lint/breaking.generated.json'],
+		check: 'release',
+	},
+	{
 		// Carries the version and date of the release itself.
 		script: 'generate:publiccode',
 		files: ['publiccode.yml'],

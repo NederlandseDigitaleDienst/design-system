@@ -604,6 +604,7 @@
     "generate:component-reference": "node scripts/generate-component-reference.js",
     "generate:cem": "cem analyze && npm run generate:vue-types && npm run generate:react-types && npm run generate:autoloader && npm run generate:lint-data",
     "generate:lint-data": "node scripts/generate-lint-data.js",
+    "generate:lint-breaking": "node scripts/generate-lint-breaking.js",
     "generate:vue-types": "node scripts/generate-vue-types.js",
     "generate:react-types": "node scripts/generate-react-types.js",
     "generate:skill-changelog": "node scripts/generate-skill-changelog.js",

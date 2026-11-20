@@ -461,12 +461,15 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	 * markup parser skips on purpose, such as a comment or an inert template, is not this.
 	 */
 	function unreadMarkup(source, filename, roots) {
+		const rule = 'file-not-read';
+		const finding = (offset) => [{ rule, severity: BUILT_IN_RULES[rule].severity, message: BUILT_IN_RULES[rule].description, tag: '', offset }];
+		// A reader that knows what it left unread says so itself.
+		if (roots.unread !== undefined) return roots.unread < 0 ? [] : finding(roots.unread);
 		const reader = readerOf(filename);
 		if (reader === 'markup' || (reader === 'templates' && roots.length > 0)) return [];
 		const offset = withoutComments(source, !MARKUP_FILE.test(filename)).search(/<nldd-[a-z]/);
 		if (offset < 0) return [];
-		const rule = 'file-not-read';
-		return [{ rule, severity: BUILT_IN_RULES[rule].severity, message: BUILT_IN_RULES[rule].description, tag: '', offset }];
+		return finding(offset);
 	}
 
 	// An opt-in group runs only where a level was given for it, never by default.
@@ -551,6 +554,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				mention: node.mention,
 				startTag: node.startTag,
 				jsx,
+				inString: Boolean(parsed.strings),
 				...position(node.offset),
 			}))
 			.concat(

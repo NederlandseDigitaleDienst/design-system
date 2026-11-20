@@ -1,0 +1,131 @@
+name: Upgrade a project
+
+# Brings one repository to a version of the design system and opens a pull
+# request for it, or updates the one that is open. The work is `nldd upgrade`:
+# it raises the version wherever the project names it, rewrites the lockfile,
+# applies every fix that is certain, and writes what is left as the text of the
+# pull request. This workflow only runs it and delivers the result.
+#
+# A team calls it from its own repository, on a schedule:
+#
+#   on:
+#     schedule:
+#       - cron: '0 6 * * 1'
+#   jobs:
+#     upgrade:
+#       uses: NederlandseDigitaleDienst/design-system/.github/workflows/upgrade.yml@main
+#       permissions:
+#         contents: write
+#         pull-requests: write
+#
+# upgrade-fleet.yml calls it for every repository on its list, with a token of
+# its own, so a team that did nothing gets the same pull request.
+#
+# One branch per repository, rewritten on every run: a newer release replaces
+# the pull request that is open, it does not open a second one. A pull request
+# made with the token of the workflow itself does not start the repository's
+# other workflows; pass a token of an app or a bot account where CI has to run.
+
+on:
+  workflow_call:
+    inputs:
+      repository:
+        description: 'owner/name of the repository to upgrade. Default: the one that calls this.'
+        type: string
+        default: ''
+      version:
+        description: 'The version to upgrade to: a number, or a tag such as latest.'
+        type: string
+        default: latest
+      agent:
+        description: 'Let an agent work the list of what is left, with the upgrade skill, before the pull request is made. Needs the secret claude_code_oauth_token.'
+        type: boolean
+        default: false
+    secrets:
+      token:
+        description: 'A token that may push a branch and open a pull request in the repository. Default: the token of the workflow.'
+        required: false
+      claude_code_oauth_token:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      BRANCH: nldd/design-system-upgrade
+      REPOSITORY: ${{ inputs.repository || github.repository }}
+      WANTED: ${{ inputs.version }}
+      GH_TOKEN: ${{ secrets.token || github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          repository: ${{ inputs.repository || github.repository }}
+          token: ${{ secrets.token || github.token }}
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Upgrade
+        id: upgrade
+        run: |
+          version="$(npm view "@nldd/design-system@$WANTED" version)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          npx --yes "@nldd/design-system@$version" upgrade --report "$RUNNER_TEMP/upgrade.md"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Nothing to upgrade."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # What is certain is done. What is left asks for a choice, and that is what
+      # the skill is for: it reads the list and the breaking changes, and decides
+      # per place. Off by default: a team reads the list itself, or asks for this.
+      - name: Fetch the upgrade skill
+        if: steps.upgrade.outputs.changed == 'true' && inputs.agent
+        uses: actions/checkout@v7
+        with:
+          repository: NederlandseDigitaleDienst/design-system
+          ref: v${{ steps.upgrade.outputs.version }}
+          sparse-checkout: skills
+          path: .nldd-skills
+
+      - name: Work the list
+        if: steps.upgrade.outputs.changed == 'true' && inputs.agent
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.claude_code_oauth_token }}
+          prompt: |
+            This repository was just upgraded to @nldd/design-system ${{ steps.upgrade.outputs.version }} by `nldd upgrade`.
+            The report is in ${{ runner.temp }}/upgrade.md. Follow .nldd-skills/skills/nldd-design-upgrade/SKILL.md from step 2:
+            work every place under "Nog te doen" and "Niet gelezen", and read the breaking changes it lists.
+            Where you choose, keep what the page did before the upgrade. Tick a box in the report when its place is done,
+            and add a section "Keuzes" at the end of the report with every choice that does not follow from the changelog.
+            Do not commit, do not push, and leave the directory .nldd-skills alone.
+          claude_args: '--allowedTools Bash,Read,Edit,Write,Glob,Grep'
+
+      - name: Open or update the pull request
+        if: steps.upgrade.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.upgrade.outputs.version }}
+        run: |
+          rm -rf .nldd-skills
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch --force-create "$BRANCH"
+          git add --all
+          git commit --message "chore: designsysteem naar $VERSION"
+          git push --force origin "$BRANCH"
+          number="$(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --repo "$REPOSITORY" --title "chore: designsysteem naar $VERSION" --body-file "$RUNNER_TEMP/upgrade.md"
+          else
+            gh pr create --repo "$REPOSITORY" --head "$BRANCH" --title "chore: designsysteem naar $VERSION" --body-file "$RUNNER_TEMP/upgrade.md"
+          fi

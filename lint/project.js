@@ -5,7 +5,7 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from '
 import { extname, join, relative, resolve, sep } from 'node:path';
 import { declarations, TOKEN_PREFIX } from './css.js';
 
-export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
+export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt', '.venv', 'venv', '__pycache__']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
 export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.tmpl', '.gohtml', '.vue', '.astro', '.jsx', '.tsx', '.js'];
 
@@ -15,6 +15,12 @@ export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', 
  * does not read as checked and clean.
  */
 export const UNREAD_EXTENSIONS = ['.svelte', '.php', '.twig', '.erb', '.ejs', '.hbs', '.handlebars', '.mustache', '.njk', '.liquid', '.cshtml', '.razor'];
+
+/** Languages where markup stands in string literals: read there, and only where a literal holds a component. */
+export const STRING_EXTENSIONS = ['.py'];
+
+/** Markdown and MDX: read when named, and by an upgrade, which has to reach every place a component is written. */
+export const MARKDOWN_EXTENSIONS = ['.md', '.mdx'];
 
 /** An app's own stylesheets: read for the tokens they name, and in full when the group pure is on. */
 export const STYLESHEET_EXTENSIONS = ['.css', '.scss', '.sass', '.less'];
