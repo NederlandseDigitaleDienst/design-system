@@ -637,6 +637,10 @@ describe('--fix', () => {
 			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
 		);
 		assert.equal(
+			fixed('a.html', field(' show-button-text="Toon >"')).text,
+			field(` translations='{"components.password-field.show-action": "Toon >"}'`),
+		);
+		assert.equal(
 			fixed('a.html', field(` translations='{"components.password-field.show-accessible-label": "Laat het wachtwoord zien"}' show-button-text="Toon" hide-button-text="Verstop"`)).text,
 			field(` translations='{"components.password-field.show-accessible-label": "Laat het wachtwoord zien", "components.password-field.hide-action": "Verstop", "components.password-field.show-action": "Toon"}'`),
 		);
@@ -2170,6 +2174,11 @@ describe('renamed events', () => {
 		]) {
 			assert.deepEqual(await messagesIn(source, file), [renamed], `${file}: ${source}`);
 		}
+	});
+
+	it('finds the old name with nldd-, and leaves the plain name it became alone', async () => {
+		const source = 'note.addEventListener("close", hide);\nfield.addEventListener("complete", send);\nnote.addEventListener("nldd-close", hide);';
+		assert.deepEqual(await messagesIn(source, 'a.js'), ['`nldd-close` was renamed to `close` after 0.21.1, so a listener on the old name is never called.']);
 	});
 
 	it('leaves the new name, a longer name, a variable and a comment alone', async () => {

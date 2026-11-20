@@ -336,6 +336,7 @@ export function applyFixes(source, findings) {
 		const found = editsOf(source, finding).filter((edit) => !unique.some((other) => isSameEdit(edit, other)));
 		// The edits of one finding go together or not at all, such as both tags of a rename.
 		// One that overlaps an edit already taken, such as a wrap around this element, waits for the next pass.
+		// The edits within one finding are not checked against each other: every kind of fix keeps them apart.
 		if (found.length === 0 || found.some((edit) => unique.some((other) => overlaps(edit, other)))) continue;
 		unique.push(...found);
 		if (finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
