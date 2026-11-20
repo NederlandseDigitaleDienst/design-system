@@ -22,16 +22,84 @@ function renameEdits(source, startTag, from, to) {
 	return [{ from: nameStart, to: nameEnd, text: isProperty || name !== from ? toCamelCase(to) : to }];
 }
 
+/**
+ * `{5}`, `{"5"}` and `` {`5`} ``: braces around one number or one string without an escape or a hole.
+ * A number is matched as written, so `{05}` or `{5.0}` finds no value and stays a finding.
+ * Only a value the rule names for this attribute is rewritten, so `{"5"}` elsewhere stays as it is.
+ */
+const BRACED_LITERAL = /^\{\s*(?:(\d+(?:\.\d+)?)|"([^"\\\n]*)"|'([^'\\\n]*)'|`([^`\\$\n]*)`)\s*\}$/;
+
 /** Only a value written out in the markup: a bound one can hold anything. */
 function valueEdits(source, startTag, name, values) {
 	const found = findAttribute(startTag, name);
 	const value = found?.value;
-	if (!value || found.prefix || value.quote === '{') return [];
+	if (!value || found.prefix) return [];
+	if (value.quote === '{') {
+		// A literal in braces is as certain as a quoted value, and becomes one: the new value is a string.
+		const literal = BRACED_LITERAL.exec(source.slice(value.start, value.end));
+		const written = literal?.slice(1).find((group) => group !== undefined);
+		return written !== undefined && Object.hasOwn(values, written) ? [{ from: value.start, to: value.end, text: `"${values[written]}"` }] : [];
+	}
 	const at = value.quote ? value.start + 1 : value.start;
 	const end = value.quote ? value.end - 1 : value.end;
 	return Object.entries(values).flatMap(([from, to]) =>
 		at + from.length === end && source.startsWith(from, at) ? [{ from: at, to: end, text: to }] : [],
 	);
+}
+
+/** The text of a value written out in the markup, quoted or bare. A value in braces is an expression, and has none. */
+function writtenText(source, found) {
+	const value = found?.value;
+	if (!value || found.prefix || found.templated || value.quote === '{') return undefined;
+	return value.quote ? source.slice(value.start + 1, value.end - 1) : source.slice(value.start, value.end);
+}
+
+const UNCERTAIN_TEXT = /[&\\\n]|\{\{|\{%|\$\{/;
+
+/** `translations` as JSON in single quotes. */
+function translationsAttribute(entries) {
+	return `translations='{${entries.map(([key, text]) => `${JSON.stringify(key)}: ${JSON.stringify(text)}`).join(', ')}}'`;
+}
+
+/** The keys a `translations` holds, when it is written out as JSON in single quotes. */
+function writtenTranslations(source, found) {
+	const value = found.value;
+	if (!value || found.prefix || found.templated || value.quote !== "'") return undefined;
+	const json = source.slice(value.start + 1, value.end - 1);
+	if (UNCERTAIN_TEXT.test(json)) return undefined;
+	try {
+		const parsed = JSON.parse(json);
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.values(parsed).some((text) => typeof text !== 'string')) return undefined;
+		return Object.entries(parsed);
+	} catch {
+		return undefined;
+	}
+}
+
+/**
+ * A text attribute that became a translation key: the attribute goes, and its text
+ * goes in `translations` under that key, as JSON in single quotes. Not in JSX: React 18
+ * writes an object as `[object Object]`, and React 19 sets a string as the property,
+ * which the component does not parse. An entity, a backslash, a template hole or a quote
+ * that the JSON cannot hold makes it uncertain, and so does a `translations` that is
+ * bound or already has the key. One per element per pass: the next pass adds the next key.
+ */
+function translationEdits(source, finding, translation) {
+	const { startTag, jsx } = finding;
+	if (jsx) return [];
+	return Object.entries(translation).flatMap(([name, key]) => {
+		const found = findAttribute(startTag, name);
+		const text = writtenText(source, found);
+		// An empty text would win over the default in translate() and leave the button blank.
+		if (text === undefined || text.trim() === '' || UNCERTAIN_TEXT.test(text) || text.includes("'")) return [];
+		const existing = findAttribute(startTag, 'translations');
+		if (!existing) return [{ from: found.start, to: found.end, text: translationsAttribute([[key, text]]) }];
+		const entries = writtenTranslations(source, existing);
+		if (!entries || entries.some(([existingKey]) => existingKey === key)) return [];
+		const removal = removeEdits(source, finding, name);
+		if (removal.length === 0) return [];
+		return [{ from: existing.start, to: existing.end, text: translationsAttribute([...entries, [key, text]]) }, ...removal];
+	});
 }
 
 /** What stands before an attribute, back to the one before it or the tag name. */
@@ -95,7 +163,7 @@ function wrapEdits(source, finding, wrapper) {
 	const content = contentOf(source, finding);
 	const inner = content?.text.trim();
 	// A blank line ends raw HTML in Markdown, and indenting it leaves trailing space.
-	if (!inner || /\n[ \t]*\n/.test(inner)) return [];
+	if (!inner || /\r?\n[ \t]*\r?\n/.test(inner)) return [];
 	const tags = [...inner.matchAll(/<\/?([a-zA-Z][\w-]*)/g)].map((match) => match[1].toLowerCase());
 	if (tags.some((name) => !INLINE.has(name))) return [];
 	const leading = /^\s*/.exec(content.text)[0];
@@ -104,7 +172,8 @@ function wrapEdits(source, finding, wrapper) {
 	let wrapped = `<${wrapper}>${inner}</${wrapper}>`;
 	if (base !== undefined && inner.includes('\n')) {
 		const unit = base.includes('\t') || !base ? '\t' : '  ';
-		wrapped = `<${wrapper}>\n${base}${unit}${inner.replace(/\n/g, `\n${unit}`)}\n${base}</${wrapper}>`;
+		const eol = leading.includes('\r\n') ? '\r\n' : '\n';
+		wrapped = `<${wrapper}>${eol}${base}${unit}${inner.replace(/\n/g, `\n${unit}`)}${eol}${base}</${wrapper}>`;
 	}
 	return [{ from: content.start, to: content.end, text: leading + wrapped + trailing }];
 }
@@ -120,6 +189,12 @@ function editsOf(source, finding) {
 		...(fix.tag && mention ? [{ from: offset + 1, to: offset + 1 + tag.length, text: fix.tag }] : []),
 		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag) : []),
 		...(fix.wrap ? wrapEdits(source, finding, fix.wrap) : []),
+		...(fix.translation ? translationEdits(source, finding, fix.translation) : []),
+		// A token that got another name: the finding spans the old name in a `var()`, and
+		// startsWith checks that the span still holds it.
+		...(fix.token && source.startsWith(tag, offset) ? [{ from: offset, to: finding.endOffset, text: fix.token }] : []),
+		// An event that got another name: the finding spans the old name in a listener.
+		...(fix.event && source.startsWith(tag, offset) ? [{ from: offset, to: finding.endOffset, text: fix.event }] : []),
 	];
 }
 
@@ -240,20 +315,36 @@ export function linesNaming(source, renamedTags) {
 	return source.split('\n').flatMap((line, index) => (names.some((name) => line.search(name) !== -1) ? [index + 1] : []));
 }
 
+const isSameEdit = (a, b) => a.from === b.from && a.to === b.to && a.text === b.text;
+
 /**
+ * Two edits at one place, or ranges that share a character, cannot both apply to the original offsets.
+ * Two insertions at the same offset count too: the second waits for the next pass.
+ */
+const overlaps = (a, b) => a.from === b.from || (a.from < b.to && b.from < a.to);
+
+/**
+ * One pass of fixes. An edit that overlaps one already taken is left for the next pass, so a
+ * caller applies this until `fixed` is 0, as fixUntilStable does.
  * @returns {{ source: string, fixed: number, renamedTags: Map<string, string> }}
  */
 export function applyFixes(source, findings) {
 	const renamedTags = new Map();
-	const edits = findings
-		.filter(({ fix }) => fix)
-		.flatMap((finding) => {
-			const found = editsOf(source, finding);
-			if (found.length > 0 && finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
-			return found;
-		});
-	const seen = new Set();
-	const unique = edits.filter(({ from }) => !seen.has(from) && seen.add(from));
+	const translated = new Set();
+	const unique = [];
+	for (const finding of findings.filter(({ fix }) => fix)) {
+		// Two keys for one element would each write `translations`: the next pass adds the second.
+		if (finding.fix.translation && translated.has(finding.offset)) continue;
+		const found = editsOf(source, finding).filter((edit) => !unique.some((other) => isSameEdit(edit, other)));
+		// The edits of one finding go together or not at all, such as both tags of a rename.
+		// One that overlaps an edit already taken, such as a wrap around this element, waits for the next pass.
+		// Edits of one finding that overlap each other would corrupt the file, so that fix is not made.
+		const clash = (edit, i) => unique.some((other) => overlaps(edit, other)) || found.slice(i + 1).some((other) => overlaps(edit, other));
+		if (found.length === 0 || found.some(clash)) continue;
+		unique.push(...found);
+		if (finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
+		if (finding.fix.translation) translated.add(finding.offset);
+	}
 	let fixed = source;
 	for (const { from, to, text } of unique.sort((a, b) => b.from - a.from)) {
 		fixed = fixed.slice(0, from) + text + fixed.slice(to);

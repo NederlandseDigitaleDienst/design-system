@@ -5,8 +5,8 @@ import { resolve } from 'node:path';
  * The standalone browser bundle: one minified file you drop on a page with a
  * plain <script src>, with no build step at the other end.
  *
- * Unlike vite.config.ts, which makes the ESM build for bundling consumers: there
- * lit, Floating UI and the rest stay external and the code sits in chunks. Here
+ * Unlike the module build for bundling consumers, which tsc makes (see
+ * tsconfig.build.json): there lit, Floating UI and the rest stay imports. Here
  * everything comes along and nothing is split, so there is exactly one URL to
  * point at.
  */

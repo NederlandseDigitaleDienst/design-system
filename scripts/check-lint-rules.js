@@ -81,7 +81,7 @@ const existsAsValue = (attribute, value) =>
 	Object.values(data.tags).some((tag) => (attribute === 'slot' ? tag.slots.includes(value) : tag.attrs[attribute]?.values?.includes(value)));
 
 /** A fix changes what the rule says is gone, into something that exists. */
-function checkFix({ id, fix, removed = [] }) {
+function checkFix({ id, context, fix, removed = [] }) {
 	for (const [from, to] of Object.entries(fix?.rename ?? {})) {
 		if (!removed.includes(from)) problems.push(`${id}: the fix renames ${from}, which is not in removed.`);
 		if (!allAttributes.has(to)) problems.push(`${id}: the fix renames to ${to}, which no component has.`);
@@ -92,6 +92,13 @@ function checkFix({ id, fix, removed = [] }) {
 	for (const [from, to] of Object.entries(fix?.flag ?? {})) {
 		if (!removed.includes(from)) problems.push(`${id}: the fix turns ${from} into a flag, and ${from} is not in removed.`);
 		if (!allAttributes.has(to)) problems.push(`${id}: the fix turns ${from} into ${to}, which no component has.`);
+	}
+	for (const [from, key] of Object.entries(fix?.translation ?? {})) {
+		if (!removed.includes(from)) problems.push(`${id}: the fix moves ${from} into translations, and ${from} is not in removed.`);
+		// The key belongs to the component the rule is about, whose `translations` the fix writes to.
+		const tag = String(context ?? '').match(/^nldd-[a-z0-9-]+/)?.[0];
+		if (!tag) problems.push(`${id}: the fix moves ${from} into translations, and the context does not start with the tag that has them.`);
+		else if (!data.translations[tag]?.includes(key)) problems.push(`${id}: the fix moves ${from} into ${key}, which ${tag} does not have.`);
 	}
 	if (fix?.wrap && !/^[a-z]+$/.test(fix.wrap)) problems.push(`${id}: the fix wraps in ${fix.wrap}, which is not an element of HTML.`);
 	if (fix?.tag && !data.tags[fix.tag]) problems.push(`${id}: the fix renames to ${fix.tag}, which does not exist.`);

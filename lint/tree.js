@@ -51,7 +51,10 @@ export const BOUND = Symbol('bound');
  */
 
 /** Vue, Alpine, Lit and Angular write a name with a prefix, JSX and HTML bare. */
-const WRITTEN = /^(:|v-bind:|x-bind:|\.|\?|\[attr\.|\[\(?)?([A-Za-z_][\w-]*)((?:\.(?:prop|attr|camel))?)(\)?\])?$/;
+const WRITTEN = /^(:|v-bind:|x-bind:|\.|\?|\[attr\.|\[\(?)?([A-Za-z_][\w-]*)((?:\.[a-zA-Z]+)*)(\)?\])?$/;
+
+/** Vue and Alpine take any modifier after the name, `:value.sync`; the others only these. */
+const modifiersFit = (prefix = '', modifiers) => !modifiers || /^\.(prop|attr|camel)$/.test(modifiers) || /^(:|v-bind:|x-bind:)$/.test(prefix);
 
 /**
  * The span of an attribute the parser reported from `start` to just before `end`.
@@ -60,7 +63,7 @@ const WRITTEN = /^(:|v-bind:|x-bind:|\.|\?|\[attr\.|\[\(?)?([A-Za-z_][\w-]*)((?:
 export function attributeSpan(source, written, start, end) {
 	const match = WRITTEN.exec(written);
 	const bracketed = Boolean(match?.[1]?.startsWith('['));
-	const valid = match && bracketed === Boolean(match[4]);
+	const valid = match && bracketed === Boolean(match[4]) && modifiersFit(match[1], match[3]);
 	const prefix = valid ? (match[1] ?? '') : '';
 	const nameStart = start + prefix.length;
 	const nameEnd = valid ? nameStart + match[2].length : start + written.length;

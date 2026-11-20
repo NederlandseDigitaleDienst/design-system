@@ -36,10 +36,11 @@ function forWorld(tokens, classes, widen) {
 			return { ...token, data: token.data.map((each) => forWorld(each, classes, inner)) };
 		}
 		if (!widen) return token;
-		if (token.type === 'pseudo' && favorableName(token.name) !== token.name) return { ...token, name: favorableName(token.name) };
+		const named = token.type === 'pseudo' ? { ...token, name: favorableName(token.name) } : token;
 		if (token.type === 'tag' || (token.type === 'pseudo' && token.name in classes)) {
-			return { type: 'pseudo', name: 'is', data: [[token], [unknown]] };
+			return { type: 'pseudo', name: 'is', data: [[named], [unknown]] };
 		}
+		if (named.name !== token.name) return named;
 		// "Not empty" is about a value we have, and a bound value is not empty.
 		if (token.type === 'attribute' && token.action === 'equals' && token.value === '') return token;
 		if (token.type === 'attribute') {
@@ -50,9 +51,9 @@ function forWorld(tokens, classes, widen) {
 	});
 }
 
-export function createEngine({ classes = {}, tags = {}, designSystemCss = {} } = {}) {
+export function createEngine({ classes = {}, tags = {}, designSystemCss = {}, isDesignSystemCss } = {}) {
 	const pseudos = {
-		...sourcePseudos({ classes, tags, designSystemCss }),
+		...sourcePseudos({ classes, tags, designSystemCss, isDesignSystemCss }),
 		// Engine-only: how forWorld lets what is unknown match in W+.
 		unknown: (node) => node.opaque,
 		bound: (node, name) => node.opaque || node.spread || node.attrs.get(name) === BOUND,
@@ -92,19 +93,35 @@ export function createEngine({ classes = {}, tags = {}, designSystemCss = {} } =
 		return true;
 	}
 
+	/** The elements of a tree by id, and those whose id this file cannot know. Built once per tree. */
+	const idIndexes = new WeakMap();
+	function idIndex(root) {
+		if (!idIndexes.has(root)) {
+			const byId = new Map();
+			const unknown = [];
+			walk(root, (node) => {
+				const id = node.attrs.get('id');
+				if (typeof id === 'string') byId.set(id, [...(byId.get(id) ?? []), node]);
+				if (node !== root && (node.opaque || node.spread || node.templated || id === BOUND)) unknown.push(node);
+			});
+			idIndexes.set(root, { byId, unknown });
+		}
+		return idIndexes.get(root);
+	}
+
 	function refOutcome(rule, node, root) {
 		const { attr, target, equal } = rule.ref;
 		const value = node.attrs.get(attr);
 		if (value === undefined) return 'passed';
 		if (value === BOUND || node.spread) return 'cantTell';
-		const found = [];
-		walk(root, (candidate) => {
-			if (candidate.attrs.get('id') === value && matches(candidate, target, '-')) {
-				found.push(candidate);
-			}
-		});
-		// The target may be rendered by another file, unless this is a whole document.
-		if (found.length === 0) return root.opaque ? 'cantTell' : 'failed';
+		const { byId, unknown } = idIndex(root);
+		const candidates = byId.get(value) ?? [];
+		const found = candidates.filter((candidate) => matches(candidate, target, '-'));
+		if (found.length === 0) {
+			// The target may be rendered by another file, unless this is a whole document, or have an id we cannot read.
+			const maybe = root.opaque || [...candidates, ...unknown].some((candidate) => matches(candidate, target, '+'));
+			return maybe ? 'cantTell' : 'failed';
+		}
 		if (!equal) return 'passed';
 		const expected = node.attrs.get(equal);
 		const actual = found[0].attrs.get(equal);

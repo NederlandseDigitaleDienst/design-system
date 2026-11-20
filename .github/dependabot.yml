@@ -42,8 +42,8 @@ updates:
     # This repo squash-merges, so that title lands on main verbatim. The split
     # follows CLAUDE.md's criterion - does the bump change what consumers get?
     # `dependencies` reach consumers either way (bundled into dist/, or
-    # installed alongside it - lit and @floating-ui/dom are marked external in
-    # vite.config.ts), so `build` (patch); devDependencies are build tooling
+    # installed alongside it - the module build leaves lit and @floating-ui/dom
+    # as imports), so `build` (patch); devDependencies are build tooling
     # only, so `chore` (no release).
     commit-message:
       prefix: build
